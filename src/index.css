@@ -1,0 +1,57 @@
+:root {
+  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0f172a;
+  background-color: #f5f4ee;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  min-height: 100%;
+  background-color: #f5f4ee;
+  overscroll-behavior: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
+  overscroll-behavior: none;
+}
+
+@supports (padding: env(safe-area-inset-top)) {
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    background: #f5f4ee;
+  }
+
+  body::before {
+    top: 0;
+    height: env(safe-area-inset-top);
+  }
+
+  body::after {
+    bottom: 0;
+    height: env(safe-area-inset-bottom);
+  }
+}
+
+#app {
+  min-height: 100vh;
+  position: relative;
+}
