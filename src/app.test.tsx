@@ -233,7 +233,7 @@ describe('Form', () => {
 })
 
 test('Show a feedback panel with an issues link', () => {
-  renderApp('/#/en')
+  renderApp('/#/en/ktb-1')
   const link = screen.getByText('Report a problem')
   expect(link).toHaveAttribute('href', 'https://github.com/goblindegook/musarrif/issues')
 })

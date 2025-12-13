@@ -8,11 +8,12 @@ import { search } from '../paradigms/verbs'
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 interface SearchProps {
+  id?: string
   onSelect: (verb: Verb) => void
   selectedVerb?: Verb | null
 }
 
-export function Search({ onSelect, selectedVerb }: SearchProps) {
+export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const { t, lang, dir, diacriticsPreference } = useI18n()
   const translationLang = lang === 'ar' ? 'en' : lang
   const translationDir = (lang === 'ar' ? 'ltr' : dir) as 'ltr' | 'rtl'
@@ -88,6 +89,7 @@ export function Search({ onSelect, selectedVerb }: SearchProps) {
       }}
     >
       <Input
+        id={id}
         value={applyDiacriticsPreference(query, diacriticsPreference)}
         onInput={(event) => {
           setQuery((event.target as HTMLInputElement).value)
@@ -127,6 +129,7 @@ export function Search({ onSelect, selectedVerb }: SearchProps) {
         placeholder={t('placeholder')}
         dir="rtl"
         lang="ar"
+        placeholderDir={dir}
         inputMode="text"
         autoCapitalize="none"
         autoComplete="off"
@@ -193,7 +196,7 @@ const SuggestionContainer = styled('div')`
   box-sizing: border-box;
 `
 
-const Input = styled('input')`
+const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
   border-radius: 0.9rem;
   border: 1px solid #cbd5f5;
   padding: 0.9rem 1rem;
@@ -203,6 +206,11 @@ const Input = styled('input')`
   width: 100%;
   box-sizing: border-box;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+
+  &::placeholder {
+    direction: ${({ placeholderDir }) => placeholderDir ?? 'auto'};
+    text-align: ${({ placeholderDir }) => (placeholderDir === 'rtl' ? 'right' : 'left')};
+  }
 
   &:hover {
     background: #fff;

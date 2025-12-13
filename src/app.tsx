@@ -7,8 +7,10 @@ import { IconButton } from './components/IconButton'
 import { SettingsIcon } from './components/icons/SettingsIcon'
 import { LanguagePicker } from './components/LanguagePicker'
 import { Modal } from './components/Modal'
+import { Panel } from './components/Panel'
 import { QuickPickList, SuggestionsList } from './components/QuickPickList'
 import { Search as SearchBox } from './components/SearchBox'
+import { ShareButton } from './components/ShareButton'
 import { SpeechButton } from './components/SpeechButton'
 import { VerbPill } from './components/VerbPill'
 import { useI18n } from './hooks/i18n'
@@ -20,7 +22,7 @@ import { analyzeRoot, applyDiacriticsPreference } from './paradigms/helpers'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { conjugate, getVerbById, search, type Verb, verbs } from './paradigms/verbs'
+import { getVerbById, search, type Verb, verbs } from './paradigms/verbs'
 import { mapRecord } from './primitives/objects'
 
 const DOTTED_CIRCLE = '\u25cc'
@@ -149,7 +151,7 @@ const SettingsButtonWrapper = styled('div')`
   }
 `
 
-const Main = styled('main')`
+const Main = styled('main')<{ hasVerb: boolean }>`
   width: 100%;
   display: grid;
   gap: 1rem;
@@ -159,83 +161,59 @@ const Main = styled('main')`
   grid-template-areas:
     'search'
     'verb'
-    'form';
+    'footer';
+
+  ${({ hasVerb }) =>
+    !hasVerb
+      ? `
+    place-items: center;
+    min-height: calc(100vh - 12rem);
+    align-content: center;
+  `
+      : ''}
 
   @media (min-width: 960px) {
     gap: 1.25rem;
-    grid-template-columns: 1fr 1.5fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'search verb'
-      'form verb';
+    ${({ hasVerb }) =>
+      hasVerb
+        ? `
+      grid-template-columns: 1fr 1.5fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        'search verb'
+        'footer verb';
+    `
+        : `
+      max-width: 600px;
+      margin: 0 auto;
+    `}
   }
 `
 
-const Panel = styled('section')`
-  background: #ffffff;
-  border-radius: 1.5rem;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  @media (min-width: 720px) {
-    padding: 1.5rem 2rem;
-  }
-`
-
-const SearchPanel = styled(Panel)`
-  grid-area: search;
-`
-
-const FooterStack = styled('div')`
-  grid-area: form;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`
-
-const MainStack = styled('div')`
-  grid-area: verb;
+const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
+  grid-area: ${({ area: gridArea }) => gridArea};
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-self: flex-start;
 `
 
-const PanelTitle = styled('h2')`
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.55rem;
-`
-
-const PanelSubtitle = styled('h3')`
+const Heading = styled('h3')`
   margin: 0;
   font-weight: 600;
   font-size: 1.25rem;
 `
 
-const VerbTitleRow = styled('div')`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 1rem;
-
-  ${PanelTitle} {
-    margin: 0;
-  }
-`
-
-const Field = styled('label')`
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  font-weight: 600;
-  color: #1e293b;
-  width: 100%;
-  max-width: 100%;
+const VisuallyHiddenLabel = styled('label')`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
 `
 
 const VerbMetaSection = styled('section')`
@@ -363,6 +341,10 @@ export function App() {
     setIsRootInfoOpen(false)
   }, [selectedVerb])
 
+  useEffect(() => {
+    document.title = [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · ')
+  }, [selectedVerb, formatArabic, t])
+
   const selectedId = selectedVerb?.id
 
   const derivedForms = useMemo(
@@ -382,8 +364,6 @@ export function App() {
 
   const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
   const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
-
-  const pastTitle = useMemo(() => (selectedVerb ? conjugate(selectedVerb, 'past')?.['3ms'] : undefined), [selectedVerb])
 
   const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
   const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
@@ -418,42 +398,50 @@ export function App() {
           <LanguagePicker />
         </Controls>
       </TopBar>
-      <Main>
-        <SearchPanel>
-          <Field>
-            <PanelTitle dir={dir} lang={lang}>
-              {t('verbLabel')}
-            </PanelTitle>
-            <SearchBox onSelect={(verb: Verb) => navigateToVerb(verb.id)} selectedVerb={selectedVerb} />
-          </Field>
+      <Main hasVerb={!!selectedVerb}>
+        <Stack area="search">
+          <Panel>
+            <VisuallyHiddenLabel htmlFor="verb-search-input">{t('verbLabel')}</VisuallyHiddenLabel>
+            <SearchBox
+              id="verb-search-input"
+              onSelect={(verb: Verb) => navigateToVerb(verb.id)}
+              selectedVerb={selectedVerb}
+            />
 
-          <PanelSubtitle dir={dir} lang={lang}>
-            {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
-          </PanelSubtitle>
+            <Heading dir={dir} lang={lang}>
+              {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
+            </Heading>
 
-          {derivedForms.length > 1 ? (
-            <FormOptionList>
-              {derivedForms.map((verb) => {
-                const isActive = verb.id === selectedVerb?.id
-                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-              })}
-            </FormOptionList>
-          ) : (
-            <QuickPickList selectedVerb={selectedVerb} />
-          )}
-        </SearchPanel>
+            {derivedForms.length > 1 ? (
+              <FormOptionList>
+                {derivedForms.map((verb) => {
+                  const isActive = verb.id === selectedVerb?.id
+                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                })}
+              </FormOptionList>
+            ) : (
+              <QuickPickList selectedVerb={selectedVerb} />
+            )}
+          </Panel>
+        </Stack>
 
         {selectedVerb && (
-          <MainStack>
-            <Panel>
-              {pastTitle && (
-                <VerbTitleRow>
-                  <PanelTitle dir="rtl" lang="ar">
-                    {formatArabic(pastTitle)}
-                  </PanelTitle>
-                  <SpeechButton text={pastTitle} lang="ar" ariaLabel={t('aria.speak', { text: pastTitle })} />
-                </VerbTitleRow>
-              )}
+          <Stack area="verb">
+            <Panel
+              title={formatArabic(selectedVerb.label)}
+              dir="rtl"
+              lang="ar"
+              actions={
+                <>
+                  <ShareButton />
+                  <SpeechButton
+                    text={selectedVerb.label}
+                    lang="ar"
+                    ariaLabel={t('aria.speak', { text: selectedVerb.label })}
+                  />
+                </>
+              }
+            >
               <VerbMetaSection>
                 <Detail
                   label={t('meta.root')}
@@ -548,20 +536,19 @@ export function App() {
                 />
               )}
             </ConjugationSection>
-          </MainStack>
+          </Stack>
         )}
 
-        <FooterStack>
-          <Panel>
-            <PanelTitle dir={dir} lang={lang}>
-              {t('footer.feedback.title')}
-            </PanelTitle>
-            <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
-            <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
-              {t('footer.feedback.cta')}
-            </ActionLink>
-          </Panel>
-        </FooterStack>
+        {selectedVerb && (
+          <Stack area="footer">
+            <Panel title={t('footer.feedback.title')} dir={dir} lang={lang}>
+              <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
+              <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
+                {t('footer.feedback.cta')}
+              </ActionLink>
+            </Panel>
+          </Stack>
+        )}
 
         {selectedVerb && (
           <>
@@ -572,9 +559,9 @@ export function App() {
               <Text dir={dir} lang={lang}>
                 {t(`formInfo.form${selectedVerb.form}.relationship`)}
               </Text>
-              <PanelSubtitle dir={dir} lang={lang}>
+              <Heading dir={dir} lang={lang}>
                 {t('formInfo.examples')}
-              </PanelSubtitle>
+              </Heading>
               <SuggestionsList>
                 {formInsightExamples.map((example) => (
                   <VerbPill
@@ -607,9 +594,9 @@ export function App() {
                       <Text dir={dir} lang={lang}>
                         {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
                       </Text>
-                      <PanelSubtitle dir={dir} lang={lang}>
+                      <Heading dir={dir} lang={lang}>
                         {t('rootInfo.forms')}
-                      </PanelSubtitle>
+                      </Heading>
                       <SuggestionsList>
                         {derivedForms.map((verb) => {
                           const isActive = verb.id === selectedVerb?.id
