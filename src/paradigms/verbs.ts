@@ -151,7 +151,7 @@ function matchVerbsForCandidate(candidate: string): Verb[] {
 
 type SearchOptions = {
   exactRoot?: boolean
-  translate?: (key: string, params?: Record<string, string>) => string | undefined
+  translate?: (key: string, params?: Record<string, string>) => string
 }
 
 const normalizeQuery = (value: string): string =>
@@ -162,7 +162,8 @@ const normalizeQuery = (value: string): string =>
     .toLowerCase()
     .trim()
 
-export function search(query?: string, { exactRoot, translate }: SearchOptions = {}): Verb[] {
+export function search(query?: string, options: SearchOptions = {}): Verb[] {
+  const t = options.translate ?? ((key) => key)
   const matches: Verb[] = []
   const normalizedQuery = normalizeQuery(query ?? '')
   if (!normalizedQuery) return matches
@@ -174,15 +175,15 @@ export function search(query?: string, { exactRoot, translate }: SearchOptions =
     for (const verb of verbsForRoot) {
       if (distance.has(verb.id)) continue
       matches.push(verb)
-      distance.set(verb.id, Math.min(...candidates.concat(normalizedQuery).map((q) => wordDistance(q, verb.root))))
+      distance.set(verb.id, wordDistance(normalizedQuery, normalizeQuery(verb.label)))
     }
   }
 
-  if (exactRoot) {
+  if (options.exactRoot) {
     addMatches(verbsByRoot.get(normalizedQuery) ?? [])
   } else {
     addMatches(candidates.flatMap(matchVerbsForCandidate))
-    addMatches(verbs.filter((v) => normalizeQuery(translate?.(v.id) ?? '').includes(normalizedQuery)))
+    addMatches(verbs.filter((v) => normalizeQuery(t(v.id)).includes(normalizedQuery)))
   }
 
   return matches.sort((v1, v2) => {
@@ -190,7 +191,7 @@ export function search(query?: string, { exactRoot, translate }: SearchOptions =
     const d2 = distance.get(v2.id) ?? 0
     if (d1 !== d2) return d1 - d2
     if (v1.root !== v2.root) return v1.root.localeCompare(v2.root)
-    return v1.form - v2.form
+    return normalizeQuery(t(v1.id)).localeCompare(normalizeQuery(t(v2.id)))
   })
 }
 
