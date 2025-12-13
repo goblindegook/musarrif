@@ -168,7 +168,7 @@ export function search(query?: string, options: SearchOptions = {}): Verb[] {
   const normalizedQuery = normalizeQuery(query ?? '')
   if (!normalizedQuery) return matches
 
-  const candidates = extractRootCandidates(normalizedQuery ?? '')
+  const candidates = extractRootCandidates(normalizedQuery)
   const distance = new Map<string, number>()
 
   const addMatches = (verbsForRoot: Verb[]) => {
