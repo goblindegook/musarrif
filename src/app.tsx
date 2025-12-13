@@ -366,7 +366,7 @@ export function App() {
   const selectedId = selectedVerb?.id
 
   const derivedForms = useMemo(
-    () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }) : []),
+    () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
     [selectedVerb?.root],
   )
 

@@ -114,8 +114,8 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 2:
-        // Geminate Form II: if c2 === c3, only use c2 with shadda (e.g., مُحَبّ)
-        if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, c2, SHADDA]
+        // Geminate Form II: c2 === c3, fatḥa on c1, fatḥa then shadda on c2, then c3 (e.g., مُحَبَّب)
+        if (c2 === c3) return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, FATHA, SHADDA, c3, DAMMA], c3, FATHA)
         return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3, FATHA)
 
       case 3:

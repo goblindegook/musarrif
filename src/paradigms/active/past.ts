@@ -109,6 +109,9 @@ function buildPastBase(verb: Verb): readonly string[] {
         return [c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)]
       }
 
+      // Geminate Form I: if c2 === c3, collapse with shadda (e.g., حَبَّ)
+      if (c2 === c3) return [c1, FATHA, c2, SHADDA, FATHA]
+
       // Hollow Form I past contracts to a long /ā/ in the base (e.g., قامَ)
       if (isWeakLetter(c2)) return [c1, FATHA, ALIF, c3, FATHA]
 
@@ -116,8 +119,8 @@ function buildPastBase(verb: Verb): readonly string[] {
     }
 
     case 2:
-      // Geminate Form II: if c2 === c3, only use c2 with shadda (e.g., حَبَّ)
-      if (c2 === c3) return [c1, FATHA, c2, SHADDA, FATHA]
+      // Geminate Form II: c2 === c3, fatḥa then shadda on c2, then c3 (e.g., حَبَّبَ)
+      if (c2 === c3) return normalizeDefectivePast([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA], c3)
       return normalizeDefectivePast([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
 
     case 3:

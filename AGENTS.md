@@ -4,9 +4,12 @@ This document outlines the coding standards, patterns, and practices that must b
 
 ## Tooling
 
-Node is available and configured for this project via Mise. Always load the Mise environment before running `node` or any `npm` scripts as you're not likely to find a globally installed Node. For example: `mise exec -- npm test`.
+Node is available and configured for this project via Mise. Always load the Mise environment before running `node` or any `npm` scripts as you're not likely to find a globally installed Node.
 
-Vitest runs in watch mode by default. When you want a single, non-watching run (as in CI or ad‑hoc checks), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`.***
+- **npm scripts**: `mise exec -- npm test`
+- **Node.js scripts**: `mise exec -- node script.js` or `mise exec -- node -e "console.log('code here')"`
+- **Vitest**: Runs in watch mode by default. For a single, non-watching run (as in CI or ad‑hoc checks), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`
+- **Scripting tasks**: For file manipulation, data processing, or other scripting tasks, prefer Node over external tools like Python. Always use `mise exec --` to ensure the correct Node version is available.
 
 ## Code Style and Formatting
 
@@ -65,7 +68,29 @@ src/
 
 - **Grammar files**: Pure functions, no Preact dependencies or manipulation of the DOM tree
 - **UI files**: Preact components, styled components, UI logic
-- **Tests**: Co-located with source files using `.test.ts` or `.test.tsx` extension
+
+## Localization
+
+The application supports four languages: **English**, **Italian**, **European Portuguese**, and **Arabic**. Translation files are located in `src/locales/`.
+
+### UI Strings
+
+All UI strings must be translated into all languages. UI strings are stored in the `strings` object within each locale file.
+
+### Verb Translations
+
+When adding a new verb to `src/data/verbs.json`, you must also add translations for that verb:
+
+- **Translate into**: English, Italian, and Portuguese only (not Arabic)
+- **Arabic**: Arabic verbs use their Arabic labels directly and do not require translations
+- **Translation location**: Add entries to the `verbs` object in `en.json`, `it.json`, and `pt.json`
+
+### Translation Guidelines
+
+- **Primary meaning**: Always translate the primary meaning of the verb
+- **Secondary meaning**: You may add a secondary meaning if it significantly diverges from the primary one, separated by a comma (e.g., "to love, to like")
+- **Format**: Use the verb ID as the key (e.g., `"0Hbb-1": "to love"`)
+- **When adding verbs**: Include translations as part of the same change that adds the verb entry
 
 ## Testing Standards
 
@@ -118,7 +143,7 @@ test('descriptive test name', () => {
 12. **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
 13. **Avoid negative assertions**: Don’t assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
 14. **Static imports by default**: Use static imports; only use per-test dynamic imports when a test needs a fresh module instance for env-sensitive state.
-15. **Property based testing for general rules**: 
+15. **Property based testing**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
 
 ### UI Test Best Practices
 

@@ -183,7 +183,12 @@ export function search(query: string, options: SearchOptions = {}): Verb[] {
     addMatches(verbsByRoot.get(normalizedQuery) ?? [])
   } else {
     addMatches(candidates.flatMap(matchVerbsForCandidate))
-    addMatches(verbs.filter((v) => normalizeQuery(t(v.id)).includes(normalizedQuery)))
+    addMatches(
+      verbs.filter((v) => {
+        const translated = t(v.id)
+        return translated != null && normalizeQuery(translated).includes(normalizedQuery)
+      }),
+    )
   }
 
   return matches.sort((v1, v2) => {
@@ -191,7 +196,9 @@ export function search(query: string, options: SearchOptions = {}): Verb[] {
     const d2 = distance.get(v2.id) ?? 0
     if (d1 !== d2) return d1 - d2
     if (v1.root !== v2.root) return v1.root.localeCompare(v2.root)
-    return normalizeQuery(t(v1.id)).localeCompare(normalizeQuery(t(v2.id)))
+    const t1 = t(v1.id) ?? v1.id
+    const t2 = t(v2.id) ?? v2.id
+    return normalizeQuery(t1).localeCompare(normalizeQuery(t2))
   })
 }
 

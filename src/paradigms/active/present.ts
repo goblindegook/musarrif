@@ -287,6 +287,9 @@ function buildPresentBase(verb: Verb): readonly string[] {
         return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowelFromPattern(patternVowel), finalGlide]
       }
 
+      // Geminate Form I: if c2 === c3, ḍamma on prefix, kasra on c1, shadda on c2 (e.g., يُحِبُّ)
+      if (c2 === c3) return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
+
       // Initial hamza only (e.g., أكل → يأكل)
       if (isInitialHamza && !isMiddleWeak && !isFinalWeak)
         return normalizeDefectivePresent(
@@ -299,8 +302,8 @@ function buildPresentBase(verb: Verb): readonly string[] {
     }
 
     case 2:
-      // Geminate Form II: if c2 === c3, only use c2 with shadda, kasra on c1 (e.g., يُحِبُّ)
-      if (c2 === c3) return normalizeDefectivePresent([YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA], c3)
+      // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., يُحَبِّبُ)
+      if (c2 === c3) return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA], c3)
       return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA], c3)
 
     case 3:
