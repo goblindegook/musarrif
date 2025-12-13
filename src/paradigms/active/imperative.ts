@@ -1,6 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
-import { ALIF, ALIF_HAMZA, FATHA, HAMZA_ON_YEH, KASRA, SHADDA, SUKOON, WAW } from '../constants'
-import { isDiacritic, isWeakLetter, join, removeLeadingDiacritics } from '../helpers'
+import { ALIF, ALIF_HAMZA, ALIF_MADDA, FATHA, HAMZA_ON_YEH, KASRA, SEEN, SHADDA, SUKOON, TEH, WAW } from '../constants'
+import { isWeakLetter, removeLeadingDiacritics } from '../helpers'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
@@ -15,42 +15,76 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const isFinalWeak = letters.length === 4 ? isWeakLetter(c4) : isWeakLetter(c3)
 
   return mapRecord(
-    mapRecord(jussive, (jussiveWord, pronounId) => {
+    mapRecord(jussive, (jussiveVerb, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      // Handle special cases before processing jussive
-      // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
-      if (isInitialWeak && !isMiddleWeak && isFinalWeak && verb.form === 1) return [c2, KASRA]
-
-      // Initial hamza + final weak (e.g., أتى → ائْتِ)
-      if (isInitialHamza && !isMiddleWeak && isFinalWeak && verb.form === 1)
-        return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
-
-      // Initial hamza + middle weak + final weak (e.g., أوي → أَوِ, أوفى → أَوْفِ)
-      if (isInitialHamza && isMiddleWeak && isFinalWeak && verb.form === 1) {
-        // Quadriliteral: أوفى → أَوْفِ (أ-و-ف-ى)
-        if (letters.length === 4) return [ALIF_HAMZA, FATHA, WAW, SUKOON, isWeakLetter(c2) ? c3 : c2, KASRA]
-
-        // Triliteral: أوي → أَوِ
-        return [ALIF_HAMZA, FATHA, WAW, KASRA]
-      }
-
-      const chars = removeLeadingDiacritics(Array.from(jussiveWord))
-      if (chars.length === 0) return []
-
-      const [, ...rest] = chars
+      const [, ...rest] = removeLeadingDiacritics(Array.from(jussiveVerb))
       const stem = removeLeadingDiacritics(rest)
-      if (stem.length === 0) return []
 
-      // Geminate Form II: change kasra on c1 to fatha, and sukoon after shadda to kasra (e.g., حَبِّ)
-      if (verb.form === 2 && c2 === c3) return [c1, FATHA, c2, SHADDA, KASRA]
+      switch (verb.form) {
+        case 1: {
+          // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
+          if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c2, KASRA]
 
-      if (verb.form === 7 || verb.form === 8 || verb.form === 10) return [ALIF, KASRA, ...stem]
+          // Initial hamza + final weak (e.g., أتى → ائْتِ)
+          if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
 
-      if (verb.form === 4 || stem[1] === SUKOON || !isDiacritic(stem[1])) return [ALIF_HAMZA, FATHA, ...stem]
+          // Initial hamza + middle weak + final weak (e.g., أوي → اِئْوِ, أوفى → أَوْفِ)
+          if (isInitialHamza && isMiddleWeak && isFinalWeak) {
+            // Quadriliteral: أوفى → أَوْفِ (أ-و-ف-ى)
+            if (letters.length === 4) return [ALIF_HAMZA, FATHA, WAW, SUKOON, isWeakLetter(c2) ? c3 : c2, KASRA]
 
-      return stem
+            // Triliteral: أوي → اِئْوِ (initial hamza becomes ائ, middle weak kept, final weak dropped)
+            return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
+          }
+
+          return stem
+        }
+
+        case 2: {
+          // Geminate Form II: change kasra on c1 to fatha, and sukoon after shadda to kasra (e.g., حَبِّ)
+          if (c2 === c3) return [c1, FATHA, c2, SHADDA, KASRA]
+
+          return stem
+        }
+
+        case 4: {
+          // Initial hamza + middle weak + final weak (e.g., أوي → آوِ)
+          if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_MADDA, WAW, KASRA]
+
+          // Form IV always adds prefix
+          return [ALIF_HAMZA, FATHA, ...stem]
+        }
+
+        case 5: {
+          // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوَّ)
+          // Handle this before processing jussive stem to avoid incorrect diacritic order
+          if (isInitialHamza && isMiddleWeak && isFinalWeak) {
+            // Jussive: يَتَأَوَّ → Imperative: تَأَوَّ (remove يَ, add تَ)
+            // Pattern: تَ + أَ + وََّ (و + fatḥa + shadda)
+            return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
+          }
+
+          return stem
+        }
+
+        case 7:
+        case 8:
+          return [ALIF, KASRA, ...stem]
+
+        case 10: {
+          // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوِ)
+          // Initial hamza is kept as أْ, then middle weak with kasra
+          if (isInitialHamza && isMiddleWeak && isFinalWeak)
+            return [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA]
+
+          return [ALIF, KASRA, ...stem]
+        }
+
+        default:
+          return stem
+      }
     }),
-    (letters) => join(...letters),
+    (letters) => letters.join(''),
   )
 }

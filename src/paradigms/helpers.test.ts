@@ -1,5 +1,21 @@
-import { expect, it } from 'vitest'
-import { applyDiacriticsPreference, type DiacriticsPreference } from './helpers'
+import { describe, expect, it } from 'vitest'
+import { analyzeRoot, applyDiacriticsPreference, type DiacriticsPreference } from './helpers'
+
+describe('analyzeRoot', () => {
+  it.each([
+    ['كتب', 'strong', [], []],
+    ['قام', 'hollow', [1], []],
+    ['دعا', 'defective', [2], []],
+    ['وصل', 'assimilated', [0], []],
+    ['وقي', 'doubly-weak', [0, 2], []],
+    ['أكل', 'hamzated', [], [0]],
+    ['أوي', 'hamzated-hollow-defective', [1, 2], [0]],
+    ['أوفى', 'hamzated-hollow-defective', [1, 3], [0]],
+    ['أتى', 'hamzated-defective', [2], [0]],
+  ])('identifies %s as %s', (root, type, weakPositions, hamzaPositions) => {
+    expect(analyzeRoot(root)).toEqual({ type, weakPositions, hamzaPositions })
+  })
+})
 
 it.each([
   ['some', 'يَقُولُ', 'يَقولُ'],

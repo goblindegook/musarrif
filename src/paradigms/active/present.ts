@@ -319,6 +319,13 @@ function buildPresentBase(verb: Verb): readonly string[] {
       const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
       const seatedC3 = c3 === ALIF_HAMZA ? HAMZA_ON_YEH : c3
 
+      // Initial hamza + middle weak + final weak (e.g., أوي → يُؤْوِي)
+      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+        return normalizeDefectivePresent(
+          [YEH, DAMMA, HAMZA_ON_WAW, SUKOON, hollowLetterGlide(c2), KASRA, weakLetterGlide(c3)],
+          c3,
+        )
+
       if (isFinalWeak) return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, weakLetterGlide(c3)]
 
       // Hollow Form IV present: kasra on c1, long ī from c2 (e.g., يُقِيمُ)

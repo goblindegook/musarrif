@@ -29,6 +29,9 @@
     "rootInfo.doubly-weak.description": "Questa è una radice doppiamente debole, con lettere deboli sia nella posizione iniziale che finale. Queste radici sono relativamente rare e spesso esprimono concetti relativi all'essere, venire o andare.",
     "rootInfo.assimilated.description": "Questa è una radice assimilata (iniziale debole), dove la radicale iniziale è una lettera debole (و o ي). Le radici assimilate spesso esprimono azioni di arrivo, trovare o venire all'esistenza.",
     "rootInfo.hamzated.description": "Questa radice contiene una hamza (ء). Le radici hamzate possono apparire in varie posizioni e spesso esprimono azioni relative al mangiare, prendere o altri concetti fondamentali.",
+    "rootInfo.hamzated-hollow.description": "Questa radice combina una hamza (ء) con un pattern cavo (media debole). La radicale iniziale è una hamza e la radicale centrale è una lettera debole (و o ي).",
+    "rootInfo.hamzated-defective.description": "Questa radice combina una hamza (ء) con un pattern difettivo (finale debole). La radicale iniziale è una hamza e la radicale finale è una lettera debole (و, ي, o ا).",
+    "rootInfo.hamzated-hollow-defective.description": "Questa radice combina multiple irregolarità: contiene una hamza (ء) nella posizione iniziale, ha una radicale centrale debole (و o ي), e ha una radicale finale debole (و, ي, o ا). Questa combinazione richiede un trattamento speciale nella coniugazione.",
     "modal.close": "Chiudi",
     "footer.feedback.title": "Vedi qualcosa di strano?",
     "footer.feedback.body": "Muṣarrif è mantenuto da <strong>volontari</strong>. Segnalaci errori o casi mancanti.",
@@ -507,6 +510,9 @@
     "A1kd-4": "confermare",
     "A1n0xA1-4": "creare, stabilire",
     "A1ta-1": "venire, arrivare",
-    "A1wy-1": "rifugiarsi, ripararsi"
+    "A1wy-1": "rifugiarsi",
+    "A1wy-4": "dare rifugio",
+    "A1wy-5": "rifugiarsi",
+    "A1wy-10": "cercare rifugio"
   }
 }

@@ -29,6 +29,9 @@
     "rootInfo.doubly-weak.description": "Esta é uma raiz duplamente fraca, com letras fracas tanto na posição inicial quanto final. Essas raízes são relativamente raras e frequentemente expressam conceitos relacionados a ser, vir ou ir.",
     "rootInfo.assimilated.description": "Esta é uma raiz assimilada (inicial fraca), onde a radical inicial é uma letra fraca (و ou ي). As raízes assimiladas frequentemente expressam ações de chegada, encontrar ou vir à existência.",
     "rootInfo.hamzated.description": "Esta raiz contém uma hamza (ء). As raízes hamzadas podem aparecer em várias posições e frequentemente expressam ações relacionadas a comer, tomar ou outros conceitos fundamentais.",
+    "rootInfo.hamzated-hollow.description": "Esta raiz combina uma hamza (ء) com um padrão oco (média fraca). A radical inicial é uma hamza e a radical do meio é uma letra fraca (و ou ي).",
+    "rootInfo.hamzated-defective.description": "Esta raiz combina uma hamza (ء) com um padrão defeituoso (final fraca). A radical inicial é uma hamza e a radical final é uma letra fraca (و, ي, ou ا).",
+    "rootInfo.hamzated-hollow-defective.description": "Esta raiz combina múltiplas irregularidades: contém uma hamza (ء) na posição inicial, tem uma radical do meio fraca (و ou ي), e tem uma radical final fraca (و, ي, ou ا). Esta combinação requer tratamento especial na conjugação.",
     "modal.close": "Fechar",
     "footer.feedback.title": "Viu algo errado?",
     "footer.feedback.body": "O Muṣarrif é mantido por <strong>voluntários</strong>. Avise-nos sobre erros ou casos em falta.",
@@ -505,7 +508,10 @@
     "A1kd-4": "confirmar",
     "A1n0xA1-4": "criar, estabelecer",
     "A1ta-1": "vir, chegar",
-    "A1wy-1": "abrigar-se, refugiar-se",
+    "A1wy-1": "refugiar-se",
+    "A1wy-4": "dar abrigo",
+    "A1wy-5": "abrigar-se",
+    "A1wy-10": "procurar refúgio",
     "xlf-1": "diferir",
     "f0Sl-1": "separar"
   }

@@ -110,9 +110,9 @@ function masdar(verb: Verb): readonly string[] {
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
       }
 
-      // Initial hamza + middle weak + final weak (e.g., أوي → إِيواء)
+      // Initial hamza + middle weak + final weak (e.g., أوي → إِيوَاء)
       if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-        return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, ALIF, HAMZA]
+        return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
       }
 
       if (c2 === ALIF_HAMZA && isFinalWeak) {
@@ -166,6 +166,12 @@ function masdar(verb: Verb): readonly string[] {
       return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 
     case 4:
+      // Initial hamza + middle weak + final weak (e.g., أوي → إِيوَاء)
+      // Pattern: initial hamza → ī, middle weak → wāw, final weak → hamza
+      // This must come before the general "Initial hamza" check
+      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+        return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
+
       // Initial hamza in Form IV coalesces to a long ī in the masdar: إِيمَان / إِيتَاء
       if (c1 === ALIF_HAMZA) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, c3 === ALIF_HAMZA ? HAMZA : c3]
 
@@ -178,6 +184,12 @@ function masdar(verb: Verb): readonly string[] {
       return adjustDefective([ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3, DAMMA], c3, FATHA)
 
     case 5:
+      // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوِّي)
+      // Keep final weak with kasra, shadda on middle weak
+      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak) {
+        return [TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, KASRA, c3]
+      }
+
       // Defective Form V drops the weak final and takes kasratayn on the doubled middle radical: تَغَنٍّ
       if (isFinalWeak) return [TEH, FATHA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
 
@@ -221,6 +233,11 @@ function masdar(verb: Verb): readonly string[] {
     case 10: {
       // If the first radical is hamza, seat it on yeh after kasra (e.g., اِسْتِئْجارٌ)
       const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_YEH : c1
+
+      // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتِئْواء)
+      // Initial hamza is seated on yeh (ئ), then middle weak without vowel, then final weak becomes hamza
+      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+        return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, HAMZA_ON_YEH, SUKOON, c2, ALIF, HAMZA]
 
       // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
       if (isMiddleWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]

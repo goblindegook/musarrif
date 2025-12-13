@@ -141,28 +141,43 @@ function findNextBaseLetter(chars: readonly string[], startIndex: number): strin
 }
 
 interface RootAnalysis {
-  type: 'strong' | 'hollow' | 'defective' | 'doubly-weak' | 'assimilated' | 'hamzated'
+  type:
+    | 'strong'
+    | 'hollow'
+    | 'defective'
+    | 'doubly-weak'
+    | 'assimilated'
+    | 'hamzated'
+    | 'hamzated-hollow'
+    | 'hamzated-defective'
+    | 'hamzated-hollow-defective'
   weakPositions: number[]
   hamzaPositions: number[]
 }
 
 export function analyzeRoot(root: string): RootAnalysis {
   const letters = Array.from(root)
-  const isInitialWeak = isWeakLetter(letters.at(0))
-  const isMiddleWeak = isWeakLetter(letters.at(1))
-  const isFinalWeak = isWeakLetter(letters.at(-1))
-
   const weakPositions: number[] = []
   const hamzaPositions: number[] = []
+
   letters.forEach((letter, index) => {
     if (isWeakLetter(letter)) weakPositions.push(index)
     if (isHamzatedLetter(letter)) hamzaPositions.push(index)
   })
 
+  const isInitialWeak = isWeakLetter(letters.at(0))
+  const isMiddleWeak = isWeakLetter(letters.at(1))
+  const isFinalWeak = isWeakLetter(letters.at(-1))
+  const hasHamza = hamzaPositions.length > 0
+
   if (isInitialWeak && isFinalWeak) return { type: 'doubly-weak', weakPositions, hamzaPositions }
   if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
+  if (hasHamza && isMiddleWeak && isFinalWeak)
+    return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
+  if (hasHamza && isMiddleWeak) return { type: 'hamzated-hollow', weakPositions, hamzaPositions }
+  if (hasHamza && isFinalWeak) return { type: 'hamzated-defective', weakPositions, hamzaPositions }
+  if (hasHamza) return { type: 'hamzated', weakPositions, hamzaPositions }
   if (isMiddleWeak) return { type: 'hollow', weakPositions, hamzaPositions }
   if (isFinalWeak) return { type: 'defective', weakPositions, hamzaPositions }
-  if (hamzaPositions.length > 0) return { type: 'hamzated', weakPositions, hamzaPositions }
   return { type: 'strong', weakPositions, hamzaPositions }
 }

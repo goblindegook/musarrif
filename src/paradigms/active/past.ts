@@ -135,6 +135,10 @@ function buildPastBase(verb: Verb): readonly string[] {
 
       const prefix = c1 === ALIF_HAMZA ? [ALIF_MADDA] : [ALIF_HAMZA, FATHA, c1, SUKOON]
 
+      // Initial hamza + middle weak + final weak (e.g., أوي → آوَى)
+      if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3))
+        return normalizeDefectivePast([ALIF_MADDA, c2, FATHA, c3], c3)
+
       if (isWeakLetter(c3)) return normalizeDefectivePast([...prefix, c2, FATHA, c3], c3)
 
       // Hollow Form IV past contracts to long ā (e.g., أَضَافَ)
@@ -165,6 +169,13 @@ function buildPastBase(verb: Verb): readonly string[] {
       return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA], c3)
 
     case 10:
+      // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوَى)
+      if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3))
+        return normalizeDefectivePast(
+          [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, FATHA, c3, FATHA],
+          c3,
+        )
+
       if (isWeakLetter(c2))
         return normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
 

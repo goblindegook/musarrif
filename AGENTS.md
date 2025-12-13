@@ -94,11 +94,13 @@ When adding a new verb to `src/data/verbs.json`, you must also add translations 
 
 ## Testing Standards
 
-### Test-Driven Development (TDD)
+### Test-Driven Development (TDD) is MANDATORY
 
-1. **Write tests first**: Before implementing any feature or fixing any bug, write the test that describes the expected behavior.
+**⚠️ TDD IS NON-NEGOTIABLE. YOU MUST ALWAYS WRITE TESTS FIRST.**
+
+1. **Write tests first**: Before implementing any feature or fixing any bug, write the test that describes the expected behavior. **This is not optional.**
 2. **Red-Green-Refactor cycle**:
-   - Write a failing test (Red)
+   - Write a failing test and **verify it fails** (Red)
    - Write the minimum code to make it pass (Green)
    - Refactor while keeping tests green (Refactor)
 3. **Test coverage**: All code must have corresponding tests. Tests should be comprehensive and cover edge cases.
@@ -129,28 +131,29 @@ test('descriptive test name', () => {
 
 ### Test Best Practices
 
-1. **Use `afterEach` cleanup**: Always clean up after tests, especially for Preact components.
-2. **Descriptive test names**: Test names should clearly describe what is being tested.
-3. **Group related tests**: Use `describe` blocks to group related test cases.
-4. **Test edge cases**: Include tests for boundary conditions and error cases.
-5. **Avoid implementation details**: Validate behavior through public APIs; never export internal helpers solely for testing.
-6. **Don’t reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
-7. **No control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
-8. **Don’t assert test data existence**: Arrange data should be trusted; if it’s wrong the test will fail naturally—skip “is defined” checks on fixtures.
-9. **Don’t assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `verbs.json` entries directly.
-10. **Prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
-11. **Minimize mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
-12. **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
-13. **Avoid negative assertions**: Don’t assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
-14. **Static imports by default**: Use static imports; only use per-test dynamic imports when a test needs a fresh module instance for env-sensitive state.
-15. **Property based testing**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
+1. ❌ **NEVER write production code before writing tests. This is a critical error.**
+2. ✅ **DO use `afterEach` cleanup**: Always clean up after tests, especially for Preact components.
+3. ✅ **DO write descriptive test names**: Test names should clearly describe what is being tested.
+4. ✅ **DO group related tests**: Use `describe` blocks to group related test cases.
+5. ✅ **DO test edge cases**: Include tests for boundary conditions and error cases.
+6. ❌ **NEVER test implementation details**: Validate behavior through public APIs; never export internal helpers solely for testing.
+7. ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
+8. ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
+9. ❌ **NEVER test data existence**: Fixture existence should be trusted; it can be incorrect but in that case the test will fail naturally, so skip “is defined” checks on fixtures.
+10. ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `verbs.json` entries directly.
+11. ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
+12. ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
+13. ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
+14. ❌ **Avoid negative assertions**: Don’t assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
+15. ✅ **Always use static imports**: Use static imports.
+16. ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
 
 ### UI Test Best Practices
 
-1. **UI expectations stay literal**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` inside UI specs). Keep expected UI strings inline with the test that uses them instead of sharing “magical” fixtures.
-2. **UI text not a truth source**: Don’t use UI tests to validate word correctness; rely on derivation functions because UI strings can change (e.g., diacritic stripping).
-3. **Async element queries**: Prefer `findBy*` over `waitFor` + `getBy*` combinations.
-4. **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/en`) and assert on the hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
+1. ✅ **DO use literal UI expectations**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` inside UI specs). Keep expected UI strings inline with the test that uses them instead of sharing “magical” fixtures.
+2. ❌ **UI text not a truth source**: Don’t use UI tests to validate word correctness; rely on derivation functions because UI strings can change (e.g., diacritic stripping).
+3. ✅ **Async element queries**: Prefer `findBy*` over `waitFor` + `getBy*` combinations.
+4. ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/en`) and assert on the hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
 
 ## Functional Programming Patterns
 
@@ -285,8 +288,9 @@ const verb = getVerbById(slug)
 
 Before submitting code, ensure:
 
-- [ ] All tests are written first (TDD)
+- [ ] **Tests were written first** (TDD) - This is checked first and is non-negotiable
 - [ ] All tests pass
+- [ ] No production code was written before its corresponding test
 - [ ] No comments unless explaining WHY
 - [ ] Code follows Biome formatting rules
 - [ ] Types are properly defined
@@ -294,3 +298,5 @@ Before submitting code, ensure:
 - [ ] Preact components are properly structured
 - [ ] Imports are organized correctly
 - [ ] Linter passes without errors (except documented ignores)
+
+**If you cannot check the first item, you have violated TDD and must start over.**

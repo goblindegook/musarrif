@@ -1,11 +1,16 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import fc from 'fast-check'
-import { describe, expect, it } from 'vitest'
-import { ALIF_HAMZA } from '../constants'
+import { describe, expect, it, test } from 'vitest'
+import { ALIF_HAMZA, ALIF_MADDA } from '../constants'
 import { isWeakLetter } from '../helpers'
+import { PRONOUN_IDS } from '../pronouns'
 import { verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { conjugatePresentMood } from './present'
+
+const arbitraryVerb = fc.constantFrom(...verbs)
+
+const arbitraryPronoun = fc.constantFrom(...PRONOUN_IDS).filter((pronounId) => pronounId.startsWith('2'))
 
 describe('imperative', () => {
   it('drops the final glide for أعطى', () => {
@@ -19,9 +24,9 @@ describe('imperative', () => {
     expect(imperative['2pf']).toBe('أَعْطِينَ')
   })
 
-  it('imperative only exists for second person pronouns', () => {
+  test('imperative only exists for second person pronouns', () => {
     fc.assert(
-      fc.property(fc.constantFrom(...verbs), (verb) => {
+      fc.property(arbitraryVerb, (verb) => {
         const imperative = conjugateImperative(verb)
 
         expect(imperative['1s']).toBe('')
@@ -36,47 +41,23 @@ describe('imperative', () => {
     )
   })
 
-  it('imperative stems from jussive for non-geminate Form II', () => {
-    fc.assert(
-      fc.property(
-        fc.constantFrom(...verbs).filter((verb) => {
-          const [c1, c2, c3] = Array.from(verb.root)
-          if (verb.root.length > 3) return false
-          if (verb.form === 1 && (isWeakLetter(c1) || c1 === ALIF_HAMZA) && isWeakLetter(c3)) return false
-          if (verb.form === 2 && c2 === c3) return false
-          return true
-        }),
-        (verb) => {
-          const jussive = conjugatePresentMood(verb, 'jussive')
-          const imperative = conjugateImperative(verb)
-
-          expect(imperative['2ms']).toContain(jussive['2ms'].slice(-1))
-          expect(imperative['2fs']).toContain(jussive['2fs'].slice(-1))
-          expect(imperative['2d']).toContain(jussive['2d'].slice(-1))
-          expect(imperative['2pm']).toContain(jussive['2pm'].slice(-1))
-          expect(imperative['2pf']).toContain(jussive['2pf'].slice(-1))
-        },
-      ),
-    )
-  })
-
   it('it assimilates the initial wāw for ٱتَّصِلْ (Form VIII)', () => {
-    const verb = verbs.find((entry) => entry.root === 'وصل' && entry.form === 8)!
+    const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('اِتَّصِلْ')
   })
 
   it('geminate Form II imperative has kasra after shadda (e.g., حَبِّ)', () => {
-    const verb = verbs.find((entry) => entry.root === 'حبب' && entry.form === 2)!
+    const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('حَبِّ')
   })
 
   it('uses the shortened hollow stem for قال', () => {
-    const qaala = verbs.find((entry) => entry.root === 'قول' && entry.form === 1)!
-    const imperative = conjugatePresentMood(qaala, 'imperative')
+    const verb = verbs.find(({ root, form }) => root === 'قول' && form === 1)!
+    const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('قُلْ')
     expect(imperative['2fs']).toBe('قُوْلِي')
@@ -86,28 +67,28 @@ describe('imperative', () => {
   })
 
   it('keeps the long vowel for hollow Form III like قَاوَدَ', () => {
-    const verb = verbs.find((entry) => entry.root === 'قود' && entry.form === 3)!
+    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 3)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('قَاوِدْ')
   })
 
   it('shortens hollow Form IV imperative like أَقَادَ → أَقِدْ', () => {
-    const verb = verbs.find((entry) => entry.root === 'قود' && entry.form === 4)!
+    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 4)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('أَقِدْ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
-    const verb = verbs.find((entry) => entry.root === 'قود' && entry.form === 7)!
+    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 7)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('اِنْقَدْ')
   })
 
   it('shortens hollow Form VIII imperative like اِقْتَادَ → اِقْتَدْ', () => {
-    const verb = verbs.find((entry) => entry.root === 'قود' && entry.form === 8)!
+    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 8)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
     expect(imperative['2ms']).toBe('اِقْتَدْ')
@@ -118,12 +99,87 @@ describe('imperative', () => {
     ['ولى', 1, 'لِ'],
     ['أنشأ', 4, 'أَنْشِئْ'],
     ['أتى', 1, 'ائْتِ'],
-    ['أوي', 1, 'أَوِ'],
+    ['أوي', 1, 'اِئْوِ'],
+    ['أوي', 4, 'آوِ'],
+    ['أوي', 5, 'تَأَوَّ'],
+    ['أوي', 10, 'اِسْتَأْوِ'],
     ['أوفى', 1, 'أَوْفِ'],
     ['وعد', 1, 'عِدْ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const imperative = conjugatePresentMood(verb, 'imperative')
     expect(imperative['2ms']).toBe(expected)
+  })
+
+  describe('imperative stems from jussive', () => {
+    test('for forms III-X', () => {
+      fc.assert(
+        fc.property(
+          arbitraryVerb.filter(({ root, form }) => {
+            if (form < 3) return false
+            const [c1, c2, c3] = Array.from(root)
+            return c1 !== ALIF_HAMZA && !isWeakLetter(c2) && !isWeakLetter(c3)
+          }),
+          arbitraryPronoun,
+          (verb, pronounId) => {
+            const jussive = conjugatePresentMood(verb, 'jussive')
+            const imperative = conjugateImperative(verb)
+
+            expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
+          },
+        ),
+      )
+    })
+
+    test('for non-assimilated, non-defective form I', () => {
+      fc.assert(
+        fc.property(
+          arbitraryVerb.filter(({ root, form }) => {
+            const [c1, , c3] = Array.from(root)
+            return form === 1 && !isWeakLetter(c1) && c1 !== ALIF_HAMZA && !isWeakLetter(c3)
+          }),
+          arbitraryPronoun,
+          (verb, pronounId) => {
+            const jussive = conjugatePresentMood(verb, 'jussive')
+            const imperative = conjugateImperative(verb)
+
+            expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
+          },
+        ),
+      )
+    })
+
+    test('for non-geminated form II', () => {
+      fc.assert(
+        fc.property(
+          arbitraryVerb.filter(({ root, form }) => {
+            const [, c2, c3] = Array.from(root)
+            return form === 2 && c2 !== c3
+          }),
+          arbitraryPronoun,
+          (verb, pronounId) => {
+            const jussive = conjugatePresentMood(verb, 'jussive')
+            const imperative = conjugateImperative(verb)
+
+            expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
+          },
+        ),
+      )
+    })
+  })
+
+  test('all imperative conjugations of form IV verbs begin with alif hamza or alif madda', () => {
+    fc.assert(
+      fc.property(
+        arbitraryVerb.filter(({ form }) => form === 4),
+        arbitraryPronoun,
+        (verb, pronounId) => {
+          const imperative = conjugateImperative(verb)
+          const firstChar = imperative[pronounId][0]
+
+          expect([ALIF_HAMZA, ALIF_MADDA].includes(firstChar)).toBe(true)
+        },
+      ),
+    )
   })
 })

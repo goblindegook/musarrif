@@ -130,6 +130,10 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 4: {
         const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
 
+        // Initial hamza + middle weak + final weak (e.g., أوي → مُؤْوٍ)
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+          return [MEEM, DAMMA, HAMZA_ON_WAW, SUKOON, c2, TANWEEN_KASRA]
+
         if (c3 === ALIF_MAQSURA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
 
         // Final hamza seats on yeh after kasra (e.g., مُنْبِئ)
@@ -149,6 +153,12 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 5:
+        // Initial hamza + middle weak + final weak (e.g., أوي → مُتَأَوٍّ)
+        // Drop final weak and use tanween kasra on the doubled middle radical
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak) {
+          return [MEEM, DAMMA, TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, TANWEEN_KASRA]
+        }
+
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, c3, DAMMA], c3, KASRA)
 
       case 6:
@@ -175,6 +185,11 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return adjustDefective([MEEM, DAMMA, c1, SUKOON, c2, FATHA, c3, SHADDA], c3, KASRA)
 
       case 10: {
+        // Initial hamza + middle weak + final weak (e.g., أوي → مُسْتَأْوٍ)
+        // Initial hamza is kept as أْ, then middle weak with tanween kasra
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
+
         // Hollow Form X active participle (e.g., مُسْتَضِيف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3]
 

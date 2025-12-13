@@ -133,6 +133,10 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 4: {
         const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
 
+        // Initial hamza + middle weak + final weak (e.g., أوي → مُؤْوًى)
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+          return [MEEM, DAMMA, HAMZA_ON_WAW, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+
         // Hollow Form IV passive participle (e.g., مُضَاف)
         if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
 
@@ -170,6 +174,11 @@ export function derivePassiveParticiple(verb: Verb): string {
         return adjustDefective([MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3, DAMMA], c3, FATHA)
 
       case 10:
+        // Initial hamza + middle weak + final weak (e.g., أوي → مُسْتَأْوًى)
+        // Initial hamza is kept as أْ, then middle weak with tanween fatḥa and alif maqṣūra
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+
         // Hollow Form X passive participle (e.g., مُسْتَضَاف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3]
 
