@@ -134,7 +134,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
           return [MEEM, DAMMA, HAMZA_ON_WAW, SUKOON, c2, TANWEEN_KASRA]
 
-        if (c3 === ALIF_MAQSURA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
+        // Defective Form IV with final و or alif maqsura: drop final weak and use tanween kasra (e.g., مُعْطٍ, مُمْسٍ)
+        if (c3 === WAW || c3 === ALIF_MAQSURA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
 
         // Final hamza seats on yeh after kasra (e.g., مُنْبِئ)
         if (c3 === ALIF_HAMZA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, HAMZA_ON_YEH]

@@ -90,6 +90,8 @@ function masdar(verb: Verb): readonly string[] {
           case 'fi3la':
             return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3l':
+            // Hollow fi3l (e.g., صَيْر): middle weak becomes yeh, first vowel is fatḥa
+            if (isMiddleWeak) return [c1, FATHA, YEH, SUKOON, finalRadical, DAMMA]
             return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fa3aala':
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
@@ -199,11 +201,11 @@ function masdar(verb: Verb): readonly string[] {
       // Defective Form VI drops the weak final and takes kasratayn: تَفَاعٍ (e.g., تَلَاقٍ)
       if (isFinalWeak) {
         // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., تَعَانٍ)
-        if (isMiddleWeak && c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
+        if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
         return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
       }
       // Hollow Form VI with ALIF c2 always takes tanween kasra pattern (e.g., تَعَانٍ)
-      if (isMiddleWeak && c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+      if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
       return [TEH, FATHA, c1, FATHA, ALIF, c2, DAMMA, c3]
 
     case 7:

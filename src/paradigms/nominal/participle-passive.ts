@@ -19,7 +19,7 @@ import {
   YEH,
 } from '../constants'
 import { resolveFormIPresentVowel, vowelFromRadical } from '../form-i-vowels'
-import { isWeakLetter, stripTrailingDiacritics, weakLetterGlide } from '../helpers'
+import { isWeakLetter, weakLetterGlide } from '../helpers'
 import type { Verb } from '../verbs'
 import { adjustDefective, removeTerminalCaseVowel } from './nominals'
 
@@ -140,13 +140,13 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Hollow Form IV passive participle (e.g., مُضَاف)
         if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
 
-        const adjusted = adjustDefective(
-          c2 === c3 ? [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA] : [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, c3],
-          c3,
-          FATHA,
-        )
+        // Defective Form IV: drop final weak and use ALIF_MAQSURA (e.g., مُعْطَى, مُمْسَى)
+        if (isFinalWeak && c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, ALIF_MAQSURA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
-        return isFinalWeak ? stripTrailingDiacritics(adjusted) : adjusted
+        if (c2 === c3) return adjustDefective([MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA], c3, FATHA)
+
+        return adjustDefective([MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, c3], c3, FATHA)
       }
 
       case 5:

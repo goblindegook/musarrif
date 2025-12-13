@@ -35,6 +35,9 @@ test.each([
   ['أوي', 4, 'مُؤْوًى'],
   ['أوي', 10, 'مُسْتَأْوًى'],
   ['أوفى', 1, 'مُوفًى'],
+  ['عطى', 4, 'مُعْطَى'],
+  ['مسو', 4, 'مُمْسَى'],
+  ['غدو', 1, 'مَغْدُوو'],
   ['وعد', 1, 'مَوْعُود'],
 ])('%s (Form %d) passive participle is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!

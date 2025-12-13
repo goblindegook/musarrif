@@ -308,7 +308,7 @@ function buildPresentBase(verb: Verb): readonly string[] {
 
     case 3:
       // Hollow Form III: if c2 is ALIF, use FATHA on prefix, KASRA on c1, YEH for long ī (e.g., يَعِينُ)
-      if (isWeakLetter(c2) && c2 === ALIF) return normalizeDefectivePresent([YEH, FATHA, c1, KASRA, YEH, c3, DAMMA], c3)
+      if (c2 === ALIF) return normalizeDefectivePresent([YEH, FATHA, c1, KASRA, YEH, c3, DAMMA], c3)
       return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3)
 
     case 4: {
@@ -326,7 +326,11 @@ function buildPresentBase(verb: Verb): readonly string[] {
           c3,
         )
 
-      if (isFinalWeak) return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, weakLetterGlide(c3)]
+      if (isFinalWeak) {
+        // For defective Form IV verbs, final و becomes yeh in present tense (e.g., يُمْسِي)
+        const finalGlide = c3 === WAW ? YEH : weakLetterGlide(c3)
+        return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, finalGlide]
+      }
 
       // Hollow Form IV present: kasra on c1, long ī from c2 (e.g., يُقِيمُ)
       if (isMiddleWeak) return normalizeDefectivePresent([YEH, DAMMA, seatedC1, KASRA, YEH, seatedC3, DAMMA], c3)

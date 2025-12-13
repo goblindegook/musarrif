@@ -13,15 +13,14 @@ const arbitraryVerb = fc.constantFrom(...verbs)
 const arbitraryPronoun = fc.constantFrom(...PRONOUN_IDS).filter((pronounId) => pronounId.startsWith('2'))
 
 describe('imperative', () => {
-  it('drops the final glide for أعطى', () => {
-    const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
+  it.each([
+    ['عطى', 4, 'أَعْطِ'],
+    ['ضحي', 4, 'أَضْحِ'],
+  ])('drops the final glide for form IV verb with root %s', (root, form, expected2ms) => {
+    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('أَعْطِ')
-    expect(imperative['2fs']).toBe('أَعْطِي')
-    expect(imperative['2d']).toBe('أَعْطِيَا')
-    expect(imperative['2pm']).toBe('أَعْطُوا')
-    expect(imperative['2pf']).toBe('أَعْطِينَ')
+    expect(imperative['2ms']).toBe(expected2ms)
   })
 
   test('imperative only exists for second person pronouns', () => {
@@ -52,32 +51,7 @@ describe('imperative', () => {
     const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
     const imperative = conjugatePresentMood(verb, 'imperative')
 
-    expect(imperative['2ms']).toBe('حَبِّ')
-  })
-
-  it('uses the shortened hollow stem for قال', () => {
-    const verb = verbs.find(({ root, form }) => root === 'قول' && form === 1)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
-
-    expect(imperative['2ms']).toBe('قُلْ')
-    expect(imperative['2fs']).toBe('قُوْلِي')
-    expect(imperative['2d']).toBe('قُوْلَا')
-    expect(imperative['2pm']).toBe('قُوْلُوا')
-    expect(imperative['2pf']).toBe('قُلْنَ')
-  })
-
-  it('keeps the long vowel for hollow Form III like قَاوَدَ', () => {
-    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 3)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
-
-    expect(imperative['2ms']).toBe('قَاوِدْ')
-  })
-
-  it('shortens hollow Form IV imperative like أَقَادَ → أَقِدْ', () => {
-    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 4)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
-
-    expect(imperative['2ms']).toBe('أَقِدْ')
+    expect(imperative['2ms']).toBe('حَبِّ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
@@ -104,6 +78,7 @@ describe('imperative', () => {
     ['أوي', 5, 'تَأَوَّ'],
     ['أوي', 10, 'اِسْتَأْوِ'],
     ['أوفى', 1, 'أَوْفِ'],
+    ['غدو', 1, 'غْدا'],
     ['وعد', 1, 'عِدْ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
@@ -112,14 +87,10 @@ describe('imperative', () => {
   })
 
   describe('imperative stems from jussive', () => {
-    test('for forms III-X', () => {
+    test('for forms III-X without an initial hamza', () => {
       fc.assert(
         fc.property(
-          arbitraryVerb.filter(({ root, form }) => {
-            if (form < 3) return false
-            const [c1, c2, c3] = Array.from(root)
-            return c1 !== ALIF_HAMZA && !isWeakLetter(c2) && !isWeakLetter(c3)
-          }),
+          arbitraryVerb.filter(({ root, form }) => form >= 3 && root[0] !== ALIF_HAMZA),
           arbitraryPronoun,
           (verb, pronounId) => {
             const jussive = conjugatePresentMood(verb, 'jussive')

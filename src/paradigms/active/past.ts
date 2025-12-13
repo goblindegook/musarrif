@@ -125,7 +125,7 @@ function buildPastBase(verb: Verb): readonly string[] {
 
     case 3:
       // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., عَانَ)
-      if (isWeakLetter(c2) && c2 === ALIF) return normalizeDefectivePast([c1, FATHA, ALIF, c3, FATHA], c3)
+      if (c2 === ALIF) return normalizeDefectivePast([c1, FATHA, ALIF, c3, FATHA], c3)
       return normalizeDefectivePast([c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
     case 4: {
@@ -152,7 +152,7 @@ function buildPastBase(verb: Verb): readonly string[] {
 
     case 6:
       // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., تَعَانَ)
-      if (isWeakLetter(c2) && c2 === ALIF) return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+      if (c2 === ALIF) return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
       return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
     case 7:
@@ -195,7 +195,9 @@ function normalizeDefectivePast(base: readonly string[], c3: string): readonly s
   if (!last) return base
 
   // Drop final weak c3 and append appropriate tail
-  return last === c3 ? [...chars, weakLetterTail(c3)] : [...chars, last, weakLetterTail(c3)]
+  // For defective verbs in past tense, final و becomes alif maqsura (ى), not alif (ا)
+  const tail = c3 === WAW ? ALIF_MAQSURA : weakLetterTail(c3)
+  return last === c3 ? [...chars, tail] : [...chars, last, tail]
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {

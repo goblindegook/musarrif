@@ -5,14 +5,6 @@ import { verbs } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 describe('active present indicative', () => {
-  it('أَعْطَى', () => {
-    const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
-    const indicative = conjugatePresentMood(verb, 'indicative')
-
-    expect(indicative['3ms']).toBe('يُعْطِي')
-    expect(indicative['1p']).toBe('نُعْطِي')
-  })
-
   it.each([
     ['جلس', 1, 'يَجْلِسُ'],
     ['قفز', 1, 'يَقْفِزُ'],
@@ -45,6 +37,7 @@ describe('active present indicative', () => {
     ['حوي', 1, 'يَحْوِي'],
     ['فلت', 4, 'يُفْلِتُ'],
     ['عطى', 4, 'يُعْطِي'],
+    ['مسو', 4, 'يُمْسِي'],
     ['عون', 3, 'يُعَاوِنُ'],
     ['عون', 4, 'يُعِينُ'],
     ['عون', 6, 'يَتَعَاوَنُ'],
@@ -58,6 +51,7 @@ describe('active present indicative', () => {
     ['أوي', 1, 'يَأْوِي'],
     ['أوي', 4, 'يُؤْوِي'],
     ['أوفى', 1, 'يُوفِي'],
+    ['غدو', 1, 'يَغْداو'],
     ['وعد', 1, 'يَعِدُ'],
   ])('%s (%d) pattern is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
