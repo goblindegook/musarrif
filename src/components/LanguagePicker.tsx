@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { LANGUAGE_OPTIONS, useI18n } from '../hooks/i18n'
 import { useRouting } from '../hooks/routing'
+import { LanguageIcon } from './icons/LanguageIcon'
 
 const Wrapper = styled('div')`
   display: flex;
@@ -22,10 +23,15 @@ const Icon = styled('span')`
   user-select: none;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
   width: 1.75rem;
   height: 1.75rem;
   flex-shrink: 0;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.125rem;
+  }
 `
 
 const Select = styled('select')`
@@ -61,7 +67,9 @@ export function LanguagePicker() {
   return (
     <Wrapper>
       <Label id="language-label" aria-label={t('languagePicker.label')} title={t('languagePicker.label')}>
-        <Icon aria-hidden="true">🌐</Icon>
+        <Icon aria-hidden="true">
+          <LanguageIcon />
+        </Icon>
       </Label>
       <Select
         value={lang}

@@ -4,6 +4,7 @@ import { ConjugationTable } from './components/ConjugationTable'
 import { Detail } from './components/Detail'
 import { DiacriticsToggle } from './components/DiacriticsToggle'
 import { IconButton } from './components/IconButton'
+import { SettingsIcon } from './components/icons/SettingsIcon'
 import { LanguagePicker } from './components/LanguagePicker'
 import { Modal } from './components/Modal'
 import { QuickPickList, SuggestionsList } from './components/QuickPickList'
@@ -406,8 +407,9 @@ export function App() {
               ariaLabel={t('settings.toggle')}
               ariaExpanded={isSettingsOpen}
               title={t('settings.toggle')}
+              active={isSettingsOpen}
             >
-              ⚙️
+              <SettingsIcon />
             </IconButton>
           </SettingsButtonWrapper>
         </TopBarHeader>

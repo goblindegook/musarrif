@@ -3,6 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { useEffect, useId } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { IconButton } from './IconButton'
+import { CloseIcon } from './icons/CloseIcon'
 
 interface ModalProps {
   readonly isOpen: boolean
@@ -37,7 +38,7 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
         <Header>
           <ModalTitle id={titleId}>{title}</ModalTitle>
           <IconButton onClick={onClose} ariaLabel={closeLabel} title={closeLabel}>
-            ×
+            <CloseIcon />
           </IconButton>
         </Header>
         <Content>{children}</Content>

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'preact/hooks'
 import { IconButton } from './IconButton'
+import { SpeakIcon } from './icons/SpeakIcon'
 
 interface SpeechButtonProps {
   text: string
@@ -26,7 +27,7 @@ export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
   return (
     supported && (
       <IconButton onClick={() => speak(text)} ariaLabel={ariaLabel ?? `Play pronunciation for ${text}`}>
-        🔊
+        <SpeakIcon />
       </IconButton>
     )
   )
