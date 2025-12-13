@@ -3,6 +3,7 @@
   "label": "Português",
   "strings": {
     "eyebrow": "Árabe clássico • Conjugador verbal",
+    "settings.toggle": "Alternar configurações",
     "title": "Muṣarrif",
     "verbLabel": "Verbo",
     "placeholder": "Digite o verbo aqui",

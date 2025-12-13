@@ -2,6 +2,7 @@ import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useEffect, useId } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
+import { IconButton } from './IconButton'
 
 interface ModalProps {
   readonly isOpen: boolean
@@ -35,9 +36,9 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
       <Dialog role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => event.stopPropagation()}>
         <Header>
           <ModalTitle id={titleId}>{title}</ModalTitle>
-          <CloseButton type="button" onClick={onClose} aria-label={closeLabel} title={closeLabel}>
+          <IconButton onClick={onClose} ariaLabel={closeLabel} title={closeLabel}>
             ×
-          </CloseButton>
+          </IconButton>
         </Header>
         <Content>{children}</Content>
       </Dialog>
@@ -80,33 +81,6 @@ const ModalTitle = styled('h2')`
   font-weight: 700;
   font-size: 1.5rem;
   color: #0f172a;
-`
-
-const CloseButton = styled('button')`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #334155;
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
-  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: #fff8e1;
-    color: #0f172a;
-    border-color: #facc15;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
-    outline: none;
-  }
 `
 
 const Content = styled('div')`

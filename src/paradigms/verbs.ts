@@ -162,10 +162,10 @@ const normalizeQuery = (value: string): string =>
     .toLowerCase()
     .trim()
 
-export function search(query?: string, options: SearchOptions = {}): Verb[] {
+export function search(query: string, options: SearchOptions = {}): Verb[] {
   const t = options.translate ?? ((key) => key)
   const matches: Verb[] = []
-  const normalizedQuery = normalizeQuery(query ?? '')
+  const normalizedQuery = normalizeQuery(query)
   if (!normalizedQuery) return matches
 
   const candidates = extractRootCandidates(normalizedQuery)
