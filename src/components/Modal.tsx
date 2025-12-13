@@ -57,7 +57,7 @@ const Overlay = styled('div')`
   align-items: center;
   padding: 2rem 1rem;
   overflow-y: auto;
-  z-index: 10;
+  z-index: 200;
 `
 
 const Dialog = styled('div')`
