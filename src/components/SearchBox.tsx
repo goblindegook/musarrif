@@ -68,7 +68,10 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           setQuery(value)
           setSuggestionsOpen(true)
         }}
-        onFocus={() => setSuggestionsOpen(true)}
+        onFocus={() => {
+          if (isMobile) window.scrollTo({ top: 0, behavior: 'auto' })
+          setSuggestionsOpen(true)
+        }}
         onBlur={(event) => {
           if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 
