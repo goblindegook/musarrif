@@ -21,13 +21,14 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const [highligtedIndex, setHighlightedIndex] = useState(-1)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const suggestionWrapperRef = useRef<HTMLDivElement | null>(null)
+  const isMobile = useMemo(() => window.innerWidth < 960, [])
 
   const matchingVerbs = useMemo<Verb[]>(() => {
     if (!query.trim()) return []
     return search(query, { translate: t })
   }, [query, t])
 
-  const suggested = useMemo(() => matchingVerbs.slice(0, 10), [matchingVerbs])
+  const suggested = useMemo(() => matchingVerbs.slice(0, 20), [matchingVerbs])
 
   useEffect(() => {
     setHighlightedIndex((current) => Math.max(Math.min(current, suggested.length - 1), 0))
@@ -67,7 +68,17 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           setQuery(value)
           setSuggestionsOpen(true)
         }}
-        onFocus={() => setSuggestionsOpen(true)}
+        onFocus={() => {
+          // Scroll input to top of viewport before making container fixed
+          // This ensures the input is visible when the keyboard appears
+          if (inputRef.current) {
+            inputRef.current.scrollIntoView?.({ behavior: 'auto', block: 'start' })
+            // Single requestAnimationFrame ensures browser processes scroll before container becomes fixed
+            requestAnimationFrame(() => setSuggestionsOpen(true))
+            return
+          }
+          setSuggestionsOpen(true)
+        }}
         onBlur={(event) => {
           if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 
@@ -121,7 +132,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
         }
       />
 
-      {suggestionsOpen && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
+      {suggestionsOpen && isMobile && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
 
       {suggestionsOpen && suggested.length > 0 && (
         <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
@@ -183,12 +194,17 @@ const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
     isActive &&
     `
       position: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
       top: 0;
       left: 0;
       right: 0;
       z-index: 101;
-      padding: 1rem;
-      padding-bottom: 0.5rem;
+      height: 5rem;
+      gap: 0;
 
       &::before {
         content: '';
@@ -196,7 +212,7 @@ const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
         top: 0;
         left: 0;
         right: 0;
-        bottom: -0.5rem;
+        bottom: 0;
         background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
         z-index: 101;
@@ -204,11 +220,13 @@ const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
 
       @media (min-width: 960px) {
         position: relative;
+        display: block;
         top: auto;
         left: auto;
         right: auto;
         z-index: auto;
         padding: 0;
+        height: auto;
 
         &::before {
           display: none;
@@ -261,6 +279,9 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
   box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
   width: calc(100% + 1rem);
   z-index: 102;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   @media (min-width: 960px) {
     left: 0;
@@ -271,6 +292,7 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
     border-left: 1px solid #e2e8f0;
     border-right: 1px solid #e2e8f0;
     z-index: 5;
+    max-height: 20rem;
   }
 `
 
@@ -279,7 +301,7 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 1.5rem;
   border: none;
   background: ${({ highlighted }) => (highlighted ? '#f1f5f9' : '#fff')};
   color: ${({ highlighted }) => (highlighted ? '#334155' : '#0f172a')};
