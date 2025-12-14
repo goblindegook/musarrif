@@ -9,7 +9,19 @@ export default defineConfig({
     preact(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.png', 'icon-192.png', 'maskable-icon.png', 'maskable-icon-192.png'],
+      includeAssets: [
+        'icon.png',
+        'icon-192.png',
+        'maskable-icon.png',
+        'maskable-icon-192.png',
+        'fonts/NotoSansArabic-Regular.ttf',
+        'fonts/NotoSansArabic-Medium.ttf',
+        'fonts/NotoSansArabic-SemiBold.ttf',
+        'fonts/NotoSansArabic-Bold.ttf',
+      ],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'],
+      },
       manifest: {
         name: 'Muṣarrif',
         short_name: 'Muṣarrif',
