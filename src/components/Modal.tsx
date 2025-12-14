@@ -4,6 +4,7 @@ import { useEffect, useId } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { IconButton } from './IconButton'
 import { CloseIcon } from './icons/CloseIcon'
+import { Overlay } from './Overlay'
 
 interface ModalProps {
   readonly isOpen: boolean
@@ -13,54 +14,63 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
-  const titleId = useId()
   const { t } = useI18n()
-  const closeLabel = t('modal.close')
+  const titleId = useId()
 
   useEffect(() => {
     if (!isOpen) return
+    const controller = new AbortController()
+    window.addEventListener(
+      'keydown',
+      (event: KeyboardEvent) => {
+        if (event.key === 'Escape') onClose()
+      },
+      { signal: controller.signal },
+    )
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => controller.abort()
   }, [isOpen, onClose])
 
   if (!isOpen) return null
 
   return (
-    <Overlay data-testid="modal-overlay" onClick={(event) => event.target === event.currentTarget && onClose()}>
+    <ModalContainer>
+      <Overlay zIndex={199} onClick={onClose} />
       <Dialog role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => event.stopPropagation()}>
         <Header>
           <ModalTitle id={titleId}>{title}</ModalTitle>
-          <IconButton onClick={onClose} ariaLabel={closeLabel} title={closeLabel}>
+          <IconButton onClick={onClose} ariaLabel={t('modal.close')} title={t('modal.close')}>
             <CloseIcon />
           </IconButton>
         </Header>
         <Content>{children}</Content>
       </Dialog>
-    </Overlay>
+    </ModalContainer>
   )
 }
 
-const Overlay = styled('div')`
+const ModalContainer = styled('div')`
   position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(2px);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
   overflow-y: auto;
   z-index: 200;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
 `
 
 const Dialog = styled('div')`
+  position: relative;
+  z-index: 201;
   background: #ffffff;
   border-radius: 1.25rem;
   padding: 1.5rem;

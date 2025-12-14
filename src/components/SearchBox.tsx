@@ -4,6 +4,7 @@ import { useI18n } from '../hooks/i18n'
 import { applyDiacriticsPreference } from '../paradigms/helpers'
 import type { Verb } from '../paradigms/verbs'
 import { search } from '../paradigms/verbs'
+import { Overlay, type OverlayProps } from './Overlay'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
@@ -15,8 +16,6 @@ interface SearchProps {
 
 export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const { t, lang, dir, diacriticsPreference } = useI18n()
-  const translationLang = lang === 'ar' ? 'en' : lang
-  const translationDir = (lang === 'ar' ? 'ltr' : dir) as 'ltr' | 'rtl'
   const [query, setQuery] = useState('')
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [highligtedIndex, setHighlightedIndex] = useState(-1)
@@ -35,28 +34,6 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   }, [suggested.length])
 
   useEffect(() => {
-    const handlePointerDown = (event: Event) => {
-      const target = event.target as Node | null
-
-      if (!target) {
-        if (suggestionsOpen) setSuggestionsOpen(false)
-        return
-      }
-
-      if (suggestionWrapperRef.current?.contains?.(target)) {
-        if (suggested.length > 0) setSuggestionsOpen(true)
-        return
-      }
-
-      if (suggestionsOpen) setSuggestionsOpen(false)
-    }
-
-    window.addEventListener('pointerdown', handlePointerDown)
-
-    return () => window.removeEventListener('pointerdown', handlePointerDown)
-  }, [suggestionsOpen, suggested.length])
-
-  useEffect(() => {
     if (!selectedVerb) return
     setQuery(selectedVerb.label)
     setSuggestionsOpen(false)
@@ -64,12 +41,10 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
 
   const handleSelect = useCallback(
     (verb: Verb) => {
-      setQuery(verb.label)
       onSelect(verb)
+      setQuery(verb.label)
       setSuggestionsOpen(false)
-      if (inputRef.current && typeof inputRef.current.blur === 'function') {
-        inputRef.current.blur()
-      }
+      inputRef.current?.blur?.()
     },
     [onSelect],
   )
@@ -77,23 +52,23 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   return (
     <SuggestionContainer
       ref={suggestionWrapperRef}
+      isActive={suggestionsOpen && suggested.length > 0}
       onBlur={(event: FocusEvent) => {
-        const nextTarget = event.relatedTarget as Node | null
-        if (!nextTarget) {
+        if (!suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
           setSuggestionsOpen(false)
-          return
         }
-
-        if (suggestionWrapperRef.current?.contains?.(nextTarget)) return
-        setSuggestionsOpen(false)
       }}
     >
       <Input
         id={id}
         value={applyDiacriticsPreference(query, diacriticsPreference)}
         onInput={(event) => {
-          setQuery((event.target as HTMLInputElement).value)
-          setSuggestionsOpen(true)
+          const value = (event.target as HTMLInputElement).value
+          setQuery(value)
+          const hasMatches = value.trim().length > 0
+          if (hasMatches) {
+            setSuggestionsOpen(true)
+          }
         }}
         onFocus={() => setSuggestionsOpen(suggested.length > 0)}
         onBlur={(event) => {
@@ -114,11 +89,14 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
             event.preventDefault()
             setHighlightedIndex((current) => Math.max(current - 1, 0))
           }
-          if (event.key === 'Enter' && suggested.length > 0) {
+          if (event.key === 'Enter') {
             event.preventDefault()
-            event.stopPropagation()
-            const index = Math.max(highligtedIndex, 0)
-            handleSelect(suggested[index])
+            if (suggested.length > 0) {
+              const index = Math.max(highligtedIndex, 0)
+              handleSelect(suggested[index])
+            } else if (matchingVerbs.length > 0) {
+              handleSelect(matchingVerbs[0])
+            }
           }
           if (event.key === 'Escape') {
             setSuggestionsOpen(false)
@@ -147,53 +125,100 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
       />
 
       {suggestionsOpen && suggested.length > 0 && (
-        <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
-          {suggested.map((verb, index) => {
-            const isHighlighted = index === highligtedIndex
-            return (
-              <SuggestionItem
-                id={`search-suggestion-${verb.id}`}
-                type="button"
-                key={verb.id}
-                role="option"
-                aria-selected={isHighlighted}
-                highlighted={isHighlighted}
-                onPointerDown={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  handleSelect(verb)
-                }}
-                onFocus={() => setSuggestionsOpen(true)}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                onClick={() => handleSelect(verb)}
-                aria-label={`${verb.label} - ${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}${
-                  lang !== 'ar' ? ` - ${t(verb.id)}` : ''
-                }`}
-              >
-                {lang !== 'ar' && (
-                  <small dir={translationDir} lang={translationLang}>
-                    {t(verb.id)}
-                  </small>
-                )}
-                <SuggestionItemVerb>
-                  <span dir="rtl" lang="ar">
-                    {applyDiacriticsPreference(verb.label, diacriticsPreference)}
-                  </span>
-                  <small>{ROMAN_NUMERALS[verb.form - 1]}</small>
-                </SuggestionItemVerb>
-              </SuggestionItem>
-            )
-          })}
-        </SuggestionMenu>
+        <>
+          <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />
+          <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
+            {suggested.map((verb, index) => {
+              const isHighlighted = index === highligtedIndex
+              return (
+                <SuggestionItem
+                  id={`search-suggestion-${verb.id}`}
+                  type="button"
+                  key={verb.id}
+                  role="option"
+                  aria-selected={isHighlighted}
+                  highlighted={isHighlighted}
+                  onPointerDown={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                  }}
+                  onFocus={() => setSuggestionsOpen(true)}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    handleSelect(verb)
+                  }}
+                  aria-label={[
+                    verb.label,
+                    `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
+                    lang !== 'ar' && t(verb.id),
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  {lang !== 'ar' && (
+                    <small dir={dir} lang={lang}>
+                      {t(verb.id)}
+                    </small>
+                  )}
+                  <SuggestionItemVerb>
+                    <span dir="rtl" lang="ar">
+                      {applyDiacriticsPreference(verb.label, diacriticsPreference)}
+                    </span>
+                    <small>{ROMAN_NUMERALS[verb.form - 1]}</small>
+                  </SuggestionItemVerb>
+                </SuggestionItem>
+              )
+            })}
+          </SuggestionMenu>
+        </>
       )}
     </SuggestionContainer>
   )
 }
 
-const SuggestionContainer = styled('div')`
+const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  z-index: 1;
+
+  ${({ isActive }) =>
+    isActive &&
+    `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 101;
+      padding: 1rem;
+      padding-bottom: 0.5rem;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: -0.5rem;
+        background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+        z-index: 101;
+      }
+
+      @media (min-width: 960px) {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        z-index: auto;
+        padding: 0;
+
+        &::before {
+          display: none;
+        }
+      }
+  `}
 `
 
 const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
@@ -206,6 +231,8 @@ const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
   width: 100%;
   box-sizing: border-box;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  position: relative;
+  z-index: 103;
 
   &::placeholder {
     direction: ${({ placeholderDir }) => placeholderDir ?? 'auto'};
@@ -224,20 +251,31 @@ const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
   }
 `
 
-const SuggestionMenu = styled('div')`
+const SuggestionMenu = styled('div')<{ active?: boolean }>`
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 0.35rem;
-  width: 100%;
+  left: -1rem;
+  right: -1rem;
   box-sizing: border-box;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  overflow: hidden;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
   background: #fff;
   box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-  z-index: 5;
+  width: calc(100% + 1rem);
+  z-index: 102;
+
+  @media (min-width: 960px) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-top: 0.35rem;
+    border-radius: 0.75rem;
+    border-left: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    z-index: 5;
+  }
 `
 
 const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
@@ -245,7 +283,7 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.6rem 0.8rem;
+  padding: 0.6rem 1rem;
   border: none;
   background: ${({ highlighted }) => (highlighted ? '#f1f5f9' : '#fff')};
   color: ${({ highlighted }) => (highlighted ? '#334155' : '#0f172a')};
@@ -283,5 +321,11 @@ const SuggestionItemVerb = styled('div')`
   & small {
     width: 0.75rem;
     text-align: center;
+  }
+`
+
+const MobileOverlay = styled(Overlay)<OverlayProps>`
+  @media (min-width: 960px) {
+    display: none;
   }
 `
