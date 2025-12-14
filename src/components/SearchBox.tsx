@@ -52,7 +52,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   return (
     <SuggestionContainer
       ref={suggestionWrapperRef}
-      isActive={suggestionsOpen && suggested.length > 0}
+      isActive={suggestionsOpen}
       onBlur={(event: FocusEvent) => {
         if (!suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
           setSuggestionsOpen(false)
@@ -65,12 +65,9 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
         onInput={(event) => {
           const value = (event.target as HTMLInputElement).value
           setQuery(value)
-          const hasMatches = value.trim().length > 0
-          if (hasMatches) {
-            setSuggestionsOpen(true)
-          }
+          setSuggestionsOpen(true)
         }}
-        onFocus={() => setSuggestionsOpen(suggested.length > 0)}
+        onFocus={() => setSuggestionsOpen(true)}
         onBlur={(event) => {
           if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 
@@ -124,54 +121,53 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
         }
       />
 
+      {suggestionsOpen && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
+
       {suggestionsOpen && suggested.length > 0 && (
-        <>
-          <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />
-          <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
-            {suggested.map((verb, index) => {
-              const isHighlighted = index === highligtedIndex
-              return (
-                <SuggestionItem
-                  id={`search-suggestion-${verb.id}`}
-                  type="button"
-                  key={verb.id}
-                  role="option"
-                  aria-selected={isHighlighted}
-                  highlighted={isHighlighted}
-                  onPointerDown={(event) => {
-                    event.preventDefault()
-                    event.stopPropagation()
-                  }}
-                  onFocus={() => setSuggestionsOpen(true)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                  onClick={(event) => {
-                    event.preventDefault()
-                    handleSelect(verb)
-                  }}
-                  aria-label={[
-                    verb.label,
-                    `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
-                    lang !== 'ar' && t(verb.id),
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {lang !== 'ar' && (
-                    <small dir={dir} lang={lang}>
-                      {t(verb.id)}
-                    </small>
-                  )}
-                  <SuggestionItemVerb>
-                    <span dir="rtl" lang="ar">
-                      {applyDiacriticsPreference(verb.label, diacriticsPreference)}
-                    </span>
-                    <small>{ROMAN_NUMERALS[verb.form - 1]}</small>
-                  </SuggestionItemVerb>
-                </SuggestionItem>
-              )
-            })}
-          </SuggestionMenu>
-        </>
+        <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
+          {suggested.map((verb, index) => {
+            const isHighlighted = index === highligtedIndex
+            return (
+              <SuggestionItem
+                id={`search-suggestion-${verb.id}`}
+                type="button"
+                key={verb.id}
+                role="option"
+                aria-selected={isHighlighted}
+                highlighted={isHighlighted}
+                onPointerDown={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }}
+                onFocus={() => setSuggestionsOpen(true)}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                onClick={(event) => {
+                  event.preventDefault()
+                  handleSelect(verb)
+                }}
+                aria-label={[
+                  verb.label,
+                  `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
+                  lang !== 'ar' && t(verb.id),
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {lang !== 'ar' && (
+                  <SuggestionItemTranslation dir={dir} lang={lang}>
+                    {t(verb.id)}
+                  </SuggestionItemTranslation>
+                )}
+                <SuggestionItemVerb>
+                  <SuggestionItemVerbLabel dir="rtl" lang="ar">
+                    {applyDiacriticsPreference(verb.label, diacriticsPreference)}
+                  </SuggestionItemVerbLabel>
+                  <SuggestionItemVerbForm>{ROMAN_NUMERALS[verb.form - 1]}</SuggestionItemVerbForm>
+                </SuggestionItemVerb>
+              </SuggestionItem>
+            )
+          })}
+        </SuggestionMenu>
       )}
     </SuggestionContainer>
   )
@@ -283,7 +279,7 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.8rem 1rem;
   border: none;
   background: ${({ highlighted }) => (highlighted ? '#f1f5f9' : '#fff')};
   color: ${({ highlighted }) => (highlighted ? '#334155' : '#0f172a')};
@@ -291,25 +287,27 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   text-align: left;
   transition: background 120ms ease, color 120ms ease;
 
-  span {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  small {
-    color: #475569;
-    margin-left: 0.5rem;
-    transition: color 120ms ease;
-  }
-
-  &:hover {
-    background: #f1f5f9;
-    color: #334155;
-  }
-
   &:hover small {
     color: #0f172a;
   }
+`
+
+const SuggestionItemVerbLabel = styled('span')`
+  font-size: 1.2rem;
+  font-weight: 500;
+`
+
+const SuggestionItemVerbForm = styled('small')`
+  color: #475569;
+  margin-left: 0.5rem;
+  transition: color 120ms ease;
+`
+
+const SuggestionItemTranslation = styled('span')`
+  color: #475569;
+  margin-left: 0.5rem;
+  transition: color 120ms ease;
+  font-size: 0.8rem;
 `
 
 const SuggestionItemVerb = styled('div')`
