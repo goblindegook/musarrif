@@ -305,6 +305,10 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   &:hover small {
     color: #0f172a;
   }
+
+  @media (min-width: 960px) {
+    padding: 0.25rem 1rem;
+  }
 `
 
 const SuggestionItemVerbLabel = styled('span')`

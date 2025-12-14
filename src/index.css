@@ -10,6 +10,42 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/NotoSansArabic-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/NotoSansArabic-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/NotoSansArabic-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/NotoSansArabic-Bold.ttf") format("truetype");
+}
+
+:lang(ar) {
+  font-family: "Noto Sans Arabic", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+}
+
 html {
   min-height: 100%;
 }
