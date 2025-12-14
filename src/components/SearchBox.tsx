@@ -69,7 +69,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           setSuggestionsOpen(true)
         }}
         onFocus={() => {
-          if (isMobile) window.scrollTo({ top: 0, behavior: 'auto' })
+          if (isMobile) window.scrollTo({ top: 0 })
           setSuggestionsOpen(true)
         }}
         onBlur={(event) => {

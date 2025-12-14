@@ -41,7 +41,7 @@ const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
 
 const PRESENT_DUAL_SUFFIX = [ALIF, NOON, KASRA]
-const PRESENT_MASC_PLURAL_SUFFIX = [WAW, DAMMA, NOON, FATHA]
+const PRESENT_MASC_PLURAL_SUFFIX = [WAW, NOON, FATHA]
 const PRESENT_FEM_PLURAL_SUFFIX = [NOON, FATHA]
 
 const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[]) => readonly string[]> = {
