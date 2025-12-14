@@ -68,17 +68,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           setQuery(value)
           setSuggestionsOpen(true)
         }}
-        onFocus={() => {
-          // Scroll input to top of viewport before making container fixed
-          // This ensures the input is visible when the keyboard appears
-          if (inputRef.current) {
-            inputRef.current.scrollIntoView?.({ behavior: 'auto', block: 'start' })
-            // Single requestAnimationFrame ensures browser processes scroll before container becomes fixed
-            requestAnimationFrame(() => setSuggestionsOpen(true))
-            return
-          }
-          setSuggestionsOpen(true)
-        }}
+        onFocus={() => setSuggestionsOpen(true)}
         onBlur={(event) => {
           if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 

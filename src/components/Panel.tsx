@@ -24,6 +24,7 @@ export const Panel = ({ title, dir, lang, actions, children }: PanelProps) => {
 }
 
 export const PanelContainer = styled('section')`
+  position: relative;
   background: #ffffff;
   border-radius: 1.5rem;
   padding: 1rem 1.25rem;
@@ -31,6 +32,7 @@ export const PanelContainer = styled('section')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;
   }
