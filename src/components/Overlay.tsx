@@ -42,6 +42,16 @@ const OverlayBase = styled('div')<{ zIndex?: number }>`
   background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(2px);
   pointer-events: auto;
+  animation: fadeIn 0.2s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   & > * {
     pointer-events: auto;

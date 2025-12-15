@@ -51,129 +51,132 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   )
 
   return (
-    <SuggestionContainer
-      ref={suggestionWrapperRef}
-      isActive={suggestionsOpen}
-      onBlur={(event: FocusEvent) => {
-        if (!suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
-          setSuggestionsOpen(false)
-        }
-      }}
-    >
-      <Input
-        id={id}
-        value={applyDiacriticsPreference(query, diacriticsPreference)}
-        onInput={(event) => {
-          const value = (event.target as HTMLInputElement).value
-          setQuery(value)
-          setSuggestionsOpen(true)
-        }}
-        onFocus={() => {
-          if (isMobile) window.scrollTo({ top: 0 })
-          setSuggestionsOpen(true)
-        }}
-        onBlur={(event) => {
-          if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
-
-          setTimeout(() => {
-            if (suggestionWrapperRef.current?.contains?.(document.activeElement)) return
-            setSuggestionsOpen(false)
-          }, 0)
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'ArrowDown') {
-            event.preventDefault()
-            if (suggested.length > 0) setSuggestionsOpen(true)
-            setHighlightedIndex((current) => Math.min(current + 1, suggested.length - 1))
-          }
-          if (event.key === 'ArrowUp') {
-            event.preventDefault()
-            setHighlightedIndex((current) => Math.max(current - 1, 0))
-          }
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            if (suggested.length > 0) {
-              const index = Math.max(highligtedIndex, 0)
-              handleSelect(suggested[index])
-            } else if (matchingVerbs.length > 0) {
-              handleSelect(matchingVerbs[0])
-            }
-          }
-          if (event.key === 'Escape') {
-            setSuggestionsOpen(false)
-            setHighlightedIndex(-1)
-          }
-        }}
-        ref={inputRef}
-        placeholder={t('placeholder')}
-        dir="rtl"
-        lang="ar"
-        placeholderDir={dir}
-        inputMode="text"
-        autoCapitalize="none"
-        autoComplete="off"
-        autoCorrect="off"
-        type="search"
-        aria-label={t('verbLabel')}
-        role="combobox"
-        aria-expanded={suggestionsOpen}
-        aria-autocomplete="list"
-        aria-activedescendant={
-          highligtedIndex >= 0 && suggested[highligtedIndex]
-            ? `search-suggestion-${suggested[highligtedIndex].id}`
-            : undefined
-        }
-      />
-
+    <>
       {suggestionsOpen && isMobile && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
+      <SuggestionContainer
+        ref={suggestionWrapperRef}
+        isActive={suggestionsOpen}
+        onBlur={(event: FocusEvent) => {
+          if (!suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
+            setSuggestionsOpen(false)
+          }
+        }}
+      >
+        <Input
+          id={id}
+          value={applyDiacriticsPreference(query, diacriticsPreference)}
+          onInput={(event) => {
+            const value = (event.target as HTMLInputElement).value
+            setQuery(value)
+            setSuggestionsOpen(true)
+          }}
+          onFocus={() => {
+            if (isMobile) window.scrollTo({ top: 0 })
+            setSuggestionsOpen(true)
+          }}
+          onBlur={(event) => {
+            if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 
-      {suggestionsOpen && suggested.length > 0 && (
-        <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
-          {suggested.map((verb, index) => {
-            const isHighlighted = index === highligtedIndex
-            return (
-              <SuggestionItem
-                id={`search-suggestion-${verb.id}`}
-                type="button"
-                key={verb.id}
-                role="option"
-                aria-selected={isHighlighted}
-                highlighted={isHighlighted}
-                onPointerDown={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                }}
-                onFocus={() => setSuggestionsOpen(true)}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                onClick={(event) => {
-                  event.preventDefault()
-                  handleSelect(verb)
-                }}
-                aria-label={[
-                  verb.label,
-                  `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
-                  lang !== 'ar' && t(verb.id),
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                {lang !== 'ar' && (
-                  <SuggestionItemTranslation dir={dir} lang={lang}>
-                    {t(verb.id)}
-                  </SuggestionItemTranslation>
-                )}
-                <SuggestionItemVerb>
-                  <SuggestionItemVerbLabel dir="rtl" lang="ar">
-                    {applyDiacriticsPreference(verb.label, diacriticsPreference)}
-                  </SuggestionItemVerbLabel>
-                  <SuggestionItemVerbForm>{ROMAN_NUMERALS[verb.form - 1]}</SuggestionItemVerbForm>
-                </SuggestionItemVerb>
-              </SuggestionItem>
-            )
-          })}
-        </SuggestionMenu>
-      )}
-    </SuggestionContainer>
+            setTimeout(() => {
+              if (suggestionWrapperRef.current?.contains?.(document.activeElement)) return
+              setSuggestionsOpen(false)
+            }, 0)
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault()
+              if (suggested.length > 0) setSuggestionsOpen(true)
+              setHighlightedIndex((current) => Math.min(current + 1, suggested.length - 1))
+            }
+            if (event.key === 'ArrowUp') {
+              event.preventDefault()
+              setHighlightedIndex((current) => Math.max(current - 1, 0))
+            }
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              if (suggested.length > 0) {
+                const index = Math.max(highligtedIndex, 0)
+                handleSelect(suggested[index])
+              } else if (matchingVerbs.length > 0) {
+                handleSelect(matchingVerbs[0])
+              }
+            }
+            if (event.key === 'Escape') {
+              event.preventDefault()
+              setSuggestionsOpen(false)
+              setHighlightedIndex(-1)
+              inputRef.current?.blur?.()
+            }
+          }}
+          ref={inputRef}
+          placeholder={t('placeholder')}
+          dir="rtl"
+          lang="ar"
+          placeholderDir={dir}
+          inputMode="text"
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect="off"
+          type="search"
+          aria-label={t('verbLabel')}
+          role="combobox"
+          aria-expanded={suggestionsOpen}
+          aria-autocomplete="list"
+          aria-activedescendant={
+            highligtedIndex >= 0 && suggested[highligtedIndex]
+              ? `search-suggestion-${suggested[highligtedIndex].id}`
+              : undefined
+          }
+        />
+
+        {suggestionsOpen && suggested.length > 0 && (
+          <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
+            {suggested.map((verb, index) => {
+              const isHighlighted = index === highligtedIndex
+              return (
+                <SuggestionItem
+                  id={`search-suggestion-${verb.id}`}
+                  type="button"
+                  key={verb.id}
+                  role="option"
+                  aria-selected={isHighlighted}
+                  highlighted={isHighlighted}
+                  onPointerDown={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                  }}
+                  onFocus={() => setSuggestionsOpen(true)}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    handleSelect(verb)
+                  }}
+                  aria-label={[
+                    verb.label,
+                    `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
+                    lang !== 'ar' && t(verb.id),
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  {lang !== 'ar' && (
+                    <SuggestionItemTranslation dir={dir} lang={lang}>
+                      {t(verb.id)}
+                    </SuggestionItemTranslation>
+                  )}
+                  <SuggestionItemVerb>
+                    <SuggestionItemVerbLabel dir="rtl" lang="ar">
+                      {applyDiacriticsPreference(verb.label, diacriticsPreference)}
+                    </SuggestionItemVerbLabel>
+                    <SuggestionItemVerbForm>{ROMAN_NUMERALS[verb.form - 1]}</SuggestionItemVerbForm>
+                  </SuggestionItemVerb>
+                </SuggestionItem>
+              )
+            })}
+          </SuggestionMenu>
+        )}
+      </SuggestionContainer>
+    </>
   )
 }
 
@@ -198,6 +201,7 @@ const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
       z-index: 101;
       height: 5rem;
       gap: 0;
+      animation: slideFromBottom 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
       &::before {
         content: '';
@@ -220,12 +224,22 @@ const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
         z-index: auto;
         padding: 0;
         height: auto;
+        animation: none;
 
         &::before {
           display: none;
         }
       }
   `}
+
+  @keyframes slideFromBottom {
+    from {
+      top: 100vh;
+    }
+    to {
+      top: 0;
+    }
+  }
 `
 
 const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
