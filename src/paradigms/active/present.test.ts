@@ -111,4 +111,17 @@ describe('active present jussive', () => {
 
     expect(jussive['3ms']).toBe(expected3ms)
   })
+
+  it('handles initial hamza + middle weak + final weak for أَوَى', () => {
+    const verb = verbs.find((entry) => entry.root === 'أوي' && entry.form === 1)!
+    const jussive = conjugatePresentMood(verb, 'jussive')
+
+    expect(jussive['3ms']).toBe('يَأْوِ')
+    expect(jussive['2ms']).toBe('تَأْوِ')
+    expect(jussive['1s']).toBe('آوِ')
+    expect(jussive['1p']).toBe('نَأْوِ')
+    expect(jussive['3fs']).toBe('تَأْوِ')
+    expect(jussive['2fs']).toBe('تَأْوِي')
+    expect(jussive['3pm']).toBe('يَأْوُوا')
+  })
 })

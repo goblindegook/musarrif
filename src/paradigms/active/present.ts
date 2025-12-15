@@ -111,7 +111,11 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
-  const [_, c2] = Array.from(verb.root)
+  const letters = Array.from(verb.root)
+  const [c1, c2] = letters
+  const isInitialHamza = c1 === ALIF_HAMZA
+  const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(letters[2]))
+  const isFinalWeak = isWeakLetter(verb.root.at(-1))
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
@@ -119,6 +123,9 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       const shouldDropNoon = ['2fs', '2d', '2pm', '3dm', '3df', '3pm'].includes(pronounId)
       if (shouldDropNoon) return dropNoonEnding(word, indicative)
+
+      // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
+      if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
 
       const shouldShortenHollow =
         (HOLLOW_APOCOPE_FORMS.has(verb.form) || (verb.form === 3 && c2 === ALIF)) &&
@@ -227,7 +234,7 @@ function buildPresentBase(verb: Verb): readonly string[] {
       }
 
       // Initial weak + middle weak (e.g., وعد → يعد)
-      if (isInitialWeak && isMiddleWeak && !isFinalWeak) {
+      if (isInitialWeak && isMiddleWeak && !isFinalWeak)
         // Initial waw drops, middle weak handled as hollow
         return normalizeDefectivePresent(
           patternVowel === 'a'
@@ -235,7 +242,6 @@ function buildPresentBase(verb: Verb): readonly string[] {
             : [YEH, FATHA, shortVowelFromPattern(patternVowel), longVowelFromPattern(patternVowel), SUKOON, c3, DAMMA],
           c3,
         )
-      }
 
       // Doubly weak (middle wāw, final yā') keeps the glide and takes kasra before yā': يَحْوِي
       if (!isInitialWeak && !isInitialHamza && c2 === WAW && c3 === YEH) return [YEH, FATHA, c1, SUKOON, c2, KASRA, YEH]
@@ -315,10 +321,6 @@ function buildPresentBase(verb: Verb): readonly string[] {
       // Geminate Form IV (e.g., يُحِبُّ) carries shadda on the doubled radical
       if (c2 === c3) return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
 
-      // Seat initial hamza on wāw after ḍamma (e.g., يُؤْمِنُ)
-      const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
-      const seatedC3 = c3 === ALIF_HAMZA ? HAMZA_ON_YEH : c3
-
       // Initial hamza + middle weak + final weak (e.g., أوي → يُؤْوِي)
       if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
         return normalizeDefectivePresent(
@@ -326,10 +328,13 @@ function buildPresentBase(verb: Verb): readonly string[] {
           c3,
         )
 
+      // Seat initial hamza on wāw after ḍamma (e.g., يُؤْمِنُ)
+      const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+      const seatedC3 = c3 === ALIF_HAMZA ? HAMZA_ON_YEH : c3
+
       if (isFinalWeak) {
         // For defective Form IV verbs, final و becomes yeh in present tense (e.g., يُمْسِي)
-        const finalGlide = c3 === WAW ? YEH : weakLetterGlide(c3)
-        return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, finalGlide]
+        return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, c3 === WAW ? YEH : weakLetterGlide(c3)]
       }
 
       // Hollow Form IV present: kasra on c1, long ī from c2 (e.g., يُقِيمُ)
@@ -337,6 +342,7 @@ function buildPresentBase(verb: Verb): readonly string[] {
 
       return normalizeDefectivePresent([YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, seatedC3, DAMMA], c3)
     }
+
     case 5:
       return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3)
 
@@ -344,10 +350,12 @@ function buildPresentBase(verb: Verb): readonly string[] {
       // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., يَتَعَانُ)
       if (isMiddleWeak && c2 === ALIF)
         return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c3, DAMMA], c3)
+
       return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA], c3)
 
     case 7:
       if (isMiddleWeak) return normalizeDefectivePresent([YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA], c3)
+
       return normalizeDefectivePresent([YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, DAMMA], c3)
 
     case 8:
