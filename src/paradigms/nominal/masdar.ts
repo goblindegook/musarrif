@@ -112,9 +112,9 @@ function masdar(verb: Verb): readonly string[] {
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
       }
 
-      // Initial hamza + middle weak + final weak (e.g., أوي → إِيوَاء)
+      // Initial hamza + middle weak + final weak (e.g., أوي → إِوِيّ)
       if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-        return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
+        return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, YEH, SHADDA]
       }
 
       if (c2 === ALIF_HAMZA && isFinalWeak) {
