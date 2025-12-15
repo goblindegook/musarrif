@@ -168,7 +168,6 @@ const Main = styled('main')<{ hasVerb: boolean }>`
     !hasVerb &&
     `
     place-items: center;
-    height: calc(100dvh - 5rem);
     align-content: center;
     margin: 0 auto;
   `}
