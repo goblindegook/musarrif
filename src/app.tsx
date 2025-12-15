@@ -157,6 +157,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   gap: 1rem;
   grid-auto-rows: min-content;
   align-items: start;
+  max-width: 600px;
   grid-template-columns: 1fr;
   grid-template-areas:
     'search'
@@ -164,29 +165,26 @@ const Main = styled('main')<{ hasVerb: boolean }>`
     'footer';
 
   ${({ hasVerb }) =>
-    !hasVerb
-      ? `
+    !hasVerb &&
+    `
     place-items: center;
-    min-height: calc(100vh - 12rem);
-    max-height: calc(100vh - 12rem);
+    max-height: calc(100vh - 5rem);
     align-content: center;
-  `
-      : ''}
+    margin: 0 auto;
+  `}
 
   @media (min-width: 960px) {
     gap: 1.25rem;
+    
     ${({ hasVerb }) =>
-      hasVerb
-        ? `
+      hasVerb &&
+      `
+      max-width: inherit;
       grid-template-columns: 1fr 1.5fr;
       grid-template-rows: auto 1fr;
       grid-template-areas:
         'search verb'
         'footer verb';
-    `
-        : `
-      max-width: 600px;
-      margin: 0 auto;
     `}
   }
 `
