@@ -24,6 +24,8 @@ describe('active present indicative', () => {
     ['حضر', 1, '3ms', 'يَحْضُرُ'],
     ['حلق', 1, '3ms', 'يَحْلِقُ'],
     ['حمر', 9, '3ms', 'يَحْمَرُّ'],
+    ['حمر', 9, '2pf', 'تَحْمَرَرْنَ'],
+    ['حمر', 9, '3pf', 'يَحْمَرَرْنَ'],
     ['حوي', 1, '3ms', 'يَحْوِي'],
     ['خسر', 1, '3ms', 'يَخْسَرُ'],
     ['دحرج', 1, '3ms', 'يُدَحْرِجُ'],
@@ -123,5 +125,41 @@ describe('active present jussive', () => {
     expect(jussive['3fs']).toBe('تَأْوِ')
     expect(jussive['2fs']).toBe('تَأْوِي')
     expect(jussive['3pm']).toBe('يَأْوُوا')
+  })
+
+  it('preserves shadda for form IX verbs in jussive', () => {
+    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
+    const jussive = conjugatePresentMood(verb, 'jussive')
+
+    expect(jussive['3ms']).toBe('يَحْمَرَّ')
+    expect(jussive['2ms']).toBe('تَحْمَرَّ')
+    expect(jussive['1s']).toBe('أَحْمَرَّ')
+  })
+
+  it('expands shadda for form IX verbs in feminine plural forms in jussive', () => {
+    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
+    const jussive = conjugatePresentMood(verb, 'jussive')
+
+    expect(jussive['2pf']).toBe('تَحْمَرَرْنَ')
+    expect(jussive['3pf']).toBe('يَحْمَرَرْنَ')
+  })
+})
+
+describe('active present subjunctive', () => {
+  it('preserves shadda for form IX verbs in subjunctive', () => {
+    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
+    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
+
+    expect(subjunctive['3ms']).toBe('يَحْمَرَّ')
+    expect(subjunctive['2ms']).toBe('تَحْمَرَّ')
+    expect(subjunctive['1s']).toBe('أَحْمَرَّ')
+  })
+
+  it('expands shadda for form IX verbs in feminine plural forms in subjunctive', () => {
+    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
+    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
+
+    expect(subjunctive['2pf']).toBe('تَحْمَرَرْنَ')
+    expect(subjunctive['3pf']).toBe('يَحْمَرَرْنَ')
   })
 })

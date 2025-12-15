@@ -80,6 +80,7 @@ describe('imperative', () => {
     ['أوفى', 1, 'أَوْفِ'],
     ['غدو', 1, 'غْدا'],
     ['وعد', 1, 'عِدْ'],
+    ['حمر', 9, 'اِحْمَرَّ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const imperative = conjugateImperative(verb)

@@ -70,6 +70,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         case 7:
         case 8:
+        case 9:
           return [ALIF, KASRA, ...stem]
 
         case 10: {

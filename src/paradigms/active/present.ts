@@ -42,7 +42,7 @@ const PRESENT_DUAL_SUFFIX = [ALIF, NOON, KASRA]
 const PRESENT_MASC_PLURAL_SUFFIX = [WAW, NOON, FATHA]
 const PRESENT_FEM_PLURAL_SUFFIX = [NOON, FATHA]
 
-const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[]) => readonly string[]> = {
+const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) => readonly string[]> = {
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
   '2ms': (base) => applyPresentPrefix(base, TEH),
   '2fs': (base) => [
@@ -59,14 +59,21 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[]) => readonly 
   '3df': (base) => [...replaceFinalDiacritic(applyPresentPrefix(base, TEH), FATHA), ...PRESENT_DUAL_SUFFIX],
   '1p': (base) => applyPresentPrefix(base, NOON),
   '2pm': (base) => [...dropTerminalDefective(applyPresentPrefix(base, TEH)), ...PRESENT_MASC_PLURAL_SUFFIX],
-  '2pf': (base) => [...replaceFinalDiacritic(applyPresentPrefix(base, TEH), SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX],
+  '2pf': (base, verb) => {
+    const stem = applyPresentPrefix(base, TEH)
+    const expanded = verb.form === 9 ? expandShadda(stem) : stem
+    return [...replaceFinalDiacritic(expanded, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+  },
   '3pm': (base) => [...dropTerminalDefective(base), ...PRESENT_MASC_PLURAL_SUFFIX],
-  '3pf': (base) => [...replaceFinalDiacritic(base, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX],
+  '3pf': (base, verb) => {
+    const expanded = verb.form === 9 ? expandShadda(base) : base
+    return [...replaceFinalDiacritic(expanded, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+  },
 }
 
 function conjugatePresent(verb: Verb): Record<PronounId, string> {
   const base = buildPresentBase(verb)
-  return mapRecord(PRESENT_BUILDERS, (build) => join(...build(base)))
+  return mapRecord(PRESENT_BUILDERS, (build) => join(...build(base, verb)))
 }
 
 function dropNoonEnding(word: readonly string[], indicative: string): readonly string[] {
@@ -133,7 +140,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isWeakLetter(verb.root.at(-1))) return dropFinalDefectiveGlide(stem)
 
-      return replaceFinalDiacritic(stem, ['2pf', '3pf'].includes(pronounId) ? FATHA : SUKOON)
+      // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
+      if (['2pf', '3pf'].includes(pronounId) || verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
+
+      return replaceFinalDiacritic(stem, SUKOON)
     }),
     (letters) => join(...letters),
   )
@@ -395,8 +405,38 @@ function shortenHollowStem(word: readonly string[], hollowRadical: string | unde
   return chars
 }
 
+function expandShadda(word: readonly string[]): readonly string[] {
+  const chars = [...word]
+
+  // Find shadda and the letter it's attached to
+  for (let i = 0; i < chars.length - 1; i += 1) {
+    if (chars[i + 1] === SHADDA && !isDiacritic(chars[i])) {
+      // Expand shadda: replace letter + shadda with letter + fatḥa + letter
+      return [...chars.slice(0, i + 1), FATHA, chars[i], ...chars.slice(i + 2)]
+    }
+  }
+
+  return chars
+}
+
 function replaceFinalDiacritic(word: readonly string[], diacritic: string): readonly string[] {
-  return [...stripTrailingDiacritics(word), diacritic]
+  const chars = [...word]
+
+  // Find the last base letter (non-diacritic)
+  let lastBaseIndex = chars.length - 1
+  while (lastBaseIndex >= 0 && isDiacritic(chars[lastBaseIndex])) lastBaseIndex -= 1
+
+  if (lastBaseIndex < 0) return [...chars, diacritic]
+
+  // Check if there's a shadda right after the last base letter (for form IX verbs)
+  if (lastBaseIndex + 1 < chars.length && chars[lastBaseIndex + 1] === SHADDA) {
+    // Remove everything after the shadda, then add shadda + new diacritic
+    return [...chars.slice(0, lastBaseIndex + 2), diacritic]
+  }
+
+  // Normal case: strip trailing diacritics and add new one
+  const stripped = stripTrailingDiacritics(chars)
+  return [...stripped, diacritic]
 }
 
 function dropTerminalDefective(word: readonly string[]): readonly string[] {

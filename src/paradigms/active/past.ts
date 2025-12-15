@@ -121,11 +121,13 @@ function buildPastBase(verb: Verb): readonly string[] {
     case 2:
       // Geminate Form II: c2 === c3, fatḥa then shadda on c2, then c3 (e.g., حَبَّبَ)
       if (c2 === c3) return normalizeDefectivePast([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA], c3)
+
       return normalizeDefectivePast([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
 
     case 3:
       // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., عَانَ)
       if (c2 === ALIF) return normalizeDefectivePast([c1, FATHA, ALIF, c3, FATHA], c3)
+
       return normalizeDefectivePast([c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
     case 4: {
@@ -153,16 +155,20 @@ function buildPastBase(verb: Verb): readonly string[] {
     case 6:
       // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., تَعَانَ)
       if (c2 === ALIF) return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+
       return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
     case 7:
       // Hollow Form VII (e.g., اِنْقَادَ) lengthens the glide to ألف
       if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
+
       return normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
 
     case 8:
       if (c1 === WAW) return normalizeDefectivePast([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+
       if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, ALIF, c3, FATHA], c3)
+
       return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3, FATHA], c3)
 
     case 9:
