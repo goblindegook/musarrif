@@ -125,7 +125,7 @@ const Controls = styled('aside')<{ visible: boolean }>`
   flex-direction: column;
   align-items: stretch;
   gap: 0.75rem;
-  // max-height: ${({ visible }) => (visible ? '200px' : '0')};
+  max-height: ${({ visible }) => (visible ? '200px' : '0')};
   opacity: ${({ visible }) => (visible ? '1' : '0')};
   margin-top: ${({ visible }) => (visible ? '0' : '-1rem')};
   overflow: hidden;
@@ -167,7 +167,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
     !hasVerb
       ? `
     place-items: center;
-    min-height: calc(100vh - 12rem);
+    height: calc(100vh - 12rem);
     align-content: center;
   `
       : ''}
