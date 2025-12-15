@@ -42,28 +42,28 @@ describe('imperative', () => {
 
   it('it assimilates the initial wāw for ٱتَّصِلْ (Form VIII)', () => {
     const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
+    const imperative = conjugateImperative(verb)
 
     expect(imperative['2ms']).toBe('اِتَّصِلْ')
   })
 
   it('geminate Form II imperative has kasra after shadda (e.g., حَبِّ)', () => {
     const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
+    const imperative = conjugateImperative(verb)
 
     expect(imperative['2ms']).toBe('حَبِّ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
     const verb = verbs.find(({ root, form }) => root === 'قود' && form === 7)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
+    const imperative = conjugateImperative(verb)
 
     expect(imperative['2ms']).toBe('اِنْقَدْ')
   })
 
   it('shortens hollow Form VIII imperative like اِقْتَادَ → اِقْتَدْ', () => {
     const verb = verbs.find(({ root, form }) => root === 'قود' && form === 8)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
+    const imperative = conjugateImperative(verb)
 
     expect(imperative['2ms']).toBe('اِقْتَدْ')
   })
@@ -82,7 +82,7 @@ describe('imperative', () => {
     ['وعد', 1, 'عِدْ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-    const imperative = conjugatePresentMood(verb, 'imperative')
+    const imperative = conjugateImperative(verb)
     expect(imperative['2ms']).toBe(expected)
   })
 

@@ -21,8 +21,8 @@ interface RoutingContextValue extends RoutingState {
 const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
 
 const BASE_PATH = normalizeBasePath(import.meta.env.BASE_URL)
-const SUPPORTED_TENSES: readonly Tense[] = ['past', 'present', 'future']
-const SUPPORTED_MOODS: readonly Mood[] = ['indicative', 'subjunctive', 'jussive', 'imperative']
+const SUPPORTED_TENSES: readonly Tense[] = ['past', 'present', 'future', 'imperative']
+const SUPPORTED_MOODS: readonly Mood[] = ['indicative', 'subjunctive', 'jussive']
 
 function normalizeBasePath(value: string | undefined): string {
   const trimmed = value?.trim()
@@ -96,28 +96,48 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
     })
   const maybeLanguage = segments[0] as Language | undefined
   if (maybeLanguage && isLanguageSupported(maybeLanguage)) {
-    const normalized = normalizeConjugation(segments[2], segments[3])
+    const hasActive = segments[2] === 'active'
+    if (hasActive) {
+      const normalized = normalizeConjugation(segments[3], segments[4])
+      return {
+        lang: maybeLanguage,
+        verbId: segments[1],
+        tense: segments.length >= 4 ? normalized.tense : undefined,
+        mood: segments.length >= 5 && normalized.tense === 'present' ? normalized.mood : undefined,
+      }
+    }
     return {
       lang: maybeLanguage,
       verbId: segments[1],
-      tense: segments.length >= 3 ? normalized.tense : undefined,
-      mood: segments.length >= 4 && normalized.tense !== 'past' ? normalized.mood : undefined,
+      tense: undefined,
+      mood: undefined,
     }
   }
 
-  const normalized = normalizeConjugation(segments[1], segments[2])
+  const hasActive = segments[1] === 'active'
+  if (hasActive) {
+    const normalized = normalizeConjugation(segments[2], segments[3])
+    return {
+      lang: fallbackLang,
+      verbId: segments[0] ?? undefined,
+      tense: segments.length >= 3 ? normalized.tense : undefined,
+      mood: segments.length >= 4 && normalized.tense === 'present' ? normalized.mood : undefined,
+    }
+  }
+
   return {
     lang: fallbackLang,
     verbId: segments[0] ?? undefined,
-    tense: segments.length >= 2 ? normalized.tense : undefined,
-    mood: segments.length >= 3 && normalized.tense !== 'past' ? normalized.mood : undefined,
+    tense: undefined,
+    mood: undefined,
   }
 }
 
 function buildHashPath({ lang, verbId, tense, mood }: RoutingState): string {
+  const activeSegment = tense ? '/active' : ''
   const tenseSegment = tense ? `/${tense}` : ''
-  const moodSegment = tense && tense !== 'past' && mood ? `/${mood}` : ''
-  const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${tenseSegment}${moodSegment}` : ''
+  const moodSegment = tense === 'present' && mood ? `/${mood}` : ''
+  const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${activeSegment}${tenseSegment}${moodSegment}` : ''
   return `/${lang}${verbSegment}`
 }
 

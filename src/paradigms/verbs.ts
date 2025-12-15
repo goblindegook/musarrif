@@ -1,17 +1,13 @@
 import rawVerbs from '../data/verbs.json'
 import { wordDistance } from '../primitives/strings'
-import { conjugateFuture } from './active/future'
 import { conjugatePast } from './active/past'
-import type { Mood } from './active/present'
-import { conjugatePresentMood } from './active/present'
 import { ALIF } from './constants'
 import type { FormIPattern } from './form-i-vowels'
 import { stripDiacritics } from './helpers'
-import type { PronounId } from './pronouns'
 
 type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 type MasdarPattern = 'fa3l' | 'fa3al' | 'fu3l' | 'fu3ool' | 'fi3aal' | 'fi3aala' | 'fa3aala' | 'fi3la' | 'fi3l'
-export type Tense = 'past' | 'present' | 'future'
+export type Tense = 'past' | 'present' | 'future' | 'imperative'
 
 type RawFormI = {
   root: string
@@ -204,18 +200,4 @@ export function search(query: string, options: SearchOptions = {}): Verb[] {
 
 export function getVerbById(id?: string): Verb | undefined {
   return id ? verbsById.get(id) : undefined
-}
-
-export function conjugate(verb: Verb, tense: 'past' | 'future'): Record<PronounId, string>
-export function conjugate(verb: Verb, tense: 'present', mood?: Mood): Record<PronounId, string>
-export function conjugate(verb: Verb, tense: Tense, mood: Mood = 'indicative'): Record<PronounId, string> {
-  if (tense === 'past') {
-    return conjugatePast(verb)
-  }
-
-  if (tense === 'present') {
-    return conjugatePresentMood(verb, mood)
-  }
-
-  return conjugateFuture(verb)
 }

@@ -1,11 +1,13 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
-import type { Mood } from '../paradigms/active/present'
+import { conjugateFuture } from '../paradigms/active/future'
+import { conjugateImperative } from '../paradigms/active/imperative'
+import { conjugatePast } from '../paradigms/active/past'
+import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/helpers'
 import { PRONOUNS, type PronounSlot } from '../paradigms/pronouns'
 import type { Tense, Verb } from '../paradigms/verbs'
-import { conjugate } from '../paradigms/verbs'
 import { SpeechButton, useSpeechSupport } from './SpeechButton'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
@@ -32,7 +34,16 @@ interface FutureConjugationProps extends ConjugationProps {
   mood?: undefined
 }
 
-type ConjugationTableProps = PastConjugationProps | PresentConjugationProps | FutureConjugationProps
+interface ImperativeConjugationProps extends ConjugationProps {
+  tense: 'imperative'
+  mood?: undefined
+}
+
+type ConjugationTableProps =
+  | PastConjugationProps
+  | PresentConjugationProps
+  | FutureConjugationProps
+  | ImperativeConjugationProps
 
 export function ConjugationTable({
   verb,
@@ -45,21 +56,16 @@ export function ConjugationTable({
   const { t, dir, lang } = useI18n()
   const speechSupported = useSpeechSupport('ar')
   const conjugations = useMemo(() => {
-    if (tense === 'past') {
-      return conjugate(verb, tense)
-    }
-
-    if (tense === 'present') {
-      return conjugate(verb, tense, mood)
-    }
-
-    return conjugate(verb, tense)
+    if (tense === 'past') return conjugatePast(verb)
+    if (tense === 'future') return conjugateFuture(verb)
+    if (tense === 'imperative') return conjugateImperative(verb)
+    return conjugatePresentMood(verb, mood)
   }, [verb, tense, mood])
 
   return (
     <TabsContainer>
       <TabBlock>
-        <TabRow role="tablist" aria-label={t('aria.selectTense')}>
+        <TabRow wrap role="tablist" aria-label={t('aria.selectTense')}>
           {(Object.keys(TENSE_OPTIONS) as Tense[]).map((option) => (
             <TabButton
               type="button"
@@ -74,13 +80,14 @@ export function ConjugationTable({
               onClick={() => onTenseChange(option)}
               dir={dir}
               lang={lang}
+              fluid
             >
               {t(TENSE_OPTIONS[option])}
             </TabButton>
           ))}
         </TabRow>
         {tense === 'present' && (
-          <TabRow wrap role="tablist" aria-label={t('aria.selectMood')}>
+          <TabRow role="tablist" aria-label={t('aria.selectMood')}>
             {(Object.keys(MOOD_OPTIONS) as Mood[]).map((option) => (
               <TabButton
                 type="button"
@@ -93,7 +100,6 @@ export function ConjugationTable({
                 tabIndex={option === mood ? 0 : -1}
                 aria-label={t(MOOD_OPTIONS[option])}
                 size="sm"
-                fluid
                 onClick={() => onMoodChange(option)}
                 dir={dir}
                 lang={lang}
@@ -109,7 +115,7 @@ export function ConjugationTable({
           role="tabpanel"
           id="conjugation-panel"
           aria-labelledby={
-            tense === 'past' ? `tense-tab-${tense}` : tense === 'present' ? `mood-tab-${mood}` : `tense-tab-${tense}`
+            tense === 'past' || tense === 'future' || tense === 'imperative' ? `tense-tab-${tense}` : `mood-tab-${mood}`
           }
         >
           <Table dir="rtl">
@@ -117,7 +123,7 @@ export function ConjugationTable({
               <Row>
                 <TableHeadCell>{t('table.pronoun')}</TableHeadCell>
                 <VerbHeadCell>
-                  {tense !== 'present' || mood === 'indicative' ? t(TENSE_OPTIONS[tense]) : t(MOOD_OPTIONS[mood])}
+                  {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_OPTIONS[tense])}
                 </VerbHeadCell>
                 {speechSupported && <TableHeadCell></TableHeadCell>}
               </Row>
@@ -159,13 +165,13 @@ const TENSE_OPTIONS: Readonly<Record<Tense, TranslationKey>> = {
   past: 'tense.past',
   present: 'tense.present',
   future: 'tense.future',
+  imperative: 'mood.imperative',
 } as const
 
 const MOOD_OPTIONS: Readonly<Record<Mood, TranslationKey>> = {
   indicative: 'mood.indicative',
   subjunctive: 'mood.subjunctive',
   jussive: 'mood.jussive',
-  imperative: 'mood.imperative',
 } as const
 
 const TabsContainer = styled('nav')`
@@ -212,7 +218,7 @@ const TabButton = styled('button')<{ active?: boolean; size?: 'sm' | 'lg'; fluid
   gap: 0.1rem;
   justify-content: center;
   letter-spacing: 0.08em;
-  min-width: ${({ fluid }) => (fluid ? '45%' : '0')};
+  min-width: ${({ fluid }) => (fluid ? 'calc(50% - 0.25rem)' : '0')};
   padding: 0.4rem 0.6rem;
   text-transform: uppercase;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;

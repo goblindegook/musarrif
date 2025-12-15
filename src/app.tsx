@@ -507,15 +507,7 @@ export function App() {
             </Panel>
 
             <ConjugationSection>
-              {!tense || tense === 'past' ? (
-                <ConjugationTable
-                  verb={selectedVerb}
-                  tense="past"
-                  diacriticsPreference={diacriticsPreference}
-                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
-                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
-                />
-              ) : tense === 'present' ? (
+              {tense === 'present' ? (
                 <ConjugationTable
                   verb={selectedVerb}
                   tense="present"
@@ -527,7 +519,7 @@ export function App() {
               ) : (
                 <ConjugationTable
                   verb={selectedVerb}
-                  tense="future"
+                  tense={tense ?? 'past'}
                   diacriticsPreference={diacriticsPreference}
                   onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
                   onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}

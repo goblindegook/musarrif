@@ -61,17 +61,41 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Present'))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/present')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/active/present')
   })
 
-  it('labels the imperative column without a present prefix', async () => {
+  it('shows imperative as a separate tense option', async () => {
+    renderApp('/#/en/ktb-1')
+    const user = userEvent.setup()
+
+    await user.click(screen.getByText('Imperative'))
+
+    expect(screen.getByRole('columnheader', { name: 'Imperative' })).toBeInTheDocument()
+    const imperativeCells = screen.getAllByRole('cell')
+    const hasImperativeContent = imperativeCells.some((cell) => /ك.*ت.*ب/.test(cell.textContent ?? ''))
+    expect(hasImperativeContent).toBe(true)
+  })
+
+  it('reflects imperative tense changes in the URL', async () => {
+    renderApp('/#/en/ktb-1')
+    const user = userEvent.setup()
+    const pushSpy = vi.spyOn(window.history, 'pushState')
+
+    await user.click(screen.getByText('Imperative'))
+
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/active/imperative')
+  })
+
+  it('does not show imperative in present tense mood tabs', async () => {
     renderApp('/#/en/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('Present'))
-    await user.click(screen.getByText('Imperative'))
 
-    expect(screen.getByRole('columnheader', { name: 'Imperative' })).toBeInTheDocument()
+    const moodTabs = screen.getByRole('tablist', { name: /select mood/i })
+    expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
+    expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
+    expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
   })
 })
 

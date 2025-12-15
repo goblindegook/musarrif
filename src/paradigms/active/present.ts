@@ -33,9 +33,7 @@ import {
 } from '../helpers'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
-import { conjugateImperative } from './imperative'
-
-export type Mood = 'indicative' | 'subjunctive' | 'jussive' | 'imperative'
+export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
 const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2ms', '3ms', '3fs', '2pf', '3pf'])
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
@@ -145,8 +143,7 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
   if (mood === 'indicative') return conjugatePresent(verb)
   if (mood === 'subjunctive') return conjugateSubjunctive(verb)
   if (mood === 'jussive') return conjugateJussive(verb)
-  // FIXME: Imperative is not a present mood.
-  return conjugateImperative(verb)
+  throw new Error(`Unknown mood: ${mood}`)
 }
 
 function normalizeDefectivePresent(base: readonly string[], c3: string): readonly string[] {
