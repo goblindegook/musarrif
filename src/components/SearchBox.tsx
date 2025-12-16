@@ -180,7 +180,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   )
 }
 
-const SuggestionContainer = styled('div')<{ isActive?: boolean }>`
+const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
   position: relative;
   width: 100%;
   box-sizing: border-box;
