@@ -9,6 +9,7 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   MEEM,
@@ -67,9 +68,9 @@ function masdar(verb: Verb): readonly string[] {
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const isInitialHamza = c1 === ALIF_HAMZA
-  const isMiddleHamza = c2 === ALIF_HAMZA
-  const isFinalHamza = c3 === ALIF_HAMZA
+  const isInitialHamza = isHamzatedLetter(c1)
+  const isMiddleHamza = isHamzatedLetter(c2)
+  const isFinalHamza = isHamzatedLetter(c3)
 
   switch (verb.form) {
     case 1: {
@@ -125,6 +126,9 @@ function masdar(verb: Verb): readonly string[] {
         const seatedHamza = vowelFromRadical('u') === DAMMA ? HAMZA_ON_WAW : HAMZA
         return [c1, DAMMA, seatedHamza, SUKOON, YEH, FATHA, TEH_MARBUTA]
       }
+
+      // Hollow verb with final hamza (e.g., جيء → مَجِيء)
+      if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
 
       if (isMiddleWeak) {
         // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
@@ -202,6 +206,9 @@ function masdar(verb: Verb): readonly string[] {
     case 6:
       // Hollow defective Form VI with alif c2 doesn't repeat the alif (e.g., تَعَانٍ)
       if (c2 === ALIF && isFinalWeak) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
+
+      // Hollow Form VI with final hamza (e.g., تَجَاءٍ)
+      if (isMiddleWeak && isFinalHamza) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
       // Defective Form VI drops the weak final and takes kasratayn: تَفَاعٍ (e.g., تَلَاقٍ)
       if (isFinalWeak) return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]

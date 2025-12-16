@@ -46,6 +46,8 @@ test.each([
   ['أوفى', 1, 'مُوفٍ'],
   ['غدو', 1, 'غَاد'],
   ['وعد', 1, 'وَاعِد'],
+  ['جيء', 1, 'جَاءٍ'],
+  ['جيء', 6, 'مُتَجَاءٍ'],
 ])('%s (Form %d) active participle is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
   expect(deriveActiveParticiple(verb)).toBe(expected)

@@ -86,7 +86,7 @@ export function isWeakLetter(value = ''): boolean {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
-function isHamzatedLetter(value = ''): boolean {
+export function isHamzatedLetter(value = ''): boolean {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 

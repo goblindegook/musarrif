@@ -6,7 +6,10 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  HAMZA,
+  HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   MEEM,
@@ -34,28 +37,84 @@ function weakLetterTail(letter: string): string {
         : ALIF
 }
 
-type PastBaseForms = {
-  base: readonly string[]
-  baseWithSukoon: readonly string[]
-  baseWithDamma: readonly string[]
-  baseWithoutC3?: readonly string[]
-  glide?: string
-}
+type PastBaseForms =
+  | {
+      base: readonly string[]
+      baseWithSukoon: readonly string[]
+      baseWithDamma: readonly string[]
+    }
+  | {
+      base: readonly string[]
+      baseWithSukoon: readonly string[]
+      baseWithDamma: readonly string[]
+      baseWithoutC3: readonly string[]
+      glide: string
+    }
 
-const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms) => readonly string[]> = {
-  '1s': (forms) => [...forms.baseWithSukoon, TEH, DAMMA],
-  '2ms': (forms) => [...forms.baseWithSukoon, TEH, FATHA],
-  '2fs': (forms) => [...forms.baseWithSukoon, TEH, KASRA],
-  '3ms': (forms) => [...forms.base],
-  '3fs': (forms) => [...forms.base, TEH, SUKOON],
-  '2d': (forms) => [...forms.baseWithSukoon, TEH, DAMMA, MEEM, FATHA, ALIF],
-  '3dm': (forms) => [...forms.base, ALIF],
-  '3df': (forms) => [...forms.base, TEH, FATHA, ALIF],
-  '1p': (forms) => [...forms.baseWithSukoon, NOON, FATHA, ALIF],
-  '2pm': (forms) => [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON],
-  '2pf': (forms) => [...forms.baseWithSukoon, TEH, DAMMA, NOON, SHADDA, FATHA],
-  '3pm': (forms) => [...forms.baseWithDamma, WAW, ALIF],
-  '3pf': (forms) => [...forms.baseWithSukoon, NOON, FATHA],
+const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
+  '1s': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA]
+    return [...forms.baseWithSukoon, TEH, DAMMA]
+  },
+  '2ms': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, FATHA]
+    return [...forms.baseWithSukoon, TEH, FATHA]
+  },
+  '2fs': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, KASRA]
+    return [...forms.baseWithSukoon, TEH, KASRA]
+  },
+  '3ms': (forms) => forms.base,
+  '3fs': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, TEH, SUKOON]
+    return [...forms.base, TEH, SUKOON]
+  },
+  '2d': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF]
+    return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, FATHA, ALIF]
+  },
+  '3dm': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, FATHA, ALIF]
+    return [...forms.base, ALIF]
+  },
+  '3df': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, TEH, FATHA, ALIF]
+    return [...forms.base, TEH, FATHA, ALIF]
+  },
+  '1p': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA, ALIF]
+    return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
+  },
+  '2pm': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
+    return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON]
+  },
+  '2pf': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA]
+    return [...forms.baseWithSukoon, TEH, DAMMA, NOON, SHADDA, FATHA]
+  },
+  '3pm': (forms, verb) => {
+    const [, c2, c3] = [...verb.root]
+
+    // For hollow verbs with final hamza, hamza before و should be seated on waw: جَاؤُوا
+    if (isWeakLetter(c2) && isHamzatedLetter(c3))
+      return [
+        ...stripTrailingDiacritics(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
+        DAMMA,
+        WAW,
+        ALIF,
+      ]
+
+    if ('baseWithoutC3' in forms) {
+      const pluralGlide = forms.glide === YEH ? WAW : forms.glide
+      return [...forms.baseWithoutC3, pluralGlide, SUKOON, ALIF]
+    }
+    return [...forms.baseWithDamma, WAW, ALIF]
+  },
+  '3pf': (forms) => {
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA]
+    return [...forms.baseWithSukoon, NOON, FATHA]
+  },
 }
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
@@ -63,7 +122,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 
   return PRONOUN_IDS.reduce<Record<PronounId, string>>(
     (acc, pronounId) => {
-      const past = forms.baseWithoutC3 ? buildDefectivePast(pronounId, forms) : PAST_BUILDERS[pronounId](forms)
+      const past = PAST_BUILDERS[pronounId](forms, verb)
       acc[pronounId] = past.join('')
       return acc
     },
@@ -149,6 +208,8 @@ function buildPastBase(verb: Verb): readonly string[] {
       if (isWeakLetter(c3)) return normalizeDefectivePast([...prefix, c2, FATHA, c3], c3)
 
       // Hollow Form IV past contracts to long ā (e.g., أَضَافَ)
+      // Hollow Form IV with final hamza (e.g., أَجَاءَ) - don't normalize, hamza is not a weak letter
+      if (isWeakLetter(c2) && isHamzatedLetter(c3)) return [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA]
       if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
 
       return normalizeDefectivePast([...prefix, c2, FATHA, c3, FATHA], c3)
@@ -160,6 +221,8 @@ function buildPastBase(verb: Verb): readonly string[] {
     case 6:
       // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., تَعَانَ)
       if (c2 === ALIF) return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+      // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
+      if (isWeakLetter(c2) && isHamzatedLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
 
       return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
@@ -217,6 +280,36 @@ function derivePastForms(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const isDefective = isWeakLetter(verb.root.at(-1))
   const isHollow = isWeakLetter(c2)
+  const isFinalHamza = isHamzatedLetter(c3)
+
+  // Hollow verb with final hamza (e.g., جيء → جَاءَ / جِئْتُ, Form IV: أَجَاءَ / أَجِئْتُ, Form VI: تَجَاءَ / تَجِئْتُ)
+  // Base keeps hamza, but forms with suffixes drop hamza and seat it on yeh
+  if (isHollow && isFinalHamza) {
+    const shortVowel = hollowShortVowel(verb)
+    // For Form IV and VI, preserve the prefix from the base
+    if (verb.form === 4 || verb.form === 6) {
+      // Base is [أ, ج, َ, ا, ء] or [ت, ج, ا, ء], we need [أ, ج, ِ, ئ] or [ت, ج, ِ, ئ]
+      // Remove alif, change fatḥa before it to kasra, replace hamza with hamza on yeh
+      const result = stripTrailingDiacritics(base)
+        .map((char, i, stem) => {
+          if (char === ALIF) return null
+          if (char === FATHA && stem[i + 1] === ALIF) return KASRA
+          if (char === HAMZA) return HAMZA_ON_YEH
+          return char
+        })
+        .filter((char): char is string => char != null)
+      return {
+        base,
+        baseWithSukoon: [...result, SUKOON],
+        baseWithDamma: [...result, DAMMA],
+      }
+    }
+    return {
+      base,
+      baseWithSukoon: [c1, shortVowel, HAMZA_ON_YEH, SUKOON],
+      baseWithDamma: [c1, shortVowel, HAMZA_ON_YEH, DAMMA],
+    }
+  }
 
   if (!isDefective && isHollow)
     return {
@@ -253,26 +346,4 @@ function hollowShortVowel(verb: Verb): string {
   if (middleRadical === YEH) return KASRA
   if (middleRadical === WAW || middleRadical === ALIF) return DAMMA
   return FATHA
-}
-
-function buildDefectivePast(pronounId: PronounId, forms: PastBaseForms): readonly string[] {
-  const baseWithoutC3 = forms.baseWithoutC3 ?? []
-  const glide = forms.glide ?? YEH
-
-  switch (pronounId) {
-    case '3ms':
-      return forms.base
-    case '3fs':
-      return [...baseWithoutC3, TEH, SUKOON]
-    case '3dm':
-      return [...baseWithoutC3, glide, FATHA, ALIF]
-    case '3df':
-      return [...baseWithoutC3, TEH, FATHA, ALIF]
-    case '3pm': {
-      const pluralGlide = glide === YEH ? WAW : glide
-      return [...baseWithoutC3, pluralGlide, SUKOON, ALIF]
-    }
-    default:
-      return PAST_BUILDERS[pronounId](forms)
-  }
 }

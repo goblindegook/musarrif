@@ -8,6 +8,7 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   MEEM,
@@ -102,6 +103,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (c3 === ALIF_HAMZA) return [c1, FATHA, ALIF, c2, KASRA, HAMZA_ON_YEH]
 
+        // Hollow verb with final hamza (e.g., جيء → جَاءٍ)
+        if (isMiddleWeak && isHamzatedLetter(c3)) return [c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+
         if (isMiddleWeak) return adjustDefective([c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3, DAMMA], c3, KASRA)
 
         // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
@@ -167,6 +171,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 6:
         // Hollow Form VI: if c2 is ALIF, don't insert another ALIF and use tanween kasra (e.g., مُتَعَانٍ)
         if (c2 === ALIF) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+        // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
+        if (isMiddleWeak && isHamzatedLetter(c3)) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3, KASRA)
 
       case 7:

@@ -7,9 +7,11 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   longVowelFromPattern,
@@ -48,29 +50,65 @@ const PRESENT_FEM_PLURAL_SUFFIX = [NOON, FATHA]
 const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) => readonly string[]> = {
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
   '2ms': (base) => applyPresentPrefix(base, TEH),
-  '2fs': (base) => [
-    ...replaceFinalDiacritic(dropTerminalDefective(applyPresentPrefix(base, TEH)), KASRA),
-    YEH,
-    SUKOON,
-    NOON,
-    FATHA,
-  ],
+  '2fs': (base, verb) => {
+    const stem = applyPresentPrefix(base, TEH)
+    const [, c2, c3] = [...verb.root]
+    if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
+      // Replace hamza with hamza on yeh, change final damma to kasra, add yeh + noon + fatḥa
+      const stemWithoutFinalDiacritic = stripTrailingDiacritics(stem)
+      return [
+        ...stemWithoutFinalDiacritic.map((char) => (char === HAMZA || char === ALIF_HAMZA ? HAMZA_ON_YEH : char)),
+        KASRA,
+        YEH,
+        NOON,
+        FATHA,
+      ]
+    }
+    return [...replaceFinalDiacritic(dropTerminalDefective(stem), KASRA), YEH, SUKOON, NOON, FATHA]
+  },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
-  '2d': (base) => [...replaceFinalDiacritic(applyPresentPrefix(base, TEH), FATHA), ...PRESENT_DUAL_SUFFIX],
-  '3dm': (base) => [...replaceFinalDiacritic(base, FATHA), ...PRESENT_DUAL_SUFFIX],
-  '3df': (base) => [...replaceFinalDiacritic(applyPresentPrefix(base, TEH), FATHA), ...PRESENT_DUAL_SUFFIX],
+  '2d': (base, verb) => {
+    const stem = applyPresentPrefix(base, TEH)
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : stem
+    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  },
+  '3dm': (base, verb) => {
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(base) : base
+    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  },
+  '3df': (base, verb) => {
+    const stem = applyPresentPrefix(base, TEH)
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : stem
+    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  },
   '1p': (base) => applyPresentPrefix(base, NOON),
-  '2pm': (base) => [...dropTerminalDefective(applyPresentPrefix(base, TEH)), ...PRESENT_MASC_PLURAL_SUFFIX],
+  '2pm': (base, verb) => {
+    const stem = applyPresentPrefix(base, TEH)
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : dropTerminalDefective(stem)
+    return [...processed, ...PRESENT_MASC_PLURAL_SUFFIX]
+  },
   '2pf': (base, verb) => {
+    const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
-    return [...replaceFinalDiacritic(expanded, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(expanded) : expanded
+    return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
-  '3pm': (base) => [...dropTerminalDefective(base), ...PRESENT_MASC_PLURAL_SUFFIX],
+  '3pm': (base, verb) => {
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(base) : dropTerminalDefective(base)
+    return [...processed, ...PRESENT_MASC_PLURAL_SUFFIX]
+  },
   '3pf': (base, verb) => {
     const expanded = verb.form === 9 ? expandShadda(base) : base
-    return [...replaceFinalDiacritic(expanded, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+    const [, c2, c3] = [...verb.root]
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(expanded) : expanded
+    return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
 }
 
@@ -120,20 +158,36 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
-  const [c1, c2] = letters
+  const [c1, c2, c3] = letters
   const isInitialHamza = c1 === ALIF_HAMZA
   const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(letters[2]))
   const isFinalWeak = isWeakLetter(verb.root.at(-1))
+  const isFinalHamza = (c3 === ALIF_HAMZA || c3 === HAMZA) && letters.length >= 3
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
       const shouldDropNoon = ['2fs', '2d', '2pm', '3dm', '3df', '3pm'].includes(pronounId)
-      if (shouldDropNoon) return dropNoonEnding(word, indicative)
+      if (shouldDropNoon) {
+        const dropped = dropNoonEnding(word, indicative)
+        // If final hamza, drop it and seat on yeh
+        if (isFinalHamza) {
+          return dropFinalHamza(dropped)
+        }
+        return dropped
+      }
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
+
+      // Hollow verb with final hamza: shorten hollow and drop hamza, seat it on yeh
+      if (!isInitialHamza && isMiddleWeak && isFinalHamza) {
+        const shouldShortenHollow =
+          HOLLOW_APOCOPE_FORMS.has(verb.form) && HOLLOW_JUSSIVE_APOCOPE_PRONOUNS.has(pronounId)
+        const stem = shouldShortenHollow ? shortenHollowStem(word, c2) : word
+        return replaceFinalDiacritic(dropFinalHamza(stem), SUKOON)
+      }
 
       const shouldShortenHollow =
         (HOLLOW_APOCOPE_FORMS.has(verb.form) || (verb.form === 3 && c2 === ALIF)) &&
@@ -263,6 +317,10 @@ function buildPresentBase(verb: Verb): readonly string[] {
       // Final-weak (defective) Form I: glide remains, no trailing case vowel on 3ms base
       if (!isInitialWeak && !isInitialHamza && !isMiddleWeak && isFinalWeak)
         return [YEH, FATHA, c1, SUKOON, c2, longVowelFromPattern(patternVowel), finalLetterGlide(c3)]
+
+      // Hollow verbs with final hamza (e.g., جيء → يَجِيءُ)
+      if (!isInitialWeak && !isInitialHamza && isMiddleWeak && (c3 === ALIF_HAMZA || c3 === HAMZA))
+        return [YEH, FATHA, c1, shortVowelFromPattern(patternVowel), longVowelFromPattern(patternVowel), c3, DAMMA]
 
       // Hollow verbs (middle weak letter wāw or yā' written as long vowel)
       if (!isInitialWeak && !isInitialHamza && isMiddleWeak && !isFinalWeak)
@@ -468,6 +526,14 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
     return chars
   }
   return replaceFinalDiacritic(word, SUKOON)
+}
+
+function dropFinalHamza(word: readonly string[]): readonly string[] {
+  for (let i = word.length - 1; i >= 0; i -= 1) {
+    if (isDiacritic(word[i])) continue
+    if (word[i] === ALIF_HAMZA || word[i] === HAMZA) return [...word.slice(0, i), HAMZA_ON_YEH, ...word.slice(i + 1)]
+  }
+  return word
 }
 
 function applyPresentPrefix(chars: readonly string[], prefix: string): readonly string[] {

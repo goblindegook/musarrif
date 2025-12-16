@@ -40,6 +40,9 @@ describe('active past', () => {
     ['وعد', 1, 'وَعَدَ'],
     ['وقي', 1, 'وَقَى'],
     ['ولى', 1, 'وَلِي'],
+    ['جيء', 1, 'جَاءَ'],
+    ['جيء', 4, 'أَجَاءَ'],
+    ['جيء', 6, 'تَجَاءَ'],
   ])('%s (%d) pattern is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const past = conjugatePast(verb)
@@ -80,5 +83,62 @@ describe('active past', () => {
 
     expect(past['1s']).toBe('قُلْتُ')
     expect(past['1p']).toBe('قُلْنَا')
+  })
+
+  it('handles hollow verb with final hamza for جَاءَ', () => {
+    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
+    const past = conjugatePast(verb)
+
+    expect(past['3ms']).toBe('جَاءَ')
+    expect(past['3fs']).toBe('جَاءَتْ')
+    expect(past['3dm']).toBe('جَاءَا')
+    expect(past['3df']).toBe('جَاءَتَا')
+    expect(past['3pm']).toBe('جَاؤُوا')
+    expect(past['3pf']).toBe('جِئْنَ')
+    expect(past['2ms']).toBe('جِئْتَ')
+    expect(past['2fs']).toBe('جِئْتِ')
+    expect(past['2d']).toBe('جِئْتُمَا')
+    expect(past['2pm']).toBe('جِئْتُمْ')
+    expect(past['2pf']).toBe('جِئْتُنَّ')
+    expect(past['1s']).toBe('جِئْتُ')
+    expect(past['1p']).toBe('جِئْنَا')
+  })
+
+  it('handles Form IV hollow verb with final hamza for أَجَاءَ', () => {
+    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 4)!
+    const past = conjugatePast(verb)
+
+    expect(past['3ms']).toBe('أَجَاءَ')
+    expect(past['3fs']).toBe('أَجَاءَتْ')
+    expect(past['3dm']).toBe('أَجَاءَا')
+    expect(past['3df']).toBe('أَجَاءَتَا')
+    expect(past['3pm']).toBe('أَجَاؤُوا')
+    expect(past['3pf']).toBe('أَجِئْنَ')
+    expect(past['2ms']).toBe('أَجِئْتَ')
+    expect(past['2fs']).toBe('أَجِئْتِ')
+    expect(past['2d']).toBe('أَجِئْتُمَا')
+    expect(past['2pm']).toBe('أَجِئْتُمْ')
+    expect(past['2pf']).toBe('أَجِئْتُنَّ')
+    expect(past['1s']).toBe('أَجِئْتُ')
+    expect(past['1p']).toBe('أَجِئْنَا')
+  })
+
+  it('handles Form VI hollow verb with final hamza for تَجَاءَ', () => {
+    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 6)!
+    const past = conjugatePast(verb)
+
+    expect(past['3ms']).toBe('تَجَاءَ')
+    expect(past['3fs']).toBe('تَجَاءَتْ')
+    expect(past['3dm']).toBe('تَجَاءَا')
+    expect(past['3df']).toBe('تَجَاءَتَا')
+    expect(past['3pm']).toBe('تَجَاؤُوا')
+    expect(past['3pf']).toBe('تَجِئْنَ')
+    expect(past['2ms']).toBe('تَجِئْتَ')
+    expect(past['2fs']).toBe('تَجِئْتِ')
+    expect(past['2d']).toBe('تَجِئْتُمَا')
+    expect(past['2pm']).toBe('تَجِئْتُمْ')
+    expect(past['2pf']).toBe('تَجِئْتُنَّ')
+    expect(past['1s']).toBe('تَجِئْتُ')
+    expect(past['1p']).toBe('تَجِئْنَا')
   })
 })

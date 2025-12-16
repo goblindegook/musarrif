@@ -57,6 +57,15 @@ describe('active present indicative', () => {
     ['وعد', 1, '3ms', 'يَعِدُ'],
     ['وقي', 1, '3ms', 'يَقِي'],
     ['ولى', 1, '3ms', 'يَلِي'],
+    ['جيء', 1, '3ms', 'يَجِيءُ'],
+    ['جيء', 1, '2fs', 'تَجِيئِينَ'],
+    ['جيء', 1, '2d', 'تَجِيئَانِ'],
+    ['جيء', 1, '3dm', 'يَجِيئَانِ'],
+    ['جيء', 1, '3df', 'تَجِيئَانِ'],
+    ['جيء', 1, '2pm', 'تَجِيئُونَ'],
+    ['جيء', 1, '2pf', 'تَجِيئْنَ'],
+    ['جيء', 1, '3pm', 'يَجِيئُونَ'],
+    ['جيء', 1, '3pf', 'يَجِيئْنَ'],
   ])('%s (%d) %s is %s', (root, form, pronoun, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     expect(conjugatePresentMood(verb, 'indicative')[pronoun]).toBe(expected)
@@ -143,6 +152,19 @@ describe('active present jussive', () => {
     expect(jussive['2pf']).toBe('تَحْمَرَرْنَ')
     expect(jussive['3pf']).toBe('يَحْمَرَرْنَ')
   })
+
+  it('drops final hamza for جَاءَ (middle weak + final hamza)', () => {
+    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
+    const jussive = conjugatePresentMood(verb, 'jussive')
+
+    expect(jussive['3ms']).toBe('يَجِئْ')
+    expect(jussive['2ms']).toBe('تَجِئْ')
+    expect(jussive['1s']).toBe('أَجِئْ')
+    expect(jussive['1p']).toBe('نَجِئْ')
+    expect(jussive['3fs']).toBe('تَجِئْ')
+    expect(jussive['2fs']).toBe('تَجِيئِي')
+    expect(jussive['3pm']).toBe('يَجِيئُوا')
+  })
 })
 
 describe('active present subjunctive', () => {
@@ -161,5 +183,16 @@ describe('active present subjunctive', () => {
 
     expect(subjunctive['2pf']).toBe('تَحْمَرَرْنَ')
     expect(subjunctive['3pf']).toBe('يَحْمَرَرْنَ')
+  })
+
+  it('changes final damma to fatḥa for جَاءَ in subjunctive', () => {
+    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
+    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
+
+    expect(subjunctive['3ms']).toBe('يَجِيءَ')
+    expect(subjunctive['2ms']).toBe('تَجِيءَ')
+    expect(subjunctive['1s']).toBe('أَجِيءَ')
+    expect(subjunctive['1p']).toBe('نَجِيءَ')
+    expect(subjunctive['3fs']).toBe('تَجِيءَ')
   })
 })
