@@ -109,13 +109,10 @@ function buildPastBase(verb: Verb): readonly string[] {
       const pastVowel = resolveFormIPastVowel(verb)
 
       // Final-weak Form I: long vowel in the base, no ending fatḥa
-      if (isWeakLetter(c3)) {
-        // e.g., نَسِيَ -> ياء with kasra on C2
-        if (pastVowel === 'i') return [c1, FATHA, c2, KASRA, YEH, FATHA]
+      if (isWeakLetter(c3) && pastVowel === 'i') return [c1, FATHA, c2, KASRA, YEH, FATHA]
 
-        // Default to long ā (wāw -> alif, yā’ -> alif maqṣūra)
-        return [c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)]
-      }
+      // Final-weak Form I: long vowel in the base, no ending fatḥa
+      if (isWeakLetter(c3)) return [c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)]
 
       // Geminate Form I: if c2 === c3, collapse with shadda (e.g., حَبَّ)
       if (c2 === c3) return [c1, FATHA, c2, SHADDA, FATHA]

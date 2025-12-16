@@ -34,6 +34,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
       const [, ...rest] = removeLeadingDiacritics(Array.from(jussiveVerb))
       const stem = removeLeadingDiacritics(rest)
 
+      if (letters.length === 4 && verb.form === 1 && isInitialHamza && isMiddleWeak && isFinalWeak) {
+        return [ALIF_HAMZA, FATHA, WAW, SUKOON, isWeakLetter(c2) ? c3 : c2, KASRA]
+      }
+
       switch (verb.form) {
         case 1: {
           // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
@@ -42,14 +46,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Initial hamza + final weak (e.g., أتى → ائْتِ)
           if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
 
-          // Initial hamza + middle weak + final weak (e.g., أوي → اِئْوِ, أوفى → أَوْفِ)
-          if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-            // Quadriliteral: أوفى → أَوْفِ (أ-و-ف-ى)
-            if (letters.length === 4) return [ALIF_HAMZA, FATHA, WAW, SUKOON, isWeakLetter(c2) ? c3 : c2, KASRA]
-
-            // Triliteral: أوي → اِئْوِ (initial hamza becomes ائ, middle weak kept, final weak dropped)
-            return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
-          }
+          // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
+          if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
           return stem
         }
