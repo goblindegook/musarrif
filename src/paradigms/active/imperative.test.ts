@@ -1,8 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
-import { ALIF_HAMZA, ALIF_MADDA } from '../constants'
-import { isWeakLetter } from '../helpers'
+import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { verbs } from '../verbs'
 import { conjugateImperative } from './imperative'

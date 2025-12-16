@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { FATHA, SEEN } from '../constants'
+import { FATHA, SEEN } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { verbs } from '../verbs'
 import { conjugateFuture } from './future'

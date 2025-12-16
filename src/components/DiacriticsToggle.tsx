@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useI18n } from '../hooks/i18n'
-import type { DiacriticsPreference } from '../paradigms/helpers'
+import type { DiacriticsPreference } from '../paradigms/letters'
 
 const DIACRITICS_OPTIONS: readonly DiacriticsPreference[] = ['all', 'some', 'none']
 const DIACRITICS_ICON = '\u25cc\u064b'

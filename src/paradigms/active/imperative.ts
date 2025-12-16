@@ -1,6 +1,19 @@
 import { mapRecord } from '../../primitives/objects'
-import { ALIF, ALIF_HAMZA, ALIF_MADDA, FATHA, HAMZA_ON_YEH, KASRA, SEEN, SHADDA, SUKOON, TEH, WAW } from '../constants'
-import { isWeakLetter, removeLeadingDiacritics } from '../helpers'
+import {
+  ALIF,
+  ALIF_HAMZA,
+  ALIF_MADDA,
+  FATHA,
+  HAMZA_ON_YEH,
+  isWeakLetter,
+  KASRA,
+  removeLeadingDiacritics,
+  SEEN,
+  SHADDA,
+  SUKOON,
+  TEH,
+  WAW,
+} from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'

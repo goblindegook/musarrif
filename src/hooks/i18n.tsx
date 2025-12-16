@@ -5,7 +5,7 @@ import ar from '../locales/ar.json'
 import en from '../locales/en.json'
 import it from '../locales/it.json'
 import pt from '../locales/pt.json'
-import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/helpers'
+import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { DIACRITICS_STORAGE_KEY, readPreference, writePreference } from './preferences'
 import { useRouting } from './routing'
 

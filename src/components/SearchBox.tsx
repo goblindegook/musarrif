@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
-import { applyDiacriticsPreference } from '../paradigms/helpers'
+import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { Verb } from '../paradigms/verbs'
 import { search } from '../paradigms/verbs'
 import { Overlay, type OverlayProps } from './Overlay'

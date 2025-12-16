@@ -3,7 +3,7 @@ import { useCallback } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { buildVerbHref } from '../hooks/routing'
 import enTranslations from '../locales/en.json'
-import { applyDiacriticsPreference } from '../paradigms/helpers'
+import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { Verb } from '../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const

@@ -8,18 +8,20 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isWeakLetter,
   KASRA,
   MEEM,
   NOON,
   SEEN,
   SHADDA,
   SUKOON,
+  stripTrailingDiacritics,
   TANWEEN_KASRA,
   TEH,
   WAW,
+  weakLetterGlide,
   YEH,
-} from '../constants'
-import { isWeakLetter, stripTrailingDiacritics, weakLetterGlide } from '../helpers'
+} from '../letters'
 import type { Verb } from '../verbs'
 import { adjustDefective, removeTerminalCaseVowel } from './nominals'
 
@@ -201,5 +203,5 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     }
   })()
 
-  return removeTerminalCaseVowel(result)
+  return removeTerminalCaseVowel(result).join('')
 }

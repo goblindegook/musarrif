@@ -1,3 +1,4 @@
+import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -8,6 +9,7 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isWeakLetter,
   KASRA,
   MEEM,
   NOON,
@@ -18,12 +20,11 @@ import {
   TEH,
   TEH_MARBUTA,
   WAW,
+  weakLetterGlide,
   YEH,
-} from '../constants'
-import { resolveFormIPastVowel, resolveFormIPresentVowel, vowelFromRadical } from '../form-i-vowels'
-import { isWeakLetter, weakLetterGlide } from '../helpers'
+} from '../letters'
 import type { Verb } from '../verbs'
-import { adjustDefective, removeTerminalCaseVowel } from './nominals'
+import { adjustDefective, removeTerminalCaseVowel, vowelFromRadical } from './nominals'
 
 function masdar(verb: Verb): readonly string[] {
   const letters = [...verb.root]
@@ -113,9 +114,7 @@ function masdar(verb: Verb): readonly string[] {
       }
 
       // Initial hamza + middle weak + final weak (e.g., أوي → إِوِيّ)
-      if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-        return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, YEH, SHADDA]
-      }
+      if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, YEH, SHADDA]
 
       if (c2 === ALIF_HAMZA && isFinalWeak) {
         // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
@@ -163,8 +162,10 @@ function masdar(verb: Verb): readonly string[] {
         if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, FATHA, ALIF, TEH_MARBUTA]
         return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, ALIF, TEH_MARBUTA]
       }
+
       // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانَاة)
       if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, FATHA, ALIF, TEH_MARBUTA]
+
       return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 
     case 4:
@@ -188,9 +189,8 @@ function masdar(verb: Verb): readonly string[] {
     case 5:
       // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوِّي)
       // Keep final weak with kasra, shadda on middle weak
-      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak) {
+      if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
         return [TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, KASRA, c3]
-      }
 
       // Defective Form V drops the weak final and takes kasratayn on the doubled middle radical: تَغَنٍّ
       if (isFinalWeak) return [TEH, FATHA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
@@ -204,8 +204,10 @@ function masdar(verb: Verb): readonly string[] {
         if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
         return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
       }
+
       // Hollow Form VI with ALIF c2 always takes tanween kasra pattern (e.g., تَعَانٍ)
       if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+
       return [TEH, FATHA, c1, FATHA, ALIF, c2, DAMMA, c3]
 
     case 7:
@@ -255,5 +257,5 @@ function masdar(verb: Verb): readonly string[] {
 }
 
 export function deriveMasdar(verb: Verb): string {
-  return removeTerminalCaseVowel(masdar(verb))
+  return removeTerminalCaseVowel(masdar(verb)).join('')
 }

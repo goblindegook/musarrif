@@ -1,9 +1,8 @@
 import rawVerbs from '../data/verbs.json'
 import { wordDistance } from '../primitives/strings'
 import { conjugatePast } from './active/past'
-import { ALIF } from './constants'
 import type { FormIPattern } from './form-i-vowels'
-import { stripDiacritics } from './helpers'
+import { ALIF, stripDiacritics } from './letters'
 
 type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 type MasdarPattern = 'fa3l' | 'fa3al' | 'fu3l' | 'fu3ool' | 'fi3aal' | 'fi3aala' | 'fa3aala' | 'fi3la' | 'fi3l'

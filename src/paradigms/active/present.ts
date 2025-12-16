@@ -1,4 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
+import { resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -8,32 +9,34 @@ import {
   FATHA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isDiacritic,
+  isWeakLetter,
   KASRA,
+  longVowelFromPattern,
   NOON,
+  removeLeadingDiacritics,
+  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
-  TEH,
-  WAW,
-  YEH,
-} from '../constants'
-import { resolveFormIPresentVowel } from '../form-i-vowels'
-import {
-  finalLetterGlide,
-  hollowLetterGlide,
-  isDiacritic,
-  isWeakLetter,
-  join,
-  longVowelFromPattern,
-  removeLeadingDiacritics,
-  removeTrailingDiacritics,
   shortVowelFromPattern,
   stripTrailingDiacritics,
+  TEH,
+  WAW,
   weakLetterGlide,
-} from '../helpers'
+  YEH,
+} from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
+
+function finalLetterGlide(letter: string): string {
+  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF_MAQSURA
+}
+
+function hollowLetterGlide(letter: string): string {
+  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF
+}
 
 const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2ms', '3ms', '3fs', '2pf', '3pf'])
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
@@ -73,7 +76,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
 function conjugatePresent(verb: Verb): Record<PronounId, string> {
   const base = buildPresentBase(verb)
-  return mapRecord(PRESENT_BUILDERS, (build) => join(...build(base, verb)))
+  return mapRecord(PRESENT_BUILDERS, (build) => build(base, verb).join(''))
 }
 
 function dropNoonEnding(word: readonly string[], indicative: string): readonly string[] {
@@ -111,7 +114,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       return replaceFinalDiacritic(word, FATHA)
     }),
-    (letters) => join(...letters),
+    (letters) => letters.join(''),
   )
 }
 
@@ -145,7 +148,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       return replaceFinalDiacritic(stem, SUKOON)
     }),
-    (letters) => join(...letters),
+    (letters) => letters.join(''),
   )
 }
 

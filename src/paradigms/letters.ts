@@ -1,20 +1,32 @@
-import {
-  ALIF,
-  ALIF_HAMZA,
-  ALIF_MAQSURA,
-  COMBINING_MARK,
-  DAMMA,
-  FATHA,
-  HAMZA,
-  HAMZA_ON_WAW,
-  HAMZA_ON_YEH,
-  KASRA,
-  SUKOON,
-  WAW,
-  YEH,
-} from './constants'
+export const HAMZA = '\u0621'
+export const ALIF_MADDA = '\u0622'
+export const ALIF_HAMZA = '\u0623'
+export const HAMZA_ON_WAW = '\u0624'
+export const ALIF_HAMZA_BELOW = '\u0625'
+export const HAMZA_ON_YEH = '\u0626'
+export const ALIF = '\u0627'
+export const TEH_MARBUTA = '\u0629'
+export const TEH = '\u062A'
+export const SEEN = '\u0633'
+export const MEEM = '\u0645'
+export const NOON = '\u0646'
+export const WAW = '\u0648'
+export const ALIF_MAQSURA = '\u0649'
+export const YEH = '\u064A'
+export const KASRA = '\u0650'
+export const TANWEEN_FATHA = '\u064B'
+export const TANWEEN_DAMMA = '\u064C'
+export const TANWEEN_KASRA = '\u064D'
+export const FATHA = '\u064E'
+export const DAMMA = '\u064F'
+export const SHADDA = '\u0651'
+export const SUKOON = '\u0652'
+
+export const COMBINING_MARK = /\p{Mn}/u
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
+
+export type ShortVowel = 'a' | 'i' | 'u'
 
 const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
   a: FATHA,
@@ -78,26 +90,8 @@ function isHamzatedLetter(value = ''): boolean {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
-export function finalLetterGlide(letter: string): string {
-  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF_MAQSURA
-}
-
-export function hollowLetterGlide(letter: string): string {
-  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF
-}
-
 export function weakLetterGlide(letter: string): string {
   return letter === WAW || letter === ALIF ? WAW : YEH
-}
-
-export function weakLetterTail(letter: string): string {
-  return letter === YEH || letter === ALIF_MAQSURA
-    ? ALIF_MAQSURA
-    : letter === ALIF_HAMZA
-      ? ALIF_HAMZA
-      : letter === HAMZA_ON_YEH
-        ? HAMZA_ON_YEH
-        : ALIF
 }
 
 export function isDiacritic(char = ''): boolean {
@@ -128,10 +122,6 @@ export function stripTrailingDiacritics(word: readonly string[]): string[] {
   const chars = [...word]
   while (chars.length > 0 && COMBINING_MARK.test(chars[chars.length - 1])) chars.pop()
   return chars
-}
-
-export function join(...parts: readonly string[]): string {
-  return parts.join('')
 }
 
 function findNextBaseLetter(chars: readonly string[], startIndex: number): string | undefined {

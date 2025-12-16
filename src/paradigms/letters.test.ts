@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyzeRoot, applyDiacriticsPreference, type DiacriticsPreference } from './helpers'
+import { analyzeRoot, applyDiacriticsPreference, type DiacriticsPreference } from './letters'
 
 describe('analyzeRoot', () => {
   it.each([

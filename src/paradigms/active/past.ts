@@ -1,3 +1,4 @@
+import { FORM_I_PRESENT_VOWELS, resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -5,26 +6,33 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  HAMZA_ON_YEH,
+  isWeakLetter,
   KASRA,
   MEEM,
   NOON,
+  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
+  shortVowelFromPattern,
+  stripTrailingDiacritics,
   TEH,
   WAW,
   YEH,
-} from '../constants'
-import { FORM_I_PRESENT_VOWELS, resolveFormIPastVowel } from '../form-i-vowels'
-import {
-  isWeakLetter,
-  removeTrailingDiacritics,
-  shortVowelFromPattern,
-  stripTrailingDiacritics,
-  weakLetterTail,
-} from '../helpers'
+} from '../letters'
 import { PRONOUN_IDS, type PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
+
+function weakLetterTail(letter: string): string {
+  return letter === YEH || letter === ALIF_MAQSURA
+    ? ALIF_MAQSURA
+    : letter === ALIF_HAMZA
+      ? ALIF_HAMZA
+      : letter === HAMZA_ON_YEH
+        ? HAMZA_ON_YEH
+        : ALIF
+}
 
 type PastBaseForms = {
   base: readonly string[]

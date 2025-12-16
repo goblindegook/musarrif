@@ -1,3 +1,4 @@
+import { resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -7,6 +8,7 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isWeakLetter,
   KASRA,
   MEEM,
   NOON,
@@ -16,12 +18,11 @@ import {
   TANWEEN_FATHA,
   TEH,
   WAW,
+  weakLetterGlide,
   YEH,
-} from '../constants'
-import { resolveFormIPresentVowel, vowelFromRadical } from '../form-i-vowels'
-import { isWeakLetter, weakLetterGlide } from '../helpers'
+} from '../letters'
 import type { Verb } from '../verbs'
-import { adjustDefective, removeTerminalCaseVowel } from './nominals'
+import { adjustDefective, removeTerminalCaseVowel, vowelFromRadical } from './nominals'
 
 export function derivePassiveParticiple(verb: Verb): string {
   if (verb.form === 9 || verb.noPassiveParticiple) return ''
@@ -189,5 +190,5 @@ export function derivePassiveParticiple(verb: Verb): string {
     }
   })()
 
-  return removeTerminalCaseVowel(result)
+  return removeTerminalCaseVowel(result).join('')
 }

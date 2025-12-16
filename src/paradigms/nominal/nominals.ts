@@ -1,5 +1,16 @@
-import { ALIF, ALIF_MAQSURA, DAMMA, FATHA, KASRA, SHADDA, WAW, YEH } from '../constants'
-import { isWeakLetter, join, stripTrailingDiacritics } from '../helpers'
+import type { ShortVowel } from '../letters'
+import {
+  ALIF,
+  ALIF_MAQSURA,
+  DAMMA,
+  FATHA,
+  isWeakLetter,
+  KASRA,
+  SHADDA,
+  stripTrailingDiacritics,
+  WAW,
+  YEH,
+} from '../letters'
 
 export function adjustDefective(word: readonly string[], c3: string, vowel: string): readonly string[] {
   if (!isWeakLetter(c3)) return word
@@ -19,11 +30,15 @@ export function adjustDefective(word: readonly string[], c3: string, vowel: stri
   return chars
 }
 
-export const removeTerminalCaseVowel = (letters: readonly string[]): string => {
+export const removeTerminalCaseVowel = (letters: readonly string[]): readonly string[] => {
   const last = letters.at(-1)
   if (last === DAMMA || last === FATHA || last === KASRA) {
     const beforeLast = letters.at(-2)
-    return beforeLast === SHADDA ? join(...letters) : join(...letters.slice(0, -1))
+    return beforeLast === SHADDA ? letters : letters.slice(0, -1)
   }
-  return join(...letters)
+  return letters
 }
+
+const VOWEL_FROM_RADICAL: Record<ShortVowel, string> = { u: DAMMA, i: KASRA, a: FATHA }
+
+export const vowelFromRadical = (radical: ShortVowel) => VOWEL_FROM_RADICAL[radical]
