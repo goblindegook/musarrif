@@ -61,10 +61,10 @@ const Option = styled('button')<{ active: boolean }>`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
-    background: ${({ active }) => (active ? '#ffe58f' : '#f1f5f9')};
-    border-color: ${({ active }) => (active ? '#eab308' : '#cbd5f5')};
+    background: ${({ active }) => (active ? '#fff8e1' : '#f1f5f9')};
+    border-color: ${({ active }) => (active ? '#facc15' : '#cbd5f5')};
     color: ${({ active }) => (active ? '#92400e' : '#334155')};
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    box-shadow: ${({ active }) => (active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : '0 6px 14px rgba(15, 23, 42, 0.1)')};
   }
 
   @media (min-width: 720px) {

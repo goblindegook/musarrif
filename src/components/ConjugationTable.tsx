@@ -96,12 +96,13 @@ export function ConjugationTable({
   return (
     <TabsContainer>
       <TabBlock>
-        <TabRow wrap role="tablist" aria-label={t('aria.selectTense')}>
+        <TabBar wrap role="tablist" aria-label={t('aria.selectTense')}>
           {(Object.keys(TENSE_OPTIONS) as Tense[]).map((option) => (
             <TabButton
               type="button"
               key={option}
               active={option === tense}
+              hasChildren={option === 'present'}
               role="tab"
               id={`tense-tab-${option}`}
               aria-selected={option === tense}
@@ -116,9 +117,9 @@ export function ConjugationTable({
               {t(TENSE_OPTIONS[option])}
             </TabButton>
           ))}
-        </TabRow>
+        </TabBar>
         {tense === 'present' && (
-          <TabRow role="tablist" aria-label={t('aria.selectMood')}>
+          <SubTabBar role="tablist" aria-label={t('aria.selectMood')}>
             {(Object.keys(MOOD_OPTIONS) as Mood[]).map((option) => (
               <TabButton
                 type="button"
@@ -138,7 +139,7 @@ export function ConjugationTable({
                 {t(MOOD_OPTIONS[option])}
               </TabButton>
             ))}
-          </TabRow>
+          </SubTabBar>
         )}
       </TabBlock>
       {conjugations && (
@@ -222,7 +223,7 @@ const TabBlock = styled('div')`
   }
 `
 
-const TabRow = styled('div')<{ wrap?: boolean }>`
+const TabBar = styled('div')<{ wrap?: boolean }>`
   display: flex;
   gap: 0.5rem;
   padding: 0;
@@ -233,36 +234,79 @@ const TabRow = styled('div')<{ wrap?: boolean }>`
   }
 `
 
-const TabButton = styled('button')<{ active?: boolean; size?: 'sm' | 'lg'; fluid?: boolean }>`
+const SubTabBar = styled(TabBar)`
+  background: linear-gradient(to bottom, #fff8e1 0%, transparent 50%);
+  border-top: 1px solid #facc15;
+  margin-top: -4px;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  padding: 0.75rem 1.25rem 0.75rem 1.25rem;
+
+  @media (min-width: 720px) {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding: 0.75rem 2rem;
+  }
+`
+
+const TabButton = styled('button')<{
+  active?: boolean
+  size?: 'sm' | 'lg'
+  fluid?: boolean
+  hasChildren?: boolean
+}>`
   align-items: center;
-  background: ${(props) => (props.active ? '#fff8e1' : '#fff')};
+  background: ${({ active }) => (active ? '#fff8e1' : '#fff')};
   border-radius: 0.75rem;
   border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
-  box-shadow: ${(props) => (props.active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : 'none')};
-  color: ${(props) => (props.active ? '#92400e' : '#475569')};
+  box-shadow: ${({ active }) => (active ? '0 2px 10px rgba(15, 23, 42, 0.12)' : 'none')};
+  color: ${({ active }) => (active ? '#92400e' : '#475569')};
   cursor: pointer;
   display: flex;
   flex-direction: column;
   flex: 1;
   font-family: inherit;
-  font-size: ${(props) => (props.size === 'sm' ? '0.8rem' : '0.9rem')};
+  font-size: ${({ size }) => (size === 'sm' ? '0.8rem' : '0.9rem')};
   gap: 0.1rem;
   justify-content: center;
   letter-spacing: 0.08em;
   min-width: ${({ fluid }) => (fluid ? 'calc(50% - 0.25rem)' : '0')};
   padding: 0.4rem 0.6rem;
+  position: relative;
   text-transform: uppercase;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
-    background: ${({ active }) => (active ? '#ffe58f' : '#f1f5f9')};
-    border-color: ${({ active }) => (active ? '#eab308' : '#cbd5f5')};
+    background: ${({ active }) => (active ? '#fff8e1' : '#f1f5f9')};
+    border-color: ${({ active }) => (active ? '#facc15' : '#cbd5f5')};
     color: ${({ active }) => (active ? '#92400e' : '#334155')};
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    box-shadow: ${({ active }) => (active ? '0' : '0 6px 14px rgba(15, 23, 42, 0.1)')};
   }
 
   @media (min-width: 720px) {
     min-width: 0;
+
+    ${({ active, hasChildren }) =>
+      active &&
+      hasChildren &&
+      `
+      border-radius: 0.75rem 0.75rem 0 0;
+      border-bottom: none;
+      z-index: 1;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: calc(-0.5rem - 1px);
+        left: -1px;
+        right: -1px;
+        height: calc(0.5rem + 1px);
+        background: #fff8e1;
+        z-index: 10;
+        border-left: 1px solid #facc15;
+        border-right: 1px solid #facc15;
+      }
+    `}
   }
 `
 

@@ -52,10 +52,10 @@ const StyledIconButton = styled('button')<{ active?: boolean }>`
 
   &:hover,
   &:focus-visible {
-    background: ${({ active }) => (active ? '#ffe58f' : '#fff8e1')};
+    background: ${({ active }) => (active ? '#fff8e1' : '#fff8e1')};
     color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
-    border-color: ${({ active }) => (active ? '#eab308' : '#facc15')};
-    box-shadow: ${({ active }) => (active ? '0 6px 14px rgba(15, 23, 42, 0.1)' : '0 6px 16px rgba(15, 23, 42, 0.14)')};
+    border-color: ${({ active }) => (active ? '#facc15' : '#facc15')};
+    box-shadow: ${({ active }) => (active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : '0 6px 16px rgba(15, 23, 42, 0.14)')};
     outline: none;
   }
 
