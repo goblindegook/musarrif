@@ -6,11 +6,42 @@ import { conjugateImperative } from '../paradigms/active/imperative'
 import { conjugatePast } from '../paradigms/active/past'
 import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
-import { PRONOUNS, type PronounSlot } from '../paradigms/pronouns'
+import type { PronounId } from '../paradigms/pronouns'
 import type { Tense, Verb } from '../paradigms/verbs'
 import { SpeechButton, useSpeechSupport } from './SpeechButton'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
+
+interface PronounSlot {
+  id: PronounId
+  label: string
+  number: 'singular' | 'dual' | 'plural'
+  person: '1st' | '2nd' | '3rd'
+  gender?: 'masculine' | 'feminine'
+}
+
+const PRONOUNS: readonly PronounSlot[] = [
+  { id: '1s', label: 'أَنَا', number: 'singular', person: '1st' },
+
+  { id: '2ms', label: 'أَنْتَ', number: 'singular', person: '2nd', gender: 'masculine' },
+  { id: '2fs', label: 'أَنْتِ', number: 'singular', person: '2nd', gender: 'feminine' },
+
+  { id: '3ms', label: 'هُوَ', number: 'singular', person: '3rd', gender: 'masculine' },
+  { id: '3fs', label: 'هِيَ', number: 'singular', person: '3rd', gender: 'feminine' },
+
+  { id: '2d', label: 'أَنْتُمَا', number: 'dual', person: '2nd' },
+
+  { id: '3dm', label: 'هُمَا', number: 'dual', person: '3rd', gender: 'masculine' },
+  { id: '3df', label: 'هُمَا', number: 'dual', person: '3rd', gender: 'feminine' },
+
+  { id: '1p', label: 'نَحْنُ', number: 'plural', person: '1st' },
+
+  { id: '2pm', label: 'أَنْتُمْ', number: 'plural', person: '2nd', gender: 'masculine' },
+  { id: '2pf', label: 'أَنْتُنَّ', number: 'plural', person: '2nd', gender: 'feminine' },
+
+  { id: '3pm', label: 'هُمْ', number: 'plural', person: '3rd', gender: 'masculine' },
+  { id: '3pf', label: 'هُنَّ', number: 'plural', person: '3rd', gender: 'feminine' },
+] as const
 
 interface ConjugationProps {
   verb: Verb

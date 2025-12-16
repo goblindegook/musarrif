@@ -45,9 +45,7 @@ function countPositionMatches(first: string, second: string): number {
   const limit = Math.min(first.length, second.length)
   let matches = 0
   for (let index = 0; index < limit; index += 1) {
-    if (first[index] === second[index]) {
-      matches += 1
-    }
+    if (first[index] === second[index]) matches += 1
   }
   return matches
 }

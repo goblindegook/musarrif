@@ -1,7 +1,5 @@
 import { memoize } from '@pacote/memoize'
 
-export const wordDistance = memoize((a: string, b: string) => [a, b].join(':'), distance, { capacity: 1000 })
-
 function distance(a: string, b: string): number {
   const lettersA = Array.from(a)
   const lettersB = Array.from(b)
@@ -26,3 +24,7 @@ function distance(a: string, b: string): number {
 
   return dp[rows - 1][cols - 1]
 }
+
+const cacheKey = (a: string, b: string) => [a, b].join(':')
+
+export const wordDistance = memoize(cacheKey, distance, { capacity: 10000 })
