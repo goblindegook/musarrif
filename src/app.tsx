@@ -390,6 +390,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   grid-auto-rows: min-content;
   align-items: start;
   max-width: 600px;
+  margin: 0 auto;
   grid-template-columns: 1fr;
   grid-template-areas:
     'search'
@@ -401,7 +402,6 @@ const Main = styled('main')<{ hasVerb: boolean }>`
     `
     place-items: center;
     align-content: center;
-    margin: 0 auto;
   `}
 
   @media (min-width: 960px) {
