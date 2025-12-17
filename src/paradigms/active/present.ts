@@ -454,10 +454,9 @@ function expandShadda(word: readonly string[]): readonly string[] {
 
   // Find shadda and the letter it's attached to
   for (let i = 0; i < chars.length - 1; i += 1) {
-    if (chars[i + 1] === SHADDA && !isDiacritic(chars[i])) {
+    if (chars[i + 1] === SHADDA && !isDiacritic(chars[i]))
       // Expand shadda: replace letter + shadda with letter + fatḥa + letter
       return [...chars.slice(0, i + 1), FATHA, chars[i], ...chars.slice(i + 2)]
-    }
   }
 
   return chars

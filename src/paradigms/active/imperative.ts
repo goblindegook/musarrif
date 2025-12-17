@@ -1,4 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
+import { resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -49,6 +50,12 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
+          // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
+          // This is a morphological rule based on past pattern classification, even though
+          // the imperative is technically derived from the present tense (jussive)
+          // (e.g., مرض → اِمْرَضْ, سمع → اِسْمَعْ)
+          if (verb.form === 1 && resolveFormIPastVowel(verb) === 'i') return [ALIF, KASRA, ...stem]
+
           return stem
         }
 
@@ -70,11 +77,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         case 5: {
           // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوَّ)
           // Handle this before processing jussive stem to avoid incorrect diacritic order
-          if (isInitialHamza && isMiddleWeak && isFinalWeak) {
+          if (isInitialHamza && isMiddleWeak && isFinalWeak)
             // Jussive: يَتَأَوَّ → Imperative: تَأَوَّ (remove يَ, add تَ)
             // Pattern: تَ + أَ + وََّ (و + fatḥa + shadda)
             return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
-          }
 
           return stem
         }
