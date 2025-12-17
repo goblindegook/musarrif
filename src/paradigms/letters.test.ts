@@ -10,7 +10,6 @@ describe('analyzeRoot', () => {
     ['وقي', 'doubly-weak', [0, 2], []],
     ['أكل', 'hamzated', [], [0]],
     ['أوي', 'hamzated-hollow-defective', [1, 2], [0]],
-    ['أوفى', 'hamzated-hollow-defective', [1, 3], [0]],
     ['أتى', 'hamzated-defective', [2], [0]],
   ])('identifies %s as %s', (root, type, weakPositions, hamzaPositions) => {
     expect(analyzeRoot(root)).toEqual({ type, weakPositions, hamzaPositions })

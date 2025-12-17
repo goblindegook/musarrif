@@ -41,20 +41,12 @@ function masdar(verb: Verb): readonly string[] {
   if (letters.length === 4) {
     const [q1, q2, q3, q4] = letters
     const isInitialHamza = q1 === ALIF_HAMZA
-    const isMiddleWeak = isWeakLetter(q2) || isWeakLetter(q3)
     const isFinalWeak = isWeakLetter(q4)
 
     // Form IV quadriliteral: initial hamza + final weak (e.g., أنشأ → إِنْشَاء)
     if (verb.form === 4 && isInitialHamza && (isFinalWeak || q4 === ALIF_HAMZA)) {
       const finalGlide = q4 === ALIF_MAQSURA || q4 === ALIF_HAMZA ? HAMZA : weakLetterGlide(q4)
       return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, finalGlide]
-    }
-
-    // Form I quadriliteral: initial hamza + middle weak + final weak (e.g., أوفى → إِيفَاء)
-    if (verb.form === 1 && isInitialHamza && isMiddleWeak && isFinalWeak) {
-      const middleLetter = isWeakLetter(q2) ? q3 : q2
-      const finalGlide = q4 === ALIF_MAQSURA ? HAMZA : weakLetterGlide(q4)
-      return [ALIF_HAMZA_BELOW, KASRA, YEH, middleLetter, FATHA, ALIF, finalGlide]
     }
 
     const base =
@@ -86,6 +78,8 @@ function masdar(verb: Verb): readonly string[] {
           case 'fu3ool':
             return adjustDefective([c1, DAMMA, c2, DAMMA, WAW, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fu3aal':
+            // For defective verbs with final alif maqsura or yeh, use fatḥa on c1 and convert to hamza (e.g., وفي → وَفَاء)
+            if (isFinalWeak && (c3 === ALIF_MAQSURA || c3 === YEH)) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
             return adjustDefective([c1, DAMMA, c2, FATHA, ALIF, finalRadical], finalRadical, FATHA)
           case 'fi3aal':
             // Hollow fi3aal (e.g., قِيَام)
@@ -152,6 +146,8 @@ function masdar(verb: Verb): readonly string[] {
         case 'i':
           return adjustDefective([c1, KASRA, c2, ALIF, c3, TEH_MARBUTA], c3, FATHA)
         case 'a':
+          // Defective verb with past vowel 'a' and final alif maqsura uses fa3āl pattern (e.g., وفي → وَفَاء)
+          if (isFinalWeak && c3 === ALIF_MAQSURA) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
           return adjustDefective([c1, KASRA, ALIF, c2, FATHA, c3, TEH_MARBUTA], c3, FATHA)
         default:
           return []
@@ -181,6 +177,9 @@ function masdar(verb: Verb): readonly string[] {
       // Pattern: initial hamza → ī, middle weak → wāw, final weak → hamza
       // This must come before the general "Initial hamza" check
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
+
+      // Initial weak + final weak (e.g., وفي → إِيفَاء): initial weak drops, becomes ī
+      if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, HAMZA]
 
       // Initial hamza in Form IV coalesces to a long ī in the masdar: إِيمَان / إِيتَاء
       if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, isFinalHamza ? HAMZA : c3]
@@ -254,8 +253,14 @@ function masdar(verb: Verb): readonly string[] {
       // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
       if (isMiddleWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-      // Defective Form X seats hamza and drops the weak final: اِسْتِيفَاء / اِسْتِرْضَاء
-      if (isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
+      // Defective Form X: initial weak (but not hamza) drops, then c2 with fatḥa, then alif + hamza (e.g., وفي → اِسْتِفَاء)
+      // If initial hamza, seat it on yeh; otherwise drop initial weak and use c2 directly
+      if (isFinalWeak) {
+        if (isInitialWeak && !isInitialHamza) {
+          return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, c2, FATHA, ALIF, HAMZA]
+        }
+        return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
+      }
 
       return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, c3]
     }

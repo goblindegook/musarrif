@@ -218,7 +218,6 @@ function buildPresentBase(verb: Verb): readonly string[] {
   if (letters.length === 4) {
     const [c1, c2, c3, c4] = letters
     const isInitialHamza = c1 === ALIF_HAMZA
-    const isMiddleWeak = isWeakLetter(c2) || isWeakLetter(c3)
     const isFinalWeak = isWeakLetter(c4)
 
     switch (verb.form) {
@@ -238,15 +237,6 @@ function buildPresentBase(verb: Verb): readonly string[] {
       }
 
       default: {
-        // Form I quadriliteral: initial hamza + middle weak + final weak (e.g., أوفى → يوفي)
-        if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-          // Initial hamza drops in quadriliterals, keep middle letter, middle weak becomes long vowel, final weak remains
-          // أوفى = أ-و-ف-ى, so c2=و (weak), c3=ف (strong), c4=ى (weak)
-          const middleLetter = isWeakLetter(c2) ? c3 : c2
-          const middleGlide = isWeakLetter(c2) ? hollowLetterGlide(c2) : hollowLetterGlide(c3)
-          const finalGlide = c4 === ALIF_MAQSURA ? YEH : c4 === YEH ? YEH : WAW
-          return [YEH, DAMMA, middleGlide, middleLetter, KASRA, finalGlide]
-        }
         // Default to Form I quadriliteral pattern
         return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
       }
@@ -395,6 +385,10 @@ function buildPresentBase(verb: Verb): readonly string[] {
     }
 
     case 5:
+      // Form V defective: final ي becomes ى (alif maqsura) in present tense (e.g., تَوَفَّى → يَتَوَفَّى)
+      if (isFinalWeak && c3 === YEH) {
+        return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ALIF_MAQSURA]
+      }
       return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3)
 
     case 6:
@@ -484,7 +478,14 @@ function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
   for (let i = word.length - 1; i >= 0; i -= 1) {
     if (isDiacritic(word[i])) continue
     if (word[i] === ALIF_HAMZA || word[i] === HAMZA) return [...word.slice(0, i), HAMZA_ON_YEH, ...word.slice(i + 1)]
-    if (isWeakLetter(word[i])) return removeTrailingDiacritics(word.slice(0, i))
+    if (isWeakLetter(word[i])) {
+      const sliced = word.slice(0, i)
+      // For Form V pattern [letter, SHADDA, FATHA, ALIF_MAQSURA], preserve shadda and fatḥa
+      if (i >= 2 && word[i - 2] === SHADDA && word[i - 1] === FATHA && word[i] === ALIF_MAQSURA) {
+        return sliced
+      }
+      return removeTrailingDiacritics(sliced)
+    }
     return word
   }
   return word

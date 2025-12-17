@@ -9,7 +9,6 @@ describe('active present indicative', () => {
     ['أتى', 1, '3ms', 'يَأْتِي'],
     ['أمن', 4, '3ms', 'يُؤْمِنُ'],
     ['أنشأ', 4, '3ms', 'يُنْشِئُ'],
-    ['أوفى', 1, '3ms', 'يُوفِي'],
     ['أوي', 1, '3ms', 'يَأْوِي'],
     ['أوي', 4, '3ms', 'يُؤْوِي'],
     ['بدأ', 1, '3ms', 'يَبْدَأُ'],
@@ -66,6 +65,12 @@ describe('active present indicative', () => {
     ['جيء', 1, '2pf', 'تَجِيئْنَ'],
     ['جيء', 1, '3pm', 'يَجِيئُونَ'],
     ['جيء', 1, '3pf', 'يَجِيئْنَ'],
+    ['وفي', 5, '3ms', 'يَتَوَفَّى'],
+    ['وفي', 5, '3fs', 'تَتَوَفَّى'],
+    ['وفي', 5, '2ms', 'تَتَوَفَّى'],
+    ['وفي', 5, '2fs', 'تَتَوَفِّيْنَ'],
+    ['وفي', 5, '3pm', 'يَتَوَفَّونَ'],
+    ['وفي', 5, '3pf', 'يَتَوَفَّىْنَ'],
   ])('%s (%d) %s is %s', (root, form, pronoun, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     expect(conjugatePresentMood(verb, 'indicative')[pronoun]).toBe(expected)

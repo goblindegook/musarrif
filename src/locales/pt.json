@@ -514,6 +514,12 @@
     "w0Zf-2": "empregar",
     "w3d-1": "prometer",
     "w3d-2": "prometer",
+    "wfy-1": "cumprir, ser completo",
+    "wfy-2": "cumprir completamente",
+    "wfy-3": "corresponder",
+    "wfy-4": "cumprir, dar integralmente",
+    "wfy-5": "ser tomado completamente, morrer",
+    "wfy-10": "exigir integralmente",
     "wfr-1": "salvar",
     "wqf-4": "parar",
     "wqf-1": "levantar-se",
@@ -540,6 +546,7 @@
     "A1x0z": "tomar",
     "mr0D": "doença",
     "0Sdq": "verdade",
-    "A1wy": "refúgio"
+    "A1wy": "refúgio",
+    "wfy": "cumprimento"
   }
 }

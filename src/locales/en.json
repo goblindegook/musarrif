@@ -494,6 +494,12 @@
     "w3d-2": "to promise",
     "wAf-1": "to agree",
     "wd3-1": "to put",
+    "wfy-1": "to fulfill, to be complete",
+    "wfy-2": "to fulfill completely",
+    "wfy-3": "to correspond",
+    "wfy-4": "to fulfill, to give in full",
+    "wfy-5": "to be taken fully, to die",
+    "wfy-10": "to demand in full",
     "wfr-1": "to save",
     "whb-1": "to donate",
     "whb-4": "to donate",
@@ -540,6 +546,7 @@
     "A1x0z": "taking",
     "mr0D": "illness",
     "0Sdq": "truth",
-    "A1wy": "refuge"
+    "A1wy": "refuge",
+    "wfy": "fulfillment"
   }
 }
