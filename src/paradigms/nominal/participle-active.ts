@@ -42,20 +42,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return [MEEM, DAMMA, q2, SUKOON, q3, KASRA, finalGlide]
       }
 
-      if (verb.form === 1) return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, KASRA, q4]
-
-      if (verb.form === 2)
-        return adjustDefective([MEEM, DAMMA, TEH, FATHA, q1, FATHA, q2, SUKOON, q3, KASRA, q4], q4, KASRA)
-
-      return adjustDefective([MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, KASRA, q4], q4, KASRA)
-    }
-
-    if (letters.length > 4) {
-      const [q1, ...rest] = letters
-      const last = rest[rest.length - 1]
-      const middle = rest.slice(0, -1).join(SUKOON)
-      const base = [MEEM, DAMMA, q1, FATHA, middle, SUKOON, last]
-      return adjustDefective(base, last, KASRA)
+      return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, KASRA, q4]
     }
 
     const isInitialWeak = isWeakLetter(c1)
@@ -81,9 +68,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Hamzated defective (middle hamza, final glide) seats hamza on the line with tanween kasra: رَاءٍ
         if (c2 === ALIF_HAMZA && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
 
-        // Doubly weak (middle wāw, final yā') yields حَاوٍ (drop final glide, kasratayn on wāw)
-        if (c2 === WAW && c3 === YEH) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
           // Form I faʿila-yafʿalu/‑yafʿilu:
           // - fuʿول مصدر → فَاعِل (e.g., حَابِط)
@@ -101,10 +85,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isMiddleWeak) return adjustDefective([c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3, DAMMA], c3, KASRA)
 
         // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
-        if (isFinalWeak) return c1 === ALIF_HAMZA ? [ALIF_MADDA, c2, KASRA] : [c1, FATHA, ALIF, c2, KASRA]
+        if (isFinalWeak) return [c1, FATHA, ALIF, c2, KASRA]
 
-        const base = c1 === ALIF_HAMZA ? [ALIF_MADDA, c2, KASRA, c3, DAMMA] : [c1, FATHA, ALIF, c2, KASRA, c3, DAMMA]
-        return adjustDefective(base, c3, KASRA)
+        return adjustDefective([c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3, KASRA)
       }
 
       case 2:
@@ -117,15 +100,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, KASRA, c3, DAMMA], c3, KASRA)
 
       case 3:
-        // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانٍ)
-        if (c2 === ALIF && isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, TANWEEN_KASRA]
-
-        // Weak final radical: drop the glide and place kasratayn on the preceding consonant (e.g., مُسَاوٍ)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
-        // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانٍ)
-        if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
-
         return adjustDefective([MEEM, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3], c3, KASRA)
 
       case 4: {
@@ -148,10 +122,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, KASRA, YEH, c3]
 
         // Geminate Form IV active participle (e.g., مُحِبّ)
-        if (c2 === c3) {
-          const geminated = [MEEM, DAMMA, seatedC1, KASRA, c2, SHADDA]
-          return adjustDefective(isFinalWeak ? stripTrailingDiacritics(geminated) : geminated, c3, KASRA)
-        }
+        if (c2 === c3) return adjustDefective([MEEM, DAMMA, seatedC1, KASRA, c2, SHADDA], c3, KASRA)
 
         const adjusted = [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
         return adjustDefective(isFinalWeak ? stripTrailingDiacritics(adjusted) : adjusted, c3, KASRA)
@@ -160,9 +131,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 5:
         // Initial hamza + middle weak + final weak (e.g., أوي → مُتَأَوٍّ)
         // Drop final weak and use tanween kasra on the doubled middle radical
-        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak) {
+        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
           return [MEEM, DAMMA, TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, TANWEEN_KASRA]
-        }
 
         // Defective Form V: drop final weak and place tanween kasra on the doubled middle radical (e.g., مُتَوَفٍّ)
         if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
@@ -170,10 +140,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, c3, DAMMA], c3, KASRA)
 
       case 6:
-        // Hollow Form VI: if c2 is ALIF, don't insert another ALIF and use tanween kasra (e.g., مُتَعَانٍ)
-        if (c2 === ALIF) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
         // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
         if (isMiddleWeak && isHamzatedLetter(c3)) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3, KASRA)
 
       case 7:
@@ -185,9 +154,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, ALIF, c3]
-
-        // Drop the weak final radical and put kasratayn on the preceding consonant (e.g., مُنْتَهٍ)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, KASRA]
 
         return adjustDefective([MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA], c3, KASRA)
 
@@ -204,12 +170,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3]
 
         // Defective Form X: initial weak (but not hamza) drops, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَفٍ)
-        if (isFinalWeak) {
-          if (isInitialWeak && !isInitialHamza) {
-            return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c2, TANWEEN_KASRA]
-          }
-          return adjustDefective([MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], c3, KASRA)
-        }
+        if (isFinalWeak && isInitialWeak && !isInitialHamza)
+          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c2, TANWEEN_KASRA]
 
         return adjustDefective([MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], c3, KASRA)
       }

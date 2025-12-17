@@ -35,10 +35,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
       const [, ...rest] = removeLeadingDiacritics(Array.from(jussiveVerb))
       const stem = removeLeadingDiacritics(rest)
 
-      if (letters.length === 4 && verb.form === 1 && isInitialHamza && isMiddleWeak && isFinalWeak) {
-        return [ALIF_HAMZA, FATHA, WAW, SUKOON, isWeakLetter(c2) ? c3 : c2, KASRA]
-      }
-
       switch (verb.form) {
         case 1: {
           // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)

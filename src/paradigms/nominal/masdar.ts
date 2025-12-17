@@ -1,4 +1,4 @@
-import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
+import { resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -30,14 +30,6 @@ import { adjustDefective, removeTerminalCaseVowel, vowelFromRadical } from './no
 function masdar(verb: Verb): readonly string[] {
   const letters = [...verb.root]
 
-  if (letters.length >= 5) {
-    const [q1, ...rest] = letters
-    const last = rest[rest.length - 1]
-    const middle = rest.slice(0, -1).join(SUKOON)
-    const base = [q1, FATHA, middle, SUKOON, last, FATHA, TEH_MARBUTA]
-    return adjustDefective(base, last ?? q1, FATHA)
-  }
-
   if (letters.length === 4) {
     const [q1, q2, q3, q4] = letters
     const isInitialHamza = q1 === ALIF_HAMZA
@@ -49,11 +41,7 @@ function masdar(verb: Verb): readonly string[] {
       return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, finalGlide]
     }
 
-    const base =
-      verb.form === 2
-        ? [TEH, FATHA, q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
-        : [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
-    return adjustDefective(base, q4, FATHA)
+    return adjustDefective([q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA], q4, FATHA)
   }
 
   const [c1, c2, c3] = letters
@@ -85,13 +73,9 @@ function masdar(verb: Verb): readonly string[] {
             // Hollow fi3aal (e.g., قِيَام)
             if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
             return adjustDefective([c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
-          case 'fi3aala':
-            return adjustDefective([c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3la':
             return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3l':
-            // Hollow fi3l (e.g., صَيْر): middle weak becomes yeh, first vowel is fatḥa
-            if (isMiddleWeak) return [c1, FATHA, YEH, SUKOON, finalRadical, DAMMA]
             return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fa3aala':
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
@@ -127,17 +111,7 @@ function masdar(verb: Verb): readonly string[] {
       if (isMiddleWeak) {
         // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
         if (c2 === WAW && c3 === YEH) return [c1, FATHA, c2, SUKOON, c3]
-
-        switch (resolveFormIPresentVowel(verb)) {
-          case 'u':
-            return adjustDefective([c1, FATHA, WAW, SUKOON, c3, DAMMA], c3, FATHA)
-          case 'i':
-            return adjustDefective([c1, FATHA, YEH, SUKOON, c3, DAMMA], c3, FATHA)
-          case 'a':
-            return adjustDefective([c1, KASRA, YEH, FATHA, ALIF, c3, DAMMA], c3, FATHA)
-          default:
-            return []
-        }
+        return adjustDefective([c1, FATHA, WAW, SUKOON, c3, DAMMA], c3, FATHA)
       }
 
       switch (resolveFormIPastVowel(verb)) {
@@ -146,8 +120,6 @@ function masdar(verb: Verb): readonly string[] {
         case 'i':
           return adjustDefective([c1, KASRA, c2, ALIF, c3, TEH_MARBUTA], c3, FATHA)
         case 'a':
-          // Defective verb with past vowel 'a' and final alif maqsura uses fa3āl pattern (e.g., وفي → وَفَاء)
-          if (isFinalWeak && c3 === ALIF_MAQSURA) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
           return adjustDefective([c1, KASRA, ALIF, c2, FATHA, c3, TEH_MARBUTA], c3, FATHA)
         default:
           return []
@@ -160,16 +132,6 @@ function masdar(verb: Verb): readonly string[] {
       return [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH, c3]
 
     case 3:
-      // Weak final radical: lengthen the preceding vowel and drop the weak letter (e.g., مُسَاوَاة)
-      if (isFinalWeak) {
-        // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانَاة)
-        if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, FATHA, ALIF, TEH_MARBUTA]
-        return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, ALIF, TEH_MARBUTA]
-      }
-
-      // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانَاة)
-      if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, FATHA, ALIF, TEH_MARBUTA]
-
       return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 
     case 4:

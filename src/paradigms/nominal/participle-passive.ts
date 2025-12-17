@@ -57,14 +57,6 @@ export function derivePassiveParticiple(verb: Verb): string {
       return adjustDefective(base, q4, FATHA)
     }
 
-    if (letters.length > 4) {
-      const [q1, ...rest] = letters
-      const last = rest[rest.length - 1]
-      const middle = rest.slice(0, -1).join(SUKOON)
-      const base = [MEEM, DAMMA, q1, FATHA, middle, SUKOON, last]
-      return adjustDefective(base, last, FATHA)
-    }
-
     const isInitialWeak = isWeakLetter(c1)
     const isInitialHamza = c1 === ALIF_HAMZA
     const isMiddleWeak = isWeakLetter(c2)
@@ -115,15 +107,6 @@ export function derivePassiveParticiple(verb: Verb): string {
         return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3, FATHA)
 
       case 3:
-        // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانًى)
-        if (c2 === ALIF && isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        // Weak final radical: drop the glide and place tanween fatḥa on the preceding consonant (e.g., مُسَاوًى)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., مُعَانًى)
-        if (c2 === ALIF) return [MEEM, DAMMA, c1, FATHA, ALIF, c3, TANWEEN_FATHA, ALIF_MAQSURA]
-
         return adjustDefective([MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3], c3, FATHA)
 
       case 4: {
@@ -140,7 +123,6 @@ export function derivePassiveParticiple(verb: Verb): string {
         if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
 
         // Defective Form IV: drop final weak and use ALIF_MAQSURA (e.g., مُعْطَى, مُمْسَى)
-        if (isFinalWeak && c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, ALIF_MAQSURA]
         if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
         if (c2 === c3) return adjustDefective([MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA], c3, FATHA)
@@ -155,9 +137,6 @@ export function derivePassiveParticiple(verb: Verb): string {
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3, FATHA)
 
       case 6:
-        // Hollow Form VI: if c2 is ALIF, don't insert another ALIF and use tanween fatḥa (e.g., مُتَعَانًى)
-        if (c2 === ALIF) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_FATHA, ALIF_MAQSURA]
-
         return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA], c3, FATHA)
 
       case 7:

@@ -133,31 +133,10 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 function buildPastBase(verb: Verb): readonly string[] {
   const letters = [...verb.root]
 
-  if (letters.length < 3) {
-    throw new Error(`Root must have at least 3 letters, received "${verb.root}".`)
-  }
-
   // Handle quadriliteral and longer roots
   if (letters.length === 4) {
     const [c1, c2, c3, c4] = letters
-    switch (verb.form) {
-      case 1:
-        return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
-      case 2:
-        return [TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
-      default:
-        // For other forms, use Form I pattern
-        return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
-    }
-  }
-
-  // Handle 5+ letter roots (rare, but possible)
-  if (letters.length >= 5) {
-    // For longer roots, use a simple pattern: first letter + FATHA, rest with SUKOON/FATHA
-    const [c1, ...rest] = letters
-    const [middle] = rest.slice(0, -1).join(SUKOON)
-    const last = rest[rest.length - 1]
-    return [c1, FATHA, middle, SUKOON, last, FATHA]
+    return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
   }
 
   // Triliteral roots (3 letters) - original logic
@@ -189,15 +168,11 @@ function buildPastBase(verb: Verb): readonly string[] {
       return normalizeDefectivePast([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
 
     case 3:
-      // Hollow Form III: if c2 is ALIF, don't insert another ALIF (e.g., عَانَ)
-      if (c2 === ALIF) return normalizeDefectivePast([c1, FATHA, ALIF, c3, FATHA], c3)
-
       return normalizeDefectivePast([c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
 
     case 4: {
       // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
-      if (c2 === c3)
-        return c1 === ALIF_HAMZA ? [ALIF_MADDA, c2, SHADDA, FATHA] : [ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA]
+      if (c2 === c3) return [ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA]
 
       const prefix = c1 === ALIF_HAMZA ? [ALIF_MADDA] : [ALIF_HAMZA, FATHA, c1, SUKOON]
 
@@ -219,8 +194,6 @@ function buildPastBase(verb: Verb): readonly string[] {
       return normalizeDefectivePast([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
 
     case 6:
-      // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., تَعَانَ)
-      if (c2 === ALIF) return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
       // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
       if (isWeakLetter(c2) && isHamzatedLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
 
@@ -254,24 +227,18 @@ function buildPastBase(verb: Verb): readonly string[] {
         return normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
 
       return normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, FATHA], c3)
-
-    default:
-      return []
   }
 }
 
 function normalizeDefectivePast(base: readonly string[], c3: string): readonly string[] {
   if (!isWeakLetter(c3)) return base
   const chars = [...removeTrailingDiacritics(base)]
-  if (chars.length === 0) return base
-
   const last = chars.pop()
   if (!last) return base
 
   // Drop final weak c3 and append appropriate tail
   // For defective verbs in past tense, final و becomes alif maqsura (ى), not alif (ا)
-  const tail = c3 === WAW ? ALIF_MAQSURA : weakLetterTail(c3)
-  return last === c3 ? [...chars, tail] : [...chars, last, tail]
+  return [...chars, weakLetterTail(c3)]
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {
