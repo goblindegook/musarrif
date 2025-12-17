@@ -1,14 +1,18 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { Heading } from './components/atoms/Heading'
+import { Text } from './components/atoms/Text'
 import { ConjugationTable } from './components/ConjugationTable'
 import { Detail } from './components/Detail'
 import { DiacriticsToggle } from './components/DiacriticsToggle'
+import { FormInsights } from './components/FormInsights'
 import { IconButton } from './components/IconButton'
 import { SettingsIcon } from './components/icons/SettingsIcon'
 import { LanguagePicker } from './components/LanguagePicker'
 import { Modal } from './components/Modal'
 import { Panel } from './components/Panel'
-import { QuickPickList, SuggestionsList } from './components/QuickPickList'
+import { QuickPickList } from './components/QuickPickList'
+import { RootInsights } from './components/RootInsights'
 import { Search as SearchBox } from './components/SearchBox'
 import { ShareButton } from './components/ShareButton'
 import { SpeechButton } from './components/SpeechButton'
@@ -17,11 +21,11 @@ import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import { FORM_I_PAST_VOWELS, FORM_I_PRESENT_VOWELS } from './paradigms/form-i-vowels'
-import { analyzeRoot, applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './paradigms/letters'
+import { applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { getVerbById, search, transliterateRoot, type Verb, verbs } from './paradigms/verbs'
+import { getVerbById, search, type Verb } from './paradigms/verbs'
 import { mapRecord } from './primitives/objects'
 
 const DOTTED_CIRCLE = '\u25cc'
@@ -66,20 +70,10 @@ export function App() {
     document.title = [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · ')
   }, [selectedVerb, formatArabic, t])
 
-  const selectedId = selectedVerb?.id
-
   const derivedForms = useMemo(
     () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
     [selectedVerb?.root],
   )
-
-  const formInsightExamples = useMemo<Verb[]>(() => {
-    if (!selectedVerb) return []
-    const pool = verbs.filter((verb) => verb.form === selectedVerb.form && verb.id !== selectedId)
-    if (pool.length === 0) return []
-    const shuffled = [...pool].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 5)
-  }, [selectedId, selectedVerb])
 
   const selectedFormPattern = selectedVerb?.form === 1 ? selectedVerb.formPattern : undefined
 
@@ -266,24 +260,7 @@ export function App() {
         {selectedVerb && (
           <>
             <Modal isOpen={isFormInfoOpen} onClose={() => setIsFormInfoOpen(false)} title={t('formInfo.title')}>
-              <Text dir={dir} lang={lang}>
-                {t(`formInfo.form${selectedVerb.form}.description`)}
-              </Text>
-              <Text dir={dir} lang={lang}>
-                {t(`formInfo.form${selectedVerb.form}.relationship`)}
-              </Text>
-              <Heading dir={dir} lang={lang}>
-                {t('formInfo.examples')}
-              </Heading>
-              <SuggestionsList>
-                {formInsightExamples.map((example) => (
-                  <VerbPill
-                    key={example.id}
-                    verb={example}
-                    className={example.id === selectedVerb?.id ? 'active' : undefined}
-                  />
-                ))}
-              </SuggestionsList>
+              <FormInsights form={selectedVerb.form} />
             </Modal>
             <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
               <RootInsights root={selectedVerb.root} />
@@ -292,51 +269,6 @@ export function App() {
         )}
       </Main>
     </Page>
-  )
-}
-
-const RootInsights = ({ root }: { root: string }) => {
-  const { t, dir, lang } = useI18n()
-  const rootAnalysis = analyzeRoot(root)
-  const transliteratedRoot = transliterateRoot(root)
-  const semanticMeaning = t(transliteratedRoot)
-  const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
-  return (
-    <>
-      <RootDisplay dir="rtl" lang="ar">
-        {semanticMeaning !== transliteratedRoot && (
-          <Text dir={dir} lang={lang}>
-            <em>
-              <q>{semanticMeaning}</q>
-            </em>
-          </Text>
-        )}
-        <RootLetters>
-          {Array.from(root).map((letter, index) => {
-            const isWeak = rootAnalysis.weakPositions.includes(index)
-            const isHamza = rootAnalysis.hamzaPositions.includes(index)
-            return (
-              <RootLetter key={index} weak={isWeak} hamza={isHamza}>
-                {letter}
-                {isWeak && <RootLetterAnnotation>{t('rootInfo.annotation.weak')}</RootLetterAnnotation>}
-                {isHamza && <RootLetterAnnotation>{t('rootInfo.annotation.hamzated')}</RootLetterAnnotation>}
-              </RootLetter>
-            )
-          })}
-        </RootLetters>
-      </RootDisplay>
-      <Text dir={dir} lang={lang}>
-        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
-      </Text>
-      <Heading dir={dir} lang={lang}>
-        {t('rootInfo.forms')}
-      </Heading>
-      <SuggestionsList>
-        {derivedForms.map((v) => (
-          <VerbPill key={v.id} verb={v} />
-        ))}
-      </SuggestionsList>
-    </>
   )
 }
 
@@ -496,12 +428,6 @@ const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
   align-self: flex-start;
 `
 
-const Heading = styled('h3')`
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.25rem;
-`
-
 const VisuallyHiddenLabel = styled('label')`
   position: absolute;
   width: 1px;
@@ -537,12 +463,6 @@ const FormOptionList = styled('section')`
   flex-wrap: wrap;
   gap: 0.5rem;
 `
-const Text = styled('p')`
-  margin: 0;
-  color: #475569;
-  line-height: 1.6;
-  font-size: 0.98rem;
-`
 
 const ActionLink = styled('a')`
   align-self: stretch;
@@ -577,46 +497,4 @@ const RootMetaValue = styled('div')`
   align-items: space-between;
   justify-content: center;
   gap: 1rem;
-`
-
-const RootDisplay = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem 4rem;
-  background: #f8fafc;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
-`
-
-const RootLetters = styled('div')`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.5rem;
-`
-
-const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
-  font-size: 2rem;
-  font-weight: 600;
-  color: ${(props) => (props.weak || props.hamza ? '#92400e' : '#0f172a')};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  position: relative;
-  min-width: 3rem;
-  flex: 0 0 auto;
-`
-
-const RootLetterAnnotation = styled('small')`
-  font-size: 0.65rem;
-  color: #92400e;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
 `
