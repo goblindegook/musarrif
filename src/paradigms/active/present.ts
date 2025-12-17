@@ -51,63 +51,51 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
   '2ms': (base) => applyPresentPrefix(base, TEH),
   '2fs': (base, verb) => {
-    const stem = applyPresentPrefix(base, TEH)
     const [, c2, c3] = [...verb.root]
+    const stem = applyPresentPrefix(base, TEH)
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-      // Replace hamza with hamza on yeh, change final damma to kasra, add yeh + noon + fatḥa
-      const stemWithoutFinalDiacritic = stripTrailingDiacritics(stem)
-      return [
-        ...stemWithoutFinalDiacritic.map((char) => (char === HAMZA || char === ALIF_HAMZA ? HAMZA_ON_YEH : char)),
-        KASRA,
-        YEH,
-        NOON,
-        FATHA,
-      ]
+      // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
+      return [...stripTrailingDiacritics(dropTerminalWeakOrHamza(stem)), KASRA, YEH, NOON, FATHA]
     }
-    return [...replaceFinalDiacritic(dropTerminalDefective(stem), KASRA), YEH, SUKOON, NOON, FATHA]
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
-  '2d': (base, verb) => {
-    const stem = applyPresentPrefix(base, TEH)
-    const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : stem
-    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  '2d': (base, _verb) => {
+    return [
+      ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
+      ...PRESENT_DUAL_SUFFIX,
+    ]
   },
-  '3dm': (base, verb) => {
-    const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(base) : base
-    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  '3dm': (base, _verb) => {
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ...PRESENT_DUAL_SUFFIX]
   },
-  '3df': (base, verb) => {
-    const stem = applyPresentPrefix(base, TEH)
-    const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : stem
-    return [...replaceFinalDiacritic(processed, FATHA), ...PRESENT_DUAL_SUFFIX]
+  '3df': (base, _verb) => {
+    return [
+      ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
+      ...PRESENT_DUAL_SUFFIX,
+    ]
   },
   '1p': (base) => applyPresentPrefix(base, NOON),
-  '2pm': (base, verb) => {
+  '2pm': (base) => {
     const stem = applyPresentPrefix(base, TEH)
-    const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(stem) : dropTerminalDefective(stem)
+    const processed = dropTerminalWeakOrHamza(stem)
     return [...processed, ...PRESENT_MASC_PLURAL_SUFFIX]
   },
   '2pf': (base, verb) => {
     const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(expanded) : expanded
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropTerminalWeakOrHamza(expanded) : expanded
     return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
-  '3pm': (base, verb) => {
-    const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(base) : dropTerminalDefective(base)
-    return [...processed, ...PRESENT_MASC_PLURAL_SUFFIX]
+  '3pm': (base) => {
+    return [...dropTerminalWeakOrHamza(base), ...PRESENT_MASC_PLURAL_SUFFIX]
   },
   '3pf': (base, verb) => {
-    const expanded = verb.form === 9 ? expandShadda(base) : base
     const [, c2, c3] = [...verb.root]
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropFinalHamza(expanded) : expanded
+    const expanded = verb.form === 9 ? expandShadda(base) : base
+    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropTerminalWeakOrHamza(expanded) : expanded
     return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
 }
@@ -162,21 +150,16 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const isInitialHamza = c1 === ALIF_HAMZA
   const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(letters[2]))
   const isFinalWeak = isWeakLetter(verb.root.at(-1))
-  const isFinalHamza = (c3 === ALIF_HAMZA || c3 === HAMZA) && letters.length >= 3
+  const isFinalHamza = isHamzatedLetter(c3)
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
+      // Don't call dropTerminalWeakOrHamza here - it would remove suffix letters
+      // The hamza/weak letter was already handled in the builder
       const shouldDropNoon = ['2fs', '2d', '2pm', '3dm', '3df', '3pm'].includes(pronounId)
-      if (shouldDropNoon) {
-        const dropped = dropNoonEnding(word, indicative)
-        // If final hamza, drop it and seat on yeh
-        if (isFinalHamza) {
-          return dropFinalHamza(dropped)
-        }
-        return dropped
-      }
+      if (shouldDropNoon) return dropNoonEnding(word, indicative)
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
@@ -186,7 +169,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         const shouldShortenHollow =
           HOLLOW_APOCOPE_FORMS.has(verb.form) && HOLLOW_JUSSIVE_APOCOPE_PRONOUNS.has(pronounId)
         const stem = shouldShortenHollow ? shortenHollowStem(word, c2) : word
-        return replaceFinalDiacritic(dropFinalHamza(stem), SUKOON)
+        return replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), SUKOON)
       }
 
       const shouldShortenHollow =
@@ -490,21 +473,22 @@ function replaceFinalDiacritic(word: readonly string[], diacritic: string): read
   if (lastBaseIndex < 0) return [...chars, diacritic]
 
   // Check if there's a shadda right after the last base letter (for form IX verbs)
-  if (lastBaseIndex + 1 < chars.length && chars[lastBaseIndex + 1] === SHADDA) {
+  if (lastBaseIndex + 1 < chars.length && chars[lastBaseIndex + 1] === SHADDA)
     // Remove everything after the shadda, then add shadda + new diacritic
     return [...chars.slice(0, lastBaseIndex + 2), diacritic]
-  }
 
   // Normal case: strip trailing diacritics and add new one
-  const stripped = stripTrailingDiacritics(chars)
-  return [...stripped, diacritic]
+  return [...stripTrailingDiacritics(chars), diacritic]
 }
 
-function dropTerminalDefective(word: readonly string[]): readonly string[] {
-  const stem = [...stripTrailingDiacritics(word)]
-  if (!isWeakLetter(stem.at(-1))) return word
-  stem.pop()
-  return removeTrailingDiacritics(stem)
+function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
+  for (let i = word.length - 1; i >= 0; i -= 1) {
+    if (isDiacritic(word[i])) continue
+    if (word[i] === ALIF_HAMZA || word[i] === HAMZA) return [...word.slice(0, i), HAMZA_ON_YEH, ...word.slice(i + 1)]
+    if (isWeakLetter(word[i])) return removeTrailingDiacritics(word.slice(0, i))
+    return word
+  }
+  return word
 }
 
 function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
@@ -526,14 +510,6 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
     return chars
   }
   return replaceFinalDiacritic(word, SUKOON)
-}
-
-function dropFinalHamza(word: readonly string[]): readonly string[] {
-  for (let i = word.length - 1; i >= 0; i -= 1) {
-    if (isDiacritic(word[i])) continue
-    if (word[i] === ALIF_HAMZA || word[i] === HAMZA) return [...word.slice(0, i), HAMZA_ON_YEH, ...word.slice(i + 1)]
-  }
-  return word
 }
 
 function applyPresentPrefix(chars: readonly string[], prefix: string): readonly string[] {
