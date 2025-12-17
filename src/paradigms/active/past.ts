@@ -342,6 +342,9 @@ const glideFromRadical = (value = ''): string => (value === WAW || value === ALI
 
 function hollowShortVowel(verb: Verb): string {
   const middleRadical = verb.root.at(1)
+  const isFinalHamza = isHamzatedLetter(verb.root.at(-1))
+  // Hollow verbs with final hamza and middle ya always use kasra (e.g., جيء → جِئْتُ)
+  if (isFinalHamza && middleRadical === YEH) return KASRA
   if (verb.form === 1 && verb.formPattern) return shortVowelFromPattern(FORM_I_PRESENT_VOWELS[verb.formPattern])
   if (middleRadical === YEH) return KASRA
   if (middleRadical === WAW || middleRadical === ALIF) return DAMMA

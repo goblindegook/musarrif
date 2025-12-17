@@ -2,6 +2,13 @@
 
 This document outlines the coding standards, patterns, and practices that must be followed when working on this codebase.
 
+## IMPORTANT
+
+⚠️ TEST-DRIVEN DEVELOPMENT IS NON-NEGOTIABLE ⚠️
+
+If you are changing the behaviour of the system, you MUST cover the expected behaviour with a test before you change
+production code.
+
 ## Tooling
 
 Node is available and configured for this project via Mise. Always load the Mise environment before running `node` or any `npm` scripts as you're not likely to find a globally installed Node.
@@ -32,7 +39,7 @@ Node is available and configured for this project via Mise. Always load the Mise
 
 ### Naming Conventions
 
-- **Functions/Variables**: camelCase (`conjugateFutureMood`, `isDefectiveRadical`)
+- **Functions/Variables**: camelCase (`conjugateFuture`, `isDefectiveRadical`)
 - **Components/Types/Interfaces**: PascalCase (`Verb`, `VerbMetaProps`)
 - **Constants**: UPPER_SNAKE_CASE for module-level constants (`ALIF_HAMZA`)
 - **Files**: PascalCase for components (`SpeechButton.tsx`), camelCase for utilities (`pronouns.ts`)
@@ -79,11 +86,13 @@ All UI strings must be translated into all languages. UI strings are stored in t
 
 ### Verb Translations
 
-When adding a new verb to `src/data/verbs.json`, you must also add translations for that verb:
+When adding a new root to `src/data/roots.json`, you must also add translated root semantics and translations for all
+the verb forms added:
 
 - **Translate into**: English, Italian, and Portuguese only (not Arabic)
 - **Arabic**: Arabic verbs use their Arabic labels directly and do not require translations
-- **Translation location**: Add entries to the `verbs` object in `en.json`, `it.json`, and `pt.json`
+- **Verb translation location**: Add entries to the `verbs` object in `en.json`, `it.json`, and `pt.json`
+- **Root semantics location**: Add entries to the `roots` object in `en.json`, `it.json`, and `pt.json`
 
 ### Translation Guidelines
 
@@ -131,7 +140,7 @@ test('descriptive test name', () => {
 
 ### Testing Best Practices
 
-- ❌ **NEVER change the behaviour of the code before writing tests. This is a critical error.**
+- ❌ **NEVER change the behaviour of the system before writing tests. This is a critical error.**
 - ✅ **DO write descriptive test names**: Test names should clearly describe what is being tested.
 - ✅ **DO group related tests**: Use `describe` blocks to group related test cases.
 - ✅ **DO test edge cases**: Include tests for boundary conditions and error cases.
@@ -140,7 +149,7 @@ test('descriptive test name', () => {
 - ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
 - ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
 - ❌ **NEVER test data existence**: Fixture existence should be trusted; it can be incorrect but in that case the test will fail naturally, so skip “is defined” checks on fixtures.
-- ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `verbs.json` entries directly.
+- ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `roots.json` entries directly.
 - ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
 - ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
 - ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.

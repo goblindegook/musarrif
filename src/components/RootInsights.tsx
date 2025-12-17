@@ -81,9 +81,10 @@ const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: flex-start;
   position: relative;
   min-width: 3rem;
+  min-height: 3rem;
   flex: 0 0 auto;
 `
 
@@ -93,4 +94,5 @@ const RootLetterAnnotation = styled('small')`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;
+  margin-top: 0.25rem;
 `

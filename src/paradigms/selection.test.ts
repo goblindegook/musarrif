@@ -7,6 +7,6 @@ describe('getClosestVerbs', () => {
   test('prefers verbs with matching radicals in the same positions', () => {
     const closestRoots = getClosestVerbs('أنبأ', verbs, 6).map((verb) => verb.root)
 
-    expect(closestRoots).toEqual(['أنشأ', 'تنب', 'أتى', 'أجر', 'أخذ', 'أذن'])
+    expect(closestRoots).toEqual(['أنشأ', 'تنب', 'أتي', 'أتي', 'أجر', 'أخذ'])
   })
 })

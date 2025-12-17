@@ -86,7 +86,16 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropTerminalWeakOrHamza(expanded) : expanded
+    // For defective verbs, keep the final weak letter
+    if (isWeakLetter(c3) && !isWeakLetter(c2))
+      return [...stripTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+
+    const processed = dropTerminalWeakOrHamza(expanded)
+    const stripped = stripTrailingDiacritics(processed)
+    // For hollow verbs with final hamza, remove the yeh before HAMZA_ON_YEH
+    if (isWeakLetter(c2) && isHamzatedLetter(c3) && stripped.at(-1) === HAMZA_ON_YEH && stripped.at(-2) === YEH)
+      return [...stripped.slice(0, -2), HAMZA_ON_YEH, SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+
     return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
   '3pm': (base) => {
@@ -95,7 +104,16 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3pf': (base, verb) => {
     const [, c2, c3] = [...verb.root]
     const expanded = verb.form === 9 ? expandShadda(base) : base
-    const processed = isWeakLetter(c2) && isHamzatedLetter(c3) ? dropTerminalWeakOrHamza(expanded) : expanded
+    // For defective verbs, keep the final weak letter
+    if (isWeakLetter(c3) && !isWeakLetter(c2))
+      return [...stripTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+
+    const processed = dropTerminalWeakOrHamza(expanded)
+    const stripped = stripTrailingDiacritics(processed)
+    // For hollow verbs with final hamza, remove the yeh before HAMZA_ON_YEH
+    if (isWeakLetter(c2) && isHamzatedLetter(c3) && stripped.at(-1) === HAMZA_ON_YEH && stripped.at(-2) === YEH)
+      return [...stripped.slice(0, -2), HAMZA_ON_YEH, SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+
     return [...replaceFinalDiacritic(processed, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
   },
 }
@@ -292,8 +310,12 @@ function buildPresentBase(verb: Verb): readonly string[] {
         return [YEH, FATHA, c1, SUKOON, c2, longVowelFromPattern(patternVowel), finalLetterGlide(c3)]
 
       // Hollow verbs with final hamza (e.g., جيء → يَجِيءُ)
-      if (!isInitialWeak && !isInitialHamza && isMiddleWeak && (c3 === ALIF_HAMZA || c3 === HAMZA))
-        return [YEH, FATHA, c1, shortVowelFromPattern(patternVowel), longVowelFromPattern(patternVowel), c3, DAMMA]
+      // When middle radical is ya, always use kasra regardless of pattern
+      if (!isInitialWeak && !isInitialHamza && isMiddleWeak && (c3 === ALIF_HAMZA || c3 === HAMZA)) {
+        const shortVowel = c2 === YEH ? KASRA : shortVowelFromPattern(patternVowel)
+        const longVowel = c2 === YEH ? YEH : longVowelFromPattern(patternVowel)
+        return [YEH, FATHA, c1, shortVowel, longVowel, c3, DAMMA]
+      }
 
       // Hollow verbs (middle weak letter wāw or yā' written as long vowel)
       if (!isInitialWeak && !isInitialHamza && isMiddleWeak && !isFinalWeak)

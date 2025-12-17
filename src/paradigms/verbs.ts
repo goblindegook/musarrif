@@ -1,4 +1,4 @@
-import rawVerbs from '../data/verbs.json'
+import rawVerbs from '../data/roots.json'
 import { wordDistance } from '../primitives/strings'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
