@@ -386,15 +386,14 @@ function buildPresentBase(verb: Verb): readonly string[] {
 
     case 5:
       // Form V defective: final ي becomes ى (alif maqsura) in present tense (e.g., تَوَفَّى → يَتَوَفَّى)
-      if (isFinalWeak && c3 === YEH) {
+      if (c3 === YEH) {
         return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ALIF_MAQSURA]
       }
       return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3)
 
     case 6:
       // Hollow Form VI: if c2 is ALIF, don't insert another ALIF (e.g., يَتَعَانُ)
-      if (isMiddleWeak && c2 === ALIF)
-        return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c3, DAMMA], c3)
+      if (c2 === ALIF) return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c3, DAMMA], c3)
 
       return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA], c3)
 
