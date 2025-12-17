@@ -22,6 +22,7 @@ interface Translation {
   label: string
   strings: Record<string, string>
   verbs?: Record<string, string>
+  roots?: Record<string, string>
 }
 
 const TRANSLATIONS: Record<Language, Translation> = {
@@ -121,14 +122,13 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
       lang,
       dir: current.dir,
       t: (key, params) => {
-        const template = current.strings[key] || current.verbs?.[key] || key
-        const rendered = typeof template === 'string' ? format(template, params) : key
+        const template = current.strings[key] || current.verbs?.[key] || current.roots?.[key] || key
+        const rendered = format(String(template), params)
         return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
       },
       tHtml: (key, params) => {
         const template = current.strings[key] || key
-        const rendered = typeof template === 'string' ? format(template, params) : key
-        return sanitizeHtml(rendered, diacriticsPreference)
+        return sanitizeHtml(format(String(template), params), diacriticsPreference)
       },
       diacriticsPreference,
       setDiacriticsPreference,

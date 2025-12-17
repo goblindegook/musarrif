@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { ConjugationTable } from './components/ConjugationTable'
 import { Detail } from './components/Detail'
 import { DiacriticsToggle } from './components/DiacriticsToggle'
@@ -21,7 +21,7 @@ import { analyzeRoot, applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './p
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { getVerbById, search, type Verb, verbs } from './paradigms/verbs'
+import { getVerbById, search, transliterateRoot, type Verb, verbs } from './paradigms/verbs'
 import { mapRecord } from './primitives/objects'
 
 const DOTTED_CIRCLE = '\u25cc'
@@ -38,6 +38,307 @@ const FORM_I_PATTERN_VOWELS = mapRecord(FORM_I_PAST_VOWELS, (past, pattern) => {
 })
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+
+export function App() {
+  const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
+  const { verbId, navigateToVerb, tense, mood } = useRouting()
+  const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
+  const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const translateVerb = useCallback(
+    (verb: Verb) => (lang !== 'ar' ? t(verb.id) : (enTranslations.verbs as Record<string, string>)[verb.id]),
+    [lang, t],
+  )
+
+  const formatArabic = useMemo(
+    () => (value: string) => applyDiacriticsPreference(value, diacriticsPreference),
+    [diacriticsPreference],
+  )
+
+  const selectedVerb = useMemo(() => getVerbById(verbId), [verbId])
+
+  useEffect(() => {
+    setIsFormInfoOpen(false)
+    setIsRootInfoOpen(false)
+  }, [selectedVerb])
+
+  useEffect(() => {
+    document.title = [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · ')
+  }, [selectedVerb, formatArabic, t])
+
+  const selectedId = selectedVerb?.id
+
+  const derivedForms = useMemo(
+    () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
+    [selectedVerb?.root],
+  )
+
+  const formInsightExamples = useMemo<Verb[]>(() => {
+    if (!selectedVerb) return []
+    const pool = verbs.filter((verb) => verb.form === selectedVerb.form && verb.id !== selectedId)
+    if (pool.length === 0) return []
+    const shuffled = [...pool].sort(() => Math.random() - 0.5)
+    return shuffled.slice(0, 5)
+  }, [selectedId, selectedVerb])
+
+  const selectedFormPattern = selectedVerb?.form === 1 ? selectedVerb.formPattern : undefined
+
+  const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
+  const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
+
+  const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
+  const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
+  const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
+
+  return (
+    <Page dir={dir} lang={lang} settingsOpen={isSettingsOpen}>
+      <TopBar>
+        <TopBarHeader>
+          <TitleGroup dir={dir} lang={lang}>
+            <Eyebrow dir={dir} lang={lang}>
+              {t('eyebrow')}
+            </Eyebrow>
+            <PageTitle dir={dir} lang={lang}>
+              {t('title')}
+            </PageTitle>
+          </TitleGroup>
+          <SettingsButtonWrapper>
+            <IconButton
+              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+              ariaLabel={t('settings.toggle')}
+              ariaExpanded={isSettingsOpen}
+              title={t('settings.toggle')}
+              active={isSettingsOpen}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </SettingsButtonWrapper>
+        </TopBarHeader>
+        <Controls visible={isSettingsOpen}>
+          <DiacriticsToggle />
+          <LanguagePicker />
+        </Controls>
+      </TopBar>
+      <Main hasVerb={!!selectedVerb}>
+        <Stack area="search">
+          <Panel>
+            <VisuallyHiddenLabel htmlFor="verb-search-input">{t('verbLabel')}</VisuallyHiddenLabel>
+            <SearchBox
+              id="verb-search-input"
+              onSelect={(verb: Verb) => navigateToVerb(verb.id)}
+              selectedVerb={selectedVerb}
+            />
+
+            <Heading dir={dir} lang={lang}>
+              {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
+            </Heading>
+
+            {derivedForms.length > 1 ? (
+              <FormOptionList>
+                {derivedForms.map((verb) => {
+                  const isActive = verb.id === selectedVerb?.id
+                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                })}
+              </FormOptionList>
+            ) : (
+              <QuickPickList selectedVerb={selectedVerb} />
+            )}
+          </Panel>
+        </Stack>
+
+        {selectedVerb && (
+          <Stack area="verb">
+            <Panel
+              title={formatArabic(selectedVerb.label)}
+              dir="rtl"
+              lang="ar"
+              actions={
+                <>
+                  <ShareButton />
+                  <SpeechButton
+                    text={selectedVerb.label}
+                    lang="ar"
+                    ariaLabel={t('aria.speak', { text: selectedVerb.label })}
+                  />
+                </>
+              }
+            >
+              <VerbMetaSection>
+                <Detail
+                  label={t('meta.root')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  onClick={() => setIsRootInfoOpen(true)}
+                  ariaLabel={t('rootInfo.open')}
+                  ariaHasPopup="dialog"
+                  ariaExpanded={isRootInfoOpen}
+                >
+                  <RootMetaValue dir="rtl" lang="ar">
+                    {Array.from(selectedVerb.root).map((letter, index) => {
+                      return <span key={index}>{letter}</span>
+                    })}
+                  </RootMetaValue>
+                </Detail>
+                <Detail
+                  label={t('meta.form')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  valueLang={lang}
+                  valueDir={dir}
+                  onClick={() => setIsFormInfoOpen(true)}
+                  ariaLabel={formInsightsLabel}
+                  ariaHasPopup="dialog"
+                  ariaExpanded={isFormInfoOpen}
+                >
+                  <span>{ROMAN_NUMERALS[selectedVerb.form - 1]}</span>
+                  {selectedFormPattern && diacriticsPreference !== 'none' && (
+                    <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>
+                      {applyDiacriticsPreference(FORM_I_PATTERN_VOWELS[selectedFormPattern], diacriticsPreference)}
+                    </span>
+                  )}
+                </Detail>
+                <Detail
+                  label={t('meta.translation')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  value={translateVerb(selectedVerb)}
+                  valueLang="en"
+                  valueDir="ltr"
+                />
+                <Detail
+                  label={t('meta.activeParticiple')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  value={activeParticiple ? formatArabic(activeParticiple) : '—'}
+                  speechText={activeParticiple}
+                />
+                <Detail
+                  label={t('meta.passiveParticiple')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  value={passiveParticiple ? formatArabic(passiveParticiple) : '—'}
+                  speechText={passiveParticiple}
+                />
+                <Detail
+                  label={t('meta.verbalNoun')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  value={masdar ? formatArabic(masdar) : '—'}
+                  speechText={masdar}
+                />
+              </VerbMetaSection>
+            </Panel>
+
+            <ConjugationSection>
+              {tense === 'present' ? (
+                <ConjugationTable
+                  verb={selectedVerb}
+                  tense="present"
+                  mood={mood ?? 'indicative'}
+                  diacriticsPreference={diacriticsPreference}
+                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
+                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
+                />
+              ) : (
+                <ConjugationTable
+                  verb={selectedVerb}
+                  tense={tense ?? 'past'}
+                  diacriticsPreference={diacriticsPreference}
+                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
+                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
+                />
+              )}
+            </ConjugationSection>
+          </Stack>
+        )}
+
+        {selectedVerb && (
+          <Stack area="footer">
+            <Panel title={t('footer.feedback.title')} dir={dir} lang={lang}>
+              <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
+              <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
+                {t('footer.feedback.cta')}
+              </ActionLink>
+            </Panel>
+          </Stack>
+        )}
+
+        {selectedVerb && (
+          <>
+            <Modal isOpen={isFormInfoOpen} onClose={() => setIsFormInfoOpen(false)} title={t('formInfo.title')}>
+              <Text dir={dir} lang={lang}>
+                {t(`formInfo.form${selectedVerb.form}.description`)}
+              </Text>
+              <Text dir={dir} lang={lang}>
+                {t(`formInfo.form${selectedVerb.form}.relationship`)}
+              </Text>
+              <Heading dir={dir} lang={lang}>
+                {t('formInfo.examples')}
+              </Heading>
+              <SuggestionsList>
+                {formInsightExamples.map((example) => (
+                  <VerbPill
+                    key={example.id}
+                    verb={example}
+                    className={example.id === selectedVerb?.id ? 'active' : undefined}
+                  />
+                ))}
+              </SuggestionsList>
+            </Modal>
+            <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
+              <RootInsights root={selectedVerb.root} />
+            </Modal>
+          </>
+        )}
+      </Main>
+    </Page>
+  )
+}
+
+const RootInsights = ({ root }: { root: string }) => {
+  const { t, dir, lang } = useI18n()
+  const rootAnalysis = analyzeRoot(root)
+  const transliteratedRoot = transliterateRoot(root)
+  const semanticMeaning = t(transliteratedRoot)
+  const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
+  return (
+    <>
+      <RootDisplay dir="rtl" lang="ar">
+        {semanticMeaning !== transliteratedRoot && (
+          <Text dir={dir} lang={lang}>
+            <em>
+              <q>{semanticMeaning}</q>
+            </em>
+          </Text>
+        )}
+        <RootLetters>
+          {Array.from(root).map((letter, index) => {
+            const isWeak = rootAnalysis.weakPositions.includes(index)
+            const isHamza = rootAnalysis.hamzaPositions.includes(index)
+            return (
+              <RootLetter key={index} weak={isWeak} hamza={isHamza}>
+                {letter}
+                {isWeak && <RootLetterAnnotation>{t('rootInfo.annotation.weak')}</RootLetterAnnotation>}
+                {isHamza && <RootLetterAnnotation>{t('rootInfo.annotation.hamzated')}</RootLetterAnnotation>}
+              </RootLetter>
+            )
+          })}
+        </RootLetters>
+      </RootDisplay>
+      <Text dir={dir} lang={lang}>
+        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
+      </Text>
+      <Heading dir={dir} lang={lang}>
+        {t('rootInfo.forms')}
+      </Heading>
+      <SuggestionsList>
+        {derivedForms.map((v) => (
+          <VerbPill key={v.id} verb={v} />
+        ))}
+      </SuggestionsList>
+    </>
+  )
+}
 
 const Page = styled('div')<{ settingsOpen: boolean }>`
   max-width: 1200px;
@@ -280,8 +581,8 @@ const RootMetaValue = styled('div')`
 
 const RootDisplay = styled('div')`
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem 4rem;
@@ -291,315 +592,31 @@ const RootDisplay = styled('div')`
   margin-bottom: 1rem;
 `
 
+const RootLetters = styled('div')`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.5rem;
+`
+
 const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
   font-size: 2rem;
   font-weight: 600;
   color: ${(props) => (props.weak || props.hamza ? '#92400e' : '#0f172a')};
   display: flex;
   flex-direction: column;
-  align-items: center;e
+  align-items: center;
   gap: 0.25rem;
   position: relative;
-  flex: 1;
+  min-width: 3rem;
+  flex: 0 0 auto;
 `
 
-const RootAnnotation = styled('small')`
+const RootLetterAnnotation = styled('small')`
   font-size: 0.65rem;
   color: #92400e;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;
 `
-
-function enTranslate(verb: Verb, _t: (key: string) => string) {
-  return (enTranslations.verbs as Record<string, string>)[verb.id]
-}
-
-export function App() {
-  const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
-  const { verbId, navigateToVerb, tense, mood } = useRouting()
-  const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
-  const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const translateVerb = useMemo(
-    () => (lang !== 'ar' ? (verb: Verb) => t(verb.id) : (verb: Verb) => enTranslate(verb, t)),
-    [lang, t],
-  )
-
-  const formatArabic = useMemo(
-    () => (value: string) => applyDiacriticsPreference(value, diacriticsPreference),
-    [diacriticsPreference],
-  )
-
-  const selectedVerb = useMemo(() => getVerbById(verbId), [verbId])
-
-  useEffect(() => {
-    setIsFormInfoOpen(false)
-    setIsRootInfoOpen(false)
-  }, [selectedVerb])
-
-  useEffect(() => {
-    document.title = [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · ')
-  }, [selectedVerb, formatArabic, t])
-
-  const selectedId = selectedVerb?.id
-
-  const derivedForms = useMemo(
-    () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
-    [selectedVerb?.root],
-  )
-
-  const formInsightExamples = useMemo<Verb[]>(() => {
-    if (!selectedVerb) return []
-    const pool = verbs.filter((verb) => verb.form === selectedVerb.form && verb.id !== selectedId)
-    if (pool.length === 0) return []
-    const shuffled = [...pool].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 5)
-  }, [selectedId, selectedVerb])
-
-  const selectedFormPattern = selectedVerb?.form === 1 ? selectedVerb.formPattern : undefined
-
-  const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
-  const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
-
-  const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
-  const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
-  const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
-
-  return (
-    <Page dir={dir} lang={lang} settingsOpen={isSettingsOpen}>
-      <TopBar>
-        <TopBarHeader>
-          <TitleGroup dir={dir} lang={lang}>
-            <Eyebrow dir={dir} lang={lang}>
-              {t('eyebrow')}
-            </Eyebrow>
-            <PageTitle dir={dir} lang={lang}>
-              {t('title')}
-            </PageTitle>
-          </TitleGroup>
-          <SettingsButtonWrapper>
-            <IconButton
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              ariaLabel={t('settings.toggle')}
-              ariaExpanded={isSettingsOpen}
-              title={t('settings.toggle')}
-              active={isSettingsOpen}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </SettingsButtonWrapper>
-        </TopBarHeader>
-        <Controls visible={isSettingsOpen}>
-          <DiacriticsToggle />
-          <LanguagePicker />
-        </Controls>
-      </TopBar>
-      <Main hasVerb={!!selectedVerb}>
-        <Stack area="search">
-          <Panel>
-            <VisuallyHiddenLabel htmlFor="verb-search-input">{t('verbLabel')}</VisuallyHiddenLabel>
-            <SearchBox
-              id="verb-search-input"
-              onSelect={(verb: Verb) => navigateToVerb(verb.id)}
-              selectedVerb={selectedVerb}
-            />
-
-            <Heading dir={dir} lang={lang}>
-              {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
-            </Heading>
-
-            {derivedForms.length > 1 ? (
-              <FormOptionList>
-                {derivedForms.map((verb) => {
-                  const isActive = verb.id === selectedVerb?.id
-                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                })}
-              </FormOptionList>
-            ) : (
-              <QuickPickList selectedVerb={selectedVerb} />
-            )}
-          </Panel>
-        </Stack>
-
-        {selectedVerb && (
-          <Stack area="verb">
-            <Panel
-              title={formatArabic(selectedVerb.label)}
-              dir="rtl"
-              lang="ar"
-              actions={
-                <>
-                  <ShareButton />
-                  <SpeechButton
-                    text={selectedVerb.label}
-                    lang="ar"
-                    ariaLabel={t('aria.speak', { text: selectedVerb.label })}
-                  />
-                </>
-              }
-            >
-              <VerbMetaSection>
-                <Detail
-                  label={t('meta.root')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  onClick={() => setIsRootInfoOpen(true)}
-                  ariaLabel={t('rootInfo.open')}
-                  ariaHasPopup="dialog"
-                  ariaExpanded={isRootInfoOpen}
-                >
-                  <RootMetaValue dir="rtl" lang="ar">
-                    {Array.from(selectedVerb.root).map((letter, index) => {
-                      return <span key={index}>{letter}</span>
-                    })}
-                  </RootMetaValue>
-                </Detail>
-                <Detail
-                  label={t('meta.form')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  valueLang={lang}
-                  valueDir={dir}
-                  onClick={() => setIsFormInfoOpen(true)}
-                  ariaLabel={formInsightsLabel}
-                  ariaHasPopup="dialog"
-                  ariaExpanded={isFormInfoOpen}
-                >
-                  <span>{ROMAN_NUMERALS[selectedVerb.form - 1]}</span>
-                  {selectedFormPattern && diacriticsPreference !== 'none' && (
-                    <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>
-                      {applyDiacriticsPreference(FORM_I_PATTERN_VOWELS[selectedFormPattern], diacriticsPreference)}
-                    </span>
-                  )}
-                </Detail>
-                <Detail
-                  label={t('meta.translation')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  value={translateVerb(selectedVerb)}
-                  valueLang="en"
-                  valueDir="ltr"
-                />
-                <Detail
-                  label={t('meta.activeParticiple')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  value={activeParticiple ? formatArabic(activeParticiple) : '—'}
-                  speechText={activeParticiple}
-                />
-                <Detail
-                  label={t('meta.passiveParticiple')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  value={passiveParticiple ? formatArabic(passiveParticiple) : '—'}
-                  speechText={passiveParticiple}
-                />
-                <Detail
-                  label={t('meta.verbalNoun')}
-                  labelLang={lang}
-                  labelDir={dir}
-                  value={masdar ? formatArabic(masdar) : '—'}
-                  speechText={masdar}
-                />
-              </VerbMetaSection>
-            </Panel>
-
-            <ConjugationSection>
-              {tense === 'present' ? (
-                <ConjugationTable
-                  verb={selectedVerb}
-                  tense="present"
-                  mood={mood ?? 'indicative'}
-                  diacriticsPreference={diacriticsPreference}
-                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
-                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
-                />
-              ) : (
-                <ConjugationTable
-                  verb={selectedVerb}
-                  tense={tense ?? 'past'}
-                  diacriticsPreference={diacriticsPreference}
-                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
-                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
-                />
-              )}
-            </ConjugationSection>
-          </Stack>
-        )}
-
-        {selectedVerb && (
-          <Stack area="footer">
-            <Panel title={t('footer.feedback.title')} dir={dir} lang={lang}>
-              <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
-              <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
-                {t('footer.feedback.cta')}
-              </ActionLink>
-            </Panel>
-          </Stack>
-        )}
-
-        {selectedVerb && (
-          <>
-            <Modal isOpen={isFormInfoOpen} onClose={() => setIsFormInfoOpen(false)} title={t('formInfo.title')}>
-              <Text dir={dir} lang={lang}>
-                {t(`formInfo.form${selectedVerb.form}.description`)}
-              </Text>
-              <Text dir={dir} lang={lang}>
-                {t(`formInfo.form${selectedVerb.form}.relationship`)}
-              </Text>
-              <Heading dir={dir} lang={lang}>
-                {t('formInfo.examples')}
-              </Heading>
-              <SuggestionsList>
-                {formInsightExamples.map((example) => (
-                  <VerbPill
-                    key={example.id}
-                    verb={example}
-                    className={example.id === selectedVerb?.id ? 'active' : undefined}
-                  />
-                ))}
-              </SuggestionsList>
-            </Modal>
-            <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
-              {(() => {
-                try {
-                  const rootAnalysis = analyzeRoot(selectedVerb.root)
-                  return (
-                    <>
-                      <RootDisplay dir="rtl" lang="ar">
-                        {Array.from(selectedVerb.root).map((letter, index) => {
-                          const isWeak = rootAnalysis.weakPositions.includes(index)
-                          const isHamza = rootAnalysis.hamzaPositions.includes(index)
-                          return (
-                            <RootLetter key={index} weak={isWeak} hamza={isHamza}>
-                              {letter}
-                              {isWeak && <RootAnnotation>{t('rootInfo.annotation.weak')}</RootAnnotation>}
-                              {isHamza && <RootAnnotation>{t('rootInfo.annotation.hamzated')}</RootAnnotation>}
-                            </RootLetter>
-                          )
-                        })}
-                      </RootDisplay>
-                      <Text dir={dir} lang={lang}>
-                        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
-                      </Text>
-                      <Heading dir={dir} lang={lang}>
-                        {t('rootInfo.forms')}
-                      </Heading>
-                      <SuggestionsList>
-                        {derivedForms.map((verb) => {
-                          const isActive = verb.id === selectedVerb?.id
-                          return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                        })}
-                      </SuggestionsList>
-                    </>
-                  )
-                } catch {}
-              })()}
-            </Modal>
-          </>
-        )}
-      </Main>
-    </Page>
-  )
-}

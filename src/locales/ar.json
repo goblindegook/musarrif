@@ -11,7 +11,7 @@
     "diacritics.title": "ٱلتَّشْكِيلُ",
     "diacritics.all": "كَامِلَةٌ",
     "diacritics.some": "جُزْئِيَّةٌ",
-    "diacritics.none": "بِدُونِ تَشْكِيلٍ",
+    "diacritics.none": "عَدَم",
     "quickPicks": "ٱخْتِيَارَاتٌ سَرِيعَةٌ",
     "selectDerivedForm": "أبواب الاشتقاق",
     "formInfo.title": "ملاحظات عن الأبواب",
@@ -90,6 +90,5 @@
     "pronoun.2nd.plural.feminine": "٢ ف. ج.",
     "pronoun.1st.singular": "١ مف.",
     "pronoun.1st.plural": "١ ج."
-  },
-  "verbs": {}
+  }
 }

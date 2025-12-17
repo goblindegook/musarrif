@@ -285,6 +285,19 @@ test('Order derived form options by form number', () => {
   expect(formLabels).toEqual(['I', 'II', 'VI', 'X'])
 })
 
+describe('Root insights', () => {
+  it('displays root semantics when available', async () => {
+    renderApp('/#/en/ktb-1')
+    const user = userEvent.setup()
+    const rootDetail = screen.getByText('Root').parentElement!
+
+    await user.click(rootDetail)
+
+    const dialog = screen.getByRole('dialog', { name: 'Root insights' })
+    expect(within(dialog).getByText('writing')).toBeInTheDocument()
+  })
+})
+
 describe('Language', () => {
   const getLanguageSelect = () => screen.getAllByRole<HTMLSelectElement>('combobox')[0]
 

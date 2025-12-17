@@ -79,14 +79,14 @@ const TRANSLITERATION_MAP: Record<string, string> = {
 
 const normalizeHamza = (value: string): string => value.replace(/[آأإ]/g, ALIF)
 
+export function transliterateRoot(root: string): string {
+  return Array.from(stripDiacritics(root))
+    .map((char) => TRANSLITERATION_MAP[char] ?? char)
+    .join('')
+}
+
 function verbId({ root, form }: RawVerb): string {
-  return (
-    Array.from(stripDiacritics(root))
-      .map((char) => TRANSLITERATION_MAP[char] ?? char)
-      .join('') +
-    '-' +
-    String(form)
-  )
+  return [transliterateRoot(root), String(form)].join('-')
 }
 
 export const verbs: Verb[] = (rawVerbs as RawVerb[]).map((verb) => {

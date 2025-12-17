@@ -464,9 +464,9 @@
     "mAr-1": "praticar",
     "md0H-1": "elogiar",
     "mr0D-1": "estar doente",
-    "mr0D-2": "adoentar, cuidar",
-    "mr0D-4": "adoentar, causar doença",
-    "mr0D-5": "fingir-se doente",
+    "mr0D-2": "adoentar alguém",
+    "mr0D-4": "causar doença",
+    "mr0D-5": "fingir-se doente, adoentar-se",
     "mr0D-10": "procurar tratamento médico, considerar doente",
     "mry-10": "continuar",
     "msk-4": "segurar",
@@ -534,5 +534,10 @@
     "A1wy-10": "procurar refúgio",
     "xlf-1": "diferir",
     "f0Sl-1": "separar"
+  },
+  "roots": {
+    "ktb": "escrita",
+    "A1x0z": "tomar",
+    "mr0D": "doença"
   }
 }

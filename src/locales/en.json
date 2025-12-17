@@ -371,11 +371,11 @@
     "mk0t-1": "to remain",
     "mn0H-1": "to grant",
     "mn3-1": "to prevent",
-    "mr0D-1": "to be sick",
-    "mr0D-2": "to make sick, to nurse",
-    "mr0D-4": "to make sick, to cause to be ill",
-    "mr0D-5": "to pretend to be sick",
-    "mr0D-10": "to seek medical treatment, to consider sick",
+    "mr0D-1": "to be ill",
+    "mr0D-2": "to make someone ill",
+    "mr0D-4": "to cause illness",
+    "mr0D-5": "to feign illess, to become ill",
+    "mr0D-10": "to seek medical treatment, to consider ill",
     "mry-10": "to continue",
     "msk-4": "to hold",
     "msw-4": "to enter the evening, to become",
@@ -534,5 +534,10 @@
     "zlzl-1": "to shake",
     "zr3-1": "to plant",
     "zwr-1": "to visit"
+  },
+  "roots": {
+    "ktb": "writing",
+    "A1x0z": "taking",
+    "mr0D": "illness"
   }
 }

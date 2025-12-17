@@ -466,9 +466,9 @@
     "mAr-1": "praticare",
     "md0H-1": "lodare",
     "mr0D-1": "essere malato",
-    "mr0D-2": "far ammalare, curare",
-    "mr0D-4": "far ammalare, causare malattia",
-    "mr0D-5": "fingere di essere malato",
+    "mr0D-2": "far ammalare qualcuno",
+    "mr0D-4": "causare malattia",
+    "mr0D-5": "fingere di essere malato, ammalarsi",
     "mr0D-10": "cercare cure mediche, considerare malato",
     "mry-10": "continuare",
     "msk-4": "tenere",
@@ -534,5 +534,10 @@
     "A1wy-4": "dare rifugio",
     "A1wy-5": "rifugiarsi",
     "A1wy-10": "cercare rifugio"
+  },
+  "roots": {
+    "ktb": "scrittura",
+    "A1x0z": "prendere",
+    "mr0D": "malattia"
   }
 }
