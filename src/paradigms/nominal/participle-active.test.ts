@@ -71,8 +71,12 @@ describe('regular roots', () => {
 
 describe('assimilated roots', () => {
   describe('و-ع-د', () => {
-    test.todo('وَعَدَ (Form I)')
-    test.todo('تَوَعَّدَ (Form V)')
+    test.each<[VerbForm, string]>([
+      [1, 'وَاعِد'],
+      [5, 'مُتَوَعِّد'],
+    ])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('وعد', form))).toBe(expected)
+    })
   })
 })
 

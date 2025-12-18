@@ -110,8 +110,12 @@ describe('regular roots', () => {
 
 describe('assimilated roots', () => {
   describe('و-ع-د', () => {
-    test.todo('وَعَدَ (Form I)')
-    test.todo('تَوَعَّدَ (Form V)')
+    test.each<[VerbForm, string]>([
+      [1, 'وَعْد'],
+      [5, 'تَوَعُّد'],
+    ])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('وعد', form))).toBe(expected)
+    })
   })
 })
 

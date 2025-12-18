@@ -206,8 +206,41 @@ describe('active present indicative', () => {
 
   describe('assimilated verbs', () => {
     describe('و-ع-د', () => {
-      test.todo('وَعَدَ (Form I)')
-      test.todo('تَوَعَّدَ (Form V)')
+      test('وَعَدَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('وعد', 1), 'indicative')).toEqual({
+          '1s': 'أَعِدُ',
+          '2ms': 'تَعِدُ',
+          '2fs': 'تَعِدِيْنَ',
+          '3ms': 'يَعِدُ',
+          '3fs': 'تَعِدُ',
+          '2d': 'تَعِدَانِ',
+          '3dm': 'يَعِدَانِ',
+          '3df': 'تَعِدَانِ',
+          '1p': 'نَعِدُ',
+          '2pm': 'تَعِدُونَ',
+          '2pf': 'تَعِدْنَ',
+          '3pf': 'يَعِدْنَ',
+          '3pm': 'يَعِدُونَ',
+        })
+      })
+
+      test('تَوَعَّدَ (Form V)', () => {
+        expect(conjugatePresentMood(getVerb('وعد', 5), 'indicative')).toEqual({
+          '1s': 'أَتَوَعَّدُ',
+          '2ms': 'تَتَوَعَّدُ',
+          '2fs': 'تَتَوَعَّدِيْنَ',
+          '3ms': 'يَتَوَعَّدُ',
+          '3fs': 'تَتَوَعَّدُ',
+          '2d': 'تَتَوَعَّدَانِ',
+          '3dm': 'يَتَوَعَّدَانِ',
+          '3df': 'تَتَوَعَّدَانِ',
+          '1p': 'نَتَوَعَّدُ',
+          '2pm': 'تَتَوَعَّدُونَ',
+          '2pf': 'تَتَوَعَّدْنَ',
+          '3pf': 'يَتَوَعَّدْنَ',
+          '3pm': 'يَتَوَعَّدُونَ',
+        })
+      })
     })
   })
 
@@ -269,8 +302,7 @@ describe('active present indicative', () => {
 
 describe('active present jussive', () => {
   test('drops the final glide for أَعْطَى', () => {
-    const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
+    const jussive = conjugatePresentMood(getVerb('عطى', 4)!, 'jussive')
 
     expect(jussive['3ms']).toBe('يُعْطِ')
     expect(jussive['2ms']).toBe('تُعْطِ')
@@ -280,8 +312,7 @@ describe('active present jussive', () => {
   })
 
   test('drops nūn endings for صَرَفَ', () => {
-    const sarafa = verbs.find((entry) => entry.root === 'صرف' && entry.form === 1)!
-    const jussive = conjugatePresentMood(sarafa, 'jussive')
+    const jussive = conjugatePresentMood(getVerb('صرف', 1), 'jussive')
 
     expect(jussive['2ms']).toBe('تَصْرِفْ')
     expect(jussive['2fs']).toBe('تَصْرِفِي')
@@ -295,8 +326,7 @@ describe('active present jussive', () => {
   })
 
   test('shortens hollow stems without suffixes for قَالَ', () => {
-    const qaala = verbs.find((entry) => entry.root === 'قول' && entry.form === 1)!
-    const jussive = conjugatePresentMood(qaala, 'jussive')
+    const jussive = conjugatePresentMood(getVerb('قول', 1), 'jussive')
 
     expect(jussive['3ms']).toBe('يَقُلْ')
     expect(jussive['2ms']).toBe('تَقُلْ')
