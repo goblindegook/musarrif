@@ -22,6 +22,81 @@ describe('imperative', () => {
     expect(imperative['2ms']).toBe(expected2ms)
   })
 
+  describe('regular verbs', () => {
+    describe('ك-ت-ب', () => {
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَّبَ (Form II)')
+      test.todo('كَاتَبَ (Form III)')
+      test.todo('أَكْتَبَ (Form IV)')
+      test.todo('تَكَتَّبَ (Form V)')
+      test.todo('تَكَاتَبَ (Form VI)')
+      test.todo('اِنْكَتَبَ (Form VII)')
+    })
+  })
+
+  describe('assimilated verbs', () => {
+    describe('و-ع-د', () => {
+      test.todo('وَعَدَ (Form I)')
+      test.todo('تَوَعَّدَ (Form V)')
+    })
+  })
+
+  describe('hollow verbs', () => {
+    describe('ق-و-ل', () => {
+      test.todo('قَالَ (Form I)')
+      test.todo('قَوَّلَ (Form II)')
+      test.todo('قَاوَلَ (Form III)')
+      test.todo('أَقَالَ (Form IV)')
+    })
+  })
+
+  describe('defective verbs', () => {
+    describe('ر-م-ي', () => {
+      test.todo('رَمَى (Form I)')
+      test.todo('رَمَّى (Form II)')
+      test.todo('اِنْرَمَى (Form VIII)')
+    })
+  })
+
+  describe('hamzated initial verbs', () => {
+    describe.todo('أ-خ-ذ')
+  })
+
+  describe('hamzated middle verbs', () => {
+    describe.todo('س-أ-ل')
+  })
+
+  describe('hamzated final verbs', () => {
+    describe.todo('ق-ر-أ')
+  })
+
+  describe('doubly weak verbs', () => {
+    describe.todo('و-ق-ي')
+    describe.todo('و-ف-ي')
+    describe.todo('ر-و-ي')
+  })
+
+  describe('hamzated initial defective verbs', () => {
+    describe.todo('أ-ت-ي')
+  })
+
+  describe('hamzated middle assimilated verbs', () => {
+    describe.todo('و-ئ-د')
+  })
+
+  describe('hamzated middle defective verbs', () => {
+    describe.todo('ب-د-أ')
+  })
+
+  describe('hamzated final assimilated verbs', () => {
+    describe.todo('و-أ-ى')
+  })
+
+  describe('hamzated final hollow verbs', () => {
+    describe.todo('ج-ي-ء')
+  })
+
   test('imperative only exists for second person pronouns', () => {
     fc.assert(
       fc.property(arbitraryVerb, (verb) => {

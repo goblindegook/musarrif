@@ -1,11 +1,11 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests will surface broken dataset */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import type { PronounId } from '../pronouns'
 import { verbs } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 describe('active present indicative', () => {
-  it.each<[string, number, PronounId, string]>([
+  test.each<[string, number, PronounId, string]>([
     ['أتي', 1, '3ms', 'يَأْتِي'],
     ['أمن', 4, '3ms', 'يُؤْمِنُ'],
     ['أنشأ', 4, '3ms', 'يُنْشِئُ'],
@@ -73,10 +73,85 @@ describe('active present indicative', () => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     expect(conjugatePresentMood(verb, 'indicative')[pronoun]).toBe(expected)
   })
+
+  describe('regular verbs', () => {
+    describe('ك-ت-ب', () => {
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَّبَ (Form II)')
+      test.todo('كَاتَبَ (Form III)')
+      test.todo('أَكْتَبَ (Form IV)')
+      test.todo('تَكَتَّبَ (Form V)')
+      test.todo('تَكَاتَبَ (Form VI)')
+      test.todo('اِنْكَتَبَ (Form VII)')
+    })
+  })
+
+  describe('assimilated verbs', () => {
+    describe('و-ع-د', () => {
+      test.todo('وَعَدَ (Form I)')
+      test.todo('تَوَعَّدَ (Form V)')
+    })
+  })
+
+  describe('hollow verbs', () => {
+    describe('ق-و-ل', () => {
+      test.todo('قَالَ (Form I)')
+      test.todo('قَوَّلَ (Form II)')
+      test.todo('قَاوَلَ (Form III)')
+      test.todo('أَقَالَ (Form IV)')
+    })
+  })
+
+  describe('defective verbs', () => {
+    describe('ر-م-ي', () => {
+      test.todo('رَمَى (Form I)')
+      test.todo('رَمَّى (Form II)')
+      test.todo('اِنْرَمَى (Form VIII)')
+    })
+  })
+
+  describe('hamzated initial verbs', () => {
+    describe.todo('أ-خ-ذ')
+  })
+
+  describe('hamzated middle verbs', () => {
+    describe.todo('س-أ-ل')
+  })
+
+  describe('hamzated final verbs', () => {
+    describe.todo('ق-ر-أ')
+  })
+
+  describe('doubly weak verbs', () => {
+    describe.todo('و-ق-ي')
+    describe.todo('و-ف-ي')
+    describe.todo('ر-و-ي')
+  })
+
+  describe('hamzated initial defective verbs', () => {
+    describe.todo('أ-ت-ي')
+  })
+
+  describe('hamzated middle assimilated verbs', () => {
+    describe.todo('و-ئ-د')
+  })
+
+  describe('hamzated middle defective verbs', () => {
+    describe.todo('ب-د-أ')
+  })
+
+  describe('hamzated final assimilated verbs', () => {
+    describe.todo('و-أ-ى')
+  })
+
+  describe('hamzated final hollow verbs', () => {
+    describe.todo('ج-ي-ء')
+  })
 })
 
 describe('active present jussive', () => {
-  it('drops the final glide for أَعْطَى', () => {
+  test('drops the final glide for أَعْطَى', () => {
     const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
@@ -87,7 +162,7 @@ describe('active present jussive', () => {
     expect(jussive['3pm']).toBe('يُعْطُوا')
   })
 
-  it('drops nūn endings for صَرَفَ', () => {
+  test('drops nūn endings for صَرَفَ', () => {
     const sarafa = verbs.find((entry) => entry.root === 'صرف' && entry.form === 1)!
     const jussive = conjugatePresentMood(sarafa, 'jussive')
 
@@ -102,7 +177,7 @@ describe('active present jussive', () => {
     expect(jussive['3pm']).toBe('يَصْرِفُوا')
   })
 
-  it('shortens hollow stems without suffixes for قَالَ', () => {
+  test('shortens hollow stems without suffixes for قَالَ', () => {
     const qaala = verbs.find((entry) => entry.root === 'قول' && entry.form === 1)!
     const jussive = conjugatePresentMood(qaala, 'jussive')
 
@@ -115,7 +190,7 @@ describe('active present jussive', () => {
     expect(jussive['3pf']).toBe('يَقُلْنَ')
   })
 
-  it.each([
+  test.each([
     ['قود', 7, 'يَنْقَدْ'],
     ['قود', 8, 'يَقْتَدْ'],
     ['قود', 10, 'يَسْتَقِدْ'],
@@ -126,7 +201,7 @@ describe('active present jussive', () => {
     expect(jussive['3ms']).toBe(expected3ms)
   })
 
-  it('handles initial hamza + middle weak + final weak for أَوَى', () => {
+  test('handles initial hamza + middle weak + final weak for أَوَى', () => {
     const verb = verbs.find((entry) => entry.root === 'أوي' && entry.form === 1)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
@@ -139,7 +214,7 @@ describe('active present jussive', () => {
     expect(jussive['3pm']).toBe('يَأْوُوا')
   })
 
-  it('preserves shadda for form IX verbs in jussive', () => {
+  test('preserves shadda for form IX verbs in jussive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
@@ -148,7 +223,7 @@ describe('active present jussive', () => {
     expect(jussive['1s']).toBe('أَحْمَرَّ')
   })
 
-  it('expands shadda for form IX verbs in feminine plural forms in jussive', () => {
+  test('expands shadda for form IX verbs in feminine plural forms in jussive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
@@ -156,7 +231,7 @@ describe('active present jussive', () => {
     expect(jussive['3pf']).toBe('يَحْمَرَرْنَ')
   })
 
-  it('drops final hamza for جَاءَ (middle weak + final hamza)', () => {
+  test('drops final hamza for جَاءَ (middle weak + final hamza)', () => {
     const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
@@ -171,7 +246,7 @@ describe('active present jussive', () => {
 })
 
 describe('active present subjunctive', () => {
-  it('preserves shadda for form IX verbs in subjunctive', () => {
+  test('preserves shadda for form IX verbs in subjunctive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 
@@ -180,7 +255,7 @@ describe('active present subjunctive', () => {
     expect(subjunctive['1s']).toBe('أَحْمَرَّ')
   })
 
-  it('expands shadda for form IX verbs in feminine plural forms in subjunctive', () => {
+  test('expands shadda for form IX verbs in feminine plural forms in subjunctive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 
@@ -188,7 +263,7 @@ describe('active present subjunctive', () => {
     expect(subjunctive['3pf']).toBe('يَحْمَرَرْنَ')
   })
 
-  it('changes final damma to fatḥa for جَاءَ in subjunctive', () => {
+  test('changes final damma to fatḥa for جَاءَ in subjunctive', () => {
     const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 

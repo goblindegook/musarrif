@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { verbs } from '../verbs'
 import { conjugatePast } from './past'
 
 describe('active past', () => {
-  it.each([
+  test.each([
     ['أتي', 1, 'أَتَى'],
     ['أمن', 1, 'أَمِنَ'],
     ['أمن', 4, 'آمَنَ'],
@@ -46,7 +46,82 @@ describe('active past', () => {
     expect(past['3ms']).toBe(expected)
   })
 
-  it('handles defective endings for أعطى', () => {
+  describe('regular verbs', () => {
+    describe('ك-ت-ب', () => {
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَبَ (Form I)')
+      test.todo('كَتَّبَ (Form II)')
+      test.todo('كَاتَبَ (Form III)')
+      test.todo('أَكْتَبَ (Form IV)')
+      test.todo('تَكَتَّبَ (Form V)')
+      test.todo('تَكَاتَبَ (Form VI)')
+      test.todo('اِنْكَتَبَ (Form VII)')
+    })
+  })
+
+  describe('assimilated verbs', () => {
+    describe('و-ع-د', () => {
+      test.todo('وَعَدَ (Form I)')
+      test.todo('تَوَعَّدَ (Form V)')
+    })
+  })
+
+  describe('hollow verbs', () => {
+    describe('ق-و-ل', () => {
+      test.todo('قَالَ (Form I)')
+      test.todo('قَوَّلَ (Form II)')
+      test.todo('قَاوَلَ (Form III)')
+      test.todo('أَقَالَ (Form IV)')
+    })
+  })
+
+  describe('defective verbs', () => {
+    describe('ر-م-ي', () => {
+      test.todo('رَمَى (Form I)')
+      test.todo('رَمَّى (Form II)')
+      test.todo('اِنْرَمَى (Form VIII)')
+    })
+  })
+
+  describe('hamzated initial verbs', () => {
+    describe.todo('أ-خ-ذ')
+  })
+
+  describe('hamzated middle verbs', () => {
+    describe.todo('س-أ-ل')
+  })
+
+  describe('hamzated final verbs', () => {
+    describe.todo('ق-ر-أ')
+  })
+
+  describe('doubly weak verbs', () => {
+    describe.todo('و-ق-ي')
+    describe.todo('و-ف-ي')
+    describe.todo('ر-و-ي')
+  })
+
+  describe('hamzated initial defective verbs', () => {
+    describe.todo('أ-ت-ي')
+  })
+
+  describe('hamzated middle assimilated verbs', () => {
+    describe.todo('و-ئ-د')
+  })
+
+  describe('hamzated middle defective verbs', () => {
+    describe.todo('ب-د-أ')
+  })
+
+  describe('hamzated final assimilated verbs', () => {
+    describe.todo('و-أ-ى')
+  })
+
+  describe('hamzated final hollow verbs', () => {
+    describe.todo('ج-ي-ء')
+  })
+
+  test('defective endings for أعطى', () => {
     const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
     expect(conjugatePast(verb)).toEqual({
       '1s': 'أَعْطَيْتُ',
@@ -65,7 +140,7 @@ describe('active past', () => {
     })
   })
 
-  it('shortens with suffixes for hollow verbs like قال', () => {
+  test('shorten with suffixes for hollow verbs like قال', () => {
     const verb = verbs.find((entry) => entry.root === 'قول' && entry.form === 1)!
     expect(conjugatePast(verb)).toEqual({
       '1s': 'قُلْتُ',
@@ -84,7 +159,7 @@ describe('active past', () => {
     })
   })
 
-  it('handles hollow verb with final hamza for جَاءَ', () => {
+  test('hollow verb with final hamza for جَاءَ', () => {
     const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
     expect(conjugatePast(verb)).toEqual({
       '3ms': 'جَاءَ',
@@ -103,7 +178,7 @@ describe('active past', () => {
     })
   })
 
-  it('handles Form IV hollow verb with final hamza for أَجَاءَ', () => {
+  test('Form IV hollow verb with final hamza for أَجَاءَ', () => {
     const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 4)!
     expect(conjugatePast(verb)).toEqual({
       '3ms': 'أَجَاءَ',
@@ -122,7 +197,7 @@ describe('active past', () => {
     })
   })
 
-  it('handles Form VI hollow verb with final hamza for تَجَاءَ', () => {
+  test('Form VI hollow verb with final hamza for تَجَاءَ', () => {
     const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 6)!
     expect(conjugatePast(verb)).toEqual({
       '3ms': 'تَجَاءَ',

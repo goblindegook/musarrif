@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { verbs } from '../verbs'
 import { deriveActiveParticiple } from './participle-active'
 
@@ -51,4 +51,79 @@ test.each([
 ])('%s (Form %d) active participle is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
   expect(deriveActiveParticiple(verb)).toBe(expected)
+})
+
+describe('regular roots', () => {
+  describe('ك-ت-ب', () => {
+    test.todo('كَتَبَ (Form I)')
+    test.todo('كَتَبَ (Form I)')
+    test.todo('كَتَّبَ (Form II)')
+    test.todo('كَاتَبَ (Form III)')
+    test.todo('أَكْتَبَ (Form IV)')
+    test.todo('تَكَتَّبَ (Form V)')
+    test.todo('تَكَاتَبَ (Form VI)')
+    test.todo('اِنْكَتَبَ (Form VII)')
+  })
+})
+
+describe('assimilated roots', () => {
+  describe('و-ع-د', () => {
+    test.todo('وَعَدَ (Form I)')
+    test.todo('تَوَعَّدَ (Form V)')
+  })
+})
+
+describe('hollow roots', () => {
+  describe('ق-و-ل', () => {
+    test.todo('قَالَ (Form I)')
+    test.todo('قَوَّلَ (Form II)')
+    test.todo('قَاوَلَ (Form III)')
+    test.todo('أَقَالَ (Form IV)')
+  })
+})
+
+describe('defective roots', () => {
+  describe('ر-م-ي', () => {
+    test.todo('رَمَى (Form I)')
+    test.todo('رَمَّى (Form II)')
+    test.todo('اِنْرَمَى (Form VIII)')
+  })
+})
+
+describe('hamzated initial roots', () => {
+  describe.todo('أ-خ-ذ')
+})
+
+describe('hamzated middle roots', () => {
+  describe.todo('س-أ-ل')
+})
+
+describe('hamzated final roots', () => {
+  describe.todo('ق-ر-أ')
+})
+
+describe('doubly weak roots', () => {
+  describe.todo('و-ق-ي')
+  describe.todo('و-ف-ي')
+  describe.todo('ر-و-ي')
+})
+
+describe('hamzated initial defective roots', () => {
+  describe.todo('أ-ت-ي')
+})
+
+describe('hamzated middle assimilated roots', () => {
+  describe.todo('و-ئ-د')
+})
+
+describe('hamzated middle defective roots', () => {
+  describe.todo('ب-د-أ')
+})
+
+describe('hamzated final assimilated roots', () => {
+  describe.todo('و-أ-ى')
+})
+
+describe('hamzated final hollow roots', () => {
+  describe.todo('ج-ي-ء')
 })
