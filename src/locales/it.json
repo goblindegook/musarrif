@@ -580,7 +580,13 @@
     "A1wy-1": "rifugiarsi",
     "A1wy-4": "dare rifugio",
     "A1wy-5": "rifugiarsi",
-    "A1wy-10": "cercare rifugio"
+    "A1wy-10": "cercare rifugio",
+    "0zhb-1": "andare",
+    "0zhb-2": "dorare",
+    "0zhb-4": "rimuovere, mandare via",
+    "0zhb-5": "essere dorato",
+    "0zhb-6": "andarsene insieme",
+    "0zhb-10": "considerare buono"
   },
   "roots": {
     "ktb": "scrittura",
@@ -615,6 +621,7 @@
     "3lm": "conoscenza",
     "3wn": "assistenza",
     "fkr": "pensiero",
-    "w0Sl": "arrivo"
+    "w0Sl": "arrivo",
+    "0zhb": "andare"
   }
 }

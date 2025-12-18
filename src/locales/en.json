@@ -580,7 +580,13 @@
     "zAl-4": "to remove",
     "zlzl-1": "to shake",
     "zr3-1": "to plant",
-    "zwr-1": "to visit"
+    "zwr-1": "to visit",
+    "0zhb-1": "to go",
+    "0zhb-2": "to gild",
+    "0zhb-4": "to remove, to send away",
+    "0zhb-5": "to be gilded",
+    "0zhb-6": "to go away together",
+    "0zhb-10": "to consider good"
   },
   "roots": {
     "ktb": "writing",
@@ -615,6 +621,7 @@
     "3lm": "knowledge",
     "3wn": "assistance",
     "fkr": "thought",
-    "w0Sl": "arrival"
+    "w0Sl": "arrival",
+    "0zhb": "going"
   }
 }

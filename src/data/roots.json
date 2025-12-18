@@ -463,5 +463,11 @@
   { "root": "ولى", "form": 4 },
   { "root": "وهب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "وهب", "form": 4 },
+  { "root": "ذهب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "ذهب", "form": 2 },
+  { "root": "ذهب", "form": 4 },
+  { "root": "ذهب", "form": 5 },
+  { "root": "ذهب", "form": 6 },
+  { "root": "ذهب", "form": 10 },
   { "root": "يقظ", "form": 10 }
 ]
