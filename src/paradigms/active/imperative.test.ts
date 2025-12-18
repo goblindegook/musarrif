@@ -27,14 +27,16 @@ describe('imperative', () => {
       fc.property(arbitraryVerb, (verb) => {
         const imperative = conjugateImperative(verb)
 
-        expect(imperative['1s']).toBe('')
-        expect(imperative['1p']).toBe('')
-        expect(imperative['3ms']).toBe('')
-        expect(imperative['3fs']).toBe('')
-        expect(imperative['3dm']).toBe('')
-        expect(imperative['3df']).toBe('')
-        expect(imperative['3pm']).toBe('')
-        expect(imperative['3pf']).toBe('')
+        expect(imperative).toMatchObject({
+          '1s': '',
+          '1p': '',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+        })
       }),
     )
   })
