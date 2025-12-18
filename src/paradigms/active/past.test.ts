@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { getVerb, verbs } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePast } from './past'
 
 describe('active past', () => {
-  test.each([
+  test.each<[string, VerbForm, string]>([
     ['أتي', 1, 'أَتَى'],
     ['أمن', 1, 'أَمِنَ'],
     ['أمن', 4, 'آمَنَ'],
@@ -41,7 +41,7 @@ describe('active past', () => {
     ['جيء', 4, 'أَجَاءَ'],
     ['جيء', 6, 'تَجَاءَ'],
   ])('%s (%d) pattern is %s', (root, form, expected) => {
-    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
+    const verb = getVerb(root, form)
     const past = conjugatePast(verb)
     expect(past['3ms']).toBe(expected)
   })
@@ -294,9 +294,59 @@ describe('active past', () => {
 
   describe('defective verbs', () => {
     describe('ر-م-ي', () => {
-      test.todo('رَمَى (Form I)')
-      test.todo('رَمَّى (Form II)')
-      test.todo('اِنْرَمَى (Form VIII)')
+      test('رَمَى (Form I)', () => {
+        expect(conjugatePast(getVerb('رمي', 1))).toEqual({
+          '1s': 'رَمَيْتُ',
+          '2ms': 'رَمَيْتَ',
+          '2fs': 'رَمَيْتِ',
+          '3ms': 'رَمَى',
+          '3fs': 'رَمَتْ',
+          '2d': 'رَمَيْتُمَا',
+          '3dm': 'رَمَيَا',
+          '3df': 'رَمَتَا',
+          '1p': 'رَمَيْنَا',
+          '2pm': 'رَمَيْتُمْ',
+          '2pf': 'رَمَيْتُنَّ',
+          '3pf': 'رَمَيْنَ',
+          '3pm': 'رَمَوْا',
+        })
+      })
+
+      test('رَمَّى (Form II)', () => {
+        expect(conjugatePast(getVerb('رمي', 2))).toEqual({
+          '1s': 'رَمَّيْتُ',
+          '2ms': 'رَمَّيْتَ',
+          '2fs': 'رَمَّيْتِ',
+          '3ms': 'رَمَّى',
+          '3fs': 'رَمَّتْ',
+          '2d': 'رَمَّيْتُمَا',
+          '3dm': 'رَمَّيَا',
+          '3df': 'رَمَّتَا',
+          '1p': 'رَمَّيْنَا',
+          '2pm': 'رَمَّيْتُمْ',
+          '2pf': 'رَمَّيْتُنَّ',
+          '3pf': 'رَمَّيْنَ',
+          '3pm': 'رَمَّوْا',
+        })
+      })
+
+      test('اِنْرَمَى (Form VII)', () => {
+        expect(conjugatePast(getVerb('رمي', 7))).toEqual({
+          '1s': 'اِنْرَمَيْتُ',
+          '2ms': 'اِنْرَمَيْتَ',
+          '2fs': 'اِنْرَمَيْتِ',
+          '3ms': 'اِنْرَمَى',
+          '3fs': 'اِنْرَمَتْ',
+          '2d': 'اِنْرَمَيْتُمَا',
+          '3dm': 'اِنْرَمَيَا',
+          '3df': 'اِنْرَمَتَا',
+          '1p': 'اِنْرَمَيْنَا',
+          '2pm': 'اِنْرَمَيْتُمْ',
+          '2pf': 'اِنْرَمَيْتُنَّ',
+          '3pf': 'اِنْرَمَيْنَ',
+          '3pm': 'اِنْرَمَوْا',
+        })
+      })
     })
   })
 
@@ -339,8 +389,7 @@ describe('active past', () => {
   })
 
   test('defective endings for أعطى', () => {
-    const verb = verbs.find((entry) => entry.root === 'عطى' && entry.form === 4)!
-    expect(conjugatePast(verb)).toEqual({
+    expect(conjugatePast(getVerb('عطى', 4))).toEqual({
       '1s': 'أَعْطَيْتُ',
       '2ms': 'أَعْطَيْتَ',
       '2fs': 'أَعْطَيْتِ',
@@ -358,8 +407,7 @@ describe('active past', () => {
   })
 
   test('shorten with suffixes for hollow verbs like قال', () => {
-    const verb = verbs.find((entry) => entry.root === 'قول' && entry.form === 1)!
-    expect(conjugatePast(verb)).toEqual({
+    expect(conjugatePast(getVerb('قول', 1))).toEqual({
       '1s': 'قُلْتُ',
       '2ms': 'قُلْتَ',
       '2fs': 'قُلْتِ',
@@ -377,8 +425,7 @@ describe('active past', () => {
   })
 
   test('hollow verb with final hamza for جَاءَ', () => {
-    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
-    expect(conjugatePast(verb)).toEqual({
+    expect(conjugatePast(getVerb('جيء', 1))).toEqual({
       '3ms': 'جَاءَ',
       '3fs': 'جَاءَتْ',
       '3dm': 'جَاءَا',
@@ -396,8 +443,7 @@ describe('active past', () => {
   })
 
   test('Form IV hollow verb with final hamza for أَجَاءَ', () => {
-    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 4)!
-    expect(conjugatePast(verb)).toEqual({
+    expect(conjugatePast(getVerb('جيء', 4))).toEqual({
       '3ms': 'أَجَاءَ',
       '3fs': 'أَجَاءَتْ',
       '3dm': 'أَجَاءَا',
@@ -415,8 +461,7 @@ describe('active past', () => {
   })
 
   test('Form VI hollow verb with final hamza for تَجَاءَ', () => {
-    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 6)!
-    expect(conjugatePast(verb)).toEqual({
+    expect(conjugatePast(getVerb('جيء', 6))).toEqual({
       '3ms': 'تَجَاءَ',
       '3fs': 'تَجَاءَتْ',
       '3dm': 'تَجَاءَا',
