@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { verbs } from '../verbs'
+import { getVerb, type VerbForm, verbs } from '../verbs'
 import { deriveActiveParticiple } from './participle-active'
 
 test.each([
@@ -55,14 +55,17 @@ test.each([
 
 describe('regular roots', () => {
   describe('ك-ت-ب', () => {
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَّبَ (Form II)')
-    test.todo('كَاتَبَ (Form III)')
-    test.todo('أَكْتَبَ (Form IV)')
-    test.todo('تَكَتَّبَ (Form V)')
-    test.todo('تَكَاتَبَ (Form VI)')
-    test.todo('اِنْكَتَبَ (Form VII)')
+    test.each<[VerbForm, string]>([
+      [1, 'كَاتِب'],
+      [2, 'مُكَتِّب'],
+      [3, 'مُكَاتِب'],
+      [4, 'مُكْتِب'],
+      [5, 'مُتَكَتِّب'],
+      [6, 'مُتَكَاتِب'],
+      [7, 'مُنْكَتِب'],
+    ])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('كتب', form))).toBe(expected)
+    })
   })
 })
 

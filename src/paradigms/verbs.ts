@@ -4,7 +4,7 @@ import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { ALIF, stripDiacritics } from './letters'
 
-type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 type MasdarPattern =
   | 'fa3l'
   | 'fa3al'

@@ -496,13 +496,13 @@ function applyPresentPrefix(chars: readonly string[], prefix: string): readonly 
   const carriedDiacritics: string[] = []
 
   // Carry over any prefix diacritics (e.g., fatḥa from the base "ya-")
-  while (remainder.length > 0 && isDiacritic(remainder[0])) {
+  while (isDiacritic(remainder.at(0))) {
     const mark = remainder.shift()
     if (mark) carriedDiacritics.push(mark)
   }
 
   // If we're adding hamza prefix to a hamza-initial stem (e.g., آذَنُ, آكُلُ)
-  if (prefix === ALIF_HAMZA && remainder[0] === ALIF_HAMZA) {
+  if (prefix === ALIF_HAMZA && remainder.at(0) === ALIF_HAMZA) {
     // Drop the stem hamza and any diacritics attached to it (e.g., sukoon)
     remainder.shift()
     return [ALIF_MADDA, ...removeLeadingDiacritics(remainder)]

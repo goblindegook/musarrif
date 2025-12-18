@@ -44,8 +44,7 @@ function stripBasePath(pathname: string): string {
 
 function hasLanguageSegment(pathname: string): boolean {
   const segments = stripBasePath(pathname).split('/').filter(Boolean)
-  const maybeLanguage = segments[0] as Language | undefined
-  return maybeLanguage != null && isLanguageSupported(maybeLanguage)
+  return isLanguageSupported(segments.at(0))
 }
 
 function isTense(value: unknown): value is Tense {
@@ -94,21 +93,21 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
         return segment
       }
     })
-  const maybeLanguage = segments[0] as Language | undefined
-  if (maybeLanguage && isLanguageSupported(maybeLanguage)) {
+  const maybeLanguage = segments.at(0) as Language | undefined
+  if (isLanguageSupported(maybeLanguage)) {
     const hasActive = segments[2] === 'active'
     if (hasActive) {
       const normalized = normalizeConjugation(segments[3], segments[4])
       return {
         lang: maybeLanguage,
-        verbId: segments[1],
+        verbId: segments.at(1),
         tense: segments.length >= 4 ? normalized.tense : undefined,
         mood: segments.length >= 5 && normalized.tense === 'present' ? normalized.mood : undefined,
       }
     }
     return {
       lang: maybeLanguage,
-      verbId: segments[1],
+      verbId: segments.at(1),
       tense: undefined,
       mood: undefined,
     }
@@ -119,7 +118,7 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
     const normalized = normalizeConjugation(segments[2], segments[3])
     return {
       lang: fallbackLang,
-      verbId: segments[0] ?? undefined,
+      verbId: segments.at(0),
       tense: segments.length >= 3 ? normalized.tense : undefined,
       mood: segments.length >= 4 && normalized.tense === 'present' ? normalized.mood : undefined,
     }
@@ -127,7 +126,7 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
 
   return {
     lang: fallbackLang,
-    verbId: segments[0] ?? undefined,
+    verbId: segments.at(0),
     tense: undefined,
     mood: undefined,
   }
@@ -161,7 +160,7 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
 
     const browserLanguage = [...(navigator?.languages ?? []), navigator?.language ?? '']
       .filter(Boolean)
-      .map((locale) => locale.toLowerCase().split('-')[0])
+      .map((locale) => locale.toLowerCase().split('-').at(0))
       .find((language) => isLanguageSupported(language))
     if (browserLanguage) return browserLanguage
 

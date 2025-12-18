@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { verbs } from '../verbs'
+import { getVerb, type VerbForm, verbs } from '../verbs'
 import { deriveMasdar } from './masdar'
 
 test.each([
@@ -94,14 +94,17 @@ test.each([
 
 describe('regular roots', () => {
   describe('ك-ت-ب', () => {
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَّبَ (Form II)')
-    test.todo('كَاتَبَ (Form III)')
-    test.todo('أَكْتَبَ (Form IV)')
-    test.todo('تَكَتَّبَ (Form V)')
-    test.todo('تَكَاتَبَ (Form VI)')
-    test.todo('اِنْكَتَبَ (Form VII)')
+    test.each<[VerbForm, string]>([
+      [1, 'كِتَابَة'],
+      [2, 'تَكْتِيب'],
+      [3, 'مُكَاتَبَة'],
+      [4, 'إِكْتَاب'],
+      [5, 'تَكَتُّب'],
+      [6, 'تَكَاتُب'],
+      [7, 'اِنْكِتَاب'],
+    ])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('كتب', form))).toBe(expected)
+    })
   })
 })
 

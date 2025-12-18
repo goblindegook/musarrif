@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { verbs } from '../verbs'
+import { getVerb, type VerbForm, verbs } from '../verbs'
 import { derivePassiveParticiple } from './participle-passive'
 
 test.each([
@@ -61,14 +61,17 @@ test.each([
 
 describe('regular roots', () => {
   describe('ك-ت-ب', () => {
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَبَ (Form I)')
-    test.todo('كَتَّبَ (Form II)')
-    test.todo('كَاتَبَ (Form III)')
-    test.todo('أَكْتَبَ (Form IV)')
-    test.todo('تَكَتَّبَ (Form V)')
-    test.todo('تَكَاتَبَ (Form VI)')
-    test.todo('اِنْكَتَبَ (Form VII)')
+    test.each<[VerbForm, string]>([
+      [1, 'مَكْتُوب'],
+      [2, '\u0645\u064F\u0643\u064E\u062A\u0651\u064E\u0628'],
+      [3, 'مُكَاتَب'],
+      [4, 'مُكْتَب'],
+      [5, '\u0645\u064F\u062A\u064E\u0643\u064E\u062A\u0651\u064E\u0628'],
+      [6, 'مُتَكَاتَب'],
+      [7, 'مُنْكَتَب'],
+    ])('Form %d passive participle is %s', (form, expected) => {
+      expect(derivePassiveParticiple(getVerb('كتب', form))).toBe(expected)
+    })
   })
 })
 
