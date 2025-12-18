@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests will surface broken dataset */
 import { describe, expect, test } from 'vitest'
 import type { PronounId } from '../pronouns'
-import { verbs } from '../verbs'
+import { getVerb, verbs } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 describe('active present indicative', () => {
@@ -76,14 +76,131 @@ describe('active present indicative', () => {
 
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
-      test.todo('كَتَبَ (Form I)')
-      test.todo('كَتَبَ (Form I)')
-      test.todo('كَتَّبَ (Form II)')
-      test.todo('كَاتَبَ (Form III)')
-      test.todo('أَكْتَبَ (Form IV)')
-      test.todo('تَكَتَّبَ (Form V)')
-      test.todo('تَكَاتَبَ (Form VI)')
-      test.todo('اِنْكَتَبَ (Form VII)')
+      test('كَتَبَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 1), 'indicative')).toEqual({
+          '1s': 'أَكْتُبُ',
+          '2ms': 'تَكْتُبُ',
+          '2fs': 'تَكْتُبِيْنَ',
+          '3ms': 'يَكْتُبُ',
+          '3fs': 'تَكْتُبُ',
+          '2d': 'تَكْتُبَانِ',
+          '3dm': 'يَكْتُبَانِ',
+          '3df': 'تَكْتُبَانِ',
+          '1p': 'نَكْتُبُ',
+          '2pm': 'تَكْتُبُونَ',
+          '2pf': 'تَكْتُبْنَ',
+          '3pf': 'يَكْتُبْنَ',
+          '3pm': 'يَكْتُبُونَ',
+        })
+      })
+
+      test('كَتَّبَ (Form II)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 2), 'indicative')).toEqual({
+          '1s': 'أُكَتِّبُ',
+          '2ms': 'تُكَتِّبُ',
+          '2fs': 'تُكَتِّبِيْنَ',
+          '3ms': 'يُكَتِّبُ',
+          '3fs': 'تُكَتِّبُ',
+          '2d': 'تُكَتِّبَانِ',
+          '3dm': 'يُكَتِّبَانِ',
+          '3df': 'تُكَتِّبَانِ',
+          '1p': 'نُكَتِّبُ',
+          '2pm': 'تُكَتِّبُونَ',
+          '2pf': 'تُكَتِّبْنَ',
+          '3pf': 'يُكَتِّبْنَ',
+          '3pm': 'يُكَتِّبُونَ',
+        })
+      })
+
+      test('كَاتَبَ (Form III)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 3), 'indicative')).toEqual({
+          '1s': 'أُكَاتِبُ',
+          '2ms': 'تُكَاتِبُ',
+          '2fs': 'تُكَاتِبِيْنَ',
+          '3ms': 'يُكَاتِبُ',
+          '3fs': 'تُكَاتِبُ',
+          '2d': 'تُكَاتِبَانِ',
+          '3dm': 'يُكَاتِبَانِ',
+          '3df': 'تُكَاتِبَانِ',
+          '1p': 'نُكَاتِبُ',
+          '2pm': 'تُكَاتِبُونَ',
+          '2pf': 'تُكَاتِبْنَ',
+          '3pf': 'يُكَاتِبْنَ',
+          '3pm': 'يُكَاتِبُونَ',
+        })
+      })
+
+      test('أَكْتَبَ (Form IV)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 4), 'indicative')).toEqual({
+          '1s': 'أُكْتِبُ',
+          '2ms': 'تُكْتِبُ',
+          '2fs': 'تُكْتِبِيْنَ',
+          '3ms': 'يُكْتِبُ',
+          '3fs': 'تُكْتِبُ',
+          '2d': 'تُكْتِبَانِ',
+          '3dm': 'يُكْتِبَانِ',
+          '3df': 'تُكْتِبَانِ',
+          '1p': 'نُكْتِبُ',
+          '2pm': 'تُكْتِبُونَ',
+          '2pf': 'تُكْتِبْنَ',
+          '3pf': 'يُكْتِبْنَ',
+          '3pm': 'يُكْتِبُونَ',
+        })
+      })
+
+      test('تَكَتَّبَ (Form V)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 5), 'indicative')).toEqual({
+          '1s': 'أَتَكَتَّبُ',
+          '2ms': 'تَتَكَتَّبُ',
+          '2fs': 'تَتَكَتَّبِيْنَ',
+          '3ms': 'يَتَكَتَّبُ',
+          '3fs': 'تَتَكَتَّبُ',
+          '2d': 'تَتَكَتَّبَانِ',
+          '3dm': 'يَتَكَتَّبَانِ',
+          '3df': 'تَتَكَتَّبَانِ',
+          '1p': 'نَتَكَتَّبُ',
+          '2pm': 'تَتَكَتَّبُونَ',
+          '2pf': 'تَتَكَتَّبْنَ',
+          '3pf': 'يَتَكَتَّبْنَ',
+          '3pm': 'يَتَكَتَّبُونَ',
+        })
+      })
+
+      test('تَكَاتَبَ (Form VI)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 6), 'indicative')).toEqual({
+          '1s': 'أَتَكَاتَبُ',
+          '2ms': 'تَتَكَاتَبُ',
+          '2fs': 'تَتَكَاتَبِيْنَ',
+          '3ms': 'يَتَكَاتَبُ',
+          '3fs': 'تَتَكَاتَبُ',
+          '2d': 'تَتَكَاتَبَانِ',
+          '3dm': 'يَتَكَاتَبَانِ',
+          '3df': 'تَتَكَاتَبَانِ',
+          '1p': 'نَتَكَاتَبُ',
+          '2pm': 'تَتَكَاتَبُونَ',
+          '2pf': 'تَتَكَاتَبْنَ',
+          '3pf': 'يَتَكَاتَبْنَ',
+          '3pm': 'يَتَكَاتَبُونَ',
+        })
+      })
+
+      test('اِنْكَتَبَ (Form VII)', () => {
+        expect(conjugatePresentMood(getVerb('كتب', 7), 'indicative')).toEqual({
+          '1s': 'أَنْكَتِبُ',
+          '2ms': 'تَنْكَتِبُ',
+          '2fs': 'تَنْكَتِبِيْنَ',
+          '3ms': 'يَنْكَتِبُ',
+          '3fs': 'تَنْكَتِبُ',
+          '2d': 'تَنْكَتِبَانِ',
+          '3dm': 'يَنْكَتِبَانِ',
+          '3df': 'تَنْكَتِبَانِ',
+          '1p': 'نَنْكَتِبُ',
+          '2pm': 'تَنْكَتِبُونَ',
+          '2pf': 'تَنْكَتِبْنَ',
+          '3pf': 'يَنْكَتِبْنَ',
+          '3pm': 'يَنْكَتِبُونَ',
+        })
+      })
     })
   })
 

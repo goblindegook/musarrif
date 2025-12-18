@@ -3,7 +3,7 @@ import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
-import { verbs } from '../verbs'
+import { getVerb, verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { conjugatePresentMood } from './present'
 
@@ -24,14 +24,131 @@ describe('imperative', () => {
 
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
-      test.todo('كَتَبَ (Form I)')
-      test.todo('كَتَبَ (Form I)')
-      test.todo('كَتَّبَ (Form II)')
-      test.todo('كَاتَبَ (Form III)')
-      test.todo('أَكْتَبَ (Form IV)')
-      test.todo('تَكَتَّبَ (Form V)')
-      test.todo('تَكَاتَبَ (Form VI)')
-      test.todo('اِنْكَتَبَ (Form VII)')
+      test('كَتَبَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('كتب', 1))).toEqual({
+          '1s': '',
+          '2ms': 'اُكْتُبْ',
+          '2fs': 'اُكْتُبِي',
+          '2d': 'اُكْتُبَا',
+          '2pm': 'اُكْتُبُوا',
+          '2pf': 'اُكْتُبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('كَتَّبَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('كتب', 2))).toEqual({
+          '1s': '',
+          '2ms': 'كَتِّبْ',
+          '2fs': 'كَتِّبِي',
+          '2d': 'كَتِّبَا',
+          '2pm': 'كَتِّبُوا',
+          '2pf': 'كَتِّبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('كَاتَبَ (Form III)', () => {
+        expect(conjugateImperative(getVerb('كتب', 3))).toEqual({
+          '1s': '',
+          '2ms': 'كَاتِبْ',
+          '2fs': 'كَاتِبِي',
+          '2d': 'كَاتِبَا',
+          '2pm': 'كَاتِبُوا',
+          '2pf': 'كَاتِبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('أَكْتَبَ (Form IV)', () => {
+        expect(conjugateImperative(getVerb('كتب', 4))).toEqual({
+          '1s': '',
+          '2ms': 'أَكْتِبْ',
+          '2fs': 'أَكْتِبِي',
+          '2d': 'أَكْتِبَا',
+          '2pm': 'أَكْتِبُوا',
+          '2pf': 'أَكْتِبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('تَكَتَّبَ (Form V)', () => {
+        expect(conjugateImperative(getVerb('كتب', 5))).toEqual({
+          '1s': '',
+          '2ms': 'تَكَتَّبْ',
+          '2fs': 'تَكَتَّبِي',
+          '2d': 'تَكَتَّبَا',
+          '2pm': 'تَكَتَّبُوا',
+          '2pf': 'تَكَتَّبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('تَكَاتَبَ (Form VI)', () => {
+        expect(conjugateImperative(getVerb('كتب', 6))).toEqual({
+          '1s': '',
+          '2ms': 'تَكَاتَبْ',
+          '2fs': 'تَكَاتَبِي',
+          '2d': 'تَكَاتَبَا',
+          '2pm': 'تَكَاتَبُوا',
+          '2pf': 'تَكَاتَبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
+
+      test('اِنْكَتَبَ (Form VII)', () => {
+        expect(conjugateImperative(getVerb('كتب', 7))).toEqual({
+          '1s': '',
+          '2ms': 'اِنْكَتِبْ',
+          '2fs': 'اِنْكَتِبِي',
+          '2d': 'اِنْكَتِبَا',
+          '2pm': 'اِنْكَتِبُوا',
+          '2pf': 'اِنْكَتِبْنَ',
+          '3ms': '',
+          '3fs': '',
+          '3dm': '',
+          '3df': '',
+          '3pm': '',
+          '3pf': '',
+          '1p': '',
+        })
+      })
     })
   })
 

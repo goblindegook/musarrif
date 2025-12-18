@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { resolveFormIPastVowel } from '../form-i-vowels'
+import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -12,6 +12,7 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
+  shortVowelFromPattern,
   TEH,
   WAW,
 } from '../letters'
@@ -37,6 +38,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       switch (verb.form) {
         case 1: {
+          const pastVowel = resolveFormIPastVowel(verb)
+          const presentVowel = resolveFormIPresentVowel(verb)
+
           // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
           if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c2, KASRA]
 
@@ -50,7 +54,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // This is a morphological rule based on past pattern classification, even though
           // the imperative is technically derived from the present tense (jussive)
           // (e.g., مرض → اِمْرَضْ, سمع → اِسْمَعْ)
-          if (verb.form === 1 && resolveFormIPastVowel(verb) === 'i') return [ALIF, KASRA, ...stem]
+          if (pastVowel === 'i') return [ALIF, KASRA, ...stem]
+
+          // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
+          // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
+          // Exclude hollow verbs (middle weak) and defective verbs (final weak) as they have special handling
+          if (!isFinalWeak && stem.at(1) === SUKOON) {
+            return [ALIF, shortVowelFromPattern(presentVowel), ...stem]
+          }
 
           return stem
         }

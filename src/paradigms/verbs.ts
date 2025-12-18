@@ -210,3 +210,9 @@ export function search(query: string, options: SearchOptions = {}): Verb[] {
 export function getVerbById(id?: string): Verb | undefined {
   return id ? verbsById.get(id) : undefined
 }
+
+export function getVerb(root: string, form: VerbForm): Verb {
+  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
+  if (!verb) throw new Error(`Verb with root ${root} and form ${form} not found`)
+  return verb
+}
