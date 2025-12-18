@@ -218,10 +218,86 @@ describe('active past', () => {
 
   describe('hollow verbs', () => {
     describe('ق-و-ل', () => {
-      test.todo('قَالَ (Form I)')
-      test.todo('قَوَّلَ (Form II)')
-      test.todo('قَاوَلَ (Form III)')
-      test.todo('أَقَالَ (Form IV)')
+      test('قَالَ (Form I)', () => {
+        expect(conjugatePast(getVerb('قول', 1))).toEqual({
+          '1s': 'قُلْتُ',
+          '2ms': 'قُلْتَ',
+          '2fs': 'قُلْتِ',
+          '3ms': 'قَالَ',
+          '3fs': 'قَالَتْ',
+          '2d': 'قُلْتُمَا',
+          '3dm': 'قَالَا',
+          '3df': 'قَالَتَا',
+          '1p': 'قُلْنَا',
+          '2pm': 'قُلْتُمْ',
+          '2pf': 'قُلْتُنَّ',
+          '3pf': 'قُلْنَ',
+          '3pm': 'قَالُوا',
+        })
+      })
+
+      test('قَوَّلَ (Form II)', () => {
+        // NOTE: Production code issue - Form II hollow verbs should keep the shadda pattern in suffixed forms.
+        // Expected: قَوَّلْتُ, قَوَّلْتَ, etc. (keeping the و and shadda)
+        // Production currently produces: قُلْتُ, قُلْتَ, etc. (shortened form like Form I)
+        expect(conjugatePast(getVerb('قول', 2))).toEqual({
+          '1s': 'قَوَّلْتُ',
+          '2ms': 'قَوَّلْتَ',
+          '2fs': 'قَوَّلْتِ',
+          '3ms': 'قَوَّلَ',
+          '3fs': 'قَوَّلَتْ',
+          '2d': 'قَوَّلْتُمَا',
+          '3dm': 'قَوَّلَا',
+          '3df': 'قَوَّلَتَا',
+          '1p': 'قَوَّلْنَا',
+          '2pm': 'قَوَّلْتُمْ',
+          '2pf': 'قَوَّلْتُنَّ',
+          '3pf': 'قَوَّلْنَ',
+          '3pm': 'قَوَّلُوا',
+        })
+      })
+
+      test('قَاوَلَ (Form III)', () => {
+        // NOTE: Production code issue - Form III hollow verbs should keep the alif in suffixed forms.
+        // Expected: قَاوَلْتُ, قَاوَلْتَ, etc. (keeping the ا)
+        // Production currently produces: قُلْتُ, قُلْتَ, etc. (shortened form like Form I)
+        expect(conjugatePast(getVerb('قول', 3))).toEqual({
+          '1s': 'قَاوَلْتُ',
+          '2ms': 'قَاوَلْتَ',
+          '2fs': 'قَاوَلْتِ',
+          '3ms': 'قَاوَلَ',
+          '3fs': 'قَاوَلَتْ',
+          '2d': 'قَاوَلْتُمَا',
+          '3dm': 'قَاوَلَا',
+          '3df': 'قَاوَلَتَا',
+          '1p': 'قَاوَلْنَا',
+          '2pm': 'قَاوَلْتُمْ',
+          '2pf': 'قَاوَلْتُنَّ',
+          '3pf': 'قَاوَلْنَ',
+          '3pm': 'قَاوَلُوا',
+        })
+      })
+
+      test('أَقَالَ (Form IV)', () => {
+        // NOTE: Production code issue - Form IV hollow verbs should keep the prefix أَ in suffixed forms.
+        // Expected: أَقُلْتُ, أَقُلْتَ, etc. (with prefix and shortened middle vowel)
+        // Production currently produces: قُلْتُ, قُلْتَ, etc. (missing the prefix)
+        expect(conjugatePast(getVerb('قول', 4))).toEqual({
+          '1s': 'أَقُلْتُ',
+          '2ms': 'أَقُلْتَ',
+          '2fs': 'أَقُلْتِ',
+          '3ms': 'أَقَالَ',
+          '3fs': 'أَقَالَتْ',
+          '2d': 'أَقُلْتُمَا',
+          '3dm': 'أَقَالَا',
+          '3df': 'أَقَالَتَا',
+          '1p': 'أَقُلْنَا',
+          '2pm': 'أَقُلْتُمْ',
+          '2pf': 'أَقُلْتُنَّ',
+          '3pf': 'أَقُلْنَ',
+          '3pm': 'أَقَالُوا',
+        })
+      })
     })
   })
 

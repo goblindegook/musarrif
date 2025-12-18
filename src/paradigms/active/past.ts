@@ -130,13 +130,38 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   )
 }
 
-function buildPastBase(verb: Verb): readonly string[] {
+function buildDefectiveForms(base: readonly string[], verb: Verb): PastBaseForms {
+  const stem = stripTrailingDiacritics(base)
+  const baseWithoutC3 = stem.slice(0, -1)
+  const glide = glideFromRadical(verb.root.at(-1))
+  const lastRadical = verb.root.at(-1)
+  return {
+    base: lastRadical === ALIF_MAQSURA || lastRadical === ALIF ? stem : base,
+    baseWithSukoon: [...baseWithoutC3, glide, SUKOON],
+    baseWithDamma: [...baseWithoutC3, glide, DAMMA],
+    baseWithoutC3: baseWithoutC3,
+    glide,
+  }
+}
+
+function buildNonDefectiveForms(base: readonly string[]): PastBaseForms {
+  const stem = stripTrailingDiacritics(base)
+  return {
+    base,
+    baseWithSukoon: [...stem, SUKOON],
+    baseWithDamma: [...stem, DAMMA],
+  }
+}
+
+function derivePastForms(verb: Verb): PastBaseForms {
   const letters = [...verb.root]
+  const isDefective = isWeakLetter(verb.root.at(-1))
 
   // Handle quadriliteral and longer roots
   if (letters.length === 4) {
     const [c1, c2, c3, c4] = letters
-    return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
+    const base = [c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA]
+    return buildNonDefectiveForms(base)
   }
 
   // Triliteral roots (3 letters) - original logic
@@ -147,86 +172,168 @@ function buildPastBase(verb: Verb): readonly string[] {
       const pastVowel = resolveFormIPastVowel(verb)
 
       // Final-weak Form I: long vowel in the base, no ending fatḥa
-      if (isWeakLetter(c3) && pastVowel === 'i') return [c1, FATHA, c2, KASRA, YEH, FATHA]
+      if (isWeakLetter(c3) && pastVowel === 'i') return buildDefectiveForms([c1, FATHA, c2, KASRA, YEH, FATHA], verb)
 
       // Final-weak Form I: long vowel in the base, no ending fatḥa
-      if (isWeakLetter(c3)) return [c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)]
+      if (isWeakLetter(c3))
+        return buildDefectiveForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)], verb)
 
       // Geminate Form I: if c2 === c3, collapse with shadda (e.g., حَبَّ)
-      if (c2 === c3) return [c1, FATHA, c2, SHADDA, FATHA]
+      if (c2 === c3) {
+        return buildNonDefectiveForms([c1, FATHA, c2, SHADDA, FATHA])
+      }
 
       // Hollow Form I past contracts to a long /ā/ in the base (e.g., قامَ)
-      if (isWeakLetter(c2)) return [c1, FATHA, ALIF, c3, FATHA]
+      if (isWeakLetter(c2)) {
+        // Hollow Form I with final hamza (e.g., جيء → جَاءَ)
+        if (isHamzatedLetter(c3)) {
+          const suffixedBase = [c1, hollowShortVowel(verb), HAMZA_ON_YEH]
+          return {
+            base: [c1, FATHA, ALIF, c3, FATHA],
+            baseWithSukoon: [...suffixedBase, SUKOON],
+            baseWithDamma: [...suffixedBase, DAMMA],
+          }
+        }
+        // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
+        // baseWithDamma keeps the alif for 3pm (قَالُوا)
+        const base = [c1, FATHA, ALIF, c3, FATHA]
+        return {
+          base,
+          baseWithSukoon: [c1, hollowShortVowel(verb), c3, SUKOON],
+          baseWithDamma: [...stripTrailingDiacritics(base), DAMMA],
+        }
+      }
 
-      return [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA]
+      const base = [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA]
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
     }
 
-    case 2:
+    case 2: {
       // Geminate Form II: c2 === c3, fatḥa then shadda on c2, then c3 (e.g., حَبَّبَ)
-      if (c2 === c3) return normalizeDefectivePast([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA], c3)
+      if (c2 === c3) {
+        const base = normalizeDefectivePast([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA], c3)
+        return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+      }
 
-      return normalizeDefectivePast([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+      const base = normalizeDefectivePast([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+      // Hollow Form II keeps the shadda pattern in suffixed forms (e.g., قَوَّلْ)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-    case 3:
-      return normalizeDefectivePast([c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
+    case 3: {
+      const base = normalizeDefectivePast([c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
+      // Hollow Form III keeps the alif in suffixed forms (e.g., قَاوَلْ)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
     case 4: {
       // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
-      if (c2 === c3) return [ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA]
+      if (c2 === c3) {
+        return buildNonDefectiveForms([ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA])
+      }
+
+      // Initial hamza + middle weak + final weak (e.g., أوي → آوَى)
+      if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3)) {
+        const base = normalizeDefectivePast([ALIF_MADDA, c2, FATHA, c3], c3)
+        return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+      }
 
       const prefix = c1 === ALIF_HAMZA ? [ALIF_MADDA] : [ALIF_HAMZA, FATHA, c1, SUKOON]
 
-      // Initial hamza + middle weak + final weak (e.g., أوي → آوَى)
-      if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3))
-        return normalizeDefectivePast([ALIF_MADDA, c2, FATHA, c3], c3)
-
-      if (isWeakLetter(c3)) return normalizeDefectivePast([...prefix, c2, FATHA, c3], c3)
+      if (isWeakLetter(c3)) {
+        const base = normalizeDefectivePast([...prefix, c2, FATHA, c3], c3)
+        return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+      }
 
       // Hollow Form IV past contracts to long ā (e.g., أَضَافَ)
       // Hollow Form IV with final hamza (e.g., أَجَاءَ) - don't normalize, hamza is not a weak letter
-      if (isWeakLetter(c2) && isHamzatedLetter(c3)) return [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA]
-      if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+      if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
+        const base = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA]
+        return {
+          base,
+          baseWithSukoon: [...transformHollowWithFinalHamza(base), SUKOON],
+          baseWithDamma: [...transformHollowWithFinalHamza(base), DAMMA],
+        }
+      }
+      if (isWeakLetter(c2)) {
+        const base = normalizeDefectivePast([ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+        const stem = stripTrailingDiacritics(base)
+        return {
+          base,
+          baseWithSukoon: [...shortenHollowStem(stem, hollowShortVowel(verb)), SUKOON],
+          baseWithDamma: [...stem, DAMMA],
+        }
+      }
 
-      return normalizeDefectivePast([...prefix, c2, FATHA, c3, FATHA], c3)
+      const base = normalizeDefectivePast([...prefix, c2, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
     }
 
-    case 5:
-      return normalizeDefectivePast([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+    case 5: {
+      const base = normalizeDefectivePast([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-    case 6:
+    case 6: {
       // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
-      if (isWeakLetter(c2) && isHamzatedLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
+      if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
+        const base = [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
+        return {
+          base,
+          baseWithSukoon: [...transformHollowWithFinalHamza(base), SUKOON],
+          baseWithDamma: [...transformHollowWithFinalHamza(base), DAMMA],
+        }
+      }
 
-      return normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
+      const base = normalizeDefectivePast([TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-    case 7:
+    case 7: {
       // Hollow Form VII (e.g., اِنْقَادَ) lengthens the glide to ألف
-      if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
+      const base = isWeakLetter(c2)
+        ? normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
+        : normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-      return normalizeDefectivePast([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
+    case 8: {
+      const base =
+        c1 === WAW
+          ? normalizeDefectivePast([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+          : isWeakLetter(c2)
+            ? normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, ALIF, c3, FATHA], c3)
+            : normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-    case 8:
-      if (c1 === WAW) return normalizeDefectivePast([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+    case 9: {
+      const base = normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
 
-      if (isWeakLetter(c2)) return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, ALIF, c3, FATHA], c3)
-
-      return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3, FATHA], c3)
-
-    case 9:
-      return normalizeDefectivePast([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA], c3)
-
-    case 10:
+    case 10: {
       // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوَى)
-      if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3))
-        return normalizeDefectivePast(
-          [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, FATHA, c3, FATHA],
-          c3,
-        )
+      const base =
+        c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3)
+          ? normalizeDefectivePast(
+              [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, FATHA, c3, FATHA],
+              c3,
+            )
+          : isWeakLetter(c2)
+            ? normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+            : normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, FATHA], c3)
+      return isDefective ? buildDefectiveForms(base, verb) : buildNonDefectiveForms(base)
+    }
+  }
 
-      if (isWeakLetter(c2))
-        return normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
-
-      return normalizeDefectivePast([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, FATHA], c3)
+  // This should never be reached - all cases should return
+  const base: readonly string[] = []
+  const stem = stripTrailingDiacritics(base)
+  return {
+    base,
+    baseWithSukoon: [...stem, SUKOON],
+    baseWithDamma: [...stem, DAMMA],
   }
 }
 
@@ -241,68 +348,29 @@ function normalizeDefectivePast(base: readonly string[], c3: string): readonly s
   return [...chars, weakLetterTail(c3)]
 }
 
-function derivePastForms(verb: Verb): PastBaseForms {
-  const base = buildPastBase(verb)
+function transformHollowWithFinalHamza(base: readonly string[]): readonly string[] {
+  // Remove alif, change fatḥa before it to kasra, replace hamza with hamza on yeh
+  // Base is [أ, ج, َ, ا, ء] or [ت, ج, َ, ا, ء], we need [أ, ج, ِ, ئ] or [ت, ج, ِ, ئ]
   const stem = stripTrailingDiacritics(base)
-  const [c1, c2, c3] = [...verb.root]
-  const isDefective = isWeakLetter(verb.root.at(-1))
-  const isHollow = isWeakLetter(c2)
-  const isFinalHamza = isHamzatedLetter(c3)
+  return stem
+    .map((char, i, arr) => {
+      if (char === ALIF) return null
+      if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return KASRA
+      if (char === HAMZA) return HAMZA_ON_YEH
+      return char
+    })
+    .filter((char): char is string => char != null)
+}
 
-  // Hollow verb with final hamza (e.g., جيء → جَاءَ / جِئْتُ, Form IV: أَجَاءَ / أَجِئْتُ, Form VI: تَجَاءَ / تَجِئْتُ)
-  // Base keeps hamza, but forms with suffixes drop hamza and seat it on yeh
-  if (isHollow && isFinalHamza) {
-    const shortVowel = hollowShortVowel(verb)
-    // For Form IV and VI, preserve the prefix from the base
-    if (verb.form === 4 || verb.form === 6) {
-      // Base is [أ, ج, َ, ا, ء] or [ت, ج, ا, ء], we need [أ, ج, ِ, ئ] or [ت, ج, ِ, ئ]
-      // Remove alif, change fatḥa before it to kasra, replace hamza with hamza on yeh
-      const result = stripTrailingDiacritics(base)
-        .map((char, i, stem) => {
-          if (char === ALIF) return null
-          if (char === FATHA && stem[i + 1] === ALIF) return KASRA
-          if (char === HAMZA) return HAMZA_ON_YEH
-          return char
-        })
-        .filter((char): char is string => char != null)
-      return {
-        base,
-        baseWithSukoon: [...result, SUKOON],
-        baseWithDamma: [...result, DAMMA],
-      }
-    }
-    return {
-      base,
-      baseWithSukoon: [c1, shortVowel, HAMZA_ON_YEH, SUKOON],
-      baseWithDamma: [c1, shortVowel, HAMZA_ON_YEH, DAMMA],
-    }
-  }
-
-  if (!isDefective && isHollow)
-    return {
-      base,
-      baseWithSukoon: [c1, hollowShortVowel(verb), c3, SUKOON],
-      baseWithDamma: [...stem, DAMMA],
-    }
-
-  if (!isDefective)
-    return {
-      base: base,
-      baseWithSukoon: [...stem, SUKOON],
-      baseWithDamma: [...stem, DAMMA],
-    }
-
-  const baseWithoutC3 = stem.slice(0, -1)
-  const glide = glideFromRadical(verb.root.at(-1))
-  const lastRadical = verb.root.at(-1)
-
-  return {
-    base: lastRadical === ALIF_MAQSURA || lastRadical === ALIF ? stem : base,
-    baseWithSukoon: [...baseWithoutC3, glide, SUKOON],
-    baseWithDamma: [...baseWithoutC3, glide, DAMMA],
-    baseWithoutC3: baseWithoutC3,
-    glide,
-  }
+function shortenHollowStem(stem: readonly string[], shortVowel: string): readonly string[] {
+  // Remove alif and change fatḥa before it to short vowel
+  return stem
+    .map((char, i, arr) => {
+      if (char === ALIF) return null
+      if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return shortVowel
+      return char
+    })
+    .filter((char): char is string => char != null)
 }
 
 const glideFromRadical = (value = ''): string => (value === WAW || value === ALIF ? WAW : YEH)
