@@ -120,7 +120,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
 function conjugatePresent(verb: Verb): Record<PronounId, string> {
   const base = buildPresentBase(verb)
-  return mapRecord(PRESENT_BUILDERS, (build) => build(base, verb).join(''))
+  return mapRecord(PRESENT_BUILDERS, (build) => build(base, verb).join('').normalize('NFC'))
 }
 
 function dropNoonEnding(word: readonly string[]): readonly string[] {
@@ -151,7 +151,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       return replaceFinalDiacritic(word, FATHA)
     }),
-    (letters) => letters.join(''),
+    (letters) => letters.join('').normalize('NFC'),
   )
 }
 
@@ -196,7 +196,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       return replaceFinalDiacritic(stem, SUKOON)
     }),
-    (letters) => letters.join(''),
+    (letters) => letters.join('').normalize('NFC'),
   )
 }
 
@@ -442,13 +442,16 @@ function replaceFinalDiacritic(word: readonly string[], diacritic: string): read
   const chars = [...word]
 
   // Find the last base letter (non-diacritic)
-  let lastBaseIndex = chars.length - 1
-  while (lastBaseIndex >= 0 && isDiacritic(chars[lastBaseIndex])) lastBaseIndex -= 1
+  const lastBaseIndex = chars.findLastIndex((char) => !isDiacritic(char))
 
-  // Check if there's a shadda right after the last base letter (for form IX verbs)
-  if (lastBaseIndex + 1 < chars.length && chars[lastBaseIndex + 1] === SHADDA)
-    // Remove everything after the shadda, then add shadda + new diacritic
-    return [...chars.slice(0, lastBaseIndex + 2), diacritic]
+  // Check if there's a shadda after the last base letter (for form IX verbs)
+  // Shadda might be separated by other diacritics (e.g., رُّ has damma before shadda)
+  const shaddaIndex = chars.findIndex((char, i) => i > lastBaseIndex && char === SHADDA)
+
+  if (shaddaIndex !== -1)
+    // Remove everything after the base letter, then add shadda + new diacritic
+    // (shadda comes before the vowel in the expected Unicode order)
+    return [...chars.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
 
   // Normal case: strip trailing diacritics and add new one
   return [...stripTrailingDiacritics(chars), diacritic]

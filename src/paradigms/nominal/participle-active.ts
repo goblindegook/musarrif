@@ -180,5 +180,5 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     }
   })()
 
-  return removeTerminalCaseVowel(result).join('')
+  return removeTerminalCaseVowel(result).join('').normalize('NFC')
 }

@@ -110,6 +110,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           return stem
       }
     }),
-    (letters) => letters.join(''),
+    (letters) => letters.join('').normalize('NFC'),
   )
 }

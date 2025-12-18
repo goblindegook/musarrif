@@ -99,11 +99,11 @@ describe('imperative', () => {
       test('تَكَتَّبَ (Form V)', () => {
         expect(conjugateImperative(getVerb('كتب', 5))).toEqual({
           '1s': '',
-          '2ms': 'تَكَتَّبْ',
-          '2fs': 'تَكَتَّبِي',
-          '2d': 'تَكَتَّبَا',
-          '2pm': 'تَكَتَّبُوا',
-          '2pf': 'تَكَتَّبْنَ',
+          '2ms': 'تَكَتَّبْ',
+          '2fs': 'تَكَتَّبِي',
+          '2d': 'تَكَتَّبَا',
+          '2pm': 'تَكَتَّبُوا',
+          '2pf': 'تَكَتَّبْنَ',
           '3ms': '',
           '3fs': '',
           '3dm': '',
@@ -237,7 +237,7 @@ describe('imperative', () => {
     const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('اِتَّصِلْ')
+    expect(imperative['2ms']).toBe('اِتَّصِلْ')
   })
 
   it('geminate Form II imperative has kasra after shadda (e.g., حَبِّ)', () => {
@@ -272,7 +272,7 @@ describe('imperative', () => {
     ['أوي', 10, 'اِسْتَأْوِ'],
     ['غدو', 1, 'غْدا'],
     ['وعد', 1, 'عِدْ'],
-    ['حمر', 9, 'اِحْمَرَّ'],
+    ['حمر', 9, 'اِحْمَرَّ'],
     ['جيء', 1, 'جِئْ'],
     ['مرض', 1, 'اِمْرَضْ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {

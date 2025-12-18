@@ -268,7 +268,7 @@ test('Show quick picks related to the selected verb', () => {
   const buttons = Array.from(quickPicksHeading.nextElementSibling!.children)
   expect(buttons.map((button) => normalizeButtonText(button.textContent))).toEqual([
     'اَرَتَIto rise',
-    'تَبَرَّعَVto donate',
+    'تَبَرَّعَVto donate',
     'تَرَكَIto leave',
     'جَرَبَIto try',
     'جَرَحَIto wound',

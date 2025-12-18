@@ -5,5 +5,5 @@ import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 export function conjugateFuture(verb: Verb): Record<PronounId, string> {
-  return mapRecord(conjugatePresentMood(verb, 'indicative'), (value) => [SEEN, FATHA, value].join(''))
+  return mapRecord(conjugatePresentMood(verb, 'indicative'), (value) => [SEEN, FATHA, value].join('').normalize('NFC'))
 }

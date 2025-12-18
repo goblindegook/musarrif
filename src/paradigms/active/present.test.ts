@@ -16,13 +16,13 @@ describe('active present indicative', () => {
     ['ترجم', 1, '3ms', 'يُتَرْجِمُ'],
     ['جلس', 1, '3ms', 'يَجْلِسُ'],
     ['جمع', 1, '3ms', 'يَجْمَعُ'],
-    ['حبب', 1, '3ms', 'يُحِبُّ'],
+    ['حبب', 1, '3ms', 'يُحِبُّ'],
     ['حبب', 2, '3ms', 'يُحَبِّبُ'],
     ['حبط', 1, '3ms', 'يَحْبَطُ'],
     ['حسب', 1, '3ms', 'يَحْسُبُ'],
     ['حضر', 1, '3ms', 'يَحْضُرُ'],
     ['حلق', 1, '3ms', 'يَحْلِقُ'],
-    ['حمر', 9, '3ms', 'يَحْمَرُّ'],
+    ['حمر', 9, '3ms', 'يَحْمَرُّ'],
     ['حمر', 9, '2pf', 'تَحْمَرَرْنَ'],
     ['حمر', 9, '3pf', 'يَحْمَرَرْنَ'],
     ['خسر', 1, '3ms', 'يَخْسَرُ'],
@@ -31,7 +31,7 @@ describe('active present indicative', () => {
     ['درس', 1, '3ms', 'يَدْرُسُ'],
     ['درس', 1, '3pm', 'يَدْرُسُونَ'],
     ['رأى', 1, '3ms', 'يَرَى'],
-    ['صفر', 9, '3ms', 'يَصْفَرُّ'],
+    ['صفر', 9, '3ms', 'يَصْفَرُّ'],
     ['ضيف', 10, '3ms', 'يَسْتَضِيفُ'],
     ['ضيف', 4, '3ms', 'يُضِيفُ'],
     ['عطى', 4, '3ms', 'يُعْطِي'],
@@ -49,7 +49,7 @@ describe('active present indicative', () => {
     ['كسر', 1, '3ms', 'يَكْسِرُ'],
     ['نبأ', 4, '3ms', 'يُنْبِئُ'],
     ['هجر', 1, '3ms', 'يَهْجُرُ'],
-    ['وصل', 8, '3ms', 'يَتَّصِلُ'],
+    ['وصل', 8, '3ms', 'يَتَّصِلُ'],
     ['وعد', 1, '3ms', 'يَعِدُ'],
     ['وعد', 1, '3ms', 'يَعِدُ'],
     ['وقي', 1, '3ms', 'يَقِي'],
@@ -63,12 +63,12 @@ describe('active present indicative', () => {
     ['جيء', 1, '2pf', 'تَجِئْنَ'],
     ['جيء', 1, '3pm', 'يَجِيئُونَ'],
     ['جيء', 1, '3pf', 'يَجِئْنَ'],
-    ['وفي', 5, '3ms', 'يَتَوَفَّى'],
-    ['وفي', 5, '3fs', 'تَتَوَفَّى'],
-    ['وفي', 5, '2ms', 'تَتَوَفَّى'],
-    ['وفي', 5, '2fs', 'تَتَوَفِّيْنَ'],
-    ['وفي', 5, '3pm', 'يَتَوَفَّونَ'],
-    ['وفي', 5, '3pf', 'يَتَوَفَّىْنَ'],
+    ['وفي', 5, '3ms', 'يَتَوَفَّى'],
+    ['وفي', 5, '3fs', 'تَتَوَفَّى'],
+    ['وفي', 5, '2ms', 'تَتَوَفَّى'],
+    ['وفي', 5, '2fs', 'تَتَوَفِّيْنَ'],
+    ['وفي', 5, '3pm', 'يَتَوَفَّونَ'],
+    ['وفي', 5, '3pf', 'يَتَوَفَّىْنَ'],
   ])('%s (%d) %s is %s', (root, form, pronoun, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     expect(conjugatePresentMood(verb, 'indicative')[pronoun]).toBe(expected)
@@ -150,19 +150,19 @@ describe('active present indicative', () => {
 
       test('تَكَتَّبَ (Form V)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 5), 'indicative')).toEqual({
-          '1s': 'أَتَكَتَّبُ',
-          '2ms': 'تَتَكَتَّبُ',
-          '2fs': 'تَتَكَتَّبِيْنَ',
-          '3ms': 'يَتَكَتَّبُ',
-          '3fs': 'تَتَكَتَّبُ',
-          '2d': 'تَتَكَتَّبَانِ',
-          '3dm': 'يَتَكَتَّبَانِ',
-          '3df': 'تَتَكَتَّبَانِ',
-          '1p': 'نَتَكَتَّبُ',
-          '2pm': 'تَتَكَتَّبُونَ',
-          '2pf': 'تَتَكَتَّبْنَ',
-          '3pf': 'يَتَكَتَّبْنَ',
-          '3pm': 'يَتَكَتَّبُونَ',
+          '1s': 'أَتَكَتَّبُ',
+          '2ms': 'تَتَكَتَّبُ',
+          '2fs': 'تَتَكَتَّبِيْنَ',
+          '3ms': 'يَتَكَتَّبُ',
+          '3fs': 'تَتَكَتَّبُ',
+          '2d': 'تَتَكَتَّبَانِ',
+          '3dm': 'يَتَكَتَّبَانِ',
+          '3df': 'تَتَكَتَّبَانِ',
+          '1p': 'نَتَكَتَّبُ',
+          '2pm': 'تَتَكَتَّبُونَ',
+          '2pf': 'تَتَكَتَّبْنَ',
+          '3pf': 'يَتَكَتَّبْنَ',
+          '3pm': 'يَتَكَتَّبُونَ',
         })
       })
 
@@ -335,9 +335,9 @@ describe('active present jussive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const jussive = conjugatePresentMood(verb, 'jussive')
 
-    expect(jussive['3ms']).toBe('يَحْمَرَّ')
-    expect(jussive['2ms']).toBe('تَحْمَرَّ')
-    expect(jussive['1s']).toBe('أَحْمَرَّ')
+    expect(jussive['3ms']).toBe('يَحْمَرَّ')
+    expect(jussive['2ms']).toBe('تَحْمَرَّ')
+    expect(jussive['1s']).toBe('أَحْمَرَّ')
   })
 
   test('expands shadda for form IX verbs in feminine plural forms in jussive', () => {
@@ -367,9 +367,9 @@ describe('active present subjunctive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 
-    expect(subjunctive['3ms']).toBe('يَحْمَرَّ')
-    expect(subjunctive['2ms']).toBe('تَحْمَرَّ')
-    expect(subjunctive['1s']).toBe('أَحْمَرَّ')
+    expect(subjunctive['3ms']).toBe('يَحْمَرَّ')
+    expect(subjunctive['2ms']).toBe('تَحْمَرَّ')
+    expect(subjunctive['1s']).toBe('أَحْمَرَّ')
   })
 
   test('expands shadda for form IX verbs in feminine plural forms in subjunctive', () => {

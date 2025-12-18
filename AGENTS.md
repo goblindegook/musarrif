@@ -148,14 +148,15 @@ test('descriptive test name', () => {
 - ❌ **NEVER test implementation details**: Validate behavior through public APIs; never export internal helpers solely for testing.
 - ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
 - ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
-- ❌ **NEVER test data existence**: Fixture existence should be trusted; it can be incorrect but in that case the test will fail naturally, so skip “is defined” checks on fixtures.
+- ❌ **NEVER test data existence**: Fixture existence should be trusted; it can be incorrect but in that case the test will fail naturally, so skip "is defined" checks on fixtures.
 - ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `roots.json` entries directly.
 - ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
 - ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
 - ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
-- ❌ **Avoid negative assertions**: Don’t assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
+- ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
 - ✅ **Always use static imports**: Use static imports.
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
+- ❌ **NEVER normalize or transform test expectations to match incorrect production output**: If tests fail due to Unicode normalization or other output format issues, fix the production code to output the correct format. Normalizing test expectations to match wrong output is a critical anti-pattern that hides bugs and makes tests meaningless.
 
 ### UI Test Best Practices
 

@@ -232,5 +232,5 @@ function masdar(verb: Verb): readonly string[] {
 }
 
 export function deriveMasdar(verb: Verb): string {
-  return removeTerminalCaseVowel(masdar(verb)).join('')
+  return removeTerminalCaseVowel(masdar(verb)).join('').normalize('NFC')
 }

@@ -123,7 +123,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   return PRONOUN_IDS.reduce<Record<PronounId, string>>(
     (acc, pronounId) => {
       const past = PAST_BUILDERS[pronounId](forms, verb)
-      acc[pronounId] = past.join('')
+      acc[pronounId] = past.join('').normalize('NFC')
       return acc
     },
     {} as Record<PronounId, string>,
