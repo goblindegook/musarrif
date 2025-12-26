@@ -10,6 +10,7 @@ import {
   isWeakLetter,
   KASRA,
   removeLeadingDiacritics,
+  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
@@ -41,19 +42,19 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           const pastVowel = resolveFormIPastVowel(verb)
           const presentVowel = resolveFormIPresentVowel(verb)
 
-          // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
-          if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c2, KASRA]
-
-          // Initial hamza + final weak (e.g., أتى → ائْتِ)
-          if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
-
           // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
-          // Initial weak verbs with past vowel 'i' drop the initial و in present/jussive
+          // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
+          if (isInitialWeak && isFinalWeak) return [c2, KASRA]
+
+          // Initial weak verbs drop the initial و in present/jussive
           // so the stem already starts with the second radical (e.g., وَلَدَ → يَلِدْ → لِدْ)
           // Don't add اِـ prefix as the initial weak has already been dropped
-          if (isInitialWeak && !isMiddleWeak && !isFinalWeak && pastVowel === 'i') return stem
+          if (isInitialWeak) return stem
+
+          // Initial hamza + final weak (e.g., أتى → ائْتِ)
+          if (isInitialHamza && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
 
           // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
           // This is a morphological rule based on past pattern classification, even though
@@ -61,13 +62,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // (e.g., مرض → اِمْرَضْ, سمع → اِسْمَعْ)
           if (pastVowel === 'i') return [ALIF, KASRA, ...stem]
 
+          // Defective verbs with final و: drop final و and add ALIF (e.g., غدو → غْدا)
+          // ALIF carries the vowel implicitly, so no explicit FATHA is needed
+          if (c3 === WAW && stem.at(-1) === ALIF) return stem
+          if (c3 === WAW) return [...removeTrailingDiacritics(stem), ALIF]
+
           // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
           // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
-          // Exclude hollow verbs (middle weak) and defective verbs (final weak) as they have special handling
-          if (!isFinalWeak && stem.at(1) === SUKOON) {
-            const prefixVowel = presentVowel === 'u' ? DAMMA : KASRA
-            return [ALIF, prefixVowel, ...stem]
-          }
+          if (stem.at(1) === SUKOON) return [ALIF, presentVowel === 'u' ? DAMMA : KASRA, ...stem]
 
           return stem
         }

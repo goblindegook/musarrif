@@ -23,8 +23,8 @@ interface PronounSlot {
 const PRONOUNS: readonly PronounSlot[] = [
   { id: '1s', label: 'أَنَا', number: 'singular', person: '1st' },
 
-  { id: '2ms', label: 'أَنْتَ', number: 'singular', person: '2nd', gender: 'masculine' },
-  { id: '2fs', label: 'أَنْتِ', number: 'singular', person: '2nd', gender: 'feminine' },
+  { id: '2sm', label: 'أَنْتَ', number: 'singular', person: '2nd', gender: 'masculine' },
+  { id: '2sf', label: 'أَنْتِ', number: 'singular', person: '2nd', gender: 'feminine' },
 
   { id: '3ms', label: 'هُوَ', number: 'singular', person: '3rd', gender: 'masculine' },
   { id: '3fs', label: 'هِيَ', number: 'singular', person: '3rd', gender: 'feminine' },

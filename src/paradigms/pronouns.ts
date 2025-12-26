@@ -1,8 +1,8 @@
 export const PRONOUN_IDS = [
   '1s',
   '1p',
-  '2ms',
-  '2fs',
+  '2sm',
+  '2sf',
   '2d',
   '2pm',
   '2pf',

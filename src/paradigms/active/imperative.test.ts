@@ -15,19 +15,19 @@ describe('imperative', () => {
   it.each([
     ['عطى', 4, 'أَعْطِ'],
     ['ضحي', 4, 'أَضْحِ'],
-  ])('drops the final glide for form IV verb with root %s', (root, form, expected2ms) => {
+  ])('drops the final glide for form IV verb with root %s', (root, form, expected2sm) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe(expected2ms)
+    expect(imperative['2sm']).toBe(expected2sm)
   })
 
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {
         expect(conjugateImperative(getVerb('كتب', 1))).toMatchObject({
-          '2ms': 'اُكْتُبْ',
-          '2fs': 'اُكْتُبِي',
+          '2sm': 'اُكْتُبْ',
+          '2sf': 'اُكْتُبِي',
           '2d': 'اُكْتُبَا',
           '2pm': 'اُكْتُبُوا',
           '2pf': 'اُكْتُبْنَ',
@@ -36,8 +36,8 @@ describe('imperative', () => {
 
       test('كَتَّبَ (Form II)', () => {
         expect(conjugateImperative(getVerb('كتب', 2))).toMatchObject({
-          '2ms': 'كَتِّبْ',
-          '2fs': 'كَتِّبِي',
+          '2sm': 'كَتِّبْ',
+          '2sf': 'كَتِّبِي',
           '2d': 'كَتِّبَا',
           '2pm': 'كَتِّبُوا',
           '2pf': 'كَتِّبْنَ',
@@ -46,8 +46,8 @@ describe('imperative', () => {
 
       test('كَاتَبَ (Form III)', () => {
         expect(conjugateImperative(getVerb('كتب', 3))).toMatchObject({
-          '2ms': 'كَاتِبْ',
-          '2fs': 'كَاتِبِي',
+          '2sm': 'كَاتِبْ',
+          '2sf': 'كَاتِبِي',
           '2d': 'كَاتِبَا',
           '2pm': 'كَاتِبُوا',
           '2pf': 'كَاتِبْنَ',
@@ -56,8 +56,8 @@ describe('imperative', () => {
 
       test('أَكْتَبَ (Form IV)', () => {
         expect(conjugateImperative(getVerb('كتب', 4))).toMatchObject({
-          '2ms': 'أَكْتِبْ',
-          '2fs': 'أَكْتِبِي',
+          '2sm': 'أَكْتِبْ',
+          '2sf': 'أَكْتِبِي',
           '2d': 'أَكْتِبَا',
           '2pm': 'أَكْتِبُوا',
           '2pf': 'أَكْتِبْنَ',
@@ -66,8 +66,8 @@ describe('imperative', () => {
 
       test('تَكَتَّبَ (Form V)', () => {
         expect(conjugateImperative(getVerb('كتب', 5))).toMatchObject({
-          '2ms': 'تَكَتَّبْ',
-          '2fs': 'تَكَتَّبِي',
+          '2sm': 'تَكَتَّبْ',
+          '2sf': 'تَكَتَّبِي',
           '2d': 'تَكَتَّبَا',
           '2pm': 'تَكَتَّبُوا',
           '2pf': 'تَكَتَّبْنَ',
@@ -76,8 +76,8 @@ describe('imperative', () => {
 
       test('تَكَاتَبَ (Form VI)', () => {
         expect(conjugateImperative(getVerb('كتب', 6))).toMatchObject({
-          '2ms': 'تَكَاتَبْ',
-          '2fs': 'تَكَاتَبِي',
+          '2sm': 'تَكَاتَبْ',
+          '2sf': 'تَكَاتَبِي',
           '2d': 'تَكَاتَبَا',
           '2pm': 'تَكَاتَبُوا',
           '2pf': 'تَكَاتَبْنَ',
@@ -86,8 +86,8 @@ describe('imperative', () => {
 
       test('اِنْكَتَبَ (Form VII)', () => {
         expect(conjugateImperative(getVerb('كتب', 7))).toMatchObject({
-          '2ms': 'اِنْكَتِبْ',
-          '2fs': 'اِنْكَتِبِي',
+          '2sm': 'اِنْكَتِبْ',
+          '2sf': 'اِنْكَتِبِي',
           '2d': 'اِنْكَتِبَا',
           '2pm': 'اِنْكَتِبُوا',
           '2pf': 'اِنْكَتِبْنَ',
@@ -100,8 +100,8 @@ describe('imperative', () => {
     describe('و-ع-د', () => {
       test('وَعَدَ (Form I)', () => {
         expect(conjugateImperative(getVerb('وعد', 1))).toMatchObject({
-          '2ms': 'عِدْ',
-          '2fs': 'عِدِي',
+          '2sm': 'عِدْ',
+          '2sf': 'عِدِي',
           '2d': 'عِدَا',
           '2pm': 'عِدُوا',
           '2pf': 'عِدْنَ',
@@ -110,8 +110,8 @@ describe('imperative', () => {
 
       test('تَوَعَّدَ (Form V)', () => {
         expect(conjugateImperative(getVerb('وعد', 5))).toMatchObject({
-          '2ms': 'تَوَعَّدْ',
-          '2fs': 'تَوَعَّدِي',
+          '2sm': 'تَوَعَّدْ',
+          '2sf': 'تَوَعَّدِي',
           '2d': 'تَوَعَّدَا',
           '2pm': 'تَوَعَّدُوا',
           '2pf': 'تَوَعَّدْنَ',
@@ -198,28 +198,28 @@ describe('imperative', () => {
     const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('اِتَّصِلْ')
+    expect(imperative['2sm']).toBe('اِتَّصِلْ')
   })
 
   it('geminate Form II imperative has kasra after shadda (e.g., حَبِّ)', () => {
     const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('حَبِّ')
+    expect(imperative['2sm']).toBe('حَبِّ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
     const verb = verbs.find(({ root, form }) => root === 'قود' && form === 7)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('اِنْقَدْ')
+    expect(imperative['2sm']).toBe('اِنْقَدْ')
   })
 
   it('shortens hollow Form VIII imperative like اِقْتَادَ → اِقْتَدْ', () => {
     const verb = verbs.find(({ root, form }) => root === 'قود' && form === 8)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('اِقْتَدْ')
+    expect(imperative['2sm']).toBe('اِقْتَدْ')
   })
 
   it.each([
@@ -239,10 +239,10 @@ describe('imperative', () => {
     ['دخل', 1, 'اُدْخُلْ'],
     ['ولد', 1, 'لِدْ'],
     ['ذهب', 1, 'اِذْهَبْ'],
-  ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
+  ])('%s (%d) imperative 2sm is %s', (root, form, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const imperative = conjugateImperative(verb)
-    expect(imperative['2ms']).toBe(expected)
+    expect(imperative['2sm']).toBe(expected)
   })
 
   describe('imperative stems from jussive', () => {

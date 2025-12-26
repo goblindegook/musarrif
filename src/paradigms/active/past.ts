@@ -55,11 +55,11 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA]
     return [...forms.baseWithSukoon, TEH, DAMMA]
   },
-  '2ms': (forms) => {
+  '2sm': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, FATHA]
     return [...forms.baseWithSukoon, TEH, FATHA]
   },
-  '2fs': (forms) => {
+  '2sf': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, KASRA]
     return [...forms.baseWithSukoon, TEH, KASRA]
   },

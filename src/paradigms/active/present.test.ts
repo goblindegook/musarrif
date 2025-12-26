@@ -39,7 +39,7 @@ describe('active present indicative', () => {
     ['عون', 3, '3ms', 'يُعَاوِنُ'],
     ['عون', 4, '3ms', 'يُعِينُ'],
     ['عون', 6, '3ms', 'يَتَعَاوَنُ'],
-    ['غدو', 1, '3ms', 'يَغْداو'],
+    ['غدو', 1, '3ms', 'يَغْدُو'],
     ['فسر', 2, '3ms', 'يُفَسِّرُ'],
     ['فلت', 4, '3ms', 'يُفْلِتُ'],
     ['قتل', 1, '3ms', 'يَقْتُلُ'],
@@ -54,26 +54,17 @@ describe('active present indicative', () => {
     ['وعد', 1, '3ms', 'يَعِدُ'],
     ['وقي', 1, '3ms', 'يَقِي'],
     ['ولى', 1, '3ms', 'يَلِي'],
-    ['جيء', 1, '3ms', 'يَجِيءُ'],
-    ['جيء', 1, '2fs', 'تَجِيئِينَ'],
-    ['جيء', 1, '2d', 'تَجِيئَانِ'],
-    ['جيء', 1, '3dm', 'يَجِيئَانِ'],
-    ['جيء', 1, '3df', 'تَجِيئَانِ'],
-    ['جيء', 1, '2pm', 'تَجِيئُونَ'],
-    ['جيء', 1, '2pf', 'تَجِئْنَ'],
-    ['جيء', 1, '3pm', 'يَجِيئُونَ'],
-    ['جيء', 1, '3pf', 'يَجِئْنَ'],
     ['وفي', 5, '3ms', 'يَتَوَفَّى'],
     ['وفي', 5, '3fs', 'تَتَوَفَّى'],
-    ['وفي', 5, '2ms', 'تَتَوَفَّى'],
-    ['وفي', 5, '2fs', 'تَتَوَفِّيْنَ'],
+    ['وفي', 5, '2sm', 'تَتَوَفَّى'],
+    ['وفي', 5, '2sf', 'تَتَوَفِّيْنَ'],
     ['وفي', 5, '3pm', 'يَتَوَفَّونَ'],
     ['وفي', 5, '3pf', 'يَتَوَفَّىْنَ'],
     ['دخل', 1, '3ms', 'يَدْخُلُ'],
-    ['دخل', 1, '2ms', 'تَدْخُلُ'],
+    ['دخل', 1, '2sm', 'تَدْخُلُ'],
     ['دخل', 1, '1s', 'أَدْخُلُ'],
     ['ولد', 1, '3ms', 'يَلِدُ'],
-    ['ولد', 1, '2ms', 'تَلِدُ'],
+    ['ولد', 1, '2sm', 'تَلِدُ'],
     ['ولد', 1, '1s', 'أَلِدُ'],
   ])('%s (%d) %s is %s', (root, form, pronoun, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
@@ -85,8 +76,8 @@ describe('active present indicative', () => {
       test('كَتَبَ (Form I)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 1), 'indicative')).toEqual({
           '1s': 'أَكْتُبُ',
-          '2ms': 'تَكْتُبُ',
-          '2fs': 'تَكْتُبِيْنَ',
+          '2sm': 'تَكْتُبُ',
+          '2sf': 'تَكْتُبِيْنَ',
           '3ms': 'يَكْتُبُ',
           '3fs': 'تَكْتُبُ',
           '2d': 'تَكْتُبَانِ',
@@ -103,8 +94,8 @@ describe('active present indicative', () => {
       test('كَتَّبَ (Form II)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 2), 'indicative')).toEqual({
           '1s': 'أُكَتِّبُ',
-          '2ms': 'تُكَتِّبُ',
-          '2fs': 'تُكَتِّبِيْنَ',
+          '2sm': 'تُكَتِّبُ',
+          '2sf': 'تُكَتِّبِيْنَ',
           '3ms': 'يُكَتِّبُ',
           '3fs': 'تُكَتِّبُ',
           '2d': 'تُكَتِّبَانِ',
@@ -121,8 +112,8 @@ describe('active present indicative', () => {
       test('كَاتَبَ (Form III)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 3), 'indicative')).toEqual({
           '1s': 'أُكَاتِبُ',
-          '2ms': 'تُكَاتِبُ',
-          '2fs': 'تُكَاتِبِيْنَ',
+          '2sm': 'تُكَاتِبُ',
+          '2sf': 'تُكَاتِبِيْنَ',
           '3ms': 'يُكَاتِبُ',
           '3fs': 'تُكَاتِبُ',
           '2d': 'تُكَاتِبَانِ',
@@ -139,8 +130,8 @@ describe('active present indicative', () => {
       test('أَكْتَبَ (Form IV)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 4), 'indicative')).toEqual({
           '1s': 'أُكْتِبُ',
-          '2ms': 'تُكْتِبُ',
-          '2fs': 'تُكْتِبِيْنَ',
+          '2sm': 'تُكْتِبُ',
+          '2sf': 'تُكْتِبِيْنَ',
           '3ms': 'يُكْتِبُ',
           '3fs': 'تُكْتِبُ',
           '2d': 'تُكْتِبَانِ',
@@ -157,8 +148,8 @@ describe('active present indicative', () => {
       test('تَكَتَّبَ (Form V)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 5), 'indicative')).toEqual({
           '1s': 'أَتَكَتَّبُ',
-          '2ms': 'تَتَكَتَّبُ',
-          '2fs': 'تَتَكَتَّبِيْنَ',
+          '2sm': 'تَتَكَتَّبُ',
+          '2sf': 'تَتَكَتَّبِيْنَ',
           '3ms': 'يَتَكَتَّبُ',
           '3fs': 'تَتَكَتَّبُ',
           '2d': 'تَتَكَتَّبَانِ',
@@ -175,8 +166,8 @@ describe('active present indicative', () => {
       test('تَكَاتَبَ (Form VI)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 6), 'indicative')).toEqual({
           '1s': 'أَتَكَاتَبُ',
-          '2ms': 'تَتَكَاتَبُ',
-          '2fs': 'تَتَكَاتَبِيْنَ',
+          '2sm': 'تَتَكَاتَبُ',
+          '2sf': 'تَتَكَاتَبِيْنَ',
           '3ms': 'يَتَكَاتَبُ',
           '3fs': 'تَتَكَاتَبُ',
           '2d': 'تَتَكَاتَبَانِ',
@@ -193,8 +184,8 @@ describe('active present indicative', () => {
       test('اِنْكَتَبَ (Form VII)', () => {
         expect(conjugatePresentMood(getVerb('كتب', 7), 'indicative')).toEqual({
           '1s': 'أَنْكَتِبُ',
-          '2ms': 'تَنْكَتِبُ',
-          '2fs': 'تَنْكَتِبِيْنَ',
+          '2sm': 'تَنْكَتِبُ',
+          '2sf': 'تَنْكَتِبِيْنَ',
           '3ms': 'يَنْكَتِبُ',
           '3fs': 'تَنْكَتِبُ',
           '2d': 'تَنْكَتِبَانِ',
@@ -215,8 +206,8 @@ describe('active present indicative', () => {
       test('وَعَدَ (Form I)', () => {
         expect(conjugatePresentMood(getVerb('وعد', 1), 'indicative')).toEqual({
           '1s': 'أَعِدُ',
-          '2ms': 'تَعِدُ',
-          '2fs': 'تَعِدِيْنَ',
+          '2sm': 'تَعِدُ',
+          '2sf': 'تَعِدِيْنَ',
           '3ms': 'يَعِدُ',
           '3fs': 'تَعِدُ',
           '2d': 'تَعِدَانِ',
@@ -233,8 +224,8 @@ describe('active present indicative', () => {
       test('تَوَعَّدَ (Form V)', () => {
         expect(conjugatePresentMood(getVerb('وعد', 5), 'indicative')).toEqual({
           '1s': 'أَتَوَعَّدُ',
-          '2ms': 'تَتَوَعَّدُ',
-          '2fs': 'تَتَوَعَّدِيْنَ',
+          '2sm': 'تَتَوَعَّدُ',
+          '2sf': 'تَتَوَعَّدِيْنَ',
           '3ms': 'يَتَوَعَّدُ',
           '3fs': 'تَتَوَعَّدُ',
           '2d': 'تَتَوَعَّدَانِ',
@@ -252,18 +243,135 @@ describe('active present indicative', () => {
 
   describe('hollow verbs', () => {
     describe('ق-و-ل', () => {
-      test.todo('قَالَ (Form I)')
-      test.todo('قَوَّلَ (Form II)')
-      test.todo('قَاوَلَ (Form III)')
-      test.todo('أَقَالَ (Form IV)')
+      test('قَالَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('قول', 1), 'indicative')).toEqual({
+          '1s': 'أَقُولُ',
+          '2sm': 'تَقُولُ',
+          '2sf': 'تَقُولِيْنَ',
+          '3ms': 'يَقُولُ',
+          '3fs': 'تَقُولُ',
+          '2d': 'تَقُولَانِ',
+          '3dm': 'يَقُولَانِ',
+          '3df': 'تَقُولَانِ',
+          '1p': 'نَقُولُ',
+          '2pm': 'تَقُولُونَ',
+          '2pf': 'تَقُلْنَ',
+          '3pf': 'يَقُلْنَ',
+          '3pm': 'يَقُولُونَ',
+        })
+      })
+
+      test.skip('قَوَّلَ (Form II)', () => {
+        expect(conjugatePresentMood(getVerb('قول', 2), 'indicative')).toEqual({
+          '1s': 'أُقَوِّلُ',
+          '2sm': 'تُقَوِّلُ',
+          '2sf': 'تُقَوِّلِينَ',
+          '3ms': 'يُقَوِّلُ',
+          '3fs': 'تُقَوِّلُ',
+          '2d': 'تُقَوِّلَانِ',
+          '3dm': 'يُقَوِّلَانِ',
+          '3df': 'تُقَوِّلَانِ',
+          '1p': 'نُقَوِّلُ',
+          '2pm': 'تُقَوِّلُونَ',
+          '2pf': 'تُقَوِّلْنَ',
+          '3pf': 'يُقَوِّلْنَ',
+          '3pm': 'يُقَوِّلُونَ',
+        })
+      })
+
+      test.skip('قَاوَلَ (Form III)', () => {
+        expect(conjugatePresentMood(getVerb('قول', 3), 'indicative')).toEqual({
+          '1s': 'أُقَاوِلُ',
+          '2sm': 'تُقَاوِلُ',
+          '2sf': 'تُقَاوِلِينَ',
+          '3ms': 'يُقَاوِلُ',
+          '3fs': 'تُقَاوِلُ',
+          '2d': 'تُقَاوِلَانِ',
+          '3dm': 'يُقَاوِلَانِ',
+          '3df': 'تُقَاوِلَانِ',
+          '1p': 'نُقَاوِلُ',
+          '2pm': 'تُقَاوِلُونَ',
+          '2pf': 'تُقَاوِلْنَ',
+          '3pf': 'يُقَاوِلْنَ',
+          '3pm': 'يُقَاوِلُونَ',
+        })
+      })
+
+      test.skip('أَقَالَ (Form IV)', () => {
+        expect(conjugatePresentMood(getVerb('قول', 4), 'indicative')).toEqual({
+          '1s': 'أُقْوِلُ',
+          '2sm': 'تُقْوِلُ',
+          '2sf': 'تُقْوِلِينَ',
+          '3ms': 'يُقْوِلُ',
+          '3fs': 'تُقْوِلُ',
+          '2d': 'تُقْوِلَانِ',
+          '3dm': 'يُقْوِلَانِ',
+          '3df': 'تُقْوِلَانِ',
+          '1p': 'نُقْوِلُ',
+          '2pm': 'تُقْوِلُونَ',
+          '2pf': 'تُقْوِلْنَ',
+          '3pf': 'يُقْوِلْنَ',
+          '3pm': 'يُقْوِلُونَ',
+        })
+      })
     })
   })
 
-  describe('defective verbs', () => {
+  describe.skip('defective verbs', () => {
     describe('ر-م-ي', () => {
-      test.todo('رَمَى (Form I)')
-      test.todo('رَمَّى (Form II)')
-      test.todo('اِنْرَمَى (Form VIII)')
+      test('رَمَى (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('رمي', 1), 'indicative')).toEqual({
+          '1s': 'أَرْمِي',
+          '2sm': 'تَرْمِي',
+          '2sf': 'تَرْمِينَ',
+          '3ms': 'يَرْمِي',
+          '3fs': 'تَرْمِي',
+          '2d': 'تَرْمِيَانِ',
+          '3dm': 'يَرْمِيَانِ',
+          '3df': 'تَرْمِيَانِ',
+          '1p': 'نَرْمِي',
+          '2pm': 'تَرْمُونَ',
+          '2pf': 'تَرْمِينَ',
+          '3pf': 'يَرْمِينَ',
+          '3pm': 'يَرْمُونَ',
+        })
+      })
+
+      test('رَمَّى (Form II)', () => {
+        expect(conjugatePresentMood(getVerb('رمي', 2), 'indicative')).toEqual({
+          '1s': 'أُرَمِّي',
+          '2sm': 'تُرَمِّي',
+          '2sf': 'تُرَمِّينَ',
+          '3ms': 'يُرَمِّي',
+          '3fs': 'تُرَمِّي',
+          '2d': 'تُرَمِّيَانِ',
+          '3dm': 'يُرَمِّيَانِ',
+          '3df': 'تُرَمِّيَانِ',
+          '1p': 'نُرَمِّي',
+          '2pm': 'تُرَمُّونَ',
+          '2pf': 'تُرَمِّينَ',
+          '3pf': 'يُرَمِّينَ',
+          '3pm': 'يُرَمُّونَ',
+        })
+      })
+
+      test('اِنْرَمَى (Form VII)', () => {
+        expect(conjugatePresentMood(getVerb('رمي', 7), 'indicative')).toEqual({
+          '1s': 'أَنْرَمِي',
+          '2sm': 'تَنْرَمِي',
+          '2sf': 'تَنْرَمِيْنَ',
+          '3ms': 'يَنْرَمِي',
+          '3fs': 'تَنْرَمِي',
+          '2d': 'تَنْرَمِيَانِ',
+          '3dm': 'يَنْرَمِيَانِ',
+          '3df': 'تَنْرَمِيَانِ',
+          '1p': 'نَنْرَمِي',
+          '2pm': 'تَنْرَمِيونَ',
+          '2pf': 'تَنْرَمِيْنَ',
+          '3pf': 'يَنْرَمِيْنَ',
+          '3pm': 'يَنْرَمِيونَ',
+        })
+      })
     })
   })
 
@@ -302,7 +410,25 @@ describe('active present indicative', () => {
   })
 
   describe('hamzated final hollow verbs', () => {
-    describe.todo('ج-ي-ء')
+    describe('ج-ي-ء', () => {
+      test('جَاءَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('جيء', 1), 'indicative')).toEqual({
+          '1s': 'أَجِيءُ',
+          '2sm': 'تَجِيءُ',
+          '2sf': 'تَجِيئِينَ',
+          '3ms': 'يَجِيءُ',
+          '3fs': 'تَجِيءُ',
+          '2d': 'تَجِيئَانِ',
+          '3dm': 'يَجِيئَانِ',
+          '3df': 'تَجِيئَانِ',
+          '1p': 'نَجِيءُ',
+          '2pm': 'تَجِيئُونَ',
+          '2pf': 'تَجِئْنَ',
+          '3pm': 'يَجِيئُونَ',
+          '3pf': 'يَجِئْنَ',
+        })
+      })
+    })
   })
 })
 
@@ -311,17 +437,17 @@ describe('active present jussive', () => {
     const jussive = conjugatePresentMood(getVerb('عطى', 4)!, 'jussive')
 
     expect(jussive['3ms']).toBe('يُعْطِ')
-    expect(jussive['2ms']).toBe('تُعْطِ')
+    expect(jussive['2sm']).toBe('تُعْطِ')
     expect(jussive['1p']).toBe('نُعْطِ')
-    expect(jussive['2fs']).toBe('تُعْطِي')
+    expect(jussive['2sf']).toBe('تُعْطِي')
     expect(jussive['3pm']).toBe('يُعْطُوا')
   })
 
   test('drops nūn endings for صَرَفَ', () => {
     const jussive = conjugatePresentMood(getVerb('صرف', 1), 'jussive')
 
-    expect(jussive['2ms']).toBe('تَصْرِفْ')
-    expect(jussive['2fs']).toBe('تَصْرِفِي')
+    expect(jussive['2sm']).toBe('تَصْرِفْ')
+    expect(jussive['2sf']).toBe('تَصْرِفِي')
     expect(jussive['2d']).toBe('تَصْرِفَا')
     expect(jussive['2pm']).toBe('تَصْرِفُوا')
     expect(jussive['2pf']).toBe('تَصْرِفْنَ')
@@ -335,7 +461,7 @@ describe('active present jussive', () => {
     const jussive = conjugatePresentMood(getVerb('قول', 1), 'jussive')
 
     expect(jussive['3ms']).toBe('يَقُلْ')
-    expect(jussive['2ms']).toBe('تَقُلْ')
+    expect(jussive['2sm']).toBe('تَقُلْ')
     expect(jussive['3fs']).toBe('تَقُلْ')
     expect(jussive['1s']).toBe('أَقُلْ')
     expect(jussive['1p']).toBe('نَقُلْ')
@@ -359,11 +485,11 @@ describe('active present jussive', () => {
     const jussive = conjugatePresentMood(verb, 'jussive')
 
     expect(jussive['3ms']).toBe('يَأْوِ')
-    expect(jussive['2ms']).toBe('تَأْوِ')
+    expect(jussive['2sm']).toBe('تَأْوِ')
     expect(jussive['1s']).toBe('آوِ')
     expect(jussive['1p']).toBe('نَأْوِ')
     expect(jussive['3fs']).toBe('تَأْوِ')
-    expect(jussive['2fs']).toBe('تَأْوِي')
+    expect(jussive['2sf']).toBe('تَأْوِي')
     expect(jussive['3pm']).toBe('يَأْوُوا')
   })
 
@@ -372,7 +498,7 @@ describe('active present jussive', () => {
     const jussive = conjugatePresentMood(verb, 'jussive')
 
     expect(jussive['3ms']).toBe('يَحْمَرَّ')
-    expect(jussive['2ms']).toBe('تَحْمَرَّ')
+    expect(jussive['2sm']).toBe('تَحْمَرَّ')
     expect(jussive['1s']).toBe('أَحْمَرَّ')
   })
 
@@ -389,11 +515,11 @@ describe('active present jussive', () => {
     const jussive = conjugatePresentMood(verb, 'jussive')
 
     expect(jussive['3ms']).toBe('يَجِئْ')
-    expect(jussive['2ms']).toBe('تَجِئْ')
+    expect(jussive['2sm']).toBe('تَجِئْ')
     expect(jussive['1s']).toBe('أَجِئْ')
     expect(jussive['1p']).toBe('نَجِئْ')
     expect(jussive['3fs']).toBe('تَجِئْ')
-    expect(jussive['2fs']).toBe('تَجِيئِي')
+    expect(jussive['2sf']).toBe('تَجِيئِي')
     expect(jussive['3pm']).toBe('يَجِيئُوا')
   })
 })
@@ -404,7 +530,7 @@ describe('active present subjunctive', () => {
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 
     expect(subjunctive['3ms']).toBe('يَحْمَرَّ')
-    expect(subjunctive['2ms']).toBe('تَحْمَرَّ')
+    expect(subjunctive['2sm']).toBe('تَحْمَرَّ')
     expect(subjunctive['1s']).toBe('أَحْمَرَّ')
   })
 
@@ -421,7 +547,7 @@ describe('active present subjunctive', () => {
     const subjunctive = conjugatePresentMood(verb, 'subjunctive')
 
     expect(subjunctive['3ms']).toBe('يَجِيءَ')
-    expect(subjunctive['2ms']).toBe('تَجِيءَ')
+    expect(subjunctive['2sm']).toBe('تَجِيءَ')
     expect(subjunctive['1s']).toBe('أَجِيءَ')
     expect(subjunctive['1p']).toBe('نَجِيءَ')
     expect(subjunctive['3fs']).toBe('تَجِيءَ')
