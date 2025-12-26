@@ -89,6 +89,7 @@ test.each([
   ['ولى', 1, 'وِلَايَة'],
   ['دخل', 1, 'دُخُول'],
   ['ولد', 1, 'وِلادَة'],
+  ['ذهب', 1, 'ذَهَاب'],
 ])('%s (Form %d) masdar is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
   expect(deriveMasdar(verb)).toBe(expected)

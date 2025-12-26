@@ -4,6 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MADDA,
+  DAMMA,
   FATHA,
   HAMZA_ON_YEH,
   isWeakLetter,
@@ -12,7 +13,6 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
-  shortVowelFromPattern,
   TEH,
   WAW,
 } from '../letters'
@@ -65,7 +65,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
           // Exclude hollow verbs (middle weak) and defective verbs (final weak) as they have special handling
           if (!isFinalWeak && stem.at(1) === SUKOON) {
-            return [ALIF, shortVowelFromPattern(presentVowel), ...stem]
+            const prefixVowel = presentVowel === 'u' ? DAMMA : KASRA
+            return [ALIF, prefixVowel, ...stem]
           }
 
           return stem

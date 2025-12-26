@@ -8,6 +8,7 @@ export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 type MasdarPattern =
   | 'fa3l'
   | 'fa3al'
+  | 'fa3aal'
   | 'fu3l'
   | 'fu3ool'
   | 'fu3aal'
