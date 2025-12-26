@@ -31,12 +31,12 @@ import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
-function finalLetterGlide(letter: string): string {
-  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF_MAQSURA
+function hollowLetterGlide(letter: string): string {
+  return letter === WAW || letter === YEH ? letter : ALIF
 }
 
-function hollowLetterGlide(letter: string): string {
-  return letter === WAW ? WAW : letter === YEH ? YEH : ALIF
+function defectiveLetterGlide(letter: string): string {
+  return letter === ALIF_MAQSURA || letter === YEH ? YEH : WAW
 }
 
 const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2sm', '3ms', '3fs', '2pf', '3pf'])
@@ -60,16 +60,16 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
-  '2d': (base, _verb) => {
+  '2d': (base) => {
     return [
       ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
       ...PRESENT_DUAL_SUFFIX,
     ]
   },
-  '3dm': (base, _verb) => {
+  '3dm': (base) => {
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ...PRESENT_DUAL_SUFFIX]
   },
-  '3df': (base, _verb) => {
+  '3df': (base) => {
     return [
       ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
       ...PRESENT_DUAL_SUFFIX,
@@ -128,7 +128,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 }
 
 function conjugatePresent(verb: Verb): Record<PronounId, string> {
-  const base = buildPresentBase(verb)
+  const base = derivePresentForms(verb)
   return mapRecord(PRESENT_BUILDERS, (build) => build(base, verb).join('').normalize('NFC'))
 }
 
@@ -143,8 +143,7 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
   if (chars[chars.length - 1] === WAW) {
     // Keep the long ū with wāw and seat it on an alif after dropping the nūn
     const stemBeforeWaw = chars.slice(0, chars.length - 1)
-    const stemWithDamma = replaceFinalDiacritic(stemBeforeWaw, DAMMA)
-    return [...stemWithDamma, WAW, ALIF]
+    return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
   }
 
   return chars
@@ -185,7 +184,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
 
       // Hollow verb with final hamza: shorten hollow and drop hamza, seat it on yeh
-      if (!isInitialHamza && isMiddleWeak && isFinalHamza) {
+      if (isMiddleWeak && isFinalHamza) {
         const shouldShortenHollow =
           HOLLOW_APOCOPE_FORMS.has(verb.form) && HOLLOW_JUSSIVE_APOCOPE_PRONOUNS.has(pronounId)
         const stem = shouldShortenHollow ? shortenHollowStem(word, c2) : word
@@ -216,25 +215,16 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
   throw new Error(`Unknown mood: ${mood}`)
 }
 
-function normalizeDefectivePresent(base: readonly string[], c3: string): readonly string[] {
-  if (!isWeakLetter(c3)) return base
-  const chars = [...removeTrailingDiacritics(base)]
-  const last = chars.pop()
-  if (!last) return base
-
-  // Drop the radical and any trailing diacritics we already stripped, append glide
-  return [...chars, weakLetterGlide(c3)]
-}
-
 function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
-  const isInitialHamza = c1 === ALIF_HAMZA
+  const isInitialHamza = isHamzatedLetter(c1)
   const isFinalWeak = isWeakLetter(c4)
+  const isFinalHamza = isHamzatedLetter(c4)
 
   switch (verb.form) {
     case 4: {
       // Form IV quadriliteral: initial hamza + final weak (e.g., أنشأ → ينشئ)
-      if (isInitialHamza && (isFinalWeak || c4 === ALIF_HAMZA)) {
+      if (isInitialHamza && (isFinalWeak || isFinalHamza)) {
         // Initial hamza drops in Form IV quadriliterals, final weak becomes hamza on yeh
         const finalGlide = c4 === ALIF_MAQSURA || c4 === ALIF_HAMZA ? HAMZA_ON_YEH : weakLetterGlide(c4)
         return [YEH, DAMMA, c2, SUKOON, c3, KASRA, finalGlide, DAMMA]
@@ -255,7 +245,6 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
-  const isFinalHamza = isHamzatedLetter(c3)
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -266,32 +255,26 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (c2 === c3) return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
-  if (isInitialWeak && isFinalWeak) {
-    // Initial waw drops, final weak remains with short vowel on c2
-    // ALIF_MAQSURA becomes YEH in present tense, no trailing case vowel on 3ms base
-    const finalGlide = c3 === ALIF_MAQSURA ? YEH : c3 === YEH ? YEH : WAW
-    return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), finalGlide]
-  }
+  // Initial waw drops, final weak remains with short vowel on c2
+  // ALIF_MAQSURA becomes YEH in present tense, no trailing case vowel on 3ms base
+  if (isInitialWeak && isFinalWeak)
+    return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
 
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
   if (isInitialWeak) return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
 
+  // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
+  // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains
+  if (isInitialHamza && isMiddleWeak && isFinalWeak)
+    return [YEH, FATHA, ALIF_HAMZA, SUKOON, hollowLetterGlide(c2), KASRA, defectiveLetterGlide(c3)]
+
   // Initial hamza + final weak (e.g., أتى → يأتي, أوي → يأوي)
-  if (isInitialHamza && isFinalWeak) {
-    // Initial hamza is kept in triliteral verbs, final weak remains
-    // No trailing case vowel on 3ms base for final weak verbs
-    const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
-
-    // Middle weak becomes long vowel (e.g., أوي → يأوي)
-    if (isMiddleWeak) return [YEH, FATHA, ALIF_HAMZA, SUKOON, hollowLetterGlide(c2), KASRA, finalGlide]
-
-    // Middle letter is not weak, use short vowel (e.g., أتى → يأتي)
-    return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowelFromPattern(patternVowel), finalGlide]
-  }
+  // Initial hamza is kept in triliteral verbs, final weak remains
+  if (isInitialHamza && isFinalWeak)
+    return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
 
   // Initial hamza only (e.g., أكل → يأكل)
-  if (isInitialHamza)
-    return normalizeDefectivePresent([YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA], c3)
+  if (isInitialHamza) return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
 
   // Doubly weak keeps the glide and takes kasra
   if (isMiddleWeak && isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, KASRA, c3]
@@ -299,48 +282,31 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   // Middle hamza + final weak (e.g., رَأَى → يَرَى)
   if (isMiddleHamza && isFinalWeak) return [YEH, FATHA, c1, FATHA, ALIF_MAQSURA]
 
-  // Hollow verbs with final hamza (e.g., جيء → يَجِيءُ)
-  // When middle radical is ya, always use kasra regardless of pattern
-  if (isMiddleWeak && isFinalHamza) {
+  // Hollow verbs (middle weak letter wāw or yā' written as long vowel)
+  if (isMiddleWeak) {
     const shortVowel = c2 === YEH ? KASRA : shortVowelFromPattern(patternVowel)
-    const longVowel = c2 === YEH ? YEH : longVowelFromPattern(patternVowel)
+    const longVowel = c2 === YEH ? YEH : patternVowel === 'a' ? ALIF : longVowelFromPattern(patternVowel)
     return [YEH, FATHA, c1, shortVowel, longVowel, c3, DAMMA]
   }
 
-  // Hollow verbs (middle weak letter wāw or yā' written as long vowel)
-  if (isMiddleWeak)
-    return normalizeDefectivePresent(
-      patternVowel === 'a'
-        ? // e.g., يَنَامُ
-          [YEH, FATHA, c1, FATHA, ALIF, c3, DAMMA]
-        : // e.g., يَقُومُ / يَبِيعُ
-          [YEH, FATHA, c1, shortVowelFromPattern(patternVowel), longVowelFromPattern(patternVowel), c3, DAMMA],
-      c3,
-    )
-
-  // Final-weak (defective) Form I: glide remains, no trailing case vowel on 3ms base
   // Special case: fa3ala-yaf3alu pattern (past 'a' + present 'a') with final WAW uses damma instead of long vowel (e.g., غدو → يَغْدُو)
-  if (isFinalWeak) {
-    // fa3ala-yaf3alu is the only pattern with both past and present vowels 'a'
-    if (pastVowel === 'a' && patternVowel === 'a' && c3 === WAW) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, WAW]
-
-    return [YEH, FATHA, c1, SUKOON, c2, longVowelFromPattern(patternVowel), finalLetterGlide(c3)]
-  }
+  if (pastVowel === 'a' && patternVowel === 'a' && c3 === WAW) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, c3]
 
   // Regular strong verb
-  return normalizeDefectivePresent([YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA], c3)
+  return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
 }
 
 function derivePresentFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., يُحَبِّبُ)
-  if (c2 === c3) return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA], c3)
-  return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA], c3)
+  if (c2 === c3) return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
+
+  return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
 }
 
 function derivePresentFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  return normalizeDefectivePresent([YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3)
+  return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIV(verb: Verb): readonly string[] {
@@ -354,72 +320,68 @@ function derivePresentFormIV(verb: Verb): readonly string[] {
 
   // Initial hamza + middle weak + final weak (e.g., أوي → يُؤْوِي)
   if (isInitialHamza && isMiddleWeak && isFinalWeak)
-    return normalizeDefectivePresent(
-      [YEH, DAMMA, HAMZA_ON_WAW, SUKOON, hollowLetterGlide(c2), KASRA, weakLetterGlide(c3)],
-      c3,
-    )
+    return [YEH, DAMMA, HAMZA_ON_WAW, SUKOON, hollowLetterGlide(c2), KASRA, weakLetterGlide(c3)]
 
   // Seat initial hamza on wāw after ḍamma (e.g., يُؤْمِنُ)
   const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
   const seatedC3 = c3 === ALIF_HAMZA ? HAMZA_ON_YEH : c3
 
-  if (isFinalWeak) {
-    // For defective Form IV verbs, final و becomes yeh in present tense (e.g., يُمْسِي)
-    return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, c3 === WAW ? YEH : weakLetterGlide(c3)]
-  }
+  // For defective Form IV verbs, final و becomes yeh in present tense (e.g., يُمْسِي)
+  if (isFinalWeak) return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, c3 === WAW ? YEH : weakLetterGlide(c3)]
 
   // Hollow Form IV present: kasra on c1, long ī from c2 (e.g., يُقِيمُ)
-  if (isMiddleWeak) return normalizeDefectivePresent([YEH, DAMMA, seatedC1, KASRA, YEH, seatedC3, DAMMA], c3)
+  if (isMiddleWeak) return [YEH, DAMMA, seatedC1, KASRA, YEH, seatedC3, DAMMA]
 
-  return normalizeDefectivePresent([YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, seatedC3, DAMMA], c3)
+  return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
 
 function derivePresentFormV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+
   // Form V defective: final ي becomes ى (alif maqsura) in present tense (e.g., تَوَفَّى → يَتَوَفَّى)
-  if (c3 === YEH) {
-    return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ALIF_MAQSURA]
-  }
-  return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3)
+  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ALIF_MAQSURA]
+
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA]
 }
 
 function derivePresentFormVI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  return normalizeDefectivePresent([YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA], c3)
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA]
 }
 
 function derivePresentFormVII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
-  if (isMiddleWeak) return normalizeDefectivePresent([YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA], c3)
 
-  return normalizeDefectivePresent([YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, DAMMA], c3)
+  if (isMiddleWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA]
+
+  return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormVIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
 
-  if (c1 === WAW) return normalizeDefectivePresent([YEH, FATHA, TEH, SHADDA, FATHA, c2, KASRA, c3, DAMMA], c3)
+  if (c1 === WAW) return [YEH, FATHA, TEH, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
 
-  if (isMiddleWeak) return normalizeDefectivePresent([YEH, FATHA, c1, SUKOON, TEH, FATHA, ALIF, c3, DAMMA], c3)
+  if (isMiddleWeak) return [YEH, FATHA, c1, SUKOON, TEH, FATHA, ALIF, c3, DAMMA]
 
-  return normalizeDefectivePresent([YEH, FATHA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA], c3)
+  return [YEH, FATHA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIX(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  return normalizeDefectivePresent([YEH, FATHA, c1, SUKOON, c2, FATHA, c3, SHADDA, DAMMA], c3)
+  return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, SHADDA, DAMMA]
 }
 
 function derivePresentFormX(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
-  // Hollow Form X present (e.g., يَسْتَضِيفُ)
-  if (isMiddleWeak)
-    return normalizeDefectivePresent([YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3, DAMMA], c3)
 
-  return normalizeDefectivePresent([YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], c3)
+  // Hollow Form X present (e.g., يَسْتَضِيفُ)
+  if (isMiddleWeak) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3, DAMMA]
+
+  return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentForms(verb: Verb): readonly string[] {
@@ -455,10 +417,6 @@ function derivePresentForms(verb: Verb): readonly string[] {
     case 10:
       return derivePresentFormX(verb)
   }
-}
-
-function buildPresentBase(verb: Verb): readonly string[] {
-  return derivePresentForms(verb)
 }
 
 function shortenHollowStem(word: readonly string[], hollowRadical: string | undefined): readonly string[] {
