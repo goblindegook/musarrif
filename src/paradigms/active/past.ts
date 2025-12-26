@@ -55,11 +55,11 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA]
     return [...forms.baseWithSukoon, TEH, DAMMA]
   },
-  '2sm': (forms) => {
+  '2ms': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, FATHA]
     return [...forms.baseWithSukoon, TEH, FATHA]
   },
-  '2sf': (forms) => {
+  '2fs': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, KASRA]
     return [...forms.baseWithSukoon, TEH, KASRA]
   },
@@ -72,11 +72,11 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF]
     return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, FATHA, ALIF]
   },
-  '3dm': (forms) => {
+  '3md': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, FATHA, ALIF]
     return [...forms.base, ALIF]
   },
-  '3df': (forms) => {
+  '3fd': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, TEH, FATHA, ALIF]
     return [...forms.base, TEH, FATHA, ALIF]
   },
@@ -84,15 +84,15 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA, ALIF]
     return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
   },
-  '2pm': (forms) => {
+  '2mp': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
     return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON]
   },
-  '2pf': (forms) => {
+  '2fp': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA]
     return [...forms.baseWithSukoon, TEH, DAMMA, NOON, SHADDA, FATHA]
   },
-  '3pm': (forms, verb) => {
+  '3mp': (forms, verb) => {
     const [, c2, c3] = [...verb.root]
 
     // For hollow verbs with final hamza, hamza before و should be seated on waw: جَاؤُوا
@@ -110,7 +110,7 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     }
     return [...forms.baseWithDamma, WAW, ALIF]
   },
-  '3pf': (forms) => {
+  '3fp': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA]
     return [...forms.baseWithSukoon, NOON, FATHA]
   },
@@ -196,7 +196,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
       }
 
     // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
-    // baseWithDamma keeps the alif for 3pm (قَالُوا)
+    // baseWithDamma keeps the alif for 3mp (قَالُوا)
     return {
       base: [c1, FATHA, ALIF, c3, FATHA],
       baseWithSukoon: [c1, hollowShortVowel(verb), c3, SUKOON],

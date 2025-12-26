@@ -39,7 +39,7 @@ function defectiveLetterGlide(letter: string): string {
   return letter === ALIF_MAQSURA || letter === YEH ? YEH : WAW
 }
 
-const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2sm', '3ms', '3fs', '2pf', '3pf'])
+const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2ms', '3ms', '3fs', '2fp', '3fp'])
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
 
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
@@ -50,21 +50,27 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded, c2)), SUKOON), NOON, FATHA]
 
-  if (isWeakLetter(c2)) return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), NOON, FATHA]
+  if (isWeakLetter(c2) && ![3, 5].includes(verb.form))
+    return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), NOON, FATHA]
 
   return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), NOON, FATHA]
 }
 
 const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) => readonly string[]> = {
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
-  '2sm': (base) => applyPresentPrefix(base, TEH),
-  '2sf': (base, verb) => {
+  '2ms': (base) => applyPresentPrefix(base, TEH),
+  '2fs': (base, verb) => {
     const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
-    if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-      // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
+
+    // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
+    if (isWeakLetter(c2) && isHamzatedLetter(c3))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
-    }
+
+    // Form III and Form V hollow verbs don't have sukoon before noon in 2fs
+    if (isWeakLetter(c2) && [3, 5].includes(verb.form))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
@@ -75,21 +81,21 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     NOON,
     KASRA,
   ],
-  '3dm': (base) => {
+  '3md': (base) => {
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ALIF, NOON, KASRA]
   },
-  '3df': (base) => {
+  '3fd': (base) => {
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA), ALIF, NOON, KASRA]
   },
   '1p': (base) => applyPresentPrefix(base, NOON),
-  '2pm': (base) => [...dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), WAW, NOON, FATHA],
-  '2pf': (base, verb) => {
+  '2mp': (base) => [...dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), WAW, NOON, FATHA],
+  '2fp': (base, verb) => {
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
     return buildFemininePlural(expanded, verb)
   },
-  '3pm': (base) => [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA],
-  '3pf': (base, verb) => {
+  '3mp': (base) => [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA],
+  '3fp': (base, verb) => {
     const expanded = verb.form === 9 ? expandShadda(base) : base
     return buildFemininePlural(expanded, verb)
   },
@@ -122,7 +128,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      const shouldDropNoon = ['2sf', '2d', '2pm', '3dm', '3df', '3pm'].includes(pronounId)
+      const shouldDropNoon = ['2fs', '2d', '2mp', '3md', '3fd', '3mp'].includes(pronounId)
       if (shouldDropNoon) return dropNoonEnding(word)
 
       return replaceFinalDiacritic(word, FATHA)
@@ -145,7 +151,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       // Don't call dropTerminalWeakOrHamza here - it would remove suffix letters
       // The hamza/weak letter was already handled in the builder
-      const shouldDropNoon = ['2sf', '2d', '2pm', '3dm', '3df', '3pm'].includes(pronounId)
+      const shouldDropNoon = ['2fs', '2d', '2mp', '3md', '3fd', '3mp'].includes(pronounId)
       if (shouldDropNoon) return dropNoonEnding(word)
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
@@ -168,7 +174,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isWeakLetter(verb.root.at(-1))) return dropFinalDefectiveGlide(stem)
 
       // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
-      if (['2pf', '3pf'].includes(pronounId) || verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
+      if (['2fp', '3fp'].includes(pronounId) || verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
 
       return replaceFinalDiacritic(stem, SUKOON)
     }),
