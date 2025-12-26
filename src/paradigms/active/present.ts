@@ -42,9 +42,18 @@ function defectiveLetterGlide(letter: string): string {
 const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2sm', '3ms', '3fs', '2pf', '3pf'])
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
 
-const PRESENT_DUAL_SUFFIX = [ALIF, NOON, KASRA]
-const PRESENT_MASC_PLURAL_SUFFIX = [WAW, NOON, FATHA]
-const PRESENT_FEM_PLURAL_SUFFIX = [NOON, FATHA]
+function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
+  const [, c2, c3] = Array.from(verb.root)
+
+  if (isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
+
+  if (isWeakLetter(c2) && isHamzatedLetter(c3))
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded, c2)), SUKOON), NOON, FATHA]
+
+  if (isWeakLetter(c2)) return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), NOON, FATHA]
+
+  return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), NOON, FATHA]
+}
 
 const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) => readonly string[]> = {
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
@@ -54,76 +63,35 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const stem = applyPresentPrefix(base, TEH)
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
       // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
-      return [...removeTrailingDiacritics(dropTerminalWeakOrHamza(stem)), KASRA, YEH, NOON, FATHA]
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
     }
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
-  '2d': (base) => {
-    return [
-      ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
-      ...PRESENT_DUAL_SUFFIX,
-    ]
-  },
+  '2d': (base) => [
+    ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
+    ALIF,
+    NOON,
+    KASRA,
+  ],
   '3dm': (base) => {
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ...PRESENT_DUAL_SUFFIX]
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ALIF, NOON, KASRA]
   },
   '3df': (base) => {
-    return [
-      ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
-      ...PRESENT_DUAL_SUFFIX,
-    ]
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA), ALIF, NOON, KASRA]
   },
   '1p': (base) => applyPresentPrefix(base, NOON),
-  '2pm': (base) => {
-    const stem = applyPresentPrefix(base, TEH)
-    const processed = dropTerminalWeakOrHamza(stem)
-    return [...processed, ...PRESENT_MASC_PLURAL_SUFFIX]
-  },
+  '2pm': (base) => [...dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), WAW, NOON, FATHA],
   '2pf': (base, verb) => {
-    const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
-
-    // For defective verbs, keep the final weak letter
-    if (isWeakLetter(c3)) return [...removeTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
-
-    // For hollow verbs with final hamza, ensure hamza is seated on yeh
-    if (isWeakLetter(c2) && isHamzatedLetter(c3))
-      return [
-        ...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded, c2)), SUKOON),
-        ...PRESENT_FEM_PLURAL_SUFFIX,
-      ]
-
-    // For hollow verbs, shorten by dropping the middle weak letter (long vowel)
-    if (isWeakLetter(c2))
-      return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
-
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+    return buildFemininePlural(expanded, verb)
   },
-  '3pm': (base) => {
-    return [...dropTerminalWeakOrHamza(base), ...PRESENT_MASC_PLURAL_SUFFIX]
-  },
+  '3pm': (base) => [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA],
   '3pf': (base, verb) => {
-    const [, c2, c3] = [...verb.root]
     const expanded = verb.form === 9 ? expandShadda(base) : base
-
-    // For defective verbs, keep the final weak letter
-    if (isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
-
-    // For hollow verbs with final hamza, ensure hamza is seated on yeh
-    if (isWeakLetter(c2) && isHamzatedLetter(c3))
-      return [
-        ...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded, c2)), SUKOON),
-        ...PRESENT_FEM_PLURAL_SUFFIX,
-      ]
-
-    // For hollow verbs, shorten by dropping the middle weak letter (long vowel)
-    if (isWeakLetter(c2))
-      return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
-
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), ...PRESENT_FEM_PLURAL_SUFFIX]
+    return buildFemininePlural(expanded, verb)
   },
 }
 
@@ -140,7 +108,7 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
 
   while (chars.at(-1) === SUKOON) chars.pop()
 
-  if (chars[chars.length - 1] === WAW) {
+  if (chars.at(-1) === WAW) {
     // Keep the long ū with wāw and seat it on an alif after dropping the nūn
     const stemBeforeWaw = chars.slice(0, chars.length - 1)
     return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
@@ -419,54 +387,33 @@ function derivePresentForms(verb: Verb): readonly string[] {
   }
 }
 
-function shortenHollowStem(word: readonly string[], hollowRadical: string | undefined): readonly string[] {
-  if (!hollowRadical) return word
+function shortenHollowStem(word: readonly string[], hollowRadical: string): readonly string[] {
+  const possibleHollowLetters = new Set<string>([hollowRadical, ALIF, YEH])
 
-  const chars = [...word]
-  const hollowTargets = new Set([hollowRadical, hollowLetterGlide(hollowRadical)])
-  if (hollowRadical === WAW) hollowTargets.add(YEH)
-  if (hollowRadical === ALIF) hollowTargets.add(YEH)
-  hollowTargets.add(ALIF)
-  const hollowIndex = chars.findIndex((char, index) => index > 0 && !isDiacritic(char) && hollowTargets.has(char))
-  if (hollowIndex === -1) return word
+  const hollowLetterIndex = word.findIndex(
+    (char, index) => index > 0 && !isDiacritic(char) && possibleHollowLetters.has(char),
+  )
+  if (hollowLetterIndex < 0) return word
 
-  let removalCount = 1
-  while (isDiacritic(chars[hollowIndex + removalCount])) removalCount += 1
+  const nextLetterIndex = word.findIndex((char, index) => index > hollowLetterIndex && !isDiacritic(char))
 
-  chars.splice(hollowIndex, removalCount)
-  return chars
+  return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
 function expandShadda(word: readonly string[]): readonly string[] {
-  const chars = [...word]
-
-  // Find shadda and the letter it's attached to
-  for (let i = 0; i < chars.length - 1; i += 1) {
-    if (chars[i + 1] === SHADDA && !isDiacritic(chars[i]))
+  for (let i = 0; i < word.length - 1; i += 1) {
+    if (word[i + 1] === SHADDA && !isDiacritic(word[i]))
       // Expand shadda: replace letter + shadda with letter + fatḥa + letter
-      return [...chars.slice(0, i + 1), FATHA, chars[i], ...chars.slice(i + 2)]
+      return [...word.slice(0, i + 1), FATHA, word[i], ...word.slice(i + 2)]
   }
-
-  return chars
+  return word
 }
 
 function replaceFinalDiacritic(word: readonly string[], diacritic: string): readonly string[] {
-  const chars = [...word]
-
-  // Find the last base letter (non-diacritic)
-  const lastBaseIndex = chars.findLastIndex((char) => !isDiacritic(char))
-
-  // Check if there's a shadda after the last base letter (for form IX verbs)
-  // Shadda might be separated by other diacritics (e.g., رُّ has damma before shadda)
-  const shaddaIndex = chars.findIndex((char, i) => i > lastBaseIndex && char === SHADDA)
-
-  if (shaddaIndex !== -1)
-    // Remove everything after the base letter, then add shadda + new diacritic
-    // (shadda comes before the vowel in the expected Unicode order)
-    return [...chars.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
-
-  // Normal case: strip trailing diacritics and add new one
-  return [...removeTrailingDiacritics(chars), diacritic]
+  const lastBaseIndex = word.findLastIndex((char) => !isDiacritic(char))
+  const shaddaIndex = word.findIndex((char, i) => i > lastBaseIndex && char === SHADDA)
+  if (shaddaIndex >= 0) return [...word.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
+  return [...removeTrailingDiacritics(word), diacritic]
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
