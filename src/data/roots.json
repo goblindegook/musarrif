@@ -4,6 +4,8 @@
   { "root": "أجر", "form": 10 },
   { "root": "أخذ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPattern": "fa3l" },
   { "root": "أخذ", "form": 7 },
+  { "root": "أخذ", "form": 8 },
+  { "root": "أخذ", "form": 10 },
   { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
   { "root": "أقر", "form": 1, "formPattern": "fa3ala-yaf3alu" },

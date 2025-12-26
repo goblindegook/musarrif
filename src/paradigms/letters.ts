@@ -118,12 +118,6 @@ export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
   return LONG_VOWEL_MAP[vowel]
 }
 
-export function stripTrailingDiacritics(word: readonly string[]): string[] {
-  const chars = [...word]
-  while (chars.length > 0 && COMBINING_MARK.test(chars[chars.length - 1])) chars.pop()
-  return chars
-}
-
 function findNextBaseLetter(chars: readonly string[], startIndex: number): string | undefined {
   for (let index = startIndex; index < chars.length; index += 1) {
     if (!COMBINING_MARK.test(chars[index])) return chars[index]

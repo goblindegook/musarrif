@@ -1,9 +1,9 @@
 import type { ShortVowel } from '../letters'
-import { ALIF, ALIF_MAQSURA, DAMMA, FATHA, isWeakLetter, KASRA, stripTrailingDiacritics, WAW, YEH } from '../letters'
+import { ALIF, ALIF_MAQSURA, DAMMA, FATHA, isWeakLetter, KASRA, removeTrailingDiacritics, WAW, YEH } from '../letters'
 
 export function adjustDefective(word: readonly string[], c3: string, vowel: string): readonly string[] {
   if (!isWeakLetter(c3)) return word
-  const chars = stripTrailingDiacritics(word)
+  const chars = [...removeTrailingDiacritics(word)]
   const last = chars.pop()
   if (!last) return word
 

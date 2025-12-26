@@ -22,7 +22,6 @@ import {
   SHADDA,
   SUKOON,
   shortVowelFromPattern,
-  stripTrailingDiacritics,
   TEH,
   WAW,
   weakLetterGlide,
@@ -55,7 +54,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const stem = applyPresentPrefix(base, TEH)
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
       // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
-      return [...stripTrailingDiacritics(dropTerminalWeakOrHamza(stem)), KASRA, YEH, NOON, FATHA]
+      return [...removeTrailingDiacritics(dropTerminalWeakOrHamza(stem)), KASRA, YEH, NOON, FATHA]
     }
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
@@ -88,10 +87,10 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
     // For defective verbs, keep the final weak letter
     if (isWeakLetter(c3) && !isWeakLetter(c2))
-      return [...stripTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+      return [...removeTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
 
     const processed = dropTerminalWeakOrHamza(expanded)
-    const stripped = stripTrailingDiacritics(processed)
+    const stripped = removeTrailingDiacritics(processed)
     // For hollow verbs with final hamza, remove the yeh before HAMZA_ON_YEH
     if (isWeakLetter(c2) && isHamzatedLetter(c3) && stripped.at(-1) === HAMZA_ON_YEH && stripped.at(-2) === YEH)
       return [...stripped.slice(0, -2), HAMZA_ON_YEH, SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
@@ -106,10 +105,10 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const expanded = verb.form === 9 ? expandShadda(base) : base
     // For defective verbs, keep the final weak letter
     if (isWeakLetter(c3) && !isWeakLetter(c2))
-      return [...stripTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
+      return [...removeTrailingDiacritics(expanded), SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
 
     const processed = dropTerminalWeakOrHamza(expanded)
-    const stripped = stripTrailingDiacritics(processed)
+    const stripped = removeTrailingDiacritics(processed)
     // For hollow verbs with final hamza, remove the yeh before HAMZA_ON_YEH
     if (isWeakLetter(c2) && isHamzatedLetter(c3) && stripped.at(-1) === HAMZA_ON_YEH && stripped.at(-2) === YEH)
       return [...stripped.slice(0, -2), HAMZA_ON_YEH, SUKOON, ...PRESENT_FEM_PLURAL_SUFFIX]
@@ -454,7 +453,7 @@ function replaceFinalDiacritic(word: readonly string[], diacritic: string): read
     return [...chars.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
 
   // Normal case: strip trailing diacritics and add new one
-  return [...stripTrailingDiacritics(chars), diacritic]
+  return [...removeTrailingDiacritics(chars), diacritic]
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
@@ -475,7 +474,7 @@ function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
 }
 
 function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
-  const chars = [...stripTrailingDiacritics(word)]
+  const chars = removeTrailingDiacritics(word)
   const last = chars.at(-1)
 
   if (last === NOON) {
@@ -487,10 +486,8 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
     if (isWeakLetter(base)) return [...chars.slice(0, baseIndex), base, NOON, FATHA]
   }
 
-  if (isWeakLetter(last)) {
-    chars.pop()
-    return chars
-  }
+  if (isWeakLetter(last)) return chars.slice(0, -1)
+
   return replaceFinalDiacritic(word, SUKOON)
 }
 

@@ -13,10 +13,10 @@ import {
   KASRA,
   MEEM,
   NOON,
+  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
-  stripTrailingDiacritics,
   TANWEEN_KASRA,
   TEH,
   WAW,
@@ -125,7 +125,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (c2 === c3) return adjustDefective([MEEM, DAMMA, seatedC1, KASRA, c2, SHADDA], c3, KASRA)
 
         const adjusted = [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
-        return adjustDefective(isFinalWeak ? stripTrailingDiacritics(adjusted) : adjusted, c3, KASRA)
+        return adjustDefective(isFinalWeak ? removeTrailingDiacritics(adjusted) : adjusted, c3, KASRA)
       }
 
       case 5:
