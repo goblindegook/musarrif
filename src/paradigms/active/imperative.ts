@@ -26,7 +26,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const [c1, c2, c3, c4] = letters
   const isInitialWeak = isWeakLetter(c1)
   const isInitialHamza = c1 === ALIF_HAMZA
-  const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(c3))
+  const isMiddleWeak = letters.length === 4 ? isWeakLetter(c3) : isWeakLetter(c2)
   const isFinalWeak = letters.length === 4 ? isWeakLetter(c4) : isWeakLetter(c3)
 
   return mapRecord(
@@ -49,6 +49,11 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
+
+          // Initial weak verbs with past vowel 'i' drop the initial و in present/jussive
+          // so the stem already starts with the second radical (e.g., وَلَدَ → يَلِدْ → لِدْ)
+          // Don't add اِـ prefix as the initial weak has already been dropped
+          if (isInitialWeak && !isMiddleWeak && !isFinalWeak && pastVowel === 'i') return stem
 
           // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
           // This is a morphological rule based on past pattern classification, even though

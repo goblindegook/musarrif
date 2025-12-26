@@ -79,6 +79,8 @@ function masdar(verb: Verb): readonly string[] {
             return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fa3aala':
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
+          case 'fi3aala':
+            return adjustDefective([c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           default:
             return []
         }

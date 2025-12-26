@@ -145,11 +145,10 @@ function buildDefectiveForms(base: readonly string[], verb: Verb): PastBaseForms
 }
 
 function buildNonDefectiveForms(base: readonly string[]): PastBaseForms {
-  const stem = stripTrailingDiacritics(base)
   return {
     base,
-    baseWithSukoon: [...stem, SUKOON],
-    baseWithDamma: [...stem, DAMMA],
+    baseWithSukoon: [...stripTrailingDiacritics(base), SUKOON],
+    baseWithDamma: [...stripTrailingDiacritics(base), DAMMA],
   }
 }
 

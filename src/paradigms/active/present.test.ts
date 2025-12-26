@@ -69,6 +69,12 @@ describe('active present indicative', () => {
     ['وفي', 5, '2fs', 'تَتَوَفِّيْنَ'],
     ['وفي', 5, '3pm', 'يَتَوَفَّونَ'],
     ['وفي', 5, '3pf', 'يَتَوَفَّىْنَ'],
+    ['دخل', 1, '3ms', 'يَدْخُلُ'],
+    ['دخل', 1, '2ms', 'تَدْخُلُ'],
+    ['دخل', 1, '1s', 'أَدْخُلُ'],
+    ['ولد', 1, '3ms', 'يَلِدُ'],
+    ['ولد', 1, '2ms', 'تَلِدُ'],
+    ['ولد', 1, '1s', 'أَلِدُ'],
   ])('%s (%d) %s is %s', (root, form, pronoun, expected) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     expect(conjugatePresentMood(verb, 'indicative')[pronoun]).toBe(expected)
