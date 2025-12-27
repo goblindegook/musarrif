@@ -52,12 +52,13 @@ function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readon
 }
 
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
-  const [, c2, c3] = Array.from(verb.root)
+  const [c1, c2, c3] = Array.from(verb.root)
+
+  // Defective verbs (not doubly weak) preserve final weak letter, add noon + fatḥa directly (no sukoon)
+  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...expanded, NOON, FATHA]
 
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
-  if (verb.form === 2 && isWeakLetter(c3)) {
-    return [...expanded, NOON, FATHA]
-  }
+  if (verb.form === 2 && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
 
   if (isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
 
@@ -74,48 +75,77 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '1s': (base) => applyPresentPrefix(base, ALIF_HAMZA),
   '2ms': (base) => applyPresentPrefix(base, TEH),
   '2fs': (base, verb) => {
-    const [, c2, c3] = [...verb.root]
+    const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
+
     // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
     if (isWeakLetter(c2) && isHamzatedLetter(c3))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
+
     // Form II defective verbs preserve shadda and final weak letter
     if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
+
     // Form II hollow verbs preserve full stem, replace final damma with kasra, add yeh + noon + fatḥa
     if (verb.form === 2 && isWeakLetter(c2)) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
+
+    // Defective verbs (not doubly weak) preserve final weak letter, add noon + fatḥa directly
+    if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...stem, NOON, FATHA]
+
     // Form III and Form V hollow verbs don't have sukoon before noon in 2fs
     if (isWeakLetter(c2) && [3, 5].includes(verb.form))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
   '2d': (base, verb) => {
-    const [, , c3] = [...verb.root]
+    const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
+
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+
+    // Defective verbs (not doubly weak) preserve final weak letter in dual forms
+    if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), FATHA), ALIF, NOON, KASRA]
   },
   '3md': (base, verb) => {
-    const [, , c3] = [...verb.root]
+    const [c1, , c3] = [...verb.root]
 
     // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
 
+    // Form I defective verbs (not doubly weak) preserve final weak letter in dual forms
+    if (verb.form === 1 && isWeakLetter(c3) && !isWeakLetter(c1))
+      return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ALIF, NOON, KASRA]
   },
   '3fd': (base, verb) => {
-    const [, , c3] = [...verb.root]
+    const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
+
     // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+
+    // Form I defective verbs (not doubly weak) preserve final weak letter in dual forms
+    if (verb.form === 1 && isWeakLetter(c3) && !isWeakLetter(c1))
+      return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), FATHA), ALIF, NOON, KASRA]
   },
   '1p': (base) => applyPresentPrefix(base, NOON),
   '2mp': (base, verb) => {
-    const [, , c3] = [...verb.root]
+    const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
+
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(stem, DAMMA), WAW, NOON, FATHA]
+
+    // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
+    if (isWeakLetter(c3) && !isWeakLetter(c1))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), DAMMA), WAW, NOON, FATHA]
+
     return [...dropTerminalWeakOrHamza(stem), WAW, NOON, FATHA]
   },
   '2fp': (base, verb) => {
@@ -124,8 +154,14 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     return buildFemininePlural(expanded, verb)
   },
   '3mp': (base, verb) => {
-    const [, , c3] = [...verb.root]
+    const [c1, , c3] = [...verb.root]
+
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(base, DAMMA), WAW, NOON, FATHA]
+
+    // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
+    if (isWeakLetter(c3) && !isWeakLetter(c1))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), DAMMA), WAW, NOON, FATHA]
+
     return [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA]
   },
   '3fp': (base, verb) => {
@@ -298,6 +334,13 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   // Special case: fa3ala-yaf3alu pattern (past 'a' + present 'a') with final WAW uses damma instead of long vowel (e.g., غدو → يَغْدُو)
   if (pastVowel === 'a' && patternVowel === 'a' && c3 === WAW) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, c3]
+
+  // Defective verbs (final weak only): final weak letter remains, no trailing damma (e.g., رَمَى → يَرْمِي)
+  // For defective verbs ending in ي, use kasra before the final ي; for و, use damma
+  if (isFinalWeak) {
+    const vowelBeforeWeak = c3 === YEH || c3 === ALIF_MAQSURA ? KASRA : DAMMA
+    return [YEH, FATHA, c1, SUKOON, c2, vowelBeforeWeak, defectiveLetterGlide(c3)]
+  }
 
   // Regular strong verb
   return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]

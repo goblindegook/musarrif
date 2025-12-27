@@ -305,7 +305,7 @@ describe('active present indicative pattern', () => {
 
   describe('defective verbs', () => {
     describe('ر-م-ي', () => {
-      test.skip('رَمَى (Form I)', () => {
+      test('رَمَى (Form I)', () => {
         expect(conjugatePresentMood(getVerb('رمي', 1), 'indicative')).toEqual({
           '1s': 'أَرْمِي',
           '2ms': 'تَرْمِي',
