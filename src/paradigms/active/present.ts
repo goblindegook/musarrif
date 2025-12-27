@@ -64,7 +64,7 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded, c2)), SUKOON), NOON, FATHA]
 
-  if (isWeakLetter(c2) && ![3, 5].includes(verb.form))
+  if (isWeakLetter(c2) && ![2, 3, 5].includes(verb.form))
     return [...replaceFinalDiacritic(shortenHollowStem(expanded, c2), SUKOON), NOON, FATHA]
 
   return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), NOON, FATHA]
@@ -81,6 +81,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
     // Form II defective verbs preserve shadda and final weak letter
     if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
+    // Form II hollow verbs preserve full stem, replace final damma with kasra, add yeh + noon + fatḥa
+    if (verb.form === 2 && isWeakLetter(c2)) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
     // Form III and Form V hollow verbs don't have sukoon before noon in 2fs
     if (isWeakLetter(c2) && [3, 5].includes(verb.form))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]

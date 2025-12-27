@@ -247,7 +247,7 @@ describe('active present indicative pattern', () => {
         })
       })
 
-      test.skip('قَوَّلَ (Form II)', () => {
+      test('قَوَّلَ (Form II)', () => {
         expect(conjugatePresentMood(getVerb('قول', 2), 'indicative')).toEqual({
           '1s': 'أُقَوِّلُ',
           '2ms': 'تُقَوِّلُ',
