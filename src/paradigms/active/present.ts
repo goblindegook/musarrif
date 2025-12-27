@@ -221,13 +221,6 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   )
 }
 
-function dropFormXInitialWeakLetter(word: readonly string[]): readonly string[] {
-  // Find and drop the initial weak letter (و or ي) after the Form X prefix س-ت-
-  // Form X structure: [pronoun prefix (2 chars)] + SEEN + SUKOON + TEH + FATHA + [weak letter] + SUKOON + [rest]
-  // Weak letter is always at index 6 (2 + 4)
-  return [...word.slice(0, 6), ...word.slice(8)]
-}
-
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
@@ -243,13 +236,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       // Dual forms: drop weak letter before alif
       if (['2d', '3md', '3fd'].includes(pronounId)) {
-        if (verb.form === 10 && isInitialWeak && isFinalWeak)
-          return dropFormXInitialWeakLetter(dropWeakLetterBeforeAlif(dropNoonEnding(word)))
         return dropWeakLetterBeforeAlif(dropNoonEnding(word))
       }
 
       if (['2fs', '2mp', '3mp'].includes(pronounId)) {
-        if (verb.form === 10 && isInitialWeak && isFinalWeak) return dropFormXInitialWeakLetter(dropNoonEnding(word))
         return dropNoonEnding(word)
       }
 
@@ -270,8 +260,9 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         isWeakLetter(c2)
       const stem = shouldShortenHollow ? shortenHollowStem(word, c2) : word
 
-      if (verb.form === 10 && isInitialWeak && isFinalWeak)
-        return dropFormXInitialWeakLetter(dropFinalDefectiveGlide(stem))
+      // Form X defective verbs with initial weak: preserve initial weak in jussive (e.g., وفي → يَسْتَوْفِ)
+      // Only drop final weak, not initial weak
+      if (verb.form === 10 && isInitialWeak && isFinalWeak) return dropFinalDefectiveGlide(stem)
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
 

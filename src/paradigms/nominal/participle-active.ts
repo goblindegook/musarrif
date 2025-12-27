@@ -171,9 +171,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Hollow Form X active participle (e.g., مُسْتَضِيف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3]
 
-        // Defective Form X: initial weak (but not hamza) drops, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَفٍ)
+        // Defective Form X: preserve initial weak with sukoon, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَوْفٍ)
         if (isFinalWeak && isInitialWeak && !isInitialHamza)
-          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c2, TANWEEN_KASRA]
+          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_KASRA]
 
         return adjustDefective([MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], c3, KASRA)
       }

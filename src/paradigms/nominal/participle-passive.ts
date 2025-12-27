@@ -165,10 +165,10 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Hollow Form X passive participle (e.g., مُسْتَضَاف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3]
 
-        // Defective Form X: initial weak (but not hamza) drops, then c2 with tanween fatḥa and alif maqsura (e.g., وفي → مُسْتَفًى)
+        // Defective Form X: preserve initial weak with sukoon, then c2 with tanween fatḥa and alif maqsura (e.g., وفي → مُسْتَوْفًى)
         if (isFinalWeak) {
           if (isInitialWeak && !isInitialHamza) {
-            return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+            return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
           }
           return adjustDefective([MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, DAMMA], c3, FATHA)
         }
