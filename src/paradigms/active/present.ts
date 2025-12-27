@@ -220,15 +220,17 @@ function conjugatePresent(verb: Verb): Record<PronounId, string> {
 function dropNoonEnding(word: readonly string[]): readonly string[] {
   const chars = [...word]
   while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
+  return chars
+}
 
-  if (chars.at(-1) === WAW) {
-    // Keep the long ū with wāw and seat it on an alif after dropping the nūn
-    // Add sukoon before alif for consistency with imperative forms
-    const stemBeforeWaw = chars.slice(0, chars.length - 1)
+function replaceDiacriticBeforeWaw(word: readonly string[]): readonly string[] {
+  // Keep the long ū with wāw and seat it on an alif after dropping the nūn
+  // Add sukoon before alif for consistency with imperative forms
+  if (word.at(-1) === WAW) {
+    const stemBeforeWaw = word.slice(0, word.length - 1)
     return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, SUKOON, ALIF]
   }
-
-  return chars
+  return word
 }
 
 function dropWeakLetterBeforeAlif(word: readonly string[]): readonly string[] {
@@ -246,7 +248,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       // Dual forms: drop weak letter before alif
       if (['2d', '3md', '3fd'].includes(pronounId)) return dropWeakLetterBeforeAlif(dropNoonEnding(word))
 
-      if (['2fs', '2mp', '3mp'].includes(pronounId)) return dropNoonEnding(word)
+      if (['2fs', '2mp', '3mp'].includes(pronounId)) return replaceDiacriticBeforeWaw(dropNoonEnding(word))
 
       return replaceFinalDiacritic(word, FATHA)
     }),
@@ -269,33 +271,25 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       // Form V defective verbs: preserve weak letter in jussive (unlike other defective verbs)
       if (verb.form === 5 && isFinalWeak) {
-        const chars = [...word]
-        if (['2fp', '3fp'].includes(pronounId)) {
-          while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
-          const last = chars.at(-1)
-          if (last === YEH) return [...chars, SUKOON, NOON, FATHA]
-          if (last === WAW) return [...chars, SUKOON, ALIF]
-        }
+        const stemWithoutNoon = dropNoonEnding(word)
+        const last = stemWithoutNoon.at(-1)
 
-        if (['2fs', '2mp', '3mp'].includes(pronounId)) {
-          while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
-          const last = chars.at(-1)
-          if (last === YEH) return [...chars, SUKOON]
-          if (last === WAW) return [...chars, SUKOON, ALIF]
-        }
+        if (last === YEH && ['2fp', '3fp'].includes(pronounId)) return [...stemWithoutNoon, SUKOON, NOON, FATHA]
 
-        if (['2d', '3md', '3fd'].includes(pronounId)) return dropNoonEnding(word)
+        if (last === YEH && ['2fs', '2mp', '3mp'].includes(pronounId)) return [...stemWithoutNoon, SUKOON]
+
+        if (last === WAW && ['2fs', '2mp', '2fp', '3mp', '3fp'].includes(pronounId))
+          return [...stemWithoutNoon, SUKOON, ALIF]
+
+        if (['2d', '3md', '3fd'].includes(pronounId)) return stemWithoutNoon
+
         return dropFinalDefectiveGlide(word)
       }
 
       // Dual forms: drop weak letter before alif
-      if (['2d', '3md', '3fd'].includes(pronounId)) {
-        return dropWeakLetterBeforeAlif(dropNoonEnding(word))
-      }
+      if (['2d', '3md', '3fd'].includes(pronounId)) return dropWeakLetterBeforeAlif(dropNoonEnding(word))
 
-      if (['2fs', '2mp', '3mp'].includes(pronounId)) {
-        return dropNoonEnding(word)
-      }
+      if (['2fs', '2mp', '3mp'].includes(pronounId)) return replaceDiacriticBeforeWaw(dropNoonEnding(word))
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
