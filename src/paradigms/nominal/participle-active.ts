@@ -100,6 +100,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, KASRA, c3, DAMMA], c3, KASRA)
 
       case 3:
+        // Defective Form III active participle: drop final weak and use tanween kasra (e.g., وفي → مُوَافٍ)
+        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
         return adjustDefective([MEEM, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3], c3, KASRA)
 
       case 4: {

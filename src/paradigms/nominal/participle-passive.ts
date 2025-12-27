@@ -107,6 +107,8 @@ export function derivePassiveParticiple(verb: Verb): string {
         return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA], c3, FATHA)
 
       case 3:
+        // Defective Form III passive participle: drop final weak and use tanween fatḥa + alif maqsura (e.g., وفي → مُوَافًى)
+        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_FATHA, ALIF_MAQSURA]
         return adjustDefective([MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3], c3, FATHA)
 
       case 4: {

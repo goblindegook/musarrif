@@ -153,8 +153,19 @@ describe('hamzated final roots', () => {
 })
 
 describe('doubly weak roots', () => {
-  describe.todo('و-ق-ي')
-  describe.todo('و-ف-ي')
+  describe('و-ف-ي', () => {
+    test.each<[VerbForm, string]>([
+      [1, 'وَفَاء'],
+      [2, 'تَوْفِيَة'],
+      [3, 'مُوَافَاءة'],
+      [4, 'إِيفَاء'],
+      [5, 'تَوَفٍّ'],
+      [10, 'اِسْتِفَاء'],
+    ])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('وفي', form))).toBe(expected)
+    })
+  })
+
   describe.todo('ر-و-ي')
 })
 

@@ -136,6 +136,10 @@ function masdar(verb: Verb): readonly string[] {
       return [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH, c3]
 
     case 3:
+      // Defective Form III masdar: drop final weak and use مُفَاعَاة pattern (e.g., وفي → مُوَافَاة)
+      // Pattern: مُ + فَ + ا + عَ + ا + ء + ة = مُفَاعَاة
+      // Similar to Form I fu3aal but with MEEM prefix and TEH_MARBUTA suffix
+      if (c3 === ALIF_MAQSURA || c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, ALIF, HAMZA, TEH_MARBUTA]
       return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 
     case 4:

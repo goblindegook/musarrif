@@ -211,7 +211,8 @@ test('descriptive test name', () => {
 
 ## Conjugation Rule Patterns
 
-- When word structure is fixed and known, use direct slicing/indexing instead of searching and conditionals. If you know exact positions (e.g., "pronoun prefix is always 2 chars, Form X prefix is always 4 chars, weak letter is always at index 6"), use `word.slice(0, 6)` and `word.slice(8)` rather than `findIndex` and conditional checks.
+- **When word structure is fixed and known, use direct slicing/indexing instead of searching and conditionals:** If you know exact positions (e.g., "pronoun prefix is always 2 chars, Form X prefix is always 4 chars, weak letter is always at index 6"), use `word.slice(0, 6)` and `word.slice(8)` rather than `findIndex` and conditional checks.
+- **Avoid redundant condition checks:** If a condition already implies another check, don't repeat it. For example, if `isFinalWeak` checks for weak letters (which includes `WAW`, `YEH` and some others), but you only want to handle `WAW` and `YEH` cases, use `c3 === WAW || c3 === YEH` **only** - don't write `isFinalWeak && (c3 === WAW || c3 === YEH)` because those specific letters are guaranteed to be weak.
 
 ## Preact Patterns
 

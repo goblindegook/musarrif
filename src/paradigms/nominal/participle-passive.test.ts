@@ -116,8 +116,19 @@ describe('hamzated final roots', () => {
 })
 
 describe('doubly weak roots', () => {
-  describe.todo('و-ق-ي')
-  describe.todo('و-ف-ي')
+  describe('و-ف-ي', () => {
+    test.each<[VerbForm, string]>([
+      [1, 'مَوْفِيّ'],
+      [2, 'مُوَفًّى'],
+      [3, 'مُوَافًى'],
+      [4, 'مُوفًى'],
+      [5, 'مُتَوَفًّى'],
+      [10, 'مُسْتَفًى'],
+    ])('Form %d passive participle is %s', (form, expected) => {
+      expect(derivePassiveParticiple(getVerb('وفي', form))).toBe(expected)
+    })
+  })
+
   describe.todo('ر-و-ي')
 })
 
