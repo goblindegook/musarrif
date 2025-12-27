@@ -526,8 +526,6 @@ describe('active past pattern', () => {
       })
     })
 
-    describe.todo('و-ف-ي')
-
     describe.todo('ر-و-ي')
   })
 

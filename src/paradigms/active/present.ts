@@ -7,7 +7,6 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
-  HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
@@ -191,8 +190,9 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
 
   if (chars.at(-1) === WAW) {
     // Keep the long ū with wāw and seat it on an alif after dropping the nūn
+    // Add sukoon before alif for consistency with imperative forms
     const stemBeforeWaw = chars.slice(0, chars.length - 1)
-    return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
+    return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, SUKOON, ALIF]
   }
 
   return chars
@@ -221,10 +221,18 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   )
 }
 
+function dropFormXInitialWeakLetter(word: readonly string[]): readonly string[] {
+  // Find and drop the initial weak letter (و or ي) after the Form X prefix س-ت-
+  // Form X structure: [pronoun prefix (2 chars)] + SEEN + SUKOON + TEH + FATHA + [weak letter] + SUKOON + [rest]
+  // Weak letter is always at index 6 (2 + 4)
+  return [...word.slice(0, 6), ...word.slice(8)]
+}
+
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
   const isInitialHamza = c1 === ALIF_HAMZA
+  const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(letters[2]))
   const isFinalWeak = isWeakLetter(verb.root.at(-1))
   const isFinalHamza = isHamzatedLetter(c3)
@@ -234,9 +242,16 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       const word = Array.from(indicative)
 
       // Dual forms: drop weak letter before alif
-      if (['2d', '3md', '3fd'].includes(pronounId)) return dropWeakLetterBeforeAlif(dropNoonEnding(word))
+      if (['2d', '3md', '3fd'].includes(pronounId)) {
+        if (verb.form === 10 && isInitialWeak && isFinalWeak)
+          return dropFormXInitialWeakLetter(dropWeakLetterBeforeAlif(dropNoonEnding(word)))
+        return dropWeakLetterBeforeAlif(dropNoonEnding(word))
+      }
 
-      if (['2fs', '2mp', '3mp'].includes(pronounId)) return dropNoonEnding(word)
+      if (['2fs', '2mp', '3mp'].includes(pronounId)) {
+        if (verb.form === 10 && isInitialWeak && isFinalWeak) return dropFormXInitialWeakLetter(dropNoonEnding(word))
+        return dropNoonEnding(word)
+      }
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
@@ -255,7 +270,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         isWeakLetter(c2)
       const stem = shouldShortenHollow ? shortenHollowStem(word, c2) : word
 
-      if (isWeakLetter(verb.root.at(-1))) return dropFinalDefectiveGlide(stem)
+      if (verb.form === 10 && isInitialWeak && isFinalWeak)
+        return dropFormXInitialWeakLetter(dropFinalDefectiveGlide(stem))
+
+      if (isFinalWeak) return dropFinalDefectiveGlide(stem)
 
       // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
       if (['2fp', '3fp'].includes(pronounId) || verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
@@ -518,44 +536,52 @@ function expandShadda(word: readonly string[]): readonly string[] {
   return word
 }
 
+function findLastLetterIndex(word: readonly string[]): number {
+  return word.findLastIndex((char) => !isDiacritic(char))
+}
+
 function replaceFinalDiacritic(word: readonly string[], diacritic: VowelOrSukoon): readonly string[] {
-  const lastBaseIndex = word.findLastIndex((char) => !isDiacritic(char))
-  const shaddaIndex = word.findIndex((char, i) => i > lastBaseIndex && char === SHADDA)
-  if (shaddaIndex >= 0) return [...word.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
+  const lastLetterIndex = findLastLetterIndex(word)
+  const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
+  if (shaddaIndex >= 0) return [...word.slice(0, lastLetterIndex + 1), SHADDA, diacritic]
   return [...removeTrailingDiacritics(word), diacritic]
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
-  for (let i = word.length - 1; i >= 0; i -= 1) {
-    if (isDiacritic(word[i])) continue
-    if (word[i] === ALIF_HAMZA || word[i] === HAMZA) return [...word.slice(0, i), HAMZA_ON_YEH, ...word.slice(i + 1)]
-    if (isWeakLetter(word[i])) {
-      const sliced = word.slice(0, i)
-      // For Form V pattern [letter, SHADDA, FATHA, ALIF_MAQSURA], preserve shadda and fatḥa
-      if (i >= 2 && word[i - 2] === SHADDA && word[i - 1] === FATHA && word[i] === ALIF_MAQSURA) {
-        return sliced
-      }
-      return removeTrailingDiacritics(sliced)
-    }
-    return word
-  }
+  const lastLetterIndex = findLastLetterIndex(word)
+  const last = word.at(lastLetterIndex)
+
+  if (isHamzatedLetter(last))
+    return [...word.slice(0, lastLetterIndex), HAMZA_ON_YEH, ...word.slice(lastLetterIndex + 1)]
+
+  if (last === ALIF_MAQSURA) return word.slice(0, lastLetterIndex)
+
+  if (isWeakLetter(last)) return removeTrailingDiacritics(word.slice(0, lastLetterIndex))
+
   return word
 }
 
 function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
-  const chars = removeTrailingDiacritics(word)
-  const last = chars.at(-1)
+  const last = word.at(-1)
+  const secondLast = word.at(-2)
 
-  if (last === NOON) {
-    // Find the last base letter before the terminal nūn (skip diacritics)
-    let baseIndex = chars.length - 2
-    while (baseIndex >= 0 && isDiacritic(chars[baseIndex])) baseIndex -= 1
-    const base = chars[baseIndex]
-    // Rebuild without extra diacritics on the glide; keep fatḥa on the nūn: …طِينَ
-    if (isWeakLetter(base)) return [...chars.slice(0, baseIndex), base, NOON, FATHA]
+  // Check if word ends with NOON + FATHA (feminine plural ending)
+  if (secondLast === NOON && last === FATHA) {
+    // ALIF_MAQSURA can only appear at the end of the word, so convert it to YEH + SUKOON if found here
+    const maqsuraIndex = word.lastIndexOf(ALIF_MAQSURA)
+    if (maqsuraIndex >= 0) return [...word.slice(0, maqsuraIndex), YEH, SUKOON, NOON, FATHA]
+
+    // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
+    // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
+    // then preserve everything up to and including it, and add NOON + FATHA.
+    const stem = removeTrailingDiacritics(word)
+    const weakLetterIndex = stem.findLastIndex((char, i) => i < stem.length - 1 && !isDiacritic(char))
+    if (isWeakLetter(stem.at(weakLetterIndex))) return [...stem.slice(0, weakLetterIndex + 1), NOON, FATHA]
   }
 
-  if (isWeakLetter(last)) return chars.slice(0, -1)
+  const chars = removeTrailingDiacritics(word)
+  const lastChar = chars.at(-1)
+  if (isWeakLetter(lastChar)) return chars.slice(0, -1)
 
   return replaceFinalDiacritic(word, SUKOON)
 }

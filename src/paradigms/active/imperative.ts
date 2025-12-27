@@ -22,6 +22,13 @@ import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
+function restoreWeakLetterBeforeAlif(stem: readonly string[]): readonly string[] {
+  const alifIndex = stem.lastIndexOf(ALIF)
+  if (stem.at(alifIndex - 1) === FATHA)
+    return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ...stem.slice(alifIndex)]
+  return [...stem.slice(0, alifIndex), YEH, FATHA, ...stem.slice(alifIndex)]
+}
+
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const jussive = conjugatePresentMood(verb, 'jussive')
   const letters = Array.from(verb.root)
@@ -79,31 +86,23 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (c2 === c3) return [c1, FATHA, c2, KASRA, SHADDA]
 
           // Form II defective verbs preserve final weak letter in dual forms
-          if (isFinalWeak && pronounId === '2d') {
-            // Jussive drops final weak letter, but imperative preserves it in dual forms
-            // Jussive has: وَفِّا (after prefix removal), need: وَفِّيَا
-            // Insert YEH + FATHA before the final ALIF
-            return [...stem.slice(0, stem.lastIndexOf(ALIF)), YEH, FATHA, ALIF]
-          }
+          if (isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
 
           return stem
         }
 
         case 3: {
           // Form III defective verbs preserve final weak letter in dual forms
-          if (isFinalWeak && pronounId === '2d') {
-            // Jussive drops final weak letter, but imperative preserves it in dual forms
-            // Replace FATHA before final ALIF with KASRA + YEH + FATHA
-            const alifIndex = stem.lastIndexOf(ALIF)
-            if (stem.at(alifIndex - 1) === FATHA)
-              return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ...stem.slice(alifIndex)]
-          }
+          if (isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 4: {
           // Initial hamza + middle weak + final weak (e.g., أوي → آوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_MADDA, WAW, KASRA]
+
+          // Form IV defective verbs preserve final weak letter in dual forms
+          if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
 
           // Form IV always adds prefix
           return [ALIF_HAMZA, FATHA, ...stem]
@@ -116,6 +115,16 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             // Jussive: يَتَأَوَّ → Imperative: تَأَوَّ (remove يَ, add تَ)
             // Pattern: تَ + أَ + وََّ (و + fatḥa + shadda)
             return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
+
+          // Form V defective verbs preserve final weak letter in dual and plural forms
+          if (isFinalWeak) {
+            if (pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
+            if (pronounId === '2mp') {
+              // Jussive uses damma before shadda, imperative uses fatḥa instead
+              const shaddaIndex = stem.lastIndexOf(SHADDA)
+              return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
+            }
+          }
 
           return stem
         }
@@ -130,6 +139,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Initial hamza is kept as أْ, then middle weak with kasra
           if (isInitialHamza && isMiddleWeak && isFinalWeak)
             return [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA]
+
+          // Form X defective verbs: restore final weak letter in dual forms
+          if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
 
           return [ALIF, KASRA, ...stem]
         }

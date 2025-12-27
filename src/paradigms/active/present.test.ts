@@ -484,8 +484,6 @@ describe('active present indicative pattern', () => {
       })
     })
 
-    describe.todo('و-ف-ي')
-
     describe.todo('ر-و-ي')
   })
 
@@ -535,7 +533,7 @@ describe('active present jussive', () => {
       '2ms': 'تُعْطِ',
       '1p': 'نُعْطِ',
       '2fs': 'تُعْطِي',
-      '3mp': 'يُعْطُوا',
+      '3mp': 'يُعْطُوْا',
     })
   })
 
@@ -544,12 +542,12 @@ describe('active present jussive', () => {
       '2ms': 'تَصْرِفْ',
       '2fs': 'تَصْرِفِي',
       '2d': 'تَصْرِفَا',
-      '2mp': 'تَصْرِفُوا',
+      '2mp': 'تَصْرِفُوْا',
       '2fp': 'تَصْرِفْنَ',
       '3md': 'يَصْرِفَا',
       '3fd': 'تَصْرِفَا',
       '3fp': 'يَصْرِفْنَ',
-      '3mp': 'يَصْرِفُوا',
+      '3mp': 'يَصْرِفُوْا',
     })
   })
 
@@ -560,14 +558,37 @@ describe('active present jussive', () => {
       '2ms': 'تُوَفِّ',
       '2fs': 'تُوَفِّي',
       '2d': 'تُوَفِّا',
-      '2mp': 'تُوَفُّوا',
+      '2mp': 'تُوَفُّوْا',
       '2fp': 'تُوَفِّينَ',
       '3ms': 'يُوَفِّ',
       '3fs': 'تُوَفِّ',
       '3md': 'يُوَفِّا',
       '3fd': 'تُوَفِّا',
-      '3mp': 'يُوَفُّوا',
+      '3mp': 'يُوَفُّوْا',
       '3fp': 'يُوَفِّينَ',
+    })
+  })
+
+  test('Form V defective verb تَوَفَّى jussive conjugation', () => {
+    // Based on authoritative sources: Form V defective verbs drop the final weak letter (ى) in jussive
+    // Dual forms drop the weak letter before alif (similar to Form II)
+    // Masculine plural forms have damma before waw (similar to Form II)
+    // Feminine plural forms preserve yeh before noon + fatḥa (similar to Form II)
+    // 2fs form has kasra before final yeh (similar to Form II)
+    expect(conjugatePresentMood(getVerb('وفي', 5), 'jussive')).toEqual({
+      '1s': 'أَتَوَفَّ',
+      '2ms': 'تَتَوَفَّ',
+      '2fs': 'تَتَوَفِّي',
+      '3ms': 'يَتَوَفَّ',
+      '3fs': 'تَتَوَفَّ',
+      '2d': 'تَتَوَفَّا',
+      '3md': 'يَتَوَفَّا',
+      '3fd': 'تَتَوَفَّا',
+      '1p': 'نَتَوَفَّ',
+      '2mp': 'تَتَوَفُّوْا',
+      '2fp': 'تَتَوَفَّيْنَ',
+      '3mp': 'يَتَوَفُّوْا',
+      '3fp': 'يَتَوَفَّيْنَ',
     })
   })
 
@@ -601,7 +622,7 @@ describe('active present jussive', () => {
       '1p': 'نَأْوِ',
       '3fs': 'تَأْوِ',
       '2fs': 'تَأْوِي',
-      '3mp': 'يَأْوُوا',
+      '3mp': 'يَأْوُوْا',
     })
   })
 
@@ -628,7 +649,25 @@ describe('active present jussive', () => {
       '1p': 'نَجِئْ',
       '3fs': 'تَجِئْ',
       '2fs': 'تَجِيئِي',
-      '3mp': 'يَجِيئُوا',
+      '3mp': 'يَجِيئُوْا',
+    })
+  })
+
+  test('drops both initial and final weak letters for اِسْتَوْفَى', () => {
+    expect(conjugatePresentMood(getVerb('وفي', 10), 'jussive')).toEqual({
+      '1s': 'أَسْتَفِ',
+      '2ms': 'تَسْتَفِ',
+      '2fs': 'تَسْتَفِي',
+      '3ms': 'يَسْتَفِ',
+      '3fs': 'تَسْتَفِ',
+      '2d': 'تَسْتَفَا',
+      '3md': 'يَسْتَفَا',
+      '3fd': 'تَسْتَفَا',
+      '1p': 'نَسْتَفِ',
+      '2mp': 'تَسْتَفُوْا',
+      '2fp': 'تَسْتَفِينَ',
+      '3mp': 'يَسْتَفُوْا',
+      '3fp': 'يَسْتَفِينَ',
     })
   })
 })

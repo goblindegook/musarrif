@@ -6,16 +6,16 @@ This document outlines the coding standards, patterns, and practices that must b
 
 ⚠️ TEST-DRIVEN DEVELOPMENT IS NON-NEGOTIABLE ⚠️
 
-If you are changing the behaviour of the system, you MUST cover the expected behaviour with a test before you change production code.
+When changing system behaviour, write tests covering expected behaviour before changing production code.
 
 ## Tooling
 
-Node is available and configured for this project via Mise. Always load the Mise environment before running `node` or any `npm` scripts as you're not likely to find a globally installed Node.
+Node is configured via Mise. Always use `mise exec --` before running `node` or `npm` scripts (no global Node available).
 
 - **npm scripts**: `mise exec -- npm test`
 - **Node.js scripts**: `mise exec -- node script.js` or `mise exec -- node -e "console.log('code here')"`
-- **Vitest**: Runs in watch mode by default. For a single, non-watching run (as in CI or ad‑hoc checks), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`
-- **Scripting tasks**: For file manipulation, data processing, or other scripting tasks, prefer Node over external tools like Python. Always use `mise exec --` to ensure the correct Node version is available.
+- **Vitest**: Runs in watch mode by default. For single runs (CI/ad-hoc), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`
+- **Scripting tasks**: Prefer Node over external tools (e.g., Python). Always use `mise exec --` to ensure the correct Node version.
 
 ## Code Style and Formatting
 
@@ -25,7 +25,7 @@ Node is available and configured for this project via Mise. Always load the Mise
 - Use `type` keyword for type-only imports: `import type { Verb } from './verbs'`
 - Prefer explicit types over inference when it improves readability
 - Use readonly arrays and objects where immutability is desired: `readonly string[]`
-- Prefer nullish equality checks (`value == null` / `value != null`) over strict `undefined` or `null` comparisons when testing for absence
+- Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks when testing for absence
 - When a variable is used only once, prefer inlining it unless it compromises readability.
 
 ### Formatting Rules (Biome)
@@ -42,11 +42,10 @@ Node is available and configured for this project via Mise. Always load the Mise
 - **Components/Types/Interfaces**: PascalCase (`Verb`, `VerbMetaProps`)
 - **Constants**: UPPER_SNAKE_CASE for module-level constants (`ALIF_HAMZA`)
 - **Files**: PascalCase for components (`SpeechButton.tsx`), camelCase for utilities (`pronouns.ts`)
-- **Descriptive names**: Use clear, descriptive names that explain intent
 
 ### Comments
 
-- Do not write comments that explain WHAT the code does (code should be self-explanatory)
+- Do not write comments explaining what code does (code should be self-explanatory)
 - Do not write comments for obvious operations
 - Do write comments to explain non-obvious implementation decisions
 - Do write comments to explain the reason for workarounds or special cases
@@ -77,19 +76,18 @@ src/
 
 ## Localization
 
-The application supports four languages: **English**, **Italian**, **European Portuguese**, and **Arabic**. Translation files are located in `src/locales/`.
+Supports four languages: **English**, **Italian**, **European Portuguese**, and **Arabic**. Translation files are in `src/locales/`.
 
 ### UI Strings
 
-All UI strings must be translated into all languages. UI strings are stored in the `strings` object within each locale file.
+All UI strings must be translated into all languages and stored in the `strings` object within each locale file.
 
 ### Verb Translations
 
-When adding a new root to `src/data/roots.json`, you must also add translated root semantics and translations for all
-the verb forms added:
+When adding a root to `src/data/roots.json`, also add translated root semantics and translations for all verb forms:
 
 - **Translate into**: English, Italian, and Portuguese only (not Arabic)
-- **Arabic**: Arabic verbs use their Arabic labels directly and do not require translations
+- **Arabic**: Uses Arabic labels directly (no translations required)
 - **Verb translation location**: Add entries to the `verbs` object in `en.json`, `it.json`, and `pt.json`
 - **Root semantics location**: Add entries to the `roots` object in `en.json`, `it.json`, and `pt.json`
 
@@ -106,13 +104,13 @@ the verb forms added:
 
 **⚠️ TDD IS NON-NEGOTIABLE. YOU MUST ALWAYS WRITE TESTS FIRST.**
 
-1. **Write tests first**: Before implementing any feature or fixing any bug, write the test that describes the expected behavior. **This is not optional.**
+1. **Write tests first**: Before implementing features or fixing bugs, write tests describing expected behavior.
 2. **Red-Green-Refactor cycle**:
    - Write a failing test and **verify it fails** (Red)
    - Write the minimum code to make it pass (Green)
    - Refactor while keeping tests green (Refactor)
-3. **Test coverage**: All code must have corresponding tests. Tests should be comprehensive and cover edge cases.
-4. **Test location**: Tests must be co-located with source files using the `.test.ts` or `.test.tsx` extension (e.g., `VerbMeta.tsx` → `VerbMeta.test.tsx`).
+3. **Test coverage**: All code must have comprehensive tests covering edge cases.
+4. **Test location**: Co-locate tests with source files using `.test.ts` or `.test.tsx` extensions (e.g., `VerbMeta.tsx` → `VerbMeta.test.tsx`).
 
 ### Test Framework
 
@@ -139,15 +137,15 @@ test('descriptive test name', () => {
 
 ### Testing Best Practices
 
-- ❌ **NEVER change the behaviour of the system before writing tests. This is a critical error.**
-- ✅ **DO write descriptive test names**: Test names should clearly describe what is being tested.
+- ❌ **NEVER change system behaviour before writing tests. This is a critical error.**
+- ✅ **DO write descriptive test names**: Clearly describe what is being tested.
 - ✅ **DO group related tests**: Use `describe` blocks to group related test cases.
 - ✅ **DO test edge cases**: Include tests for boundary conditions and error cases.
-- ✅ **DO use clean up after tests**: Use `afterEach` to restore the testinng environment, especially for Preact components.
-- ❌ **NEVER test implementation details**: Validate behavior through public APIs; never export internal helpers solely for testing.
+- ✅ **DO clean up after tests**: Use `afterEach` to restore the testing environment, especially for Preact components.
+- ❌ **NEVER test implementation details**: Validate behavior through public APIs; don't export internal helpers solely for testing.
 - ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
 - ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
-- ❌ **NEVER test data existence**: Fixture existence should be trusted; it can be incorrect but in that case the test will fail naturally, so skip "is defined" checks on fixtures.
+- ❌ **NEVER test data existence**: Trust fixture existence; if incorrect, tests will fail naturally, so skip "is defined" checks.
 - ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `roots.json` entries directly.
 - ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
 - ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
@@ -155,49 +153,53 @@ test('descriptive test name', () => {
 - ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
 - ✅ **Always use static imports**: Do not use dynamic imports in tests.
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
-- ❌ **NEVER normalize or transform test expectations to match incorrect production output**: If tests fail due to Unicode normalization or other output format issues, fix the production code to output the correct format. Normalizing test expectations to match wrong output is a critical anti-pattern that hides bugs and makes tests meaningless.
+- ❌ **NEVER normalize test expectations to match incorrect production output**: If tests fail due to Unicode normalization or format issues, fix production code. Normalizing expectations to match wrong output hides bugs and makes tests meaningless.
 
 ### Validating Test Expectations
 
-**⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, you MUST validate them from authoritative sources. Do not rely on assumptions or memory.**
+**⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, validate from authoritative sources. Do not rely on assumptions or memory.**
 
-**⚠️ CRITICAL: Never assume production code is correct. Tests MUST reflect the correct expected behavior based on authoritative sources, NOT potentially incorrect production output. Writing tests based on incorrect production code is worse than having no tests at all - it validates and perpetuates bugs. Always verify expected behavior from authoritative sources first, then write tests that assert the correct behavior, regardless of what the production code currently produces.**
+**⚠️ CRITICAL: Never assume production code is correct. Tests MUST reflect correct expected behavior from authoritative sources, NOT potentially incorrect production output. Writing tests based on incorrect production code validates and perpetuates bugs. Always verify expected behavior from authoritative sources first, then write tests asserting correct behavior, regardless of current production output.**
 
-1. **Verify from authoritative sources**: Before writing test expectations for Arabic grammar rules (verb conjugations, masdar patterns, etc.), you MUST:
-   - Search for and consult authoritative Arabic grammar references
+1. **Verify from authoritative sources**: Before writing test expectations for Arabic grammar rules (verb conjugations, masdar patterns, etc.):
+   - Search and consult authoritative Arabic grammar references
    - Cross-check against multiple reliable sources (grammar textbooks, linguistic references, verified conjugation tables)
-   - Use web search to find actual examples of the verb forms you're testing
-   - Verify the complete conjugation paradigm, not just isolated forms
+   - Use web search to find actual examples of verb forms being tested
+   - Verify complete conjugation paradigms, not just isolated forms
 
 2. **Run tests and note discrepancies**: After writing test expectations:
-   - Run the tests to see what the production code actually produces
-   - If tests fail, compare your expected values against the production output
-   - If there's a discrepancy, add a comment to the test noting it and allow the human operator to review expectations independently
-   - **NEVER assume the production code is correct.** If your expectations are based on authoritative sources, keep them as-is even if they fail. Changing verified expectations to match potentially incorrect production code is a critical error
-   - Do not try to fix the production code unless explicitly instructed to do so
+   - Run tests to see what production code produces
+   - If tests fail, compare expected values against production output
+   - If there's a discrepancy, add a comment noting it for review
+   - **NEVER assume production code is correct.** If expectations are based on authoritative sources, keep them as-is even if they fail. Changing verified expectations to match potentially incorrect production code is a critical error
+   - Don't fix production code unless explicitly instructed
 
-3. **Document uncertainty**: If you are uncertain about the correct grammar rules:
-   - State your uncertainty explicitly in comments
-   - List the sources you consulted
+3. **Document uncertainty**: If uncertain about correct grammar rules:
+   - State uncertainty explicitly in comments
+   - List sources consulted
    - Ask for verification rather than making assumptions
-   - Consider checking similar verbs in the existing test suite for patterns
+   - Check similar verbs in existing test suite for patterns
 
 4. **Cross-reference existing tests**: Before writing new test expectations:
-   - Check existing tests for similar verb patterns to understand the expected behavior
+   - Check existing tests for similar verb patterns to understand expected behavior
    - Look for patterns in how other verbs of the same type are conjugated
-   - Note any inconsistencies in existing tests that might indicate areas needing correction
+   - Note inconsistencies in existing tests that might indicate areas needing correction
 
 5. **Verify complete paradigms**: When testing verb conjugations:
    - Verify ALL pronoun forms, not just a subset
    - Ensure the pattern is consistent across all forms
    - Check that special cases (dual, plural, feminine) follow the same rules
 
+6. **Verification order for fixing conjugations**: When fixing incorrect conjugations, verify and fix dependencies first:
+   - **If imperative is incorrect**: Check (from authoritative sources) if jussive is correct, then verify and fix jussive before fixing imperative.
+   - **Before fixing subjunctive or jussive**: Verify present tense is correct first, as both are derived from present tense.
+
 ### UI Test Best Practices
 
-- ✅ **DO use literal UI expectations**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` inside UI specs). Keep expected UI strings inline with the test that uses them instead of sharing “magical” fixtures.
+- ✅ **DO use literal UI expectations**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` in UI specs). Keep expected UI strings inline with tests instead of sharing "magical" fixtures.
 - ❌ **UI text not a truth source**: Don’t use UI tests to validate word correctness; rely on derivation functions because UI strings can change (e.g., diacritic stripping).
 - ✅ **Async element queries**: Prefer `findBy*` over `waitFor` + `getBy*` combinations.
-- ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/en`) and assert on the hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
+- ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/en`) and assert on hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
 
 ## Functional Programming Patterns
 
@@ -206,6 +208,10 @@ test('descriptive test name', () => {
 - Prefer immutable data structures
 - Use `readonly` modifiers for arrays and objects that shouldn't be mutated
 - Use spread operators and functional methods instead of mutations
+
+## Conjugation Rule Patterns
+
+- When word structure is fixed and known, use direct slicing/indexing instead of searching and conditionals. If you know exact positions (e.g., "pronoun prefix is always 2 chars, Form X prefix is always 4 chars, weak letter is always at index 6"), use `word.slice(0, 6)` and `word.slice(8)` rather than `findIndex` and conditional checks.
 
 ## Preact Patterns
 
@@ -252,16 +258,16 @@ import { Button } from './Button'
 
 ### Function Organization
 
-- Keep functions small and focused on a single responsibility
+- Keep functions small and focused on single responsibility
 - Extract complex logic into separate functions
-- Use pure functions when possible (no side effects)
+- Prefer pure functions (no side effects)
 - Document complex algorithms with clear variable names
 
 ## Type Safety
 
 ### Type Definitions
 
-- Define types and interfaces explicitly, prefer `interface` over `type` whenever possible
+- Define types and interfaces explicitly; prefer `interface` over `type`
 - Use type aliases for complex types
 - Use union types for limited values: `1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10`
 
@@ -332,7 +338,7 @@ const verb = getVerbById(slug)
 
 Before submitting code, ensure:
 
-- [ ] **Tests were written first** (TDD) - This is checked first and is non-negotiable
+- [ ] **Tests were written first** (TDD) - Non-negotiable, checked first
 - [ ] All tests pass
 - [ ] No production code was written before its corresponding test
 - [ ] No comments unless explaining WHY
