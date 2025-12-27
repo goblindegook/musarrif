@@ -341,7 +341,7 @@ describe('active present indicative pattern', () => {
         })
       })
 
-      test.skip('اِنْرَمَى (Form VII)', () => {
+      test('اِنْرَمَى (Form VII)', () => {
         expect(conjugatePresentMood(getVerb('رمي', 7), 'indicative')).toEqual({
           '1s': 'أَنْرَمِي',
           '2ms': 'تَنْرَمِي',

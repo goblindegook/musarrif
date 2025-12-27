@@ -54,11 +54,11 @@ function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readon
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
 
-  // Defective verbs (not doubly weak) preserve final weak letter, add noon + fatḥa directly (no sukoon)
-  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...expanded, NOON, FATHA]
-
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
-  if (verb.form === 2 && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
+  if (isWeakLetter(c1) && isWeakLetter(c3) && verb.form === 2) return [...expanded, NOON, FATHA]
+
+  // Defective verbs (not doubly weak, excluding Form VII) preserve final weak letter, add noon + fatḥa directly (no sukoon)
+  if (isWeakLetter(c3) && !isWeakLetter(c1) && verb.form !== 7) return [...expanded, NOON, FATHA]
 
   if (isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
 
@@ -88,6 +88,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     // Form II hollow verbs preserve full stem, replace final damma with kasra, add yeh + noon + fatḥa
     if (verb.form === 2 && isWeakLetter(c2)) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
 
+    // Form VII defective verbs preserve final weak letter, add sukoon + noon + fatḥa
+    if (verb.form === 7 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, SUKOON), NOON, FATHA]
+
     // Defective verbs (not doubly weak) preserve final weak letter, add noon + fatḥa directly
     if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...stem, NOON, FATHA]
 
@@ -103,6 +106,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
+    // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
     // Defective verbs (not doubly weak) preserve final weak letter in dual forms
@@ -113,12 +117,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3md': (base, verb) => {
     const [c1, , c3] = [...verb.root]
 
-    // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
+    // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
 
-    // Form I defective verbs (not doubly weak) preserve final weak letter in dual forms
-    if (verb.form === 1 && isWeakLetter(c3) && !isWeakLetter(c1))
-      return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
+    // Defective verbs (not doubly weak) preserve final weak letter in dual forms
+    if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
 
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ALIF, NOON, KASRA]
   },
@@ -126,12 +129,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
-    // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
+    // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
-    // Form I defective verbs (not doubly weak) preserve final weak letter in dual forms
-    if (verb.form === 1 && isWeakLetter(c3) && !isWeakLetter(c1))
-      return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+    // Defective verbs (not doubly weak) preserve final weak letter in dual forms
+    if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), FATHA), ALIF, NOON, KASRA]
   },
@@ -141,6 +143,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const stem = applyPresentPrefix(base, TEH)
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(stem, DAMMA), WAW, NOON, FATHA]
+
+    // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
+    if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, NOON, FATHA]
 
     // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
     if (isWeakLetter(c3) && !isWeakLetter(c1))
@@ -157,6 +162,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, , c3] = [...verb.root]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(base, DAMMA), WAW, NOON, FATHA]
+
+    // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
+    if (verb.form === 7 && isWeakLetter(c3)) return [...base, WAW, NOON, FATHA]
 
     // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
     if (isWeakLetter(c3) && !isWeakLetter(c1))
@@ -413,8 +421,16 @@ function derivePresentFormVI(verb: Verb): readonly string[] {
 function derivePresentFormVII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
+  const isFinalWeak = isWeakLetter(c3)
+
+  // Defective Form VII verbs don't have final ḍamma
+  if (isMiddleWeak && isFinalWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3]
 
   if (isMiddleWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA]
+
+  // Defective Form VII verbs don't have final ḍamma
+  if (isFinalWeak)
+    return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, c3 === YEH || c3 === ALIF_MAQSURA ? KASRA : DAMMA, c3]
 
   return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, DAMMA]
 }
