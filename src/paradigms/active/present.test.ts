@@ -553,13 +553,21 @@ describe('active present jussive', () => {
     })
   })
 
-  test.skip('Form II defective verb وَفَّى preserves shadda in jussive', () => {
-    expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toMatchObject({
+  test('Form II defective verb وَفَّى preserves shadda in jussive', () => {
+    expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqual({
+      '1s': 'أُوَفِّ',
+      '1p': 'نُوَفِّ',
       '2ms': 'تُوَفِّ',
       '2fs': 'تُوَفِّي',
       '2d': 'تُوَفِّا',
       '2mp': 'تُوَفُّوا',
       '2fp': 'تُوَفِّينَ',
+      '3ms': 'يُوَفِّ',
+      '3fs': 'تُوَفِّ',
+      '3md': 'يُوَفِّا',
+      '3fd': 'تُوَفِّا',
+      '3mp': 'يُوَفُّوا',
+      '3fp': 'يُوَفِّينَ',
     })
   })
 

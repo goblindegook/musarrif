@@ -78,6 +78,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Geminate Form II: change kasra on c1 to fatha, and kasra before shadda (e.g., حَبِّ)
           if (c2 === c3) return [c1, FATHA, c2, KASRA, SHADDA]
 
+          // Form II defective verbs preserve final weak letter in dual forms
+          if (isFinalWeak && pronounId === '2d') {
+            // Jussive drops final weak letter, but imperative preserves it in dual forms
+            // Jussive has: وَفِّا (after prefix removal), need: وَفِّيَا
+            // Insert YEH + FATHA before the final ALIF
+            return [...stem.slice(0, stem.lastIndexOf(ALIF)), YEH, FATHA, ALIF]
+          }
+
           return stem
         }
 
@@ -87,7 +95,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             // Jussive drops final weak letter, but imperative preserves it in dual forms
             // Replace FATHA before final ALIF with KASRA + YEH + FATHA
             const alifIndex = stem.lastIndexOf(ALIF)
-            if (alifIndex > 0 && stem[alifIndex - 1] === FATHA)
+            if (stem.at(alifIndex - 1) === FATHA)
               return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ...stem.slice(alifIndex)]
           }
           return stem

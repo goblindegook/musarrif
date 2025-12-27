@@ -176,12 +176,10 @@ function conjugatePresent(verb: Verb): Record<PronounId, string> {
 }
 
 function dropNoonEnding(word: readonly string[]): readonly string[] {
-  const chars = [...removeTrailingDiacritics(word)]
+  const chars = [...word]
 
-  // Drop the nūn itself
-  chars.pop()
-
-  while (chars.at(-1) === SUKOON) chars.pop()
+  // Drop the nūn itself and any trailing diacritics after it
+  while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
 
   if (chars.at(-1) === WAW) {
     // Keep the long ū with wāw and seat it on an alif after dropping the nūn
@@ -192,13 +190,22 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
   return chars
 }
 
+function dropWeakLetterBeforeAlif(word: readonly string[]): readonly string[] {
+  const alifIdx = word.lastIndexOf(ALIF)
+  const prevBaseIdx = word.findLastIndex((char, i) => i < alifIdx && !isDiacritic(char))
+  if (isWeakLetter(word.at(prevBaseIdx))) return [...word.slice(0, prevBaseIdx), ALIF]
+  return word
+}
+
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      const shouldDropNoon = ['2fs', '2d', '2mp', '3md', '3fd', '3mp'].includes(pronounId)
-      if (shouldDropNoon) return dropNoonEnding(word)
+      // Dual forms: drop weak letter before alif
+      if (['2d', '3md', '3fd'].includes(pronounId)) return dropWeakLetterBeforeAlif(dropNoonEnding(word))
+
+      if (['2fs', '2mp', '3mp'].includes(pronounId)) return dropNoonEnding(word)
 
       return replaceFinalDiacritic(word, FATHA)
     }),
@@ -218,10 +225,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      // Don't call dropTerminalWeakOrHamza here - it would remove suffix letters
-      // The hamza/weak letter was already handled in the builder
-      const shouldDropNoon = ['2fs', '2d', '2mp', '3md', '3fd', '3mp'].includes(pronounId)
-      if (shouldDropNoon) return dropNoonEnding(word)
+      // Dual forms: drop weak letter before alif
+      if (['2d', '3md', '3fd'].includes(pronounId)) return dropWeakLetterBeforeAlif(dropNoonEnding(word))
+
+      if (['2fs', '2mp', '3mp'].includes(pronounId)) return dropNoonEnding(word)
 
       // Initial hamza + middle weak + final weak: don't shorten hollow, just drop final weak
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return dropFinalDefectiveGlide(word)
