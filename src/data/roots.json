@@ -111,7 +111,7 @@
   { "root": "حفل", "form": 8 },
   { "root": "حكم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPattern": "fa3l" },
   { "root": "حلق", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPattern": "fa3l" },
-  { "root": "حلم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "حلم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPattern": "fu3l" },
   { "root": "حمر", "form": 9 },
   { "root": "حمل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "حمم", "form": 10 },
