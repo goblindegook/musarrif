@@ -171,7 +171,7 @@ describe('imperative', () => {
         })
       })
 
-      test.skip('وَافَى (Form III)', () => {
+      test('وَافَى (Form III)', () => {
         expect(conjugateImperative(getVerb('وفي', 3))).toMatchObject({
           '2ms': 'وَافِ',
           '2fs': 'وَافِي',
