@@ -154,9 +154,44 @@ test('descriptive test name', () => {
 - ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
 - ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
 - ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
-- ✅ **Always use static imports**: Use static imports.
+- ✅ **Always use static imports**: Do not use dynamic imports in tests.
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
 - ❌ **NEVER normalize or transform test expectations to match incorrect production output**: If tests fail due to Unicode normalization or other output format issues, fix the production code to output the correct format. Normalizing test expectations to match wrong output is a critical anti-pattern that hides bugs and makes tests meaningless.
+
+### Validating Test Expectations
+
+**⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, you MUST validate them from authoritative sources. Do not rely on assumptions or memory.**
+
+1. **Verify from authoritative sources**: Before writing test expectations for Arabic grammar rules (verb conjugations, masdar patterns, etc.), you MUST:
+   - Search for and consult authoritative Arabic grammar references
+   - Cross-check against multiple reliable sources (grammar textbooks, linguistic references, verified conjugation tables)
+   - Use web search to find actual examples of the verb forms you're testing
+   - Verify the complete conjugation paradigm, not just isolated forms
+
+2. **Run tests and note discrepancies**: After writing test expectations:
+   - Run the tests to see what the production code actually produces
+   - If tests fail, compare your expected values against the production output
+   - If there's a discrepancy, add a comment to the test noting it and allow the human operator to review expectations independently
+   - Do not assume the code is correct; do not change tests to match production output
+   - Do not assume the code is incorrect either; do not try to fix the production code unless instructed
+
+3. **Document uncertainty**: If you are uncertain about the correct grammar rules:
+   - State your uncertainty explicitly in comments
+   - List the sources you consulted
+   - Ask for verification rather than making assumptions
+   - Consider checking similar verbs in the existing test suite for patterns
+
+4. **Cross-reference existing tests**: Before writing new test expectations:
+   - Check existing tests for similar verb patterns to understand the expected behavior
+   - Look for patterns in how other verbs of the same type are conjugated
+   - Note any inconsistencies in existing tests that might indicate areas needing correction
+
+5. **Verify complete paradigms**: When testing verb conjugations:
+   - Verify ALL pronoun forms, not just a subset
+   - Ensure the pattern is consistent across all forms
+   - Check that special cases (dual, plural, feminine) follow the same rules
+
+**Remember**: Incorrect test expectations are worse than no tests - they validate wrong behavior. Always verify before asserting.
 
 ### UI Test Best Practices
 
