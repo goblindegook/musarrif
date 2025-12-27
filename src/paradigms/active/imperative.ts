@@ -16,6 +16,7 @@ import {
   SUKOON,
   TEH,
   WAW,
+  YEH,
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
@@ -45,15 +46,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
-          // Initial weak + final weak (e.g., وقي → قِ, ولى → لِ)
-          if (isInitialWeak && isFinalWeak) return [c2, KASRA]
+          if (isInitialWeak && isFinalWeak) {
+            const alifIndex = stem.indexOf(ALIF)
+            if (alifIndex >= 0 && stem[alifIndex - 1] === FATHA)
+              return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
+          }
 
-          // Initial weak verbs drop the initial و in present/jussive
-          // so the stem already starts with the second radical (e.g., وَلَدَ → يَلِدْ → لِدْ)
-          // Don't add اِـ prefix as the initial weak has already been dropped
           if (isInitialWeak) return stem
 
-          // Initial hamza + final weak (e.g., أتى → ائْتِ)
           if (isInitialHamza && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
 
           // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ

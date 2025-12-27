@@ -6,8 +6,7 @@ This document outlines the coding standards, patterns, and practices that must b
 
 ⚠️ TEST-DRIVEN DEVELOPMENT IS NON-NEGOTIABLE ⚠️
 
-If you are changing the behaviour of the system, you MUST cover the expected behaviour with a test before you change
-production code.
+If you are changing the behaviour of the system, you MUST cover the expected behaviour with a test before you change production code.
 
 ## Tooling
 
@@ -162,6 +161,8 @@ test('descriptive test name', () => {
 
 **⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, you MUST validate them from authoritative sources. Do not rely on assumptions or memory.**
 
+**⚠️ CRITICAL: Never assume production code is correct. Tests MUST reflect the correct expected behavior based on authoritative sources, NOT potentially incorrect production output. Writing tests based on incorrect production code is worse than having no tests at all - it validates and perpetuates bugs. Always verify expected behavior from authoritative sources first, then write tests that assert the correct behavior, regardless of what the production code currently produces.**
+
 1. **Verify from authoritative sources**: Before writing test expectations for Arabic grammar rules (verb conjugations, masdar patterns, etc.), you MUST:
    - Search for and consult authoritative Arabic grammar references
    - Cross-check against multiple reliable sources (grammar textbooks, linguistic references, verified conjugation tables)
@@ -172,8 +173,8 @@ test('descriptive test name', () => {
    - Run the tests to see what the production code actually produces
    - If tests fail, compare your expected values against the production output
    - If there's a discrepancy, add a comment to the test noting it and allow the human operator to review expectations independently
-   - Do not assume the code is correct; do not change tests to match production output
-   - Do not assume the code is incorrect either; do not try to fix the production code unless instructed
+   - **NEVER assume the production code is correct.** If your expectations are based on authoritative sources, keep them as-is even if they fail. Changing verified expectations to match potentially incorrect production code is a critical error
+   - Do not try to fix the production code unless explicitly instructed to do so
 
 3. **Document uncertainty**: If you are uncertain about the correct grammar rules:
    - State your uncertainty explicitly in comments
@@ -190,8 +191,6 @@ test('descriptive test name', () => {
    - Verify ALL pronoun forms, not just a subset
    - Ensure the pattern is consistent across all forms
    - Check that special cases (dual, plural, feminine) follow the same rules
-
-**Remember**: Incorrect test expectations are worse than no tests - they validate wrong behavior. Always verify before asserting.
 
 ### UI Test Best Practices
 

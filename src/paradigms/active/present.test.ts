@@ -395,19 +395,19 @@ describe('active present indicative pattern', () => {
 
       test('وَفَّى (Form II)', () => {
         expect(conjugatePresentMood(getVerb('وفي', 2), 'indicative')).toEqual({
-          '1s': 'أُوَفِّيُ',
-          '2ms': 'تُوَفِّيُ',
-          '2fs': 'تُوَفِيْنَ',
-          '3ms': 'يُوَفِّيُ',
-          '3fs': 'تُوَفِّيُ',
-          '2d': 'تُوَفَانِ',
-          '3md': 'يُوَفَانِ',
-          '3fd': 'تُوَفَانِ',
-          '1p': 'نُوَفِّيُ',
-          '2mp': 'تُوَفونَ',
-          '2fp': 'تُوَفِّيْنَ',
-          '3mp': 'يُوَفونَ',
-          '3fp': 'يُوَفِّيْنَ',
+          '1s': 'أُوَفِّي',
+          '2ms': 'تُوَفِّي',
+          '2fs': 'تُوَفِّينَ',
+          '3ms': 'يُوَفِّي',
+          '3fs': 'تُوَفِّي',
+          '2d': 'تُوَفِّيَانِ',
+          '3md': 'يُوَفِّيَانِ',
+          '3fd': 'تُوَفِّيَانِ',
+          '1p': 'نُوَفِّي',
+          '2mp': 'تُوَفُّونَ',
+          '2fp': 'تُوَفِّينَ',
+          '3mp': 'يُوَفُّونَ',
+          '3fp': 'يُوَفِّينَ',
         })
       })
 
@@ -540,17 +540,27 @@ describe('active present jussive', () => {
   })
 
   test('drops nūn endings for صَرَفَ', () => {
-    const jussive = conjugatePresentMood(getVerb('صرف', 1), 'jussive')
+    expect(conjugatePresentMood(getVerb('صرف', 1), 'jussive')).toMatchObject({
+      '2ms': 'تَصْرِفْ',
+      '2fs': 'تَصْرِفِي',
+      '2d': 'تَصْرِفَا',
+      '2mp': 'تَصْرِفُوا',
+      '2fp': 'تَصْرِفْنَ',
+      '3md': 'يَصْرِفَا',
+      '3fd': 'تَصْرِفَا',
+      '3fp': 'يَصْرِفْنَ',
+      '3mp': 'يَصْرِفُوا',
+    })
+  })
 
-    expect(jussive['2ms']).toBe('تَصْرِفْ')
-    expect(jussive['2fs']).toBe('تَصْرِفِي')
-    expect(jussive['2d']).toBe('تَصْرِفَا')
-    expect(jussive['2mp']).toBe('تَصْرِفُوا')
-    expect(jussive['2fp']).toBe('تَصْرِفْنَ')
-    expect(jussive['3md']).toBe('يَصْرِفَا')
-    expect(jussive['3fd']).toBe('تَصْرِفَا')
-    expect(jussive['3fp']).toBe('يَصْرِفْنَ')
-    expect(jussive['3mp']).toBe('يَصْرِفُوا')
+  test.skip('Form II defective verb وَفَّى preserves shadda in jussive', () => {
+    const jussive = conjugatePresentMood(getVerb('وفي', 2), 'jussive')
+
+    expect(jussive['2ms']).toBe('تُوَفِّ')
+    expect(jussive['2fs']).toBe('تُوَفِّي')
+    expect(jussive['2d']).toBe('تُوَفِّا')
+    expect(jussive['2mp']).toBe('تُوَفُّوا')
+    expect(jussive['2fp']).toBe('تُوَفِّينَ')
   })
 
   test('shortens hollow stems without suffixes for قَالَ', () => {
@@ -577,16 +587,17 @@ describe('active present jussive', () => {
   })
 
   test('handles initial hamza + middle weak + final weak for أَوَى', () => {
-    const verb = verbs.find((entry) => entry.root === 'أوي' && entry.form === 1)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
+    const verb = getVerb('أوي', 1)!
 
-    expect(jussive['3ms']).toBe('يَأْوِ')
-    expect(jussive['2ms']).toBe('تَأْوِ')
-    expect(jussive['1s']).toBe('آوِ')
-    expect(jussive['1p']).toBe('نَأْوِ')
-    expect(jussive['3fs']).toBe('تَأْوِ')
-    expect(jussive['2fs']).toBe('تَأْوِي')
-    expect(jussive['3mp']).toBe('يَأْوُوا')
+    expect(conjugatePresentMood(verb, 'jussive')).toMatchObject({
+      '3ms': 'يَأْوِ',
+      '2ms': 'تَأْوِ',
+      '1s': 'آوِ',
+      '1p': 'نَأْوِ',
+      '3fs': 'تَأْوِ',
+      '2fs': 'تَأْوِي',
+      '3mp': 'يَأْوُوا',
+    })
   })
 
   test('preserves shadda for form IX verbs in jussive', () => {

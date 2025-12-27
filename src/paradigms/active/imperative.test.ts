@@ -34,7 +34,7 @@ describe('imperative', () => {
         })
       })
 
-      test('كَتَّبَ (Form II)', () => {
+      test('كَتَّبَ (Form II)', () => {
         expect(conjugateImperative(getVerb('كتب', 2))).toMatchObject({
           '2ms': 'كَتِّبْ',
           '2fs': 'كَتِّبِي',
@@ -64,7 +64,7 @@ describe('imperative', () => {
         })
       })
 
-      test('تَكَتَّبَ (Form V)', () => {
+      test('تَكَتَّبَ (Form V)', () => {
         expect(conjugateImperative(getVerb('كتب', 5))).toMatchObject({
           '2ms': 'تَكَتَّبْ',
           '2fs': 'تَكَتَّبِي',
@@ -123,7 +123,7 @@ describe('imperative', () => {
   describe('hollow verbs', () => {
     describe('ق-و-ل', () => {
       test.todo('قَالَ (Form I)')
-      test.todo('قَوَّلَ (Form II)')
+      test.todo('قَوَّلَ (Form II)')
       test.todo('قَاوَلَ (Form III)')
       test.todo('أَقَالَ (Form IV)')
     })
@@ -132,7 +132,7 @@ describe('imperative', () => {
   describe('defective verbs', () => {
     describe('ر-م-ي', () => {
       test.todo('رَمَى (Form I)')
-      test.todo('رَمَّى (Form II)')
+      test.todo('رَمَّى (Form II)')
       test.todo('اِنْرَمَى (Form VIII)')
     })
   })
@@ -150,8 +150,68 @@ describe('imperative', () => {
   })
 
   describe('doubly weak verbs', () => {
-    describe.todo('و-ق-ي')
-    describe.todo('و-ف-ي')
+    describe('و-ف-ي', () => {
+      test('وَفَى (Form I)', () => {
+        expect(conjugateImperative(getVerb('وفي', 1))).toMatchObject({
+          '2ms': 'فِ',
+          '2fs': 'فِي',
+          '2d': 'فِيَا',
+          '2mp': 'فُوا',
+          '2fp': 'فِينَ',
+        })
+      })
+
+      test('وَفَّى (Form II)', () => {
+        expect(conjugateImperative(getVerb('وفي', 2))).toMatchObject({
+          '2ms': 'وَفِّ',
+          '2fs': 'وَفِّي',
+          '2d': 'وَفِّيَا',
+          '2mp': 'وَفُّوا',
+          '2fp': 'وَفِّينَ',
+        })
+      })
+
+      test.skip('وَافَى (Form III)', () => {
+        expect(conjugateImperative(getVerb('وفي', 3))).toMatchObject({
+          '2ms': 'وَافِ',
+          '2fs': 'وَافِي',
+          '2d': 'وَافِيَا',
+          '2mp': 'وَافُوا',
+          '2fp': 'وَافِينَ',
+        })
+      })
+
+      test.skip('أَوْفَى (Form IV)', () => {
+        expect(conjugateImperative(getVerb('وفي', 4))).toMatchObject({
+          '2ms': 'أَوْفِ',
+          '2fs': 'أَوْفِي',
+          '2d': 'أَوْفِيَا',
+          '2mp': 'أَوْفُوا',
+          '2fp': 'أَوْفِينَ',
+        })
+      })
+
+      test.skip('تَوَفَّى (Form V)', () => {
+        expect(conjugateImperative(getVerb('وفي', 5))).toMatchObject({
+          '2ms': 'تَوَفَّ',
+          '2fs': 'تَوَفِّي',
+          '2d': 'تَوَفَّيَا',
+          '2mp': 'تَوَفَّوْا',
+          '2fp': 'تَوَفَّيْنَ',
+        })
+      })
+
+      test.skip('اِسْتَوْفَى (Form X)', () => {
+        expect(conjugateImperative(getVerb('وفي', 10))).toMatchObject({
+          '2ms': 'اِسْتَفِ',
+          '2fs': 'اِسْتَفِي',
+          '2d': 'اِسْتَفِيَا',
+          '2mp': 'اِسْتَفُوا',
+          '2fp': 'اِسْتَفِينَ',
+        })
+      })
+    })
+
     describe.todo('ر-و-ي')
   })
 
@@ -194,7 +254,7 @@ describe('imperative', () => {
     )
   })
 
-  it('it assimilates the initial wāw for ٱتَّصِلْ (Form VIII)', () => {
+  it('it assimilates the initial wāw for ٱتَّصِلْ (Form VIII)', () => {
     const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
     const imperative = conjugateImperative(verb)
 

@@ -28,6 +28,10 @@ export type DiacriticsPreference = 'all' | 'some' | 'none'
 
 export type ShortVowel = 'a' | 'i' | 'u'
 
+export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
+
+export type VowelOrSukoon = Vowel | typeof SUKOON
+
 const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
   a: FATHA,
   i: KASRA,

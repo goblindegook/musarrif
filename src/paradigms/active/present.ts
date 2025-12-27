@@ -23,6 +23,8 @@ import {
   SUKOON,
   shortVowelFromPattern,
   TEH,
+  type Vowel,
+  type VowelOrSukoon,
   WAW,
   weakLetterGlide,
   YEH,
@@ -42,8 +44,20 @@ function defectiveLetterGlide(letter: string): string {
 const HOLLOW_JUSSIVE_APOCOPE_PRONOUNS: ReadonlySet<PronounId> = new Set(['1s', '1p', '2ms', '3ms', '3fs', '2fp', '3fp'])
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
 
+function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readonly string[] {
+  const beforeShadda = word.slice(0, word.lastIndexOf(SHADDA))
+  if ([FATHA, KASRA, DAMMA].includes(beforeShadda.at(-1) ?? ''))
+    return [...beforeShadda.slice(0, beforeShadda.length - 1), vowel, SHADDA]
+  return word
+}
+
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
+
+  // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
+  if (verb.form === 2 && isWeakLetter(c3)) {
+    return [...expanded, NOON, FATHA]
+  }
 
   if (isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
 
@@ -62,39 +76,56 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '2fs': (base, verb) => {
     const [, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
-
     // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
     if (isWeakLetter(c2) && isHamzatedLetter(c3))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
-
+    // Form II defective verbs preserve shadda and final weak letter
+    if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
     // Form III and Form V hollow verbs don't have sukoon before noon in 2fs
     if (isWeakLetter(c2) && [3, 5].includes(verb.form))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
-
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
-  '2d': (base) => [
-    ...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA),
-    ALIF,
-    NOON,
-    KASRA,
-  ],
-  '3md': (base) => {
+  '2d': (base, verb) => {
+    const [, , c3] = [...verb.root]
+    const stem = applyPresentPrefix(base, TEH)
+    if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), FATHA), ALIF, NOON, KASRA]
+  },
+  '3md': (base, verb) => {
+    const [, , c3] = [...verb.root]
+
+    // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
+    if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base), FATHA), ALIF, NOON, KASRA]
   },
-  '3fd': (base) => {
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), FATHA), ALIF, NOON, KASRA]
+  '3fd': (base, verb) => {
+    const [, , c3] = [...verb.root]
+    const stem = applyPresentPrefix(base, TEH)
+    // Form II defective verbs preserve final weak letter in dual forms (keep shadda on c2)
+    if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
+    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), FATHA), ALIF, NOON, KASRA]
   },
   '1p': (base) => applyPresentPrefix(base, NOON),
-  '2mp': (base) => [...dropTerminalWeakOrHamza(applyPresentPrefix(base, TEH)), WAW, NOON, FATHA],
+  '2mp': (base, verb) => {
+    const [, , c3] = [...verb.root]
+    const stem = applyPresentPrefix(base, TEH)
+    if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(stem, DAMMA), WAW, NOON, FATHA]
+    return [...dropTerminalWeakOrHamza(stem), WAW, NOON, FATHA]
+  },
   '2fp': (base, verb) => {
     const stem = applyPresentPrefix(base, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
     return buildFemininePlural(expanded, verb)
   },
-  '3mp': (base) => [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA],
+  '3mp': (base, verb) => {
+    const [, , c3] = [...verb.root]
+    if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(base, DAMMA), WAW, NOON, FATHA]
+    return [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA]
+  },
   '3fp': (base, verb) => {
     const expanded = verb.form === 9 ? expandShadda(base) : base
     return buildFemininePlural(expanded, verb)
@@ -272,8 +303,12 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
 function derivePresentFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const isFinalWeak = isWeakLetter(c3)
   // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., يُحَبِّبُ)
   if (c2 === c3) return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
+
+  // Defective Form II verbs don't have final ḍamma
+  if (isFinalWeak) return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3]
 
   return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
 }
@@ -415,7 +450,7 @@ function expandShadda(word: readonly string[]): readonly string[] {
   return word
 }
 
-function replaceFinalDiacritic(word: readonly string[], diacritic: string): readonly string[] {
+function replaceFinalDiacritic(word: readonly string[], diacritic: VowelOrSukoon): readonly string[] {
   const lastBaseIndex = word.findLastIndex((char) => !isDiacritic(char))
   const shaddaIndex = word.findIndex((char, i) => i > lastBaseIndex && char === SHADDA)
   if (shaddaIndex >= 0) return [...word.slice(0, lastBaseIndex + 1), SHADDA, diacritic]
