@@ -323,7 +323,7 @@ describe('active present indicative pattern', () => {
         })
       })
 
-      test.skip('رَمَّى (Form II)', () => {
+      test('رَمَّى (Form II)', () => {
         expect(conjugatePresentMood(getVerb('رمي', 2), 'indicative')).toEqual({
           '1s': 'أُرَمِّي',
           '2ms': 'تُرَمِّي',
@@ -530,13 +530,13 @@ describe('active present indicative pattern', () => {
 
 describe('active present jussive', () => {
   test('drops the final glide for أَعْطَى', () => {
-    const jussive = conjugatePresentMood(getVerb('عطى', 4)!, 'jussive')
-
-    expect(jussive['3ms']).toBe('يُعْطِ')
-    expect(jussive['2ms']).toBe('تُعْطِ')
-    expect(jussive['1p']).toBe('نُعْطِ')
-    expect(jussive['2fs']).toBe('تُعْطِي')
-    expect(jussive['3mp']).toBe('يُعْطُوا')
+    expect(conjugatePresentMood(getVerb('عطى', 4)!, 'jussive')).toMatchObject({
+      '3ms': 'يُعْطِ',
+      '2ms': 'تُعْطِ',
+      '1p': 'نُعْطِ',
+      '2fs': 'تُعْطِي',
+      '3mp': 'يُعْطُوا',
+    })
   })
 
   test('drops nūn endings for صَرَفَ', () => {
@@ -554,25 +554,25 @@ describe('active present jussive', () => {
   })
 
   test.skip('Form II defective verb وَفَّى preserves shadda in jussive', () => {
-    const jussive = conjugatePresentMood(getVerb('وفي', 2), 'jussive')
-
-    expect(jussive['2ms']).toBe('تُوَفِّ')
-    expect(jussive['2fs']).toBe('تُوَفِّي')
-    expect(jussive['2d']).toBe('تُوَفِّا')
-    expect(jussive['2mp']).toBe('تُوَفُّوا')
-    expect(jussive['2fp']).toBe('تُوَفِّينَ')
+    expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toMatchObject({
+      '2ms': 'تُوَفِّ',
+      '2fs': 'تُوَفِّي',
+      '2d': 'تُوَفِّا',
+      '2mp': 'تُوَفُّوا',
+      '2fp': 'تُوَفِّينَ',
+    })
   })
 
   test('shortens hollow stems without suffixes for قَالَ', () => {
-    const jussive = conjugatePresentMood(getVerb('قول', 1), 'jussive')
-
-    expect(jussive['3ms']).toBe('يَقُلْ')
-    expect(jussive['2ms']).toBe('تَقُلْ')
-    expect(jussive['3fs']).toBe('تَقُلْ')
-    expect(jussive['1s']).toBe('أَقُلْ')
-    expect(jussive['1p']).toBe('نَقُلْ')
-    expect(jussive['2fp']).toBe('تَقُلْنَ')
-    expect(jussive['3fp']).toBe('يَقُلْنَ')
+    expect(conjugatePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَقُلْ',
+      '2ms': 'تَقُلْ',
+      '3fs': 'تَقُلْ',
+      '1s': 'أَقُلْ',
+      '1p': 'نَقُلْ',
+      '2fp': 'تَقُلْنَ',
+      '3fp': 'يَقُلْنَ',
+    })
   })
 
   test.each([
@@ -582,14 +582,11 @@ describe('active present jussive', () => {
   ])('%s (%d) pattern is %s', (root, form, expected3ms) => {
     const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
     const jussive = conjugatePresentMood(verb, 'jussive')
-
     expect(jussive['3ms']).toBe(expected3ms)
   })
 
   test('handles initial hamza + middle weak + final weak for أَوَى', () => {
-    const verb = getVerb('أوي', 1)!
-
-    expect(conjugatePresentMood(verb, 'jussive')).toMatchObject({
+    expect(conjugatePresentMood(getVerb('أوي', 1), 'jussive')).toMatchObject({
       '3ms': 'يَأْوِ',
       '2ms': 'تَأْوِ',
       '1s': 'آوِ',
@@ -601,62 +598,57 @@ describe('active present jussive', () => {
   })
 
   test('preserves shadda for form IX verbs in jussive', () => {
-    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
-
-    expect(jussive['3ms']).toBe('يَحْمَرَّ')
-    expect(jussive['2ms']).toBe('تَحْمَرَّ')
-    expect(jussive['1s']).toBe('أَحْمَرَّ')
+    expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObject({
+      '3ms': 'يَحْمَرَّ',
+      '2ms': 'تَحْمَرَّ',
+      '1s': 'أَحْمَرَّ',
+    })
   })
 
   test('expands shadda for form IX verbs in feminine plural forms in jussive', () => {
-    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
-
-    expect(jussive['2fp']).toBe('تَحْمَرَرْنَ')
-    expect(jussive['3fp']).toBe('يَحْمَرَرْنَ')
+    expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObject({
+      '2fp': 'تَحْمَرَرْنَ',
+      '3fp': 'يَحْمَرَرْنَ',
+    })
   })
 
   test('drops final hamza for جَاءَ (middle weak + final hamza)', () => {
-    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
-
-    expect(jussive['3ms']).toBe('يَجِئْ')
-    expect(jussive['2ms']).toBe('تَجِئْ')
-    expect(jussive['1s']).toBe('أَجِئْ')
-    expect(jussive['1p']).toBe('نَجِئْ')
-    expect(jussive['3fs']).toBe('تَجِئْ')
-    expect(jussive['2fs']).toBe('تَجِيئِي')
-    expect(jussive['3mp']).toBe('يَجِيئُوا')
+    expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَجِئْ',
+      '2ms': 'تَجِئْ',
+      '1s': 'أَجِئْ',
+      '1p': 'نَجِئْ',
+      '3fs': 'تَجِئْ',
+      '2fs': 'تَجِيئِي',
+      '3mp': 'يَجِيئُوا',
+    })
   })
 })
 
 describe('active present subjunctive', () => {
   test('preserves shadda for form IX verbs in subjunctive', () => {
     const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
-    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
-
-    expect(subjunctive['3ms']).toBe('يَحْمَرَّ')
-    expect(subjunctive['2ms']).toBe('تَحْمَرَّ')
-    expect(subjunctive['1s']).toBe('أَحْمَرَّ')
+    expect(conjugatePresentMood(verb, 'subjunctive')).toMatchObject({
+      '3ms': 'يَحْمَرَّ',
+      '2ms': 'تَحْمَرَّ',
+      '1s': 'أَحْمَرَّ',
+    })
   })
 
   test('expands shadda for form IX verbs in feminine plural forms in subjunctive', () => {
-    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
-    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
-
-    expect(subjunctive['2fp']).toBe('تَحْمَرَرْنَ')
-    expect(subjunctive['3fp']).toBe('يَحْمَرَرْنَ')
+    expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObject({
+      '2fp': 'تَحْمَرَرْنَ',
+      '3fp': 'يَحْمَرَرْنَ',
+    })
   })
 
   test('changes final damma to fatḥa for جَاءَ in subjunctive', () => {
-    const verb = verbs.find((entry) => entry.root === 'جيء' && entry.form === 1)!
-    const subjunctive = conjugatePresentMood(verb, 'subjunctive')
-
-    expect(subjunctive['3ms']).toBe('يَجِيءَ')
-    expect(subjunctive['2ms']).toBe('تَجِيءَ')
-    expect(subjunctive['1s']).toBe('أَجِيءَ')
-    expect(subjunctive['1p']).toBe('نَجِيءَ')
-    expect(subjunctive['3fs']).toBe('تَجِيءَ')
+    expect(conjugatePresentMood(getVerb('جيء', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يَجِيءَ',
+      '2ms': 'تَجِيءَ',
+      '1s': 'أَجِيءَ',
+      '1p': 'نَجِيءَ',
+      '3fs': 'تَجِيءَ',
+    })
   })
 })
