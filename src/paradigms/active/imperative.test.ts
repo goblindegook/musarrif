@@ -194,7 +194,7 @@ describe('imperative', () => {
       test('تَوَفَّى (Form V)', () => {
         expect(conjugateImperative(getVerb('وفي', 5))).toMatchObject({
           '2ms': 'تَوَفَّ',
-          '2fs': 'تَوَفِّي',
+          '2fs': 'تَوَفَّيْ',
           '2d': 'تَوَفَّيَا',
           '2mp': 'تَوَفَّوْا',
           '2fp': 'تَوَفَّيْنَ',

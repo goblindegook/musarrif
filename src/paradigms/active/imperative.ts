@@ -118,7 +118,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           // Form V defective verbs preserve final weak letter in dual and plural forms
           if (isFinalWeak) {
-            if (pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
             if (pronounId === '2mp') {
               // Jussive uses damma before shadda, imperative uses fatḥa instead
               const shaddaIndex = stem.lastIndexOf(SHADDA)

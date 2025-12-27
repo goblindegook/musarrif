@@ -56,6 +56,11 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c1) && isWeakLetter(c3) && verb.form === 2) return [...expanded, NOON, FATHA]
 
+  // Form V defective verbs: replace alif maqsura with yeh + sukoon, add noon + fatḥa
+  if (verb.form === 5 && c3 === YEH) {
+    return [...expanded.slice(0, -1), YEH, SUKOON, NOON, FATHA]
+  }
+
   // Defective verbs (not doubly weak, excluding Form VII) preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c3) && !isWeakLetter(c1) && verb.form !== 7) return [...expanded, NOON, FATHA]
 
@@ -84,6 +89,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     // Form II defective verbs preserve shadda and final weak letter
     if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
+    // Form V defective verbs: replace alif maqsura with yeh + sukoon, add noon + fatḥa
+    if (verb.form === 5 && c3 === YEH) {
+      return [...stem.slice(0, -1), YEH, SUKOON, NOON, FATHA]
+    }
+
     // Form II hollow verbs preserve full stem, replace final damma with kasra, add yeh + noon + fatḥa
     if (verb.form === 2 && isWeakLetter(c2)) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
 
@@ -105,6 +115,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, , c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
+    // Form V defective verbs: convert alif maqsura to yeh with kasra, add alif + noon + kasra
+    if (verb.form === 5 && c3 === YEH) {
+      return [...stem.slice(0, -1), YEH, FATHA, ALIF, NOON, KASRA]
+    }
+
     // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
@@ -119,6 +134,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
 
+    // Form V defective verbs: replace alif maqsura with yeh + fatḥa, add alif + noon + kasra
+    if (verb.form === 5 && c3 === YEH) {
+      return [...base.slice(0, -1), YEH, FATHA, ALIF, NOON, KASRA]
+    }
+
     // Defective verbs (not doubly weak) preserve final weak letter in dual forms
     if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA]
 
@@ -131,6 +151,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     // Form II defective verbs preserve final weak letter in dual forms (even if doubly weak)
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
+    // Form V defective verbs: replace alif maqsura with yeh + fatḥa, add alif + noon + kasra
+    if (verb.form === 5 && c3 === YEH) {
+      return [...stem.slice(0, -1), YEH, FATHA, ALIF, NOON, KASRA]
+    }
+
     // Defective verbs (not doubly weak) preserve final weak letter in dual forms
     if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA]
 
@@ -142,6 +167,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const stem = applyPresentPrefix(base, TEH)
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(stem, DAMMA), WAW, NOON, FATHA]
+
+    // Form V defective verbs: replace alif maqsura with waw + sukoon, add noon + fatḥa
+    if (verb.form === 5 && c3 === YEH) {
+      return [...stem.slice(0, -1), WAW, SUKOON, NOON, FATHA]
+    }
 
     // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
     if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, NOON, FATHA]
@@ -161,6 +191,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, , c3] = [...verb.root]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeShadda(base, DAMMA), WAW, NOON, FATHA]
+
+    // Form V defective verbs: replace alif maqsura with waw + sukoon, add noon + fatḥa
+    if (verb.form === 5 && c3 === YEH) {
+      return [...base.slice(0, -1), WAW, SUKOON, NOON, FATHA]
+    }
 
     // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
     if (verb.form === 7 && isWeakLetter(c3)) return [...base, WAW, NOON, FATHA]
@@ -184,8 +219,6 @@ function conjugatePresent(verb: Verb): Record<PronounId, string> {
 
 function dropNoonEnding(word: readonly string[]): readonly string[] {
   const chars = [...word]
-
-  // Drop the nūn itself and any trailing diacritics after it
   while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
 
   if (chars.at(-1) === WAW) {
@@ -233,6 +266,27 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
+
+      // Form V defective verbs: preserve weak letter in jussive (unlike other defective verbs)
+      if (verb.form === 5 && isFinalWeak) {
+        const chars = [...word]
+        if (['2fp', '3fp'].includes(pronounId)) {
+          while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
+          const last = chars.at(-1)
+          if (last === YEH) return [...chars, SUKOON, NOON, FATHA]
+          if (last === WAW) return [...chars, SUKOON, ALIF]
+        }
+
+        if (['2fs', '2mp', '3mp'].includes(pronounId)) {
+          while (chars.at(-1) === NOON || isDiacritic(chars.at(-1))) chars.pop()
+          const last = chars.at(-1)
+          if (last === YEH) return [...chars, SUKOON]
+          if (last === WAW) return [...chars, SUKOON, ALIF]
+        }
+
+        if (['2d', '3md', '3fd'].includes(pronounId)) return dropNoonEnding(word)
+        return dropFinalDefectiveGlide(word)
+      }
 
       // Dual forms: drop weak letter before alif
       if (['2d', '3md', '3fd'].includes(pronounId)) {
@@ -417,7 +471,7 @@ function derivePresentFormV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
   // Form V defective: final ي becomes ى (alif maqsura) in present tense (e.g., تَوَفَّى → يَتَوَفَّى)
-  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ALIF_MAQSURA]
+  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, FATHA, SHADDA, ALIF_MAQSURA]
 
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, DAMMA]
 }
