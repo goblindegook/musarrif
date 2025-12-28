@@ -90,7 +90,9 @@ export function derivePassiveParticiple(verb: Verb): string {
         if (isMiddleWeak) {
           const vowel = resolveFormIPresentVowel(verb)
           const glide = vowel === 'u' ? WAW : vowel === 'i' ? YEH : ALIF
-          return adjustDefective([MEEM, FATHA, c1, vowelFromRadical(vowel), glide, SUKOON, c3, DAMMA], c3, FATHA)
+          // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
+          // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
+          return adjustDefective([MEEM, FATHA, c1, vowelFromRadical(vowel), glide, c3, DAMMA], c3, FATHA)
         }
 
         // Standard maf'ūl pattern uses a long ū (no written sukoon on wāw)

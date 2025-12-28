@@ -122,10 +122,45 @@ describe('imperative', () => {
 
   describe('hollow verbs', () => {
     describe('ق-و-ل', () => {
-      test.todo('قَالَ (Form I)')
-      test.todo('قَوَّلَ (Form II)')
-      test.todo('قَاوَلَ (Form III)')
-      test.todo('أَقَالَ (Form IV)')
+      test('قَالَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('قول', 1))).toMatchObject({
+          '2ms': 'قُلْ',
+          '2fs': 'قُولِي',
+          '2d': 'قُولَا',
+          '2mp': 'قُولُوْا',
+          '2fp': 'قُلْنَ',
+        })
+      })
+
+      test('قَوَّلَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('قول', 2))).toMatchObject({
+          '2ms': 'قَوِّلْ',
+          '2fs': 'قَوِّلِي',
+          '2d': 'قَوِّلَا',
+          '2mp': 'قَوِّلُوْا',
+          '2fp': 'قَوِّلْنَ',
+        })
+      })
+
+      test('قَاوَلَ (Form III)', () => {
+        expect(conjugateImperative(getVerb('قول', 3))).toMatchObject({
+          '2ms': 'قَاوِلْ',
+          '2fs': 'قَاوِلِي',
+          '2d': 'قَاوِلَا',
+          '2mp': 'قَاوِلُوْا',
+          '2fp': 'قَاوِلْنَ',
+        })
+      })
+
+      test('تَقَوَّلَ (Form V)', () => {
+        expect(conjugateImperative(getVerb('قول', 5))).toMatchObject({
+          '2ms': 'تَقَوَّلْ',
+          '2fs': 'تَقَوَّلِي',
+          '2d': 'تَقَوَّلَا',
+          '2mp': 'تَقَوَّلُوْا',
+          '2fp': 'تَقَوَّلْنَ',
+        })
+      })
     })
   })
 

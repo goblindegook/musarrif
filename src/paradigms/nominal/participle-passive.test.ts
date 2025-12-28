@@ -88,10 +88,14 @@ describe('assimilated roots', () => {
 
 describe('hollow roots', () => {
   describe('ق-و-ل', () => {
-    test.todo('قَالَ (Form I)')
-    test.todo('قَوَّلَ (Form II)')
-    test.todo('قَاوَلَ (Form III)')
-    test.todo('أَقَالَ (Form IV)')
+    test.each<[VerbForm, string]>([
+      [1, 'مَقُول'],
+      [2, 'مُقَوَّل'],
+      [3, 'مُقَاوَل'],
+      [5, 'مُتَقَوَّل'],
+    ])('Form %d passive participle is %s', (form, expected) => {
+      expect(derivePassiveParticiple(getVerb('قول', form))).toBe(expected)
+    })
   })
 })
 

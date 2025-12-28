@@ -125,10 +125,14 @@ describe('assimilated roots', () => {
 
 describe('hollow roots', () => {
   describe('ق-و-ل', () => {
-    test.todo('قَالَ (Form I)')
-    test.todo('قَوَّلَ (Form II)')
-    test.todo('قَاوَلَ (Form III)')
-    test.todo('أَقَالَ (Form IV)')
+    test.each<[VerbForm, string]>([
+      [1, 'قَوْل'],
+      [2, 'تَقْوِيل'],
+      [3, 'مُقَاوَلَة'],
+      [5, 'تَقَوُّل'],
+    ])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('قول', form))).toBe(expected)
+    })
   })
 })
 
