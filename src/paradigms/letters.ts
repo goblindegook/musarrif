@@ -44,7 +44,7 @@ const LONG_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
   u: WAW,
 } as const
 
-const SHORT_VOWELS = [FATHA, KASRA, DAMMA]
+export const SHORT_VOWELS = [FATHA, KASRA, DAMMA]
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA]),
   [KASRA]: new Set([YEH]),
@@ -123,9 +123,8 @@ export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string[] {
 }
 
 function findNextBaseLetter(chars: readonly string[], startIndex: number): string | undefined {
-  for (let index = startIndex; index < chars.length; index += 1) {
+  for (let index = startIndex; index < chars.length; index += 1)
     if (!COMBINING_MARK.test(chars[index])) return chars[index]
-  }
 }
 
 export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {

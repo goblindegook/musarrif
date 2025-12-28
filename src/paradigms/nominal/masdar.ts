@@ -17,6 +17,7 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
+  shortVowelFromPattern,
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
@@ -25,7 +26,7 @@ import {
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
-import { adjustDefective, removeTerminalCaseVowel, vowelFromRadical } from './nominals'
+import { adjustDefective, removeTerminalCaseVowel } from './nominals'
 
 function masdar(verb: Verb): readonly string[] {
   const letters = [...verb.root]
@@ -105,7 +106,7 @@ function masdar(verb: Verb): readonly string[] {
 
       if (isMiddleHamza && isFinalWeak) {
         // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
-        const seatedHamza = vowelFromRadical('u') === DAMMA ? HAMZA_ON_WAW : HAMZA
+        const seatedHamza = shortVowelFromPattern('u') === DAMMA ? HAMZA_ON_WAW : HAMZA
         return [c1, DAMMA, seatedHamza, SUKOON, YEH, FATHA, TEH_MARBUTA]
       }
 

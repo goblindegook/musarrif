@@ -593,15 +593,8 @@ function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {
 }
 
 function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
-  const last = word.at(-1)
-  const secondLast = word.at(-2)
-
-  // Check if word ends with NOON + FATHA (feminine plural ending)
-  if (secondLast === NOON && last === FATHA) {
-    // ALIF_MAQSURA can only appear at the end of the word, so convert it to YEH + SUKOON if found here
-    const maqsuraIndex = word.lastIndexOf(ALIF_MAQSURA)
-    if (maqsuraIndex >= 0) return [...word.slice(0, maqsuraIndex), YEH, SUKOON, NOON, FATHA]
-
+  // Check if word ends with NOON (feminine plural ending)
+  if (word.at(-2) === NOON) {
     // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
     // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
     // then preserve everything up to and including it, and add NOON + FATHA.
