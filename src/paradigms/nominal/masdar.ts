@@ -17,7 +17,6 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
-  shortVowelFromPattern,
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
@@ -69,11 +68,9 @@ function masdar(verb: Verb): readonly string[] {
           case 'fu3ool':
             return adjustDefective([c1, DAMMA, c2, DAMMA, WAW, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fu3aal':
-            // For defective verbs with final alif maqsura or yeh, use fatḥa on c1 and convert to hamza (e.g., وفي → وَفَاء)
-            if (isFinalWeak && (c3 === ALIF_MAQSURA || c3 === YEH)) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
+            if (c3 === ALIF_MAQSURA || c3 === YEH) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
             return adjustDefective([c1, DAMMA, c2, FATHA, ALIF, finalRadical], finalRadical, FATHA)
           case 'fi3aal':
-            // Hollow fi3aal (e.g., قِيَام)
             if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
             return adjustDefective([c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3la':
@@ -91,24 +88,21 @@ function masdar(verb: Verb): readonly string[] {
 
       // Initial weak + final weak (e.g., وقي → وِقَايَة, ولى → وِلَايَة)
       if (isInitialWeak && !isMiddleWeak && isFinalWeak) {
-        const finalGlide = c3 === ALIF_MAQSURA ? YEH : c3 === YEH ? YEH : WAW
+        const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
         return [c1, KASRA, c2, FATHA, ALIF, finalGlide, FATHA, TEH_MARBUTA]
       }
 
       // Initial hamza + final weak (e.g., أتى → إِتْيَان)
       if (isInitialHamza && !isMiddleWeak && isFinalWeak) {
-        const finalGlide = c3 === ALIF_MAQSURA ? YEH : c3 === YEH ? YEH : WAW
+        const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
       }
 
       // Initial hamza + middle weak + final weak (e.g., أوي → إِوِيّ)
       if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, YEH, SHADDA]
 
-      if (isMiddleHamza && isFinalWeak) {
-        // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
-        const seatedHamza = shortVowelFromPattern('u') === DAMMA ? HAMZA_ON_WAW : HAMZA
-        return [c1, DAMMA, seatedHamza, SUKOON, YEH, FATHA, TEH_MARBUTA]
-      }
+      // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
+      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, YEH, FATHA, TEH_MARBUTA]
 
       // Hollow verb with final hamza (e.g., جيء → مَجِيء)
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
@@ -213,25 +207,20 @@ function masdar(verb: Verb): readonly string[] {
       return [ALIF, KASRA, c1, SUKOON, c2, KASRA, c3, FATHA, ALIF, c3]
 
     case 10: {
+      // Assimilated defective Form X: initial weak drops, then c2 with fatḥa, then alif + hamza (e.g., وفي → اِسْتِفَاء)
+      if (isInitialWeak && isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, c2, FATHA, ALIF, HAMZA]
+
       // If the first radical is hamza, seat it on yeh after kasra (e.g., اِسْتِئْجارٌ)
       const seatedC1 = isInitialHamza ? HAMZA_ON_YEH : c1
 
       // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتِئْواء)
       // Initial hamza is seated on yeh (ئ), then middle weak without vowel, then final weak becomes hamza
-      if (isInitialHamza && isMiddleWeak && isFinalWeak)
-        return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, HAMZA_ON_YEH, SUKOON, c2, ALIF, HAMZA]
+      if (isMiddleWeak && isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, ALIF, HAMZA]
 
       // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
       if (isMiddleWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-      // Defective Form X: initial weak (but not hamza) drops, then c2 with fatḥa, then alif + hamza (e.g., وفي → اِسْتِفَاء)
-      // If initial hamza, seat it on yeh; otherwise drop initial weak and use c2 directly
-      if (isFinalWeak) {
-        if (isInitialWeak && !isInitialHamza) {
-          return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, c2, FATHA, ALIF, HAMZA]
-        }
-        return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
-      }
+      if (isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
 
       return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, c3]
     }

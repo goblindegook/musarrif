@@ -1,4 +1,4 @@
-import { ALIF_MAQSURA, FATHA, isWeakLetter, removeTrailingDiacritics, SHORT_VOWELS, YEH } from '../letters'
+import { isWeakLetter, removeTrailingDiacritics, SHORT_VOWELS } from '../letters'
 
 export function adjustDefective(word: readonly string[], c3: string, vowel: string): readonly string[] {
   if (!isWeakLetter(c3)) return word
@@ -6,14 +6,12 @@ export function adjustDefective(word: readonly string[], c3: string, vowel: stri
   const last = chars.pop()
   if (!last) return word
 
-  const tail = c3 === YEH && vowel === FATHA ? ALIF_MAQSURA : c3
-
   if (last !== c3) {
-    chars.push(last, tail)
+    chars.push(last, c3)
     return chars
   }
 
-  chars.push(tail, vowel)
+  chars.push(c3, vowel)
   return chars
 }
 
