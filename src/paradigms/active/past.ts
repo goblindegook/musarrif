@@ -221,8 +221,6 @@ function derivePastFormII(verb: Verb): PastBaseForms {
 
   // Geminate Form II: c2 === c3, fatḥa then shadda on c2, then c3 (e.g., حَبَّبَ)
   if (c2 === c3) {
-    if (isWeakLetter(c3)) return buildDefectiveForms([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA], c3)
-
     return buildNonDefectiveForms([c1, FATHA, c2, FATHA, SHADDA, c3, FATHA])
   }
 
