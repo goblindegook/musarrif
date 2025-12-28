@@ -29,26 +29,24 @@ import type { Verb } from '../verbs'
 function weakLetterTail(letter: string): string {
   return letter === YEH || letter === ALIF_MAQSURA
     ? ALIF_MAQSURA
-    : letter === ALIF_HAMZA
-      ? ALIF_HAMZA
-      : letter === HAMZA_ON_YEH
-        ? HAMZA_ON_YEH
-        : ALIF
+    : letter === ALIF_HAMZA || letter === HAMZA_ON_YEH
+      ? letter
+      : ALIF
 }
 
-type PastBaseForms =
-  | {
-      base: readonly string[]
-      baseWithSukoon: readonly string[]
-      baseWithDamma: readonly string[]
-    }
-  | {
-      base: readonly string[]
-      baseWithSukoon: readonly string[]
-      baseWithDamma: readonly string[]
-      baseWithoutC3: readonly string[]
-      glide: string
-    }
+interface NonDefectivePastBaseForms {
+  base: readonly string[]
+  baseWithSukoon: readonly string[]
+  baseWithDamma: readonly string[]
+}
+
+interface DefectivePastBaseForms {
+  base: readonly string[]
+  baseWithoutC3: readonly string[]
+  glide: string
+}
+
+type PastBaseForms = NonDefectivePastBaseForms | DefectivePastBaseForms
 
 const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
   '1s': (forms) => {
@@ -108,10 +106,7 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
         ALIF,
       ]
 
-    if ('baseWithoutC3' in forms) {
-      const pluralGlide = forms.glide === YEH ? WAW : forms.glide
-      return [...forms.baseWithoutC3, pluralGlide, SUKOON, ALIF]
-    }
+    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide === YEH ? WAW : forms.glide, SUKOON, ALIF]
     return [...forms.baseWithDamma, WAW, ALIF]
   },
   '3fp': (forms) => {
@@ -129,31 +124,23 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 
   return PRONOUN_IDS.reduce<Record<PronounId, string>>(
     (acc, pronounId) => {
-      const past = PAST_BUILDERS[pronounId](forms, verb)
-      acc[pronounId] = past.join('').normalize('NFC')
+      acc[pronounId] = PAST_BUILDERS[pronounId](forms, verb).join('').normalize('NFC')
       return acc
     },
     {} as Record<PronounId, string>,
   )
 }
 
-function buildDefectiveForms(base: readonly string[], c3: string): PastBaseForms {
+function buildDefectiveForms(base: readonly string[], c3: string): DefectivePastBaseForms {
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
-
-  const baseWithoutC3 = normalizedBase.slice(0, -1)
-
-  const glide = glideFromRadical(c3)
-
   return {
     base: normalizedBase,
-    baseWithSukoon: [...baseWithoutC3, glide, SUKOON],
-    baseWithDamma: [...baseWithoutC3, glide, DAMMA],
-    baseWithoutC3,
-    glide,
+    baseWithoutC3: normalizedBase.slice(0, -1),
+    glide: glideFromRadical(c3),
   }
 }
 
-function buildNonDefectiveForms(base: readonly string[]): PastBaseForms {
+function buildNonDefectiveForms(base: readonly string[]): NonDefectivePastBaseForms {
   return {
     base,
     baseWithSukoon: [...removeTrailingDiacritics(base), SUKOON],
@@ -161,7 +148,7 @@ function buildNonDefectiveForms(base: readonly string[]): PastBaseForms {
   }
 }
 
-function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
+function deriveQuadriliteralPastForms(verb: Verb): NonDefectivePastBaseForms {
   const [c1, c2, c3, c4] = [...verb.root]
   return buildNonDefectiveForms([c1, FATHA, c2, SUKOON, c3, FATHA, c4, FATHA])
 }
@@ -172,19 +159,12 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
-  if (isWeakLetter(c3) && pastVowel === 'i') {
-    const base = [c1, FATHA, c2, KASRA, YEH, FATHA]
-    const stem = removeTrailingDiacritics(base)
-    const baseWithoutC3 = stem.slice(0, -1)
-    const glide = glideFromRadical(c3)
+  if (isWeakLetter(c3) && pastVowel === 'i')
     return {
-      base: c3 === ALIF_MAQSURA || c3 === ALIF ? stem : base,
-      baseWithSukoon: [...baseWithoutC3, glide, SUKOON],
-      baseWithDamma: [...baseWithoutC3, glide, DAMMA],
-      baseWithoutC3,
-      glide,
+      base: c3 === ALIF_MAQSURA || c3 === ALIF ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
+      baseWithoutC3: [c1, FATHA, c2, KASRA],
+      glide: glideFromRadical(c3),
     }
-  }
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   if (isWeakLetter(c3))
