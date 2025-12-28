@@ -20,13 +20,13 @@ import {
   NOON,
   removeLeadingDiacritics,
   removeTrailingDiacritics,
+  replaceFinalDiacritic,
   SEEN,
   SHADDA,
   SUKOON,
   shortVowelFromPattern,
   TEH,
   type Vowel,
-  type VowelOrSukoon,
   WAW,
   weakLetterGlide,
   YEH,
@@ -569,13 +569,6 @@ function expandShadda(word: readonly string[]): readonly string[] {
       return [...word.slice(0, i + 1), FATHA, word[i], ...word.slice(i + 2)]
   }
   return word
-}
-
-function replaceFinalDiacritic(word: readonly string[], diacritic: VowelOrSukoon): readonly string[] {
-  const lastLetterIndex = findLastLetterIndex(word)
-  const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
-  if (shaddaIndex >= 0) return [...word.slice(0, lastLetterIndex + 1), SHADDA, diacritic]
-  return [...removeTrailingDiacritics(word), diacritic]
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[]): readonly string[] {

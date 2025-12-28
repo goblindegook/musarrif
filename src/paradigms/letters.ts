@@ -114,6 +114,13 @@ export function removeTrailingDiacritics(chars: readonly string[]): readonly str
   return result
 }
 
+export function replaceFinalDiacritic(word: readonly string[], diacritic: VowelOrSukoon): readonly string[] {
+  const lastLetterIndex = findLastLetterIndex(word)
+  const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
+  if (shaddaIndex >= 0) return [...word.slice(0, lastLetterIndex + 1), SHADDA, diacritic]
+  return [...removeTrailingDiacritics(word), diacritic]
+}
+
 export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
   return SHORT_VOWEL_MAP[vowel]
 }

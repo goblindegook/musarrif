@@ -15,6 +15,7 @@ import {
   MEEM,
   NOON,
   removeTrailingDiacritics,
+  replaceFinalDiacritic,
   SEEN,
   SHADDA,
   SUKOON,
@@ -42,7 +43,7 @@ interface NonDefectivePastBaseForms {
 
 interface DefectivePastBaseForms {
   base: readonly string[]
-  baseWithoutC3: readonly string[]
+  defectiveBase: readonly string[]
   glide: string
 }
 
@@ -50,36 +51,37 @@ type PastBaseForms = NonDefectivePastBaseForms | DefectivePastBaseForms
 
 const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
   '1s': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA]
     return [...forms.baseWithSukoon, TEH, DAMMA]
   },
   '2ms': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, FATHA]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, FATHA]
     return [...forms.baseWithSukoon, TEH, FATHA]
   },
   '2fs': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, KASRA]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, KASRA]
     return [...forms.baseWithSukoon, TEH, KASRA]
   },
   '3ms': (forms) => forms.base,
   '3fs': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, TEH, SUKOON]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, TEH, SUKOON]
     return [...forms.base, TEH, SUKOON]
   },
   '2d': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF]
     return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, FATHA, ALIF]
   },
   '3md': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, FATHA, ALIF]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, FATHA, ALIF]
     return [...forms.base, ALIF]
   },
   '3fd': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, TEH, FATHA, ALIF]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, TEH, FATHA, ALIF]
     return [...forms.base, TEH, FATHA, ALIF]
   },
   '1p': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA, ALIF]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA, ALIF]
+
     // If baseWithSukoon ends with NOON + SUKOON, geminate with shadda when adding NOON suffix
     if (forms.baseWithSukoon.at(-2) === NOON && forms.baseWithSukoon.at(-1) === SUKOON)
       return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA, ALIF]
@@ -87,11 +89,11 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
   },
   '2mp': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
     return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON]
   },
   '2fp': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA]
     return [...forms.baseWithSukoon, TEH, DAMMA, NOON, SHADDA, FATHA]
   },
   '3mp': (forms, verb) => {
@@ -106,11 +108,11 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
         ALIF,
       ]
 
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide === YEH ? WAW : forms.glide, SUKOON, ALIF]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide === YEH ? WAW : forms.glide, SUKOON, ALIF]
     return [...forms.baseWithDamma, WAW, ALIF]
   },
   '3fp': (forms) => {
-    if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA]
+    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA]
 
     // If baseWithSukoon ends with NOON, geminate with shadda when adding NOON suffix
     if (forms.baseWithSukoon.at(-2) === NOON) return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA]
@@ -135,16 +137,16 @@ function buildDefectiveForms(base: readonly string[], c3: string): DefectivePast
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
   return {
     base: normalizedBase,
-    baseWithoutC3: normalizedBase.slice(0, -1),
-    glide: glideFromRadical(c3),
+    defectiveBase: normalizedBase.slice(0, -1),
+    glide: c3 === WAW || c3 === ALIF ? WAW : YEH,
   }
 }
 
 function buildNonDefectiveForms(base: readonly string[]): NonDefectivePastBaseForms {
   return {
     base,
-    baseWithSukoon: [...removeTrailingDiacritics(base), SUKOON],
-    baseWithDamma: [...removeTrailingDiacritics(base), DAMMA],
+    baseWithSukoon: replaceFinalDiacritic(base, SUKOON),
+    baseWithDamma: replaceFinalDiacritic(base, DAMMA),
   }
 }
 
@@ -162,8 +164,8 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   if (isWeakLetter(c3) && pastVowel === 'i')
     return {
       base: c3 === ALIF_MAQSURA || c3 === ALIF ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
-      baseWithoutC3: [c1, FATHA, c2, KASRA],
-      glide: glideFromRadical(c3),
+      defectiveBase: [c1, FATHA, c2, KASRA],
+      glide: c3 === WAW || c3 === ALIF ? WAW : YEH,
     }
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
@@ -173,11 +175,13 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   // Geminate Form I: if c2 === c3, collapse with shadda (e.g., حَبَّ)
   if (c2 === c3) return buildNonDefectiveForms([c1, FATHA, c2, SHADDA, FATHA])
 
+  const base = [c1, FATHA, ALIF, c3, FATHA]
+
   // Hollow Form I past contracts to a long /ā/ in the base (e.g., قامَ)
   // Hollow Form I with final hamza (e.g., جيء → جَاءَ)
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
-      base: [c1, FATHA, ALIF, c3, FATHA],
+      base,
       baseWithSukoon: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
       baseWithDamma: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA],
     }
@@ -186,13 +190,12 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   // baseWithDamma keeps the alif for 3mp (قَالُوا)
   if (isWeakLetter(c2))
     return {
-      base: [c1, FATHA, ALIF, c3, FATHA],
+      base,
       baseWithSukoon: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      baseWithDamma: [...removeTrailingDiacritics([c1, FATHA, ALIF, c3, FATHA]), DAMMA],
+      baseWithDamma: replaceFinalDiacritic(base, DAMMA),
     }
 
-  const base = [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA]
-  return buildNonDefectiveForms(base)
+  return buildNonDefectiveForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA])
 }
 
 function derivePastFormII(verb: Verb): PastBaseForms {
@@ -393,5 +396,3 @@ function shortenHollowStem(stem: readonly string[], shortVowel: string): readonl
     })
     .filter((char): char is string => char != null)
 }
-
-const glideFromRadical = (value = ''): string => (value === WAW || value === ALIF ? WAW : YEH)
