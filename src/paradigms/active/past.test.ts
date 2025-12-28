@@ -216,6 +216,26 @@ describe('active past pattern', () => {
   })
 
   describe('hollow verbs', () => {
+    describe('ك-ا-ن', () => {
+      test('كَانَ (Form I)', () => {
+        expect(conjugatePast(getVerb('كان', 1))).toEqual({
+          '1s': 'كُنْتُ',
+          '2ms': 'كُنْتَ',
+          '2fs': 'كُنْتِ',
+          '3ms': 'كَانَ',
+          '3fs': 'كَانَتْ',
+          '2d': 'كُنْتُمَا',
+          '3md': 'كَانَا',
+          '3fd': 'كَانَتَا',
+          '1p': 'كُنَّا',
+          '2mp': 'كُنْتُمْ',
+          '2fp': 'كُنْتُنَّ',
+          '3mp': 'كَانُوا',
+          '3fp': 'كُنَّ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugatePast(getVerb('قول', 1))).toEqual({

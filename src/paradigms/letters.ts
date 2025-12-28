@@ -118,14 +118,27 @@ export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
   return SHORT_VOWEL_MAP[vowel]
 }
 
-export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
-  return LONG_VOWEL_MAP[vowel]
+export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string[] {
+  return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
 }
 
 function findNextBaseLetter(chars: readonly string[], startIndex: number): string | undefined {
   for (let index = startIndex; index < chars.length; index += 1) {
     if (!COMBINING_MARK.test(chars[index])) return chars[index]
   }
+}
+
+export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {
+  return word.findIndex((char, i) => i > index && isWeakLetter(char))
+}
+
+export function findLetterIndex(word: readonly string[], index: number = 0): number {
+  return word.findIndex((char, i) => i > index && !isDiacritic(char))
+}
+
+export function findLastLetterIndex(word: readonly string[], beforeIndex?: number): number {
+  const index = beforeIndex ?? word.length
+  return word.findLastIndex((char, i) => i < index && !isDiacritic(char))
 }
 
 interface RootAnalysis {

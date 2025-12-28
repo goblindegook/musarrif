@@ -121,6 +121,18 @@ describe('imperative', () => {
   })
 
   describe('hollow verbs', () => {
+    describe('ك-ا-ن', () => {
+      test('كَانَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('كان', 1))).toMatchObject({
+          '2ms': 'كُنْ',
+          '2fs': 'كُونِي',
+          '2d': 'كُونَا',
+          '2mp': 'كُونُوا',
+          '2fp': 'كُنَّ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugateImperative(getVerb('قول', 1))).toMatchObject({

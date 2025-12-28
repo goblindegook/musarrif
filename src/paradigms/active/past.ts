@@ -1,4 +1,4 @@
-import { FORM_I_PRESENT_VOWELS, resolveFormIPastVowel } from '../form-i-vowels'
+import { resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -82,6 +82,10 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
   },
   '1p': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA, ALIF]
+    // If baseWithSukoon ends with NOON + SUKOON, geminate with shadda when adding NOON suffix
+    if (forms.baseWithSukoon.at(-2) === NOON && forms.baseWithSukoon.at(-1) === SUKOON)
+      return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA, ALIF]
+
     return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
   },
   '2mp': (forms) => {
@@ -112,6 +116,10 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
   },
   '3fp': (forms) => {
     if ('baseWithoutC3' in forms) return [...forms.baseWithoutC3, forms.glide, SUKOON, NOON, FATHA]
+    // If baseWithSukoon ends with NOON + SUKOON, geminate with shadda when adding NOON suffix
+    if (forms.baseWithSukoon.at(-2) === NOON && forms.baseWithSukoon.at(-1) === SUKOON)
+      return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA]
+
     return [...forms.baseWithSukoon, NOON, FATHA]
   },
 }
@@ -191,15 +199,15 @@ function derivePastFormI(verb: Verb): PastBaseForms {
     if (isHamzatedLetter(c3))
       return {
         base: [c1, FATHA, ALIF, c3, FATHA],
-        baseWithSukoon: [c1, hollowShortVowel(verb), HAMZA_ON_YEH, SUKOON],
-        baseWithDamma: [c1, hollowShortVowel(verb), HAMZA_ON_YEH, DAMMA],
+        baseWithSukoon: [c1, hollowShortVowel(c2), HAMZA_ON_YEH, SUKOON],
+        baseWithDamma: [c1, hollowShortVowel(c2), HAMZA_ON_YEH, DAMMA],
       }
 
     // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
     // baseWithDamma keeps the alif for 3mp (قَالُوا)
     return {
       base: [c1, FATHA, ALIF, c3, FATHA],
-      baseWithSukoon: [c1, hollowShortVowel(verb), c3, SUKOON],
+      baseWithSukoon: [c1, hollowShortVowel(c2), c3, SUKOON],
       baseWithDamma: [...removeTrailingDiacritics([c1, FATHA, ALIF, c3, FATHA]), DAMMA],
     }
   }
@@ -266,7 +274,7 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
     const stem = removeTrailingDiacritics([ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA])
     return {
       base: [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA],
-      baseWithSukoon: [...shortenHollowStem(stem, hollowShortVowel(verb)), SUKOON],
+      baseWithSukoon: [...shortenHollowStem(stem, hollowShortVowel(c2)), SUKOON],
       baseWithDamma: [...stem, DAMMA],
     }
   }
@@ -413,13 +421,9 @@ function shortenHollowStem(stem: readonly string[], shortVowel: string): readonl
 
 const glideFromRadical = (value = ''): string => (value === WAW || value === ALIF ? WAW : YEH)
 
-function hollowShortVowel(verb: Verb): string {
-  const middleRadical = verb.root.at(1)
-  const isFinalHamza = isHamzatedLetter(verb.root.at(-1))
-  // Hollow verbs with final hamza and middle ya always use kasra (e.g., جيء → جِئْتُ)
-  if (isFinalHamza && middleRadical === YEH) return KASRA
-  if (verb.form === 1 && verb.formPattern) return shortVowelFromPattern(FORM_I_PRESENT_VOWELS[verb.formPattern])
-  if (middleRadical === YEH) return KASRA
-  if (middleRadical === WAW || middleRadical === ALIF) return DAMMA
+function hollowShortVowel(c2: string): string {
+  if (c2 === ALIF) return DAMMA
+  if (c2 === YEH) return KASRA
+  if (c2 === WAW) return DAMMA
   return FATHA
 }

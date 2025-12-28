@@ -228,6 +228,26 @@ describe('active present indicative pattern', () => {
   })
 
   describe('hollow verbs', () => {
+    describe('ك-ا-ن', () => {
+      test('كَانَ (Form I) indicative', () => {
+        expect(conjugatePresentMood(getVerb('كان', 1), 'indicative')).toEqual({
+          '1s': 'أَكُونُ',
+          '2ms': 'تَكُونُ',
+          '2fs': 'تَكُونِينَ',
+          '3ms': 'يَكُونُ',
+          '3fs': 'تَكُونُ',
+          '2d': 'تَكُونَانِ',
+          '3md': 'يَكُونَانِ',
+          '3fd': 'تَكُونَانِ',
+          '1p': 'نَكُونُ',
+          '2mp': 'تَكُونُونَ',
+          '2fp': 'تَكُنَّ',
+          '3mp': 'يَكُونُونَ',
+          '3fp': 'يَكُنَّ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugatePresentMood(getVerb('قول', 1), 'indicative')).toEqual({
