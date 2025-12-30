@@ -1,3 +1,4 @@
+import { mapRecord } from '../../primitives/objects.ts'
 import { resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
@@ -6,6 +7,7 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -81,11 +83,6 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
   },
   '1p': (forms) => {
     if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA, ALIF]
-
-    // If baseWithSukoon ends with NOON + SUKOON, geminate with shadda when adding NOON suffix
-    if (forms.baseWithSukoon.at(-2) === NOON && forms.baseWithSukoon.at(-1) === SUKOON)
-      return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA, ALIF]
-
     return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
   },
   '2mp': (forms) => {
@@ -124,12 +121,15 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const forms = derivePastForms(verb)
 
-  return PRONOUN_IDS.reduce<Record<PronounId, string>>(
-    (acc, pronounId) => {
-      acc[pronounId] = PAST_BUILDERS[pronounId](forms, verb).join('').normalize('NFC')
-      return acc
-    },
-    {} as Record<PronounId, string>,
+  return mapRecord(
+    PRONOUN_IDS.reduce(
+      (acc, pronounId) => {
+        acc[pronounId] = PAST_BUILDERS[pronounId](forms, verb)
+        return acc
+      },
+      {} as Record<PronounId, readonly string[]>,
+    ),
+    (past) => geminateDoubleLetters(past).join('').normalize('NFC'),
   )
 }
 

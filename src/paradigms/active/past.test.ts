@@ -216,7 +216,25 @@ describe('active past pattern', () => {
   })
 
   describe('hollow verbs', () => {
-    describe('ك-ا-ن', () => {
+    describe('ب-ي-ت', () => {
+      test('بَاتَ (Form I)', () => {
+        expect(conjugatePast(getVerb('بيت', 1))).toEqual({
+          '1s': 'بِتُّ',
+          '2ms': 'بِتَّ',
+          '2fs': 'بِتِّ',
+          '3ms': 'بَاتَ',
+          '3fs': 'بَاتَتْ',
+          '2d': 'بِتُّمَا',
+          '3md': 'بَاتَا',
+          '3fd': 'بَاتَتَا',
+          '1p': 'بِتْنَا',
+          '2mp': 'بِتُّمْ',
+          '2fp': 'بِتُّنَّ',
+          '3mp': 'بَاتُوا',
+          '3fp': 'بِتْنَ',
+        })
+      })
+
       test('كَانَ (Form I)', () => {
         expect(conjugatePast(getVerb('كان', 1))).toEqual({
           '1s': 'كُنْتُ',

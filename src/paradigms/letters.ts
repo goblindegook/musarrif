@@ -121,6 +121,20 @@ export function replaceFinalDiacritic(word: readonly string[], diacritic: VowelO
   return [...removeTrailingDiacritics(word), diacritic]
 }
 
+export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
+  const geminated = []
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === word.at(i + 2) && word.at(i + 1) === SUKOON) {
+      geminated.push(word[i])
+      geminated.push(SHADDA)
+      i = i + 2
+      continue
+    }
+    geminated.push(word[i])
+  }
+  return geminated
+}
+
 export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
   return SHORT_VOWEL_MAP[vowel]
 }
