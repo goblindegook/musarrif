@@ -4,23 +4,17 @@ import { IconButton } from './IconButton'
 import { ShareIcon } from './icons/ShareIcon'
 
 export function ShareButton() {
+  const supported = typeof navigator?.share === 'function'
   const { t } = useI18n()
 
   const share = useCallback(async () => {
-    const shareUrl = window.location.href
-    const shareTitle = document.title
-
     try {
-      await navigator.share({
-        title: shareTitle,
-        url: shareUrl,
-      })
+      await navigator.share({ title: document.title, url: window.location.href })
     } catch {}
   }, [])
 
   return (
-    window != null &&
-    typeof navigator?.share === 'function' && (
+    supported && (
       <IconButton onClick={share} ariaLabel={t('aria.share')}>
         <ShareIcon />
       </IconButton>

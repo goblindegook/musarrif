@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'preact/hooks'
+import { useCallback } from 'preact/hooks'
 import { IconButton } from './IconButton'
 import { SpeakIcon } from './icons/SpeakIcon'
 
@@ -9,7 +9,7 @@ interface SpeechButtonProps {
 }
 
 export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
-  const supported = useSpeechSupport(lang)
+  const supported = window?.speechSynthesis && window?.SpeechSynthesisUtterance
 
   const speak = useCallback(
     (text: string) => {
@@ -30,12 +30,5 @@ export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
         <SpeakIcon />
       </IconButton>
     )
-  )
-}
-
-function useSpeechSupport(lang: string): boolean {
-  return useMemo(
-    () => typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
-    [lang],
   )
 }

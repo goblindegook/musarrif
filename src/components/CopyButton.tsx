@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'preact/hooks'
+import { useCallback } from 'preact/hooks'
 import { IconButton } from './IconButton'
 import { CopyIcon } from './icons/CopyIcon'
 
@@ -8,11 +8,9 @@ interface CopyButtonProps {
 }
 
 export function CopyButton({ text, ariaLabel }: CopyButtonProps) {
-  const supported = useClipboardSupport()
+  const supported = typeof navigator?.clipboard?.writeText === 'function'
 
   const copy = useCallback(async () => {
-    if (!supported) return
-
     try {
       await navigator.clipboard.writeText(text)
     } catch {}
@@ -25,8 +23,4 @@ export function CopyButton({ text, ariaLabel }: CopyButtonProps) {
       </IconButton>
     )
   )
-}
-
-function useClipboardSupport(): boolean {
-  return useMemo(() => typeof navigator !== 'undefined' && typeof navigator?.clipboard?.writeText === 'function', [])
 }
