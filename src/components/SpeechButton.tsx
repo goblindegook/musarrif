@@ -33,7 +33,7 @@ export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
   )
 }
 
-export function useSpeechSupport(lang: string): boolean {
+function useSpeechSupport(lang: string): boolean {
   return useMemo(
     () => typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
     [lang],

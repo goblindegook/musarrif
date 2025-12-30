@@ -8,8 +8,8 @@ import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { Tense, Verb } from '../paradigms/verbs'
-import { CopyButton, useClipboardSupport } from './CopyButton'
-import { SpeechButton, useSpeechSupport } from './SpeechButton'
+import { CopyButton } from './CopyButton'
+import { SpeechButton } from './SpeechButton'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
 
@@ -86,8 +86,6 @@ export function ConjugationTable({
   diacriticsPreference = 'all',
 }: ConjugationTableProps) {
   const { t, dir, lang } = useI18n()
-  const speechSupported = useSpeechSupport('ar')
-  const copySupported = useClipboardSupport()
   const conjugations = useMemo(() => {
     if (tense === 'past') return conjugatePast(verb)
     if (tense === 'future') return conjugateFuture(verb)
@@ -159,7 +157,7 @@ export function ConjugationTable({
                 <VerbHeadCell>
                   {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_OPTIONS[tense])}
                 </VerbHeadCell>
-                {(speechSupported || copySupported) && <TableHeadCell></TableHeadCell>}
+                <TableHeadCell></TableHeadCell>
               </Row>
             </thead>
             <TableBody>
@@ -179,22 +177,17 @@ export function ConjugationTable({
                     <VerbCell dir="rtl" lang="ar">
                       {displayText}
                     </VerbCell>
-                    {(speechSupported || copySupported) && (
-                      <ActionCell>
-                        <ActionButtons>
-                          {copySupported && (
-                            <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
-                          )}
-                          {speechSupported && (
-                            <SpeechButton
-                              text={conjugations[slot.id]}
-                              lang="ar"
-                              ariaLabel={t('aria.speak', { text: conjugations[slot.id] })}
-                            />
-                          )}
-                        </ActionButtons>
-                      </ActionCell>
-                    )}
+
+                    <ActionCell>
+                      <ActionButtons>
+                        <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                        <SpeechButton
+                          text={conjugations[slot.id]}
+                          lang="ar"
+                          ariaLabel={t('aria.speak', { text: conjugations[slot.id] })}
+                        />
+                      </ActionButtons>
+                    </ActionCell>
                   </Row>
                 )
               })}

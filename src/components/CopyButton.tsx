@@ -27,6 +27,6 @@ export function CopyButton({ text, ariaLabel }: CopyButtonProps) {
   )
 }
 
-export function useClipboardSupport(): boolean {
+function useClipboardSupport(): boolean {
   return useMemo(() => typeof navigator !== 'undefined' && typeof navigator?.clipboard?.writeText === 'function', [])
 }
