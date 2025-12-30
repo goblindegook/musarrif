@@ -73,6 +73,7 @@
     "error.conjugation": "تَعَذَّرَ تَصْرِيفُ هَذَا ٱلْفِعْلِ.",
     "aria.selectTense": "ٱخْتَرِ ٱلزَّمَنَ",
     "aria.selectMood": "ٱخْتَرِ ٱلْحَالَةَ",
+    "aria.copy": "نَسْخُ {text}",
     "aria.share": "مشاركة",
     "aria.speak": "تَشْغِيلُ نُطْقِ {text}",
     "languagePicker.label": "ٱللُّغَةُ",

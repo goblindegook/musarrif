@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useI18n } from '../hooks/i18n'
+import { CopyButton } from './CopyButton'
 import { SpeechButton } from './SpeechButton'
 
 interface DetailProps {
@@ -9,6 +10,7 @@ interface DetailProps {
   labelDir?: 'auto' | 'rtl' | 'ltr'
   value?: string
   speechText?: string | null
+  copyText?: string | null
   valueLang?: string
   valueDir?: 'auto' | 'rtl' | 'ltr'
   children?: ComponentChildren
@@ -24,6 +26,7 @@ export const Detail = ({
   labelDir,
   value,
   speechText,
+  copyText,
   valueLang = 'ar',
   valueDir = 'rtl',
   children,
@@ -48,9 +51,6 @@ export const Detail = ({
         </DetailLabel>
         <DetailValue dir={valueDir} lang={valueLang}>
           {value && <span>{value}</span>}
-          {speechText && (
-            <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
-          )}
           {children}
         </DetailValue>
       </DetailButton>
@@ -63,11 +63,18 @@ export const Detail = ({
         {label}
       </DetailLabel>
       <DetailValue dir={valueDir} lang={valueLang}>
-        {value && <span>{value}</span>}
-        {speechText && (
-          <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
+        <DetailContent>
+          {value && <span>{value}</span>}
+          {children}
+        </DetailContent>
+        {(speechText || copyText) && (
+          <DetailActions>
+            {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} />}
+            {speechText && (
+              <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
+            )}
+          </DetailActions>
         )}
-        {children}
       </DetailValue>
     </DetailItem>
   )
@@ -117,4 +124,17 @@ const DetailValue = styled('span')`
   gap: 0.5rem;
   font-size: 1.4rem;
   font-weight: 600;
+  width: 100%;
+`
+
+const DetailContent = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+const DetailActions = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 `

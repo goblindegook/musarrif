@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { Heading } from './components/atoms/Heading'
 import { Text } from './components/atoms/Text'
 import { ConjugationTable } from './components/ConjugationTable'
+import { CopyButton } from './components/CopyButton'
 import { Detail } from './components/Detail'
 import { DiacriticsToggle } from './components/DiacriticsToggle'
 import { FormInsights } from './components/FormInsights'
@@ -55,7 +56,7 @@ export function App() {
   )
 
   const formatArabic = useMemo(
-    () => (value: string) => applyDiacriticsPreference(value, diacriticsPreference),
+    () => (value: string | null) => applyDiacriticsPreference(value ?? '', diacriticsPreference),
     [diacriticsPreference],
   )
 
@@ -148,12 +149,16 @@ export function App() {
               lang="ar"
               actions={
                 <>
-                  <ShareButton />
+                  <CopyButton
+                    text={formatArabic(selectedVerb.label)}
+                    ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}
+                  />
                   <SpeechButton
                     text={selectedVerb.label}
                     lang="ar"
                     ariaLabel={t('aria.speak', { text: selectedVerb.label })}
                   />
+                  <ShareButton />
                 </>
               }
             >
@@ -203,22 +208,25 @@ export function App() {
                   label={t('meta.activeParticiple')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={activeParticiple ? formatArabic(activeParticiple) : '—'}
+                  value={formatArabic(activeParticiple) || '—'}
                   speechText={activeParticiple}
+                  copyText={formatArabic(activeParticiple)}
                 />
                 <Detail
                   label={t('meta.passiveParticiple')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={passiveParticiple ? formatArabic(passiveParticiple) : '—'}
+                  value={formatArabic(passiveParticiple) || '—'}
                   speechText={passiveParticiple}
+                  copyText={formatArabic(passiveParticiple)}
                 />
                 <Detail
                   label={t('meta.verbalNoun')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={masdar ? masdar.map((value) => formatArabic(value)).join('، ') : '—'}
+                  value={masdar?.map((value) => formatArabic(value)).join('، ') || '—'}
                   speechText={masdar ? masdar.join('، ') : null}
+                  copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
                 />
               </VerbMetaSection>
             </Panel>

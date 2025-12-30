@@ -4,6 +4,7 @@
   "strings": {
     "aria.selectMood": "Select mood",
     "aria.selectTense": "Select tense",
+    "aria.copy": "Copy {text}",
     "aria.share": "Share",
     "aria.speak": "Play pronunciation for {text}",
     "diacritics.all": "All",

@@ -8,6 +8,7 @@ import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { Tense, Verb } from '../paradigms/verbs'
+import { CopyButton, useClipboardSupport } from './CopyButton'
 import { SpeechButton, useSpeechSupport } from './SpeechButton'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
@@ -86,6 +87,7 @@ export function ConjugationTable({
 }: ConjugationTableProps) {
   const { t, dir, lang } = useI18n()
   const speechSupported = useSpeechSupport('ar')
+  const copySupported = useClipboardSupport()
   const conjugations = useMemo(() => {
     if (tense === 'past') return conjugatePast(verb)
     if (tense === 'future') return conjugateFuture(verb)
@@ -157,34 +159,45 @@ export function ConjugationTable({
                 <VerbHeadCell>
                   {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_OPTIONS[tense])}
                 </VerbHeadCell>
-                {speechSupported && <TableHeadCell></TableHeadCell>}
+                {(speechSupported || copySupported) && <TableHeadCell></TableHeadCell>}
               </Row>
             </thead>
             <TableBody>
-              {PRONOUNS.filter((slot) => conjugations[slot.id]).map((slot, index) => (
-                <Row key={slot.id} striped={index % 2 === 0}>
-                  <PronounCell>
-                    <span dir="rtl" lang="ar">
-                      {applyDiacriticsPreference(slot.label, diacriticsPreference)}
-                    </span>
-                    <PronounDescription dir={dir} lang={lang}>
-                      {formatDescription(slot, t)}
-                    </PronounDescription>
-                  </PronounCell>
-                  <VerbCell dir="rtl" lang="ar">
-                    {applyDiacriticsPreference(conjugations[slot.id], diacriticsPreference)}
-                  </VerbCell>
-                  {speechSupported && (
-                    <AudioCell>
-                      <SpeechButton
-                        text={conjugations[slot.id]}
-                        lang="ar"
-                        ariaLabel={t('aria.speak', { text: conjugations[slot.id] })}
-                      />
-                    </AudioCell>
-                  )}
-                </Row>
-              ))}
+              {PRONOUNS.filter((slot) => conjugations[slot.id]).map((slot, index) => {
+                const displayText = applyDiacriticsPreference(conjugations[slot.id], diacriticsPreference)
+
+                return (
+                  <Row key={slot.id} striped={index % 2 === 0}>
+                    <PronounCell>
+                      <span dir="rtl" lang="ar">
+                        {applyDiacriticsPreference(slot.label, diacriticsPreference)}
+                      </span>
+                      <PronounDescription dir={dir} lang={lang}>
+                        {formatDescription(slot, t)}
+                      </PronounDescription>
+                    </PronounCell>
+                    <VerbCell dir="rtl" lang="ar">
+                      {displayText}
+                    </VerbCell>
+                    {(speechSupported || copySupported) && (
+                      <ActionCell>
+                        <ActionButtons>
+                          {copySupported && (
+                            <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                          )}
+                          {speechSupported && (
+                            <SpeechButton
+                              text={conjugations[slot.id]}
+                              lang="ar"
+                              ariaLabel={t('aria.speak', { text: conjugations[slot.id] })}
+                            />
+                          )}
+                        </ActionButtons>
+                      </ActionCell>
+                    )}
+                  </Row>
+                )
+              })}
             </TableBody>
           </Table>
         </TabPanel>
@@ -375,10 +388,16 @@ const VerbHeadCell = styled(TableHeadCell)`
   width: 65%;
 `
 
-const AudioCell = styled('td')`
+const ActionCell = styled('td')`
   padding: 0.75rem 2rem;
-  width: 54px;
   vertical-align: middle;
+`
+
+const ActionButtons = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
 `
 
 function formatDescription(slot: PronounSlot, translate: (key: TranslationKey) => string): string {

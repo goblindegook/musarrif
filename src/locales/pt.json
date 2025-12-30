@@ -73,6 +73,7 @@
     "error.conjugation": "Não foi possível conjugar este verbo.",
     "aria.selectTense": "Escolha o tempo",
     "aria.selectMood": "Escolha o modo",
+    "aria.copy": "Copiar {text}",
     "aria.share": "Compartilhar",
     "aria.speak": "Reproduzir pronúncia de {text}",
     "languagePicker.label": "Idioma",
