@@ -94,6 +94,9 @@ export function derivePassiveParticiple(verb: Verb): string {
             FATHA,
           )
 
+        // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)
+        if (c3 === YEH || c3 === ALIF_MAQSURA) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
+
         // Standard maf'ūl pattern uses a long ū (no written sukoon on wāw)
         return adjustDefective([MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, c3, DAMMA], c3, FATHA)
       }
