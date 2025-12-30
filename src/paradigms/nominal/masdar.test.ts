@@ -36,7 +36,7 @@ test.each([
   ['رأى', 1, 'رُؤْيَة'],
   ['ركز', 1, 'رَكْز'],
   ['سعد', 1, 'سَعَادَة'],
-  ['شرب', 1, 'شُرْب'],
+  ['شرب', 1, ['شُرْب', 'مَشْرَب']],
   ['صبح', 1, 'صَبْح'],
   ['صبر', 1, 'صَبْر'],
   ['صدق', 1, 'صِدْق'],
@@ -82,7 +82,7 @@ test.each([
   ['هجر', 1, 'هَجْر'],
   ['وصل', 1, 'وَصْل'],
   ['وصل', 8, 'اِتِّصَال'],
-  ['وعد', 1, 'وَعْد'],
+  ['وعد', 1, ['وَعْد', 'مَوْعِد']],
   ['وفي', 1, 'وَفَاء'],
   ['وفي', 10, 'اِسْتِفَاء'],
   ['وفي', 4, 'إِيفَاء'],
@@ -94,7 +94,24 @@ test.each([
   ['بيت', 1, 'مَبِيت'],
 ])('%s (Form %d) masdar is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-  expect(deriveMasdar(verb)).toBe(expected)
+  expect(deriveMasdar(verb)).toEqual([expected].flat())
+})
+
+describe('masdar patterns', () => {
+  // Source: https://ar.wikipedia.org/wiki/مصدر_ميمي
+  test.each([
+    ['شرب', ['شُرْب', 'مَشْرَب']],
+    ['وعد', ['وَعْد', 'مَوْعِد']],
+  ])('%s supports multiple masdar patterns', (root, expected) => {
+    expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
+  })
+
+  test.each([
+    ['بيت', ['مَبِيت']],
+    ['سعى', ['مَسْعَى']],
+  ])('%s uses the expected masdar mimi form', (root, expected) => {
+    expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
+  })
 })
 
 describe('regular roots', () => {
@@ -108,18 +125,18 @@ describe('regular roots', () => {
       [6, 'تَكَاتُب'],
       [7, 'اِنْكِتَاب'],
     ])('Form %d masdar is %s', (form, expected) => {
-      expect(deriveMasdar(getVerb('كتب', form))).toBe(expected)
+      expect(deriveMasdar(getVerb('كتب', form))).toEqual([expected])
     })
   })
 })
 
 describe('assimilated roots', () => {
   describe('و-ع-د', () => {
-    test.each<[VerbForm, string]>([
-      [1, 'وَعْد'],
-      [5, 'تَوَعُّد'],
+    test.each<[VerbForm, string | readonly string[]]>([
+      [1, ['وَعْد', 'مَوْعِد']],
+      [5, ['تَوَعُّد']],
     ])('Form %d masdar is %s', (form, expected) => {
-      expect(deriveMasdar(getVerb('وعد', form))).toBe(expected)
+      expect(deriveMasdar(getVerb('وعد', form))).toEqual(expected)
     })
   })
 })
@@ -132,7 +149,7 @@ describe('hollow roots', () => {
       [3, 'مُقَاوَلَة'],
       [5, 'تَقَوُّل'],
     ])('Form %d masdar is %s', (form, expected) => {
-      expect(deriveMasdar(getVerb('قول', form))).toBe(expected)
+      expect(deriveMasdar(getVerb('قول', form))).toEqual([expected])
     })
   })
 })
@@ -167,7 +184,7 @@ describe('doubly weak roots', () => {
       [5, 'تَوَفٍّ'],
       [10, 'اِسْتِفَاء'],
     ])('Form %d masdar is %s', (form, expected) => {
-      expect(deriveMasdar(getVerb('وفي', form))).toBe(expected)
+      expect(deriveMasdar(getVerb('وفي', form))).toEqual([expected])
     })
   })
 

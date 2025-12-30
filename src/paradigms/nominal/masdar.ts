@@ -12,11 +12,13 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
+  longVowelFromPattern,
   MEEM,
   NOON,
   SEEN,
   SHADDA,
   SUKOON,
+  shortVowelFromPattern,
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
@@ -24,10 +26,10 @@ import {
   weakLetterGlide,
   YEH,
 } from '../letters'
-import type { Verb } from '../verbs'
+import type { MasdarPattern, Verb } from '../verbs'
 import { adjustDefective, removeTerminalCaseVowel } from './nominals'
 
-function masdar(verb: Verb): readonly string[] {
+function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
   const letters = [...verb.root]
 
   if (letters.length === 4) {
@@ -54,9 +56,9 @@ function masdar(verb: Verb): readonly string[] {
 
   switch (verb.form) {
     case 1: {
-      if (verb.masdarPattern) {
+      if (pattern) {
         const finalRadical = isFinalHamza ? HAMZA : c3
-        switch (verb.masdarPattern) {
+        switch (pattern) {
           case 'fa3l':
             return adjustDefective([c1, FATHA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fa3al':
@@ -85,9 +87,13 @@ function masdar(verb: Verb): readonly string[] {
           case 'fi3aala':
             return adjustDefective([c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'mimi': {
-            const presentVowel = resolveFormIPresentVowel(verb)
+            // a -> a, i -> i, u -> i
+            const vowelPattern = resolveFormIPresentVowel(verb) !== 'a' ? 'i' : 'a'
+
+            if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), finalRadical]
+
             return adjustDefective(
-              [MEEM, FATHA, c1, presentVowel === 'i' ? KASRA : FATHA, c2, finalRadical],
+              [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), finalRadical],
               finalRadical,
               FATHA,
             )
@@ -240,6 +246,11 @@ function masdar(verb: Verb): readonly string[] {
   }
 }
 
-export function deriveMasdar(verb: Verb): string {
-  return removeTerminalCaseVowel(masdar(verb)).join('').normalize('NFC')
+export function deriveMasdar(verb: Verb): readonly string[] {
+  if (verb.form === 1 && verb.masdarPatterns) {
+    return verb.masdarPatterns.map((pattern) =>
+      removeTerminalCaseVowel(masdar(verb, pattern)).join('').normalize('NFC'),
+    )
+  }
+  return [removeTerminalCaseVowel(masdar(verb)).join('').normalize('NFC')]
 }

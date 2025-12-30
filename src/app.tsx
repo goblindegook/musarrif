@@ -217,8 +217,8 @@ export function App() {
                   label={t('meta.verbalNoun')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={masdar ? formatArabic(masdar) : '—'}
-                  speechText={masdar}
+                  value={masdar ? masdar.map((value) => formatArabic(value)).join('، ') : '—'}
+                  speechText={masdar ? masdar.join('، ') : null}
                 />
               </VerbMetaSection>
             </Panel>

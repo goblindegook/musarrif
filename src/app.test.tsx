@@ -44,6 +44,14 @@ test('Show up to five random quick pick suggestions by default', () => {
   expect(screen.getByText('Quick picks').nextElementSibling!.children.length).toBeLessThanOrEqual(5)
 })
 
+test('shows multiple masdars', () => {
+  window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
+  renderApp('/#/en/w3d-1')
+
+  const detail = screen.getByText('Verbal noun').parentElement!
+  expect(within(detail).getByText('وَعْد، مَوْعِد')).toBeInTheDocument()
+})
+
 describe('Conjugation table', () => {
   it('switches to the present-tense table via tabs', async () => {
     renderApp('/#/en/ktb-1')

@@ -6,7 +6,7 @@ import { ALIF, stripDiacritics } from './letters'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
-type MasdarPattern =
+export type MasdarPattern =
   | 'fa3aal'
   | 'fa3aala'
   | 'fa3al'
@@ -27,14 +27,13 @@ type RawFormI = {
   root: string
   form: 1
   formPattern: FormIPattern
-  masdarPattern?: MasdarPattern
+  masdarPatterns?: readonly MasdarPattern[]
   noPassiveParticiple?: boolean
 }
 
 type RawNonFormI = {
   root: string
   form: Exclude<VerbForm, 1>
-  masdarPattern?: MasdarPattern
   noPassiveParticiple?: boolean
 }
 

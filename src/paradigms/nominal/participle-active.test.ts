@@ -54,6 +54,16 @@ test.each([
   expect(deriveActiveParticiple(verb)).toBe(expected)
 })
 
+describe('Form I fa3ila active participles', () => {
+  test('use faa3il when the masdar is fu3ool', () => {
+    expect(deriveActiveParticiple(getVerb('حبط', 1))).toBe('حَابِط')
+  })
+
+  test('use fa3eel when the masdar is not fu3ool', () => {
+    expect(deriveActiveParticiple(getVerb('سعد', 1))).toBe('سَعِيد')
+  })
+})
+
 describe('regular roots', () => {
   describe('ك-ت-ب', () => {
     test.each<[VerbForm, string]>([

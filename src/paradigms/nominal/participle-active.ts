@@ -69,10 +69,10 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (c2 === ALIF_HAMZA && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
 
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
-          // Form I faʿila-yafʿalu/‑yafʿilu:
-          // - fuʿول مصدر → فَاعِل (e.g., حَابِط)
-          // - otherwise → فَعِيل (e.g., سَعِيد)
-          if (verb.masdarPattern === 'fu3ool') return adjustDefective([c1, FATHA, ALIF, c2, KASRA, c3], c3, KASRA)
+          // Form I fa3ila-yaf3alu/fa3ila‑yaf3ilu:
+          // fu3ool -> faa3il, otherwise -> fa3eel
+          if (verb.masdarPatterns?.includes('fu3ool'))
+            return adjustDefective([c1, FATHA, ALIF, c2, KASRA, c3], c3, KASRA)
 
           return adjustDefective([c1, FATHA, c2, KASRA, YEH, c3], c3, KASRA)
         }
