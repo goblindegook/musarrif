@@ -1,4 +1,4 @@
-import { resolveFormIPastVowel } from '../form-i-vowels'
+import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -70,6 +70,9 @@ function masdar(verb: Verb): readonly string[] {
           case 'fu3aal':
             if (c3 === ALIF_MAQSURA || c3 === YEH) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
             return adjustDefective([c1, DAMMA, c2, FATHA, ALIF, finalRadical], finalRadical, FATHA)
+          case 'fu3ul':
+            if (c3 === WAW) return [c1, DAMMA, c2, DAMMA, finalRadical, SHADDA]
+            return adjustDefective([c1, DAMMA, c2, DAMMA, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fi3aal':
             if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
             return adjustDefective([c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
@@ -81,6 +84,14 @@ function masdar(verb: Verb): readonly string[] {
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3aala':
             return adjustDefective([c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
+          case 'mimi': {
+            const presentVowel = resolveFormIPresentVowel(verb)
+            return adjustDefective(
+              [MEEM, FATHA, c1, presentVowel === 'i' ? KASRA : FATHA, c2, finalRadical],
+              finalRadical,
+              FATHA,
+            )
+          }
           default:
             return []
         }
@@ -117,9 +128,9 @@ function masdar(verb: Verb): readonly string[] {
         case 'u':
           return adjustDefective([c1, DAMMA, c2, DAMMA, WAW, SUKOON, c3], c3, FATHA)
         case 'i':
-          return adjustDefective([c1, KASRA, c2, ALIF, c3, TEH_MARBUTA], c3, FATHA)
+          return [c1, KASRA, c2, ALIF, c3, TEH_MARBUTA]
         case 'a':
-          return adjustDefective([c1, KASRA, ALIF, c2, FATHA, c3, TEH_MARBUTA], c3, FATHA)
+          return [c1, KASRA, ALIF, c2, FATHA, c3, TEH_MARBUTA]
         default:
           return []
       }

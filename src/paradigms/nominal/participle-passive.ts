@@ -5,6 +5,7 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -184,5 +185,5 @@ export function derivePassiveParticiple(verb: Verb): string {
     }
   })()
 
-  return removeTerminalCaseVowel(result).join('').normalize('NFC')
+  return geminateDoubleLetters(removeTerminalCaseVowel(result)).join('').normalize('NFC')
 }

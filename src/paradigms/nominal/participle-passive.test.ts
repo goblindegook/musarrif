@@ -23,7 +23,7 @@ test.each([
   ['عون', 3, 'مُعَاوَن'],
   ['عون', 4, 'مُعَان'],
   ['عون', 6, 'مُتَعَاوَن'],
-  ['غدو', 1, 'مَغْدُوو'],
+  ['غدو', 1, 'مَغْدُوّ'],
   ['فلت', 4, 'مُفْلَت'],
   ['قود', 7, 'مُنْقَاد'],
   ['قود', 8, 'مُقْتَاد'],
@@ -39,6 +39,7 @@ test.each([
   ['وفي', 5, 'مُتَوَفًّى'],
   ['وقي', 1, 'مَوْقِيّ'],
   ['ولى', 1, 'مَوْلِيّ'],
+  ['بيت', 1, 'مَبِيت'],
 ])('%s (Form %d) passive participle is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
   expect(derivePassiveParticiple(verb)).toBe(expected)

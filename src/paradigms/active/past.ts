@@ -222,9 +222,7 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
 
   // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
-  if (c2 === c3) {
-    return buildNonDefectiveForms([ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA])
-  }
+  if (c2 === c3) return buildNonDefectiveForms([ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA])
 
   // Initial hamza + middle weak + final weak (e.g., أوي → آوَى)
   if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3)) {

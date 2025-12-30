@@ -32,7 +32,7 @@ test.each([
   ['عون', 3, 'مُعَاوِن'],
   ['عون', 4, 'مُعِين'],
   ['عون', 6, 'مُتَعَاوِن'],
-  ['غدو', 1, 'غَاد'],
+  ['غدو', 1, 'غَادٍ'],
   ['فلت', 4, 'مُفْلِت'],
   ['قود', 4, 'مُقِيد'],
   ['قود', 7, 'مُنْقَاد'],
@@ -48,6 +48,7 @@ test.each([
   ['وفي', 5, 'مُتَوَفٍّ'],
   ['وقي', 1, 'وَاقٍ'],
   ['ولى', 1, 'وَالٍ'],
+  ['بيت', 1, 'بَائِت'],
 ])('%s (Form %d) active participle is %s', (root, form, expected) => {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
   expect(deriveActiveParticiple(verb)).toBe(expected)

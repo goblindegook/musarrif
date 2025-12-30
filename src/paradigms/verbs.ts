@@ -5,18 +5,22 @@ import type { FormIPattern } from './form-i-vowels'
 import { ALIF, stripDiacritics } from './letters'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+
 type MasdarPattern =
-  | 'fa3l'
-  | 'fa3al'
   | 'fa3aal'
-  | 'fu3l'
-  | 'fu3ool'
-  | 'fu3aal'
+  | 'fa3aala'
+  | 'fa3al'
+  | 'fa3l'
   | 'fi3aal'
   | 'fi3aala'
-  | 'fa3aala'
-  | 'fi3la'
   | 'fi3l'
+  | 'fi3la'
+  | 'fu3aal'
+  | 'fu3l'
+  | 'fu3ool'
+  | 'fu3ul'
+  | 'mimi'
+
 export type Tense = 'past' | 'present' | 'future' | 'imperative'
 
 type RawFormI = {

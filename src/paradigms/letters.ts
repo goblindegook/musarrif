@@ -130,6 +130,14 @@ export function geminateDoubleLetters(word: readonly string[]): readonly string[
       i = i + 2
       continue
     }
+
+    if (word[i] === word.at(i + 1)) {
+      geminated.push(word[i])
+      geminated.push(SHADDA)
+      i = i + 1
+      continue
+    }
+
     geminated.push(word[i])
   }
   return geminated

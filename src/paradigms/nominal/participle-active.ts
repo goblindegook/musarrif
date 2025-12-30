@@ -85,7 +85,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isMiddleWeak) return adjustDefective([c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3, DAMMA], c3, KASRA)
 
         // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
-        if (isFinalWeak) return [c1, FATHA, ALIF, c2, KASRA]
+        if (isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
         return adjustDefective([c1, FATHA, ALIF, c2, KASRA, c3, DAMMA], c3, KASRA)
       }
