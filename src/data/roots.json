@@ -366,6 +366,7 @@
   { "root": "فعل", "form": 2 },
   { "root": "فعل", "form": 4 },
   { "root": "فقد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "فكر", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "فكر", "form": 2 },
   { "root": "فكر", "form": 5 },
   { "root": "فكر", "form": 6 },
