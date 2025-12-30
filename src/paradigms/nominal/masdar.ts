@@ -64,6 +64,7 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
           case 'fa3al':
             return adjustDefective([c1, FATHA, c2, FATHA, finalRadical, FATHA], finalRadical, FATHA)
           case 'fa3aal':
+            if (isMiddleWeak) return [c1, FATHA, WAW, FATHA, ALIF, finalRadical]
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical], finalRadical, FATHA)
           case 'fu3l':
             return adjustDefective([c1, DAMMA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)

@@ -180,6 +180,7 @@
   { "root": "رأى", "form": 6 },
   { "root": "رأي", "form": 4 },
   { "root": "روي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "راح", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
   { "root": "راح", "form": 10 },
   { "root": "راد", "form": 4 },
   { "root": "راق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
