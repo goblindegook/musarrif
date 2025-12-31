@@ -6,6 +6,7 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -40,7 +41,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
   switch (pattern) {
     case 'fa3l':
-      return [c1, FATHA, c2, SUKOON, finalRadical]
+      return geminateDoubleLetters([c1, FATHA, c2, SUKOON, finalRadical])
 
     case 'fa3al':
       return [c1, FATHA, c2, FATHA, finalRadical]
@@ -114,7 +115,6 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
       if (isMiddleWeak) return [c1, FATHA, WAW, SUKOON, c3]
 
-      // TODO: Default to masdar mimi?
       return []
   }
 }

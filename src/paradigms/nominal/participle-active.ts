@@ -13,7 +13,6 @@ import {
   KASRA,
   MEEM,
   NOON,
-  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
@@ -40,9 +39,10 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     }
 
     const isInitialWeak = isWeakLetter(c1)
-    const isInitialHamza = c1 === ALIF_HAMZA
+    const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
+    const isFinalHamza = isHamzatedLetter(c3)
 
     switch (verb.form) {
       case 1: {
@@ -78,6 +78,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
         if (isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+
+        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
+        if (c2 === c3) return [c1, FATHA, ALIF, c2, SHADDA]
 
         return [c1, FATHA, ALIF, c2, KASRA, c3]
       }
@@ -118,14 +121,13 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Geminate Form IV active participle (e.g., مُحِبّ)
         if (c2 === c3) return [MEEM, DAMMA, seatedC1, KASRA, c2, SHADDA]
 
-        const adjusted = [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
-        return isFinalWeak ? removeTrailingDiacritics(adjusted) : adjusted
+        return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
       }
 
       case 5:
         // Initial hamza + middle weak + final weak (e.g., أوي → مُتَأَوٍّ)
         // Drop final weak and use tanween kasra on the doubled middle radical
-        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+        if (isInitialHamza && isMiddleWeak && isFinalWeak)
           return [MEEM, DAMMA, TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, TANWEEN_KASRA]
 
         // Defective Form V: drop final weak and place tanween kasra on the doubled middle radical (e.g., مُتَوَفٍّ)
@@ -135,7 +137,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
       case 6:
         // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
-        if (isMiddleWeak && isHamzatedLetter(c3)) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+        if (isMiddleWeak && isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, KASRA, c3]
 
@@ -157,15 +159,14 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 10: {
         // Initial hamza + middle weak + final weak (e.g., أوي → مُسْتَأْوٍ)
         // Initial hamza is kept as أْ, then middle weak with tanween kasra
-        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
+        if (isInitialHamza && isMiddleWeak && isFinalWeak)
           return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
 
         // Hollow Form X active participle (e.g., مُسْتَضِيف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3]
 
         // Defective Form X: preserve initial weak with sukoon, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَوْفٍ)
-        if (isFinalWeak && isInitialWeak && !isInitialHamza)
-          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_KASRA]
+        if (isFinalWeak && isInitialWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_KASRA]
 
         return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3]
       }

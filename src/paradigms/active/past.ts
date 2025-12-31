@@ -247,7 +247,7 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
   }
 
   if (isWeakLetter(c2)) {
-    const stem = removeTrailingDiacritics([ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA])
+    const stem = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3]
     return {
       base: [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA],
       baseWithSukoon: [...shortenHollowStem(stem, c2 === YEH ? KASRA : DAMMA), SUKOON],
@@ -373,8 +373,7 @@ function derivePastForms(verb: Verb): PastBaseForms {
 function transformHollowWithFinalHamza(base: readonly string[]): readonly string[] {
   // Remove alif, change fatḥa before it to kasra, replace hamza with hamza on yeh
   // Base is [أ, ج, َ, ا, ء] or [ت, ج, َ, ا, ء], we need [أ, ج, ِ, ئ] or [ت, ج, ِ, ئ]
-  const stem = removeTrailingDiacritics(base)
-  return stem
+  return removeTrailingDiacritics(base)
     .map((char, i, arr) => {
       if (char === ALIF) return null
       if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return KASRA

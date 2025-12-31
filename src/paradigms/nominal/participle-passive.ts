@@ -9,6 +9,7 @@ import {
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   longVowelFromPattern,
@@ -43,24 +44,20 @@ export function derivePassiveParticiple(verb: Verb): string {
     }
 
     const isInitialWeak = isWeakLetter(c1)
-    const isInitialHamza = c1 === ALIF_HAMZA
+    const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
+    const isFinalHamza = isHamzatedLetter(c3)
 
     switch (verb.form) {
       case 1: {
         // Initial weak + final weak (e.g., وقي → مَوْقِيّ, ولى → مَوْلِيّ)
-        if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
+        if (isInitialWeak && isFinalWeak) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
 
         // Initial hamza + final weak (e.g., أتى → مَأْتِيّ)
-        if (isInitialHamza && !isMiddleWeak && isFinalWeak)
-          return [MEEM, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA, YEH, SHADDA]
+        if (isInitialHamza && isFinalWeak) return [MEEM, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        // Assimilated (initial weak) Form I keeps the glide (e.g., وصل → مَوْصُول)
-        if (isInitialWeak && !isMiddleWeak && c2 !== ALIF_HAMZA && !isFinalWeak)
-          return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, c3]
-
-        if (c3 === ALIF_HAMZA) return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, HAMZA]
+        if (isFinalHamza) return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, HAMZA]
 
         // Hamzated defective: seat hamza on yeh with kasra, geminate the glide (e.g., مَرْئِيّ)
         if (c2 === ALIF_HAMZA && (c3 === YEH || c3 === ALIF_MAQSURA))
@@ -70,6 +67,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
         // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
+        if (c2 === ALIF) return [MEEM, FATHA, c1, DAMMA, WAW, c3]
         if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(resolveFormIPresentVowel(verb)), c3]
 
         // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)
