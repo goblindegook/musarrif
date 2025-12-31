@@ -1,4 +1,4 @@
-import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
+import { resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -56,13 +56,15 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 
   switch (verb.form) {
     case 1: {
+      const finalRadical = isFinalHamza ? HAMZA : c3
+      const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
+
       if (pattern) {
-        const finalRadical = isFinalHamza ? HAMZA : c3
         switch (pattern) {
           case 'fa3l':
             return adjustDefective([c1, FATHA, c2, SUKOON, finalRadical, DAMMA], finalRadical, FATHA)
           case 'fa3al':
-            return adjustDefective([c1, FATHA, c2, FATHA, finalRadical, FATHA], finalRadical, FATHA)
+            return [c1, FATHA, c2, FATHA, finalRadical, FATHA]
           case 'fa3aal':
             if (isMiddleWeak) return [c1, FATHA, WAW, FATHA, ALIF, finalRadical]
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical], finalRadical, FATHA)
@@ -87,17 +89,14 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
             return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
           case 'fi3aala':
             return adjustDefective([c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, FATHA)
+          case 'ifi3aal':
+            // Attested triliteral with this pattern: أوي
+            return [ALIF_HAMZA_BELOW, KASRA, c2, KASRA, c3, SHADDA]
           case 'mimi': {
             // a -> a, i -> i, u -> i
             const vowelPattern = resolveFormIPresentVowel(verb) !== 'a' ? 'i' : 'a'
-
-            if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), finalRadical]
-
-            return adjustDefective(
-              [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), finalRadical],
-              finalRadical,
-              FATHA,
-            )
+            if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), c3]
+            return adjustDefective([MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3], c3, FATHA)
           }
           default:
             return []
@@ -105,42 +104,31 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
       }
 
       // Initial weak + final weak (e.g., وقي → وِقَايَة, ولى → وِلَايَة)
-      if (isInitialWeak && !isMiddleWeak && isFinalWeak) {
-        const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
+      if (isInitialWeak && !isMiddleWeak && isFinalWeak)
         return [c1, KASRA, c2, FATHA, ALIF, finalGlide, FATHA, TEH_MARBUTA]
-      }
 
       // Initial hamza + final weak (e.g., أتى → إِتْيَان)
-      if (isInitialHamza && !isMiddleWeak && isFinalWeak) {
-        const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
+      if (isInitialHamza && !isMiddleWeak && isFinalWeak)
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
-      }
 
       // Initial hamza + middle weak + final weak (e.g., أوي → إِوِيّ)
-      if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, YEH, SHADDA]
+      if (isInitialHamza && isMiddleWeak && isFinalWeak)
+        return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, finalGlide, SHADDA]
 
       // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
-      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, YEH, FATHA, TEH_MARBUTA]
+      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, finalGlide, FATHA, TEH_MARBUTA]
 
       // Hollow verb with final hamza (e.g., جيء → مَجِيء)
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
 
-      if (isMiddleWeak) {
-        // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
-        if (c2 === WAW && c3 === YEH) return [c1, FATHA, c2, SUKOON, c3]
-        return adjustDefective([c1, FATHA, WAW, SUKOON, c3, DAMMA], c3, FATHA)
-      }
+      // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
+      if (c2 === WAW && c3 === YEH) return [c1, FATHA, c2, SUKOON, c3]
 
-      switch (resolveFormIPastVowel(verb)) {
-        case 'u':
-          return adjustDefective([c1, DAMMA, c2, DAMMA, WAW, SUKOON, c3], c3, FATHA)
-        case 'i':
-          return [c1, KASRA, c2, ALIF, c3, TEH_MARBUTA]
-        case 'a':
-          return [c1, KASRA, ALIF, c2, FATHA, c3, TEH_MARBUTA]
-        default:
-          return []
-      }
+      if (isMiddleWeak) return [c1, FATHA, WAW, SUKOON, c3, DAMMA]
+
+      // TODO: Default to masdar mimi?
+
+      return []
     }
 
     case 2:

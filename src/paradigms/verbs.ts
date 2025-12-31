@@ -19,6 +19,7 @@ export type MasdarPattern =
   | 'fu3l'
   | 'fu3ool'
   | 'fu3ul'
+  | 'ifi3aal'
   | 'mimi'
 
 export type Tense = 'past' | 'present' | 'future' | 'imperative'
