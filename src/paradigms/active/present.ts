@@ -369,8 +369,11 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const pastVowel = resolveFormIPastVowel(verb)
   const patternVowel = resolveFormIPresentVowel(verb)
 
-  // Geminate Form I: if c2 === c3, ḍamma on prefix, kasra on c1, shadda on c2 (e.g., يُحِبُّ)
-  if (c2 === c3) return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
+  // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
+  if (c2 === c3) {
+    if (patternVowel === 'u') return [YEH, FATHA, c1, DAMMA, c2, SHADDA, DAMMA]
+    return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
+  }
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
   // Initial waw drops, final weak remains with short vowel on c2
