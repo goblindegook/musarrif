@@ -26,7 +26,6 @@ import {
   YEH,
 } from '../letters'
 import type { MasdarPattern, Verb } from '../verbs'
-import { adjustDefective } from './nominals'
 
 function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
@@ -42,33 +41,33 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
   if (pattern) {
     switch (pattern) {
       case 'fa3l':
-        return adjustDefective([c1, FATHA, c2, SUKOON, finalRadical], finalRadical, '')
+        return [c1, FATHA, c2, SUKOON, finalRadical]
       case 'fa3al':
         return [c1, FATHA, c2, FATHA, finalRadical]
       case 'fa3aal':
         if (isMiddleWeak) return [c1, FATHA, WAW, FATHA, ALIF, finalRadical]
-        return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical], finalRadical, '')
+        return [c1, FATHA, c2, FATHA, ALIF, finalRadical]
       case 'fu3l':
-        return adjustDefective([c1, DAMMA, c2, SUKOON, finalRadical], finalRadical, '')
+        return [c1, DAMMA, c2, SUKOON, finalRadical]
       case 'fu3ool':
-        return adjustDefective([c1, DAMMA, c2, DAMMA, WAW, finalRadical], finalRadical, '')
+        return [c1, DAMMA, c2, DAMMA, WAW, finalRadical]
       case 'fu3aal':
         if (c3 === ALIF_MAQSURA || c3 === YEH) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
-        return adjustDefective([c1, DAMMA, c2, FATHA, ALIF, finalRadical], finalRadical, '')
+        return [c1, DAMMA, c2, FATHA, ALIF, finalRadical]
       case 'fu3ul':
         if (c3 === WAW) return [c1, DAMMA, c2, DAMMA, finalRadical, SHADDA]
-        return adjustDefective([c1, DAMMA, c2, DAMMA, finalRadical], finalRadical, '')
+        return [c1, DAMMA, c2, DAMMA, finalRadical]
       case 'fi3aal':
         if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
-        return adjustDefective([c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, '')
+        return [c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA]
       case 'fi3la':
-        return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA], finalRadical, '')
+        return [c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA]
       case 'fi3l':
-        return adjustDefective([c1, KASRA, c2, SUKOON, finalRadical], finalRadical, '')
+        return [c1, KASRA, c2, SUKOON, finalRadical]
       case 'fa3aala':
-        return adjustDefective([c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, '')
+        return [c1, FATHA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA]
       case 'fi3aala':
-        return adjustDefective([c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA], finalRadical, '')
+        return [c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA]
       case 'ifi3aal':
         // Attested triliteral with this pattern: أوي
         return [ALIF_HAMZA_BELOW, KASRA, c2, KASRA, c3, SHADDA]
@@ -76,7 +75,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
         // a -> a, i -> i, u -> i
         const vowelPattern = resolveFormIPresentVowel(verb) !== 'a' ? 'i' : 'a'
         if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), c3]
-        return adjustDefective([MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3], c3, '')
+        return [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3]
       }
       default:
         return []
@@ -155,7 +154,7 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
   // Weak final radical in Form IV takes the إِفْعَاء pattern
   if (isFinalWeak || isFinalHamza) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
 
-  return adjustDefective([ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3], c3, '')
+  return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormV(verb: Verb): readonly string[] {
@@ -260,7 +259,7 @@ function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
   if (verb.form === 4 && isHamzatedLetter(q1) && isHamzatedLetter(q4))
     return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, HAMZA]
 
-  return adjustDefective([q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA], q4, '')
+  return [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
 }
 
 function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {

@@ -23,7 +23,6 @@ import {
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
-import { adjustDefective } from './nominals'
 
 export function derivePassiveParticiple(verb: Verb): string {
   if (verb.noPassiveParticiple) return ''
@@ -40,7 +39,7 @@ export function derivePassiveParticiple(verb: Verb): string {
         return [MEEM, DAMMA, q2, SUKOON, q3, FATHA, ALIF_HAMZA]
 
       // Default Form I quadriliteral: مُفَعْلَل (e.g., مُدَحْرَج)
-      return adjustDefective([MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4], q4, '')
+      return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
     }
 
     const isInitialWeak = isWeakLetter(c1)
@@ -71,31 +70,30 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
         // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
-        if (isMiddleWeak)
-          return adjustDefective([MEEM, FATHA, c1, ...longVowelFromPattern(resolveFormIPresentVowel(verb)), c3], c3, '')
+        if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(resolveFormIPresentVowel(verb)), c3]
 
         // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)
         if (c3 === YEH || c3 === ALIF_MAQSURA) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
 
         // Standard maf'ūl pattern uses a long ū (no written sukoon on wāw)
-        return adjustDefective([MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, c3], c3, '')
+        return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, c3]
       }
 
       case 2: {
         // Geminate Form II: c2 === c3, fatḥa on c1, fatḥa then shadda on c2, then c3 (e.g., مُحَبَّب)
-        if (c2 === c3) return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, FATHA, SHADDA, c3], c3, '')
+        if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, c2, FATHA, SHADDA, c3]
 
         // Defective Form II: drop final weak and place tanween fatḥa on the doubled middle radical, convert to alif maqsura (e.g., مُوَفًّى)
         if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return adjustDefective([MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3]
       }
 
       case 3: {
         // Defective Form III passive participle: drop final weak and use tanween fatḥa + alif maqsura (e.g., وفي → مُوَافًى)
         if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return adjustDefective([MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3]
       }
 
       case 4: {
@@ -114,26 +112,26 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Defective Form IV: drop final weak and use ALIF_MAQSURA (e.g., مُعْطَى, مُمْسَى)
         if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
-        if (c2 === c3) return adjustDefective([MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA], c3, '')
+        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA]
 
-        return adjustDefective([MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, c3]
       }
 
       case 5: {
         // Defective Form V: drop final weak and place tanween fatḥa + alif maqsura on the doubled middle radical (e.g., مُتَوَفًّى)
         if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
 
-        return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3]
       }
 
       case 6: {
-        return adjustDefective([MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3]
       }
 
       case 7: {
         if (isMiddleWeak) return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, ALIF, c3]
 
-        return adjustDefective([MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3]
       }
 
       case 8: {
@@ -144,7 +142,7 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Weak final radical: drop the weak letter and place tanween fatḥ on the preceding consonant
         if (isFinalWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, ALIF_MAQSURA]
 
-        return adjustDefective([MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3]
       }
 
       case 9: {
@@ -163,7 +161,7 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Defective Form X: preserve initial weak with sukoon, then c2 with tanween fatḥa and alif maqsura (e.g., وفي → مُسْتَوْفًى)
         if (isFinalWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return adjustDefective([MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3], c3, '')
+        return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3]
       }
     }
   })()
