@@ -498,11 +498,12 @@ function derivePresentFormVII(verb: Verb): readonly string[] {
 
 function derivePresentFormVIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
+
+  if (isHamzatedLetter(c1)) return [YEH, FATHA, TEH, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
 
   if (c1 === WAW) return [YEH, FATHA, TEH, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
 
-  if (isMiddleWeak) return [YEH, FATHA, c1, SUKOON, TEH, FATHA, ALIF, c3, DAMMA]
+  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, TEH, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 }

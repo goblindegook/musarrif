@@ -145,7 +145,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3]
 
       case 8:
-        if (isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
+        if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, ALIF, c3]
 

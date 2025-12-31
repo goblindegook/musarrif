@@ -41,6 +41,7 @@ describe('active present indicative pattern', () => {
     ['قتل', 1, 'يَقْتُلُ'],
     ['قرر', 1, 'يَقُرُّ'],
     ['قرر', 4, 'يُقِرُّ'],
+    ['أخذ', 8, 'يَتَّخِذُ'],
     ['قفز', 1, 'يَقْفِزُ'],
     ['قود', 10, 'يَسْتَقِيدُ'],
     ['قود', 8, 'يَقْتَادُ'],
@@ -645,6 +646,14 @@ describe('active present jussive', () => {
       '3fs': 'تَأْوِ',
       '2fs': 'تَأْوِي',
       '3mp': 'يَأْوُوْا',
+    })
+  })
+
+  test('drops the hamza for Form VIII اِتَّخَذَ in jussive', () => {
+    expect(conjugatePresentMood(getVerb('أخذ', 8), 'jussive')).toMatchObject({
+      '3ms': 'يَتَّخِذْ',
+      '2ms': 'تَتَّخِذْ',
+      '1s': 'أَتَّخِذْ',
     })
   })
 

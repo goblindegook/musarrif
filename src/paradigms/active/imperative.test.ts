@@ -185,7 +185,27 @@ describe('imperative', () => {
   })
 
   describe('hamzated initial verbs', () => {
-    describe.todo('أ-خ-ذ')
+    describe('أ-خ-ذ', () => {
+      test('أَخَذَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('أخذ', 1))).toMatchObject({
+          '2ms': 'خُذْ',
+          '2fs': 'خُذِي',
+          '2d': 'خُذَا',
+          '2mp': 'خُذُوْا',
+          '2fp': 'خُذْنَ',
+        })
+      })
+
+      test('اِتَّخَذَ (Form VIII)', () => {
+        expect(conjugateImperative(getVerb('أخذ', 8))).toMatchObject({
+          '2ms': 'اِتَّخِذْ',
+          '2fs': 'اِتَّخِذِي',
+          '2d': 'اِتَّخِذَا',
+          '2mp': 'اِتَّخِذُوْا',
+          '2fp': 'اِتَّخِذْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated middle verbs', () => {
