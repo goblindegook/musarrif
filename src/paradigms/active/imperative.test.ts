@@ -282,6 +282,20 @@ describe('imperative', () => {
     describe.todo('ر-و-ي')
   })
 
+  describe('geminate verbs', () => {
+    describe('ح-م-م', () => {
+      test('اِسْتَحَمَّ (Form X)', () => {
+        expect(conjugateImperative(getVerb('حمم', 10))).toMatchObject({
+          '2ms': 'اِسْتَحِمَّ',
+          '2fs': 'اِسْتَحِمِّي',
+          '2d': 'اِسْتَحِمَّا',
+          '2mp': 'اِسْتَحِمُّوْا',
+          '2fp': 'اِسْتَحْمِمْنَ',
+        })
+      })
+    })
+  })
+
   describe('hamzated initial defective verbs', () => {
     describe.todo('أ-ت-ي')
   })

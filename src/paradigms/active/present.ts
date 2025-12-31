@@ -191,7 +191,12 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     return [...dropTerminalWeakOrHamza(stem), WAW, NOON, FATHA]
   },
   '2fp': (base, verb) => {
-    const stem = applyPresentPrefix(base, TEH)
+    const [c1, c2, c3] = [...verb.root]
+    const baseForFeminine =
+      verb.form === 10 && c2 === c3
+        ? [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]
+        : base
+    const stem = applyPresentPrefix(baseForFeminine, TEH)
     const expanded = verb.form === 9 ? expandShadda(stem) : stem
     return buildFemininePlural(expanded, verb)
   },
@@ -215,7 +220,12 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     return [...dropTerminalWeakOrHamza(base), WAW, NOON, FATHA]
   },
   '3fp': (base, verb) => {
-    const expanded = verb.form === 9 ? expandShadda(base) : base
+    const [c1, c2, c3] = [...verb.root]
+    const baseForFeminine =
+      verb.form === 10 && c2 === c3
+        ? [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]
+        : base
+    const expanded = verb.form === 9 ? expandShadda(baseForFeminine) : baseForFeminine
     return buildFemininePlural(expanded, verb)
   },
 }
@@ -275,6 +285,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const isMiddleWeak = isWeakLetter(c2) || (letters.length === 4 && isWeakLetter(letters[2]))
   const isFinalWeak = isWeakLetter(verb.root.at(-1))
   const isFinalHamza = isHamzatedLetter(c3)
+  const isGeminate = c2 === c3
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
@@ -313,6 +324,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       const stem = shouldShortenHollow ? shortenHollowStem(word) : word
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
+
+      if (verb.form === 10 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
 
       // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
       if (verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
@@ -517,6 +530,8 @@ function derivePresentFormX(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
 
+  if (c2 === c3) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA, DAMMA]
+
   // Hollow Form X present (e.g., يَسْتَضِيفُ)
   if (isMiddleWeak) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3, DAMMA]
 
@@ -569,7 +584,7 @@ function shortenHollowStem(word: readonly string[]): readonly string[] {
 function expandShadda(word: readonly string[]): readonly string[] {
   for (let i = 0; i < word.length - 1; i += 1) {
     if (word[i + 1] === SHADDA && !isDiacritic(word[i]))
-      // Expand shadda: replace letter + shadda with letter + fatḥa + letter
+      // Expand shadda: replace letter + shadda with letter + vowel + letter
       return [...word.slice(0, i + 1), FATHA, word[i], ...word.slice(i + 2)]
   }
   return word

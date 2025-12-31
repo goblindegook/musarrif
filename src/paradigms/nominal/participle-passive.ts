@@ -156,6 +156,8 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Hollow Form X passive participle (e.g., مُسْتَضَاف)
         if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3]
 
+        if (c2 === c3) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA]
+
         // Defective Form X: preserve initial weak with sukoon, then c2 with tanween fatḥa and alif maqsura (e.g., وفي → مُسْتَوْفًى)
         if (isFinalWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 

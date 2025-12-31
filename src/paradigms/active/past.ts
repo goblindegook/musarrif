@@ -326,6 +326,14 @@ function derivePastFormIX(verb: Verb): PastBaseForms {
 
 function derivePastFormX(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  if (c2 === c3) {
+    const base = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA]
+    return {
+      base,
+      baseWithSukoon: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON],
+      baseWithDamma: replaceFinalDiacritic(base, DAMMA),
+    }
+  }
   // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوَى)
   const base =
     c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3)

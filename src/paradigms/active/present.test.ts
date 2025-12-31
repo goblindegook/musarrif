@@ -23,6 +23,7 @@ describe('active present indicative pattern', () => {
     ['حلق', 1, 'يَحْلِقُ'],
     ['حلم', 1, 'يَحْلُمُ'],
     ['حمر', 9, 'يَحْمَرُّ'],
+    ['حمم', 10, 'يَسْتَحِمُّ'],
     ['خسر', 1, 'يَخْسَرُ'],
     ['دحرج', 1, 'يُدَحْرِجُ'],
     ['درس', 1, 'يَدْرُسُ'],
@@ -511,6 +512,28 @@ describe('active present indicative pattern', () => {
     describe.todo('ر-و-ي')
   })
 
+  describe('geminate verbs', () => {
+    describe('ح-م-م', () => {
+      test('اِسْتَحَمَّ (Form X)', () => {
+        expect(conjugatePresentMood(getVerb('حمم', 10), 'indicative')).toEqual({
+          '1s': 'أَسْتَحِمُّ',
+          '2ms': 'تَسْتَحِمُّ',
+          '2fs': 'تَسْتَحِمِّيْنَ',
+          '3ms': 'يَسْتَحِمُّ',
+          '3fs': 'تَسْتَحِمُّ',
+          '2d': 'تَسْتَحِمَّانِ',
+          '3md': 'يَسْتَحِمَّانِ',
+          '3fd': 'تَسْتَحِمَّانِ',
+          '1p': 'نَسْتَحِمُّ',
+          '2mp': 'تَسْتَحِمُّونَ',
+          '2fp': 'تَسْتَحْمِمْنَ',
+          '3mp': 'يَسْتَحِمُّونَ',
+          '3fp': 'يَسْتَحْمِمْنَ',
+        })
+      })
+    })
+  })
+
   describe('hamzated initial defective verbs', () => {
     describe.todo('أ-ت-ي')
   })
@@ -613,6 +636,25 @@ describe('active present jussive', () => {
       '2fp': 'تَتَوَفَّيْنَ',
       '3mp': 'يَتَوَفَّوْا',
       '3fp': 'يَتَوَفَّيْنَ',
+    })
+  })
+
+  test('Form X geminate verb اِسْتَحَمَّ jussive conjugation', () => {
+    // Wiktionary lists multiple jussive variants; this uses the contracted form with shadda.
+    expect(conjugatePresentMood(getVerb('حمم', 10), 'jussive')).toEqual({
+      '1s': 'أَسْتَحِمَّ',
+      '2ms': 'تَسْتَحِمَّ',
+      '2fs': 'تَسْتَحِمِّي',
+      '3ms': 'يَسْتَحِمَّ',
+      '3fs': 'تَسْتَحِمَّ',
+      '2d': 'تَسْتَحِمَّا',
+      '3md': 'يَسْتَحِمَّا',
+      '3fd': 'تَسْتَحِمَّا',
+      '1p': 'نَسْتَحِمَّ',
+      '2mp': 'تَسْتَحِمُّوْا',
+      '2fp': 'تَسْتَحْمِمْنَ',
+      '3mp': 'يَسْتَحِمُّوْا',
+      '3fp': 'يَسْتَحْمِمْنَ',
     })
   })
 
