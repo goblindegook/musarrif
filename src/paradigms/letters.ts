@@ -110,7 +110,7 @@ export function removeLeadingDiacritics(chars: readonly string[]): readonly stri
 
 export function removeTrailingDiacritics(chars: readonly string[]): readonly string[] {
   const result = [...chars]
-  while (isDiacritic(result.at(-1))) result.pop()
+  while (isDiacritic(last(result))) result.pop()
   return result
 }
 
@@ -169,6 +169,10 @@ export function findLastLetterIndex(word: readonly string[], beforeIndex?: numbe
   return word.findLastIndex((char, i) => i < index && !isDiacritic(char))
 }
 
+export function last(word: readonly string[]): string | undefined {
+  return word.at(-1)
+}
+
 interface RootAnalysis {
   type:
     | 'strong'
@@ -194,9 +198,10 @@ export function analyzeRoot(root: string): RootAnalysis {
     if (isHamzatedLetter(letter)) hamzaPositions.push(index)
   })
 
-  const isInitialWeak = isWeakLetter(letters.at(0))
-  const isMiddleWeak = isWeakLetter(letters.at(1))
-  const isFinalWeak = isWeakLetter(letters.at(-1))
+  const [c1, c2, c3] = Array.from(letters)
+  const isInitialWeak = isWeakLetter(c1)
+  const isMiddleWeak = isWeakLetter(c2)
+  const isFinalWeak = isWeakLetter(c3)
   const hasHamza = hamzaPositions.length > 0
 
   if (isInitialWeak && isFinalWeak) return { type: 'doubly-weak', weakPositions, hamzaPositions }
