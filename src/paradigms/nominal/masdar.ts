@@ -192,6 +192,7 @@ function deriveMasdarFormVI(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isFinalHamza = isHamzatedLetter(c3)
+  const seatedC2WithDamma = isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2
 
   // Hollow defective Form VI with alif c2 doesn't repeat the alif (e.g., تَعَانٍ)
   if (c2 === ALIF && isFinalWeak) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
@@ -205,7 +206,7 @@ function deriveMasdarFormVI(verb: Verb): readonly string[] {
   // Hollow Form VI with alif c2 drops the alif and takes tanween kasra pattern (e.g., تَعَانٍ)
   if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
-  return [TEH, FATHA, c1, FATHA, ALIF, c2, DAMMA, c3]
+  return [TEH, FATHA, c1, FATHA, ALIF, seatedC2WithDamma, DAMMA, c3]
 }
 
 function deriveMasdarFormVII(verb: Verb): readonly string[] {

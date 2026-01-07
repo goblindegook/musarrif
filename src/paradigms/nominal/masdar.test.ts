@@ -184,6 +184,10 @@ describe('hamzated middle roots', () => {
     test('سَاءَلَ (Form III)', () => {
       expect(deriveMasdar(getVerb('سأل', 3))).toEqual(['مُسَاءَلَة'])
     })
+
+    test('تَسَاءَلَ (Form VI)', () => {
+      expect(deriveMasdar(getVerb('سأل', 6))).toEqual(['تَسَاؤُل'])
+    })
   })
 })
 

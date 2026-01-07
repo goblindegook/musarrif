@@ -211,7 +211,7 @@
   { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سأل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3aal"] },
   { "root": "سأل", "form": 3 },
-  { "root": "سأل", "form": 10 },
+  { "root": "سأل", "form": 6 },
   { "root": "ساف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سبب", "form": 2 },
   { "root": "سبح", "form": 1, "formPattern": "fa3ala-yaf3alu" },

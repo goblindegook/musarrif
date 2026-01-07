@@ -10,6 +10,7 @@ import {
   findLastLetterIndex,
   findLetterIndex,
   findWeakLetterIndex,
+  HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
@@ -479,7 +480,8 @@ function derivePresentFormV(verb: Verb): readonly string[] {
 
 function derivePresentFormVI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, DAMMA]
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, c3, DAMMA]
 }
 
 function derivePresentFormVII(verb: Verb): readonly string[] {
