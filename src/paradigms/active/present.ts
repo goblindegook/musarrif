@@ -16,6 +16,7 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
+  last,
   longVowelFromPattern,
   NOON,
   removeLeadingDiacritics,
@@ -30,7 +31,6 @@ import {
   WAW,
   weakLetterGlide,
   YEH,
-  last,
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
@@ -438,7 +438,8 @@ function derivePresentFormII(verb: Verb): readonly string[] {
 
 function derivePresentFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3, DAMMA]
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+  return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIV(verb: Verb): readonly string[] {

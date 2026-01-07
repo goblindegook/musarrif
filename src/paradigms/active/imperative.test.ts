@@ -219,6 +219,16 @@ describe('imperative', () => {
           '2fp': 'اِسْأَلْنَ',
         })
       })
+
+      test('سَاءَلَ (Form III)', () => {
+        expect(conjugateImperative(getVerb('سأل', 3))).toMatchObject({
+          '2ms': 'سَائِلْ',
+          '2fs': 'سَائِلِي',
+          '2d': 'سَائِلَا',
+          '2mp': 'سَائِلُوْا',
+          '2fp': 'سَائِلْنَ',
+        })
+      })
     })
   })
 

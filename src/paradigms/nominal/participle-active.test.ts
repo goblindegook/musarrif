@@ -125,6 +125,10 @@ describe('hamzated middle roots', () => {
     test('سَأَلَ (Form I)', () => {
       expect(deriveActiveParticiple(getVerb('سأل', 1))).toBe('سَائِل')
     })
+
+    test('سَاءَلَ (Form III)', () => {
+      expect(deriveActiveParticiple(getVerb('سأل', 3))).toBe('مُسَائِل')
+    })
   })
 })
 

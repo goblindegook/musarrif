@@ -89,7 +89,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return [c1, FATHA, ALIF, c2, KASRA, c3]
       }
 
-      case 2:
+      case 2: {
         // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., مُحَبِّب)
         if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3]
 
@@ -97,11 +97,14 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
 
         return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, KASRA, c3]
+      }
 
-      case 3:
+      case 3: {
         // Defective Form III active participle: drop final weak and use tanween kasra (e.g., وفي → مُوَافٍ)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-        return [MEEM, DAMMA, c1, FATHA, ALIF, c2, KASRA, c3]
+        const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, TANWEEN_KASRA]
+        return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3]
+      }
 
       case 4: {
         const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
@@ -128,7 +131,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
       }
 
-      case 5:
+      case 5: {
         // Initial hamza + middle weak + final weak (e.g., أوي → مُتَأَوٍّ)
         // Drop final weak and use tanween kasra on the doubled middle radical
         if (isInitialHamza && isMiddleWeak && isFinalWeak)
@@ -138,27 +141,32 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
 
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, c3]
+      }
 
-      case 6:
+      case 6: {
         // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
         if (isMiddleWeak && isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, KASRA, c3]
+      }
 
-      case 7:
+      case 7: {
         if (isMiddleWeak) return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, ALIF, c3]
 
         return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3]
+      }
 
-      case 8:
+      case 8: {
         if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, ALIF, c3]
 
         return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3]
+      }
 
-      case 9:
+      case 9: {
         return [MEEM, DAMMA, c1, SUKOON, c2, FATHA, c3, SHADDA]
+      }
 
       case 10: {
         // Initial hamza + middle weak + final weak (e.g., أوي → مُسْتَأْوٍ)

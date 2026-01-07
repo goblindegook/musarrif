@@ -132,13 +132,15 @@ function deriveMasdarFormII(verb: Verb): readonly string[] {
 
 function deriveMasdarFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
   // Defective Form III masdar: drop final weak and use مُفَاعَاة pattern (e.g., وفي → مُوَافَاة)
   // Pattern: مُ + فَ + ا + عَ + ا + ء + ة = مُفَاعَاة
   // Similar to Form I fu3aal but with MEEM prefix and TEH_MARBUTA suffix
-  if (c3 === ALIF_MAQSURA || c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, ALIF, HAMZA, TEH_MARBUTA]
+  if (c3 === ALIF_MAQSURA || c3 === YEH)
+    return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, HAMZA, TEH_MARBUTA]
 
-  return [MEEM, DAMMA, c1, FATHA, ALIF, c2, FATHA, c3, FATHA, TEH_MARBUTA]
+  return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
 }
 
 function deriveMasdarFormIV(verb: Verb): readonly string[] {

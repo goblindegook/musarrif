@@ -180,6 +180,10 @@ describe('hamzated middle roots', () => {
     test('سَأَلَ (Form I)', () => {
       expect(deriveMasdar(getVerb('سأل', 1))).toEqual(['سُؤَال'])
     })
+
+    test('سَاءَلَ (Form III)', () => {
+      expect(deriveMasdar(getVerb('سأل', 3))).toEqual(['مُسَاءَلَة'])
+    })
   })
 })
 
