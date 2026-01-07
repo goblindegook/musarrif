@@ -46,6 +46,7 @@ export function derivePassiveParticiple(verb: Verb): string {
     const isInitialWeak = isWeakLetter(c1)
     const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
+    const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
     const isFinalHamza = isHamzatedLetter(c3)
 
@@ -62,6 +63,9 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Hamzated defective: seat hamza on yeh with kasra, geminate the glide (e.g., مَرْئِيّ)
         if (c2 === ALIF_HAMZA && (c3 === YEH || c3 === ALIF_MAQSURA))
           return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
+
+        // Middle hamza in the maf'ūl pattern seats on wāw after ḍamma (e.g., سأل → مَسْؤُول)
+        if (isMiddleHamza) return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_WAW, DAMMA, WAW, c3]
 
         if (c2 === WAW && c3 === YEH) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, c3, SHADDA]
 

@@ -468,7 +468,29 @@ describe('active past pattern', () => {
   })
 
   describe('hamzated middle verbs', () => {
-    describe.todo('س-أ-ل')
+    describe('س-أ-ل', () => {
+      test('سَأَلَ (Form I)', () => {
+        expect(conjugatePast(getVerb('سأل', 1))).toEqual({
+          '1s': 'سَأَلْتُ',
+          '2ms': 'سَأَلْتَ',
+          '2fs': 'سَأَلْتِ',
+          '3ms': 'سَأَلَ',
+          '3fs': 'سَأَلَتْ',
+          '2d': 'سَأَلْتُمَا',
+          '3md': 'سَأَلَا',
+          '3fd': 'سَأَلَتَا',
+          '1p': 'سَأَلْنَا',
+          '2mp': 'سَأَلْتُمْ',
+          '2fp': 'سَأَلْتُنَّ',
+          '3mp': 'سَأَلُوا',
+          '3fp': 'سَأَلْنَ',
+        })
+      })
+
+      test.todo('سَاءَلَ (Form III)')
+
+      test.todo('تَسَاءَلَ (Form VI)')
+    })
   })
 
   describe('hamzated final verbs', () => {

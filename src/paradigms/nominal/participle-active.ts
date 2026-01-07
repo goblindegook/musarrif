@@ -41,6 +41,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     const isInitialWeak = isWeakLetter(c1)
     const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
+    const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
     const isFinalHamza = isHamzatedLetter(c3)
 
@@ -60,6 +61,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         // Hamzated defective (middle hamza, final glide) seats hamza on the line with tanween kasra: رَاءٍ
         if (c2 === ALIF_HAMZA && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
+
+        // Middle hamza in faa'il seats on yeh after kasra (e.g., سأل → سَائِل)
+        if (isMiddleHamza) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
 
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
           // Form I fa3ila-yaf3alu/fa3ila‑yaf3ilu:

@@ -176,7 +176,11 @@ describe('hamzated initial roots', () => {
 })
 
 describe('hamzated middle roots', () => {
-  describe.todo('س-أ-ل')
+  describe('س-أ-ل', () => {
+    test('سَأَلَ (Form I)', () => {
+      expect(deriveMasdar(getVerb('سأل', 1))).toEqual(['سُؤَال'])
+    })
+  })
 })
 
 describe('hamzated final roots', () => {

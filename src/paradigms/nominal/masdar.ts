@@ -57,6 +57,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       return [c1, DAMMA, c2, DAMMA, WAW, finalRadical]
 
     case 'fu3aal':
+      if (isMiddleHamza) return [c1, DAMMA, HAMZA_ON_WAW, FATHA, ALIF, finalRadical]
       if (c3 === ALIF_MAQSURA || c3 === YEH) return [c1, FATHA, c2, FATHA, ALIF, HAMZA]
       return [c1, DAMMA, c2, FATHA, ALIF, finalRadical]
 

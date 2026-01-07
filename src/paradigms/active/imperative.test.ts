@@ -209,7 +209,17 @@ describe('imperative', () => {
   })
 
   describe('hamzated middle verbs', () => {
-    describe.todo('س-أ-ل')
+    describe('س-أ-ل', () => {
+      test('سَأَلَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('سأل', 1))).toMatchObject({
+          '2ms': 'اِسْأَلْ',
+          '2fs': 'اِسْأَلِي',
+          '2d': 'اِسْأَلَا',
+          '2mp': 'اِسْأَلُوْا',
+          '2fp': 'اِسْأَلْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated final verbs', () => {

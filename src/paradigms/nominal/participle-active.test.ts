@@ -121,7 +121,11 @@ describe('hamzated initial roots', () => {
 })
 
 describe('hamzated middle roots', () => {
-  describe.todo('س-أ-ل')
+  describe('س-أ-ل', () => {
+    test('سَأَلَ (Form I)', () => {
+      expect(deriveActiveParticiple(getVerb('سأل', 1))).toBe('سَائِل')
+    })
+  })
 })
 
 describe('hamzated final roots', () => {

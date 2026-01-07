@@ -391,7 +391,25 @@ describe('active present indicative pattern', () => {
   })
 
   describe('hamzated middle verbs', () => {
-    describe.todo('س-أ-ل')
+    describe('س-أ-ل', () => {
+      test('سَأَلَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('سأل', 1), 'indicative')).toEqual({
+          '1s': 'أَسْأَلُ',
+          '2ms': 'تَسْأَلُ',
+          '2fs': 'تَسْأَلِيْنَ',
+          '3ms': 'يَسْأَلُ',
+          '3fs': 'تَسْأَلُ',
+          '2d': 'تَسْأَلَانِ',
+          '3md': 'يَسْأَلَانِ',
+          '3fd': 'تَسْأَلَانِ',
+          '1p': 'نَسْأَلُ',
+          '2mp': 'تَسْأَلُونَ',
+          '2fp': 'تَسْأَلْنَ',
+          '3mp': 'يَسْأَلُونَ',
+          '3fp': 'يَسْأَلْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated final verbs', () => {
