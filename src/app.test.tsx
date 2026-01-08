@@ -46,7 +46,7 @@ test('Show up to five random quick pick suggestions by default', () => {
 
 test('shows multiple masdars', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
-  renderApp('/#/en/w3d-1')
+  renderApp('/#/en/wEd-1')
 
   const detail = screen.getByText('Verbal noun').parentElement!
   expect(within(detail).getByText('وَعْد، مَوْعِد')).toBeInTheDocument()
@@ -243,7 +243,7 @@ describe('Form', () => {
   })
 
   it('has insights with linked examples', async () => {
-    renderApp('/#/en/3lm-5')
+    renderApp('/#/en/Elm-5')
     const user = userEvent.setup()
     const formDetail = screen.getByText('Form')
 
