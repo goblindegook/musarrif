@@ -253,7 +253,27 @@ describe('imperative', () => {
   })
 
   describe('hamzated final verbs', () => {
-    describe.todo('ق-ر-أ')
+    describe('ق-ر-أ', () => {
+      test('قَرَأَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('قرأ', 1))).toMatchObject({
+          '2ms': 'اِقْرَأْ',
+          '2fs': 'اِقْرَئِي',
+          '2d': 'اِقْرَآ',
+          '2mp': 'اِقْرَأُوا',
+          '2fp': 'اِقْرَأْنَ',
+        })
+      })
+
+      test('اِسْتَقْرَأَ (Form X)', () => {
+        expect(conjugateImperative(getVerb('قرأ', 10))).toMatchObject({
+          '2ms': 'اِسْتَقْرِئْ',
+          '2fs': 'اِسْتَقْرِئِي',
+          '2d': 'اِسْتَقْرِئَا',
+          '2mp': 'اِسْتَقْرِئُوا',
+          '2fp': 'اِسْتَقْرِئْنَ',
+        })
+      })
+    })
   })
 
   describe('doubly weak verbs', () => {

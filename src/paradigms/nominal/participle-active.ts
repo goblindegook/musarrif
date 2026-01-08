@@ -177,15 +177,29 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isInitialHamza && isMiddleWeak && isFinalWeak)
           return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
 
+        const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+
         // Hollow Form X active participle (e.g., مُسْتَضِيف)
-        if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3]
+        if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, seatedC3]
 
         // Defective Form X: preserve initial weak with sukoon, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَوْفٍ)
         if (isFinalWeak && isInitialWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_KASRA]
 
         if (c2 === c3) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA]
 
-        return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, KASRA, c3]
+        return [
+          MEEM,
+          DAMMA,
+          SEEN,
+          SUKOON,
+          TEH,
+          FATHA,
+          c1,
+          SUKOON,
+          isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2,
+          KASRA,
+          seatedC3,
+        ]
       }
       default:
         return []

@@ -263,7 +263,8 @@ function deriveMasdarFormX(verb: Verb): readonly string[] {
 
   if (isHamzatedLetter(c2)) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, ALIF_MADDA, c3]
 
-  if (isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
+  if (isHamzatedLetter(c3) || isFinalWeak)
+    return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
 
   return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, c3]
 }

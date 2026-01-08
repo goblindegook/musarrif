@@ -140,7 +140,14 @@ describe('hamzated middle roots', () => {
 })
 
 describe('hamzated final roots', () => {
-  describe.todo('ق-ر-أ')
+  describe('ق-ر-أ', () => {
+    test.each<[VerbForm, string]>([
+      [1, 'قَارِئ'],
+      [10, 'مُسْتَقْرِئ'],
+    ])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('قرأ', form))).toBe(expected)
+    })
+  })
 })
 
 describe('doubly weak roots', () => {
