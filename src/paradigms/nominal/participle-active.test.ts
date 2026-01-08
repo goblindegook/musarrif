@@ -117,21 +117,24 @@ describe('defective roots', () => {
 })
 
 describe('hamzated initial roots', () => {
+  describe('أ-ك-ل', () => {
+    test.each<[VerbForm, string]>([[1, 'آكِل']])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('أكل', form))).toBe(expected)
+    })
+  })
+
   describe.todo('أ-خ-ذ')
 })
 
 describe('hamzated middle roots', () => {
   describe('س-أ-ل', () => {
-    test('سَأَلَ (Form I)', () => {
-      expect(deriveActiveParticiple(getVerb('سأل', 1))).toBe('سَائِل')
-    })
-
-    test('سَاءَلَ (Form III)', () => {
-      expect(deriveActiveParticiple(getVerb('سأل', 3))).toBe('مُسَائِل')
-    })
-
-    test('تَسَاءَلَ (Form VI)', () => {
-      expect(deriveActiveParticiple(getVerb('سأل', 6))).toBe('مُتَسَائِل')
+    test.each<[VerbForm, string]>([
+      [1, 'سَائِل'],
+      [3, 'مُسَائِل'],
+      [6, 'مُتَسَائِل'],
+      [10, 'مُسْتَسْئِل'],
+    ])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('سأل', form))).toBe(expected)
     })
   })
 })

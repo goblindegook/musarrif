@@ -56,6 +56,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Initial hamza + final weak (e.g., أتى → آتٍ)
         if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF_MADDA, c2, TANWEEN_KASRA]
 
+        // Initial hamza + sound root coalesces into alif madda in faa3il (e.g., أكل → آكِل)
+        if (isInitialHamza && !isMiddleWeak && !isFinalWeak) return [ALIF_MADDA, c2, KASRA, c3]
+
         // Assimilated (initial weak) Form I keeps the glide (e.g., وصل → وَاصِل)
         if (isInitialWeak && !isMiddleWeak && c2 !== ALIF_HAMZA && !isFinalWeak) return [c1, FATHA, ALIF, c2, KASRA, c3]
 
@@ -182,7 +185,19 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (c2 === c3) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA]
 
-        return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3]
+        return [
+          MEEM,
+          DAMMA,
+          SEEN,
+          SUKOON,
+          TEH,
+          FATHA,
+          c1,
+          SUKOON,
+          isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2,
+          KASRA,
+          c3,
+        ]
       }
       default:
         return []

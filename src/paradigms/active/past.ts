@@ -85,8 +85,13 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA, ALIF]
     return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
   },
-  '2mp': (forms) => {
+  '2mp': (forms, verb) => {
+    const [, c2] = [...verb.root]
+    const dropFinalSukoon = verb.form === 10 && isHamzatedLetter(c2)
+    if ('defectiveBase' in forms && dropFinalSukoon)
+      return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM]
     if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
+    if (dropFinalSukoon) return [...forms.baseWithSukoon, TEH, DAMMA, MEEM]
     return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON]
   },
   '2fp': (forms) => {

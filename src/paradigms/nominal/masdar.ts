@@ -3,6 +3,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
+  ALIF_MADDA,
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
@@ -259,6 +260,9 @@ function deriveMasdarFormX(verb: Verb): readonly string[] {
 
   // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
   if (isMiddleWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
+
+  if (isHamzatedLetter(c2))
+    return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, ALIF_MADDA, c3]
 
   if (isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
 

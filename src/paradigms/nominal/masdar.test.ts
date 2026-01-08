@@ -172,21 +172,24 @@ describe('defective roots', () => {
 })
 
 describe('hamzated initial roots', () => {
+  describe('أ-ك-ل', () => {
+    test.each<[VerbForm, string]>([[1, 'أَكْل']])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('أكل', form))).toEqual([expected])
+    })
+  })
+
   describe.todo('أ-خ-ذ')
 })
 
 describe('hamzated middle roots', () => {
   describe('س-أ-ل', () => {
-    test('سَأَلَ (Form I)', () => {
-      expect(deriveMasdar(getVerb('سأل', 1))).toEqual(['سُؤَال'])
-    })
-
-    test('سَاءَلَ (Form III)', () => {
-      expect(deriveMasdar(getVerb('سأل', 3))).toEqual(['مُسَاءَلَة'])
-    })
-
-    test('تَسَاءَلَ (Form VI)', () => {
-      expect(deriveMasdar(getVerb('سأل', 6))).toEqual(['تَسَاؤُل'])
+    test.each<[VerbForm, readonly string[]]>([
+      [1, ['سُؤَال']],
+      [3, ['مُسَاءَلَة']],
+      [6, ['تَسَاؤُل']],
+      [10, ['اِسْتِسْآل']],
+    ])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('سأل', form))).toEqual(expected)
     })
   })
 })

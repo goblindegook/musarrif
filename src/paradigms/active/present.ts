@@ -113,6 +113,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isWeakLetter(c2) && (c2 === ALIF || [3, 5].includes(verb.form)))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
 
+    if (verb.form === 10 && isHamzatedLetter(c2))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
+
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, SUKOON, NOON, FATHA]
   },
   '3ms': (base) => base,
@@ -521,13 +524,14 @@ function derivePresentFormIX(verb: Verb): readonly string[] {
 function derivePresentFormX(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
 
   if (c2 === c3) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA, DAMMA]
 
   // Hollow Form X present (e.g., يَسْتَضِيفُ)
   if (isMiddleWeak) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, c3, DAMMA]
 
-  return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]
+  return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, seatedC2, KASRA, c3, DAMMA]
 }
 
 function derivePresentForms(verb: Verb): readonly string[] {

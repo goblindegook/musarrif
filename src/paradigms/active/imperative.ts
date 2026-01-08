@@ -7,6 +7,7 @@ import {
   DAMMA,
   FATHA,
   HAMZA_ON_YEH,
+  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   last,
@@ -35,7 +36,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3, c4] = letters
   const isInitialWeak = isWeakLetter(c1)
-  const isInitialHamza = c1 === ALIF_HAMZA
+  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = letters.length === 4 ? isWeakLetter(c3) : isWeakLetter(c2)
   const isFinalWeak = letters.length === 4 ? isWeakLetter(c4) : isWeakLetter(c3)
 
@@ -145,6 +146,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           // Form X defective verbs: restore final weak letter in dual forms
           if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
+
+          if (pronounId === '2mp' && isHamzatedLetter(c2) && stem.at(-2) === SUKOON)
+            return [ALIF, KASRA, ...stem.slice(0, -2), stem.at(-1)]
 
           return [ALIF, KASRA, ...stem]
         }
