@@ -80,7 +80,7 @@ const TRANSLITERATION_MAP: Record<string, string> = {
   ي: 'y',
   ة: 'p',
   ى: 'Y',
-  ء: '\'',
+  ء: "'",
   ؤ: '&',
   ئ: '}',
 }

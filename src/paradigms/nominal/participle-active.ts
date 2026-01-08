@@ -185,19 +185,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (c2 === c3) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA]
 
-        return [
-          MEEM,
-          DAMMA,
-          SEEN,
-          SUKOON,
-          TEH,
-          FATHA,
-          c1,
-          SUKOON,
-          isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2,
-          KASRA,
-          c3,
-        ]
+        return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, KASRA, c3]
       }
       default:
         return []

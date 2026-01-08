@@ -39,7 +39,11 @@ test('Show the title', () => {
   expect(screen.getByText('Muṣarrif')).toBeInTheDocument()
 })
 
-test.each([['klm-2', 'كَلَّمَ']])('renders %s as %s', (id, expectedPast) => {
+test.each([
+  ['klm-2', 'كَلَّمَ'],
+  ['sfr-1', 'سَفَرَ'],
+  ['sfr-2', 'سَفَّرَ'],
+])('renders %s as %s', (id, expectedPast) => {
   renderApp(`/#/en/${id}`)
 
   expect(screen.getAllByText(expectedPast).length).toBeGreaterThan(0)

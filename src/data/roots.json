@@ -228,6 +228,8 @@
   },
   { "root": "سعد", "form": 3 },
   { "root": "سعى", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["mimi"] },
+  { "root": "سفر", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
+  { "root": "سفر", "form": 2 },
   { "root": "سفر", "form": 3 },
   { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سلم", "form": 10 },
