@@ -39,6 +39,12 @@ test('Show the title', () => {
   expect(screen.getByText('Muṣarrif')).toBeInTheDocument()
 })
 
+test.each([['klm-2', 'كَلَّمَ']])('renders %s as %s', (id, expectedPast) => {
+  renderApp(`/#/en/${id}`)
+
+  expect(screen.getAllByText(expectedPast).length).toBeGreaterThan(0)
+})
+
 test('Show up to five random quick pick suggestions by default', () => {
   renderApp('/#/en')
   expect(screen.getByText('Quick picks').nextElementSibling!.children.length).toBeLessThanOrEqual(5)
