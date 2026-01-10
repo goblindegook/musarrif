@@ -54,12 +54,14 @@ test('Show up to five random quick pick suggestions by default', () => {
   expect(screen.getByText('Quick picks').nextElementSibling!.children.length).toBeLessThanOrEqual(5)
 })
 
-test('shows multiple masdars', () => {
+test('shows multiple masdars with a mimi label', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderApp('/#/en/wEd-1')
 
   const detail = screen.getByText('Verbal noun').parentElement!
-  expect(within(detail).getByText('وَعْد، مَوْعِد')).toBeInTheDocument()
+  expect(within(detail).getByText('وَعْد')).toBeInTheDocument()
+  expect(within(detail).getByText('مَوْعِد')).toBeInTheDocument()
+  expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
 describe('Conjugation table', () => {

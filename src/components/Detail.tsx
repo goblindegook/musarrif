@@ -118,7 +118,7 @@ const DetailLabel = styled('span')`
 
 const DetailValue = styled('span')`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex-direction: row;
   gap: 0.5rem;
@@ -129,7 +129,7 @@ const DetailValue = styled('span')`
 
 const DetailContent = styled('span')`
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
 `
 

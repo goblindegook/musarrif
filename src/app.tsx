@@ -224,10 +224,23 @@ export function App() {
                   label={t('meta.verbalNoun')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={masdar?.map((value) => formatArabic(value)).join('، ') || '—'}
+                  value={masdar ? undefined : '—'}
                   speechText={masdar ? masdar.join('، ') : null}
                   copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
-                />
+                >
+                  {masdar && (
+                    <MasdarList>
+                      {masdar.map((value, index) => (
+                        <MasdarItem key={value}>
+                          <span>{formatArabic(value)}</span>
+                          {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
+                            <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
+                          )}
+                        </MasdarItem>
+                      ))}
+                    </MasdarList>
+                  )}
+                </Detail>
               </VerbMetaSection>
             </Panel>
 
@@ -456,6 +469,24 @@ const VerbMetaSection = styled('section')`
   @media (min-width: 960px) {
     grid-template-columns: repeat(3, 1fr);
   }
+`
+
+const MasdarList = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`
+
+const MasdarItem = styled('div')`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+`
+
+const MasdarNote = styled('span')`
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #64748b;
 `
 
 const ConjugationSection = styled('div')`
