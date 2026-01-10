@@ -97,6 +97,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 2: {
+          if (isInitialHamza) return [ALIF_HAMZA, ...stem.slice(1)]
+
           // Geminate Form II: change kasra on c1 to fatha, and kasra before shadda (e.g., حَبِّ)
           if (c2 === c3) return [c1, FATHA, c2, KASRA, SHADDA]
 

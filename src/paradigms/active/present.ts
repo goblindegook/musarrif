@@ -503,13 +503,14 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 function derivePresentFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
+  const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
   // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., يُحَبِّبُ)
-  if (c2 === c3) return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
+  if (c2 === c3) return [YEH, DAMMA, seatedC1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
 
   // Defective Form II verbs don't have final ḍamma
-  if (isFinalWeak) return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3]
+  if (isFinalWeak) return [YEH, DAMMA, seatedC1, FATHA, c2, KASRA, SHADDA, c3]
 
-  return [YEH, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
+  return [YEH, DAMMA, seatedC1, FATHA, c2, KASRA, SHADDA, c3, DAMMA]
 }
 
 function derivePresentFormIII(verb: Verb): readonly string[] {

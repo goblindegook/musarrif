@@ -221,6 +221,20 @@ describe('imperative', () => {
     })
   })
 
+  describe('hamzated initial hollow verbs', () => {
+    describe('أ-ي-د', () => {
+      test('أَيَّدَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('أيد', 2))).toMatchObject({
+          '2ms': 'أَيِّدْ',
+          '2fs': 'أَيِّدِي',
+          '2d': 'أَيِّدَا',
+          '2mp': 'أَيِّدُوْا',
+          '2fp': 'أَيِّدْنَ',
+        })
+      })
+    })
+  })
+
   describe('hamzated middle verbs', () => {
     describe('س-أ-ل', () => {
       test('سَأَلَ (Form I)', () => {

@@ -488,6 +488,28 @@ describe('active past pattern', () => {
     })
   })
 
+  describe('hamzated initial hollow verbs', () => {
+    describe('أ-ي-د', () => {
+      test('أَيَّدَ (Form II)', () => {
+        expect(conjugatePast(getVerb('أيد', 2))).toEqual({
+          '1s': 'أَيَّدْتُ',
+          '2ms': 'أَيَّدْتَ',
+          '2fs': 'أَيَّدْتِ',
+          '3ms': 'أَيَّدَ',
+          '3fs': 'أَيَّدَتْ',
+          '2d': 'أَيَّدْتُمَا',
+          '3md': 'أَيَّدَا',
+          '3fd': 'أَيَّدَتَا',
+          '1p': 'أَيَّدْنَا',
+          '2mp': 'أَيَّدْتُمْ',
+          '2fp': 'أَيَّدْتُنَّ',
+          '3mp': 'أَيَّدُوا',
+          '3fp': 'أَيَّدْنَ',
+        })
+      })
+    })
+  })
+
   describe('hamzated middle verbs', () => {
     describe('س-أ-ل', () => {
       test('سَأَلَ (Form I)', () => {

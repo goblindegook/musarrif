@@ -407,8 +407,26 @@ describe('active present indicative pattern', () => {
     })
   })
 
-  describe('hamzated initial verbs', () => {
-    describe.todo('أ-خ-ذ')
+  describe('hamzated initial hollow verbs', () => {
+    describe('أ-ي-د', () => {
+      test('أَيَّدَ (Form II)', () => {
+        expect(conjugatePresentMood(getVerb('أيد', 2), 'indicative')).toEqual({
+          '1s': 'أُؤَيِّدُ',
+          '2ms': 'تُؤَيِّدُ',
+          '2fs': 'تُؤَيِّدِينَ',
+          '3ms': 'يُؤَيِّدُ',
+          '3fs': 'تُؤَيِّدُ',
+          '2d': 'تُؤَيِّدَانِ',
+          '3md': 'يُؤَيِّدَانِ',
+          '3fd': 'تُؤَيِّدَانِ',
+          '1p': 'نُؤَيِّدُ',
+          '2mp': 'تُؤَيِّدُونَ',
+          '2fp': 'تُؤَيِّدْنَ',
+          '3mp': 'يُؤَيِّدُونَ',
+          '3fp': 'يُؤَيِّدْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated middle verbs', () => {
@@ -745,6 +763,26 @@ describe('active present jussive', () => {
     })
   })
 
+  describe('hamzated initial hollow verbs', () => {
+    test('أَيَّدَ (Form II)', () => {
+      expect(conjugatePresentMood(getVerb('أيد', 2), 'jussive')).toEqual({
+        '1s': 'أُؤَيِّدْ',
+        '2ms': 'تُؤَيِّدْ',
+        '2fs': 'تُؤَيِّدِي',
+        '3ms': 'يُؤَيِّدْ',
+        '3fs': 'تُؤَيِّدْ',
+        '2d': 'تُؤَيِّدَا',
+        '3md': 'يُؤَيِّدَا',
+        '3fd': 'تُؤَيِّدَا',
+        '1p': 'نُؤَيِّدْ',
+        '2mp': 'تُؤَيِّدُوْا',
+        '2fp': 'تُؤَيِّدْنَ',
+        '3mp': 'يُؤَيِّدُوْا',
+        '3fp': 'يُؤَيِّدْنَ',
+      })
+    })
+  })
+
   test('Form II defective verb وَفَّى preserves shadda in jussive', () => {
     expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqual({
       '1s': 'أُوَفِّ',
@@ -971,6 +1009,26 @@ describe('active present subjunctive', () => {
       '2fp': 'تَبْقَيْنَ',
       '3mp': 'يَبْقَوْا',
       '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
+  describe('hamzated initial hollow verbs', () => {
+    test('subjunctive conjugation for أَيَّدَ (Form II)', () => {
+      expect(conjugatePresentMood(getVerb('أيد', 2), 'subjunctive')).toEqual({
+        '1s': 'أُؤَيِّدَ',
+        '2ms': 'تُؤَيِّدَ',
+        '2fs': 'تُؤَيِّدِي',
+        '3ms': 'يُؤَيِّدَ',
+        '3fs': 'تُؤَيِّدَ',
+        '2d': 'تُؤَيِّدَا',
+        '3md': 'يُؤَيِّدَا',
+        '3fd': 'تُؤَيِّدَا',
+        '1p': 'نُؤَيِّدَ',
+        '2mp': 'تُؤَيِّدُوْا',
+        '2fp': 'تُؤَيِّدْنَ',
+        '3mp': 'يُؤَيِّدُوْا',
+        '3fp': 'يُؤَيِّدْنَ',
+      })
     })
   })
 

@@ -34,7 +34,7 @@
   { "root": "أوي", "form": 10 },
   { "root": "أوي", "form": 4 },
   { "root": "أوي", "form": 5 },
-  { "root": "أيد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "أيد", "form": 2 },
   { "root": "ابت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ارت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "الت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
