@@ -233,6 +233,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('أ-و-د', () => {
+      test('أَوَّدَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('أود', 2))).toMatchObject({
+          '2ms': 'أَوِّدْ',
+          '2fs': 'أَوِّدِي',
+          '2d': 'أَوِّدَا',
+          '2mp': 'أَوِّدُوْا',
+          '2fp': 'أَوِّدْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated middle verbs', () => {
