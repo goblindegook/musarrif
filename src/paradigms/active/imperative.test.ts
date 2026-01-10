@@ -22,6 +22,10 @@ describe('imperative', () => {
     expect(imperative['2ms']).toBe(expected2ms)
   })
 
+  test('Form X imperative pattern for اِسْتَعْمَلَ', () => {
+    expect(conjugateImperative(getVerb('عمل', 10))['2ms']).toBe('اِسْتَعْمِلْ')
+  })
+
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {
@@ -276,16 +280,6 @@ describe('imperative', () => {
           '2d': 'تَسَاءَلَا',
           '2mp': 'تَسَاءَلُوْا',
           '2fp': 'تَسَاءَلْنَ',
-        })
-      })
-
-      test('اِسْتَسْأَلَ (Form X)', () => {
-        expect(conjugateImperative(getVerb('سأل', 10))).toMatchObject({
-          '2ms': 'اِسْتَسْئِلْ',
-          '2fs': 'اِسْتَسْئِلِي',
-          '2d': 'اِسْتَسْئِلَا',
-          '2mp': 'اِسْتَسْئِلُوا',
-          '2fp': 'اِسْتَسْئِلْنَ',
         })
       })
     })

@@ -25,6 +25,7 @@ test.each([
   ['عون', 3, 'مُعَاوَن'],
   ['عون', 4, 'مُعَان'],
   ['عون', 6, 'مُتَعَاوَن'],
+  ['عمل', 10, 'مُسْتَعْمَل'],
   ['غدو', 1, 'مَغْدُوّ'],
   ['فلت', 4, 'مُفْلَت'],
   ['قود', 7, 'مُنْقَاد'],
@@ -135,10 +136,6 @@ describe('hamzated middle roots', () => {
 
     test('تَسَاءَلَ (Form VI)', () => {
       expect(derivePassiveParticiple(getVerb('سأل', 6))).toBe('مُتَسَاءَل')
-    })
-
-    test('اِسْتَسْأَلَ (Form X)', () => {
-      expect(derivePassiveParticiple(getVerb('سأل', 10))).toBe('مُسْتَسْأَل')
     })
   })
 })
