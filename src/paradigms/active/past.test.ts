@@ -407,6 +407,27 @@ describe('active past pattern', () => {
         })
       })
     })
+
+    // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
+    describe('ب-ق-ي', () => {
+      test('بَقِيَ (Form I)', () => {
+        expect(conjugatePast(getVerb('بقي', 1))).toEqual({
+          '1s': 'بَقِيتُ',
+          '2ms': 'بَقِيتَ',
+          '2fs': 'بَقِيتِ',
+          '3ms': 'بَقِيَ',
+          '3fs': 'بَقِيَتْ',
+          '2d': 'بَقِيتُمَا',
+          '3md': 'بَقِيَا',
+          '3fd': 'بَقِيَتَا',
+          '1p': 'بَقِينَا',
+          '2mp': 'بَقِيتُمْ',
+          '2fp': 'بَقِيتُنَّ',
+          '3mp': 'بَقُوا',
+          '3fp': 'بَقِينَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial verbs', () => {

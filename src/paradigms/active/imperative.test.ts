@@ -177,6 +177,19 @@ describe('imperative', () => {
   })
 
   describe('defective verbs', () => {
+    // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
+    describe('ب-ق-ي', () => {
+      test('بَقِيَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('بقي', 1))).toMatchObject({
+          '2ms': 'اِبْقَ',
+          '2fs': 'اِبْقَيْ',
+          '2d': 'اِبْقَيَا',
+          '2mp': 'اِبْقَوْا',
+          '2fp': 'اِبْقَيْنَ',
+        })
+      })
+    })
+
     describe('ر-م-ي', () => {
       test.todo('رَمَى (Form I)')
       test.todo('رَمَّى (Form II)')

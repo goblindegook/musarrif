@@ -39,64 +39,82 @@ function weakLetterTail(letter: string): string {
 
 interface NonDefectivePastBaseForms {
   base: readonly string[]
-  baseWithSukoon: readonly string[]
-  baseWithDamma: readonly string[]
+  suffixedBase?: readonly string[]
+  pluralBase?: readonly string[]
 }
 
 interface DefectivePastBaseForms {
   base: readonly string[]
-  defectiveBase: readonly string[]
   glide: string
+  suffixedBase: readonly string[]
+  pluralBase: readonly string[]
 }
 
 type PastBaseForms = NonDefectivePastBaseForms | DefectivePastBaseForms
 
+function nonDefectiveSuffixedBase(forms: NonDefectivePastBaseForms): readonly string[] {
+  return forms.suffixedBase ?? replaceFinalDiacritic(forms.base, SUKOON)
+}
+
+function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
+  if (forms.suffixedBase.at(-1) === SUKOON) return forms.suffixedBase.slice(0, -2)
+  return forms.suffixedBase.slice(0, -1)
+}
+
 const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
   '1s': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA]
-    return [...forms.baseWithSukoon, TEH, DAMMA]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA]
+    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA]
   },
   '2ms': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, FATHA]
-    return [...forms.baseWithSukoon, TEH, FATHA]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, FATHA]
+    return [...nonDefectiveSuffixedBase(forms), TEH, FATHA]
   },
   '2fs': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, KASRA]
-    return [...forms.baseWithSukoon, TEH, KASRA]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, KASRA]
+    return [...nonDefectiveSuffixedBase(forms), TEH, KASRA]
   },
   '3ms': (forms) => forms.base,
   '3fs': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, TEH, SUKOON]
+    if ('glide' in forms) {
+      if (forms.suffixedBase.at(-1) === SUKOON) return [...defectiveStem(forms), TEH, SUKOON]
+      return [...forms.suffixedBase, FATHA, TEH, SUKOON]
+    }
     return [...forms.base, TEH, SUKOON]
   },
   '2d': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF]
-    return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, FATHA, ALIF]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF]
+    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, FATHA, ALIF]
   },
   '3md': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, FATHA, ALIF]
+    if ('glide' in forms) {
+      const glide = forms.suffixedBase.at(-1) === SUKOON ? forms.suffixedBase.at(-2) : forms.suffixedBase.at(-1)
+      return [...defectiveStem(forms), glide ?? '', FATHA, ALIF]
+    }
     return [...forms.base, ALIF]
   },
   '3fd': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, TEH, FATHA, ALIF]
+    if ('glide' in forms) {
+      if (forms.suffixedBase.at(-1) === SUKOON) return [...defectiveStem(forms), TEH, FATHA, ALIF]
+      return [...forms.suffixedBase, FATHA, TEH, FATHA, ALIF]
+    }
     return [...forms.base, TEH, FATHA, ALIF]
   },
   '1p': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA, ALIF]
-    return [...forms.baseWithSukoon, NOON, FATHA, ALIF]
+    if ('glide' in forms) return [...forms.suffixedBase, NOON, FATHA, ALIF]
+    return [...nonDefectiveSuffixedBase(forms), NOON, FATHA, ALIF]
   },
   '2mp': (forms, verb) => {
     const [, c2] = [...verb.root]
     const dropFinalSukoon = verb.form === 10 && isHamzatedLetter(c2)
-    if ('defectiveBase' in forms && dropFinalSukoon)
-      return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM]
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, MEEM, SUKOON]
-    if (dropFinalSukoon) return [...forms.baseWithSukoon, TEH, DAMMA, MEEM]
-    return [...forms.baseWithSukoon, TEH, DAMMA, MEEM, SUKOON]
+    if ('glide' in forms && dropFinalSukoon) return [...forms.suffixedBase, TEH, DAMMA, MEEM]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, SUKOON]
+    if (dropFinalSukoon) return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM]
+    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, SUKOON]
   },
   '2fp': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA]
-    return [...forms.baseWithSukoon, TEH, DAMMA, NOON, SHADDA, FATHA]
+    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA]
+    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, NOON, SHADDA, FATHA]
   },
   '3mp': (forms, verb) => {
     const [, c2, c3] = [...verb.root]
@@ -110,16 +128,20 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
         ALIF,
       ]
 
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide === YEH ? WAW : forms.glide, SUKOON, ALIF]
-    return [...forms.baseWithDamma, WAW, ALIF]
+    if ('glide' in forms) return [...forms.pluralBase, ALIF]
+
+    const pluralBase = forms.pluralBase ?? replaceFinalDiacritic(forms.base, DAMMA)
+    if (pluralBase.at(-1) === WAW) return [...pluralBase, ALIF]
+    return [...pluralBase, WAW, ALIF]
   },
   '3fp': (forms) => {
-    if ('defectiveBase' in forms) return [...forms.defectiveBase, forms.glide, SUKOON, NOON, FATHA]
+    if ('glide' in forms) return [...forms.suffixedBase, NOON, FATHA]
 
-    // If baseWithSukoon ends with NOON, geminate with shadda when adding NOON suffix
-    if (forms.baseWithSukoon.at(-2) === NOON) return [...forms.baseWithSukoon.slice(0, -2), NOON, SHADDA, FATHA]
+    // If the suffixed base ends with NOON, geminate with shadda when adding NOON suffix
+    const suffixedBase = nonDefectiveSuffixedBase(forms)
+    if (suffixedBase.at(-2) === NOON) return [...suffixedBase.slice(0, -2), NOON, SHADDA, FATHA]
 
-    return [...forms.baseWithSukoon, NOON, FATHA]
+    return [...suffixedBase, NOON, FATHA]
   },
 }
 
@@ -140,19 +162,19 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 
 function buildDefectiveForms(base: readonly string[], c3: string): DefectivePastBaseForms {
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
+  const glide = c3 === WAW || c3 === ALIF ? WAW : YEH
+  const suffixedBase = [...normalizedBase.slice(0, -1), glide, SUKOON]
+  const pluralBase = [...suffixedBase.slice(0, -2), glide === YEH ? WAW : glide, SUKOON]
   return {
     base: normalizedBase,
-    defectiveBase: normalizedBase.slice(0, -1),
-    glide: c3 === WAW || c3 === ALIF ? WAW : YEH,
+    glide,
+    suffixedBase,
+    pluralBase,
   }
 }
 
 function buildNonDefectiveForms(base: readonly string[]): NonDefectivePastBaseForms {
-  return {
-    base,
-    baseWithSukoon: replaceFinalDiacritic(base, SUKOON),
-    baseWithDamma: replaceFinalDiacritic(base, DAMMA),
-  }
+  return { base }
 }
 
 function deriveQuadriliteralPastForms(verb: Verb): NonDefectivePastBaseForms {
@@ -166,12 +188,13 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
-  if (isWeakLetter(c3) && pastVowel === 'i')
+  if (isWeakLetter(c3) && pastVowel === 'i') {
     return {
       base: c3 === ALIF_MAQSURA || c3 === ALIF ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
-      defectiveBase: [c1, FATHA, c2, KASRA],
-      glide: c3 === WAW || c3 === ALIF ? WAW : YEH,
+      suffixedBase: [c1, FATHA, c2, KASRA, YEH],
+      pluralBase: [c1, FATHA, c2, DAMMA, WAW],
     }
+  }
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   if (isWeakLetter(c3))
@@ -187,17 +210,17 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
       base,
-      baseWithSukoon: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
-      baseWithDamma: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA],
+      suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
+      pluralBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA],
     }
 
   // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
-  // baseWithDamma keeps the alif for 3mp (قَالُوا)
+  // pluralBase keeps the alif for 3mp (قَالُوا)
   if (isWeakLetter(c2))
     return {
       base,
-      baseWithSukoon: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      baseWithDamma: replaceFinalDiacritic(base, DAMMA),
+      suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
+      pluralBase: replaceFinalDiacritic(base, DAMMA),
     }
 
   return buildNonDefectiveForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA])
@@ -247,8 +270,8 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
     const base = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA]
     return {
       base,
-      baseWithSukoon: [...transformHollowWithFinalHamza(base), SUKOON],
-      baseWithDamma: [...transformHollowWithFinalHamza(base), DAMMA],
+      suffixedBase: [...transformHollowWithFinalHamza(base), SUKOON],
+      pluralBase: [...transformHollowWithFinalHamza(base), DAMMA],
     }
   }
 
@@ -256,8 +279,8 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
     const stem = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3]
     return {
       base: [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA],
-      baseWithSukoon: [...shortenHollowStem(stem, c2 === YEH ? KASRA : DAMMA), SUKOON],
-      baseWithDamma: [...stem, DAMMA],
+      suffixedBase: [...shortenHollowStem(stem, c2 === YEH ? KASRA : DAMMA), SUKOON],
+      pluralBase: [...stem, DAMMA],
     }
   }
 
@@ -280,8 +303,8 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
     const base = [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
     return {
       base,
-      baseWithSukoon: [...transformHollowWithFinalHamza(base), SUKOON],
-      baseWithDamma: [...transformHollowWithFinalHamza(base), DAMMA],
+      suffixedBase: [...transformHollowWithFinalHamza(base), SUKOON],
+      pluralBase: [...transformHollowWithFinalHamza(base), DAMMA],
     }
   }
 
@@ -337,8 +360,8 @@ function derivePastFormX(verb: Verb): PastBaseForms {
     const base = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA]
     return {
       base,
-      baseWithSukoon: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON],
-      baseWithDamma: replaceFinalDiacritic(base, DAMMA),
+      suffixedBase: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON],
+      pluralBase: replaceFinalDiacritic(base, DAMMA),
     }
   }
   // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوَى)

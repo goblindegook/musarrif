@@ -384,6 +384,27 @@ describe('active present indicative pattern', () => {
         })
       })
     })
+
+    // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
+    describe('ب-ق-ي', () => {
+      test('بَقِيَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('بقي', 1), 'indicative')).toEqual({
+          '1s': 'أَبْقَى',
+          '2ms': 'تَبْقَى',
+          '2fs': 'تَبْقَيْنَ',
+          '3ms': 'يَبْقَى',
+          '3fs': 'تَبْقَى',
+          '2d': 'تَبْقَيَانِ',
+          '3md': 'يَبْقَيَانِ',
+          '3fd': 'تَبْقَيَانِ',
+          '1p': 'نَبْقَى',
+          '2mp': 'تَبْقَوْنَ',
+          '2fp': 'تَبْقَيْنَ',
+          '3mp': 'يَبْقَوْنَ',
+          '3fp': 'يَبْقَيْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial verbs', () => {
@@ -706,6 +727,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for بَقِيَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqual({
+      '1s': 'أَبْقَ',
+      '2ms': 'تَبْقَ',
+      '2fs': 'تَبْقَيْ',
+      '3ms': 'يَبْقَ',
+      '3fs': 'تَبْقَ',
+      '2d': 'تَبْقَيَا',
+      '3md': 'يَبْقَيَا',
+      '3fd': 'تَبْقَيَا',
+      '1p': 'نَبْقَ',
+      '2mp': 'تَبْقَوْا',
+      '2fp': 'تَبْقَيْنَ',
+      '3mp': 'يَبْقَوْا',
+      '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
   test('Form II defective verb وَفَّى preserves shadda in jussive', () => {
     expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqual({
       '1s': 'أُوَفِّ',
@@ -914,6 +953,24 @@ describe('active present subjunctive', () => {
       '1s': 'أَجِيءَ',
       '1p': 'نَجِيءَ',
       '3fs': 'تَجِيءَ',
+    })
+  })
+
+  test('subjunctive conjugation for بَقِيَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('بقي', 1), 'subjunctive')).toEqual({
+      '1s': 'أَبْقَى',
+      '2ms': 'تَبْقَى',
+      '2fs': 'تَبْقَيْ',
+      '3ms': 'يَبْقَى',
+      '3fs': 'تَبْقَى',
+      '2d': 'تَبْقَيَا',
+      '3md': 'يَبْقَيَا',
+      '3fd': 'تَبْقَيَا',
+      '1p': 'نَبْقَى',
+      '2mp': 'تَبْقَوْا',
+      '2fp': 'تَبْقَيْنَ',
+      '3mp': 'يَبْقَوْا',
+      '3fp': 'يَبْقَيْنَ',
     })
   })
 
