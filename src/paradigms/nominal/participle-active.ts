@@ -70,8 +70,10 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
           // Form I fa3ila-yaf3alu/fa3ila‑yaf3ilu:
-          // fu3ool -> faa3il, otherwise -> fa3eel
-          if (verb.masdarPatterns?.includes('fu3ool')) return [c1, FATHA, ALIF, c2, KASRA, c3]
+          // fu3ool/fa3al -> faa3il, otherwise -> fa3eel
+          if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al')) {
+            return [c1, FATHA, ALIF, c2, KASRA, c3]
+          }
 
           return [c1, FATHA, c2, KASRA, YEH, c3]
         }

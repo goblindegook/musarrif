@@ -22,10 +22,6 @@ describe('imperative', () => {
     expect(imperative['2ms']).toBe(expected2ms)
   })
 
-  test('Form X imperative pattern for اِسْتَعْمَلَ', () => {
-    expect(conjugateImperative(getVerb('عمل', 10))['2ms']).toBe('اِسْتَعْمِلْ')
-  })
-
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {
@@ -457,6 +453,9 @@ describe('imperative', () => {
   })
 
   it.each([
+    ['عمل', 1, 'اِعْمَلْ'],
+    ['عمل', 2, 'عَمِّلْ'],
+    ['عمل', 10, 'اِسْتَعْمِلْ'],
     ['وقي', 1, 'قِ'],
     ['ولى', 1, 'لِ'],
     ['أنشأ', 4, 'أَنْشِئْ'],
