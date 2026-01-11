@@ -75,6 +75,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Hamzated initial strong verbs drop the hamza
           if (isInitialHamza) return removeLeadingDiacritics(stem.slice(1))
 
+          if (c2 === c3 && presentVowel === 'i' && pronounId === '2ms') return [c1, KASRA, c2, SHADDA, FATHA]
+
           // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
           // This is a morphological rule based on past pattern classification, even though
           // the imperative is technically derived from the present tense (jussive)

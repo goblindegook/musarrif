@@ -446,6 +446,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
   if (c2 === c3) {
     if (patternVowel === 'u') return [YEH, FATHA, c1, DAMMA, c2, SHADDA, DAMMA]
+    if (patternVowel === 'i') return [YEH, FATHA, c1, KASRA, c2, SHADDA, DAMMA]
     return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
   }
 
