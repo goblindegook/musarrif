@@ -400,6 +400,7 @@
   { "root": "قرر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
   { "root": "قرر", "form": 4 },
   { "root": "قرر", "form": 10 },
+  { "root": "قرح", "form": 8 },
   { "root": "قسم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3la"] },
   { "root": "قطع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "قعد", "form": 6 },

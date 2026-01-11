@@ -232,7 +232,7 @@ function deriveMasdarFormVIII(verb: Verb): readonly string[] {
 
   if (isWeakLetter(c2)) return [ALIF, KASRA, c1, SUKOON, TEH, KASRA, YEH, FATHA, ALIF, c3]
 
-  return [ALIF, KASRA, c1, SUKOON, TEH, KASRA, c2, ALIF, c3]
+  return [ALIF, KASRA, c1, SUKOON, TEH, KASRA, c2, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormIX(verb: Verb): readonly string[] {
