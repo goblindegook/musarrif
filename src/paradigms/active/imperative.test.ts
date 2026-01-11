@@ -228,7 +228,7 @@ describe('imperative', () => {
           '2ms': 'أَيِّدْ',
           '2fs': 'أَيِّدِي',
           '2d': 'أَيِّدَا',
-          '2mp': 'أَيِّدُوْا',
+          '2mp': 'أَيِّدُوا',
           '2fp': 'أَيِّدْنَ',
         })
       })
@@ -240,7 +240,7 @@ describe('imperative', () => {
           '2ms': 'أَوِّدْ',
           '2fs': 'أَوِّدِي',
           '2d': 'أَوِّدَا',
-          '2mp': 'أَوِّدُوْا',
+          '2mp': 'أَوِّدُوا',
           '2fp': 'أَوِّدْنَ',
         })
       })
@@ -282,6 +282,18 @@ describe('imperative', () => {
   })
 
   describe('hamzated final verbs', () => {
+    describe('ب-د-أ', () => {
+      test('بَدَأَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('بدأ', 1))).toMatchObject({
+          '2ms': 'اِبْدَأْ',
+          '2fs': 'اِبْدَئِي',
+          '2d': 'اِبْدَآ',
+          '2mp': 'اِبْدَأُوا',
+          '2fp': 'اِبْدَأْنَ',
+        })
+      })
+    })
+
     describe('ق-ر-أ', () => {
       test('قَرَأَ (Form I)', () => {
         expect(conjugateImperative(getVerb('قرأ', 1))).toMatchObject({

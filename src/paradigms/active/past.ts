@@ -7,6 +7,7 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  findLastLetterIndex,
   geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
@@ -61,6 +62,13 @@ function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
   return forms.suffixedBase.slice(0, -1)
 }
 
+function shouldCollapseHamzaDual(base: readonly string[]): boolean {
+  const hamzaIndex = base.findLastIndex((char) => isHamzatedLetter(char))
+  if (hamzaIndex < 0) return false
+  const previousLetterIndex = findLastLetterIndex(base, hamzaIndex)
+  return base.at(previousLetterIndex) !== ALIF
+}
+
 const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
   '1s': (forms) => {
     if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA]
@@ -86,11 +94,14 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, FATHA, ALIF]
   },
-  '3md': (forms) => {
+  '3md': (forms, verb) => {
     if ('glide' in forms) {
       const glide = forms.suffixedBase.at(-1) === SUKOON ? forms.suffixedBase.at(-2) : forms.suffixedBase.at(-1)
       return [...defectiveStem(forms), glide ?? '', FATHA, ALIF]
     }
+    const lastRoot = verb.root.at(-1)
+    if (isHamzatedLetter(lastRoot) && shouldCollapseHamzaDual(forms.base))
+      return [...forms.base.slice(0, -2), ALIF_MADDA]
     return [...forms.base, ALIF]
   },
   '3fd': (forms) => {

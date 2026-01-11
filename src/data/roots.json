@@ -42,7 +42,6 @@
   { "root": "باع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بحث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بدأ", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "بدأ", "form": 5 },
   { "root": "بدل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "بدل", "form": 10 },
   { "root": "بدل", "form": 2 },
