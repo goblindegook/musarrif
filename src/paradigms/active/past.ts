@@ -313,6 +313,14 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
+  if (c2 === c3) {
+    return {
+      base: [TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA, FATHA],
+      suffixedBase: [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, SUKOON],
+      pluralBase: [TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA, DAMMA],
+    }
+  }
+
   // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
     const base = [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]

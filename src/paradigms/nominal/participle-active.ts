@@ -154,6 +154,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
         if (isMiddleWeak && isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
+        if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
+
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, KASRA, c3]
       }
 

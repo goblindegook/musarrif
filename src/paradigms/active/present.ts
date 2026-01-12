@@ -68,6 +68,8 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
 
   if (verb.form === 4 && c2 === c3) return [expanded[0], DAMMA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
 
+  if (verb.form === 6 && c2 === c3) return [...replaceFinalDiacritic(expandShadda(expanded), SUKOON), NOON, FATHA]
+
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c1) && isWeakLetter(c3) && verb.form === 2) return [...expanded, NOON, FATHA]
 
@@ -578,6 +580,7 @@ function derivePresentFormV(verb: Verb): readonly string[] {
 function derivePresentFormVI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  if (c2 === c3) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA, DAMMA]
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, c3, DAMMA]
 }
 

@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { getVerb, type VerbForm, verbs } from '../verbs'
 import { derivePassiveParticiple } from './participle-passive'
 
-test.each([
+test.each<[string, VerbForm, string]>([
   ['أتي', 1, 'مَأْتِيّ'],
   ['أمن', 4, 'مُؤْمَن'],
   ['أنشأ', 4, 'مُنْشَأ'],
@@ -17,6 +17,7 @@ test.each([
   ['حبب', 4, 'مُحَبّ'],
   ['حبب', 1, 'مَحْبُوب'],
   ['حبب', 5, 'مُتَحَبَّب'],
+  ['حبب', 6, 'مُتَحَابّ'],
   ['تمم', 1, 'مَتْمُوم'],
   ['قرح', 8, 'مُقْتَرَح'],
   ['ذكر', 1, 'مَذْكُور'],
@@ -58,8 +59,7 @@ test.each([
   ['ولى', 1, 'مَوْلِيّ'],
   ['بيت', 1, 'مَبِيت'],
 ])('%s (Form %d) passive participle is %s', (root, form, expected) => {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-  expect(derivePassiveParticiple(verb)).toBe(expected)
+  expect(derivePassiveParticiple(getVerb(root, form))).toBe(expected)
 })
 
 test.each([

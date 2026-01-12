@@ -128,6 +128,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 6: {
+        if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3]
       }
 
