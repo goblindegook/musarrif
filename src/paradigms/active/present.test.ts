@@ -25,7 +25,7 @@ describe('active present indicative pattern', () => {
     ['عمل', 1, 'يَعْمَلُ'],
     ['عمل', 2, 'يُعَمِّلُ'],
     ['جمع', 1, 'يَجْمَعُ'],
-    ['حبب', 1, 'يُحِبُّ'],
+    ['حبب', 1, 'يَحِبُّ'],
     ['حبب', 2, 'يُحَبِّبُ'],
     ['حبط', 1, 'يَحْبَطُ'],
     ['حسب', 1, 'يَحْسُبُ'],
@@ -692,6 +692,26 @@ describe('active present indicative pattern', () => {
         })
       })
     })
+
+    describe('ح-ب-ب', () => {
+      test('حَبَّ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('حبب', 1), 'indicative')).toEqual({
+          '1s': 'أَحِبُّ',
+          '2ms': 'تَحِبُّ',
+          '2fs': 'تَحِبِّيْنَ',
+          '3ms': 'يَحِبُّ',
+          '3fs': 'تَحِبُّ',
+          '2d': 'تَحِبَّانِ',
+          '3md': 'يَحِبَّانِ',
+          '3fd': 'تَحِبَّانِ',
+          '1p': 'نَحِبُّ',
+          '2mp': 'تَحِبُّونَ',
+          '2fp': 'تَحْبِبْنَ',
+          '3mp': 'يَحِبُّونَ',
+          '3fp': 'يَحْبِبْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial defective verbs', () => {
@@ -856,6 +876,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for حَبَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('حبب', 1), 'jussive')).toEqual({
+      '1s': 'أَحِبَّ',
+      '2ms': 'تَحِبَّ',
+      '2fs': 'تَحِبِّي',
+      '3ms': 'يَحِبَّ',
+      '3fs': 'تَحِبَّ',
+      '2d': 'تَحِبَّا',
+      '3md': 'يَحِبَّا',
+      '3fd': 'تَحِبَّا',
+      '1p': 'نَحِبَّ',
+      '2mp': 'تَحِبُّوْا',
+      '2fp': 'تَحْبِبْنَ',
+      '3mp': 'يَحِبُّوْا',
+      '3fp': 'يَحْبِبْنَ',
+    })
+  })
+
   test('shortens hollow stems without suffixes for قَالَ', () => {
     expect(conjugatePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
       '3ms': 'يَقُلْ',
@@ -1012,6 +1050,24 @@ describe('active present subjunctive', () => {
     expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObject({
       '2fp': 'تَحْمَرَرْنَ',
       '3fp': 'يَحْمَرَرْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for حَبَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('حبب', 1), 'subjunctive')).toEqual({
+      '1s': 'أَحِبَّ',
+      '2ms': 'تَحِبَّ',
+      '2fs': 'تَحِبِّي',
+      '3ms': 'يَحِبَّ',
+      '3fs': 'تَحِبَّ',
+      '2d': 'تَحِبَّا',
+      '3md': 'يَحِبَّا',
+      '3fd': 'تَحِبَّا',
+      '1p': 'نَحِبَّ',
+      '2mp': 'تَحِبُّوْا',
+      '2fp': 'تَحْبِبْنَ',
+      '3mp': 'يَحِبُّوْا',
+      '3fp': 'يَحْبِبْنَ',
     })
   })
 

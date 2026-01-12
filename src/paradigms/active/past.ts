@@ -211,8 +211,12 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   if (isWeakLetter(c3))
     return buildDefectiveForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)], c3)
 
-  // Geminate Form I: if c2 === c3, collapse with shadda (e.g., حَبَّ)
-  if (c2 === c3) return buildNonDefectiveForms([c1, FATHA, c2, SHADDA, FATHA])
+  // Geminate Form I: collapse 3ms, expand in suffixed forms (e.g., حَبَّ / حَبَبْتُ)
+  if (c2 === c3)
+    return {
+      base: [c1, FATHA, c2, SHADDA, FATHA],
+      suffixedBase: [c1, FATHA, c2, FATHA, c3, SUKOON],
+    }
 
   const base = [c1, FATHA, ALIF, c3, FATHA]
 

@@ -64,6 +64,8 @@ function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readon
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
 
+  if (verb.form === 1 && c2 === c3) return [expanded[0], FATHA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
+
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c1) && isWeakLetter(c3) && verb.form === 2) return [...expanded, NOON, FATHA]
 

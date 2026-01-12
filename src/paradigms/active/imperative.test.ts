@@ -395,6 +395,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('ح-ب-ب', () => {
+      test('حَبَّ (Form I)', () => {
+        expect(conjugateImperative(getVerb('حبب', 1))).toMatchObject({
+          '2ms': 'حِبَّ',
+          '2fs': 'حِبِّي',
+          '2d': 'حِبَّا',
+          '2mp': 'حِبُّوْا',
+          '2fp': 'اِحْبِبْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial defective verbs', () => {

@@ -53,7 +53,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       return [c1, FATHA, c2, FATHA, ALIF, finalRadical]
 
     case 'fu3l':
-      return [c1, DAMMA, c2, SUKOON, finalRadical]
+      return geminateDoubleLetters([c1, DAMMA, c2, SUKOON, finalRadical])
 
     case 'fu3ool':
       return [c1, DAMMA, c2, DAMMA, WAW, finalRadical]

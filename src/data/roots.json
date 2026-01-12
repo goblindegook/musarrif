@@ -87,7 +87,7 @@
   { "root": "جمل", "form": 2 },
   { "root": "جهد", "form": 3 },
   { "root": "جهز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حبب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "حبب", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3l"] },
   { "root": "حبب", "form": 10 },
   { "root": "حبب", "form": 2 },
   { "root": "حبب", "form": 3 },
