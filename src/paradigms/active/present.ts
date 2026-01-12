@@ -66,6 +66,8 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
 
   if (verb.form === 1 && c2 === c3) return [expanded[0], FATHA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
 
+  if (verb.form === 4 && c2 === c3) return [expanded[0], DAMMA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
+
   // Form II defective verbs preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c1) && isWeakLetter(c3) && verb.form === 2) return [...expanded, NOON, FATHA]
 
@@ -398,6 +400,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       const stem = HOLLOW_APOCOPE_FORMS.has(verb.form) && isWeakLetter(c2) ? shortenHollowStem(word) : word
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
+
+      if (verb.form === 4 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
 
       if (verb.form === 10 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
 

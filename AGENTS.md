@@ -155,6 +155,13 @@ test('descriptive test name', () => {
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
 - ❌ **NEVER normalize test expectations to match incorrect production output**: If tests fail due to Unicode normalization or format issues, fix production code. Normalizing expectations to match wrong output hides bugs and makes tests meaningless.
 
+### Conjugation Test Strategy
+
+- **Pattern-first coverage**: When a verb form/type/tense or mood already has a full conjugation table test elsewhere, add only a main pattern test for new verbs.
+- **Escalation rule**: If a main pattern test fails, write a full conjugation table test for that verb and tense/mood before changing production code. Keep these tests grouped by their type (e.g. regular, geminated, defective, etc.)
+- **Imperative rule**: If an imperative pattern test fails, write full conjugation tables for both the imperative and the jussive before changing the implementation.
+- **Nominals**: Active participle, passive participle, and masdar stay in the table-driven pattern tests because they are simpler.
+
 ### Validating Test Expectations
 
 **⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, validate from authoritative sources. Do not rely on assumptions or memory.**
