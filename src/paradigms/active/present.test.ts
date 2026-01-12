@@ -894,6 +894,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for حَبَّبَ (Form II)', () => {
+    expect(conjugatePresentMood(getVerb('حبب', 2), 'jussive')).toEqual({
+      '1s': 'أُحَبِّبْ',
+      '2ms': 'تُحَبِّبْ',
+      '2fs': 'تُحَبِّبِي',
+      '3ms': 'يُحَبِّبْ',
+      '3fs': 'تُحَبِّبْ',
+      '2d': 'تُحَبِّبَا',
+      '3md': 'يُحَبِّبَا',
+      '3fd': 'تُحَبِّبَا',
+      '1p': 'نُحَبِّبْ',
+      '2mp': 'تُحَبِّبُوْا',
+      '2fp': 'تُحَبِّبْنَ',
+      '3mp': 'يُحَبِّبُوْا',
+      '3fp': 'يُحَبِّبْنَ',
+    })
+  })
+
   test('shortens hollow stems without suffixes for قَالَ', () => {
     expect(conjugatePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
       '3ms': 'يَقُلْ',

@@ -406,6 +406,16 @@ describe('imperative', () => {
           '2fp': 'اِحْبِبْنَ',
         })
       })
+
+      test('حَبَّبَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('حبب', 2))).toMatchObject({
+          '2ms': 'حَبِّبْ',
+          '2fs': 'حَبِّبِي',
+          '2d': 'حَبِّبَا',
+          '2mp': 'حَبِّبُوْا',
+          '2fp': 'حَبِّبْنَ',
+        })
+      })
     })
   })
 
@@ -455,11 +465,11 @@ describe('imperative', () => {
     expect(imperative['2ms']).toBe('اِتَّصِلْ')
   })
 
-  it('geminate Form II imperative has kasra after shadda (e.g., حَبِّ)', () => {
+  it('geminate Form II imperative has kasra after shadda (e.g., حَبِّبْ)', () => {
     const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
     const imperative = conjugateImperative(verb)
 
-    expect(imperative['2ms']).toBe('حَبِّ')
+    expect(imperative['2ms']).toBe('حَبِّبْ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
@@ -480,6 +490,7 @@ describe('imperative', () => {
     ['عمل', 1, 'اِعْمَلْ'],
     ['عمل', 2, 'عَمِّلْ'],
     ['عمل', 10, 'اِسْتَعْمِلْ'],
+    ['حبب', 2, 'حَبِّبْ'],
     ['ضمن', 5, 'تَضَمَّنْ'],
     ['ضمن', 2, 'ضَمِّنْ'],
     ['ضمن', 1, 'اِضْمَنْ'],
