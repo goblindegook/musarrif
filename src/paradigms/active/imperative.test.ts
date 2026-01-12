@@ -94,7 +94,6 @@ describe('imperative', () => {
         })
       })
     })
-
   })
 
   describe('assimilated verbs', () => {

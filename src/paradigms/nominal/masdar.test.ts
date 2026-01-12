@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { getVerb, type VerbForm, verbs } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { deriveMasdar } from './masdar'
 
-test.each([
+test.each<[string, VerbForm, string | string[]]>([
   ['أتي', 1, 'إِتْيَان'],
   ['أجر', 10, 'اِسْتِئْجَار'],
   ['أمر', 1, 'أَمْر'],
@@ -123,8 +123,7 @@ test.each([
   ['طلب', 1, 'طَلَب'],
   ['لعب', 1, 'لُعْب'],
 ])('%s (Form %d) masdar is %s', (root, form, expected) => {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-  expect(deriveMasdar(verb)).toEqual([expected].flat())
+  expect(deriveMasdar(getVerb(root, form))).toEqual([expected].flat())
 })
 
 describe('masdar patterns', () => {
