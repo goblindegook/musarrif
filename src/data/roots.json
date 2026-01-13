@@ -65,6 +65,7 @@
   { "root": "تغي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تمر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تمم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
+  { "root": "حدث", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
   { "root": "تنا", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تنب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ثاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
