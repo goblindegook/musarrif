@@ -468,6 +468,7 @@
   { "root": "مشط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "طلب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
   { "root": "مشى", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "مثل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
   { "root": "مكث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
