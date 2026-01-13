@@ -82,13 +82,15 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 2: {
+        const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+
         // Geminate Form II: c2 === c3, fatḥa on c1, fatḥa then shadda on c2, then c3 (e.g., مُحَبَّب)
-        if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, c2, FATHA, SHADDA, c3]
+        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, FATHA, SHADDA, c3]
 
         // Defective Form II: drop final weak and place tanween fatḥa on the doubled middle radical, convert to alif maqsura (e.g., مُوَفًّى)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, FATHA, c3]
+        return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, FATHA, c3]
       }
 
       case 3: {

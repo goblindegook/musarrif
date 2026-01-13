@@ -97,13 +97,15 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 2: {
+        const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+
         // Geminate Form II: c2 === c3, fatḥa on c1, kasra then shadda on c2, then c3 (e.g., مُحَبِّب)
-        if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, c2, KASRA, SHADDA, c3]
+        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, KASRA, SHADDA, c3]
 
         // Defective Form II: drop final weak and place tanween kasra on the doubled middle radical (e.g., مُوَفٍّ)
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, TANWEEN_KASRA]
 
-        return [MEEM, DAMMA, c1, FATHA, c2, SHADDA, KASRA, c3]
+        return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, KASRA, c3]
       }
 
       case 3: {

@@ -219,6 +219,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('أ-ث-ر', () => {
+      test('أَثَّرَ (Form II)', () => {
+        expect(conjugateImperative(getVerb('أثر', 2))).toMatchObject({
+          '2ms': 'أَثِّرْ',
+          '2fs': 'أَثِّرِي',
+          '2d': 'أَثِّرَا',
+          '2mp': 'أَثِّرُوْا',
+          '2fp': 'أَثِّرْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial hollow verbs', () => {
