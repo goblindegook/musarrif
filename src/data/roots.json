@@ -38,7 +38,6 @@
   { "root": "أود", "form": 2 },
   { "root": "ابت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ارت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "الت", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "باع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بحث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بدأ", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
@@ -284,7 +283,7 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "صغر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "صغر", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
   { "root": "صفر", "form": 9 },
   { "root": "صلح", "form": 4 },
   { "root": "صلّى", "form": 1, "formPattern": "fa3ala-yaf3alu" },

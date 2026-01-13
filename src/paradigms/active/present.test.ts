@@ -71,6 +71,7 @@ describe('active present indicative pattern', () => {
     ['وعد', 1, 'يَعِدُ'],
     ['وقي', 1, 'يَقِي'],
     ['ولى', 1, 'يَلِي'],
+    ['صغر', 1, 'يَصْغُرُ'],
     ['دخل', 1, 'يَدْخُلُ'],
     ['ولد', 1, 'يَلِدُ'],
   ])('%s (%d) %s is %s', (root, form, expected) => {
@@ -801,6 +802,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for صَغُرَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('صغر', 1), 'jussive')).toEqual({
+      '1s': 'أَصْغُرْ',
+      '2ms': 'تَصْغُرْ',
+      '2fs': 'تَصْغُرِي',
+      '3ms': 'يَصْغُرْ',
+      '3fs': 'تَصْغُرْ',
+      '2d': 'تَصْغُرَا',
+      '3md': 'يَصْغُرَا',
+      '3fd': 'تَصْغُرَا',
+      '1p': 'نَصْغُرْ',
+      '2mp': 'تَصْغُرُوا',
+      '2fp': 'تَصْغُرْنَ',
+      '3mp': 'يَصْغُرُوا',
+      '3fp': 'يَصْغُرْنَ',
+    })
+  })
+
   test('jussive conjugation for بَقِيَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqual({
       '1s': 'أَبْقَ',
@@ -1109,6 +1128,24 @@ describe('active present subjunctive', () => {
     expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObject({
       '2fp': 'تَحْمَرَرْنَ',
       '3fp': 'يَحْمَرَرْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for صَغُرَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('صغر', 1), 'subjunctive')).toEqual({
+      '1s': 'أَصْغُرَ',
+      '2ms': 'تَصْغُرَ',
+      '2fs': 'تَصْغُرِي',
+      '3ms': 'يَصْغُرَ',
+      '3fs': 'تَصْغُرَ',
+      '2d': 'تَصْغُرَا',
+      '3md': 'يَصْغُرَا',
+      '3fd': 'تَصْغُرَا',
+      '1p': 'نَصْغُرَ',
+      '2mp': 'تَصْغُرُوا',
+      '2fp': 'تَصْغُرْنَ',
+      '3mp': 'يَصْغُرُوا',
+      '3fp': 'يَصْغُرْنَ',
     })
   })
 

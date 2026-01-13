@@ -38,6 +38,22 @@ function dropSukoonBeforeFinalAlif(word: readonly string[]): readonly string[] {
   return word
 }
 
+function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly string[] {
+  const [c1, c2] = [...verb.root]
+  const lastRoot = last(Array.from(verb.root))
+
+  if (c2 === ALIF) return word
+
+  if (verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2)) return word
+
+  if (isHamzatedLetter(lastRoot) && !isWeakLetter(c2)) return word
+
+  const alifIndex = word.lastIndexOf(ALIF)
+  if (alifIndex > 0 && word.at(alifIndex - 1) === WAW && word.at(alifIndex - 2) !== SUKOON)
+    return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
+  return word
+}
+
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const jussive = conjugatePresentMood(verb, 'jussive')
   const letters = Array.from(verb.root)
@@ -47,8 +63,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const isMiddleWeak = letters.length === 4 ? isWeakLetter(c3) : isWeakLetter(c2)
   const isFinalWeak = letters.length === 4 ? isWeakLetter(c4) : isWeakLetter(c3)
 
-  return mapRecord(
-    mapRecord(jussive, (jussiveVerb, pronounId) => {
+  const baseImperative = mapRecord(jussive, (jussiveVerb, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
       const [, ...rest] = removeLeadingDiacritics(Array.from(jussiveVerb))
@@ -159,15 +174,18 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
 
           if (pronounId === '2mp' && isHamzatedLetter(c2) && stem.at(-2) === SUKOON)
-            return [ALIF, KASRA, ...stem.slice(0, -2), stem.at(-1)]
+            return [ALIF, KASRA, ...stem.slice(0, -2), stem[stem.length - 1]]
 
           return [ALIF, KASRA, ...stem]
         }
 
-        default:
-          return stem
       }
-    }),
-    (letters) => letters.join('').normalize('NFC'),
-  )
+
+      return stem
+    })
+
+  return mapRecord(baseImperative, (letters, pronounId) => {
+    const adjusted = pronounId === '2mp' ? addSukoonBeforeFinalAlif(letters, verb) : letters
+    return adjusted.join('').normalize('NFC')
+  })
 }

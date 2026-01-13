@@ -331,6 +331,9 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       if (isMasculinePlural && verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
+      if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
+        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
+
       if (isSecondFeminineSingular || isMasculinePlural) return replaceDiacriticBeforeFinalWaw(dropNoonEnding(word), c2)
 
       return replaceFinalDiacritic(word, FATHA)
@@ -386,6 +389,9 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (verb.form === 1 && isFinalHamza && isMasculinePlural) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
+
+      if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
+        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       // Dual forms: drop weak letter before alif
       if (isDual) return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
