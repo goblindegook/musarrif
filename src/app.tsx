@@ -224,11 +224,11 @@ export function App() {
                   label={t('meta.verbalNoun')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={masdar ? undefined : '—'}
-                  speechText={masdar ? masdar.join('، ') : null}
+                  value={masdar?.length ? undefined : '—'}
+                  speechText={masdar?.length ? masdar.join('، ') : null}
                   copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
                 >
-                  {masdar && (
+                  {masdar?.length && (
                     <MasdarList>
                       {masdar.map((value, index) => (
                         <MasdarItem key={value}>

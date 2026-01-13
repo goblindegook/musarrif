@@ -64,6 +64,13 @@ test('shows multiple masdars with a mimi label', () => {
   expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
+test('shows a dash when the masdar is missing', () => {
+  renderApp('/#/en/lmm-1')
+
+  const detail = screen.getByText('Verbal noun').parentElement!
+  expect(within(detail).getByText('—')).toBeInTheDocument()
+})
+
 describe('Conjugation table', () => {
   it('switches to the present-tense table via tabs', async () => {
     renderApp('/#/en/ktb-1')
