@@ -128,7 +128,6 @@
     "root": "حضر",
     "form": 1,
     "formPattern": "fa3ala-yaf3ulu",
-    "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
   { "root": "حضر", "form": 10 },
