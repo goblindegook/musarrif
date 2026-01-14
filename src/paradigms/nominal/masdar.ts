@@ -95,6 +95,9 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     }
 
     default:
+      // Initial weak + middle hamza + final weak (e.g., وأى → وَأْي)
+      if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF_HAMZA, SUKOON, finalGlide]
+
       // Initial weak + final weak (e.g., وقي → وِقَايَة, ولى → وِلَايَة)
       if (isInitialWeak && !isMiddleWeak && isFinalWeak)
         return [c1, KASRA, c2, FATHA, ALIF, finalGlide, FATHA, TEH_MARBUTA]

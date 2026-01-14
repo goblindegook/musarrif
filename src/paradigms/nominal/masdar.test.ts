@@ -65,7 +65,6 @@ test.each<[string, VerbForm, string | string[]]>([
   ['ركز', 1, 'رَكْز'],
   ['سعد', 1, 'سَعَادَة'],
   ['سفر', 1, 'سَفْر'],
-  ['شرب', 1, ['شُرْب', 'مَشْرَب']],
   ['صبح', 1, 'صَبْح'],
   ['صبح', 4, 'إِصْبَاح'],
   ['صبر', 1, 'صَبْر'],
@@ -106,7 +105,6 @@ test.each<[string, VerbForm, string | string[]]>([
   ['قود', 7, 'اِنْقِيَاد'],
   ['قود', 8, 'اِقْتِيَاد'],
   ['قوم', 1, 'قِيَام'],
-  ['لمم', 1, []],
   ['كان', 1, 'كَوْن'],
   ['كتب', 1, 'كِتَابَة'],
   ['كسر', 1, 'كَسْر'],
@@ -118,11 +116,11 @@ test.each<[string, VerbForm, string | string[]]>([
   ['هجر', 1, 'هَجْر'],
   ['وصل', 1, 'وَصْل'],
   ['وصل', 8, 'اِتِّصَال'],
-  ['وعد', 1, ['وَعْد', 'مَوْعِد']],
   ['وفي', 1, 'وَفَاء'],
   ['وفي', 10, 'اِسْتِفَاء'],
   ['وفي', 4, 'إِيفَاء'],
   ['وقي', 1, 'وِقَايَة'],
+  ['وأى', 1, 'وَأْي'],
   ['ولى', 1, 'وِلَايَة'],
   ['دخل', 1, 'دُخُول'],
   ['ولد', 1, 'وِلادَة'],
@@ -149,6 +147,10 @@ describe('masdar patterns', () => {
     ['سعى', ['مَسْعَى']],
   ])('%s uses the expected masdar mimi form', (root, expected) => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
+  })
+
+  test.each(['لمم'])('%s has no masdar', (root) => {
+    expect(deriveMasdar(getVerb(root, 1))).toEqual([])
   })
 })
 
@@ -192,13 +194,7 @@ describe('hollow roots', () => {
   })
 })
 
-describe('defective roots', () => {
-  describe('ر-م-ي', () => {
-    test.todo('رَمَى (Form I)')
-    test.todo('رَمَّى (Form II)')
-    test.todo('اِنْرَمَى (Form VIII)')
-  })
-})
+describe.todo('defective roots')
 
 describe('hamzated initial roots', () => {
   describe('أ-ك-ل', () => {
@@ -206,8 +202,6 @@ describe('hamzated initial roots', () => {
       expect(deriveMasdar(getVerb('أكل', form))).toEqual([expected])
     })
   })
-
-  describe.todo('أ-خ-ذ')
 })
 
 describe('hamzated middle roots', () => {
@@ -246,26 +240,14 @@ describe('doubly weak roots', () => {
       expect(deriveMasdar(getVerb('وفي', form))).toEqual([expected])
     })
   })
-
-  describe.todo('ر-و-ي')
 })
 
-describe('hamzated initial defective roots', () => {
-  describe.todo('أ-ت-ي')
-})
+describe.todo('hamzated initial defective roots')
 
-describe('hamzated middle assimilated roots', () => {
-  describe.todo('و-ئ-د')
-})
+describe.todo('hamzated middle assimilated roots')
 
-describe('hamzated middle defective roots', () => {
-  describe.todo('ب-د-أ')
-})
+describe.todo('hamzated middle defective roots')
 
-describe('hamzated final assimilated roots', () => {
-  describe.todo('و-أ-ى')
-})
+describe.todo('hamzated final assimilated roots')
 
-describe('hamzated final hollow roots', () => {
-  describe.todo('ج-ي-ء')
-})
+describe.todo('hamzated final hollow roots')

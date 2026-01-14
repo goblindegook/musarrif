@@ -52,6 +52,10 @@ export function derivePassiveParticiple(verb: Verb): string {
 
     switch (verb.form) {
       case 1: {
+        // Initial weak + middle hamza + final weak (e.g., وأى → مَوْئِيّ)
+        if (isInitialWeak && isMiddleHamza && isFinalWeak)
+          return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
+
         // Initial weak + final weak (e.g., وقي → مَوْقِيّ, ولى → مَوْلِيّ)
         if (isInitialWeak && isFinalWeak) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
 

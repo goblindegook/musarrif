@@ -47,6 +47,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
     switch (verb.form) {
       case 1: {
+        // Initial weak + middle hamza + final weak (e.g., وأى → وَاءٍ)
+        if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
+
         // Initial weak + final weak (e.g., وقي → وَاقٍ, ولى → وَالٍ)
         if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
