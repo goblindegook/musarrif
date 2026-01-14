@@ -77,8 +77,19 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
         if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
+        if (isInitialWeak && isFinalWeak && isHamzatedLetter(c2) && pronounId === '2d')
+          return [HAMZA_ON_YEH, KASRA, YEH, FATHA, ALIF]
+
         if (isInitialWeak && isFinalWeak) {
           const alifIndex = stem.indexOf(ALIF)
+          const doubleYehIndex = stem.findIndex(
+            (char, index) =>
+              char === YEH && stem[index + 1] === KASRA && stem[index + 2] === YEH && stem[index + 3] === ALIF,
+          )
+          if (doubleYehIndex >= 0) return [...stem.slice(0, doubleYehIndex + 1), ...stem.slice(doubleYehIndex + 3)]
+          if (alifIndex > 1 && stem.at(alifIndex - 1) === YEH && stem.at(alifIndex - 2) === YEH)
+            return [...stem.slice(0, alifIndex - 1), ...stem.slice(alifIndex)]
+          if (alifIndex > 0 && stem.at(alifIndex - 1) === YEH) return stem
           if (alifIndex >= 0 && stem[alifIndex - 1] === FATHA)
             return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
         }

@@ -475,7 +475,17 @@ describe('imperative', () => {
   })
 
   describe('hamzated final assimilated verbs', () => {
-    describe.todo('و-أ-ى')
+    describe('و-أ-ى', () => {
+      test('وَأَى (Form I)', () => {
+        expect(conjugateImperative(getVerb('وأى', 1))).toMatchObject({
+          '2ms': 'ئِ',
+          '2fs': 'ئِي',
+          '2d': 'ئِيَا',
+          '2mp': 'أُوْا',
+          '2fp': 'ئِينَ',
+        })
+      })
+    })
   })
 
   describe('hamzated final hollow verbs', () => {

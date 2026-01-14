@@ -826,21 +826,33 @@ describe('active past pattern', () => {
     })
   })
 
-  describe('hamzated middle assimilated verbs', () => {
-    describe.todo('و-ئ-د')
-  })
+  describe.todo('hamzated middle assimilated verbs')
 
-  describe('hamzated middle defective verbs', () => {
-    describe.todo('ب-د-أ')
-  })
+  describe.todo('hamzated middle defective verbs')
 
   describe('hamzated final assimilated verbs', () => {
-    describe.todo('و-أ-ى')
+    describe('و-أ-ى', () => {
+      test('وَأَى (Form I)', () => {
+        expect(conjugatePast(getVerb('وأى', 1))).toEqual({
+          '1s': 'وَأَيْتُ',
+          '2ms': 'وَأَيْتَ',
+          '2fs': 'وَأَيْتِ',
+          '3ms': 'وَأَى',
+          '3fs': 'وَأَتْ',
+          '2d': 'وَأَيْتُمَا',
+          '3md': 'وَأَيَا',
+          '3fd': 'وَأَتَا',
+          '1p': 'وَأَيْنَا',
+          '2mp': 'وَأَيْتُمْ',
+          '2fp': 'وَأَيْتُنَّ',
+          '3mp': 'وَأَوْا',
+          '3fp': 'وَأَيْنَ',
+        })
+      })
+    })
   })
 
-  describe('hamzated final hollow verbs', () => {
-    describe.todo('ج-ي-ء')
-  })
+  describe.todo('hamzated final hollow verbs')
 
   test('defective endings for أعطى', () => {
     expect(conjugatePast(getVerb('عطى', 4))).toEqual({

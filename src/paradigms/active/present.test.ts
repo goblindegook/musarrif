@@ -778,7 +778,25 @@ describe('active present indicative pattern', () => {
   })
 
   describe('hamzated final assimilated verbs', () => {
-    describe.todo('و-أ-ى')
+    describe('و-أ-ى', () => {
+      test('وَأَى (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('وأى', 1), 'indicative')).toEqual({
+          '1s': 'أَئِي',
+          '2ms': 'تَئِي',
+          '2fs': 'تَئِينَ',
+          '3ms': 'يَئِي',
+          '3fs': 'تَئِي',
+          '2d': 'تَئِيَانِ',
+          '3md': 'يَئِيَانِ',
+          '3fd': 'تَئِيَانِ',
+          '1p': 'نَئِي',
+          '2mp': 'تَأُونَ',
+          '2fp': 'تَئِينَ',
+          '3mp': 'يَأُونَ',
+          '3fp': 'يَئِينَ',
+        })
+      })
+    })
   })
 
   describe('hamzated final hollow verbs', () => {
@@ -901,6 +919,26 @@ describe('active present jussive', () => {
         '2fp': 'تَأْتِينَ',
         '3mp': 'يَأْتُوْا',
         '3fp': 'يَأْتِينَ',
+      })
+    })
+  })
+
+  describe('hamzated final assimilated verbs', () => {
+    test('وَأَى (Form I)', () => {
+      expect(conjugatePresentMood(getVerb('وأى', 1), 'jussive')).toEqual({
+        '1s': 'أَئِ',
+        '2ms': 'تَئِ',
+        '2fs': 'تَئِي',
+        '3ms': 'يَئِ',
+        '3fs': 'تَئِ',
+        '2d': 'تَئِيَا',
+        '3md': 'يَئِيَا',
+        '3fd': 'تَئِيَا',
+        '1p': 'نَئِ',
+        '2mp': 'تَأُوا',
+        '2fp': 'تَئِينَ',
+        '3mp': 'يَأُوا',
+        '3fp': 'يَئِينَ',
       })
     })
   })
@@ -1278,6 +1316,26 @@ describe('active present subjunctive', () => {
         '2fp': 'تَأْتِينَ',
         '3mp': 'يَأْتُوْا',
         '3fp': 'يَأْتِينَ',
+      })
+    })
+  })
+
+  describe('hamzated final assimilated verbs', () => {
+    test('subjunctive conjugation for وَأَى (Form I)', () => {
+      expect(conjugatePresentMood(getVerb('وأى', 1), 'subjunctive')).toEqual({
+        '1s': 'أَئِيَ',
+        '2ms': 'تَئِيَ',
+        '2fs': 'تَئِي',
+        '3ms': 'يَئِيَ',
+        '3fs': 'تَئِيَ',
+        '2d': 'تَئِيَا',
+        '3md': 'يَئِيَا',
+        '3fd': 'تَئِيَا',
+        '1p': 'نَئِيَ',
+        '2mp': 'تَأُوا',
+        '2fp': 'تَئِينَ',
+        '3mp': 'يَأُوا',
+        '3fp': 'يَئِينَ',
       })
     })
   })
