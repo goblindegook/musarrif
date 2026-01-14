@@ -87,6 +87,7 @@
     "masdarPatterns": ["fu3ool"]
   },
   { "root": "جمع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
+  { "root": "جمع", "form": 2 },
   { "root": "جمل", "form": 2 },
   { "root": "جهد", "form": 3 },
   { "root": "جهز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
