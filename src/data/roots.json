@@ -8,7 +8,7 @@
   { "root": "أخذ", "form": 10 },
   { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "أكد", "form": 4 },
+  { "root": "أكد", "form": 2 },
   { "root": "أكل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
