@@ -748,7 +748,25 @@ describe('active present indicative pattern', () => {
   })
 
   describe('hamzated initial defective verbs', () => {
-    describe.todo('أ-ت-ي')
+    describe('أ-ت-ي', () => {
+      test('أَتَى (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('أتي', 1), 'indicative')).toEqual({
+          '1s': 'آتِي',
+          '2ms': 'تَأْتِي',
+          '2fs': 'تَأْتِينَ',
+          '3ms': 'يَأْتِي',
+          '3fs': 'تَأْتِي',
+          '2d': 'تَأْتِيَانِ',
+          '3md': 'يَأْتِيَانِ',
+          '3fd': 'تَأْتِيَانِ',
+          '1p': 'نَأْتِي',
+          '2mp': 'تَأْتُونَ',
+          '2fp': 'تَأْتِينَ',
+          '3mp': 'يَأْتُونَ',
+          '3fp': 'يَأْتِينَ',
+        })
+      })
+    })
   })
 
   describe('hamzated middle assimilated verbs', () => {
@@ -863,6 +881,26 @@ describe('active present jussive', () => {
         '2fp': 'تُؤَثِّرْنَ',
         '3mp': 'يُؤَثِّرُوْا',
         '3fp': 'يُؤَثِّرْنَ',
+      })
+    })
+  })
+
+  describe('hamzated initial defective verbs', () => {
+    test('أَتَى (Form I)', () => {
+      expect(conjugatePresentMood(getVerb('أتي', 1), 'jussive')).toEqual({
+        '1s': 'آتِ',
+        '2ms': 'تَأْتِ',
+        '2fs': 'تَأْتِي',
+        '3ms': 'يَأْتِ',
+        '3fs': 'تَأْتِ',
+        '2d': 'تَأْتِيَا',
+        '3md': 'يَأْتِيَا',
+        '3fd': 'تَأْتِيَا',
+        '1p': 'نَأْتِ',
+        '2mp': 'تَأْتُوْا',
+        '2fp': 'تَأْتِينَ',
+        '3mp': 'يَأْتُوْا',
+        '3fp': 'يَأْتِينَ',
       })
     })
   })
@@ -1221,6 +1259,26 @@ describe('active present subjunctive', () => {
       '2fp': 'تَبْقَيْنَ',
       '3mp': 'يَبْقَوْا',
       '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
+  describe('hamzated initial defective verbs', () => {
+    test('subjunctive conjugation for أَتَى (Form I)', () => {
+      expect(conjugatePresentMood(getVerb('أتي', 1), 'subjunctive')).toEqual({
+        '1s': 'آتِيَ',
+        '2ms': 'تَأْتِيَ',
+        '2fs': 'تَأْتِي',
+        '3ms': 'يَأْتِيَ',
+        '3fs': 'تَأْتِيَ',
+        '2d': 'تَأْتِيَا',
+        '3md': 'يَأْتِيَا',
+        '3fd': 'تَأْتِيَا',
+        '1p': 'نَأْتِيَ',
+        '2mp': 'تَأْتُوْا',
+        '2fp': 'تَأْتِينَ',
+        '3mp': 'يَأْتُوْا',
+        '3fp': 'يَأْتِينَ',
+      })
     })
   })
 

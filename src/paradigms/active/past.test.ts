@@ -805,7 +805,25 @@ describe('active past pattern', () => {
   })
 
   describe('hamzated initial defective verbs', () => {
-    describe.todo('أ-ت-ي')
+    describe('أ-ت-ي', () => {
+      test('أَتَى (Form I)', () => {
+        expect(conjugatePast(getVerb('أتي', 1))).toEqual({
+          '1s': 'أَتَيْتُ',
+          '2ms': 'أَتَيْتَ',
+          '2fs': 'أَتَيْتِ',
+          '3ms': 'أَتَى',
+          '3fs': 'أَتَتْ',
+          '2d': 'أَتَيْتُمَا',
+          '3md': 'أَتَيَا',
+          '3fd': 'أَتَتَا',
+          '1p': 'أَتَيْنَا',
+          '2mp': 'أَتَيْتُمْ',
+          '2fp': 'أَتَيْتُنَّ',
+          '3mp': 'أَتَوْا',
+          '3fp': 'أَتَيْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated middle assimilated verbs', () => {

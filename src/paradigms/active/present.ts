@@ -393,8 +393,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      // Dual forms: drop weak letter before alif
-      if (isDual) return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
+      // Dual forms: Form I defective verbs keep the weak letter before alif; hollow verbs drop it
+      if (isDual) {
+        if (verb.form === 1 && isFinalWeak && !isMiddleWeak) return dropNoonEnding(word)
+        return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
+      }
 
       if (isSecondFeminineSingular || isMasculinePlural) return replaceDiacriticBeforeFinalWaw(dropNoonEnding(word), c2)
 

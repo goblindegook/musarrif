@@ -85,7 +85,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (isInitialWeak) return stem
 
-        if (isInitialHamza && isFinalWeak) return [ALIF, HAMZA_ON_YEH, SUKOON, c2, KASRA]
+        if (isInitialHamza && isFinalWeak) {
+          if (stem.at(0) === ALIF_HAMZA) return [ALIF, HAMZA_ON_YEH, ...stem.slice(1)]
+          return [ALIF, HAMZA_ON_YEH, ...stem]
+        }
 
         // Hamzated initial strong verbs drop the hamza
         if (isInitialHamza) return removeLeadingDiacritics(stem.slice(1))

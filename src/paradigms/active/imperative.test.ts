@@ -230,6 +230,20 @@ describe('imperative', () => {
     })
   })
 
+  describe('hamzated initial defective verbs', () => {
+    describe('أ-ت-ي', () => {
+      test('أَتَى (Form I)', () => {
+        expect(conjugateImperative(getVerb('أتي', 1))).toMatchObject({
+          '2ms': 'ائْتِ',
+          '2fs': 'ائْتِي',
+          '2d': 'ائْتِيَا',
+          '2mp': 'ائْتُوْا',
+          '2fp': 'ائْتِينَ',
+        })
+      })
+    })
+  })
+
   describe('hamzated initial hollow verbs', () => {
     describe('أ-ي-د', () => {
       test('أَيَّدَ (Form II)', () => {
@@ -471,9 +485,7 @@ describe('imperative', () => {
   test('imperative only exists for second person pronouns', () => {
     fc.assert(
       fc.property(arbitraryVerb, (verb) => {
-        const imperative = conjugateImperative(verb)
-
-        expect(imperative).toMatchObject({
+        expect(conjugateImperative(verb)).toMatchObject({
           '1s': '',
           '1p': '',
           '3ms': '',
@@ -488,8 +500,7 @@ describe('imperative', () => {
   })
 
   it('it assimilates the initial wāw for ٱتَّصِلْ (Form VIII)', () => {
-    const verb = verbs.find(({ root, form }) => root === 'وصل' && form === 8)!
-    const imperative = conjugateImperative(verb)
+    const imperative = conjugateImperative(getVerb('وصل', 8))
 
     expect(imperative['2ms']).toBe('اِتَّصِلْ')
   })
