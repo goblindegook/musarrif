@@ -265,6 +265,7 @@
   { "root": "صاح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "صاح", "form": 4 },
   { "root": "صبح", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
+  { "root": "صبح", "form": 2 },
   { "root": "صبح", "form": 4 },
   { "root": "صبر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "صبر", "form": 2 },
