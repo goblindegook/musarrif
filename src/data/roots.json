@@ -472,6 +472,7 @@
   { "root": "طلب", "form": 5 },
   { "root": "مشى", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "مثل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
+  { "root": "مكن", "form": 4 },
   { "root": "مكث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
