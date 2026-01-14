@@ -57,12 +57,11 @@ describe('active past pattern', () => {
     ['ولى', 1, 'وَلِي'],
     ['صغر', 1, 'صَغُرَ'],
     ['جيء', 1, 'جَاءَ'],
+    ['جري', 1, 'جَرَى'],
     ['جيء', 4, 'أَجَاءَ'],
     ['جيء', 6, 'تَجَاءَ'],
   ])('%s (%d) pattern is %s', (root, form, expected) => {
-    const verb = getVerb(root, form)
-    const past = conjugatePast(verb)
-    expect(past['3ms']).toBe(expected)
+    expect(conjugatePast(getVerb(root, form))['3ms']).toBe(expected)
   })
 
   describe('regular verbs', () => {

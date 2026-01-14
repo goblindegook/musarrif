@@ -3,7 +3,7 @@ import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
-import { getVerb, verbs } from '../verbs'
+import { getVerb, verbs, type VerbForm } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { conjugatePresentMood } from './present'
 
@@ -12,14 +12,11 @@ const arbitraryVerb = fc.constantFrom(...verbs)
 const arbitraryPronoun = fc.constantFrom(...PRONOUN_IDS).filter((pronounId) => pronounId.startsWith('2'))
 
 describe('imperative', () => {
-  it.each([
+  it.each<[string, VerbForm, string]>([
     ['عطى', 4, 'أَعْطِ'],
     ['ضحي', 4, 'أَضْحِ'],
   ])('drops the final glide for form IV verb with root %s', (root, form, expected2ms) => {
-    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-    const imperative = conjugateImperative(verb)
-
-    expect(imperative['2ms']).toBe(expected2ms)
+    expect(conjugateImperative(getVerb(root, form))['2ms']).toBe(expected2ms)
   })
 
   describe('regular verbs', () => {
@@ -518,7 +515,7 @@ describe('imperative', () => {
     expect(imperative['2ms']).toBe('اِقْتَدْ')
   })
 
-  it.each([
+  it.each<[string, VerbForm, string]>([
     ['عمل', 1, 'اِعْمَلْ'],
     ['عمل', 2, 'عَمِّلْ'],
     ['عمل', 10, 'اِسْتَعْمِلْ'],
@@ -547,14 +544,13 @@ describe('imperative', () => {
     ['حمر', 9, 'اِحْمَرَّ'],
     ['جيء', 1, 'جِئْ'],
     ['مرض', 1, 'اِمْرَضْ'],
+    ['جري', 1, 'اِجْرِ'],
     ['مثل', 1, 'اُمْثُلْ'],
     ['دخل', 1, 'اُدْخُلْ'],
     ['ولد', 1, 'لِدْ'],
     ['ذهب', 1, 'اِذْهَبْ'],
   ])('%s (%d) imperative 2ms is %s', (root, form, expected) => {
-    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-    const imperative = conjugateImperative(verb)
-    expect(imperative['2ms']).toBe(expected)
+    expect(conjugateImperative(getVerb(root, form))['2ms']).toBe(expected)
   })
 
   describe('imperative stems from jussive', () => {
