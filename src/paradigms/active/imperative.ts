@@ -11,6 +11,7 @@ import {
   isWeakLetter,
   KASRA,
   last,
+  NOON,
   removeLeadingDiacritics,
   removeTrailingDiacritics,
   SEEN,
@@ -57,7 +58,13 @@ function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly
   if (isHamzatedLetter(c3)) return word
 
   const alifIndex = word.lastIndexOf(ALIF)
-  if (alifIndex <= 0 || word.at(alifIndex - 1) !== WAW || isWeakLetter(word.at(alifIndex - 3))) return word
+  if (
+    alifIndex <= 0 ||
+    word.at(alifIndex - 1) !== WAW ||
+    isWeakLetter(word.at(alifIndex - 3)) ||
+    word.at(alifIndex - 3) === NOON
+  )
+    return word
 
   return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
 }
@@ -110,6 +117,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         if (isInitialHamza && presentVowel === 'i')
+          return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
+
+        if (isInitialHamza && pastVowel === 'i')
           return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
 
         // Hamzated initial strong verbs drop the hamza

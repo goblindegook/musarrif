@@ -94,6 +94,11 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
     return [...replaceFinalDiacritic(hollowStem, SUKOON), NOON, FATHA]
   }
 
+  if (removeTrailingDiacritics(expanded).at(-1) === NOON) {
+    const base = removeTrailingDiacritics(expanded)
+    return [...base.slice(0, -1), NOON, SHADDA, FATHA]
+  }
+
   if (isHamzatedLetter(c3) || isWeakLetter(c3)) return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
 
   return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(expanded), SUKOON), NOON, FATHA]
@@ -315,6 +320,7 @@ function replaceDiacriticBeforeFinalWaw(word: readonly string[], c2: string): re
     const lastStemLetter = stemBeforeWaw.at(findLastLetterIndex(stemBeforeWaw))
     return c2 === ALIF ||
       (isHamzatedLetter(lastStemLetter) && !isWeakLetter(c2)) ||
+      lastStemLetter === NOON ||
       (isWeakLetter(lastStemLetter) && !word.includes(ALIF_HAMZA))
       ? [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
       : [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, SUKOON, ALIF]

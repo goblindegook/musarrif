@@ -6,7 +6,7 @@
   { "root": "أخذ", "form": 7 },
   { "root": "أخذ", "form": 8 },
   { "root": "أخذ", "form": 10 },
-  { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu" },
+  { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"] },
   { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "أكد", "form": 2 },
   { "root": "أكل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
