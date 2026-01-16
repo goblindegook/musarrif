@@ -331,6 +331,8 @@ function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
+  const isInitialHamza = isHamzatedLetter(c1)
+  const isFinalWeak = isWeakLetter(c3)
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
@@ -354,6 +356,15 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
+        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
+
+      if (
+        isMasculinePlural &&
+        verb.form === 1 &&
+        isInitialHamza &&
+        !isFinalWeak &&
+        resolveFormIPresentVowel(verb) === 'i'
+      )
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isSecondFeminineSingular || isMasculinePlural) return replaceDiacriticBeforeFinalWaw(dropNoonEnding(word), c2)
@@ -413,6 +424,15 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 1 && isFinalHamza && isMasculinePlural) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
+        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
+
+      if (
+        isMasculinePlural &&
+        verb.form === 1 &&
+        isInitialHamza &&
+        !isFinalWeak &&
+        resolveFormIPresentVowel(verb) === 'i'
+      )
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       // Dual forms: Form I defective verbs keep the weak letter before alif; hollow verbs drop it

@@ -41,6 +41,15 @@ function dropSukoonBeforeFinalAlif(word: readonly string[]): readonly string[] {
 function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
+  if (
+    verb.form === 1 &&
+    isHamzatedLetter(c1) &&
+    !isWeakLetter(c2) &&
+    !isWeakLetter(c3) &&
+    resolveFormIPresentVowel(verb) === 'i'
+  )
+    return word
+
   if (c2 === ALIF) return word
 
   if (isHamzatedLetter(c1) && isWeakLetter(c2)) return word
@@ -99,6 +108,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (stem.at(0) === ALIF_HAMZA) return [ALIF, HAMZA_ON_YEH, ...stem.slice(1)]
           return [ALIF, HAMZA_ON_YEH, ...stem]
         }
+
+        if (isInitialHamza && presentVowel === 'i')
+          return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
 
         // Hamzated initial strong verbs drop the hamza
         if (isInitialHamza) return removeLeadingDiacritics(stem.slice(1))

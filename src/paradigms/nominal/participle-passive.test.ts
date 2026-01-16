@@ -6,6 +6,7 @@ import { derivePassiveParticiple } from './participle-passive'
 test.each<[string, VerbForm, string]>([
   ['أتي', 1, 'مَأْتِيّ'],
   ['أمن', 4, 'مُؤْمَن'],
+  ['أسر', 1, 'مَأْسُور'],
   ['أنشأ', 4, 'مُنْشَأ'],
   ['أوي', 1, 'مَأْوِيّ'],
   ['أوي', 10, 'مُسْتَأْوًى'],
