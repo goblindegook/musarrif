@@ -50,7 +50,7 @@
     "rootInfo.strong.description": "This is a strong root with all three radicals being consonants. Strong roots form the foundation of Arabic verb morphology and can appear in all ten verb forms.",
     "rootInfo.hollow.description": "This is a hollow root (middle weak), where the middle radical is a weak letter (و or ي). Hollow roots often express verbs involving movement, change, or speech, such as walking, rising, selling, or saying.",
     "rootInfo.defective.description": "This is a defective root (final weak), where the final radical is a weak letter (و, ي, or ا). Defective roots commonly express actions that extend or complete, such as giving, building, or calling.",
-    "rootInfo.doubly-weak.description": "This is a doubly weak root, with weak letters in both the initial and final positions. These roots are relatively rare and often express concepts related to being, coming, or going.",
+    "rootInfo.doubly-weak.description": "This is a doubly weak root with two weak radicals, often in the middle and final positions. These roots are relatively rare and tend to combine hollow and defective behavior.",
     "rootInfo.assimilated.description": "This is an assimilated root (initial weak), where the initial radical is a weak letter (و or ي). Assimilated roots often express actions of arrival, finding, or coming into being.",
     "rootInfo.hamzated.description": "This root contains a hamza (ء). Hamzated roots can appear in various positions and often express actions related to eating, taking, or other fundamental concepts.",
     "rootInfo.hamzated-hollow.description": "This root combines a hamza (ء) with a hollow pattern (middle weak). The initial radical is a hamza and the middle radical is a weak letter (و or ي).",

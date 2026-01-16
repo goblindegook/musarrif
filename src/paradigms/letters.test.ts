@@ -8,6 +8,7 @@ describe('analyzeRoot', () => {
     ['دعا', 'defective', [2], []],
     ['وصل', 'assimilated', [0], []],
     ['وقي', 'doubly-weak', [0, 2], []],
+    ['روي', 'doubly-weak', [1, 2], []],
     ['أكل', 'hamzated', [], [0]],
     ['أوي', 'hamzated-hollow-defective', [1, 2], [0]],
     ['أتى', 'hamzated-defective', [2], [0]],
