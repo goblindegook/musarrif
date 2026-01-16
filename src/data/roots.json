@@ -181,7 +181,7 @@
   { "root": "رأى", "form": 5 },
   { "root": "رأى", "form": 6 },
   { "root": "رأي", "form": 4 },
-  { "root": "روي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "روي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": [] },
   { "root": "راح", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
   { "root": "راح", "form": 10 },
   { "root": "راد", "form": 4 },

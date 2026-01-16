@@ -69,6 +69,7 @@ test('shows a dash when the masdar is missing', () => {
 
   const detail = screen.getByText('Verbal noun').parentElement!
   expect(within(detail).getByText('—')).toBeInTheDocument()
+  expect(detail.textContent?.trim()).toBe('Verbal noun—')
 })
 
 describe('Conjugation table', () => {

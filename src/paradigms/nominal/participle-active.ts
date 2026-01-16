@@ -72,6 +72,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (isMiddleHamza) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
 
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
+          if (isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+
           // Form I fa3ila-yaf3alu/fa3ila‑yaf3ilu:
           // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
           if (
@@ -87,6 +89,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         // Hollow verb with final hamza (e.g., جيء → جَاءٍ)
         if (isMiddleWeak && isHamzatedLetter(c3)) return [c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+
+        if (isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
         if (isMiddleWeak) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
 

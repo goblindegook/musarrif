@@ -313,7 +313,9 @@ function replaceDiacriticBeforeFinalWaw(word: readonly string[], c2: string): re
   if (last(word) === WAW) {
     const stemBeforeWaw = word.slice(0, word.length - 1)
     const lastStemLetter = stemBeforeWaw.at(findLastLetterIndex(stemBeforeWaw))
-    return c2 === ALIF || (isHamzatedLetter(lastStemLetter) && !isWeakLetter(c2))
+    return c2 === ALIF ||
+      (isHamzatedLetter(lastStemLetter) && !isWeakLetter(c2)) ||
+      (isWeakLetter(lastStemLetter) && !word.includes(ALIF_HAMZA))
       ? [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
       : [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, SUKOON, ALIF]
   }
@@ -415,7 +417,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       // Dual forms: Form I defective verbs keep the weak letter before alif; hollow verbs drop it
       if (isDual) {
-        if (verb.form === 1 && isFinalWeak && !isMiddleWeak) return dropNoonEnding(word)
+        if (verb.form === 1 && isFinalWeak) return dropNoonEnding(word)
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 
@@ -428,7 +430,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isMiddleWeak && isFinalHamza)
         return replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON)
 
-      const stem = HOLLOW_APOCOPE_FORMS.has(verb.form) && isWeakLetter(c2) ? shortenHollowStem(word) : word
+      const stem =
+        HOLLOW_APOCOPE_FORMS.has(verb.form) && isWeakLetter(c2) && !isFinalWeak ? shortenHollowStem(word) : word
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
 
@@ -514,6 +517,10 @@ function derivePresentFormI(verb: Verb): readonly string[] {
       : c2
     return [YEH, FATHA, seatedC2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
   }
+
+  // Doubly weak (middle weak + final weak): treat as defective, not hollow (e.g., رَوِيَ → يَرْوِي)
+  if (isMiddleWeak && isFinalWeak)
+    return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
 
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
   if (isInitialWeak) return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]

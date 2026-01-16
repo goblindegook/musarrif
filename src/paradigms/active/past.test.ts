@@ -806,7 +806,25 @@ describe('active past pattern', () => {
       })
     })
 
-    describe.todo('ر-و-ي')
+    describe('ر-و-ي', () => {
+      test('رَوِيَ (Form I)', () => {
+        expect(conjugatePast(getVerb('روي', 1))).toEqual({
+          '1s': 'رَوِيتُ',
+          '2ms': 'رَوِيتَ',
+          '2fs': 'رَوِيتِ',
+          '3ms': 'رَوِيَ',
+          '3fs': 'رَوِيَتْ',
+          '2d': 'رَوِيتُمَا',
+          '3md': 'رَوِيَا',
+          '3fd': 'رَوِيَتَا',
+          '1p': 'رَوِينَا',
+          '2mp': 'رَوِيتُمْ',
+          '2fp': 'رَوِيتُنَّ',
+          '3mp': 'رَوُوا',
+          '3fp': 'رَوِينَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial defective verbs', () => {

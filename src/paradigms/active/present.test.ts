@@ -687,7 +687,25 @@ describe('active present indicative pattern', () => {
       })
     })
 
-    describe.todo('ر-و-ي')
+    describe('ر-و-ي', () => {
+      test('رَوِيَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('روي', 1), 'indicative')).toEqual({
+          '1s': 'أَرْوِي',
+          '2ms': 'تَرْوِي',
+          '2fs': 'تَرْوِينَ',
+          '3ms': 'يَرْوِي',
+          '3fs': 'تَرْوِي',
+          '2d': 'تَرْوِيَانِ',
+          '3md': 'يَرْوِيَانِ',
+          '3fd': 'تَرْوِيَانِ',
+          '1p': 'نَرْوِي',
+          '2mp': 'تَرْوُونَ',
+          '2fp': 'تَرْوِينَ',
+          '3mp': 'يَرْوُونَ',
+          '3fp': 'يَرْوِينَ',
+        })
+      })
+    })
   })
 
   describe('geminate verbs', () => {
@@ -883,6 +901,24 @@ describe('active present jussive', () => {
       '2fp': 'تَبْقَيْنَ',
       '3mp': 'يَبْقَوْا',
       '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
+  test('jussive conjugation for رَوِيَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('روي', 1), 'jussive')).toEqual({
+      '1s': 'أَرْوِ',
+      '2ms': 'تَرْوِ',
+      '2fs': 'تَرْوِي',
+      '3ms': 'يَرْوِ',
+      '3fs': 'تَرْوِ',
+      '2d': 'تَرْوِيَا',
+      '3md': 'يَرْوِيَا',
+      '3fd': 'تَرْوِيَا',
+      '1p': 'نَرْوِ',
+      '2mp': 'تَرْوُوا',
+      '2fp': 'تَرْوِينَ',
+      '3mp': 'يَرْوُوا',
+      '3fp': 'يَرْوِينَ',
     })
   })
 
@@ -1300,6 +1336,24 @@ describe('active present subjunctive', () => {
       '2fp': 'تَبْقَيْنَ',
       '3mp': 'يَبْقَوْا',
       '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for رَوِيَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('روي', 1), 'subjunctive')).toEqual({
+      '1s': 'أَرْوِيَ',
+      '2ms': 'تَرْوِيَ',
+      '2fs': 'تَرْوِي',
+      '3ms': 'يَرْوِيَ',
+      '3fs': 'تَرْوِيَ',
+      '2d': 'تَرْوِيَا',
+      '3md': 'يَرْوِيَا',
+      '3fd': 'تَرْوِيَا',
+      '1p': 'نَرْوِيَ',
+      '2mp': 'تَرْوُوا',
+      '2fp': 'تَرْوِينَ',
+      '3mp': 'يَرْوُوا',
+      '3fp': 'يَرْوِينَ',
     })
   })
 

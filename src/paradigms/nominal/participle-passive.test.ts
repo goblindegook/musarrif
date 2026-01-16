@@ -194,7 +194,11 @@ describe('doubly weak roots', () => {
     })
   })
 
-  describe.todo('ر-و-ي')
+  describe('ر-و-ي', () => {
+    test('رَوِيَ (Form I)', () => {
+      expect(derivePassiveParticiple(getVerb('روي', 1))).toBe('مَرْوِيّ')
+    })
+  })
 })
 
 describe('hamzated initial defective roots', () => {

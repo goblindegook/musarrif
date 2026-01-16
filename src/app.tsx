@@ -228,7 +228,7 @@ export function App() {
                   speechText={masdar?.length ? masdar.join('، ') : null}
                   copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
                 >
-                  {masdar?.length && (
+                  {masdar?.length ? (
                     <MasdarList>
                       {masdar.map((value, index) => (
                         <MasdarItem key={value}>
@@ -239,7 +239,7 @@ export function App() {
                         </MasdarItem>
                       ))}
                     </MasdarList>
-                  )}
+                  ) : null}
                 </Detail>
               </VerbMetaSection>
             </Panel>

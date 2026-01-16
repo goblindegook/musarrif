@@ -403,7 +403,17 @@ describe('imperative', () => {
       })
     })
 
-    describe.todo('ر-و-ي')
+    describe('ر-و-ي', () => {
+      test('رَوِيَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('روي', 1))).toMatchObject({
+          '2ms': 'اِرْوِ',
+          '2fs': 'اِرْوِي',
+          '2d': 'اِرْوِيَا',
+          '2mp': 'اِرْوُوا',
+          '2fp': 'اِرْوِينَ',
+        })
+      })
+    })
   })
 
   describe('geminate verbs', () => {

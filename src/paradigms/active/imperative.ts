@@ -39,19 +39,18 @@ function dropSukoonBeforeFinalAlif(word: readonly string[]): readonly string[] {
 }
 
 function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly string[] {
-  const [c1, c2] = [...verb.root]
-  const lastRoot = last(Array.from(verb.root))
+  const [c1, c2, c3] = [...verb.root]
 
   if (c2 === ALIF) return word
 
-  if (verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2)) return word
+  if (isHamzatedLetter(c1) && isWeakLetter(c2)) return word
 
-  if (isHamzatedLetter(lastRoot) && !isWeakLetter(c2)) return word
+  if (isHamzatedLetter(c3)) return word
 
   const alifIndex = word.lastIndexOf(ALIF)
-  if (alifIndex > 0 && word.at(alifIndex - 1) === WAW && word.at(alifIndex - 2) !== SUKOON)
-    return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
-  return word
+  if (alifIndex <= 0 || word.at(alifIndex - 1) !== WAW || isWeakLetter(word.at(alifIndex - 3))) return word
+
+  return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
 }
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
