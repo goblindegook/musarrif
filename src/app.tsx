@@ -21,12 +21,13 @@ import { VerbPill } from './components/VerbPill'
 import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
+import type { Mood } from './paradigms/active/present'
 import { FORM_I_PAST_VOWELS, FORM_I_PRESENT_VOWELS } from './paradigms/form-i-vowels'
 import { applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { getVerbById, search, type Verb } from './paradigms/verbs'
+import { getVerbById, search, type Tense, type Verb, type Voice } from './paradigms/verbs'
 import { mapRecord } from './primitives/objects'
 
 const DOTTED_CIRCLE = '\u25cc'
@@ -46,7 +47,7 @@ const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 
 
 export function App() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
-  const { verbId, navigateToVerb, tense, mood } = useRouting()
+  const { verbId, navigateToVerb, tense, mood, voice } = useRouting()
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -80,6 +81,33 @@ export function App() {
 
   const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
   const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
+
+  const selectedVoice: Voice = voice ?? 'active'
+  const selectedTense = selectedVoice === 'passive' && tense === 'imperative' ? 'past' : (tense ?? 'past')
+  const selectedMood = selectedTense === 'present' ? (mood ?? 'indicative') : undefined
+  const routeMood = mood
+
+  const handleVoiceChange = useCallback(
+    (nextVoice: Voice) => {
+      const nextTense = nextVoice === 'passive' && selectedTense === 'imperative' ? 'past' : selectedTense
+      navigateToVerb(verbId, nextVoice, nextTense, nextTense === 'present' ? routeMood : undefined)
+    },
+    [navigateToVerb, routeMood, selectedTense, verbId],
+  )
+
+  const handleTenseChange = useCallback(
+    (nextTense: Tense) => {
+      navigateToVerb(verbId, selectedVoice, nextTense, nextTense === 'present' ? routeMood : undefined)
+    },
+    [navigateToVerb, routeMood, selectedVoice, verbId],
+  )
+
+  const handleMoodChange = useCallback(
+    (nextMood: Mood) => {
+      navigateToVerb(verbId, selectedVoice, 'present', nextMood)
+    },
+    [navigateToVerb, selectedVoice, verbId],
+  )
 
   const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
   const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
@@ -173,9 +201,9 @@ export function App() {
                   ariaExpanded={isRootInfoOpen}
                 >
                   <RootMetaValue dir="rtl" lang="ar">
-                    {Array.from(selectedVerb.root).map((letter, index) => {
-                      return <span key={index}>{letter}</span>
-                    })}
+                    {Array.from(selectedVerb.root).map((letter, index) => (
+                      <span key={index}>{letter}</span>
+                    ))}
                   </RootMetaValue>
                 </Detail>
                 <Detail
@@ -245,22 +273,26 @@ export function App() {
             </Panel>
 
             <ConjugationSection>
-              {tense === 'present' ? (
+              {selectedTense === 'present' ? (
                 <ConjugationTable
                   verb={selectedVerb}
+                  voice={selectedVoice}
                   tense="present"
-                  mood={mood ?? 'indicative'}
+                  mood={selectedMood ?? 'indicative'}
                   diacriticsPreference={diacriticsPreference}
-                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
-                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
+                  onVoiceChange={handleVoiceChange}
+                  onTenseChange={handleTenseChange}
+                  onMoodChange={handleMoodChange}
                 />
               ) : (
                 <ConjugationTable
                   verb={selectedVerb}
-                  tense={tense ?? 'past'}
+                  voice={selectedVoice}
+                  tense={selectedTense}
                   diacriticsPreference={diacriticsPreference}
-                  onTenseChange={(nextTense) => navigateToVerb(verbId, nextTense)}
-                  onMoodChange={(nextMood) => navigateToVerb(verbId, tense, nextMood)}
+                  onVoiceChange={handleVoiceChange}
+                  onTenseChange={handleTenseChange}
+                  onMoodChange={handleMoodChange}
                 />
               )}
             </ConjugationSection>

@@ -2,25 +2,27 @@ import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import type { Mood } from '../paradigms/active/present'
-import type { Tense } from '../paradigms/verbs'
+import type { Tense, Voice } from '../paradigms/verbs'
 import { DEFAULT_LANGUAGE, isLanguageSupported, type Language } from './i18n'
 import { LANGUAGE_STORAGE_KEY, readPreference, writePreference } from './preferences'
 
 interface RoutingState {
   lang: Language
   verbId?: string
+  voice?: Voice
   tense?: Tense
   mood?: Mood
 }
 
 interface RoutingContextValue extends RoutingState {
   setLang: (lang: string) => void
-  navigateToVerb: (verbId?: string, tense?: Tense, mood?: Mood) => void
+  navigateToVerb: (verbId?: string, voice?: Voice, tense?: Tense, mood?: Mood) => void
 }
 
 const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
 
 const BASE_PATH = normalizeBasePath(import.meta.env.BASE_URL)
+const SUPPORTED_VOICES: readonly Voice[] = ['active', 'passive']
 const SUPPORTED_TENSES: readonly Tense[] = ['past', 'present', 'future', 'imperative']
 const SUPPORTED_MOODS: readonly Mood[] = ['indicative', 'subjunctive', 'jussive']
 
@@ -53,6 +55,10 @@ function isTense(value: unknown): value is Tense {
 
 function isMood(value: unknown): value is Mood {
   return typeof value === 'string' && (SUPPORTED_MOODS as readonly string[]).includes(value)
+}
+
+function isVoice(value: unknown): value is Voice {
+  return typeof value === 'string' && (SUPPORTED_VOICES as readonly string[]).includes(value)
 }
 
 function normalizeConjugation(tense?: string | Tense, mood?: string | Mood): { tense?: Tense; mood?: Mood } {
@@ -95,12 +101,14 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
     })
   const maybeLanguage = segments.at(0) as Language | undefined
   if (isLanguageSupported(maybeLanguage)) {
-    const hasActive = segments[2] === 'active'
-    if (hasActive) {
+    const voiceSegment = segments.at(2)
+    const voice = isVoice(voiceSegment) ? voiceSegment : undefined
+    if (voice) {
       const normalized = normalizeConjugation(segments[3], segments[4])
       return {
         lang: maybeLanguage,
         verbId: segments.at(1),
+        voice,
         tense: segments.length >= 4 ? normalized.tense : undefined,
         mood: segments.length >= 5 && normalized.tense === 'present' ? normalized.mood : undefined,
       }
@@ -113,12 +121,14 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
     }
   }
 
-  const hasActive = segments[1] === 'active'
-  if (hasActive) {
+  const voiceSegment = segments.at(1)
+  const voice = isVoice(voiceSegment) ? voiceSegment : undefined
+  if (voice) {
     const normalized = normalizeConjugation(segments[2], segments[3])
     return {
       lang: fallbackLang,
       verbId: segments.at(0),
+      voice,
       tense: segments.length >= 3 ? normalized.tense : undefined,
       mood: segments.length >= 4 && normalized.tense === 'present' ? normalized.mood : undefined,
     }
@@ -132,11 +142,11 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
   }
 }
 
-function buildHashPath({ lang, verbId, tense, mood }: RoutingState): string {
-  const activeSegment = tense ? '/active' : ''
+function buildHashPath({ lang, verbId, voice, tense, mood }: RoutingState): string {
+  const voiceSegment = tense ? `/${voice ?? 'active'}` : ''
   const tenseSegment = tense ? `/${tense}` : ''
   const moodSegment = tense === 'present' && mood ? `/${mood}` : ''
-  const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${activeSegment}${tenseSegment}${moodSegment}` : ''
+  const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${voiceSegment}${tenseSegment}${moodSegment}` : ''
   return `/${lang}${verbSegment}`
 }
 
@@ -194,9 +204,16 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
   }, [route.lang])
 
   const navigate = useCallback(
-    ({ lang, verbId, tense, mood }: RoutingState) => {
+    ({ lang, verbId, voice, tense, mood }: RoutingState) => {
       const normalized = normalizeConjugation(tense, mood)
-      const nextState: RoutingState = { lang, verbId, tense: normalized.tense, mood: normalized.mood }
+      const normalizedVoice = isVoice(voice) ? voice : undefined
+      const nextState: RoutingState = {
+        lang,
+        verbId,
+        voice: normalizedVoice,
+        tense: normalized.tense,
+        mood: normalized.mood,
+      }
       window.history.pushState({}, '', buildUrl(nextState))
       setRoute(nextState)
     },
@@ -207,9 +224,9 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
     return {
       ...route,
       setLang: (lang) => navigate({ ...route, lang: isLanguageSupported(lang) ? lang : route.lang }),
-      navigateToVerb: (verbId, tense, mood) => navigate({ ...route, verbId, tense, mood }),
+      navigateToVerb: (verbId, voice, tense, mood) => navigate({ ...route, verbId, voice, tense, mood }),
     }
-  }, [route.lang, route.verbId, route.tense, route.mood])
+  }, [route.lang, route.verbId, route.voice, route.tense, route.mood])
 
   return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
 }

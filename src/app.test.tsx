@@ -73,6 +73,22 @@ test('shows a dash when the masdar is missing', () => {
 })
 
 describe('Conjugation table', () => {
+  it('shows active and passive voice tabs', () => {
+    renderApp('/#/en/ktb-1')
+
+    const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
+    expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
+    expect(within(voiceTabs).getByRole('tab', { name: 'Passive' })).toHaveAttribute('aria-selected', 'false')
+  })
+
+  it('shows only the active voice tab when passive is unavailable', () => {
+    renderApp('/#/en/Zll-1')
+
+    const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
+    expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
+    expect(within(voiceTabs).queryByRole('tab', { name: 'Passive' })).not.toBeInTheDocument()
+  })
+
   it('switches to the present-tense table via tabs', async () => {
     renderApp('/#/en/ktb-1')
     const user = userEvent.setup()
@@ -90,6 +106,34 @@ describe('Conjugation table', () => {
     await user.click(screen.getByText('Present'))
 
     expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/active/present')
+  })
+
+  it('switches to passive tense options and updates the URL', async () => {
+    renderApp('/#/en/ktb-1')
+    const user = userEvent.setup()
+    const pushSpy = vi.spyOn(window.history, 'pushState')
+
+    await user.click(screen.getByRole('tab', { name: 'Passive' }))
+
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/passive/past')
+    const tenseTabs = screen.getByRole('tablist', { name: 'Select tense' })
+    expect(within(tenseTabs).getByText('Past')).toBeInTheDocument()
+    expect(within(tenseTabs).getByText('Present')).toBeInTheDocument()
+    expect(within(tenseTabs).getByText('Future')).toBeInTheDocument()
+    expect(within(tenseTabs).queryByText('Imperative')).not.toBeInTheDocument()
+  })
+
+  it('shows mood tabs for passive present tense', async () => {
+    renderApp('/#/en/ktb-1')
+    const user = userEvent.setup()
+
+    await user.click(screen.getByRole('tab', { name: 'Passive' }))
+    await user.click(screen.getByText('Present'))
+
+    const moodTabs = screen.getByRole('tablist', { name: /select mood/i })
+    expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
+    expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
+    expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
   })
 
   it('shows imperative as a separate tense option', async () => {

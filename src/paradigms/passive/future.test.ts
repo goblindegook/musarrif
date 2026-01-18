@@ -1,0 +1,22 @@
+import fc from 'fast-check'
+import { describe, expect, it } from 'vitest'
+import { FATHA, SEEN } from '../letters'
+import { PRONOUN_IDS } from '../pronouns'
+import { verbs } from '../verbs'
+import { conjugatePassiveFuture } from './future'
+import { conjugatePassivePresentMood } from './present'
+import { canConjugatePassive } from './support'
+
+describe('passive future', () => {
+  it('prefixes seen + fatḥa to passive present indicative', () => {
+    const eligibleVerbs = verbs.filter((verb) => canConjugatePassive(verb))
+    fc.assert(
+      fc.property(fc.constantFrom(...eligibleVerbs), fc.constantFrom(...PRONOUN_IDS), (verb, pronoun) => {
+        const present = conjugatePassivePresentMood(verb, 'indicative')
+        const future = conjugatePassiveFuture(verb)
+
+        expect(future[pronoun]).toBe(`${SEEN}${FATHA}${present[pronoun]}`)
+      }),
+    )
+  })
+})

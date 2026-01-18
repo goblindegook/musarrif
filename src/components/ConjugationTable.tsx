@@ -6,8 +6,12 @@ import { conjugateImperative } from '../paradigms/active/imperative'
 import { conjugatePast } from '../paradigms/active/past'
 import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
+import { conjugatePassiveFuture } from '../paradigms/passive/future'
+import { conjugatePassivePast } from '../paradigms/passive/past'
+import { conjugatePassivePresentMood } from '../paradigms/passive/present'
+import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import type { Tense, Verb } from '../paradigms/verbs'
+import type { Tense, Verb, Voice } from '../paradigms/verbs'
 import { CopyButton } from './CopyButton'
 import { SpeechButton } from './SpeechButton'
 
@@ -46,9 +50,11 @@ const PRONOUNS: readonly PronounSlot[] = [
 
 interface ConjugationProps {
   verb: Verb
+  voice: Voice
   diacriticsPreference?: DiacriticsPreference
   onTenseChange: (tense: Tense) => void
   onMoodChange: (mood: Mood) => void
+  onVoiceChange: (voice: Voice) => void
 }
 
 interface PastConjugationProps extends ConjugationProps {
@@ -79,127 +85,172 @@ type ConjugationTableProps =
 
 export function ConjugationTable({
   verb,
+  voice,
   tense,
   mood,
   onTenseChange,
   onMoodChange,
+  onVoiceChange,
   diacriticsPreference = 'all',
 }: ConjugationTableProps) {
   const { t, dir, lang } = useI18n()
+  const passiveAvailable = canConjugatePassive(verb)
+  const availableVoices = passiveAvailable ? VOICE_OPTIONS : (['active'] as const)
+  const activeVoice = passiveAvailable ? voice : 'active'
   const conjugations = useMemo(() => {
+    if (activeVoice === 'passive') {
+      if (tense === 'past') return conjugatePassivePast(verb)
+      if (tense === 'future') return conjugatePassiveFuture(verb)
+      if (tense === 'present') return conjugatePassivePresentMood(verb, mood)
+      return null
+    }
     if (tense === 'past') return conjugatePast(verb)
     if (tense === 'future') return conjugateFuture(verb)
     if (tense === 'imperative') return conjugateImperative(verb)
     return conjugatePresentMood(verb, mood)
-  }, [verb, tense, mood])
+  }, [activeVoice, verb, tense, mood])
+  const conjugationEntries: Partial<Record<PronounId, string>> = conjugations ?? {}
+  const availableTenses = TENSE_OPTIONS_BY_VOICE[activeVoice]
 
   return (
     <TabsContainer>
       <TabBlock>
-        <TabBar wrap role="tablist" aria-label={t('aria.selectTense')}>
-          {(Object.keys(TENSE_OPTIONS) as Tense[]).map((option) => (
+        <TabBar role="tablist" aria-label={t('aria.selectVoice')}>
+          {availableVoices.map((option) => (
             <TabButton
               type="button"
               key={option}
-              active={option === tense}
-              hasChildren={option === 'present'}
+              active={option === activeVoice}
+              hasChildren
               role="tab"
-              id={`tense-tab-${option}`}
-              aria-selected={option === tense}
+              id={`voice-tab-${option}`}
+              aria-selected={option === activeVoice}
               aria-controls={'conjugation-panel'}
-              tabIndex={option === tense ? 0 : -1}
-              aria-label={t(TENSE_OPTIONS[option])}
-              onClick={() => onTenseChange(option)}
+              tabIndex={option === activeVoice ? 0 : -1}
+              aria-label={t(VOICE_LABELS[option])}
+              onClick={() => onVoiceChange(option)}
               dir={dir}
               lang={lang}
               fluid
             >
-              {t(TENSE_OPTIONS[option])}
+              {t(VOICE_LABELS[option])}
             </TabButton>
           ))}
         </TabBar>
-        {tense === 'present' && (
-          <SubTabBar role="tablist" aria-label={t('aria.selectMood')}>
-            {(Object.keys(MOOD_OPTIONS) as Mood[]).map((option) => (
+        <TenseBlock>
+          <SubTabBar wrap role="tablist" aria-label={t('aria.selectTense')}>
+            {availableTenses.map((option) => (
               <TabButton
                 type="button"
                 key={option}
-                active={option === mood}
+                active={option === tense}
+                hasChildren={option === 'present'}
                 role="tab"
-                id={`mood-tab-${option}`}
-                aria-selected={option === mood}
+                id={`tense-tab-${option}`}
+                aria-selected={option === tense}
                 aria-controls={'conjugation-panel'}
-                tabIndex={option === mood ? 0 : -1}
-                aria-label={t(MOOD_OPTIONS[option])}
-                size="sm"
-                onClick={() => onMoodChange(option)}
+                tabIndex={option === tense ? 0 : -1}
+                aria-label={t(TENSE_LABELS[option])}
+                onClick={() => onTenseChange(option)}
                 dir={dir}
                 lang={lang}
+                fluid
               >
-                {t(MOOD_OPTIONS[option])}
+                {t(TENSE_LABELS[option])}
               </TabButton>
             ))}
           </SubTabBar>
-        )}
+          {tense === 'present' && (
+            <SubTabBar role="tablist" aria-label={t('aria.selectMood')}>
+              {(Object.keys(MOOD_OPTIONS) as Mood[]).map((option) => (
+                <TabButton
+                  type="button"
+                  key={option}
+                  active={option === mood}
+                  role="tab"
+                  id={`mood-tab-${option}`}
+                  aria-selected={option === mood}
+                  aria-controls={'conjugation-panel'}
+                  tabIndex={option === mood ? 0 : -1}
+                  aria-label={t(MOOD_OPTIONS[option])}
+                  size="sm"
+                  onClick={() => onMoodChange(option)}
+                  dir={dir}
+                  lang={lang}
+                >
+                  {t(MOOD_OPTIONS[option])}
+                </TabButton>
+              ))}
+            </SubTabBar>
+          )}
+        </TenseBlock>
       </TabBlock>
-      {conjugations && (
-        <TabPanel
-          role="tabpanel"
-          id="conjugation-panel"
-          aria-labelledby={
-            tense === 'past' || tense === 'future' || tense === 'imperative' ? `tense-tab-${tense}` : `mood-tab-${mood}`
-          }
-        >
-          <Table dir="rtl">
-            <thead>
-              <Row>
-                <TableHeadCell>{t('table.pronoun')}</TableHeadCell>
-                <VerbHeadCell>
-                  {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_OPTIONS[tense])}
-                </VerbHeadCell>
-                <TableHeadCell></TableHeadCell>
-              </Row>
-            </thead>
-            <TableBody>
-              {PRONOUNS.filter((slot) => conjugations[slot.id]).map((slot, index) => {
-                const displayText = applyDiacriticsPreference(conjugations[slot.id], diacriticsPreference)
+      <TabPanel
+        role="tabpanel"
+        id="conjugation-panel"
+        aria-labelledby={
+          tense === 'past' || tense === 'future' || tense === 'imperative' ? `tense-tab-${tense}` : `mood-tab-${mood}`
+        }
+      >
+        <Table dir="rtl">
+          <thead>
+            <Row>
+              <TableHeadCell>{t('table.pronoun')}</TableHeadCell>
+              <VerbHeadCell>
+                {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_LABELS[tense])}
+              </VerbHeadCell>
+              <TableHeadCell></TableHeadCell>
+            </Row>
+          </thead>
+          <TableBody>
+            {PRONOUNS.map((slot, index) => {
+              const conjugation = conjugationEntries[slot.id]
+              if (!conjugation) return null
+              const displayText = applyDiacriticsPreference(conjugation, diacriticsPreference)
 
-                return (
-                  <Row key={slot.id} striped={index % 2 === 0}>
-                    <PronounCell>
-                      <span dir="rtl" lang="ar">
-                        {applyDiacriticsPreference(slot.label, diacriticsPreference)}
-                      </span>
-                      <PronounDescription dir={dir} lang={lang}>
-                        {formatDescription(slot, t)}
-                      </PronounDescription>
-                    </PronounCell>
-                    <VerbCell dir="rtl" lang="ar">
-                      {displayText}
-                    </VerbCell>
+              return (
+                <Row key={slot.id} striped={index % 2 === 0}>
+                  <PronounCell>
+                    <span dir="rtl" lang="ar">
+                      {applyDiacriticsPreference(slot.label, diacriticsPreference)}
+                    </span>
+                    <PronounDescription dir={dir} lang={lang}>
+                      {formatDescription(slot, t)}
+                    </PronounDescription>
+                  </PronounCell>
+                  <VerbCell dir="rtl" lang="ar">
+                    {displayText}
+                  </VerbCell>
 
-                    <ActionCell>
-                      <ActionButtons>
-                        <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
-                        <SpeechButton
-                          text={conjugations[slot.id]}
-                          lang="ar"
-                          ariaLabel={t('aria.speak', { text: conjugations[slot.id] })}
-                        />
-                      </ActionButtons>
-                    </ActionCell>
-                  </Row>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TabPanel>
-      )}
+                  <ActionCell>
+                    <ActionButtons>
+                      <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                      <SpeechButton text={conjugation} lang="ar" ariaLabel={t('aria.speak', { text: conjugation })} />
+                    </ActionButtons>
+                  </ActionCell>
+                </Row>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </TabPanel>
     </TabsContainer>
   )
 }
 
-const TENSE_OPTIONS: Readonly<Record<Tense, TranslationKey>> = {
+const VOICE_OPTIONS: readonly Voice[] = ['active', 'passive']
+
+const VOICE_LABELS: Readonly<Record<Voice, TranslationKey>> = {
+  active: 'voice.active',
+  passive: 'voice.passive',
+} as const
+
+const TENSE_OPTIONS_BY_VOICE: Readonly<Record<Voice, readonly Tense[]>> = {
+  active: ['past', 'present', 'future', 'imperative'],
+  passive: ['past', 'present', 'future'],
+} as const
+
+const TENSE_LABELS: Readonly<Record<Tense, TranslationKey>> = {
   past: 'tense.past',
   present: 'tense.present',
   future: 'tense.future',
@@ -253,6 +304,12 @@ const SubTabBar = styled(TabBar)`
     margin-right: -2rem;
     padding: 0.75rem 2rem;
   }
+`
+
+const TenseBlock = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 `
 
 const TabButton = styled('button')<{
