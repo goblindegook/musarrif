@@ -125,6 +125,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (c2 === c3 && presentVowel === 'i' && pronounId === '2ms') return [c1, KASRA, c2, SHADDA, FATHA]
 
+        if (c2 === c3 && presentVowel === 'a' && pronounId !== '2fp')
+          // Geminate Form I with present vowel 'a' drops the helping prefix and takes fatḥa on the first radical.
+          return [c1, FATHA, ...stem.slice(2)]
+
         // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
         // This is a morphological rule based on past pattern classification, even though
         // the imperative is technically derived from the present tense (jussive)

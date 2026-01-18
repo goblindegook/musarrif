@@ -64,7 +64,19 @@ function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readon
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
 
-  if (verb.form === 1 && c2 === c3) return [expanded[0], FATHA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
+  if (verb.form === 1 && c2 === c3)
+    return [
+      expanded[0],
+      FATHA,
+      c1,
+      SUKOON,
+      c2,
+      shortVowelFromPattern(resolveFormIPresentVowel(verb)),
+      c3,
+      SUKOON,
+      NOON,
+      FATHA,
+    ]
 
   if (verb.form === 4 && c2 === c3) return [expanded[0], DAMMA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
 
@@ -465,8 +477,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (verb.form === 10 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
 
-      if (verb.form === 1 && isGeminate && resolveFormIPresentVowel(verb) === 'i')
-        return replaceFinalDiacritic(stem, FATHA)
+      if (verb.form === 1 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
 
       // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
       if (verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
@@ -527,7 +538,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (c2 === c3) {
     if (patternVowel === 'u') return [YEH, FATHA, c1, DAMMA, c2, SHADDA, DAMMA]
     if (patternVowel === 'i') return [YEH, FATHA, c1, KASRA, c2, SHADDA, DAMMA]
-    return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
+    if (patternVowel === 'a') return [YEH, FATHA, c1, FATHA, c2, SHADDA, DAMMA]
   }
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)

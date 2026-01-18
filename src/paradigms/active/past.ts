@@ -215,7 +215,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   if (c2 === c3)
     return {
       base: [c1, FATHA, c2, SHADDA, FATHA],
-      suffixedBase: [c1, FATHA, c2, FATHA, c3, SUKOON],
+      suffixedBase: [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, SUKOON],
     }
 
   const base = [c1, FATHA, ALIF, c3, FATHA]

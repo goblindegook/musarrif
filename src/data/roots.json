@@ -313,7 +313,7 @@
   { "root": "طوع", "form": 10 },
   { "root": "طير", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "طير", "form": 2 },
-  { "root": "ظلل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "ظلل", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3l"] },
   { "root": "ظنن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "عاد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "عاد", "form": 10 },

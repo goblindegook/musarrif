@@ -70,6 +70,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Middle hamza in faa'il seats on yeh after kasra (e.g., سأل → سَائِل)
         if (isMiddleHamza) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
 
+        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
+        if (c2 === c3) return [c1, FATHA, ALIF, c2, SHADDA]
+
         if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
           if (isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
@@ -95,9 +98,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
         if (isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
-        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
-        if (c2 === c3) return [c1, FATHA, ALIF, c2, SHADDA]
 
         return [c1, FATHA, ALIF, c2, KASRA, c3]
       }
