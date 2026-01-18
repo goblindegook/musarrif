@@ -467,6 +467,26 @@ describe('active present indicative pattern', () => {
         })
       })
     })
+
+    describe('د-ع-ا', () => {
+      test('دَعَا (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('دعا', 1), 'indicative')).toEqual({
+          '1s': 'أَدْعُو',
+          '2ms': 'تَدْعُو',
+          '2fs': 'تَدْعِينَ',
+          '3ms': 'يَدْعُو',
+          '3fs': 'تَدْعُو',
+          '2d': 'تَدْعُوَانِ',
+          '3md': 'يَدْعُوَانِ',
+          '3fd': 'تَدْعُوَانِ',
+          '1p': 'نَدْعُو',
+          '2mp': 'تَدْعُونَ',
+          '2fp': 'تَدْعُونَ',
+          '3mp': 'يَدْعُونَ',
+          '3fp': 'يَدْعُونَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial hollow verbs', () => {
@@ -982,6 +1002,24 @@ describe('active present jussive', () => {
       '2fp': 'تَبْقَيْنَ',
       '3mp': 'يَبْقَوْا',
       '3fp': 'يَبْقَيْنَ',
+    })
+  })
+
+  test('jussive conjugation for دَعَا (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('دعا', 1), 'jussive')).toEqual({
+      '1s': 'أَدْعُ',
+      '2ms': 'تَدْعُ',
+      '2fs': 'تَدْعِي',
+      '3ms': 'يَدْعُ',
+      '3fs': 'تَدْعُ',
+      '2d': 'تَدْعُوَا',
+      '3md': 'يَدْعُوَا',
+      '3fd': 'تَدْعُوَا',
+      '1p': 'نَدْعُ',
+      '2mp': 'تَدْعُوا',
+      '2fp': 'تَدْعُونَ',
+      '3mp': 'يَدْعُوا',
+      '3fp': 'يَدْعُونَ',
     })
   })
 

@@ -48,8 +48,8 @@ function defectiveLetterGlide(letter: string): string {
 
 const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
 
-function isFormIFinalWeakPresentA(verb: Verb): boolean {
-  return verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === 'a'
+function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'u'): boolean {
+  return verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === vowel
 }
 
 function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly string[] {
@@ -124,7 +124,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
-    if (isFormIFinalWeakPresentA(verb)) return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a'))
+      return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
+
+    if (isFormIFinalWeakPresent(verb, 'u'))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
 
     // Replace final hamza with hamza on yeh, add kasra + yeh + noon + fatḥa
     if (isWeakLetter(c2) && isHamzatedLetter(c3))
@@ -163,7 +167,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
-    if (isFormIFinalWeakPresentA(verb))
+    if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
@@ -185,7 +189,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3md': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
 
-    if (isFormIFinalWeakPresentA(verb))
+    if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
@@ -208,7 +212,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
-    if (isFormIFinalWeakPresentA(verb))
+    if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
@@ -232,7 +236,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
 
-    if (isFormIFinalWeakPresentA(verb)) return [...buildFormIFinalWeakPresentAStem(TEH, verb), WAW, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a'))
+      return [...buildFormIFinalWeakPresentAStem(TEH, verb), WAW, SUKOON, NOON, FATHA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...stem, WAW, NOON, FATHA]
 
@@ -258,7 +263,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '2fp': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
 
-    if (isFormIFinalWeakPresentA(verb)) return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a'))
+      return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
 
     if (verb.form === 9) return buildFemininePlural(expandShadda(applyPresentPrefix(base, TEH)), verb)
 
@@ -270,7 +276,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3mp': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
 
-    if (isFormIFinalWeakPresentA(verb)) return [...buildFormIFinalWeakPresentAStem(YEH, verb), WAW, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a'))
+      return [...buildFormIFinalWeakPresentAStem(YEH, verb), WAW, SUKOON, NOON, FATHA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...base, WAW, NOON, FATHA]
 
@@ -296,7 +303,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3fp': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
 
-    if (isFormIFinalWeakPresentA(verb)) return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a'))
+      return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, SUKOON, NOON, FATHA]
 
     if (verb.form === 9) return buildFemininePlural(expandShadda(base), verb)
 
@@ -428,7 +436,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return dropFinalDefectiveGlide(word)
       }
 
-      if (verb.form === 1 && isFormIFinalWeakPresentA(verb)) {
+      if (verb.form === 1 && isFormIFinalWeakPresent(verb, 'a')) {
         if (isDual) return dropNoonEnding(word)
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
         if (isMasculinePlural && last(dropNoonEnding(word)) === WAW)
