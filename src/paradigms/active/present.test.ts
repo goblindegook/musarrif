@@ -289,6 +289,26 @@ describe('active present indicative pattern', () => {
       })
     })
 
+    describe('ش-ي-د', () => {
+      test('شَادَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('شيد', 1), 'indicative')).toEqual({
+          '1s': 'أَشِيدُ',
+          '2ms': 'تَشِيدُ',
+          '2fs': 'تَشِيدِيْنَ',
+          '3ms': 'يَشِيدُ',
+          '3fs': 'تَشِيدُ',
+          '2d': 'تَشِيدَانِ',
+          '3md': 'يَشِيدَانِ',
+          '3fd': 'تَشِيدَانِ',
+          '1p': 'نَشِيدُ',
+          '2mp': 'تَشِيدُونَ',
+          '2fp': 'تَشِدْنَ',
+          '3mp': 'يَشِيدُونَ',
+          '3fp': 'يَشِدْنَ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugatePresentMood(getVerb('قول', 1), 'indicative')).toEqual({
@@ -959,6 +979,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for شَادَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('شيد', 1), 'jussive')).toEqual({
+      '1s': 'أَشِدْ',
+      '2ms': 'تَشِدْ',
+      '2fs': 'تَشِيدِي',
+      '3ms': 'يَشِدْ',
+      '3fs': 'تَشِدْ',
+      '2d': 'تَشِيدَا',
+      '3md': 'يَشِيدَا',
+      '3fd': 'تَشِيدَا',
+      '1p': 'نَشِدْ',
+      '2mp': 'تَشِيدُوْا',
+      '2fp': 'تَشِدْنَ',
+      '3mp': 'يَشِيدُوْا',
+      '3fp': 'يَشِدْنَ',
+    })
+  })
+
   test('jussive conjugation for أَسَرَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('أسر', 1), 'jussive')).toEqual({
       '1s': 'آسِرْ',
@@ -1443,6 +1481,24 @@ describe('active present subjunctive', () => {
       '2fp': 'تَرْوِينَ',
       '3mp': 'يَرْوُوا',
       '3fp': 'يَرْوِينَ',
+    })
+  })
+
+  test('subjunctive conjugation for شَادَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('شيد', 1), 'subjunctive')).toEqual({
+      '1s': 'أَشِيدَ',
+      '2ms': 'تَشِيدَ',
+      '2fs': 'تَشِيدِي',
+      '3ms': 'يَشِيدَ',
+      '3fs': 'تَشِيدَ',
+      '2d': 'تَشِيدَا',
+      '3md': 'يَشِيدَا',
+      '3fd': 'تَشِيدَا',
+      '1p': 'نَشِيدَ',
+      '2mp': 'تَشِيدُوْا',
+      '2fp': 'تَشِدْنَ',
+      '3mp': 'يَشِيدُوْا',
+      '3fp': 'يَشِدْنَ',
     })
   })
 

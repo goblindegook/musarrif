@@ -371,6 +371,26 @@ describe('active past pattern', () => {
       })
     })
 
+    describe('ش-ي-د', () => {
+      test('شَادَ (Form I)', () => {
+        expect(conjugatePast(getVerb('شيد', 1))).toEqual({
+          '1s': 'شِدْتُ',
+          '2ms': 'شِدْتَ',
+          '2fs': 'شِدْتِ',
+          '3ms': 'شَادَ',
+          '3fs': 'شَادَتْ',
+          '2d': 'شِدْتُمَا',
+          '3md': 'شَادَا',
+          '3fd': 'شَادَتَا',
+          '1p': 'شِدْنَا',
+          '2mp': 'شِدْتُمْ',
+          '2fp': 'شِدْتُنَّ',
+          '3mp': 'شَادُوا',
+          '3fp': 'شِدْنَ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugatePast(getVerb('قول', 1))).toEqual({

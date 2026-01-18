@@ -130,6 +130,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('ش-ي-د', () => {
+      test('شَادَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('شيد', 1))).toMatchObject({
+          '2ms': 'شِدْ',
+          '2fs': 'شِيدِي',
+          '2d': 'شِيدَا',
+          '2mp': 'شِيدُوْا',
+          '2fp': 'شِدْنَ',
+        })
+      })
+    })
+
     describe('ق-و-ل', () => {
       test('قَالَ (Form I)', () => {
         expect(conjugateImperative(getVerb('قول', 1))).toMatchObject({

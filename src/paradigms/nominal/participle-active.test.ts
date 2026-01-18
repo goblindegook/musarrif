@@ -135,6 +135,12 @@ describe('assimilated roots', () => {
 })
 
 describe('hollow roots', () => {
+  describe('ش-ي-د', () => {
+    test.each<[VerbForm, string]>([[1, 'شَائِد']])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('شيد', form))).toBe(expected)
+    })
+  })
+
   describe('ق-و-ل', () => {
     test.each<[VerbForm, string]>([
       [1, 'قَائِل'],
