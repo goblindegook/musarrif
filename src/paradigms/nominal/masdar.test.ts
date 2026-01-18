@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
 import { getVerb, type VerbForm } from '../verbs'
 import { deriveMasdar } from './masdar'
@@ -135,6 +134,7 @@ test.each<[string, VerbForm, string | string[]]>([
   ['راح', 1, 'رَوَاح'],
   ['طلب', 1, 'طَلَب'],
   ['لعب', 1, 'لُعْب'],
+  ['حول', 5, 'تَحَوُّل'],
 ])('%s (Form %d) masdar is %s', (root, form, expected) => {
   expect(deriveMasdar(getVerb(root, form))).toEqual([expected].flat())
 })

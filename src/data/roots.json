@@ -141,6 +141,7 @@
   { "root": "حمل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "حمم", "form": 10 },
   { "root": "حول", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "حول", "form": 5 },
   { "root": "خاف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خبر", "form": 4 },
   { "root": "خبز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
