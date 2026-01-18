@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
 import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePast } from './past'
@@ -57,7 +56,7 @@ describe('active past pattern', () => {
     ['غدو', 1, 'غَدَا'],
     ['بيت', 1, 'بَاتَ'],
     ['مسي', 4, 'أَمْسَى'],
-    ['حول', 5, 'تَحَوَّلَ'],
+    ['حول', 5, 'تَحَوَّلَ'],
     ['مكن', 4, 'أَمْكَنَ'],
     ['فجر', 7, 'اِنْفَجَرَ'],
     ['قود', 10, 'اِسْتَقَادَ'],
