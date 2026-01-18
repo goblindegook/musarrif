@@ -81,6 +81,7 @@ test.each<[string, VerbForm, string]>([
   ['وأى', 1, 'مَوْئِيّ'],
   ['ولى', 1, 'مَوْلِيّ'],
   ['بيت', 1, 'مَبِيت'],
+  ['صير', 1, 'مَصِير'],
 ])('%s (Form %d) passive participle is %s', (root, form, expected) => {
   expect(derivePassiveParticiple(getVerb(root, form))).toBe(expected)
 })

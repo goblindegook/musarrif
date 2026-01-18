@@ -90,6 +90,7 @@ test.each<[string, VerbForm, string]>([
   ['وأى', 1, 'وَاءٍ'],
   ['ولى', 1, 'وَالٍ'],
   ['بيت', 1, 'بَائِت'],
+  ['صير', 1, 'صَائِر'],
 ])('%s (Form %d) active participle is %s', (root, form, expected) => {
   const verb = getVerb(root, form)
   expect(deriveActiveParticiple(verb)).toBe(expected)

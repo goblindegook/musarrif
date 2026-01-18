@@ -119,7 +119,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
       if (c2 === WAW && c3 === YEH) return [c1, FATHA, c2, SUKOON, c3]
 
-      if (isMiddleWeak) return [c1, FATHA, WAW, SUKOON, c3]
+      if (isMiddleWeak) return [c1, FATHA, c2 === YEH ? YEH : WAW, SUKOON, c3]
 
       return []
   }
