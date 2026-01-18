@@ -9,6 +9,8 @@ describe('active past pattern', () => {
     ['أمن', 4, 'آمَنَ'],
     ['أذن', 1, 'أَذِنَ'],
     ['أسر', 1, 'أَسَرَ'],
+    ['رأى', 1, 'رَأَى'],
+    ['أخذ', 1, 'أَخَذَ'],
     ['أكد', 2, 'أَكَّدَ'],
     ['أنشأ', 4, 'أَنْشَأَ'],
     ['أود', 2, 'أَوَّدَ'],
@@ -55,6 +57,7 @@ describe('active past pattern', () => {
     ['عون', 6, 'تَعَاوَنَ'],
     ['عمل', 10, 'اِسْتَعْمَلَ'],
     ['غدو', 1, 'غَدَا'],
+    ['لوم', 1, 'لَامَ'],
     ['بيت', 1, 'بَاتَ'],
     ['مسي', 4, 'أَمْسَى'],
     ['صير', 1, 'صَارَ'],
@@ -899,7 +902,27 @@ describe('active past pattern', () => {
 
   describe.todo('hamzated middle assimilated verbs')
 
-  describe.todo('hamzated middle defective verbs')
+  describe('hamzated middle defective verbs', () => {
+    describe('ر-أ-ى', () => {
+      test('رَأَى (Form I)', () => {
+        expect(conjugatePast(getVerb('رأى', 1))).toEqual({
+          '1s': 'رَأَيْتُ',
+          '2ms': 'رَأَيْتَ',
+          '2fs': 'رَأَيْتِ',
+          '3ms': 'رَأَى',
+          '3fs': 'رَأَتْ',
+          '2d': 'رَأَيْتُمَا',
+          '3md': 'رَأَيَا',
+          '3fd': 'رَأَتَا',
+          '1p': 'رَأَيْنَا',
+          '2mp': 'رَأَيْتُمْ',
+          '2fp': 'رَأَيْتُنَّ',
+          '3mp': 'رَأَوْا',
+          '3fp': 'رَأَيْنَ',
+        })
+      })
+    })
+  })
 
   describe('hamzated final assimilated verbs', () => {
     describe('و-أ-ى', () => {

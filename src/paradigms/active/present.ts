@@ -54,6 +54,7 @@ function isFormIFinalWeakPresentA(verb: Verb): boolean {
 
 function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly string[] {
   const [c1, c2] = [...verb.root]
+  if (isHamzatedLetter(c2)) return [prefix, FATHA, c1, FATHA]
   return [prefix, FATHA, c1, SUKOON, c2, FATHA]
 }
 

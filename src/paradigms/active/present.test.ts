@@ -8,6 +8,7 @@ describe('active present indicative pattern', () => {
     ['أمن', 4, 'يُؤْمِنُ'],
     ['أذن', 1, 'يَأْذَنُ'],
     ['أسر', 1, 'يَأْسِرُ'],
+    ['أخذ', 1, 'يَأْخُذُ'],
     ['أنشأ', 4, 'يُنْشِئُ'],
     ['أكد', 2, 'يُؤَكِّدُ'],
     ['أود', 2, 'يُؤَوِّدُ'],
@@ -66,6 +67,7 @@ describe('active present indicative pattern', () => {
     ['عون', 6, 'يَتَعَاوَنُ'],
     ['عمل', 10, 'يَسْتَعْمِلُ'],
     ['غدو', 1, 'يَغْدُو'],
+    ['لوم', 1, 'يَلُومُ'],
     ['بيت', 1, 'يَبِيتُ'],
     ['مسي', 4, 'يُمْسِي'],
     ['صير', 1, 'يَصِيرُ'],
@@ -842,7 +844,25 @@ describe('active present indicative pattern', () => {
   })
 
   describe('hamzated middle defective verbs', () => {
-    describe.todo('ب-د-أ')
+    describe('ر-أ-ى', () => {
+      test('رَأَى (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('رأى', 1), 'indicative')).toEqual({
+          '1s': 'أَرَى',
+          '2ms': 'تَرَى',
+          '2fs': 'تَرَيْنَ',
+          '3ms': 'يَرَى',
+          '3fs': 'تَرَى',
+          '2d': 'تَرَيَانِ',
+          '3md': 'يَرَيَانِ',
+          '3fd': 'تَرَيَانِ',
+          '1p': 'نَرَى',
+          '2mp': 'تَرَوْنَ',
+          '2fp': 'تَرَيْنَ',
+          '3mp': 'يَرَوْنَ',
+          '3fp': 'يَرَيْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated final assimilated verbs', () => {
@@ -994,6 +1014,24 @@ describe('active present jussive', () => {
       '2fp': 'تَشِدْنَ',
       '3mp': 'يَشِيدُوْا',
       '3fp': 'يَشِدْنَ',
+    })
+  })
+
+  test('jussive conjugation for رَأَى (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('رأى', 1), 'jussive')).toEqual({
+      '1s': 'أَرَ',
+      '2ms': 'تَرَ',
+      '2fs': 'تَرَيْ',
+      '3ms': 'يَرَ',
+      '3fs': 'تَرَ',
+      '2d': 'تَرَيَا',
+      '3md': 'يَرَيَا',
+      '3fd': 'تَرَيَا',
+      '1p': 'نَرَ',
+      '2mp': 'تَرَوْا',
+      '2fp': 'تَرَيْنَ',
+      '3mp': 'يَرَوْا',
+      '3fp': 'يَرَيْنَ',
     })
   })
 
@@ -1499,6 +1537,24 @@ describe('active present subjunctive', () => {
       '2fp': 'تَشِدْنَ',
       '3mp': 'يَشِيدُوْا',
       '3fp': 'يَشِدْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for رَأَى (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('رأى', 1), 'subjunctive')).toEqual({
+      '1s': 'أَرَى',
+      '2ms': 'تَرَى',
+      '2fs': 'تَرَيْ',
+      '3ms': 'يَرَى',
+      '3fs': 'تَرَى',
+      '2d': 'تَرَيَا',
+      '3md': 'يَرَيَا',
+      '3fd': 'تَرَيَا',
+      '1p': 'نَرَى',
+      '2mp': 'تَرَوْا',
+      '2fp': 'تَرَيْنَ',
+      '3mp': 'يَرَوْا',
+      '3fp': 'يَرَيْنَ',
     })
   })
 
