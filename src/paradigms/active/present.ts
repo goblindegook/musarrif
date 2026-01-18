@@ -596,7 +596,9 @@ function derivePresentFormI(verb: Verb): readonly string[] {
     return [YEH, FATHA, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
   // For defective verbs ending in ي, use kasra before the final ي; for و, use damma
-  if (c3 === YEH || c3 === ALIF_MAQSURA) return [YEH, FATHA, c1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
+  if (c3 === YEH || (c3 === ALIF_MAQSURA && patternVowel === 'i'))
+    return [YEH, FATHA, c1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
+  if (c3 === ALIF_MAQSURA && patternVowel === 'u') return [YEH, FATHA, c1, SUKOON, c2, DAMMA, WAW]
 
   // Defective verbs (final weak only): final weak letter remains, no trailing damma (e.g., رَمَى → يَرْمِي)
   if (isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, defectiveLetterGlide(c3)]

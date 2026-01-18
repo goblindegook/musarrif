@@ -142,6 +142,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('د-ع-ا', () => {
+      test('دَعَا (Form I)', () => {
+        expect(conjugateImperative(getVerb('دعا', 1))).toMatchObject({
+          '2ms': 'اُدْعُ',
+          '2fs': 'اُدْعِي',
+          '2d': 'اُدْعُوَا',
+          '2mp': 'اُدْعُوا',
+          '2fp': 'اُدْعُونَ',
+        })
+      })
+    })
+
     describe('ب-ي-ع', () => {
       test('بَاعَ (Form I)', () => {
         expect(conjugateImperative(getVerb('باع', 1))).toMatchObject({

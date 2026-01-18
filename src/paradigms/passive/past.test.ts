@@ -195,6 +195,26 @@ describe('passive past', () => {
     })
   })
 
+  describe('defective roots', () => {
+    test('دَعَا (Form I)', () => {
+      expect(conjugatePassivePast(getVerb('دعا', 1))).toEqual({
+        '1s': 'دُعِيتُ',
+        '2ms': 'دُعِيتَ',
+        '2fs': 'دُعِيتِ',
+        '3ms': 'دُعِيَ',
+        '3fs': 'دُعِيَتْ',
+        '2d': 'دُعِيتُمَا',
+        '3md': 'دُعِيَا',
+        '3fd': 'دُعِيَتَا',
+        '1p': 'دُعِينَا',
+        '2mp': 'دُعِيتُمْ',
+        '2fp': 'دُعِيتُنَّ',
+        '3mp': 'دُعُوا',
+        '3fp': 'دُعِينَ',
+      })
+    })
+  })
+
   describe('doubly weak roots', () => {
     test('رَوِيَ (Form I)', () => {
       expect(conjugatePassivePast(getVerb('روي', 1))).toEqual({

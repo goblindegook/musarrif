@@ -214,6 +214,26 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('defective roots', () => {
+    test('دَعَا (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'indicative')).toEqual({
+        '1s': 'أُدْعَى',
+        '2ms': 'تُدْعَى',
+        '2fs': 'تُدْعَيْنَ',
+        '3ms': 'يُدْعَى',
+        '3fs': 'تُدْعَى',
+        '2d': 'تُدْعَيَانِ',
+        '3md': 'يُدْعَيَانِ',
+        '3fd': 'تُدْعَيَانِ',
+        '1p': 'نُدْعَى',
+        '2mp': 'تُدْعَوْنَ',
+        '2fp': 'تُدْعَيْنَ',
+        '3mp': 'يُدْعَوْنَ',
+        '3fp': 'يُدْعَيْنَ',
+      })
+    })
+  })
 })
 
 describe('passive present subjunctive', () => {
@@ -428,6 +448,26 @@ describe('passive present subjunctive', () => {
       })
     })
   })
+
+  describe('defective roots', () => {
+    test('دَعَا (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'subjunctive')).toEqual({
+        '1s': 'أُدْعَى',
+        '2ms': 'تُدْعَى',
+        '2fs': 'تُدْعَيْ',
+        '3ms': 'يُدْعَى',
+        '3fs': 'تُدْعَى',
+        '2d': 'تُدْعَيَا',
+        '3md': 'يُدْعَيَا',
+        '3fd': 'تُدْعَيَا',
+        '1p': 'نُدْعَى',
+        '2mp': 'تُدْعَوْا',
+        '2fp': 'تُدْعَيْنَ',
+        '3mp': 'يُدْعَوْا',
+        '3fp': 'يُدْعَيْنَ',
+      })
+    })
+  })
 })
 
 describe('passive present jussive', () => {
@@ -639,6 +679,26 @@ describe('passive present jussive', () => {
         '2fp': 'تُؤْتَيْنَ',
         '3mp': 'يُؤْتَوْا',
         '3fp': 'يُؤْتَيْنَ',
+      })
+    })
+  })
+
+  describe('defective roots', () => {
+    test('دَعَا (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'jussive')).toEqual({
+        '1s': 'أُدْعَ',
+        '2ms': 'تُدْعَ',
+        '2fs': 'تُدْعَيْ',
+        '3ms': 'يُدْعَ',
+        '3fs': 'تُدْعَ',
+        '2d': 'تُدْعَيَا',
+        '3md': 'يُدْعَيَا',
+        '3fd': 'تُدْعَيَا',
+        '1p': 'نُدْعَ',
+        '2mp': 'تُدْعَوْا',
+        '2fp': 'تُدْعَيْنَ',
+        '3mp': 'يُدْعَوْا',
+        '3fp': 'يُدْعَيْنَ',
       })
     })
   })

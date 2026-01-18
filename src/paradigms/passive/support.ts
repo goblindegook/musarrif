@@ -12,6 +12,7 @@ export function canConjugatePassive(verb: Verb): boolean {
   const isHamzatedMiddleDefective = isHamzatedLetter(c2) && isWeakLetter(c3)
   const isHamzatedFinalWeak = isHamzatedLetter(c1) && !isWeakLetter(c2) && isWeakLetter(c3)
   const isDoublyWeak = isWeakLetter(c2) && isWeakLetter(c3)
+  const isFinalWeak = isWeakLetter(c3)
 
   return (
     !verb.noPassiveVoice &&
@@ -19,6 +20,7 @@ export function canConjugatePassive(verb: Verb): boolean {
     (isStrong ||
       isHollow ||
       isInitialWeak ||
+      isFinalWeak ||
       isHamzatedInitialStrong ||
       isHamzatedMiddleDefective ||
       isHamzatedFinalWeak ||

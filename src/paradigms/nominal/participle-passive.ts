@@ -84,6 +84,9 @@ export function derivePassiveParticiple(verb: Verb): string {
           return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]
         }
 
+        if ((c3 === ALIF || c3 === ALIF_MAQSURA) && resolveFormIPresentVowel(verb) === 'u')
+          return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, SHADDA]
+
         // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)
         if (c3 === YEH || c3 === ALIF_MAQSURA) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
 

@@ -89,6 +89,14 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
     return toConjugation(forms)
   }
 
+  if (isFinalWeak && !isMiddleWeak && !isInitialHamza) {
+    const base = [c1, DAMMA, c2, KASRA, YEH, FATHA]
+    const stem = [c1, DAMMA, c2, KASRA, YEH]
+    const pluralBase = [c1, DAMMA, c2, DAMMA, WAW]
+    const forms = buildForms({ base, stem, pluralBase, pluralSuffix: [ALIF] })
+    return toConjugation(forms)
+  }
+
   if (isMiddleWeak && isFinalWeak) {
     const final = c3 === ALIF_MAQSURA ? YEH : c3
     const base = [c1, DAMMA, c2, KASRA, final, FATHA]

@@ -89,6 +89,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         const pastVowel = resolveFormIPastVowel(verb)
         const presentVowel = resolveFormIPresentVowel(verb)
 
+        if (isFinalWeak && presentVowel === 'u' && !isMiddleWeak) {
+          if (pronounId === '2ms') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA]
+          if (pronounId === '2fs') return [ALIF, DAMMA, c1, SUKOON, c2, KASRA, YEH]
+          if (pronounId === '2d') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, FATHA, ALIF]
+          if (pronounId === '2mp') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, ALIF]
+          if (pronounId === '2fp') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, NOON, FATHA]
+        }
+
         // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
         if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
@@ -221,7 +229,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   })
 
   return mapRecord(baseImperative, (letters, pronounId) => {
-    const adjusted = pronounId === '2mp' ? addSukoonBeforeFinalAlif(letters, verb) : letters
+    const isFinalWeakFormIWithU =
+      verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === 'u'
+    const adjusted = pronounId === '2mp' && !isFinalWeakFormIWithU ? addSukoonBeforeFinalAlif(letters, verb) : letters
     return adjusted.join('').normalize('NFC')
   })
 }
