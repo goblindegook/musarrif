@@ -67,6 +67,7 @@ describe('active present indicative pattern', () => {
     ['غدو', 1, 'يَغْدُو'],
     ['بيت', 1, 'يَبِيتُ'],
     ['مسي', 4, 'يُمْسِي'],
+    ['ضحي', 4, 'يُضْحِي'],
     ['حول', 5, 'يَتَحَوَّلُ'],
     ['مكن', 4, 'يُمْكِنُ'],
     ['فسر', 2, 'يُفَسِّرُ'],
@@ -875,6 +876,16 @@ describe('active present jussive', () => {
       '1p': 'نُعْطِ',
       '2fs': 'تُعْطِي',
       '3mp': 'يُعْطُوْا',
+    })
+  })
+
+  test('drops the final glide for أَضْحَى', () => {
+    expect(conjugatePresentMood(getVerb('ضحي', 4), 'jussive')).toMatchObject({
+      '3ms': 'يُضْحِ',
+      '2ms': 'تُضْحِ',
+      '1p': 'نُضْحِ',
+      '2fs': 'تُضْحِي',
+      '3mp': 'يُضْحُوْا',
     })
   })
 
