@@ -2,7 +2,6 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MADDA,
-  ALIF_MAQSURA,
   DAMMA,
   FATHA,
   HAMZA,
@@ -132,8 +131,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Initial weak + final weak (e.g., وفي → مُوفٍ): initial weak becomes ū, drop final weak, use tanween kasra
         if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_KASRA]
 
-        // Defective Form IV with final و or alif maqsura: drop final weak and use tanween kasra (e.g., مُعْطٍ, مُمْسٍ)
-        if (c3 === WAW || c3 === ALIF_MAQSURA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
+        // Defective Form IV: drop final weak and use tanween kasra (e.g., مُعْطٍ, مُنْهٍ, مُمْسٍ)
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
 
         // Final hamza seats on yeh after kasra (e.g., مُنْبِئ)
         if (c3 === ALIF_HAMZA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, HAMZA_ON_YEH]

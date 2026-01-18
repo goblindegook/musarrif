@@ -118,8 +118,8 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Initial weak + final weak (e.g., وفي → مُوفًى): initial weak becomes ū, drop final weak, use tanween fatḥa + alif maqsura
         if (isInitialWeak && isFinalWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        // Defective Form IV: drop final weak and use ALIF_MAQSURA (e.g., مُعْطَى, مُمْسَى)
-        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, ALIF_MAQSURA]
+        // Defective Form IV: drop final weak and use tanween fatḥa + alif maqṣūra (e.g., مُعْطًى, مُنْهًى)
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA]
 

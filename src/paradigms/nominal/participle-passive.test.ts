@@ -1,6 +1,5 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { getVerb, type VerbForm, verbs } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { derivePassiveParticiple } from './participle-passive'
 
 test.each<[string, VerbForm, string]>([
@@ -50,7 +49,7 @@ test.each<[string, VerbForm, string]>([
   ['ضيف', 4, 'مُضَاف'],
   ['طلب', 5, 'مُتَطَلَّب'],
   ['عدد', 4, 'مُعَدّ'],
-  ['عطى', 4, 'مُعْطَى'],
+  ['عطى', 4, 'مُعْطًى'],
   ['عون', 10, 'مُسْتَعَان'],
   ['عون', 3, 'مُعَاوَن'],
   ['عون', 4, 'مُعَان'],
@@ -63,7 +62,7 @@ test.each<[string, VerbForm, string]>([
   ['قود', 8, 'مُقْتَاد'],
   ['لمم', 1, 'مَلْمُوم'],
   ['نبأ', 4, 'مُنْبَأ'],
-  ['نهي', 4, 'مُنْهَى'],
+  ['نهي', 4, 'مُنْهًى'],
   ['نهي', 8, 'مُنْتَهَى'],
   ['صبح', 4, 'مُصْبَح'],
   ['سعى', 1, 'مَسْعِيّ'],
@@ -74,6 +73,7 @@ test.each<[string, VerbForm, string]>([
   ['وفي', 2, 'مُوَفًّى'],
   ['وفي', 4, 'مُوفًى'],
   ['وفي', 5, 'مُتَوَفًّى'],
+  ['مسي', 4, 'مُمْسًى'],
   ['وقي', 1, 'مَوْقِيّ'],
   ['وأى', 1, 'مَوْئِيّ'],
   ['ولى', 1, 'مَوْلِيّ'],
@@ -82,7 +82,7 @@ test.each<[string, VerbForm, string]>([
   expect(derivePassiveParticiple(getVerb(root, form))).toBe(expected)
 })
 
-test.each([
+test.each<[string, VerbForm]>([
   ['كان', 1],
   ['أمن', 1],
   ['جلس', 1],
@@ -93,8 +93,8 @@ test.each([
   ['طلق', 7],
   ['فجر', 7],
 ])('%s (Form %d) has no passive participle', (root, form) => {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
-  expect(derivePassiveParticiple(verb!)).toBe('')
+  const verb = getVerb(root, form)
+  expect(derivePassiveParticiple(verb)).toBe('')
 })
 
 describe('regular roots', () => {

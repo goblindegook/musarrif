@@ -1,9 +1,8 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { getVerb, type VerbForm, verbs } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { deriveActiveParticiple } from './participle-active'
 
-test.each([
+test.each<[string, VerbForm, string]>([
   ['أتي', 1, 'آتٍ'],
   ['أمن', 4, 'مُؤْمِن'],
   ['أذن', 1, 'آذِن'],
@@ -71,10 +70,11 @@ test.each([
   ['قود', 4, 'مُقِيد'],
   ['قود', 7, 'مُنْقَاد'],
   ['قود', 8, 'مُقْتَاد'],
+  ['مسي', 4, 'مُمْسٍ'],
   ['لمم', 1, 'لَامّ'],
   ['كان', 1, 'كَائِن'],
   ['نبأ', 4, 'مُنْبِئ'],
-  ['نهي', 4, 'مُنْهِي'],
+  ['نهي', 4, 'مُنْهٍ'],
   ['صبح', 4, 'مُصْبِح'],
   ['وصل', 1, 'وَاصِل'],
   ['وصل', 8, 'مُتَّصِل'],
@@ -88,7 +88,7 @@ test.each([
   ['ولى', 1, 'وَالٍ'],
   ['بيت', 1, 'بَائِت'],
 ])('%s (Form %d) active participle is %s', (root, form, expected) => {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
+  const verb = getVerb(root, form)
   expect(deriveActiveParticiple(verb)).toBe(expected)
 })
 

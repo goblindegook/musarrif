@@ -3,7 +3,7 @@ import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
-import { getVerb, verbs, type VerbForm } from '../verbs'
+import { getVerb, type VerbForm, verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { conjugatePresentMood } from './present'
 
@@ -15,6 +15,7 @@ describe('imperative', () => {
   it.each<[string, VerbForm, string]>([
     ['عطى', 4, 'أَعْطِ'],
     ['ضحي', 4, 'أَضْحِ'],
+    ['مسي', 4, 'أَمْسِ'],
   ])('drops the final glide for form IV verb with root %s', (root, form, expected2ms) => {
     expect(conjugateImperative(getVerb(root, form))['2ms']).toBe(expected2ms)
   })
