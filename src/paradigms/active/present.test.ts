@@ -1,10 +1,9 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests will surface broken dataset */
 import { describe, expect, test } from 'vitest'
-import { getVerb, verbs } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 describe('active present indicative pattern', () => {
-  test.each<[string, number, string]>([
+  test.each<[string, VerbForm, string]>([
     ['أتي', 1, 'يَأْتِي'],
     ['أمن', 4, 'يُؤْمِنُ'],
     ['أذن', 1, 'يَأْذَنُ'],
@@ -65,6 +64,7 @@ describe('active present indicative pattern', () => {
     ['عون', 6, 'يَتَعَاوَنُ'],
     ['عمل', 10, 'يَسْتَعْمِلُ'],
     ['غدو', 1, 'يَغْدُو'],
+    ['بيت', 1, 'يَبِيتُ'],
     ['مسي', 4, 'يُمْسِي'],
     ['مكن', 4, 'يُمْكِنُ'],
     ['فسر', 2, 'يُفَسِّرُ'],
@@ -90,8 +90,7 @@ describe('active present indicative pattern', () => {
     ['دخل', 1, 'يَدْخُلُ'],
     ['ولد', 1, 'يَلِدُ'],
   ])('%s (%d) %s is %s', (root, form, expected) => {
-    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-    expect(conjugatePresentMood(verb, 'indicative')['3ms']).toBe(expected)
+    expect(conjugatePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
 
   describe('regular verbs', () => {
@@ -848,7 +847,7 @@ describe('active present indicative pattern', () => {
 
 describe('active present jussive', () => {
   test('drops the final glide for أَعْطَى', () => {
-    expect(conjugatePresentMood(getVerb('عطى', 4)!, 'jussive')).toMatchObject({
+    expect(conjugatePresentMood(getVerb('عطى', 4), 'jussive')).toMatchObject({
       '3ms': 'يُعْطِ',
       '2ms': 'تُعْطِ',
       '1p': 'نُعْطِ',
@@ -1167,13 +1166,12 @@ describe('active present jussive', () => {
     })
   })
 
-  test.each([
+  test.each<[string, VerbForm, string]>([
     ['قود', 7, 'يَنْقَدْ'],
     ['قود', 8, 'يَقْتَدْ'],
     ['قود', 10, 'يَسْتَقِدْ'],
   ])('%s (%d) pattern is %s', (root, form, expected3ms) => {
-    const verb = verbs.find((entry) => entry.root === root && entry.form === form)!
-    const jussive = conjugatePresentMood(verb, 'jussive')
+    const jussive = conjugatePresentMood(getVerb(root, form), 'jussive')
     expect(jussive['3ms']).toBe(expected3ms)
   })
 
@@ -1299,8 +1297,7 @@ describe('active present jussive', () => {
 
 describe('active present subjunctive', () => {
   test('preserves shadda for form IX verbs in subjunctive', () => {
-    const verb = verbs.find((entry) => entry.root === 'حمر' && entry.form === 9)!
-    expect(conjugatePresentMood(verb, 'subjunctive')).toMatchObject({
+    expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObject({
       '3ms': 'يَحْمَرَّ',
       '2ms': 'تَحْمَرَّ',
       '1s': 'أَحْمَرَّ',

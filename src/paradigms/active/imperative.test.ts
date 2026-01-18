@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
@@ -551,22 +550,19 @@ describe('imperative', () => {
   })
 
   it('geminate Form II imperative has kasra after shadda (e.g., حَبِّبْ)', () => {
-    const verb = verbs.find(({ root, form }) => root === 'حبب' && form === 2)!
-    const imperative = conjugateImperative(verb)
+    const imperative = conjugateImperative(getVerb('حبب', 2))
 
     expect(imperative['2ms']).toBe('حَبِّبْ')
   })
 
   it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
-    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 7)!
-    const imperative = conjugateImperative(verb)
+    const imperative = conjugateImperative(getVerb('قود', 7))
 
     expect(imperative['2ms']).toBe('اِنْقَدْ')
   })
 
   it('shortens hollow Form VIII imperative like اِقْتَادَ → اِقْتَدْ', () => {
-    const verb = verbs.find(({ root, form }) => root === 'قود' && form === 8)!
-    const imperative = conjugateImperative(verb)
+    const imperative = conjugateImperative(getVerb('قود', 8))
 
     expect(imperative['2ms']).toBe('اِقْتَدْ')
   })
@@ -611,6 +607,7 @@ describe('imperative', () => {
     ['حمر', 9, 'اِحْمَرَّ'],
     ['جيء', 1, 'جِئْ'],
     ['مرض', 1, 'اِمْرَضْ'],
+    ['بيت', 1, 'بِتْ'],
     ['صبح', 4, 'أَصْبِحْ'],
     ['جري', 1, 'اِجْرِ'],
     ['مثل', 1, 'اُمْثُلْ'],
