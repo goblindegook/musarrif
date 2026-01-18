@@ -107,17 +107,14 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   const suffixes = MOOD_SUFFIXES[mood]
 
   if (isInitialHamza && !isMiddleWeak && !isFinalWeak) {
-    const hamzaStem = [HAMZA_ON_WAW, SUKOON, c2, FATHA, c3]
-    const alifStem = [WAW, c2, FATHA, c3]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           const prefix = PRESENT_PREFIXES[pronounId]
-          const stem = pronounId === '1s' ? alifStem : hamzaStem
+          const stem = pronounId === '1s' ? [WAW, c2, FATHA, c3] : [HAMZA_ON_WAW, SUKOON, c2, FATHA, c3]
 
           if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [prefix, DAMMA, ...stem, KASRA, YEH, NOON, FATHA]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
             return acc
           }
 
@@ -131,45 +128,36 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-    const hamzaStem = [HAMZA_ON_WAW, SUKOON, c2]
-    const alifStem = [WAW, c2]
-    const longTail = [FATHA, ALIF_MAQSURA]
-    const shortTail = [FATHA]
-    const yehTail = [FATHA, YEH, SUKOON]
-    const yehTailNoSukoon = [FATHA, YEH]
-    const wawTail = [FATHA, WAW, SUKOON]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           const prefix = PRESENT_PREFIXES[pronounId]
-          const baseStem = pronounId === '1s' ? alifStem : hamzaStem
+          const baseStem = pronounId === '1s' ? [WAW, c2] : [HAMZA_ON_WAW, SUKOON, c2]
 
           if (pronounId === '2fs') {
-            const tail = mood === 'indicative' ? [...yehTail, NOON, FATHA] : yehTail
+            const tail = mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
             acc[pronounId] = [prefix, DAMMA, ...baseStem, ...tail]
             return acc
           }
 
           if (pronounId === '2fp' || pronounId === '3fp') {
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...yehTail, NOON, FATHA]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, FATHA, YEH, SUKOON, NOON, FATHA]
             return acc
           }
 
           if (pronounId === '2mp' || pronounId === '3mp') {
-            const tail = mood === 'indicative' ? [...wawTail, NOON, FATHA] : [...wawTail, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...tail]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
 
           if (pronounId === '2d' || pronounId === '3md' || pronounId === '3fd') {
-            const tail =
-              mood === 'indicative' ? [...yehTailNoSukoon, FATHA, ALIF, NOON, KASRA] : [...yehTailNoSukoon, FATHA, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...tail]
+            const tail = mood === 'indicative' ? [FATHA, YEH, FATHA, ALIF, NOON, KASRA] : [FATHA, YEH, FATHA, ALIF]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
 
-          const tail = mood === 'jussive' ? shortTail : longTail
+          const tail = mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
           acc[pronounId] = [prefix, DAMMA, ...baseStem, ...tail]
           return acc
         },
@@ -258,45 +246,36 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (isInitialHamza && !isMiddleWeak && isFinalWeak) {
-    const hamzaStem = [HAMZA_ON_WAW, SUKOON, c2]
-    const alifStem = [WAW, c2]
-    const longTail = [FATHA, ALIF_MAQSURA]
-    const shortTail = [FATHA]
-    const yehTail = [FATHA, YEH, SUKOON]
-    const yehTailNoSukoon = [FATHA, YEH]
-    const wawTail = [FATHA, WAW, SUKOON]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           const prefix = PRESENT_PREFIXES[pronounId]
-          const baseStem = pronounId === '1s' ? alifStem : hamzaStem
+          const baseStem = pronounId === '1s' ? [WAW, c2] : [HAMZA_ON_WAW, SUKOON, c2]
 
           if (pronounId === '2fs') {
-            const tail = mood === 'indicative' ? [...yehTail, NOON, FATHA] : yehTail
+            const tail = mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
             acc[pronounId] = [prefix, DAMMA, ...baseStem, ...tail]
             return acc
           }
 
           if (pronounId === '2fp' || pronounId === '3fp') {
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...yehTail, NOON, FATHA]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, FATHA, YEH, SUKOON, NOON, FATHA]
             return acc
           }
 
           if (pronounId === '2mp' || pronounId === '3mp') {
-            const tail = mood === 'indicative' ? [...wawTail, NOON, FATHA] : [...wawTail, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...tail]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
 
           if (pronounId === '2d' || pronounId === '3md' || pronounId === '3fd') {
-            const tail =
-              mood === 'indicative' ? [...yehTailNoSukoon, FATHA, ALIF, NOON, KASRA] : [...yehTailNoSukoon, FATHA, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...hamzaStem, ...tail]
+            const tail = mood === 'indicative' ? [FATHA, YEH, FATHA, ALIF, NOON, KASRA] : [FATHA, YEH, FATHA, ALIF]
+            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
 
-          const tail = mood === 'jussive' ? shortTail : longTail
+          const tail = mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
           acc[pronounId] = [prefix, DAMMA, ...baseStem, ...tail]
           return acc
         },
@@ -307,9 +286,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (isMiddleWeak && !isFinalWeak && !isInitialHamza) {
-    const longStem = [c1, FATHA, ALIF, c3]
-    const shortStem = [c1, FATHA, c3]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
@@ -317,28 +293,28 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
 
           if (pronounId === '2fs') {
             const tail = mood === 'indicative' ? [KASRA, YEH, NOON, FATHA] : [KASRA, YEH]
-            acc[pronounId] = [prefix, DAMMA, ...longStem, ...tail]
+            acc[pronounId] = [prefix, DAMMA, c1, FATHA, ALIF, c3, ...tail]
             return acc
           }
 
           if (pronounId === '2fp' || pronounId === '3fp') {
-            acc[pronounId] = [prefix, DAMMA, ...shortStem, SUKOON, NOON, FATHA]
+            acc[pronounId] = [prefix, DAMMA, c1, FATHA, c3, SUKOON, NOON, FATHA]
             return acc
           }
 
           if (pronounId === '2mp' || pronounId === '3mp') {
             const tail = mood === 'indicative' ? [DAMMA, WAW, NOON, FATHA] : [DAMMA, WAW, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...longStem, ...tail]
+            acc[pronounId] = [prefix, DAMMA, c1, FATHA, ALIF, c3, ...tail]
             return acc
           }
 
           if (pronounId === '2d' || pronounId === '3md' || pronounId === '3fd') {
             const tail = mood === 'indicative' ? [FATHA, ALIF, NOON, KASRA] : [FATHA, ALIF]
-            acc[pronounId] = [prefix, DAMMA, ...longStem, ...tail]
+            acc[pronounId] = [prefix, DAMMA, c1, FATHA, ALIF, c3, ...tail]
             return acc
           }
 
-          const stem = mood === 'jussive' ? shortStem : longStem
+          const stem = mood === 'jussive' ? [c1, FATHA, c3] : [c1, FATHA, ALIF, c3]
           acc[pronounId] = [prefix, DAMMA, ...stem, ...suffixes[pronounId]]
           return acc
         },
@@ -349,17 +325,15 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (isInitialWeak) {
-    const stem = [c1, c2, FATHA, c3]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, ...stem, KASRA, YEH, NOON, FATHA]
+            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
             return acc
           }
 
-          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, ...stem, ...suffixes[pronounId]]
+          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, c2, FATHA, c3, ...suffixes[pronounId]]
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
@@ -369,12 +343,10 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (!isGeminate) {
-    const stem = [c1, SUKOON, c2, FATHA, c3]
-
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
-          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, ...stem, ...suffixes[pronounId]]
+          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, SUKOON, c2, FATHA, c3, ...suffixes[pronounId]]
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
@@ -383,8 +355,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     )
   }
 
-  const geminateStem = [c1, FATHA, c2, SHADDA]
-  const expandedStem = [c1, SUKOON, c2, FATHA, c3]
   const geminateSuffixes = mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES : suffixes
 
   return mapRecord(
@@ -394,16 +364,16 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
 
         if (pronounId === '2fs') {
           const tail = mood === 'indicative' ? [KASRA, YEH, SUKOON, NOON, FATHA] : [KASRA, YEH]
-          acc[pronounId] = [prefix, DAMMA, ...geminateStem, ...tail]
+          acc[pronounId] = [prefix, DAMMA, c1, FATHA, c2, SHADDA, ...tail]
           return acc
         }
 
         if (pronounId === '2fp' || pronounId === '3fp') {
-          acc[pronounId] = [prefix, DAMMA, ...expandedStem, ...geminateSuffixes[pronounId]]
+          acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, FATHA, c3, ...geminateSuffixes[pronounId]]
           return acc
         }
 
-        acc[pronounId] = [prefix, DAMMA, ...geminateStem, ...geminateSuffixes[pronounId]]
+        acc[pronounId] = [prefix, DAMMA, c1, FATHA, c2, SHADDA, ...geminateSuffixes[pronounId]]
         return acc
       },
       {} as Record<PronounId, readonly string[]>,
