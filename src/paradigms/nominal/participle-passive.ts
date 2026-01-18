@@ -75,7 +75,10 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
         // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
-        if (c2 === ALIF) return [MEEM, FATHA, c1, DAMMA, WAW, c3]
+        if (c2 === ALIF) {
+          const vowel = resolveFormIPresentVowel(verb)
+          return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]
+        }
         if (isMiddleWeak) {
           const vowel = c2 === WAW ? 'u' : 'i'
           return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]

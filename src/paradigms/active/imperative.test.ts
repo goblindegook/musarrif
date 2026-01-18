@@ -130,13 +130,25 @@ describe('imperative', () => {
       })
     })
 
+    describe('ز-و-ر', () => {
+      test('زَارَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('زور', 1))).toMatchObject({
+          '2ms': 'زُرْ',
+          '2fs': 'زُورِي',
+          '2d': 'زُورَا',
+          '2mp': 'زُورُوا',
+          '2fp': 'زُرْنَ',
+        })
+      })
+    })
+
     describe('ب-ي-ع', () => {
       test('بَاعَ (Form I)', () => {
         expect(conjugateImperative(getVerb('باع', 1))).toMatchObject({
           '2ms': 'بِعْ',
           '2fs': 'بِيعِي',
           '2d': 'بِيعَا',
-          '2mp': 'بِيعُوْا',
+          '2mp': 'بِيعُوا',
           '2fp': 'بِعْنَ',
         })
       })

@@ -579,8 +579,8 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   // Middle hamza + final weak (e.g., رَأَى → يَرَى)
   if (isMiddleHamza && isFinalWeak) return [YEH, FATHA, c1, FATHA, ALIF_MAQSURA]
 
-  // Hollow verbs with middle ALIF always use long WAW vowel
-  if (c2 === ALIF) return [YEH, FATHA, c1, ...longVowelFromPattern('u'), c3, DAMMA]
+  // Hollow verbs with middle ALIF use the long vowel from the pattern
+  if (c2 === ALIF) return [YEH, FATHA, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
   // Hollow verbs with middle YEH use long YEH vowel
   if (c2 === YEH) return [YEH, FATHA, c1, ...longVowelFromPattern('i'), c3, DAMMA]
