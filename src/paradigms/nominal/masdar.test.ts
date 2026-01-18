@@ -9,6 +9,7 @@ test.each<[string, VerbForm, string | string[]]>([
   ['أمن', 1, 'أَمْن'],
   ['أذن', 1, 'أَذَن'],
   ['أسر', 1, 'أَسْر'],
+  ['أخذ', 1, 'أَخْذ'],
   ['أمن', 4, 'إِيمَان'],
   ['أكد', 2, 'تَأْكِيد'],
   ['أود', 2, 'تَأْوِيد'],
@@ -89,6 +90,7 @@ test.each<[string, VerbForm, string | string[]]>([
   ['عون', 4, 'إِعَانَة'],
   ['عون', 6, 'تَعَاوُن'],
   ['غدو', 1, 'غُدُوّ'],
+  ['لوم', 1, 'لَوْم'],
   ['غنى', 10, 'اِسْتِغْنَاء'],
   ['غنى', 2, 'تَغْنِيَة'],
   ['غنى', 5, 'تَغَنٍّ'],
@@ -158,7 +160,7 @@ describe('masdar patterns', () => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
   })
 
-  test.each(['لمم', 'روي'])('%s has no masdar', (root) => {
+  test.each(['لمم', 'روي', 'شيد'])('%s has no masdar', (root) => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual([])
   })
 })

@@ -135,6 +135,12 @@ describe('assimilated roots', () => {
 })
 
 describe('hollow roots', () => {
+  describe('ل-و-م', () => {
+    test.each<[VerbForm, string]>([[1, 'لَائِم']])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('لوم', form))).toBe(expected)
+    })
+  })
+
   describe('ش-ي-د', () => {
     test.each<[VerbForm, string]>([[1, 'شَائِد']])('Form %d active participle is %s', (form, expected) => {
       expect(deriveActiveParticiple(getVerb('شيد', form))).toBe(expected)
@@ -168,7 +174,11 @@ describe('hamzated initial roots', () => {
     })
   })
 
-  describe.todo('أ-خ-ذ')
+  describe('أ-خ-ذ', () => {
+    test.each<[VerbForm, string]>([[1, 'آخِذ']])('Form %d active participle is %s', (form, expected) => {
+      expect(deriveActiveParticiple(getVerb('أخذ', form))).toBe(expected)
+    })
+  })
 })
 
 describe('hamzated middle roots', () => {
