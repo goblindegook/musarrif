@@ -513,6 +513,18 @@ describe('imperative', () => {
   })
 
   describe('geminate verbs', () => {
+    describe('أ-م-م', () => {
+      test('أَمَّ (Form I)', () => {
+        expect(conjugateImperative(getVerb('أمم', 1))).toMatchObject({
+          '2ms': 'أُمَّ',
+          '2fs': 'أُمِّي',
+          '2d': 'أُمَّا',
+          '2mp': 'أُمُّوا',
+          '2fp': 'أُمُمْنَ',
+        })
+      })
+    })
+
     describe('ح-م-م', () => {
       test('اِسْتَحَمَّ (Form X)', () => {
         expect(conjugateImperative(getVerb('حمم', 10))).toMatchObject({
@@ -709,6 +721,7 @@ describe('imperative', () => {
     ['أوي', 10, 'اِسْتَأْوِ'],
     ['غدو', 1, 'غْدا'],
     ['لوم', 1, 'لُمْ'],
+    ['أمم', 1, 'أُمَّ'],
     ['أكد', 2, 'أَكِّدْ'],
     ['مكن', 4, 'أَمْكِنْ'],
     ['طلب', 5, 'تَطَلَّبْ'],

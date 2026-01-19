@@ -132,6 +132,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
 
+    if (verb.form === 1 && isHamzatedLetter(c1) && c2 === c3)
+      return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
+
     if (isFormIFinalWeakPresent(verb, 'u'))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), YEH, NOON, FATHA]
 
@@ -549,7 +552,17 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const patternVowel = resolveFormIPresentVowel(verb)
 
   // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
-  if (c2 === c3) return [YEH, FATHA, c1, shortVowelFromPattern(patternVowel), c2, SHADDA, DAMMA]
+  if (c2 === c3) {
+    const shortVowel = shortVowelFromPattern(patternVowel)
+    const seatedC1 = isInitialHamza
+      ? shortVowel === DAMMA
+        ? HAMZA_ON_WAW
+        : shortVowel === KASRA
+          ? HAMZA_ON_YEH
+          : c1
+      : c1
+    return [YEH, FATHA, seatedC1, shortVowel, c2, SHADDA, DAMMA]
+  }
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
   // Initial waw drops, final weak remains with short vowel on c2

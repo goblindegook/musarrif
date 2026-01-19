@@ -49,6 +49,8 @@ function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly
 
   if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'i' && isHamzatedLetter(c1)) return word
 
+  if (verb.form === 1 && isHamzatedLetter(c1) && c2 === c3) return word
+
   if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'a' && !isHamzatedLetter(c2)) return word
 
   if (isHamzatedLetter(c1) && isWeakLetter(c2)) return word
@@ -92,6 +94,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
         if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
+
+        if (isInitialHamza && c2 === c3) {
+          if (pronounId === '2ms') return [ALIF_HAMZA, DAMMA, c2, SHADDA, FATHA]
+          if (pronounId === '2fs') return [ALIF_HAMZA, DAMMA, c2, SHADDA, KASRA, YEH]
+          if (pronounId === '2d') return [ALIF_HAMZA, DAMMA, c2, SHADDA, FATHA, ALIF]
+          if (pronounId === '2mp') return [ALIF_HAMZA, DAMMA, c2, SHADDA, DAMMA, WAW, ALIF]
+          if (pronounId === '2fp') return [ALIF_HAMZA, DAMMA, c2, DAMMA, c3, SUKOON, NOON, FATHA]
+        }
 
         if (isInitialWeak && isFinalWeak && isMiddleHamza && pronounId === '2d')
           return [HAMZA_ON_YEH, KASRA, YEH, FATHA, ALIF]

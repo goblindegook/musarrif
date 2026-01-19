@@ -58,11 +58,14 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Initial hamza + final weak (e.g., أتى → آتٍ)
         if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF_MADDA, c2, TANWEEN_KASRA]
 
+        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
+        if (c2 === c3) {
+          if (isInitialHamza) return [ALIF_MADDA, c2, SHADDA]
+          return [c1, FATHA, ALIF, c2, SHADDA]
+        }
+
         // Initial hamza + sound root coalesces into alif madda in faa3il (e.g., أكل → آكِل)
         if (isInitialHamza && !isMiddleWeak && !isFinalWeak) return [ALIF_MADDA, c2, KASRA, c3]
-
-        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
-        if (c2 === c3) return [c1, FATHA, ALIF, c2, SHADDA]
 
         // Assimilated (initial weak) Form I keeps the glide (e.g., وصل → وَاصِل)
         if (isInitialWeak && !isMiddleWeak && c2 !== ALIF_HAMZA && !isFinalWeak) return [c1, FATHA, ALIF, c2, KASRA, c3]
