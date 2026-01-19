@@ -354,15 +354,21 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   }
 
   if (isInitialWeak) {
+    const seatedC1 = c1 === YEH ? WAW : c1
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
+            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
             return acc
           }
 
-          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, c2, FATHA, c3, ...suffixes[pronounId]]
+          if (c3 === NOON && (pronounId === '2fp' || pronounId === '3fp')) {
+            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, NOON, SHADDA, FATHA]
+            return acc
+          }
+
+          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, c3, ...suffixes[pronounId]]
           return acc
         },
         {} as Record<PronounId, readonly string[]>,

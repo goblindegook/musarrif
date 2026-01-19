@@ -79,6 +79,26 @@ describe('passive past', () => {
     })
   })
 
+  describe('assimilated roots', () => {
+    test('يَمَنَ (Form I)', () => {
+      expect(conjugatePassivePast(getVerb('يمن', 1))).toEqual({
+        '1s': 'يُمِنْتُ',
+        '2ms': 'يُمِنْتَ',
+        '2fs': 'يُمِنْتِ',
+        '3ms': 'يُمِنَ',
+        '3fs': 'يُمِنَتْ',
+        '2d': 'يُمِنْتُمَا',
+        '3md': 'يُمِنَا',
+        '3fd': 'يُمِنَتَا',
+        '1p': 'يُمِنَّا',
+        '2mp': 'يُمِنْتُمْ',
+        '2fp': 'يُمِنْتُنَّ',
+        '3mp': 'يُمِنُوا',
+        '3fp': 'يُمِنَّ',
+      })
+    })
+  })
+
   describe('hollow roots', () => {
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePast(getVerb('لوم', 1))).toEqual({

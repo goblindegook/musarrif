@@ -75,6 +75,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const [c1, c2, c3, c4] = letters
   const isInitialWeak = isWeakLetter(c1)
   const isInitialHamza = isHamzatedLetter(c1)
+  const isMiddleHamza = isHamzatedLetter(c2)
   const isMiddleWeak = letters.length === 4 ? isWeakLetter(c3) : isWeakLetter(c2)
   const isFinalWeak = letters.length === 4 ? isWeakLetter(c4) : isWeakLetter(c3)
 
@@ -89,7 +90,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         const pastVowel = resolveFormIPastVowel(verb)
         const presentVowel = resolveFormIPresentVowel(verb)
 
-        if (isFinalWeak && presentVowel === 'u' && !isMiddleWeak) {
+        if (isFinalWeak && presentVowel === 'u') {
           if (pronounId === '2ms') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA]
           if (pronounId === '2fs') return [ALIF, DAMMA, c1, SUKOON, c2, KASRA, YEH]
           if (pronounId === '2d') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, FATHA, ALIF]
@@ -100,25 +101,27 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
         if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
 
-        if (isInitialWeak && isFinalWeak && isHamzatedLetter(c2) && pronounId === '2d')
+        if (isInitialWeak && isFinalWeak && isMiddleHamza && pronounId === '2d')
           return [HAMZA_ON_YEH, KASRA, YEH, FATHA, ALIF]
 
         if (isInitialWeak && isFinalWeak) {
           const alifIndex = stem.indexOf(ALIF)
-          const doubleYehIndex = stem.findIndex(
-            (char, index) =>
-              char === YEH && stem[index + 1] === KASRA && stem[index + 2] === YEH && stem[index + 3] === ALIF,
-          )
-          if (doubleYehIndex >= 0) return [...stem.slice(0, doubleYehIndex + 1), ...stem.slice(doubleYehIndex + 3)]
+
           if (alifIndex > 1 && stem.at(alifIndex - 1) === YEH && stem.at(alifIndex - 2) === YEH)
             return [...stem.slice(0, alifIndex - 1), ...stem.slice(alifIndex)]
+
           if (alifIndex > 0 && stem.at(alifIndex - 1) === YEH) return stem
+
           if (alifIndex >= 0 && stem[alifIndex - 1] === FATHA)
             return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
         }
 
-        if (isInitialWeak && c1 === WAW && c2 === c3 && pronounId === '2fp' && stem.at(0) === WAW && stem.at(1) === SUKOON)
-          return [ALIF, KASRA, YEH, ...stem.slice(2)]
+        if (isInitialWeak && c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(2)]
+
+        if (isInitialWeak && presentVowel === 'u') {
+          const trimmedStem = stem.at(0) === YEH ? stem.slice(1) : stem
+          return [ALIF, DAMMA, WAW, ...removeLeadingDiacritics(trimmedStem)]
+        }
 
         if (isInitialWeak) return stem
 
@@ -127,9 +130,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           return [ALIF, HAMZA_ON_YEH, ...stem]
         }
 
-        if (isInitialHamza && presentVowel === 'i') return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
-
-        if (isInitialHamza && pastVowel === 'i') return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
+        if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i'))
+          return [ALIF, KASRA, YEH, ...removeLeadingDiacritics(stem.slice(1))]
 
         // Hamzated initial strong verbs drop the hamza
         if (isInitialHamza) return removeLeadingDiacritics(stem.slice(1))

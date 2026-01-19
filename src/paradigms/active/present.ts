@@ -569,7 +569,10 @@ function derivePresentFormI(verb: Verb): readonly string[] {
     return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
 
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
-  if (isInitialWeak) return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  if (isInitialWeak) {
+    if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+    return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  }
 
   // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains

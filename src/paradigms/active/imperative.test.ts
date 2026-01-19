@@ -219,6 +219,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('ي-م-ن', () => {
+      test('يَمَنَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('يمن', 1))).toMatchObject({
+          '2ms': 'اُومُنْ',
+          '2fs': 'اُومُنِي',
+          '2d': 'اُومُنَا',
+          '2mp': 'اُومُنُوا',
+          '2fp': 'اُومُنَّ',
+        })
+      })
+    })
   })
 
   describe('defective verbs', () => {

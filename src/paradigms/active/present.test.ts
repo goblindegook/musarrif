@@ -273,6 +273,26 @@ describe('active present indicative pattern', () => {
         })
       })
     })
+
+    describe('ي-م-ن', () => {
+      test('يَمَنَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('يمن', 1), 'indicative')).toEqual({
+          '1s': 'أَيْمُنُ',
+          '2ms': 'تَيْمُنُ',
+          '2fs': 'تَيْمُنِيْنَ',
+          '3ms': 'يَيْمُنُ',
+          '3fs': 'تَيْمُنُ',
+          '2d': 'تَيْمُنَانِ',
+          '3md': 'يَيْمُنَانِ',
+          '3fd': 'تَيْمُنَانِ',
+          '1p': 'نَيْمُنُ',
+          '2mp': 'تَيْمُنُونَ',
+          '2fp': 'تَيْمُنَّ',
+          '3mp': 'يَيْمُنُونَ',
+          '3fp': 'يَيْمُنَّ',
+        })
+      })
+    })
   })
 
   describe('hollow verbs', () => {

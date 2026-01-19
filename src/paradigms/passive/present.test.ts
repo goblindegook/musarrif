@@ -79,6 +79,26 @@ describe('passive present indicative', () => {
     })
   })
 
+  describe('assimilated roots', () => {
+    test('يَمَنَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'indicative')).toEqual({
+        '1s': 'أُومَنُ',
+        '2ms': 'تُومَنُ',
+        '2fs': 'تُومَنِينَ',
+        '3ms': 'يُومَنُ',
+        '3fs': 'تُومَنُ',
+        '2d': 'تُومَنَانِ',
+        '3md': 'يُومَنَانِ',
+        '3fd': 'تُومَنَانِ',
+        '1p': 'نُومَنُ',
+        '2mp': 'تُومَنُونَ',
+        '2fp': 'تُومَنَّ',
+        '3mp': 'يُومَنُونَ',
+        '3fp': 'يُومَنَّ',
+      })
+    })
+  })
+
   describe('hollow roots', () => {
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'indicative')).toEqual({
@@ -331,6 +351,26 @@ describe('passive present subjunctive', () => {
     })
   })
 
+  describe('assimilated roots', () => {
+    test('يَمَنَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'subjunctive')).toEqual({
+        '1s': 'أُومَنَ',
+        '2ms': 'تُومَنَ',
+        '2fs': 'تُومَنِي',
+        '3ms': 'يُومَنَ',
+        '3fs': 'تُومَنَ',
+        '2d': 'تُومَنَا',
+        '3md': 'يُومَنَا',
+        '3fd': 'تُومَنَا',
+        '1p': 'نُومَنَ',
+        '2mp': 'تُومَنُوا',
+        '2fp': 'تُومَنَّ',
+        '3mp': 'يُومَنُوا',
+        '3fp': 'يُومَنَّ',
+      })
+    })
+  })
+
   describe('hollow roots', () => {
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'subjunctive')).toEqual({
@@ -579,6 +619,26 @@ describe('passive present jussive', () => {
         '2fp': 'تُودَدْنَ',
         '3mp': 'يُوَدُّوا',
         '3fp': 'يُودَدْنَ',
+      })
+    })
+  })
+
+  describe('assimilated roots', () => {
+    test('يَمَنَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'jussive')).toEqual({
+        '1s': 'أُومَنْ',
+        '2ms': 'تُومَنْ',
+        '2fs': 'تُومَنِي',
+        '3ms': 'يُومَنْ',
+        '3fs': 'تُومَنْ',
+        '2d': 'تُومَنَا',
+        '3md': 'يُومَنَا',
+        '3fd': 'تُومَنَا',
+        '1p': 'نُومَنْ',
+        '2mp': 'تُومَنُوا',
+        '2fp': 'تُومَنَّ',
+        '3mp': 'يُومَنُوا',
+        '3fp': 'يُومَنَّ',
       })
     })
   })

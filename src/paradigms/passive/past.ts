@@ -60,6 +60,28 @@ function toConjugation(forms: Record<PronounId, readonly string[]>): Record<Pron
   )
 }
 
+function collapseFinalNoon(
+  forms: Record<PronounId, readonly string[]>,
+  finalRadical: string,
+): Record<PronounId, readonly string[]> {
+  if (finalRadical !== NOON) return forms
+
+  return {
+    ...forms,
+    '1p': replaceSuffix(forms['1p'], [NOON, SUKOON, NOON, FATHA, ALIF], [NOON, SHADDA, FATHA, ALIF]),
+    '3fp': replaceSuffix(forms['3fp'], [NOON, SUKOON, NOON, FATHA], [NOON, SHADDA, FATHA]),
+  }
+}
+
+function replaceSuffix(
+  stem: readonly string[],
+  find: readonly string[],
+  replacement: readonly string[],
+): readonly string[] {
+  if (!stem.join('').endsWith(find.join(''))) return stem
+  return Array.from(stem.join('').slice(0, stem.length - find.length) + replacement.join(''))
+}
+
 export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   if (!canConjugatePassive(verb)) {
     throw new Error('Passive past conjugation is only implemented for regular Form I verbs.')
@@ -75,64 +97,82 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   if (isInitialHamza && !isMiddleWeak && isFinalWeak) {
     const final = c3 === ALIF_MAQSURA ? YEH : c3
     return toConjugation(
-      buildForms({
-        base: [c1, DAMMA, c2, KASRA, final, FATHA],
-        stem: [c1, DAMMA, c2, KASRA, final],
-        pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
-        pluralSuffix: [ALIF],
-      }),
+      collapseFinalNoon(
+        buildForms({
+          base: [c1, DAMMA, c2, KASRA, final, FATHA],
+          stem: [c1, DAMMA, c2, KASRA, final],
+          pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
+          pluralSuffix: [ALIF],
+        }),
+        c3,
+      ),
     )
   }
 
   if (isMiddleHamza && isFinalWeak) {
     return toConjugation(
-      buildForms({
-        base: [c1, DAMMA, HAMZA_ON_YEH, KASRA, YEH, FATHA],
-        stem: [c1, DAMMA, HAMZA_ON_YEH, KASRA, YEH],
-        pluralBase: [c1, DAMMA, HAMZA_ON_WAW, DAMMA, WAW],
-        pluralSuffix: [ALIF],
-      }),
+      collapseFinalNoon(
+        buildForms({
+          base: [c1, DAMMA, HAMZA_ON_YEH, KASRA, YEH, FATHA],
+          stem: [c1, DAMMA, HAMZA_ON_YEH, KASRA, YEH],
+          pluralBase: [c1, DAMMA, HAMZA_ON_WAW, DAMMA, WAW],
+          pluralSuffix: [ALIF],
+        }),
+        c3,
+      ),
     )
   }
 
   if (isFinalWeak && !isMiddleWeak && !isInitialHamza) {
     return toConjugation(
-      buildForms({
-        base: [c1, DAMMA, c2, KASRA, YEH, FATHA],
-        stem: [c1, DAMMA, c2, KASRA, YEH],
-        pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
-        pluralSuffix: [ALIF],
-      }),
+      collapseFinalNoon(
+        buildForms({
+          base: [c1, DAMMA, c2, KASRA, YEH, FATHA],
+          stem: [c1, DAMMA, c2, KASRA, YEH],
+          pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
+          pluralSuffix: [ALIF],
+        }),
+        c3,
+      ),
     )
   }
 
   if (isMiddleWeak && isFinalWeak) {
     const final = c3 === ALIF_MAQSURA ? YEH : c3
     return toConjugation(
-      buildForms({
-        base: [c1, DAMMA, c2, KASRA, final, FATHA],
-        stem: [c1, DAMMA, c2, KASRA, final],
-        pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
-        pluralSuffix: [ALIF],
-      }),
+      collapseFinalNoon(
+        buildForms({
+          base: [c1, DAMMA, c2, KASRA, final, FATHA],
+          stem: [c1, DAMMA, c2, KASRA, final],
+          pluralBase: [c1, DAMMA, c2, DAMMA, WAW],
+          pluralSuffix: [ALIF],
+        }),
+        c3,
+      ),
     )
   }
 
   if (isMiddleWeak && !isFinalWeak && !isInitialHamza) {
     return toConjugation(
-      buildForms({
-        base: [c1, KASRA, YEH, c3, FATHA],
-        stem: [c1, KASRA, c3, SUKOON],
-        pluralBase: [c1, KASRA, YEH, c3, DAMMA],
-      }),
+      collapseFinalNoon(
+        buildForms({
+          base: [c1, KASRA, YEH, c3, FATHA],
+          stem: [c1, KASRA, c3, SUKOON],
+          pluralBase: [c1, KASRA, YEH, c3, DAMMA],
+        }),
+        c3,
+      ),
     )
   }
 
   return toConjugation(
-    buildForms({
-      base: isGeminate ? [c1, DAMMA, c2, SHADDA, FATHA] : [c1, DAMMA, c2, KASRA, c3, FATHA],
-      stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
-      pluralBase: isGeminate ? [c1, DAMMA, c2, SHADDA, DAMMA] : [c1, DAMMA, c2, KASRA, c3, DAMMA],
-    }),
+    collapseFinalNoon(
+      buildForms({
+        base: isGeminate ? [c1, DAMMA, c2, SHADDA, FATHA] : [c1, DAMMA, c2, KASRA, c3, FATHA],
+        stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
+        pluralBase: isGeminate ? [c1, DAMMA, c2, SHADDA, DAMMA] : [c1, DAMMA, c2, KASRA, c3, DAMMA],
+      }),
+      c3,
+    ),
   )
 }
