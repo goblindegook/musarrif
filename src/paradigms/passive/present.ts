@@ -167,32 +167,33 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           const prefix = PRESENT_PREFIXES[pronounId]
+          const c1Segment = isWeakLetter(c1) ? [c1] : [c1, SUKOON]
 
           if (pronounId === '2fs') {
             const tail = mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
-            acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, ...tail]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
             return acc
           }
 
           if (pronounId === '2fp' || pronounId === '3fp') {
-            acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, FATHA, YEH, SUKOON, NOON, FATHA]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, FATHA, YEH, SUKOON, NOON, FATHA]
             return acc
           }
 
           if (pronounId === '2mp' || pronounId === '3mp') {
             const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
-            acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, ...tail]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
             return acc
           }
 
           if (pronounId === '2d' || pronounId === '3md' || pronounId === '3fd') {
             const tail = mood === 'indicative' ? [FATHA, YEH, FATHA, ALIF, NOON, KASRA] : [FATHA, YEH, FATHA, ALIF]
-            acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, ...tail]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
             return acc
           }
 
           const tail = mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
-          acc[pronounId] = [prefix, DAMMA, c1, SUKOON, c2, ...tail]
+          acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
