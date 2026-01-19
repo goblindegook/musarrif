@@ -12,6 +12,7 @@ describe('passive present indicative pattern', () => {
     ['وصف', 1, 'يُوصَفُ'],
     ['وفد', 1, 'يُوفَدُ'],
     ['ولي', 1, 'يُولَى'],
+    ['وعي', 1, 'يُوعَى'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
