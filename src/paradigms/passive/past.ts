@@ -21,28 +21,6 @@ import type { PronounId } from '../pronouns'
 import { PRONOUN_IDS } from '../pronouns'
 import type { Verb } from '../verbs'
 
-function collapseFinalNoon(
-  forms: Record<PronounId, readonly string[]>,
-  finalRadical: string,
-): Record<PronounId, readonly string[]> {
-  if (finalRadical !== NOON) return forms
-
-  return {
-    ...forms,
-    '1p': replaceSuffix(forms['1p'], [NOON, SUKOON, NOON, FATHA, ALIF], [NOON, SHADDA, FATHA, ALIF]),
-    '3fp': replaceSuffix(forms['3fp'], [NOON, SUKOON, NOON, FATHA], [NOON, SHADDA, FATHA]),
-  }
-}
-
-function replaceSuffix(
-  stem: readonly string[],
-  find: readonly string[],
-  replacement: readonly string[],
-): readonly string[] {
-  if (!stem.join('').endsWith(find.join(''))) return stem
-  return Array.from(stem.join('').slice(0, stem.length - find.length) + replacement.join(''))
-}
-
 function toConjugation(params: {
   base: readonly string[]
   stem: readonly string[]
@@ -59,17 +37,16 @@ function toConjugation(params: {
     '2d': [...stem, TEH, DAMMA, MEEM, FATHA, ALIF],
     '3md': [...base, ALIF],
     '3fd': [...base, TEH, FATHA, ALIF],
-    '1p': [...stem, NOON, FATHA, ALIF],
+    '1p': finalRadical === NOON ? [...stem.slice(0, -2), NOON, SHADDA, FATHA, ALIF] : [...stem, NOON, FATHA, ALIF],
     '2mp': [...stem, TEH, DAMMA, MEEM, SUKOON],
     '2fp': [...stem, TEH, DAMMA, NOON, SHADDA, FATHA],
     '3mp': [...thirdMasculinePluralStem, DAMMA, WAW, ALIF],
-    '3fp': [...stem, NOON, FATHA],
+    '3fp': finalRadical === NOON ? [...stem.slice(0, -2), NOON, SHADDA, FATHA] : [...stem, NOON, FATHA],
   }
-  const collapsedForms = collapseFinalNoon(forms, finalRadical)
   return mapRecord(
     PRONOUN_IDS.reduce(
       (acc, pronounId) => {
-        acc[pronounId] = collapsedForms[pronounId]
+        acc[pronounId] = forms[pronounId]
         return acc
       },
       {} as Record<PronounId, readonly string[]>,
