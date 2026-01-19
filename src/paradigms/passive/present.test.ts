@@ -6,6 +6,7 @@ describe('passive present indicative pattern', () => {
   test.each<[string, VerbForm, string]>([
     ['وضع', 1, 'يُوضَعُ'],
     ['يبس', 1, 'يُوبَسُ'],
+    ['وثق', 1, 'يُوثَقُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })

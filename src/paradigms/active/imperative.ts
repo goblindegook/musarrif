@@ -51,6 +51,8 @@ function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly
 
   if (verb.form === 1 && isHamzatedLetter(c1) && c2 === c3) return word
 
+  if (verb.form === 1 && isWeakLetter(c1) && resolveFormIPastVowel(verb) === 'u') return word
+
   if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'a' && !isHamzatedLetter(c2)) return word
 
   if (verb.form === 1 && isWeakLetter(c1) && isHamzatedLetter(c2) && !isWeakLetter(c3)) return word
@@ -125,6 +127,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         if (isInitialWeak && c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(2)]
+
+        if (isInitialWeak && pastVowel === 'u' && !isFinalWeak) return stem
 
         if (isInitialWeak && presentVowel === 'u') {
           const trimmedStem = stem.at(0) === YEH ? stem.slice(1) : stem
