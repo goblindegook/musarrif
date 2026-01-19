@@ -3,7 +3,10 @@ import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePassivePast } from './past'
 
 describe('passive past pattern', () => {
-  test.each<[string, VerbForm, string]>([['وضع', 1, 'وُضِعَ']])('%s (Form %d) pattern is %s', (root, form, expected) => {
+  test.each<[string, VerbForm, string]>([
+    ['وضع', 1, 'وُضِعَ'],
+    ['يبس', 1, 'يُبِسَ'],
+  ])('%s (Form %d) pattern is %s', (root, form, expected) => {
     expect(conjugatePassivePast(getVerb(root, form))['3ms']).toBe(expected)
   })
 })

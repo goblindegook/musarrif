@@ -99,6 +99,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (isInitialWeak && isMiddleHamza && !isFinalWeak) return [ALIF, KASRA, c1, ...stem.slice(2)]
 
+        if (isInitialWeak && pastVowel === 'i' && !isFinalWeak && c2 !== c3) return [ALIF, KASRA, c1, ...stem.slice(2)]
+
         if (isInitialHamza && c2 === c3) {
           if (pronounId === '2ms') return [ALIF_HAMZA, DAMMA, c2, SHADDA, FATHA]
           if (pronounId === '2fs') return [ALIF_HAMZA, DAMMA, c2, SHADDA, KASRA, YEH]

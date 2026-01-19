@@ -3,7 +3,10 @@ import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePassivePresentMood } from './present'
 
 describe('passive present indicative pattern', () => {
-  test.each<[string, VerbForm, string]>([['وضع', 1, 'يُوضَعُ']])('%s (Form %d) %s is %s', (root, form, expected) => {
+  test.each<[string, VerbForm, string]>([
+    ['وضع', 1, 'يُوضَعُ'],
+    ['يبس', 1, 'يُوبَسُ'],
+  ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
 })

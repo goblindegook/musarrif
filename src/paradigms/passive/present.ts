@@ -20,7 +20,6 @@ import {
 import type { PronounId } from '../pronouns'
 import { PRONOUN_IDS } from '../pronouns'
 import type { Verb } from '../verbs'
-import { canConjugatePassive } from './support'
 
 const PRESENT_PREFIXES: Record<PronounId, string> = {
   '1s': ALIF_HAMZA,
@@ -93,10 +92,6 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
-  if (!canConjugatePassive(verb)) {
-    throw new Error('Passive present conjugation is only implemented for regular Form I verbs.')
-  }
-
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
