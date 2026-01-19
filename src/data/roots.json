@@ -518,6 +518,7 @@
   { "root": "واف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "وجد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ودع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "ودد", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l"] },
   { "root": "وئد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "وئد", "form": 5 },
   { "root": "وصل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },

@@ -554,6 +554,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('و-د-د', () => {
+      test('وَدَّ (Form I)', () => {
+        expect(conjugateImperative(getVerb('ودد', 1))).toMatchObject({
+          '2ms': 'وَدَّ',
+          '2fs': 'وَدِّي',
+          '2d': 'وَدَّا',
+          '2mp': 'وَدُّوْا',
+          '2fp': 'اِيدَدْنَ',
+        })
+      })
+    })
   })
 
   describe('hamzated initial defective verbs', () => {
