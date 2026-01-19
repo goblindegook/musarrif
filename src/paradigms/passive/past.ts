@@ -26,9 +26,9 @@ function buildForms(params: {
   base: readonly string[]
   stem: readonly string[]
   pluralBase: readonly string[]
-  pluralSuffix?: readonly string[]
+  pluralSuffix: readonly string[]
 }): Record<PronounId, readonly string[]> {
-  const { base, stem, pluralBase, pluralSuffix = [WAW, ALIF] } = params
+  const { base, stem, pluralBase, pluralSuffix } = params
 
   return {
     '1s': [...stem, TEH, DAMMA],
@@ -159,6 +159,7 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
           base: [c1, KASRA, YEH, c3, FATHA],
           stem: [c1, KASRA, c3, SUKOON],
           pluralBase: [c1, KASRA, YEH, c3, DAMMA],
+          pluralSuffix: [WAW, ALIF],
         }),
         c3,
       ),
@@ -171,6 +172,7 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
         base: isGeminate ? [c1, DAMMA, c2, SHADDA, FATHA] : [c1, DAMMA, c2, KASRA, c3, FATHA],
         stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
         pluralBase: isGeminate ? [c1, DAMMA, c2, SHADDA, DAMMA] : [c1, DAMMA, c2, KASRA, c3, DAMMA],
+        pluralSuffix: [WAW, ALIF],
       }),
       c3,
     ),
