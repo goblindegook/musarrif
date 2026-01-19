@@ -42,6 +42,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
   switch (pattern) {
     case 'fa3l':
+      if (isMiddleHamza) return geminateDoubleLetters([c1, FATHA, ALIF_HAMZA, SUKOON, finalRadical])
       return geminateDoubleLetters([c1, FATHA, c2, SUKOON, finalRadical])
 
     case 'fa3al':

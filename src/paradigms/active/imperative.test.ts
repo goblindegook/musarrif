@@ -367,6 +367,18 @@ describe('imperative', () => {
   })
 
   describe('hamzated middle verbs', () => {
+    describe('ي-ئ-س', () => {
+      test('يَئِسَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('يئس', 1))).toMatchObject({
+          '2ms': 'اِيئَسْ',
+          '2fs': 'اِيئَسِي',
+          '2d': 'اِيئَسَا',
+          '2mp': 'اِيئَسُوا',
+          '2fp': 'اِيئَسْنَ',
+        })
+      })
+    })
+
     describe('س-أ-ل', () => {
       test('سَأَلَ (Form I)', () => {
         expect(conjugateImperative(getVerb('سأل', 1))).toMatchObject({
@@ -738,6 +750,7 @@ describe('imperative', () => {
     ['حول', 5, 'تَحَوَّلْ'],
     ['صبح', 4, 'أَصْبِحْ'],
     ['جري', 1, 'اِجْرِ'],
+    ['يئس', 1, 'اِيئَسْ'],
     ['مثل', 1, 'اُمْثُلْ'],
     ['دخل', 1, 'اُدْخُلْ'],
     ['ولد', 1, 'لِدْ'],

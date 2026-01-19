@@ -134,6 +134,7 @@ test.each<[string, VerbForm, string | string[]]>([
   ['باع', 1, 'بَيْع'],
   ['زور', 1, 'زَوْر'],
   ['دعا', 1, 'دُعَاء'],
+  ['يئس', 1, 'يَأْس'],
   ['مسي', 4, 'إِمْسَاء'],
   ['ضحي', 4, 'إِضْحَاء'],
   ['دخل', 1, 'دُخُول'],
@@ -229,6 +230,12 @@ describe('hamzated middle roots', () => {
       [6, ['تَسَاؤُل']],
     ])('Form %d masdar is %s', (form, expected) => {
       expect(deriveMasdar(getVerb('سأل', form))).toEqual(expected)
+    })
+  })
+
+  describe('ي-ئ-س', () => {
+    test.each<[VerbForm, readonly string[]]>([[1, ['يَأْس']]])('Form %d masdar is %s', (form, expected) => {
+      expect(deriveMasdar(getVerb('يئس', form))).toEqual(expected)
     })
   })
 })

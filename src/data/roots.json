@@ -549,5 +549,6 @@
   { "root": "ذهب", "form": 6 },
   { "root": "ذهب", "form": 10 },
   { "root": "يمن", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
+  { "root": "يئس", "form": 1, "formPattern": "fa3ila-yaf3alu", "noPassiveVoice": true, "masdarPatterns": ["fa3l"] },
   { "root": "يقظ", "form": 10 }
 ]

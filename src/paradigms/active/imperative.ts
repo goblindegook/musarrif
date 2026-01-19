@@ -53,6 +53,8 @@ function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly
 
   if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'a' && !isHamzatedLetter(c2)) return word
 
+  if (verb.form === 1 && isWeakLetter(c1) && isHamzatedLetter(c2) && !isWeakLetter(c3)) return word
+
   if (isHamzatedLetter(c1) && isWeakLetter(c2)) return word
 
   if (isHamzatedLetter(c3)) return word
@@ -94,6 +96,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِئْوِ)
         if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, WAW, KASRA]
+
+        if (isInitialWeak && isMiddleHamza && !isFinalWeak) return [ALIF, KASRA, c1, ...stem.slice(2)]
 
         if (isInitialHamza && c2 === c3) {
           if (pronounId === '2ms') return [ALIF_HAMZA, DAMMA, c2, SHADDA, FATHA]
