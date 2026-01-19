@@ -151,6 +151,7 @@ test.each<[string, VerbForm, string | string[]]>([
   ['وجب', 1, 'وُجُوب'],
   ['وصف', 1, 'وَصْف'],
   ['وفد', 1, 'وُفُود'],
+  ['ولي', 1, 'وَلْي'],
 ])('%s (Form %d) masdar is %s', (root, form, expected) => {
   expect(deriveMasdar(getVerb(root, form))).toEqual([expected].flat())
 })
