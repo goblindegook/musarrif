@@ -94,6 +94,10 @@ export function isHamzatedLetter(value = ''): boolean {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
+export function isGutturalLetter(value = ''): boolean {
+  return isHamzatedLetter(value) || ['ه', 'ع', 'ح', 'غ', 'خ'].includes(value)
+}
+
 export function weakLetterGlide(letter: string): string {
   return letter === WAW || letter === ALIF ? WAW : YEH
 }

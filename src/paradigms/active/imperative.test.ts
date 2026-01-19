@@ -140,6 +140,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('و-ه-ن', () => {
+      test('وَهُنَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('وهن', 1))).toMatchObject({
+          '2ms': 'اُوهُنْ',
+          '2fs': 'اُوهُنِي',
+          '2d': 'اُوهُنَا',
+          '2mp': 'اُوهُنُوا',
+          '2fp': 'اُوهُنَّ',
+        })
+      })
+    })
+
     describe('ي-ب-س', () => {
       test('يَبِسَ (Form I)', () => {
         expect(conjugateImperative(getVerb('يبس', 1))).toMatchObject({
@@ -772,6 +784,7 @@ describe('imperative', () => {
     ['وفد', 1, 'فِدْ'],
     ['ولي', 1, 'لِ'],
     ['وعي', 1, 'عِ'],
+    ['وهن', 1, 'اُوهُنْ'],
     ['حمر', 9, 'اِحْمَرَّ'],
     ['ظلل', 1, 'ظَلَّ'],
     ['جيء', 1, 'جِئْ'],

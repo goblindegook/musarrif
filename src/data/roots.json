@@ -535,6 +535,7 @@
   { "root": "وفد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3ool"] },
   { "root": "ولي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "وعي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
+  { "root": "وهن", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "ونى", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
   { "root": "وظف", "form": 2 },
   { "root": "وعد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l", "mimi"] },

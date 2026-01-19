@@ -1,10 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import {
-  isFormIPastVowel,
-  isFormIPresentVowel,
-  resolveFormIPastVowel,
-  resolveFormIPresentVowel,
-} from '../form-i-vowels'
+import { isFormIPastVowel, isFormIPresentVowel, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -19,6 +14,7 @@ import {
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
+  isGutturalLetter,
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
@@ -582,11 +578,13 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (isMiddleWeak && isFinalWeak)
     return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
 
+  if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
+    return [YEH, FATHA, WAW, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
-  if (isInitialWeak) {
-    if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
-    return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
-  }
+  if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+
+  if (isInitialWeak) return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
 
   // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains
@@ -624,6 +622,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   // For defective verbs ending in ي, use kasra before the final ي; for و, use damma
   if (c3 === YEH || (c3 === ALIF_MAQSURA && isFormIPresentVowel(verb, 'i')))
     return [YEH, FATHA, c1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
+
   if (c3 === ALIF_MAQSURA && patternVowel === 'u') return [YEH, FATHA, c1, SUKOON, c2, DAMMA, WAW]
 
   // Defective verbs (final weak only): final weak letter remains, no trailing damma (e.g., رَمَى → يَرْمِي)
