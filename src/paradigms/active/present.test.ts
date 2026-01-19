@@ -94,6 +94,7 @@ describe('active present indicative pattern', () => {
     ['وصل', 8, 'يَتَّصِلُ'],
     ['وعد', 1, 'يَعِدُ'],
     ['وعد', 1, 'يَعِدُ'],
+    ['وضع', 1, 'يَضَعُ'],
     ['ودد', 1, 'يَوَدُّ'],
     ['وفي', 1, 'يَفِي'],
     ['وقي', 1, 'يَقِي'],
@@ -270,6 +271,26 @@ describe('active present indicative pattern', () => {
           '2fp': 'تَتَوَعَّدْنَ',
           '3mp': 'يَتَوَعَّدُونَ',
           '3fp': 'يَتَوَعَّدْنَ',
+        })
+      })
+    })
+
+    describe('و-ض-ع', () => {
+      test('وَضَعَ (Form I)', () => {
+        expect(conjugatePresentMood(getVerb('وضع', 1), 'indicative')).toEqual({
+          '1s': 'أَضَعُ',
+          '2ms': 'تَضَعُ',
+          '2fs': 'تَضَعِيْنَ',
+          '3ms': 'يَضَعُ',
+          '3fs': 'تَضَعُ',
+          '2d': 'تَضَعَانِ',
+          '3md': 'يَضَعَانِ',
+          '3fd': 'تَضَعَانِ',
+          '1p': 'نَضَعُ',
+          '2mp': 'تَضَعُونَ',
+          '2fp': 'تَضَعْنَ',
+          '3mp': 'يَضَعُونَ',
+          '3fp': 'يَضَعْنَ',
         })
       })
     })
@@ -1008,6 +1029,24 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive conjugation for وَضَعَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqual({
+      '1s': 'أَضَعْ',
+      '2ms': 'تَضَعْ',
+      '2fs': 'تَضَعِي',
+      '3ms': 'يَضَعْ',
+      '3fs': 'تَضَعْ',
+      '2d': 'تَضَعَا',
+      '3md': 'يَضَعَا',
+      '3fd': 'تَضَعَا',
+      '1p': 'نَضَعْ',
+      '2mp': 'تَضَعُوا',
+      '2fp': 'تَضَعْنَ',
+      '3mp': 'يَضَعُوا',
+      '3fp': 'يَضَعْنَ',
+    })
+  })
+
   test('jussive conjugation for بَقِيَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqual({
       '1s': 'أَبْقَ',
@@ -1518,6 +1557,24 @@ describe('active present subjunctive', () => {
       '2fp': 'تَصْغُرْنَ',
       '3mp': 'يَصْغُرُوا',
       '3fp': 'يَصْغُرْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for وَضَعَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('وضع', 1), 'subjunctive')).toEqual({
+      '1s': 'أَضَعَ',
+      '2ms': 'تَضَعَ',
+      '2fs': 'تَضَعِي',
+      '3ms': 'يَضَعَ',
+      '3fs': 'تَضَعَ',
+      '2d': 'تَضَعَا',
+      '3md': 'يَضَعَا',
+      '3fd': 'تَضَعَا',
+      '1p': 'نَضَعَ',
+      '2mp': 'تَضَعُوا',
+      '2fp': 'تَضَعْنَ',
+      '3mp': 'يَضَعُوا',
+      '3fp': 'يَضَعْنَ',
     })
   })
 

@@ -115,6 +115,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('و-ض-ع', () => {
+      test('وَضَعَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('وضع', 1))).toMatchObject({
+          '2ms': 'ضَعْ',
+          '2fs': 'ضَعِي',
+          '2d': 'ضَعَا',
+          '2mp': 'ضَعُوا',
+          '2fp': 'ضَعْنَ',
+        })
+      })
+    })
   })
 
   describe('hollow verbs', () => {

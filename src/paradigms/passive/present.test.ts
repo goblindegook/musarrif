@@ -1,6 +1,12 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { getVerb, type VerbForm } from '../verbs'
 import { conjugatePassivePresentMood } from './present'
+
+describe('passive present indicative pattern', () => {
+  test.each<[string, VerbForm, string]>([['وضع', 1, 'يُوضَعُ']])('%s (Form %d) %s is %s', (root, form, expected) => {
+    expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
+  })
+})
 
 describe('passive present indicative', () => {
   describe('strong roots', () => {

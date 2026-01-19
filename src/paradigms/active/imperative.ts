@@ -40,30 +40,22 @@ function dropSukoonBeforeFinalAlif(word: readonly string[]): readonly string[] {
 }
 
 function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly string[] {
+  const alifIndex = word.lastIndexOf(ALIF)
+  if (alifIndex <= 0) return word
+
   const [c1, c2, c3] = [...verb.root]
 
-  if (
-    verb.form === 1 &&
-    isHamzatedLetter(c1) &&
-    !isWeakLetter(c2) &&
-    !isWeakLetter(c3) &&
-    resolveFormIPresentVowel(verb) === 'i'
-  )
-    return word
-
   if (c2 === ALIF) return word
+
+  if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'i' && isHamzatedLetter(c1)) return word
+
+  if (verb.form === 1 && resolveFormIPresentVowel(verb) === 'a' && !isHamzatedLetter(c2)) return word
 
   if (isHamzatedLetter(c1) && isWeakLetter(c2)) return word
 
   if (isHamzatedLetter(c3)) return word
 
-  const alifIndex = word.lastIndexOf(ALIF)
-  if (
-    alifIndex <= 0 ||
-    word.at(alifIndex - 1) !== WAW ||
-    isWeakLetter(word.at(alifIndex - 3)) ||
-    word.at(alifIndex - 3) === NOON
-  )
+  if (word.at(alifIndex - 1) !== WAW || isWeakLetter(word.at(alifIndex - 3)) || word.at(alifIndex - 3) === NOON)
     return word
 
   return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
