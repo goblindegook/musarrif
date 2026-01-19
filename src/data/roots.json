@@ -526,6 +526,7 @@
   { "root": "وصل", "form": 5 },
   { "root": "وصل", "form": 8 },
   { "root": "وضع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
+  { "root": "ونى", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
   { "root": "وظف", "form": 2 },
   { "root": "وعد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l", "mimi"] },
   { "root": "وعد", "form": 5 },
