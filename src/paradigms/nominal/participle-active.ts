@@ -52,29 +52,23 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (c2 === c3) return [...prefix, c2, SHADDA]
 
-        if (isMiddleHamza && isFinalWeak) return [...prefix, HAMZA, TANWEEN_KASRA]
+        if (isMiddleWeak && isFinalHamza) return [...prefix, HAMZA, TANWEEN_KASRA]
 
-        if (isFinalWeak) return [...prefix, c2, TANWEEN_KASRA]
+        if (isFinalWeak) return [...prefix, isMiddleHamza ? HAMZA : c2, TANWEEN_KASRA]
 
         if (isMiddleHamza) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
 
-        if (isMiddleWeak && isFinalHamza) return [...prefix, c3, TANWEEN_KASRA]
-
         if (isFinalHamza) return [...prefix, c2, KASRA, HAMZA_ON_YEH]
-
-        // Initial hamza + sound root coalesces into alif madda in faa3il (e.g., أكل → آكِل)
-        // FIXME: This is the same as the default result, refactor out
-        if (isInitialWeak && !isMiddleWeak) return [...prefix, c2, KASRA, c3]
-
-        // FIXME: This is the same as the default result, refactor out
-        if (verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH) return [...prefix, c2, KASRA, c3]
 
         // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
         // FIXME: This is the same as the default result, refactor out
         if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal'))
           return [...prefix, c2, KASRA, c3]
 
-        if (hasPattern(verb, 'fa3ila-yaf3alu', 'fa3ila-yaf3ilu')) return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu') && c2 !== YEH) return [c1, FATHA, c2, KASRA, YEH, c3]
+
+        // FIXME: This is the same as the default result, refactor out?
+        if (hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c2, KASRA, c3]
 
         if (isMiddleWeak) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
 
@@ -96,50 +90,37 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 3: {
         // Defective Form III active participle: drop final weak and use tanween kasra (e.g., وفي → مُوَافٍ)
         const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+
         if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, TANWEEN_KASRA]
+
         return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3]
       }
 
       case 4: {
-        const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+        const prefix = [MEEM, DAMMA, isInitialHamza ? HAMZA_ON_WAW : c1]
 
-        // Initial hamza + middle weak + final weak (e.g., أوي → مُؤْوٍ)
-        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
-          return [MEEM, DAMMA, HAMZA_ON_WAW, SUKOON, c2, TANWEEN_KASRA]
+        if (isInitialWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        // Initial weak + final weak (e.g., وفي → مُوفٍ): initial weak becomes ū, drop final weak, use tanween kasra
-        if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_KASRA]
+        if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_KASRA]
 
-        // Defective Form IV: drop final weak and use tanween kasra (e.g., مُعْطٍ, مُنْهٍ, مُمْسٍ)
-        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_KASRA]
+        if (isFinalHamza) return [...prefix, SUKOON, c2, KASRA, HAMZA_ON_YEH]
 
-        // Final hamza seats on yeh after kasra (e.g., مُنْبِئ)
-        if (c3 === ALIF_HAMZA) return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, HAMZA_ON_YEH]
+        if (isMiddleWeak) return [...prefix, KASRA, YEH, c3]
 
-        // Hollow Form IV active participle (e.g., مُقِيم)
-        if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, KASRA, YEH, c3]
+        if (c2 === c3) return [...prefix, KASRA, c2, SHADDA]
 
-        // Geminate Form IV active participle (e.g., مُحِبّ)
-        if (c2 === c3) return [MEEM, DAMMA, seatedC1, KASRA, c2, SHADDA]
-
-        return [MEEM, DAMMA, seatedC1, SUKOON, c2, KASRA, c3]
+        return [...prefix, SUKOON, c2, KASRA, c3]
       }
 
       case 5: {
-        // Initial hamza + middle weak + final weak (e.g., أوي → مُتَأَوٍّ)
-        // Drop final weak and use tanween kasra on the doubled middle radical
-        if (isInitialHamza && isMiddleWeak && isFinalWeak)
-          return [MEEM, DAMMA, TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, TANWEEN_KASRA]
+        if (isFinalWeak)
+          return [MEEM, DAMMA, TEH, FATHA, isInitialHamza ? ALIF_HAMZA : c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
 
-        // Defective Form V: drop final weak and place tanween kasra on the doubled middle radical (e.g., مُتَوَفٍّ)
-        if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
-
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, c3]
+        return [MEEM, DAMMA, TEH, FATHA, isInitialHamza ? ALIF_HAMZA : c1, FATHA, c2, SHADDA, KASRA, c3]
       }
 
       case 6: {
-        // Hollow Form VI with final hamza (e.g., مُتَجَاءٍ)
-        if (isMiddleWeak && isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+        if (isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
         if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
 
