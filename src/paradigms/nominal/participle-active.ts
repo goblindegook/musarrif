@@ -18,7 +18,6 @@ import {
   SUKOON,
   TANWEEN_KASRA,
   TEH,
-  WAW,
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
@@ -60,9 +59,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isFinalHamza) return [...prefix, c2, KASRA, HAMZA_ON_YEH]
 
-        // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
         // FIXME: This is the same as the default result, refactor out
-        if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal'))
+        if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
           return [...prefix, c2, KASRA, c3]
 
         if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu') && c2 !== YEH) return [c1, FATHA, c2, KASRA, YEH, c3]
@@ -146,35 +144,19 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 10: {
-        // Initial hamza + middle weak + final weak (e.g., أوي → مُسْتَأْوٍ)
-        // Initial hamza is kept as أْ, then middle weak with tanween kasra
-        if (isInitialHamza && isMiddleWeak && isFinalWeak)
-          return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
+        const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA]
 
-        const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+        if (isInitialHamza && isMiddleWeak && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
 
-        // Hollow Form X active participle (e.g., مُسْتَضِيف)
-        if (isMiddleWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, YEH, seatedC3]
+        if (isMiddleWeak) return [...prefix, c1, KASRA, YEH, isFinalHamza ? HAMZA_ON_YEH : c3]
 
-        // Defective Form X: preserve initial weak with sukoon, then c2 with kasra, then tanween kasra (e.g., وفي → مُسْتَوْفٍ)
-        if (isFinalWeak && isInitialWeak) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, TANWEEN_KASRA]
+        if (isFinalWeak && isInitialWeak) return [...prefix, c1, SUKOON, c2, TANWEEN_KASRA]
 
-        if (c2 === c3) return [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1, KASRA, c2, SHADDA]
+        if (c2 === c3) return [...prefix, c1, KASRA, c2, SHADDA]
 
-        return [
-          MEEM,
-          DAMMA,
-          SEEN,
-          SUKOON,
-          TEH,
-          FATHA,
-          c1,
-          SUKOON,
-          isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2,
-          KASRA,
-          seatedC3,
-        ]
+        return [...prefix, c1, SUKOON, isMiddleHamza ? HAMZA_ON_YEH : c2, KASRA, isFinalHamza ? HAMZA_ON_YEH : c3]
       }
+
       default:
         return []
     }

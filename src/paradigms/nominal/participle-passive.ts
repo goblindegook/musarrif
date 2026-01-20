@@ -54,84 +54,59 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 1: {
         const presentVowel = resolveFormIPresentVowel(verb)
         const isConsonantalMiddleYeh = hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH
+        const prefix = [MEEM, FATHA, c1]
 
-        // Initial weak + middle hamza + final weak (e.g., وأى → مَوْئِيّ)
-        if (isInitialWeak && isMiddleHamza && isFinalWeak)
-          return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
+        if (isMiddleHamza && isFinalWeak) return [...prefix, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
 
-        // Initial weak + final weak (e.g., وقي → مَوْقِيّ, ولى → مَوْلِيّ)
-        if (isInitialWeak && isFinalWeak) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
+        if (isInitialWeak && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        // Initial hamza + final weak (e.g., أتى → مَأْتِيّ)
-        if (isInitialHamza && isFinalWeak) return [MEEM, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA, YEH, SHADDA]
+        if (isInitialHamza && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        if (isFinalHamza) return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, HAMZA]
+        if (isFinalHamza) return [...prefix, SUKOON, c2, DAMMA, WAW, HAMZA]
 
-        // Hamzated defective: seat hamza on yeh with kasra, geminate the glide (e.g., مَرْئِيّ)
-        if (c2 === ALIF_HAMZA && (c3 === YEH || c3 === ALIF_MAQSURA))
-          return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
+        if (isMiddleHamza) return [...prefix, SUKOON, HAMZA_ON_WAW, DAMMA, WAW, c3]
 
-        // Middle hamza in the maf'ūl pattern seats on wāw after ḍamma (e.g., سأل → مَسْؤُول)
-        if (isMiddleHamza) return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_WAW, DAMMA, WAW, c3]
+        if (c2 === WAW && c3 === YEH) return [...prefix, SUKOON, c2, KASRA, c3, SHADDA]
 
-        if (c2 === WAW && c3 === YEH) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, c3, SHADDA]
+        if (c2 === ALIF) return [...prefix, ...longVowelFromPattern(presentVowel), c3]
 
-        // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
-        // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
-        if (c2 === ALIF) {
-          return [MEEM, FATHA, c1, ...longVowelFromPattern(presentVowel), c3]
-        }
-
-        if (isMiddleWeak && !isConsonantalMiddleYeh) {
-          const vowel = c2 === WAW ? 'u' : 'i'
-          return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]
-        }
+        if (isMiddleWeak && !isConsonantalMiddleYeh)
+          return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), c3]
 
         if ((c3 === ALIF || c3 === ALIF_MAQSURA) && presentVowel === 'u')
-          return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, SHADDA]
+          return [...prefix, SUKOON, c2, DAMMA, WAW, SHADDA]
 
-        // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)
-        if (c3 === YEH || c3 === ALIF_MAQSURA) return [MEEM, FATHA, c1, SUKOON, c2, KASRA, YEH, SHADDA]
+        if (c3 === YEH || c3 === ALIF_MAQSURA) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        // Standard maf'ūl pattern uses a long ū (no written sukoon on wāw)
-        return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, c3]
+        return [...prefix, SUKOON, c2, DAMMA, WAW, c3]
       }
 
       case 2: {
-        const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+        const prefix = [MEEM, DAMMA, isInitialHamza ? HAMZA_ON_WAW : c1, FATHA, c2]
 
-        // Geminate Form II: c2 === c3, fatḥa on c1, fatḥa then shadda on c2, then c3 (e.g., مُحَبَّب)
-        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, FATHA, SHADDA, c3]
+        if (c2 === c3) return [...prefix, FATHA, SHADDA, c3]
 
-        // Defective Form II: drop final weak and place tanween fatḥa on the doubled middle radical, convert to alif maqsura (e.g., مُوَفًّى)
-        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isFinalWeak) return [...prefix, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA, FATHA, c3]
+        return [...prefix, SHADDA, FATHA, c3]
       }
 
       case 3: {
-        // Defective Form III passive participle: drop final weak and use tanween fatḥa + alif maqsura (e.g., وفي → مُوَافًى)
-        const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, TANWEEN_FATHA, ALIF_MAQSURA]
+        const prefix = [MEEM, DAMMA, c1, FATHA, ALIF, isMiddleHamza ? HAMZA : c2]
 
-        return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3]
+        if (isFinalWeak) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
+
+        return [...prefix, FATHA, c3]
       }
 
       case 4: {
-        const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+        const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
 
-        // Initial hamza + middle weak + final weak (e.g., أوي → مُؤْوًى)
-        if (c1 === ALIF_HAMZA && isMiddleWeak && isFinalWeak)
-          return [MEEM, DAMMA, HAMZA_ON_WAW, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isInitialWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        // Hollow Form IV passive participle (e.g., مُضَاف)
-        if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
-
-        // Initial weak + final weak (e.g., وفي → مُوفًى): initial weak becomes ū, drop final weak, use tanween fatḥa + alif maqsura
-        if (isInitialWeak && isFinalWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        // Defective Form IV: drop final weak and use tanween fatḥa + alif maqṣūra (e.g., مُعْطًى, مُنْهًى)
         if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+
+        if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
 
         if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA]
 
@@ -139,7 +114,6 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 5: {
-        // Defective Form V: drop final weak and place tanween fatḥa + alif maqsura on the doubled middle radical (e.g., مُتَوَفًّى)
         if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
 
         return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3]
@@ -147,7 +121,8 @@ export function derivePassiveParticiple(verb: Verb): string {
 
       case 6: {
         if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3]
+
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, c3]
       }
 
       case 7: {
@@ -161,7 +136,6 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, ALIF, c3]
 
-        // Weak final radical: drop the weak letter and place tanween fatḥ on the preceding consonant
         if (isFinalWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, ALIF_MAQSURA]
 
         return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3]
