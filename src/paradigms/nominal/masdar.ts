@@ -3,7 +3,6 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
-  ALIF_MADDA,
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
