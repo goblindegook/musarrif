@@ -278,31 +278,30 @@ function derivePastFormV(verb: Verb): PastBaseForms {
 
 function derivePastFormVI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [TEH, FATHA, c1, FATHA, ALIF]
 
   if (c2 === c3)
     return {
-      base: [TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA, FATHA],
-      suffixedBase: [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, SUKOON],
-      pluralBase: [TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA, DAMMA],
+      base: [...prefix, c2, SHADDA, FATHA],
+      suffixedBase: [...prefix, c2, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, c2, SHADDA, DAMMA],
     }
 
   // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-    const base = [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
     return {
-      base,
-      suffixedBase: [...shortenHollowStem(base), SUKOON],
-      pluralBase: [...shortenHollowStem(base), DAMMA],
+      base: [...prefix, c3, FATHA],
+      suffixedBase: [...shortenHollowStem([...prefix, c3, FATHA]), SUKOON],
+      pluralBase: [...shortenHollowStem([...prefix, c3, FATHA]), DAMMA],
     }
   }
 
-  return buildForms([TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3, FATHA], c3)
+  return buildForms([...prefix, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormVII(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
 
-  // Hollow Form VII (e.g., اِنْقَادَ) lengthens the glide to ألف
   if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
@@ -325,20 +324,18 @@ function derivePastFormIX(verb: Verb): PastBaseForms {
 
 function derivePastFormX(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, isHamzatedLetter(c1) ? ALIF_HAMZA : c1]
+
   if (c2 === c3)
     return {
-      base: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA],
-      suffixedBase: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON],
-      pluralBase: [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, DAMMA],
+      base: [...prefix, FATHA, c2, SHADDA, FATHA],
+      suffixedBase: [...prefix, SUKOON, c2, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA],
     }
 
-  if (isWeakLetter(c2) && !isWeakLetter(c3))
-    return buildForms([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1, FATHA, ALIF, c3, FATHA], c3)
+  if (isWeakLetter(c2) && !isWeakLetter(c3)) return buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3)
 
-  return buildForms(
-    [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, isHamzatedLetter(c1) ? ALIF_HAMZA : c1, SUKOON, c2, FATHA, c3, FATHA],
-    c3,
-  )
+  return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {

@@ -32,7 +32,6 @@ import {
   TEH,
   type Vowel,
   WAW,
-  weakLetterGlide,
   YEH,
 } from '../letters'
 import { isFemininePlural, isMasculinePlural, isPlural, type PronounId } from '../pronouns'
@@ -539,11 +538,11 @@ function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
       // Form IV quadriliteral: initial hamza + final weak (e.g., أنشأ → ينشئ)
       if (isInitialHamza && (isFinalWeak || isFinalHamza)) {
         // Initial hamza drops in Form IV quadriliterals, final weak becomes hamza on yeh
-        const finalGlide = c4 === ALIF_MAQSURA || c4 === ALIF_HAMZA ? HAMZA_ON_YEH : weakLetterGlide(c4)
+        const finalGlide = c4 === ALIF_MAQSURA || c4 === ALIF_HAMZA ? HAMZA_ON_YEH : defectiveLetterGlide(c4)
         return [YEH, DAMMA, c2, SUKOON, c3, KASRA, finalGlide, DAMMA]
       }
       // Default Form IV quadriliteral pattern
-      const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
+      const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
       return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, c3, FATHA, c4, DAMMA]
     }
 
@@ -563,72 +562,70 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const isFinalWeak = isWeakLetter(c3)
   const patternVowel = resolveFormIPresentVowel(verb)
   const shortVowel = shortVowelFromPattern(patternVowel)
+  const prefix = [YEH, FATHA]
 
   // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
-  if (c2 === c3) return [YEH, FATHA, seatHamza(c1, shortVowel), shortVowel, c2, SHADDA, DAMMA]
+  if (c2 === c3) return [...prefix, seatHamza(c1, shortVowel), shortVowel, c2, SHADDA, DAMMA]
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
   // Initial waw drops, final weak remains with short vowel on c2
   // ALIF_MAQSURA becomes YEH in present tense, no trailing case vowel on 3ms base
   if (isInitialWeak && isFinalWeak)
-    return [YEH, FATHA, seatHamza(c2, patternVowel), shortVowel, defectiveLetterGlide(c3)]
+    return [...prefix, seatHamza(c2, patternVowel), shortVowel, defectiveLetterGlide(c3)]
 
   // Doubly weak (middle weak + final weak): treat as defective, not hollow (e.g., رَوِيَ → يَرْوِي)
-  if (isMiddleWeak && isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
+  if (isMiddleWeak && isFinalWeak) return [...prefix, c1, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
 
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
-    return [YEH, FATHA, WAW, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
+    return [...prefix, WAW, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
-  if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
+  if (c1 === YEH) return [...prefix, YEH, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
-  if (isInitialWeak) return [YEH, FATHA, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
+  if (isInitialWeak) return [...prefix, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains
   if (isInitialHamza && isMiddleWeak && isFinalWeak)
-    return [YEH, FATHA, ALIF_HAMZA, SUKOON, hollowLetterGlide(c2), KASRA, defectiveLetterGlide(c3)]
+    return [...prefix, ALIF_HAMZA, SUKOON, hollowLetterGlide(c2), KASRA, defectiveLetterGlide(c3)]
 
   // Initial hamza + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, final weak remains
-  if (isInitialHamza && isFinalWeak) return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
+  if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
 
   // Initial hamza only (e.g., أكل → يأكل)
-  if (isInitialHamza) return [YEH, FATHA, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
+  if (isInitialHamza) return [...prefix, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Middle hamza + final weak (e.g., رَأَى → يَرَى)
-  if (isMiddleHamza && isFinalWeak) return [YEH, FATHA, c1, FATHA, ALIF_MAQSURA]
+  if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
   // Hollow verbs with middle ALIF use the long vowel from the pattern
-  if (c2 === ALIF) return [YEH, FATHA, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
+  if (c2 === ALIF) return [...prefix, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
-  if (!hasPattern(verb, 'fa3ila-yaf3alu')) {
-    // Hollow verbs with middle YEH use long YEH vowel
-    if (c2 === YEH) return [YEH, FATHA, c1, ...longVowelFromPattern('i'), c3, DAMMA]
+  if (!hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c1, ...longVowelFromPattern('i'), c3, DAMMA]
 
-    // Other hollow verbs use vowel from pattern
-    if (isMiddleWeak) return [YEH, FATHA, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
-  }
+  if (!hasPattern(verb, 'fa3ila-yaf3alu') && isMiddleWeak)
+    return [...prefix, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
   // Special case: fa3ala-yaf3alu pattern (past 'a' + present 'a') with final WAW uses damma instead of long vowel (e.g., غدو → يَغْدُو)
   if (isFormIPastVowel(verb, 'a') && isFormIPresentVowel(verb, 'a') && c3 === WAW)
-    return [YEH, FATHA, c1, SUKOON, c2, DAMMA, c3]
+    return [...prefix, c1, SUKOON, c2, DAMMA, c3]
 
   // Final-weak Form I with present vowel 'a' takes alif maqsura in 3ms (e.g., بَقِيَ → يَبْقَى)
   if (isFinalWeak && isFormIPresentVowel(verb, 'a') && (c3 === YEH || c3 === ALIF_MAQSURA))
-    return [YEH, FATHA, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
+    return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
   // For defective verbs ending in ي, use kasra before the final ي; for و, use damma
   if (c3 === YEH || (c3 === ALIF_MAQSURA && isFormIPresentVowel(verb, 'i')))
-    return [YEH, FATHA, c1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
+    return [...prefix, c1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
 
-  if (c3 === ALIF_MAQSURA && patternVowel === 'u') return [YEH, FATHA, c1, SUKOON, c2, DAMMA, WAW]
+  if (c3 === ALIF_MAQSURA && patternVowel === 'u') return [...prefix, c1, SUKOON, c2, DAMMA, WAW]
 
   // Defective verbs (final weak only): final weak letter remains, no trailing damma (e.g., رَمَى → يَرْمِي)
-  if (isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, defectiveLetterGlide(c3)]
+  if (isFinalWeak) return [...prefix, c1, SUKOON, c2, DAMMA, defectiveLetterGlide(c3)]
 
   // Regular strong verb
-  return [YEH, FATHA, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
+  return [...prefix, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 }
 
 function derivePresentFormII(verb: Verb): readonly string[] {
@@ -652,25 +649,19 @@ function derivePresentFormIII(verb: Verb): readonly string[] {
 
 function derivePresentFormIV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isInitialHamza = c1 === ALIF_HAMZA
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
 
-  // Geminate Form IV (e.g., يُحِبُّ) carries shadda on the doubled radical
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
+  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+
   if (c2 === c3) return [YEH, DAMMA, c1, KASRA, c2, SHADDA, DAMMA]
 
-  // Initial hamza + middle weak + final weak (e.g., أوي → يُؤْوِي)
-  if (isInitialHamza && isMiddleWeak && isFinalWeak)
-    return [YEH, DAMMA, HAMZA_ON_WAW, SUKOON, hollowLetterGlide(c2), KASRA, weakLetterGlide(c3)]
+  if (isMiddleWeak && isFinalWeak)
+    return [YEH, DAMMA, seatedC1, SUKOON, hollowLetterGlide(c2), KASRA, defectiveLetterGlide(c3)]
 
-  // Seat initial hamza on wāw after ḍamma (e.g., يُؤْمِنُ)
-  const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
-  const seatedC3 = c3 === ALIF_HAMZA ? HAMZA_ON_YEH : c3
+  if (isFinalWeak) return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, defectiveLetterGlide(c3)]
 
-  // For defective Form IV verbs, final و becomes yeh in present tense (e.g., يُمْسِي)
-  if (isFinalWeak) return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, c3 === WAW ? YEH : weakLetterGlide(c3)]
-
-  // Hollow Form IV present: kasra on c1, long ī from c2 (e.g., يُقِيمُ)
   if (isMiddleWeak) return [YEH, DAMMA, seatedC1, KASRA, YEH, seatedC3, DAMMA]
 
   return [YEH, DAMMA, seatedC1, SUKOON, c2, KASRA, seatedC3, DAMMA]

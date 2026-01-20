@@ -210,12 +210,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
 
         // Form V defective verbs preserve final weak letter in dual and plural forms
-        if (isFinalWeak) {
-          if (pronounId === '2mp') {
-            // Jussive uses damma before shadda, imperative uses fatḥa instead
-            const shaddaIndex = stem.lastIndexOf(SHADDA)
-            return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
-          }
+        if (isFinalWeak && pronounId === '2mp') {
+          // Jussive uses damma before shadda, imperative uses fatḥa instead
+          const shaddaIndex = stem.lastIndexOf(SHADDA)
+          return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
         }
 
         return stem

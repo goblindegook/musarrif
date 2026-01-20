@@ -38,10 +38,12 @@ function toConjugation(params: {
     '2d': [...stem, TEH, DAMMA, MEEM, FATHA, ALIF],
     '3md': [...base, ALIF],
     '3fd': [...base, TEH, FATHA, ALIF],
+    // TODO: Simplify construction and geminate noons afterwards
     '1p': finalRadical === NOON ? [...stem.slice(0, -2), NOON, SHADDA, FATHA, ALIF] : [...stem, NOON, FATHA, ALIF],
     '2mp': [...stem, TEH, DAMMA, MEEM, SUKOON],
     '2fp': [...stem, TEH, DAMMA, NOON, SHADDA, FATHA],
     '3mp': [...thirdMasculinePluralStem, DAMMA, WAW, ALIF],
+    // TODO: Simplify construction and geminate noon afterwards
     '3fp': finalRadical === NOON ? [...stem.slice(0, -2), NOON, SHADDA, FATHA] : [...stem, NOON, FATHA],
   }
   return mapRecord(
@@ -102,10 +104,19 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
     })
   }
 
+  if (isGeminate) {
+    return toConjugation({
+      base: [c1, DAMMA, c2, SHADDA, FATHA],
+      stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
+      thirdMasculinePluralStem: [c1, DAMMA, c2, SHADDA],
+      finalRadical: c3,
+    })
+  }
+
   return toConjugation({
-    base: isGeminate ? [c1, DAMMA, c2, SHADDA, FATHA] : [c1, DAMMA, c2, KASRA, c3, FATHA],
+    base: [c1, DAMMA, c2, KASRA, c3, FATHA],
     stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
-    thirdMasculinePluralStem: isGeminate ? [c1, DAMMA, c2, SHADDA] : [c1, DAMMA, c2, KASRA, c3],
+    thirdMasculinePluralStem: [c1, DAMMA, c2, KASRA, c3],
     finalRadical: c3,
   })
 }

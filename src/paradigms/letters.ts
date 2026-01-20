@@ -98,10 +98,6 @@ export function isGutturalLetter(value = ''): boolean {
   return isHamzatedLetter(value) || ['ه', 'ع', 'ح', 'غ', 'خ'].includes(value)
 }
 
-export function weakLetterGlide(letter: string): string {
-  return letter === WAW || letter === ALIF ? WAW : YEH
-}
-
 export function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
 }
