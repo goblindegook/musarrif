@@ -58,8 +58,7 @@ function nonDefectiveSuffixedBase(forms: NonDefectivePastBaseForms): readonly st
 }
 
 function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
-  if (forms.suffixedBase.at(-1) === SUKOON) return forms.suffixedBase.slice(0, -2)
-  return forms.suffixedBase.slice(0, -1)
+  return forms.suffixedBase.slice(0, -2)
 }
 
 function shouldCollapseHamzaDual(base: readonly string[]): boolean {
@@ -84,10 +83,7 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
   },
   '3ms': (forms) => forms.base,
   '3fs': (forms) => {
-    if ('glide' in forms) {
-      if (forms.suffixedBase.at(-1) === SUKOON) return [...defectiveStem(forms), TEH, SUKOON]
-      return [...forms.suffixedBase, FATHA, TEH, SUKOON]
-    }
+    if ('glide' in forms) return [...defectiveStem(forms), TEH, SUKOON]
     return [...forms.base, TEH, SUKOON]
   },
   '2d': (forms) => {
@@ -95,32 +91,21 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, FATHA, ALIF]
   },
   '3md': (forms, verb) => {
-    if ('glide' in forms) {
-      const glide = forms.suffixedBase.at(-1) === SUKOON ? forms.suffixedBase.at(-2) : forms.suffixedBase.at(-1)
-      return [...defectiveStem(forms), glide ?? '', FATHA, ALIF]
-    }
-    const lastRoot = verb.root.at(-1)
-    if (isHamzatedLetter(lastRoot) && shouldCollapseHamzaDual(forms.base))
-      return [...forms.base.slice(0, -2), ALIF_MADDA]
+    const [, , c3] = [...verb.root]
+    if ('glide' in forms) return [...defectiveStem(forms), forms.suffixedBase.at(-2) ?? '', FATHA, ALIF]
+    if (isHamzatedLetter(c3) && shouldCollapseHamzaDual(forms.base)) return [...forms.base.slice(0, -2), ALIF_MADDA]
     return [...forms.base, ALIF]
   },
   '3fd': (forms) => {
-    if ('glide' in forms) {
-      if (forms.suffixedBase.at(-1) === SUKOON) return [...defectiveStem(forms), TEH, FATHA, ALIF]
-      return [...forms.suffixedBase, FATHA, TEH, FATHA, ALIF]
-    }
+    if ('glide' in forms) return [...defectiveStem(forms), TEH, FATHA, ALIF]
     return [...forms.base, TEH, FATHA, ALIF]
   },
   '1p': (forms) => {
     if ('glide' in forms) return [...forms.suffixedBase, NOON, FATHA, ALIF]
     return [...nonDefectiveSuffixedBase(forms), NOON, FATHA, ALIF]
   },
-  '2mp': (forms, verb) => {
-    const [, c2] = [...verb.root]
-    const dropFinalSukoon = verb.form === 10 && isHamzatedLetter(c2)
-    if ('glide' in forms && dropFinalSukoon) return [...forms.suffixedBase, TEH, DAMMA, MEEM]
+  '2mp': (forms) => {
     if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, SUKOON]
-    if (dropFinalSukoon) return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, SUKOON]
   },
   '2fp': (forms) => {

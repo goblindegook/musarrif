@@ -34,7 +34,7 @@ import {
   WAW,
   YEH,
 } from '../letters'
-import { isFemininePlural, isMasculinePlural, isPlural, type PronounId } from '../pronouns'
+import { isDual, isFemininePlural, isMasculinePlural, isPlural, type PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
@@ -374,34 +374,32 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
-      const isDual = ['2d', '3md', '3fd'].includes(pronounId)
       const isSecondFeminineSingular = pronounId === '2fs'
-      const isMasculinePlural = pronounId === '2mp' || pronounId === '3mp'
-      const isFemininePlural = pronounId === '2fp' || pronounId === '3fp'
 
-      if (isDual) return collapseHamzaAlif(dropNoonEnding(word))
+      if (isDual(pronounId)) return collapseHamzaAlif(dropNoonEnding(word))
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural && last(dropNoonEnding(word)) === WAW)
+        if (isMasculinePlural(pronounId) && last(dropNoonEnding(word)) === WAW)
           return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
-        if (isMasculinePlural) return dropNoonEnding(word)
-        if (isFemininePlural || last(word) === ALIF_MAQSURA) return word
+        if (isMasculinePlural(pronounId)) return dropNoonEnding(word)
+        if (isFemininePlural(pronounId) || last(word) === ALIF_MAQSURA) return word
       }
 
-      if (isMasculinePlural && verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2))
+      if (isMasculinePlural(pronounId) && verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (isMasculinePlural && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
+      if (isMasculinePlural(pronounId) && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (isMasculinePlural && isInitialHamza && !isFinalWeak && isFormIPresentVowel(verb, 'i'))
+      if (isMasculinePlural(pronounId) && isInitialHamza && !isFinalWeak && isFormIPresentVowel(verb, 'i'))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (isMasculinePlural && !isMiddleWeak && isFormIPresentVowel(verb, 'a'))
+      if (isMasculinePlural(pronounId) && !isMiddleWeak && isFormIPresentVowel(verb, 'a'))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (isSecondFeminineSingular || isMasculinePlural) return replaceDiacriticBeforeFinalWaw(dropNoonEnding(word), c2)
+      if (isSecondFeminineSingular || isMasculinePlural(pronounId))
+        return replaceDiacriticBeforeFinalWaw(dropNoonEnding(word), c2)
 
       return replaceFinalDiacritic(word, FATHA)
     }),
@@ -423,7 +421,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
-      const isDual = ['2d', '3md', '3fd'].includes(pronounId)
       const isSecondFeminineSingular = pronounId === '2fs'
 
       // Form V defective verbs: preserve weak letter in jussive (unlike other defective verbs)
@@ -438,13 +435,13 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (last === WAW && (isSecondFeminineSingular || isPlural(pronounId)))
           return [...dropNoonEnding(word), SUKOON, ALIF]
 
-        if (isDual) return dropNoonEnding(word)
+        if (isDual(pronounId)) return dropNoonEnding(word)
 
         return dropFinalDefectiveGlide(word)
       }
 
       if (verb.form === 1 && isFormIFinalWeakPresent(verb, 'a')) {
-        if (isDual) return dropNoonEnding(word)
+        if (isDual(pronounId)) return dropNoonEnding(word)
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
         if (isMasculinePlural(pronounId) && last(dropNoonEnding(word)) === WAW)
           return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
@@ -471,7 +468,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       // Dual forms: Form I defective verbs keep the weak letter before alif; hollow verbs drop it
-      if (isDual) {
+      if (isDual(pronounId)) {
         if (verb.form === 1 && isFinalWeak) return dropNoonEnding(word)
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
