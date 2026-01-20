@@ -13,6 +13,7 @@ describe('passive past pattern', () => {
     ['وفد', 1, 'وُفِدَ'],
     ['ولي', 1, 'وُلِيَ'],
     ['وعي', 1, 'وُعِيَ'],
+    ['وطئ', 1, 'وُطِئَ'],
     ['وهن', 1, 'وُهِنَ'],
   ])('%s (Form %d) pattern is %s', (root, form, expected) => {
     expect(conjugatePassivePast(getVerb(root, form))['3ms']).toBe(expected)

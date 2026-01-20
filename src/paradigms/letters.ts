@@ -147,6 +147,13 @@ export function geminateDoubleLetters(word: readonly string[]): readonly string[
   return geminated
 }
 
+export function seatHamza(letter: string, vowel: string): string {
+  if (!isHamzatedLetter(letter)) return letter
+  if (vowel === FATHA) return ALIF_HAMZA
+  if (vowel === DAMMA) return HAMZA_ON_WAW
+  return HAMZA_ON_YEH
+}
+
 export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
   return SHORT_VOWEL_MAP[vowel]
 }

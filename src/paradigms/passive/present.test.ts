@@ -13,6 +13,7 @@ describe('passive present indicative pattern', () => {
     ['وفد', 1, 'يُوفَدُ'],
     ['ولي', 1, 'يُولَى'],
     ['وعي', 1, 'يُوعَى'],
+    ['وطئ', 1, 'يُوطَأُ'],
     ['وهن', 1, 'يُوهَنُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
@@ -246,6 +247,26 @@ describe('passive present indicative', () => {
         '2fp': 'تُرَيْنَ',
         '3mp': 'يُرَوْنَ',
         '3fp': 'يُرَيْنَ',
+      })
+    })
+  })
+
+  describe('hamzated final roots', () => {
+    test('وَطِئَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('وطئ', 1), 'indicative')).toEqual({
+        '1s': 'أُوطَأُ',
+        '2ms': 'تُوطَأُ',
+        '2fs': 'تُوطَئِينَ',
+        '3ms': 'يُوطَأُ',
+        '3fs': 'تُوطَأُ',
+        '2d': 'تُوطَآنِ',
+        '3md': 'يُوطَآنِ',
+        '3fd': 'تُوطَآنِ',
+        '1p': 'نُوطَأُ',
+        '2mp': 'تُوطَأُونَ',
+        '2fp': 'تُوطَأْنَ',
+        '3mp': 'يُوطَأُونَ',
+        '3fp': 'يُوطَأْنَ',
       })
     })
   })

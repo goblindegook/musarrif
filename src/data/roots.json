@@ -557,6 +557,7 @@
   { "root": "ذهب", "form": 5 },
   { "root": "ذهب", "form": 6 },
   { "root": "ذهب", "form": 10 },
+  { "root": "وطئ", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3l"] },
   { "root": "يمن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
   { "root": "يئس", "form": 1, "formPattern": "fa3ila-yaf3alu", "noPassiveVoice": true, "masdarPatterns": ["fa3l"] },
   { "root": "يبس", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },

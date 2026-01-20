@@ -101,6 +101,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (isInitialWeak && isMiddleHamza && !isFinalWeak) return [ALIF, KASRA, c1, ...stem.slice(2)]
 
+        if (isInitialWeak && isHamzatedLetter(c3)) return stem
+
         if (isInitialWeak && pastVowel === 'i' && !isFinalWeak && c2 !== c3) return [ALIF, KASRA, c1, ...stem.slice(2)]
 
         if (isInitialHamza && c2 === c3) {

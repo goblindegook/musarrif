@@ -27,6 +27,7 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
+  seatHamza,
   shortVowelFromPattern,
   TEH,
   type Vowel,
@@ -546,19 +547,10 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const patternVowel = resolveFormIPresentVowel(verb)
+  const shortVowel = shortVowelFromPattern(patternVowel)
 
   // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
-  if (c2 === c3) {
-    const shortVowel = shortVowelFromPattern(patternVowel)
-    const seatedC1 = isInitialHamza
-      ? shortVowel === DAMMA
-        ? HAMZA_ON_WAW
-        : shortVowel === KASRA
-          ? HAMZA_ON_YEH
-          : c1
-      : c1
-    return [YEH, FATHA, seatedC1, shortVowel, c2, SHADDA, DAMMA]
-  }
+  if (c2 === c3) return [YEH, FATHA, seatHamza(c1, shortVowel), shortVowel, c2, SHADDA, DAMMA]
 
   // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
   // Initial waw drops, final weak remains with short vowel on c2
@@ -571,20 +563,19 @@ function derivePresentFormI(verb: Verb): readonly string[] {
           ? HAMZA_ON_WAW
           : c2
       : c2
-    return [YEH, FATHA, seatedC2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
+    return [YEH, FATHA, seatedC2, shortVowel, defectiveLetterGlide(c3)]
   }
 
   // Doubly weak (middle weak + final weak): treat as defective, not hollow (e.g., رَوِيَ → يَرْوِي)
-  if (isMiddleWeak && isFinalWeak)
-    return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
+  if (isMiddleWeak && isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
 
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
-    return [YEH, FATHA, WAW, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+    return [YEH, FATHA, WAW, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
-  if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  if (c1 === YEH) return [YEH, FATHA, YEH, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
-  if (isInitialWeak) return [YEH, FATHA, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  if (isInitialWeak) return [YEH, FATHA, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains
@@ -593,11 +584,10 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   // Initial hamza + final weak (e.g., أتى → يأتي, أوي → يأوي)
   // Initial hamza is kept in triliteral verbs, final weak remains
-  if (isInitialHamza && isFinalWeak)
-    return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowelFromPattern(patternVowel), defectiveLetterGlide(c3)]
+  if (isInitialHamza && isFinalWeak) return [YEH, FATHA, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveLetterGlide(c3)]
 
   // Initial hamza only (e.g., أكل → يأكل)
-  if (isInitialHamza) return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  if (isInitialHamza) return [YEH, FATHA, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   // Middle hamza + final weak (e.g., رَأَى → يَرَى)
   if (isMiddleHamza && isFinalWeak) return [YEH, FATHA, c1, FATHA, ALIF_MAQSURA]
@@ -629,7 +619,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (isFinalWeak) return [YEH, FATHA, c1, SUKOON, c2, DAMMA, defectiveLetterGlide(c3)]
 
   // Regular strong verb
-  return [YEH, FATHA, c1, SUKOON, c2, shortVowelFromPattern(patternVowel), c3, DAMMA]
+  return [YEH, FATHA, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 }
 
 function derivePresentFormII(verb: Verb): readonly string[] {

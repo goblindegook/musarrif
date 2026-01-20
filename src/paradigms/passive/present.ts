@@ -3,6 +3,7 @@ import type { Mood } from '../active/present'
 import {
   ALIF,
   ALIF_HAMZA,
+  ALIF_MADDA,
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
@@ -13,6 +14,7 @@ import {
   NOON,
   SHADDA,
   SUKOON,
+  seatHamza,
   TEH,
   WAW,
   YEH,
@@ -91,6 +93,12 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
   jussive: JUSSIVE_SUFFIXES,
 }
 
+function collapseHamzaAlif(word: readonly string[]): readonly string[] {
+  const hamzaIndex = word.findIndex((char, index) => char === ALIF_HAMZA && word[index + 1] === FATHA)
+  if (hamzaIndex < 0 || word.at(hamzaIndex + 2) !== ALIF) return word
+  return [...word.slice(0, hamzaIndex), ALIF_MADDA, ...word.slice(hamzaIndex + 3)]
+}
+
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
@@ -100,6 +108,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   const isInitialWeak = isWeakLetter(c1) && !isMiddleWeak && !isFinalWeak
   const isGeminate = c2 === c3
   const suffixes = MOOD_SUFFIXES[mood]
+  const dualPronouns = new Set<PronounId>(['2d', '3md', '3fd'])
 
   if (isInitialHamza && !isMiddleWeak && !isFinalWeak) {
     return mapRecord(
@@ -355,7 +364,18 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
           if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
+            acc[pronounId] = [
+              PRESENT_PREFIXES[pronounId],
+              DAMMA,
+              seatedC1,
+              c2,
+              FATHA,
+              seatHamza(c3, KASRA),
+              KASRA,
+              YEH,
+              NOON,
+              FATHA,
+            ]
             return acc
           }
 
@@ -364,7 +384,16 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
             return acc
           }
 
-          acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, c3, ...suffixes[pronounId]]
+          const word = [
+            PRESENT_PREFIXES[pronounId],
+            DAMMA,
+            seatedC1,
+            c2,
+            FATHA,
+            seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA),
+            ...suffixes[pronounId],
+          ]
+          acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.has(pronounId) ? collapseHamzaAlif(word) : word
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
@@ -376,7 +405,9 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   return mapRecord(
     PRONOUN_IDS.reduce(
       (acc, pronounId) => {
-        acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, c1, SUKOON, c2, FATHA, c3, ...suffixes[pronounId]]
+        const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
+        const word = [PRESENT_PREFIXES[pronounId], DAMMA, c1, SUKOON, c2, FATHA, seatedC3, ...suffixes[pronounId]]
+        acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.has(pronounId) ? collapseHamzaAlif(word) : word
         return acc
       },
       {} as Record<PronounId, readonly string[]>,
