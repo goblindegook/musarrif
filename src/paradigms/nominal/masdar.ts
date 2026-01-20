@@ -257,26 +257,27 @@ function deriveMasdarFormX(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isInitialHamza = isHamzatedLetter(c1)
+  const isMiddleHamza = isHamzatedLetter(c2)
+  const isFinalHamza = isHamzatedLetter(c3)
+
+  const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
 
   // Assimilated defective Form X: initial weak drops, then c2 with fatḥa, then alif + hamza (e.g., وفي → اِسْتِفَاء)
-  if (isInitialWeak && isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, c2, FATHA, ALIF, HAMZA]
+  if (isInitialWeak && isFinalWeak) return [...prefix, c2, FATHA, ALIF, HAMZA]
 
   // If the first radical is hamza, seat it on yeh after kasra (e.g., اِسْتِئْجارٌ)
   const seatedC1 = isInitialHamza ? HAMZA_ON_YEH : c1
 
   // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتِئْواء)
   // Initial hamza is seated on yeh (ئ), then middle weak without vowel, then final weak becomes hamza
-  if (isMiddleWeak && isFinalWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, ALIF, HAMZA]
+  if (isMiddleWeak && isFinalWeak) return [...prefix, seatedC1, SUKOON, c2, ALIF, HAMZA]
 
   // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
-  if (isMiddleWeak) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
+  if (isMiddleWeak) return [...prefix, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-  if (isHamzatedLetter(c2)) return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, ALIF_MADDA, c3]
+  if (isMiddleHamza) return [...prefix, seatedC1, SUKOON, ALIF_MADDA, c3]
 
-  if (isHamzatedLetter(c3) || isFinalWeak)
-    return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
-
-  return [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA, seatedC1, SUKOON, c2, FATHA, ALIF, c3]
+  return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, isFinalHamza || isFinalWeak ? HAMZA : c3]
 }
 
 function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {

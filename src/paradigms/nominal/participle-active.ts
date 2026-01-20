@@ -47,61 +47,38 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
     switch (verb.form) {
       case 1: {
-        // Initial weak + middle hamza + final weak (e.g., وأى → وَاءٍ)
-        if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
+        // TODO: generic function to transform ALIF + FATHA + ALIF -> ALIF_MADDA
+        const prefix = isInitialHamza ? [ALIF_MADDA] : [c1, FATHA, ALIF]
 
-        // Initial weak + final weak (e.g., وقي → وَاقٍ, ولى → وَالٍ)
-        if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+        if (c2 === c3) return [...prefix, c2, SHADDA]
 
-        // Initial hamza + middle weak + final weak triliteral (e.g., أوي → آوٍ)
-        if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_MADDA, c2, TANWEEN_KASRA]
+        if (isMiddleHamza && isFinalWeak) return [...prefix, HAMZA, TANWEEN_KASRA]
 
-        // Initial hamza + final weak (e.g., أتى → آتٍ)
-        if (isInitialHamza && !isMiddleWeak && isFinalWeak) return [ALIF_MADDA, c2, TANWEEN_KASRA]
+        if (isFinalWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        // Geminate Form I active participle uses shadda on the doubled radical (e.g., لَمَّ → لَامّ)
-        if (c2 === c3) {
-          if (isInitialHamza) return [ALIF_MADDA, c2, SHADDA]
-          return [c1, FATHA, ALIF, c2, SHADDA]
-        }
+        if (isMiddleHamza) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
+
+        if (isMiddleWeak && isFinalHamza) return [...prefix, c3, TANWEEN_KASRA]
+
+        if (isFinalHamza) return [...prefix, c2, KASRA, HAMZA_ON_YEH]
 
         // Initial hamza + sound root coalesces into alif madda in faa3il (e.g., أكل → آكِل)
-        if (isInitialHamza && !isMiddleWeak && !isFinalWeak) return [ALIF_MADDA, c2, KASRA, c3]
+        // FIXME: This is the same as the default result, refactor out
+        if (isInitialWeak && !isMiddleWeak) return [...prefix, c2, KASRA, c3]
 
-        // Assimilated (initial weak) Form I keeps the glide (e.g., وصل → وَاصِل)
-        if (isInitialWeak && !isMiddleWeak && c2 !== ALIF_HAMZA && !isFinalWeak) return [c1, FATHA, ALIF, c2, KASRA, c3]
-
-        // Hamzated defective (middle hamza, final glide) seats hamza on the line with tanween kasra: رَاءٍ
-        if (c2 === ALIF_HAMZA && isFinalWeak) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
-
-        // Middle hamza in faa'il seats on yeh after kasra (e.g., سأل → سَائِل)
-        if (isMiddleHamza) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
-
-        if (verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH) return [c1, FATHA, ALIF, c2, KASRA, c3]
-
-        if (verb.formPattern === 'fa3ila-yaf3ilu' && isMiddleWeak && isFinalWeak)
-          return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+        // FIXME: This is the same as the default result, refactor out
+        if (verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH) return [...prefix, c2, KASRA, c3]
 
         // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
         // FIXME: This is the same as the default result, refactor out
         if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal'))
-          return [c1, FATHA, ALIF, c2, KASRA, c3]
+          return [...prefix, c2, KASRA, c3]
 
         if (hasPattern(verb, 'fa3ila-yaf3alu', 'fa3ila-yaf3ilu')) return [c1, FATHA, c2, KASRA, YEH, c3]
 
-        if (c3 === ALIF_HAMZA) return [c1, FATHA, ALIF, c2, KASRA, HAMZA_ON_YEH]
+        if (isMiddleWeak) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
 
-        // Hollow verb with final hamza (e.g., جيء → جَاءٍ)
-        if (isMiddleWeak && isHamzatedLetter(c3)) return [c1, FATHA, ALIF, c3, TANWEEN_KASRA]
-
-        if (isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
-        if (isMiddleWeak) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
-
-        // Defective final (e.g., وَفَى → وَافٍ). Drop weak c3 and place kasratayn on the preceding consonant.
-        if (isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
-        return [c1, FATHA, ALIF, c2, KASRA, c3]
+        return [...prefix, c2, KASRA, c3]
       }
 
       case 2: {
