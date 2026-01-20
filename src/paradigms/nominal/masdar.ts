@@ -65,8 +65,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       return [c1, DAMMA, c2, FATHA, ALIF, finalRadical]
 
     case 'fu3ul':
-      if (c3 === WAW) return [c1, DAMMA, c2, DAMMA, finalRadical, SHADDA]
-      return [c1, DAMMA, c2, DAMMA, finalRadical]
+      return [c1, DAMMA, c2, DAMMA, finalRadical, SHADDA]
 
     case 'fi3aal':
       if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
@@ -107,18 +106,11 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       if (isInitialHamza && !isMiddleWeak && isFinalWeak)
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
 
-      // Initial hamza + middle weak + final weak (e.g., أوي → إِوِيّ)
-      if (isInitialHamza && isMiddleWeak && isFinalWeak)
-        return [ALIF_HAMZA_BELOW, KASRA, WAW, KASRA, finalGlide, SHADDA]
-
       // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
       if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, finalGlide, FATHA, TEH_MARBUTA]
 
       // Hollow verb with final hamza (e.g., جيء → مَجِيء)
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
-
-      // Doubly weak (middle wāw, final yā') uses حَوْي for the masdar
-      if (c2 === WAW && c3 === YEH) return [c1, FATHA, c2, SUKOON, c3]
 
       if (isFinalWeak && !isMiddleWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
 
@@ -162,16 +154,13 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
   const isInitialHamza = isHamzatedLetter(c1)
   const isFinalHamza = isHamzatedLetter(c3)
 
-  // Initial hamza + middle weak + final weak (e.g., أوي → إِيوَاء)
-  // Pattern: initial hamza → ī, middle weak → wāw, final weak → hamza
-  // This must come before the general "Initial hamza" check
   if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
 
   // Initial weak + final weak (e.g., وفي → إِيفَاء): initial weak drops, becomes ī
   if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, HAMZA]
 
   // Initial hamza in Form IV coalesces to a long ī in the masdar: إِيمَان / إِيتَاء
-  if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, isFinalHamza ? HAMZA : c3]
+  if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, c3]
 
   // Hollow Form IV: إِفَالَة pattern (e.g., إِقَامَة، إِعَانَة، إِضَافَة)
   if (isMiddleWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
@@ -184,15 +173,8 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
 
 function deriveMasdarFormV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const isInitialHamza = isHamzatedLetter(c1)
 
-  // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوِّي)
-  // Keep final weak with kasra, shadda on middle weak
-  if (isInitialHamza && isMiddleWeak && isFinalWeak) return [TEH, FATHA, ALIF_HAMZA, FATHA, c2, SHADDA, KASRA, c3]
-
-  // Defective Form V drops the weak final and takes kasratayn on the doubled middle radical: تَغَنٍّ
   if (isFinalWeak) return [TEH, FATHA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
 
   return [TEH, FATHA, c1, FATHA, c2, SHADDA, DAMMA, c3]
@@ -201,31 +183,15 @@ function deriveMasdarFormV(verb: Verb): readonly string[] {
 function deriveMasdarFormVI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
   const isFinalHamza = isHamzatedLetter(c3)
-  const seatedC2WithDamma = isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2
 
-  // Hollow defective Form VI with alif c2 doesn't repeat the alif (e.g., تَعَانٍ)
-  if (c2 === ALIF && isFinalWeak) return [TEH, FATHA, c1, FATHA, ALIF, TANWEEN_KASRA]
-
-  // Hollow Form VI with final hamza (e.g., تَجَاءٍ)
   if (isMiddleWeak && isFinalHamza) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
 
-  // Defective Form VI drops the weak final and takes kasratayn: تَفَاعٍ (e.g., تَلَاقٍ)
-  if (isFinalWeak) return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
-
-  // Hollow Form VI with alif c2 drops the alif and takes tanween kasra pattern (e.g., تَعَانٍ)
-  if (c2 === ALIF) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
-
-  return [TEH, FATHA, c1, FATHA, ALIF, seatedC2WithDamma, DAMMA, c3]
+  return [TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
 }
 
 function deriveMasdarFormVII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-
-  // Form VII masdar: اِفْتِعَال → nun-prefix + kasra on c1, fatḥa on c2 (e.g., اِنْفِجَار)
-  // Defective Form VII drops the weak final and seats hamza: اِنْقِضَاء
-  if (isWeakLetter(c3)) return [ALIF, KASRA, NOON, SUKOON, c1, KASRA, c2, FATHA, ALIF, HAMZA]
 
   if (isWeakLetter(c2)) return [ALIF, KASRA, NOON, SUKOON, c1, KASRA, YEH, FATHA, ALIF, c3]
 
@@ -257,25 +223,15 @@ function deriveMasdarFormX(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
 
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
 
-  // Assimilated defective Form X: initial weak drops, then c2 with fatḥa, then alif + hamza (e.g., وفي → اِسْتِفَاء)
   if (isInitialWeak && isFinalWeak) return [...prefix, c2, FATHA, ALIF, HAMZA]
 
-  // If the first radical is hamza, seat it on yeh after kasra (e.g., اِسْتِئْجارٌ)
   const seatedC1 = isInitialHamza ? HAMZA_ON_YEH : c1
 
-  // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتِئْواء)
-  // Initial hamza is seated on yeh (ئ), then middle weak without vowel, then final weak becomes hamza
-  if (isMiddleWeak && isFinalWeak) return [...prefix, seatedC1, SUKOON, c2, ALIF, HAMZA]
-
-  // Hollow Form X masdar drops the glide and inserts alif with kasra on the ta: اِسْتِقَامَة، اِسْتِضَافَة
   if (isMiddleWeak) return [...prefix, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-
-  if (isMiddleHamza) return [...prefix, seatedC1, SUKOON, ALIF_MADDA, c3]
 
   return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, isFinalHamza || isFinalWeak ? HAMZA : c3]
 }
@@ -315,8 +271,6 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
       return deriveMasdarFormIX(verb)
     case 10:
       return deriveMasdarFormX(verb)
-    default:
-      return []
   }
 }
 

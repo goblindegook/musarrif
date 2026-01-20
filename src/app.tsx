@@ -252,7 +252,6 @@ export function App() {
                   label={t('meta.verbalNoun')}
                   labelLang={lang}
                   labelDir={dir}
-                  value={masdar?.length ? undefined : '—'}
                   speechText={masdar?.length ? masdar.join('، ') : null}
                   copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
                 >
@@ -267,7 +266,9 @@ export function App() {
                         </MasdarItem>
                       ))}
                     </MasdarList>
-                  ) : null}
+                  ) : (
+                    '—'
+                  )}
                 </Detail>
               </VerbMetaSection>
             </Panel>

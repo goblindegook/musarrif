@@ -111,10 +111,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 5: {
-        if (isFinalWeak)
-          return [MEEM, DAMMA, TEH, FATHA, isInitialHamza ? ALIF_HAMZA : c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
+        if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_KASRA, SHADDA]
 
-        return [MEEM, DAMMA, TEH, FATHA, isInitialHamza ? ALIF_HAMZA : c1, FATHA, c2, SHADDA, KASRA, c3]
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, c3]
       }
 
       case 6: {
@@ -146,19 +145,14 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 10: {
         const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA]
 
-        if (isInitialHamza && isMiddleWeak && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, TANWEEN_KASRA]
-
-        if (isMiddleWeak) return [...prefix, c1, KASRA, YEH, isFinalHamza ? HAMZA_ON_YEH : c3]
+        if (isMiddleWeak) return [...prefix, c1, KASRA, YEH, c3]
 
         if (isFinalWeak && isInitialWeak) return [...prefix, c1, SUKOON, c2, TANWEEN_KASRA]
 
         if (c2 === c3) return [...prefix, c1, KASRA, c2, SHADDA]
 
-        return [...prefix, c1, SUKOON, isMiddleHamza ? HAMZA_ON_YEH : c2, KASRA, isFinalHamza ? HAMZA_ON_YEH : c3]
+        return [...prefix, c1, SUKOON, c2, KASRA, isFinalHamza ? HAMZA_ON_YEH : c3]
       }
-
-      default:
-        return []
     }
   })()
 

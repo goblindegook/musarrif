@@ -186,16 +186,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
       }
 
       case 5: {
-        // Initial hamza + middle weak + final weak (e.g., أوي → تَأَوَّ)
-        // Handle this before processing jussive stem to avoid incorrect diacritic order
-        if (isInitialHamza && isMiddleWeak && isFinalWeak)
-          // Jussive: يَتَأَوَّ → Imperative: تَأَوَّ (remove يَ, add تَ)
-          // Pattern: تَ + أَ + وََّ (و + fatḥa + shadda)
-          return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
+        if (isInitialHamza && isMiddleWeak && isFinalWeak) return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
 
-        // Form V defective verbs preserve final weak letter in dual and plural forms
         if (isFinalWeak && pronounId === '2mp') {
-          // Jussive uses damma before shadda, imperative uses fatḥa instead
           const shaddaIndex = stem.lastIndexOf(SHADDA)
           return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
         }
