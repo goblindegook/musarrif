@@ -178,7 +178,7 @@ describe('masdar patterns', () => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
   })
 
-  test.each(['لمم', 'روي', 'شيد', 'يمن', 'يبس', 'وثق', 'وجز', 'هلل'])('%s has no masdar', (root) => {
+  test.each(['لمم', 'روي', 'شيد', 'يمن', 'يبس', 'وثق', 'وجز', 'هلل', 'لزم'])('%s has no masdar', (root) => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual([])
   })
 })
@@ -276,13 +276,3 @@ describe('doubly weak roots', () => {
     })
   })
 })
-
-describe.todo('hamzated initial defective roots')
-
-describe.todo('hamzated middle assimilated roots')
-
-describe.todo('hamzated middle defective roots')
-
-describe.todo('hamzated final assimilated roots')
-
-describe.todo('hamzated final hollow roots')
