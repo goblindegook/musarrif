@@ -605,6 +605,14 @@ describe('imperative', () => {
       })
     })
 
+    describe('ج-ب-ب', () => {
+      test('جَبَّ (Form I)', () => {
+        expect(conjugateImperative(getVerb('جبب', 1))).toMatchObject({
+          '2ms': 'جُبَّ',
+        })
+      })
+    })
+
     describe('ع-ن-ن', () => {
       test('عَنَّ (Form I)', () => {
         expect(conjugateImperative(getVerb('عنن', 1))).toMatchObject({
