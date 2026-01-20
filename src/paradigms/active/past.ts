@@ -256,31 +256,19 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
   // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
   if (c2 === c3) return buildForms([ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA], c3)
 
-  // Initial hamza + middle weak + final weak (e.g., أوي → آوَى)
-  if (c1 === ALIF_HAMZA && isWeakLetter(c2) && isWeakLetter(c3)) return buildForms([ALIF_MADDA, c2, FATHA, c3], c3)
-
   // Hollow Form IV past contracts to long ā (e.g., أَضَافَ)
-  // Hollow Form IV with final hamza (e.g., أَجَاءَ) - don't normalize, hamza is not a weak letter
-  if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-    const base = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3, FATHA]
-    return {
-      base,
-      suffixedBase: [...transformHollowWithFinalHamza(base), SUKOON],
-      pluralBase: [...transformHollowWithFinalHamza(base), DAMMA],
-    }
-  }
-
   if (isWeakLetter(c2) && !isWeakLetter(c3)) {
     const stem = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3]
     return {
       base: [...stem, FATHA],
-      suffixedBase: [...shortenHollowStem(stem, c2 === YEH ? KASRA : DAMMA), SUKOON],
-      pluralBase: [...stem, DAMMA],
+      suffixedBase: [...shortenHollowStem(stem), SUKOON],
+      pluralBase: [...shortenHollowStem(stem), DAMMA],
     }
   }
 
-  const prefix = c1 === ALIF_HAMZA ? [ALIF_MADDA] : [ALIF_HAMZA, FATHA, c1, SUKOON]
-  return buildForms([...prefix, c2, FATHA, c3, FATHA], c3)
+  if (c1 === ALIF_HAMZA) return buildForms([ALIF_MADDA, c2, FATHA, c3, FATHA], c3)
+
+  return buildForms([ALIF_HAMZA, FATHA, c1, SUKOON, c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormV(verb: Verb): PastBaseForms {
@@ -303,8 +291,8 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
     const base = [TEH, FATHA, c1, FATHA, ALIF, c3, FATHA]
     return {
       base,
-      suffixedBase: [...transformHollowWithFinalHamza(base), SUKOON],
-      pluralBase: [...transformHollowWithFinalHamza(base), DAMMA],
+      suffixedBase: [...shortenHollowStem(base), SUKOON],
+      pluralBase: [...shortenHollowStem(base), DAMMA],
     }
   }
 
@@ -384,25 +372,13 @@ function derivePastForms(verb: Verb): PastBaseForms {
   }
 }
 
-function transformHollowWithFinalHamza(base: readonly string[]): readonly string[] {
-  // Remove alif, change fatḥa before it to kasra, replace hamza with hamza on yeh
-  // Base is [أ, ج, َ, ا, ء] or [ت, ج, َ, ا, ء], we need [أ, ج, ِ, ئ] or [ت, ج, ِ, ئ]
-  return removeTrailingDiacritics(base)
+function shortenHollowStem(stem: readonly string[]): readonly string[] {
+  // Remove alif and change fatḥa before it to short vowel
+  return removeTrailingDiacritics(stem)
     .map((char, i, arr) => {
       if (char === ALIF) return null
       if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return KASRA
       if (char === HAMZA) return HAMZA_ON_YEH
-      return char
-    })
-    .filter((char): char is string => char != null)
-}
-
-function shortenHollowStem(stem: readonly string[], shortVowel: string): readonly string[] {
-  // Remove alif and change fatḥa before it to short vowel
-  return stem
-    .map((char, i, arr) => {
-      if (char === ALIF) return null
-      if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return shortVowel
       return char
     })
     .filter((char): char is string => char != null)
