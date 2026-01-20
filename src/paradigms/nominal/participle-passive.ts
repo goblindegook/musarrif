@@ -1,4 +1,4 @@
-import { resolveFormIPresentVowel } from '../form-i-vowels'
+import { hasPattern, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -53,7 +53,7 @@ export function derivePassiveParticiple(verb: Verb): string {
     switch (verb.form) {
       case 1: {
         const presentVowel = resolveFormIPresentVowel(verb)
-        const isConsonantalMiddleYeh = verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+        const isConsonantalMiddleYeh = hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH
 
         // Initial weak + middle hamza + final weak (e.g., وأى → مَوْئِيّ)
         if (isInitialWeak && isMiddleHamza && isFinalWeak)

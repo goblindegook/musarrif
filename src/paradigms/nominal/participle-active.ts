@@ -1,3 +1,4 @@
+import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -86,8 +87,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal'))
           return [c1, FATHA, ALIF, c2, KASRA, c3]
 
-        if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu')
-          return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (hasPattern(verb, 'fa3ila-yaf3alu', 'fa3ila-yaf3ilu')) return [c1, FATHA, c2, KASRA, YEH, c3]
 
         if (c3 === ALIF_HAMZA) return [c1, FATHA, ALIF, c2, KASRA, HAMZA_ON_YEH]
 

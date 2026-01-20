@@ -1,4 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
+import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_MAQSURA,
@@ -63,7 +64,7 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   const isMiddleHamza = isHamzatedLetter(c2)
   const isGeminate = c2 === c3
 
-  const isConsonantalMiddleYeh = verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+  const isConsonantalMiddleYeh = hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH
 
   if ((isInitialHamza || isMiddleWeak) && isFinalWeak) {
     return toConjugation({

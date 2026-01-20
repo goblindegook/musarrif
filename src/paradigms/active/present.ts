@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { isFormIPastVowel, isFormIPresentVowel, resolveFormIPresentVowel } from '../form-i-vowels'
+import { hasPattern, isFormIPastVowel, isFormIPresentVowel, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -602,7 +602,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   // Hollow verbs with middle ALIF use the long vowel from the pattern
   if (c2 === ALIF) return [YEH, FATHA, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
-  if (verb.form !== 1 || verb.formPattern !== 'fa3ila-yaf3alu') {
+  if (!hasPattern(verb, 'fa3ila-yaf3alu')) {
     // Hollow verbs with middle YEH use long YEH vowel
     if (c2 === YEH) return [YEH, FATHA, c1, ...longVowelFromPattern('i'), c3, DAMMA]
 

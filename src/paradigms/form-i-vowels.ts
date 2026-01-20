@@ -49,3 +49,7 @@ export function resolveFormIPresentVowel(verb: Verb): ShortVowel {
 export function isFormIPresentVowel(verb: Verb, vowel: ShortVowel): boolean {
   return verb.form === 1 && FORM_I_PRESENT_VOWELS[verb.formPattern] === vowel
 }
+
+export function hasPattern(verb: Verb, ...pattern: FormIPattern[]): boolean {
+  return verb.form === 1 && pattern.includes(verb.formPattern)
+}
