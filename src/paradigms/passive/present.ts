@@ -105,10 +105,17 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isMiddleHamza = isHamzatedLetter(c2)
-  const isInitialWeak = isWeakLetter(c1) && !isMiddleWeak && !isFinalWeak
+  const isInitialWeak = isWeakLetter(c1)
   const isGeminate = c2 === c3
-  const suffixes = MOOD_SUFFIXES[mood]
-  const dualPronouns = new Set<PronounId>(['2d', '3md', '3fd'])
+
+  const isConsonantalMiddleYeh = verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+
+  const suffixes =
+    isConsonantalMiddleYeh && mood === 'indicative'
+      ? { ...MOOD_SUFFIXES[mood], '2fs': [KASRA, YEH, NOON, FATHA] }
+      : MOOD_SUFFIXES[mood]
+
+  const dualPronouns = ['2d', '3md', '3fd']
 
   if (isInitialHamza && !isMiddleWeak && !isFinalWeak) {
     return mapRecord(
@@ -290,7 +297,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     )
   }
 
-  if (isMiddleWeak && !isFinalWeak && !isInitialHamza) {
+  if (isMiddleWeak && !isConsonantalMiddleYeh) {
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
@@ -393,7 +400,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
             seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA),
             ...suffixes[pronounId],
           ]
-          acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.has(pronounId) ? collapseHamzaAlif(word) : word
+          acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.includes(pronounId) ? collapseHamzaAlif(word) : word
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
@@ -407,7 +414,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
       (acc, pronounId) => {
         const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
         const word = [PRESENT_PREFIXES[pronounId], DAMMA, c1, SUKOON, c2, FATHA, seatedC3, ...suffixes[pronounId]]
-        acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.has(pronounId) ? collapseHamzaAlif(word) : word
+        acc[pronounId] = isHamzatedLetter(c3) && dualPronouns.includes(pronounId) ? collapseHamzaAlif(word) : word
         return acc
       },
       {} as Record<PronounId, readonly string[]>,

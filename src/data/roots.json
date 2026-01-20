@@ -78,6 +78,7 @@
   { "root": "جاب", "form": 4 },
   { "root": "جاد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "جبب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
+  { "root": "جيد", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "جرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "جرح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "جعل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },

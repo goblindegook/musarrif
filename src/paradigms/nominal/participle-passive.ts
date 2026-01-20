@@ -52,6 +52,9 @@ export function derivePassiveParticiple(verb: Verb): string {
 
     switch (verb.form) {
       case 1: {
+        const presentVowel = resolveFormIPresentVowel(verb)
+        const isConsonantalMiddleYeh = verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+
         // Initial weak + middle hamza + final weak (e.g., وأى → مَوْئِيّ)
         if (isInitialWeak && isMiddleHamza && isFinalWeak)
           return [MEEM, FATHA, c1, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
@@ -76,15 +79,15 @@ export function derivePassiveParticiple(verb: Verb): string {
         // Hollow verb passive participle: مَفْعُول pattern (e.g., مَقُول)
         // The glide (waw/yā'/alif) carries the vowel, so no sukoon is written before c3
         if (c2 === ALIF) {
-          const vowel = resolveFormIPresentVowel(verb)
-          return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]
+          return [MEEM, FATHA, c1, ...longVowelFromPattern(presentVowel), c3]
         }
-        if (isMiddleWeak) {
+
+        if (isMiddleWeak && !isConsonantalMiddleYeh) {
           const vowel = c2 === WAW ? 'u' : 'i'
           return [MEEM, FATHA, c1, ...longVowelFromPattern(vowel), c3]
         }
 
-        if ((c3 === ALIF || c3 === ALIF_MAQSURA) && resolveFormIPresentVowel(verb) === 'u')
+        if ((c3 === ALIF || c3 === ALIF_MAQSURA) && presentVowel === 'u')
           return [MEEM, FATHA, c1, SUKOON, c2, DAMMA, WAW, SHADDA]
 
         // Defective Form I: final yā’/maqṣūra takes kasra + yā’ shadda (e.g., سعى → مَسْعِيّ)

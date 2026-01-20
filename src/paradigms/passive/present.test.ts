@@ -16,6 +16,7 @@ describe('passive present indicative pattern', () => {
     ['وطئ', 1, 'يُوطَأُ'],
     ['وهن', 1, 'يُوهَنُ'],
     ['جبب', 1, 'يُجَبُّ'],
+    ['جيد', 1, 'يُجْيَدُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
@@ -188,6 +189,24 @@ describe('passive present indicative', () => {
         '2fp': 'تُشَدْنَ',
         '3mp': 'يُشَادُونَ',
         '3fp': 'يُشَدْنَ',
+      })
+    })
+
+    test('جَيِدَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('جيد', 1), 'indicative')).toEqual({
+        '1s': 'أُجْيَدُ',
+        '2ms': 'تُجْيَدُ',
+        '2fs': 'تُجْيَدِينَ',
+        '3ms': 'يُجْيَدُ',
+        '3fs': 'تُجْيَدُ',
+        '2d': 'تُجْيَدَانِ',
+        '3md': 'يُجْيَدَانِ',
+        '3fd': 'تُجْيَدَانِ',
+        '1p': 'نُجْيَدُ',
+        '2mp': 'تُجْيَدُونَ',
+        '2fp': 'تُجْيَدْنَ',
+        '3mp': 'يُجْيَدُونَ',
+        '3fp': 'يُجْيَدْنَ',
       })
     })
   })

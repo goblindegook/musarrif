@@ -16,6 +16,7 @@ describe('passive past pattern', () => {
     ['وطئ', 1, 'وُطِئَ'],
     ['وهن', 1, 'وُهِنَ'],
     ['جبب', 1, 'جُبَّ'],
+    ['جيد', 1, 'جُيِدَ'],
   ])('%s (Form %d) pattern is %s', (root, form, expected) => {
     expect(conjugatePassivePast(getVerb(root, form))['3ms']).toBe(expected)
   })
@@ -188,6 +189,24 @@ describe('passive past', () => {
         '2fp': 'شِدْتُنَّ',
         '3mp': 'شِيدُوا',
         '3fp': 'شِدْنَ',
+      })
+    })
+
+    test('جَيِدَ (Form I)', () => {
+      expect(conjugatePassivePast(getVerb('جيد', 1))).toEqual({
+        '1s': 'جُيِدْتُ',
+        '2ms': 'جُيِدْتَ',
+        '2fs': 'جُيِدْتِ',
+        '3ms': 'جُيِدَ',
+        '3fs': 'جُيِدَتْ',
+        '2d': 'جُيِدْتُمَا',
+        '3md': 'جُيِدَا',
+        '3fd': 'جُيِدَتَا',
+        '1p': 'جُيِدْنَا',
+        '2mp': 'جُيِدْتُمْ',
+        '2fp': 'جُيِدْتُنَّ',
+        '3mp': 'جُيِدُوا',
+        '3fp': 'جُيِدْنَ',
       })
     })
   })

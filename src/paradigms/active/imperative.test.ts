@@ -190,6 +190,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('ج-ي-د', () => {
+      test('جَيِدَ (Form I)', () => {
+        expect(conjugateImperative(getVerb('جيد', 1))).toMatchObject({
+          '2ms': 'اِجْيَدْ',
+          '2fs': 'اِجْيَدِي',
+          '2d': 'اِجْيَدَا',
+          '2mp': 'اِجْيَدُوا',
+          '2fp': 'اِجْيَدْنَ',
+        })
+      })
+    })
+
     describe('ز-و-ر', () => {
       test('زَارَ (Form I)', () => {
         expect(conjugateImperative(getVerb('زور', 1))).toMatchObject({
@@ -597,30 +609,6 @@ describe('imperative', () => {
       })
     })
 
-    describe('ه-ل-ل', () => {
-      test('هَلَّ (Form I)', () => {
-        expect(conjugateImperative(getVerb('هلل', 1))).toMatchObject({
-          '2ms': 'هُلَّ',
-        })
-      })
-    })
-
-    describe('ج-ب-ب', () => {
-      test('جَبَّ (Form I)', () => {
-        expect(conjugateImperative(getVerb('جبب', 1))).toMatchObject({
-          '2ms': 'جُبَّ',
-        })
-      })
-    })
-
-    describe('ع-ن-ن', () => {
-      test('عَنَّ (Form I)', () => {
-        expect(conjugateImperative(getVerb('عنن', 1))).toMatchObject({
-          '2ms': 'عِنَّ',
-        })
-      })
-    })
-
     describe('ح-م-م', () => {
       test('اِسْتَحَمَّ (Form X)', () => {
         expect(conjugateImperative(getVerb('حمم', 10))).toMatchObject({
@@ -841,6 +829,10 @@ describe('imperative', () => {
     ['بيت', 1, 'بِتْ'],
     ['صبح', 1, 'اِصْبَحْ'],
     ['صير', 1, 'صِرْ'],
+    ['جيد', 1, 'اِجْيَدْ'],
+    ['هلل', 1, 'هُلَّ'],
+    ['جبب', 1, 'جُبَّ'],
+    ['عنن', 1, 'عِنَّ'],
     ['حول', 5, 'تَحَوَّلْ'],
     ['صبح', 4, 'أَصْبِحْ'],
     ['جري', 1, 'اِجْرِ'],

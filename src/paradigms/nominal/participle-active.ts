@@ -76,19 +76,18 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         // Middle hamza in faa'il seats on yeh after kasra (e.g., سأل → سَائِل)
         if (isMiddleHamza) return [c1, FATHA, ALIF, HAMZA_ON_YEH, KASRA, c3]
 
-        if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu') {
-          if (isMiddleWeak && isFinalWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+        if (verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH) return [c1, FATHA, ALIF, c2, KASRA, c3]
 
-          // Form I fa3ila-yaf3alu/fa3ila‑yaf3ilu:
-          // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
-          if (
-            verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal')
-          ) {
-            return [c1, FATHA, ALIF, c2, KASRA, c3]
-          }
+        if (verb.formPattern === 'fa3ila-yaf3ilu' && isMiddleWeak && isFinalWeak)
+          return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
+        // fu3ool/fa3al/fa3aal -> faa3il, otherwise -> fa3eel
+        // FIXME: This is the same as the default result, refactor out
+        if (verb.masdarPatterns?.some((pattern) => pattern === 'fu3ool' || pattern === 'fa3al' || pattern === 'fa3aal'))
+          return [c1, FATHA, ALIF, c2, KASRA, c3]
+
+        if (verb.formPattern === 'fa3ila-yaf3alu' || verb.formPattern === 'fa3ila-yaf3ilu')
           return [c1, FATHA, c2, KASRA, YEH, c3]
-        }
 
         if (c3 === ALIF_HAMZA) return [c1, FATHA, ALIF, c2, KASRA, HAMZA_ON_YEH]
 

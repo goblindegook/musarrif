@@ -196,6 +196,8 @@ function deriveQuadriliteralPastForms(verb: Verb): NonDefectivePastBaseForms {
 function derivePastFormI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const pastVowel = resolveFormIPastVowel(verb)
+  const isMiddleWeak = isWeakLetter(c2)
+  const isConsonantalMiddleYeh = verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && verb.root[1] === YEH
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
@@ -222,7 +224,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Hollow Form I past contracts to a long /ā/ in the base (e.g., قامَ)
   // Hollow Form I with final hamza (e.g., جيء → جَاءَ)
-  if (isWeakLetter(c2) && isHamzatedLetter(c3))
+  if (isMiddleWeak && isHamzatedLetter(c3))
     return {
       base,
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
@@ -231,7 +233,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
   // pluralBase keeps the alif for 3mp (قَالُوا)
-  if (isWeakLetter(c2))
+  if (isMiddleWeak && !isConsonantalMiddleYeh)
     return {
       base,
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],

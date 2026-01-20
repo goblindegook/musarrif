@@ -63,6 +63,8 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   const isMiddleHamza = isHamzatedLetter(c2)
   const isGeminate = c2 === c3
 
+  const isConsonantalMiddleYeh = verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+
   if ((isInitialHamza || isMiddleWeak) && isFinalWeak) {
     return toConjugation({
       base: [c1, DAMMA, c2, KASRA, c3 === ALIF_MAQSURA ? YEH : c3, FATHA],
@@ -90,7 +92,7 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
     })
   }
 
-  if (isMiddleWeak && !isFinalWeak && !isInitialHamza) {
+  if (isMiddleWeak && !isConsonantalMiddleYeh) {
     return toConjugation({
       base: [c1, KASRA, YEH, c3, FATHA],
       stem: [c1, KASRA, c3, SUKOON],
