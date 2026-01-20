@@ -32,13 +32,6 @@ function restoreWeakLetterBeforeAlif(stem: readonly string[]): readonly string[]
   return [...stem.slice(0, alifIndex), YEH, FATHA, ...stem.slice(alifIndex)]
 }
 
-function dropSukoonBeforeFinalAlif(word: readonly string[]): readonly string[] {
-  const alifIndex = word.lastIndexOf(ALIF)
-  if (alifIndex > 1 && word.at(alifIndex - 1) === SUKOON && word.at(alifIndex - 2) === WAW)
-    return [...word.slice(0, alifIndex - 1), ...word.slice(alifIndex)]
-  return word
-}
-
 function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly string[] {
   const alifIndex = word.lastIndexOf(ALIF)
   if (alifIndex <= 0) return word
@@ -119,18 +112,11 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         if (isInitialWeak && isFinalWeak) {
           const alifIndex = stem.indexOf(ALIF)
 
-          if (alifIndex > 1 && stem.at(alifIndex - 1) === YEH && stem.at(alifIndex - 2) === YEH)
-            return [...stem.slice(0, alifIndex - 1), ...stem.slice(alifIndex)]
-
-          if (alifIndex > 0 && stem.at(alifIndex - 1) === YEH) return stem
-
           if (alifIndex >= 0 && stem[alifIndex - 1] === FATHA)
             return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
         }
 
         if (isInitialWeak && c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(2)]
-
-        if (isInitialWeak && pastVowel === 'u' && presentVowel !== 'u' && stem.at(0) !== WAW) return stem
 
         if (isInitialWeak && presentVowel === 'u') {
           if (stem.at(0) === YEH || stem.at(0) === WAW) return [ALIF, DAMMA, WAW, ...stem.slice(2)]
@@ -140,8 +126,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         if (isInitialWeak) return stem
 
         if (isInitialHamza && isFinalWeak && stem.at(0) === ALIF_HAMZA) return [ALIF, HAMZA_ON_YEH, ...stem.slice(1)]
-
-        if (isInitialHamza && isFinalWeak) return [ALIF, HAMZA_ON_YEH, ...stem]
 
         if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i')) return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
@@ -168,7 +152,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
         // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
 
-        if (isHamzatedLetter(c3) && pronounId === '2mp') return dropSukoonBeforeFinalAlif([ALIF, KASRA, ...stem])
+        if (isHamzatedLetter(c3) && pronounId === '2mp') return [ALIF, KASRA, ...stem]
 
         if (stem.at(1) === SUKOON) return [ALIF, presentVowel === 'u' ? DAMMA : KASRA, ...stem]
 
@@ -232,9 +216,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         // Form X defective verbs: restore final weak letter in dual forms
         if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
-
-        if (pronounId === '2mp' && isHamzatedLetter(c2) && stem.at(-2) === SUKOON)
-          return [ALIF, KASRA, ...stem.slice(0, -2), stem[stem.length - 1]]
 
         return [ALIF, KASRA, ...stem]
       }

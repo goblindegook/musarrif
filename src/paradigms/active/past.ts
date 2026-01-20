@@ -63,7 +63,6 @@ function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
 
 function shouldCollapseHamzaDual(base: readonly string[]): boolean {
   const hamzaIndex = base.findLastIndex((char) => isHamzatedLetter(char))
-  if (hamzaIndex < 0) return false
   const previousLetterIndex = findLastLetterIndex(base, hamzaIndex)
   return base.at(previousLetterIndex) !== ALIF
 }

@@ -55,8 +55,8 @@ function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'u'): boolean {
 
 function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly string[] {
   const [c1, c2] = [...verb.root]
-  if (isHamzatedLetter(c2)) return [prefix, FATHA, c1, FATHA]
-  return [prefix, FATHA, c1, SUKOON, c2, FATHA]
+  if (isHamzatedLetter(c2)) return [...prefix, FATHA, c1, FATHA]
+  return [...prefix, FATHA, c1, SUKOON, c2, FATHA]
 }
 
 function replaceVowelBeforeShadda(word: readonly string[], vowel: Vowel): readonly string[] {
@@ -335,7 +335,6 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
 }
 
 function replaceDammaBeforeWawAlif(word: readonly string[]): readonly string[] {
-  if (last(word) !== WAW) return word
   const stemBeforeWaw = word.slice(0, word.length - 1)
   return [...replaceFinalDiacritic(stemBeforeWaw, DAMMA), WAW, ALIF]
 }
@@ -364,12 +363,8 @@ function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const letters = Array.from(verb.root)
-  const [c1, c2, c3] = letters
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleWeak =
-    isWeakLetter(c2) && !(verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && verb.root[1] === YEH)
-  const isFinalWeak = isWeakLetter(c3)
+  const [c1, c2, c3] = Array.from(verb.root)
+  const isMiddleWeak = isWeakLetter(c2)
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
@@ -380,9 +375,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId) && last(dropNoonEnding(word)) === WAW)
-          return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
-        if (isMasculinePlural(pronounId)) return dropNoonEnding(word)
+        if (isMasculinePlural(pronounId)) return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
         if (isFemininePlural(pronounId) || last(word) === ALIF_MAQSURA) return word
       }
 
@@ -390,9 +383,6 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isMasculinePlural(pronounId) && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
-        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
-      if (isMasculinePlural(pronounId) && isInitialHamza && !isFinalWeak && isFormIPresentVowel(verb, 'i'))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isMasculinePlural(pronounId) && !isMiddleWeak && isFormIPresentVowel(verb, 'a'))
@@ -443,9 +433,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 1 && isFormIFinalWeakPresent(verb, 'a')) {
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId) && last(dropNoonEnding(word)) === WAW)
-          return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
-        if (isMasculinePlural(pronounId)) return dropNoonEnding(word)
+        if (isMasculinePlural(pronounId)) return [...replaceFinalDiacritic(dropNoonEnding(word), SUKOON), ALIF]
         if (isFemininePlural(pronounId)) return word
       }
 
@@ -575,27 +563,16 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
     return [...prefix, WAW, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
-  // Initial weak (assimilated) verbs drop the leading wāw in the present (e.g., وصل → يَصِلُ)
   if (c1 === YEH) return [...prefix, YEH, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
   if (isInitialWeak) return [...prefix, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
-  // Initial hamza + middle weak + final weak (e.g., أتى → يأتي, أوي → يأوي)
-  // Initial hamza is kept in triliteral verbs, middle weak becomes long vowel, final weak remains
-  if (isInitialHamza && isMiddleWeak && isFinalWeak)
-    return [...prefix, ALIF_HAMZA, SUKOON, hollowGlide(c2), KASRA, defectiveGlide(c3)]
-
-  // Initial hamza + final weak (e.g., أتى → يأتي, أوي → يأوي)
-  // Initial hamza is kept in triliteral verbs, final weak remains
   if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveGlide(c3)]
 
-  // Initial hamza only (e.g., أكل → يأكل)
   if (isInitialHamza) return [...prefix, c1, SUKOON, c2, shortVowel, seatHamza(c3, shortVowel), DAMMA]
 
-  // Middle hamza + final weak (e.g., رَأَى → يَرَى)
   if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
-  // Hollow verbs with middle ALIF use the long vowel from the pattern
   if (c2 === ALIF) return [...prefix, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
   if (!hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c1, ...longVowelFromPattern('i'), c3, DAMMA]
@@ -605,7 +582,6 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   if (patternVowel === 'a' && c3 === WAW) return [...prefix, c1, SUKOON, c2, DAMMA, defectiveGlide(c3)]
 
-  // Final-weak Form I with present vowel 'a' takes alif maqsura in 3ms (e.g., بَقِيَ → يَبْقَى)
   if (patternVowel === 'a' && (c3 === YEH || c3 === ALIF_MAQSURA))
     return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
@@ -666,12 +642,8 @@ function derivePresentFormVII(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
 
-  // Defective Form VII verbs don't have final ḍamma
-  if (isMiddleWeak && isFinalWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3]
-
   if (isMiddleWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA]
 
-  // Defective Form VII verbs don't have final ḍamma
   if (isFinalWeak)
     return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, c3 === YEH || c3 === ALIF_MAQSURA ? KASRA : DAMMA, c3]
 
