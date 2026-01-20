@@ -177,7 +177,7 @@ describe('masdar patterns', () => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual(expected)
   })
 
-  test.each(['لمم', 'روي', 'شيد', 'يمن', 'يبس', 'وثق', 'وجز'])('%s has no masdar', (root) => {
+  test.each(['لمم', 'روي', 'شيد', 'يمن', 'يبس', 'وثق', 'وجز', 'هلل'])('%s has no masdar', (root) => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual([])
   })
 })
