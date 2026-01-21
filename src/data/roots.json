@@ -477,6 +477,13 @@
   { "root": "مرض", "form": 10 },
   { "root": "مسك", "form": 4 },
   { "root": "مسي", "form": 4 },
+  {
+    "root": "ميل",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3al"],
+    "noPassiveVoice": true
+  },
   { "root": "مشط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "طلب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
   { "root": "طلب", "form": 5 },
