@@ -79,6 +79,12 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive pattern for عَامَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('عوم', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَعُمْ',
+    })
+  })
+
   test('jussive conjugation for وَضَعَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqual({
       '1s': 'أَضَعْ',

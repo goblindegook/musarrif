@@ -29,6 +29,12 @@ describe('imperative', () => {
     })
   })
 
+  test('imperative pattern for عَامَ (Form I)', () => {
+    expect(conjugateImperative(getVerb('عوم', 1))).toMatchObject({
+      '2ms': 'عُمْ',
+    })
+  })
+
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {

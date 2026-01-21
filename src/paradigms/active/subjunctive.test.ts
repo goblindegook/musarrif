@@ -42,6 +42,12 @@ describe('active present subjunctive', () => {
     })
   })
 
+  test('subjunctive pattern for عَامَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('عوم', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يَعُومَ',
+    })
+  })
+
   test('subjunctive pattern for قَالَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('قول', 1), 'subjunctive')).toMatchObject({
       '3ms': 'يَقُولَ',
