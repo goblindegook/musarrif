@@ -53,7 +53,7 @@ export function derivePassiveParticiple(verb: Verb): string {
     switch (verb.form) {
       case 1: {
         const presentVowel = resolveFormIPresentVowel(verb)
-        const isConsonantalMiddleYeh = hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH
+        const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
         const prefix = [MEEM, FATHA, c1]
 
         if (isMiddleHamza && isFinalWeak) return [...prefix, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
@@ -70,7 +70,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (c2 === ALIF) return [...prefix, ...longVowelFromPattern(presentVowel), c3]
 
-        if (isMiddleWeak && !isConsonantalMiddleYeh)
+        if (isMiddleWeak && !isConsonantalMiddleWeak)
           return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), c3]
 
         if ((c3 === ALIF || c3 === ALIF_MAQSURA) && presentVowel === 'u')

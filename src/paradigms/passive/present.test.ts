@@ -17,6 +17,7 @@ describe('passive present indicative pattern', () => {
     ['وهن', 1, 'يُوهَنُ'],
     ['جبب', 1, 'يُجَبُّ'],
     ['جيد', 1, 'يُجْيَدُ'],
+    ['عوز', 1, 'يُعْوَزُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
@@ -120,6 +121,24 @@ describe('passive present indicative', () => {
   })
 
   describe('hollow roots', () => {
+    test('عَوِزَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'indicative')).toEqual({
+        '1s': 'أُعْوَزُ',
+        '2ms': 'تُعْوَزُ',
+        '2fs': 'تُعْوَزِينَ',
+        '3ms': 'يُعْوَزُ',
+        '3fs': 'تُعْوَزُ',
+        '2d': 'تُعْوَزَانِ',
+        '3md': 'يُعْوَزَانِ',
+        '3fd': 'تُعْوَزَانِ',
+        '1p': 'نُعْوَزُ',
+        '2mp': 'تُعْوَزُونَ',
+        '2fp': 'تُعْوَزْنَ',
+        '3mp': 'يُعْوَزُونَ',
+        '3fp': 'يُعْوَزْنَ',
+      })
+    })
+
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'indicative')).toEqual({
         '1s': 'أُلَامُ',
@@ -351,6 +370,12 @@ describe('passive present indicative', () => {
 })
 
 describe('passive present subjunctive', () => {
+  test('subjunctive pattern for عَوِزَ (Form I)', () => {
+    expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يُعْوَزَ',
+    })
+  })
+
   describe('strong roots', () => {
     test('كَتَبَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'subjunctive')).toEqual({
@@ -448,6 +473,24 @@ describe('passive present subjunctive', () => {
   })
 
   describe('hollow roots', () => {
+    test('عَوِزَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toEqual({
+        '1s': 'أُعْوَزَ',
+        '2ms': 'تُعْوَزَ',
+        '2fs': 'تُعْوَزِي',
+        '3ms': 'يُعْوَزَ',
+        '3fs': 'تُعْوَزَ',
+        '2d': 'تُعْوَزَا',
+        '3md': 'يُعْوَزَا',
+        '3fd': 'تُعْوَزَا',
+        '1p': 'نُعْوَزَ',
+        '2mp': 'تُعْوَزُوا',
+        '2fp': 'تُعْوَزْنَ',
+        '3mp': 'يُعْوَزُوا',
+        '3fp': 'يُعْوَزْنَ',
+      })
+    })
+
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'subjunctive')).toEqual({
         '1s': 'أُلَامَ',
@@ -623,6 +666,12 @@ describe('passive present subjunctive', () => {
 })
 
 describe('passive present jussive', () => {
+  test('jussive pattern for عَوِزَ (Form I)', () => {
+    expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toMatchObject({
+      '3ms': 'يُعْوَزْ',
+    })
+  })
+
   describe('strong roots', () => {
     test('كَتَبَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'jussive')).toEqual({
@@ -720,6 +769,24 @@ describe('passive present jussive', () => {
   })
 
   describe('hollow roots', () => {
+    test('عَوِزَ (Form I)', () => {
+      expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toEqual({
+        '1s': 'أُعْوَزْ',
+        '2ms': 'تُعْوَزْ',
+        '2fs': 'تُعْوَزِي',
+        '3ms': 'يُعْوَزْ',
+        '3fs': 'تُعْوَزْ',
+        '2d': 'تُعْوَزَا',
+        '3md': 'يُعْوَزَا',
+        '3fd': 'تُعْوَزَا',
+        '1p': 'نُعْوَزْ',
+        '2mp': 'تُعْوَزُوا',
+        '2fp': 'تُعْوَزْنَ',
+        '3mp': 'يُعْوَزُوا',
+        '3fp': 'يُعْوَزْنَ',
+      })
+    })
+
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'jussive')).toEqual({
         '1s': 'أُلَمْ',

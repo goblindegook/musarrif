@@ -169,7 +169,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const pastVowel = resolveFormIPastVowel(verb)
   const isMiddleWeak = isWeakLetter(c2)
-  const isConsonantalMiddleYeh = hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH
+  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
@@ -204,7 +204,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
   // pluralBase keeps the alif for 3mp (قَالُوا)
-  if (isMiddleWeak && !isConsonantalMiddleYeh)
+  if (isMiddleWeak && !isConsonantalMiddleWeak)
     return {
       base,
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],

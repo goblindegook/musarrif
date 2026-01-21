@@ -36,6 +36,12 @@ describe('active present subjunctive', () => {
     })
   })
 
+  test('subjunctive pattern for عَوِزَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('عوز', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يَعْوَزَ',
+    })
+  })
+
   test('subjunctive conjugation for وَضَعَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('وضع', 1), 'subjunctive')).toEqual({
       '1s': 'أَضَعَ',

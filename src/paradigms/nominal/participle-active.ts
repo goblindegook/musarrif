@@ -18,6 +18,7 @@ import {
   SUKOON,
   TANWEEN_KASRA,
   TEH,
+  WAW,
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
@@ -62,10 +63,13 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
           return [...prefix, c2, KASRA, c3]
 
-        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu') && c2 !== YEH) return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu') && c2 === WAW) return [...prefix, c2, KASRA, c3]
 
         // FIXME: This is the same as the default result, refactor out?
-        if (hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c2, KASRA, c3]
+        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c2, KASRA, c3]
+
+        // FIXME: This is the same as the default result, refactor out?
+        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu')) return [c1, FATHA, c2, KASRA, YEH, c3]
 
         if (isMiddleWeak) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
 

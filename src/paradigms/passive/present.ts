@@ -1,5 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import type { Mood } from '../active/present'
+import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -102,10 +103,10 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   const isInitialWeak = isWeakLetter(c1)
   const isGeminate = c2 === c3
 
-  const isConsonantalMiddleYeh = verb.form === 1 && verb.formPattern === 'fa3ila-yaf3alu' && c2 === YEH
+  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
   const suffixes =
-    isConsonantalMiddleYeh && mood === 'indicative'
+    isConsonantalMiddleWeak && mood === 'indicative'
       ? { ...MOOD_SUFFIXES[mood], '2fs': [KASRA, YEH, NOON, FATHA] }
       : MOOD_SUFFIXES[mood]
 
@@ -289,7 +290,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     )
   }
 
-  if (isMiddleWeak && !isConsonantalMiddleYeh) {
+  if (isMiddleWeak && !isConsonantalMiddleWeak) {
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {

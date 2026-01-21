@@ -17,6 +17,7 @@ describe('passive past pattern', () => {
     ['وهن', 1, 'وُهِنَ'],
     ['جبب', 1, 'جُبَّ'],
     ['جيد', 1, 'جُيِدَ'],
+    ['عوز', 1, 'عُوِزَ'],
   ])('%s (Form %d) pattern is %s', (root, form, expected) => {
     expect(conjugatePassivePast(getVerb(root, form))['3ms']).toBe(expected)
   })
@@ -120,6 +121,24 @@ describe('passive past', () => {
   })
 
   describe('hollow roots', () => {
+    test('عَوِزَ (Form I)', () => {
+      expect(conjugatePassivePast(getVerb('عوز', 1))).toEqual({
+        '1s': 'عُوِزْتُ',
+        '2ms': 'عُوِزْتَ',
+        '2fs': 'عُوِزْتِ',
+        '3ms': 'عُوِزَ',
+        '3fs': 'عُوِزَتْ',
+        '2d': 'عُوِزْتُمَا',
+        '3md': 'عُوِزَا',
+        '3fd': 'عُوِزَتَا',
+        '1p': 'عُوِزْنَا',
+        '2mp': 'عُوِزْتُمْ',
+        '2fp': 'عُوِزْتُنَّ',
+        '3mp': 'عُوِزُوا',
+        '3fp': 'عُوِزْنَ',
+      })
+    })
+
     test('لَامَ (Form I)', () => {
       expect(conjugatePassivePast(getVerb('لوم', 1))).toEqual({
         '1s': 'لِمْتُ',

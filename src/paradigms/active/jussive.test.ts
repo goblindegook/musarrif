@@ -55,6 +55,30 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive pattern for عَوِزَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَعْوَزْ',
+    })
+  })
+
+  test('jussive conjugation for عَوِزَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toEqual({
+      '1s': 'أَعْوَزْ',
+      '2ms': 'تَعْوَزْ',
+      '2fs': 'تَعْوَزِي',
+      '3ms': 'يَعْوَزْ',
+      '3fs': 'تَعْوَزْ',
+      '2d': 'تَعْوَزَا',
+      '3md': 'يَعْوَزَا',
+      '3fd': 'تَعْوَزَا',
+      '1p': 'نَعْوَزْ',
+      '2mp': 'تَعْوَزُوا',
+      '2fp': 'تَعْوَزْنَ',
+      '3mp': 'يَعْوَزُوا',
+      '3fp': 'يَعْوَزْنَ',
+    })
+  })
+
   test('jussive conjugation for وَضَعَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqual({
       '1s': 'أَضَعْ',

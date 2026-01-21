@@ -19,6 +19,16 @@ describe('imperative', () => {
     expect(conjugateImperative(getVerb(root, form))['2ms']).toBe(expected2ms)
   })
 
+  test('imperative conjugation for عَوِزَ (Form I)', () => {
+    expect(conjugateImperative(getVerb('عوز', 1))).toMatchObject({
+      '2ms': 'اِعْوَزْ',
+      '2fs': 'اِعْوَزِي',
+      '2d': 'اِعْوَزَا',
+      '2mp': 'اِعْوَزُوا',
+      '2fp': 'اِعْوَزْنَ',
+    })
+  })
+
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {
