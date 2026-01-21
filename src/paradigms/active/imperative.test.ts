@@ -41,6 +41,22 @@ describe('imperative', () => {
     })
   })
 
+  test('imperative pattern for قَرَّ (Form I)', () => {
+    expect(conjugateImperative(getVerb('قرر', 1))).toMatchObject({
+      '2ms': 'قَرَّ',
+    })
+  })
+
+  test('imperative conjugation for قَرَّ (Form I)', () => {
+    expect(conjugateImperative(getVerb('قرر', 1))).toMatchObject({
+      '2ms': 'قَرَّ',
+      '2fs': 'قَرِّي',
+      '2d': 'قَرَّا',
+      '2mp': 'قَرُّوْا',
+      '2fp': 'اِقْرَرْنَ',
+    })
+  })
+
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {

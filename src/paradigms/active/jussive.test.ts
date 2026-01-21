@@ -91,6 +91,30 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive pattern for قَرَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَقَرَّ',
+    })
+  })
+
+  test('jussive conjugation for قَرَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toEqual({
+      '1s': 'أَقَرَّ',
+      '2ms': 'تَقَرَّ',
+      '2fs': 'تَقَرِّي',
+      '3ms': 'يَقَرَّ',
+      '3fs': 'تَقَرَّ',
+      '2d': 'تَقَرَّا',
+      '3md': 'يَقَرَّا',
+      '3fd': 'تَقَرَّا',
+      '1p': 'نَقَرَّ',
+      '2mp': 'تَقَرُّوْا',
+      '2fp': 'تَقْرَرْنَ',
+      '3mp': 'يَقَرُّوْا',
+      '3fp': 'يَقْرَرْنَ',
+    })
+  })
+
   test('jussive conjugation for وَضَعَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqual({
       '1s': 'أَضَعْ',

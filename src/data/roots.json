@@ -409,7 +409,7 @@
   { "root": "قرأ", "form": 2 },
   { "root": "قرأ", "form": 3 },
   { "root": "قرأ", "form": 10 },
-  { "root": "قرر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
+  { "root": "قرر", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3l"], "noPassiveVoice": true },
   { "root": "قرر", "form": 4 },
   { "root": "قرر", "form": 10 },
   { "root": "قرح", "form": 8 },

@@ -54,6 +54,30 @@ describe('active present subjunctive', () => {
     })
   })
 
+  test('subjunctive pattern for قَرَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('قرر', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يَقَرَّ',
+    })
+  })
+
+  test('subjunctive conjugation for قَرَّ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('قرر', 1), 'subjunctive')).toEqual({
+      '1s': 'أَقَرَّ',
+      '2ms': 'تَقَرَّ',
+      '2fs': 'تَقَرِّي',
+      '3ms': 'يَقَرَّ',
+      '3fs': 'تَقَرَّ',
+      '2d': 'تَقَرَّا',
+      '3md': 'يَقَرَّا',
+      '3fd': 'تَقَرَّا',
+      '1p': 'نَقَرَّ',
+      '2mp': 'تَقَرُّوا',
+      '2fp': 'تَقْرَرْنَ',
+      '3mp': 'يَقَرُّوا',
+      '3fp': 'يَقْرَرْنَ',
+    })
+  })
+
   test('subjunctive pattern for قَالَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('قول', 1), 'subjunctive')).toMatchObject({
       '3ms': 'يَقُولَ',
