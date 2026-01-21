@@ -4,7 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MAQSURA,
-  alifMaddaNormalization,
+  normalizeAlifMadda,
   DAMMA,
   FATHA,
   geminateDoubleLetters,
@@ -84,7 +84,7 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
   },
   '3md': (forms) => {
     if ('defectiveGlide' in forms) return [...defectiveStem(forms), forms.suffixedBase.at(-2) ?? '', FATHA, ALIF]
-    return alifMaddaNormalization([...forms.base, ALIF])
+    return normalizeAlifMadda([...forms.base, ALIF])
   },
   '3fd': (forms) => {
     if ('defectiveGlide' in forms) return [...defectiveStem(forms), TEH, FATHA, ALIF]
@@ -239,7 +239,7 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
       pluralBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), DAMMA],
     }
 
-  return buildForms(alifMaddaNormalization([...prefix, SUKOON, c2, FATHA, c3, FATHA]), c3)
+  return buildForms(normalizeAlifMadda([...prefix, SUKOON, c2, FATHA, c3, FATHA]), c3)
 }
 
 function derivePastFormV(verb: Verb): PastBaseForms {

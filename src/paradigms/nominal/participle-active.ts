@@ -2,7 +2,7 @@ import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
-  alifMaddaNormalization,
+  normalizeAlifMadda,
   DAMMA,
   FATHA,
   HAMZA,
@@ -46,7 +46,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
     switch (verb.form) {
       case 1: {
-        const prefix = alifMaddaNormalization([c1, FATHA, ALIF])
+        const prefix = normalizeAlifMadda([c1, FATHA, ALIF])
 
         if (c2 === c3) return [...prefix, c2, SHADDA]
 

@@ -4,7 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MAQSURA,
-  alifMaddaNormalization,
+  normalizeAlifMadda,
   DAMMA,
   FATHA,
   HAMZA_ON_WAW,
@@ -383,7 +383,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
             return acc
           }
 
-          acc[pronounId] = alifMaddaNormalization([
+          acc[pronounId] = normalizeAlifMadda([
             PRESENT_PREFIXES[pronounId],
             DAMMA,
             seatedC1,
@@ -404,7 +404,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     PRONOUN_IDS.reduce(
       (acc, pronounId) => {
         const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-        acc[pronounId] = alifMaddaNormalization([
+        acc[pronounId] = normalizeAlifMadda([
           PRESENT_PREFIXES[pronounId],
           DAMMA,
           c1,
