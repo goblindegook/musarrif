@@ -35,6 +35,12 @@ describe('imperative', () => {
     })
   })
 
+  test('imperative pattern for حَالَ (Form I)', () => {
+    expect(conjugateImperative(getVerb('حول', 1))).toMatchObject({
+      '2ms': 'حُلْ',
+    })
+  })
+
   describe('regular verbs', () => {
     describe('ك-ت-ب', () => {
       test('كَتَبَ (Form I)', () => {
