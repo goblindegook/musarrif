@@ -54,6 +54,12 @@ describe('active present subjunctive', () => {
     })
   })
 
+  test('subjunctive pattern for غَشَى (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('غشي', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يَغْشِيَ',
+    })
+  })
+
   test('subjunctive pattern for قَرَّ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('قرر', 1), 'subjunctive')).toMatchObject({
       '3ms': 'يَقَرَّ',

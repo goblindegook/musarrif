@@ -91,6 +91,12 @@ describe('active present jussive', () => {
     })
   })
 
+  test('jussive pattern for غَشَى (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('غشي', 1), 'jussive')).toMatchObject({
+      '3ms': 'يَغْشِ',
+    })
+  })
+
   test('jussive pattern for قَرَّ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toMatchObject({
       '3ms': 'يَقَرَّ',

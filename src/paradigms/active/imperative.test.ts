@@ -41,6 +41,12 @@ describe('imperative', () => {
     })
   })
 
+  test('imperative pattern for غَشَى (Form I)', () => {
+    expect(conjugateImperative(getVerb('غشي', 1))).toMatchObject({
+      '2ms': 'اِغْشِ',
+    })
+  })
+
   test('imperative pattern for قَرَّ (Form I)', () => {
     expect(conjugateImperative(getVerb('قرر', 1))).toMatchObject({
       '2ms': 'قَرَّ',

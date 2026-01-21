@@ -191,6 +191,7 @@ describe('masdar patterns', () => {
     'لزم',
     'عوز',
     'عوم',
+    'غشي',
   ])('%s has no masdar', (root) => {
     expect(deriveMasdar(getVerb(root, 1))).toEqual([])
   })

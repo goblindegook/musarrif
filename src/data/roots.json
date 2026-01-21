@@ -352,6 +352,7 @@
   { "root": "عون", "form": 6 },
   { "root": "غاث", "form": 10 },
   { "root": "غدو", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3ul"] },
+  { "root": "غشي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
   { "root": "غدر", "form": 3 },
   { "root": "غسل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "غفر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
