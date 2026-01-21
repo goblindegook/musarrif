@@ -2,7 +2,6 @@ import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
-  normalizeAlifMadda,
   DAMMA,
   FATHA,
   HAMZA,
@@ -13,6 +12,7 @@ import {
   KASRA,
   MEEM,
   NOON,
+  normalizeAlifMadda,
   SEEN,
   SHADDA,
   SUKOON,

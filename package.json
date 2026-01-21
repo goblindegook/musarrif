@@ -11,7 +11,7 @@
     "test:coverage": "vitest --coverage",
     "lint": "biome check .",
     "lint:fix": "biome check --write --unsafe .",
-    "format": "biome format --write ."
+    "format": "npm run lint:fix && biome format --write ."
   },
   "dependencies": {
     "@pacote/memoize": "^2.1.3",
