@@ -17,6 +17,7 @@ describe('passive present indicative pattern', () => {
     ['وهن', 1, 'يُوهَنُ'],
     ['جبب', 1, 'يُجَبُّ'],
     ['جيد', 1, 'يُجْيَدُ'],
+    ['قول', 1, 'يُقَالُ'],
     ['عوز', 1, 'يُعْوَزُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
@@ -370,6 +371,12 @@ describe('passive present indicative', () => {
 })
 
 describe('passive present subjunctive', () => {
+  test('subjunctive pattern for قَالَ (Form I)', () => {
+    expect(conjugatePassivePresentMood(getVerb('قول', 1), 'subjunctive')).toMatchObject({
+      '3ms': 'يُقَالَ',
+    })
+  })
+
   test('subjunctive pattern for عَوِزَ (Form I)', () => {
     expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toMatchObject({
       '3ms': 'يُعْوَزَ',
@@ -666,6 +673,12 @@ describe('passive present subjunctive', () => {
 })
 
 describe('passive present jussive', () => {
+  test('jussive pattern for قَالَ (Form I)', () => {
+    expect(conjugatePassivePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
+      '3ms': 'يُقَلْ',
+    })
+  })
+
   test('jussive pattern for عَوِزَ (Form I)', () => {
     expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toMatchObject({
       '3ms': 'يُعْوَزْ',
