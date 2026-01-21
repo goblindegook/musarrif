@@ -57,7 +57,7 @@ function addSukoonBeforeFinalAlif(word: readonly string[], verb: Verb): readonly
   if (word.at(alifIndex - 1) !== WAW || isWeakLetter(word.at(alifIndex - 3)) || word.at(alifIndex - 3) === NOON)
     return word
 
-  return [...word.slice(0, alifIndex - 1), WAW, SUKOON, ALIF]
+  return [...word.slice(0, alifIndex - 1), WAW, ALIF]
 }
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {

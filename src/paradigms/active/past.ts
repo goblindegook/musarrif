@@ -151,7 +151,7 @@ function buildForms(base: readonly string[], c3: string): PastBaseForms {
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
   const glide = c3 === WAW || c3 === ALIF ? WAW : YEH
   const suffixedBase = [...normalizedBase.slice(0, -1), glide, SUKOON]
-  const pluralBase = [...suffixedBase.slice(0, -2), glide === YEH ? WAW : glide, SUKOON]
+  const pluralBase = [...suffixedBase.slice(0, -2), glide === YEH ? WAW : glide]
   return {
     base: normalizedBase,
     defectiveGlide: glide,

@@ -150,7 +150,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           }
 
           if (isMasculinePlural(pronounId)) {
-            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
             acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
@@ -190,7 +190,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           }
 
           if (isMasculinePlural(pronounId)) {
-            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
             acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
             return acc
           }
@@ -229,7 +229,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           }
 
           if (isMasculinePlural(pronounId)) {
-            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
             acc[pronounId] = [prefix, DAMMA, c1, ...tail]
             return acc
           }
@@ -269,7 +269,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           }
 
           if (isMasculinePlural(pronounId)) {
-            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
             acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, ...tail]
             return acc
           }
