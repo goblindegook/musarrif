@@ -180,6 +180,13 @@ export function last(word: readonly string[]): string | undefined {
   return word.at(-1)
 }
 
+export function alifMaddaNormalization(word: readonly string[]): readonly string[] {
+  return word
+    .join('')
+    .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`, 'g'), ALIF_MADDA)
+    .split('')
+}
+
 interface RootAnalysis {
   type:
     | 'strong'

@@ -3,8 +3,8 @@ import { hasPattern, isFormIPresentVowel, resolveFormIPresentVowel } from '../fo
 import {
   ALIF,
   ALIF_HAMZA,
-  ALIF_MADDA,
   ALIF_MAQSURA,
+  alifMaddaNormalization,
   DAMMA,
   FATHA,
   findLastLetterIndex,
@@ -21,7 +21,6 @@ import {
   last,
   longVowelFromPattern,
   NOON,
-  removeLeadingDiacritics,
   removeTrailingDiacritics,
   replaceFinalDiacritic,
   SEEN,
@@ -179,7 +178,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
-      return collapseHamzaAlif([...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA])
+      return alifMaddaNormalization([...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA])
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem, FATHA, ALIF, NOON, KASRA]
 
@@ -201,7 +200,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
       return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
-      return collapseHamzaAlif([...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA])
+      return alifMaddaNormalization([...replaceFinalDiacritic(base, FATHA), ALIF, NOON, KASRA])
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...base, FATHA, ALIF, NOON, KASRA]
 
@@ -224,7 +223,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, FATHA, ALIF, NOON, KASRA]
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2))
-      return collapseHamzaAlif([...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA])
+      return alifMaddaNormalization([...replaceFinalDiacritic(stem, FATHA), ALIF, NOON, KASRA])
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem, FATHA, ALIF, NOON, KASRA]
 
@@ -371,7 +370,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       const word = Array.from(indicative)
       const isSecondFeminineSingular = pronounId === '2fs'
 
-      if (isDual(pronounId)) return collapseHamzaAlif(dropNoonEnding(word))
+      if (isDual(pronounId)) return dropNoonEnding(alifMaddaNormalization(word))
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
@@ -761,12 +760,6 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
   return replaceFinalDiacritic(word, SUKOON)
 }
 
-function collapseHamzaAlif(word: readonly string[]): readonly string[] {
-  const hamzaIndex = word.findIndex((char, index) => char === ALIF_HAMZA && word[index + 1] === FATHA)
-  if (hamzaIndex < 0 || word.at(hamzaIndex + 2) !== ALIF) return word
-  return [...word.slice(0, hamzaIndex), ALIF_MADDA, ...word.slice(hamzaIndex + 3)]
-}
-
 function applyPresentPrefix(chars: readonly string[], prefix: string): readonly string[] {
   const remainder = chars.slice(1)
   const carriedDiacritics: string[] = []
@@ -777,12 +770,5 @@ function applyPresentPrefix(chars: readonly string[], prefix: string): readonly 
     if (mark) carriedDiacritics.push(mark)
   }
 
-  // If we're adding hamza prefix to a hamza-initial stem (e.g., آذَنُ, آكُلُ)
-  if (prefix === ALIF_HAMZA && remainder.at(0) === ALIF_HAMZA) {
-    // Drop the stem hamza and any diacritics attached to it (e.g., sukoon)
-    remainder.shift()
-    return [ALIF_MADDA, ...removeLeadingDiacritics(remainder)]
-  }
-
-  return [prefix, ...carriedDiacritics, ...remainder]
+  return alifMaddaNormalization([prefix, ...carriedDiacritics, ...remainder])
 }

@@ -3,8 +3,8 @@ import type { Mood } from '../active/present'
 import {
   ALIF,
   ALIF_HAMZA,
-  ALIF_MADDA,
   ALIF_MAQSURA,
+  alifMaddaNormalization,
   DAMMA,
   FATHA,
   HAMZA_ON_WAW,
@@ -91,11 +91,6 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
   indicative: INDICATIVE_SUFFIXES,
   subjunctive: SUBJUNCTIVE_SUFFIXES,
   jussive: JUSSIVE_SUFFIXES,
-}
-
-function collapseHamzaAlif(word: readonly string[]): readonly string[] {
-  const hamzaIndex = word.findIndex((char, index) => char === ALIF_HAMZA && word[index + 1] === FATHA)
-  return [...word.slice(0, hamzaIndex), ALIF_MADDA, ...word.slice(hamzaIndex + 3)]
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
@@ -388,7 +383,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
             return acc
           }
 
-          const word = [
+          acc[pronounId] = alifMaddaNormalization([
             PRESENT_PREFIXES[pronounId],
             DAMMA,
             seatedC1,
@@ -396,8 +391,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
             FATHA,
             seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA),
             ...suffixes[pronounId],
-          ]
-          acc[pronounId] = isHamzatedLetter(c3) && isDual(pronounId) ? collapseHamzaAlif(word) : word
+          ])
           return acc
         },
         {} as Record<PronounId, readonly string[]>,
@@ -410,8 +404,16 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     PRONOUN_IDS.reduce(
       (acc, pronounId) => {
         const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-        const word = [PRESENT_PREFIXES[pronounId], DAMMA, c1, SUKOON, c2, FATHA, seatedC3, ...suffixes[pronounId]]
-        acc[pronounId] = isHamzatedLetter(c3) && isDual(pronounId) ? collapseHamzaAlif(word) : word
+        acc[pronounId] = alifMaddaNormalization([
+          PRESENT_PREFIXES[pronounId],
+          DAMMA,
+          c1,
+          SUKOON,
+          c2,
+          FATHA,
+          seatedC3,
+          ...suffixes[pronounId],
+        ])
         return acc
       },
       {} as Record<PronounId, readonly string[]>,

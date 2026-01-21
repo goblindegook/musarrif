@@ -3,11 +3,10 @@ import { hasPattern, resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
-  ALIF_MADDA,
   ALIF_MAQSURA,
+  alifMaddaNormalization,
   DAMMA,
   FATHA,
-  findLastLetterIndex,
   geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
@@ -46,7 +45,7 @@ interface NonDefectivePastBaseForms {
 
 interface DefectivePastBaseForms {
   base: readonly string[]
-  glide: string
+  defectiveGlide: string
   suffixedBase: readonly string[]
   pluralBase: readonly string[]
 }
@@ -61,54 +60,46 @@ function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
   return forms.suffixedBase.slice(0, -2)
 }
 
-function shouldCollapseHamzaDual(base: readonly string[]): boolean {
-  const hamzaIndex = base.findLastIndex((char) => isHamzatedLetter(char))
-  const previousLetterIndex = findLastLetterIndex(base, hamzaIndex)
-  return base.at(previousLetterIndex) !== ALIF
-}
-
 const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
   '1s': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA]
   },
   '2ms': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, FATHA]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, FATHA]
     return [...nonDefectiveSuffixedBase(forms), TEH, FATHA]
   },
   '2fs': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, KASRA]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, KASRA]
     return [...nonDefectiveSuffixedBase(forms), TEH, KASRA]
   },
   '3ms': (forms) => forms.base,
   '3fs': (forms) => {
-    if ('glide' in forms) return [...defectiveStem(forms), TEH, SUKOON]
+    if ('defectiveGlide' in forms) return [...defectiveStem(forms), TEH, SUKOON]
     return [...forms.base, TEH, SUKOON]
   },
   '2d': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, FATHA, ALIF]
   },
-  '3md': (forms, verb) => {
-    const [, , c3] = [...verb.root]
-    if ('glide' in forms) return [...defectiveStem(forms), forms.suffixedBase.at(-2) ?? '', FATHA, ALIF]
-    if (isHamzatedLetter(c3) && shouldCollapseHamzaDual(forms.base)) return [...forms.base.slice(0, -2), ALIF_MADDA]
-    return [...forms.base, ALIF]
+  '3md': (forms) => {
+    if ('defectiveGlide' in forms) return [...defectiveStem(forms), forms.suffixedBase.at(-2) ?? '', FATHA, ALIF]
+    return alifMaddaNormalization([...forms.base, ALIF])
   },
   '3fd': (forms) => {
-    if ('glide' in forms) return [...defectiveStem(forms), TEH, FATHA, ALIF]
+    if ('defectiveGlide' in forms) return [...defectiveStem(forms), TEH, FATHA, ALIF]
     return [...forms.base, TEH, FATHA, ALIF]
   },
   '1p': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, NOON, FATHA, ALIF]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, NOON, FATHA, ALIF]
     return [...nonDefectiveSuffixedBase(forms), NOON, FATHA, ALIF]
   },
   '2mp': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, SUKOON]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, SUKOON]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, SUKOON]
   },
   '2fp': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA]
     return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, NOON, SHADDA, FATHA]
   },
   '3mp': (forms, verb) => {
@@ -123,14 +114,13 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
         ALIF,
       ]
 
-    if ('glide' in forms) return [...forms.pluralBase, ALIF]
-
+    if ('defectiveGlide' in forms) return [...forms.pluralBase, ALIF]
     const pluralBase = forms.pluralBase ?? replaceFinalDiacritic(forms.base, DAMMA)
     if (pluralBase.at(-1) === WAW) return [...pluralBase, ALIF]
     return [...pluralBase, WAW, ALIF]
   },
   '3fp': (forms) => {
-    if ('glide' in forms) return [...forms.suffixedBase, NOON, FATHA]
+    if ('defectiveGlide' in forms) return [...forms.suffixedBase, NOON, FATHA]
 
     // If the suffixed base ends with NOON, geminate with shadda when adding NOON suffix
     const suffixedBase = nonDefectiveSuffixedBase(forms)
@@ -164,7 +154,7 @@ function buildForms(base: readonly string[], c3: string): PastBaseForms {
   const pluralBase = [...suffixedBase.slice(0, -2), glide === YEH ? WAW : glide, SUKOON]
   return {
     base: normalizedBase,
-    glide,
+    defectiveGlide: glide,
     suffixedBase,
     pluralBase,
   }
@@ -236,23 +226,20 @@ function derivePastFormIII(verb: Verb): PastBaseForms {
 
 function derivePastFormIV(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [ALIF_HAMZA, FATHA, c1]
 
   // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
-  if (c2 === c3) return buildForms([ALIF_HAMZA, FATHA, c1, FATHA, c2, SHADDA, FATHA], c3)
+  if (c2 === c3) return buildForms([...prefix, FATHA, c2, SHADDA, FATHA], c3)
 
   // Hollow Form IV past contracts to long ā (e.g., أَضَافَ)
-  if (isWeakLetter(c2) && !isWeakLetter(c3)) {
-    const stem = [ALIF_HAMZA, FATHA, c1, FATHA, ALIF, c3]
+  if (isWeakLetter(c2) && !isWeakLetter(c3))
     return {
-      base: [...stem, FATHA],
-      suffixedBase: [...shortenHollowStem(stem), SUKOON],
-      pluralBase: [...shortenHollowStem(stem), DAMMA],
+      base: [...prefix, FATHA, ALIF, c3, FATHA],
+      suffixedBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), SUKOON],
+      pluralBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), DAMMA],
     }
-  }
 
-  if (c1 === ALIF_HAMZA) return buildForms([ALIF_MADDA, c2, FATHA, c3, FATHA], c3)
-
-  return buildForms([ALIF_HAMZA, FATHA, c1, SUKOON, c2, FATHA, c3, FATHA], c3)
+  return buildForms(alifMaddaNormalization([...prefix, SUKOON, c2, FATHA, c3, FATHA]), c3)
 }
 
 function derivePastFormV(verb: Verb): PastBaseForms {
