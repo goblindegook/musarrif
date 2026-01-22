@@ -165,6 +165,7 @@ describe('imperative', () => {
         ['لوم', 'لُمْ'],
         ['بيت', 'بِتْ'],
         ['صير', 'صِرْ'],
+        ['خور', 'اِخْوَرْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
           '2ms': expected,

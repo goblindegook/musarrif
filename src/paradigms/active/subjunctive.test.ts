@@ -122,6 +122,7 @@ describe('active present subjunctive', () => {
         ['عوز', 'يَعْوَزَ'],
         ['عوم', 'يَعُومَ'],
         ['حول', 'يَحُولَ'],
+        ['خور', 'يَخْوَرَ'],
         ['قول', 'يَقُولَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({

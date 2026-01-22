@@ -152,6 +152,7 @@
   { "root": "خبز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خدم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خدم", "form": 10 },
+  { "root": "خور", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"] },
   { "root": "خرج", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3ool"] },
   { "root": "خرج", "form": 10 },
   { "root": "خسر", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3l"] },

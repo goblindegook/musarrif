@@ -22,6 +22,7 @@ describe('passive present indicative', () => {
         ['حول', 'يُحَالُ'],
         ['عوم', 'يُعَامُ'],
         ['قول', 'يُقَالُ'],
+        ['خور', 'يُخْوَرُ'],
         ['عوز', 'يُعْوَزُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
@@ -434,6 +435,7 @@ describe('passive present indicative', () => {
         ['حول', 'يُحَالَ'],
         ['عوم', 'يُعَامَ'],
         ['قول', 'يُقَالَ'],
+        ['خور', 'يُخْوَرَ'],
         ['عوز', 'يُعْوَزَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
@@ -769,6 +771,7 @@ describe('passive present indicative', () => {
         ['حول', 'يُحَلْ'],
         ['عوم', 'يُعَمْ'],
         ['قول', 'يُقَلْ'],
+        ['خور', 'يُخْوَرْ'],
         ['عوز', 'يُعْوَزْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
