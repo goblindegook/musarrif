@@ -47,6 +47,7 @@ describe('active present subjunctive', () => {
     ['نظر', 'يَنْظُرَ'],
     ['بعد', 'يَبْعَدَ'],
     ['مثل', 'يَمْثُلَ'],
+    ['دعم', 'يَدْعَمَ'],
   ])('subjunctive pattern for %s (Form I)', (root, expected) => {
     expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
       '3ms': expected,

@@ -25,6 +25,7 @@ describe('passive present indicative pattern', () => {
     ['غشي', 1, 'يُغْشَى'],
     ['نظر', 1, 'يُنْظَرُ'],
     ['مثل', 1, 'يُمْثَلُ'],
+    ['دعم', 1, 'يُدْعَمُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
@@ -386,6 +387,7 @@ describe('passive present subjunctive', () => {
     ['نظر', 'يُنْظَرَ'],
     ['غشي', 'يُغْشَى'],
     ['مثل', 'يُمْثَلَ'],
+    ['دعم', 'يُدْعَمَ'],
   ])('subjunctive pattern for %s (Form I)', (root, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
       '3ms': expected,
@@ -691,6 +693,7 @@ describe('passive present jussive', () => {
     ['نظر', 'يُنْظَرْ'],
     ['غشي', 'يُغْشَ'],
     ['مثل', 'يُمْثَلْ'],
+    ['دعم', 'يُدْعَمْ'],
   ])('jussive pattern for %s (Form I)', (root, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
       '3ms': expected,
