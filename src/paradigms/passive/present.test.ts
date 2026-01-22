@@ -44,7 +44,10 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each<[string, string]>([['جبب', 'يُجَبُّ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['جبب', 'يُجَبُّ'],
+        ['أمم', 'يُؤَمُّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
     })
@@ -130,6 +133,24 @@ describe('passive present indicative', () => {
           '2fp': 'تُلْمَمْنَ',
           '3mp': 'يُلَمُّونَ',
           '3fp': 'يُلْمَمْنَ',
+        })
+      })
+
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqual({
+          '1s': 'أُؤَمُّ',
+          '2ms': 'تُؤَمُّ',
+          '2fs': 'تُؤَمِّيْنَ',
+          '3ms': 'يُؤَمُّ',
+          '3fs': 'تُؤَمُّ',
+          '2d': 'تُؤَمَّانِ',
+          '3md': 'يُؤَمَّانِ',
+          '3fd': 'تُؤَمَّانِ',
+          '1p': 'نُؤَمُّ',
+          '2mp': 'تُؤَمُّونَ',
+          '2fp': 'تُؤْمَمْنَ',
+          '3mp': 'يُؤَمُّونَ',
+          '3fp': 'يُؤْمَمْنَ',
         })
       })
 
@@ -525,6 +546,24 @@ describe('passive present indicative', () => {
         })
       })
 
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqual({
+          '1s': 'أُؤَمَّ',
+          '2ms': 'تُؤَمَّ',
+          '2fs': 'تُؤَمِّي',
+          '3ms': 'يُؤَمَّ',
+          '3fs': 'تُؤَمَّ',
+          '2d': 'تُؤَمَّا',
+          '3md': 'يُؤَمَّا',
+          '3fd': 'تُؤَمَّا',
+          '1p': 'نُؤَمَّ',
+          '2mp': 'تُؤَمُّوا',
+          '2fp': 'تُؤْمَمْنَ',
+          '3mp': 'يُؤَمُّوا',
+          '3fp': 'يُؤْمَمْنَ',
+        })
+      })
+
       test('وَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'subjunctive')).toEqual({
           '1s': 'أُوَدَّ',
@@ -860,6 +899,24 @@ describe('passive present indicative', () => {
           '2fp': 'تُلْمَمْنَ',
           '3mp': 'يُلَمُّوا',
           '3fp': 'يُلْمَمْنَ',
+        })
+      })
+
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'jussive')).toEqual({
+          '1s': 'أُؤَمَّ',
+          '2ms': 'تُؤَمَّ',
+          '2fs': 'تُؤَمِّي',
+          '3ms': 'يُؤَمَّ',
+          '3fs': 'تُؤَمَّ',
+          '2d': 'تُؤَمَّا',
+          '3md': 'يُؤَمَّا',
+          '3fd': 'تُؤَمَّا',
+          '1p': 'نُؤَمَّ',
+          '2mp': 'تُؤَمُّوا',
+          '2fp': 'تُؤْمَمْنَ',
+          '3mp': 'يُؤَمُّوا',
+          '3fp': 'يُؤْمَمْنَ',
         })
       })
 

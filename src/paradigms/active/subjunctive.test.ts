@@ -78,6 +78,24 @@ describe('active present subjunctive', () => {
         })
       })
 
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqual({
+          '1s': 'أَؤُمَّ',
+          '2ms': 'تَؤُمَّ',
+          '2fs': 'تَؤُمِّي',
+          '3ms': 'يَؤُمَّ',
+          '3fs': 'تَؤُمَّ',
+          '2d': 'تَؤُمَّا',
+          '3md': 'يَؤُمَّا',
+          '3fd': 'تَؤُمَّا',
+          '1p': 'نَؤُمَّ',
+          '2mp': 'تَؤُمُّوا',
+          '2fp': 'تَأْمُمْنَ',
+          '3mp': 'يَؤُمُّوا',
+          '3fp': 'يَأْمُمْنَ',
+        })
+      })
+
       test('حَبَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('حبب', 1), 'subjunctive')).toEqual({
           '1s': 'أَحِبَّ',
@@ -316,6 +334,24 @@ describe('active present subjunctive', () => {
       test.each([['أوي', 'يَأْوِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
           '3ms': expected,
+        })
+      })
+
+      test('أَوَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أوي', 1), 'subjunctive')).toEqual({
+          '1s': 'آوِيَ',
+          '2ms': 'تَأْوِيَ',
+          '2fs': 'تَأْوِي',
+          '3ms': 'يَأْوِيَ',
+          '3fs': 'تَأْوِيَ',
+          '2d': 'تَأْوِيَا',
+          '3md': 'يَأْوِيَا',
+          '3fd': 'تَأْوِيَا',
+          '1p': 'نَأْوِيَ',
+          '2mp': 'تَأْوُوا',
+          '2fp': 'تَأْوِينَ',
+          '3mp': 'يَأْوُوا',
+          '3fp': 'يَأْوِينَ',
         })
       })
     })

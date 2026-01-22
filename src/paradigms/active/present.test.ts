@@ -682,6 +682,24 @@ describe('active present indicative', () => {
           '3ms': expected,
         })
       })
+
+      test('أَوَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أوي', 1), 'indicative')).toEqual({
+          '1s': 'آوِي',
+          '2ms': 'تَأْوِي',
+          '2fs': 'تَأْوِينَ',
+          '3ms': 'يَأْوِي',
+          '3fs': 'تَأْوِي',
+          '2d': 'تَأْوِيَانِ',
+          '3md': 'يَأْوِيَانِ',
+          '3fd': 'تَأْوِيَانِ',
+          '1p': 'نَأْوِي',
+          '2mp': 'تَأْوُونَ',
+          '2fp': 'تَأْوِينَ',
+          '3mp': 'يَأْوُونَ',
+          '3fp': 'يَأْوِينَ',
+        })
+      })
     })
   })
 

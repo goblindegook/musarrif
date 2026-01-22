@@ -464,6 +464,24 @@ describe('active past', () => {
           '3ms': expected,
         })
       })
+
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePast(getVerb('أمم', 1))).toEqual({
+          '1s': 'أَمَمْتُ',
+          '2ms': 'أَمَمْتَ',
+          '2fs': 'أَمَمْتِ',
+          '3ms': 'أَمَّ',
+          '3fs': 'أَمَّتْ',
+          '2d': 'أَمَمْتُمَا',
+          '3md': 'أَمَّا',
+          '3fd': 'أَمَّتَا',
+          '1p': 'أَمَمْنَا',
+          '2mp': 'أَمَمْتُمْ',
+          '2fp': 'أَمَمْتُنَّ',
+          '3mp': 'أَمُّوا',
+          '3fp': 'أَمَمْنَ',
+        })
+      })
     })
 
     describe('hamzated middle roots', () => {
@@ -656,6 +674,24 @@ describe('active past', () => {
       test.each([['أوي', 'أَوَى']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))).toMatchObject({
           '3ms': expected,
+        })
+      })
+
+      test('أَوَى conjugation', () => {
+        expect(conjugatePast(getVerb('أوي', 1))).toEqual({
+          '1s': 'أَوَيْتُ',
+          '2ms': 'أَوَيْتَ',
+          '2fs': 'أَوَيْتِ',
+          '3ms': 'أَوَى',
+          '3fs': 'أَوَتْ',
+          '2d': 'أَوَيْتُمَا',
+          '3md': 'أَوَيَا',
+          '3fd': 'أَوَتَا',
+          '1p': 'أَوَيْنَا',
+          '2mp': 'أَوَيْتُمْ',
+          '2fp': 'أَوَيْتُنَّ',
+          '3mp': 'أَوَوا',
+          '3fp': 'أَوَيْنَ',
         })
       })
     })

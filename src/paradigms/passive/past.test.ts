@@ -43,7 +43,10 @@ describe('passive past pattern', () => {
     })
 
     describe('geminate roots', () => {
-      test.each<[string, string]>([['جبب', 'جُبَّ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['جبب', 'جُبَّ'],
+        ['أمم', 'أُمَّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
       })
     })
@@ -130,6 +133,24 @@ describe('passive past pattern', () => {
           '2fp': 'لُمِمْتُنَّ',
           '3mp': 'لُمُّوا',
           '3fp': 'لُمِمْنَ',
+        })
+      })
+
+      test('أَمَّ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('أمم', 1))).toEqual({
+          '1s': 'أُمِمْتُ',
+          '2ms': 'أُمِمْتَ',
+          '2fs': 'أُمِمْتِ',
+          '3ms': 'أُمَّ',
+          '3fs': 'أُمَّتْ',
+          '2d': 'أُمِمْتُمَا',
+          '3md': 'أُمَّا',
+          '3fd': 'أُمَّتَا',
+          '1p': 'أُمِمْنَا',
+          '2mp': 'أُمِمْتُمْ',
+          '2fp': 'أُمِمْتُنَّ',
+          '3mp': 'أُمُّوا',
+          '3fp': 'أُمِمْنَ',
         })
       })
 
