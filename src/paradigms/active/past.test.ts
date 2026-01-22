@@ -247,7 +247,6 @@ describe('active past pattern', () => {
         })
       })
     })
-
   })
 
   describe('geminate verbs', () => {
@@ -1015,8 +1014,6 @@ describe('active past pattern', () => {
     })
   })
 
-  describe.todo('hamzated middle assimilated verbs')
-
   describe('hamzated middle defective verbs', () => {
     describe('ر-أ-ى', () => {
       test('رَأَى (Form I)', () => {
@@ -1060,8 +1057,6 @@ describe('active past pattern', () => {
       })
     })
   })
-
-  describe.todo('hamzated final hollow verbs')
 
   test('defective endings for أعطى', () => {
     expect(conjugatePast(getVerb('عطى', 4))).toEqual({

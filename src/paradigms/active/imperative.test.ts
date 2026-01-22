@@ -36,6 +36,7 @@ describe('imperative', () => {
     ['أوي', 'اِئْوِ'],
     ['نظر', 'اُنْظُرْ'],
     ['بعد', 'اِبْعَدْ'],
+    ['مثل', 'اُمْثُلْ'],
     ['قرر', 'قَرَّ'],
   ])('imperative pattern for %s (Form I)', (root, expected) => {
     expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
@@ -361,12 +362,6 @@ describe('imperative', () => {
           '2fp': 'اِبْقَيْنَ',
         })
       })
-    })
-
-    describe('ر-م-ي', () => {
-      test.todo('رَمَى (Form I)')
-      test.todo('رَمَّى (Form II)')
-      test.todo('اِنْرَمَى (Form VIII)')
     })
   })
 
@@ -732,14 +727,6 @@ describe('imperative', () => {
     })
   })
 
-  describe('hamzated initial defective verbs', () => {
-    describe.todo('أ-ت-ي')
-  })
-
-  describe('hamzated middle assimilated verbs', () => {
-    describe.todo('و-ئ-د')
-  })
-
   describe('hamzated middle defective verbs', () => {
     describe('ر-أ-ى', () => {
       test('رَأَى (Form I)', () => {
@@ -766,10 +753,6 @@ describe('imperative', () => {
         })
       })
     })
-  })
-
-  describe('hamzated final hollow verbs', () => {
-    describe.todo('ج-ي-ء')
   })
 
   test('imperative only exists for second person pronouns', () => {

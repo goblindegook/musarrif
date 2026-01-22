@@ -1055,10 +1055,6 @@ describe('active present indicative pattern', () => {
     })
   })
 
-  describe('hamzated middle assimilated verbs', () => {
-    describe.todo('و-ئ-د')
-  })
-
   describe('hamzated middle defective verbs', () => {
     describe('ر-أ-ى', () => {
       test('رَأَى (Form I)', () => {

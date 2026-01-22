@@ -239,8 +239,6 @@ describe('hollow roots', () => {
   })
 })
 
-describe.todo('defective roots')
-
 describe('hamzated initial roots', () => {
   describe('أ-ك-ل', () => {
     test.each<[VerbForm, string]>([[1, 'أَكْل']])('Form %d active participle is %s', (form, expected) => {

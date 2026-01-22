@@ -190,14 +190,6 @@ describe('hollow roots', () => {
   })
 })
 
-describe('defective roots', () => {
-  describe('ر-م-ي', () => {
-    test.todo('رَمَى (Form I)')
-    test.todo('رَمَّى (Form II)')
-    test.todo('اِنْرَمَى (Form VIII)')
-  })
-})
-
 describe('hamzated initial roots', () => {
   describe('أ-ك-ل', () => {
     test.each<[VerbForm, string]>([[1, 'آكِل']])('Form %d active participle is %s', (form, expected) => {
@@ -254,24 +246,4 @@ describe('doubly weak roots', () => {
       expect(deriveActiveParticiple(getVerb('روي', 1))).toBe('رَاوٍ')
     })
   })
-})
-
-describe('hamzated initial defective roots', () => {
-  describe.todo('أ-ت-ي')
-})
-
-describe('hamzated middle assimilated roots', () => {
-  describe.todo('و-ئ-د')
-})
-
-describe('hamzated middle defective roots', () => {
-  describe.todo('ب-د-أ')
-})
-
-describe('hamzated final assimilated roots', () => {
-  describe.todo('و-أ-ى')
-})
-
-describe('hamzated final hollow roots', () => {
-  describe.todo('ج-ي-ء')
 })
