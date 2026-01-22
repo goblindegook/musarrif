@@ -262,7 +262,7 @@ describe('imperative', () => {
         ['لهو', 'اُلْهُ'],
         ['شفي', 'اِشْفِ'],
         ['جري', 'اِجْرِ'],
-        ['غدو', 'غْدا'],
+        ['غدو', 'اِغْدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
           '2ms': expected,
@@ -277,6 +277,16 @@ describe('imperative', () => {
           '2d': 'اِبْقَيَا',
           '2mp': 'اِبْقَوا',
           '2fp': 'اِبْقَيْنَ',
+        })
+      })
+
+      test('تَحَا conjugation', () => {
+        expect(conjugateImperative(getVerb('تحو', 1))).toMatchObject({
+          '2ms': 'اِتْحُ',
+          '2fs': 'اِتْحَيْ',
+          '2d': 'تْحَيَا',
+          '2mp': 'تْحَوا',
+          '2fp': 'اِتْحَيْنَ',
         })
       })
     })

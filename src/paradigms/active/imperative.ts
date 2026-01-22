@@ -13,7 +13,6 @@ import {
   last,
   NOON,
   removeLeadingDiacritics,
-  removeTrailingDiacritics,
   SEEN,
   SHADDA,
   SUKOON,
@@ -144,10 +143,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         // (e.g., مرض → اِمْرَضْ, سمع → اِسْمَعْ)
         if (pastVowel === 'i') return [ALIF, KASRA, ...stem]
 
-        // Defective verbs with final و: drop final و and add ALIF (e.g., غدو → غْدا)
-        // ALIF carries the vowel implicitly, so no explicit FATHA is needed
         if (c3 === WAW && last(stem) === ALIF) return stem
-        if (c3 === WAW) return [...removeTrailingDiacritics(stem), ALIF]
 
         // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
         // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
