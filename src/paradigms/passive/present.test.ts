@@ -21,7 +21,9 @@ describe('passive present indicative pattern', () => {
     ['عوم', 1, 'يُعَامُ'],
     ['قول', 1, 'يُقَالُ'],
     ['عوز', 1, 'يُعْوَزُ'],
+    ['أوي', 1, 'يُؤْوَى'],
     ['غشي', 1, 'يُغْشَى'],
+    ['نظر', 1, 'يُنْظَرُ'],
   ])('%s (Form %d) %s is %s', (root, form, expected) => {
     expect(conjugatePassivePresentMood(getVerb(root, form), 'indicative')['3ms']).toBe(expected)
   })
@@ -374,33 +376,17 @@ describe('passive present indicative', () => {
 })
 
 describe('passive present subjunctive', () => {
-  test('subjunctive pattern for حَالَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('حول', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يُحَالَ',
-    })
-  })
-
-  test('subjunctive pattern for عَامَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('عوم', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يُعَامَ',
-    })
-  })
-
-  test('subjunctive pattern for قَالَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('قول', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يُقَالَ',
-    })
-  })
-
-  test('subjunctive pattern for عَوِزَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يُعْوَزَ',
-    })
-  })
-
-  test('subjunctive pattern for غَشَى (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('غشي', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يُغْشَى',
+  test.each([
+    ['حول', 'يُحَالَ'],
+    ['عوم', 'يُعَامَ'],
+    ['قول', 'يُقَالَ'],
+    ['عوز', 'يُعْوَزَ'],
+    ['أوي', 'يُؤْوَى'],
+    ['نظر', 'يُنْظَرَ'],
+    ['غشي', 'يُغْشَى'],
+  ])('subjunctive pattern for %s (Form I)', (root, expected) => {
+    expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+      '3ms': expected,
     })
   })
 
@@ -694,33 +680,17 @@ describe('passive present subjunctive', () => {
 })
 
 describe('passive present jussive', () => {
-  test('jussive pattern for حَالَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('حول', 1), 'jussive')).toMatchObject({
-      '3ms': 'يُحَلْ',
-    })
-  })
-
-  test('jussive pattern for عَامَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('عوم', 1), 'jussive')).toMatchObject({
-      '3ms': 'يُعَمْ',
-    })
-  })
-
-  test('jussive pattern for قَالَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
-      '3ms': 'يُقَلْ',
-    })
-  })
-
-  test('jussive pattern for عَوِزَ (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toMatchObject({
-      '3ms': 'يُعْوَزْ',
-    })
-  })
-
-  test('jussive pattern for غَشَى (Form I)', () => {
-    expect(conjugatePassivePresentMood(getVerb('غشي', 1), 'jussive')).toMatchObject({
-      '3ms': 'يُغْشَ',
+  test.each([
+    ['حول', 'يُحَلْ'],
+    ['عوم', 'يُعَمْ'],
+    ['قول', 'يُقَلْ'],
+    ['عوز', 'يُعْوَزْ'],
+    ['أوي', 'يُؤْوَ'],
+    ['نظر', 'يُنْظَرْ'],
+    ['غشي', 'يُغْشَ'],
+  ])('jussive pattern for %s (Form I)', (root, expected) => {
+    expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+      '3ms': expected,
     })
   })
 

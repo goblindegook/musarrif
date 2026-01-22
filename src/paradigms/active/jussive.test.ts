@@ -55,9 +55,17 @@ describe('active present jussive', () => {
     })
   })
 
-  test('jussive pattern for عَوِزَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toMatchObject({
-      '3ms': 'يَعْوَزْ',
+  test.each([
+    ['عوز', 'يَعْوَزْ'],
+    ['أوي', 'يَأْوِ'],
+    ['نظر', 'يَنْظُرْ'],
+    ['عوم', 'يَعُمْ'],
+    ['حول', 'يَحُلْ'],
+    ['غشي', 'يَغْشِ'],
+    ['قرر', 'يَقَرَّ'],
+  ])('jussive pattern for %s (Form I)', (root, expected) => {
+    expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+      '3ms': expected,
     })
   })
 
@@ -79,27 +87,21 @@ describe('active present jussive', () => {
     })
   })
 
-  test('jussive pattern for عَامَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('عوم', 1), 'jussive')).toMatchObject({
-      '3ms': 'يَعُمْ',
-    })
-  })
-
-  test('jussive pattern for حَالَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('حول', 1), 'jussive')).toMatchObject({
-      '3ms': 'يَحُلْ',
-    })
-  })
-
-  test('jussive pattern for غَشَى (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('غشي', 1), 'jussive')).toMatchObject({
-      '3ms': 'يَغْشِ',
-    })
-  })
-
-  test('jussive pattern for قَرَّ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toMatchObject({
-      '3ms': 'يَقَرَّ',
+  test('jussive conjugation for نَظَرَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('نظر', 1), 'jussive')).toEqual({
+      '1s': 'أَنْظُرْ',
+      '2ms': 'تَنْظُرْ',
+      '2fs': 'تَنْظُرِي',
+      '3ms': 'يَنْظُرْ',
+      '3fs': 'تَنْظُرْ',
+      '2d': 'تَنْظُرَا',
+      '3md': 'يَنْظُرَا',
+      '3fd': 'تَنْظُرَا',
+      '1p': 'نَنْظُرْ',
+      '2mp': 'تَنْظُرُوا',
+      '2fp': 'تَنْظُرْنَ',
+      '3mp': 'يَنْظُرُوا',
+      '3fp': 'يَنْظُرْنَ',
     })
   })
 

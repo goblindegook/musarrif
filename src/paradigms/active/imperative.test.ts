@@ -29,27 +29,26 @@ describe('imperative', () => {
     })
   })
 
-  test('imperative pattern for عَامَ (Form I)', () => {
-    expect(conjugateImperative(getVerb('عوم', 1))).toMatchObject({
-      '2ms': 'عُمْ',
+  test.each([
+    ['عوم', 'عُمْ'],
+    ['حول', 'حُلْ'],
+    ['غشي', 'اِغْشِ'],
+    ['أوي', 'اِئْوِ'],
+    ['نظر', 'اُنْظُرْ'],
+    ['قرر', 'قَرَّ'],
+  ])('imperative pattern for %s (Form I)', (root, expected) => {
+    expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+      '2ms': expected,
     })
   })
 
-  test('imperative pattern for حَالَ (Form I)', () => {
-    expect(conjugateImperative(getVerb('حول', 1))).toMatchObject({
-      '2ms': 'حُلْ',
-    })
-  })
-
-  test('imperative pattern for غَشَى (Form I)', () => {
-    expect(conjugateImperative(getVerb('غشي', 1))).toMatchObject({
-      '2ms': 'اِغْشِ',
-    })
-  })
-
-  test('imperative pattern for قَرَّ (Form I)', () => {
-    expect(conjugateImperative(getVerb('قرر', 1))).toMatchObject({
-      '2ms': 'قَرَّ',
+  test('imperative conjugation for نَظَرَ (Form I)', () => {
+    expect(conjugateImperative(getVerb('نظر', 1))).toMatchObject({
+      '2ms': 'اُنْظُرْ',
+      '2fs': 'اُنْظُرِي',
+      '2d': 'اُنْظُرَا',
+      '2mp': 'اُنْظُرُوا',
+      '2fp': 'اُنْظُرْنَ',
     })
   })
 

@@ -36,33 +36,18 @@ describe('active present subjunctive', () => {
     })
   })
 
-  test('subjunctive pattern for عَوِزَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('عوز', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَعْوَزَ',
-    })
-  })
-
-  test('subjunctive pattern for عَامَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('عوم', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَعُومَ',
-    })
-  })
-
-  test('subjunctive pattern for حَالَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('حول', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَحُولَ',
-    })
-  })
-
-  test('subjunctive pattern for غَشَى (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('غشي', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَغْشِيَ',
-    })
-  })
-
-  test('subjunctive pattern for قَرَّ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('قرر', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَقَرَّ',
+  test.each([
+    ['عوز', 'يَعْوَزَ'],
+    ['عوم', 'يَعُومَ'],
+    ['حول', 'يَحُولَ'],
+    ['غشي', 'يَغْشِيَ'],
+    ['قرر', 'يَقَرَّ'],
+    ['قول', 'يَقُولَ'],
+    ['أوي', 'يَأْوِيَ'],
+    ['نظر', 'يَنْظُرَ'],
+  ])('subjunctive pattern for %s (Form I)', (root, expected) => {
+    expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+      '3ms': expected,
     })
   })
 
@@ -84,12 +69,6 @@ describe('active present subjunctive', () => {
     })
   })
 
-  test('subjunctive pattern for قَالَ (Form I)', () => {
-    expect(conjugatePresentMood(getVerb('قول', 1), 'subjunctive')).toMatchObject({
-      '3ms': 'يَقُولَ',
-    })
-  })
-
   test('subjunctive conjugation for وَضَعَ (Form I)', () => {
     expect(conjugatePresentMood(getVerb('وضع', 1), 'subjunctive')).toEqual({
       '1s': 'أَضَعَ',
@@ -105,6 +84,24 @@ describe('active present subjunctive', () => {
       '2fp': 'تَضَعْنَ',
       '3mp': 'يَضَعُوا',
       '3fp': 'يَضَعْنَ',
+    })
+  })
+
+  test('subjunctive conjugation for نَظَرَ (Form I)', () => {
+    expect(conjugatePresentMood(getVerb('نظر', 1), 'subjunctive')).toEqual({
+      '1s': 'أَنْظُرَ',
+      '2ms': 'تَنْظُرَ',
+      '2fs': 'تَنْظُرِي',
+      '3ms': 'يَنْظُرَ',
+      '3fs': 'تَنْظُرَ',
+      '2d': 'تَنْظُرَا',
+      '3md': 'يَنْظُرَا',
+      '3fd': 'تَنْظُرَا',
+      '1p': 'نَنْظُرَ',
+      '2mp': 'تَنْظُرُوا',
+      '2fp': 'تَنْظُرْنَ',
+      '3mp': 'يَنْظُرُوا',
+      '3fp': 'يَنْظُرْنَ',
     })
   })
 
