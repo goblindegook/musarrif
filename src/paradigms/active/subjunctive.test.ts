@@ -152,6 +152,7 @@ describe('active present subjunctive', () => {
       test.each([
         ['غشي', 'يَغْشِيَ'],
         ['بدو', 'يَبْدُوَ'],
+        ['جدو', 'يَجْدُوَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
           '3ms': expected,
