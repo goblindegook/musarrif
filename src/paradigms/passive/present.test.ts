@@ -43,6 +43,12 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each<[string, string]>([['روى', 'يُرْوَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each<[string, string]>([
         ['جبب', 'يُجَبُّ'],
@@ -479,6 +485,32 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['روى', 'يُرْوَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+          '3ms': expected,
+        })
+      })
+
+      test('رَوَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'subjunctive')).toEqual({
+          '1s': 'أُرْوَى',
+          '2ms': 'تُرْوَى',
+          '2fs': 'تُرْوَيْ',
+          '3ms': 'يُرْوَى',
+          '3fs': 'تُرْوَى',
+          '2d': 'تُرْوَيَا',
+          '3md': 'يُرْوَيَا',
+          '3fd': 'تُرْوَيَا',
+          '1p': 'نُرْوَى',
+          '2mp': 'تُرْوَوْا',
+          '2fp': 'تُرْوَيْنَ',
+          '3mp': 'يُرْوَوْا',
+          '3fp': 'يُرْوَيْنَ',
+        })
+      })
+    })
+
     describe('strong roots', () => {
       test.each([
         ['نظر', 'يُنْظَرَ'],
@@ -829,6 +861,32 @@ describe('passive present indicative', () => {
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
           '3ms': expected,
+        })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test.each([['روى', 'يُرْوَ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+          '3ms': expected,
+        })
+      })
+
+      test('رَوَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'jussive')).toEqual({
+          '1s': 'أُرْوَ',
+          '2ms': 'تُرْوَ',
+          '2fs': 'تُرْوَيْ',
+          '3ms': 'يُرْوَ',
+          '3fs': 'تُرْوَ',
+          '2d': 'تُرْوَيَا',
+          '3md': 'يُرْوَيَا',
+          '3fd': 'تُرْوَيَا',
+          '1p': 'نُرْوَ',
+          '2mp': 'تُرْوَوْا',
+          '2fp': 'تُرْوَيْنَ',
+          '3mp': 'يُرْوَوْا',
+          '3fp': 'يُرْوَيْنَ',
         })
       })
     })

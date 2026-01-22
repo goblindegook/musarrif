@@ -418,6 +418,7 @@ describe('active present indicative', () => {
         ['ولي', 'يَلِي'],
         ['وعي', 'يَعِي'],
         ['وفي', 'يَفِي'],
+        ['روى', 'يَرْوِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObject({
           '3ms': expected,

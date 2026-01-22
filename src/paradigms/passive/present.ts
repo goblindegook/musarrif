@@ -190,6 +190,49 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     )
   }
 
+  if (isMiddleWeak && isFinalWeak && !isInitialHamza) {
+    return mapRecord(
+      PRONOUN_IDS.reduce(
+        (acc, pronounId) => {
+          const prefix = PRESENT_PREFIXES[pronounId]
+          const c1Segment = [c1, SUKOON]
+
+          if (pronounId === '2fs') {
+            const tail = mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
+            return acc
+          }
+
+          if (isFemininePlural(pronounId)) {
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, FATHA, YEH, SUKOON, NOON, FATHA]
+            return acc
+          }
+
+          if (isMasculinePlural(pronounId)) {
+            const tail =
+              mood === 'indicative'
+                ? [FATHA, WAW, SUKOON, NOON, FATHA]
+                : [FATHA, WAW, SUKOON, ALIF]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
+            return acc
+          }
+
+          if (isDual(pronounId)) {
+            const tail = mood === 'indicative' ? [FATHA, YEH, FATHA, ALIF, NOON, KASRA] : [FATHA, YEH, FATHA, ALIF]
+            acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
+            return acc
+          }
+
+          const tail = mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
+          acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
+          return acc
+        },
+        {} as Record<PronounId, readonly string[]>,
+      ),
+      (value) => value.join('').normalize('NFC'),
+    )
+  }
+
   if (isMiddleHamza && isFinalWeak) {
     return mapRecord(
       PRONOUN_IDS.reduce(

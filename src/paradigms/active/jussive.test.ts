@@ -388,6 +388,12 @@ describe('active present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['روى', 'يَرْوِ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+          '3ms': expected,
+        })
+      })
+
       test('رَوِيَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('روي', 1), 'jussive')).toEqual({
           '1s': 'أَرْوِ',
