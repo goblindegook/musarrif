@@ -25,6 +25,7 @@ describe('passive past pattern', () => {
       test.each<[string, string]>([
         ['ولي', 'وُلِيَ'],
         ['وعي', 'وُعِيَ'],
+        ['لهو', 'لُهِيَ'],
         ['جدو', 'جُدِيَ'],
         ['غشي', 'غُشِيَ'],
       ])('%s pattern', (root, expected) => {

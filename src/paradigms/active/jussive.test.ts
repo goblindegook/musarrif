@@ -322,6 +322,7 @@ describe('active present jussive', () => {
         ['غشي', 'يَغْشِ'],
         ['بدو', 'يَبْدُ'],
         ['جدو', 'يَجْدُ'],
+        ['لهو', 'يَلْهُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
           '3ms': expected,

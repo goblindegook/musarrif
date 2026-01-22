@@ -463,6 +463,7 @@
   { "root": "لبس", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "لحق", "form": 8 },
   { "root": "لزم", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
+  { "root": "لهو", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "لعب", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l"] },
   { "root": "لكم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "لمح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
