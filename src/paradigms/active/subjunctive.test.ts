@@ -149,7 +149,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غشي', 'يَغْشِيَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['غشي', 'يَغْشِيَ'],
+        ['بدو', 'يَبْدُوَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
           '3ms': expected,
         })
