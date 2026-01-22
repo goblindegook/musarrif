@@ -55,6 +55,7 @@
   { "root": "تاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تاج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تبع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "بعد", "form": 1, "formPattern": "fa3ila-yaf3alu", "noPassiveVoice": true, "masdarPatterns": [] },
   { "root": "تحد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تحر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تحو", "form": 1, "formPattern": "fa3ala-yaf3alu" },

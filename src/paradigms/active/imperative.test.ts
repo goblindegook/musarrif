@@ -35,6 +35,7 @@ describe('imperative', () => {
     ['غشي', 'اِغْشِ'],
     ['أوي', 'اِئْوِ'],
     ['نظر', 'اُنْظُرْ'],
+    ['بعد', 'اِبْعَدْ'],
     ['قرر', 'قَرَّ'],
   ])('imperative pattern for %s (Form I)', (root, expected) => {
     expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
