@@ -34,6 +34,7 @@ describe('passive present indicative', () => {
         ['وعي', 'يُوعَى'],
         ['علي', 'يُعْلَى'],
         ['لهو', 'يُلْهَى'],
+        ['شفي', 'يُشْفَى'],
         ['جدو', 'يُجْدَى'],
         ['غشي', 'يُغْشَى'],
       ])('%s pattern', (root, expected) => {
@@ -447,6 +448,7 @@ describe('passive present indicative', () => {
         ['جدو', 'يُجْدَى'],
         ['لهو', 'يُلْهَى'],
         ['علي', 'يُعْلَى'],
+        ['شفي', 'يُشْفَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
           '3ms': expected,
@@ -781,6 +783,7 @@ describe('passive present indicative', () => {
         ['جدو', 'يُجْدَ'],
         ['لهو', 'يُلْهَ'],
         ['علي', 'يُعْلَ'],
+        ['شفي', 'يُشْفَ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
           '3ms': expected,

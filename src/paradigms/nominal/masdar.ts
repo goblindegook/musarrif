@@ -68,6 +68,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
     case 'fi3aal':
       if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
+      if (isFinalWeak) return [c1, KASRA, c2, FATHA, ALIF, HAMZA]
       return [c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA]
 
     case 'fi3la':

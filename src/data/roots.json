@@ -256,6 +256,7 @@
   { "root": "شرب", "form": 4 },
   { "root": "شرب", "form": 5 },
   { "root": "شرب", "form": 7 },
+  { "root": "شفي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3aal"] },
   { "root": "شرح", "form": 2 },
   { "root": "شرد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "شرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
