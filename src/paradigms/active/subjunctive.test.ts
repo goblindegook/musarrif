@@ -152,6 +152,7 @@ describe('active present subjunctive', () => {
       test.each([
         ['غشي', 'يَغْشِيَ'],
         ['بدو', 'يَبْدُوَ'],
+        ['علي', 'يَعْلِيَ'],
         ['جدو', 'يَجْدُوَ'],
         ['لهو', 'يَلْهُوَ'],
       ])('%s pattern', (root, expected) => {

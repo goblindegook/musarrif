@@ -321,6 +321,7 @@ describe('active present jussive', () => {
       test.each([
         ['غشي', 'يَغْشِ'],
         ['بدو', 'يَبْدُ'],
+        ['علي', 'يَعْلِ'],
         ['جدو', 'يَجْدُ'],
         ['لهو', 'يَلْهُ'],
       ])('%s pattern', (root, expected) => {
