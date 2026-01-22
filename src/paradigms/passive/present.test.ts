@@ -440,7 +440,10 @@ describe('passive present indicative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غشي', 'يُغْشَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['غشي', 'يُغْشَى'],
+        ['جدو', 'يُجْدَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
           '3ms': expected,
         })
@@ -769,7 +772,10 @@ describe('passive present indicative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غشي', 'يُغْشَ']])('jussive pattern for %s conjugation', (root, expected) => {
+      test.each([
+        ['غشي', 'يُغْشَ'],
+        ['جدو', 'يُجْدَ'],
+      ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
           '3ms': expected,
         })
