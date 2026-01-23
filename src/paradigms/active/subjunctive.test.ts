@@ -12,6 +12,7 @@ describe('active present subjunctive', () => {
         ['دعم', 'يَدْعَمَ'],
         ['قدم', 'يَقْدُمَ'],
         ['نفس', 'يَنْفُسَ'],
+        ['مكن', 'يَمْكُنَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
