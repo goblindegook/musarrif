@@ -372,7 +372,13 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
+        if (isMasculinePlural(pronounId)) {
+          const stem = dropNoonEnding(word)
+          // Doubly weak Form I (middle weak + final weak) keeps sukūn on the plural wāw in the subjunctive.
+          if (isMiddleWeak && last(stem) === WAW)
+            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
+          return replaceFathaBeforeFinalWawAlif(stem)
+        }
         if (isFemininePlural(pronounId) || last(word) === ALIF_MAQSURA) return word
       }
 
@@ -557,7 +563,8 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (isInitialWeak && isFinalWeak) return [...prefix, seatHamza(c2, shortVowel), shortVowel, defectiveGlide(c3)]
 
   // Doubly weak (middle weak + final weak): treat as defective, not hollow (e.g., رَوِيَ → يَرْوِي)
-  if (isMiddleWeak && isFinalWeak) return [...prefix, c1, SUKOON, c2, shortVowel, defectiveGlide(c3)]
+  if (isMiddleWeak && isFinalWeak)
+    return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
     return [...prefix, WAW, SUKOON, c2, shortVowel, seatedC3, DAMMA]
@@ -574,19 +581,13 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   if (c2 === ALIF) return [...prefix, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
-  if (!hasPattern(verb, 'fa3ila-yaf3alu') && c2 === YEH) return [...prefix, c1, ...longVowelFromPattern('i'), c3, DAMMA]
-
   if (!hasPattern(verb, 'fa3ila-yaf3alu') && isMiddleWeak)
-    return [...prefix, c1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
+    return [...prefix, c1, ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]
 
-  if (patternVowel === 'a' && c3 === WAW) return [...prefix, c1, SUKOON, c2, DAMMA, defectiveGlide(c3)]
+  if (c3 === WAW && patternVowel === 'a') return [...prefix, c1, SUKOON, c2, DAMMA, defectiveGlide(c3)]
 
-  if (patternVowel === 'a' && (c3 === YEH || c3 === ALIF_MAQSURA))
-    return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
-
-  if (patternVowel === 'i' && isFinalWeak) return [...prefix, c1, SUKOON, c2, KASRA, defectiveGlide(c3)]
-
-  if (isFinalWeak) return [...prefix, c1, SUKOON, c2, DAMMA, defectiveGlide(c3)]
+  if (isFinalWeak)
+    return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 
   return [...prefix, seatedC1, SUKOON, c2, shortVowel, seatedC3, DAMMA]
 }

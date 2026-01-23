@@ -418,10 +418,29 @@ describe('active present indicative', () => {
         ['ولي', 'يَلِي'],
         ['وعي', 'يَعِي'],
         ['وفي', 'يَفِي'],
+        ['جوي', 'يَجْوَى'],
         ['روى', 'يَرْوِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({
           '3ms': expected,
+        })
+      })
+
+      test('جَوِيَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('جوي', 1), 'indicative')).toEqualT({
+          '1s': 'أَجْوَى',
+          '2ms': 'تَجْوَى',
+          '2fs': 'تَجْوَيْنَ',
+          '3ms': 'يَجْوَى',
+          '3fs': 'تَجْوَى',
+          '2d': 'تَجْوَيَانِ',
+          '3md': 'يَجْوَيَانِ',
+          '3fd': 'تَجْوَيَانِ',
+          '1p': 'نَجْوَى',
+          '2mp': 'تَجْوَوْنَ',
+          '2fp': 'تَجْوَيْنَ',
+          '3mp': 'يَجْوَوْنَ',
+          '3fp': 'يَجْوَيْنَ',
         })
       })
 

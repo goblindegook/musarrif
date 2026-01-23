@@ -44,7 +44,10 @@ describe('passive present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each<[string, string]>([['روى', 'يُرْوَى']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['جوي', 'يُجْوَى'],
+        ['روى', 'يُرْوَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
     })
@@ -486,7 +489,10 @@ describe('passive present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['روى', 'يُرْوَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جوي', 'يُجْوَى'],
+        ['روى', 'يُرْوَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
@@ -866,7 +872,10 @@ describe('passive present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['روى', 'يُرْوَ']])('jussive pattern for %s conjugation', (root, expected) => {
+      test.each([
+        ['جوي', 'يُجْوَ'],
+        ['روى', 'يُرْوَ'],
+      ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })

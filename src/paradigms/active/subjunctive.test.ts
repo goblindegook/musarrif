@@ -201,9 +201,30 @@ describe('active present subjunctive', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['روى', 'يَرْوِيَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جوي', 'يَجْوَى'],
+        ['روى', 'يَرْوِيَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
+        })
+      })
+
+      test('جَوِيَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('جوي', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَجْوَى',
+          '2ms': 'تَجْوَى',
+          '2fs': 'تَجْوَيْ',
+          '3ms': 'يَجْوَى',
+          '3fs': 'تَجْوَى',
+          '2d': 'تَجْوَيَا',
+          '3md': 'يَجْوَيَا',
+          '3fd': 'تَجْوَيَا',
+          '1p': 'نَجْوَى',
+          '2mp': 'تَجْوَوْا',
+          '2fp': 'تَجْوَيْنَ',
+          '3mp': 'يَجْوَوْا',
+          '3fp': 'يَجْوَيْنَ',
         })
       })
 

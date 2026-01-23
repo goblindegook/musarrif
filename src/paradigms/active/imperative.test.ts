@@ -299,6 +299,7 @@ describe('imperative', () => {
         ['ونى', 'نِ'],
         ['ولي', 'لِ'],
         ['وعي', 'عِ'],
+        ['جوي', 'اِجْوَ'],
         ['روى', 'اِرْوِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
