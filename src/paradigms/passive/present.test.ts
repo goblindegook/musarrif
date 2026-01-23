@@ -262,6 +262,12 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each<[string, string]>([['جيء', 'يُجَاءُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'indicative')).toEqualT({

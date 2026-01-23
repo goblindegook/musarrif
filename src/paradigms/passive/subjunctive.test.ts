@@ -231,6 +231,14 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each([['جيء', 'يُجَاءَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'subjunctive')).toEqualT({
