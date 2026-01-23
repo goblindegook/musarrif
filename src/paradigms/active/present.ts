@@ -543,6 +543,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const patternVowel = resolveFormIPresentVowel(verb)
   const shortVowel = shortVowelFromPattern(patternVowel)
   const seatedC1 = seatHamza(c1, shortVowel)
+  const seatedC2 = c1 === YEH && isHamzatedLetter(c2) ? HAMZA_ON_YEH : seatHamza(c2, shortVowel)
   const seatedC3 = seatHamza(c3, shortVowel)
   const prefix = [YEH, FATHA]
 
@@ -559,18 +560,18 @@ function derivePresentFormI(verb: Verb): readonly string[] {
     return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
-    return [...prefix, WAW, SUKOON, c2, shortVowel, seatedC3, DAMMA]
+    return [...prefix, WAW, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
-  if (c1 === YEH) return [...prefix, YEH, SUKOON, c2, shortVowel, seatedC3, DAMMA]
+  if (c1 === YEH) return [...prefix, YEH, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
-  if (isInitialWeak) return [...prefix, c2, shortVowel, seatedC3, DAMMA]
+  if (isInitialWeak) return [...prefix, seatedC2, shortVowel, seatedC3, DAMMA]
 
-  if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveGlide(c3)]
+  if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, seatedC2, shortVowel, defectiveGlide(c3)]
 
   if (isInitialHamza && isMiddleWeak && !isFinalWeak)
     return [...prefix, seatHamza(c1, shortVowel), ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]
 
-  if (isInitialHamza) return [...prefix, c1, SUKOON, c2, shortVowel, seatedC3, DAMMA]
+  if (isInitialHamza) return [...prefix, c1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
   if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
@@ -579,12 +580,12 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   if (!hasPattern(verb, 'fa3ila-yaf3alu') && isMiddleWeak)
     return [...prefix, c1, ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]
 
-  if (c3 === WAW && patternVowel === 'a') return [...prefix, c1, SUKOON, c2, DAMMA, defectiveGlide(c3)]
+  if (c3 === WAW && patternVowel === 'a') return [...prefix, c1, SUKOON, seatedC2, DAMMA, defectiveGlide(c3)]
 
   if (isFinalWeak)
-    return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
+    return [...prefix, c1, SUKOON, seatedC2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 
-  return [...prefix, seatedC1, SUKOON, c2, shortVowel, seatedC3, DAMMA]
+  return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 }
 
 function derivePresentFormII(verb: Verb): readonly string[] {

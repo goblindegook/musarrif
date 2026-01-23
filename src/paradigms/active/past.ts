@@ -170,6 +170,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const pastVowel = resolveFormIPastVowel(verb)
   const seatedFinalHamza = c3 === HAMZA ? seatHamza(c3, shortVowelFromPattern(pastVowel)) : c3
+  const seatedC2 = seatHamza(c2, shortVowelFromPattern(pastVowel))
   const isMiddleWeak = isWeakLetter(c2)
   const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
@@ -213,7 +214,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
       pluralBase: replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA),
     }
 
-  return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), seatedFinalHamza, FATHA], seatedFinalHamza)
+  return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedFinalHamza, FATHA], seatedFinalHamza)
 }
 
 function derivePastFormII(verb: Verb): PastBaseForms {

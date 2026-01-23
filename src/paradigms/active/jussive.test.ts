@@ -502,6 +502,14 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['بءس', 'يَبْؤُسْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+    })
+
     describe('hamzated final roots', () => {
       test.each([['جرء', 'يَجْرُؤْ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({

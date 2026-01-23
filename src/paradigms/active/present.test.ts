@@ -518,7 +518,10 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['يئس', 'يَيْئَسُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['يئس', 'يَيْئَسُ'],
+        ['بءس', 'يَبْؤُسُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({
           '3ms': expected,
         })
