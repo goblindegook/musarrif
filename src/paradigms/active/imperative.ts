@@ -154,7 +154,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
         // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
 
-        if (isHamzatedLetter(c3) && pronounId === '2mp') return [ALIF, KASRA, ...stem]
+        if (isHamzatedLetter(c3) && pronounId === '2mp' && stem.at(1) === SUKOON) return [ALIF, KASRA, ...stem]
 
         if (stem.at(1) === SUKOON) return [ALIF, presentVowel === 'u' ? DAMMA : KASRA, ...stem]
 

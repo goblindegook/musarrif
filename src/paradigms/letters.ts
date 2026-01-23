@@ -30,7 +30,11 @@ export type ShortVowel = 'a' | 'i' | 'u'
 
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
 
-export type VowelOrSukoon = Vowel | typeof SUKOON
+export type Sukoon = typeof SUKOON
+
+type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAMZA_ON_YEH
+
+type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
 const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
   a: FATHA,
@@ -86,11 +90,11 @@ export function applyDiacriticsPreference(input: string, preference: DiacriticsP
   return stripDiacritics(input)
 }
 
-export function isWeakLetter(value = ''): boolean {
+export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
-export function isHamzatedLetter(value = ''): boolean {
+export function isHamzatedLetter(value = ''): value is Hamza {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
@@ -114,7 +118,7 @@ export function removeTrailingDiacritics(chars: readonly string[]): readonly str
   return result
 }
 
-export function replaceFinalDiacritic(word: readonly string[], diacritic: VowelOrSukoon): readonly string[] {
+export function replaceFinalDiacritic(word: readonly string[], diacritic: Vowel | Sukoon): readonly string[] {
   const lastLetterIndex = findLastLetterIndex(word)
   const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
   if (shaddaIndex >= 0) return [...word.slice(0, lastLetterIndex + 1), SHADDA, diacritic]

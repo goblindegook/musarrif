@@ -458,12 +458,19 @@ describe('imperative', () => {
     })
 
     describe('hamzated hollow roots', () => {
-      test.each([
-        ['جيء', 'جِئْ'],
-        ['بوء', 'بُؤْ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['جيء', 'جِئْ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
+        })
+      })
+
+      test('بوء conjugation', () => {
+        expect(conjugateImperative(getVerb('بوء', 1))).toMatchObjectT({
+          '2ms': 'بُؤْ',
+          '2fs': 'بُوئِي',
+          '2d': 'بُوءَا',
+          '2mp': 'بُوئُوا',
+          '2fp': 'بُؤْنَ',
         })
       })
     })
