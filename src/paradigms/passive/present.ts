@@ -209,10 +209,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           }
 
           if (isMasculinePlural(pronounId)) {
-            const tail =
-              mood === 'indicative'
-                ? [FATHA, WAW, SUKOON, NOON, FATHA]
-                : [FATHA, WAW, SUKOON, ALIF]
+            const tail = mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, SUKOON, ALIF]
             acc[pronounId] = [prefix, DAMMA, ...c1Segment, c2, ...tail]
             return acc
           }
