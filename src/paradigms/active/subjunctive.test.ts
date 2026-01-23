@@ -202,6 +202,7 @@ describe('active present subjunctive', () => {
 
     describe('doubly weak roots', () => {
       test.each([
+        ['قوي', 'يَقْوَى'],
         ['جوي', 'يَجْوَى'],
         ['روى', 'يَرْوِيَ'],
       ])('%s pattern', (root, expected) => {

@@ -389,6 +389,7 @@ describe('active present jussive', () => {
 
     describe('doubly weak roots', () => {
       test.each([
+        ['قوي', 'يَقْوَ'],
         ['جوي', 'يَجْوَ'],
         ['روى', 'يَرْوِ'],
       ])('%s pattern', (root, expected) => {

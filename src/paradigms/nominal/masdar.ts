@@ -96,22 +96,19 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     }
 
     default:
-      // Initial weak + middle hamza + final weak (e.g., وأى → وَأْي)
       if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF_HAMZA, SUKOON, finalGlide]
 
-      // Initial weak + final weak (e.g., وقي → وِقَايَة, ولى → وِلَايَة)
       if (isInitialWeak && !isMiddleWeak && isFinalWeak)
         return [c1, KASRA, c2, FATHA, ALIF, finalGlide, FATHA, TEH_MARBUTA]
 
-      // Initial hamza + final weak (e.g., أتى → إِتْيَان)
       if (isInitialHamza && !isMiddleWeak && isFinalWeak)
         return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
 
-      // Hamzated defective (e.g., رَأَى) yields رُؤْيَة
       if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, finalGlide, FATHA, TEH_MARBUTA]
 
-      // Hollow verb with final hamza (e.g., جيء → مَجِيء)
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
+
+      if (c2 === WAW && c3 === YEH) return [c1, DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
 
       if (isFinalWeak && !isMiddleWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
 
@@ -127,20 +124,18 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 function deriveMasdarFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
+  const prefix = [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH]
 
   // Defective Form II favors تَفْعِيَة (e.g., تَغْنِيَة) over the long-ī + tanween pattern
-  if (isFinalWeak) return [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH, FATHA, TEH_MARBUTA]
+  if (isFinalWeak) return [...prefix, FATHA, TEH_MARBUTA]
 
-  return [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH, c3]
+  return [...prefix, c3]
 }
 
 function deriveMasdarFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
-  // Defective Form III masdar: drop final weak and use مُفَاعَاة pattern (e.g., وفي → مُوَافَاة)
-  // Pattern: مُ + فَ + ا + عَ + ا + ء + ة = مُفَاعَاة
-  // Similar to Form I fu3aal but with MEEM prefix and TEH_MARBUTA suffix
   if (c3 === ALIF_MAQSURA || c3 === YEH)
     return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, HAMZA, TEH_MARBUTA]
 
@@ -175,10 +170,11 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
 function deriveMasdarFormV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
+  const prefix = [TEH, FATHA, c1, FATHA, c2, SHADDA]
 
-  if (isFinalWeak) return [TEH, FATHA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
+  if (isFinalWeak) return [...prefix, TANWEEN_KASRA]
 
-  return [TEH, FATHA, c1, FATHA, c2, SHADDA, DAMMA, c3]
+  return [...prefix, DAMMA, c3]
 }
 
 function deriveMasdarFormVI(verb: Verb): readonly string[] {

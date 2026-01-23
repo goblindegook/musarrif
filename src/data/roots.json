@@ -439,6 +439,7 @@
   { "root": "قود", "form": 6 },
   { "root": "قود", "form": 7 },
   { "root": "قود", "form": 8 },
+  { "root": "قوي", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "قوم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3aal"] },
   { "root": "كان", "form": 1, "formPattern": "fa3ala-yaf3ulu", "noPassiveParticiple": true },
   { "root": "كبر", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
