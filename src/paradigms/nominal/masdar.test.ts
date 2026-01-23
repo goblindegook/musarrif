@@ -53,7 +53,7 @@ describe('masdar', () => {
         ['لزم', []],
         ['بعد', []],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -69,7 +69,7 @@ describe('masdar', () => {
         ['لمم', []],
         ['هلل', []],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -90,7 +90,7 @@ describe('masdar', () => {
         ['وثق', []],
         ['وجز', []],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -112,7 +112,7 @@ describe('masdar', () => {
         ['عوز', []],
         ['عوم', []],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -131,7 +131,7 @@ describe('masdar', () => {
         ['سعى', ['مَسْعَى']],
         ['غشي', []],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -145,7 +145,7 @@ describe('masdar', () => {
         ['روي', []],
         ['روى', 'رِوَايَة'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -158,25 +158,25 @@ describe('masdar', () => {
         ['أخذ', 'أَخْذ'],
         ['أكل', 'أَكْل'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated initial geminate roots', () => {
       test.each([['أمم', 'أَمّ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated initial defective roots', () => {
       test.each([['أتي', 'إِتْيَان']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'إِوِيّ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -185,7 +185,7 @@ describe('masdar', () => {
         ['يئس', 'يَأْس'],
         ['سأل', ['سُؤَال']],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -194,7 +194,7 @@ describe('masdar', () => {
         ['رأى', 'رُؤْيَة'],
         ['وأى', 'وَأْي'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
@@ -203,19 +203,19 @@ describe('masdar', () => {
         ['بدأ', 'بَدْء'],
         ['قرأ', 'قِرَاءَة'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final hollow roots', () => {
       test.each([['جيء', 'مَجِيء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final assimilated roots', () => {
       test.each([['وطئ', 'وَطْء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 1))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
   })
@@ -232,13 +232,13 @@ describe('masdar', () => {
         ['فعل', 'تَفْعِيل'],
         ['كتب', 'تَكْتِيب'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
     describe('geminate roots', () => {
       test.each([['حبب', 'تَحْبِيب']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
@@ -247,19 +247,19 @@ describe('masdar', () => {
         ['طير', 'تَطْيِير'],
         ['قول', 'تَقْوِيل'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
     describe('defective roots', () => {
       test.each([['غنى', 'تَغْنِيَة']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([['وفي', 'تَوْفِيَة']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
@@ -268,7 +268,7 @@ describe('masdar', () => {
         ['أكد', 'تَأْكِيد'],
         ['أثر', 'تَأْثِير'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
 
@@ -277,7 +277,7 @@ describe('masdar', () => {
         ['أود', 'تَأْوِيد'],
         ['أيد', 'تَأْيِيد'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 2))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
   })
@@ -285,7 +285,7 @@ describe('masdar', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test.each([['كتب', 'مُكَاتَبَة']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 3))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
     })
 
@@ -295,19 +295,19 @@ describe('masdar', () => {
         ['قود', 'مُقَاوَدَة'],
         ['قول', 'مُقَاوَلَة'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 3))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([['وفي', 'مُوَافَاءة']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 3))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated middle roots', () => {
       test.each([['سأل', ['مُسَاءَلَة']]])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 3))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
     })
   })
@@ -321,7 +321,7 @@ describe('masdar', () => {
         ['فلت', 'إِفْلَات'],
         ['كتب', 'إِكْتَاب'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
@@ -331,7 +331,7 @@ describe('masdar', () => {
         ['عدد', 'إِعْدَاد'],
         ['قرر', 'إِقْرَار'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
@@ -341,7 +341,7 @@ describe('masdar', () => {
         ['عون', 'إِعَانَة'],
         ['قود', 'إِقَادَة'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
@@ -352,13 +352,13 @@ describe('masdar', () => {
         ['مسي', 'إِمْسَاء'],
         ['ضحي', 'إِضْحَاء'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([['وفي', 'إِيفَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
@@ -367,19 +367,19 @@ describe('masdar', () => {
         ['أمن', 'إِيمَان'],
         ['أنشأ', 'إِنْشَاء'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'إِيوَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final roots', () => {
       test.each([['نبأ', 'إِنْبَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
   })
@@ -392,19 +392,19 @@ describe('masdar', () => {
         ['طلب', 'تَطَلُّب'],
         ['كتب', 'تَكَتُّب'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
 
     describe('geminate roots', () => {
       test.each([['حبب', 'تَحَبُّب']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
 
     describe('assimilated roots', () => {
       test.each([['وعد', 'تَوَعُّد']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
 
@@ -413,19 +413,19 @@ describe('masdar', () => {
         ['حول', 'تَحَوُّل'],
         ['قول', 'تَقَوُّل'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
 
     describe('defective roots', () => {
       test.each([['غنى', 'تَغَنٍّ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([['وفي', 'تَوَفٍّ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 5))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
   })
@@ -433,31 +433,31 @@ describe('masdar', () => {
   describe('Form VI', () => {
     describe('regular roots', () => {
       test.each([['كتب', 'تَكَاتُب']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
 
     describe('geminate roots', () => {
       test.each([['حبب', 'تَحَابُب']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
 
     describe('hollow roots', () => {
       test.each([['عون', 'تَعَاوُن']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated middle roots', () => {
       test.each([['سأل', ['تَسَاؤُل']]])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final hollow roots', () => {
       test.each([['جيء', 'تَجَاءٍ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
   })
@@ -468,13 +468,13 @@ describe('masdar', () => {
         ['فجر', 'اِنْفِجَار'],
         ['كتب', 'اِنْكِتَاب'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 7))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 7))).toEqualT([expected].flat())
       })
     })
 
     describe('hollow roots', () => {
       test.each([['قود', 'اِنْقِيَاد']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 7))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 7))).toEqualT([expected].flat())
       })
     })
   })
@@ -482,31 +482,31 @@ describe('masdar', () => {
   describe('Form VIII', () => {
     describe('regular roots', () => {
       test.each([['قرح', 'اِقْتِرَاح']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 8))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
 
     describe('assimilated roots', () => {
       test.each([['وصل', 'اِتِّصَال']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 8))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
 
     describe('hollow roots', () => {
       test.each([['قود', 'اِقْتِيَاد']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 8))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
 
     describe('defective roots', () => {
       test.each([['نهي', 'اِنْتِهَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 8))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated initial roots', () => {
       test.each([['أخذ', 'اِتِّخَاذ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 8))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
   })
@@ -517,7 +517,7 @@ describe('masdar', () => {
         ['حمر', 'اِحْمِرَار'],
         ['صفر', 'اِصْفِرَار'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 9))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 9))).toEqualT([expected].flat())
       })
     })
   })
@@ -528,7 +528,7 @@ describe('masdar', () => {
         ['عمل', 'اِسْتِعْمَال'],
         ['درس', 'اِسْتِدْرَاس'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
@@ -537,7 +537,7 @@ describe('masdar', () => {
         ['حمم', 'اِسْتِحْمَام'],
         ['حبب', 'اِسْتِحْبَاب'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
@@ -547,7 +547,7 @@ describe('masdar', () => {
         ['عاد', 'اِسْتِعَادَة'],
         ['عون', 'اِسْتِعَانَة'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
@@ -556,25 +556,25 @@ describe('masdar', () => {
         ['دعى', 'اِسْتِدْعَاء'],
         ['غنى', 'اِسْتِغْنَاء'],
       ])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([['وفي', 'اِسْتِفَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated initial roots', () => {
       test.each([['أجر', 'اِسْتِئْجَار']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final roots', () => {
       test.each([['قرأ', ['اِسْتِقْرَاء']]])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 10))).toEqual([expected].flat())
+        expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })
     })
   })

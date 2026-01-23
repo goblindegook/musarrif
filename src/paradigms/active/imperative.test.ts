@@ -29,13 +29,13 @@ describe('imperative', () => {
         ['بعد', 'اِبْعَدْ'],
         ['دعم', 'اِدْعَمْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('كَتَبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كتب', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('كتب', 1))).toMatchObjectT({
           '2ms': 'اُكْتُبْ',
           '2fs': 'اُكْتُبِي',
           '2d': 'اُكْتُبَا',
@@ -45,7 +45,7 @@ describe('imperative', () => {
       })
 
       test('نَظَرَ conjugation', () => {
-        expect(conjugateImperative(getVerb('نظر', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('نظر', 1))).toMatchObjectT({
           '2ms': 'اُنْظُرْ',
           '2fs': 'اُنْظُرِي',
           '2d': 'اُنْظُرَا',
@@ -82,13 +82,13 @@ describe('imperative', () => {
         ['وفد', 'فِدْ'],
         ['ولد', 'لِدْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('وَعَدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وعد', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وعد', 1))).toMatchObjectT({
           '2ms': 'عِدْ',
           '2fs': 'عِدِي',
           '2d': 'عِدَا',
@@ -98,7 +98,7 @@ describe('imperative', () => {
       })
 
       test('وَضَعَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وضع', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وضع', 1))).toMatchObjectT({
           '2ms': 'ضَعْ',
           '2fs': 'ضَعِي',
           '2d': 'ضَعَا',
@@ -108,7 +108,7 @@ describe('imperative', () => {
       })
 
       test('وَثُقَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وثق', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وثق', 1))).toMatchObjectT({
           '2ms': 'ثُقْ',
           '2fs': 'ثُقِي',
           '2d': 'ثُقَا',
@@ -118,7 +118,7 @@ describe('imperative', () => {
       })
 
       test('وَهُنَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وهن', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وهن', 1))).toMatchObjectT({
           '2ms': 'اُوهُنْ',
           '2fs': 'اُوهُنِي',
           '2d': 'اُوهُنَا',
@@ -128,7 +128,7 @@ describe('imperative', () => {
       })
 
       test('يَبِسَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يبس', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('يبس', 1))).toMatchObjectT({
           '2ms': 'اِيبَسْ',
           '2fs': 'اِيبَسِي',
           '2d': 'اِيبَسَا',
@@ -138,7 +138,7 @@ describe('imperative', () => {
       })
 
       test('يَسُرَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يسر', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('يسر', 1))).toMatchObjectT({
           '2ms': 'اُوسُرْ',
           '2fs': 'اُوسُرِي',
           '2d': 'اُوسُرَا',
@@ -148,7 +148,7 @@ describe('imperative', () => {
       })
 
       test('يَمَنَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يمن', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('يمن', 1))).toMatchObjectT({
           '2ms': 'اِيمَنْ',
           '2fs': 'اِيمَنِي',
           '2d': 'اِيمَنَا',
@@ -167,13 +167,13 @@ describe('imperative', () => {
         ['صير', 'صِرْ'],
         ['خور', 'اِخْوَرْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('عَوِزَ conjugation', () => {
-        expect(conjugateImperative(getVerb('عوز', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('عوز', 1))).toMatchObjectT({
           '2ms': 'اِعْوَزْ',
           '2fs': 'اِعْوَزِي',
           '2d': 'اِعْوَزَا',
@@ -183,7 +183,7 @@ describe('imperative', () => {
       })
 
       test('كَانَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كان', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('كان', 1))).toMatchObjectT({
           '2ms': 'كُنْ',
           '2fs': 'كُونِي',
           '2d': 'كُونَا',
@@ -193,7 +193,7 @@ describe('imperative', () => {
       })
 
       test('جَيِدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('جيد', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('جيد', 1))).toMatchObjectT({
           '2ms': 'اِجْيَدْ',
           '2fs': 'اِجْيَدِي',
           '2d': 'اِجْيَدَا',
@@ -203,7 +203,7 @@ describe('imperative', () => {
       })
 
       test('زَارَ conjugation', () => {
-        expect(conjugateImperative(getVerb('زور', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('زور', 1))).toMatchObjectT({
           '2ms': 'زُرْ',
           '2fs': 'زُورِي',
           '2d': 'زُورَا',
@@ -213,7 +213,7 @@ describe('imperative', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugateImperative(getVerb('دعا', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('دعا', 1))).toMatchObjectT({
           '2ms': 'اُدْعُ',
           '2fs': 'اُدْعِي',
           '2d': 'اُدْعُوَا',
@@ -223,7 +223,7 @@ describe('imperative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugateImperative(getVerb('باع', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('باع', 1))).toMatchObjectT({
           '2ms': 'بِعْ',
           '2fs': 'بِيعِي',
           '2d': 'بِيعَا',
@@ -233,7 +233,7 @@ describe('imperative', () => {
       })
 
       test('شَادَ conjugation', () => {
-        expect(conjugateImperative(getVerb('شيد', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('شيد', 1))).toMatchObjectT({
           '2ms': 'شِدْ',
           '2fs': 'شِيدِي',
           '2d': 'شِيدَا',
@@ -243,7 +243,7 @@ describe('imperative', () => {
       })
 
       test('قَالَ conjugation', () => {
-        expect(conjugateImperative(getVerb('قول', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('قول', 1))).toMatchObjectT({
           '2ms': 'قُلْ',
           '2fs': 'قُولِي',
           '2d': 'قُولَا',
@@ -265,14 +265,14 @@ describe('imperative', () => {
         ['جري', 'اِجْرِ'],
         ['غدو', 'اِغْدُ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
       test('بَقِيَ conjugation', () => {
-        expect(conjugateImperative(getVerb('بقي', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('بقي', 1))).toMatchObjectT({
           '2ms': 'اِبْقَ',
           '2fs': 'اِبْقَيْ',
           '2d': 'اِبْقَيَا',
@@ -282,7 +282,7 @@ describe('imperative', () => {
       })
 
       test('تَحَا conjugation', () => {
-        expect(conjugateImperative(getVerb('تحو', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('تحو', 1))).toMatchObjectT({
           '2ms': 'اِتْحُ',
           '2fs': 'اِتْحَيْ',
           '2d': 'تْحَيَا',
@@ -301,13 +301,13 @@ describe('imperative', () => {
         ['وعي', 'عِ'],
         ['روى', 'اِرْوِ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('وَفَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 1))).toMatchObjectT({
           '2ms': 'فِ',
           '2fs': 'فِي',
           '2d': 'فِيَا',
@@ -317,7 +317,7 @@ describe('imperative', () => {
       })
 
       test('رَوِيَ conjugation', () => {
-        expect(conjugateImperative(getVerb('روي', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('روي', 1))).toMatchObjectT({
           '2ms': 'اِرْوِ',
           '2fs': 'اِرْوِي',
           '2d': 'اِرْوِيَا',
@@ -334,13 +334,13 @@ describe('imperative', () => {
         ['جبب', 'جُبَّ'],
         ['عنن', 'عِنَّ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('قَرَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('قرر', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('قرر', 1))).toMatchObjectT({
           '2ms': 'قَرَّ',
           '2fs': 'قَرِّي',
           '2d': 'قَرَّا',
@@ -350,7 +350,7 @@ describe('imperative', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('أمم', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أمم', 1))).toMatchObjectT({
           '2ms': 'أُمَّ',
           '2fs': 'أُمِّي',
           '2d': 'أُمَّا',
@@ -360,7 +360,7 @@ describe('imperative', () => {
       })
 
       test('حَبَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('حبب', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('حبب', 1))).toMatchObjectT({
           '2ms': 'حِبَّ',
           '2fs': 'حِبِّي',
           '2d': 'حِبَّا',
@@ -370,7 +370,7 @@ describe('imperative', () => {
       })
 
       test('ظَلَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('ظلل', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('ظلل', 1))).toMatchObjectT({
           '2ms': 'ظَلَّ',
           '2fs': 'ظَلِّي',
           '2d': 'ظَلَّا',
@@ -380,7 +380,7 @@ describe('imperative', () => {
       })
 
       test('وَدَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('ودد', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('ودد', 1))).toMatchObjectT({
           '2ms': 'وَدَّ',
           '2fs': 'وَدِّي',
           '2d': 'وَدَّا',
@@ -392,7 +392,7 @@ describe('imperative', () => {
 
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أخذ', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أخذ', 1))).toMatchObjectT({
           '2ms': 'خُذْ',
           '2fs': 'خُذِي',
           '2d': 'خُذَا',
@@ -402,7 +402,7 @@ describe('imperative', () => {
       })
 
       test('أَسَرَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أسر', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أسر', 1))).toMatchObjectT({
           '2ms': 'اِيسِرْ',
           '2fs': 'اِيسِرِي',
           '2d': 'اِيسِرَا',
@@ -412,7 +412,7 @@ describe('imperative', () => {
       })
 
       test('أَذِنَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أذن', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أذن', 1))).toMatchObjectT({
           '2ms': 'اِيذَنْ',
           '2fs': 'اِيذَنِي',
           '2d': 'اِيذَنَا',
@@ -424,7 +424,7 @@ describe('imperative', () => {
 
     describe('hamzated initial defective roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugateImperative(getVerb('أتي', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أتي', 1))).toMatchObjectT({
           '2ms': 'ائْتِ',
           '2fs': 'ائْتِي',
           '2d': 'ائْتِيَا',
@@ -436,13 +436,13 @@ describe('imperative', () => {
 
     describe('hamzated initial hollow-defective roots', () => {
       test.each([['أوي', 'اِيوِ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('أَوَى conjugation', () => {
-        expect(conjugateImperative(getVerb('أوي', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('أوي', 1))).toMatchObjectT({
           '2ms': 'اِيوِ',
           '2fs': 'اِيوِي',
           '2d': 'اِيوِيَا',
@@ -454,7 +454,7 @@ describe('imperative', () => {
 
     describe('hamzated hollow roots', () => {
       test.each([['جيء', 'جِئْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 1))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -462,7 +462,7 @@ describe('imperative', () => {
 
     describe('hamzated middle roots', () => {
       test('يَئِسَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يئس', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('يئس', 1))).toMatchObjectT({
           '2ms': 'اِيئَسْ',
           '2fs': 'اِيئَسِي',
           '2d': 'اِيئَسَا',
@@ -472,7 +472,7 @@ describe('imperative', () => {
       })
 
       test('سَأَلَ conjugation', () => {
-        expect(conjugateImperative(getVerb('سأل', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('سأل', 1))).toMatchObjectT({
           '2ms': 'اِسْأَلْ',
           '2fs': 'اِسْأَلِي',
           '2d': 'اِسْأَلَا',
@@ -484,7 +484,7 @@ describe('imperative', () => {
 
     describe('hamzated middle defective roots', () => {
       test('رَأَى conjugation', () => {
-        expect(conjugateImperative(getVerb('رأى', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('رأى', 1))).toMatchObjectT({
           '2ms': 'رَ',
           '2fs': 'رَيْ',
           '2d': 'رَيَا',
@@ -496,7 +496,7 @@ describe('imperative', () => {
 
     describe('hamzated final roots', () => {
       test('بَدَأَ conjugation', () => {
-        expect(conjugateImperative(getVerb('بدأ', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('بدأ', 1))).toMatchObjectT({
           '2ms': 'اِبْدَأْ',
           '2fs': 'اِبْدَئِي',
           '2d': 'اِبْدَآ',
@@ -506,7 +506,7 @@ describe('imperative', () => {
       })
 
       test('قَرَأَ conjugation', () => {
-        expect(conjugateImperative(getVerb('قرأ', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('قرأ', 1))).toMatchObjectT({
           '2ms': 'اِقْرَأْ',
           '2fs': 'اِقْرَئِي',
           '2d': 'اِقْرَآ',
@@ -516,7 +516,7 @@ describe('imperative', () => {
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وطئ', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وطئ', 1))).toMatchObjectT({
           '2ms': 'طَأْ',
           '2fs': 'طَئِي',
           '2d': 'طَآ',
@@ -528,7 +528,7 @@ describe('imperative', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وأى', 1))).toMatchObject({
+        expect(conjugateImperative(getVerb('وأى', 1))).toMatchObjectT({
           '2ms': 'ئِ',
           '2fs': 'ئِي',
           '2d': 'ئِيَا',
@@ -544,7 +544,7 @@ describe('imperative', () => {
           fc.property(
             arbitraryVerb.filter(({ form }) => form === 1),
             (verb) => {
-              expect(conjugateImperative(verb)).toMatchObject({
+              expect(conjugateImperative(verb)).toMatchObjectT({
                 '1s': '',
                 '1p': '',
                 '3ms': '',
@@ -571,7 +571,7 @@ describe('imperative', () => {
           ['ذكر', 'ذَكِّرْ'],
           ['جمع', 'جَمِّعْ'],
         ])('%s pattern', (root, expected) => {
-          expect(conjugateImperative(getVerb(root, 2))).toMatchObject({
+          expect(conjugateImperative(getVerb(root, 2))).toMatchObjectT({
             '2ms': expected,
           })
         })
@@ -579,7 +579,7 @@ describe('imperative', () => {
 
       describe('full conjugation tests', () => {
         test('كَتَّبَ', () => {
-          expect(conjugateImperative(getVerb('كتب', 2))).toMatchObject({
+          expect(conjugateImperative(getVerb('كتب', 2))).toMatchObjectT({
             '2ms': 'كَتِّبْ',
             '2fs': 'كَتِّبِي',
             '2d': 'كَتِّبَا',
@@ -610,7 +610,7 @@ describe('imperative', () => {
 
     describe('geminate roots', () => {
       test('حَبَّبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('حبب', 2))).toMatchObject({
+        expect(conjugateImperative(getVerb('حبب', 2))).toMatchObjectT({
           '2ms': 'حَبِّبْ',
           '2fs': 'حَبِّبِي',
           '2d': 'حَبِّبَا',
@@ -628,7 +628,7 @@ describe('imperative', () => {
 
     describe('doubly weak roots', () => {
       test('وَفَّى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 2))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 2))).toMatchObjectT({
           '2ms': 'وَفِّ',
           '2fs': 'وَفِّي',
           '2d': 'وَفِّيَا',
@@ -640,13 +640,13 @@ describe('imperative', () => {
 
     describe('hamzated initial roots', () => {
       test.each([['أكد', 'أَكِّدْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 2))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 2))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('أَثَّرَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أثر', 2))).toMatchObject({
+        expect(conjugateImperative(getVerb('أثر', 2))).toMatchObjectT({
           '2ms': 'أَثِّرْ',
           '2fs': 'أَثِّرِي',
           '2d': 'أَثِّرَا',
@@ -658,7 +658,7 @@ describe('imperative', () => {
 
     describe('hamzated initial hollow roots', () => {
       test('أَيَّدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أيد', 2))).toMatchObject({
+        expect(conjugateImperative(getVerb('أيد', 2))).toMatchObjectT({
           '2ms': 'أَيِّدْ',
           '2fs': 'أَيِّدِي',
           '2d': 'أَيِّدَا',
@@ -668,7 +668,7 @@ describe('imperative', () => {
       })
 
       test('أَوَّدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أود', 2))).toMatchObject({
+        expect(conjugateImperative(getVerb('أود', 2))).toMatchObjectT({
           '2ms': 'أَوِّدْ',
           '2fs': 'أَوِّدِي',
           '2d': 'أَوِّدَا',
@@ -682,7 +682,7 @@ describe('imperative', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test('كَاتَبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كتب', 3))).toMatchObject({
+        expect(conjugateImperative(getVerb('كتب', 3))).toMatchObjectT({
           '2ms': 'كَاتِبْ',
           '2fs': 'كَاتِبِي',
           '2d': 'كَاتِبَا',
@@ -694,7 +694,7 @@ describe('imperative', () => {
 
     describe('hollow roots', () => {
       test('قَاوَلَ conjugation', () => {
-        expect(conjugateImperative(getVerb('قول', 3))).toMatchObject({
+        expect(conjugateImperative(getVerb('قول', 3))).toMatchObjectT({
           '2ms': 'قَاوِلْ',
           '2fs': 'قَاوِلِي',
           '2d': 'قَاوِلَا',
@@ -706,7 +706,7 @@ describe('imperative', () => {
 
     describe('doubly weak roots', () => {
       test('وَافَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 3))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 3))).toMatchObjectT({
           '2ms': 'وَافِ',
           '2fs': 'وَافِي',
           '2d': 'وَافِيَا',
@@ -718,7 +718,7 @@ describe('imperative', () => {
 
     describe('hamzated middle roots', () => {
       test('سَاءَلَ', () => {
-        expect(conjugateImperative(getVerb('سأل', 3))).toMatchObject({
+        expect(conjugateImperative(getVerb('سأل', 3))).toMatchObjectT({
           '2ms': 'سَائِلْ',
           '2fs': 'سَائِلِي',
           '2d': 'سَائِلَا',
@@ -735,14 +735,14 @@ describe('imperative', () => {
         ['مكن', 'أَمْكِنْ'],
         ['صبح', 'أَصْبِحْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 4))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       describe('full conjugation tests', () => {
         test('أَكْتَبَ conjugation', () => {
-          expect(conjugateImperative(getVerb('كتب', 4))).toMatchObject({
+          expect(conjugateImperative(getVerb('كتب', 4))).toMatchObjectT({
             '2ms': 'أَكْتِبْ',
             '2fs': 'أَكْتِبِي',
             '2d': 'أَكْتِبَا',
@@ -765,7 +765,7 @@ describe('imperative', () => {
 
     describe('doubly weak roots', () => {
       test('أَوْفَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 4))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 4))).toMatchObjectT({
           '2ms': 'أَوْفِ',
           '2fs': 'أَوْفِي',
           '2d': 'أَوْفِيَا',
@@ -777,7 +777,7 @@ describe('imperative', () => {
 
     describe('geminate roots', () => {
       test('أَحَبَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('حبب', 4))).toMatchObject({
+        expect(conjugateImperative(getVerb('حبب', 4))).toMatchObjectT({
           '2ms': 'أَحِبَّ',
           '2fs': 'أَحِبِّي',
           '2d': 'أَحِبَّا',
@@ -789,7 +789,7 @@ describe('imperative', () => {
 
     describe('hamzated final roots', () => {
       test.each([['أنشأ', 'أَنْشِئْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 4))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -797,7 +797,7 @@ describe('imperative', () => {
 
     describe('hamzated initial hollow-defective roots', () => {
       test.each([['أوي', 'آوِ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 4))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -823,13 +823,13 @@ describe('imperative', () => {
         ['ضمن', 'تَضَمَّنْ'],
         ['طلب', 'تَطَلَّبْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 5))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 5))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       test('تَكَتَّبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كتب', 5))).toMatchObject({
+        expect(conjugateImperative(getVerb('كتب', 5))).toMatchObjectT({
           '2ms': 'تَكَتَّبْ',
           '2fs': 'تَكَتَّبِي',
           '2d': 'تَكَتَّبَا',
@@ -841,7 +841,7 @@ describe('imperative', () => {
 
     describe('geminate roots', () => {
       test.each([['حبب', 'تَحَبَّبْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 5))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 5))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -849,7 +849,7 @@ describe('imperative', () => {
 
     describe('assimilated roots', () => {
       test('تَوَعَّدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وعد', 5))).toMatchObject({
+        expect(conjugateImperative(getVerb('وعد', 5))).toMatchObjectT({
           '2ms': 'تَوَعَّدْ',
           '2fs': 'تَوَعَّدِي',
           '2d': 'تَوَعَّدَا',
@@ -861,14 +861,14 @@ describe('imperative', () => {
 
     describe('hollow roots', () => {
       test.each([['حول', 'تَحَوَّلْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 5))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 5))).toMatchObjectT({
           '2ms': expected,
         })
       })
 
       describe('full conjugation tests', () => {
         test('تَقَوَّلَ conjugation', () => {
-          expect(conjugateImperative(getVerb('قول', 5))).toMatchObject({
+          expect(conjugateImperative(getVerb('قول', 5))).toMatchObjectT({
             '2ms': 'تَقَوَّلْ',
             '2fs': 'تَقَوَّلِي',
             '2d': 'تَقَوَّلَا',
@@ -881,7 +881,7 @@ describe('imperative', () => {
 
     describe('doubly weak roots', () => {
       test('تَوَفَّى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 5))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 5))).toMatchObjectT({
           '2ms': 'تَوَفَّ',
           '2fs': 'تَوَفَّيْ',
           '2d': 'تَوَفَّيَا',
@@ -895,7 +895,7 @@ describe('imperative', () => {
   describe('Form VI', () => {
     describe('regular roots', () => {
       test('تَكَاتَبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كتب', 6))).toMatchObject({
+        expect(conjugateImperative(getVerb('كتب', 6))).toMatchObjectT({
           '2ms': 'تَكَاتَبْ',
           '2fs': 'تَكَاتَبِي',
           '2d': 'تَكَاتَبَا',
@@ -907,7 +907,7 @@ describe('imperative', () => {
 
     describe('hamzated middle roots', () => {
       test('تَسَاءَلَ conjugation', () => {
-        expect(conjugateImperative(getVerb('سأل', 6))).toMatchObject({
+        expect(conjugateImperative(getVerb('سأل', 6))).toMatchObjectT({
           '2ms': 'تَسَاءَلْ',
           '2fs': 'تَسَاءَلِي',
           '2d': 'تَسَاءَلَا',
@@ -921,7 +921,7 @@ describe('imperative', () => {
   describe('Form VII', () => {
     describe('regular roots', () => {
       test('اِنْكَتَبَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كتب', 7))).toMatchObject({
+        expect(conjugateImperative(getVerb('كتب', 7))).toMatchObjectT({
           '2ms': 'اِنْكَتِبْ',
           '2fs': 'اِنْكَتِبِي',
           '2d': 'اِنْكَتِبَا',
@@ -943,7 +943,7 @@ describe('imperative', () => {
   describe('Form VIII', () => {
     describe('regular roots', () => {
       test.each([['قرح', 'اِقْتَرِحْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 8))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 8))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -967,7 +967,7 @@ describe('imperative', () => {
 
     describe('hamzated initial roots', () => {
       test('اِتَّخَذَ conjugation', () => {
-        expect(conjugateImperative(getVerb('أخذ', 8))).toMatchObject({
+        expect(conjugateImperative(getVerb('أخذ', 8))).toMatchObjectT({
           '2ms': 'اِتَّخِذْ',
           '2fs': 'اِتَّخِذِي',
           '2d': 'اِتَّخِذَا',
@@ -981,7 +981,7 @@ describe('imperative', () => {
   describe('Form IX', () => {
     describe('regular roots', () => {
       test.each([['حمر', 'اِحْمَرَّ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 9))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 9))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -991,7 +991,7 @@ describe('imperative', () => {
   describe('Form X', () => {
     describe('regular roots', () => {
       test.each([['عمل', 'اِسْتَعْمِلْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 10))).toMatchObject({
+        expect(conjugateImperative(getVerb(root, 10))).toMatchObjectT({
           '2ms': expected,
         })
       })
@@ -999,7 +999,7 @@ describe('imperative', () => {
 
     describe('doubly weak roots', () => {
       test('اِسْتَوْفَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وفي', 10))).toMatchObject({
+        expect(conjugateImperative(getVerb('وفي', 10))).toMatchObjectT({
           '2ms': 'اِسْتَوْفِ',
           '2fs': 'اِسْتَوْفِي',
           '2d': 'اِسْتَوْفِيَا',
@@ -1011,7 +1011,7 @@ describe('imperative', () => {
 
     describe('geminate roots', () => {
       test('اِسْتَحَمَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('حمم', 10))).toMatchObject({
+        expect(conjugateImperative(getVerb('حمم', 10))).toMatchObjectT({
           '2ms': 'اِسْتَحِمَّ',
           '2fs': 'اِسْتَحِمِّي',
           '2d': 'اِسْتَحِمَّا',
@@ -1021,7 +1021,7 @@ describe('imperative', () => {
       })
 
       test('اِسْتَحَبَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('حبب', 10))).toMatchObject({
+        expect(conjugateImperative(getVerb('حبب', 10))).toMatchObjectT({
           '2ms': 'اِسْتَحِبَّ',
           '2fs': 'اِسْتَحِبِّي',
           '2d': 'اِسْتَحِبَّا',
@@ -1033,7 +1033,7 @@ describe('imperative', () => {
 
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
-        expect(conjugateImperative(getVerb('قرأ', 10))).toMatchObject({
+        expect(conjugateImperative(getVerb('قرأ', 10))).toMatchObjectT({
           '2ms': 'اِسْتَقْرِئْ',
           '2fs': 'اِسْتَقْرِئِي',
           '2d': 'اِسْتَقْرِئَا',
@@ -1062,7 +1062,7 @@ describe('imperative', () => {
   test('only exists for second person pronouns', () => {
     fc.assert(
       fc.property(arbitraryVerb, (verb) => {
-        expect(conjugateImperative(verb)).toMatchObject({
+        expect(conjugateImperative(verb)).toMatchObjectT({
           '1s': '',
           '1p': '',
           '3ms': '',

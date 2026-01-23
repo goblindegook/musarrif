@@ -11,13 +11,13 @@ describe('active present jussive', () => {
         ['مثل', 'يَمْثُلْ'],
         ['دعم', 'يَدْعَمْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('drops nūn endings for صَرَفَ', () => {
-        expect(conjugatePresentMood(getVerb('صرف', 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('صرف', 1), 'jussive')).toMatchObjectT({
           '2ms': 'تَصْرِفْ',
           '2fs': 'تَصْرِفِي',
           '2d': 'تَصْرِفَا',
@@ -31,7 +31,7 @@ describe('active present jussive', () => {
       })
 
       test('صَغُرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('صغر', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('صغر', 1), 'jussive')).toEqualT({
           '1s': 'أَصْغُرْ',
           '2ms': 'تَصْغُرْ',
           '2fs': 'تَصْغُرِي',
@@ -49,7 +49,7 @@ describe('active present jussive', () => {
       })
 
       test('نَظَرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('نظر', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('نظر', 1), 'jussive')).toEqualT({
           '1s': 'أَنْظُرْ',
           '2ms': 'تَنْظُرْ',
           '2fs': 'تَنْظُرِي',
@@ -69,13 +69,13 @@ describe('active present jussive', () => {
 
     describe('geminate roots', () => {
       test.each([['قرر', 'يَقَرَّ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('قَرَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('قرر', 1), 'jussive')).toEqualT({
           '1s': 'أَقَرَّ',
           '2ms': 'تَقَرَّ',
           '2fs': 'تَقَرِّي',
@@ -93,7 +93,7 @@ describe('active present jussive', () => {
       })
 
       test('حَبَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حبب', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('حبب', 1), 'jussive')).toEqualT({
           '1s': 'أَحِبَّ',
           '2ms': 'تَحِبَّ',
           '2fs': 'تَحِبِّي',
@@ -111,7 +111,7 @@ describe('active present jussive', () => {
       })
 
       test('ظَلَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('ظلل', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('ظلل', 1), 'jussive')).toEqualT({
           '1s': 'أَظَلَّ',
           '2ms': 'تَظَلَّ',
           '2fs': 'تَظَلِّي',
@@ -131,7 +131,7 @@ describe('active present jussive', () => {
 
     describe('assimilated roots', () => {
       test('وَضَعَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وضع', 1), 'jussive')).toEqualT({
           '1s': 'أَضَعْ',
           '2ms': 'تَضَعْ',
           '2fs': 'تَضَعِي',
@@ -149,7 +149,7 @@ describe('active present jussive', () => {
       })
 
       test('وَثُقَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وثق', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وثق', 1), 'jussive')).toEqualT({
           '1s': 'أَثُقْ',
           '2ms': 'تَثُقْ',
           '2fs': 'تَثُقِي',
@@ -167,7 +167,7 @@ describe('active present jussive', () => {
       })
 
       test('وَهُنَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وهن', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وهن', 1), 'jussive')).toEqualT({
           '1s': 'أَوْهُنْ',
           '2ms': 'تَوْهُنْ',
           '2fs': 'تَوْهُنِي',
@@ -185,7 +185,7 @@ describe('active present jussive', () => {
       })
 
       test('يَئِسَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('يئس', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('يئس', 1), 'jussive')).toEqualT({
           '1s': 'أَيْئَسْ',
           '2ms': 'تَيْئَسْ',
           '2fs': 'تَيْئَسِي',
@@ -203,7 +203,7 @@ describe('active present jussive', () => {
       })
 
       test('يَسُرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('يسر', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('يسر', 1), 'jussive')).toEqualT({
           '1s': 'أَيْسُرْ',
           '2ms': 'تَيْسُرْ',
           '2fs': 'تَيْسُرِي',
@@ -221,7 +221,7 @@ describe('active present jussive', () => {
       })
 
       test('يَبِسَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('يبس', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('يبس', 1), 'jussive')).toEqualT({
           '1s': 'أَيْبَسْ',
           '2ms': 'تَيْبَسْ',
           '2fs': 'تَيْبَسِي',
@@ -246,13 +246,13 @@ describe('active present jussive', () => {
         ['حول', 'يَحُلْ'],
         ['خور', 'يَخْوَرْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('عَوِزَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toEqualT({
           '1s': 'أَعْوَزْ',
           '2ms': 'تَعْوَزْ',
           '2fs': 'تَعْوَزِي',
@@ -270,7 +270,7 @@ describe('active present jussive', () => {
       })
 
       test('جَيِدَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('جيد', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('جيد', 1), 'jussive')).toEqualT({
           '1s': 'أَجْيَدْ',
           '2ms': 'تَجْيَدْ',
           '2fs': 'تَجْيَدِي',
@@ -288,7 +288,7 @@ describe('active present jussive', () => {
       })
 
       test('شَادَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('شيد', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('شيد', 1), 'jussive')).toEqualT({
           '1s': 'أَشِدْ',
           '2ms': 'تَشِدْ',
           '2fs': 'تَشِيدِي',
@@ -306,7 +306,7 @@ describe('active present jussive', () => {
       })
 
       test('shortens hollow stems without suffixes for قَالَ', () => {
-        expect(conjugatePresentMood(getVerb('قول', 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('قول', 1), 'jussive')).toMatchObjectT({
           '3ms': 'يَقُلْ',
           '2ms': 'تَقُلْ',
           '3fs': 'تَقُلْ',
@@ -327,13 +327,13 @@ describe('active present jussive', () => {
         ['لهو', 'يَلْهُ'],
         ['شفي', 'يَشْفِ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('بَقِيَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqualT({
           '1s': 'أَبْقَ',
           '2ms': 'تَبْقَ',
           '2fs': 'تَبْقَيْ',
@@ -351,7 +351,7 @@ describe('active present jussive', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('دعا', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('دعا', 1), 'jussive')).toEqualT({
           '1s': 'أَدْعُ',
           '2ms': 'تَدْعُ',
           '2fs': 'تَدْعِي',
@@ -369,7 +369,7 @@ describe('active present jussive', () => {
       })
 
       test('تَحَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('تحو', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('تحو', 1), 'jussive')).toEqualT({
           '1s': 'أَتْحُ',
           '2ms': 'تَتْحُ',
           '2fs': 'تَتْحَيْ',
@@ -389,13 +389,13 @@ describe('active present jussive', () => {
 
     describe('doubly weak roots', () => {
       test.each([['روى', 'يَرْوِ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('رَوِيَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('روي', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('روي', 1), 'jussive')).toEqualT({
           '1s': 'أَرْوِ',
           '2ms': 'تَرْوِ',
           '2fs': 'تَرْوِي',
@@ -415,7 +415,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial roots', () => {
       test('أَسَرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أسر', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أسر', 1), 'jussive')).toEqualT({
           '1s': 'آسِرْ',
           '2ms': 'تَأْسِرْ',
           '2fs': 'تَأْسِرِي',
@@ -433,7 +433,7 @@ describe('active present jussive', () => {
       })
 
       test('أَذِنَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أذن', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أذن', 1), 'jussive')).toEqualT({
           '1s': 'آذَنْ',
           '2ms': 'تَأْذَنْ',
           '2fs': 'تَأْذَنِي',
@@ -451,7 +451,7 @@ describe('active present jussive', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أمم', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أمم', 1), 'jussive')).toEqualT({
           '1s': 'أَؤُمَّ',
           '2ms': 'تَؤُمَّ',
           '2fs': 'تَؤُمِّي',
@@ -471,7 +471,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final roots', () => {
       test('قَرَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرأ', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('قرأ', 1), 'jussive')).toEqualT({
           '1s': 'أَقْرَأْ',
           '2ms': 'تَقْرَأْ',
           '2fs': 'تَقْرَئِي',
@@ -489,7 +489,7 @@ describe('active present jussive', () => {
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وطئ', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وطئ', 1), 'jussive')).toEqualT({
           '1s': 'أَطَأْ',
           '2ms': 'تَطَأْ',
           '2fs': 'تَطَئِي',
@@ -507,7 +507,7 @@ describe('active present jussive', () => {
       })
 
       test('بَدَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بدأ', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('بدأ', 1), 'jussive')).toEqualT({
           '1s': 'أَبْدَأْ',
           '2ms': 'تَبْدَأْ',
           '2fs': 'تَبْدَئِي',
@@ -527,7 +527,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final hollow roots', () => {
       test('drops final hamza for جَاءَ', () => {
-        expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toMatchObjectT({
           '3ms': 'يَجِئْ',
           '2ms': 'تَجِئْ',
           '1s': 'أَجِئْ',
@@ -541,7 +541,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial defective roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أتي', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أتي', 1), 'jussive')).toEqualT({
           '1s': 'آتِ',
           '2ms': 'تَأْتِ',
           '2fs': 'تَأْتِي',
@@ -561,7 +561,7 @@ describe('active present jussive', () => {
 
     describe('hamzated middle defective roots', () => {
       test('رَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رأى', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('رأى', 1), 'jussive')).toEqualT({
           '1s': 'أَرَ',
           '2ms': 'تَرَ',
           '2fs': 'تَرَيْ',
@@ -581,7 +581,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وأى', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وأى', 1), 'jussive')).toEqualT({
           '1s': 'أَئِ',
           '2ms': 'تَئِ',
           '2fs': 'تَئِي',
@@ -601,13 +601,13 @@ describe('active present jussive', () => {
 
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'يَأْوِ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('أَوَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أوي', 1), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أوي', 1), 'jussive')).toEqualT({
           '1s': 'آوِ',
           '1p': 'نَأْوِ',
           '2ms': 'تَأْوِ',
@@ -629,7 +629,7 @@ describe('active present jussive', () => {
   describe('Form II', () => {
     describe('geminate roots', () => {
       test('حَبَّبَ pattern', () => {
-        expect(conjugatePresentMood(getVerb('حبب', 2), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('حبب', 2), 'jussive')).toEqualT({
           '1s': 'أُحَبِّبْ',
           '2ms': 'تُحَبِّبْ',
           '2fs': 'تُحَبِّبِي',
@@ -649,7 +649,7 @@ describe('active present jussive', () => {
 
     describe('doubly weak roots', () => {
       test('وَفَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqualT({
           '1s': 'أُوَفِّ',
           '1p': 'نُوَفِّ',
           '2ms': 'تُوَفِّ',
@@ -669,7 +669,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial roots', () => {
       test('أَثَّرَ pattern', () => {
-        expect(conjugatePresentMood(getVerb('أثر', 2), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أثر', 2), 'jussive')).toEqualT({
           '1s': 'أُؤَثِّرْ',
           '2ms': 'تُؤَثِّرْ',
           '2fs': 'تُؤَثِّرِي',
@@ -689,7 +689,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial hollow roots', () => {
       test('أَيَّدَ pattern', () => {
-        expect(conjugatePresentMood(getVerb('أيد', 2), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('أيد', 2), 'jussive')).toEqualT({
           '1s': 'أُؤَيِّدْ',
           '2ms': 'تُؤَيِّدْ',
           '2fs': 'تُؤَيِّدِي',
@@ -711,7 +711,7 @@ describe('active present jussive', () => {
   describe('Form IV', () => {
     describe('geminate roots', () => {
       test('أَحَبَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حبب', 4), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('حبب', 4), 'jussive')).toEqualT({
           '1s': 'أُحِبَّ',
           '2ms': 'تُحِبَّ',
           '2fs': 'تُحِبِّي',
@@ -731,7 +731,7 @@ describe('active present jussive', () => {
 
     describe('defective roots', () => {
       test('drops the final glide for أَعْطَى', () => {
-        expect(conjugatePresentMood(getVerb('عطى', 4), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('عطى', 4), 'jussive')).toMatchObjectT({
           '3ms': 'يُعْطِ',
           '2ms': 'تُعْطِ',
           '1p': 'نُعْطِ',
@@ -741,7 +741,7 @@ describe('active present jussive', () => {
       })
 
       test('drops the final glide for أَضْحَى', () => {
-        expect(conjugatePresentMood(getVerb('ضحي', 4), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('ضحي', 4), 'jussive')).toMatchObjectT({
           '3ms': 'يُضْحِ',
           '2ms': 'تُضْحِ',
           '1p': 'نُضْحِ',
@@ -760,7 +760,7 @@ describe('active present jussive', () => {
         // Masculine plural forms have damma before waw (similar to Form II)
         // Feminine plural forms preserve yeh before noon + fatḥa (similar to Form II)
         // 2fs form has kasra before final yeh (similar to Form II)
-        expect(conjugatePresentMood(getVerb('وفي', 5), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وفي', 5), 'jussive')).toEqualT({
           '1s': 'أَتَوَفَّ',
           '2ms': 'تَتَوَفَّ',
           '2fs': 'تَتَوَفَّيْ',
@@ -798,7 +798,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial roots', () => {
       test('drops the hamza', () => {
-        expect(conjugatePresentMood(getVerb('أخذ', 8), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('أخذ', 8), 'jussive')).toMatchObjectT({
           '3ms': 'يَتَّخِذْ',
           '2ms': 'تَتَّخِذْ',
           '1s': 'أَتَّخِذْ',
@@ -810,7 +810,7 @@ describe('active present jussive', () => {
   describe('Form IX', () => {
     describe('regular roots', () => {
       test('shadda is preserved', () => {
-        expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObjectT({
           '3ms': 'يَحْمَرَّ',
           '2ms': 'تَحْمَرَّ',
           '1s': 'أَحْمَرَّ',
@@ -818,7 +818,7 @@ describe('active present jussive', () => {
       })
 
       test('shadda is expanded for feminine plural', () => {
-        expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObject({
+        expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObjectT({
           '2fp': 'تَحْمَرَرْنَ',
           '3fp': 'يَحْمَرَرْنَ',
         })
@@ -830,7 +830,7 @@ describe('active present jussive', () => {
     describe('geminate roots', () => {
       test('اِسْتَحَمَّ conjugation', () => {
         // Wiktionary lists multiple jussive variants; this uses the contracted form with shadda.
-        expect(conjugatePresentMood(getVerb('حمم', 10), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('حمم', 10), 'jussive')).toEqualT({
           '1s': 'أَسْتَحِمَّ',
           '2ms': 'تَسْتَحِمَّ',
           '2fs': 'تَسْتَحِمِّي',
@@ -857,7 +857,7 @@ describe('active present jussive', () => {
 
     describe('doubly weak roots', () => {
       test('preserves initial weak and drops final weak for اِسْتَوْفَى jussive', () => {
-        expect(conjugatePresentMood(getVerb('وفي', 10), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('وفي', 10), 'jussive')).toEqualT({
           '1s': 'أَسْتَوْفِ',
           '2ms': 'تَسْتَوْفِ',
           '2fs': 'تَسْتَوْفِي',
@@ -877,7 +877,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ (Form X) conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرأ', 10), 'jussive')).toEqual({
+        expect(conjugatePresentMood(getVerb('قرأ', 10), 'jussive')).toEqualT({
           '1s': 'أَسْتَقْرِئْ',
           '2ms': 'تَسْتَقْرِئْ',
           '2fs': 'تَسْتَقْرِئِي',

@@ -26,5 +26,5 @@ it.each([
   ['none', 'يَقُولُ', 'يقول'],
   ['all', 'يَقُولُ', 'يَقُولُ'],
 ])('showing %s of the diacritics for %s yields %s', (preference, input: string, expected: string) => {
-  expect(applyDiacriticsPreference(input, preference as DiacriticsPreference)).toBe(expected)
+  expect(applyDiacriticsPreference(input, preference as DiacriticsPreference)).toEqualT(expected)
 })

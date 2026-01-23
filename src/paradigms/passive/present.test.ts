@@ -87,7 +87,7 @@ describe('passive present indicative', () => {
   describe('passive present indicative', () => {
     describe('strong roots', () => {
       test('كَتَبَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'indicative')).toEqualT({
           '1s': 'أُكْتَبُ',
           '2ms': 'تُكْتَبُ',
           '2fs': 'تُكْتَبِيْنَ',
@@ -105,7 +105,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَقَفَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'indicative')).toEqualT({
           '1s': 'أُوقَفُ',
           '2ms': 'تُوقَفُ',
           '2fs': 'تُوقَفِينَ',
@@ -125,7 +125,7 @@ describe('passive present indicative', () => {
 
     describe('geminate roots', () => {
       test('لَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَمُّ',
           '2ms': 'تُلَمُّ',
           '2fs': 'تُلَمِّيْنَ',
@@ -143,7 +143,7 @@ describe('passive present indicative', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أُؤَمُّ',
           '2ms': 'تُؤَمُّ',
           '2fs': 'تُؤَمِّيْنَ',
@@ -161,7 +161,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَدَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'indicative')).toEqualT({
           '1s': 'أُوَدُّ',
           '2ms': 'تُوَدُّ',
           '2fs': 'تُوَدِّيْنَ',
@@ -181,7 +181,7 @@ describe('passive present indicative', () => {
 
     describe('assimilated roots', () => {
       test('يَمَنَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'indicative')).toEqualT({
           '1s': 'أُومَنُ',
           '2ms': 'تُومَنُ',
           '2fs': 'تُومَنِينَ',
@@ -201,7 +201,7 @@ describe('passive present indicative', () => {
 
     describe('hollow roots', () => {
       test('عَوِزَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'indicative')).toEqualT({
           '1s': 'أُعْوَزُ',
           '2ms': 'تُعْوَزُ',
           '2fs': 'تُعْوَزِينَ',
@@ -219,7 +219,7 @@ describe('passive present indicative', () => {
       })
 
       test('لَامَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَامُ',
           '2ms': 'تُلَامُ',
           '2fs': 'تُلَامِينَ',
@@ -237,7 +237,7 @@ describe('passive present indicative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'indicative')).toEqualT({
           '1s': 'أُبَاعُ',
           '2ms': 'تُبَاعُ',
           '2fs': 'تُبَاعِينَ',
@@ -255,7 +255,7 @@ describe('passive present indicative', () => {
       })
 
       test('زَارَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'indicative')).toEqualT({
           '1s': 'أُزَارُ',
           '2ms': 'تُزَارُ',
           '2fs': 'تُزَارِينَ',
@@ -273,7 +273,7 @@ describe('passive present indicative', () => {
       })
 
       test('شَادَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'indicative')).toEqualT({
           '1s': 'أُشَادُ',
           '2ms': 'تُشَادُ',
           '2fs': 'تُشَادِينَ',
@@ -291,7 +291,7 @@ describe('passive present indicative', () => {
       })
 
       test('جَيِدَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('جيد', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('جيد', 1), 'indicative')).toEqualT({
           '1s': 'أُجْيَدُ',
           '2ms': 'تُجْيَدُ',
           '2fs': 'تُجْيَدِينَ',
@@ -311,7 +311,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'indicative')).toEqualT({
           '1s': 'أُوخَذُ',
           '2ms': 'تُؤْخَذُ',
           '2fs': 'تُؤْخَذِينَ',
@@ -331,7 +331,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial doubly weak roots', () => {
       test('أَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'indicative')).toEqualT({
           '1s': 'أُووَى',
           '2ms': 'تُؤْوَى',
           '2fs': 'تُؤْوَيْنَ',
@@ -351,7 +351,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated middle defective roots', () => {
       test('رَأَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'indicative')).toEqualT({
           '1s': 'أُرَى',
           '2ms': 'تُرَى',
           '2fs': 'تُرَيْنَ',
@@ -371,7 +371,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated final roots', () => {
       test('وَطِئَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وطئ', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('وطئ', 1), 'indicative')).toEqualT({
           '1s': 'أُوطَأُ',
           '2ms': 'تُوطَأُ',
           '2fs': 'تُوطَئِينَ',
@@ -391,7 +391,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated final-weak roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'indicative')).toEqualT({
           '1s': 'أُوتَى',
           '2ms': 'تُؤْتَى',
           '2fs': 'تُؤْتَيْنَ',
@@ -411,7 +411,7 @@ describe('passive present indicative', () => {
 
     describe('defective roots', () => {
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'indicative')).toEqualT({
           '1s': 'أُدْعَى',
           '2ms': 'تُدْعَى',
           '2fs': 'تُدْعَيْنَ',
@@ -429,7 +429,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَلِيَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ولي', 1), 'indicative')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('ولي', 1), 'indicative')).toEqualT({
           '1s': 'أُولَى',
           '2ms': 'تُولَى',
           '2fs': 'تُولَيْنَ',
@@ -451,7 +451,7 @@ describe('passive present indicative', () => {
   describe('passive present subjunctive', () => {
     describe('hamzated initial hollow-defective roots', () => {
       test.each([['أوي', 'يُؤْوَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -465,7 +465,7 @@ describe('passive present indicative', () => {
         ['خور', 'يُخْوَرَ'],
         ['عوز', 'يُعْوَزَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -479,7 +479,7 @@ describe('passive present indicative', () => {
         ['علي', 'يُعْلَى'],
         ['شفي', 'يُشْفَى'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -487,13 +487,13 @@ describe('passive present indicative', () => {
 
     describe('doubly weak roots', () => {
       test.each([['روى', 'يُرْوَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('رَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'subjunctive')).toEqualT({
           '1s': 'أُرْوَى',
           '2ms': 'تُرْوَى',
           '2fs': 'تُرْوَيْ',
@@ -517,13 +517,13 @@ describe('passive present indicative', () => {
         ['مثل', 'يُمْثَلَ'],
         ['دعم', 'يُدْعَمَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('كَتَبَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'subjunctive')).toEqualT({
           '1s': 'أُكْتَبَ',
           '2ms': 'تُكْتَبَ',
           '2fs': 'تُكْتَبِي',
@@ -541,7 +541,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَقَفَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'subjunctive')).toEqualT({
           '1s': 'أُوقَفَ',
           '2ms': 'تُوقَفَ',
           '2fs': 'تُوقَفِي',
@@ -561,7 +561,7 @@ describe('passive present indicative', () => {
 
     describe('geminate roots', () => {
       test('لَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُلَمَّ',
           '2ms': 'تُلَمَّ',
           '2fs': 'تُلَمِّي',
@@ -579,7 +579,7 @@ describe('passive present indicative', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُؤَمَّ',
           '2ms': 'تُؤَمَّ',
           '2fs': 'تُؤَمِّي',
@@ -597,7 +597,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَدَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'subjunctive')).toEqualT({
           '1s': 'أُوَدَّ',
           '2ms': 'تُوَدَّ',
           '2fs': 'تُوَدِّي',
@@ -617,7 +617,7 @@ describe('passive present indicative', () => {
 
     describe('assimilated roots', () => {
       test('يَمَنَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'subjunctive')).toEqualT({
           '1s': 'أُومَنَ',
           '2ms': 'تُومَنَ',
           '2fs': 'تُومَنِي',
@@ -637,7 +637,7 @@ describe('passive present indicative', () => {
 
     describe('hollow roots', () => {
       test('عَوِزَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'subjunctive')).toEqualT({
           '1s': 'أُعْوَزَ',
           '2ms': 'تُعْوَزَ',
           '2fs': 'تُعْوَزِي',
@@ -655,7 +655,7 @@ describe('passive present indicative', () => {
       })
 
       test('لَامَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُلَامَ',
           '2ms': 'تُلَامَ',
           '2fs': 'تُلَامِي',
@@ -673,7 +673,7 @@ describe('passive present indicative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'subjunctive')).toEqualT({
           '1s': 'أُبَاعَ',
           '2ms': 'تُبَاعَ',
           '2fs': 'تُبَاعِي',
@@ -691,7 +691,7 @@ describe('passive present indicative', () => {
       })
 
       test('زَارَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'subjunctive')).toEqualT({
           '1s': 'أُزَارَ',
           '2ms': 'تُزَارَ',
           '2fs': 'تُزَارِي',
@@ -709,7 +709,7 @@ describe('passive present indicative', () => {
       })
 
       test('شَادَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'subjunctive')).toEqualT({
           '1s': 'أُشَادَ',
           '2ms': 'تُشَادَ',
           '2fs': 'تُشَادِي',
@@ -729,7 +729,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'subjunctive')).toEqualT({
           '1s': 'أُوخَذَ',
           '2ms': 'تُؤْخَذَ',
           '2fs': 'تُؤْخَذِي',
@@ -749,7 +749,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial doubly weak roots', () => {
       test('أَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'subjunctive')).toEqualT({
           '1s': 'أُووَى',
           '2ms': 'تُؤْوَى',
           '2fs': 'تُؤْوَيْ',
@@ -769,7 +769,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated middle defective roots', () => {
       test('رَأَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'subjunctive')).toEqualT({
           '1s': 'أُرَى',
           '2ms': 'تُرَى',
           '2fs': 'تُرَيْ',
@@ -789,7 +789,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated final-weak roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'subjunctive')).toEqualT({
           '1s': 'أُوتَى',
           '2ms': 'تُؤْتَى',
           '2fs': 'تُؤْتَيْ',
@@ -809,7 +809,7 @@ describe('passive present indicative', () => {
 
     describe('defective roots', () => {
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'subjunctive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'subjunctive')).toEqualT({
           '1s': 'أُدْعَى',
           '2ms': 'تُدْعَى',
           '2fs': 'تُدْعَيْ',
@@ -831,7 +831,7 @@ describe('passive present indicative', () => {
   describe('passive present jussive', () => {
     describe('hamzated initial hollow-defective roots', () => {
       test.each([['أوي', 'يُؤْوَ']])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -845,7 +845,7 @@ describe('passive present indicative', () => {
         ['خور', 'يُخْوَرْ'],
         ['عوز', 'يُعْوَزْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -859,7 +859,7 @@ describe('passive present indicative', () => {
         ['علي', 'يُعْلَ'],
         ['شفي', 'يُشْفَ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -867,13 +867,13 @@ describe('passive present indicative', () => {
 
     describe('doubly weak roots', () => {
       test.each([['روى', 'يُرْوَ']])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
 
       test('رَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'jussive')).toEqualT({
           '1s': 'أُرْوَ',
           '2ms': 'تُرْوَ',
           '2fs': 'تُرْوَيْ',
@@ -897,7 +897,7 @@ describe('passive present indicative', () => {
         ['مثل', 'يُمْثَلْ'],
         ['دعم', 'يُدْعَمْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObject({
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
         })
       })
@@ -905,7 +905,7 @@ describe('passive present indicative', () => {
 
     describe('strong roots', () => {
       test('كَتَبَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'jussive')).toEqualT({
           '1s': 'أُكْتَبْ',
           '2ms': 'تُكْتَبْ',
           '2fs': 'تُكْتَبِي',
@@ -923,7 +923,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَقَفَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'jussive')).toEqualT({
           '1s': 'أُوقَفْ',
           '2ms': 'تُوقَفْ',
           '2fs': 'تُوقَفِي',
@@ -943,7 +943,7 @@ describe('passive present indicative', () => {
 
     describe('geminate roots', () => {
       test('لَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'jussive')).toEqualT({
           '1s': 'أُلَمَّ',
           '2ms': 'تُلَمَّ',
           '2fs': 'تُلَمِّي',
@@ -961,7 +961,7 @@ describe('passive present indicative', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'jussive')).toEqualT({
           '1s': 'أُؤَمَّ',
           '2ms': 'تُؤَمَّ',
           '2fs': 'تُؤَمِّي',
@@ -979,7 +979,7 @@ describe('passive present indicative', () => {
       })
 
       test('وَدَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'jussive')).toEqualT({
           '1s': 'أُوَدَّ',
           '2ms': 'تُوَدَّ',
           '2fs': 'تُوَدِّي',
@@ -999,7 +999,7 @@ describe('passive present indicative', () => {
 
     describe('assimilated roots', () => {
       test('يَمَنَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'jussive')).toEqualT({
           '1s': 'أُومَنْ',
           '2ms': 'تُومَنْ',
           '2fs': 'تُومَنِي',
@@ -1019,7 +1019,7 @@ describe('passive present indicative', () => {
 
     describe('hollow roots', () => {
       test('عَوِزَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'jussive')).toEqualT({
           '1s': 'أُعْوَزْ',
           '2ms': 'تُعْوَزْ',
           '2fs': 'تُعْوَزِي',
@@ -1037,7 +1037,7 @@ describe('passive present indicative', () => {
       })
 
       test('لَامَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'jussive')).toEqualT({
           '1s': 'أُلَمْ',
           '2ms': 'تُلَمْ',
           '2fs': 'تُلَامِي',
@@ -1055,7 +1055,7 @@ describe('passive present indicative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'jussive')).toEqualT({
           '1s': 'أُبَعْ',
           '2ms': 'تُبَعْ',
           '2fs': 'تُبَاعِي',
@@ -1073,7 +1073,7 @@ describe('passive present indicative', () => {
       })
 
       test('زَارَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('زور', 1), 'jussive')).toEqualT({
           '1s': 'أُزَرْ',
           '2ms': 'تُزَرْ',
           '2fs': 'تُزَارِي',
@@ -1091,7 +1091,7 @@ describe('passive present indicative', () => {
       })
 
       test('شَادَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'jussive')).toEqualT({
           '1s': 'أُشَدْ',
           '2ms': 'تُشَدْ',
           '2fs': 'تُشَادِي',
@@ -1111,7 +1111,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'jussive')).toEqualT({
           '1s': 'أُوخَذْ',
           '2ms': 'تُؤْخَذْ',
           '2fs': 'تُؤْخَذِي',
@@ -1131,7 +1131,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial doubly weak roots', () => {
       test('أَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أوي', 1), 'jussive')).toEqualT({
           '1s': 'أُووَ',
           '2ms': 'تُؤْوَ',
           '2fs': 'تُؤْوَيْ',
@@ -1151,7 +1151,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated middle defective roots', () => {
       test('رَأَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'jussive')).toEqualT({
           '1s': 'أُرَ',
           '2ms': 'تُرَ',
           '2fs': 'تُرَيْ',
@@ -1171,7 +1171,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated final-weak roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'jussive')).toEqualT({
           '1s': 'أُوتَ',
           '2ms': 'تُؤْتَ',
           '2fs': 'تُؤْتَيْ',
@@ -1191,7 +1191,7 @@ describe('passive present indicative', () => {
 
     describe('defective roots', () => {
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'jussive')).toEqual({
+        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'jussive')).toEqualT({
           '1s': 'أُدْعَ',
           '2ms': 'تُدْعَ',
           '2fs': 'تُدْعَيْ',
