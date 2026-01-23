@@ -46,7 +46,10 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated final hollow roots', () => {
-      test.each<[string, string]>([['جيء', 'جِيءَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['جيء', 'جِيءَ'],
+        ['نوء', 'نِيءَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
       })
     })

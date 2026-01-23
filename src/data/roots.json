@@ -530,6 +530,7 @@
   { "root": "نفس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3al"] },
   { "root": "نفق", "form": 4 },
   { "root": "نقص", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "نوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "نكر", "form": 10 },
   { "root": "نكر", "form": 4 },
   { "root": "نهي", "form": 4 },
