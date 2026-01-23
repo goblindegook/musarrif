@@ -64,8 +64,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isMiddleWeak && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        if (isMiddleWeak && isFinalHamza)
-          return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), HAMZA]
+        if (isMiddleWeak && isFinalHamza) return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), HAMZA]
 
         if (isFinalHamza) return [...prefix, SUKOON, c2, DAMMA, WAW, HAMZA]
 
