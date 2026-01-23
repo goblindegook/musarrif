@@ -609,6 +609,12 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated final hollow roots', () => {
+      test.each([['بوء', 'يَبُوءُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
       test('جَاءَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('جيء', 1), 'indicative')).toEqualT({
           '1s': 'أَجِيءُ',

@@ -181,7 +181,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated final hollow roots', () => {
-      test.each([['جيء', 'جَاءٍ']])('%s', (root, expected) => {
+      test.each([
+        ['جيء', 'جَاءٍ'],
+        ['بوء', 'بَاءٍ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
       })
     })
