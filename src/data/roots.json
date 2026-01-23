@@ -525,6 +525,7 @@
   { "root": "نفخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نفذ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "نفس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3al"] },
   { "root": "نفق", "form": 4 },
   { "root": "نقص", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نكر", "form": 10 },

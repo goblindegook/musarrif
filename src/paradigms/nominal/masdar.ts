@@ -173,29 +173,31 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
 function deriveMasdarFormV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
-  const prefix = [TEH, FATHA, c1, FATHA, c2, SHADDA]
+  const prefix = [TEH, FATHA, c1, FATHA]
 
-  if (isFinalWeak) return [...prefix, TANWEEN_KASRA]
+  if (isFinalWeak) return [...prefix, c2, SHADDA, TANWEEN_KASRA]
 
-  return [...prefix, DAMMA, c3]
+  return [...prefix, c2, SHADDA, DAMMA, c3]
 }
 
 function deriveMasdarFormVI(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
+  const prefix = [TEH, FATHA, c1, FATHA]
 
-  if (isMiddleWeak && isFinalHamza) return [TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+  if (isMiddleWeak && isFinalHamza) return [...prefix, ALIF, c3, TANWEEN_KASRA]
 
-  return [TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
+  return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
 }
 
 function deriveMasdarFormVII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
 
-  if (isWeakLetter(c2)) return [ALIF, KASRA, NOON, SUKOON, c1, KASRA, YEH, FATHA, ALIF, c3]
+  if (isWeakLetter(c2)) return [...prefix, YEH, FATHA, ALIF, c3]
 
-  return [ALIF, KASRA, NOON, SUKOON, c1, KASRA, c2, FATHA, ALIF, c3]
+  return [...prefix, c2, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormVIII(verb: Verb): readonly string[] {
@@ -213,7 +215,6 @@ function deriveMasdarFormVIII(verb: Verb): readonly string[] {
 function deriveMasdarFormIX(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
-  // Form IX masdar: اِفْعِلَال (e.g., اِحْمِرَار, اِصْفِرَار)
   return [ALIF, KASRA, c1, SUKOON, c2, KASRA, c3, FATHA, ALIF, c3]
 }
 
