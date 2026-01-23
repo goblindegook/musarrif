@@ -252,6 +252,12 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated final roots', () => {
+      test.each([['جرء', 'يَجْرُؤَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
       test('قَرَأَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('قرأ', 1), 'subjunctive')).toEqualT({
           '1s': 'أَقْرَأَ',

@@ -78,6 +78,7 @@
   { "root": "جيء", "form": 5 },
   { "root": "جيء", "form": 6, "noPassiveParticiple": true },
   { "root": "جري", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
+  { "root": "جرء", "form": 1, "formPattern": "fa3ula-yaf3ulu", "noPassiveVoice": true },
   { "root": "جوي", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "جدو", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   { "root": "جاب", "form": 4 },

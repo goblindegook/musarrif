@@ -342,8 +342,8 @@ test('Show quick picks related to the selected verb', () => {
     'اَرَتَIto rise',
     'تَبَرَّعَVto donate',
     'تَرَكَIto leave',
+    'جَرُؤَIto be bold',
     'جَرَبَIto try',
-    'جَرَحَIto wound',
   ])
 })
 
@@ -361,9 +361,8 @@ describe('Root insights', () => {
   it('displays root semantics when available', async () => {
     renderApp('/#/en/ktb-1')
     const user = userEvent.setup()
-    const rootDetail = screen.getByText('Root').parentElement!
 
-    await user.click(rootDetail)
+    await user.click(screen.getByText('Root').parentElement!)
 
     const dialog = screen.getByRole('dialog', { name: 'Root insights' })
     expect(within(dialog).getByText('writing')).toBeInTheDocument()

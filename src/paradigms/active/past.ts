@@ -21,6 +21,7 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
+  seatHamza,
   shortVowelFromPattern,
   TEH,
   WAW,
@@ -168,6 +169,7 @@ function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
 function derivePastFormI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const pastVowel = resolveFormIPastVowel(verb)
+  const seatedFinalHamza = c3 === HAMZA ? seatHamza(c3, shortVowelFromPattern(pastVowel)) : c3
   const isMiddleWeak = isWeakLetter(c2)
   const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
@@ -211,7 +213,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
       pluralBase: replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA),
     }
 
-  return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA], c3)
+  return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), seatedFinalHamza, FATHA], seatedFinalHamza)
 }
 
 function derivePastFormII(verb: Verb): PastBaseForms {

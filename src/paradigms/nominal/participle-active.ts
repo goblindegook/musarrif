@@ -57,6 +57,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleHamza) return [...prefix, HAMZA_ON_YEH, KASRA, c3]
 
+        if (isFinalHamza && hasPattern(verb, 'fa3ula-yaf3ulu')) return [c1, FATHA, c2, KASRA, YEH, HAMZA]
+
         if (isFinalHamza) return [...prefix, c2, KASRA, HAMZA_ON_YEH]
 
         if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))

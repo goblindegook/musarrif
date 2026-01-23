@@ -517,9 +517,29 @@ describe('active past', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['وطئ', 'وَطِئَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وطئ', 'وَطِئَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))).toMatchObjectT({
           '3ms': expected,
+        })
+      })
+
+      test('جَرُؤَ conjugation', () => {
+        expect(conjugatePast(getVerb('جرء', 1))).toEqualT({
+          '1s': 'جَرُؤْتُ',
+          '2ms': 'جَرُؤْتَ',
+          '2fs': 'جَرُؤْتِ',
+          '3ms': 'جَرُؤَ',
+          '3fs': 'جَرُؤَتْ',
+          '2d': 'جَرُؤْتُمَا',
+          '3md': 'جَرُؤَا',
+          '3fd': 'جَرُؤَتَا',
+          '1p': 'جَرُؤْنَا',
+          '2mp': 'جَرُؤْتُمْ',
+          '2fp': 'جَرُؤْتُنَّ',
+          '3mp': 'جَرُؤُوا',
+          '3fp': 'جَرُؤْنَ',
         })
       })
 

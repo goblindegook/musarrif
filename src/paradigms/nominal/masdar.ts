@@ -1,4 +1,4 @@
-import { resolveFormIPresentVowel } from '../form-i-vowels'
+import { hasPattern, resolveFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -112,6 +112,9 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
 
       if (c2 === WAW && c3 === YEH) return [c1, DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
+
+      if (c3 === HAMZA && hasPattern(verb, 'fa3ula-yaf3ulu'))
+        return [c1, DAMMA, c2, SUKOON, ALIF_HAMZA, FATHA, TEH_MARBUTA]
 
       if (isFinalWeak && !isMiddleWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
 
