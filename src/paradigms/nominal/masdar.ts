@@ -74,6 +74,9 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     case 'fi3la':
       return [c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA]
 
+    case 'fi3al':
+      return [c1, KASRA, c2, FATHA, finalRadical]
+
     case 'fi3l':
       return [c1, KASRA, c2, SUKOON, finalRadical]
 

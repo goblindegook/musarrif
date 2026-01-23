@@ -31,7 +31,7 @@ describe('findVerbsByRoot', () => {
 
   test.each([
     ['علم', [1, 2, 4, 5]],
-    ['قدم', [2, 5]],
+    ['قدم', [1, 2, 5]],
     ['كبر', [1, 2, 3, 5, 6, 8, 10]],
     ['مرض', [1, 2, 4, 5, 10]],
   ])('returns derived forms for %s', (root, expectedForms) => {

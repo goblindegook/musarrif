@@ -10,6 +10,7 @@ describe('active present jussive', () => {
         ['بعد', 'يَبْعَدْ'],
         ['مثل', 'يَمْثُلْ'],
         ['دعم', 'يَدْعَمْ'],
+        ['قدم', 'يَقْدُمْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
           '3ms': expected,
