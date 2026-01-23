@@ -242,6 +242,32 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'يُؤَالَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
+      test('يُؤَالَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أول', 1), 'subjunctive')).toEqualT({
+          '1s': 'أُؤَالَ',
+          '2ms': 'تُؤَالَ',
+          '2fs': 'تُؤَالِي',
+          '3ms': 'يُؤَالَ',
+          '3fs': 'تُؤَالَ',
+          '2d': 'تُؤَالَا',
+          '3md': 'يُؤَالَا',
+          '3fd': 'تُؤَالَا',
+          '1p': 'نُؤَالَ',
+          '2mp': 'تُؤَالُوا',
+          '2fp': 'تُؤَلْنَ',
+          '3mp': 'يُؤَالُوا',
+          '3fp': 'يُؤَلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'subjunctive')).toEqualT({

@@ -637,6 +637,32 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'يَؤُولُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
+      test('يَؤُولُ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أول', 1), 'indicative')).toEqualT({
+          '1s': 'أَؤُولُ',
+          '2ms': 'تَؤُولُ',
+          '2fs': 'تَؤُولِيْنَ',
+          '3ms': 'يَؤُولُ',
+          '3fs': 'تَؤُولُ',
+          '2d': 'تَؤُولَانِ',
+          '3md': 'يَؤُولَانِ',
+          '3fd': 'تَؤُولَانِ',
+          '1p': 'نَؤُولُ',
+          '2mp': 'تَؤُولُونَ',
+          '2fp': 'تَؤُلْنَ',
+          '3mp': 'يَؤُولُونَ',
+          '3fp': 'يَؤُلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test.each([['أتي', 'يَأْتِي']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({

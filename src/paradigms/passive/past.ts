@@ -2,6 +2,7 @@ import { mapRecord } from '../../primitives/objects'
 import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
+  ALIF_HAMZA_BELOW,
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
@@ -96,10 +97,11 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   }
 
   if (isMiddleWeak && !isConsonantalMiddleWeak) {
+    const seatedC1 = isInitialHamza ? ALIF_HAMZA_BELOW : c1
     return toConjugation({
-      base: [c1, KASRA, YEH, c3, FATHA],
-      stem: [c1, KASRA, c3, SUKOON],
-      thirdMasculinePluralStem: [c1, KASRA, YEH, c3],
+      base: [seatedC1, KASRA, YEH, c3, FATHA],
+      stem: [seatedC1, KASRA, c3, SUKOON],
+      thirdMasculinePluralStem: [seatedC1, KASRA, YEH, c3],
       finalRadical: c3,
     })
   }

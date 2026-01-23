@@ -370,6 +370,32 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'يَؤُولَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
+      test('يَؤُولَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أول', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَؤُولَ',
+          '2ms': 'تَؤُولَ',
+          '2fs': 'تَؤُولِي',
+          '3ms': 'يَؤُولَ',
+          '3fs': 'تَؤُولَ',
+          '2d': 'تَؤُولَا',
+          '3md': 'يَؤُولَا',
+          '3fd': 'تَؤُولَا',
+          '1p': 'نَؤُولَ',
+          '2mp': 'تَؤُولُوا',
+          '2fp': 'تَؤُلْنَ',
+          '3mp': 'يَؤُولُوا',
+          '3fp': 'يَؤُلْنَ',
+        })
+      })
+    })
+
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'يَأْوِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({

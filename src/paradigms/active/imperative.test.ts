@@ -427,6 +427,24 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'أُلْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
+          '2ms': expected,
+        })
+      })
+
+      test('أُلْ conjugation', () => {
+        expect(conjugateImperative(getVerb('أول', 1))).toMatchObjectT({
+          '2ms': 'أُلْ',
+          '2fs': 'أُولِي',
+          '2d': 'أُولَا',
+          '2mp': 'أُولُوا',
+          '2fp': 'أُلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('أَتَى conjugation', () => {
         expect(conjugateImperative(getVerb('أتي', 1))).toMatchObjectT({

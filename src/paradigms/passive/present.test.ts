@@ -271,6 +271,30 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each<[string, string]>([['أول', 'يُؤَالُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
+      })
+
+      test('يُؤَالُ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أول', 1), 'indicative')).toEqualT({
+          '1s': 'أُؤَالُ',
+          '2ms': 'تُؤَالُ',
+          '2fs': 'تُؤَالِينَ',
+          '3ms': 'يُؤَالُ',
+          '3fs': 'تُؤَالُ',
+          '2d': 'تُؤَالَانِ',
+          '3md': 'يُؤَالَانِ',
+          '3fd': 'تُؤَالَانِ',
+          '1p': 'نُؤَالُ',
+          '2mp': 'تُؤَالُونَ',
+          '2fp': 'تُؤَلْنَ',
+          '3mp': 'يُؤَالُونَ',
+          '3fp': 'يُؤَلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'indicative')).toEqualT({

@@ -135,6 +135,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'آئِل']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
+      })
+    })
+
     describe('hamzated initial geminate roots', () => {
       test.each([['أمم', 'آمّ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)

@@ -231,6 +231,32 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'يُؤَلْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
+      test('يُؤَلْ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أول', 1), 'jussive')).toEqualT({
+          '1s': 'أُؤَلْ',
+          '2ms': 'تُؤَلْ',
+          '2fs': 'تُؤَالِي',
+          '3ms': 'يُؤَلْ',
+          '3fs': 'تُؤَلْ',
+          '2d': 'تُؤَالَا',
+          '3md': 'يُؤَالَا',
+          '3fd': 'تُؤَالَا',
+          '1p': 'نُؤَلْ',
+          '2mp': 'تُؤَالُوا',
+          '2fp': 'تُؤَلْنَ',
+          '3mp': 'يُؤَالُوا',
+          '3fp': 'يُؤَلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'jussive')).toEqualT({

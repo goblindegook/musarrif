@@ -22,6 +22,7 @@
   },
   { "root": "أمن", "form": 4 },
   { "root": "أنشأ", "form": 4 },
+  { "root": "أول", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "وفي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "noPassiveVoice": true, "masdarPatterns": ["fa3aal"] },
   { "root": "وفي", "form": 2 },
   { "root": "وفي", "form": 3 },

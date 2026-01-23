@@ -134,6 +134,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i')) return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
+        if (isInitialHamza && isMiddleWeak && !isFinalWeak) {
+          if (pronounId === '2ms') return [ALIF_HAMZA, DAMMA, c3, SUKOON]
+          if (pronounId === '2fs') return [ALIF_HAMZA, DAMMA, WAW, c3, KASRA, YEH]
+          if (pronounId === '2d') return [ALIF_HAMZA, DAMMA, WAW, c3, FATHA, ALIF]
+          if (pronounId === '2mp') return [ALIF_HAMZA, DAMMA, WAW, c3, DAMMA, WAW, ALIF]
+          if (pronounId === '2fp') return [ALIF_HAMZA, DAMMA, c3, SUKOON, NOON, FATHA]
+        }
+
         // Hamzated initial strong verbs drop the hamza
         if (isInitialHamza) return stem.slice(2)
 

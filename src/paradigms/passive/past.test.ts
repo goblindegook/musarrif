@@ -10,6 +10,30 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each<[string, string]>([['أول', 'إِيلَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+      })
+
+      test('إِيلَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('أول', 1))).toEqualT({
+          '1s': 'إِلْتُ',
+          '2ms': 'إِلْتَ',
+          '2fs': 'إِلْتِ',
+          '3ms': 'إِيلَ',
+          '3fs': 'إِيلَتْ',
+          '2d': 'إِلْتُمَا',
+          '3md': 'إِيلَا',
+          '3fd': 'إِيلَتَا',
+          '1p': 'إِلْنَا',
+          '2mp': 'إِلْتُمْ',
+          '2fp': 'إِلْتُنَّ',
+          '3mp': 'إِيلُوا',
+          '3fp': 'إِلْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       test.each<[string, string]>([
         ['حول', 'حِيلَ'],

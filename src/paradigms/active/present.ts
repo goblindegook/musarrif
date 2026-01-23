@@ -567,6 +567,9 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, c2, shortVowel, defectiveGlide(c3)]
 
+  if (isInitialHamza && isMiddleWeak && !isFinalWeak)
+    return [...prefix, seatHamza(c1, shortVowel), ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]
+
   if (isInitialHamza) return [...prefix, c1, SUKOON, c2, shortVowel, seatedC3, DAMMA]
 
   if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]

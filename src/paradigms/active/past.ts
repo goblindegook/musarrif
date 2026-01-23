@@ -206,9 +206,9 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   // pluralBase keeps the alif for 3mp (قَالُوا)
   if (isMiddleWeak && !isConsonantalMiddleWeak)
     return {
-      base,
+      base: normalizeAlifMadda(base),
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      pluralBase: replaceFinalDiacritic(base, DAMMA),
+      pluralBase: replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA),
     }
 
   return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, FATHA], c3)

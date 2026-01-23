@@ -608,6 +608,32 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أول', 'آلَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 1))).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
+      test('آلَ conjugation', () => {
+        expect(conjugatePast(getVerb('أول', 1))).toEqualT({
+          '1s': 'أُلْتُ',
+          '2ms': 'أُلْتَ',
+          '2fs': 'أُلْتِ',
+          '3ms': 'آلَ',
+          '3fs': 'آلَتْ',
+          '2d': 'أُلْتُمَا',
+          '3md': 'آلَا',
+          '3fd': 'آلَتَا',
+          '1p': 'أُلْنَا',
+          '2mp': 'أُلْتُمْ',
+          '2fp': 'أُلْتُنَّ',
+          '3mp': 'آلُوا',
+          '3fp': 'أُلْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test.each([['أتي', 'أَتَى']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))).toMatchObjectT({
