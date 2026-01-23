@@ -90,14 +90,14 @@ const TRANSLITERATION_MAP: Record<string, string> = {
 
 const normalizeHamza = (value: string): string => value.replace(/[آأإ]/g, ALIF)
 
-export function transliterateRoot(root: string): string {
-  return Array.from(stripDiacritics(root))
+export function transliterate(text: string): string {
+  return Array.from(text)
     .map((char) => TRANSLITERATION_MAP[char] ?? char)
     .join('')
 }
 
 function verbId({ root, form }: RawVerb): string {
-  return [transliterateRoot(root), String(form)].join('-')
+  return [transliterate(root), String(form)].join('-')
 }
 
 export const verbs: Verb[] = (rawVerbs as RawVerb[]).map((verb) => {
@@ -116,20 +116,14 @@ const verbsByRoot = new Map<string, Verb[]>()
 
 for (const verb of verbs) {
   const existing = verbsByRoot.get(verb.root)
-  if (existing) {
-    existing.push(verb)
-  } else {
-    verbsByRoot.set(verb.root, [verb])
-  }
+  if (existing) existing.push(verb)
+  else verbsByRoot.set(verb.root, [verb])
 
   const normalizedRoot = normalizeHamza(verb.root)
   if (normalizedRoot !== verb.root) {
     const normalizedExisting = verbsByRoot.get(normalizedRoot)
-    if (normalizedExisting) {
-      normalizedExisting.push(verb)
-    } else {
-      verbsByRoot.set(normalizedRoot, [verb])
-    }
+    if (normalizedExisting) normalizedExisting.push(verb)
+    else verbsByRoot.set(normalizedRoot, [verb])
   }
 }
 

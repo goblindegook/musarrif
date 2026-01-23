@@ -2,7 +2,7 @@ import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { analyzeRoot } from '../paradigms/letters'
-import { search, transliterateRoot } from '../paradigms/verbs'
+import { search, transliterate } from '../paradigms/verbs'
 import { Heading } from './atoms/Heading'
 import { Text } from './atoms/Text'
 import { SuggestionsList } from './QuickPickList'
@@ -11,12 +11,12 @@ import { VerbPill } from './VerbPill'
 export const RootInsights = ({ root }: { root: string }) => {
   const { t, dir, lang } = useI18n()
   const rootAnalysis = analyzeRoot(root)
-  const transliteratedRoot = transliterateRoot(root)
+  const transliteratedRoot = transliterate(root)
   const semanticMeaning = t(transliteratedRoot)
   const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
   return (
     <>
-      <RootDisplay dir="rtl" lang="ar">
+      <RootDisplay>
         {semanticMeaning !== transliteratedRoot && (
           <Text dir={dir} lang={lang}>
             <em>
@@ -24,7 +24,7 @@ export const RootInsights = ({ root }: { root: string }) => {
             </em>
           </Text>
         )}
-        <RootLetters>
+        <RootLetters dir="rtl" lang="ar">
           {Array.from(root).map((letter, index) => {
             const isWeak = rootAnalysis.weakPositions.includes(index)
             const isHamza = rootAnalysis.hamzaPositions.includes(index)
