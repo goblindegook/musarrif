@@ -434,31 +434,31 @@ describe('imperative', () => {
     describe('hamzated initial defective roots', () => {
       test('أَنَى conjugation', () => {
         expect(conjugateImperative(getVerb('أني', 1))).toMatchObjectT({
-          '2ms': 'إِنِ',
-          '2fs': 'إِنِي',
-          '2d': 'إِنِيَا',
-          '2mp': 'إِنُوا',
-          '2fp': 'إِنِينَ',
+          '2ms': 'اِئْنَ',
+          '2fs': 'اِئْنَيْ',
+          '2d': 'اِئْنَيَا',
+          '2mp': 'اِئْنَوا',
+          '2fp': 'اِئْنَيْنَ',
         })
       })
 
       test('أَبَى conjugation', () => {
         expect(conjugateImperative(getVerb('أبي', 1))).toMatchObjectT({
-          '2ms': 'إِبِ',
-          '2fs': 'إِبِي',
-          '2d': 'إِبِيَا',
-          '2mp': 'إِبُوا',
-          '2fp': 'إِبِينَ',
+          '2ms': 'اِئْبَ',
+          '2fs': 'اِئْبَيْ',
+          '2d': 'اِئْبَيَا',
+          '2mp': 'اِئْبَوا',
+          '2fp': 'اِئْبَيْنَ',
         })
       })
 
       test('أَتَى conjugation', () => {
         expect(conjugateImperative(getVerb('أتي', 1))).toMatchObjectT({
-          '2ms': 'إِتِ',
-          '2fs': 'إِتِي',
-          '2d': 'إِتِيَا',
-          '2mp': 'إِتُوا',
-          '2fp': 'إِتِينَ',
+          '2ms': 'اِئْتِ',
+          '2fs': 'اِئْتِيْ',
+          '2d': 'اِئْتِيَا',
+          '2mp': 'اِئْتُوا',
+          '2fp': 'اِئْتِيْنَ',
         })
       })
     })
