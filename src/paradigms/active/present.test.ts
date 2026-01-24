@@ -646,7 +646,10 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أتي', 'يَأْتِي']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أتي', 'يَأْتِي'],
+        ['أني', 'يَأْنِي'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })
 

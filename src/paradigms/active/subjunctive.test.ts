@@ -290,6 +290,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial defective roots', () => {
+      test.each([['أني', 'يَأْنِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('أَبَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('أبي', 1), 'subjunctive')).toEqualT({
           '1s': 'آبَى',

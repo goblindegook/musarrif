@@ -3,6 +3,7 @@ import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowel
 import {
   ALIF,
   ALIF_HAMZA,
+  ALIF_HAMZA_BELOW,
   ALIF_MADDA,
   DAMMA,
   FATHA,
@@ -130,20 +131,25 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         if (isInitialWeak) return stem
 
-        if (isInitialHamza && isFinalWeak && stem.at(0) === ALIF_HAMZA) {
-          if (presentVowel === 'a') return [ALIF, KASRA, YEH, ...stem.slice(2)]
-          return [ALIF, HAMZA_ON_YEH, ...stem.slice(1)]
+        if (isInitialHamza && isMiddleWeak) {
+          const prefix = [ALIF_HAMZA, DAMMA]
+          if (pronounId === '2ms') return [...prefix, c3, SUKOON]
+          if (pronounId === '2fs') return [...prefix, WAW, c3, KASRA, YEH]
+          if (pronounId === '2d') return [...prefix, WAW, c3, FATHA, ALIF]
+          if (pronounId === '2mp') return [...prefix, WAW, c3, DAMMA, WAW, ALIF]
+          if (pronounId === '2fp') return [...prefix, c3, SUKOON, NOON, FATHA]
+        }
+
+        if (isInitialHamza && isFinalWeak) {
+          const prefix = [ALIF_HAMZA_BELOW, KASRA, c2]
+          if (pronounId === '2ms') return [...prefix, KASRA]
+          if (pronounId === '2fs') return [...prefix, KASRA, YEH]
+          if (pronounId === '2d') return [...prefix, KASRA, c3, FATHA, ALIF]
+          if (pronounId === '2mp') return [...prefix, DAMMA, WAW, ALIF]
+          if (pronounId === '2fp') return [...prefix, KASRA, c3, NOON, FATHA]
         }
 
         if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i')) return [ALIF, KASRA, YEH, ...stem.slice(2)]
-
-        if (isInitialHamza && isMiddleWeak && !isFinalWeak) {
-          if (pronounId === '2ms') return [ALIF_HAMZA, DAMMA, c3, SUKOON]
-          if (pronounId === '2fs') return [ALIF_HAMZA, DAMMA, WAW, c3, KASRA, YEH]
-          if (pronounId === '2d') return [ALIF_HAMZA, DAMMA, WAW, c3, FATHA, ALIF]
-          if (pronounId === '2mp') return [ALIF_HAMZA, DAMMA, WAW, c3, DAMMA, WAW, ALIF]
-          if (pronounId === '2fp') return [ALIF_HAMZA, DAMMA, c3, SUKOON, NOON, FATHA]
-        }
 
         // Hamzated initial strong verbs drop the hamza
         if (isInitialHamza) return stem.slice(2)

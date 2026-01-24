@@ -252,6 +252,10 @@ describe('passive present jussive', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['أني', 'يُؤْنَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('أَبَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أبي', 1), 'jussive')).toEqualT({
           '1s': 'أُوبَ',
