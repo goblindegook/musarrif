@@ -258,6 +258,24 @@ describe('passive present jussive', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test('أَبَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أبي', 1), 'jussive')).toEqualT({
+          '1s': 'أُوبَ',
+          '2ms': 'تُؤْبَ',
+          '2fs': 'تُؤْبَيْ',
+          '3ms': 'يُؤْبَ',
+          '3fs': 'تُؤْبَ',
+          '2d': 'تُؤْبَيَا',
+          '3md': 'يُؤْبَيَا',
+          '3fd': 'تُؤْبَيَا',
+          '1p': 'نُؤْبَ',
+          '2mp': 'تُؤْبَوا',
+          '2fp': 'تُؤْبَيْنَ',
+          '3mp': 'يُؤْبَوا',
+          '3fp': 'يُؤْبَيْنَ',
+        })
+      })
+
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'jussive')).toEqualT({
           '1s': 'أُوخَذْ',

@@ -66,10 +66,12 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     case 'fu3ul':
       return [c1, DAMMA, c2, DAMMA, finalRadical, SHADDA]
 
-    case 'fi3aal':
-      if (isMiddleWeak) return [c1, KASRA, YEH, FATHA, ALIF, finalRadical]
-      if (isFinalWeak) return [c1, KASRA, c2, FATHA, ALIF, HAMZA]
-      return [c1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA]
+    case 'fi3aal': {
+      const seatedC1 = isInitialHamza ? ALIF_HAMZA_BELOW : c1
+      if (isMiddleWeak) return [seatedC1, KASRA, YEH, FATHA, ALIF, finalRadical]
+      if (isFinalWeak) return [seatedC1, KASRA, c2, FATHA, ALIF, HAMZA]
+      return [seatedC1, KASRA, c2, FATHA, ALIF, finalRadical, FATHA, TEH_MARBUTA]
+    }
 
     case 'fi3la':
       return [c1, KASRA, c2, SUKOON, finalRadical, FATHA, TEH_MARBUTA]
@@ -93,7 +95,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
     case 'mimi': {
       // a -> a, i -> i, u -> i
-      const vowelPattern = resolveFormIPresentVowel(verb) !== 'a' ? 'i' : 'a'
+      const vowelPattern = resolveFormIPresentVowel(verb) === 'a' ? 'a' : 'i'
       if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), c3]
       return [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3]
     }

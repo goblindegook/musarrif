@@ -170,6 +170,7 @@
     "bdl-6": "scambiare",
     "bdw-1": "apparire, sembrare",
     "bEd-1": "essere distante",
+    ">by-1": "rifiutare",
     "b's-1": "essere coraggioso",
     "bHv-1": "ricercare",
     "bky-1": "piangere",
@@ -669,6 +670,7 @@
   "roots": {
     "*hb": "andare",
     ">tY": "venire",
+    ">by": "rifiuto",
     ">wy": "rifugio",
     ">yd": "sostegno",
     ">wd": "abitudine",

@@ -345,6 +345,7 @@ function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   const [c1, c2, c3] = Array.from(verb.root)
+  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
 
   return mapRecord(
@@ -360,6 +361,8 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
           const stem = dropNoonEnding(word)
           // Doubly weak Form I (middle weak + final weak) keeps sukūn on the plural wāw in the subjunctive.
           if (isMiddleWeak && last(stem) === WAW)
+            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
+          if (isInitialHamza && last(stem) === WAW)
             return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
           return replaceFathaBeforeFinalWawAlif(stem)
         }
@@ -420,7 +423,12 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 1 && isFormIFinalWeakPresent(verb, 'a')) {
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
+        if (isMasculinePlural(pronounId)) {
+          const stem = dropNoonEnding(word)
+          if (isInitialHamza && last(stem) === WAW)
+            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
+          return replaceFathaBeforeFinalWawAlif(stem)
+        }
         if (isFemininePlural(pronounId)) return word
       }
 
@@ -566,7 +574,15 @@ function derivePresentFormI(verb: Verb): readonly string[] {
 
   if (isInitialWeak) return [...prefix, seatedC2, shortVowel, seatedC3, DAMMA]
 
-  if (isInitialHamza && isFinalWeak) return [...prefix, ALIF_HAMZA, SUKOON, seatedC2, shortVowel, defectiveGlide(c3)]
+  if (isInitialHamza && isFinalWeak)
+    return [
+      ...prefix,
+      ALIF_HAMZA,
+      SUKOON,
+      seatedC2,
+      shortVowel,
+      patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3),
+    ]
 
   if (isInitialHamza && isMiddleWeak && !isFinalWeak)
     return [...prefix, seatHamza(c1, shortVowel), ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]

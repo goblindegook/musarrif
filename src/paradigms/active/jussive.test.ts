@@ -611,6 +611,10 @@ describe('active present jussive', () => {
     })
 
     describe('hamzated initial defective roots', () => {
+      test.each([['أبي', 'يَأْبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('أَتَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('أتي', 1), 'jussive')).toEqualT({
           '1s': 'آتِ',

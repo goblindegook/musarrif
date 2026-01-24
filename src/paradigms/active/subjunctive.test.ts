@@ -304,6 +304,24 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial defective roots', () => {
+      test('أَبَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أبي', 1), 'subjunctive')).toEqualT({
+          '1s': 'آبَى',
+          '2ms': 'تَأْبَى',
+          '2fs': 'تَأْبَيْ',
+          '3ms': 'يَأْبَى',
+          '3fs': 'تَأْبَى',
+          '2d': 'تَأْبَيَا',
+          '3md': 'يَأْبَيَا',
+          '3fd': 'تَأْبَيَا',
+          '1p': 'نَأْبَى',
+          '2mp': 'تَأْبَوْا',
+          '2fp': 'تَأْبَيْنَ',
+          '3mp': 'يَأْبَوْا',
+          '3fp': 'يَأْبَيْنَ',
+        })
+      })
+
       test('أَتَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('أتي', 1), 'subjunctive')).toEqualT({
           '1s': 'آتِيَ',

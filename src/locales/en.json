@@ -170,6 +170,7 @@
     "bdl-6": "to exchange",
     "bdw-1": "to appear, to seem",
     "bEd-1": "to be distant",
+    ">by-1": "to refuse",
     "b's-1": "to be brave",
     "bHv-1": "to research",
     "bky-1": "to cry",
@@ -669,6 +670,7 @@
   "roots": {
     "*hb": "going",
     ">tY": "coming",
+    ">by": "refusal",
     ">wy": "refuge",
     ">yd": "support",
     ">wd": "habituation",

@@ -668,9 +668,27 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أتي', 'يَأْتِي']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'indicative')).toMatchObjectT({
-          '3ms': expected,
+      test.each([
+        ['أتي', 'يَأْتِي'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('أَبَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أبي', 1), 'indicative')).toEqualT({
+          '1s': 'آبَى',
+          '2ms': 'تَأْبَى',
+          '2fs': 'تَأْبَيْنَ',
+          '3ms': 'يَأْبَى',
+          '3fs': 'تَأْبَى',
+          '2d': 'تَأْبَيَانِ',
+          '3md': 'يَأْبَيَانِ',
+          '3fd': 'تَأْبَيَانِ',
+          '1p': 'نَأْبَى',
+          '2mp': 'تَأْبَوْنَ',
+          '2fp': 'تَأْبَيْنَ',
+          '3mp': 'يَأْبَوْنَ',
+          '3fp': 'يَأْبَيْنَ',
         })
       })
 

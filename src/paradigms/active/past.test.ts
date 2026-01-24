@@ -656,10 +656,11 @@ describe('active past', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أتي', 'أَتَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 1))).toMatchObjectT({
-          '3ms': expected,
-        })
+      test.each([
+        ['أتي', 'أَتَى'],
+        ['أبي', 'أَبَى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('أَتَى conjugation', () => {

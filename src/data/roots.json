@@ -55,6 +55,7 @@
   { "root": "بنى", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "بءس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
+  { "root": "أبي", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aal"] },
   { "root": "بيت", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["mimi"] },
   { "root": "تاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تاج", "form": 1, "formPattern": "fa3ala-yaf3alu" },

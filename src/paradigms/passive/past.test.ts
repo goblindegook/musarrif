@@ -346,6 +346,10 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['أبي', 'أُبِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
+      })
+
       test('أَخَذَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('أخذ', 1))).toEqualT({
           '1s': 'أُخِذْتُ',
