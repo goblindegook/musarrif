@@ -10,9 +10,7 @@ describe('passive present jussive', () => {
         ['مثل', 'يُمْثَلْ'],
         ['دعم', 'يُدْعَمْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('كَتَبَ conjugation', () => {
@@ -135,9 +133,7 @@ describe('passive present jussive', () => {
         ['قول', 'يُقَلْ'],
         ['خور', 'يُخْوَرْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('عَوِزَ conjugation', () => {
@@ -233,9 +229,7 @@ describe('passive present jussive', () => {
 
     describe('hamzated initial hollow roots', () => {
       test.each([['أول', 'يُؤَلْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('يُؤَلْ conjugation', () => {
@@ -317,9 +311,7 @@ describe('passive present jussive', () => {
 
     describe('hamzated middle defective roots', () => {
       test.each([['رأى', 'يُرَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {
@@ -369,9 +361,7 @@ describe('passive present jussive', () => {
         ['علي', 'يُعْلَ'],
         ['شفي', 'يُشْفَ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('دَعَا conjugation', () => {
@@ -395,9 +385,7 @@ describe('passive present jussive', () => {
 
     describe('doubly weak roots', () => {
       test.each([['جوي', 'يُجْوَ']])('jussive pattern for %s conjugation', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('رَوَى conjugation', () => {

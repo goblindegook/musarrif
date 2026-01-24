@@ -14,9 +14,7 @@ describe('active present jussive', () => {
         ['نفس', 'يَنْفُسْ'],
         ['مكن', 'يَمْكُنْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('drops nūn endings for صَرَفَ', () => {
@@ -72,9 +70,7 @@ describe('active present jussive', () => {
 
     describe('geminate roots', () => {
       test.each([['قرر', 'يَقَرَّ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('قَرَّ conjugation', () => {
@@ -249,9 +245,7 @@ describe('active present jussive', () => {
         ['حول', 'يَحُلْ'],
         ['خور', 'يَخْوَرْ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('عَوِزَ conjugation', () => {
@@ -330,9 +324,7 @@ describe('active present jussive', () => {
         ['لهو', 'يَلْهُ'],
         ['شفي', 'يَشْفِ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('بَقِيَ conjugation', () => {
@@ -396,9 +388,7 @@ describe('active present jussive', () => {
         ['جوي', 'يَجْوَ'],
         ['روى', 'يَرْوِ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('رَوِيَ conjugation', () => {
@@ -478,9 +468,7 @@ describe('active present jussive', () => {
 
     describe('hamzated initial hollow roots', () => {
       test.each([['أول', 'يَؤُلْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('يَؤُلْ conjugation', () => {
@@ -504,17 +492,13 @@ describe('active present jussive', () => {
 
     describe('hamzated middle roots', () => {
       test.each([['بءس', 'يَبْؤُسْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
       test.each([['جرء', 'يَجْرُؤْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('قَرَأَ conjugation', () => {
@@ -574,9 +558,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final hollow roots', () => {
       test.each([['نوء', 'يَنُؤْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('بوء conjugation', () => {
@@ -636,9 +618,7 @@ describe('active present jussive', () => {
 
     describe('hamzated middle defective roots', () => {
       test.each([['رأى', 'يَرَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {
@@ -682,9 +662,7 @@ describe('active present jussive', () => {
 
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'يَأْوِ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
       test('أَوَى conjugation', () => {

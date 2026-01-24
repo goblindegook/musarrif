@@ -391,9 +391,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated middle defective roots', () => {
       test.each([['رأى', 'رُئِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {

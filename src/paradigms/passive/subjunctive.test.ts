@@ -10,9 +10,7 @@ describe('passive present subjunctive', () => {
         ['مثل', 'يُمْثَلَ'],
         ['دعم', 'يُدْعَمَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('كَتَبَ conjugation', () => {
@@ -135,9 +133,7 @@ describe('passive present subjunctive', () => {
         ['قول', 'يُقَالَ'],
         ['خور', 'يُخْوَرَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('عَوِزَ conjugation', () => {
@@ -236,17 +232,13 @@ describe('passive present subjunctive', () => {
         ['جيء', 'يُجَاءَ'],
         ['نوء', 'يُنَاءَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial hollow roots', () => {
       test.each([['أول', 'يُؤَالَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('يُؤَالَ conjugation', () => {
@@ -314,9 +306,7 @@ describe('passive present subjunctive', () => {
 
     describe('hamzated middle defective roots', () => {
       test.each([['رأى', 'يُرَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {
@@ -366,9 +356,7 @@ describe('passive present subjunctive', () => {
         ['علي', 'يُعْلَى'],
         ['شفي', 'يُشْفَى'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('دَعَا conjugation', () => {
@@ -392,9 +380,7 @@ describe('passive present subjunctive', () => {
 
     describe('doubly weak roots', () => {
       test.each([['جوي', 'يُجْوَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')).toMatchObjectT({
-          '3ms': expected,
-        })
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('رَوَى conjugation', () => {
