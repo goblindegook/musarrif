@@ -535,6 +535,12 @@ describe('imperative', () => {
     })
 
     describe('hamzated middle defective roots', () => {
+      test.each([['رأى', 'رَ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 1))).toMatchObjectT({
+          '2ms': expected,
+        })
+      })
+
       test('رَأَى conjugation', () => {
         expect(conjugateImperative(getVerb('رأى', 1))).toMatchObjectT({
           '2ms': 'رَ',

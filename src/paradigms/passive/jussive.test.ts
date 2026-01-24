@@ -316,6 +316,12 @@ describe('passive present jussive', () => {
     })
 
     describe('hamzated middle defective roots', () => {
+      test.each([['رأى', 'يُرَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')).toMatchObjectT({
+          '3ms': expected,
+        })
+      })
+
       test('رَأَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'jussive')).toEqualT({
           '1s': 'أُرَ',
