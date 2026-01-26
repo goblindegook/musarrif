@@ -147,6 +147,7 @@ describe('passive participle', () => {
         ['أمم', 'مَأْمُوم'],
         ['أدد', 'مَأْدُود'],
         ['أجج', 'مَأْجُوج'],
+        ['أزز', 'مَأْزُوز'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toBe(expected)
       })
