@@ -451,7 +451,10 @@ describe('active past', () => {
     })
 
     describe('hamzated initial geminate roots', () => {
-      test.each([['أمم', 'أَمَّ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أمم', 'أَمَّ'],
+        ['أدد', 'أَدَّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 

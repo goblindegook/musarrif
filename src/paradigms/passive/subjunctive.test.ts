@@ -51,6 +51,10 @@ describe('passive present subjunctive', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([['أدد', 'يُؤَدَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('لَمَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُلَمَّ',

@@ -142,7 +142,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated initial geminate roots', () => {
-      test.each([['أمم', 'آمّ']])('%s', (root, expected) => {
+      test.each([
+        ['أمم', 'آمّ'],
+        ['أدد', 'آدّ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
       })
     })

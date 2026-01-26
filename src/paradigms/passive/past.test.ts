@@ -88,6 +88,7 @@ describe('passive past pattern', () => {
       test.each<[string, string]>([
         ['جبب', 'جُبَّ'],
         ['أمم', 'أُمَّ'],
+        ['أدد', 'أُدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
       })

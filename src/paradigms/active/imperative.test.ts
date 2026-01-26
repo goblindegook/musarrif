@@ -352,6 +352,16 @@ describe('imperative', () => {
         })
       })
 
+      test('أَدَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('أدد', 1))).toMatchObjectT({
+          '2ms': 'إِدَّ',
+          '2fs': 'إِدِّي',
+          '2d': 'إِدَّا',
+          '2mp': 'إِدُّوا',
+          '2fp': 'اِيدِدْنَ',
+        })
+      })
+
       test('حَبَّ conjugation', () => {
         expect(conjugateImperative(getVerb('حبب', 1))).toMatchObjectT({
           '2ms': 'حِبَّ',

@@ -51,7 +51,10 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each<[string, string]>([['جبب', 'يُجَبُّ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جبب', 'يُجَبُّ'],
+        ['أدد', 'يُؤَدُّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
 

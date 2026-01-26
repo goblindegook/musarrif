@@ -484,6 +484,10 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated initial geminate roots', () => {
+      test.each([['أدد', 'يَئِدُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('أَمَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أَؤُمُّ',
