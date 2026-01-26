@@ -72,6 +72,7 @@ describe('active present jussive', () => {
       test.each([
         ['قرر', 'يَقَرَّ'],
         ['أدد', 'يَئِدَّ'],
+        ['أجج', 'يَؤُجَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })

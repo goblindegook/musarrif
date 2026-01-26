@@ -14,6 +14,7 @@
   { "root": "أمل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أدد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
+  { "root": "أجج", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   {
     "root": "أمن",
     "form": 1,
