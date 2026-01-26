@@ -329,7 +329,7 @@ describe('imperative', () => {
         ['جبب', 'جُبَّ'],
         ['عنن', 'عِنَّ'],
         ['أجج', 'أُجَّ'],
-        ['أزز', 'إِزَّ'],
+        ['أزز', 'أُزَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -350,7 +350,7 @@ describe('imperative', () => {
           '2fs': 'أُمِّي',
           '2d': 'أُمَّا',
           '2mp': 'أُمُّوا',
-          '2fp': 'أُمُمْنَ',
+          '2fp': 'اُومُمْنَ',
         })
       })
 
@@ -361,6 +361,16 @@ describe('imperative', () => {
           '2d': 'إِدَّا',
           '2mp': 'إِدُّوا',
           '2fp': 'اِيدِدْنَ',
+        })
+      })
+
+      test('أَزَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('أزز', 1))).toMatchObjectT({
+          '2ms': 'أُزَّ',
+          '2fs': 'أُزِّي',
+          '2d': 'أُزَّا',
+          '2mp': 'أُزُّوا',
+          '2fp': 'اُوزُزْنَ',
         })
       })
 
