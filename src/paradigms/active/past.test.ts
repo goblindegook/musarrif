@@ -507,7 +507,10 @@ describe('active past', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['وطئ', 'وَطِئَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وطئ', 'وَطِئَ'],
+        ['كلأ', 'كَلَأَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
@@ -562,6 +565,24 @@ describe('active past', () => {
           '2fp': 'قَرَأْتُنَّ',
           '3mp': 'قَرَأُوا',
           '3fp': 'قَرَأْنَ',
+        })
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePast(getVerb('كلأ', 1))).toEqualT({
+          '1s': 'كَلَأْتُ',
+          '2ms': 'كَلَأْتَ',
+          '2fs': 'كَلَأْتِ',
+          '3ms': 'كَلَأَ',
+          '3fs': 'كَلَأَتْ',
+          '2d': 'كَلَأْتُمَا',
+          '3md': 'كَلَآ',
+          '3fd': 'كَلَأَتَا',
+          '1p': 'كَلَأْنَا',
+          '2mp': 'كَلَأْتُمْ',
+          '2fp': 'كَلَأْتُنَّ',
+          '3mp': 'كَلَأُوا',
+          '3fp': 'كَلَأْنَ',
         })
       })
     })

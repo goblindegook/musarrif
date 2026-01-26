@@ -345,6 +345,33 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([
+        ['وطئ', 'يُوطَأْ'],
+        ['كلأ', 'يُكْلَأْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('كلأ', 1), 'jussive')).toEqualT({
+          '1s': 'أُكْلَأْ',
+          '2ms': 'تُكْلَأْ',
+          '2fs': 'تُكْلَئِي',
+          '3ms': 'يُكْلَأْ',
+          '3fs': 'تُكْلَأْ',
+          '2d': 'تُكْلَآ',
+          '3md': 'يُكْلَآ',
+          '3fd': 'تُكْلَآ',
+          '1p': 'نُكْلَأْ',
+          '2mp': 'تُكْلَأُوا',
+          '2fp': 'تُكْلَأْنَ',
+          '3mp': 'يُكْلَأُوا',
+          '3fp': 'يُكْلَأْنَ',
+        })
+      })
+    })
+
     describe('hamzated final-weak roots', () => {
       test('أَتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 1), 'jussive')).toEqualT({

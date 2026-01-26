@@ -502,7 +502,10 @@ describe('active present jussive', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['جرء', 'يَجْرُؤْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جرء', 'يَجْرُؤْ'],
+        ['كلأ', 'يَكْلُؤْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
@@ -521,6 +524,24 @@ describe('active present jussive', () => {
           '2fp': 'تَقْرَأْنَ',
           '3mp': 'يَقْرَأُوا',
           '3fp': 'يَقْرَأْنَ',
+        })
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('كلأ', 1), 'jussive')).toEqualT({
+          '1s': 'أَكْلُؤْ',
+          '2ms': 'تَكْلُؤْ',
+          '2fs': 'تَكْلُئِي',
+          '3ms': 'يَكْلُؤْ',
+          '3fs': 'تَكْلُؤْ',
+          '2d': 'تَكْلُؤَا',
+          '3md': 'يَكْلُؤَا',
+          '3fd': 'تَكْلُؤَا',
+          '1p': 'نَكْلُؤْ',
+          '2mp': 'تَكْلُؤُوا',
+          '2fp': 'تَكْلُؤْنَ',
+          '3mp': 'يَكْلُؤُوا',
+          '3fp': 'يَكْلُؤْنَ',
         })
       })
 

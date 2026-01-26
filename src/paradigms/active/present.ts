@@ -189,6 +189,10 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     // Defective verbs (not doubly weak) preserve final weak letter, add noon + fatḥa directly
     if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...stem, NOON, FATHA]
 
+    // Hamzated final roots with present vowel 'u': use kasra on yeh (e.g., كَلَأَ → تَكْلُئِينَ)
+    if (isHamzatedLetter(c3) && isFormIPresentVowel(verb, 'u'))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA), KASRA), YEH, NOON, FATHA]
+
     // Form I hollow verbs with middle ALIF don't have sukoon before noon in 2fs (e.g., كان → تَكُونِينَ)
     // Form III and Form V hollow verbs don't have sukoon before noon in 2fs
     if (

@@ -563,7 +563,10 @@ describe('imperative', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['جرء', 'اُجْرُؤْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جرء', 'اُجْرُؤْ'],
+        ['كلأ', 'اُكْلُؤْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
@@ -584,6 +587,16 @@ describe('imperative', () => {
           '2d': 'اِقْرَآ',
           '2mp': 'اِقْرَأُوا',
           '2fp': 'اِقْرَأْنَ',
+        })
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('كلأ', 1))).toMatchObjectT({
+          '2ms': 'اُكْلُؤْ',
+          '2fs': 'اُكْلُئِي',
+          '2d': 'اُكْلُؤَا',
+          '2mp': 'اُكْلُؤُوا',
+          '2fp': 'اُكْلُؤْنَ',
         })
       })
 

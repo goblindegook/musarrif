@@ -543,6 +543,7 @@ describe('active present indicative', () => {
         ['بدأ', 'يَبْدَأُ'],
         ['وطئ', 'يَطَأُ'],
         ['جرء', 'يَجْرُؤُ'],
+        ['كلأ', 'يَكْلُؤُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -598,6 +599,24 @@ describe('active present indicative', () => {
           '2fp': 'تَطَأْنَ',
           '3mp': 'يَطَأُونَ',
           '3fp': 'يَطَأْنَ',
+        })
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('كلأ', 1), 'indicative')).toEqualT({
+          '1s': 'أَكْلُؤُ',
+          '2ms': 'تَكْلُؤُ',
+          '2fs': 'تَكْلُئِينَ',
+          '3ms': 'يَكْلُؤُ',
+          '3fs': 'تَكْلُؤُ',
+          '2d': 'تَكْلُؤَانِ',
+          '3md': 'يَكْلُؤَانِ',
+          '3fd': 'تَكْلُؤَانِ',
+          '1p': 'نَكْلُؤُ',
+          '2mp': 'تَكْلُؤُونَ',
+          '2fp': 'تَكْلُؤْنَ',
+          '3mp': 'يَكْلُؤُونَ',
+          '3fp': 'يَكْلُؤْنَ',
         })
       })
     })

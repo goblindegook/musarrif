@@ -106,14 +106,22 @@ export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
     })
   }
 
-  if (isGeminate) {
+  if (isGeminate)
     return toConjugation({
       base: [c1, DAMMA, c2, SHADDA, FATHA],
       stem: [c1, DAMMA, c2, KASRA, c3, SUKOON],
       thirdMasculinePluralStem: [c1, DAMMA, c2, SHADDA],
       finalRadical: c3,
     })
-  }
+
+  // Hamzated final roots (not weak, not middle weak): use HAMZA_ON_YEH (e.g., كَلَأَ → كُلِئَ)
+  if (isHamzatedLetter(c3))
+    return toConjugation({
+      base: [c1, DAMMA, c2, KASRA, HAMZA_ON_YEH, FATHA],
+      stem: [c1, DAMMA, c2, KASRA, HAMZA_ON_YEH, SUKOON],
+      thirdMasculinePluralStem: [c1, DAMMA, c2, KASRA, HAMZA_ON_YEH],
+      finalRadical: c3,
+    })
 
   return toConjugation({
     base: [c1, DAMMA, c2, KASRA, c3, FATHA],

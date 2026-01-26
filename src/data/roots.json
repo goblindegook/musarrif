@@ -467,6 +467,7 @@
   { "root": "كتب", "form": 6 },
   { "root": "كتب", "form": 7 },
   { "root": "كذب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "كلأ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   { "root": "كره", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "كسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "كسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },

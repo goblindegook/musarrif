@@ -1,6 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import type { Mood } from '../active/present'
-import { hasPattern } from '../form-i-vowels'
+import { hasPattern, isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -43,7 +43,7 @@ const PRESENT_PREFIXES: Record<PronounId, string> = {
 const INDICATIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '1s': [DAMMA],
   '2ms': [DAMMA],
-  '2fs': [KASRA, YEH, SUKOON, NOON, FATHA],
+  '2fs': [KASRA, YEH, NOON, FATHA],
   '3ms': [DAMMA],
   '3fs': [DAMMA],
   '2d': [FATHA, ALIF, NOON, KASRA],
@@ -358,12 +358,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           const prefix = PRESENT_PREFIXES[pronounId]
           const stemC1 = isInitialHamza ? HAMZA_ON_WAW : c1
 
-          if (pronounId === '2fs') {
-            const tail = mood === 'indicative' ? [KASRA, YEH, SUKOON, NOON, FATHA] : [KASRA, YEH]
-            acc[pronounId] = [prefix, DAMMA, stemC1, FATHA, c2, SHADDA, ...tail]
-            return acc
-          }
-
           if (isFemininePlural(pronounId)) {
             const stem = isInitialWeak ? [stemC1, c2, FATHA, c3] : [stemC1, SUKOON, c2, FATHA, c3]
             acc[pronounId] = [prefix, DAMMA, ...stem, ...geminateSuffixes[pronounId]]
@@ -386,11 +380,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           const prefix = PRESENT_PREFIXES[pronounId]
           const stem = pronounId === '1s' ? [WAW, c2, FATHA, c3] : [HAMZA_ON_WAW, SUKOON, c2, FATHA, c3]
 
-          if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [prefix, DAMMA, HAMZA_ON_WAW, SUKOON, c2, FATHA, c3, KASRA, YEH, NOON, FATHA]
-            return acc
-          }
-
           acc[pronounId] = [prefix, DAMMA, ...stem, ...suffixes[pronounId]]
           return acc
         },
@@ -405,22 +394,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     return mapRecord(
       PRONOUN_IDS.reduce(
         (acc, pronounId) => {
-          if (pronounId === '2fs' && mood === 'indicative') {
-            acc[pronounId] = [
-              PRESENT_PREFIXES[pronounId],
-              DAMMA,
-              seatedC1,
-              c2,
-              FATHA,
-              seatHamza(c3, KASRA),
-              KASRA,
-              YEH,
-              NOON,
-              FATHA,
-            ]
-            return acc
-          }
-
           if (c3 === NOON && isFemininePlural(pronounId)) {
             acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, seatedC1, c2, FATHA, NOON, SHADDA, FATHA]
             return acc
@@ -443,10 +416,32 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     )
   }
 
+  // Hamzated final roots with present vowel 'u': use fatḥa on yeh for 2fs (e.g., كَلَأَ → تُكْلَئِينَ)
+  if (isHamzatedLetter(c3) && isFormIPresentVowel(verb, 'u')) {
+    return mapRecord(
+      PRONOUN_IDS.reduce(
+        (acc, pronounId) => {
+          acc[pronounId] = normalizeAlifMadda([
+            PRESENT_PREFIXES[pronounId],
+            DAMMA,
+            c1,
+            SUKOON,
+            c2,
+            FATHA,
+            seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA),
+            ...suffixes[pronounId],
+          ])
+          return acc
+        },
+        {} as Record<PronounId, readonly string[]>,
+      ),
+      (value) => value.join('').normalize('NFC'),
+    )
+  }
+
   return mapRecord(
     PRONOUN_IDS.reduce(
       (acc, pronounId) => {
-        const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
         acc[pronounId] = normalizeAlifMadda([
           PRESENT_PREFIXES[pronounId],
           DAMMA,
@@ -454,7 +449,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           SUKOON,
           c2,
           FATHA,
-          seatedC3,
+          seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA),
           ...suffixes[pronounId],
         ])
         return acc

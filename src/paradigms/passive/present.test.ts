@@ -17,7 +17,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'indicative')).toEqualT({
           '1s': 'أُكْتَبُ',
           '2ms': 'تُكْتَبُ',
-          '2fs': 'تُكْتَبِيْنَ',
+          '2fs': 'تُكْتَبِينَ',
           '3ms': 'يُكْتَبُ',
           '3fs': 'تُكْتَبُ',
           '2d': 'تُكْتَبَانِ',
@@ -64,7 +64,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَمُّ',
           '2ms': 'تُلَمُّ',
-          '2fs': 'تُلَمِّيْنَ',
+          '2fs': 'تُلَمِّينَ',
           '3ms': 'يُلَمُّ',
           '3fs': 'تُلَمُّ',
           '2d': 'تُلَمَّانِ',
@@ -82,7 +82,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أُؤَمُّ',
           '2ms': 'تُؤَمُّ',
-          '2fs': 'تُؤَمِّيْنَ',
+          '2fs': 'تُؤَمِّينَ',
           '3ms': 'يُؤَمُّ',
           '3fs': 'تُؤَمُّ',
           '2d': 'تُؤَمَّانِ',
@@ -100,7 +100,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'indicative')).toEqualT({
           '1s': 'أُوَدُّ',
           '2ms': 'تُوَدُّ',
-          '2fs': 'تُوَدِّيْنَ',
+          '2fs': 'تُوَدِّينَ',
           '3ms': 'يُوَدُّ',
           '3fs': 'تُوَدُّ',
           '2d': 'تُوَدَّانِ',
@@ -372,6 +372,13 @@ describe('passive present indicative', () => {
     })
 
     describe('hamzated final roots', () => {
+      test.each([
+        ['وطئ', 'يُوطَأُ'],
+        ['كلأ', 'يُكْلَأُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
+      })
+
       test('وَطِئَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وطئ', 1), 'indicative')).toEqualT({
           '1s': 'أُوطَأُ',
@@ -387,6 +394,24 @@ describe('passive present indicative', () => {
           '2fp': 'تُوطَأْنَ',
           '3mp': 'يُوطَأُونَ',
           '3fp': 'يُوطَأْنَ',
+        })
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('كلأ', 1), 'indicative')).toEqualT({
+          '1s': 'أُكْلَأُ',
+          '2ms': 'تُكْلَأُ',
+          '2fs': 'تُكْلَئِينَ',
+          '3ms': 'يُكْلَأُ',
+          '3fs': 'تُكْلَأُ',
+          '2d': 'تُكْلَآنِ',
+          '3md': 'يُكْلَآنِ',
+          '3fd': 'تُكْلَآنِ',
+          '1p': 'نُكْلَأُ',
+          '2mp': 'تُكْلَأُونَ',
+          '2fp': 'تُكْلَأْنَ',
+          '3mp': 'يُكْلَأُونَ',
+          '3fp': 'يُكْلَأْنَ',
         })
       })
     })

@@ -79,8 +79,29 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each<[string, string]>([['وطئ', 'وُطِئَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['وطئ', 'وُطِئَ'],
+        ['كلأ', 'كُلِئَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+      })
+
+      test('كَلَأَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('كلأ', 1))).toEqualT({
+          '1s': 'كُلِئْتُ',
+          '2ms': 'كُلِئْتَ',
+          '2fs': 'كُلِئْتِ',
+          '3ms': 'كُلِئَ',
+          '3fs': 'كُلِئَتْ',
+          '2d': 'كُلِئْتُمَا',
+          '3md': 'كُلِئَا',
+          '3fd': 'كُلِئَتَا',
+          '1p': 'كُلِئْنَا',
+          '2mp': 'كُلِئْتُمْ',
+          '2fp': 'كُلِئْتُنَّ',
+          '3mp': 'كُلِئُوا',
+          '3fp': 'كُلِئْنَ',
+        })
       })
     })
 
