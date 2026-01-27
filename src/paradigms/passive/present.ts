@@ -101,10 +101,9 @@ function buildC1Segment(verb: Verb, pronounId: PronounId): readonly string[] {
   const isMiddleHamza = isHamzatedLetter(c2)
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
+  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
   const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
-
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
   if (isGeminate && !isInitialWeak && isFemininePlural(pronounId)) return [isInitialHamza ? HAMZA_ON_WAW : c1, SUKOON]
 
@@ -112,9 +111,7 @@ function buildC1Segment(verb: Verb, pronounId: PronounId): readonly string[] {
 
   if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
-  if (isMiddleWeak && isConsonantalMiddleWeak) return [c1, SUKOON]
-
-  if (isMiddleWeak && !isFinalWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
+  if (isMiddleWeak && !isConsonantalMiddleWeak && !isFinalWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
   if (isInitialHamza && pronounId === '1s') return [WAW]
 
@@ -138,20 +135,17 @@ function buildC2Segment(verb: Verb, pronounId: PronounId, mood: Mood): readonly 
 
   if (isGeminate && isFemininePlural(pronounId)) return [c2, FATHA]
 
-  if (isGeminate || isFinalWeak) return [c2]
+  if (isGeminate) return [c2, SHADDA]
 
-  if (isConsonantalMiddleWeak) return [c2, FATHA]
+  if (isFinalWeak) return [c2]
 
-  if (
-    isMiddleWeak &&
-    !isFemininePlural(pronounId) &&
-    (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
-  )
-    return [ALIF]
+  if (!isMiddleWeak || isConsonantalMiddleWeak) return [c2, FATHA]
 
-  if (isMiddleWeak) return []
+  if (isFemininePlural(pronounId)) return []
 
-  return [c2, FATHA]
+  if (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId)) return [ALIF]
+
+  return []
 }
 
 function buildC3Segment(verb: Verb, pronounId: PronounId, _mood: Mood): readonly string[] {
@@ -165,14 +159,12 @@ function buildC3Segment(verb: Verb, pronounId: PronounId, _mood: Mood): readonly
 
   if (isMiddleWeak) return [c3]
 
-  if (isFemininePlural(pronounId)) return [seatHamza(c3, FATHA)]
+  if (!isGeminate || isFemininePlural(pronounId)) return [seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)]
 
-  if (isGeminate) return [SHADDA]
-
-  return [seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)]
+  return []
 }
 
-function suffix(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
+function buildSuffix(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   const isFinalWeak = isWeakLetter(c3)
@@ -208,7 +200,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
           ...buildC1Segment(verb, pronounId),
           ...buildC2Segment(verb, pronounId, mood),
           ...buildC3Segment(verb, pronounId, mood),
-          ...suffix(verb, mood, pronounId),
+          ...buildSuffix(verb, mood, pronounId),
         ]
         return acc
       },

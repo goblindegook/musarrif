@@ -265,8 +265,7 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 
   switch (verb.form) {
     case 1:
-      if (pattern) return deriveMasdarFormI(verb, pattern)
-      return deriveMasdarFormI(verb)
+      return deriveMasdarFormI(verb, pattern)
     case 2:
       return deriveMasdarFormII(verb)
     case 3:
@@ -290,5 +289,5 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 
 export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = verb.form === 1 && verb.masdarPatterns ? verb.masdarPatterns : [undefined]
-  return patterns.map((pattern) => masdar(verb, pattern).join('').normalize('NFC'))
+  return patterns.map((pattern) => masdar(verb, pattern).join('').normalize('NFC')).filter(Boolean)
 }
