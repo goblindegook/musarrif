@@ -108,25 +108,21 @@ function buildC1Segment(verb: Verb, pronounId: PronounId): readonly string[] {
 
   if (isGeminate && !isInitialWeak && isFemininePlural(pronounId)) return [isInitialHamza ? HAMZA_ON_WAW : c1, SUKOON]
 
-  if (isGeminate && isFemininePlural(pronounId)) return [isInitialHamza ? HAMZA_ON_WAW : c1]
+  if (isGeminate && isFemininePlural(pronounId)) return [c1]
 
   if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
-  if (isMiddleWeak && isConsonantalMiddleWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, SUKOON]
+  if (isMiddleWeak && isConsonantalMiddleWeak) return [c1, SUKOON]
 
-  if (isMiddleWeak && !isFinalWeak) {
-    if (isConsonantalMiddleWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1]
+  if (isMiddleWeak && !isFinalWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
-    return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
-  }
+  if (isInitialHamza && pronounId === '1s') return [WAW]
 
-  if (isInitialHamza) return pronounId === '1s' ? [WAW] : [HAMZA_ON_WAW, SUKOON]
+  if (c1 === YEH) return [WAW]
 
-  if (isInitialWeak) return c1 === YEH ? [WAW] : [c1]
+  if (isInitialWeak || isMiddleHamza) return [c1]
 
-  if (isMiddleHamza) return [c1]
-
-  return [c1 === YEH ? WAW : c1, SUKOON]
+  return [isInitialHamza ? HAMZA_ON_WAW : c1, SUKOON]
 }
 
 function buildC2Segment(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
