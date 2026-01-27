@@ -13,6 +13,7 @@ describe('no passive voice', () => {
     ['بعد', 1],
     ['بدو', 1],
     ['جرء', 1],
+    ['أذن', 1],
   ])('%s (Form %d)', (root, form) => {
     expect(canConjugatePassive(getVerb(root, form))).toBe(false)
   })
