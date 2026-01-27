@@ -478,6 +478,7 @@ describe('active present indicative', () => {
         ['أذن', 'يَأْذَنُ'],
         ['أسر', 'يَأْسِرُ'],
         ['أخذ', 'يَأْخُذُ'],
+        ['أمر', 'يَأْمُرُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })

@@ -467,6 +467,14 @@ describe('active present subjunctive', () => {
         })
       })
     })
+
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أمر', 'يَأْمُرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form II', () => {

@@ -10,7 +10,7 @@
   { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "أكد", "form": 2 },
   { "root": "أكل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "أمر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
+  { "root": "أمر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"], "noPassiveVoice": true },
   { "root": "أمل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أدد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
