@@ -139,17 +139,14 @@ function buildC2Segment(verb: Verb, pronounId: PronounId, mood: Mood): readonly 
 
   if (isGeminate) return [c2]
 
-  if (isMiddleWeak && !isFinalWeak && !isConsonantalMiddleWeak && !isFemininePlural(pronounId)) {
-    if (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId)) return [ALIF]
-  }
-
-  if (isMiddleWeak && !isFinalWeak && isConsonantalMiddleWeak) return [c2]
-
-  if (isMiddleWeak && !isFinalWeak) return []
-
   if (isMiddleHamza) return []
 
-  if (isFinalWeak) return [c2]
+  if (isConsonantalMiddleWeak || isFinalWeak) return [c2]
+
+  if (isMiddleWeak && !isFemininePlural(pronounId))
+    if (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId)) return [ALIF]
+
+  if (isMiddleWeak) return []
 
   return [c2, FATHA]
 }
@@ -163,21 +160,21 @@ function buildC3Segment(verb: Verb, pronounId: PronounId, mood: Mood): readonly 
   const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
 
-  if (isConsonantalMiddleWeak && !isFinalWeak) return [FATHA, c3]
-
-  if (isMiddleWeak && !isFinalWeak) return [c3]
-
   if (
     isFinalWeak &&
     (pronounId === '2fs' || isFemininePlural(pronounId) || isMasculinePlural(pronounId) || isDual(pronounId))
   )
     return []
 
-  if (isMiddleHamza && isFinalWeak && mood === 'jussive') return [FATHA]
+  if (isMiddleHamza && mood === 'jussive') return [FATHA]
 
-  if (isMiddleHamza && isFinalWeak) return [FATHA, ALIF_MAQSURA]
+  if (isMiddleHamza) return [FATHA, ALIF_MAQSURA]
 
   if (isFinalWeak) return []
+
+  if (isConsonantalMiddleWeak) return [FATHA, c3]
+
+  if (isMiddleWeak) return [c3]
 
   if (isGeminate) return isFemininePlural(pronounId) ? [c3] : [SHADDA]
 
@@ -187,56 +184,32 @@ function buildC3Segment(verb: Verb, pronounId: PronounId, mood: Mood): readonly 
 }
 
 function suffix(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
-  const [c1, c2, c3] = Array.from(verb.root)
+  const [, c2, c3] = Array.from(verb.root)
 
-  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
-  const isInitialWeak = isWeakLetter(c1)
-  const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
 
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
+  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (isGeminate) return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
+  if (isGeminate) return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : moodSuffix
 
-  if (isFinalWeak) {
-    if (pronounId === '2fs') return mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
+  if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-    if (isDual(pronounId))
-      return mood === 'indicative' ? [FATHA, YEH, FATHA, ALIF, NOON, KASRA] : [FATHA, YEH, FATHA, ALIF]
+  if (!isFinalWeak) return moodSuffix
 
-    if (
-      !isInitialHamza &&
-      isMiddleWeak &&
-      isMasculinePlural(pronounId) &&
-      (mood === 'subjunctive' || mood === 'jussive')
-    )
-      return [FATHA, WAW, SUKOON, ALIF]
+  if (pronounId === '2fs') return mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
 
-    if (isMasculinePlural(pronounId))
-      return mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
+  if (isDual(pronounId)) return [FATHA, YEH, ...moodSuffix]
 
-    if (isFemininePlural(pronounId)) return [FATHA, YEH, SUKOON, NOON, FATHA]
+  if (isMasculinePlural(pronounId))
+    return mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
 
-    if (isMiddleHamza) return []
+  if (isFemininePlural(pronounId)) return [FATHA, YEH, ...moodSuffix]
 
-    return mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
-  }
+  if (isMiddleHamza) return []
 
-  if (isMiddleWeak && !isConsonantalMiddleWeak) {
-    if (pronounId === '2fs') return mood === 'indicative' ? [KASRA, YEH, NOON, FATHA] : [KASRA, YEH]
-    if (isDual(pronounId)) return mood === 'indicative' ? [FATHA, ALIF, NOON, KASRA] : [FATHA, ALIF]
-    if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [DAMMA, WAW, NOON, FATHA] : [DAMMA, WAW, ALIF]
-    if (isFemininePlural(pronounId)) return [SUKOON, NOON, FATHA]
-    return MOOD_SUFFIXES[mood][pronounId]
-  }
-
-  if (isInitialWeak && c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
-
-  if (isConsonantalMiddleWeak && mood === 'indicative' && pronounId === '2fs') return [KASRA, YEH, NOON, FATHA]
-
-  return MOOD_SUFFIXES[mood][pronounId]
+  return mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
