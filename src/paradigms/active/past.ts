@@ -61,79 +61,49 @@ function defectiveStem(forms: DefectivePastBaseForms): readonly string[] {
   return forms.suffixedBase.slice(0, -2)
 }
 
-const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => readonly string[]> = {
-  '1s': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA]
-    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA]
-  },
-  '2ms': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, FATHA]
-    return [...nonDefectiveSuffixedBase(forms), TEH, FATHA]
-  },
-  '2fs': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, KASRA]
-    return [...nonDefectiveSuffixedBase(forms), TEH, KASRA]
-  },
-  '3ms': (forms) => forms.base,
-  '3fs': (forms) => {
-    if ('defectiveGlide' in forms) return [...defectiveStem(forms), TEH, SUKOON]
-    return [...forms.base, TEH, SUKOON]
-  },
-  '2d': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF]
-    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, FATHA, ALIF]
-  },
-  '3md': (forms) => {
-    if ('defectiveGlide' in forms) return [...defectiveStem(forms), forms.suffixedBase.at(-2) ?? '', FATHA, ALIF]
-    return normalizeAlifMadda([...forms.base, ALIF])
-  },
-  '3fd': (forms) => {
-    if ('defectiveGlide' in forms) return [...defectiveStem(forms), TEH, FATHA, ALIF]
-    return [...forms.base, TEH, FATHA, ALIF]
-  },
-  '1p': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, NOON, FATHA, ALIF]
-    return [...nonDefectiveSuffixedBase(forms), NOON, FATHA, ALIF]
-  },
-  '2mp': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, MEEM, SUKOON]
-    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, MEEM, SUKOON]
-  },
-  '2fp': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA]
-    return [...nonDefectiveSuffixedBase(forms), TEH, DAMMA, NOON, SHADDA, FATHA]
-  },
-  '3mp': (forms, verb) => {
-    const [, c2, c3] = [...verb.root]
+function buildPastConjugations(verb: Verb): Record<PronounId, readonly string[]> {
+  const forms = derivePastForms(verb)
+  const isDefective = 'defectiveGlide' in forms
+  const stem = isDefective ? defectiveStem(forms) : null
+  const suffixedBase = isDefective ? forms.suffixedBase : nonDefectiveSuffixedBase(forms)
+  const pluralBase = forms.pluralBase ?? replaceFinalDiacritic(forms.base, DAMMA)
 
-    // For hollow verbs with final hamza, hamza before و should be seated on waw: جَاؤُوا
-    if (isWeakLetter(c2) && isHamzatedLetter(c3))
-      return [
-        ...removeTrailingDiacritics(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
-        DAMMA,
-        WAW,
-        ALIF,
-      ]
+  const [, c2, c3] = [...verb.root]
 
-    if ('defectiveGlide' in forms) return [...forms.pluralBase, ALIF]
-    const pluralBase = forms.pluralBase ?? replaceFinalDiacritic(forms.base, DAMMA)
-    if (pluralBase.at(-1) === WAW) return [...pluralBase, ALIF]
-    return [...pluralBase, WAW, ALIF]
-  },
-  '3fp': (forms) => {
-    if ('defectiveGlide' in forms) return [...forms.suffixedBase, NOON, FATHA]
-
-    // If the suffixed base ends with NOON, geminate with shadda when adding NOON suffix
-    const suffixedBase = nonDefectiveSuffixedBase(forms)
-    if (suffixedBase.at(-2) === NOON) return [...suffixedBase.slice(0, -2), NOON, SHADDA, FATHA]
-
-    return [...suffixedBase, NOON, FATHA]
-  },
+  return {
+    '1s': [...suffixedBase, TEH, DAMMA],
+    '2ms': [...suffixedBase, TEH, FATHA],
+    '2fs': [...suffixedBase, TEH, KASRA],
+    '3ms': forms.base,
+    '3fs': stem ? [...stem, TEH, SUKOON] : [...forms.base, TEH, SUKOON],
+    '2d': [...suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF],
+    '3md': stem ? [...stem, forms.suffixedBase?.at(-2) ?? '', FATHA, ALIF] : normalizeAlifMadda([...forms.base, ALIF]),
+    '3fd': stem ? [...stem, TEH, FATHA, ALIF] : [...forms.base, TEH, FATHA, ALIF],
+    '1p': [...suffixedBase, NOON, FATHA, ALIF],
+    '2mp': [...suffixedBase, TEH, DAMMA, MEEM, SUKOON],
+    '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
+    '3mp': (() => {
+      if (isWeakLetter(c2) && isHamzatedLetter(c3))
+        return [
+          ...removeTrailingDiacritics(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
+          DAMMA,
+          WAW,
+          ALIF,
+        ]
+      if (isDefective) return [...forms.pluralBase, ALIF]
+      if (pluralBase.at(-1) === WAW) return [...pluralBase, ALIF]
+      return [...pluralBase, WAW, ALIF]
+    })(),
+    '3fp': (() => {
+      if (isDefective) return [...forms.suffixedBase, NOON, FATHA]
+      if (suffixedBase.at(-2) === NOON) return [...suffixedBase.slice(0, -2), NOON, SHADDA, FATHA]
+      return [...suffixedBase, NOON, FATHA]
+    })(),
+  }
 }
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
-  const forms = derivePastForms(verb)
-  return mapRecord(PAST_BUILDERS, (build) => geminateDoubleLetters(build(forms, verb)).join('').normalize('NFC'))
+  return mapRecord(buildPastConjugations(verb), (value) => geminateDoubleLetters(value).join('').normalize('NFC'))
 }
 
 function buildForms(base: readonly string[], c3: string): PastBaseForms {
