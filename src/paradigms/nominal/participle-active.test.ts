@@ -244,6 +244,7 @@ describe('active participle', () => {
       test.each([
         ['وطن', 'مُوَطِّن'],
         ['وجه', 'مُوَجِّه'],
+        ['وسط', 'مُوَسِّط'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })
