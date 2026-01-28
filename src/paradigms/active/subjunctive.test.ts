@@ -469,9 +469,7 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([
-        ['أمر', 'يَأْمُرَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['أمر', 'يَأْمُرَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -495,6 +493,12 @@ describe('active present subjunctive', () => {
           '3mp': 'يُؤَيِّدُوا',
           '3fp': 'يُؤَيِّدْنَ',
         })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test.each([['يود', 'يُيَوِّدَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
   })

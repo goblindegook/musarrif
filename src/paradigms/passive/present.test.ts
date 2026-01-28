@@ -494,4 +494,26 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('Form II', () => {
+    describe('doubly weak roots', () => {
+      test('يَوَّدَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('يود', 2), 'indicative')).toEqualT({
+          '1s': 'أُيَوَّدُ',
+          '2ms': 'تُيَوَّدُ',
+          '2fs': 'تُيَوَّدِينَ',
+          '3ms': 'يُيَوَّدُ',
+          '3fs': 'تُيَوَّدُ',
+          '2d': 'تُيَوَّدَانِ',
+          '3md': 'يُيَوَّدَانِ',
+          '3fd': 'تُيَوَّدَانِ',
+          '1p': 'نُيَوَّدُ',
+          '2mp': 'تُيَوَّدُونَ',
+          '2fp': 'تُيَوَّدْنَ',
+          '3mp': 'يُيَوَّدُونَ',
+          '3fp': 'يُيَوَّدْنَ',
+        })
+      })
+    })
+  })
 })

@@ -406,9 +406,7 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([
-        ['أمر', 'مُرْ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['أمر', 'مُرْ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
@@ -762,6 +760,12 @@ describe('imperative', () => {
           '2mp': 'أَوِّدُوا',
           '2fp': 'أَوِّدْنَ',
         })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test.each([['يود', 'يَوِّدْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })
     })
   })

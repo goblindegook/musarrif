@@ -440,4 +440,26 @@ describe('passive present subjunctive', () => {
       })
     })
   })
+
+  describe('Form II', () => {
+    describe('doubly weak roots', () => {
+      test('يَوَّدَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('يود', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُيَوَّدَ',
+          '2ms': 'تُيَوَّدَ',
+          '2fs': 'تُيَوَّدِي',
+          '3ms': 'يُيَوَّدَ',
+          '3fs': 'تُيَوَّدَ',
+          '2d': 'تُيَوَّدَا',
+          '3md': 'يُيَوَّدَا',
+          '3fd': 'تُيَوَّدَا',
+          '1p': 'نُيَوَّدَ',
+          '2mp': 'تُيَوَّدُوا',
+          '2fp': 'تُيَوَّدْنَ',
+          '3mp': 'يُيَوَّدُوا',
+          '3fp': 'يُيَوَّدْنَ',
+        })
+      })
+    })
+  })
 })

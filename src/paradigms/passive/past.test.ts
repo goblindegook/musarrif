@@ -500,4 +500,26 @@ describe('passive past pattern', () => {
       })
     })
   })
+
+  describe('Form II', () => {
+    describe('doubly weak roots', () => {
+      test('يَوَّدَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('يود', 2))).toEqualT({
+          '1s': 'يُوِّدْتُ',
+          '2ms': 'يُوِّدْتَ',
+          '2fs': 'يُوِّدْتِ',
+          '3ms': 'يُوِّدَ',
+          '3fs': 'يُوِّدَتْ',
+          '2d': 'يُوِّدْتُمَا',
+          '3md': 'يُوِّدَا',
+          '3fd': 'يُوِّدَتَا',
+          '1p': 'يُوِّدْنَا',
+          '2mp': 'يُوِّدْتُمْ',
+          '2fp': 'يُوِّدْتُنَّ',
+          '3mp': 'يُوِّدُوا',
+          '3fp': 'يُوِّدْنَ',
+        })
+      })
+    })
+  })
 })

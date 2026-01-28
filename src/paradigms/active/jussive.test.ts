@@ -416,9 +416,7 @@ describe('active present jussive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([
-        ['أمر', 'يَأْمُرْ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['أمر', 'يَأْمُرْ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
@@ -742,6 +740,10 @@ describe('active present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['يود', 'يُيَوِّدْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('وَفَّى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 2), 'jussive')).toEqualT({
           '1s': 'أُوَفِّ',
@@ -778,6 +780,12 @@ describe('active present jussive', () => {
           '3mp': 'يُؤَثِّرُوا',
           '3fp': 'يُؤَثِّرْنَ',
         })
+      })
+    })
+
+    describe('initial weak roots', () => {
+      test.each([['يود', 'يُيَوِّدْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
     })
 
