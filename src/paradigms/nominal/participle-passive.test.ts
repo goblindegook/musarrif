@@ -201,7 +201,7 @@ describe('passive participle', () => {
     })
 
     describe('hamzated final assimilated roots', () => {
-      test.each([['وطئ', 'مَوْطُوء']])('%s', (root, expected) => {
+      test.each([['وطء', 'مَوْطُوء']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toBe(expected)
       })
     })
@@ -247,6 +247,12 @@ describe('passive participle', () => {
         ['أثر', 'مُؤَثَّر'],
         ['أكد', 'مُؤَكَّد'],
       ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test.each([['وطء', 'مُوَطَّأ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
       })
     })

@@ -605,7 +605,7 @@ describe('imperative', () => {
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وطئ', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('وطء', 1))).toMatchObjectT({
           '2ms': 'طَأْ',
           '2fs': 'طَئِي',
           '2d': 'طَآ',
@@ -759,6 +759,18 @@ describe('imperative', () => {
           '2d': 'أَوِّدَا',
           '2mp': 'أَوِّدُوا',
           '2fp': 'أَوِّدْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test('وَطِّئْ conjugation', () => {
+        expect(conjugateImperative(getVerb('وطء', 2))).toMatchObjectT({
+          '2ms': 'وَطِّئْ',
+          '2fs': 'وَطِّئِي',
+          '2d': 'وَطِّئَا',
+          '2mp': 'وَطِّئُوا',
+          '2fp': 'وَطِّئْنَ',
         })
       })
     })

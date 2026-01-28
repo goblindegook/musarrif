@@ -542,7 +542,7 @@ describe('active present indicative', () => {
     describe('hamzated final roots', () => {
       test.each([
         ['بدأ', 'يَبْدَأُ'],
-        ['وطئ', 'يَطَأُ'],
+        ['وطء', 'يَطَأُ'],
         ['جرء', 'يَجْرُؤُ'],
         ['كلأ', 'يَكْلُؤُ'],
       ])('%s pattern', (root, expected) => {
@@ -586,7 +586,7 @@ describe('active present indicative', () => {
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وطئ', 1), 'indicative')).toEqualT({
+        expect(conjugatePresentMood(getVerb('وطء', 1), 'indicative')).toEqualT({
           '1s': 'أَطَأُ',
           '2ms': 'تَطَأُ',
           '2fs': 'تَطَئِيْنَ',
@@ -800,7 +800,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
 
-      test('كَتَّبَ conjugation', () => {
+      test('كَتَّبَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('كتب', 2), 'indicative')).toEqualT({
           '1s': 'أُكَتِّبُ',
           '2ms': 'تُكَتِّبُ',
@@ -918,6 +918,26 @@ describe('active present indicative', () => {
           '2fp': 'تُؤَيِّدْنَ',
           '3mp': 'يُؤَيِّدُونَ',
           '3fp': 'يُؤَيِّدْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test('يُوَطِّئُ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وطء', 2), 'indicative')).toEqualT({
+          '1s': 'أُوَطِّئُ',
+          '2ms': 'تُوَطِّئُ',
+          '2fs': 'تُوَطِّئِيْنَ',
+          '3ms': 'يُوَطِّئُ',
+          '3fs': 'تُوَطِّئُ',
+          '2d': 'تُوَطِّئَانِ',
+          '3md': 'يُوَطِّئَانِ',
+          '3fd': 'تُوَطِّئَانِ',
+          '1p': 'نُوَطِّئُ',
+          '2mp': 'تُوَطِّئُونَ',
+          '2fp': 'تُوَطِّئْنَ',
+          '3mp': 'يُوَطِّئُونَ',
+          '3fp': 'يُوَطِّئْنَ',
         })
       })
     })
@@ -1118,7 +1138,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })
 
-      test('تَكَتَّبَ conjugation', () => {
+      test('تَكَتَّبَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('كتب', 5), 'indicative')).toEqualT({
           '1s': 'أَتَكَتَّبُ',
           '2ms': 'تَتَكَتَّبُ',

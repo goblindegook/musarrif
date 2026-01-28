@@ -16,6 +16,7 @@ import {
   NOON,
   SHADDA,
   SUKOON,
+  seatHamza,
   TEH,
   WAW,
   YEH,
@@ -119,11 +120,12 @@ function derivePassivePastFormI(verb: Verb): PassivePastParams {
 
 function derivePassivePastFormII(verb: Verb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC3 = seatHamza(c3, KASRA)
   return {
     prefix: [c1, DAMMA, c2, SHADDA, KASRA],
-    suffix: [c3, SUKOON],
-    suffix3sd: [c3, FATHA],
-    suffix3pm: [c3],
+    suffix: [seatedC3, SUKOON],
+    suffix3sd: [seatedC3, FATHA],
+    suffix3pm: [seatedC3],
   }
 }
 

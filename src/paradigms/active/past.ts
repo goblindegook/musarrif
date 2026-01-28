@@ -179,7 +179,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
 function derivePastFormII(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  return buildForms([c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+  return buildForms([c1, FATHA, c2, SHADDA, FATHA, seatHamza(c3, FATHA), FATHA], c3)
 }
 
 function derivePastFormIII(verb: Verb): PastBaseForms {

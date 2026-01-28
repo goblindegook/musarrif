@@ -80,7 +80,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated final roots', () => {
       test.each<[string, string]>([
-        ['وطئ', 'وُطِئَ'],
+        ['وطء', 'وُطِئَ'],
         ['كلأ', 'كُلِئَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
@@ -184,7 +184,7 @@ describe('passive past pattern', () => {
     })
 
     describe('geminate roots', () => {
-      test('لَمَّ conjugation', () => {
+      test('لَمَّ conjugation', () => {
         expect(conjugatePassivePast(getVerb('لمم', 1))).toEqualT({
           '1s': 'لُمِمْتُ',
           '2ms': 'لُمِمْتَ',
@@ -202,7 +202,7 @@ describe('passive past pattern', () => {
         })
       })
 
-      test('أَمَّ conjugation', () => {
+      test('أَمَّ conjugation', () => {
         expect(conjugatePassivePast(getVerb('أمم', 1))).toEqualT({
           '1s': 'أُمِمْتُ',
           '2ms': 'أُمِمْتَ',
@@ -220,7 +220,7 @@ describe('passive past pattern', () => {
         })
       })
 
-      test('وَدَّ conjugation', () => {
+      test('وَدَّ conjugation', () => {
         expect(conjugatePassivePast(getVerb('ودد', 1))).toEqualT({
           '1s': 'وُدِدْتُ',
           '2ms': 'وُدِدْتَ',
@@ -502,6 +502,26 @@ describe('passive past pattern', () => {
   })
 
   describe('Form II', () => {
+    describe('hamzated final assimilated roots', () => {
+      test('وُطِّئَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('وطء', 2))).toEqualT({
+          '1s': 'وُطِّئْتُ',
+          '2ms': 'وُطِّئْتَ',
+          '2fs': 'وُطِّئْتِ',
+          '3ms': 'وُطِّئَ',
+          '3fs': 'وُطِّئَتْ',
+          '2d': 'وُطِّئْتُمَا',
+          '3md': 'وُطِّئَا',
+          '3fd': 'وُطِّئَتَا',
+          '1p': 'وُطِّئْنَا',
+          '2mp': 'وُطِّئْتُمْ',
+          '2fp': 'وُطِّئْتُنَّ',
+          '3mp': 'وُطِّئُوا',
+          '3fp': 'وُطِّئْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('يود', 2))).toEqualT({

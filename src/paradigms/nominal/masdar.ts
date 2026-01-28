@@ -140,10 +140,13 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 function deriveMasdarFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
+  const isFinalHamza = isHamzatedLetter(c3)
   const prefix = [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH]
 
   // Defective Form II favors تَفْعِيَة (e.g., تَغْنِيَة) over the long-ī + tanween pattern
   if (isFinalWeak) return [...prefix, FATHA, TEH_MARBUTA]
+
+  if (isFinalHamza) return [TEH, FATHA, c1, SUKOON, c2, KASRA, HAMZA_ON_YEH, FATHA, TEH_MARBUTA]
 
   return [...prefix, c3]
 }

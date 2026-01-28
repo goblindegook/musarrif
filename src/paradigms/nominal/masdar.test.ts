@@ -235,7 +235,7 @@ describe('masdar', () => {
     })
 
     describe('hamzated final assimilated roots', () => {
-      test.each([['وطئ', 'وَطْء']])('%s', (root, expected) => {
+      test.each([['وطء', 'وَطْء']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })
@@ -301,6 +301,12 @@ describe('masdar', () => {
         ['أود', 'تَأْوِيد'],
         ['أيد', 'تَأْيِيد'],
       ])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test.each([['وطء', 'تَوْطِئَة']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })

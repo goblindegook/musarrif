@@ -82,7 +82,7 @@ describe('active present subjunctive', () => {
         })
       })
 
-      test('أَمَّ conjugation', () => {
+      test('أَمَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أَؤُمَّ',
           '2ms': 'تَؤُمَّ',
@@ -476,6 +476,26 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form II', () => {
+    describe('hamzated final assimilated roots', () => {
+      test('يُوَطِّئَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وطء', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُوَطِّئَ',
+          '2ms': 'تُوَطِّئَ',
+          '2fs': 'تُوَطِّئِي',
+          '3ms': 'يُوَطِّئَ',
+          '3fs': 'تُوَطِّئَ',
+          '2d': 'تُوَطِّئَا',
+          '3md': 'يُوَطِّئَا',
+          '3fd': 'تُوَطِّئَا',
+          '1p': 'نُوَطِّئَ',
+          '2mp': 'تُوَطِّئُوا',
+          '2fp': 'تُوَطِّئْنَ',
+          '3mp': 'يُوَطِّئُوا',
+          '3fp': 'يُوَطِّئْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial hollow roots', () => {
       test('أَيَّدَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أيد', 2), 'subjunctive')).toEqualT({

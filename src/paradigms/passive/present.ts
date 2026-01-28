@@ -202,7 +202,8 @@ function derivePassivePresentStemFormI(verb: Verb, pronounId: PronounId, mood: M
 function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-  return [c1, FATHA, c2, SHADDA, FATHA, c3, ...moodSuffix]
+  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
+  return [c1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
 
 function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {

@@ -461,7 +461,7 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
-      test('أَمَّ conjugation', () => {
+      test('أَمَّ conjugation', () => {
         expect(conjugatePast(getVerb('أمم', 1))).toEqualT({
           '1s': 'أَمَمْتُ',
           '2ms': 'أَمَمْتَ',
@@ -509,7 +509,7 @@ describe('active past', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['وطئ', 'وَطِئَ'],
+        ['وطء', 'وَطِئَ'],
         ['كلأ', 'كَلَأَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
@@ -768,7 +768,7 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
 
-      test('كَتَّبَ conjugation', () => {
+      test('كَتَّبَ conjugation', () => {
         expect(conjugatePast(getVerb('كتب', 2))).toEqualT({
           '1s': 'كَتَّبْتُ',
           '2ms': 'كَتَّبْتَ',
@@ -886,6 +886,26 @@ describe('active past', () => {
           '2fp': 'أَيَّدْتُنَّ',
           '3mp': 'أَيَّدُوا',
           '3fp': 'أَيَّدْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test('وَطَّأَ conjugation', () => {
+        expect(conjugatePast(getVerb('وطء', 2))).toEqualT({
+          '1s': 'وَطَّأْتُ',
+          '2ms': 'وَطَّأْتَ',
+          '2fs': 'وَطَّأْتِ',
+          '3ms': 'وَطَّأَ',
+          '3fs': 'وَطَّأَتْ',
+          '2d': 'وَطَّأْتُمَا',
+          '3md': 'وَطَّآ',
+          '3fd': 'وَطَّأَتَا',
+          '1p': 'وَطَّأْنَا',
+          '2mp': 'وَطَّأْتُمْ',
+          '2fp': 'وَطَّأْتُنَّ',
+          '3mp': 'وَطَّأُوا',
+          '3fp': 'وَطَّأْنَ',
         })
       })
     })
@@ -1128,7 +1148,7 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
 
-      test('تَكَتَّبَ conjugation', () => {
+      test('تَكَتَّبَ conjugation', () => {
         expect(conjugatePast(getVerb('كتب', 5))).toEqualT({
           '1s': 'تَكَتَّبْتُ',
           '2ms': 'تَكَتَّبْتَ',

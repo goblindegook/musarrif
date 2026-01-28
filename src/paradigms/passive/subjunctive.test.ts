@@ -59,7 +59,7 @@ describe('passive present subjunctive', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
-      test('لَمَّ conjugation', () => {
+      test('لَمَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُلَمَّ',
           '2ms': 'تُلَمَّ',
@@ -77,7 +77,7 @@ describe('passive present subjunctive', () => {
         })
       })
 
-      test('أَمَّ conjugation', () => {
+      test('أَمَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أُؤَمَّ',
           '2ms': 'تُؤَمَّ',
@@ -95,7 +95,7 @@ describe('passive present subjunctive', () => {
         })
       })
 
-      test('وَدَّ conjugation', () => {
+      test('وَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'subjunctive')).toEqualT({
           '1s': 'أُوَدَّ',
           '2ms': 'تُوَدَّ',
@@ -341,7 +341,7 @@ describe('passive present subjunctive', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['وطئ', 'يُوطَأَ'],
+        ['وطء', 'يُوطَأَ'],
         ['كلأ', 'يُكْلَأَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
@@ -442,6 +442,26 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form II', () => {
+    describe('hamzated final assimilated roots', () => {
+      test('يُوَطَّأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُوَطَّأَ',
+          '2ms': 'تُوَطَّأَ',
+          '2fs': 'تُوَطَّئِي',
+          '3ms': 'يُوَطَّأَ',
+          '3fs': 'تُوَطَّأَ',
+          '2d': 'تُوَطَّآ',
+          '3md': 'يُوَطَّآ',
+          '3fd': 'تُوَطَّآ',
+          '1p': 'نُوَطَّأَ',
+          '2mp': 'تُوَطَّأُوا',
+          '2fp': 'تُوَطَّأْنَ',
+          '3mp': 'يُوَطَّأُوا',
+          '3fp': 'يُوَطَّأْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'subjunctive')).toEqualT({

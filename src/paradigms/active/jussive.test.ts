@@ -550,7 +550,7 @@ describe('active present jussive', () => {
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وطئ', 1), 'jussive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('وطء', 1), 'jussive')).toEqualT({
           '1s': 'أَطَأْ',
           '2ms': 'تَطَأْ',
           '2fs': 'تَطَئِي',
@@ -779,6 +779,26 @@ describe('active present jussive', () => {
           '2fp': 'تُؤَثِّرْنَ',
           '3mp': 'يُؤَثِّرُوا',
           '3fp': 'يُؤَثِّرْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final assimilated roots', () => {
+      test('يُوَطِّئْ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وطء', 2), 'jussive')).toEqualT({
+          '1s': 'أُوَطِّئْ',
+          '2ms': 'تُوَطِّئْ',
+          '2fs': 'تُوَطِّئِي',
+          '3ms': 'يُوَطِّئْ',
+          '3fs': 'تُوَطِّئْ',
+          '2d': 'تُوَطِّئَا',
+          '3md': 'يُوَطِّئَا',
+          '3fd': 'تُوَطِّئَا',
+          '1p': 'نُوَطِّئْ',
+          '2mp': 'تُوَطِّئُوا',
+          '2fp': 'تُوَطِّئْنَ',
+          '3mp': 'يُوَطِّئُوا',
+          '3fp': 'يُوَطِّئْنَ',
         })
       })
     })

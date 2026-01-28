@@ -60,7 +60,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
 
-      test('لَمَّ conjugation', () => {
+      test('لَمَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَمُّ',
           '2ms': 'تُلَمُّ',
@@ -78,7 +78,7 @@ describe('passive present indicative', () => {
         })
       })
 
-      test('أَمَّ conjugation', () => {
+      test('أَمَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أُؤَمُّ',
           '2ms': 'تُؤَمُّ',
@@ -96,7 +96,7 @@ describe('passive present indicative', () => {
         })
       })
 
-      test('وَدَّ conjugation', () => {
+      test('وَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'indicative')).toEqualT({
           '1s': 'أُوَدُّ',
           '2ms': 'تُوَدُّ',
@@ -373,14 +373,14 @@ describe('passive present indicative', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['وطئ', 'يُوطَأُ'],
+        ['وطء', 'يُوطَأُ'],
         ['كلأ', 'يُكْلَأُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
 
       test('وَطِئَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وطئ', 1), 'indicative')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('وطء', 1), 'indicative')).toEqualT({
           '1s': 'أُوطَأُ',
           '2ms': 'تُوطَأُ',
           '2fs': 'تُوطَئِينَ',
@@ -496,6 +496,26 @@ describe('passive present indicative', () => {
   })
 
   describe('Form II', () => {
+    describe('hamzated final assimilated roots', () => {
+      test('يُوَطَّأُ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'indicative')).toEqualT({
+          '1s': 'أُوَطَّأُ',
+          '2ms': 'تُوَطَّأُ',
+          '2fs': 'تُوَطَّئِينَ',
+          '3ms': 'يُوَطَّأُ',
+          '3fs': 'تُوَطَّأُ',
+          '2d': 'تُوَطَّآنِ',
+          '3md': 'يُوَطَّآنِ',
+          '3fd': 'تُوَطَّآنِ',
+          '1p': 'نُوَطَّأُ',
+          '2mp': 'تُوَطَّأُونَ',
+          '2fp': 'تُوَطَّأْنَ',
+          '3mp': 'يُوَطَّأُونَ',
+          '3fp': 'يُوَطَّأْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'indicative')).toEqualT({
