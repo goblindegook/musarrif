@@ -63,6 +63,7 @@ describe('passive participle', () => {
         ['وصف', 'مَوْصُوف'],
         ['وفد', 'مَوْفُود'],
         ['وهن', 'مَوْهُون'],
+        ['وقف', 'مَوْقُوف'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toBe(expected)
       })
@@ -226,6 +227,7 @@ describe('passive participle', () => {
         ['وطن', 'مُوَطَّن'],
         ['وجه', 'مُوَجَّه'],
         ['وسط', 'مُوَسَّط'],
+        ['وقف', 'مُوَقَّف'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
       })

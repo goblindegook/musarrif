@@ -115,6 +115,10 @@ describe('passive present subjunctive', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([['وقف', 'يُوقَفَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('يَمَنَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'subjunctive')).toEqualT({
           '1s': 'أُومَنَ',
@@ -446,6 +450,7 @@ describe('passive present subjunctive', () => {
       test.each([
         ['وطن', 'يُوَطَّنَ'],
         ['وجه', 'يُوَجَّهَ'],
+        ['وقف', 'يُوَقَّفَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

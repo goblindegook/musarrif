@@ -64,6 +64,7 @@ describe('active participle', () => {
         ['وصف', 'وَاصِف'],
         ['وفد', 'وَافِد'],
         ['وهن', 'وَاهِن'],
+        ['وقف', 'وَاقِف'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
       })
@@ -245,6 +246,7 @@ describe('active participle', () => {
         ['وطن', 'مُوَطِّن'],
         ['وجه', 'مُوَجِّه'],
         ['وسط', 'مُوَسِّط'],
+        ['وقف', 'مُوَقِّف'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })

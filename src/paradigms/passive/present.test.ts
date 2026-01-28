@@ -125,6 +125,7 @@ describe('passive present indicative', () => {
         ['وصف', 'يُوصَفُ'],
         ['وفد', 'يُوفَدُ'],
         ['وهن', 'يُوهَنُ'],
+        ['وقف', 'يُوقَفُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
@@ -520,6 +521,7 @@ describe('passive present indicative', () => {
       test.each([
         ['وطن', 'يُوَطَّنُ'],
         ['وجه', 'يُوَجَّهُ'],
+        ['وقف', 'يُوَقَّفُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })

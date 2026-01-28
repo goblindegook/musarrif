@@ -129,6 +129,7 @@ describe('active past', () => {
         ['وصف', 'وَصَفَ'],
         ['وفد', 'وَفَدَ'],
         ['وهن', 'وَهُنَ'],
+        ['وقف', 'وَقَفَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -791,6 +792,7 @@ describe('active past', () => {
       test.each([
         ['وطن', 'وَطَّنَ'],
         ['وجه', 'وَجَّهَ'],
+        ['وقف', 'وَقَّفَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })

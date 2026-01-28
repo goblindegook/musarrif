@@ -82,8 +82,19 @@ describe('imperative', () => {
         ['وصف', 'صِفْ'],
         ['وفد', 'فِدْ'],
         ['ولد', 'لِدْ'],
+        ['وقف', 'قِفْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
+      })
+
+      test('وَقَفَ conjugation', () => {
+        expect(conjugateImperative(getVerb('وقف', 1))).toMatchObjectT({
+          '2ms': 'قِفْ',
+          '2fs': 'قِفِي',
+          '2d': 'قِفَا',
+          '2mp': 'قِفُوا',
+          '2fp': 'قِفْنَ',
+        })
       })
 
       test('وَعَدَ conjugation', () => {
@@ -699,6 +710,7 @@ describe('imperative', () => {
       test.each([
         ['وطن', 'وَطِّنْ'],
         ['وجه', 'وَجِّهْ'],
+        ['وقف', 'وَقِّفْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })

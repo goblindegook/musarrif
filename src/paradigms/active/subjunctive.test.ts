@@ -120,6 +120,28 @@ describe('active present subjunctive', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([['وقف', 'يَقِفَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('وَقَفَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وقف', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَقِفَ',
+          '2ms': 'تَقِفَ',
+          '2fs': 'تَقِفِي',
+          '3ms': 'يَقِفَ',
+          '3fs': 'تَقِفَ',
+          '2d': 'تَقِفَا',
+          '3md': 'يَقِفَا',
+          '3fd': 'تَقِفَا',
+          '1p': 'نَقِفَ',
+          '2mp': 'تَقِفُوا',
+          '2fp': 'تَقِفْنَ',
+          '3mp': 'يَقِفُوا',
+          '3fp': 'يَقِفْنَ',
+        })
+      })
+
       test('وَضَعَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('وضع', 1), 'subjunctive')).toEqualT({
           '1s': 'أَضَعَ',
@@ -480,6 +502,7 @@ describe('active present subjunctive', () => {
       test.each([
         ['وطن', 'يُوَطِّنَ'],
         ['وجه', 'يُوَجِّهَ'],
+        ['وقف', 'يُوَقِّفَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

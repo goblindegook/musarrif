@@ -163,8 +163,27 @@ describe('active present indicative', () => {
         ['يبس', 'يَيْبَسُ'],
         ['يمن', 'يَيْمَنُ'],
         ['ولد', 'يَلِدُ'],
+        ['وقف', 'يَقِفُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('وَقَفَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وقف', 1), 'indicative')).toEqualT({
+          '1s': 'أَقِفُ',
+          '2ms': 'تَقِفُ',
+          '2fs': 'تَقِفِيْنَ',
+          '3ms': 'يَقِفُ',
+          '3fs': 'تَقِفُ',
+          '2d': 'تَقِفَانِ',
+          '3md': 'يَقِفَانِ',
+          '3fd': 'تَقِفَانِ',
+          '1p': 'نَقِفُ',
+          '2mp': 'تَقِفُونَ',
+          '2fp': 'تَقِفْنَ',
+          '3mp': 'يَقِفُونَ',
+          '3fp': 'يَقِفْنَ',
+        })
       })
 
       test('وَعَدَ conjugation', () => {
@@ -823,6 +842,7 @@ describe('active present indicative', () => {
       test.each([
         ['وطن', 'يُوَطِّنُ'],
         ['وجه', 'يُوَجِّهُ'],
+        ['وقف', 'يُوَقِّفُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })

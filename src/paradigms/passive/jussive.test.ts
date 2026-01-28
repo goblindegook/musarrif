@@ -115,6 +115,10 @@ describe('passive present jussive', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([['وقف', 'يُوقَفْ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('يَمَنَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'jussive')).toEqualT({
           '1s': 'أُومَنْ',
@@ -452,6 +456,7 @@ describe('passive present jussive', () => {
       test.each([
         ['وطن', 'يُوَطَّنْ'],
         ['وجه', 'يُوَجَّهْ'],
+        ['وقف', 'يُوَقَّفْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
