@@ -442,6 +442,12 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form II', () => {
+    describe('assimilated roots', () => {
+      test.each([['وطن', 'يُوَطَّنَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final assimilated roots', () => {
       test('يُوَطَّأَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'subjunctive')).toEqualT({

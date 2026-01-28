@@ -516,6 +516,12 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وطن', 'يُوَطَّنُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'indicative')).toEqualT({

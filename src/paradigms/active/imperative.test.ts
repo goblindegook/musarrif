@@ -695,6 +695,12 @@ describe('imperative', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وطن', 'وَطِّنْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test('حَبَّبَ conjugation', () => {
         expect(conjugateImperative(getVerb('حبب', 2))).toMatchObjectT({

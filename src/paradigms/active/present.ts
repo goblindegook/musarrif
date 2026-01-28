@@ -312,7 +312,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
 function conjugatePresent(verb: Verb): Record<PronounId, string> {
   const base = derivePresentForms(verb)
-  return mapRecord(PRESENT_BUILDERS, (build) => build(base, verb).join('').normalize('NFC'))
+  return mapRecord(PRESENT_BUILDERS, (build) => normalizeAlifMadda(build(base, verb)).join('').normalize('NFC'))
 }
 
 function dropNoonEnding(word: readonly string[]): readonly string[] {
@@ -797,5 +797,5 @@ function applyPresentPrefix(chars: readonly string[], prefix: string): readonly 
     if (mark) carriedDiacritics.push(mark)
   }
 
-  return normalizeAlifMadda([prefix, ...carriedDiacritics, ...remainder])
+  return [prefix, ...carriedDiacritics, ...remainder]
 }
