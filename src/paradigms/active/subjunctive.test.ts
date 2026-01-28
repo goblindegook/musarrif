@@ -480,9 +480,26 @@ describe('active present subjunctive', () => {
       test.each([
         ['وطن', 'يُوَطِّنَ'],
         ['وجه', 'يُوَجِّهَ'],
-        ['وسط', 'يُوَسِّطَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('يُوَسِّطَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وسط', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُوَسِّطَ',
+          '2ms': 'تُوَسِّطَ',
+          '2fs': 'تُوَسِّطِي',
+          '3ms': 'يُوَسِّطَ',
+          '3fs': 'تُوَسِّطَ',
+          '2d': 'تُوَسِّطَا',
+          '3md': 'يُوَسِّطَا',
+          '3fd': 'تُوَسِّطَا',
+          '1p': 'نُوَسِّطَ',
+          '2mp': 'تُوَسِّطُوا',
+          '2fp': 'تُوَسِّطْنَ',
+          '3mp': 'يُوَسِّطُوا',
+          '3fp': 'يُوَسِّطْنَ',
+        })
       })
     })
 

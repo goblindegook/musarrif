@@ -699,9 +699,18 @@ describe('imperative', () => {
       test.each([
         ['وطن', 'وَطِّنْ'],
         ['وجه', 'وَجِّهْ'],
-        ['وسط', 'وَسِّطْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
+      })
+
+      test('وَسِّطْ conjugation', () => {
+        expect(conjugateImperative(getVerb('وسط', 2))).toMatchObjectT({
+          '2ms': 'وَسِّطْ',
+          '2fs': 'وَسِّطِي',
+          '2d': 'وَسِّطَا',
+          '2mp': 'وَسِّطُوا',
+          '2fp': 'وَسِّطْنَ',
+        })
       })
     })
 

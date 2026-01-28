@@ -262,7 +262,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('كان', 1), 'indicative')).toEqualT({
           '1s': 'أَكُونُ',
           '2ms': 'تَكُونُ',
-          '2fs': 'تَكُونِينَ',
+          '2fs': 'تَكُونِيْنَ',
           '3ms': 'يَكُونُ',
           '3fs': 'تَكُونُ',
           '2d': 'تَكُونَانِ',
@@ -298,7 +298,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('جيد', 1), 'indicative')).toEqualT({
           '1s': 'أَجْيَدُ',
           '2ms': 'تَجْيَدُ',
-          '2fs': 'تَجْيَدِينَ',
+          '2fs': 'تَجْيَدِيْنَ',
           '3ms': 'يَجْيَدُ',
           '3fs': 'تَجْيَدُ',
           '2d': 'تَجْيَدَانِ',
@@ -388,7 +388,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('دعا', 1), 'indicative')).toEqualT({
           '1s': 'أَدْعُو',
           '2ms': 'تَدْعُو',
-          '2fs': 'تَدْعِينَ',
+          '2fs': 'تَدْعِيْنَ',
           '3ms': 'يَدْعُو',
           '3fs': 'تَدْعُو',
           '2d': 'تَدْعُوَانِ',
@@ -497,7 +497,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أَؤُمُّ',
           '2ms': 'تَؤُمُّ',
-          '2fs': 'تَؤُمِّينَ',
+          '2fs': 'تَؤُمِّيْنَ',
           '3ms': 'يَؤُمُّ',
           '3fs': 'تَؤُمُّ',
           '2d': 'تَؤُمَّانِ',
@@ -607,7 +607,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('كلأ', 1), 'indicative')).toEqualT({
           '1s': 'أَكْلُؤُ',
           '2ms': 'تَكْلُؤُ',
-          '2fs': 'تَكْلُئِينَ',
+          '2fs': 'تَكْلُئِيْنَ',
           '3ms': 'يَكْلُؤُ',
           '3fs': 'تَكْلُؤُ',
           '2d': 'تَكْلُؤَانِ',
@@ -634,7 +634,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('جيء', 1), 'indicative')).toEqualT({
           '1s': 'أَجِيءُ',
           '2ms': 'تَجِيءُ',
-          '2fs': 'تَجِيئِينَ',
+          '2fs': 'تَجِيئِيْنَ',
           '3ms': 'يَجِيءُ',
           '3fs': 'تَجِيءُ',
           '2d': 'تَجِيئَانِ',
@@ -823,9 +823,26 @@ describe('active present indicative', () => {
       test.each([
         ['وطن', 'يُوَطِّنُ'],
         ['وجه', 'يُوَجِّهُ'],
-        ['وسط', 'يُوَسِّطُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('يُوَسِّطُ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وسط', 2), 'indicative')).toEqualT({
+          '1s': 'أُوَسِّطُ',
+          '2ms': 'تُوَسِّطُ',
+          '2fs': 'تُوَسِّطِيْنَ',
+          '3ms': 'يُوَسِّطُ',
+          '3fs': 'تُوَسِّطُ',
+          '2d': 'تُوَسِّطَانِ',
+          '3md': 'يُوَسِّطَانِ',
+          '3fd': 'تُوَسِّطَانِ',
+          '1p': 'نُوَسِّطُ',
+          '2mp': 'تُوَسِّطُونَ',
+          '2fp': 'تُوَسِّطْنَ',
+          '3mp': 'يُوَسِّطُونَ',
+          '3fp': 'يُوَسِّطْنَ',
+        })
       })
     })
 
@@ -840,7 +857,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('قول', 2), 'indicative')).toEqualT({
           '1s': 'أُقَوِّلُ',
           '2ms': 'تُقَوِّلُ',
-          '2fs': 'تُقَوِّلِينَ',
+          '2fs': 'تُقَوِّلِيْنَ',
           '3ms': 'يُقَوِّلُ',
           '3fs': 'تُقَوِّلُ',
           '2d': 'تُقَوِّلَانِ',
@@ -917,7 +934,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('أيد', 2), 'indicative')).toEqualT({
           '1s': 'أُؤَيِّدُ',
           '2ms': 'تُؤَيِّدُ',
-          '2fs': 'تُؤَيِّدِينَ',
+          '2fs': 'تُؤَيِّدِيْنَ',
           '3ms': 'يُؤَيِّدُ',
           '3fs': 'تُؤَيِّدُ',
           '2d': 'تُؤَيِّدَانِ',
@@ -983,7 +1000,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('قول', 3), 'indicative')).toEqualT({
           '1s': 'أُقَاوِلُ',
           '2ms': 'تُقَاوِلُ',
-          '2fs': 'تُقَاوِلِينَ',
+          '2fs': 'تُقَاوِلِيْنَ',
           '3ms': 'يُقَاوِلُ',
           '3fs': 'تُقَاوِلُ',
           '2d': 'تُقَاوِلَانِ',
@@ -1202,7 +1219,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('قول', 5), 'indicative')).toEqualT({
           '1s': 'أَتَقَوَّلُ',
           '2ms': 'تَتَقَوَّلُ',
-          '2fs': 'تَتَقَوَّلِينَ',
+          '2fs': 'تَتَقَوَّلِيْنَ',
           '3ms': 'يَتَقَوَّلُ',
           '3fs': 'تَتَقَوَّلُ',
           '2d': 'تَتَقَوَّلَانِ',
@@ -1455,7 +1472,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('قرأ', 10), 'indicative')).toEqualT({
           '1s': 'أَسْتَقْرِئُ',
           '2ms': 'تَسْتَقْرِئُ',
-          '2fs': 'تَسْتَقْرِئِينَ',
+          '2fs': 'تَسْتَقْرِئِيْنَ',
           '3ms': 'يَسْتَقْرِئُ',
           '3fs': 'تَسْتَقْرِئُ',
           '2d': 'تَسْتَقْرِئَانِ',

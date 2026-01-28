@@ -520,9 +520,26 @@ describe('passive present indicative', () => {
       test.each([
         ['وطن', 'يُوَطَّنُ'],
         ['وجه', 'يُوَجَّهُ'],
-        ['وسط', 'يُوَسَّطُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('يُوَسَّطُ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وسط', 2), 'indicative')).toEqualT({
+          '1s': 'أُوَسَّطُ',
+          '2ms': 'تُوَسَّطُ',
+          '2fs': 'تُوَسَّطِينَ',
+          '3ms': 'يُوَسَّطُ',
+          '3fs': 'تُوَسَّطُ',
+          '2d': 'تُوَسَّطَانِ',
+          '3md': 'يُوَسَّطَانِ',
+          '3fd': 'تُوَسَّطَانِ',
+          '1p': 'نُوَسَّطُ',
+          '2mp': 'تُوَسَّطُونَ',
+          '2fp': 'تُوَسَّطْنَ',
+          '3mp': 'يُوَسَّطُونَ',
+          '3fp': 'يُوَسَّطْنَ',
+        })
       })
     })
 

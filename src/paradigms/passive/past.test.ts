@@ -526,9 +526,26 @@ describe('passive past pattern', () => {
       test.each([
         ['وطن', 'وُطِّنَ'],
         ['وجه', 'وُجِّهَ'],
-        ['وسط', 'وُسِّطَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
+      test('وُسِّطَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('وسط', 2))).toEqualT({
+          '1s': 'وُسِّطْتُ',
+          '2ms': 'وُسِّطْتَ',
+          '2fs': 'وُسِّطْتِ',
+          '3ms': 'وُسِّطَ',
+          '3fs': 'وُسِّطَتْ',
+          '2d': 'وُسِّطْتُمَا',
+          '3md': 'وُسِّطَا',
+          '3fd': 'وُسِّطَتَا',
+          '1p': 'وُسِّطْنَا',
+          '2mp': 'وُسِّطْتُمْ',
+          '2fp': 'وُسِّطْتُنَّ',
+          '3mp': 'وُسِّطُوا',
+          '3fp': 'وُسِّطْنَ',
+        })
       })
     })
 

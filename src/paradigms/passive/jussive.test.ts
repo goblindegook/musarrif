@@ -452,9 +452,26 @@ describe('passive present jussive', () => {
       test.each([
         ['وطن', 'يُوَطَّنْ'],
         ['وجه', 'يُوَجَّهْ'],
-        ['وسط', 'يُوَسَّطْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('يُوَسَّطْ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وسط', 2), 'jussive')).toEqualT({
+          '1s': 'أُوَسَّطْ',
+          '2ms': 'تُوَسَّطْ',
+          '2fs': 'تُوَسَّطِي',
+          '3ms': 'يُوَسَّطْ',
+          '3fs': 'تُوَسَّطْ',
+          '2d': 'تُوَسَّطَا',
+          '3md': 'يُوَسَّطَا',
+          '3fd': 'تُوَسَّطَا',
+          '1p': 'نُوَسَّطْ',
+          '2mp': 'تُوَسَّطُوا',
+          '2fp': 'تُوَسَّطْنَ',
+          '3mp': 'يُوَسَّطُوا',
+          '3fp': 'يُوَسَّطْنَ',
+        })
       })
     })
 
