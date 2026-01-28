@@ -27,7 +27,7 @@ import {
   WAW,
   YEH,
 } from '../letters'
-import { PRONOUN_IDS, type PronounId } from '../pronouns'
+import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
 function weakLetterTail(letter: string): string {
@@ -133,17 +133,7 @@ const PAST_BUILDERS: Record<PronounId, (forms: PastBaseForms, verb: Verb) => rea
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const forms = derivePastForms(verb)
-
-  return mapRecord(
-    PRONOUN_IDS.reduce(
-      (acc, pronounId) => {
-        acc[pronounId] = PAST_BUILDERS[pronounId](forms, verb)
-        return acc
-      },
-      {} as Record<PronounId, readonly string[]>,
-    ),
-    (past) => geminateDoubleLetters(past).join('').normalize('NFC'),
-  )
+  return mapRecord(PAST_BUILDERS, (build) => geminateDoubleLetters(build(forms, verb)).join('').normalize('NFC'))
 }
 
 function buildForms(base: readonly string[], c3: string): PastBaseForms {

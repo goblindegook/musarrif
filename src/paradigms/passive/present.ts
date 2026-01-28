@@ -21,7 +21,7 @@ import {
   YEH,
 } from '../letters'
 import type { PronounId } from '../pronouns'
-import { isDual, isFemininePlural, isMasculinePlural, PRONOUN_IDS } from '../pronouns'
+import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
 import type { Verb } from '../verbs'
 
 const PRESENT_PREFIXES: Record<PronounId, string> = {
@@ -217,14 +217,9 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
-  return mapRecord(
-    PRONOUN_IDS.reduce(
-      (acc, pronounId) => {
-        acc[pronounId] = [PRESENT_PREFIXES[pronounId], DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]
-        return acc
-      },
-      {} as Record<PronounId, readonly string[]>,
-    ),
-    (value) => normalizeAlifMadda(value).join('').normalize('NFC'),
+  return mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
+    normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
+      .join('')
+      .normalize('NFC'),
   )
 }
