@@ -258,7 +258,10 @@ describe('masdar', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وطن', 'تَوْطِين']])('%s', (root, expected) => {
+      test.each([
+        ['وطن', 'تَوْطِين'],
+        ['وجه', 'تَوْجِيه'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })

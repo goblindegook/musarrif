@@ -788,7 +788,10 @@ describe('active past', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وطن', 'وَطَّنَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وطن', 'وَطَّنَ'],
+        ['وجه', 'وَجَّهَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })

@@ -222,7 +222,10 @@ describe('passive participle', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وطن', 'مُوَطَّن']])('%s', (root, expected) => {
+      test.each([
+        ['وطن', 'مُوَطَّن'],
+        ['وجه', 'مُوَجَّه'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
       })
     })

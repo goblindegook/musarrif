@@ -820,7 +820,10 @@ describe('active present indicative', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وطن', 'يُوَطِّنُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وطن', 'يُوَطِّنُ'],
+        ['وجه', 'يُوَجِّهُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
     })

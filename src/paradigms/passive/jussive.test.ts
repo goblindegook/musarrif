@@ -449,7 +449,10 @@ describe('passive present jussive', () => {
 
   describe('Form II', () => {
     describe('assimilated roots', () => {
-      test.each([['وطن', 'يُوَطَّنْ']])('jussive pattern for %s conjugation', (root, expected) => {
+      test.each([
+        ['وطن', 'يُوَطَّنْ'],
+        ['وجه', 'يُوَجَّهْ'],
+      ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
     })
