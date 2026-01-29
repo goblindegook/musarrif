@@ -167,7 +167,6 @@ function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): rea
 function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
-  const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
 
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
@@ -176,18 +175,9 @@ function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonl
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-  if (!isFinalWeak) return moodSuffix
+  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
 
-  if (pronounId === '2fs') return mood === 'indicative' ? [FATHA, YEH, SUKOON, NOON, FATHA] : [FATHA, YEH, SUKOON]
-
-  if (isDual(pronounId)) return [FATHA, YEH, ...moodSuffix]
-
-  if (isMasculinePlural(pronounId))
-    return mood === 'indicative' ? [FATHA, WAW, SUKOON, NOON, FATHA] : [FATHA, WAW, ALIF]
-
-  if (isFemininePlural(pronounId)) return [FATHA, YEH, ...moodSuffix]
-
-  return mood === 'jussive' ? [FATHA] : [FATHA, ALIF_MAQSURA]
+  return moodSuffix
 }
 
 function derivePassivePresentStemFormI(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
@@ -203,7 +193,25 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-  return [c1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
+  const prefix = [c1, FATHA, c2, SHADDA, FATHA]
+
+  if (isWeakLetter(c3)) return [...prefix, ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA])]
+
+  return [...prefix, seatedC3, ...moodSuffix]
+}
+
+function defectiveSuffix(mood: Mood, pronounId: PronounId, femininePluralSuffix: readonly string[]): readonly string[] {
+  if (pronounId === '2fs') return mood === 'indicative' ? [YEH, SUKOON, NOON, FATHA] : [YEH, SUKOON]
+
+  if (isDual(pronounId)) return [YEH, ...MOOD_SUFFIXES[mood][pronounId]]
+
+  if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [WAW, SUKOON, NOON, FATHA] : [WAW, ALIF]
+
+  if (isFemininePlural(pronounId)) return [YEH, ...femininePluralSuffix]
+
+  if (mood === 'jussive') return []
+
+  return [ALIF_MAQSURA]
 }
 
 function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {

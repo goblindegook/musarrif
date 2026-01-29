@@ -501,6 +501,28 @@ describe('passive present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['وفي', 'يُوَفَّ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('وَفَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وفي', 2), 'jussive')).toEqualT({
+          '1s': 'أُوَفَّ',
+          '2ms': 'تُوَفَّ',
+          '2fs': 'تُوَفَّيْ',
+          '3ms': 'يُوَفَّ',
+          '3fs': 'تُوَفَّ',
+          '2d': 'تُوَفَّيَا',
+          '3md': 'يُوَفَّيَا',
+          '3fd': 'تُوَفَّيَا',
+          '1p': 'نُوَفَّ',
+          '2mp': 'تُوَفَّوا',
+          '2fp': 'تُوَفَّيْنَ',
+          '3mp': 'يُوَفَّوا',
+          '3fp': 'يُوَفَّيْنَ',
+        })
+      })
+
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'jussive')).toEqualT({
           '1s': 'أُيَوَّدْ',

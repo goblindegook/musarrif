@@ -546,6 +546,28 @@ describe('passive present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['وفي', 'يُوَفَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('وَفَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وفي', 2), 'indicative')).toEqualT({
+          '1s': 'أُوَفَّى',
+          '2ms': 'تُوَفَّى',
+          '2fs': 'تُوَفَّيْنَ',
+          '3ms': 'يُوَفَّى',
+          '3fs': 'تُوَفَّى',
+          '2d': 'تُوَفَّيَانِ',
+          '3md': 'يُوَفَّيَانِ',
+          '3fd': 'تُوَفَّيَانِ',
+          '1p': 'نُوَفَّى',
+          '2mp': 'تُوَفَّوْنَ',
+          '2fp': 'تُوَفَّيْنَ',
+          '3mp': 'يُوَفَّوْنَ',
+          '3fp': 'يُوَفَّيْنَ',
+        })
+      })
+
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'indicative')).toEqualT({
           '1s': 'أُيَوَّدُ',

@@ -552,6 +552,10 @@ describe('passive past pattern', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['وفي', 'وُفِّيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('يود', 2))).toEqualT({
           '1s': 'يُوِّدْتُ',

@@ -762,7 +762,10 @@ describe('active present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['يود', 'يُيَوِّدْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['يود', 'يُيَوِّدْ'],
+        ['وفي', 'يُوَفِّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
 

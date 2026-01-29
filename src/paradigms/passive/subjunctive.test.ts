@@ -495,6 +495,28 @@ describe('passive present subjunctive', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['وفي', 'يُوَفَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('وَفَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وفي', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُوَفَّى',
+          '2ms': 'تُوَفَّى',
+          '2fs': 'تُوَفَّيْ',
+          '3ms': 'يُوَفَّى',
+          '3fs': 'تُوَفَّى',
+          '2d': 'تُوَفَّيَا',
+          '3md': 'يُوَفَّيَا',
+          '3fd': 'تُوَفَّيَا',
+          '1p': 'نُوَفَّى',
+          '2mp': 'تُوَفَّوا',
+          '2fp': 'تُوَفَّيْنَ',
+          '3mp': 'يُوَفَّوا',
+          '3fp': 'يُوَفَّيْنَ',
+        })
+      })
+
       test('يَوَّدَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'subjunctive')).toEqualT({
           '1s': 'أُيَوَّدَ',

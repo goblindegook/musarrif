@@ -46,8 +46,6 @@ function defectiveGlide(letter: string): string {
   return letter === ALIF_MAQSURA || letter === YEH ? YEH : WAW
 }
 
-const HOLLOW_APOCOPE_FORMS: ReadonlySet<Verb['form']> = new Set([1, 4, 7, 8, 10])
-
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'u'): boolean {
   return verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === vowel
 }
@@ -467,7 +465,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON)
 
       const stem =
-        HOLLOW_APOCOPE_FORMS.has(verb.form) && isMiddleWeak && !isConsonantalMiddleWeak && !isFinalWeak
+        [1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !isConsonantalMiddleWeak && !isFinalWeak
           ? shortenHollowStem(word)
           : word
 
