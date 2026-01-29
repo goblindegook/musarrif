@@ -519,6 +519,7 @@
   { "root": "مكث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "منع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "مني", "form": 2 },
   { "root": "ناد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ناق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نام", "form": 2 },

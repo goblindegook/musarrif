@@ -500,6 +500,7 @@ describe('passive present subjunctive', () => {
         ['وصي', 'يُوَصَّى'],
         ['ولي', 'يُوَلَّى'],
         ['وري', 'يُوَرَّى'],
+        ['مني', 'يُمَنَّى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
