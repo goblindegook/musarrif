@@ -101,21 +101,24 @@ function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE):
     })
   const maybeLanguage = segments.at(0) as Language | undefined
   if (isLanguageSupported(maybeLanguage)) {
-    const voiceSegment = segments.at(2)
+    const hasVerbsSegment = segments.at(1) === 'verbs'
+    const verbIndex = hasVerbsSegment ? 2 : 1
+    const voiceIndex = verbIndex + 1
+    const voiceSegment = segments.at(voiceIndex)
     const voice = isVoice(voiceSegment) ? voiceSegment : undefined
     if (voice) {
-      const normalized = normalizeConjugation(segments[3], segments[4])
+      const normalized = normalizeConjugation(segments[voiceIndex + 1], segments[voiceIndex + 2])
       return {
         lang: maybeLanguage,
-        verbId: segments.at(1),
+        verbId: segments.at(verbIndex),
         voice,
-        tense: segments.length >= 4 ? normalized.tense : undefined,
-        mood: segments.length >= 5 && normalized.tense === 'present' ? normalized.mood : undefined,
+        tense: segments.length > voiceIndex + 1 ? normalized.tense : undefined,
+        mood: segments.length > voiceIndex + 2 && normalized.tense === 'present' ? normalized.mood : undefined,
       }
     }
     return {
       lang: maybeLanguage,
-      verbId: segments.at(1),
+      verbId: segments.at(verbIndex),
       tense: undefined,
       mood: undefined,
     }
@@ -147,7 +150,7 @@ function buildHashPath({ lang, verbId, voice, tense, mood }: RoutingState): stri
   const tenseSegment = tense ? `/${tense}` : ''
   const moodSegment = tense === 'present' && mood ? `/${mood}` : ''
   const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${voiceSegment}${tenseSegment}${moodSegment}` : ''
-  return `/${lang}${verbSegment}`
+  return `/${lang}/verbs${verbSegment}`
 }
 
 function buildUrl(state: RoutingState): string {
@@ -160,7 +163,7 @@ function buildUrl(state: RoutingState): string {
 export function buildVerbHref(lang: Language, id: string): string {
   const baseWithTrailingSlash = BASE_PATH ? `${BASE_PATH}/` : '/'
   const encodedId = encodeURIComponent(id)
-  return `${baseWithTrailingSlash}#/${lang}/${encodedId}`
+  return `${baseWithTrailingSlash}#/${lang}/verbs/${encodedId}`
 }
 
 export function RoutingProvider({ children }: { children: ComponentChildren }) {

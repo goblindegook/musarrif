@@ -44,19 +44,25 @@ test.each([
   ['sfr-1', 'سَفَرَ'],
   ['sfr-2', 'سَفَّرَ'],
 ])('renders %s as %s', (id, expectedPast) => {
-  renderApp(`/#/en/${id}`)
+  renderApp(`/#/en/verbs/${id}`)
 
   expect(screen.getAllByText(expectedPast).length).toBeGreaterThan(0)
 })
 
 test('Show up to five random quick pick suggestions by default', () => {
-  renderApp('/#/en')
+  renderApp('/#/en/verbs')
   expect(screen.getByText('Quick picks').nextElementSibling!.children.length).toBeLessThanOrEqual(5)
+})
+
+test('Shows the main page at the verbs base route', () => {
+  renderApp('/#/en/verbs')
+
+  expect(screen.getByText('Quick picks')).toBeInTheDocument()
 })
 
 test('shows multiple masdars with a mimi label', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
-  renderApp('/#/en/wEd-1')
+  renderApp('/#/en/verbs/wEd-1')
 
   const detail = screen.getByText('Verbal noun').parentElement!
   expect(within(detail).getByText('وَعْد')).toBeInTheDocument()
@@ -65,7 +71,7 @@ test('shows multiple masdars with a mimi label', () => {
 })
 
 test('shows a dash when the masdar is missing', () => {
-  renderApp('/#/en/lmm-1')
+  renderApp('/#/en/verbs/lmm-1')
 
   const detail = screen.getByText('Verbal noun').parentElement!
   expect(within(detail).getByText('—')).toBeInTheDocument()
@@ -74,7 +80,7 @@ test('shows a dash when the masdar is missing', () => {
 
 describe('Conjugation table', () => {
   it('shows active and passive voice tabs', () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
 
     const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
     expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
@@ -82,7 +88,7 @@ describe('Conjugation table', () => {
   })
 
   it('shows only the active voice tab when passive is unavailable', () => {
-    renderApp('/#/en/Zll-1')
+    renderApp('/#/en/verbs/Zll-1')
 
     const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
     expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
@@ -90,7 +96,7 @@ describe('Conjugation table', () => {
   })
 
   it('switches to the present-tense table via tabs', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('Present'))
@@ -99,23 +105,23 @@ describe('Conjugation table', () => {
   })
 
   it('reflects tense and mood changes in the URL', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.click(screen.getByText('Present'))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/active/present')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/verbs/ktb-1/active/present')
   })
 
   it('switches to passive tense options and updates the URL', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.click(screen.getByRole('tab', { name: 'Passive' }))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/passive/past')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/verbs/ktb-1/passive/past')
     const tenseTabs = screen.getByRole('tablist', { name: 'Select tense' })
     expect(within(tenseTabs).getByText('Past')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Present')).toBeInTheDocument()
@@ -124,7 +130,7 @@ describe('Conjugation table', () => {
   })
 
   it('shows mood tabs for passive present tense', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByRole('tab', { name: 'Passive' }))
@@ -137,7 +143,7 @@ describe('Conjugation table', () => {
   })
 
   it('shows imperative as a separate tense option', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('Imperative'))
@@ -149,17 +155,17 @@ describe('Conjugation table', () => {
   })
 
   it('reflects imperative tense changes in the URL', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.click(screen.getByText('Imperative'))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/ktb-1/active/imperative')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/verbs/ktb-1/active/imperative')
   })
 
   it('does not show imperative in present tense mood tabs', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('Present'))
@@ -232,26 +238,26 @@ describe('Search', () => {
   })
 
   it('updates the URL with the selected verb', async () => {
-    renderApp('/#/en')
+    renderApp('/#/en/verbs')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.type(screen.getByLabelText('Verb'), 'كتب{enter}')
 
-    expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/en/ktb-2')
+    expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/en/verbs/ktb-2')
   })
 })
 
 describe('Diacritics control', () => {
   it('shows some diacritics Some by default', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
 
     expect(screen.getAllByText('كَتَبَ').length).toBeGreaterThan(0)
     expect(screen.getByText('Some')).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('can be set to None', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('None'))
@@ -261,7 +267,7 @@ describe('Diacritics control', () => {
   })
 
   it('can be set to All', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('All'))
@@ -271,18 +277,18 @@ describe('Diacritics control', () => {
   })
 
   it('remembers the user preference', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('None'))
 
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     expect(screen.getByText('None')).toHaveAttribute('aria-pressed', 'true')
   })
 })
 
 test('Allow picking among multiple forms of the same verb', async () => {
-  renderApp('/#/en/rkz-1')
+  renderApp('/#/en/verbs/rkz-1')
   const user = userEvent.setup()
   const derivedForms = screen.getByText(/Derived forms/i).nextElementSibling as HTMLElement
   await user.click(within(derivedForms).getByLabelText(/Form II.*to concentrate/i))
@@ -297,7 +303,7 @@ describe('Form', () => {
     ['qwl-1', '◌َ / ◌ُ'],
     ['bdl-1', '◌َ / ◌ِ'],
   ])('detail for verb %s indicates vowels %s', (id, expected) => {
-    renderApp(`/#/en/${id}`)
+    renderApp(`/#/en/verbs/${id}`)
 
     const formLabel = screen.getByText('Form')
     const formDetail = formLabel.parentElement as HTMLElement
@@ -307,7 +313,7 @@ describe('Form', () => {
   })
 
   it('has insights with linked examples', async () => {
-    renderApp('/#/en/Elm-5')
+    renderApp('/#/en/verbs/Elm-5')
     const user = userEvent.setup()
     const formDetail = screen.getByText('Form')
 
@@ -320,7 +326,7 @@ describe('Form', () => {
     expect(links.length).toBeGreaterThan(0)
     expect(links.length).toBeLessThanOrEqual(5)
     links.forEach((link) => {
-      expect(link.getAttribute('href')).toMatch(/#\/en\/.+-5$/)
+      expect(link.getAttribute('href')).toMatch(/#\/en\/verbs\/.+-5$/)
     })
 
     await user.click(within(dialog).getByLabelText('Close'))
@@ -329,13 +335,13 @@ describe('Form', () => {
 })
 
 test('Show a feedback panel with an issues link', () => {
-  renderApp('/#/en/ktb-1')
+  renderApp('/#/en/verbs/ktb-1')
   const link = screen.getByText('Report a problem')
   expect(link).toHaveAttribute('href', 'https://github.com/goblindegook/musarrif/issues')
 })
 
 test('Show quick picks related to the selected verb', () => {
-  renderApp('/#/en/krh-1')
+  renderApp('/#/en/verbs/krh-1')
   const quickPicksHeading = screen.getByText('Quick picks')
   const buttons = Array.from(quickPicksHeading.nextElementSibling!.children)
   expect(buttons.map((button) => normalizeButtonText(button.textContent))).toEqual([
@@ -348,7 +354,7 @@ test('Show quick picks related to the selected verb', () => {
 })
 
 test('Order derived form options by form number', () => {
-  renderApp('/#/en/bdl-1')
+  renderApp('/#/en/verbs/bdl-1')
   const derivedFormHeading = screen.getByText('Derived forms')
   const buttons = Array.from(derivedFormHeading.nextElementSibling!.children)
   const formLabels = buttons
@@ -359,7 +365,7 @@ test('Order derived form options by form number', () => {
 
 describe('Root insights', () => {
   it('displays root semantics when available', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
     await user.click(screen.getByText('Root').parentElement!)
@@ -375,11 +381,11 @@ describe('Language', () => {
   it('is English by default', () => {
     renderApp('/')
 
-    expect(window.location.hash).toBe('#/en')
+    expect(window.location.hash).toBe('#/en/verbs')
   })
 
   it('remembers the user preference', async () => {
-    renderApp('/#/it')
+    renderApp('/#/it/verbs')
     const user = userEvent.setup()
 
     const languageSelect = getLanguageSelect()
@@ -387,28 +393,28 @@ describe('Language', () => {
 
     await waitFor(() => expect(document.documentElement.lang).toBe('pt'))
     renderApp('/')
-    expect(window.location.hash).toBe('#/pt')
+    expect(window.location.hash).toBe('#/pt/verbs')
     expect(getLanguageSelect().value).toBe('pt')
   })
 
   it('switching updates the URL', async () => {
-    renderApp('/#/en')
+    renderApp('/#/en/verbs')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
     const languageSelect = getLanguageSelect()
 
     await user.selectOptions(languageSelect, 'pt')
 
-    expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/pt')
+    expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/pt/verbs')
   })
 
   it('switching preserves the selected verb', async () => {
-    renderApp('/#/en/ktb-1')
+    renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.selectOptions(getLanguageSelect(), 'pt')
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/pt/ktb-1')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/pt/verbs/ktb-1')
   })
 })
