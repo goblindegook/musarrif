@@ -1,21 +1,22 @@
 # Muṣarrif
 
-Interactive Arabic verb conjugator. Search by Arabic root, pick derived forms, and instantly view past, present, and
-future conjugations with optional speech playback.
+Interactive Arabic verb conjugator. Search and browse verbs, drill into derived forms, and view full conjugation
+tables with speech playback (where supported).
 
 ## Features
 
 - Arabic-aware search with diacritic stripping and autocomplete suggestions
-- Derived-form selector (I–X) and radical vowel indicator
-- Full conjugation tables for past plus present/future moods (indicative, subjunctive, jussive, imperative)
-- Nominals: active and passive participles plus masdar
-- Quick picks and “closest verbs” recommendations
+- Browse verbs by form
+- Derived‑form selector
+- Root and form insights
+- Full conjugation tables for active/passive past, present, future, and imperative
+- Nominals: active/passive participles and masdar
 - Multilingual UI (Arabic, English, Italian, Portuguese) with RTL/LTR support
-- Optional speech synthesis playback where supported
+- Diacritics toggle plus copy, share, and speech playback controls
 
 ## Getting Started
 
-Requirements: Node (via Mise) and npm.
+Requirements: Node and npm.
 
 Install dependencies:
 
