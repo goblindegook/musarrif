@@ -378,6 +378,7 @@
   { "root": "غلب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "غلق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "غمض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "غطي", "form": 2 },
   {
     "root": "غني",
     "form": 1,

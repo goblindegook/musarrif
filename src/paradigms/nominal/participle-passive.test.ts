@@ -254,6 +254,7 @@ describe('passive participle', () => {
         ['وري', 'مُوَرًّى'],
         ['مني', 'مُمَنًّى'],
         ['سمي', 'مُسَمًّى'],
+        ['غطي', 'مُغَطًّى'],
         ['غني', 'مُغَنًّى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)

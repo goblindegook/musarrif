@@ -575,6 +575,7 @@ describe('active present subjunctive', () => {
         ['وري', 'يُوَرِّيَ'],
         ['مني', 'يُمَنِّيَ'],
         ['سمي', 'يُسَمِّيَ'],
+        ['غطي', 'يُغَطِّيَ'],
         ['غني', 'يُغَنِّيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)

@@ -770,6 +770,7 @@ describe('active present jussive', () => {
         ['وري', 'يُوَرِّ'],
         ['مني', 'يُمَنِّ'],
         ['سمي', 'يُسَمِّ'],
+        ['غطي', 'يُغَطِّ'],
         ['غني', 'يُغَنِّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
