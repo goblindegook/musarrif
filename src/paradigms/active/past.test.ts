@@ -823,6 +823,10 @@ describe('active past', () => {
     })
 
     describe('hollow roots', () => {
+      test.each([['قوس', 'قَوَّسَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
       test('قَوَّلَ conjugation', () => {
         expect(conjugatePast(getVerb('قول', 2))).toEqualT({
           '1s': 'قَوَّلْتُ',

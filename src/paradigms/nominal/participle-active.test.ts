@@ -259,7 +259,10 @@ describe('active participle', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['قول', 'مُقَوِّل']])('%s', (root, expected) => {
+      test.each([
+        ['قول', 'مُقَوِّل'],
+        ['قوس', 'مُقَوِّس'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })
     })
