@@ -17,6 +17,7 @@ import { RootInsights } from './components/RootInsights'
 import { Search as SearchBox } from './components/SearchBox'
 import { ShareButton } from './components/ShareButton'
 import { SpeechButton } from './components/SpeechButton'
+import { TabBar, TabButton, TabPanel } from './components/Tabs'
 import { VerbPill } from './components/VerbPill'
 import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
@@ -27,7 +28,7 @@ import { applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './paradigms/lett
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { getVerbById, search, type Tense, type Verb, type Voice } from './paradigms/verbs'
+import { getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
 import { mapRecord } from './primitives/objects'
 
 const DOTTED_CIRCLE = '\u25cc'
@@ -44,6 +45,8 @@ const FORM_I_PATTERN_VOWELS = mapRecord(FORM_I_PAST_VOWELS, (past, pattern) => {
 })
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
+type FormNumber = (typeof FORM_NUMBERS)[number]
 
 export function App() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
@@ -51,6 +54,7 @@ export function App() {
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const translateVerb = useCallback(
     (verb: Verb) => (lang !== 'ar' ? t(verb.id) : (enTranslations.verbs as Record<string, string>)[verb.id]),
     [lang, t],
@@ -62,6 +66,23 @@ export function App() {
   )
 
   const selectedVerb = useMemo(() => getVerbById(verbId), [verbId])
+  const verbsByForm = useMemo(() => {
+    const grouped = new Map<FormNumber, Verb[]>()
+    for (const form of FORM_NUMBERS) {
+      grouped.set(form, [])
+    }
+    verbs.forEach((verb) => {
+      grouped.get(verb.form)?.push(verb)
+    })
+    for (const form of FORM_NUMBERS) {
+      const entries = grouped.get(form) ?? []
+      grouped.set(
+        form,
+        entries.sort((left, right) => left.label.localeCompare(right.label, 'ar')),
+      )
+    }
+    return grouped
+  }, [])
 
   useEffect(() => {
     setIsFormInfoOpen(false)
@@ -167,6 +188,44 @@ export function App() {
               <QuickPickList selectedVerb={selectedVerb} />
             )}
           </Panel>
+
+          {!selectedVerb && (
+            <Panel title={t('verbsByForm.title')} dir={dir} lang={lang}>
+              <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
+                {FORM_NUMBERS.map((form) => {
+                  const isActive = selectedFormTab === form
+                  return (
+                    <TabButton
+                      key={form}
+                      id={`form-tab-${form}`}
+                      role="tab"
+                      type="button"
+                      aria-selected={isActive}
+                      aria-controls={`form-panel-${form}`}
+                      size="sm"
+                      fluid
+                      active={isActive}
+                      onClick={() => setSelectedFormTab(form)}
+                    >
+                      {ROMAN_NUMERALS[form - 1]}
+                    </TabButton>
+                  )
+                })}
+              </TabBar>
+              <TabPanel
+                role="tabpanel"
+                id={`form-panel-${selectedFormTab}`}
+                aria-labelledby={`form-tab-${selectedFormTab}`}
+                aria-label={`${t('meta.form')} ${ROMAN_NUMERALS[selectedFormTab - 1]}`}
+              >
+                <VerbPillList>
+                  {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
+                    <VerbPill key={verb.id} verb={verb} />
+                  ))}
+                </VerbPillList>
+              </TabPanel>
+            </Panel>
+          )}
         </Stack>
 
         {selectedVerb && (
@@ -492,6 +551,12 @@ const VisuallyHiddenLabel = styled('label')`
   clip-path: inset(50%);
   white-space: nowrap;
   border-width: 0;
+`
+
+const VerbPillList = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 `
 
 const VerbMetaSection = styled('section')`

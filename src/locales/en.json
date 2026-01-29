@@ -5,6 +5,7 @@
     "aria.selectMood": "Select mood",
     "aria.selectTense": "Select tense",
     "aria.selectVoice": "Select voice",
+    "aria.selectForm": "Select form",
     "aria.copy": "Copy {text}",
     "aria.share": "Share",
     "aria.speak": "Play pronunciation for {text}",
@@ -93,7 +94,8 @@
     "voice.active": "Active",
     "voice.passive": "Passive",
     "title": "Muṣarrif",
-    "verbLabel": "Verb"
+    "verbLabel": "Verb",
+    "verbsByForm.title": "Verbs by form"
   },
   "verbs": {
     "*hb-1": "to go",

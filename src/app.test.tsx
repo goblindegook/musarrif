@@ -60,6 +60,39 @@ test('Shows the main page at the verbs base route', () => {
   expect(screen.getByText('Quick picks')).toBeInTheDocument()
 })
 
+test('Shows verbs grouped by form at the verbs base route', () => {
+  renderApp('/#/en/verbs')
+
+  expect(document.querySelectorAll('[role="tablist"][aria-label="Select form"] [role="tab"]')).toHaveLength(10)
+
+  const formOneTab = document.querySelector(
+    '[role="tablist"][aria-label="Select form"] [role="tab"][aria-selected="true"]',
+  )
+  const formTwoTab = document.querySelector(
+    '[role="tablist"][aria-label="Select form"] [role="tab"][aria-selected="false"]',
+  )
+
+  expect(formOneTab?.textContent).toBe('I')
+  expect(formTwoTab?.textContent).toBe('II')
+})
+
+test('Shows alphabetized verbs for the selected form', async () => {
+  renderApp('/#/en/verbs')
+  const user = userEvent.setup()
+
+  await user.click(
+    [...document.querySelectorAll('[role="tablist"][aria-label="Select form"] [role="tab"]')].find(
+      (tab) => tab.textContent === 'II',
+    )!,
+  )
+
+  const formTwoPanel = document.querySelector('[role="tabpanel"][aria-label="Form II"]') as HTMLElement
+  const safarra = within(formTwoPanel).getByText('سَفَّرَ')
+  const kallama = within(formTwoPanel).getByText('كَلَّمَ')
+
+  expect(safarra.compareDocumentPosition(kallama) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+
 test('shows multiple masdars with a mimi label', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderApp('/#/en/verbs/wEd-1')
@@ -82,17 +115,23 @@ describe('Conjugation table', () => {
   it('shows active and passive voice tabs', () => {
     renderApp('/#/en/verbs/ktb-1')
 
-    const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
-    expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
-    expect(within(voiceTabs).getByRole('tab', { name: 'Passive' })).toHaveAttribute('aria-selected', 'false')
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
+    const activeTab = tabs.find((tab) => tab.textContent === 'Active')
+    const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
+    expect(activeTab?.getAttribute('aria-selected')).toBe('true')
+    expect(passiveTab?.getAttribute('aria-selected')).toBe('false')
   })
 
   it('shows only the active voice tab when passive is unavailable', () => {
     renderApp('/#/en/verbs/Zll-1')
 
-    const voiceTabs = screen.getByRole('tablist', { name: 'Select voice' })
-    expect(within(voiceTabs).getByRole('tab', { name: 'Active' })).toHaveAttribute('aria-selected', 'true')
-    expect(within(voiceTabs).queryByRole('tab', { name: 'Passive' })).not.toBeInTheDocument()
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
+    const activeTab = tabs.find((tab) => tab.textContent === 'Active')
+    const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
+    expect(activeTab?.getAttribute('aria-selected')).toBe('true')
+    expect(passiveTab).toBeUndefined()
   })
 
   it('switches to the present-tense table via tabs', async () => {
@@ -119,10 +158,14 @@ describe('Conjugation table', () => {
     const user = userEvent.setup()
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
-    await user.click(screen.getByRole('tab', { name: 'Passive' }))
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const passiveTab = Array.from(voiceTabs.querySelectorAll('[role="tab"]')).find(
+      (tab) => tab.textContent === 'Passive',
+    ) as HTMLElement
+    await user.click(passiveTab)
 
     expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/en/verbs/ktb-1/passive/past')
-    const tenseTabs = screen.getByRole('tablist', { name: 'Select tense' })
+    const tenseTabs = document.querySelector('[role="tablist"][aria-label="Select tense"]') as HTMLElement
     expect(within(tenseTabs).getByText('Past')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Present')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Future')).toBeInTheDocument()
@@ -133,10 +176,14 @@ describe('Conjugation table', () => {
     renderApp('/#/en/verbs/ktb-1')
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole('tab', { name: 'Passive' }))
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const passiveTab = Array.from(voiceTabs.querySelectorAll('[role="tab"]')).find(
+      (tab) => tab.textContent === 'Passive',
+    ) as HTMLElement
+    await user.click(passiveTab)
     await user.click(screen.getByText('Present'))
 
-    const moodTabs = screen.getByRole('tablist', { name: /select mood/i })
+    const moodTabs = document.querySelector('[role="tablist"][aria-label="Select mood"]') as HTMLElement
     expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
@@ -148,8 +195,11 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Imperative'))
 
-    expect(screen.getByRole('columnheader', { name: 'Imperative' })).toBeInTheDocument()
-    const imperativeCells = screen.getAllByRole('cell')
+    const imperativeHeader = Array.from(document.querySelectorAll('th')).find(
+      (cell) => cell.textContent === 'Imperative',
+    )
+    expect(imperativeHeader).toBeTruthy()
+    const imperativeCells = Array.from(document.querySelectorAll('td'))
     const hasImperativeContent = imperativeCells.some((cell) => /ك.*ت.*ب/.test(cell.textContent ?? ''))
     expect(hasImperativeContent).toBe(true)
   })
@@ -170,7 +220,7 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Present'))
 
-    const moodTabs = screen.getByRole('tablist', { name: /select mood/i })
+    const moodTabs = document.querySelector('[role="tablist"][aria-label="Select mood"]') as HTMLElement
     expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
@@ -193,7 +243,7 @@ describe('Search', () => {
 
     await user.type(screen.getByLabelText('Verb'), 'كت')
 
-    const listbox = screen.getByRole('listbox', { name: 'Verb' })
+    const listbox = document.querySelector('[role="listbox"][aria-label="Verb"]') as HTMLElement
     expect(within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)).toBeInTheDocument()
     expect(within(listbox).getAllByText('IV').length).toBeGreaterThan(0)
   })
@@ -205,7 +255,7 @@ describe('Search', () => {
 
     await user.click(document.body)
 
-    expect(screen.queryByRole('listbox', { name: 'Verb' })).not.toBeInTheDocument()
+    expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeNull()
   })
 
   it('shows dropdown again when refocusing after a blur', async () => {
@@ -218,7 +268,7 @@ describe('Search', () => {
 
     await user.click(input)
 
-    expect(screen.getByRole('listbox', { name: 'Verb' })).toBeInTheDocument()
+    expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeTruthy()
   })
 
   it('populates the query and shows paradigms when selecting a suggestion', async () => {
@@ -228,13 +278,14 @@ describe('Search', () => {
     const input = screen.getByLabelText('Verb')
     await user.type(input, 'كت')
 
-    const suggestion = within(screen.getByRole('listbox', { name: 'Verb' })).getByLabelText(/ك.*ت.*ب.*Form IV/)
+    const listbox = document.querySelector('[role="listbox"][aria-label="Verb"]') as HTMLElement
+    const suggestion = within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)
 
     await user.click(suggestion)
 
     expect((input as HTMLInputElement).value).toBe('أَكتَبَ')
     expect(screen.getAllByText('أَكتَبَ')).not.toHaveLength(0)
-    expect(screen.queryByRole('listbox', { name: 'Verb' })).not.toBeInTheDocument()
+    expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeNull()
   })
 
   it('updates the URL with the selected verb', async () => {
@@ -319,10 +370,11 @@ describe('Form', () => {
 
     await user.click(formDetail)
 
-    const dialog = screen.getByRole('dialog', { name: 'Form insights' })
-    expect(dialog).toBeInTheDocument()
+    const dialogTitle = screen.getByText('Form insights')
+    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
+    expect(dialog).toBeTruthy()
     expect(within(dialog).getByText(/reflexive or passive counterpart to Form II/i)).toBeInTheDocument()
-    const links = within(dialog).getAllByRole('link')
+    const links = Array.from(dialog.querySelectorAll('a[href]'))
     expect(links.length).toBeGreaterThan(0)
     expect(links.length).toBeLessThanOrEqual(5)
     links.forEach((link) => {
@@ -330,7 +382,7 @@ describe('Form', () => {
     })
 
     await user.click(within(dialog).getByLabelText('Close'))
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(document.querySelector('[role="dialog"]')).toBeNull()
   })
 })
 
@@ -370,13 +422,15 @@ describe('Root insights', () => {
 
     await user.click(screen.getByText('Root').parentElement!)
 
-    const dialog = screen.getByRole('dialog', { name: 'Root insights' })
+    const dialogTitle = screen.getByText('Root insights')
+    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('writing')).toBeInTheDocument()
   })
 })
 
 describe('Language', () => {
-  const getLanguageSelect = () => screen.getAllByRole<HTMLSelectElement>('combobox')[0]
+  const getLanguageSelect = () =>
+    document.querySelector('select[aria-labelledby="language-label"]') as HTMLSelectElement
 
   it('is English by default', () => {
     renderApp('/')
