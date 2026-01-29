@@ -567,6 +567,7 @@
   { "root": "وجز", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": [] },
   { "root": "وجه", "form": 2 },
   { "root": "وسط", "form": 2 },
+  { "root": "وصي", "form": 2 },
   { "root": "وطن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "وطن", "form": 2 },
   { "root": "وجب", "form": 1, "formPattern": "fa3ala-yaf3ilu", "noPassiveVoice": true, "masdarPatterns": ["fu3ool"] },

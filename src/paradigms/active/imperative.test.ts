@@ -745,7 +745,10 @@ describe('imperative', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['وفي', 'وَفِّ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وفي', 'وَفِّ'],
+        ['وصي', 'وَصِّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })
 
