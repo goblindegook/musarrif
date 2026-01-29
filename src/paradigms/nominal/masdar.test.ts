@@ -285,7 +285,7 @@ describe('masdar', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غنى', 'تَغْنِيَة']])('%s', (root, expected) => {
+      test.each([['غني', 'تَغْنِيَة']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })
@@ -298,6 +298,7 @@ describe('masdar', () => {
         ['ولي', 'تَوْلِيَة'],
         ['وري', 'تَوْرِيَة'],
         ['مني', 'تَمْنِيَة'],
+        ['سمي', 'تَسْمِيَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
@@ -464,7 +465,7 @@ describe('masdar', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غنى', 'تَغَنٍّ']])('%s', (root, expected) => {
+      test.each([['غني', 'تَغَنٍّ']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })
@@ -600,7 +601,7 @@ describe('masdar', () => {
     describe('defective roots', () => {
       test.each([
         ['دعى', 'اِسْتِدْعَاء'],
-        ['غنى', 'اِسْتِغْنَاء'],
+        ['غني', 'اِسْتِغْنَاء'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })

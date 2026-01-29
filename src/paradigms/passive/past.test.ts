@@ -558,6 +558,8 @@ describe('passive past pattern', () => {
         ['ولي', 'وُلِّيَ'],
         ['وري', 'وُرِّيَ'],
         ['مني', 'مُنِّيَ'],
+        ['سمي', 'سُمِّيَ'],
+        ['غني', 'غُنِّيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })

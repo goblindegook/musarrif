@@ -506,9 +506,65 @@ describe('passive present jussive', () => {
         ['وصي', 'يُوَصَّ'],
         ['ولي', 'يُوَلَّ'],
         ['وري', 'يُوَرَّ'],
-        ['مني', 'يُمَنَّ'],
+        ['مني', 'يُمَنِّ'],
+        ['سمي', 'يُسَمِّ'],
+        ['غني', 'يُغَنِّ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('مَنَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('مني', 2), 'jussive')).toEqualT({
+          '1s': 'أُمَنِّ',
+          '2ms': 'تُمَنِّ',
+          '2fs': 'تُمَنِّيْ',
+          '3ms': 'يُمَنِّ',
+          '3fs': 'تُمَنِّ',
+          '2d': 'تُمَنِّيَا',
+          '3md': 'يُمَنِّيَا',
+          '3fd': 'تُمَنِّيَا',
+          '1p': 'نُمَنِّ',
+          '2mp': 'تُمَنُّوا',
+          '2fp': 'تُمَنِّيْنَ',
+          '3mp': 'يُمَنُّوا',
+          '3fp': 'يُمَنِّيْنَ',
+        })
+      })
+
+      test('سَمَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('سمي', 2), 'jussive')).toEqualT({
+          '1s': 'أُسَمِّ',
+          '2ms': 'تُسَمِّ',
+          '2fs': 'تُسَمِّيْ',
+          '3ms': 'يُسَمِّ',
+          '3fs': 'تُسَمِّ',
+          '2d': 'تُسَمِّيَا',
+          '3md': 'يُسَمِّيَا',
+          '3fd': 'تُسَمِّيَا',
+          '1p': 'نُسَمِّ',
+          '2mp': 'تُسَمُّوا',
+          '2fp': 'تُسَمِّيْنَ',
+          '3mp': 'يُسَمُّوا',
+          '3fp': 'يُسَمِّيْنَ',
+        })
+      })
+
+      test('غَنَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('غني', 2), 'jussive')).toEqualT({
+          '1s': 'أُغَنِّ',
+          '2ms': 'تُغَنِّ',
+          '2fs': 'تُغَنِّيْ',
+          '3ms': 'يُغَنِّ',
+          '3fs': 'تُغَنِّ',
+          '2d': 'تُغَنِّيَا',
+          '3md': 'يُغَنِّيَا',
+          '3fd': 'تُغَنِّيَا',
+          '1p': 'نُغَنِّ',
+          '2mp': 'تُغَنُّوا',
+          '2fp': 'تُغَنِّيْنَ',
+          '3mp': 'يُغَنُّوا',
+          '3fp': 'يُغَنِّيْنَ',
+        })
       })
 
       test('وَفَّى conjugation', () => {
