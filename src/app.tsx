@@ -21,26 +21,20 @@ import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
-import { FORM_I_PAST_VOWELS, FORM_I_PRESENT_VOWELS } from './paradigms/form-i-vowels'
-import { applyDiacriticsPreference, DAMMA, FATHA, KASRA } from './paradigms/letters'
+import { FORM_I_PAST_VOWELS, FORM_I_PRESENT_VOWELS, type FormIPattern } from './paradigms/form-i-vowels'
+import { applyDiacriticsPreference, shortVowelFromPattern } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
 import { getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
-import { mapRecord } from './primitives/objects'
 
-const DOTTED_CIRCLE = '\u25cc'
-
-const VOWELS: Record<'a' | 'i' | 'u', string> = {
-  a: `${DOTTED_CIRCLE}${FATHA}`,
-  i: `${DOTTED_CIRCLE}${KASRA}`,
-  u: `${DOTTED_CIRCLE}${DAMMA}`,
-} as const
-
-const FORM_I_PATTERN_VOWELS = mapRecord(FORM_I_PAST_VOWELS, (past, pattern) => {
+const formIVowelPattern = (pattern: FormIPattern) => {
+  const past = FORM_I_PAST_VOWELS[pattern]
   const present = FORM_I_PRESENT_VOWELS[pattern]
-  return past === present ? VOWELS[past] : `${VOWELS[past]} / ${VOWELS[present]}`
-})
+  return past === present
+    ? `\u25cc${shortVowelFromPattern(past)}`
+    : `\u25cc${shortVowelFromPattern(past)} / \u25cc${shortVowelFromPattern(present)}`
+}
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
@@ -252,7 +246,7 @@ export function App() {
                   <span>{ROMAN_NUMERALS[selectedVerb.form - 1]}</span>
                   {selectedFormPattern && diacriticsPreference !== 'none' && (
                     <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>
-                      {applyDiacriticsPreference(FORM_I_PATTERN_VOWELS[selectedFormPattern], diacriticsPreference)}
+                      {applyDiacriticsPreference(formIVowelPattern(selectedFormPattern), diacriticsPreference)}
                     </span>
                   )}
                 </Detail>
