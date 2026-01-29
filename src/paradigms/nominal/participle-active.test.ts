@@ -270,6 +270,7 @@ describe('active participle', () => {
         ['وفي', 'مُوَفٍّ'],
         ['وصي', 'مُوَصٍّ'],
         ['ولي', 'مُوَلٍّ'],
+        ['وري', 'مُوَرٍّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })
