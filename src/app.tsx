@@ -1,15 +1,13 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { AppHeader } from './components/AppHeader'
 import { Heading } from './components/atoms/Heading'
 import { Text } from './components/atoms/Text'
+import { VisuallyHiddenLabel } from './components/atoms/VisuallyHidden'
 import { ConjugationTable } from './components/ConjugationTable'
 import { CopyButton } from './components/CopyButton'
 import { Detail } from './components/Detail'
-import { DiacriticsToggle } from './components/DiacriticsToggle'
 import { FormInsights } from './components/FormInsights'
-import { IconButton } from './components/IconButton'
-import { SettingsIcon } from './components/icons/SettingsIcon'
-import { LanguagePicker } from './components/LanguagePicker'
 import { Modal } from './components/Modal'
 import { Panel } from './components/Panel'
 import { QuickPickList } from './components/QuickPickList'
@@ -53,7 +51,6 @@ export function App() {
   const { verbId, navigateToVerb, tense, mood, voice } = useRouting()
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const translateVerb = useCallback(
     (verb: Verb) => (lang !== 'ar' ? t(verb.id) : (enTranslations.verbs as Record<string, string>)[verb.id]),
@@ -135,38 +132,14 @@ export function App() {
   const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
 
   return (
-    <Page dir={dir} lang={lang} settingsOpen={isSettingsOpen}>
-      <TopBar>
-        <TopBarHeader>
-          <TitleGroup dir={dir} lang={lang}>
-            <Eyebrow dir={dir} lang={lang}>
-              {t('eyebrow')}
-            </Eyebrow>
-            <PageTitle dir={dir} lang={lang}>
-              {t('title')}
-            </PageTitle>
-          </TitleGroup>
-          <SettingsButtonWrapper>
-            <IconButton
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              ariaLabel={t('settings.toggle')}
-              ariaExpanded={isSettingsOpen}
-              title={t('settings.toggle')}
-              active={isSettingsOpen}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </SettingsButtonWrapper>
-        </TopBarHeader>
-        <Controls visible={isSettingsOpen}>
-          <DiacriticsToggle />
-          <LanguagePicker />
-        </Controls>
-      </TopBar>
+    <Page dir={dir} lang={lang}>
+      <AppHeader />
       <Main hasVerb={!!selectedVerb}>
         <Stack area="search">
           <Panel>
-            <VisuallyHiddenLabel htmlFor="verb-search-input">{t('verbLabel')}</VisuallyHiddenLabel>
+            <VisuallyHiddenLabel as="label" htmlFor="verb-search-input">
+              {t('verbLabel')}
+            </VisuallyHiddenLabel>
             <SearchBox
               id="verb-search-input"
               onSelect={(verb: Verb) => navigateToVerb(verb.id)}
@@ -178,12 +151,12 @@ export function App() {
             </Heading>
 
             {derivedForms.length > 1 ? (
-              <FormOptionList>
+              <VerbList>
                 {derivedForms.map((verb) => {
                   const isActive = verb.id === selectedVerb?.id
                   return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
                 })}
-              </FormOptionList>
+              </VerbList>
             ) : (
               <QuickPickList selectedVerb={selectedVerb} />
             )}
@@ -218,11 +191,11 @@ export function App() {
                 aria-labelledby={`form-tab-${selectedFormTab}`}
                 aria-label={`${t('meta.form')} ${ROMAN_NUMERALS[selectedFormTab - 1]}`}
               >
-                <VerbPillList>
+                <VerbList>
                   {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
                     <VerbPill key={verb.id} verb={verb} />
                   ))}
-                </VerbPillList>
+                </VerbList>
               </TabPanel>
             </Panel>
           )}
@@ -385,7 +358,7 @@ export function App() {
   )
 }
 
-const Page = styled('div')<{ settingsOpen: boolean }>`
+const Page = styled('div')`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
@@ -396,103 +369,6 @@ const Page = styled('div')<{ settingsOpen: boolean }>`
 
   @media (min-width: 960px) {
     padding-top: 2rem;
-  }
-`
-
-const TopBar = styled('header')`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
-  flex-wrap: wrap;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
-  transition: padding 200ms ease;
-
-  @media (min-width: 960px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0 2rem;
-    position: static;
-    background: transparent;
-    box-shadow: none;
-  }
-`
-
-const TopBarHeader = styled('div')`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-`
-
-const TitleGroup = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.15rem;
-  align-self: flex-start;
-`
-
-const Eyebrow = styled('p')`
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.78rem;
-  color: #92400e;
-  margin: 0;
-`
-
-const PageTitle = styled('h1')`
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 1.3rem;
-  color: #334155;
-  line-height: 1.2;
-  font-weight: 500;
-
-  @media (min-width: 960px) {
-    font-size: clamp(1.9rem, 3vw, 2.4rem);
-    line-height: 1.5;
-  }
-`
-
-const Controls = styled('aside')<{ visible: boolean }>`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.75rem;
-  max-height: ${({ visible }) => (visible ? '200px' : '0')};
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
-  margin-top: ${({ visible }) => (visible ? '0' : '-1rem')};
-  overflow: hidden;
-  transition: max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease;
-
-  @media (min-width: 720px) {
-    flex-direction: row;
-    align-items: center;
-    gap: 1.25rem;
-  }
-
-  @media (min-width: 960px) {
-    max-height: none;
-    opacity: 1;
-    margin-top: 0;
-    overflow: visible;
-  }
-`
-
-const SettingsButtonWrapper = styled('div')`
-  @media (min-width: 960px) {
-    display: none;
   }
 `
 
@@ -541,19 +417,7 @@ const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
   align-self: flex-start;
 `
 
-const VisuallyHiddenLabel = styled('label')`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border-width: 0;
-`
-
-const VerbPillList = styled('div')`
+const VerbList = styled('div')`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -593,12 +457,6 @@ const ConjugationSection = styled('div')`
   overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-`
-
-const FormOptionList = styled('section')`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
 `
 
 const ActionLink = styled('a')`
