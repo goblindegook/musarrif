@@ -419,6 +419,7 @@
   { "root": "قول", "form": 3 },
   { "root": "قول", "form": 5 },
   { "root": "قوس", "form": 2 },
+  { "root": "كون", "form": 2 },
   { "root": "قبض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "قبل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "قبل", "form": 10 },
