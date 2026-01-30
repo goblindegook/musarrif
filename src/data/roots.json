@@ -187,6 +187,7 @@
   { "root": "دعى", "form": 10 },
   { "root": "دفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "دور", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "دون", "form": 2 },
   { "root": "ذكر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3l"] },
   { "root": "ذكر", "form": 2 },
   { "root": "ذكر", "form": 5 },

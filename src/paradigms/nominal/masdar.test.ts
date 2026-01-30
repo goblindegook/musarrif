@@ -281,6 +281,7 @@ describe('masdar', () => {
         ['قول', 'تَقْوِيل'],
         ['قوس', 'تَقْوِيس'],
         ['كون', 'تَكْوِين'],
+        ['دون', 'تَدْوِين'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
