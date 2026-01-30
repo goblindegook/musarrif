@@ -65,19 +65,11 @@ function stripObviousDiacritics(input: string): string {
 
   for (let index = 0; index < chars.length; index += 1) {
     const current = chars[index]
-    if (current === SUKOON) {
-      const nextBase = findNextBaseLetter(chars, index + 1)
-      if (nextBase && isWeakLetter(nextBase)) {
-        result.push(current)
-      }
-      continue
-    }
-    if (SHORT_VOWELS.includes(current)) {
-      const nextBase = findNextBaseLetter(chars, index + 1)
-      if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) {
-        continue
-      }
-    }
+    const nextBase = findNextBaseLetter(chars, index + 1)
+    if (current === SUKOON && isWeakLetter(nextBase)) result.push(current)
+    if (current === SUKOON) continue
+    if (current === FATHA && nextBase === TEH_MARBUTA) continue
+    if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) continue
     result.push(current)
   }
 

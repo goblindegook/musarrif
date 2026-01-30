@@ -19,7 +19,7 @@ describe('analyzeRoot', () => {
 
 it.each<[DiacriticsPreference, string, string]>([
   ['some', 'يَقُولُ', 'يَقولُ'],
-  ['some', 'سِيرَة', 'سيرَة'],
+  ['some', 'سِيرَة', 'سيرة'],
   ['some', 'يَكْتُبُ', 'يَكتُبُ'],
   ['some', 'سْو', 'سْو'],
   ['some', 'كَتَبَ', 'كَتَبَ'],
