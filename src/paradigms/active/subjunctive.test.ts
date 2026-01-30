@@ -168,6 +168,7 @@ describe('active present subjunctive', () => {
         ['حول', 'يَحُولَ'],
         ['خور', 'يَخْوَرَ'],
         ['قول', 'يَقُولَ'],
+        ['خوف', 'يَخَافَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })

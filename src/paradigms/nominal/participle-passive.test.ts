@@ -84,6 +84,7 @@ describe('passive participle', () => {
         ['شيد', 'مَشِيد'],
         ['قول', 'مَقُول'],
         ['خور', 'مَخْوُور'],
+        ['خوف', 'مَخُوف'],
         ['كان', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toBe(expected)

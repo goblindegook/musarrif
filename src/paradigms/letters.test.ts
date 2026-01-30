@@ -17,7 +17,7 @@ describe('analyzeRoot', () => {
   })
 })
 
-it.each([
+it.each<[DiacriticsPreference, string, string]>([
   ['some', 'يَقُولُ', 'يَقولُ'],
   ['some', 'سِيرَة', 'سيرَة'],
   ['some', 'يَكْتُبُ', 'يَكتُبُ'],
@@ -25,6 +25,6 @@ it.each([
   ['some', 'كَتَبَ', 'كَتَبَ'],
   ['none', 'يَقُولُ', 'يقول'],
   ['all', 'يَقُولُ', 'يَقُولُ'],
-])('showing %s of the diacritics for %s yields %s', (preference, input: string, expected: string) => {
-  expect(applyDiacriticsPreference(input, preference as DiacriticsPreference)).toEqualT(expected)
+])('showing %s of the diacritics for %s yields %s', (preference, input, expected) => {
+  expect(applyDiacriticsPreference(input, preference)).toEqualT(expected)
 })
