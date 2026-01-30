@@ -256,6 +256,7 @@
   { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سلم", "form": 10 },
   { "root": "سلم", "form": 2 },
+  { "root": "كيف", "form": 2 },
   { "root": "سمح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سمع", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "سمع", "form": 10 },

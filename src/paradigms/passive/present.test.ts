@@ -551,6 +551,7 @@ describe('passive present indicative', () => {
         ['كون', 'يُكَوَّنُ'],
         ['دون', 'يُدَوَّنُ'],
         ['سوف', 'يُسَوَّفُ'],
+        ['كيف', 'يُكَيَّفُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
