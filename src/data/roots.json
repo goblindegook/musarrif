@@ -232,6 +232,7 @@
   { "root": "زحزح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "زرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "زلزل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "زوي", "form": 2 },
   { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "سأل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3aal"] },
   { "root": "سأل", "form": 3 },

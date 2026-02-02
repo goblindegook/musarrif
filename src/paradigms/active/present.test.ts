@@ -944,6 +944,7 @@ describe('active present indicative', () => {
         ['غطي', 'يُغَطِّي'],
         ['غني', 'يُغَنِّي'],
         ['قوي', 'يُقَوِّي'],
+        ['زوي', 'يُزَوِّي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
