@@ -467,6 +467,30 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['قوي', 'يُقَوَّ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('قَوَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('قوي', 2), 'jussive')).toEqualT({
+          '1s': 'أُقَوَّ',
+          '2ms': 'تُقَوَّ',
+          '2fs': 'تُقَوَّيْ',
+          '3ms': 'يُقَوَّ',
+          '3fs': 'تُقَوَّ',
+          '2d': 'تُقَوَّيَا',
+          '3md': 'يُقَوَّيَا',
+          '3fd': 'تُقَوَّيَا',
+          '1p': 'نُقَوَّ',
+          '2mp': 'تُقَوَّوا',
+          '2fp': 'تُقَوَّيْنَ',
+          '3mp': 'يُقَوَّوا',
+          '3fp': 'يُقَوَّيْنَ',
+        })
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وطن', 'يُوَطَّنْ'],

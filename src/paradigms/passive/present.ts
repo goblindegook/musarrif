@@ -196,7 +196,9 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   const prefix = [c1, FATHA, c2, SHADDA]
 
   if (isWeakLetter(c3)) {
-    const glide = isWeakLetter(c1) || mood !== 'jussive' ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
+    const glide =
+      mood !== 'jussive' || isWeakLetter(c1) || isWeakLetter(c2) ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
+
     return [...prefix, glide, ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA])]
   }
 

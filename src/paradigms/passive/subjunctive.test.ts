@@ -461,6 +461,12 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['قوي', 'يُقَوَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وطن', 'يُوَطَّنَ'],
