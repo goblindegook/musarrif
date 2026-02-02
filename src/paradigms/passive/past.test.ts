@@ -511,6 +511,7 @@ describe('passive past pattern', () => {
         ['سبب', 'سُبِّبَ'],
         ['خطط', 'خُطِّطَ'],
         ['حدد', 'حُدِّدَ'],
+        ['شدد', 'شُدِّدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })

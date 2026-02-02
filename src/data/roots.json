@@ -264,6 +264,7 @@
   { "root": "سمع", "form": 10 },
   { "root": "شاخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "شاد", "form": 4 },
+  { "root": "شدد", "form": 2 },
   { "root": "شبب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "شجع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "شرب", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l", "mimi"] },
