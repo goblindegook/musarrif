@@ -66,7 +66,7 @@ function buildPastConjugations(verb: Verb): Record<PronounId, readonly string[]>
   const isDefective = 'defectiveGlide' in forms
   const stem = isDefective ? defectiveStem(forms) : null
   const suffixedBase = isDefective ? forms.suffixedBase : nonDefectiveSuffixedBase(forms)
-  const pluralBase = forms.pluralBase ?? replaceFinalDiacritic(forms.base, DAMMA)
+  const pluralBase = forms.pluralBase ?? [...replaceFinalDiacritic(forms.base, DAMMA), WAW]
 
   const [, c2, c3] = [...verb.root]
 
@@ -95,8 +95,7 @@ function buildPastConjugations(verb: Verb): Record<PronounId, readonly string[]>
           SUKOON,
           ALIF,
         ]
-      if (pluralBase.at(-1) === WAW) return [...pluralBase, SUKOON, ALIF]
-      return [...pluralBase, WAW, SUKOON, ALIF]
+      return [...pluralBase, SUKOON, ALIF]
     })(),
     '3fp': (() => {
       if (isDefective) return [...forms.suffixedBase, NOON, FATHA]
@@ -116,12 +115,11 @@ function buildForms(base: readonly string[], c3: string): PastBaseForms {
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
   const glide = c3 === WAW || c3 === ALIF ? WAW : YEH
   const suffixedBase = [...normalizedBase.slice(0, -1), glide, SUKOON]
-  const pluralBase = [...suffixedBase.slice(0, -2), glide === YEH ? WAW : glide]
   return {
     base: normalizedBase,
     defectiveGlide: glide,
     suffixedBase,
-    pluralBase,
+    pluralBase: [...suffixedBase.slice(0, -2), WAW],
   }
 }
 
@@ -166,7 +164,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
     return {
       base,
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
-      pluralBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA],
+      pluralBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA, WAW],
     }
 
   // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
@@ -175,7 +173,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
     return {
       base: normalizeAlifMadda(base),
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      pluralBase: replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA),
+      pluralBase: [...replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA), WAW],
     }
 
   return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedFinalHamza, FATHA], seatedFinalHamza)
@@ -211,7 +209,7 @@ function derivePastFormIV(verb: Verb): PastBaseForms {
     return {
       base: [...prefix, FATHA, ALIF, c3, FATHA],
       suffixedBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), SUKOON],
-      pluralBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), DAMMA],
+      pluralBase: [...shortenHollowStem([...prefix, FATHA, ALIF, c3]), DAMMA, WAW],
     }
 
   return buildForms(normalizeAlifMadda([...prefix, SUKOON, c2, FATHA, c3, FATHA]), c3)
@@ -230,7 +228,7 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
     return {
       base: [...prefix, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, c2, FATHA, c3, SUKOON],
-      pluralBase: [...prefix, c2, SHADDA, DAMMA],
+      pluralBase: [...prefix, c2, SHADDA, DAMMA, WAW],
     }
 
   // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
@@ -238,7 +236,7 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
     return {
       base: [...prefix, c3, FATHA],
       suffixedBase: [...shortenHollowStem([...prefix, c3, FATHA]), SUKOON],
-      pluralBase: [...shortenHollowStem([...prefix, c3, FATHA]), DAMMA],
+      pluralBase: [...shortenHollowStem([...prefix, c3, FATHA]), DAMMA, WAW],
     }
   }
 
@@ -276,7 +274,7 @@ function derivePastFormX(verb: Verb): PastBaseForms {
     return {
       base: [...prefix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, SUKOON, c2, FATHA, c3, SUKOON],
-      pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA],
+      pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isWeakLetter(c2) && !isWeakLetter(c3)) return buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3)
