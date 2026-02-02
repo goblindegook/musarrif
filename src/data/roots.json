@@ -520,6 +520,7 @@
   { "root": "طلب", "form": 5 },
   { "root": "مشى", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "مثل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
+  { "root": "مثل", "form": 2 },
   { "root": "مكن", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3aala"] },
   { "root": "مكن", "form": 2 },
   { "root": "مكن", "form": 4 },

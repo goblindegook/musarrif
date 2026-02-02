@@ -743,7 +743,10 @@ describe('active present jussive', () => {
 
   describe('Form II', () => {
     describe('regular roots', () => {
-      test.each([['مكن', 'يُمَكِّنْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['مكن', 'يُمَكِّنْ'],
+        ['مثل', 'يُمَثِّلْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
     })

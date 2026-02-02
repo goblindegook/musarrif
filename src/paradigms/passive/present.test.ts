@@ -499,7 +499,10 @@ describe('passive present indicative', () => {
 
   describe('Form II', () => {
     describe('regular roots', () => {
-      test.each([['مكن', 'يُمَكَّنُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['مكن', 'يُمَكَّنُ'],
+        ['مثل', 'يُمَثَّلُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
     })

@@ -505,7 +505,10 @@ describe('passive past pattern', () => {
 
   describe('Form II', () => {
     describe('regular roots', () => {
-      test.each([['مكن', 'مُكِّنَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['مكن', 'مُكِّنَ'],
+        ['مثل', 'مُثِّلَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })
