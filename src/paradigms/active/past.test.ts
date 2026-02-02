@@ -767,6 +767,7 @@ describe('active past', () => {
         ['عمل', 'عَمَّلَ'],
         ['مكن', 'مَكَّنَ'],
         ['مثل', 'مَثَّلَ'],
+        ['سبب', 'سَبَّبَ'],
         ['صبح', 'صَبَّحَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
