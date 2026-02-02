@@ -499,6 +499,12 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form II', () => {
+    describe('regular roots', () => {
+      test.each([['مكن', 'يُمَكِّنَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وطن', 'يُوَطِّنَ'],

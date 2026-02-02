@@ -498,6 +498,12 @@ describe('passive present indicative', () => {
   })
 
   describe('Form II', () => {
+    describe('regular roots', () => {
+      test.each([['مكن', 'يُمَكَّنُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final assimilated roots', () => {
       test('يُوَطَّأُ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'indicative')).toEqualT({

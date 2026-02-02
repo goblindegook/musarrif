@@ -453,6 +453,12 @@ describe('passive present jussive', () => {
   })
 
   describe('Form II', () => {
+    describe('regular roots', () => {
+      test.each([['مكن', 'يُمَكَّنْ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وطن', 'يُوَطَّنْ'],
