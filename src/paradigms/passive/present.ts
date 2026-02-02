@@ -50,9 +50,9 @@ const INDICATIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3md': [FATHA, ALIF, NOON, KASRA],
   '3fd': [FATHA, ALIF, NOON, KASRA],
   '1p': [DAMMA],
-  '2mp': [DAMMA, WAW, NOON, FATHA],
+  '2mp': [DAMMA, WAW, SUKOON, NOON, FATHA],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, NOON, FATHA],
+  '3mp': [DAMMA, WAW, SUKOON, NOON, FATHA],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -66,9 +66,9 @@ const SUBJUNCTIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3md': [FATHA, ALIF],
   '3fd': [FATHA, ALIF],
   '1p': [FATHA],
-  '2mp': [DAMMA, WAW, ALIF],
+  '2mp': [DAMMA, WAW, SUKOON, ALIF],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, ALIF],
+  '3mp': [DAMMA, WAW, SUKOON, ALIF],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -82,9 +82,9 @@ const JUSSIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3md': [FATHA, ALIF],
   '3fd': [FATHA, ALIF],
   '1p': [SUKOON],
-  '2mp': [DAMMA, WAW, ALIF],
+  '2mp': [DAMMA, WAW, SUKOON, ALIF],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, ALIF],
+  '3mp': [DAMMA, WAW, SUKOON, ALIF],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -194,12 +194,15 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
   const prefix = [c1, FATHA, c2, SHADDA]
+  const weakSuffix = defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA])
 
   if (isWeakLetter(c3)) {
     const glide =
       mood !== 'jussive' || isWeakLetter(c1) || isWeakLetter(c2) ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
 
-    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA])]
+    if (c2 === YEH && c3 === YEH && weakSuffix.at(0) === ALIF_MAQSURA) return [...prefix, glide, ALIF]
+
+    return [...prefix, glide, ...weakSuffix]
   }
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
@@ -210,7 +213,7 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, femininePluralSuffix:
 
   if (isDual(pronounId)) return [YEH, ...MOOD_SUFFIXES[mood][pronounId]]
 
-  if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [WAW, SUKOON, NOON, FATHA] : [WAW, ALIF]
+  if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [WAW, SUKOON, NOON, FATHA] : [WAW, SUKOON, ALIF]
 
   if (isFemininePlural(pronounId)) return [YEH, ...femininePluralSuffix]
 

@@ -141,14 +141,15 @@ function deriveMasdarFormII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
   const isFinalHamza = isHamzatedLetter(c3)
-  const prefix = [TEH, FATHA, c1, SUKOON, c2, KASRA, YEH]
+  const prefix = [TEH, FATHA, c1, SUKOON, c2, KASRA]
 
-  // Defective Form II favors تَفْعِيَة (e.g., تَغْنِيَة) over the long-ī + tanween pattern
-  if (isFinalWeak) return [...prefix, FATHA, TEH_MARBUTA]
+  if (c2 === YEH && c3 === YEH) return [TEH, FATHA, c1, KASRA, c2, SHADDA, FATHA, TEH_MARBUTA]
 
-  if (isFinalHamza) return [TEH, FATHA, c1, SUKOON, c2, KASRA, HAMZA_ON_YEH, FATHA, TEH_MARBUTA]
+  if (isFinalWeak) return [...prefix, YEH, FATHA, TEH_MARBUTA]
 
-  return [...prefix, c3]
+  if (isFinalHamza) return [...prefix, HAMZA_ON_YEH, FATHA, TEH_MARBUTA]
+
+  return [...prefix, YEH, c3]
 }
 
 function deriveMasdarFormIII(verb: Verb): readonly string[] {
@@ -292,5 +293,9 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 
 export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = verb.form === 1 && verb.masdarPatterns ? verb.masdarPatterns : [undefined]
-  return patterns.map((pattern) => masdar(verb, pattern).join('').normalize('NFC')).filter(Boolean)
+  return patterns
+    .map((pattern) => {
+      return masdar(verb, pattern).join('').normalize('NFC')
+    })
+    .filter(Boolean)
 }

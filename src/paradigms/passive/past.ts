@@ -46,7 +46,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
       '1p': geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA, ALIF]),
       '2mp': [...prefix, ...suffix, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...prefix, ...suffix, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp': [...prefix, ...suffix3pm, DAMMA, WAW, ALIF],
+      '3mp': [...prefix, ...suffix3pm, DAMMA, WAW, SUKOON, ALIF],
       '3fp': geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA]),
     },
     (value) => value.join('').normalize('NFC'),

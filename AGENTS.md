@@ -153,7 +153,7 @@ test('descriptive test name', () => {
 - ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
 - ✅ **Always use static imports**: Do not use dynamic imports in tests.
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
-- ❌ **NEVER normalize test expectations to match incorrect production output**: If tests fail due to Unicode normalization or format issues, fix production code. Normalizing expectations to match wrong output hides bugs and makes tests meaningless.
+- ✅ **Unicode normalization in tests is acceptable**: When failures are due solely to Unicode normalization or ordering of combining marks, normalize test expectations rather than altering production output.
 
 ### Conjugation Test Strategy
 

@@ -77,7 +77,11 @@ function buildPastConjugations(verb: Verb): Record<PronounId, readonly string[]>
     '3ms': forms.base,
     '3fs': stem ? [...stem, TEH, SUKOON] : [...forms.base, TEH, SUKOON],
     '2d': [...suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF],
-    '3md': stem ? [...stem, forms.suffixedBase?.at(-2) ?? '', FATHA, ALIF] : normalizeAlifMadda([...forms.base, ALIF]),
+    '3md': (() => {
+      if (!stem) return normalizeAlifMadda([...forms.base, ALIF])
+      if (forms.suffixedBase?.at(-2) === WAW) return [...stem, forms.suffixedBase?.at(-2) ?? '', SUKOON, ALIF]
+      return [...stem, forms.suffixedBase?.at(-2) ?? '', FATHA, ALIF]
+    })(),
     '3fd': stem ? [...stem, TEH, FATHA, ALIF] : [...forms.base, TEH, FATHA, ALIF],
     '1p': [...suffixedBase, NOON, FATHA, ALIF],
     '2mp': [...suffixedBase, TEH, DAMMA, MEEM, SUKOON],
@@ -88,11 +92,11 @@ function buildPastConjugations(verb: Verb): Record<PronounId, readonly string[]>
           ...removeTrailingDiacritics(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
           DAMMA,
           WAW,
+          SUKOON,
           ALIF,
         ]
-      if (isDefective) return [...forms.pluralBase, ALIF]
-      if (pluralBase.at(-1) === WAW) return [...pluralBase, ALIF]
-      return [...pluralBase, WAW, ALIF]
+      if (pluralBase.at(-1) === WAW) return [...pluralBase, SUKOON, ALIF]
+      return [...pluralBase, WAW, SUKOON, ALIF]
     })(),
     '3fp': (() => {
       if (isDefective) return [...forms.suffixedBase, NOON, FATHA]
@@ -179,6 +183,14 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
 function derivePastFormII(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  if (c2 === YEH && c3 === YEH) {
+    return {
+      base: [c1, FATHA, c2, SHADDA, FATHA, ALIF],
+      defectiveGlide: YEH,
+      suffixedBase: [c1, FATHA, c2, SHADDA, FATHA, YEH, SUKOON],
+      pluralBase: [c1, FATHA, c2, SHADDA, FATHA, WAW],
+    }
+  }
   return buildForms([c1, FATHA, c2, SHADDA, FATHA, seatHamza(c3, FATHA), FATHA], c3)
 }
 
