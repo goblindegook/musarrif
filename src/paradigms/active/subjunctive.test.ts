@@ -510,6 +510,12 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([['حدد', 'يُحَدِّدَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وطن', 'يُوَطِّنَ'],

@@ -453,6 +453,7 @@ describe('passive present subjunctive', () => {
         ['مثل', 'يُمَثَّلَ'],
         ['سبب', 'يُسَبَّبَ'],
         ['خطط', 'يُخَطَّطَ'],
+        ['حدد', 'يُحَدَّدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

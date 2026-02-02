@@ -121,6 +121,7 @@
     "masdarPatterns": ["fu3ool"]
   },
   { "root": "حدث", "form": 2 },
+  { "root": "حدد", "form": 2 },
   { "root": "حدق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "حرب", "form": 3 },
   { "root": "حرس", "form": 1, "formPattern": "fa3ala-yaf3alu" },
