@@ -168,6 +168,7 @@
   { "root": "خسر", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3l"] },
   { "root": "خطب", "form": 6 },
   { "root": "خطط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "خطط", "form": 2 },
   { "root": "خفض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خلع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خلف", "form": 1, "formPattern": "fa3ala-yaf3alu" },

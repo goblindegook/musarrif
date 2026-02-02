@@ -504,6 +504,7 @@ describe('active present subjunctive', () => {
         ['مكن', 'يُمَكِّنَ'],
         ['مثل', 'يُمَثِّلَ'],
         ['سبب', 'يُسَبِّبَ'],
+        ['خطط', 'يُخَطِّطَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

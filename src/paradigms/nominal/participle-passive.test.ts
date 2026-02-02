@@ -221,6 +221,7 @@ describe('passive participle', () => {
         ['مكن', 'مُمَكَّن'],
         ['مثل', 'مُمَثَّل'],
         ['سبب', 'مُسَبَّب'],
+        ['خطط', 'مُخَطَّط'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
       })
