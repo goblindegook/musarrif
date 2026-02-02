@@ -505,6 +505,7 @@ describe('passive present indicative', () => {
         ['سبب', 'يُسَبَّبُ'],
         ['خطط', 'يُخَطَّطُ'],
         ['حدد', 'يُحَدَّدُ'],
+        ['قرر', 'يُقَرَّرُ'],
         ['شدد', 'يُشَدَّدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)

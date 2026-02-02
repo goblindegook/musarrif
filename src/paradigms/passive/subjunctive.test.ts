@@ -454,6 +454,7 @@ describe('passive present subjunctive', () => {
         ['سبب', 'يُسَبَّبَ'],
         ['خطط', 'يُخَطَّطَ'],
         ['حدد', 'يُحَدَّدَ'],
+        ['قرر', 'يُقَرَّرَ'],
         ['شدد', 'يُشَدَّدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
