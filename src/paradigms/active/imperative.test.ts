@@ -781,6 +781,7 @@ describe('imperative', () => {
         ['غني', 'غَنِّ'],
         ['قوي', 'قَوِّ'],
         ['زوي', 'زَوِّ'],
+        ['هوي', 'هَوِّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })
