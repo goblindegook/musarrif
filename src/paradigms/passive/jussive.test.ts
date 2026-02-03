@@ -569,6 +569,12 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أيد', 'يُؤَيَّدْ']])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'يُوَفَّ'],

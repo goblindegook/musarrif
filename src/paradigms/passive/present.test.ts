@@ -618,6 +618,12 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated initial hollow roots', () => {
+      test.each([['أيد', 'يُؤَيَّدُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'يُوَفَّى'],
