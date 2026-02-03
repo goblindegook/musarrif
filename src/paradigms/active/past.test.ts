@@ -948,7 +948,10 @@ describe('active past', () => {
     })
 
     describe('hamzated hollow roots', () => {
-      test.each([['أود', 'أَوَّدَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أود', 'أَوَّدَ'],
+        ['أوب', 'أَوَّبَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
 

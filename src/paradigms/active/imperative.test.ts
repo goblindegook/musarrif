@@ -825,6 +825,10 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial hollow roots', () => {
+      test.each([['أوب', 'أَوِّبْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
+      })
+
       test('أَيَّدَ conjugation', () => {
         expect(conjugateImperative(getVerb('أيد', 2))).toMatchObjectT({
           '2ms': 'أَيِّدْ',
