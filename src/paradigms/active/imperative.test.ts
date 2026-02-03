@@ -809,7 +809,10 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أكد', 'أَكِّدْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أكد', 'أَكِّدْ'],
+        ['أسس', 'أَسِّسْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })
 

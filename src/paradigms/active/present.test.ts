@@ -976,6 +976,7 @@ describe('active present indicative', () => {
       test.each([
         ['أكد', 'يُؤَكِّدُ'],
         ['أثر', 'يُؤَثِّرُ'],
+        ['أسس', 'يُؤَسِّسُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
