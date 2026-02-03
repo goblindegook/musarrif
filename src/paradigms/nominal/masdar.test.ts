@@ -332,6 +332,7 @@ describe('masdar', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أكد', 'تَأْكِيد'],
+        ['أجج', 'تَأْجِيج'],
         ['أثر', 'تَأْثِير'],
         ['أسس', 'تَأْسِيس'],
       ])('%s', (root, expected) => {

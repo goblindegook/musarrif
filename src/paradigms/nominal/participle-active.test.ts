@@ -306,6 +306,7 @@ describe('active participle', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أثر', 'مُؤَثِّر'],
+        ['أجج', 'مُؤَجِّج'],
         ['أكد', 'مُؤَكِّد'],
         ['أيد', 'مُؤَيِّد'],
         ['أسس', 'مُؤَسِّس'],

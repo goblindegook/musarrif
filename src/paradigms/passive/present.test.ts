@@ -620,6 +620,7 @@ describe('passive present indicative', () => {
 
     describe('hamzated initial hollow roots', () => {
       test.each([
+        ['أجج', 'يُؤَجَّجُ'],
         ['أيد', 'يُؤَيَّدُ'],
         ['أوب', 'يُؤَوَّبُ'],
         ['أسس', 'يُؤَسَّسُ'],

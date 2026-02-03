@@ -851,7 +851,10 @@ describe('active present jussive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أسس', 'يُؤَسِّسْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أجج', 'يُؤَجِّجْ'],
+        ['أسس', 'يُؤَسِّسْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
 

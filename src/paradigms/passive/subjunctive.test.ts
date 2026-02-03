@@ -569,6 +569,7 @@ describe('passive present subjunctive', () => {
 
     describe('hamzated initial hollow roots', () => {
       test.each([
+        ['أجج', 'يُؤَجَّجَ'],
         ['أيد', 'يُؤَيَّدَ'],
         ['أوب', 'يُؤَوَّبَ'],
         ['أسس', 'يُؤَسَّسَ'],
