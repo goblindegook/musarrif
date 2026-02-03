@@ -242,6 +242,7 @@
   { "root": "زوي", "form": 2 },
   { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "هوي", "form": 2 },
+  { "root": "هنأ", "form": 2 },
   { "root": "سأل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3aal"] },
   { "root": "سأل", "form": 3 },
   { "root": "سأل", "form": 6 },
