@@ -547,6 +547,24 @@ describe('passive present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('أَوَّلَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أول', 2), 'subjunctive')).toEqualT({
+          '1s': 'أُؤَوَّلَ',
+          '2ms': 'تُؤَوَّلَ',
+          '2fs': 'تُؤَوَّلِي',
+          '3ms': 'يُؤَوَّلَ',
+          '3fs': 'تُؤَوَّلَ',
+          '2d': 'تُؤَوَّلَا',
+          '3md': 'يُؤَوَّلَا',
+          '3fd': 'تُؤَوَّلَا',
+          '1p': 'نُؤَوَّلَ',
+          '2mp': 'تُؤَوَّلُوْا',
+          '2fp': 'تُؤَوَّلْنَ',
+          '3mp': 'يُؤَوَّلُوْا',
+          '3fp': 'يُؤَوَّلْنَ',
+        })
+      })
     })
 
     describe('doubly weak roots', () => {

@@ -595,6 +595,7 @@ describe('active present subjunctive', () => {
         ['دون', 'يُدَوِّنَ'],
         ['سوف', 'يُسَوِّفَ'],
         ['كيف', 'يُكَيِّفَ'],
+        ['أول', 'يُؤَوِّلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

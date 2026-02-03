@@ -598,6 +598,24 @@ describe('passive present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('أَوَّلَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أول', 2), 'indicative')).toEqualT({
+          '1s': 'أُؤَوَّلُ',
+          '2ms': 'تُؤَوَّلُ',
+          '2fs': 'تُؤَوَّلِينَ',
+          '3ms': 'يُؤَوَّلُ',
+          '3fs': 'تُؤَوَّلُ',
+          '2d': 'تُؤَوَّلَانِ',
+          '3md': 'يُؤَوَّلَانِ',
+          '3fd': 'تُؤَوَّلَانِ',
+          '1p': 'نُؤَوَّلُ',
+          '2mp': 'تُؤَوَّلُوْنَ',
+          '2fp': 'تُؤَوَّلْنَ',
+          '3mp': 'يُؤَوَّلُوْنَ',
+          '3fp': 'يُؤَوَّلْنَ',
+        })
+      })
     })
 
     describe('doubly weak roots', () => {

@@ -889,6 +889,7 @@ describe('active present indicative', () => {
         ['دون', 'يُدَوِّنُ'],
         ['سوف', 'يُسَوِّفُ'],
         ['كيف', 'يُكَيِّفُ'],
+        ['أول', 'يُؤَوِّلُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
