@@ -8,6 +8,7 @@
   { "root": "أخذ", "form": 10 },
   { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"], "noPassiveVoice": true },
   { "root": "أذي", "form": 2 },
+  { "root": "أسي", "form": 2 },
   { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "أسس", "form": 2 },
   { "root": "أكد", "form": 2 },
