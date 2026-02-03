@@ -467,6 +467,26 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test('أَذَّى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أذي', 2), 'jussive')).toEqualT({
+          '1s': 'أُؤَذِّ',
+          '2ms': 'تُؤَذِّ',
+          '2fs': 'تُؤَذِّيْ',
+          '3ms': 'يُؤَذِّ',
+          '3fs': 'تُؤَذِّ',
+          '2d': 'تُؤَذِّيَا',
+          '3md': 'يُؤَذِّيَا',
+          '3fd': 'تُؤَذِّيَا',
+          '1p': 'نُؤَذِّ',
+          '2mp': 'تُؤَذُّوْا',
+          '2fp': 'تُؤَذِّيْنَ',
+          '3mp': 'يُؤَذُّوْا',
+          '3fp': 'يُؤَذِّيْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([['قوي', 'يُقَوَّ']])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)

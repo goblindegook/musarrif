@@ -264,6 +264,12 @@ describe('passive participle', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test.each([['أذي', 'مُؤَذًّى']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'مُوَفًّى'],

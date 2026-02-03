@@ -341,6 +341,7 @@ const verb = getVerbById(slug)
 ## Derivation Preferences
 
 - Fix issues with paradigms by adjusting derivation rules first; if that is insufficient, adopt a pattern, and only fall back to an override as a last resort.
+- Do not hard-code root checks in production code; conjugations must be derived algorithmically from root features (e.g., hamzated initial + final weak).
 
 ## Summary Checklist
 

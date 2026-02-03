@@ -864,6 +864,10 @@ describe('active past', () => {
     })
 
     describe('defective roots', () => {
+      test.each([['أذي', 'أَذَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
       test('رَمَّى conjugation', () => {
         expect(conjugatePast(getVerb('رمي', 2))).toEqualT({
           '1s': 'رَمَّيْتُ',
