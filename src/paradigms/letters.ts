@@ -66,7 +66,6 @@ function stripObviousDiacritics(input: string): string {
   for (let index = 0; index < chars.length; index += 1) {
     const current = chars[index]
     const nextBase = findNextBaseLetter(chars, index + 1)
-    if (current === SUKOON && isWeakLetter(nextBase)) result.push(current)
     if (current === SUKOON) continue
     if (current === FATHA && nextBase === TEH_MARBUTA) continue
     if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) continue
