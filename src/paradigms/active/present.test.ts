@@ -1050,6 +1050,7 @@ describe('active present indicative', () => {
         ['عمل', 'يُعَامِلُ'],
         ['تبع', 'يُتَابِعُ'],
         ['بلغ', 'يُبَالِغُ'],
+        ['سعد', 'يُسَاعِدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
