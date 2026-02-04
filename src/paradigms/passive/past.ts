@@ -129,12 +129,26 @@ function derivePassivePastFormII(verb: Verb): PassivePastParams {
   }
 }
 
+function derivePassivePastFormIII(verb: Verb): PassivePastParams {
+  const [c1, c2, c3] = [...verb.root]
+  const seatedC2 = seatHamza(c2, KASRA)
+  const seatedC3 = seatHamza(c3, KASRA)
+  return {
+    prefix: [c1, DAMMA, WAW, seatedC2, KASRA],
+    suffix: [seatedC3, SUKOON],
+    suffix3sd: [seatedC3, FATHA],
+    suffix3pm: [seatedC3],
+  }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
   switch (verb.form) {
     case 1:
       return derivePassivePastFormI(verb)
     case 2:
       return derivePassivePastFormII(verb)
+    case 3:
+      return derivePassivePastFormIII(verb)
     default:
       return derivePassivePastFormI(verb)
   }

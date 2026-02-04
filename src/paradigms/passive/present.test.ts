@@ -705,4 +705,26 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('Form III', () => {
+    describe('regular roots', () => {
+      test('عَامَلَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('عمل', 3), 'indicative')).toEqualT({
+          '1s': 'أُعَامَلُ',
+          '2ms': 'تُعَامَلُ',
+          '2fs': 'تُعَامَلِينَ',
+          '3ms': 'يُعَامَلُ',
+          '3fs': 'تُعَامَلُ',
+          '2d': 'تُعَامَلَانِ',
+          '3md': 'يُعَامَلَانِ',
+          '3fd': 'تُعَامَلَانِ',
+          '1p': 'نُعَامَلُ',
+          '2mp': 'تُعَامَلُوْنَ',
+          '2fp': 'تُعَامَلْنَ',
+          '3mp': 'يُعَامَلُوْنَ',
+          '3fp': 'يُعَامَلْنَ',
+        })
+      })
+    })
+  })
 })

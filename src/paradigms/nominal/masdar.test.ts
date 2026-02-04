@@ -375,7 +375,10 @@ describe('masdar', () => {
 
   describe('Form III', () => {
     describe('regular roots', () => {
-      test.each([['كتب', 'مُكَاتَبَة']])('%s', (root, expected) => {
+      test.each([
+        ['كتب', 'مُكَاتَبَة'],
+        ['عمل', 'مُعَامَلَة'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
     })

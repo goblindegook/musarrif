@@ -4,7 +4,10 @@ import { canConjugatePassive } from './support'
 
 describe('canConjugatePassive', () => {
   describe('has passive voice', () => {
-    test.each<[string, VerbForm]>([['يود', 2]])('%s (Form %d)', (root, form) => {
+    test.each<[string, VerbForm]>([
+      ['يود', 2],
+      ['عمل', 3],
+    ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })
   })

@@ -1070,6 +1070,14 @@ describe('active present jussive', () => {
     })
   })
 
+  describe('Form III', () => {
+    describe('regular roots', () => {
+      test.each([['عمل', 'يُعَامِلْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
   describe('Form IX', () => {
     describe('regular roots', () => {
       test('shadda is preserved', () => {

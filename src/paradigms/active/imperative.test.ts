@@ -899,6 +899,10 @@ describe('imperative', () => {
 
   describe('Form III', () => {
     describe('regular roots', () => {
+      test.each([['عمل', 'عَامِلْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
+      })
+
       test('كَاتَبَ conjugation', () => {
         expect(conjugateImperative(getVerb('كتب', 3))).toMatchObjectT({
           '2ms': 'كَاتِبْ',

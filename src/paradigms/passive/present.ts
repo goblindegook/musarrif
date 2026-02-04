@@ -208,6 +208,17 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
 
+function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3] = [...verb.root]
+  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
+  const prefix = [seatHamza(c1, DAMMA), FATHA, ALIF, c2, FATHA]
+
+  if (isWeakLetter(c3)) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+
+  return [...prefix, seatedC3, ...moodSuffix]
+}
+
 function defectiveSuffix(mood: Mood, pronounId: PronounId, femininePluralSuffix: readonly string[]): readonly string[] {
   if (pronounId === '2fs') return mood === 'indicative' ? [YEH, SUKOON, NOON, FATHA] : [YEH, SUKOON]
 
@@ -228,6 +239,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
       return derivePassivePresentStemFormI(verb, pronounId, mood)
     case 2:
       return derivePassivePresentStemFormII(verb, pronounId, mood)
+    case 3:
+      return derivePassivePresentStemFormIII(verb, pronounId, mood)
     default:
       return []
   }

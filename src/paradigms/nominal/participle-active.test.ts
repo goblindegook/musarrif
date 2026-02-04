@@ -341,7 +341,10 @@ describe('active participle', () => {
 
   describe('Form III', () => {
     describe('regular roots', () => {
-      test.each([['كتب', 'مُكَاتِب']])('%s', (root, expected) => {
+      test.each([
+        ['كتب', 'مُكَاتِب'],
+        ['عمل', 'مُعَامِل'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
       })
     })
