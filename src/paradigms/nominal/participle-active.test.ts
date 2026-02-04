@@ -310,6 +310,7 @@ describe('active participle', () => {
         ['أكد', 'مُؤَكِّد'],
         ['أيد', 'مُؤَيِّد'],
         ['أسس', 'مُؤَسِّس'],
+        ['أخر', 'مُؤَخِّر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })

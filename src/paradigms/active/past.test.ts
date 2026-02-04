@@ -869,6 +869,12 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([['أخر', 'أَخَّرَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['أذي', 'أَذَّى'],
