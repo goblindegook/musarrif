@@ -685,6 +685,10 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
 
+      test.each([['صحب', 'صُوحِبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+
       test('عَامَلَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('عمل', 3))).toEqualT({
           '1s': 'عُومِلْتُ',
