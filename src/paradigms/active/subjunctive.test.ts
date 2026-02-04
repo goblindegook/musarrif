@@ -655,6 +655,7 @@ describe('active present subjunctive', () => {
       test.each([
         ['عمل', 'يُعَامِلَ'],
         ['تبع', 'يُتَابِعَ'],
+        ['بلغ', 'يُبَالِغَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })

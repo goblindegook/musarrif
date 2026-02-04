@@ -63,6 +63,7 @@
   { "root": "بقي", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal"] },
   { "root": "بكي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3aal"] },
   { "root": "بلغ", "form": 4 },
+  { "root": "بلغ", "form": 3 },
   { "root": "بنى", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "بءس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },

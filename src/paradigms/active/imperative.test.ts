@@ -902,6 +902,7 @@ describe('imperative', () => {
       test.each([
         ['عمل', 'عَامِلْ'],
         ['تبع', 'تَابِعْ'],
+        ['بلغ', 'بَالِغْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
       })
