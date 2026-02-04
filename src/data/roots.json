@@ -379,7 +379,7 @@
   { "root": "علي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "علن", "form": 4 },
   { "root": "عنن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "عمل", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"] },
+  { "root": "عمل", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al", "mimi"] },
   { "root": "عمل", "form": 2 },
   { "root": "عمل", "form": 3 },
   { "root": "عمل", "form": 10 },
