@@ -4,6 +4,12 @@ import { conjugatePassivePast } from './past'
 
 describe('passive past pattern', () => {
   describe('Form I', () => {
+    describe('regular roots', () => {
+      test.each<[string, string]>([['بلغ', 'بُلِغَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+      })
+    })
+
     describe('hamzated initial hollow-defective roots', () => {
       test.each<[string, string]>([['أوي', 'أُوِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)

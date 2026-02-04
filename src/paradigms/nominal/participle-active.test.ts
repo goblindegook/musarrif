@@ -27,6 +27,7 @@ describe('active participle', () => {
         ['صبح', 'صَابِح'],
         ['نفس', 'نَافِس'],
         ['مكن', 'مَاكِن'],
+        ['بلغ', 'بَالِغ'],
         ['كتب', 'كَاتِب'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
