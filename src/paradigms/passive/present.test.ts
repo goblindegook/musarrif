@@ -708,6 +708,10 @@ describe('passive present indicative', () => {
 
   describe('Form III', () => {
     describe('regular roots', () => {
+      test.each([['تبع', 'يُتَابَعُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('عَامَلَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عمل', 3), 'indicative')).toEqualT({
           '1s': 'أُعَامَلُ',

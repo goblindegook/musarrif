@@ -657,6 +657,10 @@ describe('passive present subjunctive', () => {
 
   describe('Form III', () => {
     describe('regular roots', () => {
+      test.each([['تبع', 'يُتَابَعَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('عَامَلَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عمل', 3), 'subjunctive')).toEqualT({
           '1s': 'أُعَامَلَ',

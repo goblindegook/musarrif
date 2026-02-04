@@ -378,6 +378,7 @@ describe('masdar', () => {
       test.each([
         ['كتب', 'مُكَاتَبَة'],
         ['عمل', 'مُعَامَلَة'],
+        ['تبع', 'مُتَابَعَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
       })
