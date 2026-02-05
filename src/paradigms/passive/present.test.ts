@@ -733,6 +733,10 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test.each([['وعد', 'يُوَاعَدُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('عَامَلَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عمل', 3), 'indicative')).toEqualT({
           '1s': 'أُعَامَلُ',
