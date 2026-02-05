@@ -745,7 +745,11 @@ describe('passive present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['وزي', 'يُوَازَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وزي', 'يُوَازَى'],
+        ['وفي', 'يُوَافَى'],
+        ['وسي', 'يُوَاسَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
     })

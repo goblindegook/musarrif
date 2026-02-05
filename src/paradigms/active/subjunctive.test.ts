@@ -665,7 +665,11 @@ describe('active present subjunctive', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['وزي', 'يُوَازِيَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وزي', 'يُوَازِيَ'],
+        ['وفي', 'يُوَافِيَ'],
+        ['وسي', 'يُوَاسِيَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
