@@ -46,7 +46,7 @@ function defectiveGlide(letter: string): string {
   return letter === ALIF_MAQSURA || letter === YEH ? YEH : WAW
 }
 
-function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'u'): boolean {
+function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
   return verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === vowel
 }
 
@@ -328,9 +328,7 @@ function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [c1, c2, c3] = Array.from(verb.root)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleWeak = isWeakLetter(c2)
+  const [, , c3] = Array.from(verb.root)
 
   return mapRecord(
     mapRecord(conjugatePresent(verb), (indicative, pronounId) => {
@@ -341,29 +339,12 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId)) {
-          const stem = dropNoonEnding(word)
-          // Doubly weak Form I (middle weak + final weak) keeps sukūn on the plural wāw in the subjunctive.
-          if (isMiddleWeak && last(stem) === WAW)
-            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
-          if (isInitialHamza && last(stem) === WAW)
-            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
-          return replaceFathaBeforeFinalWawAlif(stem)
-        }
+        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         if (isFemininePlural(pronounId) || last(word) === ALIF_MAQSURA) return word
       }
 
-      if (isMasculinePlural(pronounId) && verb.form === 2 && isHamzatedLetter(c1) && isWeakLetter(c2))
-        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
-      if (isMasculinePlural(pronounId) && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
-        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
-      if (isMasculinePlural(pronounId) && !isMiddleWeak && isFormIPresentVowel(verb, 'a'))
-        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
-      if (isSecondFeminineSingular || isMasculinePlural(pronounId))
-        return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (isSecondFeminineSingular) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (isMasculinePlural(pronounId)) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       return replaceFinalDiacritic(word, FATHA)
     }),
@@ -398,34 +379,22 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return dropFinalDefectiveGlide(word)
       }
 
-      if (verb.form === 1 && isFormIFinalWeakPresent(verb, 'a')) {
+      if (isFormIFinalWeakPresent(verb, 'a')) {
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
-        if (isMasculinePlural(pronounId)) {
-          const stem = dropNoonEnding(word)
-          if (isInitialHamza && last(stem) === WAW)
-            return [...replaceFinalDiacritic(stem.slice(0, -1), FATHA), WAW, SUKOON, ALIF]
-          return replaceFathaBeforeFinalWawAlif(stem)
-        }
+        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         if (isFemininePlural(pronounId)) return word
       }
 
-      if (isMasculinePlural(pronounId) && verb.form === 2 && isInitialHamza && isWeakLetter(c2))
+      if (isMasculinePlural(pronounId) && isInitialHamza && isWeakLetter(c2))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (verb.form === 1 && isFinalHamza && isMasculinePlural(pronounId))
+      if (isMasculinePlural(pronounId) && isFinalHamza) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
+
+      if (isMasculinePlural(pronounId) && isFormIFinalWeakPresent(verb, 'u'))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      if (isMasculinePlural(pronounId) && verb.form === 1 && resolveFormIPresentVowel(verb) === 'u')
-        return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
-      if (
-        isMasculinePlural(pronounId) &&
-        verb.form === 1 &&
-        isInitialHamza &&
-        !isFinalWeak &&
-        resolveFormIPresentVowel(verb) === 'i'
-      )
+      if (isMasculinePlural(pronounId) && isFormIFinalWeakPresent(verb, 'i'))
         return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
       if (isMiddleWeak && isFinalHamza && isDual(pronounId)) return dropNoonEnding(word)
@@ -481,16 +450,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
 
-      if (verb.form === 4 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
+      if (isGeminate && [1, 4, 10].includes(verb.form)) return replaceFinalDiacritic(stem, FATHA)
 
-      if (verb.form === 10 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
-
-      if (verb.form === 1 && isGeminate) return replaceFinalDiacritic(stem, FATHA)
-
-      // Form IX verbs use fatḥa in jussive (same as subjunctive), not sukoon
       if (verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
 
-      // Feminine plurals use fatḥa in jussive (same as subjunctive), not sukoon
       if (isFemininePlural(pronounId)) return replaceFinalDiacritic(stem, FATHA)
 
       return replaceFinalDiacritic(stem, SUKOON)
