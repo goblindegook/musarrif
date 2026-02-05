@@ -330,6 +330,7 @@ describe('passive participle', () => {
         ['بلغ', 'مُبَالَغ'],
         ['سعد', 'مُسَاعَد'],
         ['صحب', 'مُصَاحَب'],
+        ['وجه', 'مُوَاجَه'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toBe(expected)
       })
