@@ -48,9 +48,8 @@ const LONG_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
   u: WAW,
 } as const
 
-export const SHORT_VOWELS = [FATHA, KASRA, DAMMA]
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
-  [FATHA]: new Set([ALIF, ALIF_MAQSURA]),
+  [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
   [KASRA]: new Set([YEH]),
   [DAMMA]: new Set([WAW]),
 }
@@ -60,19 +59,15 @@ export function stripDiacritics(input: string): string {
 }
 
 function stripObviousDiacritics(input: string): string {
-  const chars = Array.from(input)
-  const result: string[] = []
-
-  for (let index = 0; index < chars.length; index += 1) {
-    const current = chars[index]
-    const nextBase = findNextBaseLetter(chars, index + 1)
-    if (current === SUKOON) continue
-    if (current === FATHA && nextBase === TEH_MARBUTA) continue
-    if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) continue
-    result.push(current)
-  }
-
-  return result.join('')
+  return Array.from(input)
+    .reduce<string[]>((result, current, index, chars) => {
+      if (current === SUKOON) return result
+      const nextBase = findNextBaseLetter(chars, index + 1)
+      if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) return result
+      result.push(current)
+      return result
+    }, [])
+    .join('')
 }
 
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {

@@ -157,7 +157,7 @@ function deriveMasdarFormIII(verb: Verb): readonly string[] {
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
   if (c3 === ALIF_MAQSURA || c3 === YEH)
-    return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, HAMZA, TEH_MARBUTA]
+    return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
 
   return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
 }

@@ -95,6 +95,8 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   // Form V defective verbs: replace alif maqsura with yeh + sukoon, add noon + fatḥa
   if (verb.form === 5 && c3 === YEH) return [...expanded.slice(0, -1), YEH, SUKOON, NOON, FATHA]
 
+  if (verb.form === 3 && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
+
   // Defective verbs (not doubly weak, excluding Form VII) preserve final weak letter, add noon + fatḥa directly (no sukoon)
   if (isWeakLetter(c3) && !isWeakLetter(c1) && verb.form !== 7) return [...expanded, NOON, FATHA]
 
@@ -143,6 +145,8 @@ function buildDualPresent(word: readonly string[], verb: Verb, formIPrefix: stri
 
   if (verb.form === 2 && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
+  if (verb.form === 3 && isWeakLetter(c3)) return [...removeTrailingDiacritics(word), FATHA, ...suffix]
+
   // Form V defective verbs: replace alif maqsura with yeh + fatḥa, add alif + noon + kasra
   if (verb.form === 5 && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
 
@@ -174,6 +178,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (verb.form === 7 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, SUKOON), NOON, FATHA]
 
+    if (verb.form === 3 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
+
     if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA), KASRA), ...suffix]
@@ -203,10 +209,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(stem, DAMMA), WAW, NOON, FATHA]
 
-    // Form V defective verbs: replace alif maqsura with waw + sukoon, add noon + fatḥa
+    if (verb.form === 3 && isWeakLetter(c3))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA), DAMMA), WAW, NOON, FATHA]
+
     if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), WAW, SUKOON, NOON, FATHA]
 
-    // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
     if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, NOON, FATHA]
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
@@ -251,10 +258,11 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(base, DAMMA), WAW, NOON, FATHA]
 
-    // Form V defective verbs: replace alif maqsura with waw + sukoon, add noon + fatḥa
+    if (verb.form === 3 && isWeakLetter(c3))
+      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA), DAMMA), WAW, NOON, FATHA]
+
     if (verb.form === 5 && c3 === YEH) return [...base.slice(0, -1), WAW, SUKOON, NOON, FATHA]
 
-    // Form VII defective verbs preserve final weak letter, add waw + noon + fatḥa
     if (verb.form === 7 && isWeakLetter(c3)) return [...base, WAW, NOON, FATHA]
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
@@ -598,6 +606,7 @@ function derivePresentFormII(verb: Verb): readonly string[] {
 function derivePresentFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+  if (isWeakLetter(c3)) return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, defectiveGlide(c3)]
   return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3, DAMMA]
 }
 

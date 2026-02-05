@@ -707,5 +707,11 @@ describe('passive past pattern', () => {
         })
       })
     })
+
+    describe('doubly weak roots', () => {
+      test.each([['وزي', 'وُوزِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
   })
 })
