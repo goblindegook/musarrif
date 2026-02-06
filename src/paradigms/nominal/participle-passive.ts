@@ -1,4 +1,4 @@
-import { hasPattern, resolveFormIPresentVowel } from '../form-i-vowels'
+import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -50,14 +50,13 @@ export function derivePassiveParticiple(verb: Verb): string {
 
     switch (verb.form) {
       case 1: {
-        const presentVowel = resolveFormIPresentVowel(verb)
         const prefix = [MEEM, FATHA, c1]
 
         if (isMiddleHamza && isFinalWeak) return [...prefix, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
 
         if (isMiddleWeak && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
-        if (isMiddleWeak && isFinalHamza) return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), HAMZA]
+        if (isMiddleWeak && isFinalHamza) return [...prefix, DAMMA, WAW, HAMZA]
 
         if (isFinalHamza) return [...prefix, SUKOON, c2, DAMMA, WAW, HAMZA]
 
@@ -66,7 +65,7 @@ export function derivePassiveParticiple(verb: Verb): string {
         if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
           return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), c3]
 
-        if (c3 === ALIF && presentVowel === 'u') return [...prefix, SUKOON, c2, DAMMA, WAW, SHADDA]
+        if (c3 === ALIF) return [...prefix, SUKOON, c2, DAMMA, WAW, SHADDA]
 
         if (c3 === YEH || c3 === ALIF_MAQSURA) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
