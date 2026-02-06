@@ -7,6 +7,7 @@ describe('canConjugatePassive', () => {
     test.each<[string, VerbForm]>([
       ['يود', 2],
       ['عمل', 3],
+      ['أتي', 4],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })

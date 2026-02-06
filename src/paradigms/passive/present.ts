@@ -222,12 +222,9 @@ function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood:
 }
 
 function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
-  const [c1, c2] = [...verb.root]
+  const [, c2] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-  const isHamzatedInitial = isHamzatedLetter(c1)
-  const needsLongWaw = isHamzatedInitial && pronounId === '1s'
-  const seatedC1 = isHamzatedInitial ? (needsLongWaw ? WAW : HAMZA_ON_WAW) : c1
-  const prefix = needsLongWaw ? [seatedC1, c2, FATHA] : [seatedC1, SUKOON, c2, FATHA]
+  const prefix = pronounId === '1s' ? [WAW, c2, FATHA] : [HAMZA_ON_WAW, SUKOON, c2, FATHA]
 
   return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix)]
 }
