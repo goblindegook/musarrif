@@ -957,7 +957,13 @@ describe('imperative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'نَادِ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ندي', 'نَادِ'],
+        ['رعي', 'رَاعِ'],
+        ['بلي', 'بَالِ'],
+        ['قضي', 'قَاضِ'],
+        ['بري', 'بَارِ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
       })
     })

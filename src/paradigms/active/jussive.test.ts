@@ -1119,7 +1119,13 @@ describe('active present jussive', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'يُنَادِ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ندي', 'يُنَادِ'],
+        ['رعي', 'يُرَاعِ'],
+        ['بلي', 'يُبَالِ'],
+        ['قضي', 'يُقَاضِ'],
+        ['بري', 'يُبَارِ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
     })

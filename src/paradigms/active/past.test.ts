@@ -1110,7 +1110,13 @@ describe('active past', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'نَادَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ندي', 'نَادَى'],
+        ['رعي', 'رَاعَى'],
+        ['بلي', 'بَالَى'],
+        ['قضي', 'قَاضَى'],
+        ['بري', 'بَارَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })

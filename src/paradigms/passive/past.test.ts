@@ -721,7 +721,13 @@ describe('passive past pattern', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'نُودِيَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ندي', 'نُودِيَ'],
+        ['رعي', 'رُوعِيَ'],
+        ['بلي', 'بُولِيَ'],
+        ['قضي', 'قُوضِيَ'],
+        ['بري', 'بُورِيَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })

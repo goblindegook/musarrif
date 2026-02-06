@@ -378,7 +378,13 @@ describe('active participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'مُنَادٍ']])('%s', (root, expected) => {
+      test.each([
+        ['ندي', 'مُنَادٍ'],
+        ['رعي', 'مُرَاعٍ'],
+        ['بلي', 'مُبَالٍ'],
+        ['قضي', 'مُقَاضٍ'],
+        ['بري', 'مُبَارٍ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
       })
     })

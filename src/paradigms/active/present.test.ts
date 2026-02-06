@@ -1149,7 +1149,13 @@ describe('active present indicative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['ندي', 'يُنَادِي']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ندي', 'يُنَادِي'],
+        ['رعي', 'يُرَاعِي'],
+        ['بلي', 'يُبَالِي'],
+        ['قضي', 'يُقَاضِي'],
+        ['بري', 'يُبَارِي'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
     })
