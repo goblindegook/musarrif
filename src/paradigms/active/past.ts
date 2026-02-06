@@ -30,12 +30,8 @@ import {
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
-function weakLetterTail(letter: string): string {
-  return letter === YEH || letter === ALIF_MAQSURA
-    ? ALIF_MAQSURA
-    : letter === ALIF_HAMZA || letter === HAMZA_ON_YEH
-      ? letter
-      : ALIF
+function defectiveTail(letter: string): string {
+  return letter === YEH || letter === ALIF_MAQSURA ? ALIF_MAQSURA : ALIF
 }
 
 interface NonDefectivePastBaseForms {
@@ -90,7 +86,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 
 function buildForms(base: readonly string[], c3: string): PastBaseForms {
   if (!isWeakLetter(c3)) return { base }
-  const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), weakLetterTail(c3)]
+  const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), defectiveTail(c3)]
   const glide = c3 === WAW || c3 === ALIF ? WAW : YEH
   return {
     base: normalizedBase,
@@ -124,7 +120,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   }
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
-  if (isWeakLetter(c3)) return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), weakLetterTail(c3)], c3)
+  if (isWeakLetter(c3)) return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), defectiveTail(c3)], c3)
 
   // Geminate Form I: collapse 3ms, expand in suffixed forms (e.g., حَبَّ / حَبَبْتُ)
   if (c2 === c3)

@@ -14,10 +14,8 @@ import {
   last,
   NOON,
   removeLeadingDiacritics,
-  SEEN,
   SHADDA,
   SUKOON,
-  TEH,
   WAW,
   YEH,
 } from '../letters'
@@ -193,8 +191,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 5: {
-          if (isInitialHamza && isMiddleWeak && isFinalWeak) return [TEH, FATHA, ALIF_HAMZA, FATHA, WAW, FATHA, SHADDA]
-
           if (isFinalWeak && pronounId === '2mp') {
             const shaddaIndex = stem.lastIndexOf(SHADDA)
             return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
@@ -209,14 +205,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           return [ALIF, KASRA, ...stem]
 
         case 10: {
-          // Initial hamza + middle weak + final weak (e.g., أوي → اِسْتَأْوِ)
-          // Initial hamza is kept as أْ, then middle weak with kasra
-          if (isInitialHamza && isMiddleWeak && isFinalWeak)
-            return [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, ALIF_HAMZA, SUKOON, c2, KASRA]
-
-          // Form X defective verbs: restore final weak letter in dual forms
           if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
-
           return [ALIF, KASRA, ...stem]
         }
       }
