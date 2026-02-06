@@ -409,6 +409,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
             return [...base.slice(0, -2), SUKOON, ALIF]
           return base
         }
+        if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 

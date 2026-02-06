@@ -427,6 +427,12 @@ describe('passive participle', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test.each([['أتي', 'مُؤْتًى']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 4))).toBe(expected)
+      })
+    })
+
     describe('hamzated hollow-defective roots', () => {
       test.each([['أوي', 'مُؤْوًى']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toBe(expected)

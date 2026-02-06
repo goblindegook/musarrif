@@ -176,6 +176,15 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           // Initial hamza + middle weak + final weak (e.g., أوي → آوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_MADDA, WAW, KASRA]
 
+          // Initial hamza + final weak (e.g., أتى → آتِ)
+          if (isInitialHamza && isFinalWeak) {
+            if (pronounId === '2ms') return [ALIF_MADDA, c2, KASRA]
+            if (pronounId === '2fs') return [ALIF_MADDA, c2, KASRA, YEH]
+            if (pronounId === '2d') return [ALIF_MADDA, c2, KASRA, YEH, FATHA, ALIF]
+            if (pronounId === '2mp') return [ALIF_MADDA, c2, DAMMA, WAW, SUKOON, ALIF]
+            if (pronounId === '2fp') return [ALIF_MADDA, c2, KASRA, YEH, NOON, FATHA]
+          }
+
           // Form IV defective verbs preserve final weak letter in dual forms
           if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
 

@@ -737,4 +737,26 @@ describe('passive past pattern', () => {
       })
     })
   })
+
+  describe('Form IV', () => {
+    describe('hamzated initial defective roots', () => {
+      test('آتَى conjugation', () => {
+        expect(conjugatePassivePast(getVerb('أتي', 4))).toEqualT({
+          '1s': 'أُوتِيتُ',
+          '2ms': 'أُوتِيتَ',
+          '2fs': 'أُوتِيتِ',
+          '3ms': 'أُوتِيَ',
+          '3fs': 'أُوتِيَتْ',
+          '2d': 'أُوتِيتُمَا',
+          '3md': 'أُوتِيَا',
+          '3fd': 'أُوتِيَتَا',
+          '1p': 'أُوتِينَا',
+          '2mp': 'أُوتِيتُمْ',
+          '2fp': 'أُوتِيتُنَّ',
+          '3mp': 'أُوتُوا',
+          '3fp': 'أُوتِينَ',
+        })
+      })
+    })
+  })
 })

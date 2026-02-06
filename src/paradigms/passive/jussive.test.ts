@@ -830,4 +830,26 @@ describe('passive present jussive', () => {
       })
     })
   })
+
+  describe('Form IV', () => {
+    describe('hamzated initial defective roots', () => {
+      test('آتَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'jussive')).toEqualT({
+          '1s': 'أُوتَ',
+          '2ms': 'تُؤْتَ',
+          '2fs': 'تُؤْتَيْ',
+          '3ms': 'يُؤْتَ',
+          '3fs': 'تُؤْتَ',
+          '2d': 'تُؤْتَيَا',
+          '3md': 'يُؤْتَيَا',
+          '3fd': 'تُؤْتَيَا',
+          '1p': 'نُؤْتَ',
+          '2mp': 'تُؤْتَوْا',
+          '2fp': 'تُؤْتَيْنَ',
+          '3mp': 'يُؤْتَوْا',
+          '3fp': 'يُؤْتَيْنَ',
+        })
+      })
+    })
+  })
 })

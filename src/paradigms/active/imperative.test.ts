@@ -1005,6 +1005,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test('آتَى conjugation', () => {
+        expect(conjugateImperative(getVerb('أتي', 4))).toMatchObjectT({
+          '2ms': 'آتِ',
+          '2fs': 'آتِي',
+          '2d': 'آتِيَا',
+          '2mp': 'آتُوْا',
+          '2fp': 'آتِينَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('أَوْفَى conjugation', () => {
         expect(conjugateImperative(getVerb('وفي', 4))).toMatchObjectT({

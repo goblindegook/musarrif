@@ -169,18 +169,12 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
   const isInitialHamza = isHamzatedLetter(c1)
   const isFinalHamza = isHamzatedLetter(c3)
 
-  if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, WAW, FATHA, ALIF, HAMZA]
-
-  // Initial weak + final weak (e.g., وفي → إِيفَاء): initial weak drops, becomes ī
   if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, HAMZA]
 
-  // Initial hamza in Form IV coalesces to a long ī in the masdar: إِيمَان / إِيتَاء
-  if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, c3]
+  if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, isFinalWeak ? HAMZA : c3]
 
-  // Hollow Form IV: إِفَالَة pattern (e.g., إِقَامَة، إِعَانَة، إِضَافَة)
   if (isMiddleWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-  // Weak final radical in Form IV takes the إِفْعَاء pattern
   if (isFinalWeak || isFinalHamza) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
 
   return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3]
