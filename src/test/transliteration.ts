@@ -1,3 +1,5 @@
+import { mapRecord } from '../primitives/objects'
+
 const TRANSLITERATION_MAP: Record<string, string> = {
   آ: '|',
   أ: '>',
@@ -53,21 +55,12 @@ const transliterateString = (value: string): string =>
     .map((char) => TRANSLITERATION_MAP[char] ?? char)
     .join('')
 
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+const isRecord = (value: unknown): value is Record<string, unknown> =>
   value != null && typeof value === 'object' && value.constructor === Object
 
 export const transliterateValue = (value: unknown): unknown => {
   if (typeof value === 'string') return transliterateString(value)
   if (Array.isArray(value)) return value.map(transliterateValue)
-  if (value instanceof Map)
-    return new Map(
-      Array.from(value.entries()).map(([key, entry]) => [transliterateValue(key), transliterateValue(entry)]),
-    )
-  if (value instanceof Set) return new Set(Array.from(value.values()).map(transliterateValue))
-  if (isPlainObject(value)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [transliterateString(key), transliterateValue(entry)]),
-    )
-  }
+  if (isRecord(value)) return mapRecord(value, transliterateValue)
   return value
 }
