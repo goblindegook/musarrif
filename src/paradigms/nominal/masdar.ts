@@ -80,12 +80,8 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     case 'fi3al':
       return [c1, KASRA, c2, FATHA, finalRadical]
 
-    case 'fi3an': {
-      const seatedC1 = isInitialHamza ? ALIF_HAMZA_BELOW : c1
-      const prefix = [seatedC1, KASRA, c2]
-      if (c3 === YEH || c3 === WAW) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
-      return [...prefix, FATHA, finalRadical]
-    }
+    case 'fi3an':
+      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
     case 'fi3l':
       return [c1, KASRA, c2, SUKOON, finalRadical]
