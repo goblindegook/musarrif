@@ -44,7 +44,7 @@ function defectiveGlide(letter: string): string {
 }
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
-  return verb.form === 1 && isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
+  return isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
 }
 
 function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly string[] {
@@ -55,7 +55,7 @@ function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly s
 
 function replaceVowelBeforeGeminate(word: readonly string[], vowel: Vowel): readonly string[] {
   for (let i = word.length - 3; i >= 0; i -= 1) {
-    if (word[i] === word.at(i + 2) && word.at(i + 1) === SUKOON) {
+    if (word.at(i) === word.at(i + 2) && word.at(i + 1) === SUKOON) {
       return [...word.slice(0, i + 3), vowel]
     }
   }
@@ -64,7 +64,7 @@ function replaceVowelBeforeGeminate(word: readonly string[], vowel: Vowel): read
 
 function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
+  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu')
 
   if (verb.form === 1 && c2 === c3)
     return [
@@ -84,11 +84,11 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   if (verb.form === 3 && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
   if (verb.form === 4 && c2 === c3) return [expanded[0], DAMMA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
   if (verb.form === 5 && c3 === YEH) return [...expanded.slice(0, -1), YEH, SUKOON, NOON, FATHA]
-  if (verb.form === 6 && c2 === c3) return [...replaceFinalDiacritic(expandShadda(expanded), SUKOON), NOON, FATHA]
+  if (verb.form === 6) return [...replaceFinalDiacritic(expandShadda(expanded), SUKOON), NOON, FATHA]
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
 
-  if (isWeakLetter(c3) && !isWeakLetter(c1) && verb.form !== 7) return [...expanded, NOON, FATHA]
+  if (verb.form !== 7 && !isWeakLetter(c1) && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
 
   if (!isConsonantalMiddleWeak && isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded)), SUKOON), NOON, FATHA]
@@ -229,7 +229,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...base, WAW, NOON, FATHA]
 
-    if (verb.form === 2 && c2 === YEH && c3 === YEH) return [...replaceFinalDiacritic(base, DAMMA), WAW, NOON, FATHA]
+    if (c2 === YEH) return [...replaceFinalDiacritic(base, DAMMA), WAW, NOON, FATHA]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(base, DAMMA), WAW, NOON, FATHA]
 
@@ -377,7 +377,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isSecondFeminineSingular || isMasculinePlural(pronounId))
         return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
-      if (isMiddleWeak && isFinalHamza && isFemininePlural(pronounId)) return word
+      if (isFinalHamza && isFemininePlural(pronounId)) return word
 
       if (isMiddleWeak && isFinalHamza)
         return replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON)
@@ -412,8 +412,7 @@ function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
 
   switch (verb.form) {
     case 4: {
-      const finalGlide = c4 === ALIF_HAMZA ? HAMZA_ON_YEH : defectiveGlide(c4)
-      return [YEH, DAMMA, c2, SUKOON, c3, KASRA, finalGlide, DAMMA]
+      return [YEH, DAMMA, c2, SUKOON, c3, KASRA, HAMZA_ON_YEH, DAMMA]
     }
 
     default: {

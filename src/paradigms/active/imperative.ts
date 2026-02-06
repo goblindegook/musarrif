@@ -119,8 +119,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (isInitialHamza) return stem.slice(2)
 
-          if (c2 === c3 && isFormIPresentVowel(verb, 'a') && pronounId !== '2fp') return [c1, FATHA, ...stem.slice(2)]
-
           if (c3 === WAW && last(stem) === ALIF) return stem
 
           // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
@@ -159,12 +157,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 5: {
-          if (isFinalWeak && pronounId === '2mp') {
-            const shaddaIndex = stem.lastIndexOf(SHADDA)
-            return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
-          }
-
-          return stem
+          const shaddaIndex = stem.lastIndexOf(SHADDA)
+          return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
         }
 
         case 7:
