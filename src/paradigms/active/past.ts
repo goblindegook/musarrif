@@ -167,7 +167,16 @@ function derivePastFormII(verb: Verb): PastBaseForms {
 
 function derivePastFormIII(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  return buildForms([c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3, FATHA], c3)
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+
+  if (c2 === c3)
+    return {
+      base: [c1, FATHA, ALIF, seatedC2, SHADDA, FATHA],
+      suffixedBase: [c1, FATHA, ALIF, seatedC2, FATHA, c3, SUKOON],
+      pluralBase: [c1, FATHA, ALIF, seatedC2, SHADDA, DAMMA, WAW],
+    }
+
+  return buildForms([c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormIV(verb: Verb): PastBaseForms {

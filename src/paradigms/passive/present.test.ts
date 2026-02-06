@@ -756,6 +756,70 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['سرر', 'يُسَارُّ'],
+        ['ردد', 'يُرَادُّ'],
+        ['مدد', 'يُمَادُّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('سَارَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('سرر', 3), 'indicative')).toEqualT({
+          '1s': 'أُسَارُّ',
+          '2ms': 'تُسَارُّ',
+          '2fs': 'تُسَارِّينَ',
+          '3ms': 'يُسَارُّ',
+          '3fs': 'تُسَارُّ',
+          '2d': 'تُسَارَّانِ',
+          '3md': 'يُسَارَّانِ',
+          '3fd': 'تُسَارَّانِ',
+          '1p': 'نُسَارُّ',
+          '2mp': 'تُسَارُّوْنَ',
+          '2fp': 'تُسَارَرْنَ',
+          '3mp': 'يُسَارُّوْنَ',
+          '3fp': 'يُسَارَرْنَ',
+        })
+      })
+
+      test('رَادَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ردد', 3), 'indicative')).toEqualT({
+          '1s': 'أُرَادُّ',
+          '2ms': 'تُرَادُّ',
+          '2fs': 'تُرَادِّينَ',
+          '3ms': 'يُرَادُّ',
+          '3fs': 'تُرَادُّ',
+          '2d': 'تُرَادَّانِ',
+          '3md': 'يُرَادَّانِ',
+          '3fd': 'تُرَادَّانِ',
+          '1p': 'نُرَادُّ',
+          '2mp': 'تُرَادُّوْنَ',
+          '2fp': 'تُرَادَدْنَ',
+          '3mp': 'يُرَادُّوْنَ',
+          '3fp': 'يُرَادَدْنَ',
+        })
+      })
+
+      test('مَادَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('مدد', 3), 'indicative')).toEqualT({
+          '1s': 'أُمَادُّ',
+          '2ms': 'تُمَادُّ',
+          '2fs': 'تُمَادِّينَ',
+          '3ms': 'يُمَادُّ',
+          '3fs': 'تُمَادُّ',
+          '2d': 'تُمَادَّانِ',
+          '3md': 'يُمَادَّانِ',
+          '3fd': 'تُمَادَّانِ',
+          '1p': 'نُمَادُّ',
+          '2mp': 'تُمَادُّوْنَ',
+          '2fp': 'تُمَادَدْنَ',
+          '3mp': 'يُمَادُّوْنَ',
+          '3fp': 'يُمَادَدْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['ندي', 'يُنَادَى'],

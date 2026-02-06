@@ -667,6 +667,70 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['سرر', 'يُسَارَّ'],
+        ['ردد', 'يُرَادَّ'],
+        ['مدد', 'يُمَادَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('سَارَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('سرر', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُسَارَّ',
+          '2ms': 'تُسَارَّ',
+          '2fs': 'تُسَارِّي',
+          '3ms': 'يُسَارَّ',
+          '3fs': 'تُسَارَّ',
+          '2d': 'تُسَارَّا',
+          '3md': 'يُسَارَّا',
+          '3fd': 'تُسَارَّا',
+          '1p': 'نُسَارَّ',
+          '2mp': 'تُسَارُّوْا',
+          '2fp': 'تُسَارِرْنَ',
+          '3mp': 'يُسَارُّوْا',
+          '3fp': 'يُسَارِرْنَ',
+        })
+      })
+
+      test('رَادَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('ردد', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُرَادَّ',
+          '2ms': 'تُرَادَّ',
+          '2fs': 'تُرَادِّي',
+          '3ms': 'يُرَادَّ',
+          '3fs': 'تُرَادَّ',
+          '2d': 'تُرَادَّا',
+          '3md': 'يُرَادَّا',
+          '3fd': 'تُرَادَّا',
+          '1p': 'نُرَادَّ',
+          '2mp': 'تُرَادُّوْا',
+          '2fp': 'تُرَادِدْنَ',
+          '3mp': 'يُرَادُّوْا',
+          '3fp': 'يُرَادِدْنَ',
+        })
+      })
+
+      test('مَادَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('مدد', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُمَادَّ',
+          '2ms': 'تُمَادَّ',
+          '2fs': 'تُمَادِّي',
+          '3ms': 'يُمَادَّ',
+          '3fs': 'تُمَادَّ',
+          '2d': 'تُمَادَّا',
+          '3md': 'يُمَادَّا',
+          '3fd': 'تُمَادَّا',
+          '1p': 'نُمَادَّ',
+          '2mp': 'تُمَادُّوْا',
+          '2fp': 'تُمَادِدْنَ',
+          '3mp': 'يُمَادُّوْا',
+          '3fp': 'يُمَادِدْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وزي', 'يُوَازِيَ'],

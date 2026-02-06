@@ -924,6 +924,46 @@ describe('imperative', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['سرر', 'سَارَّ'],
+        ['ردد', 'رَادَّ'],
+        ['مدد', 'مَادَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
+      })
+
+      test('سَارَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('سرر', 3))).toMatchObjectT({
+          '2ms': 'سَارَّ',
+          '2fs': 'سَارِّي',
+          '2d': 'سَارَّا',
+          '2mp': 'سَارُّوْا',
+          '2fp': 'سَارِرْنَ',
+        })
+      })
+
+      test('رَادَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('ردد', 3))).toMatchObjectT({
+          '2ms': 'رَادَّ',
+          '2fs': 'رَادِّي',
+          '2d': 'رَادَّا',
+          '2mp': 'رَادُّوْا',
+          '2fp': 'رَادِدْنَ',
+        })
+      })
+
+      test('مَادَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('مدد', 3))).toMatchObjectT({
+          '2ms': 'مَادَّ',
+          '2fs': 'مَادِّي',
+          '2d': 'مَادَّا',
+          '2mp': 'مَادُّوْا',
+          '2fp': 'مَادِدْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       test('قَاوَلَ conjugation', () => {
         expect(conjugateImperative(getVerb('قول', 3))).toMatchObjectT({

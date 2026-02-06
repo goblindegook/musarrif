@@ -338,6 +338,16 @@ describe('passive participle', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['سرر', 'مُسَارّ'],
+        ['ردد', 'مُرَادّ'],
+        ['مدد', 'مُمَادّ'],
+      ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 3))).toBe(expected)
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([
         ['عون', 'مُعَاوَن'],

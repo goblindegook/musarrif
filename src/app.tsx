@@ -203,6 +203,7 @@ export function App() {
               lang="ar"
               actions={
                 <>
+                  <ShareButton />
                   <CopyButton
                     text={formatArabic(selectedVerb.label)}
                     ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}
@@ -212,7 +213,6 @@ export function App() {
                     lang="ar"
                     ariaLabel={t('aria.speak', { text: selectedVerb.label })}
                   />
-                  <ShareButton />
                 </>
               }
             >

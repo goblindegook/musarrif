@@ -25,6 +25,7 @@ import {
   removeTrailingDiacritics,
   replaceFinalDiacritic,
   SEEN,
+  SHADDA,
   SUKOON,
   seatHamza,
   shortVowelFromPattern,
@@ -174,6 +175,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (verb.form === 7 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, SUKOON), NOON, FATHA]
 
+    if (verb.form === 3 && c2 === c3) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
+
     if (verb.form === 3 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
     if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
@@ -229,6 +232,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
 
+    if (verb.form === 3 && c2 === c3) return [TEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, SUKOON, NOON, FATHA]
+
     if (verb.form === 9) return buildFemininePlural(expandShadda(applyPresentPrefix(base, TEH)), verb)
 
     if (verb.form === 10 && c2 === c3)
@@ -277,6 +282,8 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (isFormIFinalWeakPresent(verb, 'a'))
       return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, SUKOON, NOON, FATHA]
+
+    if (verb.form === 3 && c2 === c3) return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, SUKOON, NOON, FATHA]
 
     if (verb.form === 9) return buildFemininePlural(expandShadda(base), verb)
 
@@ -441,7 +448,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak) return dropFinalDefectiveGlide(stem)
 
-      if (isGeminate && [1, 4, 10].includes(verb.form)) return replaceFinalDiacritic(stem, FATHA)
+      if (isGeminate && [1, 3, 4, 10].includes(verb.form)) return replaceFinalDiacritic(stem, FATHA)
 
       if (verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
 
@@ -560,6 +567,7 @@ function derivePresentFormII(verb: Verb): readonly string[] {
 function derivePresentFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+  if (c2 === c3) return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA, DAMMA]
   if (isWeakLetter(c3)) return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, defectiveGlide(c3)]
   return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3, DAMMA]
 }

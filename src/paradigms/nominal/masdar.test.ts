@@ -392,6 +392,16 @@ describe('masdar', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['سرر', 'مُسَارَّة'],
+        ['ردد', 'مُرَادَّة'],
+        ['مدد', 'مُمَادَّة'],
+      ])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([
         ['عون', 'مُعَاوَنَة'],

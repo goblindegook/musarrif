@@ -212,13 +212,20 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
 function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-  const prefix = [seatHamza(c1, DAMMA), FATHA, ALIF, seatedC2, FATHA]
+  const prefix = [seatedC1, FATHA, ALIF, seatedC2]
 
-  if (isWeakLetter(c3)) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (c2 === c3) {
+    const geminateSuffix = mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : moodSuffix
+    if (isFemininePlural(pronounId)) return [...prefix, FATHA, c3, ...geminateSuffix]
+    return [...prefix, SHADDA, ...geminateSuffix]
+  }
 
-  return [...prefix, seatedC3, ...moodSuffix]
+  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+
+  return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
 
 function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
@@ -260,8 +267,9 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
   return mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
-    normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
-      .join('')
-      .normalize('NFC'),
+    (() => {
+      const joined = normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]).join('')
+      return joined.normalize('NFC')
+    })(),
   )
 }

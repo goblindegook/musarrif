@@ -152,6 +152,8 @@ function deriveMasdarFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
+  if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA, FATHA, TEH_MARBUTA]
+
   if (c3 === ALIF_MAQSURA || c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
 
   return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
@@ -284,7 +286,8 @@ export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = verb.form === 1 && verb.masdarPatterns ? verb.masdarPatterns : [undefined]
   return patterns
     .map((pattern) => {
-      return masdar(verb, pattern).join('').normalize('NFC')
+      const joined = masdar(verb, pattern).join('')
+      return joined.normalize('NFC')
     })
     .filter(Boolean)
 }
