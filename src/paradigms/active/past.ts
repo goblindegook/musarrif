@@ -168,15 +168,16 @@ function derivePastFormII(verb: Verb): PastBaseForms {
 function derivePastFormIII(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  const prefix = [c1, FATHA, ALIF, seatedC2]
 
   if (c2 === c3)
     return {
-      base: [c1, FATHA, ALIF, seatedC2, SHADDA, FATHA],
-      suffixedBase: [c1, FATHA, ALIF, seatedC2, FATHA, c3, SUKOON],
-      pluralBase: [c1, FATHA, ALIF, seatedC2, SHADDA, DAMMA, WAW],
+      base: [...prefix, SHADDA, FATHA],
+      suffixedBase: [...prefix, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, SHADDA, DAMMA, WAW],
     }
 
-  return buildForms([c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA], c3)
+  return buildForms([...prefix, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormIV(verb: Verb): PastBaseForms {
@@ -213,14 +214,12 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
       pluralBase: [...prefix, c2, SHADDA, DAMMA, WAW],
     }
 
-  // Hollow Form VI with final hamza (e.g., تَجَاءَ) - don't normalize, hamza is not a weak letter
-  if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
+  if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
       base: [...prefix, c3, FATHA],
-      suffixedBase: [...shortenHollowStem([...prefix, c3, FATHA]), SUKOON],
-      pluralBase: [...shortenHollowStem([...prefix, c3, FATHA]), DAMMA, WAW],
+      suffixedBase: [...shortenHollowStem([...prefix, c3]), SUKOON],
+      pluralBase: [...shortenHollowStem([...prefix, c3]), DAMMA, WAW],
     }
-  }
 
   return buildForms([...prefix, isHamzatedLetter(c2) ? HAMZA : c2, FATHA, c3, FATHA], c3)
 }
@@ -297,7 +296,7 @@ function derivePastForms(verb: Verb): PastBaseForms {
 
 function shortenHollowStem(stem: readonly string[]): readonly string[] {
   // Remove alif and change fatḥa before it to short vowel
-  return removeTrailingDiacritics(stem)
+  return stem
     .map((char, i, arr) => {
       if (char === ALIF) return null
       if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return KASRA

@@ -132,14 +132,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i')) return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
-          // Hamzated initial strong verbs drop the hamza
           if (isInitialHamza) return stem.slice(2)
 
           if (c2 === c3 && presentVowel === 'i' && pronounId === '2ms') return [c1, KASRA, c2, SHADDA, FATHA]
-
-          if (c2 === c3 && presentVowel === 'a' && pronounId !== '2fp')
-            // Geminate Form I with present vowel 'a' drops the helping prefix and takes fatḥa on the first radical.
-            return [c1, FATHA, ...stem.slice(2)]
+          if (c2 === c3 && presentVowel === 'a' && pronounId !== '2fp') return [c1, FATHA, ...stem.slice(2)]
 
           // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
           // This is a morphological rule based on past pattern classification, even though
@@ -171,10 +167,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 4: {
-          // Initial hamza + middle weak + final weak (e.g., أوي → آوِ)
-          if (isInitialHamza && isMiddleWeak && isFinalWeak) return [ALIF_MADDA, WAW, KASRA]
-
-          // Initial hamza + final weak (e.g., أتى → آتِ)
           if (isInitialHamza && isFinalWeak) {
             if (pronounId === '2ms') return [ALIF_MADDA, c2, KASRA]
             if (pronounId === '2fs') return [ALIF_MADDA, c2, KASRA, YEH]
@@ -183,10 +175,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (pronounId === '2fp') return [ALIF_MADDA, c2, KASRA, YEH, NOON, FATHA]
           }
 
-          // Form IV defective verbs preserve final weak letter in dual forms
           if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
 
-          // Form IV always adds prefix
           return [ALIF_HAMZA, FATHA, ...stem]
         }
 
