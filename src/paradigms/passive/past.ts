@@ -4,7 +4,6 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
-  ALIF_MAQSURA,
   DAMMA,
   FATHA,
   geminateDoubleLetters,
@@ -63,14 +62,6 @@ function derivePassivePastFormI(verb: Verb): PassivePastParams {
   const isFinalHamza = isHamzatedLetter(c3)
   const isGeminate = c2 === c3
   const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
-
-  if ((isInitialHamza || isMiddleWeak) && isFinalWeak)
-    return {
-      prefix: [c1, DAMMA, c2],
-      suffix: [KASRA, c3 === ALIF_MAQSURA ? YEH : c3],
-      suffix3sd: [KASRA, c3 === ALIF_MAQSURA ? YEH : c3, FATHA],
-      suffix3pm: [DAMMA, WAW, SUKOON, ALIF],
-    }
 
   if (isMiddleHamza && isFinalWeak) {
     return {

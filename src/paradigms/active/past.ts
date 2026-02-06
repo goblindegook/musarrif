@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects.ts'
-import { hasPattern, resolveFormIPastVowel } from '../form-i-vowels'
+import { hasPattern, isFormIPastVowel, resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -111,7 +111,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
 
   // Final-weak Form I: long vowel in the base, no ending fatḥa
   // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
-  if (isWeakLetter(c3) && pastVowel === 'i') {
+  if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
       base: c3 === ALIF_MAQSURA || c3 === ALIF ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
       suffixedBase: [c1, FATHA, c2, KASRA, YEH],

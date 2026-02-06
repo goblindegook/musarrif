@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { resolveFormIPastVowel, resolveFormIPresentVowel } from '../form-i-vowels'
+import { isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -47,18 +47,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       switch (verb.form) {
         case 1: {
-          const pastVowel = resolveFormIPastVowel(verb)
-          const presentVowel = resolveFormIPresentVowel(verb)
-
-          if (isFinalWeak && presentVowel === 'u') {
-            if (pronounId === '2ms') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA]
-            if (pronounId === '2fs') return [ALIF, DAMMA, c1, SUKOON, c2, KASRA, YEH]
-            if (pronounId === '2d') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2mp') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, WAW, NOON, FATHA]
-          }
-
-          // Initial hamza + middle weak + final weak - Triliteral (e.g., أوي → اِيوِ)
           if (isInitialHamza && isMiddleWeak && isFinalWeak) {
             if (pronounId === '2ms') return [ALIF, KASRA, YEH, c2, KASRA]
             if (pronounId === '2fs') return [ALIF, KASRA, YEH, c2, KASRA, YEH]
@@ -67,15 +55,13 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (pronounId === '2fp') return [ALIF, KASRA, YEH, c2, KASRA, YEH, NOON, FATHA]
           }
 
-          if (isInitialWeak && isMiddleHamza && !isFinalWeak) return [ALIF, KASRA, c1, ...stem.slice(2)]
-
           if (isInitialWeak && isHamzatedLetter(c3)) return stem
 
-          if (isInitialWeak && pastVowel === 'i' && !isFinalWeak && c2 !== c3)
+          if (isInitialWeak && isFormIPastVowel(verb, 'i') && !isFinalWeak && c2 !== c3)
             return [ALIF, KASRA, c1, ...stem.slice(2)]
 
           if (isInitialHamza && c2 === c3) {
-            if (presentVowel === 'i') {
+            if (isFormIPresentVowel(verb, 'i')) {
               const prefix = [ALIF_HAMZA_BELOW, KASRA, c2, SHADDA]
               if (pronounId === '2ms') return [...prefix, FATHA]
               if (pronounId === '2fs') return [...prefix, KASRA, YEH]
@@ -97,14 +83,12 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (isInitialWeak && isFinalWeak) {
             const alifIndex = stem.indexOf(ALIF)
-
-            if (alifIndex >= 0 && stem[alifIndex - 1] === FATHA)
-              return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
+            if (stem.at(alifIndex - 1) === FATHA) return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ALIF]
           }
 
           if (isInitialWeak && c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
-          if (isInitialWeak && presentVowel === 'u') {
+          if (isInitialWeak && isFormIPresentVowel(verb, 'u')) {
             if (stem.at(0) === YEH || stem.at(0) === WAW) return [ALIF, DAMMA, WAW, ...stem.slice(2)]
             return stem
           }
@@ -122,7 +106,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (isInitialHamza && isFinalWeak) {
             const prefix = [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, c2]
-            const stemVowel = presentVowel === 'i' && c2 !== NOON ? KASRA : FATHA
+            const stemVowel = isFormIPresentVowel(verb, 'i') && c2 !== NOON ? KASRA : FATHA
             if (pronounId === '2ms') return [...prefix, stemVowel]
             if (pronounId === '2fs') return [...prefix, stemVowel, YEH, SUKOON]
             if (pronounId === '2d') return [...prefix, stemVowel, YEH, FATHA, ALIF]
@@ -130,24 +114,18 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (pronounId === '2fp') return [...prefix, stemVowel, YEH, SUKOON, NOON, FATHA]
           }
 
-          if (isInitialHamza && (pastVowel === 'i' || presentVowel === 'i')) return [ALIF, KASRA, YEH, ...stem.slice(2)]
+          if (isInitialHamza && (isFormIPastVowel(verb, 'i') || isFormIPresentVowel(verb, 'i')))
+            return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
           if (isInitialHamza) return stem.slice(2)
 
-          if (c2 === c3 && presentVowel === 'i' && pronounId === '2ms') return [c1, KASRA, c2, SHADDA, FATHA]
-          if (c2 === c3 && presentVowel === 'a' && pronounId !== '2fp') return [c1, FATHA, ...stem.slice(2)]
-
-          // Verbs with past vowel 'i' (fa3ila pattern) need imperative prefix اِـ
-          // This is a morphological rule based on past pattern classification, even though
-          // the imperative is technically derived from the present tense (jussive)
-          // (e.g., مرض → اِمْرَضْ, سمع → اِسْمَعْ)
-          if (pastVowel === 'i') return [ALIF, KASRA, ...stem]
+          if (c2 === c3 && isFormIPresentVowel(verb, 'a') && pronounId !== '2fp') return [c1, FATHA, ...stem.slice(2)]
 
           if (c3 === WAW && last(stem) === ALIF) return stem
 
           // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
           // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
-          if (stem.at(1) === SUKOON) return [ALIF, presentVowel === 'u' ? DAMMA : KASRA, ...stem]
+          if (stem.at(1) === SUKOON) return [ALIF, isFormIPresentVowel(verb, 'u') ? DAMMA : KASRA, ...stem]
 
           return stem
         }
@@ -192,8 +170,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         case 7:
         case 8:
         case 9:
-          return [ALIF, KASRA, ...stem]
-
         case 10: {
           if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
           return [ALIF, KASRA, ...stem]

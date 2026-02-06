@@ -1,4 +1,4 @@
-import { hasPattern, isFormIPresentVowel, resolveFormIPresentVowel } from '../form-i-vowels'
+import { hasPattern, isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -38,7 +38,6 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
   const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
   const finalRadical = isFinalHamza ? HAMZA : c3
-  const finalGlide = c3 === ALIF_MAQSURA || c3 === YEH ? YEH : WAW
 
   switch (pattern) {
     case 'fa3l':
@@ -61,7 +60,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
 
     case 'fu3aal':
       if (isMiddleHamza) return [c1, DAMMA, HAMZA_ON_WAW, FATHA, ALIF, finalRadical]
-      if (c3 === ALIF_MAQSURA || c3 === YEH) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
+      if (c3 === YEH) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
       return [c1, DAMMA, c2, FATHA, ALIF, finalRadical]
 
     case 'fu3ul':
@@ -94,7 +93,6 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
       return [c1, KASRA, c2, ALIF, finalRadical, FATHA, TEH_MARBUTA]
 
     case 'ifi3aal':
-      // Attested triliteral with this pattern: أوي
       return [ALIF_HAMZA_BELOW, KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {
@@ -105,29 +103,24 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
     }
 
     default:
-      if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF_HAMZA, SUKOON, finalGlide]
+      if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF_HAMZA, SUKOON, YEH]
 
-      if (isInitialWeak && !isMiddleWeak && isFinalWeak)
-        return [c1, KASRA, c2, FATHA, ALIF, finalGlide, FATHA, TEH_MARBUTA]
+      if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c1, KASRA, c2, FATHA, ALIF, YEH, FATHA, TEH_MARBUTA]
 
       if (isInitialHamza && !isMiddleWeak && isFinalWeak)
-        return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, finalGlide, FATHA, ALIF, NOON]
+        return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, YEH, FATHA, ALIF, NOON]
 
-      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, finalGlide, FATHA, TEH_MARBUTA]
+      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, YEH, FATHA, TEH_MARBUTA]
 
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
 
-      if (c2 === WAW && c3 === YEH) return [c1, DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
+      if (c3 === YEH) return [c1, DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
 
-      if (c3 === HAMZA && hasPattern(verb, 'fa3ula-yaf3ulu'))
-        return [c1, DAMMA, c2, SUKOON, ALIF_HAMZA, FATHA, TEH_MARBUTA]
+      if (hasPattern(verb, 'fa3ula-yaf3ulu')) return [c1, DAMMA, c2, SUKOON, ALIF_HAMZA, FATHA, TEH_MARBUTA]
 
-      if (isFinalWeak && !isMiddleWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
+      if (isMiddleWeak) return [c1, FATHA, isFormIPresentVowel(verb, 'i') ? YEH : WAW, SUKOON, c3]
 
-      if (isMiddleWeak) {
-        const hollowGlide = c2 === ALIF ? longVowelFromPattern(resolveFormIPresentVowel(verb))[1] : c2
-        return [c1, FATHA, hollowGlide === YEH ? YEH : WAW, SUKOON, c3]
-      }
+      if (isFinalWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
 
       return []
   }
@@ -154,7 +147,7 @@ function deriveMasdarFormIII(verb: Verb): readonly string[] {
 
   if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA, FATHA, TEH_MARBUTA]
 
-  if (c3 === ALIF_MAQSURA || c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
+  if (c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
 
   return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
 }
@@ -248,9 +241,7 @@ function deriveMasdarFormX(verb: Verb): readonly string[] {
 function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
   const [q1, q2, q3, q4] = Array.from(verb.root)
 
-  // Form IV quadriliteral: initial hamza + final hamza (e.g., أنشأ → إِنْشَاء)
-  if (verb.form === 4 && isHamzatedLetter(q1) && isHamzatedLetter(q4))
-    return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, HAMZA]
+  if (isHamzatedLetter(q1) && isHamzatedLetter(q4)) return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, HAMZA]
 
   return [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
 }

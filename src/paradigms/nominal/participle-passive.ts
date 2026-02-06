@@ -36,11 +36,8 @@ export function derivePassiveParticiple(verb: Verb): string {
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
 
-      // Form IV quadriliteral: initial hamza + final hamza (e.g., أنشأ → مُنْشَأ)
-      if (verb.form === 4 && q1 === ALIF_HAMZA && q4 === ALIF_HAMZA)
-        return [MEEM, DAMMA, q2, SUKOON, q3, FATHA, ALIF_HAMZA]
+      if (isHamzatedLetter(q1) && isHamzatedLetter(q4)) return [MEEM, DAMMA, q2, SUKOON, q3, FATHA, ALIF_HAMZA]
 
-      // Default Form I quadriliteral: مُفَعْلَل (e.g., مُدَحْرَج)
       return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
     }
 
@@ -54,14 +51,9 @@ export function derivePassiveParticiple(verb: Verb): string {
     switch (verb.form) {
       case 1: {
         const presentVowel = resolveFormIPresentVowel(verb)
-        const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
         const prefix = [MEEM, FATHA, c1]
 
         if (isMiddleHamza && isFinalWeak) return [...prefix, SUKOON, HAMZA_ON_YEH, KASRA, YEH, SHADDA]
-
-        if (isInitialWeak && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
-
-        if (isInitialHamza && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
         if (isMiddleWeak && isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
@@ -71,15 +63,10 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isMiddleHamza) return [...prefix, SUKOON, HAMZA_ON_WAW, DAMMA, WAW, c3]
 
-        if (c2 === WAW && c3 === YEH) return [...prefix, SUKOON, c2, KASRA, c3, SHADDA]
-
-        if (c2 === ALIF) return [...prefix, ...longVowelFromPattern(presentVowel), c3]
-
-        if (isMiddleWeak && !isConsonantalMiddleWeak)
+        if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
           return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), c3]
 
-        if ((c3 === ALIF || c3 === ALIF_MAQSURA) && presentVowel === 'u')
-          return [...prefix, SUKOON, c2, DAMMA, WAW, SHADDA]
+        if (c3 === ALIF && presentVowel === 'u') return [...prefix, SUKOON, c2, DAMMA, WAW, SHADDA]
 
         if (c3 === YEH || c3 === ALIF_MAQSURA) return [...prefix, SUKOON, c2, KASRA, YEH, SHADDA]
 
