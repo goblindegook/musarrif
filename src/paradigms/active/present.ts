@@ -43,7 +43,7 @@ function defectiveGlide(letter: string): string {
 }
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
-  return verb.form === 1 && isWeakLetter(verb.root[2]) && resolveFormIPresentVowel(verb) === vowel
+  return verb.form === 1 && isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
 }
 
 function buildFormIFinalWeakPresentAStem(prefix: string, verb: Verb): readonly string[] {
