@@ -563,6 +563,7 @@
   { "root": "نسي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نشر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نصر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "نوي", "form": 3 },
   { "root": "نضج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نظر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
   { "root": "نظف", "form": 1, "formPattern": "fa3ala-yaf3alu" },

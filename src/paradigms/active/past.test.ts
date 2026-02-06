@@ -1085,6 +1085,7 @@ describe('active past', () => {
       test.each([
         ['وزي', 'وَازَى'],
         ['وسي', 'وَاسَى'],
+        ['نوي', 'نَاوَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })

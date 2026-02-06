@@ -1125,6 +1125,10 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test.each([['نوي', 'يُنَاوِي']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('وَافَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 3), 'indicative')).toEqualT({
           '1s': 'أُوَافِي',
