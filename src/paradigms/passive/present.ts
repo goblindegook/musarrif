@@ -7,6 +7,7 @@ import {
   ALIF_MAQSURA,
   DAMMA,
   FATHA,
+  HAMZA,
   HAMZA_ON_WAW,
   isHamzatedLetter,
   isWeakLetter,
@@ -211,8 +212,9 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
 function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-  const prefix = [seatHamza(c1, DAMMA), FATHA, ALIF, c2, FATHA]
+  const prefix = [seatHamza(c1, DAMMA), FATHA, ALIF, seatedC2, FATHA]
 
   if (isWeakLetter(c3)) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix)]
 

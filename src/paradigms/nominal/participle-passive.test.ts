@@ -358,7 +358,10 @@ describe('passive participle', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['سأل', 'مُسَاءَل']])('%s', (root, expected) => {
+      test.each([
+        ['سأل', 'مُسَاءَل'],
+        ['وأم', 'مُوَاءَم'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toBe(expected)
       })
     })

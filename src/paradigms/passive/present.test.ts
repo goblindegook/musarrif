@@ -756,6 +756,26 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test('وَاءَمَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وأم', 3), 'indicative')).toEqualT({
+          '1s': 'أُوَاءَمُ',
+          '2ms': 'تُوَاءَمُ',
+          '2fs': 'تُوَاءَمِينَ',
+          '3ms': 'يُوَاءَمُ',
+          '3fs': 'تُوَاءَمُ',
+          '2d': 'تُوَاءَمَانِ',
+          '3md': 'يُوَاءَمَانِ',
+          '3fd': 'تُوَاءَمَانِ',
+          '1p': 'نُوَاءَمُ',
+          '2mp': 'تُوَاءَمُوْنَ',
+          '2fp': 'تُوَاءَمْنَ',
+          '3mp': 'يُوَاءَمُوْنَ',
+          '3fp': 'يُوَاءَمْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وزي', 'يُوَازَى'],

@@ -720,6 +720,12 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['وأم', 'وُوئِمَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وزي', 'وُوزِيَ'],

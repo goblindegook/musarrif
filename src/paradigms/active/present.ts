@@ -242,9 +242,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   },
   '3mp': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
+    const suffix = [WAW, SUKOON, NOON, FATHA]
 
-    if (isFormIFinalWeakPresent(verb, 'a'))
-      return [...buildFormIFinalWeakPresentAStem(YEH, verb), WAW, SUKOON, NOON, FATHA]
+    if (isFormIFinalWeakPresent(verb, 'a')) return [...buildFormIFinalWeakPresentAStem(YEH, verb), ...suffix]
 
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
       const lastIndex = findLastLetterIndex(base)
@@ -261,7 +261,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (verb.form === 3 && isWeakLetter(c3))
       return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA), DAMMA), WAW, NOON, FATHA]
 
-    if (verb.form === 5 && c3 === YEH) return [...base.slice(0, -1), WAW, SUKOON, NOON, FATHA]
+    if (verb.form === 5 && c3 === YEH) return [...base.slice(0, -1), ...suffix]
 
     if (verb.form === 7 && isWeakLetter(c3)) return [...base, WAW, NOON, FATHA]
 

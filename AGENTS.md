@@ -157,10 +157,10 @@ test('descriptive test name', () => {
 
 ### Conjugation Test Strategy
 
-- **Pattern-first coverage**: When a verb form/type/tense or mood already has a full conjugation table test elsewhere, add only a main pattern test for new verbs.
+- **Pattern-first coverage**: When adding a new verb that has the same form, root type and tense as an existing verb that is fully covered, add only a main pattern test. Pattern tests should cover all paradigms: active, passive, and nominal derivations.
 - **Escalation rule**: If a main pattern test fails, write a full conjugation table test for that verb and tense/mood before changing production code. Keep these tests grouped by their type (e.g. regular, geminated, defective, etc.)
 - **Imperative rule**: If an imperative pattern test fails, write full conjugation tables for both the imperative and the jussive before changing the implementation.
-- **Nominals**: Active participle, passive participle, and masdar stay in the table-driven pattern tests because they are simpler.
+- **Nominals**: Active participle, passive participle, and masdar have no concept of full conjugation, so they stay in the table-driven pattern tests.
 
 ### Validating Test Expectations
 

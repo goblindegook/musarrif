@@ -43,6 +43,7 @@
   { "root": "وفي", "form": 1, "formPattern": "fa3ala-yaf3alu", "noPassiveVoice": true },
   { "root": "وفي", "form": 5 },
   { "root": "وأى", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
+  { "root": "وأم", "form": 3 },
   { "root": "أوي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["ifi3aal"] },
   { "root": "أوي", "form": 4 },
   { "root": "أيد", "form": 2 },

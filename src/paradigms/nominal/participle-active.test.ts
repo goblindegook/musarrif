@@ -377,7 +377,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['سأل', 'مُسَائِل']])('%s', (root, expected) => {
+      test.each([
+        ['سأل', 'مُسَائِل'],
+        ['وأم', 'مُوَائِم'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
       })
     })
