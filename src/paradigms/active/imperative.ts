@@ -93,8 +93,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             return stem
           }
 
-          if (isInitialWeak) return stem
-
           if (isInitialHamza && isMiddleWeak) {
             const prefix = [ALIF_HAMZA, DAMMA]
             if (pronounId === '2ms') return [...prefix, c3, SUKOON]

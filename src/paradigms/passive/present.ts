@@ -102,7 +102,6 @@ function buildC1SegmentFormI(verb: Verb, pronounId: PronounId): readonly string[
   const isMiddleHamza = isHamzatedLetter(c2)
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
   const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
 
@@ -112,7 +111,8 @@ function buildC1SegmentFormI(verb: Verb, pronounId: PronounId): readonly string[
 
   if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
-  if (isMiddleWeak && !isConsonantalMiddleWeak && !isFinalWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
+  if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu') && !isFinalWeak)
+    return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
   if (isInitialHamza && pronounId === '1s') return [WAW]
 
@@ -128,7 +128,6 @@ function buildC2SegmentFormI(verb: Verb, pronounId: PronounId, mood: Mood): read
 
   const isMiddleHamza = isHamzatedLetter(c2)
   const isMiddleWeak = isWeakLetter(c2)
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
   const isFinalWeak = isWeakLetter(c3)
   const isGeminate = c2 === c3
 
@@ -140,7 +139,7 @@ function buildC2SegmentFormI(verb: Verb, pronounId: PronounId, mood: Mood): read
 
   if (isFinalWeak) return [c2]
 
-  if (!isMiddleWeak || isConsonantalMiddleWeak) return [c2, FATHA]
+  if (!isMiddleWeak || hasPattern(verb, 'fa3ila-yaf3alu')) return [c2, FATHA]
 
   if (isFemininePlural(pronounId)) return []
 

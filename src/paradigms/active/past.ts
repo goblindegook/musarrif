@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects.ts'
-import { hasPattern, isFormIPastVowel, resolveFormIPastVowel } from '../form-i-vowels'
+import { isFormIPastVowel, resolveFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -87,7 +87,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 function buildForms(base: readonly string[], c3: string): PastBaseForms {
   if (!isWeakLetter(c3)) return { base }
   const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), defectiveTail(c3)]
-  const glide = c3 === WAW || c3 === ALIF ? WAW : YEH
+  const glide = c3 === ALIF ? WAW : YEH
   return {
     base: normalizedBase,
     defectiveGlide: glide,
@@ -104,16 +104,13 @@ function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
 function derivePastFormI(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const pastVowel = resolveFormIPastVowel(verb)
-  const seatedFinalHamza = c3 === HAMZA ? seatHamza(c3, shortVowelFromPattern(pastVowel)) : c3
   const seatedC2 = seatHamza(c2, shortVowelFromPattern(pastVowel))
+  const seatedC3 = seatHamza(c3, shortVowelFromPattern(pastVowel))
   const isMiddleWeak = isWeakLetter(c2)
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
-  // Final-weak Form I: long vowel in the base, no ending fatḥa
-  // For past vowel 'i', keep YEH (ي) instead of normalizing to ALIF_MAQSURA (ى)
   if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
-      base: c3 === ALIF_MAQSURA || c3 === ALIF ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
+      base: c3 === ALIF_MAQSURA ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
       suffixedBase: [c1, FATHA, c2, KASRA, YEH],
       pluralBase: [c1, FATHA, c2, DAMMA, WAW],
     }
@@ -136,20 +133,19 @@ function derivePastFormI(verb: Verb): PastBaseForms {
   if (isMiddleWeak && isHamzatedLetter(c3))
     return {
       base,
-      suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, SUKOON],
-      pluralBase: [c1, c2 === YEH ? KASRA : DAMMA, HAMZA_ON_YEH, DAMMA, WAW],
+      suffixedBase: [c1, KASRA, HAMZA_ON_YEH, SUKOON],
     }
 
   // Form I hollow verbs shorten to [c1, shortVowel, c3] in suffixed forms (e.g., قُلْ)
   // pluralBase keeps the alif for 3mp (قَالُوا)
-  if (isMiddleWeak && !isConsonantalMiddleWeak)
+  if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
     return {
       base: normalizeAlifMadda(base),
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
       pluralBase: [...replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA), WAW],
     }
 
-  return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedFinalHamza, FATHA], seatedFinalHamza)
+  return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedC3, FATHA], seatedC3)
 }
 
 function derivePastFormII(verb: Verb): PastBaseForms {
@@ -211,7 +207,6 @@ function derivePastFormVI(verb: Verb): PastBaseForms {
     return {
       base: [...prefix, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, c2, FATHA, c3, SUKOON],
-      pluralBase: [...prefix, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
@@ -298,10 +293,10 @@ function shortenHollowStem(stem: readonly string[]): readonly string[] {
   // Remove alif and change fatḥa before it to short vowel
   return stem
     .map((char, i, arr) => {
-      if (char === ALIF) return null
+      if (char === ALIF) return ''
       if (char === FATHA && i + 1 < arr.length && arr[i + 1] === ALIF) return KASRA
       if (char === HAMZA) return HAMZA_ON_YEH
       return char
     })
-    .filter((char): char is string => char != null)
+    .filter(Boolean)
 }

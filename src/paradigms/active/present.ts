@@ -330,7 +330,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [, c2, c3] = letters
   const lastRoot = last(letters)
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(lastRoot)
   const isFinalHamza = isHamzatedLetter(lastRoot)
@@ -382,20 +381,18 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isMiddleWeak && isFinalHamza)
         return replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON)
 
-      const stem =
-        [1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !isConsonantalMiddleWeak && !isFinalWeak
-          ? shortenHollowStem(word)
-          : word
+      if (isFinalWeak) return dropFinalDefectiveGlide(word)
 
-      if (isFinalWeak) return dropFinalDefectiveGlide(stem)
+      if ([1, 3, 4, 10].includes(verb.form) && isGeminate) return replaceFinalDiacritic(word, FATHA)
 
-      if (isGeminate && [1, 3, 4, 10].includes(verb.form)) return replaceFinalDiacritic(stem, FATHA)
+      if (verb.form === 9) return replaceFinalDiacritic(word, FATHA)
 
-      if (verb.form === 9) return replaceFinalDiacritic(stem, FATHA)
+      if (isFemininePlural(pronounId)) return replaceFinalDiacritic(word, FATHA)
 
-      if (isFemininePlural(pronounId)) return replaceFinalDiacritic(stem, FATHA)
+      if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
+        return replaceFinalDiacritic(shortenHollowStem(word), SUKOON)
 
-      return replaceFinalDiacritic(stem, SUKOON)
+      return replaceFinalDiacritic(word, SUKOON)
     }),
     (letters) => letters.join('').normalize('NFC'),
   )
@@ -645,7 +642,7 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
     // then preserve everything up to and including it, and add NOON + FATHA.
     const stem = removeTrailingDiacritics(word)
     const weakLetterIndex = findLastLetterIndex(stem, stem.length - 1)
-    if (isWeakLetter(stem.at(weakLetterIndex))) return [...stem.slice(0, weakLetterIndex + 1), NOON, FATHA]
+    return [...stem.slice(0, weakLetterIndex + 1), NOON, FATHA]
   }
 
   return removeTrailingDiacritics(word).slice(0, -1)
