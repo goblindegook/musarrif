@@ -1190,8 +1190,20 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'آخَذَ'],
+        ['أجر', 'آجَرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
-      test.each([['وأم', 'وَاءَمَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وأم', 'وَاءَمَ'],
+        ['لأم', 'لَاءَمَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
 
@@ -1211,6 +1223,12 @@ describe('active past', () => {
           '3mp': 'سَاءَلُوْا',
           '3fp': 'سَاءَلْنَ',
         })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'فَاجَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
   })

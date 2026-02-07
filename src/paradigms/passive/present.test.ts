@@ -844,7 +844,20 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'يُؤَاخَذُ'],
+        ['أجر', 'يُؤَاجَرُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
+      test.each([['لأم', 'يُلَاءَمُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('وَاءَمَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وأم', 3), 'indicative')).toEqualT({
           '1s': 'أُوَاءَمُ',
@@ -861,6 +874,12 @@ describe('passive present indicative', () => {
           '3mp': 'يُوَاءَمُوْنَ',
           '3fp': 'يُوَاءَمْنَ',
         })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'يُفَاجَأُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
     })
 

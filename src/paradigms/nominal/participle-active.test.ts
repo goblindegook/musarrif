@@ -404,11 +404,27 @@ describe('active participle', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'مُؤَاخِذ'],
+        ['أجر', 'مُؤَاجِر'],
+      ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test.each([
         ['سأل', 'مُسَائِل'],
         ['وأم', 'مُوَائِم'],
+        ['لأم', 'مُلَائِم'],
       ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'مُفَاجِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toBe(expected)
       })
     })

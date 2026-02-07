@@ -13,6 +13,7 @@ import {
   KASRA,
   last,
   NOON,
+  normalizeAlifMadda,
   removeLeadingDiacritics,
   SHADDA,
   SUKOON,
@@ -119,8 +120,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (c3 === WAW && last(stem) === ALIF) return stem
 
-          // If stem starts with two consonants (consonant + sukoon), add helping vowel prefix
-          // The vowel depends on the present tense vowel: 'u' (damma) → اُ, 'i'/'a' → اِ
           if (stem.at(1) === SUKOON) return [ALIF, isFormIPresentVowel(verb, 'u') ? DAMMA : KASRA, ...stem]
 
           return stem
@@ -128,25 +127,25 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         case 2: {
           if (isInitialHamza) return [ALIF_HAMZA, ...stem.slice(1)]
-
-          if (!isMiddleWeak && isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
-
+          if (isMiddleWeak) return stem
+          if (isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 3: {
-          // Form III defective verbs preserve final weak letter in dual forms
+          if (isInitialHamza) return normalizeAlifMadda([ALIF_HAMZA, ...stem.slice(1)])
           if (isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 4: {
           if (isInitialHamza && isFinalWeak) {
-            if (pronounId === '2ms') return [ALIF_MADDA, c2, KASRA]
-            if (pronounId === '2fs') return [ALIF_MADDA, c2, KASRA, YEH]
-            if (pronounId === '2d') return [ALIF_MADDA, c2, KASRA, YEH, FATHA, ALIF]
-            if (pronounId === '2mp') return [ALIF_MADDA, c2, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [ALIF_MADDA, c2, KASRA, YEH, NOON, FATHA]
+            const prefix = [ALIF_MADDA, c2]
+            if (pronounId === '2ms') return [...prefix, KASRA]
+            if (pronounId === '2fs') return [...prefix, KASRA, YEH]
+            if (pronounId === '2d') return [...prefix, KASRA, YEH, FATHA, ALIF]
+            if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
+            if (pronounId === '2fp') return [...prefix, KASRA, YEH, NOON, FATHA]
           }
 
           if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]

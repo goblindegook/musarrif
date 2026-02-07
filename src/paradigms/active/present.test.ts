@@ -1231,8 +1231,56 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'يُؤَاخِذُ'],
+        ['أجر', 'يُؤَاجِرُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('آخَذَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أخذ', 3), 'indicative')).toEqualT({
+          '1s': 'أُؤَاخِذُ',
+          '2ms': 'تُؤَاخِذُ',
+          '2fs': 'تُؤَاخِذِيْنَ',
+          '3ms': 'يُؤَاخِذُ',
+          '3fs': 'تُؤَاخِذُ',
+          '2d': 'تُؤَاخِذَانِ',
+          '3md': 'يُؤَاخِذَانِ',
+          '3fd': 'تُؤَاخِذَانِ',
+          '1p': 'نُؤَاخِذُ',
+          '2mp': 'تُؤَاخِذُونَ',
+          '2fp': 'تُؤَاخِذْنَ',
+          '3mp': 'يُؤَاخِذُونَ',
+          '3fp': 'يُؤَاخِذْنَ',
+        })
+      })
+
+      test('آجَرَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أجر', 3), 'indicative')).toEqualT({
+          '1s': 'أُؤَاجِرُ',
+          '2ms': 'تُؤَاجِرُ',
+          '2fs': 'تُؤَاجِرِيْنَ',
+          '3ms': 'يُؤَاجِرُ',
+          '3fs': 'تُؤَاجِرُ',
+          '2d': 'تُؤَاجِرَانِ',
+          '3md': 'يُؤَاجِرَانِ',
+          '3fd': 'تُؤَاجِرَانِ',
+          '1p': 'نُؤَاجِرُ',
+          '2mp': 'تُؤَاجِرُونَ',
+          '2fp': 'تُؤَاجِرْنَ',
+          '3mp': 'يُؤَاجِرُونَ',
+          '3fp': 'يُؤَاجِرْنَ',
+        })
+      })
+    })
+
     describe('hamzated middle roots', () => {
-      test.each([['وأم', 'يُوَائِمُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وأم', 'يُوَائِمُ'],
+        ['لأم', 'يُلَائِمُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
 
@@ -1251,6 +1299,30 @@ describe('active present indicative', () => {
           '2fp': 'تُسَائِلْنَ',
           '3mp': 'يُسَائِلُونَ',
           '3fp': 'يُسَائِلْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'يُفَاجِئُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('فَاجَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('فجأ', 3), 'indicative')).toEqualT({
+          '1s': 'أُفَاجِئُ',
+          '2ms': 'تُفَاجِئُ',
+          '2fs': 'تُفَاجِئِيْنَ',
+          '3ms': 'يُفَاجِئُ',
+          '3fs': 'تُفَاجِئُ',
+          '2d': 'تُفَاجِئَانِ',
+          '3md': 'يُفَاجِئَانِ',
+          '3fd': 'تُفَاجِئَانِ',
+          '1p': 'نُفَاجِئُ',
+          '2mp': 'تُفَاجِئُونَ',
+          '2fp': 'تُفَاجِئْنَ',
+          '3mp': 'يُفَاجِئُونَ',
+          '3fp': 'يُفَاجِئْنَ',
         })
       })
     })

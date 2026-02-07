@@ -83,13 +83,15 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
       case 3: {
         // Defective Form III active participle: drop final weak and use tanween kasra (e.g., وفي → مُوَافٍ)
+        const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
         const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
+        const seatedC3 = isFinalHamza ? HAMZA_ON_YEH : c3
 
-        if (isFinalWeak) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, TANWEEN_KASRA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, TANWEEN_KASRA]
 
-        if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA]
+        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, SHADDA]
 
-        return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3]
+        return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, seatedC3]
       }
 
       case 4: {

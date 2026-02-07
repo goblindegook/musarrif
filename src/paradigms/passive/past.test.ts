@@ -754,8 +754,26 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'أُوخِذَ'],
+        ['أجر', 'أُوجِرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
-      test.each([['وأم', 'وُوئِمَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وأم', 'وُوئِمَ'],
+        ['لأم', 'لُوئِمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'فُوجِئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })

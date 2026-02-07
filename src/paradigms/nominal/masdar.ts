@@ -143,13 +143,14 @@ function deriveMasdarFormII(verb: Verb): readonly string[] {
 
 function deriveMasdarFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
 
-  if (c2 === c3) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA, FATHA, TEH_MARBUTA]
+  if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, SHADDA, FATHA, TEH_MARBUTA]
 
-  if (c3 === YEH) return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
+  if (c3 === YEH) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, FATHA, ALIF, TEH_MARBUTA]
 
-  return [MEEM, DAMMA, c1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
+  return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
 }
 
 function deriveMasdarFormIV(verb: Verb): readonly string[] {

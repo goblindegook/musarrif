@@ -767,9 +767,81 @@ describe('active present subjunctive', () => {
       })
     })
 
-    describe('hamzated middle roots', () => {
-      test.each([['وأم', 'يُوَائِمَ']])('%s pattern', (root, expected) => {
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخذ', 'يُؤَاخِذَ'],
+        ['أجر', 'يُؤَاجِرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('آخَذَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أخذ', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُؤَاخِذَ',
+          '2ms': 'تُؤَاخِذَ',
+          '2fs': 'تُؤَاخِذِي',
+          '3ms': 'يُؤَاخِذَ',
+          '3fs': 'تُؤَاخِذَ',
+          '2d': 'تُؤَاخِذَا',
+          '3md': 'يُؤَاخِذَا',
+          '3fd': 'تُؤَاخِذَا',
+          '1p': 'نُؤَاخِذَ',
+          '2mp': 'تُؤَاخِذُوْا',
+          '2fp': 'تُؤَاخِذْنَ',
+          '3mp': 'يُؤَاخِذُوْا',
+          '3fp': 'يُؤَاخِذْنَ',
+        })
+      })
+
+      test('آجَرَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أجر', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُؤَاجِرَ',
+          '2ms': 'تُؤَاجِرَ',
+          '2fs': 'تُؤَاجِرِي',
+          '3ms': 'يُؤَاجِرَ',
+          '3fs': 'تُؤَاجِرَ',
+          '2d': 'تُؤَاجِرَا',
+          '3md': 'يُؤَاجِرَا',
+          '3fd': 'تُؤَاجِرَا',
+          '1p': 'نُؤَاجِرَ',
+          '2mp': 'تُؤَاجِرُوْا',
+          '2fp': 'تُؤَاجِرْنَ',
+          '3mp': 'يُؤَاجِرُوْا',
+          '3fp': 'يُؤَاجِرْنَ',
+        })
+      })
+    })
+
+    describe('hamzated middle roots', () => {
+      test.each([
+        ['وأم', 'يُوَائِمَ'],
+        ['لأم', 'يُلَائِمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['فجأ', 'يُفَاجِئَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('فَاجَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('فجأ', 3), 'subjunctive')).toEqualT({
+          '1s': 'أُفَاجِئَ',
+          '2ms': 'تُفَاجِئَ',
+          '2fs': 'تُفَاجِئِي',
+          '3ms': 'يُفَاجِئَ',
+          '3fs': 'تُفَاجِئَ',
+          '2d': 'تُفَاجِئَا',
+          '3md': 'يُفَاجِئَا',
+          '3fd': 'تُفَاجِئَا',
+          '1p': 'نُفَاجِئَ',
+          '2mp': 'تُفَاجِئُوْا',
+          '2fp': 'تُفَاجِئْنَ',
+          '3mp': 'يُفَاجِئُوْا',
+          '3fp': 'يُفَاجِئْنَ',
+        })
       })
     })
   })

@@ -489,10 +489,12 @@ function derivePresentFormII(verb: Verb): readonly string[] {
 
 function derivePresentFormIII(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
-  if (c2 === c3) return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, SHADDA, DAMMA]
-  if (isWeakLetter(c3)) return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, defectiveGlide(c3)]
-  return [YEH, DAMMA, c1, FATHA, ALIF, seatedC2, KASRA, c3, DAMMA]
+  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+  if (c2 === c3) return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, SHADDA, DAMMA]
+  if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, defectiveGlide(c3)]
+  return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, seatedC3, DAMMA]
 }
 
 function derivePresentFormIV(verb: Verb): readonly string[] {
