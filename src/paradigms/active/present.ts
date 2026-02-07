@@ -599,6 +599,7 @@ function derivePresentForms(verb: Verb): readonly string[] {
 }
 
 function shortenHollowStem(word: readonly string[]): readonly string[] {
+  // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
   const hollowLetterIndex = findWeakLetterIndex(word, 0)
   if (hollowLetterIndex < 0) return word
   const nextLetterIndex = findLetterIndex(word, hollowLetterIndex)

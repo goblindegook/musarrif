@@ -469,11 +469,15 @@ describe('masdar', () => {
   describe('Form IV', () => {
     describe('regular roots', () => {
       test.each([
+        ['كثر', 'إِكْثَار'],
+        ['علم', 'إِعْلَام'],
+        ['لحق', 'إِلْحَاق'],
         ['مكن', 'إِمْكَان'],
         ['صبح', 'إِصْبَاح'],
         ['فعل', 'إِفْعَال'],
         ['فلت', 'إِفْلَات'],
         ['كتب', 'إِكْتَاب'],
+        ['عرب', 'إِعْرَاب'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })

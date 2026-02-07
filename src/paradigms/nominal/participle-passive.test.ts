@@ -414,10 +414,14 @@ describe('passive participle', () => {
   describe('Form IV', () => {
     describe('regular roots', () => {
       test.each([
+        ['كثر', 'مُكْثَر'],
+        ['علم', 'مُعْلَم'],
+        ['لحق', 'مُلْحَق'],
         ['فلت', 'مُفْلَت'],
         ['مكن', 'مُمْكَن'],
         ['صبح', 'مُصْبَح'],
         ['كتب', 'مُكْتَب'],
+        ['عرب', 'مُعْرَب'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toBe(expected)
       })

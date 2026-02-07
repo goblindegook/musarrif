@@ -939,6 +939,98 @@ describe('passive present jussive', () => {
   })
 
   describe('Form IV', () => {
+    describe('regular roots', () => {
+      test('أَكْثَرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('كثر', 4), 'jussive')).toEqualT({
+          '1s': 'أُكْثَرْ',
+          '2ms': 'تُكْثَرْ',
+          '2fs': 'تُكْثَرِي',
+          '3ms': 'يُكْثَرْ',
+          '3fs': 'تُكْثَرْ',
+          '2d': 'تُكْثَرَا',
+          '3md': 'يُكْثَرَا',
+          '3fd': 'تُكْثَرَا',
+          '1p': 'نُكْثَرْ',
+          '2mp': 'تُكْثَرُوْا',
+          '2fp': 'تُكْثَرْنَ',
+          '3mp': 'يُكْثَرُوْا',
+          '3fp': 'يُكْثَرْنَ',
+        })
+      })
+
+      test('أَعْلَمَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('علم', 4), 'jussive')).toEqualT({
+          '1s': 'أُعْلَمْ',
+          '2ms': 'تُعْلَمْ',
+          '2fs': 'تُعْلَمِي',
+          '3ms': 'يُعْلَمْ',
+          '3fs': 'تُعْلَمْ',
+          '2d': 'تُعْلَمَا',
+          '3md': 'يُعْلَمَا',
+          '3fd': 'تُعْلَمَا',
+          '1p': 'نُعْلَمْ',
+          '2mp': 'تُعْلَمُوْا',
+          '2fp': 'تُعْلَمْنَ',
+          '3mp': 'يُعْلَمُوْا',
+          '3fp': 'يُعْلَمْنَ',
+        })
+      })
+
+      test('أَلْحَقَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('لحق', 4), 'jussive')).toEqualT({
+          '1s': 'أُلْحَقْ',
+          '2ms': 'تُلْحَقْ',
+          '2fs': 'تُلْحَقِي',
+          '3ms': 'يُلْحَقْ',
+          '3fs': 'تُلْحَقْ',
+          '2d': 'تُلْحَقَا',
+          '3md': 'يُلْحَقَا',
+          '3fd': 'تُلْحَقَا',
+          '1p': 'نُلْحَقْ',
+          '2mp': 'تُلْحَقُوْا',
+          '2fp': 'تُلْحَقْنَ',
+          '3mp': 'يُلْحَقُوْا',
+          '3fp': 'يُلْحَقْنَ',
+        })
+      })
+
+      test('أَصْبَحَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('صبح', 4), 'jussive')).toEqualT({
+          '1s': 'أُصْبَحْ',
+          '2ms': 'تُصْبَحْ',
+          '2fs': 'تُصْبَحِي',
+          '3ms': 'يُصْبَحْ',
+          '3fs': 'تُصْبَحْ',
+          '2d': 'تُصْبَحَا',
+          '3md': 'يُصْبَحَا',
+          '3fd': 'تُصْبَحَا',
+          '1p': 'نُصْبَحْ',
+          '2mp': 'تُصْبَحُوْا',
+          '2fp': 'تُصْبَحْنَ',
+          '3mp': 'يُصْبَحُوْا',
+          '3fp': 'يُصْبَحْنَ',
+        })
+      })
+
+      test('أَعْرَبَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('عرب', 4), 'jussive')).toEqualT({
+          '1s': 'أُعْرَبْ',
+          '2ms': 'تُعْرَبْ',
+          '2fs': 'تُعْرَبِي',
+          '3ms': 'يُعْرَبْ',
+          '3fs': 'تُعْرَبْ',
+          '2d': 'تُعْرَبَا',
+          '3md': 'يُعْرَبَا',
+          '3fd': 'تُعْرَبَا',
+          '1p': 'نُعْرَبْ',
+          '2mp': 'تُعْرَبُوْا',
+          '2fp': 'تُعْرَبْنَ',
+          '3mp': 'يُعْرَبُوْا',
+          '3fp': 'يُعْرَبْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'jussive')).toEqualT({

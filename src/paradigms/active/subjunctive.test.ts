@@ -847,6 +847,18 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form IV', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['كثر', 'يُكْثِرَ'],
+        ['علم', 'يُعْلِمَ'],
+        ['لحق', 'يُلْحِقَ'],
+        ['صبح', 'يُصْبِحَ'],
+        ['عرب', 'يُعْرِبَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test.each([['أتي', 'يُؤْتِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)

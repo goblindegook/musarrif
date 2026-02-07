@@ -1236,8 +1236,12 @@ describe('active past', () => {
   describe('Form IV', () => {
     describe('regular roots', () => {
       test.each([
+        ['كثر', 'أَكْثَرَ'],
+        ['علم', 'أَعْلَمَ'],
+        ['لحق', 'أَلْحَقَ'],
         ['مكن', 'أَمْكَنَ'],
         ['صبح', 'أَصْبَحَ'],
+        ['عرب', 'أَعْرَبَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })

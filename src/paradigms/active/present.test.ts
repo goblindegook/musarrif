@@ -1331,9 +1331,13 @@ describe('active present indicative', () => {
   describe('Form IV', () => {
     describe('regular roots', () => {
       test.each([
+        ['كثر', 'يُكْثِرُ'],
+        ['علم', 'يُعْلِمُ'],
+        ['لحق', 'يُلْحِقُ'],
         ['صبح', 'يُصْبِحُ'],
         ['مكن', 'يُمْكِنُ'],
         ['فلت', 'يُفْلِتُ'],
+        ['عرب', 'يُعْرِبُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })

@@ -136,12 +136,33 @@ function derivePassivePastFormIII(verb: Verb): PassivePastParams {
 }
 
 function derivePassivePastFormIV(verb: Verb): PassivePastParams {
-  const [, c2] = [...verb.root]
+  const [c1, c2, c3] = [...verb.root]
+  const isInitialHamza = isHamzatedLetter(c1)
+  const isFinalWeak = isWeakLetter(c3)
+  const seatedC1 = seatHamza(c1, DAMMA)
+  const seatedC3 = seatHamza(c3, KASRA)
+
+  if (isInitialHamza)
+    return {
+      prefix: [ALIF_HAMZA, DAMMA, WAW, c2],
+      suffix: [KASRA, YEH],
+      suffix3sd: [KASRA, YEH, FATHA],
+      suffix3pm: [DAMMA, WAW, ALIF],
+    }
+
+  if (isFinalWeak)
+    return {
+      prefix: [ALIF_HAMZA, DAMMA, seatedC1, c2],
+      suffix: [KASRA, YEH],
+      suffix3sd: [KASRA, YEH, FATHA],
+      suffix3pm: [DAMMA, WAW, ALIF],
+    }
+
   return {
-    prefix: [ALIF_HAMZA, DAMMA, WAW, c2],
-    suffix: [KASRA, YEH],
-    suffix3sd: [KASRA, YEH, FATHA],
-    suffix3pm: [DAMMA, WAW, ALIF],
+    prefix: [ALIF_HAMZA, DAMMA, seatedC1, SUKOON, c2, KASRA],
+    suffix: [seatedC3, SUKOON],
+    suffix3sd: [seatedC3, FATHA],
+    suffix3pm: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

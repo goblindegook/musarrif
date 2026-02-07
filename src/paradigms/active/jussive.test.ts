@@ -986,6 +986,18 @@ describe('active present jussive', () => {
   })
 
   describe('Form IV', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['كثر', 'يُكْثِرْ'],
+        ['علم', 'يُعْلِمْ'],
+        ['لحق', 'يُلْحِقْ'],
+        ['صبح', 'يُصْبِحْ'],
+        ['عرب', 'يُعْرِبْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test('أَحَبَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('حبب', 4), 'jussive')).toEqualT({

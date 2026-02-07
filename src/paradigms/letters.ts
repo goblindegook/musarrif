@@ -104,6 +104,7 @@ export function removeTrailingDiacritics(chars: readonly string[]): readonly str
   return result
 }
 
+// FIXME: Do not take the diacritic, instead append it to the result of this function
 export function replaceFinalDiacritic(word: readonly string[], diacritic: Vowel | Sukoon): readonly string[] {
   const lastLetterIndex = findLastLetterIndex(word)
   const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
