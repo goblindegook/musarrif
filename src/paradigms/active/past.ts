@@ -16,8 +16,7 @@ import {
   MEEM,
   NOON,
   normalizeAlifMadda,
-  removeTrailingDiacritics,
-  replaceFinalDiacritic,
+  removeFinalDiacritic,
   SEEN,
   SHADDA,
   SUKOON,
@@ -53,9 +52,9 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const forms = derivePastForms(verb)
   const isDefective = 'defectiveGlide' in forms
   const stem = isDefective ? forms.suffixedBase.slice(0, -2) : null
-  const suffixedBase = forms.suffixedBase ?? replaceFinalDiacritic(forms.base, SUKOON)
+  const suffixedBase = forms.suffixedBase ?? [...removeFinalDiacritic(forms.base), SUKOON]
   const firstSuffixChar = forms.suffixedBase?.at(-2) ?? ''
-  const pluralBase = forms.pluralBase ?? [...replaceFinalDiacritic(forms.base, DAMMA), WAW]
+  const pluralBase = forms.pluralBase ?? [...removeFinalDiacritic(forms.base), DAMMA, WAW]
 
   const [, c2, c3] = [...verb.root]
 
@@ -74,7 +73,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
       '3mp':
         isWeakLetter(c2) && isHamzatedLetter(c3)
-          ? [...removeTrailingDiacritics(forms.base), DAMMA, WAW, SUKOON, ALIF].map((char) =>
+          ? [...removeFinalDiacritic(forms.base), DAMMA, WAW, SUKOON, ALIF].map((char) =>
               char === HAMZA ? HAMZA_ON_WAW : char,
             )
           : [...pluralBase, SUKOON, ALIF],
@@ -86,7 +85,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 
 function buildForms(base: readonly string[], c3: string): PastBaseForms {
   if (!isWeakLetter(c3)) return { base }
-  const normalizedBase = [...removeTrailingDiacritics(base).slice(0, -1), defectiveTail(c3)]
+  const normalizedBase = [...removeFinalDiacritic(base).slice(0, -1), defectiveTail(c3)]
   const glide = c3 === ALIF ? WAW : YEH
   return {
     base: normalizedBase,
@@ -142,7 +141,7 @@ function derivePastFormI(verb: Verb): PastBaseForms {
     return {
       base: normalizeAlifMadda(base),
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      pluralBase: [...replaceFinalDiacritic(normalizeAlifMadda(base), DAMMA), WAW],
+      pluralBase: [...removeFinalDiacritic(normalizeAlifMadda(base)), DAMMA, WAW],
     }
 
   return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedC3, FATHA], seatedC3)

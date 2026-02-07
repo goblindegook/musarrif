@@ -22,8 +22,7 @@ import {
   longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
-  removeTrailingDiacritics,
-  replaceFinalDiacritic,
+  removeFinalDiacritic,
   SEEN,
   SHADDA,
   SUKOON,
@@ -84,20 +83,20 @@ function buildFemininePlural(expanded: readonly string[], verb: Verb): readonly 
   if (verb.form === 3 && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
   if (verb.form === 4 && c2 === c3) return [expanded[0], DAMMA, c1, SUKOON, c2, KASRA, c3, SUKOON, NOON, FATHA]
   if (verb.form === 5 && c3 === YEH) return [...expanded.slice(0, -1), YEH, SUKOON, NOON, FATHA]
-  if (verb.form === 6) return [...replaceFinalDiacritic(expandShadda(expanded), SUKOON), NOON, FATHA]
+  if (verb.form === 6) return [...removeFinalDiacritic(expandShadda(expanded)), SUKOON, NOON, FATHA]
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
 
   if (verb.form !== 7 && !isWeakLetter(c1) && isWeakLetter(c3)) return [...expanded, NOON, FATHA]
 
   if (!isConsonantalMiddleWeak && isWeakLetter(c2) && isHamzatedLetter(c3))
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded)), SUKOON), NOON, FATHA]
+    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(expanded))), SUKOON, NOON, FATHA]
 
   if (!isConsonantalMiddleWeak && isWeakLetter(c2) && ![2, 3, 5].includes(verb.form)) {
-    return [...replaceFinalDiacritic(shortenHollowStem(expanded), SUKOON), NOON, FATHA]
+    return [...removeFinalDiacritic(shortenHollowStem(expanded)), SUKOON, NOON, FATHA]
   }
 
-  return [...replaceFinalDiacritic(expanded, SUKOON), NOON, FATHA]
+  return [...removeFinalDiacritic(expanded), SUKOON, NOON, FATHA]
 }
 
 function buildDualPresent(word: readonly string[], verb: Verb, formIPrefix: string): readonly string[] {
@@ -111,23 +110,24 @@ function buildDualPresent(word: readonly string[], verb: Verb, formIPrefix: stri
     const hamzaSeat = c2 === YEH ? HAMZA_ON_YEH : HAMZA
     const lastIndex = findLastLetterIndex(word)
     return [
-      ...replaceFinalDiacritic([...word.slice(0, lastIndex), hamzaSeat, ...word.slice(lastIndex + 1)], FATHA),
+      ...removeFinalDiacritic([...word.slice(0, lastIndex), hamzaSeat, ...word.slice(lastIndex + 1)]),
+      FATHA,
       ...suffix,
     ]
   }
 
-  if (isHamzatedLetter(c3)) return normalizeAlifMadda([...removeTrailingDiacritics(word), FATHA, ...suffix])
+  if (isHamzatedLetter(c3)) return normalizeAlifMadda([...removeFinalDiacritic(word), FATHA, ...suffix])
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
-  if (verb.form === 2 && isWeakLetter(c3)) return [...removeTrailingDiacritics(word), FATHA, ...suffix]
-  if (verb.form === 3 && isWeakLetter(c3)) return [...removeTrailingDiacritics(word), FATHA, ...suffix]
+  if (verb.form === 2 && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
+  if (verb.form === 3 && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
   if (verb.form === 5 && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
 
   // Defective verbs (not doubly weak) preserve final weak letter in dual forms
-  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...removeTrailingDiacritics(word), FATHA, ...suffix]
+  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
 
-  return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(word, FATHA), FATHA), ...suffix]
+  return [...removeFinalDiacritic(dropTerminalWeakOrHamza(word, FATHA)), FATHA, ...suffix]
 }
 
 const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) => readonly string[]> = {
@@ -141,21 +141,21 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isFormIFinalWeakPresent(verb, 'a')) return [...buildFormIFinalWeakPresentAStem(TEH, verb), ...suffix]
 
     if (isFormIFinalWeakPresent(verb, 'u'))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem), KASRA), ...suffix]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem)), KASRA, ...suffix]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
     if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), ...suffix]
 
-    if (verb.form === 7 && isWeakLetter(c3)) return [...replaceFinalDiacritic(stem, SUKOON), NOON, FATHA]
+    if (verb.form === 7 && isWeakLetter(c3)) return [...removeFinalDiacritic(stem), SUKOON, NOON, FATHA]
 
-    if (verb.form === 3 && c2 === c3) return [...replaceFinalDiacritic(stem, KASRA), YEH, NOON, FATHA]
+    if (verb.form === 3 && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, NOON, FATHA]
 
     if (verb.form === 3 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
     if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
-    return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA), KASRA), ...suffix]
+    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA)), KASRA, ...suffix]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
@@ -173,17 +173,17 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
       const lastIndex = findLastLetterIndex(stem)
       const hamzaStem = [...stem.slice(0, lastIndex), HAMZA_ON_YEH, ...stem.slice(lastIndex + 1)]
-      return [...replaceFinalDiacritic(hamzaStem, DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(hamzaStem), DAMMA, WAW, NOON, FATHA]
     }
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...stem, WAW, NOON, FATHA]
 
-    if (c2 === YEH && c3 === YEH) return [...replaceFinalDiacritic(stem, DAMMA), WAW, NOON, FATHA]
+    if (c2 === YEH && c3 === YEH) return [...removeFinalDiacritic(stem), DAMMA, WAW, NOON, FATHA]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(stem, DAMMA), WAW, NOON, FATHA]
 
     if (verb.form === 3 && isWeakLetter(c3))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA)), DAMMA, WAW, NOON, FATHA]
 
     if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), WAW, SUKOON, NOON, FATHA]
 
@@ -191,12 +191,12 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
       const hamzatedStem = stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(hamzatedStem, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(hamzatedStem, DAMMA)), DAMMA, WAW, NOON, FATHA]
     }
 
     // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
     if (isWeakLetter(c3) && !isWeakLetter(c1))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA)), DAMMA, WAW, NOON, FATHA]
 
     return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, NOON, FATHA]
   },
@@ -224,17 +224,17 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
     if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
       const lastIndex = findLastLetterIndex(base)
       const hamzaBase = [...base.slice(0, lastIndex), HAMZA_ON_YEH, ...base.slice(lastIndex + 1)]
-      return [...replaceFinalDiacritic(hamzaBase, DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(hamzaBase), DAMMA, WAW, NOON, FATHA]
     }
 
     if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...base, WAW, NOON, FATHA]
 
-    if (c2 === YEH) return [...replaceFinalDiacritic(base, DAMMA), WAW, NOON, FATHA]
+    if (c2 === YEH) return [...removeFinalDiacritic(base), DAMMA, WAW, NOON, FATHA]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(base, DAMMA), WAW, NOON, FATHA]
 
     if (verb.form === 3 && isWeakLetter(c3))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA)), DAMMA, WAW, NOON, FATHA]
 
     if (verb.form === 5 && c3 === YEH) return [...base.slice(0, -1), ...suffix]
 
@@ -242,12 +242,12 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
       const hamzatedBase = base.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(hamzatedBase, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(hamzatedBase, DAMMA)), DAMMA, WAW, NOON, FATHA]
     }
 
     // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
     if (isWeakLetter(c3) && !isWeakLetter(c1))
-      return [...replaceFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA), DAMMA), WAW, NOON, FATHA]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(base, DAMMA)), DAMMA, WAW, NOON, FATHA]
 
     return [...dropTerminalWeakOrHamza(base, DAMMA), WAW, NOON, FATHA]
   },
@@ -284,7 +284,7 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
 }
 
 function replaceDammaBeforeWawAlif(word: readonly string[]): readonly string[] {
-  return [...replaceFinalDiacritic(word.slice(0, -1), DAMMA), WAW, SUKOON, ALIF]
+  return [...removeFinalDiacritic(word.slice(0, -1)), DAMMA, WAW, SUKOON, ALIF]
 }
 
 function replaceDammaBeforeFinalWaw(word: readonly string[]): readonly string[] {
@@ -292,7 +292,7 @@ function replaceDammaBeforeFinalWaw(word: readonly string[]): readonly string[] 
 }
 
 function replaceFathaBeforeFinalWawAlif(word: readonly string[]): readonly string[] {
-  return [...replaceFinalDiacritic(word.slice(0, word.length - 1), FATHA), WAW, SUKOON, ALIF]
+  return [...removeFinalDiacritic(word.slice(0, word.length - 1)), FATHA, WAW, SUKOON, ALIF]
 }
 
 function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[] {
@@ -312,7 +312,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       if (isDual(pronounId)) return dropNoonEnding(normalizeAlifMadda(word))
 
       if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
-        if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
+        if (isSecondFeminineSingular) return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
         if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         return word
       }
@@ -320,7 +320,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       if (isSecondFeminineSingular) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
       if (isMasculinePlural(pronounId)) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
 
-      return replaceFinalDiacritic(word, FATHA)
+      return [...removeFinalDiacritic(word), FATHA]
     }),
     (letters) => letters.join('').normalize('NFC'),
   )
@@ -351,7 +351,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       }
 
       if (isFormIFinalWeakPresent(verb, 'a')) {
-        if (isSecondFeminineSingular) return replaceFinalDiacritic(dropNoonEnding(word), SUKOON)
+        if (isSecondFeminineSingular) return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
         if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         if (isFemininePlural(pronounId)) return word
       }
@@ -379,20 +379,20 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isFinalHamza && isFemininePlural(pronounId)) return word
 
       if (isMiddleWeak && isFinalHamza)
-        return replaceFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON)
+        return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word))), SUKOON]
 
       if (isFinalWeak) return dropFinalDefectiveGlide(word)
 
-      if ([1, 3, 4, 10].includes(verb.form) && isGeminate) return replaceFinalDiacritic(word, FATHA)
+      if ([1, 3, 4, 10].includes(verb.form) && isGeminate) return [...removeFinalDiacritic(word), FATHA]
 
-      if (verb.form === 9) return replaceFinalDiacritic(word, FATHA)
+      if (verb.form === 9) return [...removeFinalDiacritic(word), FATHA]
 
-      if (isFemininePlural(pronounId)) return replaceFinalDiacritic(word, FATHA)
+      if (isFemininePlural(pronounId)) return [...removeFinalDiacritic(word), FATHA]
 
       if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
-        return replaceFinalDiacritic(shortenHollowStem(word), SUKOON)
+        return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
-      return replaceFinalDiacritic(word, SUKOON)
+      return [...removeFinalDiacritic(word), SUKOON]
     }),
     (letters) => letters.join('').normalize('NFC'),
   )
@@ -630,7 +630,7 @@ function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): r
     ]
   }
 
-  if (isWeakLetter(last)) return removeTrailingDiacritics(word.slice(0, lastLetterIndex))
+  if (isWeakLetter(last)) return removeFinalDiacritic(word.slice(0, lastLetterIndex))
 
   return word
 }
@@ -641,12 +641,12 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
     // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
     // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
     // then preserve everything up to and including it, and add NOON + FATHA.
-    const stem = removeTrailingDiacritics(word)
+    const stem = removeFinalDiacritic(word)
     const weakLetterIndex = findLastLetterIndex(stem, stem.length - 1)
     return [...stem.slice(0, weakLetterIndex + 1), NOON, FATHA]
   }
 
-  return removeTrailingDiacritics(word).slice(0, -1)
+  return removeFinalDiacritic(word).slice(0, -1)
 }
 
 function applyPresentPrefix(chars: readonly string[], prefix: string): readonly string[] {

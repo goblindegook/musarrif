@@ -98,18 +98,10 @@ export function removeLeadingDiacritics(chars: readonly string[]): readonly stri
   return result
 }
 
-export function removeTrailingDiacritics(chars: readonly string[]): readonly string[] {
-  const result = [...chars]
-  while (isDiacritic(last(result))) result.pop()
-  return result
-}
-
-// FIXME: Do not take the diacritic, instead append it to the result of this function
-export function replaceFinalDiacritic(word: readonly string[], diacritic: Vowel | Sukoon): readonly string[] {
-  const lastLetterIndex = findLastLetterIndex(word)
-  const shaddaIndex = word.findIndex((char, i) => i > lastLetterIndex && char === SHADDA)
-  if (shaddaIndex >= 0) return [...word.slice(0, lastLetterIndex + 1), SHADDA, diacritic]
-  return [...removeTrailingDiacritics(word), diacritic]
+export function removeFinalDiacritic(word: readonly string[]): readonly string[] {
+  const lastIndex = findLastLetterIndex(word)
+  const base = word.slice(0, lastIndex + 1)
+  return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
 }
 
 export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
