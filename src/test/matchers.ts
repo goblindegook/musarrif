@@ -7,7 +7,12 @@ export const matchers = {
   toMatchObjectT(this: MatcherState, received: unknown, expected: unknown) {
     const pass = this.equals(received, expected, [this.utils.iterableEquality, this.utils.subsetEquality])
 
-    if (pass) return { pass }
+    if (pass) {
+      return {
+        pass,
+        message: () => '',
+      }
+    }
 
     const originalDiff = this.utils.diff?.(expected, received, { expand: this.expand })
     const transliteratedDiff = diff(transliterateValue(expected), transliterateValue(received), { expand: this.expand })
@@ -22,7 +27,12 @@ export const matchers = {
   toEqualT(this: MatcherState, received: unknown, expected: unknown) {
     const pass = this.equals(received, expected, [this.utils.iterableEquality])
 
-    if (pass) return { pass }
+    if (pass) {
+      return {
+        pass,
+        message: () => '',
+      }
+    }
 
     const originalDiff = this.utils.diff?.(expected, received, { expand: this.expand })
     const transliteratedDiff = diff(transliterateValue(expected), transliterateValue(received), { expand: this.expand })
