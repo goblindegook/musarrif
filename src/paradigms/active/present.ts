@@ -569,9 +569,7 @@ function derivePresentForms(verb: Verb): readonly string[] {
   if (letters.length < 3) throw new Error('Root must have at least 3 letters.')
 
   // Handle quadriliteral and longer roots
-  if (letters.length === 4) {
-    return deriveQuadriliteralPresentForms(verb)
-  }
+  if (letters.length === 4) return deriveQuadriliteralPresentForms(verb)
 
   // Triliteral roots (3 letters)
   switch (verb.form) {

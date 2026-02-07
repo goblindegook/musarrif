@@ -51,6 +51,18 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['قوم', 'يُقَاوَمْ'],
+        ['عود', 'يُعَاوَدْ'],
+        ['جوز', 'يُجَاوَزْ'],
+        ['نول', 'يُنَاوَلْ'],
+        ['ضيق', 'يُضَايَقْ'],
+      ])('jussive pattern for %s conjugation', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['أدد', 'يُؤَدَّ'],

@@ -756,6 +756,18 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['قوم', 'يُقَاوَمُ'],
+        ['عود', 'يُعَاوَدُ'],
+        ['جوز', 'يُجَاوَزُ'],
+        ['نول', 'يُنَاوَلُ'],
+        ['ضيق', 'يُضَايَقُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['سرر', 'يُسَارُّ'],

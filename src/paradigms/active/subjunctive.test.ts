@@ -731,6 +731,19 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['عون', 'يُعَاوِنَ'],
+        ['قوم', 'يُقَاوِمَ'],
+        ['عود', 'يُعَاوِدَ'],
+        ['جوز', 'يُجَاوِزَ'],
+        ['نول', 'يُنَاوِلَ'],
+        ['ضيق', 'يُضَايِقَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وزي', 'يُوَازِيَ'],

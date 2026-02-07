@@ -965,6 +965,16 @@ describe('imperative', () => {
     })
 
     describe('hollow roots', () => {
+      test.each([
+        ['قوم', 'قَاوِمْ'],
+        ['عود', 'عَاوِدْ'],
+        ['جوز', 'جَاوِزْ'],
+        ['نول', 'نَاوِلْ'],
+        ['ضيق', 'ضَايِقْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
+      })
+
       test('قَاوَلَ conjugation', () => {
         expect(conjugateImperative(getVerb('قول', 3))).toMatchObjectT({
           '2ms': 'قَاوِلْ',
