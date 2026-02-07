@@ -12,11 +12,13 @@ import {
   isWeakLetter,
   KASRA,
   last,
+  longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
   removeLeadingDiacritics,
   SHADDA,
   SUKOON,
+  shortVowelFromPattern,
   WAW,
   YEH,
 } from '../letters'
@@ -62,21 +64,17 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             return [ALIF, KASRA, c1, ...stem.slice(2)]
 
           if (isInitialHamza && c2 === c3) {
-            if (isFormIPresentVowel(verb, 'i')) {
-              const prefix = [ALIF_HAMZA_BELOW, KASRA, c2, SHADDA]
-              if (pronounId === '2ms') return [...prefix, FATHA]
-              if (pronounId === '2fs') return [...prefix, KASRA, YEH]
-              if (pronounId === '2d') return [...prefix, FATHA, ALIF]
-              if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
-              if (pronounId === '2fp') return [ALIF, KASRA, YEH, c2, KASRA, c3, SUKOON, NOON, FATHA]
-            } else {
-              const prefix = [ALIF_HAMZA, DAMMA, c2, SHADDA]
-              if (pronounId === '2ms') return [...prefix, FATHA]
-              if (pronounId === '2fs') return [...prefix, KASRA, YEH]
-              if (pronounId === '2d') return [...prefix, FATHA, ALIF]
-              if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
-              if (pronounId === '2fp') return [ALIF, DAMMA, WAW, c2, DAMMA, c3, SUKOON, NOON, FATHA]
-            }
+            const seatedC1 = isFormIPresentVowel(verb, 'i') ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+            const pattern = isFormIPresentVowel(verb, 'i') ? 'i' : 'u'
+            const shortVowel = shortVowelFromPattern(pattern)
+            const longVowel = longVowelFromPattern(pattern)
+            const prefix = [seatedC1, shortVowel, c2, SHADDA]
+
+            if (pronounId === '2ms') return [...prefix, FATHA]
+            if (pronounId === '2fs') return [...prefix, KASRA, YEH]
+            if (pronounId === '2d') return [...prefix, FATHA, ALIF]
+            if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
+            if (pronounId === '2fp') return [ALIF, ...longVowel, c2, shortVowel, c3, SUKOON, NOON, FATHA]
           }
 
           if (isInitialWeak && isFinalWeak && isMiddleHamza && pronounId === '2d')
