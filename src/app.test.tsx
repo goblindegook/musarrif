@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
-import { cleanup, render, screen, waitFor, within } from '@testing-library/preact'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest'
 
@@ -174,14 +174,13 @@ describe('Conjugation table', () => {
 
   it('shows mood tabs for passive present tense', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
 
     const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
     const passiveTab = Array.from(voiceTabs.querySelectorAll('[role="tab"]')).find(
       (tab) => tab.textContent === 'Passive',
     ) as HTMLElement
-    await user.click(passiveTab)
-    await user.click(screen.getByText('Present'))
+    fireEvent.click(passiveTab)
+    fireEvent.click(screen.getByText('Present'))
 
     const moodTabs = document.querySelector('[role="tablist"][aria-label="Select mood"]') as HTMLElement
     expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
@@ -252,7 +251,6 @@ describe('Search', () => {
     renderApp()
     const user = userEvent.setup()
     await user.type(screen.getByLabelText('Verb'), 'كت')
-
     await user.click(document.body)
 
     expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeNull()
@@ -260,28 +258,26 @@ describe('Search', () => {
 
   it('shows dropdown again when refocusing after a blur', async () => {
     renderApp()
-    const user = userEvent.setup()
-    const input = screen.getByLabelText('Verb')
-    await user.clear(input)
-    await user.type(input, 'ك')
-    await user.click(document.body)
-
-    await user.click(input)
+    const input = screen.getByLabelText('Verb') as HTMLInputElement
+    fireEvent.input(input, { target: { value: '' } })
+    fireEvent.focus(input)
+    fireEvent.input(input, { target: { value: 'ك' } })
+    fireEvent.blur(input)
+    fireEvent.focus(input)
 
     expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeTruthy()
   })
 
   it('populates the query and shows paradigms when selecting a suggestion', async () => {
     renderApp()
-    const user = userEvent.setup()
-
-    const input = screen.getByLabelText('Verb')
-    await user.type(input, 'كت')
+    const input = screen.getByLabelText('Verb') as HTMLInputElement
+    fireEvent.focus(input)
+    fireEvent.input(input, { target: { value: 'كت' } })
 
     const listbox = document.querySelector('[role="listbox"][aria-label="Verb"]') as HTMLElement
     const suggestion = within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)
 
-    await user.click(suggestion)
+    fireEvent.click(suggestion)
 
     expect((input as HTMLInputElement).value).toBe('أَكتَبَ')
     expect(screen.getAllByText('أَكتَبَ')).not.toHaveLength(0)
@@ -365,10 +361,9 @@ describe('Form', () => {
 
   it('has insights with linked examples', async () => {
     renderApp('/#/en/verbs/Elm-5')
-    const user = userEvent.setup()
     const formDetail = screen.getByText('Form')
 
-    await user.click(formDetail)
+    fireEvent.click(formDetail)
 
     const dialogTitle = screen.getByText('Form insights')
     const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
@@ -381,7 +376,7 @@ describe('Form', () => {
       expect(link.getAttribute('href')).toMatch(/#\/en\/verbs\/.+-5$/)
     })
 
-    await user.click(within(dialog).getByLabelText('Close'))
+    fireEvent.click(within(dialog).getByLabelText('Close'))
     expect(document.querySelector('[role="dialog"]')).toBeNull()
   })
 })
