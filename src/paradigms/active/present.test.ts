@@ -1389,6 +1389,12 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'يُوْمِئُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('أَوْفَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 4), 'indicative')).toEqualT({

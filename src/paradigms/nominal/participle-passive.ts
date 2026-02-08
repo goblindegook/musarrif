@@ -95,7 +95,9 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 4: {
         const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
 
-        if (isInitialWeak) return [MEEM, DAMMA, WAW, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isInitialWeak && isFinalHamza) return [MEEM, DAMMA, seatedC1, c2, FATHA, ALIF_HAMZA]
+
+        if (isInitialWeak) return [MEEM, DAMMA, seatedC1, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 

@@ -988,6 +988,26 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test('أَوْمَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ومأ', 4), 'indicative')).toEqualT({
+          '1s': 'أُوْمَأُ',
+          '2ms': 'تُوْمَأُ',
+          '2fs': 'تُوْمَئِينَ',
+          '3ms': 'يُوْمَأُ',
+          '3fs': 'تُوْمَأُ',
+          '2d': 'تُوْمَآنِ',
+          '3md': 'يُوْمَآنِ',
+          '3fd': 'تُوْمَآنِ',
+          '1p': 'نُوْمَأُ',
+          '2mp': 'تُوْمَأُوْنَ',
+          '2fp': 'تُوْمَأْنَ',
+          '3mp': 'يُوْمَأُوْنَ',
+          '3fp': 'يُوْمَأْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'indicative')).toEqualT({

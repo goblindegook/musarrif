@@ -1031,6 +1031,12 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'يُوْمَأْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'jussive')).toEqualT({

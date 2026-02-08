@@ -476,6 +476,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'مُومِئ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'مُوفٍ'],

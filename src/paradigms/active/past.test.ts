@@ -1472,6 +1472,12 @@ describe('active past', () => {
         })
       })
     })
+
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'أَوْمَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form VI', () => {

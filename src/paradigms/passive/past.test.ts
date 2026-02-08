@@ -883,6 +883,12 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'أُوْمِئَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePast(getVerb('أتي', 4))).toEqualT({

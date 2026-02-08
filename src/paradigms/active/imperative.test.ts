@@ -1119,6 +1119,12 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['ومأ', 'أَوْمِئْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugateImperative(getVerb('أتي', 4))).toMatchObjectT({

@@ -97,6 +97,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 4: {
         const prefix = [MEEM, DAMMA, isInitialHamza ? HAMZA_ON_WAW : c1]
 
+        if (isInitialWeak && isFinalHamza) return [...prefix, c2, KASRA, HAMZA_ON_YEH]
+
         if (isInitialWeak) return [...prefix, c2, TANWEEN_KASRA]
 
         if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_KASRA]
