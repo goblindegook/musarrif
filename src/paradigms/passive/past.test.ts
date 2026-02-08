@@ -901,6 +901,30 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'أُضِيءَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
+      test('أَضَاءَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('ضوء', 4))).toEqualT({
+          '1s': 'أُضِئْتُ',
+          '2ms': 'أُضِئْتَ',
+          '2fs': 'أُضِئْتِ',
+          '3ms': 'أُضِيءَ',
+          '3fs': 'أُضِيئَتْ',
+          '2d': 'أُضِئْتُمَا',
+          '3md': 'أُضِيئَا',
+          '3fd': 'أُضِيئَتَا',
+          '1p': 'أُضِئْنَا',
+          '2mp': 'أُضِئْتُمْ',
+          '2fp': 'أُضِئْتُنَّ',
+          '3mp': 'أُضِيئُوا',
+          '3fp': 'أُضِئْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePast(getVerb('أتي', 4))).toEqualT({

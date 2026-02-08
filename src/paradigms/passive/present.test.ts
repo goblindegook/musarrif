@@ -1100,6 +1100,30 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'يُضَاءُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('أَضَاءَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ضوء', 4), 'indicative')).toEqualT({
+          '1s': 'أُضَاءُ',
+          '2ms': 'تُضَاءُ',
+          '2fs': 'تُضَائِينَ',
+          '3ms': 'يُضَاءُ',
+          '3fs': 'تُضَاءُ',
+          '2d': 'تُضَاءَانِ',
+          '3md': 'يُضَاءَانِ',
+          '3fd': 'تُضَاءَانِ',
+          '1p': 'نُضَاءُ',
+          '2mp': 'تُضَائُوْنَ',
+          '2fp': 'تُضَأْنَ',
+          '3mp': 'يُضَائُوْنَ',
+          '3fp': 'يُضَأْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'indicative')).toEqualT({

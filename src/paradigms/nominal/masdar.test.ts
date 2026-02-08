@@ -554,7 +554,10 @@ describe('masdar', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['نبأ', 'إِنْبَاء']])('%s', (root, expected) => {
+      test.each([
+        ['نبأ', 'إِنْبَاء'],
+        ['ضوء', 'إِضَاءَة'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })

@@ -1395,6 +1395,30 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'يُضِيءُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('أَضَاءَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('ضوء', 4), 'indicative')).toEqualT({
+          '1s': 'أُضِيءُ',
+          '2ms': 'تُضِيءُ',
+          '2fs': 'تُضِيئِيْنَ',
+          '3ms': 'يُضِيءُ',
+          '3fs': 'تُضِيءُ',
+          '2d': 'تُضِيئَانِ',
+          '3md': 'يُضِيئَانِ',
+          '3fd': 'تُضِيئَانِ',
+          '1p': 'نُضِيءُ',
+          '2mp': 'تُضِيئُونَ',
+          '2fp': 'تُضِئْنَ',
+          '3mp': 'يُضِيئُونَ',
+          '3fp': 'يُضِئْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وصي', 'يُوْصِي'],

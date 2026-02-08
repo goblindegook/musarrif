@@ -1035,6 +1035,30 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'يُضَاءَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('أَضَاءَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ضوء', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُضَاءَ',
+          '2ms': 'تُضَاءَ',
+          '2fs': 'تُضَائِي',
+          '3ms': 'يُضَاءَ',
+          '3fs': 'تُضَاءَ',
+          '2d': 'تُضَاءَا',
+          '3md': 'يُضَاءَا',
+          '3fd': 'تُضَاءَا',
+          '1p': 'نُضَاءَ',
+          '2mp': 'تُضَائُوْا',
+          '2fp': 'تُضَأْنَ',
+          '3mp': 'يُضَائُوْا',
+          '3fp': 'يُضَأْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('أتي', 4), 'subjunctive')).toEqualT({

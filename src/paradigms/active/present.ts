@@ -107,7 +107,7 @@ function buildDualPresent(word: readonly string[], verb: Verb, formIPrefix: stri
     return [...buildFormIFinalWeakPresentAStem(formIPrefix, verb), YEH, FATHA, ...suffix]
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-    const hamzaSeat = c2 === YEH ? HAMZA_ON_YEH : HAMZA
+    const hamzaSeat = verb.form === 4 || c2 === YEH ? HAMZA_ON_YEH : HAMZA
     const lastIndex = findLastLetterIndex(word)
     return [
       ...removeFinalDiacritic([...word.slice(0, lastIndex), hamzaSeat, ...word.slice(lastIndex + 1)]),
@@ -373,6 +373,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return replaceDammaBeforeWawAlif(stem.at(beforeWaw) === YEH ? [...stem.slice(0, beforeWaw), WAW] : stem)
       }
 
+      if (isMasculinePlural(pronounId) && isMiddleWeak && isFinalHamza)
+        return replaceDammaBeforeFinalWaw(
+          dropNoonEnding(word).map((char) => (char === HAMZA_ON_WAW ? HAMZA_ON_YEH : char)),
+        )
+
       if (isSecondFeminineSingular || isMasculinePlural(pronounId))
         return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
@@ -502,7 +507,7 @@ function derivePresentFormIV(verb: Verb): readonly string[] {
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
-  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+  const seatedC3 = isHamzatedLetter(c3) ? (isMiddleWeak ? HAMZA : HAMZA_ON_YEH) : c3
   const prefix = [YEH, DAMMA, seatedC1]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]

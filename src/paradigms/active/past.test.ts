@@ -1348,7 +1348,10 @@ describe('active past', () => {
     })
 
     describe('hamzated final hollow roots', () => {
-      test.each([['جيء', 'أَجَاءَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['جيء', 'أَجَاءَ'],
+        ['ضوء', 'أَضَاءَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
 
