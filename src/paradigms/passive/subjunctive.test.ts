@@ -937,6 +937,98 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test('أَوْصَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وصي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْصَى',
+          '2ms': 'تُوْصَى',
+          '2fs': 'تُوْصَيْ',
+          '3ms': 'يُوْصَى',
+          '3fs': 'تُوْصَى',
+          '2d': 'تُوْصَيَا',
+          '3md': 'يُوْصَيَا',
+          '3fd': 'تُوْصَيَا',
+          '1p': 'نُوْصَى',
+          '2mp': 'تُوْصَوْا',
+          '2fp': 'تُوْصَيْنَ',
+          '3mp': 'يُوْصَوْا',
+          '3fp': 'يُوْصَيْنَ',
+        })
+      })
+
+      test('أَوْحَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وحي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْحَى',
+          '2ms': 'تُوْحَى',
+          '2fs': 'تُوْحَيْ',
+          '3ms': 'يُوْحَى',
+          '3fs': 'تُوْحَى',
+          '2d': 'تُوْحَيَا',
+          '3md': 'يُوْحَيَا',
+          '3fd': 'تُوْحَيَا',
+          '1p': 'نُوْحَى',
+          '2mp': 'تُوْحَوْا',
+          '2fp': 'تُوْحَيْنَ',
+          '3mp': 'يُوْحَوْا',
+          '3fp': 'يُوْحَيْنَ',
+        })
+      })
+
+      test('أَوْفَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وفي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْفَى',
+          '2ms': 'تُوْفَى',
+          '2fs': 'تُوْفَيْ',
+          '3ms': 'يُوْفَى',
+          '3fs': 'تُوْفَى',
+          '2d': 'تُوْفَيَا',
+          '3md': 'يُوْفَيَا',
+          '3fd': 'تُوْفَيَا',
+          '1p': 'نُوْفَى',
+          '2mp': 'تُوْفَوْا',
+          '2fp': 'تُوْفَيْنَ',
+          '3mp': 'يُوْفَوْا',
+          '3fp': 'يُوْفَيْنَ',
+        })
+      })
+
+      test('أَوْرَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وري', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْرَى',
+          '2ms': 'تُوْرَى',
+          '2fs': 'تُوْرَيْ',
+          '3ms': 'يُوْرَى',
+          '3fs': 'تُوْرَى',
+          '2d': 'تُوْرَيَا',
+          '3md': 'يُوْرَيَا',
+          '3fd': 'تُوْرَيَا',
+          '1p': 'نُوْرَى',
+          '2mp': 'تُوْرَوْا',
+          '2fp': 'تُوْرَيْنَ',
+          '3mp': 'يُوْرَوْا',
+          '3fp': 'يُوْرَيْنَ',
+        })
+      })
+
+      test('أَوْدَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ودي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْدَى',
+          '2ms': 'تُوْدَى',
+          '2fs': 'تُوْدَيْ',
+          '3ms': 'يُوْدَى',
+          '3fs': 'تُوْدَى',
+          '2d': 'تُوْدَيَا',
+          '3md': 'يُوْدَيَا',
+          '3fd': 'تُوْدَيَا',
+          '1p': 'نُوْدَى',
+          '2mp': 'تُوْدَوْا',
+          '2fp': 'تُوْدَيْنَ',
+          '3mp': 'يُوْدَوْا',
+          '3fp': 'يُوْدَيْنَ',
+        })
+      })
+    })
+
     describe('hamzated final roots', () => {
       test.each([['ومأ', 'يُوْمَأَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)

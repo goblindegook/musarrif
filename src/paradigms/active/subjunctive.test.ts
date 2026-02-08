@@ -859,6 +859,18 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['وصي', 'يُوْصِيَ'],
+        ['وحي', 'يُوْحِيَ'],
+        ['وفي', 'يُوْفِيَ'],
+        ['وري', 'يُوْرِيَ'],
+        ['ودي', 'يُوْدِيَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final roots', () => {
       test.each([['ومأ', 'يُوْمِئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)

@@ -1025,6 +1025,16 @@ describe('active present jussive', () => {
     })
 
     describe('defective roots', () => {
+      test.each([
+        ['وصي', 'يُوْصِ'],
+        ['وحي', 'يُوْحِ'],
+        ['وفي', 'يُوْفِ'],
+        ['وري', 'يُوْرِ'],
+        ['ودي', 'يُوْدِ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('drops the final glide for أَعْطَى', () => {
         expect(conjugatePresentMood(getVerb('عطى', 4), 'jussive')).toMatchObjectT({
           '3ms': 'يُعْطِ',
