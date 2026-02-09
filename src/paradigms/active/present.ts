@@ -438,7 +438,7 @@ function derivePresentFormIV(verb: Verb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
+  const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC3 = isHamzatedLetter(c3) ? (isMiddleWeak ? HAMZA : HAMZA_ON_YEH) : c3
   const prefix = [YEH, DAMMA, seatedC1]
 
