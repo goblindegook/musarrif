@@ -102,16 +102,26 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   const [c1, c2, c3] = Array.from(verb.root)
   const suffix = [SUKOON, NOON, FATHA]
 
+  if (isFormIFinalWeakPresent(verb, 'a')) return [...buildFormIFinalWeakPresentAStem(stem[0], verb), YEH, ...suffix]
+
+  if (verb.form === 1 && c2 === c3)
+    return [stem[0], FATHA, c1, SUKOON, c2, shortVowelFromPattern(resolveFormIPresentVowel(verb)), c3, ...suffix]
+
+  if (verb.form === 3 && c2 === c3) return [stem[0], DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, ...suffix]
+
   if (verb.form === 4 && c2 === c3) return [stem[0], DAMMA, c1, SUKOON, c2, KASRA, c3, ...suffix]
 
   if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), c3, ...suffix]
 
-  if (verb.form === 6) return [...removeFinalDiacritic(expandShadda(stem)), ...suffix]
+  if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandShadda(stem)), ...suffix]
+
+  if (verb.form === 10 && c2 === c3)
+    return [
+      ...removeFinalDiacritic([stem[0], FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]),
+      ...suffix,
+    ]
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
-
-  if (verb.form === 1 && c2 === c3)
-    return [stem[0], FATHA, c1, SUKOON, c2, shortVowelFromPattern(resolveFormIPresentVowel(verb)), c3, ...suffix]
 
   if (!hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(stem))), ...suffix]
@@ -159,18 +169,18 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '2fs': (base, verb) => {
     const [c1, c2, c3] = [...verb.root]
     const stem = applyPresentPrefix(base, TEH)
-    const suffix = [YEH, SUKOON, NOON, FATHA]
+    const suffix = [SUKOON, NOON, FATHA]
 
-    if (isFormIFinalWeakPresent(verb, 'a')) return [...buildFormIFinalWeakPresentAStem(TEH, verb), ...suffix]
+    if (isFormIFinalWeakPresent(verb, 'a')) return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, ...suffix]
 
     if (isFormIFinalWeakPresent(verb, 'u'))
-      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem)), KASRA, ...suffix]
+      return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem)), KASRA, YEH, ...suffix]
 
     if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
-    if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), ...suffix]
+    if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
-    if (verb.form === 7 && isWeakLetter(c3)) return [...removeFinalDiacritic(stem), SUKOON, NOON, FATHA]
+    if (verb.form === 7 && isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
     if (verb.form === 3 && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, NOON, FATHA]
 
@@ -178,7 +188,7 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
 
     if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
-    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA)), KASRA, ...suffix]
+    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA)), KASRA, YEH, ...suffix]
   },
   '3ms': (base) => base,
   '3fs': (base) => applyPresentPrefix(base, TEH),
@@ -187,37 +197,9 @@ const PRESENT_BUILDERS: Record<PronounId, (base: readonly string[], verb: Verb) 
   '3fd': (base, verb) => buildDualPresent(applyPresentPrefix(base, TEH), verb, TEH),
   '1p': (base) => applyPresentPrefix(base, NOON),
   '2mp': (base, verb) => buildMasculinePlural(applyPresentPrefix(base, TEH), verb),
-  '2fp': (base, verb) => {
-    const [c1, c2, c3] = [...verb.root]
-
-    if (isFormIFinalWeakPresent(verb, 'a'))
-      return [...buildFormIFinalWeakPresentAStem(TEH, verb), YEH, SUKOON, NOON, FATHA]
-
-    if (verb.form === 3 && c2 === c3) return [TEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, SUKOON, NOON, FATHA]
-
-    if (verb.form === 9) return buildFemininePlural(expandShadda(applyPresentPrefix(base, TEH)), verb)
-
-    if (verb.form === 10 && c2 === c3)
-      return buildFemininePlural([TEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], verb)
-
-    return buildFemininePlural(applyPresentPrefix(base, TEH), verb)
-  },
+  '2fp': (base, verb) => buildFemininePlural(applyPresentPrefix(base, TEH), verb),
   '3mp': (base, verb) => buildMasculinePlural(base, verb),
-  '3fp': (base, verb) => {
-    const [c1, c2, c3] = [...verb.root]
-
-    if (isFormIFinalWeakPresent(verb, 'a'))
-      return [...buildFormIFinalWeakPresentAStem(YEH, verb), YEH, SUKOON, NOON, FATHA]
-
-    if (verb.form === 3 && c2 === c3) return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, SUKOON, NOON, FATHA]
-
-    if (verb.form === 9) return buildFemininePlural(expandShadda(base), verb)
-
-    if (verb.form === 10 && c2 === c3)
-      return buildFemininePlural([YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA], verb)
-
-    return buildFemininePlural(base, verb)
-  },
+  '3fp': (base, verb) => buildFemininePlural(base, verb),
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, string> {
