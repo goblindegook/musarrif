@@ -140,7 +140,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), c3, ...suffix]
 
-  if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandShadda(stem)), ...suffix]
+  if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandGemination(stem)), ...suffix]
 
   if (verb.form === 10 && c2 === c3)
     return [
@@ -150,10 +150,10 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
-  if (!hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2) && isHamzatedLetter(c3))
+  if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(stem))), ...suffix]
 
-  if (![2, 3, 5].includes(verb.form) && !hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2))
+  if (verb.form === 1 && !hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2))
     return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
   return [...removeFinalDiacritic(stem), ...suffix]
@@ -196,17 +196,17 @@ function conjugateIndicative(verb: Verb): Record<PronounId, string> {
   const stem = derivePresentForms(verb)
   return mapRecord(
     {
-      '1s': applyPresentPrefix(stem, ALIF_HAMZA),
-      '2ms': applyPresentPrefix(stem, TEH),
-      '2fs': applyPresentPrefix(buildFeminineSingular(stem, verb), TEH),
+      '1s': applyPresentPrefix(ALIF_HAMZA, stem),
+      '2ms': applyPresentPrefix(TEH, stem),
+      '2fs': applyPresentPrefix(TEH, buildFeminineSingular(stem, verb)),
       '3ms': stem,
-      '3fs': applyPresentPrefix(stem, TEH),
-      '2d': applyPresentPrefix(buildDualPresent(stem, verb), TEH),
+      '3fs': applyPresentPrefix(TEH, stem),
+      '2d': applyPresentPrefix(TEH, buildDualPresent(stem, verb)),
       '3md': buildDualPresent(stem, verb),
-      '3fd': applyPresentPrefix(buildDualPresent(stem, verb), TEH),
-      '1p': applyPresentPrefix(stem, NOON),
-      '2mp': applyPresentPrefix(buildMasculinePlural(stem, verb), TEH),
-      '2fp': applyPresentPrefix(buildFemininePlural(stem, verb), TEH),
+      '3fd': applyPresentPrefix(TEH, buildDualPresent(stem, verb)),
+      '1p': applyPresentPrefix(NOON, stem),
+      '2mp': applyPresentPrefix(TEH, buildMasculinePlural(stem, verb)),
+      '2fp': applyPresentPrefix(TEH, buildFemininePlural(stem, verb)),
       '3mp': buildMasculinePlural(stem, verb),
       '3fp': buildFemininePlural(stem, verb),
     },
@@ -309,11 +309,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         const beforeWaw = findLastLetterIndex(stem.slice(0, -1))
         return replaceDammaBeforeWawAlif(stem.at(beforeWaw) === YEH ? [...stem.slice(0, beforeWaw), WAW] : stem)
       }
-
-      if (isMasculinePlural(pronounId) && isMiddleWeak && isFinalHamza)
-        return replaceDammaBeforeFinalWaw(
-          dropNoonEnding(word).map((char) => (char === HAMZA_ON_WAW ? HAMZA_ON_YEH : char)),
-        )
 
       if (isSecondFeminineSingular || isMasculinePlural(pronounId))
         return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
@@ -543,18 +538,12 @@ function derivePresentForms(verb: Verb): readonly string[] {
 function shortenHollowStem(word: readonly string[]): readonly string[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
   const hollowLetterIndex = findWeakLetterIndex(word, 0)
-  if (hollowLetterIndex < 0) return word
   const nextLetterIndex = findLetterIndex(word, hollowLetterIndex)
-
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
-function expandShadda(word: readonly string[]): readonly string[] {
-  for (let i = 0; i < word.length - 2; i += 1) {
-    if (word[i] === word.at(i + 2) && word.at(i + 1) === SUKOON && !isDiacritic(word[i]))
-      return [...word.slice(0, i + 1), FATHA, word[i], ...word.slice(i + 3)]
-  }
-  return word
+function expandGemination(word: readonly string[]): readonly string[] {
+  return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`, 'u'), `$1${FATHA}$1`))
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): readonly string[] {
@@ -591,6 +580,6 @@ function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
   return removeFinalDiacritic(word).slice(0, -1)
 }
 
-function applyPresentPrefix(chars: readonly string[], prefix: string): readonly string[] {
+function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {
   return [prefix, ...chars.slice(1)]
 }
