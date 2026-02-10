@@ -45,10 +45,9 @@ type RawNonFormI = {
 
 type RawVerb = RawFormI | RawNonFormI
 
-export type Verb = (RawFormI | RawNonFormI) & {
-  id: string
-  label: string
-}
+type VerbBase<T extends RawVerb> = T & { id: string; label: string }
+
+export type Verb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<RawFormI> : VerbBase<RawNonFormI>
 
 const TRANSLITERATION_MAP: Record<string, string> = {
   آ: '|',

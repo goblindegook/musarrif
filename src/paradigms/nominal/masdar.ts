@@ -29,7 +29,7 @@ import {
 } from '../letters'
 import type { MasdarPattern, Verb } from '../verbs'
 
-function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string[] {
+function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
@@ -126,7 +126,7 @@ function deriveMasdarFormI(verb: Verb, pattern?: MasdarPattern): readonly string
   }
 }
 
-function deriveMasdarFormII(verb: Verb): readonly string[] {
+function deriveMasdarFormII(verb: Verb<2>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
   const isFinalHamza = isHamzatedLetter(c3)
@@ -141,7 +141,7 @@ function deriveMasdarFormII(verb: Verb): readonly string[] {
   return [...prefix, YEH, c3]
 }
 
-function deriveMasdarFormIII(verb: Verb): readonly string[] {
+function deriveMasdarFormIII(verb: Verb<3>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
@@ -153,7 +153,7 @@ function deriveMasdarFormIII(verb: Verb): readonly string[] {
   return [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2, FATHA, c3, FATHA, TEH_MARBUTA]
 }
 
-function deriveMasdarFormIV(verb: Verb): readonly string[] {
+function deriveMasdarFormIV(verb: Verb<4>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
@@ -176,7 +176,7 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
   return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormV(verb: Verb): readonly string[] {
+function deriveMasdarFormV(verb: Verb<5>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
   const prefix = [TEH, FATHA, c1, FATHA]
@@ -186,7 +186,7 @@ function deriveMasdarFormV(verb: Verb): readonly string[] {
   return [...prefix, c2, SHADDA, DAMMA, c3]
 }
 
-function deriveMasdarFormVI(verb: Verb): readonly string[] {
+function deriveMasdarFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
@@ -197,7 +197,7 @@ function deriveMasdarFormVI(verb: Verb): readonly string[] {
   return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
 }
 
-function deriveMasdarFormVII(verb: Verb): readonly string[] {
+function deriveMasdarFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
 
@@ -206,7 +206,7 @@ function deriveMasdarFormVII(verb: Verb): readonly string[] {
   return [...prefix, c2, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormVIII(verb: Verb): readonly string[] {
+function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
   if (isWeakLetter(c1) || isHamzatedLetter(c1)) return [ALIF, KASRA, TEH, SHADDA, KASRA, c2, FATHA, ALIF, c3]
@@ -218,13 +218,13 @@ function deriveMasdarFormVIII(verb: Verb): readonly string[] {
   return [ALIF, KASRA, c1, SUKOON, TEH, KASRA, c2, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormIX(verb: Verb): readonly string[] {
+function deriveMasdarFormIX(verb: Verb<9>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
   return [ALIF, KASRA, c1, SUKOON, c2, KASRA, c3, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormX(verb: Verb): readonly string[] {
+function deriveMasdarFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
@@ -279,7 +279,7 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly string[] {
-  const patterns = verb.form === 1 && verb.masdarPatterns ? verb.masdarPatterns : [undefined]
+  const patterns = (verb.form === 1 && verb.masdarPatterns) || [undefined]
   return patterns
     .map((pattern) => {
       const joined = masdar(verb, pattern).join('')

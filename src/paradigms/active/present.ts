@@ -43,7 +43,7 @@ function defectiveGlide(letter: string): string {
 }
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
-  return isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
+  return verb.form === 1 && isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
 }
 
 function replaceVowelAfterGemination(word: readonly string[], vowel: Vowel): readonly string[] {
@@ -215,12 +215,9 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
   return chars
 }
 
-function replaceDammaBeforeWawAlif(word: readonly string[]): readonly string[] {
-  return [...removeFinalDiacritic(word.slice(0, -1)), DAMMA, WAW, SUKOON, ALIF]
-}
-
 function replaceDammaBeforeFinalWaw(word: readonly string[]): readonly string[] {
-  return last(word) === WAW ? replaceDammaBeforeWawAlif(word) : word
+  if (last(word) !== WAW) return word
+  return [...removeFinalDiacritic(word.slice(0, -1)), DAMMA, WAW, SUKOON, ALIF]
 }
 
 function replaceFathaBeforeFinalWawAlif(word: readonly string[]): readonly string[] {
@@ -243,15 +240,14 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isDual(pronounId)) return dropNoonEnding(normalizeAlifMadda(word))
 
-      if (isWeakLetter(c3) && isFormIPresentVowel(verb, 'a')) {
+      if (isWeakLetter(c3) && verb.form === 1 && isFormIPresentVowel(verb, 'a')) {
         if (isSecondFeminineSingular) return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
         if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         return word
       }
 
       if (isSecondFeminineSingular) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
-      if (isMasculinePlural(pronounId)) return replaceDammaBeforeWawAlif(dropNoonEnding(word))
-
+      if (isMasculinePlural(pronounId)) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
       return [...removeFinalDiacritic(word), FATHA]
     }),
     (letters) => letters.join('').normalize('NFC'),
@@ -290,7 +286,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (isMiddleWeak) return dropNoonEnding(word)
         if (verb.form === 1 && isFinalWeak) {
           const base = dropNoonEnding(word)
-          if (isDiacritic(base.at(-2)) && base.at(-3) === WAW) return [...base.slice(0, -2), SUKOON, ALIF]
+          if (base.at(-3) === WAW) return [...base.slice(0, -2), SUKOON, ALIF]
           return base
         }
         if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
@@ -342,7 +338,7 @@ function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
   }
 }
 
-function derivePresentFormI(verb: Verb): readonly string[] {
+function derivePresentFormI(verb: Verb<1>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
@@ -398,7 +394,7 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 }
 
-function derivePresentFormII(verb: Verb): readonly string[] {
+function derivePresentFormII(verb: Verb<2>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
   const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
@@ -406,7 +402,7 @@ function derivePresentFormII(verb: Verb): readonly string[] {
   return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
 
-function derivePresentFormIII(verb: Verb): readonly string[] {
+function derivePresentFormIII(verb: Verb<3>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
@@ -416,7 +412,7 @@ function derivePresentFormIII(verb: Verb): readonly string[] {
   return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, seatedC3, DAMMA]
 }
 
-function derivePresentFormIV(verb: Verb): readonly string[] {
+function derivePresentFormIV(verb: Verb<4>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -433,20 +429,20 @@ function derivePresentFormIV(verb: Verb): readonly string[] {
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
 
-function derivePresentFormV(verb: Verb): readonly string[] {
+function derivePresentFormV(verb: Verb<5>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, c3, DAMMA]
 }
 
-function derivePresentFormVI(verb: Verb): readonly string[] {
+function derivePresentFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
   if (c2 === c3) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, SUKOON, c2, DAMMA]
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, c3, DAMMA]
 }
 
-function derivePresentFormVII(verb: Verb): readonly string[] {
+function derivePresentFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isFinalWeak = isWeakLetter(c3)
 
@@ -455,7 +451,7 @@ function derivePresentFormVII(verb: Verb): readonly string[] {
   return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, DAMMA]
 }
 
-function derivePresentFormVIII(verb: Verb): readonly string[] {
+function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
@@ -465,12 +461,12 @@ function derivePresentFormVIII(verb: Verb): readonly string[] {
   return [YEH, FATHA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 }
 
-function derivePresentFormIX(verb: Verb): readonly string[] {
+function derivePresentFormIX(verb: Verb<9>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON, c3, DAMMA]
 }
 
-function derivePresentFormX(verb: Verb): readonly string[] {
+function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3

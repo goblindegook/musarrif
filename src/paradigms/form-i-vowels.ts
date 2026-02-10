@@ -30,24 +30,20 @@ export const FORM_I_PRESENT_VOWELS = {
   'fa3ula-yaf3ulu': 'u',
 } satisfies Record<FormIPattern, ShortVowel>
 
-export function resolveFormIPastVowel(verb: Verb): ShortVowel {
-  if (verb.form !== 1) throw new Error('Non-Form I verb.')
-  if (!verb.formPattern) throw new Error(`Missing Form I vowel data for root "${verb.root}".`)
+export function resolveFormIPastVowel(verb: Verb<1>): ShortVowel {
   return FORM_I_PAST_VOWELS[verb.formPattern]
 }
 
-export function isFormIPastVowel(verb: Verb, vowel: ShortVowel): boolean {
-  return verb.form === 1 && FORM_I_PAST_VOWELS[verb.formPattern] === vowel
+export function isFormIPastVowel(verb: Verb<1>, vowel: ShortVowel): boolean {
+  return resolveFormIPastVowel(verb) === vowel
 }
 
-export function resolveFormIPresentVowel(verb: Verb): ShortVowel {
-  if (verb.form !== 1) throw new Error('Non-Form I verb.')
-  if (!verb.formPattern) throw new Error(`Missing Form I vowel data for root "${verb.root}".`)
+export function resolveFormIPresentVowel(verb: Verb<1>): ShortVowel {
   return FORM_I_PRESENT_VOWELS[verb.formPattern]
 }
 
-export function isFormIPresentVowel(verb: Verb, vowel: ShortVowel): boolean {
-  return verb.form === 1 && FORM_I_PRESENT_VOWELS[verb.formPattern] === vowel
+export function isFormIPresentVowel(verb: Verb<1>, vowel: ShortVowel): boolean {
+  return FORM_I_PRESENT_VOWELS[verb.formPattern] === vowel
 }
 
 export function hasPattern(verb: Verb, pattern: FormIPattern): boolean {
