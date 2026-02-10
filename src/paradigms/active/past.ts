@@ -53,7 +53,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const isDefective = 'defectiveGlide' in forms
   const stem = isDefective ? forms.suffixedBase.slice(0, -2) : null
   const suffixedBase = forms.suffixedBase ?? [...removeFinalDiacritic(forms.base), SUKOON]
-  const firstSuffixChar = forms.suffixedBase?.at(-2) ?? ''
+  const firstSuffixChar = suffixedBase.at(-2)
   const pluralBase = forms.pluralBase ?? [...removeFinalDiacritic(forms.base), DAMMA, WAW]
 
   const [, c2, c3] = [...verb.root]
@@ -69,7 +69,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '3md':
         verb.form === 4 && c2 === c3
           ? forms.base
-          : stem
+          : stem && firstSuffixChar
             ? [...stem, firstSuffixChar, firstSuffixChar === WAW ? SUKOON : FATHA, ALIF]
             : [...forms.base, ALIF],
       '3fd': stem ? [...stem, TEH, FATHA, ALIF] : [...forms.base, TEH, FATHA, ALIF],

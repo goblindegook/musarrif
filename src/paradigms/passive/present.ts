@@ -207,12 +207,12 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormIII(verb: Verb<3>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
-  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
+  const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [seatedC1, FATHA, ALIF, seatedC2]
 
   if (c2 === c3) {
@@ -221,7 +221,7 @@ function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood:
     return [...prefix, SHADDA, ...geminateSuffix]
   }
 
-  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
+  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
@@ -256,7 +256,7 @@ function defectiveSuffix(
   mood: Mood,
   pronounId: PronounId,
   femininePluralSuffix?: readonly string[],
-  isGeminateRoot = false,
+  isGeminateRoot?: boolean,
 ): readonly string[] {
   if (pronounId === '2fs') return mood === 'indicative' ? [YEH, SUKOON, NOON, FATHA] : [YEH, SUKOON]
 

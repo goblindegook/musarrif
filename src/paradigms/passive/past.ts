@@ -34,7 +34,7 @@ interface PassivePastParams {
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
-  const { prefix, suffix, suffix3sd, suffix3ms, suffix3mp: suffix3pm = [] } = params
+  const { prefix, suffix, suffix3sd, suffix3ms, suffix3mp = [] } = params
   return mapRecord(
     {
       '1s': [...prefix, ...suffix, TEH, DAMMA],
@@ -48,7 +48,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
       '1p': geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA, ALIF]),
       '2mp': [...prefix, ...suffix, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...prefix, ...suffix, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp': [...prefix, ...suffix3pm],
+      '3mp': [...prefix, ...suffix3mp],
       '3fp': geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA]),
     },
     (value) => value.join('').normalize('NFC'),
@@ -63,7 +63,6 @@ function derivePassivePastFormI(verb: Verb): PassivePastParams {
   const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
   const isGeminate = c2 === c3
-  const isConsonantalMiddleWeak = hasPattern(verb, 'fa3ila-yaf3alu') && (c2 === YEH || c2 === WAW)
 
   if (isMiddleHamza && isFinalWeak) {
     return {
@@ -82,7 +81,7 @@ function derivePassivePastFormI(verb: Verb): PassivePastParams {
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isMiddleWeak && !isConsonantalMiddleWeak)
+  if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
     return {
       prefix: [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA],
       suffix: [c3, SUKOON],

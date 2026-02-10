@@ -168,8 +168,7 @@ type SearchOptions = {
 const normalizeQuery = (value: string): string =>
   normalizeHamza(stripDiacritics(value))
     .normalize('NFD')
-    .replace(/\p{M}/gu, '')
-    .replace(/\u0640/g, '')
+    .replace(/\p{M}|\u0640/gu, '')
     .toLowerCase()
     .trim()
 
