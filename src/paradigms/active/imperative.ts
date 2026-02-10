@@ -4,7 +4,6 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
-  ALIF_MADDA,
   DAMMA,
   FATHA,
   HAMZA_ON_YEH,
@@ -51,11 +50,12 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
       switch (verb.form) {
         case 1: {
           if (isInitialHamza && isMiddleWeak && isFinalWeak) {
-            if (pronounId === '2ms') return [ALIF, KASRA, YEH, c2, KASRA]
-            if (pronounId === '2fs') return [ALIF, KASRA, YEH, c2, KASRA, YEH]
-            if (pronounId === '2d') return [ALIF, KASRA, YEH, c2, KASRA, YEH, FATHA, ALIF]
-            if (pronounId === '2mp') return [ALIF, KASRA, YEH, c2, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [ALIF, KASRA, YEH, c2, KASRA, YEH, NOON, FATHA]
+            const prefix = [ALIF, KASRA, YEH]
+            if (pronounId === '2ms') return [...prefix, c2, KASRA]
+            if (pronounId === '2fs') return [...prefix, c2, KASRA, YEH]
+            if (pronounId === '2d') return [...prefix, c2, KASRA, YEH, FATHA, ALIF]
+            if (pronounId === '2mp') return [...prefix, c2, DAMMA, WAW, SUKOON, ALIF]
+            if (pronounId === '2fp') return [...prefix, c2, KASRA, YEH, NOON, FATHA]
           }
 
           if (isInitialWeak && isHamzatedLetter(c3)) return stem
@@ -137,18 +137,21 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 4: {
+          const prefix = [ALIF_HAMZA, FATHA]
+
           if (isInitialHamza && isFinalWeak) {
-            const prefix = [ALIF_MADDA, c2]
-            if (pronounId === '2ms') return [...prefix, KASRA]
-            if (pronounId === '2fs') return [...prefix, KASRA, YEH]
-            if (pronounId === '2d') return [...prefix, KASRA, YEH, FATHA, ALIF]
-            if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [...prefix, KASRA, YEH, NOON, FATHA]
+            if (pronounId === '2ms') return [...prefix, ALIF, c2, KASRA]
+            if (pronounId === '2fs') return [...prefix, ALIF, c2, KASRA, YEH]
+            if (pronounId === '2d') return [...prefix, ALIF, c2, KASRA, YEH, FATHA, ALIF]
+            if (pronounId === '2mp') return [...prefix, ALIF, c2, DAMMA, WAW, SUKOON, ALIF]
+            if (pronounId === '2fp') return [...prefix, ALIF, c2, KASRA, YEH, NOON, FATHA]
           }
 
-          if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
+          if (c2 === c3 && pronounId === '2d') return [...prefix, ...stem]
 
-          return [ALIF_HAMZA, FATHA, ...stem]
+          if (isFinalWeak && pronounId === '2d') return [...prefix, ...restoreWeakLetterBeforeAlif(stem)]
+
+          return [...prefix, ...stem]
         }
 
         case 5: {
@@ -167,6 +170,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       return stem
     }),
-    (letters) => letters.join('').normalize('NFC'),
+    (letters) => normalizeAlifMadda(letters).join('').normalize('NFC'),
   )
 }

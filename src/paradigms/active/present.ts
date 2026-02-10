@@ -99,7 +99,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...stem, WAW, NOON, FATHA]
 
-  if (c2 === YEH) return [...removeFinalDiacritic(stem), DAMMA, WAW, NOON, FATHA]
+  if (c2 === YEH && !isWeakLetter(c3)) return [...removeFinalDiacritic(stem), DAMMA, WAW, NOON, FATHA]
 
   if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(stem, DAMMA), WAW, NOON, FATHA]
 
@@ -304,7 +304,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 
-      if (isMasculinePlural(pronounId) && isMiddleWeak) {
+      if (isMasculinePlural(pronounId) && isMiddleWeak && !isFinalWeak) {
         const stem = dropNoonEnding(word)
         const beforeWaw = findLastLetterIndex(stem.slice(0, -1))
         return replaceDammaBeforeWawAlif(stem.at(beforeWaw) === YEH ? [...stem.slice(0, beforeWaw), WAW] : stem)
@@ -442,9 +442,9 @@ function derivePresentFormIV(verb: Verb): readonly string[] {
   const seatedC3 = isHamzatedLetter(c3) ? (isMiddleWeak ? HAMZA : HAMZA_ON_YEH) : c3
   const prefix = [YEH, DAMMA, seatedC1]
 
-  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
-
   if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, defectiveGlide(c3)]
+
+  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
 
   if (isMiddleWeak) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
 

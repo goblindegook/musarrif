@@ -154,13 +154,14 @@ function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): rea
 
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const isGeminate = c2 === c3
 
   if (isFinalWeak) return []
 
   if (isMiddleWeak) return [c3]
 
-  if (!isGeminate || isFemininePlural(pronounId)) return [seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)]
+  if (isFemininePlural(pronounId)) return [seatHamza(c3, FATHA)]
+
+  if (c2 !== c3) return [seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)]
 
   return []
 }
@@ -176,7 +177,7 @@ function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonl
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
 
   return moodSuffix
 }
@@ -195,15 +196,12 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
   const prefix = [seatHamza(c1, DAMMA), FATHA, c2, SHADDA]
-  const weakSuffix = defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA])
 
   if (isWeakLetter(c3)) {
     const glide =
       mood !== 'jussive' || isWeakLetter(c1) || isWeakLetter(c2) ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
 
-    if (c2 === YEH && c3 === YEH && weakSuffix.at(0) === ALIF_MAQSURA) return [...prefix, glide, ALIF]
-
-    return [...prefix, glide, ...weakSuffix]
+    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA], c2 === c3)]
   }
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
@@ -223,7 +221,7 @@ function derivePassivePresentStemFormIII(verb: Verb, pronounId: PronounId, mood:
     return [...prefix, SHADDA, ...geminateSuffix]
   }
 
-  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
@@ -239,7 +237,7 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
   const prefix = [seatedC1, SUKOON, c2, FATHA]
 
-  if (isInitialHamza && pronounId === '1s') return [WAW, c2, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (isInitialHamza && pronounId === '1s') return [WAW, c2, FATHA, mood !== 'jussive' ? ALIF_MAQSURA : '']
 
   if (isMiddleWeak && isFinalHamza) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [seatedC1, FATHA, ALIF_HAMZA, ...moodSuffix]
@@ -249,21 +247,28 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
     return [seatedC1, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
-  if (isInitialHamza || isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
 
   return [...prefix, seatedC3, ...moodSuffix]
 }
 
-function defectiveSuffix(mood: Mood, pronounId: PronounId, femininePluralSuffix: readonly string[]): readonly string[] {
+function defectiveSuffix(
+  mood: Mood,
+  pronounId: PronounId,
+  femininePluralSuffix?: readonly string[],
+  isGeminateRoot = false,
+): readonly string[] {
   if (pronounId === '2fs') return mood === 'indicative' ? [YEH, SUKOON, NOON, FATHA] : [YEH, SUKOON]
 
   if (isDual(pronounId)) return [YEH, ...MOOD_SUFFIXES[mood][pronounId]]
 
   if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [WAW, SUKOON, NOON, FATHA] : [WAW, SUKOON, ALIF]
 
-  if (isFemininePlural(pronounId)) return [YEH, ...femininePluralSuffix]
+  if (isFemininePlural(pronounId)) return [YEH, ...(femininePluralSuffix ?? MOOD_SUFFIXES[mood][pronounId])]
 
   if (mood === 'jussive') return []
+
+  if (isGeminateRoot) return [ALIF]
 
   return [ALIF_MAQSURA]
 }
@@ -285,9 +290,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
   return mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
-    (() => {
-      const joined = normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]).join('')
-      return joined.normalize('NFC')
-    })(),
+    normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
+      .join('')
+      .normalize('NFC'),
   )
 }

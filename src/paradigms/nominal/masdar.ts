@@ -167,6 +167,8 @@ function deriveMasdarFormIV(verb: Verb): readonly string[] {
 
   if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, isFinalWeak ? HAMZA : c3]
 
+  if (isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
+
   if (isMiddleWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
   if (isFinalWeak || isFinalHamza) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]

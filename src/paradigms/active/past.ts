@@ -66,7 +66,12 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '3ms': forms.base,
       '3fs': stem ? [...stem, TEH, SUKOON] : [...forms.base, TEH, SUKOON],
       '2d': [...suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF],
-      '3md': stem ? [...stem, firstSuffixChar, firstSuffixChar === WAW ? SUKOON : FATHA, ALIF] : [...forms.base, ALIF],
+      '3md':
+        verb.form === 4 && c2 === c3
+          ? forms.base
+          : stem
+            ? [...stem, firstSuffixChar, firstSuffixChar === WAW ? SUKOON : FATHA, ALIF]
+            : [...forms.base, ALIF],
       '3fd': stem ? [...stem, TEH, FATHA, ALIF] : [...forms.base, TEH, FATHA, ALIF],
       '1p': [...suffixedBase, NOON, FATHA, ALIF],
       '2mp': [...suffixedBase, TEH, DAMMA, MEEM, SUKOON],
@@ -178,6 +183,14 @@ function derivePastFormIII(verb: Verb): PastBaseForms {
 function derivePastFormIV(verb: Verb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [ALIF_HAMZA, FATHA, c1]
+
+  if (c2 === YEH && c3 === YEH)
+    return {
+      base: [...prefix, SUKOON, c2, FATHA, ALIF],
+      defectiveGlide: YEH,
+      suffixedBase: [...prefix, SUKOON, c2, FATHA, YEH, SUKOON],
+      pluralBase: [...prefix, SUKOON, c2, FATHA, WAW],
+    }
 
   // Geminate Form IV (e.g., أَحَبَّ) collapses the second/third radical with shadda
   if (c2 === c3) return buildForms([...prefix, FATHA, c2, SHADDA, FATHA], c3)

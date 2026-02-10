@@ -156,7 +156,7 @@ function derivePassivePastFormIV(verb: Verb): PassivePastParams {
 
   if (isFinalWeak)
     return {
-      prefix: [ALIF_HAMZA, DAMMA, seatedC1, c2],
+      prefix: [ALIF_HAMZA, DAMMA, seatedC1, SUKOON, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, ALIF],
