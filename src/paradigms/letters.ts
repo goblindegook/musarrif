@@ -105,25 +105,7 @@ export function removeFinalDiacritic(word: readonly string[]): readonly string[]
 }
 
 export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
-  const geminated = []
-  for (let i = 0; i < word.length; i++) {
-    if (word[i] === word.at(i + 2) && word.at(i + 1) === SUKOON) {
-      geminated.push(word[i])
-      geminated.push(SHADDA)
-      i = i + 2
-      continue
-    }
-
-    if (word[i] === word.at(i + 1)) {
-      geminated.push(word[i])
-      geminated.push(SHADDA)
-      i = i + 1
-      continue
-    }
-
-    geminated.push(word[i])
-  }
-  return geminated
+  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`, 'gu'), `$1${SHADDA}`))
 }
 
 export function seatHamza(letter: string, vowel: string): string {

@@ -369,15 +369,10 @@ function derivePresentFormI(verb: Verb): readonly string[] {
   const seatedC3 = seatHamza(c3, shortVowel)
   const prefix = [YEH, FATHA]
 
-  // Geminate Form I: use pattern vowel when it is ḍamma (e.g., يَقُرُّ), otherwise keep the default stem.
   if (c2 === c3) return [...prefix, seatHamza(c1, shortVowel), shortVowel, c2, SUKOON, c2, DAMMA]
 
-  // Initial weak + final weak (e.g., وقي → يقي, ولى → يلي)
-  // Initial waw drops, final weak remains with short vowel on c2
-  // ALIF_MAQSURA becomes YEH in present tense, no trailing case vowel on 3ms base
   if (isInitialWeak && isFinalWeak) return [...prefix, seatHamza(c2, shortVowel), shortVowel, defectiveGlide(c3)]
 
-  // Doubly weak (middle weak + final weak): treat as defective, not hollow (e.g., رَوِيَ → يَرْوِي)
   if (isMiddleWeak && isFinalWeak)
     return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 

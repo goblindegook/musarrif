@@ -78,9 +78,13 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
       '3mp':
         isWeakLetter(c2) && isHamzatedLetter(c3)
-          ? [...removeFinalDiacritic(forms.base), DAMMA, WAW, SUKOON, ALIF].map((char) =>
-              char === HAMZA ? HAMZA_ON_WAW : char,
-            )
+          ? [
+              ...removeFinalDiacritic(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
+              DAMMA,
+              WAW,
+              SUKOON,
+              ALIF,
+            ]
           : [...pluralBase, SUKOON, ALIF],
       '3fp': isDefective ? [...forms.suffixedBase, NOON, FATHA] : [...suffixedBase, NOON, FATHA],
     },
