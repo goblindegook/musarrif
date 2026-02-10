@@ -33,7 +33,7 @@ import {
   WAW,
   YEH,
 } from '../letters'
-import { isDual, isFemininePlural, isMasculinePlural, isPlural, type PronounId } from '../pronouns'
+import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
@@ -46,13 +46,10 @@ function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
   return isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
 }
 
-function replaceVowelBeforeGeminate(word: readonly string[], vowel: Vowel): readonly string[] {
-  for (let i = word.length - 3; i >= 0; i -= 1) {
-    if (word.at(i) === word.at(i + 2) && word.at(i + 1) === SUKOON) {
-      return [...word.slice(0, i + 3), vowel]
-    }
-  }
-  return word
+function replaceVowelAfterGemination(word: readonly string[], vowel: Vowel): readonly string[] {
+  return Array.from(
+    word.join('').replace(new RegExp(`(.)${SUKOON}\\1(?!\\1${SUKOON}\\1).*`, 'u'), `$1${SUKOON}$1${vowel}`),
+  )
 }
 
 function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly string[] {
@@ -99,9 +96,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (isHamzatedLetter(c3) && !isWeakLetter(c2)) return [...stem, WAW, NOON, FATHA]
 
-  if (c2 === YEH && !isWeakLetter(c3)) return [...removeFinalDiacritic(stem), DAMMA, WAW, NOON, FATHA]
-
-  if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelBeforeGeminate(stem, DAMMA), WAW, NOON, FATHA]
+  if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), WAW, NOON, FATHA]
 
   if (verb.form === 3 && isWeakLetter(c3))
     return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA)), DAMMA, WAW, NOON, FATHA]
@@ -277,13 +272,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       const word = Array.from(indicative)
       const isSecondFeminineSingular = pronounId === '2fs'
 
-      // Form V defective verbs: preserve weak letter in jussive (unlike other defective verbs)
       if (verb.form === 5 && isFinalWeak) {
-        const base = dropNoonEnding(word)
-        if (isFemininePlural(pronounId)) return [...base, SUKOON, NOON, FATHA]
-        if (isPlural(pronounId)) return [...base, SUKOON, ALIF]
-        if (isSecondFeminineSingular) return [...base, SUKOON]
-        if (isDual(pronounId)) return base
+        if (isSecondFeminineSingular) return [...dropNoonEnding(word), SUKOON]
+        if (isDual(pronounId)) return dropNoonEnding(word)
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
+        if (isFemininePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, NOON, FATHA]
         return dropFinalDefectiveGlide(word)
       }
 
@@ -302,12 +295,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         }
         if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
-      }
-
-      if (isMasculinePlural(pronounId) && isMiddleWeak && !isFinalWeak) {
-        const stem = dropNoonEnding(word)
-        const beforeWaw = findLastLetterIndex(stem.slice(0, -1))
-        return replaceDammaBeforeWawAlif(stem.at(beforeWaw) === YEH ? [...stem.slice(0, beforeWaw), WAW] : stem)
       }
 
       if (isSecondFeminineSingular || isMasculinePlural(pronounId))

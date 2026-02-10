@@ -24,10 +24,6 @@ export function isFemininePlural(pronounId: PronounId): boolean {
   return pronounId === '2fp' || pronounId === '3fp'
 }
 
-export function isPlural(pronounId: PronounId): boolean {
-  return isMasculinePlural(pronounId) || isFemininePlural(pronounId)
-}
-
 export function isDual(pronounId: PronounId): boolean {
   return ['2d', '3md', '3fd'].includes(pronounId)
 }
