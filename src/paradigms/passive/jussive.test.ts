@@ -10,6 +10,7 @@ describe('passive present jussive', () => {
         ['مثل', 'يُمْثَلْ'],
         ['دعم', 'يُدْعَمْ'],
         ['بلغ', 'يُبْلَغْ'],
+        ['كلم', 'يُكْلَمْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -765,6 +766,10 @@ describe('passive present jussive', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test.each([['تبع', 'يُتَابَعْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['كلم', 'يُكَالَمْ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
 

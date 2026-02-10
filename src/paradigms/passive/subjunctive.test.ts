@@ -10,6 +10,7 @@ describe('passive present subjunctive', () => {
         ['مثل', 'يُمْثَلَ'],
         ['دعم', 'يُدْعَمَ'],
         ['بلغ', 'يُبْلَغَ'],
+        ['كلم', 'يُكْلَمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -659,6 +660,10 @@ describe('passive present subjunctive', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test.each([['تبع', 'يُتَابَعَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['كلم', 'يُكَالَمَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })
 

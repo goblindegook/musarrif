@@ -522,6 +522,8 @@
   { "root": "كسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "كشف", "form": 10 },
   { "root": "كشف", "form": 8 },
+  { "root": "كلم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
+  { "root": "كلم", "form": 3 },
   { "root": "كلم", "form": 2 },
   { "root": "كلم", "form": 5 },
   { "root": "كمل", "form": 1, "formPattern": "fa3ala-yaf3alu" },

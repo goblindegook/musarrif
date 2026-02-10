@@ -32,6 +32,7 @@ describe('imperative', () => {
         ['ذهب', 'اِذْهَبْ'],
         ['بعد', 'اِبْعَدْ'],
         ['دعم', 'اِدْعَمْ'],
+        ['كلم', 'اِكْلِمْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -902,6 +903,7 @@ describe('imperative', () => {
     describe('regular roots', () => {
       test.each([
         ['عمل', 'عَامِلْ'],
+        ['كلم', 'كَالِمْ'],
         ['تبع', 'تَابِعْ'],
         ['بلغ', 'بَالِغْ'],
         ['سعد', 'سَاعِدْ'],

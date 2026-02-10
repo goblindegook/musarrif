@@ -158,6 +158,7 @@ describe('passive past pattern', () => {
         ['نظر', 'نُظِرَ'],
         ['مثل', 'مُثِلَ'],
         ['دعم', 'دُعِمَ'],
+        ['كلم', 'كُلِمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
       })
@@ -686,6 +687,10 @@ describe('passive past pattern', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test.each([['تبع', 'تُوبِعَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+
+      test.each([['كلم', 'كُولِمَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
 

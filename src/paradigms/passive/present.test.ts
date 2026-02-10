@@ -10,6 +10,7 @@ describe('passive present indicative', () => {
         ['مثل', 'يُمْثَلُ'],
         ['دعم', 'يُدْعَمُ'],
         ['بلغ', 'يُبْلَغُ'],
+        ['كلم', 'يُكْلَمُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
@@ -710,6 +711,10 @@ describe('passive present indicative', () => {
   describe('Form III', () => {
     describe('regular roots', () => {
       test.each([['تبع', 'يُتَابَعُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['كلم', 'يُكَالَمُ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
 
