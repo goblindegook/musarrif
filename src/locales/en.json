@@ -530,14 +530,8 @@
     "qwl-5": "to make up",
     "qws-2": "to arch, to bend",
     "qwm-1": "to stand up",
-    "r>Y-1": "to see",
-    "r>Y-2": "to show, to cause to see",
-    "r>Y-3": "to show off",
     "rEy-3": "to consider",
     "r>y-4": "to show",
-    "r>Y-4": "to show",
-    "r>Y-5": "to appear",
-    "r>Y-6": "to appear to each other",
     "rAd-4": "to want",
     "rAH-1": "to go away",
     "rAH-10": "to rest",
@@ -748,7 +742,13 @@
     "zrE-1": "to plant",
     "zwy-2": "to dress",
     "zwr-1": "to visit",
-    "w'y-1": "to take refuge"
+    "w'y-1": "to take refuge",
+    "r'y-1": "to see",
+    "r'y-2": "to show, to cause to see",
+    "r'y-3": "to show off",
+    "r'y-4": "to show",
+    "r'y-5": "to appear",
+    "r'y-6": "to appear to each other"
   },
   "roots": {
     "*hb": "going",
@@ -863,7 +863,6 @@
     "zwy": "clothing",
     "qwl": "saying",
     "qws": "arching",
-    "r>Y": "seeing",
     "rdd": "reply",
     "rEy": "consideration",
     "rmY": "throwing",
@@ -918,6 +917,7 @@
     "ysr": "ease",
     "ybs": "dryness",
     "ywd": "iodine",
-    "w'y": "taking refuge"
+    "w'y": "taking refuge",
+    "r'y": "seeing"
   }
 }

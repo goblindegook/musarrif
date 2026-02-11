@@ -184,7 +184,7 @@ describe('passive participle', () => {
 
     describe('hamzated middle defective roots', () => {
       test.each([
-        ['رأى', 'مَرْئِيّ'],
+        ['رءي', 'مَرْئِيّ'],
         ['وءي', 'مَوْئِيّ'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toBe(expected)

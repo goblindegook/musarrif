@@ -691,12 +691,12 @@ describe('active past', () => {
     })
 
     describe('hamzated middle defective roots', () => {
-      test.each([['رأى', 'رَأَى']])('%s pattern', (root, expected) => {
+      test.each([['رءي', 'رَأَى']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {
-        expect(conjugatePast(getVerb('رأى', 1))).toEqualT({
+        expect(conjugatePast(getVerb('رءي', 1))).toEqualT({
           '1s': 'رَأَيْتُ',
           '2ms': 'رَأَيْتَ',
           '2fs': 'رَأَيْتِ',

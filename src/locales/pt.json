@@ -530,14 +530,8 @@
     "qwl-5": "fazer crer",
     "qws-2": "curvar",
     "qwm-1": "levantar",
-    "r>Y-1": "ver",
-    "r>Y-2": "mostrar, fazer ver",
-    "r>Y-3": "ostentar",
     "rEy-3": "considerar",
     "r>y-4": "mostrar",
-    "r>Y-4": "mostrar",
-    "r>Y-5": "mostrar-se",
-    "r>Y-6": "ver-se",
     "rAd-4": "querer",
     "rAH-1": "ir embora",
     "rAH-10": "descansar",
@@ -748,7 +742,13 @@
     "zrE-1": "plantar",
     "zwy-2": "vestir",
     "zwr-1": "visitar",
-    "w'y-1": "refugiar-se"
+    "w'y-1": "refugiar-se",
+    "r'y-1": "ver",
+    "r'y-2": "mostrar, fazer ver",
+    "r'y-3": "ostentar",
+    "r'y-4": "mostrar",
+    "r'y-5": "mostrar-se",
+    "r'y-6": "ver-se"
   },
   "roots": {
     "*hb": "ir",
@@ -863,7 +863,6 @@
     "zwy": "vestuário",
     "qwl": "dizer",
     "qws": "curvatura",
-    "r>Y": "ver",
     "rdd": "resposta",
     "rEy": "consideração",
     "rmY": "atirar",
@@ -917,6 +916,7 @@
     "ysr": "facilidade",
     "ybs": "secura",
     "ywd": "iodo",
-    "w'y": "refugiar-se"
+    "w'y": "refugiar-se",
+    "r'y": "ver"
   }
 }

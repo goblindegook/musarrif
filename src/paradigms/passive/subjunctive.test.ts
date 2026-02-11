@@ -323,12 +323,12 @@ describe('passive present subjunctive', () => {
     })
 
     describe('hamzated middle defective roots', () => {
-      test.each([['رأى', 'يُرَى']])('%s pattern', (root, expected) => {
+      test.each([['رءي', 'يُرَى']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('رَأَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('رأى', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('رءي', 1), 'subjunctive')).toEqualT({
           '1s': 'أُرَى',
           '2ms': 'تُرَى',
           '2fs': 'تُرَيْ',
