@@ -60,7 +60,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '2ms': [...suffixedBase, TEH, FATHA],
       '2fs': [...suffixedBase, TEH, KASRA],
       '3ms': forms.base,
-      '3fs': stem ? [...stem, TEH, SUKOON] : [...forms.base, TEH, SUKOON],
+      '3fs': [...(stem ?? forms.base), TEH, SUKOON],
       '2d': [...suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF],
       '3md':
         verb.form === 4 && c2 === c3
@@ -68,7 +68,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
           : stem && firstSuffixChar
             ? [...stem, firstSuffixChar, firstSuffixChar === WAW ? SUKOON : FATHA, ALIF]
             : [...forms.base, ALIF],
-      '3fd': stem ? [...stem, TEH, FATHA, ALIF] : [...forms.base, TEH, FATHA, ALIF],
+      '3fd': [...(stem ?? forms.base), TEH, FATHA, ALIF],
       '1p': [...suffixedBase, NOON, FATHA, ALIF],
       '2mp': [...suffixedBase, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
@@ -82,7 +82,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
               ALIF,
             ]
           : [...pluralBase, SUKOON, ALIF],
-      '3fp': isDefective ? [...forms.suffixedBase, NOON, FATHA] : [...suffixedBase, NOON, FATHA],
+      '3fp': [...suffixedBase, NOON, FATHA],
     },
     (value) => normalizeAlifMadda(geminateDoubleLetters(value)).join('').normalize('NFC'),
   )
