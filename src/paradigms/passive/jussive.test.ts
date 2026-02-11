@@ -1151,7 +1151,10 @@ describe('passive present jussive', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['ومأ', 'يُوْمَأْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ومأ', 'يُوْمَأْ'],
+        ['نشأ', 'يُنْشَأْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
     })

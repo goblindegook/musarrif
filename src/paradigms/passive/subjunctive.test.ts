@@ -1057,7 +1057,10 @@ describe('passive present subjunctive', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['ومأ', 'يُوْمَأَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ومأ', 'يُوْمَأَ'],
+        ['نشأ', 'يُنْشَأَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })

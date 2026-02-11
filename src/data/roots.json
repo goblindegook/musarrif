@@ -33,7 +33,7 @@
     "masdarPatterns": ["fa3l"]
   },
   { "root": "أمن", "form": 4 },
-  { "root": "أنشأ", "form": 4 },
+  { "root": "نشأ", "form": 4 },
   { "root": "أول", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "أول", "form": 2 },
   { "root": "أوب", "form": 2 },

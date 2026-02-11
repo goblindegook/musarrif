@@ -919,7 +919,10 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['ومأ', 'أُوْمِئَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ومأ', 'أُوْمِئَ'],
+        ['نشأ', 'أُنْشِئَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
     })

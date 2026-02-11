@@ -7,7 +7,6 @@ import {
   FATHA,
   geminateDoubleLetters,
   HAMZA,
-  HAMZA_ON_WAW,
   isHamzatedLetter,
   isWeakLetter,
   longVowelFromPattern,
@@ -49,11 +48,11 @@ export function derivePassiveParticiple(verb: Verb): string {
 
     switch (verb.form) {
       case 1: {
-        const prefix = [MEEM, FATHA, c1]
-        const defectiveShortVowel = shortVowelFromPattern(c3 === YEH ? 'i' : 'u')
-        const defectiveVowel = longVowelFromPattern(c3 === YEH ? 'i' : 'u')
-        const seatedC2 = seatHamza(c2, defectiveShortVowel)
+        const defectivePattern = c3 === YEH ? 'i' : 'u'
+        const defectiveVowel = longVowelFromPattern(defectivePattern)
+        const seatedC2 = seatHamza(c2, shortVowelFromPattern(defectivePattern))
         const seatedC3 = isFinalHamza ? HAMZA : c3
+        const prefix = [MEEM, FATHA, c1]
 
         if (isFinalWeak) return [...prefix, SUKOON, seatedC2, ...defectiveVowel, SHADDA]
 
@@ -64,7 +63,8 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 2: {
-        const prefix = [MEEM, DAMMA, isInitialHamza ? HAMZA_ON_WAW : c1, FATHA, c2]
+        const seatedC1 = seatHamza(c1, DAMMA)
+        const prefix = [MEEM, DAMMA, seatedC1, FATHA, c2]
 
         if (isFinalWeak) return [...prefix, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
 
@@ -72,7 +72,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 3: {
-        const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
+        const seatedC1 = seatHamza(c1, DAMMA)
         const seatedC2 = isMiddleHamza ? HAMZA : c2
         const prefix = [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2]
 
@@ -84,47 +84,56 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 4: {
-        const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
+        const seatedC1 = seatHamza(c1, DAMMA)
+        const prefix = [MEEM, DAMMA, seatedC1]
 
-        if (isInitialWeak && isFinalHamza) return [MEEM, DAMMA, seatedC1, c2, FATHA, ALIF_HAMZA]
+        if (isInitialWeak && isFinalHamza) return [...prefix, c2, FATHA, ALIF_HAMZA]
 
-        if (isInitialWeak) return [MEEM, DAMMA, seatedC1, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isInitialWeak) return [...prefix, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isMiddleWeak) return [MEEM, DAMMA, seatedC1, FATHA, ALIF, c3]
+        if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
 
-        if (c2 === c3) return [MEEM, DAMMA, seatedC1, FATHA, c2, SHADDA]
+        if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
 
-        return [MEEM, DAMMA, seatedC1, SUKOON, c2, FATHA, c3]
+        return [...prefix, SUKOON, c2, FATHA, c3]
       }
 
       case 5: {
-        if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
+        const prefix = [MEEM, DAMMA, TEH, FATHA, c1]
 
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3]
+        if (isFinalWeak) return [...prefix, FATHA, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
+
+        return [...prefix, FATHA, c2, SHADDA, FATHA, c3]
       }
 
       case 6: {
-        if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
+        const prefix = [MEEM, DAMMA, TEH, FATHA, c1]
 
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, c3]
+        if (c2 === c3) return [...prefix, FATHA, ALIF, c2, SHADDA]
+
+        return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, c3]
       }
 
       case 7: {
-        if (isMiddleWeak) return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, ALIF, c3]
+        const prefix = [MEEM, DAMMA, NOON, SUKOON, c1]
 
-        return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3]
+        if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
+
+        return [...prefix, FATHA, c2, FATHA, c3]
       }
 
       case 8: {
-        if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, FATHA, c3]
+        const prefix = [MEEM, DAMMA]
 
-        if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, ALIF, c3]
+        if (isInitialHamza || isInitialWeak) return [...prefix, TEH, SHADDA, FATHA, c2, FATHA, c3]
 
-        if (isFinalWeak) return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, ALIF_MAQSURA]
+        if (isMiddleWeak) return [...prefix, c1, SUKOON, TEH, FATHA, ALIF, c3]
 
-        return [MEEM, DAMMA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3]
+        if (isFinalWeak) return [...prefix, c1, SUKOON, TEH, FATHA, c2, FATHA, ALIF_MAQSURA]
+
+        return [...prefix, c1, SUKOON, TEH, FATHA, c2, FATHA, c3]
       }
 
       case 9: {
