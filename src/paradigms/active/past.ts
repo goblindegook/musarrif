@@ -107,20 +107,21 @@ function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
 
 function derivePastFormI(verb: Verb<1>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const isMiddleWeak = isWeakLetter(c2)
   const pastVowel = resolveFormIPastVowel(verb)
   const seatedC2 = seatHamza(c2, shortVowelFromPattern(pastVowel))
   const seatedC3 = seatHamza(c3, shortVowelFromPattern(pastVowel))
-  const isMiddleWeak = isWeakLetter(c2)
 
   if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
-      base: c3 === ALIF_MAQSURA ? [c1, FATHA, c2, KASRA, YEH] : [c1, FATHA, c2, KASRA, YEH, FATHA],
-      suffixedBase: [c1, FATHA, c2, KASRA, YEH],
-      pluralBase: [c1, FATHA, c2, DAMMA, WAW],
+      base: c3 === ALIF_MAQSURA ? [c1, FATHA, seatedC2, KASRA, YEH] : [c1, FATHA, seatedC2, KASRA, YEH, FATHA],
+      suffixedBase: [c1, FATHA, seatedC2, KASRA, YEH],
+      pluralBase: [c1, FATHA, seatedC2, DAMMA, WAW],
     }
   }
 
-  if (isWeakLetter(c3)) return buildForms([c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3], c3)
+  if (isWeakLetter(c3))
+    return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), c3], c3)
 
   if (c2 === c3)
     return {
@@ -128,19 +129,17 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
       suffixedBase: [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, SUKOON],
     }
 
-  const base = [c1, FATHA, ALIF, c3, FATHA]
-
   if (isMiddleWeak && isHamzatedLetter(c3))
     return {
-      base,
+      base: [c1, FATHA, ALIF, c3, FATHA],
       suffixedBase: [c1, KASRA, HAMZA_ON_YEH, SUKOON],
     }
 
   if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
     return {
-      base,
+      base: [c1, FATHA, ALIF, c3, FATHA],
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      pluralBase: [...removeFinalDiacritic(base), DAMMA, WAW],
+      pluralBase: [c1, FATHA, ALIF, c3, DAMMA, WAW],
     }
 
   return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedC3, FATHA], seatedC3)

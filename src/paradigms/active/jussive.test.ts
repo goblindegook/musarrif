@@ -713,7 +713,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وأى', 1), 'jussive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('وءي', 1), 'jussive')).toEqualT({
           '1s': 'أَئِ',
           '2ms': 'تَئِ',
           '2fs': 'تَئِي',

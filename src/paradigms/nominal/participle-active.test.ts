@@ -186,7 +186,7 @@ describe('active participle', () => {
     describe('hamzated middle defective roots', () => {
       test.each([
         ['رأى', 'رَاءٍ'],
-        ['وأى', 'وَاءٍ'],
+        ['وءي', 'وَاءٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
       })

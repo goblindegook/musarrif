@@ -653,7 +653,6 @@
     "w'd-5": "to be buried alive",
     "w}d-1": "to bury alive",
     "w}d-5": "to be buried alive",
-    "w>Y-1": "to take refuge",
     "w>m-3": "to adapt oneself, to harmonize",
     "wAf-1": "to agree",
     "wdE-1": "to put",
@@ -748,7 +747,8 @@
     "Znn-1": "to think",
     "zrE-1": "to plant",
     "zwy-2": "to dress",
-    "zwr-1": "to visit"
+    "zwr-1": "to visit",
+    "w'y-1": "to take refuge"
   },
   "roots": {
     "*hb": "going",
@@ -882,7 +882,6 @@
     "tbE": "following",
     "tmm": "completion",
     "w'd": "burying alive",
-    "w>Y": "taking refuge",
     "w>m": "harmony",
     "wEd": "promise",
     "wdd": "love",
@@ -918,6 +917,7 @@
     "y}s": "despair",
     "ysr": "ease",
     "ybs": "dryness",
-    "ywd": "iodine"
+    "ywd": "iodine",
+    "w'y": "taking refuge"
   }
 }

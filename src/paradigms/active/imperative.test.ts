@@ -631,7 +631,7 @@ describe('imperative', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugateImperative(getVerb('وأى', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('وءي', 1))).toMatchObjectT({
           '2ms': 'ئِ',
           '2fs': 'ئِي',
           '2d': 'ئِيَا',

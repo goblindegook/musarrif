@@ -408,7 +408,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وأى', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('وءي', 1), 'subjunctive')).toEqualT({
           '1s': 'أَئِيَ',
           '2ms': 'تَئِيَ',
           '2fs': 'تَئِي',

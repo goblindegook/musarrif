@@ -653,7 +653,6 @@
     "w'd-5": "essere seppellito vivo",
     "w}d-1": "seppellire vivo",
     "w}d-5": "essere seppellito vivo",
-    "w>Y-1": "rifugiarsi",
     "w>m-3": "adattarsi, armonizzare",
     "wAf-1": "essere d'accordo",
     "wdE-1": "mettere",
@@ -748,7 +747,8 @@
     "Znn-1": "pensare",
     "zrE-1": "piantare",
     "zwy-2": "vestire",
-    "zwr-1": "visitare"
+    "zwr-1": "visitare",
+    "w'y-1": "rifugiarsi"
   },
   "roots": {
     "*hb": "andare",
@@ -882,7 +882,6 @@
     "tbE": "seguito",
     "tmm": "completamento",
     "w'd": "seppellire vivo",
-    "w>Y": "rifugiarsi",
     "w>m": "armonia",
     "wEd": "promessa",
     "wdd": "amore",
@@ -918,6 +917,7 @@
     "y}s": "disperazione",
     "ysr": "facilità",
     "ybs": "secchezza",
-    "ywd": "iodio"
+    "ywd": "iodio",
+    "w'y": "rifugiarsi"
   }
 }

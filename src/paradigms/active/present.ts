@@ -61,14 +61,13 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
       ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
       : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
-  if (isFormIFinalWeakPresent(verb, 'u'))
-    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem)), KASRA, YEH, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'u')) return [...dropTerminalWeakOrHamza(stem), KASRA, YEH, ...suffix]
 
   if (verb.form === 2 && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
   if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
+  if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
 
   if (verb.form === 3 && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, NOON, FATHA]
 
@@ -98,8 +97,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), WAW, NOON, FATHA]
 
-  if (verb.form === 3 && isWeakLetter(c3))
-    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA)), DAMMA, WAW, NOON, FATHA]
+  if (verb.form === 3 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
 
   if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), WAW, ...suffix]
 
@@ -107,12 +105,11 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
     const hamzatedStem = stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))
-    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(hamzatedStem, DAMMA)), DAMMA, WAW, NOON, FATHA]
+    return [...dropTerminalWeakOrHamza(hamzatedStem, DAMMA), DAMMA, WAW, NOON, FATHA]
   }
 
   // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
-  if (isWeakLetter(c3) && !isWeakLetter(c1))
-    return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, DAMMA)), DAMMA, WAW, NOON, FATHA]
+  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
 
   return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, NOON, FATHA]
 }
@@ -137,11 +134,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandGemination(stem)), ...suffix]
 
-  if (verb.form === 10 && c2 === c3)
-    return [
-      ...removeFinalDiacritic([YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, DAMMA]),
-      ...suffix,
-    ]
+  if (verb.form === 10 && c2 === c3) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, ...suffix]
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
@@ -177,12 +170,10 @@ function buildDualPresent(word: readonly string[], verb: Verb): readonly string[
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
-  if (verb.form === 2 && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
-  if (verb.form === 3 && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
+  if ([2, 3].includes(verb.form) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
   if (verb.form === 5 && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
 
-  // Defective verbs (not doubly weak) preserve final weak letter in dual forms
-  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...removeFinalDiacritic(word), FATHA, ...suffix]
+  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
   return [...removeFinalDiacritic(dropTerminalWeakOrHamza(word, FATHA)), FATHA, ...suffix]
 }

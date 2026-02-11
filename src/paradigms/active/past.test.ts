@@ -716,7 +716,7 @@ describe('active past', () => {
 
     describe('hamzated final assimilated roots', () => {
       test('وَأَى conjugation', () => {
-        expect(conjugatePast(getVerb('وأى', 1))).toEqualT({
+        expect(conjugatePast(getVerb('وءي', 1))).toEqualT({
           '1s': 'وَأَيْتُ',
           '2ms': 'وَأَيْتَ',
           '2fs': 'وَأَيْتِ',

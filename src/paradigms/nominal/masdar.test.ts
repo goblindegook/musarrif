@@ -213,7 +213,7 @@ describe('masdar', () => {
     describe('hamzated middle defective roots', () => {
       test.each([
         ['رأى', 'رُؤْيَة'],
-        ['وأى', 'وَأْي'],
+        ['وءي', 'وَأْي'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
