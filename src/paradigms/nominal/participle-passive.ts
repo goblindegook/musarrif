@@ -34,8 +34,6 @@ export function derivePassiveParticiple(verb: Verb): string {
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
 
-      if (isHamzatedLetter(q1) && isHamzatedLetter(q4)) return [MEEM, DAMMA, q2, SUKOON, q3, FATHA, ALIF_HAMZA]
-
       return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
     }
 

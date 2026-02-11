@@ -62,7 +62,7 @@ function stripObviousDiacritics(input: string): string {
   return Array.from(input)
     .reduce<string[]>((result, current, index, chars) => {
       if (current === SUKOON) return result
-      const nextBase = findNextBaseLetter(chars, index + 1)
+      const nextBase = chars.at(index + 1)
       if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) return result
       result.push(current)
       return result
@@ -105,7 +105,7 @@ export function removeFinalDiacritic(word: readonly string[]): readonly string[]
 }
 
 export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
-  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`, 'gu'), `$1${SHADDA}`))
+  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`), `$1${SHADDA}`))
 }
 
 export function seatHamza(letter: string, vowel: string): string {
@@ -121,11 +121,6 @@ export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
 
 export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string[] {
   return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
-}
-
-function findNextBaseLetter(chars: readonly string[], startIndex: number): string | undefined {
-  for (let index = startIndex; index < chars.length; index += 1)
-    if (!COMBINING_MARK.test(chars[index])) return chars[index]
 }
 
 export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {
@@ -148,7 +143,7 @@ export function last(word: readonly string[]): string | undefined {
 export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
   return word
     .join('')
-    .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`, 'g'), ALIF_MADDA)
+    .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
     .split('')
 }
 

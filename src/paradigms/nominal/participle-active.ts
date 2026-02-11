@@ -1,7 +1,6 @@
 import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
-  ALIF_HAMZA,
   DAMMA,
   FATHA,
   HAMZA,
@@ -29,8 +28,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
-
-      if (q4 === ALIF_HAMZA) return [MEEM, DAMMA, q2, SUKOON, q3, KASRA, HAMZA_ON_YEH]
 
       return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, KASRA, q4]
     }

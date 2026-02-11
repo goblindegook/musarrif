@@ -39,7 +39,7 @@ import type { Verb } from '../verbs'
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
 function defectiveGlide(letter: string): string {
-  return letter === ALIF_MAQSURA || letter === YEH ? YEH : WAW
+  return letter === YEH ? YEH : WAW
 }
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
@@ -318,15 +318,7 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
 function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
 
-  switch (verb.form) {
-    case 4: {
-      return [YEH, DAMMA, c2, SUKOON, c3, KASRA, HAMZA_ON_YEH, DAMMA]
-    }
-
-    default: {
-      return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
-    }
-  }
+  return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: Verb<1>): readonly string[] {
@@ -351,9 +343,9 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
     return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
 
   if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
-    return [...prefix, WAW, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
+    return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
-  if (c1 === YEH) return [...prefix, YEH, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
+  if (c1 === YEH) return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
   if (isInitialWeak) return [...prefix, seatedC2, shortVowel, seatedC3, DAMMA]
 
@@ -367,20 +359,24 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
       patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3),
     ]
 
-  if (isInitialHamza && isMiddleWeak && !isFinalWeak)
-    return [...prefix, seatHamza(c1, shortVowel), ...longVowelFromPattern(patternVowel), c3, DAMMA]
+  if (isInitialHamza && isMiddleWeak) return [...prefix, seatedC1, ...longVowelFromPattern(patternVowel), c3, DAMMA]
 
   if (isInitialHamza) return [...prefix, c1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
-
-  if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
   if (!hasPattern(verb, 'fa3ila-yaf3alu') && isMiddleWeak)
     return [...prefix, c1, ...longVowelFromPattern(c2 === YEH ? 'i' : patternVowel), c3, DAMMA]
 
-  if (c3 === WAW) return [...prefix, c1, SUKOON, seatedC2, DAMMA, defectiveGlide(c3)]
+  if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
   if (isFinalWeak)
-    return [...prefix, c1, SUKOON, seatedC2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
+    return [
+      ...prefix,
+      seatedC1,
+      SUKOON,
+      seatedC2,
+      c3 === WAW ? DAMMA : shortVowel,
+      c3 === WAW || patternVowel !== 'a' ? defectiveGlide(c3) : ALIF_MAQSURA,
+    ]
 
   return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 }
@@ -389,18 +385,24 @@ function derivePresentFormII(verb: Verb<2>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
   const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+
   if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3]
+
   return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
 
 function derivePresentFormIII(verb: Verb<3>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
-  const seatedC2 = isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2
-  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
-  if (c2 === c3) return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, SHADDA, DAMMA]
-  if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, defectiveGlide(c3)]
-  return [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2, KASRA, seatedC3, DAMMA]
+  const seatedC1 = seatHamza(c1, DAMMA)
+  const seatedC2 = seatHamza(c2, KASRA)
+  const seatedC3 = seatHamza(c3, KASRA)
+  const prefix = [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2]
+
+  if (c2 === c3) return [...prefix, SHADDA, DAMMA]
+
+  if (isWeakLetter(c3)) return [...prefix, KASRA, defectiveGlide(c3)]
+
+  return [...prefix, KASRA, seatedC3, DAMMA]
 }
 
 function derivePresentFormIV(verb: Verb<4>): readonly string[] {
@@ -422,14 +424,18 @@ function derivePresentFormIV(verb: Verb<4>): readonly string[] {
 
 function derivePresentFormV(verb: Verb<5>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+
   if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
+
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, c3, DAMMA]
 }
 
 function derivePresentFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+
   if (c2 === c3) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, SUKOON, c2, DAMMA]
+
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, c3, DAMMA]
 }
 
@@ -465,7 +471,6 @@ function derivePresentFormX(verb: Verb<10>): readonly string[] {
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
 
-  // Hollow Form X present (e.g., يَسْتَضِيفُ)
   if (isMiddleWeak) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
@@ -476,10 +481,8 @@ function derivePresentForms(verb: Verb): readonly string[] {
 
   if (letters.length < 3) throw new Error('Root must have at least 3 letters.')
 
-  // Handle quadriliteral and longer roots
   if (letters.length === 4) return deriveQuadriliteralPresentForms(verb)
 
-  // Triliteral roots (3 letters)
   switch (verb.form) {
     case 1:
       return derivePresentFormI(verb)
@@ -512,7 +515,7 @@ function shortenHollowStem(word: readonly string[]): readonly string[] {
 }
 
 function expandGemination(word: readonly string[]): readonly string[] {
-  return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`, 'u'), `$1${FATHA}$1`))
+  return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${FATHA}$1`))
 }
 
 function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): readonly string[] {
