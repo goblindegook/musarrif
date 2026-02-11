@@ -93,7 +93,7 @@ function buildForms(base: readonly string[], c3: string): PastBaseForms {
   const normalizedBase = removeFinalDiacritic(base).slice(0, -1)
   const defectiveGlide = c3 === ALIF ? WAW : YEH
   return {
-    base: [...normalizedBase, c3 === YEH || c3 === ALIF_MAQSURA ? ALIF_MAQSURA : ALIF],
+    base: [...normalizedBase, c3 === YEH ? ALIF_MAQSURA : ALIF],
     defectiveGlide,
     suffixedBase: [...normalizedBase, defectiveGlide, SUKOON],
     pluralBase: [...normalizedBase, WAW],
@@ -114,7 +114,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
 
   if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
-      base: c3 === ALIF_MAQSURA ? [c1, FATHA, seatedC2, KASRA, YEH] : [c1, FATHA, seatedC2, KASRA, YEH, FATHA],
+      base: [c1, FATHA, seatedC2, KASRA, YEH, FATHA],
       suffixedBase: [c1, FATHA, seatedC2, KASRA, YEH],
       pluralBase: [c1, FATHA, seatedC2, DAMMA, WAW],
     }

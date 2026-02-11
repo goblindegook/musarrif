@@ -39,7 +39,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     const isInitialWeak = isWeakLetter(c1)
     const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
-    const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
     const isFinalHamza = isHamzatedLetter(c3)
 
@@ -54,8 +53,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         if (c2 === c3) return [...prefix, c2, SHADDA]
 
         if (isMiddleWeak && isFinalHamza) return [...prefix, HAMZA, TANWEEN_KASRA]
-
-        if (isMiddleHamza && isFinalWeak) return [...prefix, HAMZA, TANWEEN_KASRA]
 
         if (isFinalWeak) return [...prefix, c2, TANWEEN_KASRA]
 
