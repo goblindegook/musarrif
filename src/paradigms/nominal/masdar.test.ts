@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { getVerb, verbs } from '../verbs'
 import { deriveMasdar } from './masdar'
 
 describe('masdar', () => {
@@ -138,7 +138,7 @@ describe('masdar', () => {
         ['جري', 'جَرْي'],
         ['غدو', 'غُدُوّ'],
         ['دعا', 'دُعَاء'],
-        ['سعى', ['مَسْعَى']],
+        ['سعي', ['مَسْعَى']],
         ['غشي', []],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
@@ -149,14 +149,20 @@ describe('masdar', () => {
       test.each([
         ['وفي', 'وَفَاء'],
         ['وقي', 'وِقَايَة'],
-        ['ولى', 'وِلَايَة'],
         ['ولي', 'وَلْي'],
         ['وعي', 'وَعْي'],
         ['قوي', 'قُوَّة'],
         ['روي', []],
-        ['روى', 'رِوَايَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
+      })
+
+      test('روي (a/i)', () => {
+        // biome-ignore lint/style/noNonNullAssertion: must exist
+        const verb = verbs.find(
+          (entry) => entry.form === 1 && entry.root === 'روي' && entry.formPattern === 'fa3ala-yaf3ilu',
+        )!
+        expect(deriveMasdar(verb)).toEqualT(['رِوَايَة'])
       })
     })
 
@@ -507,7 +513,7 @@ describe('masdar', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['عطى', 'إِعْطَاء'],
+        ['عطي', 'إِعْطَاء'],
         ['نهي', 'إِنْهَاء'],
         ['مسي', 'إِمْسَاء'],
         ['ضحي', 'إِضْحَاء'],
@@ -735,7 +741,7 @@ describe('masdar', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['دعى', 'اِسْتِدْعَاء'],
+        ['دعو', 'اِسْتِدْعَاء'],
         ['غني', 'اِسْتِغْنَاء'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())

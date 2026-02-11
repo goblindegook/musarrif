@@ -447,7 +447,7 @@ describe('passive present jussive', () => {
       })
 
       test('رَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'jussive')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('روي', 1), 'jussive')).toEqualT({
           '1s': 'أُرْوَ',
           '2ms': 'تُرْوَ',
           '2fs': 'تُرْوَيْ',

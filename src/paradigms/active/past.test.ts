@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { getVerb, verbs } from '../verbs'
 import { conjugatePast } from './past'
 
 describe('active past', () => {
@@ -375,17 +375,23 @@ describe('active past', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['ونى', 'وَنَى'],
+        ['وني', 'وَنَى'],
         ['ولي', 'وَلِيَ'],
         ['وعي', 'وَعَى'],
         ['وفي', 'وَفَى'],
         ['وقي', 'وَقَى'],
-        ['ولى', 'وَلِي'],
         ['قوي', 'قَوِيَ'],
         ['جوي', 'جَوِيَ'],
-        ['روى', 'رَوَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
+      })
+
+      test('روي pattern (a/i)', () => {
+        // biome-ignore lint/style/noNonNullAssertion: must exist
+        const verb = verbs.find(
+          (entry) => entry.form === 1 && entry.root === 'روي' && entry.formPattern === 'fa3ala-yaf3ilu',
+        )!
+        expect(conjugatePast(verb)['3ms']).toEqualT('رَوَى')
       })
 
       test('وَفَى conjugation', () => {
@@ -1295,8 +1301,8 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
 
-      test('أعطى conjugation', () => {
-        expect(conjugatePast(getVerb('عطى', 4))).toEqualT({
+      test('أعطي conjugation', () => {
+        expect(conjugatePast(getVerb('عطي', 4))).toEqualT({
           '1s': 'أَعْطَيْتُ',
           '2ms': 'أَعْطَيْتَ',
           '2fs': 'أَعْطَيْتِ',

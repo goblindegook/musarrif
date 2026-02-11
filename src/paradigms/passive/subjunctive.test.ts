@@ -429,7 +429,7 @@ describe('passive present subjunctive', () => {
       })
 
       test('رَوَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('روى', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('روي', 1), 'subjunctive')).toEqualT({
           '1s': 'أُرْوَى',
           '2ms': 'تُرْوَى',
           '2fs': 'تُرْوَيْ',

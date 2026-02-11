@@ -120,8 +120,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
     }
   }
 
-  if (isWeakLetter(c3))
-    return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), c3], c3)
+  if (isWeakLetter(c3)) return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), c3], c3)
 
   if (c2 === c3)
     return {

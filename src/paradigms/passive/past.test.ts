@@ -70,7 +70,7 @@ describe('passive past pattern', () => {
     describe('doubly weak roots', () => {
       test.each<[string, string]>([
         ['جوي', 'جُوِيَ'],
-        ['روى', 'رُوِيَ'],
+        ['روي', 'رُوِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
       })

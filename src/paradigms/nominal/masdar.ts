@@ -99,7 +99,7 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
       // a -> a, i -> i, u -> i
       const vowelPattern = isFormIPresentVowel(verb, 'a') ? 'a' : 'i'
       if (isMiddleWeak) return [MEEM, FATHA, c1, ...longVowelFromPattern(vowelPattern), c3]
-      return [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3]
+      return [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3 === YEH ? ALIF_MAQSURA : c3]
     }
 
     default:

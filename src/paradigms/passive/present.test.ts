@@ -492,7 +492,7 @@ describe('passive present indicative', () => {
     describe('doubly weak roots', () => {
       test.each<[string, string]>([
         ['جوي', 'يُجْوَى'],
-        ['روى', 'يُرْوَى'],
+        ['روي', 'يُرْوَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })

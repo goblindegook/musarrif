@@ -304,13 +304,12 @@ describe('imperative', () => {
     describe('doubly weak roots', () => {
       test.each([
         ['وقي', 'قِ'],
-        ['ولى', 'لِ'],
-        ['ونى', 'نِ'],
+        ['وني', 'نِ'],
         ['ولي', 'لِ'],
         ['وعي', 'عِ'],
         ['قوي', 'اِقْوَ'],
         ['جوي', 'اِجْوَ'],
-        ['روى', 'اِرْوِ'],
+        ['روي', 'اِرْوِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -1113,7 +1112,7 @@ describe('imperative', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['عطى', 'أَعْطِ'],
+        ['عطي', 'أَعْطِ'],
         ['ضحي', 'أَضْحِ'],
         ['مسي', 'أَمْسِ'],
       ])('drops the final glide for %s', (root, expected2ms) => {

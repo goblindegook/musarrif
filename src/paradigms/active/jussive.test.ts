@@ -429,7 +429,7 @@ describe('active present jussive', () => {
       test.each([
         ['قوي', 'يَقْوَ'],
         ['جوي', 'يَجْوَ'],
-        ['روى', 'يَرْوِ'],
+        ['روي', 'يَرْوِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -1061,7 +1061,7 @@ describe('active present jussive', () => {
       })
 
       test('drops the final glide for أَعْطَى', () => {
-        expect(conjugatePresentMood(getVerb('عطى', 4), 'jussive')).toMatchObjectT({
+        expect(conjugatePresentMood(getVerb('عطي', 4), 'jussive')).toMatchObjectT({
           '3ms': 'يُعْطِ',
           '2ms': 'تُعْطِ',
           '1p': 'نُعْطِ',
