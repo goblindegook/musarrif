@@ -14,7 +14,6 @@ import {
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
-  isGutturalLetter,
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
@@ -331,19 +330,16 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
   const patternVowel = resolveFormIPresentVowel(verb)
   const shortVowel = shortVowelFromPattern(patternVowel)
   const seatedC1 = seatHamza(c1, shortVowel)
-  const seatedC2 = c1 === YEH && isHamzatedLetter(c2) ? HAMZA_ON_YEH : seatHamza(c2, shortVowel)
+  const seatedC2 = seatHamza(c2, c1 === YEH ? KASRA : shortVowel)
   const seatedC3 = seatHamza(c3, shortVowel)
   const prefix = [YEH, FATHA]
 
-  if (c2 === c3) return [...prefix, seatHamza(c1, shortVowel), shortVowel, c2, SUKOON, c2, DAMMA]
+  if (c2 === c3) return [...prefix, seatedC1, shortVowel, c2, SUKOON, c2, DAMMA]
 
-  if (isInitialWeak && isFinalWeak) return [...prefix, seatHamza(c2, shortVowel), shortVowel, defectiveGlide(c3)]
+  if (isInitialWeak && isFinalWeak) return [...prefix, seatedC2, shortVowel, defectiveGlide(c3)]
 
   if (isMiddleWeak && isFinalWeak)
     return [...prefix, c1, SUKOON, c2, shortVowel, patternVowel === 'a' ? ALIF_MAQSURA : defectiveGlide(c3)]
-
-  if (isInitialWeak && patternVowel === 'u' && isGutturalLetter(c2))
-    return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 
   if (c1 === YEH) return [...prefix, seatedC1, SUKOON, seatedC2, shortVowel, seatedC3, DAMMA]
 

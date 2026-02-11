@@ -16,6 +16,7 @@ describe('canConjugatePassive', () => {
   describe('has no passive voice', () => {
     test.each<[string, VerbForm]>([
       ['وفي', 1],
+      ['وهن', 1],
       ['يئس', 1],
       ['وجب', 1],
       ['ظلل', 1],

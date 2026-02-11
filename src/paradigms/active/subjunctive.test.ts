@@ -161,6 +161,24 @@ describe('active present subjunctive', () => {
           '3fp': 'يَضَعْنَ',
         })
       })
+
+      test('وَهُنَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وهن', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَهُنَ',
+          '2ms': 'تَهُنَ',
+          '2fs': 'تَهُنِي',
+          '3ms': 'يَهُنَ',
+          '3fs': 'تَهُنَ',
+          '2d': 'تَهُنَا',
+          '3md': 'يَهُنَا',
+          '3fd': 'تَهُنَا',
+          '1p': 'نَهُنَ',
+          '2mp': 'تَهُنُوْا',
+          '2fp': 'تَهُنَّ',
+          '3mp': 'يَهُنُوْا',
+          '3fp': 'يَهُنَّ',
+        })
+      })
     })
 
     describe('hollow roots', () => {

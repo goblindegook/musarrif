@@ -131,11 +131,11 @@ describe('imperative', () => {
 
       test('وَهُنَ conjugation', () => {
         expect(conjugateImperative(getVerb('وهن', 1))).toMatchObjectT({
-          '2ms': 'اُوهُنْ',
-          '2fs': 'اُوهُنِي',
-          '2d': 'اُوهُنَا',
-          '2mp': 'اُوهُنُوْا',
-          '2fp': 'اُوهُنَّ',
+          '2ms': 'هُنْ',
+          '2fs': 'هُنِي',
+          '2d': 'هُنَا',
+          '2mp': 'هُنُوْا',
+          '2fp': 'هُنَّ',
         })
       })
 
