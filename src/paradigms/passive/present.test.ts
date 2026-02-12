@@ -901,7 +901,12 @@ describe('passive present indicative', () => {
 
   describe('Form IV', () => {
     describe('regular roots', () => {
-      test.each([['وقف', 'يُوْقَفُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وقف', 'يُوْقَفُ'],
+        ['وقع', 'يُوْقَعُ'],
+        ['ولد', 'يُوْلَدُ'],
+        ['وصل', 'يُوْصَلُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
 

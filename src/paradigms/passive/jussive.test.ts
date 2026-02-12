@@ -945,7 +945,12 @@ describe('passive present jussive', () => {
 
   describe('Form IV', () => {
     describe('regular roots', () => {
-      test.each([['وقف', 'يُوْقَفْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وقف', 'يُوْقَفْ'],
+        ['وقع', 'يُوْقَعْ'],
+        ['ولد', 'يُوْلَدْ'],
+        ['وصل', 'يُوْصَلْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
 

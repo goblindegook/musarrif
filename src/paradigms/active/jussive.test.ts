@@ -994,6 +994,9 @@ describe('active present jussive', () => {
         ['لحق', 'يُلْحِقْ'],
         ['صبح', 'يُصْبِحْ'],
         ['وقف', 'يُوْقِفْ'],
+        ['وقع', 'يُوْقِعْ'],
+        ['ولد', 'يُوْلِدْ'],
+        ['وصل', 'يُوْصِلْ'],
         ['عرب', 'يُعْرِبْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)

@@ -1093,6 +1093,9 @@ describe('imperative', () => {
         ['مكن', 'أَمْكِنْ'],
         ['صبح', 'أَصْبِحْ'],
         ['وقف', 'أَوْقِفْ'],
+        ['وقع', 'أَوْقِعْ'],
+        ['ولد', 'أَوْلِدْ'],
+        ['وصل', 'أَوْصِلْ'],
         ['عرب', 'أَعْرِبْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
