@@ -913,6 +913,18 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['شور', 'يُشِيرَ'],
+        ['رود', 'يُرِيدَ'],
+        ['تيح', 'يُتِيحَ'],
+        ['فيد', 'يُفِيدَ'],
+        ['عود', 'يُعِيدَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['علي', 'يُعْلِيَ'],

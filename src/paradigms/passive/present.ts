@@ -246,6 +246,11 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
 
   if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
 
+  if (isMiddleWeak) {
+    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [seatedC1, FATHA, seatedC3, ...moodSuffix]
+    return [seatedC1, FATHA, ALIF, seatedC3, ...moodSuffix]
+  }
+
   if (c2 === c3) {
     if (isFemininePlural(pronounId)) return [seatedC1, SUKOON, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
     return [seatedC1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]

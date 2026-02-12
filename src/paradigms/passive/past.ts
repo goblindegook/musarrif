@@ -153,13 +153,13 @@ function derivePassivePastFormIV(verb: Verb): PassivePastParams {
       suffix3mp: [DAMMA, WAW, ALIF],
     }
 
-  if (isMiddleWeak && isFinalHamza)
+  if (isMiddleWeak)
     return {
       prefix: [ALIF_HAMZA, DAMMA, seatedC1, KASRA],
-      suffix: [HAMZA_ON_YEH, SUKOON],
-      suffix3ms: [YEH, HAMZA, FATHA],
+      suffix: [seatedC3, SUKOON],
+      suffix3ms: [YEH, isFinalHamza ? HAMZA : seatedC3, FATHA],
       suffix3sd: [YEH, seatedC3, FATHA],
-      suffix3mp: [YEH, seatedC3, DAMMA, WAW, ALIF],
+      suffix3mp: [YEH, seatedC3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   if (c2 === c3)
