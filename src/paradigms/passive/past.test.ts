@@ -796,6 +796,10 @@ describe('passive past pattern', () => {
 
   describe('Form IV', () => {
     describe('regular roots', () => {
+      test.each([['وقف', 'أُوْقِفَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
       test('أَوْضَحَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('وضح', 4))).toEqualT({
           '1s': 'أُوْضِحْتُ',

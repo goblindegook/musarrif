@@ -240,8 +240,6 @@ function deriveMasdarFormX(verb: Verb<10>): readonly string[] {
 function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
   const [q1, q2, q3, q4] = Array.from(verb.root)
 
-  if (isHamzatedLetter(q1) && isHamzatedLetter(q4)) return [ALIF_HAMZA_BELOW, KASRA, q2, SUKOON, q3, FATHA, ALIF, HAMZA]
-
   return [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
 }
 

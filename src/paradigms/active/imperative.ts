@@ -88,7 +88,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (isInitialWeak && c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(2)]
 
           if (isInitialWeak && isFormIPresentVowel(verb, 'u')) {
-            if (stem.at(0) === YEH || stem.at(0) === WAW) return [ALIF, DAMMA, WAW, ...stem.slice(2)]
+            if (stem.at(0) === YEH) return [ALIF, DAMMA, WAW, ...stem.slice(2)]
             return stem
           }
 
