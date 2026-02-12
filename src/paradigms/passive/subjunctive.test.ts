@@ -982,7 +982,14 @@ describe('passive present subjunctive', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['حيي', 'يُحْيَا']])('%s pattern', (root, expected) => {
+      test.each([
+        ['علي', 'يُعْلَى'],
+        ['بقي', 'يُبْقَى'],
+        ['سمي', 'يُسْمَى'],
+        ['عطي', 'يُعْطَى'],
+        ['لقي', 'يُلْقَى'],
+        ['حيي', 'يُحْيَا'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
 

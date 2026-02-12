@@ -1408,7 +1408,11 @@ describe('active present indicative', () => {
 
     describe('defective roots', () => {
       test.each([
+        ['علي', 'يُعْلِي'],
+        ['بقي', 'يُبْقِي'],
+        ['سمي', 'يُسْمِي'],
         ['عطي', 'يُعْطِي'],
+        ['لقي', 'يُلْقِي'],
         ['مسي', 'يُمْسِي'],
         ['ضحي', 'يُضْحِي'],
       ])('%s pattern', (root, expected) => {

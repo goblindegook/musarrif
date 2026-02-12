@@ -1126,7 +1126,11 @@ describe('imperative', () => {
 
     describe('defective roots', () => {
       test.each([
+        ['علي', 'أَعْلِ'],
+        ['بقي', 'أَبْقِ'],
+        ['سمي', 'أَسْمِ'],
         ['عطي', 'أَعْطِ'],
+        ['لقي', 'أَلْقِ'],
         ['ضحي', 'أَضْحِ'],
         ['مسي', 'أَمْسِ'],
       ])('drops the final glide for %s', (root, expected2ms) => {
