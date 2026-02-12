@@ -957,6 +957,17 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أذن', 'يُؤْذِنَ'],
+        ['أمن', 'يُؤْمِنَ'],
+        ['ألم', 'يُؤْلِمَ'],
+        ['أجر', 'يُؤْجِرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final hollow roots', () => {
       test.each([['ضوء', 'يُضِيءَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)

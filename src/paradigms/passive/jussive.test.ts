@@ -1205,6 +1205,17 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أذن', 'يُؤْذَنْ'],
+        ['أمن', 'يُؤْمَنْ'],
+        ['ألم', 'يُؤْلَمْ'],
+        ['أجر', 'يُؤْجَرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final hollow roots', () => {
       test.each([['ضوء', 'يُضَأْ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)

@@ -1373,7 +1373,10 @@ describe('active past', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
+        ['أذن', 'آذَنَ'],
         ['أمن', 'آمَنَ'],
+        ['ألم', 'آلَمَ'],
+        ['أجر', 'آجَرَ'],
         ['أتي', 'آتَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)

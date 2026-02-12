@@ -1030,6 +1030,35 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أذن', 'يُؤْذِنْ'],
+        ['أمن', 'يُؤْمِنْ'],
+        ['ألم', 'يُؤْلِمْ'],
+        ['أجر', 'يُؤْجِرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('آمَنَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أمن', 4), 'jussive')).toEqualT({
+          '1s': 'أُؤْمِنْ',
+          '2ms': 'تُؤْمِنْ',
+          '2fs': 'تُؤْمِنِي',
+          '3ms': 'يُؤْمِنْ',
+          '3fs': 'تُؤْمِنْ',
+          '2d': 'تُؤْمِنَا',
+          '3md': 'يُؤْمِنَا',
+          '3fd': 'تُؤْمِنَا',
+          '1p': 'نُؤْمِنْ',
+          '2mp': 'تُؤْمِنُوْا',
+          '2fp': 'تُؤْمِنَّ',
+          '3mp': 'يُؤْمِنُوْا',
+          '3fp': 'يُؤْمِنَّ',
+        })
+      })
+    })
+
     describe('hamzated final hollow roots', () => {
       test.each([['ضوء', 'يُضِئْ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)

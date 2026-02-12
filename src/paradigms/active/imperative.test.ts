@@ -1222,6 +1222,27 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أذن', 'آذِنْ'],
+        ['أمن', 'آمِنْ'],
+        ['ألم', 'آلِمْ'],
+        ['أجر', 'آجِرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+
+      test('آمَنَ conjugation', () => {
+        expect(conjugateImperative(getVerb('أمن', 4))).toMatchObjectT({
+          '2ms': 'آمِنْ',
+          '2fs': 'آمِنِي',
+          '2d': 'آمِنَا',
+          '2mp': 'آمِنُوْا',
+          '2fp': 'آمِنَّ',
+        })
+      })
+    })
+
     describe('hamzated initial hollow-defective roots', () => {
       test.each([['أوي', 'آوِ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)

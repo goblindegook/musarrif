@@ -1500,7 +1500,10 @@ describe('active present indicative', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
+        ['أذن', 'يُؤْذِنُ'],
         ['أمن', 'يُؤْمِنُ'],
+        ['ألم', 'يُؤْلِمُ'],
+        ['أجر', 'يُؤْجِرُ'],
         ['أتي', 'يُؤْتِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
