@@ -162,6 +162,15 @@ function derivePassivePastFormIV(verb: Verb): PassivePastParams {
       suffix3mp: [YEH, seatedC3, DAMMA, WAW, ALIF],
     }
 
+  if (c2 === c3)
+    return {
+      prefix: [ALIF_HAMZA, DAMMA, seatedC1],
+      suffix: [SUKOON, c2, KASRA, c3, SUKOON],
+      suffix3ms: [KASRA, c2, SHADDA, FATHA],
+      suffix3sd: [KASRA, c2, SHADDA, FATHA],
+      suffix3mp: [KASRA, c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    }
+
   return {
     prefix: [ALIF_HAMZA, DAMMA, seatedC1, SUKOON, c2, KASRA],
     suffix: [seatedC3, SUKOON],

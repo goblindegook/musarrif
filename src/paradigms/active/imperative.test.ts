@@ -1191,6 +1191,16 @@ describe('imperative', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['تمم', 'أَتِمَّ'],
+        ['سفف', 'أَسِفَّ'],
+        ['حبب', 'أَحِبَّ'],
+        ['عدد', 'أَعِدَّ'],
+        ['همم', 'أَهِمَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+
       test('أَحَبَّ conjugation', () => {
         expect(conjugateImperative(getVerb('حبب', 4))).toMatchObjectT({
           '2ms': 'أَحِبَّ',

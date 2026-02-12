@@ -454,8 +454,11 @@ describe('active participle', () => {
 
     describe('geminate roots', () => {
       test.each([
+        ['تمم', 'مُتِمّ'],
+        ['سفف', 'مُسِفّ'],
         ['حبب', 'مُحِبّ'],
         ['عدد', 'مُعِدّ'],
+        ['همم', 'مُهِمّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
       })

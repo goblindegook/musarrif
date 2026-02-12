@@ -969,6 +969,18 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['تمم', 'يُتَمَّ'],
+        ['سفف', 'يُسَفَّ'],
+        ['حبب', 'يُحَبَّ'],
+        ['عدد', 'يُعَدَّ'],
+        ['همم', 'يُهَمَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([['حيي', 'يُحْيَا']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)

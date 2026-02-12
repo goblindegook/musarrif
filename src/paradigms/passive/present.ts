@@ -169,11 +169,9 @@ function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): rea
 function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
-  const isGeminate = c2 === c3
-
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (isGeminate) return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : moodSuffix
+  if (c2 === c3) return geminateSuffix(mood, pronounId)
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
@@ -216,9 +214,8 @@ function derivePassivePresentStemFormIII(verb: Verb<3>, pronounId: PronounId, mo
   const prefix = [seatedC1, FATHA, ALIF, seatedC2]
 
   if (c2 === c3) {
-    const geminateSuffix = mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : moodSuffix
-    if (isFemininePlural(pronounId)) return [...prefix, FATHA, c3, ...geminateSuffix]
-    return [...prefix, SHADDA, ...geminateSuffix]
+    if (isFemininePlural(pronounId)) return [...prefix, FATHA, c3, ...geminateSuffix(mood, pronounId)]
+    return [...prefix, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
   if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
@@ -249,7 +246,16 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
 
   if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
 
+  if (c2 === c3) {
+    if (isFemininePlural(pronounId)) return [seatedC1, SUKOON, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
+    return [seatedC1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
+  }
+
   return [...prefix, seatedC3, ...moodSuffix]
+}
+
+function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
+  return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
 
 function defectiveSuffix(

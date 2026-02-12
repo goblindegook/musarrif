@@ -1280,8 +1280,11 @@ describe('active past', () => {
 
     describe('geminate roots', () => {
       test.each([
+        ['تمم', 'أَتَمَّ'],
+        ['سفف', 'أَسَفَّ'],
         ['حبب', 'أَحَبَّ'],
         ['عدد', 'أَعَدَّ'],
+        ['همم', 'أَهَمَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })

@@ -1037,6 +1037,16 @@ describe('active present jussive', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['تمم', 'يُتِمَّ'],
+        ['سفف', 'يُسِفَّ'],
+        ['حبب', 'يُحِبَّ'],
+        ['عدد', 'يُعِدَّ'],
+        ['همم', 'يُهِمَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('أَحَبَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('حبب', 4), 'jussive')).toEqualT({
           '1s': 'أُحِبَّ',
