@@ -1343,6 +1343,24 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test('أَوْضَحَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وضح', 4), 'indicative')).toEqualT({
+          '1s': 'أُوْضِحُ',
+          '2ms': 'تُوْضِحُ',
+          '2fs': 'تُوْضِحِيْنَ',
+          '3ms': 'يُوْضِحُ',
+          '3fs': 'تُوْضِحُ',
+          '2d': 'تُوْضِحَانِ',
+          '3md': 'يُوْضِحَانِ',
+          '3fd': 'تُوْضِحَانِ',
+          '1p': 'نُوْضِحُ',
+          '2mp': 'تُوْضِحُونَ',
+          '2fp': 'تُوْضِحْنَ',
+          '3mp': 'يُوْضِحُونَ',
+          '3fp': 'يُوْضِحْنَ',
+        })
+      })
+
       test('أَكْتَبَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('كتب', 4), 'indicative')).toEqualT({
           '1s': 'أُكْتِبُ',

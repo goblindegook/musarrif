@@ -851,6 +851,24 @@ describe('passive present subjunctive', () => {
 
   describe('Form IV', () => {
     describe('regular roots', () => {
+      test('أَوْضَحَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وضح', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْضَحَ',
+          '2ms': 'تُوْضَحَ',
+          '2fs': 'تُوْضَحِي',
+          '3ms': 'يُوْضَحَ',
+          '3fs': 'تُوْضَحَ',
+          '2d': 'تُوْضَحَا',
+          '3md': 'يُوْضَحَا',
+          '3fd': 'تُوْضَحَا',
+          '1p': 'نُوْضَحَ',
+          '2mp': 'تُوْضَحُوْا',
+          '2fp': 'تُوْضَحْنَ',
+          '3mp': 'يُوْضَحُوْا',
+          '3fp': 'يُوْضَحْنَ',
+        })
+      })
+
       test('أَكْثَرَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('كثر', 4), 'subjunctive')).toEqualT({
           '1s': 'أُكْثَرَ',

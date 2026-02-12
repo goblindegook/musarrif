@@ -226,21 +226,21 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
-      const isSecondFeminineSingular = pronounId === '2fs'
 
-      if (isDual(pronounId)) return dropNoonEnding(normalizeAlifMadda(word))
+      if (isDual(pronounId)) return dropNoonEnding(word)
 
       if (isWeakLetter(c3) && verb.form === 1 && isFormIPresentVowel(verb, 'a')) {
-        if (isSecondFeminineSingular) return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
+        if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
         if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
         return word
       }
 
-      if (isSecondFeminineSingular) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (pronounId === '2fs') return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
       if (isMasculinePlural(pronounId)) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+
       return [...removeFinalDiacritic(word), FATHA]
     }),
-    (letters) => letters.join('').normalize('NFC'),
+    (letters) => normalizeAlifMadda(letters).join('').normalize('NFC'),
   )
 }
 

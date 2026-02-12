@@ -877,6 +877,24 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('أَوْضَحَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وضح', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُوْضِحَ',
+          '2ms': 'تُوْضِحَ',
+          '2fs': 'تُوْضِحِي',
+          '3ms': 'يُوْضِحَ',
+          '3fs': 'تُوْضِحَ',
+          '2d': 'تُوْضِحَا',
+          '3md': 'يُوْضِحَا',
+          '3fd': 'تُوْضِحَا',
+          '1p': 'نُوْضِحَ',
+          '2mp': 'تُوْضِحُوْا',
+          '2fp': 'تُوْضِحْنَ',
+          '3mp': 'يُوْضِحُوْا',
+          '3fp': 'يُوْضِحْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

@@ -440,6 +440,7 @@ describe('active participle', () => {
         ['فلت', 'مُفْلِت'],
         ['مكن', 'مُمْكِن'],
         ['صبح', 'مُصْبِح'],
+        ['وضح', 'مُوْضِح'],
         ['كتب', 'مُكْتِب'],
         ['عرب', 'مُعْرِب'],
       ])('%s', (root, expected) => {
@@ -458,9 +459,9 @@ describe('active participle', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['ضيف', 'مُضِيف'],
-        ['عون', 'مُعِين'],
-        ['قود', 'مُقِيد'],
+        ['ضيف', 'مُضِيْف'],
+        ['عون', 'مُعِيْن'],
+        ['قود', 'مُقِيْد'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
       })
@@ -479,18 +480,18 @@ describe('active participle', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['ومأ', 'مُومِئ']])('%s', (root, expected) => {
+      test.each([['ومأ', 'مُوْمِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
       })
     })
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وصي', 'مُوصٍ'],
-        ['وحي', 'مُوحٍ'],
-        ['وفي', 'مُوفٍ'],
-        ['وري', 'مُورٍ'],
-        ['ودي', 'مُودٍ'],
+        ['وصي', 'مُوْصٍ'],
+        ['وحي', 'مُوْحٍ'],
+        ['وفي', 'مُوْفٍ'],
+        ['وري', 'مُوْرٍ'],
+        ['ودي', 'مُوْدٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
       })
@@ -518,7 +519,7 @@ describe('active participle', () => {
       test.each([
         ['نشأ', 'مُنْشِئ'],
         ['نبأ', 'مُنْبِئ'],
-        ['ضوء', 'مُضِيء'],
+        ['ضوء', 'مُضِيْء'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toBe(expected)
       })

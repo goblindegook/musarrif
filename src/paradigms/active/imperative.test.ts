@@ -1098,6 +1098,16 @@ describe('imperative', () => {
       })
 
       describe('full conjugation tests', () => {
+        test('أَوْضَحَ conjugation', () => {
+          expect(conjugateImperative(getVerb('وضح', 4))).toMatchObjectT({
+            '2ms': 'أَوْضِحْ',
+            '2fs': 'أَوْضِحِي',
+            '2d': 'أَوْضِحَا',
+            '2mp': 'أَوْضِحُوْا',
+            '2fp': 'أَوْضِحْنَ',
+          })
+        })
+
         test('أَكْتَبَ conjugation', () => {
           expect(conjugateImperative(getVerb('كتب', 4))).toMatchObjectT({
             '2ms': 'أَكْتِبْ',

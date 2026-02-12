@@ -160,20 +160,14 @@ function deriveMasdarFormIV(verb: Verb<4>): readonly string[] {
   const isFinalWeak = isWeakLetter(c3)
   const isInitialHamza = isHamzatedLetter(c1)
   const isFinalHamza = isHamzatedLetter(c3)
+  const seatedC1 = isInitialWeak || isInitialHamza ? YEH : c1
+  const prefix = [ALIF_HAMZA_BELOW, KASRA, seatedC1]
 
-  if (isInitialWeak && isFinalHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, HAMZA]
+  if (isFinalWeak) return [...prefix, SUKOON, c2, FATHA, ALIF, HAMZA]
 
-  if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, HAMZA]
+  if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-  if (isInitialHamza) return [ALIF_HAMZA_BELOW, KASRA, YEH, c2, FATHA, ALIF, isFinalWeak ? HAMZA : c3]
-
-  if (isMiddleWeak && isFinalWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
-
-  if (isMiddleWeak) return [ALIF_HAMZA_BELOW, KASRA, c1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-
-  if (isFinalWeak || isFinalHamza) return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
-
-  return [ALIF_HAMZA_BELOW, KASRA, c1, SUKOON, c2, FATHA, ALIF, c3]
+  return [...prefix, SUKOON, c2, FATHA, ALIF, isFinalHamza ? HAMZA : c3]
 }
 
 function deriveMasdarFormV(verb: Verb<5>): readonly string[] {
