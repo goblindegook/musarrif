@@ -297,9 +297,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (verb.form === 9) return [...removeFinalDiacritic(word), FATHA]
 
-      if (verb.form === 4 && c3 === NOON && isFemininePlural(pronounId))
-        return [...removeFinalDiacritic(word).slice(0, -1), SUKOON, NOON, FATHA]
-
       if (isFemininePlural(pronounId)) return [...removeFinalDiacritic(word), FATHA]
 
       if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
