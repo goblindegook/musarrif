@@ -1299,7 +1299,10 @@ describe('imperative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([['حبب', 'تَحَبَّبْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['حبب', 'تَحَبَّبْ'],
+        ['هدد', 'تَهَدَّدْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
       })
     })

@@ -1199,5 +1199,11 @@ describe('passive present subjunctive', () => {
         })
       })
     })
+
+    describe('geminate roots', () => {
+      test.each([['هدد', 'يُتَهَدَّدَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
   })
 })

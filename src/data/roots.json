@@ -627,6 +627,7 @@
   { "root": "هبط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "هجر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "هدم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "هدد", "form": 5 },
   { "root": "هرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "هلل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   { "root": "همم", "form": 4 },
