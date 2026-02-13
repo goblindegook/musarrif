@@ -245,6 +245,7 @@ describe('active present subjunctive', () => {
 
     describe('doubly weak roots', () => {
       test.each([
+        ['وري', 'يَرِيَ'],
         ['قوي', 'يَقْوَى'],
         ['جوي', 'يَجْوَى'],
         ['روي', 'يَرْوِيَ'],
