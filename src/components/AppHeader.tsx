@@ -90,6 +90,10 @@ const Eyebrow = styled('p')`
   font-size: 0.78rem;
   color: #92400e;
   margin: 0;
+
+  &[lang='ar'] {
+    letter-spacing: 0;
+  }
 `
 
 const PageTitle = styled('h1')`
@@ -100,6 +104,10 @@ const PageTitle = styled('h1')`
   color: #334155;
   line-height: 1.2;
   font-weight: 500;
+
+  &[lang='ar'] {
+    letter-spacing: 0;
+  }
 
   @media (min-width: 960px) {
     font-size: clamp(1.9rem, 3vw, 2.4rem);

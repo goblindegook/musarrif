@@ -21,6 +21,7 @@ export const FATHA = '\u064E'
 export const DAMMA = '\u064F'
 export const SHADDA = '\u0651'
 export const SUKOON = '\u0652'
+export const TATWEEL = '\u0640'
 
 export const COMBINING_MARK = /\p{Mn}/u
 
@@ -62,7 +63,7 @@ function stripObviousDiacritics(input: string): string {
   return Array.from(input)
     .reduce<string[]>((result, current, index, chars) => {
       if (current === SUKOON) return result
-      const nextBase = chars.at(index + 1)
+      const nextBase = chars.slice(index + 1).find((char) => char !== TATWEEL)
       if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) return result
       result.push(current)
       return result
