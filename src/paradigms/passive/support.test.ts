@@ -10,6 +10,8 @@ describe('canConjugatePassive', () => {
       ['أتي', 4],
       ['عرف', 5],
       ['هدد', 5],
+      ['عزز', 5],
+      ['قرر', 5],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })
@@ -32,6 +34,8 @@ describe('canConjugatePassive', () => {
       ['حدث', 5],
       ['طلب', 5],
       ['مثل', 5],
+      ['حدد', 5],
+      ['سبب', 5],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(false)
     })

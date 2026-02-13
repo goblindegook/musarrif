@@ -1018,6 +1018,10 @@ describe('active present subjunctive', () => {
         ['مثل', 'يَتَمَثَّلَ'],
         ['عرف', 'يَتَعَرَّفَ'],
         ['هدد', 'يَتَهَدَّدَ'],
+        ['حدد', 'يَتَحَدَّدَ'],
+        ['عزز', 'يَتَعَزَّزَ'],
+        ['سبب', 'يَتَسَبَّبَ'],
+        ['قرر', 'يَتَقَرَّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })

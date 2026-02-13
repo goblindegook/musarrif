@@ -1266,7 +1266,11 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([['هدد', 'يُتَهَدَّدُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['هدد', 'يُتَهَدَّدُ'],
+        ['عزز', 'يُتَعَزَّزُ'],
+        ['قرر', 'يُتَقَرَّرُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })
     })
