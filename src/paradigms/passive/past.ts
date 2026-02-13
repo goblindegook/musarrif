@@ -179,6 +179,14 @@ function derivePassivePastFormIV(verb: Verb): PassivePastParams {
   }
 }
 
+function derivePassivePastFormV(verb: Verb): PassivePastParams {
+  const formII = derivePassivePastFormII(verb)
+  return {
+    ...formII,
+    prefix: [TEH, DAMMA, ...formII.prefix],
+  }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
   switch (verb.form) {
     case 1:
@@ -189,6 +197,8 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
       return derivePassivePastFormIII(verb)
     case 4:
       return derivePassivePastFormIV(verb)
+    case 5:
+      return derivePassivePastFormV(verb)
     default:
       return { prefix: [], suffix: [], suffix3sd: [] }
   }

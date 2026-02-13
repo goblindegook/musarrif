@@ -1178,4 +1178,26 @@ describe('passive present subjunctive', () => {
       })
     })
   })
+
+  describe('Form V', () => {
+    describe('regular roots', () => {
+      test('تَعَرَّفَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('عرف', 5), 'subjunctive')).toEqualT({
+          '1s': 'أُتَعَرَّفَ',
+          '2ms': 'تُتَعَرَّفَ',
+          '2fs': 'تُتَعَرَّفِي',
+          '3ms': 'يُتَعَرَّفَ',
+          '3fs': 'تُتَعَرَّفَ',
+          '2d': 'تُتَعَرَّفَا',
+          '3md': 'يُتَعَرَّفَا',
+          '3fd': 'تُتَعَرَّفَا',
+          '1p': 'نُتَعَرَّفَ',
+          '2mp': 'تُتَعَرَّفُوْا',
+          '2fp': 'تُتَعَرَّفْنَ',
+          '3mp': 'يُتَعَرَّفُوْا',
+          '3fp': 'يُتَعَرَّفْنَ',
+        })
+      })
+    })
+  })
 })

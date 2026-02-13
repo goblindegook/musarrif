@@ -1013,7 +1013,11 @@ describe('active present subjunctive', () => {
 
   describe('Form V', () => {
     describe('regular roots', () => {
-      test.each([['حدث', 'يَتَحَدَّثَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['حدث', 'يَتَحَدَّثَ'],
+        ['مثل', 'يَتَمَثَّلَ'],
+        ['عرف', 'يَتَعَرَّفَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })

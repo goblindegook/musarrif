@@ -1537,6 +1537,8 @@ describe('active present indicative', () => {
         ['جمع', 'يَتَجَمَّعُ'],
         ['ضمن', 'يَتَضَمَّنُ'],
         ['حدث', 'يَتَحَدَّثُ'],
+        ['مثل', 'يَتَمَثَّلُ'],
+        ['عرف', 'يَتَعَرَّفُ'],
         ['طلب', 'يَتَطَلَّبُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
