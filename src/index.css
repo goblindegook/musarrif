@@ -12,6 +12,7 @@
 
 @font-face {
   font-family: "Noto Sans Arabic";
+  font-feature-settings: "calt" 1, "liga" 1;
   font-style: normal;
   font-weight: 400;
   font-display: swap;

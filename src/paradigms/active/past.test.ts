@@ -1530,6 +1530,18 @@ describe('active past', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['بقي', 'تَبَقَّى'],
+        ['سني', 'تَسَنَّى'],
+        ['بني', 'تَبَنَّى'],
+        ['حدي', 'تَحَدَّى'],
+        ['سمي', 'تَسَمَّى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'تَوَفَّى'],

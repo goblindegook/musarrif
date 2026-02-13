@@ -1215,6 +1215,16 @@ describe('active present jussive', () => {
     })
 
     describe('defective roots', () => {
+      test.each([
+        ['بقي', 'يَتَبَقَّ'],
+        ['سني', 'يَتَسَنَّ'],
+        ['بني', 'يَتَبَنَّ'],
+        ['حدي', 'يَتَحَدَّ'],
+        ['سمي', 'يَتَسَمَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('تَوَفَّى conjugation', () => {
         // Based on authoritative sources: Form V defective verbs drop the final weak letter (ى) in jussive
         // Dual forms drop the weak letter before alif (similar to Form II)

@@ -643,7 +643,14 @@ describe('masdar', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['غني', 'تَغَنٍّ']])('%s', (root, expected) => {
+      test.each([
+        ['غني', 'تَغَنٍّ'],
+        ['بقي', 'تَبَقٍّ'],
+        ['سني', 'تَسَنٍّ'],
+        ['بني', 'تَبَنٍّ'],
+        ['حدي', 'تَحَدٍّ'],
+        ['سمي', 'تَسَمٍّ'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
       })
     })

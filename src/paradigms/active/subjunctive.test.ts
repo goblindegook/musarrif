@@ -1039,6 +1039,18 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['بقي', 'يَتَبَقَّى'],
+        ['سني', 'يَتَسَنَّى'],
+        ['بني', 'يَتَبَنَّى'],
+        ['حدي', 'يَتَحَدَّى'],
+        ['سمي', 'يَتَسَمَّى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('تَوَفَّى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 5), 'subjunctive')).toEqualT({

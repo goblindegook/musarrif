@@ -1630,6 +1630,18 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['بقي', 'يَتَبَقَّى'],
+        ['سني', 'يَتَسَنَّى'],
+        ['بني', 'يَتَبَنَّى'],
+        ['حدي', 'يَتَحَدَّى'],
+        ['سمي', 'يَتَسَمَّى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'يَتَوَفَّى'],

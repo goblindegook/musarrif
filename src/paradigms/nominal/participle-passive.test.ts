@@ -576,6 +576,18 @@ describe('passive participle', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['بقي', 'مُتَبَقًّى'],
+        ['سني', 'مُتَسَنًّى'],
+        ['بني', 'مُتَبَنًّى'],
+        ['حدي', 'مُتَحَدًّى'],
+        ['سمي', 'مُتَسَمًّى'],
+      ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'مُتَوَفًّى'],
