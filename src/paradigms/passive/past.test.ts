@@ -924,6 +924,24 @@ describe('passive past pattern', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
+
+      test('أَتَمَّ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('تمم', 4))).toEqualT({
+          '1s': 'أُتْمِمْتُ',
+          '2ms': 'أُتْمِمْتَ',
+          '2fs': 'أُتْمِمْتِ',
+          '3ms': 'أُتِمَّ',
+          '3fs': 'أُتِمَّتْ',
+          '2d': 'أُتْمِمْتُمَا',
+          '3md': 'أُتِمَّا',
+          '3fd': 'أُتِمَّتَا',
+          '1p': 'أُتْمِمْنَا',
+          '2mp': 'أُتْمِمْتُمْ',
+          '2fp': 'أُتْمِمْتُنَّ',
+          '3mp': 'أُتِمُّوْا',
+          '3fp': 'أُتْمِمْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
@@ -1056,6 +1074,17 @@ describe('passive past pattern', () => {
           '3mp': 'تُعُرِّفُوْا',
           '3fp': 'تُعُرِّفْنَ',
         })
+      })
+    })
+
+    describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'تُوُصِّلَ'],
+        ['وفر', 'تُوُفِّرَ'],
+        ['وقف', 'تُوُقِّفَ'],
+        ['وقع', 'تُوُقِّعَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
     })
 

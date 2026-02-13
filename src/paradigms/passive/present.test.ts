@@ -1029,6 +1029,25 @@ describe('passive present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('أَتَمَّ conjugation', () => {
+        // Source: Wiktionary (Arabic), أَتَمَّ, Form IV passive non-past indicative.
+        expect(conjugatePassivePresentMood(getVerb('تمم', 4), 'indicative')).toEqualT({
+          '1s': 'أُتَمُّ',
+          '2ms': 'تُتَمُّ',
+          '2fs': 'تُتَمِّينَ',
+          '3ms': 'يُتَمُّ',
+          '3fs': 'تُتَمُّ',
+          '2d': 'تُتَمَّانِ',
+          '3md': 'يُتَمَّانِ',
+          '3fd': 'تُتَمَّانِ',
+          '1p': 'نُتَمُّ',
+          '2mp': 'تُتَمُّوْنَ',
+          '2fp': 'تُتْمَمْنَ',
+          '3mp': 'يُتَمُّوْنَ',
+          '3fp': 'يُتْمَمْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
@@ -1262,6 +1281,17 @@ describe('passive present indicative', () => {
           '3mp': 'يُتَعَرَّفُوْنَ',
           '3fp': 'يُتَعَرَّفْنَ',
         })
+      })
+    })
+
+    describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'يُتَوَصَّلُ'],
+        ['وفر', 'يُتَوَفَّرُ'],
+        ['وقف', 'يُتَوَقَّفُ'],
+        ['وقع', 'يُتَوَقَّعُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })
     })
 

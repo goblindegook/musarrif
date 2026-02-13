@@ -1577,6 +1577,16 @@ describe('active present indicative', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'يَتَوَصَّلُ'],
+        ['وفر', 'يَتَوَفَّرُ'],
+        ['وقف', 'يَتَوَقَّفُ'],
+        ['وقع', 'يَتَوَقَّعُ'],
+        ['وسع', 'يَتَوَسَّعُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('تَوَعَّدَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('وعد', 5), 'indicative')).toEqualT({
           '1s': 'أَتَوَعَّدُ',

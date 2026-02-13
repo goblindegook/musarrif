@@ -1312,6 +1312,16 @@ describe('imperative', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'تَوَصَّلْ'],
+        ['وفر', 'تَوَفَّرْ'],
+        ['وقف', 'تَوَقَّفْ'],
+        ['وقع', 'تَوَقَّعْ'],
+        ['وسع', 'تَوَسَّعْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
+      })
+
       test('تَوَعَّدَ conjugation', () => {
         expect(conjugateImperative(getVerb('وعد', 5))).toMatchObjectT({
           '2ms': 'تَوَعَّدْ',

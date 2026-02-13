@@ -12,6 +12,10 @@ describe('canConjugatePassive', () => {
       ['هدد', 5],
       ['عزز', 5],
       ['قرر', 5],
+      ['وصل', 5],
+      ['وفر', 5],
+      ['وقف', 5],
+      ['وقع', 5],
       ['وفي', 5],
       ['وقي', 5],
       ['وخي', 5],
@@ -39,6 +43,7 @@ describe('canConjugatePassive', () => {
       ['مثل', 5],
       ['حدد', 5],
       ['سبب', 5],
+      ['وسع', 5],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(false)
     })

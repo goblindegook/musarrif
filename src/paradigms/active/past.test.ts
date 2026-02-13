@@ -1477,6 +1477,16 @@ describe('active past', () => {
     })
 
     describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'تَوَصَّلَ'],
+        ['وفر', 'تَوَفَّرَ'],
+        ['وقف', 'تَوَقَّفَ'],
+        ['وقع', 'تَوَقَّعَ'],
+        ['وسع', 'تَوَسَّعَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+
       test('تَوَعَّدَ conjugation', () => {
         expect(conjugatePast(getVerb('وعد', 5))).toEqualT({
           '1s': 'تَوَعَّدْتُ',

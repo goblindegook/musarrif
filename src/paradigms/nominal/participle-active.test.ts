@@ -576,7 +576,14 @@ describe('active participle', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وعد', 'مُتَوَعِّد']])('%s', (root, expected) => {
+      test.each([
+        ['وعد', 'مُتَوَعِّد'],
+        ['وصل', 'مُتَوَصِّل'],
+        ['وفر', 'مُتَوَفِّر'],
+        ['وقف', 'مُتَوَقِّف'],
+        ['وقع', 'مُتَوَقِّع'],
+        ['وسع', 'مُتَوَسِّع'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
       })
     })

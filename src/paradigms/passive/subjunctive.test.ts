@@ -1200,6 +1200,17 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'يُتَوَصَّلَ'],
+        ['وفر', 'يُتَوَفَّرَ'],
+        ['وقف', 'يُتَوَقَّفَ'],
+        ['وقع', 'يُتَوَقَّعَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['هدد', 'يُتَهَدَّدَ'],

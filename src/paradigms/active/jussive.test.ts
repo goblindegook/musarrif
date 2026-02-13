@@ -1202,6 +1202,18 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([
+        ['وصل', 'يَتَوَصَّلْ'],
+        ['وفر', 'يَتَوَفَّرْ'],
+        ['وقف', 'يَتَوَقَّفْ'],
+        ['وقع', 'يَتَوَقَّعْ'],
+        ['وسع', 'يَتَوَسَّعْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test('تَوَفَّى conjugation', () => {
         // Based on authoritative sources: Form V defective verbs drop the final weak letter (ى) in jussive
