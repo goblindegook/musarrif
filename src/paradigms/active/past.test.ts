@@ -1521,6 +1521,14 @@ describe('active past', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([
+        ['وفي', 'تَوَفَّى'],
+        ['وقي', 'تَوَقَّى'],
+        ['وخي', 'تَوَخَّى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+
       test('تَوَفَّى conjugation', () => {
         expect(conjugatePast(getVerb('وفي', 5))).toEqualT({
           '1s': 'تَوَفَّيْتُ',

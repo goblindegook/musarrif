@@ -1303,5 +1303,15 @@ describe('passive present jussive', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
       })
     })
+
+    describe('doubly weak roots', () => {
+      test.each([
+        ['وفي', 'يُتَوَفَّ'],
+        ['وقي', 'يُتَوَقَّ'],
+        ['وخي', 'يُتَوَخَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
   })
 })
