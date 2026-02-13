@@ -135,7 +135,7 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "جمع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
+  { "root": "جمع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l", "fa3lan", "mimi"] },
   { "root": "جمع", "form": 2 },
   { "root": "جمع", "form": 5 },
   { "root": "جمل", "form": 2 },

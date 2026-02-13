@@ -10,6 +10,7 @@ export type MasdarPattern =
   | 'fa3aal'
   | 'fa3aala'
   | 'fa3al'
+  | 'fa3lan'
   | 'fa3l'
   | 'fi3aal'
   | 'fi3aala'
