@@ -1520,7 +1520,12 @@ describe('active past', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['حول', 'تَحَوَّلَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['حول', 'تَحَوَّلَ'],
+        ['عين', 'تَعَيَّنَ'],
+        ['غير', 'تَغَيَّرَ'],
+        ['طور', 'تَطَوَّرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
 

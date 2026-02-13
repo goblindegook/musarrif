@@ -1227,6 +1227,18 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['حول', 'يَتَحَوَّلْ'],
+        ['قول', 'يَتَقَوَّلْ'],
+        ['عين', 'يَتَعَيَّنْ'],
+        ['غير', 'يَتَغَيَّرْ'],
+        ['طور', 'يَتَطَوَّرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['بقي', 'يَتَبَقَّ'],
