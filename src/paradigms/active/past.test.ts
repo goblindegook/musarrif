@@ -1463,6 +1463,18 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخر', 'تَأَخَّرَ'],
+        ['ألف', 'تَأَلَّفَ'],
+        ['أكد', 'تَأَكَّدَ'],
+        ['أكل', 'تَأَكَّلَ'],
+        ['أثر', 'تَأَثَّرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'تَحَبَّبَ'],

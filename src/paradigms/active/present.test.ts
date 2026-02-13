@@ -1563,6 +1563,18 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخر', 'يَتَأَخَّرُ'],
+        ['ألف', 'يَتَأَلَّفُ'],
+        ['أكد', 'يَتَأَكَّدُ'],
+        ['أكل', 'يَتَأَكَّلُ'],
+        ['أثر', 'يَتَأَثَّرُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'يَتَحَبَّبُ'],

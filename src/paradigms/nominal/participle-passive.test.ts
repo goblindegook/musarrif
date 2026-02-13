@@ -542,6 +542,18 @@ describe('passive participle', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخر', 'مُتَأَخَّر'],
+        ['ألف', 'مُتَأَلَّف'],
+        ['أكد', 'مُتَأَكَّد'],
+        ['أكل', 'مُتَأَكَّل'],
+        ['أثر', 'مُتَأَثَّر'],
+      ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'مُتَحَبَّب'],

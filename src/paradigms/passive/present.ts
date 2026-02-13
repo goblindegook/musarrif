@@ -261,12 +261,15 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
 
 function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  const seatedC1 = seatHamza(c1, FATHA)
+  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
 
   if (isWeakLetter(c3)) {
     return [
       TEH,
       FATHA,
-      seatHamza(c1, DAMMA),
+      seatedC1,
       FATHA,
       c2,
       SHADDA,
@@ -275,7 +278,7 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
     ]
   }
 
-  return [TEH, FATHA, ...derivePassivePresentStemFormII(verb, pronounId, mood)]
+  return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

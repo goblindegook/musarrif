@@ -180,10 +180,15 @@ function derivePassivePastFormIV(verb: Verb): PassivePastParams {
 }
 
 function derivePassivePastFormV(verb: Verb): PassivePastParams {
+  const [c1] = [...verb.root]
   const formII = derivePassivePastFormII(verb)
+  const formIIPrefix = [...formII.prefix]
+
+  if (isHamzatedLetter(c1)) formIIPrefix[0] = seatHamza(c1, DAMMA)
+
   return {
     ...formII,
-    prefix: [TEH, DAMMA, ...formII.prefix],
+    prefix: [TEH, DAMMA, ...formIIPrefix],
   }
 }
 

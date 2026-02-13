@@ -1284,6 +1284,26 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test('تَأَثَّرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أثر', 5), 'indicative')).toEqualT({
+          '1s': 'أُتَأَثَّرُ',
+          '2ms': 'تُتَأَثَّرُ',
+          '2fs': 'تُتَأَثَّرِينَ',
+          '3ms': 'يُتَأَثَّرُ',
+          '3fs': 'تُتَأَثَّرُ',
+          '2d': 'تُتَأَثَّرَانِ',
+          '3md': 'يُتَأَثَّرَانِ',
+          '3fd': 'تُتَأَثَّرَانِ',
+          '1p': 'نُتَأَثَّرُ',
+          '2mp': 'تُتَأَثَّرُوْنَ',
+          '2fp': 'تُتَأَثَّرْنَ',
+          '3mp': 'يُتَأَثَّرُوْنَ',
+          '3fp': 'يُتَأَثَّرْنَ',
+        })
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'يُتَوَصَّلُ'],

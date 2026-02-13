@@ -1200,6 +1200,26 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test('تَأَثَّرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أثر', 5), 'subjunctive')).toEqualT({
+          '1s': 'أُتَأَثَّرَ',
+          '2ms': 'تُتَأَثَّرَ',
+          '2fs': 'تُتَأَثَّرِي',
+          '3ms': 'يُتَأَثَّرَ',
+          '3fs': 'تُتَأَثَّرَ',
+          '2d': 'تُتَأَثَّرَا',
+          '3md': 'يُتَأَثَّرَا',
+          '3fd': 'تُتَأَثَّرَا',
+          '1p': 'نُتَأَثَّرَ',
+          '2mp': 'تُتَأَثَّرُوْا',
+          '2fp': 'تُتَأَثَّرْنَ',
+          '3mp': 'يُتَأَثَّرُوْا',
+          '3fp': 'يُتَأَثَّرْنَ',
+        })
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'يُتَوَصَّلَ'],

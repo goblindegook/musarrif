@@ -1077,6 +1077,26 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test('تَأَثَّرَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('أثر', 5))).toEqualT({
+          '1s': 'تُؤُثِّرْتُ',
+          '2ms': 'تُؤُثِّرْتَ',
+          '2fs': 'تُؤُثِّرْتِ',
+          '3ms': 'تُؤُثِّرَ',
+          '3fs': 'تُؤُثِّرَتْ',
+          '2d': 'تُؤُثِّرْتُمَا',
+          '3md': 'تُؤُثِّرَا',
+          '3fd': 'تُؤُثِّرَتَا',
+          '1p': 'تُؤُثِّرْنَا',
+          '2mp': 'تُؤُثِّرْتُمْ',
+          '2fp': 'تُؤُثِّرْتُنَّ',
+          '3mp': 'تُؤُثِّرُوْا',
+          '3fp': 'تُؤُثِّرْنَ',
+        })
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'تُوُصِّلَ'],

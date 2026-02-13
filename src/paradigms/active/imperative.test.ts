@@ -1298,6 +1298,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخر', 'تَأَخَّرْ'],
+        ['ألف', 'تَأَلَّفْ'],
+        ['أكد', 'تَأَكَّدْ'],
+        ['أكل', 'تَأَكَّلْ'],
+        ['أثر', 'تَأَثَّرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'تَحَبَّبْ'],

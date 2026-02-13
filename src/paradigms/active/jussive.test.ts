@@ -1202,6 +1202,18 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['أخر', 'يَتَأَخَّرْ'],
+        ['ألف', 'يَتَأَلَّفْ'],
+        ['أكد', 'يَتَأَكَّدْ'],
+        ['أكل', 'يَتَأَكَّلْ'],
+        ['أثر', 'يَتَأَثَّرْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'يَتَوَصَّلْ'],
