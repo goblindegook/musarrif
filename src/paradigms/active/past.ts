@@ -195,7 +195,6 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
     return {
       base: [...prefix, FATHA, ALIF, c3, FATHA],
       suffixedBase: [...prefix, KASRA, seatedC3, SUKOON],
-      pluralBase: [...prefix, KASRA, seatedC3, DAMMA, WAW],
     }
 
   return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
@@ -222,7 +221,6 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
     return {
       base: [...prefix, FATHA, ALIF, c3, FATHA],
       suffixedBase: [...prefix, KASRA, seatedC3, SUKOON],
-      pluralBase: [...prefix, KASRA, seatedC3, DAMMA, WAW],
     }
 
   return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, c3, FATHA], c3)
@@ -262,8 +260,6 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
       pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
-  if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
-
   if (isWeakLetter(c2)) return buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
@@ -271,9 +267,7 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
 
 function derivePastForms(verb: Verb): PastBaseForms {
   // Handle quadriliteral and longer roots
-  if (verb.root.length === 4) {
-    return deriveQuadriliteralPastForms(verb)
-  }
+  if (verb.root.length === 4) return deriveQuadriliteralPastForms(verb)
 
   // Triliteral roots (3 letters)
   switch (verb.form) {

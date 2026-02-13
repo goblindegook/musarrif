@@ -4,7 +4,9 @@ const config = {
   plugins: ['@stryker-mutator/vitest-runner'],
   testRunner: 'vitest',
   reporters: ['clear-text', 'progress', 'html'],
-  mutate: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}', '!src/test/**'],
+  mutate: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}'],
+  testFiles: ['src/**/*.test.{ts,tsx}'],
+  cleanTempDir: 'always',
   vitest: {
     configFile: 'vitest.config.ts',
   },
