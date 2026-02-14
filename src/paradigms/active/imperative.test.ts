@@ -1306,6 +1306,7 @@ describe('imperative', () => {
         ['أكد', 'تَأَكَّدْ'],
         ['أكل', 'تَأَكَّلْ'],
         ['أثر', 'تَأَثَّرْ'],
+        ['أوه', 'تَأَوَّهْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
       })
@@ -1397,6 +1398,28 @@ describe('imperative', () => {
           '2d': 'تَوَفَّيَا',
           '2mp': 'تَوَفَّوْا',
           '2fp': 'تَوَفَّيْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final hollow roots', () => {
+      test('تَهَيَّأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('هيء', 5))).toMatchObjectT({
+          '2ms': 'تَهَيَّأْ',
+          '2fs': 'تَهَيَّئِي',
+          '2d': 'تَهَيَّآ',
+          '2mp': 'تَهَيَّؤُوا',
+          '2fp': 'تَهَيَّأْنَ',
+        })
+      })
+
+      test('تَضَوَّأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('ضوء', 5))).toMatchObjectT({
+          '2ms': 'تَضَوَّأْ',
+          '2fs': 'تَضَوَّئِي',
+          '2d': 'تَضَوَّآ',
+          '2mp': 'تَضَوَّؤُوا',
+          '2fp': 'تَضَوَّأْنَ',
         })
       })
     })

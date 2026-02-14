@@ -182,7 +182,7 @@ function deriveMasdarFormV(verb: Verb<5>): readonly string[] {
 
   if (isFinalWeak) return [...prefix, c2, SHADDA, TANWEEN_KASRA]
 
-  return [...prefix, c2, SHADDA, DAMMA, c3]
+  return [...prefix, c2, SHADDA, DAMMA, seatHamza(c3, DAMMA)]
 }
 
 function deriveMasdarFormVI(verb: Verb<6>): readonly string[] {

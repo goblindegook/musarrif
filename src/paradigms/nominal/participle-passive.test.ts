@@ -550,6 +550,7 @@ describe('passive participle', () => {
         ['أكد', 'مُتَأَكَّد'],
         ['أكل', 'مُتَأَكَّل'],
         ['أثر', 'مُتَأَثَّر'],
+        ['أوه', 'مُتَأَوَّه'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
       })
@@ -609,6 +610,15 @@ describe('passive participle', () => {
         ['وفي', 'مُتَوَفًّى'],
         ['وقي', 'مُتَوَقًّى'],
         ['وخي', 'مُتَوَخًّى'],
+      ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final hollow roots', () => {
+      test.each([
+        ['هيء', 'مُتَهَيَّأ'],
+        ['ضوء', 'مُتَضَوَّأ'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
       })

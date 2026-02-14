@@ -88,7 +88,11 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
     const lastIndex = findLastLetterIndex(stem)
-    const hamzaStem = [...stem.slice(0, lastIndex), HAMZA_ON_YEH, ...stem.slice(lastIndex + 1)]
+    const hamzaStem = [
+      ...stem.slice(0, lastIndex),
+      verb.form === 5 ? HAMZA_ON_WAW : HAMZA_ON_YEH,
+      ...stem.slice(lastIndex + 1),
+    ]
     return [...removeFinalDiacritic(hamzaStem), DAMMA, WAW, NOON, FATHA]
   }
 
@@ -137,7 +141,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
-  if (isWeakLetter(c2) && isHamzatedLetter(c3))
+  if (verb.form !== 5 && isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(stem))), ...suffix]
 
   if (verb.form === 1 && !hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2))
@@ -156,7 +160,7 @@ function buildDualPresent(word: readonly string[], verb: Verb): readonly string[
       : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, FATHA, ...suffix]
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-    const hamzaSeat = verb.form === 4 || c2 === YEH ? HAMZA_ON_YEH : HAMZA
+    const hamzaSeat = verb.form === 5 ? ALIF_HAMZA : verb.form === 4 || c2 === YEH ? HAMZA_ON_YEH : HAMZA
     const lastIndex = findLastLetterIndex(word)
     return [
       ...removeFinalDiacritic([...word.slice(0, lastIndex), hamzaSeat, ...word.slice(lastIndex + 1)]),
@@ -221,7 +225,7 @@ function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [, , c3] = Array.from(verb.root)
+  const [, _c2, c3] = Array.from(verb.root)
   const isFinalWeak = isWeakLetter(c3)
 
   return mapRecord(
@@ -285,11 +289,16 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 
-      if (pronounId === '2fs' || isMasculinePlural(pronounId)) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (pronounId === '2fs') return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+
+      if (isMasculinePlural(pronounId))
+        return verb.form === 5 && isFinalHamza
+          ? [...dropNoonEnding(word), ALIF]
+          : replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
       if (isFinalHamza && isFemininePlural(pronounId)) return word
 
-      if (isMiddleWeak && isFinalHamza)
+      if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
         return [...removeFinalDiacritic(dropTerminalWeakOrHamza(shortenHollowStem(word))), SUKOON]
 
       if (isFinalWeak) return dropFinalDefectiveGlide(word)
@@ -424,7 +433,7 @@ function derivePresentFormV(verb: Verb<5>): readonly string[] {
 
   if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, c3, DAMMA]
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, seatHamza(c3, FATHA), DAMMA]
 }
 
 function derivePresentFormVI(verb: Verb<6>): readonly string[] {

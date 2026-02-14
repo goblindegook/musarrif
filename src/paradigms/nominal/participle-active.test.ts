@@ -570,6 +570,7 @@ describe('active participle', () => {
         ['أكد', 'مُتَأَكِّد'],
         ['أكل', 'مُتَأَكِّل'],
         ['أثر', 'مُتَأَثِّر'],
+        ['أوه', 'مُتَأَوِّه'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
       })
@@ -630,6 +631,15 @@ describe('active participle', () => {
         ['وفي', 'مُتَوَفٍ'],
         ['وقي', 'مُتَوَقٍ'],
         ['وخي', 'مُتَوَخٍ'],
+      ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final hollow roots', () => {
+      test.each([
+        ['هيء', 'مُتَهَيِّئ'],
+        ['ضوء', 'مُتَضَوِّئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
       })

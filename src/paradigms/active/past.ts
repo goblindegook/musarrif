@@ -74,13 +74,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
       '3mp':
         isWeakLetter(c2) && isHamzatedLetter(c3)
-          ? [
-              ...removeFinalDiacritic(forms.base).map((char) => (char === HAMZA ? HAMZA_ON_WAW : char)),
-              DAMMA,
-              WAW,
-              SUKOON,
-              ALIF,
-            ]
+          ? [...forms.base.slice(0, -2), HAMZA_ON_WAW, DAMMA, WAW, SUKOON, ALIF]
           : [...pluralBase, SUKOON, ALIF],
       '3fp': [...suffixedBase, NOON, FATHA],
     },
@@ -202,7 +196,7 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
 
 function derivePastFormV(verb: Verb<5>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  return buildForms([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3, FATHA], c3)
+  return buildForms([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, seatHamza(c3, FATHA), FATHA], c3)
 }
 
 function derivePastFormVI(verb: Verb<6>): PastBaseForms {
