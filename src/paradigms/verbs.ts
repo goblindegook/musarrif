@@ -27,20 +27,21 @@ export type MasdarPattern =
 
 export type Tense = 'past' | 'present' | 'future' | 'imperative'
 export type Voice = 'active' | 'passive'
+export type PassiveVoice = 'none' | 'impersonal'
 
 type RawFormI = {
   root: string
   form: 1
   formPattern: FormIPattern
   masdarPatterns?: readonly MasdarPattern[]
-  noPassiveVoice?: boolean
+  passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
 
 type RawNonFormI = {
   root: string
   form: Exclude<VerbForm, 1>
-  noPassiveVoice?: boolean
+  passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
 

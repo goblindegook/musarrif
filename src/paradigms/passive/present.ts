@@ -25,6 +25,7 @@ import {
 import type { PronounId } from '../pronouns'
 import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
 import type { Verb } from '../verbs'
+import { constrainPassiveConjugation } from './support'
 
 const PRESENT_PREFIXES: Record<PronounId, string> = {
   '1s': ALIF_HAMZA,
@@ -281,6 +282,12 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
   return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
 
+function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3] = [...verb.root]
+  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, ...moodSuffix]
+}
+
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
@@ -318,15 +325,20 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
       return derivePassivePresentStemFormIV(verb, pronounId, mood)
     case 5:
       return derivePassivePresentStemFormV(verb, pronounId, mood)
+    case 6:
+      return derivePassivePresentStemFormVI(verb, pronounId, mood)
     default:
       return []
   }
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
-  return mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
-    normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
-      .join('')
-      .normalize('NFC'),
+  return constrainPassiveConjugation(
+    verb,
+    mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
+      normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
+        .join('')
+        .normalize('NFC'),
+    ),
   )
 }

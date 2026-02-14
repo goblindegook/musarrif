@@ -1,8 +1,22 @@
+import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { PRONOUN_IDS } from '../pronouns'
+import { getVerb, verbs } from '../verbs'
 import { conjugatePassivePast } from './past'
 
 describe('passive past pattern', () => {
+  test('impersonal passive only conjugates 3ms in past', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(...verbs.filter((verb) => verb.passiveVoice === 'impersonal')),
+        fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
+        (verb, pronounId) => {
+          expect(conjugatePassivePast(verb)[pronounId]).toBe('')
+        },
+      ),
+    )
+  })
+
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each<[string, string]>([['بلغ', 'بُلِغَ']])('%s pattern', (root, expected) => {
@@ -160,6 +174,14 @@ describe('passive past pattern', () => {
         ['كلم', 'كُلِمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+      })
+    })
+  })
+
+  describe('Form VI', () => {
+    describe('assimilated roots', () => {
+      test.each<[string, string]>([['وجد', 'تُوُوجِدَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
       })
     })
   })

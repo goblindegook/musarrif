@@ -1,8 +1,22 @@
+import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { PRONOUN_IDS } from '../pronouns'
+import { getVerb, verbs } from '../verbs'
 import { conjugatePassivePresentMood } from './present'
 
 describe('passive present subjunctive', () => {
+  test('impersonal passive only conjugates 3ms in present subjunctive', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(...verbs.filter((verb) => verb.passiveVoice === 'impersonal')),
+        fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
+        (verb, pronounId) => {
+          expect(conjugatePassivePresentMood(verb, 'subjunctive')[pronounId]).toBe('')
+        },
+      ),
+    )
+  })
+
   describe('Form I', () => {
     describe('strong roots', () => {
       test.each([
@@ -1257,6 +1271,14 @@ describe('passive present subjunctive', () => {
         ['وخي', 'يُتَوَخَّى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
+  describe('Form VI', () => {
+    describe('assimilated roots', () => {
+      test.each<[string, string]>([['وجد', 'يُتَوَاجَدَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
   })

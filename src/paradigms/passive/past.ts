@@ -24,8 +24,14 @@ import {
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
+import { constrainPassiveConjugation } from './support'
 
-interface PassivePastParams {
+interface ImpersonalPassivePastParams {
+  prefix: readonly string[]
+  suffix3ms: readonly string[]
+}
+
+interface FullPassivePastParams {
   prefix: readonly string[]
   suffix: readonly string[]
   suffix3sd: readonly string[]
@@ -33,8 +39,31 @@ interface PassivePastParams {
   suffix3mp?: readonly string[]
 }
 
+type PassivePastParams = FullPassivePastParams | ImpersonalPassivePastParams
+
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
+  if (!('suffix' in params))
+    return mapRecord(
+      {
+        '1s': [],
+        '2ms': [],
+        '2fs': [],
+        '3ms': [...params.prefix, ...params.suffix3ms],
+        '3fs': [],
+        '2d': [],
+        '3md': [],
+        '3fd': [],
+        '1p': [],
+        '2mp': [],
+        '2fp': [],
+        '3mp': [],
+        '3fp': [],
+      },
+      (value) => value.join('').normalize('NFC'),
+    )
+
   const { prefix, suffix, suffix3sd, suffix3ms, suffix3mp = [] } = params
+
   return mapRecord(
     {
       '1s': [...prefix, ...suffix, TEH, DAMMA],
@@ -189,6 +218,14 @@ function derivePassivePastFormV(verb: Verb): PassivePastParams {
   }
 }
 
+function derivePassivePastFormVI(verb: Verb): PassivePastParams {
+  const [c1, c2, c3] = [...verb.root]
+  return {
+    prefix: [TEH, DAMMA, c1, DAMMA, WAW, c2, KASRA],
+    suffix3ms: [c3, FATHA],
+  }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
   switch (verb.form) {
     case 1:
@@ -201,11 +238,13 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
       return derivePassivePastFormIV(verb)
     case 5:
       return derivePassivePastFormV(verb)
+    case 6:
+      return derivePassivePastFormVI(verb)
     default:
       return { prefix: [], suffix: [], suffix3sd: [] }
   }
 }
 
 export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
-  return toConjugation(derivePassivePastForms(verb))
+  return constrainPassiveConjugation(verb, toConjugation(derivePassivePastForms(verb)))
 }
