@@ -621,6 +621,12 @@ describe('masdar', () => {
       })
     })
 
+    describe('hamzated initial geminate roots', () => {
+      test.each([['أمم', 'تَأَمُّم']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
+      })
+    })
+
     describe('hamzated initial defective roots', () => {
       test.each([['أذي', 'تَأَذٍّ']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 5))).toEqualT([expected].flat())
