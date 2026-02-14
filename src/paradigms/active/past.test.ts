@@ -1650,6 +1650,16 @@ describe('active past', () => {
 
   describe('Form VI', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عمل', 'تَعَامَلَ'],
+        ['كمل', 'تَكَامَلَ'],
+        ['شرك', 'تَشَارَكَ'],
+        ['علج', 'تَعَالَجَ'],
+        ['قسم', 'تَقَاسَمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
+      })
+
       test('تَكَاتَبَ conjugation', () => {
         expect(conjugatePast(getVerb('كتب', 6))).toEqualT({
           '1s': 'تَكَاتَبْتُ',

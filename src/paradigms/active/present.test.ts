@@ -1744,6 +1744,16 @@ describe('active present indicative', () => {
 
   describe('Form VI', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عمل', 'يَتَعَامَلُ'],
+        ['كمل', 'يَتَكَامَلُ'],
+        ['شرك', 'يَتَشَارَكُ'],
+        ['علج', 'يَتَعَالَجُ'],
+        ['قسم', 'يَتَقَاسَمُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('تَكَاتَبَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('كتب', 6), 'indicative')).toEqualT({
           '1s': 'أَتَكَاتَبُ',

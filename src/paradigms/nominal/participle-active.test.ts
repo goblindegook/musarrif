@@ -662,7 +662,14 @@ describe('active participle', () => {
 
   describe('Form VI', () => {
     describe('regular roots', () => {
-      test.each([['كتب', 'مُتَكَاتِب']])('%s', (root, expected) => {
+      test.each([
+        ['كتب', 'مُتَكَاتِب'],
+        ['عمل', 'مُتَعَامِل'],
+        ['كمل', 'مُتَكَامِل'],
+        ['شرك', 'مُتَشَارِك'],
+        ['علج', 'مُتَعَالِج'],
+        ['قسم', 'مُتَقَاسِم'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toBe(expected)
       })
     })

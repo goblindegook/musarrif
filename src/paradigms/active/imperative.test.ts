@@ -1441,6 +1441,16 @@ describe('imperative', () => {
 
   describe('Form VI', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عمل', 'تَعَامَلْ'],
+        ['كمل', 'تَكَامَلْ'],
+        ['شرك', 'تَشَارَكْ'],
+        ['علج', 'تَعَالَجْ'],
+        ['قسم', 'تَقَاسَمْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 6))['2ms']).toEqualT(expected)
+      })
+
       test('تَكَاتَبَ conjugation', () => {
         expect(conjugateImperative(getVerb('كتب', 6))).toMatchObjectT({
           '2ms': 'تَكَاتَبْ',
