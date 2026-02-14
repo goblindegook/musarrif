@@ -1709,6 +1709,18 @@ describe('active past', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([
+        ['وفق', 'تَوَافَقَ'],
+        ['وجه', 'تَوَاجَهَ'],
+        ['وفر', 'تَوَافَرَ'],
+        ['وجد', 'تَوَاجَدَ'],
+        ['وزن', 'تَوَازَنَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test('تَسَاءَلَ conjugation', () => {
         expect(conjugatePast(getVerb('سأل', 6))).toEqualT({

@@ -1473,6 +1473,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('assimilated roots', () => {
+      test.each([
+        ['وفق', 'تَوَافَقْ'],
+        ['وجه', 'تَوَاجَهْ'],
+        ['وفر', 'تَوَافَرْ'],
+        ['وجد', 'تَوَاجَدْ'],
+        ['وزن', 'تَوَازَنْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 6))['2ms']).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form VII', () => {

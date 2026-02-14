@@ -732,6 +732,18 @@ describe('masdar', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([
+        ['وفق', 'تَوَافُق'],
+        ['وجه', 'تَوَاجُه'],
+        ['وفر', 'تَوَافُر'],
+        ['وجد', 'تَوَاجُد'],
+        ['وزن', 'تَوَازُن'],
+      ])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test.each([['سأل', ['تَسَاؤُل']]])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())

@@ -1803,6 +1803,18 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([
+        ['وفق', 'يَتَوَافَقُ'],
+        ['وجه', 'يَتَوَاجَهُ'],
+        ['وفر', 'يَتَوَافَرُ'],
+        ['وجد', 'يَتَوَاجَدُ'],
+        ['وزن', 'يَتَوَازَنُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test('تَسَاءَلَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('سأل', 6), 'indicative')).toEqualT({
