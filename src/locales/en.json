@@ -119,6 +119,8 @@
     ">dd-1": "to hit, to afflict",
     ">dy-2": "to harm",
     ">*y-2": "to harm",
+    ">dy-5": "to be harmed",
+    ">*y-5": "to be harmed",
     ">xr-2": "to delay",
     ">xr-5": "to be delayed",
     ">lf-5": "to be composed",

@@ -1577,6 +1577,12 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test.each([['أذي', 'يَتَأَذَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'يَتَحَبَّبُ'],

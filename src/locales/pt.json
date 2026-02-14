@@ -119,6 +119,8 @@
     ">dd-1": "golpear, afligir",
     ">dy-2": "prejudicar",
     ">*y-2": "prejudicar",
+    ">dy-5": "ser prejudicado",
+    ">*y-5": "ser prejudicado",
     ">xr-2": "atrasar",
     ">xr-5": "atrasar-se",
     ">lf-5": "ser composto",

@@ -576,6 +576,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('hamzated initial defective roots', () => {
+      test.each([['أذي', 'مُتَأَذٍّ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حبب', 'مُتَحَبِّب'],
