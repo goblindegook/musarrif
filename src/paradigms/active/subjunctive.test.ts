@@ -1143,6 +1143,10 @@ describe('active present subjunctive', () => {
           '3fp': 'يَتَوَخَّيْنَ',
         })
       })
+
+      test.each([['زوي', 'يَتَزَوَّى']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
+      })
     })
 
     describe('hamzated final hollow roots', () => {

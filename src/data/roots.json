@@ -276,6 +276,7 @@
   { "root": "زرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "زلزل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "زوي", "form": 2 },
+  { "root": "زوي", "form": 5, "noPassiveVoice": true },
   { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "هوي", "form": 2 },
   { "root": "هنأ", "form": 2 },
