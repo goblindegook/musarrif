@@ -1,4 +1,4 @@
-import { hasPattern, isFormIPresentVowel } from '../form-i-vowels'
+import { isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -19,6 +19,7 @@ import {
   SEEN,
   SHADDA,
   SUKOON,
+  seatHamza,
   shortVowelFromPattern,
   TANWEEN_FATHA,
   TANWEEN_KASRA,
@@ -105,27 +106,28 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
       return [MEEM, FATHA, c1, SUKOON, c2, shortVowelFromPattern(vowelPattern), c3 === YEH ? ALIF_MAQSURA : c3]
     }
 
-    default:
-      if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, ALIF_HAMZA, SUKOON, YEH]
+    default: {
+      if (isInitialWeak && isMiddleHamza && isFinalWeak) return [c1, FATHA, seatHamza(c2, FATHA), SUKOON, YEH]
 
-      if (isInitialWeak && !isMiddleWeak && isFinalWeak) return [c1, KASRA, c2, FATHA, ALIF, YEH, FATHA, TEH_MARBUTA]
+      if (isInitialWeak && isFinalWeak) return [c1, KASRA, c2, FATHA, ALIF, YEH, FATHA, TEH_MARBUTA]
 
-      if (isInitialHamza && !isMiddleWeak && isFinalWeak)
-        return [ALIF_HAMZA_BELOW, KASRA, c2, SUKOON, YEH, FATHA, ALIF, NOON]
-
-      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, HAMZA_ON_WAW, SUKOON, YEH, FATHA, TEH_MARBUTA]
+      if (isMiddleHamza && isFinalWeak) return [c1, DAMMA, seatHamza(c2, DAMMA), SUKOON, YEH, FATHA, TEH_MARBUTA]
 
       if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, c1, KASRA, YEH, c3]
 
+      if (isInitialHamza && isFinalWeak)
+        return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, SUKOON, YEH, FATHA, ALIF, NOON]
+
       if (c3 === YEH) return [c1, DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
-
-      if (hasPattern(verb, 'fa3ula-yaf3ulu')) return [c1, DAMMA, c2, SUKOON, ALIF_HAMZA, FATHA, TEH_MARBUTA]
-
-      if (isMiddleWeak) return [c1, FATHA, isFormIPresentVowel(verb, 'i') ? YEH : WAW, SUKOON, c3]
 
       if (isFinalWeak) return [c1, DAMMA, c2, FATHA, ALIF, HAMZA]
 
+      if (isFinalHamza) return [c1, DAMMA, c2, SUKOON, seatHamza(c3, FATHA), FATHA, TEH_MARBUTA]
+
+      if (isMiddleWeak) return [c1, FATHA, isFormIPresentVowel(verb, 'i') ? YEH : WAW, SUKOON, c3]
+
       return []
+    }
   }
 }
 
