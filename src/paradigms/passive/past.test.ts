@@ -179,8 +179,22 @@ describe('passive past pattern', () => {
   })
 
   describe('Form VI', () => {
+    describe('strong roots', () => {
+      test.each<[string, string]>([
+        ['شرك', 'تُشُورِكَ'],
+        ['علج', 'تُعُولِجَ'],
+        ['عمل', 'تُعُومِلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
-      test.each<[string, string]>([['وجد', 'تُوُوجِدَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['وجد', 'تُوُوجِدَ'],
+        ['وفق', 'تُوُوفِقَ'],
+        ['وفر', 'تُوُوفِرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
       })
     })

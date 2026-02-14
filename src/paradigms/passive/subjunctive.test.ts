@@ -1276,8 +1276,22 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form VI', () => {
+    describe('strong roots', () => {
+      test.each<[string, string]>([
+        ['شرك', 'يُتَشَارَكَ'],
+        ['علج', 'يُتَعَالَجَ'],
+        ['عمل', 'يُتَعَامَلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
-      test.each<[string, string]>([['وجد', 'يُتَوَاجَدَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['وجد', 'يُتَوَاجَدَ'],
+        ['وفق', 'يُتَوَافَقَ'],
+        ['وفر', 'يُتَوَافَرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
