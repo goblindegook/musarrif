@@ -189,6 +189,16 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each<[string, string]>([
+        ['نول', 'تُنُووِلَ'],
+        ['فوض', 'تُفُووِضَ'],
+        ['جوز', 'تُجُووِزَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each<[string, string]>([
         ['وجد', 'تُوُوجِدَ'],

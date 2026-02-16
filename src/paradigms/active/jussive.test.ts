@@ -1329,6 +1329,18 @@ describe('active present jussive', () => {
     })
   })
 
+  describe('Form VI', () => {
+    describe('hollow roots', () => {
+      test.each([
+        ['نول', 'يَتَنَاوَلْ'],
+        ['فوض', 'يَتَفَاوَضْ'],
+        ['جوز', 'يَتَجَاوَزْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
   describe('Form VII', () => {
     describe('hollow roots', () => {
       test.each<[string, string]>([['قود', 'يَنْقَدْ']])('%s pattern', (root, expected3ms) => {

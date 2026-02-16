@@ -1799,7 +1799,12 @@ describe('active present indicative', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['عون', 'يَتَعَاوَنُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['عون', 'يَتَعَاوَنُ'],
+        ['نول', 'يَتَنَاوَلُ'],
+        ['فوض', 'يَتَفَاوَضُ'],
+        ['جوز', 'يَتَجَاوَزُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
       })
     })

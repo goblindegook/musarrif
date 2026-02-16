@@ -1209,6 +1209,18 @@ describe('active present subjunctive', () => {
     })
   })
 
+  describe('Form VI', () => {
+    describe('hollow roots', () => {
+      test.each([
+        ['نول', 'يَتَنَاوَلَ'],
+        ['فوض', 'يَتَفَاوَضَ'],
+        ['جوز', 'يَتَجَاوَزَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
   describe('Form X', () => {
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
