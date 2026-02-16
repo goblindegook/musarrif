@@ -189,9 +189,12 @@ function deriveMasdarFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
+  const isFinalWeak = isWeakLetter(c3)
   const prefix = [TEH, FATHA, c1, FATHA]
 
   if (isMiddleWeak && isFinalHamza) return [...prefix, ALIF, c3, TANWEEN_KASRA]
+
+  if (isFinalWeak) return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, TANWEEN_KASRA]
 
   return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
 }

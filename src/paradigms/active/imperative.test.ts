@@ -1473,6 +1473,16 @@ describe('imperative', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['نمو', 'تَنَامَ'],
+        ['مشي', 'تَمَاشَ'],
+        ['عفو', 'تَعَافَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 6))['2ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test('تَسَاءَلَ conjugation', () => {
         expect(conjugateImperative(getVerb('سأل', 6))).toMatchObjectT({

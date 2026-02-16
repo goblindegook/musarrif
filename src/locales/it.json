@@ -806,7 +806,10 @@
     "r'y-3": "fare sfoggio",
     "r'y-4": "mostrare",
     "r'y-5": "mostrarsi",
-    "r'y-6": "vedersi"
+    "r'y-6": "vedersi",
+    "Efw-6": "riprendersi",
+    "m$y-6": "camminare insieme, corrispondere",
+    "nmw-6": "crescere, aumentare"
   },
   "roots": {
     "*hb": "andare",
@@ -836,6 +839,7 @@
     "$rk": "condivisione",
     "$fy": "guarigione",
     "$wr": "indicazione",
+    "m$y": "camminata",
     "$dd": "intensificazione",
     "bd>": "inizio",
     "bdl": "cambiamento",
@@ -849,7 +853,9 @@
     "Dw'": "luce",
     "qwm": "resistenza",
     "Ewd": "ritorno",
+    "Efw": "guarigione",
     "jwz": "eccesso",
+    "nmw": "crescita",
     "nwl": "consegna",
     "bw'": "ritorno",
     "blg": "raggiungimento",

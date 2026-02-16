@@ -176,7 +176,7 @@ function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonl
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
+  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, c2 === c3)]
 
   return moodSuffix
 }
@@ -200,7 +200,7 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
     const glide =
       mood !== 'jussive' || isWeakLetter(c1) || isWeakLetter(c2) ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
 
-    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA], c2 === c3)]
+    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, c2 === c3)]
   }
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
@@ -219,7 +219,7 @@ function derivePassivePresentStemFormIII(verb: Verb<3>, pronounId: PronounId, mo
     return [...prefix, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId, moodSuffix)]
+  if (isWeakLetter(c3)) return [...prefix, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
@@ -245,7 +245,7 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
     return [seatedC1, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
-  if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, moodSuffix, c2 === c3)]
+  if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, c2 === c3)]
 
   if (isMiddleWeak) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [seatedC1, FATHA, seatedC3, ...moodSuffix]
@@ -266,18 +266,8 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
   const seatedC1 = seatHamza(c1, FATHA)
   const seatedC3 = seatHamza(c3, FATHA)
 
-  if (isWeakLetter(c3)) {
-    return [
-      TEH,
-      FATHA,
-      seatedC1,
-      FATHA,
-      c2,
-      SHADDA,
-      FATHA,
-      ...defectiveSuffix(mood, pronounId, [SUKOON, NOON, FATHA], false),
-    ]
-  }
+  if (isWeakLetter(c3))
+    return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId, false)]
 
   return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
@@ -285,6 +275,8 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
 function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  if (isWeakLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+
   return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, c3, ...moodSuffix]
 }
 
@@ -292,19 +284,17 @@ function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
 
-function defectiveSuffix(
-  mood: Mood,
-  pronounId: PronounId,
-  femininePluralSuffix?: readonly string[],
-  isGeminateRoot?: boolean,
-): readonly string[] {
-  if (pronounId === '2fs') return mood === 'indicative' ? [YEH, SUKOON, NOON, FATHA] : [YEH, SUKOON]
+function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly string[] {
+  if (mood === 'indicative') {
+    if (pronounId === '2fs') return [YEH, SUKOON, NOON, FATHA]
+    if (isDual(pronounId)) return [YEH, FATHA, ALIF, NOON, KASRA]
+    if (isMasculinePlural(pronounId)) return [WAW, SUKOON, NOON, FATHA]
+  }
 
-  if (isDual(pronounId)) return [YEH, ...MOOD_SUFFIXES[mood][pronounId]]
-
-  if (isMasculinePlural(pronounId)) return mood === 'indicative' ? [WAW, SUKOON, NOON, FATHA] : [WAW, SUKOON, ALIF]
-
-  if (isFemininePlural(pronounId)) return [YEH, ...(femininePluralSuffix ?? MOOD_SUFFIXES[mood][pronounId])]
+  if (pronounId === '2fs') return [YEH, SUKOON]
+  if (isDual(pronounId)) return [YEH, FATHA, ALIF]
+  if (isMasculinePlural(pronounId)) return [WAW, SUKOON, ALIF]
+  if (isFemininePlural(pronounId)) return [YEH, SUKOON, NOON, FATHA]
 
   if (mood === 'jussive') return []
 

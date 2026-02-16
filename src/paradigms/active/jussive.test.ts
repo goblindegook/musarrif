@@ -1339,6 +1339,16 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
       })
     })
+
+    describe('defective roots', () => {
+      test.each([
+        ['نمو', 'يَتَنَامَ'],
+        ['مشي', 'يَتَمَاشَ'],
+        ['عفو', 'يَتَعَافَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form VII', () => {

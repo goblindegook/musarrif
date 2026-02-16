@@ -806,7 +806,10 @@
     "r'y-3": "to show off",
     "r'y-4": "to show",
     "r'y-5": "to appear",
-    "r'y-6": "to appear to each other"
+    "r'y-6": "to appear to each other",
+    "Efw-6": "to recover",
+    "m$y-6": "to walk together, to correspond",
+    "nmw-6": "to grow, to increase"
   },
   "roots": {
     "*hb": "going",
@@ -836,6 +839,7 @@
     "$rk": "sharing",
     "$fy": "healing",
     "$wr": "indication",
+    "m$y": "walking",
     "$dd": "intensification",
     "bd>": "beginning",
     "bdl": "change",
@@ -849,7 +853,9 @@
     "Dw'": "light",
     "qwm": "resistance",
     "Ewd": "return",
+    "Efw": "recovery",
     "jwz": "excess",
+    "nmw": "growth",
     "nwl": "handing over",
     "bw'": "return",
     "blg": "reaching",

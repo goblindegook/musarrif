@@ -692,6 +692,16 @@ describe('active participle', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([
+        ['نمو', 'مُتَنَامٍ'],
+        ['مشي', 'مُتَمَاشٍ'],
+        ['عفو', 'مُتَعَافٍ'],
+      ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 6))).toBe(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([
         ['وفق', 'مُتَوَافِق'],

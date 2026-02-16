@@ -1219,6 +1219,70 @@ describe('active present subjunctive', () => {
         expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
+
+    describe('defective roots', () => {
+      test.each([
+        ['نمو', 'يَتَنَامَى'],
+        ['مشي', 'يَتَمَاشَى'],
+        ['عفو', 'يَتَعَافَى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('تَنَامَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('نمو', 6), 'subjunctive')).toEqualT({
+          '1s': 'أَتَنَامَى',
+          '2ms': 'تَتَنَامَى',
+          '2fs': 'تَتَنَامَيْ',
+          '3ms': 'يَتَنَامَى',
+          '3fs': 'تَتَنَامَى',
+          '2d': 'تَتَنَامَيَا',
+          '3md': 'يَتَنَامَيَا',
+          '3fd': 'تَتَنَامَيَا',
+          '1p': 'نَتَنَامَى',
+          '2mp': 'تَتَنَامَوْا',
+          '2fp': 'تَتَنَامَيْنَ',
+          '3mp': 'يَتَنَامَوْا',
+          '3fp': 'يَتَنَامَيْنَ',
+        })
+      })
+
+      test('تَمَاشَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('مشي', 6), 'subjunctive')).toEqualT({
+          '1s': 'أَتَمَاشَى',
+          '2ms': 'تَتَمَاشَى',
+          '2fs': 'تَتَمَاشَيْ',
+          '3ms': 'يَتَمَاشَى',
+          '3fs': 'تَتَمَاشَى',
+          '2d': 'تَتَمَاشَيَا',
+          '3md': 'يَتَمَاشَيَا',
+          '3fd': 'تَتَمَاشَيَا',
+          '1p': 'نَتَمَاشَى',
+          '2mp': 'تَتَمَاشَوْا',
+          '2fp': 'تَتَمَاشَيْنَ',
+          '3mp': 'يَتَمَاشَوْا',
+          '3fp': 'يَتَمَاشَيْنَ',
+        })
+      })
+
+      test('تَعَافَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('عفو', 6), 'subjunctive')).toEqualT({
+          '1s': 'أَتَعَافَى',
+          '2ms': 'تَتَعَافَى',
+          '2fs': 'تَتَعَافَيْ',
+          '3ms': 'يَتَعَافَى',
+          '3fs': 'تَتَعَافَى',
+          '2d': 'تَتَعَافَيَا',
+          '3md': 'يَتَعَافَيَا',
+          '3fd': 'تَتَعَافَيَا',
+          '1p': 'نَتَعَافَى',
+          '2mp': 'تَتَعَافَوْا',
+          '2fp': 'تَتَعَافَيْنَ',
+          '3mp': 'يَتَعَافَوْا',
+          '3fp': 'يَتَعَافَيْنَ',
+        })
+      })
+    })
   })
 
   describe('Form X', () => {

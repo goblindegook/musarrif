@@ -222,7 +222,7 @@ function derivePassivePastFormVI(verb: Verb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   return {
     prefix: [TEH, DAMMA, c1, DAMMA, WAW, c2, KASRA],
-    suffix3ms: [c3, FATHA],
+    suffix3ms: [isWeakLetter(c3) ? YEH : c3, FATHA],
   }
 }
 

@@ -1419,6 +1419,12 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each<[string, string]>([['عفو', 'يُتَعَافَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each<[string, string]>([
         ['وجد', 'يُتَوَاجَدْ'],

@@ -217,6 +217,16 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
       suffixedBase: [...prefix, KASRA, seatedC3, SUKOON],
     }
 
+  if (isWeakLetter(c3)) {
+    const normalizedBase = removeFinalDiacritic([...prefix, FATHA, ALIF, seatedC2, FATHA, c3, FATHA]).slice(0, -1)
+    return {
+      base: [...normalizedBase, ALIF_MAQSURA],
+      defectiveGlide: YEH,
+      suffixedBase: [...normalizedBase, YEH, SUKOON],
+      pluralBase: [...normalizedBase, WAW],
+    }
+  }
+
   return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, c3, FATHA], c3)
 }
 
