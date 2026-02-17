@@ -1520,6 +1520,7 @@ describe('imperative', () => {
         ['نمو', 'تَنَامَ'],
         ['مشي', 'تَمَاشَ'],
         ['عفو', 'تَعَافَ'],
+        ['هوي', 'تَهَاوَ'],
         ['ولي', 'تَوَالَ'],
         ['وصي', 'تَوَاصَ'],
       ])('%s pattern', (root, expected) => {
@@ -1540,6 +1541,16 @@ describe('imperative', () => {
     describe('hamzated final roots', () => {
       test.each([['بطأ', 'تَبَاطَأْ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 6))['2ms']).toEqualT(expected)
+      })
+
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('وطء', 6))).toMatchObjectT({
+          '2ms': 'تَوَاطَأْ',
+          '2fs': 'تَوَاطَئِي',
+          '2d': 'تَوَاطَآ',
+          '2mp': 'تَوَاطَأُوْا',
+          '2fp': 'تَوَاطَأْنَ',
+        })
       })
     })
 

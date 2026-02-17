@@ -202,7 +202,7 @@ function derivePastFormV(verb: Verb<5>): PastBaseForms {
 function derivePastFormVI(verb: Verb<6>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
-  const seatedC3 = seatHamza(c3, KASRA)
+  const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [TEH, FATHA, c1]
 
   if (c2 === c3)
@@ -214,7 +214,7 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
       base: [...prefix, FATHA, ALIF, c3, FATHA],
-      suffixedBase: [...prefix, KASRA, seatedC3, SUKOON],
+      suffixedBase: [...prefix, KASRA, seatHamza(c3, KASRA), SUKOON],
     }
 
   if (isWeakLetter(c3)) {
@@ -227,7 +227,7 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
     }
   }
 
-  return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, c3, FATHA], c3)
+  return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, seatedC3, FATHA], seatedC3)
 }
 
 function derivePastFormVII(verb: Verb<7>): PastBaseForms {

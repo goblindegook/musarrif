@@ -1431,9 +1431,30 @@ describe('passive present jussive', () => {
     describe('defective roots', () => {
       test.each<[string, string]>([
         ['عفو', 'يُتَعَافَ'],
+        ['هوي', 'يُتَهَاوَ'],
         ['وصي', 'يُتَوَاصَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وطء', 6), 'jussive')).toEqualT({
+          '1s': 'أُتَوَاطَأْ',
+          '2ms': 'تُتَوَاطَأْ',
+          '2fs': 'تُتَوَاطَئِي',
+          '3ms': 'يُتَوَاطَأْ',
+          '3fs': 'تُتَوَاطَأْ',
+          '2d': 'تُتَوَاطَآ',
+          '3md': 'يُتَوَاطَآ',
+          '3fd': 'تُتَوَاطَآ',
+          '1p': 'نُتَوَاطَأْ',
+          '2mp': 'تُتَوَاطَأُوْا',
+          '2fp': 'تُتَوَاطَأْنَ',
+          '3mp': 'يُتَوَاطَأُوْا',
+          '3fp': 'يُتَوَاطَأْنَ',
+        })
       })
     })
 

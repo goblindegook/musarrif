@@ -1308,9 +1308,30 @@ describe('passive present subjunctive', () => {
     describe('defective roots', () => {
       test.each<[string, string]>([
         ['عفو', 'يُتَعَافَى'],
+        ['هوي', 'يُتَهَاوَى'],
         ['وصي', 'يُتَوَاصَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وطء', 6), 'subjunctive')).toEqualT({
+          '1s': 'أُتَوَاطَأَ',
+          '2ms': 'تُتَوَاطَأَ',
+          '2fs': 'تُتَوَاطَئِي',
+          '3ms': 'يُتَوَاطَأَ',
+          '3fs': 'تُتَوَاطَأَ',
+          '2d': 'تُتَوَاطَآ',
+          '3md': 'يُتَوَاطَآ',
+          '3fd': 'تُتَوَاطَآ',
+          '1p': 'نُتَوَاطَأَ',
+          '2mp': 'تُتَوَاطَأُوْا',
+          '2fp': 'تُتَوَاطَأْنَ',
+          '3mp': 'يُتَوَاطَأُوْا',
+          '3fp': 'يُتَوَاطَأْنَ',
+        })
       })
     })
 

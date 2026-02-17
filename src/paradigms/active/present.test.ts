@@ -1819,6 +1819,7 @@ describe('active present indicative', () => {
         ['نمو', 'يَتَنَامَى'],
         ['مشي', 'يَتَمَاشَى'],
         ['عفو', 'يَتَعَافَى'],
+        ['هوي', 'يَتَهَاوَى'],
         ['ولي', 'يَتَوَالَى'],
         ['وصي', 'يَتَوَاصَى'],
       ])('%s pattern', (root, expected) => {
@@ -1905,6 +1906,24 @@ describe('active present indicative', () => {
     describe('hamzated final roots', () => {
       test.each([['بطأ', 'يَتَبَاطَأُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وطء', 6), 'indicative')).toEqualT({
+          '1s': 'أَتَوَاطَأُ',
+          '2ms': 'تَتَوَاطَأُ',
+          '2fs': 'تَتَوَاطَئِيْنَ',
+          '3ms': 'يَتَوَاطَأُ',
+          '3fs': 'تَتَوَاطَأُ',
+          '2d': 'تَتَوَاطَآنِ',
+          '3md': 'يَتَوَاطَآنِ',
+          '3fd': 'تَتَوَاطَآنِ',
+          '1p': 'نَتَوَاطَأُ',
+          '2mp': 'تَتَوَاطَأُونَ',
+          '2fp': 'تَتَوَاطَأْنَ',
+          '3mp': 'يَتَوَاطَأُونَ',
+          '3fp': 'يَتَوَاطَأْنَ',
+        })
       })
     })
 

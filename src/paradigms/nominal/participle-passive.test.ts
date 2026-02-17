@@ -679,6 +679,7 @@ describe('passive participle', () => {
     describe('defective roots', () => {
       test.each([
         ['عفو', 'مُتَعَافًى'],
+        ['هوي', 'مُتَهَاوًى'],
         ['ولي', 'مُتَوَالًى'],
         ['وصي', 'مُتَوَاصًى'],
       ])('%s', (root, expected) => {
@@ -703,6 +704,12 @@ describe('passive participle', () => {
         ['ألف', 'مُتَآلَف'],
         ['أمر', 'مُتَآمَر'],
       ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 6))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['وطء', 'مُتَوَاطَأ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 6))).toBe(expected)
       })
     })

@@ -211,9 +211,30 @@ describe('passive past pattern', () => {
     describe('defective roots', () => {
       test.each<[string, string]>([
         ['عفو', 'تُعُوفِيَ'],
+        ['هوي', 'تُهُووِيَ'],
         ['وصي', 'تُوُوصِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('وطء', 6))).toEqualT({
+          '1s': 'تُوُوطِئْتُ',
+          '2ms': 'تُوُوطِئْتَ',
+          '2fs': 'تُوُوطِئْتِ',
+          '3ms': 'تُوُوطِئَ',
+          '3fs': 'تُوُوطِئَتْ',
+          '2d': 'تُوُوطِئْتُمَا',
+          '3md': 'تُوُوطِئَا',
+          '3fd': 'تُوُوطِئَتَا',
+          '1p': 'تُوُوطِئْنَا',
+          '2mp': 'تُوُوطِئْتُمْ',
+          '2fp': 'تُوُوطِئْتُنَّ',
+          '3mp': 'تُوُوطِئُوْا',
+          '3fp': 'تُوُوطِئْنَ',
+        })
       })
     })
 

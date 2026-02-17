@@ -1392,9 +1392,30 @@ describe('passive present indicative', () => {
     describe('defective roots', () => {
       test.each<[string, string]>([
         ['عفو', 'يُتَعَافَى'],
+        ['هوي', 'يُتَهَاوَى'],
         ['وصي', 'يُتَوَاصَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وطء', 6), 'indicative')).toEqualT({
+          '1s': 'أُتَوَاطَأُ',
+          '2ms': 'تُتَوَاطَأُ',
+          '2fs': 'تُتَوَاطَئِينَ',
+          '3ms': 'يُتَوَاطَأُ',
+          '3fs': 'تُتَوَاطَأُ',
+          '2d': 'تُتَوَاطَآنِ',
+          '3md': 'يُتَوَاطَآنِ',
+          '3fd': 'تُتَوَاطَآنِ',
+          '1p': 'نُتَوَاطَأُ',
+          '2mp': 'تُتَوَاطَأُوْنَ',
+          '2fp': 'تُتَوَاطَأْنَ',
+          '3mp': 'يُتَوَاطَأُوْنَ',
+          '3fp': 'يُتَوَاطَأْنَ',
+        })
       })
     })
 

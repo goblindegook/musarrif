@@ -1428,6 +1428,24 @@ describe('active present jussive', () => {
       test.each([['بطأ', 'يَتَبَاطَأْ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
       })
+
+      test('تَوَاطَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وطء', 6), 'jussive')).toEqualT({
+          '1s': 'أَتَوَاطَأْ',
+          '2ms': 'تَتَوَاطَأْ',
+          '2fs': 'تَتَوَاطَئِي',
+          '3ms': 'يَتَوَاطَأْ',
+          '3fs': 'تَتَوَاطَأْ',
+          '2d': 'تَتَوَاطَآ',
+          '3md': 'يَتَوَاطَآ',
+          '3fd': 'تَتَوَاطَآ',
+          '1p': 'نَتَوَاطَأْ',
+          '2mp': 'تَتَوَاطَأُوْا',
+          '2fp': 'تَتَوَاطَأْنَ',
+          '3mp': 'يَتَوَاطَأُوْا',
+          '3fp': 'يَتَوَاطَأْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {
@@ -1435,6 +1453,7 @@ describe('active present jussive', () => {
         ['نمو', 'يَتَنَامَ'],
         ['مشي', 'يَتَمَاشَ'],
         ['عفو', 'يَتَعَافَ'],
+        ['هوي', 'يَتَهَاوَ'],
         ['ولي', 'يَتَوَالَ'],
         ['وصي', 'يَتَوَاصَ'],
       ])('%s pattern', (root, expected) => {

@@ -702,6 +702,7 @@ describe('active participle', () => {
         ['نمو', 'مُتَنَامٍ'],
         ['مشي', 'مُتَمَاشٍ'],
         ['عفو', 'مُتَعَافٍ'],
+        ['هوي', 'مُتَهَاوٍ'],
         ['ولي', 'مُتَوَالٍ'],
         ['وصي', 'مُتَوَاصٍ'],
       ])('%s', (root, expected) => {
@@ -732,7 +733,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['بطأ', 'مُتَبَاطِئ']])('%s', (root, expected) => {
+      test.each([
+        ['بطأ', 'مُتَبَاطِئ'],
+        ['وطء', 'مُتَوَاطِئ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toBe(expected)
       })
     })

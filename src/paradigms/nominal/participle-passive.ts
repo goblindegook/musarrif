@@ -112,7 +112,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isFinalWeak) return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, c3]
+        return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, seatHamza(c3, FATHA)]
       }
 
       case 7: {

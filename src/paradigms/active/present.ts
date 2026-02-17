@@ -312,6 +312,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
           return base
         }
         if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
+        if (verb.form === 6 && isFinalHamza) return dropNoonEnding(word)
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 
@@ -465,12 +466,13 @@ function derivePresentFormV(verb: Verb<5>): readonly string[] {
 function derivePresentFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  const seatedC3 = seatHamza(c3, FATHA)
 
   if (isWeakLetter(c3)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF_MAQSURA]
 
   if (c2 === c3) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, SUKOON, c2, DAMMA]
 
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, c3, DAMMA]
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, seatedC3, DAMMA]
 }
 
 function derivePresentFormVII(verb: Verb<7>): readonly string[] {
