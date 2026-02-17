@@ -16,6 +16,7 @@ import {
   longVowelFromPattern,
   MEEM,
   NOON,
+  normalizeAlifMadda,
   SEEN,
   SHADDA,
   SUKOON,
@@ -196,7 +197,7 @@ function deriveMasdarFormVI(verb: Verb<6>): readonly string[] {
 
   if (isFinalWeak) return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, TANWEEN_KASRA]
 
-  return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, c3]
+  return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, seatHamza(c3, DAMMA)]
 }
 
 function deriveMasdarFormVII(verb: Verb<7>): readonly string[] {
@@ -282,8 +283,7 @@ export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = (verb.form === 1 && verb.masdarPatterns) || [undefined]
   return patterns
     .map((pattern) => {
-      const joined = masdar(verb, pattern).join('')
-      return joined.normalize('NFC')
+      return normalizeAlifMadda(masdar(verb, pattern)).join('').normalize('NFC')
     })
     .filter(Boolean)
 }

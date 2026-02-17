@@ -573,15 +573,10 @@ function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): r
 }
 
 function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
-  // Check if word ends with NOON (feminine plural ending)
-  if (word.at(-2) === NOON) {
-    // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
-    // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
-    // then preserve everything up to and including it, and add NOON + FATHA.
-    const stem = removeFinalDiacritic(word)
-    const weakLetterIndex = findLastLetterIndex(stem, stem.length - 1)
-    return [...stem.slice(0, weakLetterIndex + 1), NOON, FATHA]
-  }
+  // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
+  // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
+  // then preserve everything up to and including it, and add NOON + FATHA.
+  if (word.at(-2) === NOON) return [...removeFinalDiacritic(word).slice(0, -2), NOON, FATHA]
 
   return removeFinalDiacritic(word).slice(0, -1)
 }

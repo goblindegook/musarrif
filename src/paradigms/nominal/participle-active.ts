@@ -104,12 +104,12 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 6: {
         if (c2 === c3) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c2, SHADDA]
 
+        if (isMiddleWeak && isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
+
         if (isFinalWeak)
           return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, TANWEEN_KASRA]
 
-        if (isFinalHamza) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, c3, TANWEEN_KASRA]
-
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, KASRA, c3]
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_YEH : c2, KASRA, seatedC3]
       }
 
       case 7: {

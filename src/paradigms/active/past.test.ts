@@ -1791,6 +1791,22 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['ألف', 'تَآلَفَ'],
+        ['أكل', 'تَآكَلَ'],
+        ['أمر', 'تَآمَرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['بطأ', 'تَبَاطَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated middle roots', () => {
       test('تَسَاءَلَ conjugation', () => {
         expect(conjugatePast(getVerb('سأل', 6))).toEqualT({

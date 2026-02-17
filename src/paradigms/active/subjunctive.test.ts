@@ -1220,6 +1220,22 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hamzated initial roots', () => {
+      test.each([
+        ['ألف', 'يَتَآلَفَ'],
+        ['أكل', 'يَتَآكَلَ'],
+        ['أمر', 'يَتَآمَرَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['بطأ', 'يَتَبَاطَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['نمو', 'يَتَنَامَى'],

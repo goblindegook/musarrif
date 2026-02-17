@@ -11,6 +11,7 @@ import {
   longVowelFromPattern,
   MEEM,
   NOON,
+  normalizeAlifMadda,
   SEEN,
   SHADDA,
   SUKOON,
@@ -152,5 +153,5 @@ export function derivePassiveParticiple(verb: Verb): string {
     }
   })()
 
-  return geminateDoubleLetters(result).join('').normalize('NFC')
+  return normalizeAlifMadda(geminateDoubleLetters(result)).join('').normalize('NFC')
 }

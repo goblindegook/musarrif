@@ -32,6 +32,8 @@ describe('canConjugatePassive', () => {
       ['وفق', 6],
       ['وفر', 6],
       ['وجد', 6],
+      ['ألف', 6],
+      ['أمر', 6],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })
@@ -83,6 +85,8 @@ describe('canConjugatePassive', () => {
       ['مشي', 6],
       ['وجه', 6],
       ['وزن', 6],
+      ['أكل', 6],
+      ['بطأ', 6],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(false)
     })
