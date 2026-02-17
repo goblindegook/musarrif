@@ -214,6 +214,17 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each<[string, string]>([
+        ['حبب', 'تُحُوبِبَ'],
+        ['مسس', 'تُمُوسِسَ'],
+        ['ضدد', 'تُضُودِدَ'],
+        ['ردد', 'تُرُودِدَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each<[string, string]>([
         ['وجد', 'تُوُوجِدَ'],

@@ -258,6 +258,7 @@
   { "root": "رحب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ردد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ردد", "form": 3 },
+  { "root": "ردد", "form": 6 },
   { "root": "رسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "رسل", "form": 4 },
   { "root": "رسم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
@@ -384,6 +385,7 @@
   { "root": "ضوء", "form": 4 },
   { "root": "ضوء", "form": 5, "passiveVoice": "none" },
   { "root": "ضيق", "form": 3 },
+  { "root": "ضدد", "form": 6 },
   { "root": "ضرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ضلل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ضمن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal"] },
@@ -603,6 +605,7 @@
   { "root": "مرض", "form": 10 },
   { "root": "مسك", "form": 4 },
   { "root": "مسي", "form": 4 },
+  { "root": "مسس", "form": 6 },
   {
     "root": "ميل",
     "form": 1,

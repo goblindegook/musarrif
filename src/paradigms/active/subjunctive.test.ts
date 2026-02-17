@@ -1210,6 +1210,17 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form VI', () => {
+    describe('geminate roots', () => {
+      test.each([
+        ['حبب', 'يَتَحَابَّ'],
+        ['مسس', 'يَتَمَاسَّ'],
+        ['ضدد', 'يَتَضَادَّ'],
+        ['ردد', 'يَتَرَادَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([
         ['نول', 'يَتَنَاوَلَ'],

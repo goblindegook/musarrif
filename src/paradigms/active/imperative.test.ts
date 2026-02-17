@@ -1463,6 +1463,48 @@ describe('imperative', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test('تَحَابَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('حبب', 6))).toMatchObjectT({
+          '2ms': 'تَحَابّْ',
+          '2fs': 'تَحَابِّي',
+          '2d': 'تَحَابَّا',
+          '2mp': 'تَحَابُّوْا',
+          '2fp': 'تَحَابَبْنَ',
+        })
+      })
+
+      test('تَرَادَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('ردد', 6))).toMatchObjectT({
+          '2ms': 'تَرَادّْ',
+          '2fs': 'تَرَادِّي',
+          '2d': 'تَرَادَّا',
+          '2mp': 'تَرَادُّوْا',
+          '2fp': 'تَرَادَدْنَ',
+        })
+      })
+
+      test('تَمَاسَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('مسس', 6))).toMatchObjectT({
+          '2ms': 'تَمَاسّْ',
+          '2fs': 'تَمَاسِّي',
+          '2d': 'تَمَاسَّا',
+          '2mp': 'تَمَاسُّوْا',
+          '2fp': 'تَمَاسَسْنَ',
+        })
+      })
+
+      test('تَضَادَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('ضدد', 6))).toMatchObjectT({
+          '2ms': 'تَضَادّْ',
+          '2fs': 'تَضَادِّي',
+          '2d': 'تَضَادَّا',
+          '2mp': 'تَضَادُّوْا',
+          '2fp': 'تَضَادَدْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([
         ['نول', 'تَنَاوَلْ'],
