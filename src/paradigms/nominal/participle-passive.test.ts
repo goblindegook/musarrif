@@ -677,7 +677,11 @@ describe('passive participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['عفو', 'مُتَعَافًى']])('%s', (root, expected) => {
+      test.each([
+        ['عفو', 'مُتَعَافًى'],
+        ['ولي', 'مُتَوَالًى'],
+        ['وصي', 'مُتَوَاصًى'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 6))).toBe(expected)
       })
     })

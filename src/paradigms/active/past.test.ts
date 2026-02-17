@@ -1725,6 +1725,8 @@ describe('active past', () => {
         ['نمو', 'تَنَامَى'],
         ['مشي', 'تَمَاشَى'],
         ['عفو', 'تَعَافَى'],
+        ['ولي', 'تَوَالَى'],
+        ['وصي', 'تَوَاصَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })

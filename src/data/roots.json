@@ -695,6 +695,7 @@
   { "root": "وسط", "form": 2 },
   { "root": "وصي", "form": 2 },
   { "root": "وصي", "form": 4 },
+  { "root": "وصي", "form": 6 },
   { "root": "وحي", "form": 4 },
   { "root": "وطن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "وطن", "form": 2 },
@@ -703,6 +704,7 @@
   { "root": "وفد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3ool"] },
   { "root": "ولي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "ولي", "form": 2 },
+  { "root": "ولي", "form": 6 },
   {
     "root": "وري",
     "form": 1,

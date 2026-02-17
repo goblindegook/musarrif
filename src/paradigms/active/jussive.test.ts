@@ -1435,6 +1435,8 @@ describe('active present jussive', () => {
         ['نمو', 'يَتَنَامَ'],
         ['مشي', 'يَتَمَاشَ'],
         ['عفو', 'يَتَعَافَ'],
+        ['ولي', 'يَتَوَالَ'],
+        ['وصي', 'يَتَوَاصَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
       })

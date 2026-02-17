@@ -209,7 +209,10 @@ describe('passive past pattern', () => {
     })
 
     describe('defective roots', () => {
-      test.each<[string, string]>([['عفو', 'تُعُوفِيَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['عفو', 'تُعُوفِيَ'],
+        ['وصي', 'تُوُوصِيَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
       })
     })
