@@ -170,15 +170,13 @@ function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): rea
 function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
-  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-
   if (c2 === c3) return geminateSuffix(mood, pronounId)
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, c2 === c3)]
+  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, false)]
 
-  return moodSuffix
+  return MOOD_SUFFIXES[mood][pronounId]
 }
 
 function derivePassivePresentStemFormI(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {

@@ -14,7 +14,6 @@ import {
   longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
-  removeLeadingDiacritics,
   SHADDA,
   SUKOON,
   shortVowelFromPattern,
@@ -45,7 +44,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      const stem = removeLeadingDiacritics(Array.from(jussive).slice(1))
+      const stem = Array.from(jussive).slice(2)
 
       switch (verb.form) {
         case 1: {

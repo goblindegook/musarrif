@@ -89,12 +89,6 @@ export function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
 }
 
-export function removeLeadingDiacritics(chars: readonly string[]): readonly string[] {
-  const result = [...chars]
-  while (isDiacritic(result.at(0))) result.shift()
-  return result
-}
-
 export function removeFinalDiacritic(word: readonly string[]): readonly string[] {
   const lastIndex = findLastLetterIndex(word)
   const base = word.slice(0, lastIndex + 1)
