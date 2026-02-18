@@ -306,13 +306,16 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isDual(pronounId)) {
         if (isMiddleWeak) return dropNoonEnding(word)
+
+        if (isFinalHamza) return dropNoonEnding(word)
+
         if (verb.form === 1 && isFinalWeak) {
           const base = dropNoonEnding(word)
           if (base.at(-3) === WAW) return [...base.slice(0, -2), SUKOON, ALIF]
           return base
         }
         if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
-        if (verb.form === 6 && isFinalHamza) return dropNoonEnding(word)
+
         return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
       }
 

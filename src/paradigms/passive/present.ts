@@ -272,11 +272,17 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
 
 function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
+
   if (isWeakLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
 
-  return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, seatedC3, ...moodSuffix]
+  return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, seatedC3, ...MOOD_SUFFIXES[mood][pronounId]]
+}
+
+function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3] = [...verb.root]
+
+  return [NOON, SUKOON, c1, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
@@ -316,6 +322,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
       return derivePassivePresentStemFormV(verb, pronounId, mood)
     case 6:
       return derivePassivePresentStemFormVI(verb, pronounId, mood)
+    case 7:
+      return derivePassivePresentStemFormVII(verb, pronounId, mood)
     default:
       return []
   }

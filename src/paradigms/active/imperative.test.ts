@@ -1581,6 +1581,13 @@ describe('imperative', () => {
 
   describe('Form VII', () => {
     describe('regular roots', () => {
+      test.each([
+        ['خفض', 'اِنْخَفِضْ'],
+        ['عكس', 'اِنْعَكِسْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 7))['2ms']).toEqualT(expected)
+      })
+
       test('اِنْكَتَبَ conjugation', () => {
         expect(conjugateImperative(getVerb('كتب', 7))).toMatchObjectT({
           '2ms': 'اِنْكَتِبْ',

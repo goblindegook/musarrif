@@ -727,6 +727,8 @@ describe('passive participle', () => {
         ['كتب', 'مُنْكَتَب'],
         ['طلق', ''],
         ['فجر', ''],
+        ['خفض', 'مُنْخَفَض'],
+        ['عكس', 'مُنْعَكَس'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 7))).toBe(expected)
       })

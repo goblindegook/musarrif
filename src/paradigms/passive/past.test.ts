@@ -260,6 +260,17 @@ describe('passive past pattern', () => {
     })
   })
 
+  describe('Form VII', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['خفض', 'اُنْخُفِضَ'],
+        ['عكس', 'اُنْعُكِسَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+      })
+    })
+  })
+
   describe('passive past', () => {
     describe('strong roots', () => {
       test('كَتَبَ conjugation', () => {

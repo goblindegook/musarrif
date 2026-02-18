@@ -1950,6 +1950,13 @@ describe('active present indicative', () => {
 
   describe('Form VII', () => {
     describe('regular roots', () => {
+      test.each([
+        ['خفض', 'يَنْخَفِضُ'],
+        ['عكس', 'يَنْعَكِسُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 7), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اِنْكَتَبَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('كتب', 7), 'indicative')).toEqualT({
           '1s': 'أَنْكَتِبُ',
