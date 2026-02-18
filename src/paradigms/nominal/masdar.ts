@@ -204,6 +204,8 @@ function deriveMasdarFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
 
+  if (isWeakLetter(c3)) return [...prefix, c2, FATHA, ALIF, HAMZA]
+
   if (isWeakLetter(c2)) return [...prefix, YEH, FATHA, ALIF, c3]
 
   return [...prefix, c2, FATHA, ALIF, c3]

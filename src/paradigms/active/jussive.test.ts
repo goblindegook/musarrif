@@ -1479,6 +1479,17 @@ describe('active present jussive', () => {
         expect(jussive['3ms']).toBe(expected3ms)
       })
     })
+
+    describe('defective roots', () => {
+      test.each<[string, string]>([
+        ['قضي', 'يَنْقَضِ'],
+        ['حني', 'يَنْحَنِ'],
+        ['ثني', 'يَنْثَنِ'],
+      ])('%s pattern', (root, expected3ms) => {
+        const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
+        expect(jussive['3ms']).toBe(expected3ms)
+      })
+    })
   })
 
   describe('Form VIII', () => {

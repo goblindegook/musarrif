@@ -1333,6 +1333,18 @@ describe('active present subjunctive', () => {
     })
   })
 
+  describe('Form VII', () => {
+    describe('defective roots', () => {
+      test.each([
+        ['قضي', 'يَنْقَضِيَ'],
+        ['حني', 'يَنْحَنِيَ'],
+        ['ثني', 'يَنْثَنِيَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 7), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
   describe('Form X', () => {
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {

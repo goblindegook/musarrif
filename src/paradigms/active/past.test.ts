@@ -1914,6 +1914,14 @@ describe('active past', () => {
     })
 
     describe('defective roots', () => {
+      test.each([
+        ['قضي', 'اِنْقَضَى'],
+        ['حني', 'اِنْحَنَى'],
+        ['ثني', 'اِنْثَنَى'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 7))['3ms']).toEqualT(expected)
+      })
+
       test('اِنْرَمَى conjugation', () => {
         expect(conjugatePast(getVerb('رمي', 7))).toEqualT({
           '1s': 'اِنْرَمَيْتُ',

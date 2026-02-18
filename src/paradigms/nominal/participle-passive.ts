@@ -118,6 +118,8 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 7: {
         const prefix = [MEEM, DAMMA, NOON, SUKOON, c1]
 
+        if (isFinalWeak) return [...prefix, FATHA, c2, FATHA, ALIF_MAQSURA]
+
         if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
 
         return [...prefix, FATHA, c2, FATHA, c3]

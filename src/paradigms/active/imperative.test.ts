@@ -1606,6 +1606,16 @@ describe('imperative', () => {
         expect(imperative['2ms']).toBe('اِنْقَدْ')
       })
     })
+
+    describe('defective roots', () => {
+      test.each([
+        ['قضي', 'اِنْقَضِ'],
+        ['حني', 'اِنْحَنِ'],
+        ['ثني', 'اِنْثَنِ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 7))['2ms']).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form VIII', () => {

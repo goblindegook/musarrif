@@ -1977,6 +1977,14 @@ describe('active present indicative', () => {
     })
 
     describe('defective roots', () => {
+      test.each([
+        ['قضي', 'يَنْقَضِي'],
+        ['حني', 'يَنْحَنِي'],
+        ['ثني', 'يَنْثَنِي'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 7), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اِنْرَمَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('رمي', 7), 'indicative')).toEqualT({
           '1s': 'أَنْرَمِي',

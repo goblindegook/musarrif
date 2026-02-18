@@ -269,6 +269,12 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
       })
     })
+
+    describe('defective roots', () => {
+      test.each([['ثني', 'اُنْثُنِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+      })
+    })
   })
 
   describe('passive past', () => {

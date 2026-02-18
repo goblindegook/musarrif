@@ -817,6 +817,16 @@ describe('masdar', () => {
         expect(deriveMasdar(getVerb(root, 7))).toEqualT([expected].flat())
       })
     })
+
+    describe('defective roots', () => {
+      test.each([
+        ['قضي', 'اِنْقِضَاء'],
+        ['حني', 'اِنْحِنَاء'],
+        ['ثني', 'اِنْثِنَاء'],
+      ])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 7))).toEqualT([expected].flat())
+      })
+    })
   })
 
   describe('Form VIII', () => {

@@ -770,6 +770,16 @@ describe('active participle', () => {
         expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
       })
     })
+
+    describe('defective roots', () => {
+      test.each([
+        ['قضي', 'مُنْقَضٍ'],
+        ['حني', 'مُنْحَنٍ'],
+        ['ثني', 'مُنْثَنٍ'],
+      ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
+      })
+    })
   })
 
   describe('Form VIII', () => {

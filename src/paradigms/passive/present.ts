@@ -282,6 +282,8 @@ function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, moo
 function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
+  if (isWeakLetter(c3)) return [NOON, SUKOON, c1, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+
   return [NOON, SUKOON, c1, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
