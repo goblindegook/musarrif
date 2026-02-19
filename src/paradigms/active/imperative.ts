@@ -26,6 +26,7 @@ import { conjugatePresentMood } from './present'
 
 function restoreWeakLetterBeforeAlif(stem: readonly string[]): readonly string[] {
   const alifIndex = stem.lastIndexOf(ALIF)
+  if (alifIndex > 1 && stem.at(alifIndex - 2) === YEH) return stem
   if (stem.at(alifIndex - 1) === FATHA)
     return [...stem.slice(0, alifIndex - 1), KASRA, YEH, FATHA, ...stem.slice(alifIndex)]
   return [...stem.slice(0, alifIndex), YEH, FATHA, ...stem.slice(alifIndex)]

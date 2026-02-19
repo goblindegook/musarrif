@@ -1473,6 +1473,26 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test('اِنْقَرَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('قرأ', 7), 'jussive')).toEqualT({
+          '1s': 'أَنْقَرِئْ',
+          '2ms': 'تَنْقَرِئْ',
+          '2fs': 'تَنْقَرِئِي',
+          '3ms': 'يَنْقَرِئْ',
+          '3fs': 'تَنْقَرِئْ',
+          '2d': 'تَنْقَرِئَا',
+          '3md': 'يَنْقَرِئَا',
+          '3fd': 'تَنْقَرِئَا',
+          '1p': 'نَنْقَرِئْ',
+          '2mp': 'تَنْقَرِئُوْا',
+          '2fp': 'تَنْقَرِئْنَ',
+          '3mp': 'يَنْقَرِئُوْا',
+          '3fp': 'يَنْقَرِئْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each<[string, string]>([
         ['قصص', 'يَنْقَصَّ'],
@@ -1522,6 +1542,26 @@ describe('active present jussive', () => {
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
         expect(jussive['3ms']).toBe(expected3ms)
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test('اِنْزَوَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زوي', 7), 'jussive')).toEqualT({
+          '1s': 'أَنْزَوِ',
+          '2ms': 'تَنْزَوِ',
+          '2fs': 'تَنْزَوِي',
+          '3ms': 'يَنْزَوِ',
+          '3fs': 'تَنْزَوِ',
+          '2d': 'تَنْزَوِيَا',
+          '3md': 'يَنْزَوِيَا',
+          '3fd': 'تَنْزَوِيَا',
+          '1p': 'نَنْزَوِ',
+          '2mp': 'تَنْزَوُوا',
+          '2fp': 'تَنْزَوِينَ',
+          '3mp': 'يَنْزَوُوا',
+          '3fp': 'يَنْزَوِينَ',
+        })
       })
     })
   })

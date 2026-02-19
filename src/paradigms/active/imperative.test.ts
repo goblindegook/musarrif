@@ -1599,6 +1599,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test('اِنْقَرَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('قرأ', 7))).toMatchObjectT({
+          '2ms': 'اِنْقَرِئْ',
+          '2fs': 'اِنْقَرِئِي',
+          '2d': 'اِنْقَرِئَا',
+          '2mp': 'اِنْقَرِئُوْا',
+          '2fp': 'اِنْقَرِئْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['قصص', 'اِنْقَصَّ'],
@@ -1637,6 +1649,18 @@ describe('imperative', () => {
         ['ثني', 'اِنْثَنِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 7))['2ms']).toEqualT(expected)
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test('اِنْزَوَى conjugation', () => {
+        expect(conjugateImperative(getVerb('زوي', 7))).toMatchObjectT({
+          '2ms': 'اِنْزَوِ',
+          '2fs': 'اِنْزَوِي',
+          '2d': 'اِنْزَوِيَا',
+          '2mp': 'اِنْزَوُوا',
+          '2fp': 'اِنْزَوِينَ',
+        })
       })
     })
   })

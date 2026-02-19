@@ -119,7 +119,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleWeak) return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, ALIF, c3]
 
-        return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3]
+        return [MEEM, DAMMA, NOON, SUKOON, c1, FATHA, c2, KASRA, seatHamza(c3, KASRA)]
       }
 
       case 8: {

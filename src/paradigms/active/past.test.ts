@@ -1907,6 +1907,12 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['قرأ', 'اِنْقَرَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 7))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['قصص', 'اِنْقَصَّ'],
@@ -1970,6 +1976,26 @@ describe('active past', () => {
           '2fp': 'اِنْرَمَيْتُنَّ',
           '3mp': 'اِنْرَمَوْا',
           '3fp': 'اِنْرَمَيْنَ',
+        })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test('اِنْزَوَى conjugation', () => {
+        expect(conjugatePast(getVerb('زوي', 7))).toEqualT({
+          '1s': 'اِنْزَوَيْتُ',
+          '2ms': 'اِنْزَوَيْتَ',
+          '2fs': 'اِنْزَوَيْتِ',
+          '3ms': 'اِنْزَوَى',
+          '3fs': 'اِنْزَوَتْ',
+          '2d': 'اِنْزَوَيْتُمَا',
+          '3md': 'اِنْزَوَيَا',
+          '3fd': 'اِنْزَوَتَا',
+          '1p': 'اِنْزَوَيْنَا',
+          '2mp': 'اِنْزَوَيْتُمْ',
+          '2fp': 'اِنْزَوَيْتُنَّ',
+          '3mp': 'اِنْزَوْا',
+          '3fp': 'اِنْزَوَيْنَ',
         })
       })
     })

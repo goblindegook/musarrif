@@ -241,6 +241,14 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
     }
   }
 
+  if (isWeakLetter(c2) && isWeakLetter(c3))
+    return {
+      base: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, ALIF_MAQSURA],
+      defectiveGlide: YEH,
+      suffixedBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, YEH, SUKOON],
+      pluralBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2],
+    }
+
   if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)

@@ -765,6 +765,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('hamzated final roots', () => {
+      test.each([['قرأ', 'مُنْقَرِئ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['قصص', 'مُنْقَصّ'],
@@ -792,6 +798,12 @@ describe('active participle', () => {
         ['حني', 'مُنْحَنٍ'],
         ['ثني', 'مُنْثَنٍ'],
       ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test.each([['زوي', 'مُنْزَوٍ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
       })
     })

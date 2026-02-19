@@ -26,12 +26,7 @@ import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
-interface ImpersonalPassivePastParams {
-  prefix: readonly string[]
-  suffix3ms: readonly string[]
-}
-
-interface FullPassivePastParams {
+interface PassivePastParams {
   prefix: readonly string[]
   suffix: readonly string[]
   suffix3sd: readonly string[]
@@ -39,29 +34,7 @@ interface FullPassivePastParams {
   suffix3mp?: readonly string[]
 }
 
-type PassivePastParams = FullPassivePastParams | ImpersonalPassivePastParams
-
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
-  if (!('suffix' in params))
-    return mapRecord(
-      {
-        '1s': [],
-        '2ms': [],
-        '2fs': [],
-        '3ms': [...params.prefix, ...params.suffix3ms],
-        '3fs': [],
-        '2d': [],
-        '3md': [],
-        '3fd': [],
-        '1p': [],
-        '2mp': [],
-        '2fp': [],
-        '3mp': [],
-        '3fp': [],
-      },
-      (value) => value.join('').normalize('NFC'),
-    )
-
   const { prefix, suffix, suffix3sd, suffix3ms, suffix3mp = [] } = params
 
   return mapRecord(
@@ -262,9 +235,8 @@ function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
 
   return {
     prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA, c2, KASRA],
-    suffix: [c3, SUKOON],
+    suffix: [],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

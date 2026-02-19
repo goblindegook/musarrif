@@ -1390,6 +1390,35 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form VII', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['خفض', 'يَنْخَفِضَ'],
+        ['عكس', 'يَنْعَكِسَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 7), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('اِنْقَرَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('قرأ', 7), 'subjunctive')).toEqualT({
+          '1s': 'أَنْقَرِئَ',
+          '2ms': 'تَنْقَرِئَ',
+          '2fs': 'تَنْقَرِئِي',
+          '3ms': 'يَنْقَرِئَ',
+          '3fs': 'تَنْقَرِئَ',
+          '2d': 'تَنْقَرِئَا',
+          '3md': 'يَنْقَرِئَا',
+          '3fd': 'تَنْقَرِئَا',
+          '1p': 'نَنْقَرِئَ',
+          '2mp': 'تَنْقَرِئُوْا',
+          '2fp': 'تَنْقَرِئْنَ',
+          '3mp': 'يَنْقَرِئُوْا',
+          '3fp': 'يَنْقَرِئْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['قصص', 'يَنْقَصَّ'],
@@ -1426,6 +1455,26 @@ describe('active present subjunctive', () => {
         ['ثني', 'يَنْثَنِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 7), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test('اِنْزَوَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زوي', 7), 'subjunctive')).toEqualT({
+          '1s': 'أَنْزَوِيَ',
+          '2ms': 'تَنْزَوِيَ',
+          '2fs': 'تَنْزَوِي',
+          '3ms': 'يَنْزَوِيَ',
+          '3fs': 'تَنْزَوِيَ',
+          '2d': 'تَنْزَوِيَا',
+          '3md': 'يَنْزَوِيَا',
+          '3fd': 'تَنْزَوِيَا',
+          '1p': 'نَنْزَوِيَ',
+          '2mp': 'تَنْزَوُوا',
+          '2fp': 'تَنْزَوِينَ',
+          '3mp': 'يَنْزَوُوا',
+          '3fp': 'يَنْزَوِينَ',
+        })
       })
     })
   })
