@@ -192,10 +192,9 @@ function buildDualPresent(word: readonly string[], verb: Verb): readonly string[
   const [c1, c2, c3] = verb.root
   const suffix = [ALIF, NOON, KASRA]
 
-  if (isFormIFinalWeakPresent(verb, 'a'))
-    return isHamzatedLetter(c2)
-      ? [YEH, FATHA, c1, FATHA, YEH, FATHA, ...suffix]
-      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, FATHA, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [YEH, FATHA, c1, FATHA, YEH, FATHA, ...suffix]
+
+  if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, FATHA, ...suffix]
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
     const hamzaSeat = verb.form === 5 ? ALIF_HAMZA : verb.form === 4 || c2 === YEH ? HAMZA_ON_YEH : HAMZA
@@ -204,11 +203,9 @@ function buildDualPresent(word: readonly string[], verb: Verb): readonly string[
 
   if (isHamzatedLetter(c3)) return normalizeAlifMadda([...removeFinalDiacritic(word), FATHA, ...suffix])
 
-  if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
+  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
-  if ([2, 3].includes(verb.form) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
-
-  if ([5, 6].includes(verb.form) && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
+  if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
 
   if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
 
