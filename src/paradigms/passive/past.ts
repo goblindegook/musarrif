@@ -241,6 +241,7 @@ function derivePassivePastFormVI(verb: Verb): PassivePastParams {
 
 function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
+  const isMiddleWeak = isWeakLetter(c2)
 
   if (c2 === c3) {
     return {
@@ -250,6 +251,14 @@ function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
       suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
     }
   }
+
+  if (isMiddleWeak)
+    return {
+      prefix: [ALIF, DAMMA, NOON, SUKOON, c1, KASRA, YEH],
+      suffix: [c3, SUKOON],
+      suffix3sd: [c3, FATHA],
+      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    }
 
   return {
     prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA, c2, KASRA],

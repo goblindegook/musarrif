@@ -824,7 +824,11 @@ describe('masdar', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['قود', 'اِنْقِيَاد']])('%s', (root, expected) => {
+      test.each([
+        ['قود', 'اِنْقِيَاد'],
+        ['هيل', 'اِنْهِيَال'],
+        ['حوز', 'اِنْحِيَاز'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 7))).toEqualT([expected].flat())
       })
     })

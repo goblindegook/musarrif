@@ -281,6 +281,7 @@ function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, moo
 
 function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const isMiddleWeak = isWeakLetter(c2)
 
   if (c2 === c3) {
     if (pronounId === '2fs' && mood !== 'indicative') return [NOON, SUKOON, c1, FATHA, c2, KASRA, YEH]
@@ -289,6 +290,11 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
     return [NOON, SUKOON, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
+
+  if (isMiddleWeak && mood === 'jussive' && MOOD_SUFFIXES.jussive[pronounId].length === 1)
+    return [NOON, SUKOON, c1, FATHA, c3, SUKOON]
+
+  if (isMiddleWeak) return [NOON, SUKOON, c1, FATHA, ALIF, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 
   if (isWeakLetter(c3)) return [NOON, SUKOON, c1, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
 

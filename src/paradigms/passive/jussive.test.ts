@@ -425,6 +425,16 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([
+        ['قود', 'يُنْقَدْ'],
+        ['هيل', 'يُنْهَلْ'],
+        ['حوز', 'يُنْحَزْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 7), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([
         ['غشي', 'يُغْشَ'],

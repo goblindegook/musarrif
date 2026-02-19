@@ -46,9 +46,7 @@ function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
 }
 
 function replaceVowelAfterGemination(word: readonly string[], vowel: Vowel): readonly string[] {
-  return Array.from(
-    word.join('').replace(new RegExp(`(.)${SUKOON}\\1(?!\\1${SUKOON}\\1).*`, 'u'), `$1${SUKOON}$1${vowel}`),
-  )
+  return Array.from(word.join('').replace(new RegExp(`(.)${SUKOON}\\1(?!\\1${SUKOON}\\1).*`), `$1${SUKOON}$1${vowel}`))
 }
 
 function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly string[] {
@@ -176,6 +174,8 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
     ]
   }
   if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandGemination(stem)), ...suffix]
+
+  if (verb.form === 7 && isWeakLetter(c2)) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
@@ -497,9 +497,12 @@ function derivePresentFormVI(verb: Verb<6>): readonly string[] {
 
 function derivePresentFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
 
   if (c2 === c3) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, SHADDA, DAMMA]
+
+  if (isMiddleWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA]
 
   if (isFinalWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3]
 
