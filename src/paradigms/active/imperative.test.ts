@@ -1599,6 +1599,27 @@ describe('imperative', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['قصص', 'اِنْقَصَّ'],
+        ['بثث', 'اِنْبَثَّ'],
+        ['كفف', 'اِنْكَفَّ'],
+        ['دسس', 'اِنْدَسَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 7))['2ms']).toEqualT(expected)
+      })
+
+      test('اِنْقَصَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('قصص', 7))).toMatchObjectT({
+          '2ms': 'اِنْقَصَّ',
+          '2fs': 'اِنْقَصِي',
+          '2d': 'اِنْقَصَّا',
+          '2mp': 'اِنْقَصُّوْا',
+          '2fp': 'اِنْقَصْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       it('shortens hollow Form VII imperative like اِنْقَادَ → اِنْقَدْ', () => {
         const imperative = conjugateImperative(getVerb('قود', 7))

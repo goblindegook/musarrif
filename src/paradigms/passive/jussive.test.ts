@@ -1490,6 +1490,35 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['قصص', 'يُنْقَصَّ'],
+        ['بثث', 'يُنْبَثَّ'],
+        ['كفف', 'يُنْكَفَّ'],
+        ['دسس', 'يُنْدَسَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 7), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِنْقَصَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('قصص', 7), 'jussive')).toEqualT({
+          '1s': 'أُنْقَصَّ',
+          '2ms': 'تُنْقَصَّ',
+          '2fs': 'تُنْقَصِي',
+          '3ms': 'يُنْقَصَّ',
+          '3fs': 'تُنْقَصَّ',
+          '2d': 'تُنْقَصَّا',
+          '3md': 'يُنْقَصَّا',
+          '3fd': 'تُنْقَصَّا',
+          '1p': 'نُنْقَصَّ',
+          '2mp': 'تُنْقَصُّوْا',
+          '2fp': 'تُنْقَصْنَ',
+          '3mp': 'يُنْقَصُّوْا',
+          '3fp': 'يُنْقَصْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test.each([['ثني', 'يُنْثَنَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 7), 'jussive')['3ms']).toEqualT(expected)

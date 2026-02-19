@@ -270,6 +270,35 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['قصص', 'اُنْقُصَّ'],
+        ['بثث', 'اُنْبُثَّ'],
+        ['كفف', 'اُنْكُفَّ'],
+        ['دسس', 'اُنْدُسَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+      })
+
+      test('اِنْقَصَّ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('قصص', 7))).toEqualT({
+          '1s': 'اُنْقُصِصْتُ',
+          '2ms': 'اُنْقُصِصْتَ',
+          '2fs': 'اُنْقُصِصْتِ',
+          '3ms': 'اُنْقُصَّ',
+          '3fs': 'اُنْقُصَّتْ',
+          '2d': 'اُنْقُصِصْتُمَا',
+          '3md': 'اُنْقُصَّا',
+          '3fd': 'اُنْقُصَّتَا',
+          '1p': 'اُنْقُصِصْنَا',
+          '2mp': 'اُنْقُصِصْتُمْ',
+          '2fp': 'اُنْقُصِصْتُنَّ',
+          '3mp': 'اُنْقُصُّوا',
+          '3fp': 'اُنْقُصِصْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test.each([['ثني', 'اُنْثُنِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)

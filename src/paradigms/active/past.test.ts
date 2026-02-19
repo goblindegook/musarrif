@@ -1907,6 +1907,35 @@ describe('active past', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['قصص', 'اِنْقَصَّ'],
+        ['بثث', 'اِنْبَثَّ'],
+        ['كفف', 'اِنْكَفَّ'],
+        ['دسس', 'اِنْدَسَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 7))['3ms']).toEqualT(expected)
+      })
+
+      test('اِنْقَصَّ conjugation', () => {
+        expect(conjugatePast(getVerb('قصص', 7))).toEqualT({
+          '1s': 'اِنْقَصَصْتُ',
+          '2ms': 'اِنْقَصَصْتَ',
+          '2fs': 'اِنْقَصَصْتِ',
+          '3ms': 'اِنْقَصَّ',
+          '3fs': 'اِنْقَصَّتْ',
+          '2d': 'اِنْقَصَصْتُمَا',
+          '3md': 'اِنْقَصَّا',
+          '3fd': 'اِنْقَصَّتَا',
+          '1p': 'اِنْقَصَصْنَا',
+          '2mp': 'اِنْقَصَصْتُمْ',
+          '2fp': 'اِنْقَصَصْتُنَّ',
+          '3mp': 'اِنْقَصُّوْا',
+          '3fp': 'اِنْقَصَصْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([['قود', 'اِنْقَادَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 7))['3ms']).toEqualT(expected)

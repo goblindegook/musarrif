@@ -1473,6 +1473,36 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each<[string, string]>([
+        ['قصص', 'يَنْقَصَّ'],
+        ['بثث', 'يَنْبَثَّ'],
+        ['كفف', 'يَنْكَفَّ'],
+        ['دسس', 'يَنْدَسَّ'],
+      ])('%s pattern', (root, expected3ms) => {
+        const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
+        expect(jussive['3ms']).toBe(expected3ms)
+      })
+
+      test('اِنْقَصَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('قصص', 7), 'jussive')).toEqualT({
+          '1s': 'أَنْقَصَّ',
+          '2ms': 'تَنْقَصَّ',
+          '2fs': 'تَنْقَصِي',
+          '3ms': 'يَنْقَصَّ',
+          '3fs': 'تَنْقَصَّ',
+          '2d': 'تَنْقَصَّا',
+          '3md': 'يَنْقَصَّا',
+          '3fd': 'تَنْقَصَّا',
+          '1p': 'نَنْقَصَّ',
+          '2mp': 'تَنْقَصُّوْا',
+          '2fp': 'تَنْقَصْنَ',
+          '3mp': 'يَنْقَصُّوْا',
+          '3fp': 'يَنْقَصْنَ',
+        })
+      })
+    })
+
     describe('hollow roots', () => {
       test.each<[string, string]>([['قود', 'يَنْقَدْ']])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')

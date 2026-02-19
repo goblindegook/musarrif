@@ -242,6 +242,15 @@ function derivePassivePastFormVI(verb: Verb): PassivePastParams {
 function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
 
+  if (c2 === c3) {
+    return {
+      prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA],
+      suffix: [c2, KASRA, c3, SUKOON],
+      suffix3sd: [c2, SHADDA, FATHA],
+      suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
+    }
+  }
+
   return {
     prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA, c2, KASRA],
     suffix: [c3, SUKOON],

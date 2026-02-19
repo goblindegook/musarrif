@@ -765,6 +765,17 @@ describe('active participle', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([
+        ['قصص', 'مُنْقَصّ'],
+        ['بثث', 'مُنْبَثّ'],
+        ['كفف', 'مُنْكَفّ'],
+        ['دسس', 'مُنْدَسّ'],
+      ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([['قود', 'مُنْقَاد']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 7))).toBe(expected)

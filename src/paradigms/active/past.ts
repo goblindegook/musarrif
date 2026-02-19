@@ -233,6 +233,14 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
 function derivePastFormVII(verb: Verb<7>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
 
+  if (c2 === c3) {
+    return {
+      base: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, SHADDA, FATHA],
+      suffixedBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, SUKOON],
+      pluralBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, SHADDA, DAMMA, WAW],
+    }
+  }
+
   if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
