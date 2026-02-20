@@ -657,6 +657,7 @@
   { "root": "نوي", "form": 3 },
   { "root": "نضج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نظر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
+  { "root": "نظر", "form": 8 },
   { "root": "نظف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نظم", "form": 2 },
   { "root": "نفخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },

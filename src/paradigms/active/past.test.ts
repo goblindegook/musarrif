@@ -2007,6 +2007,7 @@ describe('active past', () => {
         ['قرح', 'اِقْتَرَحَ'],
         ['عبر', 'اِعْتَبَرَ'],
         ['عمد', 'اِعْتَمَدَ'],
+        ['نظر', 'اِنْتَظَرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
