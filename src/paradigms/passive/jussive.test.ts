@@ -1538,6 +1538,10 @@ describe('passive present jussive', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
+      test.each([['قرح', 'يُقْتَرَحْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('اِعْتَبَرَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عبر', 8), 'jussive')).toEqualT({
           '1s': 'أُعْتَبَرْ',

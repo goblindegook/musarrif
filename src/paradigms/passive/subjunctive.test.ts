@@ -1415,6 +1415,10 @@ describe('passive present subjunctive', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
+      test.each([['قرح', 'يُقْتَرَحَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اِعْتَبَرَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عبر', 8), 'subjunctive')).toEqualT({
           '1s': 'أُعْتَبَرَ',

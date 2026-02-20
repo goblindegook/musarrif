@@ -1292,6 +1292,10 @@ describe('passive past pattern', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
+      test.each([['قرح', 'اُقْتُرِحَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
       test('اِعْتَبَرَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('عبر', 8))).toEqualT({
           '1s': 'اُعْتُبِرْتُ',
