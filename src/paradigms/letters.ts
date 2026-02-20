@@ -157,10 +157,6 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
   return TEH
 }
 
-export function usesFullFormVIIIInfixAssimilation(c1: string): boolean {
-  return FORM_VIII_INFIX_FULL_ASSIMILATION_LETTERS.has(c1)
-}
-
 interface RootAnalysis {
   type:
     | 'strong'

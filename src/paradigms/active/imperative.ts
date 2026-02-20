@@ -137,15 +137,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 4: {
-          const prefix = [ALIF_HAMZA, FATHA]
-
-          if (isInitialHamza) return [...prefix, ALIF, ...stem.slice(2)]
-
-          if (c2 === c3) return [...prefix, ...stem]
-
-          if (isFinalWeak && pronounId === '2d') return [...prefix, ...restoreWeakLetterBeforeAlif(stem)]
-
-          return [...prefix, ...stem]
+          if (isInitialHamza) return [ALIF_HAMZA, FATHA, ALIF, ...stem.slice(2)]
+          if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
+          return [ALIF_HAMZA, FATHA, ...stem]
         }
 
         case 5: {

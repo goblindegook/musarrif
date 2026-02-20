@@ -349,20 +349,9 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 7 && isGeminate && pronounId === '2fs')
         return removeFinalDiacritic(dropNoonEnding(word).filter((char) => char !== SHADDA))
 
-      if (verb.form === 7 && isWeakLetter(c3) && pronounId === '2fs')
-        return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), KASRA, YEH]
+      if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), KASRA, YEH]
 
-      if (pronounId === '2fs') return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
-
-      if (verb.form === 7 && isWeakLetter(c3) && isMasculinePlural(pronounId))
-        return [...dropNoonEnding(word), SUKOON, ALIF]
-
-      if (verb.form === 8 && isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
-
-      if (isMasculinePlural(pronounId))
-        return verb.form === 5 && isFinalHamza
-          ? [...dropNoonEnding(word), SUKOON, ALIF]
-          : replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (isMasculinePlural(pronounId)) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
       if (isFinalHamza && isFemininePlural(pronounId)) return word
 

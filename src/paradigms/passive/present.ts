@@ -20,7 +20,6 @@ import {
   SUKOON,
   seatHamza,
   TEH,
-  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -293,8 +292,7 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
     return [NOON, SUKOON, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  if (isMiddleWeak && mood === 'jussive' && MOOD_SUFFIXES.jussive[pronounId].length === 1)
-    return [NOON, SUKOON, c1, FATHA, c3, SUKOON]
+  if (isMiddleWeak && mood === 'jussive') return [NOON, SUKOON, c1, FATHA, c3, SUKOON]
 
   if (isMiddleWeak) return [NOON, SUKOON, c1, FATHA, ALIF, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 
@@ -305,12 +303,8 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
 function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const infix = resolveFormVIIIInfixConsonant(c1)
 
-  if (usesFullFormVIIIInfixAssimilation(c1))
-    return [c1, SHADDA, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
-
-  return [c1, SUKOON, infix, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
+  return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

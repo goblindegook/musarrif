@@ -27,7 +27,6 @@ import {
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
-  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -219,16 +218,9 @@ function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
   if (isWeakLetter(c1) || isHamzatedLetter(c1)) return [ALIF, KASRA, TEH, SHADDA, KASRA, c2, FATHA, ALIF, c3]
 
   if (isWeakLetter(c3))
-    return usesFullFormVIIIInfixAssimilation(c1)
-      ? [ALIF, KASRA, c1, SHADDA, KASRA, c2, FATHA, ALIF, HAMZA]
-      : [ALIF, KASRA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), KASRA, c2, FATHA, ALIF, HAMZA]
+    return [ALIF, KASRA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), KASRA, c2, FATHA, ALIF, HAMZA]
 
-  if (isWeakLetter(c2))
-    return usesFullFormVIIIInfixAssimilation(c1)
-      ? [ALIF, KASRA, c1, SHADDA, KASRA, YEH, FATHA, ALIF, c3]
-      : [ALIF, KASRA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), KASRA, YEH, FATHA, ALIF, c3]
-
-  if (usesFullFormVIIIInfixAssimilation(c1)) return [ALIF, KASRA, c1, SHADDA, KASRA, c2, FATHA, ALIF, c3]
+  if (isWeakLetter(c2)) return [ALIF, KASRA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), KASRA, YEH, FATHA, ALIF, c3]
 
   return [ALIF, KASRA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), KASRA, c2, FATHA, ALIF, c3]
 }

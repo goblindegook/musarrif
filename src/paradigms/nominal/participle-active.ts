@@ -19,7 +19,6 @@ import {
   seatHamza,
   TANWEEN_KASRA,
   TEH,
-  usesFullFormVIIIInfixAssimilation,
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
@@ -126,8 +125,6 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
       case 8: {
         if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
-
-        if (usesFullFormVIIIInfixAssimilation(c1)) return [MEEM, DAMMA, c1, SHADDA, FATHA, c2, KASRA, c3]
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
 

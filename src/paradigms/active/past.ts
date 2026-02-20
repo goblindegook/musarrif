@@ -24,7 +24,6 @@ import {
   seatHamza,
   shortVowelFromPattern,
   TEH,
-  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -262,13 +261,7 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
-  if (isWeakLetter(c2)) {
-    if (usesFullFormVIIIInfixAssimilation(c1)) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, ALIF, c3, FATHA], c3)
-    return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
-  }
-
-  if (usesFullFormVIIIInfixAssimilation(c1))
-    return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+  if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, FATHA], c3)
 }

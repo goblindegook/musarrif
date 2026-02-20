@@ -20,7 +20,6 @@ import {
   SUKOON,
   seatHamza,
   TEH,
-  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -30,14 +29,14 @@ import { constrainPassiveConjugation } from './support'
 
 interface PassivePastParams {
   prefix: readonly string[]
-  suffix: readonly string[]
+  suffix?: readonly string[]
   suffix3sd: readonly string[]
   suffix3ms?: readonly string[]
   suffix3mp?: readonly string[]
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
-  const { prefix, suffix, suffix3sd, suffix3ms, suffix3mp = [] } = params
+  const { prefix, suffix = [], suffix3sd, suffix3ms, suffix3mp = [] } = params
 
   return mapRecord(
     {
@@ -230,14 +229,11 @@ function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
   if (isMiddleWeak)
     return {
       prefix: [ALIF, DAMMA, NOON, SUKOON, c1, KASRA, YEH],
-      suffix: [c3, SUKOON],
       suffix3sd: [c3, FATHA],
-      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   return {
     prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA, c2, KASRA],
-    suffix: [],
     suffix3sd: [c3, FATHA],
   }
 }
@@ -246,9 +242,7 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
 
   return {
-    prefix: usesFullFormVIIIInfixAssimilation(c1)
-      ? [ALIF, DAMMA, c1, SHADDA, DAMMA, c2, KASRA]
-      : [ALIF, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), DAMMA, c2, KASRA],
+    prefix: [ALIF, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), DAMMA, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
     suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
@@ -274,7 +268,7 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
     case 8:
       return derivePassivePastFormVIII(verb)
     default:
-      return { prefix: [], suffix: [], suffix3sd: [] }
+      return { prefix: [], suffix3sd: [] }
   }
 }
 
