@@ -15,10 +15,12 @@ import {
   KASRA,
   NOON,
   normalizeAlifMadda,
+  resolveFormVIIIInfixConsonant,
   SHADDA,
   SUKOON,
   seatHamza,
   TEH,
+  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -303,8 +305,12 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
 function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const infix = resolveFormVIIIInfixConsonant(c1)
 
-  return [c1, SUKOON, TEH, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
+  if (usesFullFormVIIIInfixAssimilation(c1))
+    return [c1, SHADDA, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
+
+  return [c1, SUKOON, infix, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

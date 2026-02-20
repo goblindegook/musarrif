@@ -17,12 +17,14 @@ import {
   NOON,
   normalizeAlifMadda,
   removeFinalDiacritic,
+  resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
   SUKOON,
   seatHamza,
   shortVowelFromPattern,
   TEH,
+  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -256,12 +258,19 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
 
 function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const infix = resolveFormVIIIInfixConsonant(c1)
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
-  if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, c1, SUKOON, TEH, FATHA, ALIF, c3, FATHA], c3)
+  if (isWeakLetter(c2)) {
+    if (usesFullFormVIIIInfixAssimilation(c1)) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, ALIF, c3, FATHA], c3)
+    return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
+  }
 
-  return buildForms([ALIF, KASRA, c1, SUKOON, TEH, FATHA, c2, FATHA, c3, FATHA], c3)
+  if (usesFullFormVIIIInfixAssimilation(c1))
+    return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+
+  return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormIX(verb: Verb<9>): PastBaseForms {

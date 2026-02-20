@@ -1419,6 +1419,7 @@ describe('passive present subjunctive', () => {
         ['قرح', 'يُقْتَرَحَ'],
         ['عمد', 'يُعْتَمَدَ'],
         ['نظر', 'يُنْتَظَرَ'],
+        ['ضلع', 'يُضْطَلَعَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })

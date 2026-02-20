@@ -22,6 +22,7 @@ import {
   NOON,
   normalizeAlifMadda,
   removeFinalDiacritic,
+  resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
   SUKOON,
@@ -107,36 +108,34 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
       verb.form === 5 ? HAMZA_ON_WAW : HAMZA_ON_YEH,
       ...stem.slice(lastIndex + 1),
     ]
-    return [...removeFinalDiacritic(hamzaStem), DAMMA, WAW, NOON, FATHA]
+    return [...removeFinalDiacritic(hamzaStem), DAMMA, WAW, ...suffix]
   }
 
-  if (isHamzatedLetter(c3)) return [...stem, WAW, NOON, FATHA]
+  if (isHamzatedLetter(c3)) return [...stem, WAW, ...suffix]
 
-  if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), WAW, NOON, FATHA]
+  if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), WAW, ...suffix]
 
   if (verb.form === 3 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
 
   if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), WAW, ...suffix]
 
   if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3))
-    return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
+    return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, NOON, FATHA]
+  if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, ...suffix]
 
-  if (verb.form === 7 && c2 === c3) return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, SUKOON, NOON, FATHA]
+  if (verb.form === 7 && c2 === c3) return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, ...suffix]
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
     const hamzatedStem = stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))
     return [...dropTerminalWeakOrHamza(hamzatedStem, DAMMA), DAMMA, WAW, NOON, FATHA]
   }
 
-  if (verb.form === 6 && isWeakLetter(c3))
-    return [...dropTerminalWeakOrHamza(stem, FATHA), FATHA, WAW, SUKOON, NOON, FATHA]
+  if (verb.form === 6 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, FATHA), FATHA, WAW, ...suffix]
 
-  // Defective verbs (not doubly weak): drop final weak letter, replace final diacritic with damma, add waw + noon + fatḥa
-  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
+  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
 
-  return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, NOON, FATHA]
+  return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, ...suffix]
 }
 
 function buildFemininePlural(stem: readonly string[], verb: Verb): readonly string[] {
@@ -355,11 +354,14 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (pronounId === '2fs') return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
-      if (verb.form === 7 && isWeakLetter(c3) && isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
+      if (verb.form === 7 && isWeakLetter(c3) && isMasculinePlural(pronounId))
+        return [...dropNoonEnding(word), SUKOON, ALIF]
+
+      if (verb.form === 8 && isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
 
       if (isMasculinePlural(pronounId))
         return verb.form === 5 && isFinalHamza
-          ? [...dropNoonEnding(word), ALIF]
+          ? [...dropNoonEnding(word), SUKOON, ALIF]
           : replaceDammaBeforeFinalWaw(dropNoonEnding(word))
 
       if (isFinalHamza && isFemininePlural(pronounId)) return word
@@ -535,9 +537,9 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
 
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 
-  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, TEH, FATHA, ALIF, c3, DAMMA]
+  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3, DAMMA]
 
-  return [YEH, FATHA, c1, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
+  return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIX(verb: Verb<9>): readonly string[] {

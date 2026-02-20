@@ -2011,6 +2011,24 @@ describe('active past', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
+
+      test('اِضْطَلَعَ conjugation', () => {
+        expect(conjugatePast(getVerb('ضلع', 8))).toEqualT({
+          '1s': 'اِضْطَلَعْتُ',
+          '2ms': 'اِضْطَلَعْتَ',
+          '2fs': 'اِضْطَلَعْتِ',
+          '3ms': 'اِضْطَلَعَ',
+          '3fs': 'اِضْطَلَعَتْ',
+          '2d': 'اِضْطَلَعْتُمَا',
+          '3md': 'اِضْطَلَعَا',
+          '3fd': 'اِضْطَلَعَتَا',
+          '1p': 'اِضْطَلَعْنَا',
+          '2mp': 'اِضْطَلَعْتُمْ',
+          '2fp': 'اِضْطَلَعْتُنَّ',
+          '3mp': 'اِضْطَلَعُوْا',
+          '3fp': 'اِضْطَلَعْنَ',
+        })
+      })
     })
 
     describe('assimilated roots', () => {

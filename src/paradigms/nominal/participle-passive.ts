@@ -12,6 +12,7 @@ import {
   MEEM,
   NOON,
   normalizeAlifMadda,
+  resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
   SUKOON,
@@ -19,6 +20,7 @@ import {
   shortVowelFromPattern,
   TANWEEN_FATHA,
   TEH,
+  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -132,11 +134,14 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isInitialHamza || isInitialWeak) return [...prefix, TEH, SHADDA, FATHA, c2, FATHA, c3]
 
-        if (isMiddleWeak) return [...prefix, c1, SUKOON, TEH, FATHA, ALIF, c3]
+        if (usesFullFormVIIIInfixAssimilation(c1)) return [...prefix, c1, SHADDA, FATHA, c2, FATHA, c3]
 
-        if (isFinalWeak) return [...prefix, c1, SUKOON, TEH, FATHA, c2, FATHA, ALIF_MAQSURA]
+        if (isMiddleWeak) return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
 
-        return [...prefix, c1, SUKOON, TEH, FATHA, c2, FATHA, c3]
+        if (isFinalWeak)
+          return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, FATHA, ALIF_MAQSURA]
+
+        return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, FATHA, c3]
       }
 
       case 9: {

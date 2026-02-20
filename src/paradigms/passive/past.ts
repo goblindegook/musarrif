@@ -15,10 +15,12 @@ import {
   KASRA,
   MEEM,
   NOON,
+  resolveFormVIIIInfixConsonant,
   SHADDA,
   SUKOON,
   seatHamza,
   TEH,
+  usesFullFormVIIIInfixAssimilation,
   WAW,
   YEH,
 } from '../letters'
@@ -244,7 +246,9 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
 
   return {
-    prefix: [ALIF, DAMMA, c1, SUKOON, TEH, DAMMA, c2, KASRA],
+    prefix: usesFullFormVIIIInfixAssimilation(c1)
+      ? [ALIF, DAMMA, c1, SHADDA, DAMMA, c2, KASRA]
+      : [ALIF, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), DAMMA, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
     suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],

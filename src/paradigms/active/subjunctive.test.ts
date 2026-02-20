@@ -1256,6 +1256,24 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('اِضْطَلَعَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('ضلع', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَضْطَلِعَ',
+          '2ms': 'تَضْطَلِعَ',
+          '2fs': 'تَضْطَلِعِي',
+          '3ms': 'يَضْطَلِعَ',
+          '3fs': 'تَضْطَلِعَ',
+          '2d': 'تَضْطَلِعَا',
+          '3md': 'يَضْطَلِعَا',
+          '3fd': 'تَضْطَلِعَا',
+          '1p': 'نَضْطَلِعَ',
+          '2mp': 'تَضْطَلِعُوْا',
+          '2fp': 'تَضْطَلِعْنَ',
+          '3mp': 'يَضْطَلِعُوْا',
+          '3fp': 'يَضْطَلِعْنَ',
+        })
+      })
     })
   })
 
