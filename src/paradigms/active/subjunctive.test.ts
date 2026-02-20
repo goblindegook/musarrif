@@ -1246,6 +1246,14 @@ describe('active present subjunctive', () => {
     })
   })
 
+  describe('Form VIII', () => {
+    describe('regular roots', () => {
+      test.each([['عبر', 'يَعْتَبِرَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
+
   describe('Form IX', () => {
     describe('regular roots', () => {
       test('shadda is preserved', () => {

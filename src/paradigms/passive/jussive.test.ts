@@ -1535,4 +1535,26 @@ describe('passive present jussive', () => {
       })
     })
   })
+
+  describe('Form VIII', () => {
+    describe('regular roots', () => {
+      test('اِعْتَبَرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('عبر', 8), 'jussive')).toEqualT({
+          '1s': 'أُعْتَبَرْ',
+          '2ms': 'تُعْتَبَرْ',
+          '2fs': 'تُعْتَبَرِي',
+          '3ms': 'يُعْتَبَرْ',
+          '3fs': 'تُعْتَبَرْ',
+          '2d': 'تُعْتَبَرَا',
+          '3md': 'يُعْتَبَرَا',
+          '3fd': 'تُعْتَبَرَا',
+          '1p': 'نُعْتَبَرْ',
+          '2mp': 'تُعْتَبَرُوْا',
+          '2fp': 'تُعْتَبَرْنَ',
+          '3mp': 'يُعْتَبَرُوْا',
+          '3fp': 'يُعْتَبَرْنَ',
+        })
+      })
+    })
+  })
 })

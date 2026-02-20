@@ -429,6 +429,7 @@
   { "root": "عرف", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
   { "root": "عرف", "form": 5 },
   { "root": "عرب", "form": 4 },
+  { "root": "عبر", "form": 8 },
   { "root": "عزز", "form": 5 },
   { "root": "عين", "form": 5, "passiveVoice": "none" },
   { "root": "عزم", "form": 1, "formPattern": "fa3ala-yaf3alu" },

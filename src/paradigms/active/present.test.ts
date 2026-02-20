@@ -2132,7 +2132,10 @@ describe('active present indicative', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
-      test.each([['قرح', 'يَقْتَرِحُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['قرح', 'يَقْتَرِحُ'],
+        ['عبر', 'يَعْتَبِرُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
     })

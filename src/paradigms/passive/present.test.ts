@@ -1496,4 +1496,26 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('Form VIII', () => {
+    describe('regular roots', () => {
+      test('اِعْتَبَرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('عبر', 8), 'indicative')).toEqualT({
+          '1s': 'أُعْتَبَرُ',
+          '2ms': 'تُعْتَبَرُ',
+          '2fs': 'تُعْتَبَرِينَ',
+          '3ms': 'يُعْتَبَرُ',
+          '3fs': 'تُعْتَبَرُ',
+          '2d': 'تُعْتَبَرَانِ',
+          '3md': 'يُعْتَبَرَانِ',
+          '3fd': 'تُعْتَبَرَانِ',
+          '1p': 'نُعْتَبَرُ',
+          '2mp': 'تُعْتَبَرُوْنَ',
+          '2fp': 'تُعْتَبَرْنَ',
+          '3mp': 'يُعْتَبَرُوْنَ',
+          '3fp': 'يُعْتَبَرْنَ',
+        })
+      })
+    })
+  })
 })

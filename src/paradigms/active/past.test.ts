@@ -2003,7 +2003,10 @@ describe('active past', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
-      test.each([['قرح', 'اِقْتَرَحَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['قرح', 'اِقْتَرَحَ'],
+        ['عبر', 'اِعْتَبَرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
     })

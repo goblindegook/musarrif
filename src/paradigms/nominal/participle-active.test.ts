@@ -811,7 +811,10 @@ describe('active participle', () => {
 
   describe('Form VIII', () => {
     describe('regular roots', () => {
-      test.each([['قرح', 'مُقْتَرِح']])('%s', (root, expected) => {
+      test.each([
+        ['قرح', 'مُقْتَرِح'],
+        ['عبر', 'مُعْتَبِر'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })
