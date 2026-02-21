@@ -7,23 +7,22 @@ export const HAMZA_ON_YEH = '\u0626'
 export const ALIF = '\u0627'
 export const TEH_MARBUTA = '\u0629'
 export const TEH = '\u062A'
-export const THEH = '\u062B'
-export const DAL = '\u062F'
-export const THAL = '\u0630'
+const THEH = '\u062B'
+const DAL = '\u062F'
+const THAL = '\u0630'
 export const ZAY = '\u0632'
-export const SAD = '\u0635'
-export const DAD = '\u0636'
-export const TAH = '\u0637'
-export const ZAH = '\u0638'
+const SAD = '\u0635'
+const DAD = '\u0636'
+const TAH = '\u0637'
+const ZAH = '\u0638'
 export const SEEN = '\u0633'
-export const TATWEEL = '\u0640'
+const TATWEEL = '\u0640'
 export const MEEM = '\u0645'
 export const NOON = '\u0646'
 export const WAW = '\u0648'
 export const ALIF_MAQSURA = '\u0649'
 export const YEH = '\u064A'
 export const TANWEEN_FATHA = '\u064B'
-export const TANWEEN_DAMMA = '\u064C'
 export const TANWEEN_KASRA = '\u064D'
 export const FATHA = '\u064E'
 export const DAMMA = '\u064F'
@@ -31,15 +30,13 @@ export const KASRA = '\u0650'
 export const SHADDA = '\u0651'
 export const SUKOON = '\u0652'
 
-export const COMBINING_MARK = /\p{Mn}/u
+const COMBINING_MARK = /\p{Mn}/u
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
 export type ShortVowel = 'a' | 'i' | 'u'
 
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
-
-export type Sukoon = typeof SUKOON
 
 type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAMZA_ON_YEH
 
@@ -62,10 +59,6 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [KASRA]: new Set([YEH]),
   [DAMMA]: new Set([WAW]),
 }
-
-const FORM_VIII_INFIX_FULL_ASSIMILATION_LETTERS = new Set([DAL, THEH, THAL, TAH, ZAH])
-const FORM_VIII_INFIX_DAL_ASSIMILATION_LETTERS = new Set([ZAY])
-const FORM_VIII_INFIX_TAH_ASSIMILATION_LETTERS = new Set([SAD, DAD])
 
 export function stripDiacritics(input: string): string {
   return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
@@ -151,10 +144,10 @@ export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
 }
 
 export function resolveFormVIIIInfixConsonant(c1: string): string {
-  if (FORM_VIII_INFIX_DAL_ASSIMILATION_LETTERS.has(c1)) return DAL
-  if (FORM_VIII_INFIX_TAH_ASSIMILATION_LETTERS.has(c1)) return TAH
-  if (FORM_VIII_INFIX_FULL_ASSIMILATION_LETTERS.has(c1)) return c1
-  return TEH
+  if (c1 === ZAY) return DAL
+  if ([SAD, DAD].includes(c1)) return TAH
+  if (![DAL, THEH, THAL, TAH, ZAH].includes(c1)) return TEH
+  return c1
 }
 
 interface RootAnalysis {
