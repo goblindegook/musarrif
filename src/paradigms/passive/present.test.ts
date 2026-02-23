@@ -1528,6 +1528,15 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['حلل', 'يُحْتَلُّ'],
+        ['مدد', 'يُمْتَدُّ'],
+        ['حجج', 'يُحْتَجُّ'],
+        ['ردد', 'يُرْتَدُّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اُضْطُرَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ضرر', 8), 'indicative')).toEqualT({
           '1s': 'أُضْطَرُّ',

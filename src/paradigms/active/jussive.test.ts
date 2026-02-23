@@ -1598,6 +1598,16 @@ describe('active present jussive', () => {
     })
 
     describe('geminate roots', () => {
+      test.each<[string, string]>([
+        ['حلل', 'يَحْتَلَّ'],
+        ['مدد', 'يَمْتَدَّ'],
+        ['حجج', 'يَحْتَجَّ'],
+        ['ردد', 'يَرْتَدَّ'],
+      ])('%s pattern', (root, expected3ms) => {
+        const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
+        expect(jussive['3ms']).toBe(expected3ms)
+      })
+
       test('اِضْطَرَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('ضرر', 8), 'jussive')).toEqualT({
           '1s': 'أَضْطَرَّ',

@@ -1444,6 +1444,15 @@ describe('passive present subjunctive', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['حلل', 'يُحْتَلَّ'],
+        ['مدد', 'يُمْتَدَّ'],
+        ['حجج', 'يُحْتَجَّ'],
+        ['ردد', 'يُرْتَدَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اُضْطُرَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ضرر', 8), 'subjunctive')).toEqualT({
           '1s': 'أُضْطَرَّ',

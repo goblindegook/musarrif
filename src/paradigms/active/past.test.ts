@@ -2032,6 +2032,15 @@ describe('active past', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['حلل', 'اِحْتَلَّ'],
+        ['مدد', 'اِمْتَدَّ'],
+        ['حجج', 'اِحْتَجَّ'],
+        ['ردد', 'اِرْتَدَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
       test('اِضْطَرَّ conjugation', () => {
         expect(conjugatePast(getVerb('ضرر', 8))).toEqualT({
           '1s': 'اِضْطَرَرْتُ',
