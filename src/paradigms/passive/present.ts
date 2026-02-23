@@ -315,17 +315,7 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   }
 
   if (c2 === c3) {
-    if (isFemininePlural(pronounId))
-      return [
-        c1,
-        SUKOON,
-        infix,
-        FATHA,
-        c2,
-        FATHA,
-        c3,
-        ...MOOD_SUFFIXES[mood][pronounId],
-      ]
+    if (isFemininePlural(pronounId)) return [c1, SUKOON, infix, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 
     if (mood === 'indicative' && pronounId === '2fs')
       return [c1, SUKOON, infix, FATHA, c2, SHADDA, KASRA, YEH, SUKOON, NOON, FATHA]
