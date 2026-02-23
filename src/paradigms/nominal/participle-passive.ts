@@ -130,18 +130,24 @@ export function derivePassiveParticiple(verb: Verb): string {
 
       case 8: {
         const prefix = [MEEM, DAMMA]
+        const infix = resolveFormVIIIInfixConsonant(c1)
 
         if (isInitialHamza || isInitialWeak) return [...prefix, TEH, SHADDA, FATHA, c2, FATHA, c3]
 
-        if (isMiddleWeak) return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
+        if (isMiddleWeak) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
 
-        if (c2 === c3) return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA]
+        if (infix === c1 && isFinalWeak) return [...prefix, c1, SHADDA, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+
+        if (c2 === c3) return [...prefix, c1, SUKOON, infix, FATHA, c2, SHADDA]
+
+        if (infix === c1)
+          return [...prefix, c1, SHADDA, FATHA, c2, FATHA, isFinalWeak ? ALIF_MAQSURA : c3]
 
         return [
           ...prefix,
           c1,
           SUKOON,
-          resolveFormVIIIInfixConsonant(c1),
+          infix,
           FATHA,
           c2,
           FATHA,

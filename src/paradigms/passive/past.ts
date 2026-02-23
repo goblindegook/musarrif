@@ -33,10 +33,11 @@ interface PassivePastParams {
   suffix3sd: readonly string[]
   suffix3ms?: readonly string[]
   suffix3mp?: readonly string[]
+  suffix3fp?: readonly string[]
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
-  const { prefix, suffix = [], suffix3sd, suffix3ms, suffix3mp = [] } = params
+  const { prefix, suffix = [], suffix3sd, suffix3ms, suffix3mp = [], suffix3fp } = params
 
   return mapRecord(
     {
@@ -52,7 +53,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
       '2mp': [...prefix, ...suffix, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...prefix, ...suffix, TEH, DAMMA, NOON, SHADDA, FATHA],
       '3mp': [...prefix, ...suffix3mp],
-      '3fp': geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA]),
+      '3fp': suffix3fp ? [...prefix, ...suffix3fp] : geminateDoubleLetters([...prefix, ...suffix, NOON, FATHA]),
     },
     (value) => value.join('').normalize('NFC'),
   )
@@ -240,17 +241,35 @@ function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
 
 function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
+  const infix = resolveFormVIIIInfixConsonant(c1)
+
+  if (infix === c1 && isWeakLetter(c3))
+    return {
+      prefix: [ALIF, DAMMA, c1, SHADDA, DAMMA, c2],
+      suffix: [KASRA, YEH],
+      suffix3sd: [KASRA, YEH, FATHA],
+      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
+    }
 
   if (c2 === c3)
     return {
-      prefix: [ALIF, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), DAMMA],
+      prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
 
+  if (infix === c1)
+    return {
+      prefix: [ALIF, DAMMA, c1, SHADDA, DAMMA, c2, KASRA],
+      suffix: [c3, SUKOON],
+      suffix3sd: [c3, FATHA],
+      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    }
+
   return {
-    prefix: [ALIF, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), DAMMA, c2, KASRA],
+    prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
     suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],

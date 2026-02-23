@@ -263,12 +263,16 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
   if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
+  if (infix === c1 && isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, YEH], YEH)
+
   if (c2 === c3)
     return {
       base: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, SUKOON],
       pluralBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
+
+  if (infix === c1) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
   return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, FATHA], c3)
 }

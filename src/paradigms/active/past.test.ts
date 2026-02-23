@@ -2076,6 +2076,24 @@ describe('active past', () => {
       test.each([['نهي', 'اِنْتَهَى']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
+
+      test('اِدَّعَى conjugation', () => {
+        expect(conjugatePast(getVerb('دعو', 8))).toEqualT({
+          '1s': 'اِدَّعَيْتُ',
+          '2ms': 'اِدَّعَيْتَ',
+          '2fs': 'اِدَّعَيْتِ',
+          '3ms': 'اِدَّعَى',
+          '3fs': 'اِدَّعَتْ',
+          '2d': 'اِدَّعَيْتُمَا',
+          '3md': 'اِدَّعَيَا',
+          '3fd': 'اِدَّعَتَا',
+          '1p': 'اِدَّعَيْنَا',
+          '2mp': 'اِدَّعَيْتُمْ',
+          '2fp': 'اِدَّعَيْتُنَّ',
+          '3mp': 'اِدَّعَوْا',
+          '3fp': 'اِدَّعَيْنَ',
+        })
+      })
     })
 
     describe('hamzated initial roots', () => {

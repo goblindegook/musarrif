@@ -303,13 +303,23 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
 function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const infix = resolveFormVIIIInfixConsonant(c1)
+
+  if (infix === c1 && isWeakLetter(c3)) {
+    if (isMasculinePlural(pronounId))
+      return mood === 'indicative'
+        ? [c1, SHADDA, FATHA, c2, DAMMA, WAW, SUKOON, NOON, FATHA]
+        : [c1, SHADDA, FATHA, c2, DAMMA, WAW, SUKOON, ALIF]
+
+    return [c1, SHADDA, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+  }
 
   if (c2 === c3) {
     if (isFemininePlural(pronounId))
       return [
         c1,
         SUKOON,
-        resolveFormVIIIInfixConsonant(c1),
+        infix,
         FATHA,
         c2,
         FATHA,
@@ -318,12 +328,14 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
       ]
 
     if (mood === 'indicative' && pronounId === '2fs')
-      return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, KASRA, YEH, SUKOON, NOON, FATHA]
+      return [c1, SUKOON, infix, FATHA, c2, SHADDA, KASRA, YEH, SUKOON, NOON, FATHA]
 
-    return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
+    return [c1, SUKOON, infix, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
+  if (infix === c1) return [c1, SHADDA, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
+
+  return [c1, SUKOON, infix, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

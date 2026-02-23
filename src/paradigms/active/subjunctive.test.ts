@@ -1304,6 +1304,26 @@ describe('active present subjunctive', () => {
         })
       })
     })
+
+    describe('defective roots', () => {
+      test('اِدَّعَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('دعو', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَدَّعِيَ',
+          '2ms': 'تَدَّعِيَ',
+          '2fs': 'تَدَّعِي',
+          '3ms': 'يَدَّعِيَ',
+          '3fs': 'تَدَّعِيَ',
+          '2d': 'تَدَّعِيَا',
+          '3md': 'يَدَّعِيَا',
+          '3fd': 'تَدَّعِيَا',
+          '1p': 'نَدَّعِيَ',
+          '2mp': 'تَدَّعُوْا',
+          '2fp': 'تَدَّعِيْنَ',
+          '3mp': 'يَدَّعُوْا',
+          '3fp': 'يَدَّعِيْنَ',
+        })
+      })
+    })
   })
 
   describe('Form IX', () => {

@@ -87,6 +87,8 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
     ]
   }
 
+  if (verb.form === 8 && isWeakLetter(c3)) return [...stem, SUKOON, NOON, FATHA]
+
   if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
 
   return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA)), KASRA, YEH, ...suffix]
@@ -526,15 +528,19 @@ function derivePresentFormVII(verb: Verb<7>): readonly string[] {
 
 function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const infix = resolveFormVIIIInfixConsonant(c1)
 
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 
-  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3, DAMMA]
+  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
-  if (c2 === c3)
-    return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, DAMMA]
+  if (infix === c1 && isWeakLetter(c3)) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, YEH]
 
-  return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, DAMMA]
+  if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA]
+
+  if (infix === c1) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
+
+  return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIX(verb: Verb<9>): readonly string[] {

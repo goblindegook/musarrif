@@ -1724,6 +1724,12 @@ describe('imperative', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([['دعو', 'اِدَّعِ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('اِتَّخَذَ conjugation', () => {
         expect(conjugateImperative(getVerb('أخذ', 8))).toMatchObjectT({

@@ -1594,5 +1594,25 @@ describe('passive present jussive', () => {
         })
       })
     })
+
+    describe('defective roots', () => {
+      test('اُدُّعِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('دعو', 8), 'jussive')).toEqualT({
+          '1s': 'أُدَّعَ',
+          '2ms': 'تُدَّعَ',
+          '2fs': 'تُدَّعَيْ',
+          '3ms': 'يُدَّعَ',
+          '3fs': 'تُدَّعَ',
+          '2d': 'تُدَّعَيَا',
+          '3md': 'يُدَّعَيَا',
+          '3fd': 'تُدَّعَيَا',
+          '1p': 'نُدَّعَ',
+          '2mp': 'تُدَّعُوْا',
+          '2fp': 'تُدَّعَيْنَ',
+          '3mp': 'يُدَّعُوْا',
+          '3fp': 'يُدَّعَيْنَ',
+        })
+      })
+    })
   })
 })

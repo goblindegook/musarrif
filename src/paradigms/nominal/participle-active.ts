@@ -124,13 +124,19 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 8: {
+        const infix = resolveFormVIIIInfixConsonant(c1)
+
         if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
 
-        if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
+        if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, ALIF, c3]
 
-        if (c2 === c3) return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA]
+        if (infix === c1 && isFinalWeak) return [MEEM, DAMMA, c1, SHADDA, FATHA, c2, TANWEEN_KASRA]
 
-        return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3]
+        if (c2 === c3) return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, c2, SHADDA]
+
+        if (infix === c1) return [MEEM, DAMMA, c1, SHADDA, FATHA, c2, KASRA, c3]
+
+        return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
       }
 
       case 9: {

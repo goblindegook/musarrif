@@ -240,6 +240,7 @@
   { "root": "دسس", "form": 7 },
   { "root": "دعا", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "دعو", "form": 10 },
+  { "root": "دعو", "form": 8 },
   { "root": "دفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "دور", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "دون", "form": 2 },

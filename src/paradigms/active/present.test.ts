@@ -2201,6 +2201,26 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test('اِدَّعَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('دعو', 8), 'indicative')).toEqualT({
+          '1s': 'أَدَّعِي',
+          '2ms': 'تَدَّعِي',
+          '2fs': 'تَدَّعِيْنَ',
+          '3ms': 'يَدَّعِي',
+          '3fs': 'تَدَّعِي',
+          '2d': 'تَدَّعِيَانِ',
+          '3md': 'يَدَّعِيَانِ',
+          '3fd': 'تَدَّعِيَانِ',
+          '1p': 'نَدَّعِي',
+          '2mp': 'تَدَّعُوْنَ',
+          '2fp': 'تَدَّعِيْنَ',
+          '3mp': 'يَدَّعُوْنَ',
+          '3fp': 'يَدَّعِيْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([['أخذ', 'يَتَّخِذُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
