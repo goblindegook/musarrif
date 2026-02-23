@@ -1275,6 +1275,26 @@ describe('active present subjunctive', () => {
         })
       })
     })
+
+    describe('geminate roots', () => {
+      test('اِضْطَرَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('ضرر', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَضْطَرَّ',
+          '2ms': 'تَضْطَرَّ',
+          '2fs': 'تَضْطَرِّي',
+          '3ms': 'يَضْطَرَّ',
+          '3fs': 'تَضْطَرَّ',
+          '2d': 'تَضْطَرَّا',
+          '3md': 'يَضْطَرَّا',
+          '3fd': 'تَضْطَرَّا',
+          '1p': 'نَضْطَرَّ',
+          '2mp': 'تَضْطَرُّوْا',
+          '2fp': 'تَضْطَرِرْنَ',
+          '3mp': 'يَضْطَرُّوْا',
+          '3fp': 'يَضْطَرِرْنَ',
+        })
+      })
+    })
   })
 
   describe('Form IX', () => {

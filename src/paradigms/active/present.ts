@@ -161,6 +161,9 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
       case 7:
         return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, ...suffix]
 
+      case 8:
+        return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, ...suffix]
+
       case 10:
         return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, ...suffix]
     }
@@ -362,7 +365,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak) return dropFinalDefectiveGlide(word)
 
-      if ([1, 3, 4, 7, 10].includes(verb.form) && isGeminate) return [...removeFinalDiacritic(word), FATHA]
+      if ([1, 3, 4, 7, 8, 10].includes(verb.form) && isGeminate) return [...removeFinalDiacritic(word), FATHA]
 
       if (verb.form === 9) return [...removeFinalDiacritic(word), FATHA]
 
@@ -527,6 +530,9 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 
   if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3, DAMMA]
+
+  if (c2 === c3)
+    return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, DAMMA]
 
   return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, DAMMA]
 }

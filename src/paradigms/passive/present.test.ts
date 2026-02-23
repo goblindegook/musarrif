@@ -1526,5 +1526,25 @@ describe('passive present indicative', () => {
         })
       })
     })
+
+    describe('geminate roots', () => {
+      test('اُضْطُرَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ضرر', 8), 'indicative')).toEqualT({
+          '1s': 'أُضْطَرُّ',
+          '2ms': 'تُضْطَرُّ',
+          '2fs': 'تُضْطَرِّيْنَ',
+          '3ms': 'يُضْطَرُّ',
+          '3fs': 'تُضْطَرُّ',
+          '2d': 'تُضْطَرَّانِ',
+          '3md': 'يُضْطَرَّانِ',
+          '3fd': 'تُضْطَرَّانِ',
+          '1p': 'نُضْطَرُّ',
+          '2mp': 'تُضْطَرُّوْنَ',
+          '2fp': 'تُضْطَرَرْنَ',
+          '3mp': 'يُضْطَرُّوْنَ',
+          '3fp': 'يُضْطَرَرْنَ',
+        })
+      })
+    })
   })
 })

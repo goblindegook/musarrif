@@ -1687,6 +1687,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test('اِضْطَرَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('ضرر', 8))).toMatchObjectT({
+          '2ms': 'اِضْطَرَّ',
+          '2fs': 'اِضْطَرِّي',
+          '2d': 'اِضْطَرَّا',
+          '2mp': 'اِضْطَرُّوْا',
+          '2fp': 'اِضْطَرِرْنَ',
+        })
+      })
+    })
+
     describe('assimilated roots', () => {
       it('assimilates the initial wāw for ٱتَّصِلْ', () => {
         const imperative = conjugateImperative(getVerb('وصل', 8))

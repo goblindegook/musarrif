@@ -395,6 +395,7 @@
   { "root": "ضيق", "form": 3 },
   { "root": "ضدد", "form": 6 },
   { "root": "ضرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "ضرر", "form": 8 },
   { "root": "ضلل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "ضلع", "form": 8, "passiveVoice": "impersonal" },
   { "root": "ضمن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal"] },

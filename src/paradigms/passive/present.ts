@@ -304,6 +304,25 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
 
+  if (c2 === c3) {
+    if (isFemininePlural(pronounId))
+      return [
+        c1,
+        SUKOON,
+        resolveFormVIIIInfixConsonant(c1),
+        FATHA,
+        c2,
+        FATHA,
+        c3,
+        ...MOOD_SUFFIXES[mood][pronounId],
+      ]
+
+    if (mood === 'indicative' && pronounId === '2fs')
+      return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, KASRA, YEH, SUKOON, NOON, FATHA]
+
+    return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
+  }
+
   return [c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 

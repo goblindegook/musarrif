@@ -128,6 +128,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
 
+        if (c2 === c3) return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA]
+
         return [MEEM, DAMMA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3]
       }
 

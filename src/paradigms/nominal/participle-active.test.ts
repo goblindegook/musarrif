@@ -822,6 +822,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('geminate roots', () => {
+      test.each([['ضرر', 'مُضْطَرّ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
+      })
+    })
+
     describe('assimilated roots', () => {
       test.each([['وصل', 'مُتَّصِل']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)

@@ -135,6 +135,8 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isMiddleWeak) return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, ALIF, c3]
 
+        if (c2 === c3) return [...prefix, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, SHADDA]
+
         return [
           ...prefix,
           c1,
