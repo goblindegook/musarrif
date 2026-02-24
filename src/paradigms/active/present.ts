@@ -252,13 +252,8 @@ function dropNoonEnding(word: readonly string[]): readonly string[] {
   return chars
 }
 
-function replaceDammaBeforeFinalWaw(word: readonly string[]): readonly string[] {
-  if (last(word) !== WAW) return word
-  return [...removeFinalDiacritic(word.slice(0, -1)), DAMMA, WAW, SUKOON, ALIF]
-}
-
-function replaceFathaBeforeFinalWawAlif(word: readonly string[]): readonly string[] {
-  return [...removeFinalDiacritic(word.slice(0, word.length - 1)), FATHA, WAW, SUKOON, ALIF]
+function replaceBeforeFinalWawAlif(vowel: string, word: readonly string[]): readonly string[] {
+  return [...removeFinalDiacritic(word.slice(0, -1)), vowel, WAW, SUKOON, ALIF]
 }
 
 function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[] {
@@ -279,7 +274,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak && verb.form === 1 && isFormIPresentVowel(verb, 'a')) {
         if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
-        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
+        if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(FATHA, dropNoonEnding(word))
         return word
       }
 
@@ -332,7 +327,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFormIFinalWeakPresent(verb, 'a')) {
         if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
-        if (isMasculinePlural(pronounId)) return replaceFathaBeforeFinalWawAlif(dropNoonEnding(word))
+        if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(FATHA, dropNoonEnding(word))
         if (isFemininePlural(pronounId)) return word
       }
 
@@ -356,7 +351,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), KASRA, YEH]
 
-      if (isMasculinePlural(pronounId)) return replaceDammaBeforeFinalWaw(dropNoonEnding(word))
+      if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(DAMMA, dropNoonEnding(word))
 
       if (isFinalHamza && isFemininePlural(pronounId)) return word
 
@@ -539,8 +534,6 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   if (infix === c1 && isWeakLetter(c3)) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, YEH]
 
   if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
-
-  if (infix === c1) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
 
   return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3, DAMMA]
 }
