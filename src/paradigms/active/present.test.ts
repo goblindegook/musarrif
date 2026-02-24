@@ -2298,6 +2298,26 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test('يَأْتَمُّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أمم', 8), 'indicative')).toEqualT({
+          '1s': 'آتَمُّ',
+          '2ms': 'تَأْتَمُّ',
+          '2fs': 'تَأْتَمِّيْنَ',
+          '3ms': 'يَأْتَمُّ',
+          '3fs': 'تَأْتَمُّ',
+          '2d': 'تَأْتَمَّانِ',
+          '3md': 'يَأْتَمَّانِ',
+          '3fd': 'تَأْتَمَّانِ',
+          '1p': 'نَأْتَمُّ',
+          '2mp': 'تَأْتَمُّوْنَ',
+          '2fp': 'تَأْتَمِمْنَ',
+          '3mp': 'يَأْتَمُّوْنَ',
+          '3fp': 'يَأْتَمِمْنَ',
+        })
+      })
+    })
   })
 
   describe('Form IX', () => {

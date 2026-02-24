@@ -1656,6 +1656,26 @@ describe('active present jussive', () => {
         })
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test('يَأْتَمَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أمم', 8), 'jussive')).toEqualT({
+          '1s': 'آتَمَّ',
+          '2ms': 'تَأْتَمَّ',
+          '2fs': 'تَأْتَمِّي',
+          '3ms': 'يَأْتَمَّ',
+          '3fs': 'تَأْتَمَّ',
+          '2d': 'تَأْتَمَّا',
+          '3md': 'يَأْتَمَّا',
+          '3fd': 'تَأْتَمَّا',
+          '1p': 'نَأْتَمَّ',
+          '2mp': 'تَأْتَمُّوْا',
+          '2fp': 'تَأْتَمِمْنَ',
+          '3mp': 'يَأْتَمُّوْا',
+          '3fp': 'يَأْتَمِمْنَ',
+        })
+      })
+    })
   })
 
   describe('Form III', () => {

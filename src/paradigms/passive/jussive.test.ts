@@ -1686,5 +1686,25 @@ describe('passive present jussive', () => {
         })
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test('يُؤْتَمَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('أمم', 8), 'jussive')).toEqualT({
+          '1s': 'أُؤْتَمَّ',
+          '2ms': 'تُؤْتَمَّ',
+          '2fs': 'تُؤْتَمِّي',
+          '3ms': 'يُؤْتَمَّ',
+          '3fs': 'تُؤْتَمَّ',
+          '2d': 'تُؤْتَمَّا',
+          '3md': 'يُؤْتَمَّا',
+          '3fd': 'تُؤْتَمَّا',
+          '1p': 'نُؤْتَمَّ',
+          '2mp': 'تُؤْتَمُّوْا',
+          '2fp': 'تُؤْتَمَمْنَ',
+          '3mp': 'يُؤْتَمُّوْا',
+          '3fp': 'يُؤْتَمَمْنَ',
+        })
+      })
+    })
   })
 })

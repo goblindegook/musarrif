@@ -29,6 +29,7 @@
   { "root": "أمل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "أمم", "form": 5, "passiveVoice": "none" },
+  { "root": "أمم", "form": 8 },
   { "root": "أدد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
   { "root": "أمر", "form": 2 },
   { "root": "أمر", "form": 6, "passiveVoice": "impersonal" },

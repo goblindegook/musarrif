@@ -833,6 +833,12 @@ describe('passive participle', () => {
         expect(derivePassiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test.each([['أمم', 'مُؤْتَمّ']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 8))).toBe(expected)
+      })
+    })
   })
 
   describe('Form IX', () => {

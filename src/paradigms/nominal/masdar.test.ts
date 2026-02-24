@@ -911,6 +911,12 @@ describe('masdar', () => {
         expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test.each([['أمم', 'اِئْتِمَام']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
+      })
+    })
   })
 
   describe('Form IX', () => {

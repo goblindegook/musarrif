@@ -530,6 +530,8 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
 
+  if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA]
+
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 
   if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
@@ -537,8 +539,6 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   if (infix === c1 && isWeakLetter(c3)) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, YEH]
 
   if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
-
-  if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA]
 
   if (infix === c1) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, c3, DAMMA]
 

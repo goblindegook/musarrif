@@ -1747,6 +1747,18 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test('اِئْتَمَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('أمم', 8))).toMatchObjectT({
+          '2ms': 'اِئْتَمَّ',
+          '2fs': 'اِئْتَمِّي',
+          '2d': 'اِئْتَمَّا',
+          '2mp': 'اِئْتَمُّوْا',
+          '2fp': 'اِئْتَمِمْنَ',
+        })
+      })
+    })
   })
 
   describe('Form IX', () => {

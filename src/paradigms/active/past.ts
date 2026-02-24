@@ -258,19 +258,20 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
 function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
+
+  if (c2 === c3)
+    return {
+      base: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, FATHA],
+      suffixedBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, SUKOON],
+      pluralBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
+    }
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
   if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
   if (infix === c1 && isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, YEH], YEH)
-
-  if (c2 === c3)
-    return {
-      base: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, SHADDA, FATHA],
-      suffixedBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, SUKOON],
-      pluralBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
-    }
 
   if (infix === c1) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 

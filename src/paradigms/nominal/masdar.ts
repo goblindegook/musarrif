@@ -214,7 +214,10 @@ function deriveMasdarFormVII(verb: Verb<7>): readonly string[] {
 
 function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
+
+  if (c2 === c3) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
 
   if (isWeakLetter(c1) || isHamzatedLetter(c1)) return [ALIF, KASRA, TEH, SHADDA, KASRA, c2, FATHA, ALIF, c3]
 

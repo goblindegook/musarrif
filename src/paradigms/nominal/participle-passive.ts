@@ -6,6 +6,7 @@ import {
   FATHA,
   geminateDoubleLetters,
   HAMZA,
+  HAMZA_ON_WAW,
   isHamzatedLetter,
   isWeakLetter,
   longVowelFromPattern,
@@ -130,17 +131,18 @@ export function derivePassiveParticiple(verb: Verb): string {
 
       case 8: {
         const prefix = [MEEM, DAMMA]
+        const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
         const infix = resolveFormVIIIInfixConsonant(c1)
 
-        if (isInitialHamza || isInitialWeak) return [...prefix, TEH, SHADDA, FATHA, c2, FATHA, c3]
+        if (c2 === c3) return [...prefix, seatedC1, SUKOON, infix, FATHA, c2, SHADDA]
+
+        if (isInitialHamza || isInitialWeak) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, c3]
 
         if (isMiddleWeak) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
 
         if (infix === c1 && isFinalWeak) return [...prefix, c1, SHADDA, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (isFinalWeak) return [...prefix, c1, SUKOON, infix, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c2 === c3) return [...prefix, c1, SUKOON, infix, FATHA, c2, SHADDA]
 
         if (infix === c1) return [...prefix, c1, SHADDA, FATHA, c2, FATHA, isFinalWeak ? ALIF_MAQSURA : c3]
 

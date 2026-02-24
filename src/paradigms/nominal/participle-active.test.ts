@@ -863,6 +863,12 @@ describe('active participle', () => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })
+
+    describe('hamzated initial geminate roots', () => {
+      test.each([['أمم', 'مُؤْتَمّ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
+      })
+    })
   })
 
   describe('Form IX', () => {
