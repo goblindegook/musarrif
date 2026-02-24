@@ -314,6 +314,12 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     return [c1, SHADDA, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
   }
 
+  if (isWeakLetter(c3)) {
+    if (isMasculinePlural(pronounId)) return [c1, SUKOON, infix, FATHA, c2, ...MOOD_SUFFIXES[mood][pronounId]]
+
+    return [c1, SUKOON, infix, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+  }
+
   if (c2 === c3) {
     if (isFemininePlural(pronounId)) return [c1, SUKOON, infix, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 

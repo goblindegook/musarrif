@@ -536,6 +536,8 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
 
   if (infix === c1 && isWeakLetter(c3)) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, YEH]
 
+  if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
+
   if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA]
 
   if (infix === c1) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, c3, DAMMA]

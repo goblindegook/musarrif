@@ -1306,6 +1306,15 @@ describe('active present subjunctive', () => {
     })
 
     describe('defective roots', () => {
+      test.each([
+        ['قضي', 'يَقْتَضِيَ'],
+        ['ردي', 'يَرْتَدِيَ'],
+        ['شري', 'يَشْتَرِيَ'],
+        ['خفي', 'يَخْتَفِيَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اِدَّعَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('دعو', 8), 'subjunctive')).toEqualT({
           '1s': 'أَدَّعِيَ',

@@ -847,7 +847,13 @@ describe('active participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['دعو', 'مُدَّعٍ']])('%s', (root, expected) => {
+      test.each([
+        ['دعو', 'مُدَّعٍ'],
+        ['قضي', 'مُقْتَضٍ'],
+        ['ردي', 'مُرْتَدٍ'],
+        ['شري', 'مُشْتَرٍ'],
+        ['خفي', 'مُخْتَفٍ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })
