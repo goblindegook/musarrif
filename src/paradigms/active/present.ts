@@ -115,27 +115,26 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
   if (isHamzatedLetter(c3)) return [...stem, WAW, ...suffix]
 
+  if (isWeakLetter(c2) && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
+
   if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), WAW, ...suffix]
 
   if (verb.form === 3 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, NOON, FATHA]
 
-  if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), WAW, ...suffix]
+  if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), WAW, ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3))
-    return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
+  if (verb.form === 6 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, FATHA), FATHA, WAW, ...suffix]
 
   if (verb.form === 7 && isWeakLetter(c3)) return [...stem, WAW, ...suffix]
-
-  if (verb.form === 7 && c2 === c3) return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, ...suffix]
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3)) {
     const hamzatedStem = stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))
     return [...dropTerminalWeakOrHamza(hamzatedStem, DAMMA), DAMMA, WAW, NOON, FATHA]
   }
 
-  if (verb.form === 6 && isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, FATHA), FATHA, WAW, ...suffix]
+  if (isWeakLetter(c1)) return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, ...suffix]
 
-  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
+  if (isWeakLetter(c3)) return [...dropTerminalWeakOrHamza(stem, DAMMA), DAMMA, WAW, ...suffix]
 
   return [...dropTerminalWeakOrHamza(stem, DAMMA), WAW, ...suffix]
 }
