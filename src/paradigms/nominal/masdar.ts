@@ -183,9 +183,7 @@ function deriveMasdarFormV(verb: Verb<5>): readonly string[] {
   const isFinalWeak = isWeakLetter(c3)
   const prefix = [TEH, FATHA, c1, FATHA]
 
-  if (isFinalWeak && isHamzatedLetter(c2)) return [...prefix, seatHamza(c2, KASRA), SHADDA, KASRA, YEH]
-
-  if (isFinalWeak) return [...prefix, c2, SHADDA, TANWEEN_KASRA]
+  if (isFinalWeak) return [...prefix, seatHamza(c2, FATHA), SHADDA, TANWEEN_KASRA]
 
   return [...prefix, c2, SHADDA, DAMMA, seatHamza(c3, DAMMA)]
 }
