@@ -209,16 +209,14 @@ function deriveMasdarFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
 
-  if (isWeakLetter(c3) || isHamzatedLetter(c3)) return [...prefix, c2, FATHA, ALIF, HAMZA]
+  if (isWeakLetter(c3)) return [...prefix, c2, FATHA, ALIF, HAMZA]
 
-  if (isWeakLetter(c2)) return [...prefix, YEH, FATHA, ALIF, c3]
-
-  return [...prefix, c2, FATHA, ALIF, c3]
+  return [...prefix, isWeakLetter(c2) ? YEH : c2, FATHA, ALIF, seatHamza(c3)]
 }
 
 function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
+  const seatedC1 = seatHamza(c1, KASRA)
   const seatedC2 = seatHamza(c2, KASRA)
   const infix = resolveFormVIIIInfixConsonant(c1)
 

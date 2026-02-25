@@ -38,17 +38,19 @@ export type ShortVowel = 'a' | 'i' | 'u'
 
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
 
+type LongVowel = typeof ALIF | typeof YEH | typeof WAW
+
 type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAMZA_ON_YEH
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
-const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
+const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', Vowel> = {
   a: FATHA,
   i: KASRA,
   u: DAMMA,
 } as const
 
-const LONG_VOWEL_MAP: Record<'a' | 'i' | 'u', string> = {
+const LONG_VOWEL_MAP: Record<'a' | 'i' | 'u', LongVowel> = {
   a: ALIF,
   i: YEH,
   u: WAW,
@@ -104,18 +106,19 @@ export function geminateDoubleLetters(word: readonly string[]): readonly string[
   return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`), `$1${SHADDA}`))
 }
 
-export function seatHamza(letter: string, vowel: string): string {
+export function seatHamza(letter: string, vowel?: Vowel): string {
   if (!isHamzatedLetter(letter)) return letter
   if (vowel === FATHA) return ALIF_HAMZA
+  if (vowel === KASRA) return HAMZA_ON_YEH
   if (vowel === DAMMA) return HAMZA_ON_WAW
-  return HAMZA_ON_YEH
+  return HAMZA
 }
 
-export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): string {
+export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): Vowel {
   return SHORT_VOWEL_MAP[vowel]
 }
 
-export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): string[] {
+export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): [Vowel, LongVowel] {
   return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
 }
 
@@ -146,8 +149,8 @@ export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
 export function resolveFormVIIIInfixConsonant(c1: string): string {
   if (c1 === ZAY) return DAL
   if ([SAD, DAD].includes(c1)) return TAH
-  if (![DAL, THEH, THAL, TAH, ZAH].includes(c1)) return TEH
-  return c1
+  if ([DAL, THEH, THAL, TAH, ZAH].includes(c1)) return c1
+  return TEH
 }
 
 interface RootAnalysis {
