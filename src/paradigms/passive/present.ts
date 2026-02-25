@@ -305,6 +305,8 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
+  const isMiddleWeak = isWeakLetter(c2)
+  const isFinalHamza = isHamzatedLetter(c3)
 
   if (c2 === c3) {
     if (isFemininePlural(pronounId))
@@ -329,6 +331,18 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     if (isMasculinePlural(pronounId)) return [seatedC1, SUKOON, infix, FATHA, c2, ...MOOD_SUFFIXES[mood][pronounId]]
 
     return [seatedC1, SUKOON, infix, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+  }
+
+  if (isMiddleWeak && isFinalHamza) {
+    const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+
+    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON)
+      return [seatedC1, SUKOON, infix, FATHA, ALIF_HAMZA, ...moodSuffix]
+
+    if (pronounId === '2fs' || isMasculinePlural(pronounId))
+      return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA_ON_YEH, ...moodSuffix]
+
+    return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
   if (infix === c1) return [seatedC1, SHADDA, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]

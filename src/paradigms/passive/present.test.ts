@@ -1649,7 +1649,10 @@ describe('passive present indicative', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['زوج', 'يُزْدَوَجُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['زوج', 'يُزْدَوَجُ'],
+        ['سوء', 'يُسْتَاءُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
     })

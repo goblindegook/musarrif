@@ -1688,7 +1688,10 @@ describe('passive present jussive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['زوج', 'يُزْدَوَجْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['زوج', 'يُزْدَوَجْ'],
+        ['سوء', 'يُسْتَأْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'jussive')['3ms']).toEqualT(expected)
       })
     })

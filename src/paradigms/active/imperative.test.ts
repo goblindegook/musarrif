@@ -1659,10 +1659,11 @@ describe('imperative', () => {
     })
 
     describe('hollow roots', () => {
-      it('shortens hollow like اِقْتَادَ → اِقْتَدْ', () => {
-        const imperative = conjugateImperative(getVerb('قود', 8))
-
-        expect(imperative['2ms']).toBe('اِقْتَدْ')
+      test.each([
+        ['قود', 'اِقْتَدْ'],
+        ['سوء', 'اِسْتَأْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
       })
 
       test('اِزْدَوَجَ conjugation', () => {

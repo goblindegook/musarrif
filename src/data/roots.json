@@ -328,6 +328,7 @@
   { "root": "سفر", "form": 2 },
   { "root": "سفر", "form": 3 },
   { "root": "سرر", "form": 3 },
+  { "root": "سوء", "form": 8, "passiveVoice": "impersonal" },
   { "root": "سوف", "form": 2 },
   { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "سلم", "form": 10 },

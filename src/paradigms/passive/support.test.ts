@@ -67,6 +67,7 @@ describe('canConjugatePassive', () => {
       ['خفي', 8],
       ['أمم', 8],
       ['زوج', 8],
+      ['سوء', 8],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })
