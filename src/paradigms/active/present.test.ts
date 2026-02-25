@@ -1536,7 +1536,6 @@ describe('active present indicative', () => {
         ['وصي', 'يُوْصِي'],
         ['وحي', 'يُوْحِي'],
         ['وفي', 'يُوْفِي'],
-        ['وري', 'يُوْرِي'],
         ['ودي', 'يُوْدِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
@@ -1557,6 +1556,24 @@ describe('active present indicative', () => {
           '2fp': 'تُوْفِيْنَ',
           '3mp': 'يُوْفوْنَ',
           '3fp': 'يُوْفِيْنَ',
+        })
+      })
+
+      test('أَرَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 4), 'indicative')).toEqualT({
+          '1s': 'أُرِي',
+          '2ms': 'تُرِي',
+          '2fs': 'تُرِينَ',
+          '3ms': 'يُرِي',
+          '3fs': 'تُرِي',
+          '2d': 'تُرِيَانِ',
+          '3md': 'يُرِيَانِ',
+          '3fd': 'تُرِيَانِ',
+          '1p': 'نُرِي',
+          '2mp': 'تُرُونَ',
+          '2fp': 'تُرِينَ',
+          '3mp': 'يُرُونَ',
+          '3fp': 'يُرِينَ',
         })
       })
     })

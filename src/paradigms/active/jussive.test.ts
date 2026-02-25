@@ -1119,7 +1119,6 @@ describe('active present jussive', () => {
         ['وصي', 'يُوْصِ'],
         ['وحي', 'يُوْحِ'],
         ['وفي', 'يُوْفِ'],
-        ['وري', 'يُوْرِ'],
         ['ودي', 'يُوْدِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
@@ -1140,6 +1139,24 @@ describe('active present jussive', () => {
           '2fp': 'تُحْيِيْنَ',
           '3mp': 'يُحْيُوْا',
           '3fp': 'يُحْيِيْنَ',
+        })
+      })
+
+      test('أَرَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 4), 'jussive')).toEqualT({
+          '1s': 'أُرِ',
+          '2ms': 'تُرِ',
+          '2fs': 'تُرِي',
+          '3ms': 'يُرِ',
+          '3fs': 'تُرِ',
+          '2d': 'تُرِيَا',
+          '3md': 'يُرِيَا',
+          '3fd': 'تُرِيَا',
+          '1p': 'نُرِ',
+          '2mp': 'تُرُوا',
+          '2fp': 'تُرِينَ',
+          '3mp': 'يُرُوا',
+          '3fp': 'يُرِينَ',
         })
       })
 

@@ -993,7 +993,6 @@ describe('active present subjunctive', () => {
         ['وصي', 'يُوْصِيَ'],
         ['وحي', 'يُوْحِيَ'],
         ['وفي', 'يُوْفِيَ'],
-        ['وري', 'يُوْرِيَ'],
         ['ودي', 'يُوْدِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
@@ -1014,6 +1013,24 @@ describe('active present subjunctive', () => {
           '2fp': 'تُحْيِيْنَ',
           '3mp': 'يُحْيُوْا',
           '3fp': 'يُحْيِيْنَ',
+        })
+      })
+
+      test('أَرَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُرِيَ',
+          '2ms': 'تُرِيَ',
+          '2fs': 'تُرِي',
+          '3ms': 'يُرِيَ',
+          '3fs': 'تُرِيَ',
+          '2d': 'تُرِيَا',
+          '3md': 'يُرِيَا',
+          '3fd': 'تُرِيَا',
+          '1p': 'نُرِيَ',
+          '2mp': 'تُرُوْا',
+          '2fp': 'تُرِينَ',
+          '3mp': 'يُرُوْا',
+          '3fp': 'يُرِينَ',
         })
       })
     })
@@ -1639,9 +1656,9 @@ describe('active present subjunctive', () => {
           '3md': 'يَنْزَوِيَا',
           '3fd': 'تَنْزَوِيَا',
           '1p': 'نَنْزَوِيَ',
-          '2mp': 'تَنْزَوُوا',
+          '2mp': 'تَنْزَوُوْا',
           '2fp': 'تَنْزَوِينَ',
-          '3mp': 'يَنْزَوُوا',
+          '3mp': 'يَنْزَوُوْا',
           '3fp': 'يَنْزَوِينَ',
         })
       })

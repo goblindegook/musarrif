@@ -1118,7 +1118,6 @@ describe('passive past pattern', () => {
         ['وصي', 'أُوْصِيَ'],
         ['وحي', 'أُوْحِيَ'],
         ['وفي', 'أُوْفِيَ'],
-        ['وري', 'أُوْرِيَ'],
         ['ودي', 'أُوْدِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
@@ -1139,6 +1138,24 @@ describe('passive past pattern', () => {
           '2fp': 'أُحْيِيتُنَّ',
           '3mp': 'أُحْيُوْا',
           '3fp': 'أُحْيِينَ',
+        })
+      })
+
+      test('أُرِيَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('رءي', 4))).toEqualT({
+          '1s': 'أُرِيتُ',
+          '2ms': 'أُرِيتَ',
+          '2fs': 'أُرِيتِ',
+          '3ms': 'أُرِيَ',
+          '3fs': 'أُرِيَتْ',
+          '2d': 'أُرِيتُمَا',
+          '3md': 'أُرِيَا',
+          '3fd': 'أُرِيَتَا',
+          '1p': 'أُرِينَا',
+          '2mp': 'أُرِيتُمْ',
+          '2fp': 'أُرِيتُنَّ',
+          '3mp': 'أُرُوا',
+          '3fp': 'أُرِينَ',
         })
       })
     })

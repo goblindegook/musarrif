@@ -227,6 +227,7 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const isInitialHamza = isHamzatedLetter(c1)
+  const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -243,6 +244,8 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
 
     return [seatedC1, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
+
+  if (isMiddleHamza) return [seatedC1, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   if (isFinalWeak) return [...prefix, ...defectiveSuffix(mood, pronounId, c2 === c3)]
 

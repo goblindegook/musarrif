@@ -1101,21 +1101,21 @@ describe('passive present subjunctive', () => {
         })
       })
 
-      test('أَوْرَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وري', 4), 'subjunctive')).toEqualT({
-          '1s': 'أُوْرَى',
-          '2ms': 'تُوْرَى',
-          '2fs': 'تُوْرَيْ',
-          '3ms': 'يُوْرَى',
-          '3fs': 'تُوْرَى',
-          '2d': 'تُوْرَيَا',
-          '3md': 'يُوْرَيَا',
-          '3fd': 'تُوْرَيَا',
-          '1p': 'نُوْرَى',
-          '2mp': 'تُوْرَوْا',
-          '2fp': 'تُوْرَيْنَ',
-          '3mp': 'يُوْرَوْا',
-          '3fp': 'يُوْرَيْنَ',
+      test('أُرِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('رءي', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُرَى',
+          '2ms': 'تُرَى',
+          '2fs': 'تُرَيْ',
+          '3ms': 'يُرَى',
+          '3fs': 'تُرَى',
+          '2d': 'تُرَيَا',
+          '3md': 'يُرَيَا',
+          '3fd': 'تُرَيَا',
+          '1p': 'نُرَى',
+          '2mp': 'تُرَوْا',
+          '2fp': 'تُرَيْنَ',
+          '3mp': 'يُرَوْا',
+          '3fp': 'يُرَيْنَ',
         })
       })
 

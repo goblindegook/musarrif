@@ -1111,7 +1111,6 @@ describe('imperative', () => {
         ['وصي', 'أَوْصِ'],
         ['وحي', 'أَوْحِ'],
         ['وفي', 'أَوْفِ'],
-        ['وري', 'أَوْرِ'],
         ['ودي', 'أَوْدِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
@@ -1134,6 +1133,16 @@ describe('imperative', () => {
           '2d': 'أَوْفِيَا',
           '2mp': 'أَوْفُوْا',
           '2fp': 'أَوْفِيْنَ',
+        })
+      })
+
+      test('أَرَى conjugation', () => {
+        expect(conjugateImperative(getVerb('رءي', 4))).toMatchObjectT({
+          '2ms': 'أَرِ',
+          '2fs': 'أَرِي',
+          '2d': 'أَرِيَا',
+          '2mp': 'أَرُوا',
+          '2fp': 'أَرِينَ',
         })
       })
     })

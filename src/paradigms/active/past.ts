@@ -185,6 +185,8 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
 
   if (c2 === c3) return buildForms([...prefix, FATHA, c2, SHADDA, FATHA], c3)
 
+  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return buildForms([...prefix, FATHA, c3, FATHA], c3)
+
   if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
 
   if (isWeakLetter(c2))
