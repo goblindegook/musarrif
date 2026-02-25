@@ -4,6 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MAQSURA,
+  DAL,
   DAMMA,
   FATHA,
   findLastLetterIndex,
@@ -306,7 +307,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
-  const [, c2, c3] = letters
+  const [c1, c2, c3] = letters
   const lastRoot = last(letters)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(lastRoot)
@@ -367,7 +368,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFemininePlural(pronounId)) return [...removeFinalDiacritic(word), FATHA]
 
-      if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
+      if (hasPattern(verb, 'fa3ila-yaf3alu')) return [...removeFinalDiacritic(word), SUKOON]
+
+      if (verb.form === 8 && resolveFormVIIIInfixConsonant(c1) === DAL) return [...removeFinalDiacritic(word), SUKOON]
+
+      if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak)
         return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
       return [...removeFinalDiacritic(word), SUKOON]
@@ -524,15 +529,13 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
 
-  if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA]
+  if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SUKOON, c3, DAMMA]
 
   if (isHamzatedLetter(c1) || isWeakLetter(c1)) return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, c3, DAMMA]
 
-  if (isWeakLetter(c2)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
+  if (isWeakLetter(c2) && infix !== DAL) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
-  if (infix === c1 && isWeakLetter(c3)) return [YEH, FATHA, c1, SHADDA, FATHA, c2, KASRA, YEH]
-
-  if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
+  if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, YEH]
 
   return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3, DAMMA]
 }

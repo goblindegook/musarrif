@@ -1632,6 +1632,24 @@ describe('active present jussive', () => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
         expect(jussive['3ms']).toBe(expected3ms)
       })
+
+      test('اِزْدَوَجَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زوج', 8), 'jussive')).toEqualT({
+          '1s': 'أَزْدَوِجْ',
+          '2ms': 'تَزْدَوِجْ',
+          '2fs': 'تَزْدَوِجِي',
+          '3ms': 'يَزْدَوِجْ',
+          '3fs': 'تَزْدَوِجْ',
+          '2d': 'تَزْدَوِجَا',
+          '3md': 'يَزْدَوِجَا',
+          '3fd': 'تَزْدَوِجَا',
+          '1p': 'نَزْدَوِجْ',
+          '2mp': 'تَزْدَوِجُوْا',
+          '2fp': 'تَزْدَوِجْنَ',
+          '3mp': 'يَزْدَوِجُوْا',
+          '3fp': 'يَزْدَوِجْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

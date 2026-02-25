@@ -1334,6 +1334,26 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test('اِزْدَوَجَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زوج', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَزْدَوِجَ',
+          '2ms': 'تَزْدَوِجَ',
+          '2fs': 'تَزْدَوِجِي',
+          '3ms': 'يَزْدَوِجَ',
+          '3fs': 'تَزْدَوِجَ',
+          '2d': 'تَزْدَوِجَا',
+          '3md': 'يَزْدَوِجَا',
+          '3fd': 'تَزْدَوِجَا',
+          '1p': 'نَزْدَوِجَ',
+          '2mp': 'تَزْدَوِجُوْا',
+          '2fp': 'تَزْدَوِجْنَ',
+          '3mp': 'يَزْدَوِجُوْا',
+          '3fp': 'يَزْدَوِجْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial geminate roots', () => {
       test('يَأْتَمَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أمم', 8), 'subjunctive')).toEqualT({

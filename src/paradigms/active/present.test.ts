@@ -2199,6 +2199,24 @@ describe('active present indicative', () => {
       test.each([['قود', 'يَقْتَادُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('اِزْدَوَجَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زوج', 8), 'indicative')).toEqualT({
+          '1s': 'أَزْدَوِجُ',
+          '2ms': 'تَزْدَوِجُ',
+          '2fs': 'تَزْدَوِجِيْنَ',
+          '3ms': 'يَزْدَوِجُ',
+          '3fs': 'تَزْدَوِجُ',
+          '2d': 'تَزْدَوِجَانِ',
+          '3md': 'يَزْدَوِجَانِ',
+          '3fd': 'تَزْدَوِجَانِ',
+          '1p': 'نَزْدَوِجُ',
+          '2mp': 'تَزْدَوِجُوْنَ',
+          '2fp': 'تَزْدَوِجْنَ',
+          '3mp': 'يَزْدَوِجُوْنَ',
+          '3fp': 'يَزْدَوِجْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

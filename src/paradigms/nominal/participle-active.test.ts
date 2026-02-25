@@ -841,7 +841,10 @@ describe('active participle', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['قود', 'مُقْتَاد']])('%s', (root, expected) => {
+      test.each([
+        ['قود', 'مُقْتَاد'],
+        ['زوج', 'مُزْدَوِج'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })

@@ -4,6 +4,7 @@ import {
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
   ALIF_MAQSURA,
+  DAL,
   DAMMA,
   FATHA,
   geminateDoubleLetters,
@@ -219,18 +220,13 @@ function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
 
   if (c2 === c3) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
 
-  if (isWeakLetter(c1) || isHamzatedLetter(c1)) return [ALIF, KASRA, TEH, SHADDA, KASRA, c2, FATHA, ALIF, c3]
+  if (isWeakLetter(c1) || isHamzatedLetter(c1)) return [ALIF, KASRA, infix, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
 
-  if (isWeakLetter(c3))
-    return infix === c1
-      ? [ALIF, KASRA, c1, SHADDA, KASRA, c2, FATHA, ALIF, HAMZA]
-      : [ALIF, KASRA, c1, SUKOON, infix, KASRA, c2, FATHA, ALIF, HAMZA]
+  if (isWeakLetter(c3)) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, HAMZA]
 
-  if (isWeakLetter(c2)) return [ALIF, KASRA, c1, SUKOON, infix, KASRA, YEH, FATHA, ALIF, c3]
+  if (isWeakLetter(c2) && infix !== DAL) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, YEH, FATHA, ALIF, c3]
 
-  if (infix === c1) return [ALIF, KASRA, c1, SHADDA, KASRA, c2, FATHA, ALIF, c3]
-
-  return [ALIF, KASRA, c1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
+  return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormIX(verb: Verb<9>): readonly string[] {
@@ -295,7 +291,9 @@ export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = (verb.form === 1 && verb.masdarPatterns) || [undefined]
   return patterns
     .map((pattern) => {
-      return normalizeAlifMadda(masdar(verb, pattern)).join('').normalize('NFC')
+      return geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))
+        .join('')
+        .normalize('NFC')
     })
     .filter(Boolean)
 }

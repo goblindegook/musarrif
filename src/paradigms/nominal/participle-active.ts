@@ -1,8 +1,10 @@
 import { hasPattern } from '../form-i-vowels'
 import {
   ALIF,
+  DAL,
   DAMMA,
   FATHA,
+  geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -131,13 +133,11 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isInitialHamza || isInitialWeak) return [MEEM, DAMMA, TEH, SHADDA, FATHA, c2, KASRA, c3]
 
-        if (isMiddleWeak) return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, ALIF, c3]
+        if (isMiddleWeak && infix !== DAL) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
-        if (infix === c1 && isFinalWeak) return [MEEM, DAMMA, c1, SHADDA, FATHA, c2, TANWEEN_KASRA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, c2, TANWEEN_KASRA]
 
-        if (isFinalWeak) return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, c2, TANWEEN_KASRA]
-
-        return [MEEM, DAMMA, c1, SUKOON, infix, FATHA, c2, KASRA, c3]
+        return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, c2, KASRA, c3]
       }
 
       case 9: {
@@ -158,5 +158,5 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     }
   })()
 
-  return normalizeAlifMadda(result).join('').normalize('NFC')
+  return geminateDoubleLetters(normalizeAlifMadda(result)).join('').normalize('NFC')
 }

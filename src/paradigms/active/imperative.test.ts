@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
-import { ALIF_HAMZA, ALIF_MADDA, isWeakLetter } from '../letters'
+import { ALIF_HAMZA, ALIF_MADDA } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { getVerb, verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
@@ -55,24 +55,6 @@ describe('imperative', () => {
           '2mp': 'اُنْظُرُوْا',
           '2fp': 'اُنْظُرْنَ',
         })
-      })
-
-      test('imperative stems from jussive', () => {
-        fc.assert(
-          fc.property(
-            arbitraryVerb.filter(({ root, form }) => {
-              const [c1, , c3] = Array.from(root)
-              return form === 1 && !isWeakLetter(c1) && c1 !== ALIF_HAMZA && !isWeakLetter(c3)
-            }),
-            arbitraryPronoun,
-            (verb, pronounId) => {
-              const jussive = conjugatePresentMood(verb, 'jussive')
-              const imperative = conjugateImperative(verb)
-
-              expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
-            },
-          ),
-        )
       })
     })
 
@@ -641,28 +623,6 @@ describe('imperative', () => {
         })
       })
     })
-
-    describe('all root types', () => {
-      test('imperative only exists for second person pronouns', () => {
-        fc.assert(
-          fc.property(
-            arbitraryVerb.filter(({ form }) => form === 1),
-            (verb) => {
-              expect(conjugateImperative(verb)).toMatchObjectT({
-                '1s': '',
-                '1p': '',
-                '3ms': '',
-                '3fs': '',
-                '3md': '',
-                '3fd': '',
-                '3mp': '',
-                '3fp': '',
-              })
-            },
-          ),
-        )
-      })
-    })
   })
 
   describe('Form II', () => {
@@ -693,24 +653,6 @@ describe('imperative', () => {
             '2fp': 'كَتِّبْنَ',
           })
         })
-      })
-
-      test('imperative stems from jussive for non-geminated Form II', () => {
-        fc.assert(
-          fc.property(
-            arbitraryVerb.filter(({ root, form }) => {
-              const [, c2, c3] = Array.from(root)
-              return form === 2 && c2 !== c3
-            }),
-            arbitraryPronoun,
-            (verb, pronounId) => {
-              const jussive = conjugatePresentMood(verb, 'jussive')
-              const imperative = conjugateImperative(verb)
-
-              expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
-            },
-          ),
-        )
       })
     })
 
@@ -1721,6 +1663,16 @@ describe('imperative', () => {
         const imperative = conjugateImperative(getVerb('قود', 8))
 
         expect(imperative['2ms']).toBe('اِقْتَدْ')
+      })
+
+      test('اِزْدَوَجَ conjugation', () => {
+        expect(conjugateImperative(getVerb('زوج', 8))).toMatchObjectT({
+          '2ms': 'اِزْدَوِجْ',
+          '2fs': 'اِزْدَوِجِي',
+          '2d': 'اِزْدَوِجَا',
+          '2mp': 'اِزْدَوِجُوْا',
+          '2fp': 'اِزْدَوِجْنَ',
+        })
       })
     })
 

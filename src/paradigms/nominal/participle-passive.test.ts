@@ -810,7 +810,10 @@ describe('passive participle', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['قود', 'مُقْتَاد']])('%s', (root, expected) => {
+      test.each([
+        ['قود', 'مُقْتَاد'],
+        ['زوج', 'مُزْدَوَج'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })

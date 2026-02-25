@@ -2070,6 +2070,24 @@ describe('active past', () => {
       test.each([['قود', 'اِقْتَادَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
+
+      test('اِزْدَوَجَ conjugation', () => {
+        expect(conjugatePast(getVerb('زوج', 8))).toEqualT({
+          '1s': 'اِزْدَوَجْتُ',
+          '2ms': 'اِزْدَوَجْتَ',
+          '2fs': 'اِزْدَوَجْتِ',
+          '3ms': 'اِزْدَوَجَ',
+          '3fs': 'اِزْدَوَجَتْ',
+          '2d': 'اِزْدَوَجْتُمَا',
+          '3md': 'اِزْدَوَجَا',
+          '3fd': 'اِزْدَوَجَتَا',
+          '1p': 'اِزْدَوَجْنَا',
+          '2mp': 'اِزْدَوَجْتُمْ',
+          '2fp': 'اِزْدَوَجْتُنَّ',
+          '3mp': 'اِزْدَوَجُوْا',
+          '3fp': 'اِزْدَوَجْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

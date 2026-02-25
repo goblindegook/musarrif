@@ -4,6 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MAQSURA,
+  DAL,
   DAMMA,
   FATHA,
   geminateDoubleLetters,
@@ -267,13 +268,11 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
       pluralBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
-  if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, TEH, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+  if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
-  if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
+  if (isWeakLetter(c2) && infix !== DAL) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
-  if (infix === c1 && isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, YEH], YEH)
-
-  if (infix === c1) return buildForms([ALIF, KASRA, c1, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
+  if (isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, YEH], YEH)
 
   return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, FATHA], c3)
 }
