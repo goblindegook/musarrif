@@ -256,6 +256,7 @@
   { "root": "رءي", "form": 4 },
   { "root": "رءي", "form": 5 },
   { "root": "رءي", "form": 6 },
+  { "root": "رءي", "form": 8 },
   { "root": "رأي", "form": 4 },
   { "root": "رعي", "form": 3 },
   { "root": "روي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": [] },

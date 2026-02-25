@@ -260,6 +260,7 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
+  const seatedC2 = seatHamza(c2, FATHA)
 
   if (c2 === c3)
     return {
@@ -272,7 +273,7 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
   if (isWeakLetter(c2) && infix !== DAL) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
-  if (isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, YEH], YEH)
+  if (isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, seatedC2, FATHA, YEH], YEH)
 
   return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, c3, FATHA], c3)
 }

@@ -2104,6 +2104,24 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
 
+      test('اِرْتَأَى conjugation', () => {
+        expect(conjugatePast(getVerb('رءي', 8))).toEqualT({
+          '1s': 'اِرْتَأَيْتُ',
+          '2ms': 'اِرْتَأَيْتَ',
+          '2fs': 'اِرْتَأَيْتِ',
+          '3ms': 'اِرْتَأَى',
+          '3fs': 'اِرْتَأَتْ',
+          '2d': 'اِرْتَأَيْتُمَا',
+          '3md': 'اِرْتَأَيَا',
+          '3fd': 'اِرْتَأَتَا',
+          '1p': 'اِرْتَأَيْنَا',
+          '2mp': 'اِرْتَأَيْتُمْ',
+          '2fp': 'اِرْتَأَيْتُنَّ',
+          '3mp': 'اِرْتَأَوْا',
+          '3fp': 'اِرْتَأَيْنَ',
+        })
+      })
+
       test('اِدَّعَى conjugation', () => {
         expect(conjugatePast(getVerb('دعو', 8))).toEqualT({
           '1s': 'اِدَّعَيْتُ',

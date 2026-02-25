@@ -1315,6 +1315,24 @@ describe('active present subjunctive', () => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
+      test('اِرْتَأَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَرْتَئِيَ',
+          '2ms': 'تَرْتَئِيَ',
+          '2fs': 'تَرْتَئِي',
+          '3ms': 'يَرْتَئِيَ',
+          '3fs': 'تَرْتَئِيَ',
+          '2d': 'تَرْتَئِيَا',
+          '3md': 'يَرْتَئِيَا',
+          '3fd': 'تَرْتَئِيَا',
+          '1p': 'نَرْتَئِيَ',
+          '2mp': 'تَرْتَئُوْا',
+          '2fp': 'تَرْتَئِيْنَ',
+          '3mp': 'يَرْتَئُوْا',
+          '3fp': 'يَرْتَئِيْنَ',
+        })
+      })
+
       test('اِدَّعَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('دعو', 8), 'subjunctive')).toEqualT({
           '1s': 'أَدَّعِيَ',

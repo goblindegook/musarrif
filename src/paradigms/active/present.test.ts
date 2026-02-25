@@ -2259,6 +2259,24 @@ describe('active present indicative', () => {
         })
       })
 
+      test('اِرْتَأَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 8), 'indicative')).toEqualT({
+          '1s': 'أَرْتَئِي',
+          '2ms': 'تَرْتَئِي',
+          '2fs': 'تَرْتَئِيْنَ',
+          '3ms': 'يَرْتَئِي',
+          '3fs': 'تَرْتَئِي',
+          '2d': 'تَرْتَئِيَانِ',
+          '3md': 'يَرْتَئِيَانِ',
+          '3fd': 'تَرْتَئِيَانِ',
+          '1p': 'نَرْتَئِي',
+          '2mp': 'تَرْتَئُوْنَ',
+          '2fp': 'تَرْتَئِيْنَ',
+          '3mp': 'يَرْتَئُوْنَ',
+          '3fp': 'يَرْتَئِيْنَ',
+        })
+      })
+
       test('اِشْتَرَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('شري', 8), 'indicative')).toEqualT({
           '1s': 'أَشْتَرِي',

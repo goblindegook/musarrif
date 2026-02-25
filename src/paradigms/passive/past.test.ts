@@ -1359,6 +1359,24 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
 
+      test('اُرْتُئِيَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('رءي', 8))).toEqualT({
+          '1s': 'اُرْتُئِيتُ',
+          '2ms': 'اُرْتُئِيتَ',
+          '2fs': 'اُرْتُئِيتِ',
+          '3ms': 'اُرْتُئِيَ',
+          '3fs': 'اُرْتُئِيَتْ',
+          '2d': 'اُرْتُئِيتُمَا',
+          '3md': 'اُرْتُئِيَا',
+          '3fd': 'اُرْتُئِيَتَا',
+          '1p': 'اُرْتُئِينَا',
+          '2mp': 'اُرْتُئِيتُمْ',
+          '2fp': 'اُرْتُئِيتُنَّ',
+          '3mp': 'اُرْتُئُوْا',
+          '3fp': 'اُرْتُئِينَ',
+        })
+      })
+
       test('اُدُّعِيَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('دعو', 8))).toEqualT({
           '1s': 'اُدُّعِيتُ',

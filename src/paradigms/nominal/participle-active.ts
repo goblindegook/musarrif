@@ -127,6 +127,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
       case 8: {
         const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
+        const seatedC2 = seatHamza(c2, FATHA)
         const infix = resolveFormVIIIInfixConsonant(c1)
 
         if (c2 === c3) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA]
@@ -135,9 +136,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleWeak && infix !== DAL) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
-        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, c2, TANWEEN_KASRA]
+        if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_KASRA]
 
-        return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, c2, KASRA, c3]
+        return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, c3]
       }
 
       case 9: {

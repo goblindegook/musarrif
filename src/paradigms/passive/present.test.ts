@@ -1557,6 +1557,24 @@ describe('passive present indicative', () => {
     })
 
     describe('defective roots', () => {
+      test('اُرْتُئِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('رءي', 8), 'indicative')).toEqualT({
+          '1s': 'أُرْتَأَى',
+          '2ms': 'تُرْتَأَى',
+          '2fs': 'تُرْتَأَيْنَ',
+          '3ms': 'يُرْتَأَى',
+          '3fs': 'تُرْتَأَى',
+          '2d': 'تُرْتَأَيَانِ',
+          '3md': 'يُرْتَأَيَانِ',
+          '3fd': 'تُرْتَأَيَانِ',
+          '1p': 'نُرْتَأَى',
+          '2mp': 'تُرْتَأَوْنَ',
+          '2fp': 'تُرْتَأَيْنَ',
+          '3mp': 'يُرْتَأَوْنَ',
+          '3fp': 'يُرْتَأَيْنَ',
+        })
+      })
+
       test('اُقْتُضِيَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('قضي', 8), 'indicative')).toEqualT({
           '1s': 'أُقْتَضَى',
