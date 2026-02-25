@@ -215,7 +215,10 @@ function buildDualPresent(word: readonly string[], verb: Verb): readonly string[
 
   if (isHamzatedLetter(c3)) return normalizeAlifMadda([...removeFinalDiacritic(word), FATHA, ...suffix])
 
-  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
+  if (isHamzatedLetter(c2) && isWeakLetter(c3)) {
+    const dualBase = word.at(-1) === ALIF_MAQSURA ? [...word.slice(0, -1), YEH] : word
+    return [...dualBase, FATHA, ...suffix]
+  }
 
   if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
 
@@ -488,10 +491,11 @@ function derivePresentFormIV(verb: Verb<4>): readonly string[] {
 
 function derivePresentFormV(verb: Verb<5>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const seatedC2 = seatHamza(c2, FATHA)
 
-  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
+  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, c1, FATHA, seatedC2, SUKOON, seatedC2, FATHA, ALIF_MAQSURA]
 
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, seatHamza(c3, FATHA), DAMMA]
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, seatedC2, SUKOON, seatedC2, FATHA, seatHamza(c3, FATHA), DAMMA]
 }
 
 function derivePresentFormVI(verb: Verb<6>): readonly string[] {

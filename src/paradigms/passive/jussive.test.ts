@@ -1360,6 +1360,10 @@ describe('passive present jussive', () => {
     })
 
     describe('defective roots', () => {
+      test.each([['رءي', 'يُتَرَأَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('تَبَقَّى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('بقي', 5), 'jussive')).toEqualT({
           '1s': 'أُتَبَقَّ',

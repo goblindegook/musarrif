@@ -1336,6 +1336,16 @@ describe('imperative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
       })
+
+      test('تَرَأَّى conjugation', () => {
+        expect(conjugateImperative(getVerb('رءي', 5))).toMatchObjectT({
+          '2ms': 'تَرَأَّ',
+          '2fs': 'تَرَأَّيْ',
+          '2d': 'تَرَأَّيَا',
+          '2mp': 'تَرَأَّوْا',
+          '2fp': 'تَرَأَّيْنَ',
+        })
+      })
     })
 
     describe('doubly weak roots', () => {

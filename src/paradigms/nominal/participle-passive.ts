@@ -46,6 +46,9 @@ export function derivePassiveParticiple(verb: Verb): string {
     const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
     const isFinalHamza = isHamzatedLetter(c3)
+    const seatedC1 = seatHamza(c1, DAMMA)
+    const seatedC2 = seatHamza(c2, FATHA)
+    const seatedC3 = seatHamza(c3, FATHA)
 
     switch (verb.form) {
       case 1: {
@@ -64,7 +67,6 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 2: {
-        const seatedC1 = seatHamza(c1, DAMMA)
         const prefix = [MEEM, DAMMA, seatedC1, FATHA, c2]
 
         if (isFinalWeak) return [...prefix, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
@@ -73,7 +75,6 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 3: {
-        const seatedC1 = seatHamza(c1, DAMMA)
         const seatedC2 = isMiddleHamza ? HAMZA : c2
         const prefix = [MEEM, DAMMA, seatedC1, FATHA, ALIF, seatedC2]
 
@@ -85,8 +86,6 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 4: {
-        const seatedC1 = seatHamza(c1, DAMMA)
-        const seatedC3 = seatHamza(c3, FATHA)
         const prefix = [MEEM, DAMMA, seatedC1]
 
         if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
@@ -103,9 +102,9 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 5: {
         const prefix = [MEEM, DAMMA, TEH, FATHA, c1]
 
-        if (isFinalWeak) return [...prefix, FATHA, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
+        if (isFinalWeak) return [...prefix, FATHA, seatedC2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
 
-        return [...prefix, FATHA, c2, SHADDA, FATHA, seatHamza(c3, FATHA)]
+        return [...prefix, FATHA, seatedC2, SHADDA, FATHA, seatHamza(c3, FATHA)]
       }
 
       case 6: {
@@ -133,7 +132,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 8: {
         const prefix = [MEEM, DAMMA]
         const seatedC1 = isInitialHamza ? HAMZA_ON_WAW : c1
-        const seatedC2 = seatHamza(c2, FATHA)
+
         const infix = resolveFormVIIIInfixConsonant(c1)
 
         if (c2 === c3) return [...prefix, seatedC1, SUKOON, infix, FATHA, c2, SHADDA]

@@ -1266,6 +1266,24 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
       })
 
+      test('تَرَأَّى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 5), 'jussive')).toEqualT({
+          '1s': 'أَتَرَأَّ',
+          '2ms': 'تَتَرَأَّ',
+          '2fs': 'تَتَرَأَّيْ',
+          '3ms': 'يَتَرَأَّ',
+          '3fs': 'تَتَرَأَّ',
+          '2d': 'تَتَرَأَّيَا',
+          '3md': 'يَتَرَأَّيَا',
+          '3fd': 'تَتَرَأَّيَا',
+          '1p': 'نَتَرَأَّ',
+          '2mp': 'تَتَرَأَّوْا',
+          '2fp': 'تَتَرَأَّيْنَ',
+          '3mp': 'يَتَرَأَّوْا',
+          '3fp': 'يَتَرَأَّيْنَ',
+        })
+      })
+
       test('تَوَفَّى conjugation', () => {
         // Based on authoritative sources: Form V defective verbs drop the final weak letter (ى) in jussive
         // Dual forms drop the weak letter before alif (similar to Form II)

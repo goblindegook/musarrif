@@ -1573,6 +1573,24 @@ describe('active past', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
+
+      test('تَرَأَّى conjugation', () => {
+        expect(conjugatePast(getVerb('رءي', 5))).toEqualT({
+          '1s': 'تَرَأَّيْتُ',
+          '2ms': 'تَرَأَّيْتَ',
+          '2fs': 'تَرَأَّيْتِ',
+          '3ms': 'تَرَأَّى',
+          '3fs': 'تَرَأَّتْ',
+          '2d': 'تَرَأَّيْتُمَا',
+          '3md': 'تَرَأَّيَا',
+          '3fd': 'تَرَأَّتَا',
+          '1p': 'تَرَأَّيْنَا',
+          '2mp': 'تَرَأَّيْتُمْ',
+          '2fp': 'تَرَأَّيْتُنَّ',
+          '3mp': 'تَرَأَّوْا',
+          '3fp': 'تَرَأَّيْنَ',
+        })
+      })
     })
 
     describe('doubly weak roots', () => {

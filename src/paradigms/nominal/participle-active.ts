@@ -97,11 +97,11 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       }
 
       case 5: {
-        if (isFinalWeak && isInitialWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, TANWEEN_KASRA]
+        if (isFinalWeak && isInitialWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, seatedC2, TANWEEN_KASRA]
 
-        if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, TANWEEN_KASRA]
+        if (isFinalWeak) return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, seatedC2, SHADDA, TANWEEN_KASRA]
 
-        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, c2, SHADDA, KASRA, seatedC3]
+        return [MEEM, DAMMA, TEH, FATHA, c1, FATHA, seatedC2, SHADDA, KASRA, seatedC3]
       }
 
       case 6: {

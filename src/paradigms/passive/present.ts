@@ -263,12 +263,13 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC1 = seatHamza(c1, FATHA)
+  const seatedC2 = seatHamza(c2, FATHA)
   const seatedC3 = seatHamza(c3, FATHA)
 
   if (isWeakLetter(c3))
-    return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+    return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId, false)]
 
-  return [TEH, FATHA, seatedC1, FATHA, c2, SHADDA, FATHA, seatedC3, ...moodSuffix]
+  return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
 
 function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, mood: Mood): readonly string[] {

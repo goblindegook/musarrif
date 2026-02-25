@@ -1145,6 +1145,24 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('تَرَأَّى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('رءي', 5), 'subjunctive')).toEqualT({
+          '1s': 'أَتَرَأَّى',
+          '2ms': 'تَتَرَأَّى',
+          '2fs': 'تَتَرَأَّي',
+          '3ms': 'يَتَرَأَّى',
+          '3fs': 'تَتَرَأَّى',
+          '2d': 'تَتَرَأَّيَا',
+          '3md': 'يَتَرَأَّيَا',
+          '3fd': 'تَتَرَأَّيَا',
+          '1p': 'نَتَرَأَّى',
+          '2mp': 'تَتَرَأَّوْا',
+          '2fp': 'تَتَرَأَّيْنَ',
+          '3mp': 'يَتَرَأَّوْا',
+          '3fp': 'يَتَرَأَّيْنَ',
+        })
+      })
     })
 
     describe('doubly weak roots', () => {
