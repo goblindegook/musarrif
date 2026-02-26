@@ -2277,6 +2277,13 @@ describe('active present indicative', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([
+        ['نوي', 'يَنْتَوِي'],
+        ['سوي', 'يَسْتَوِي'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اِتَّقَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وقي', 8), 'indicative')).toEqualT({
           '1s': 'أَتَّقِي',

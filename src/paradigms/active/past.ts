@@ -273,6 +273,9 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
 
+  if (isWeakLetter(c2) && isWeakLetter(c3))
+    return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, c2, FATHA, YEH], YEH)
+
   if (isWeakLetter(c2) && infix !== DAL) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
 
   if (isWeakLetter(c3)) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, seatedC2, FATHA, YEH], YEH)

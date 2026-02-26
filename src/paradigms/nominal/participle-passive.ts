@@ -144,9 +144,9 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isInitialHamza || isInitialWeak) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, c3]
 
-        if (isMiddleWeak && infix !== DAL) return [...prefix, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
-
         if (isFinalWeak) return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_FATHA, ALIF_MAQSURA]
+
+        if (isMiddleWeak && infix !== DAL) return [...prefix, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
         return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, c3]
       }

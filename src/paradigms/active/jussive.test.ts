@@ -1722,7 +1722,11 @@ describe('active present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each<[string, string]>([['وقي', 'يَتَّقِ']])('%s pattern', (root, expected3ms) => {
+      test.each<[string, string]>([
+        ['وقي', 'يَتَّقِ'],
+        ['نوي', 'يَنْتَوِ'],
+        ['سوي', 'يَسْتَوِ'],
+      ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
         expect(jussive['3ms']).toBe(expected3ms)
       })
