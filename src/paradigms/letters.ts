@@ -106,6 +106,12 @@ export function geminateDoubleLetters(word: readonly string[]): readonly string[
   return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`), `$1${SHADDA}`))
 }
 
+export function seatInitialHamza(c1: string, vowel?: Vowel): string {
+  if (!isHamzatedLetter(c1)) return c1
+  if (vowel === KASRA) return ALIF_HAMZA_BELOW
+  return ALIF_HAMZA
+}
+
 export function seatHamza(letter: string, vowel?: Vowel): string {
   if (!isHamzatedLetter(letter)) return letter
   if (vowel === FATHA) return ALIF_HAMZA

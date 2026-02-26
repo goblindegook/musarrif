@@ -100,21 +100,15 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
       ...suffix,
     ]
 
-  if (isHamzatedLetter(c3)) return [...stem, ...suffix]
-
   if (isWeakLetter(c2) && isWeakLetter(c3)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
 
-  if (verb.form === 2 && isWeakLetter(c3)) return [...replaceVowelAfterGemination(stem, DAMMA), ...suffix]
-
-  if (verb.form === 3 && isWeakLetter(c3)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
-
-  if (verb.form === 4 && isHamzatedLetter(c2)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
-
-  if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), ...suffix]
-
-  if (verb.form === 6 && isWeakLetter(c3)) return [...dropTerminalWeak(stem), FATHA, ...suffix]
-
-  if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
+  if (isWeakLetter(c3)) {
+    if (verb.form === 2) return [...replaceVowelAfterGemination(stem, DAMMA), ...suffix]
+    if (verb.form === 3) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
+    if (verb.form === 5) return [...stem.slice(0, -1), ...suffix]
+    if (verb.form === 6) return [...dropTerminalWeak(stem), FATHA, ...suffix]
+    if (verb.form === 7) return [...stem, ...suffix]
+  }
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3))
     return [...dropTerminalWeak(stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))), DAMMA, ...suffix]
@@ -192,8 +186,6 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...stem.slice(0, -2), c2 === YEH ? HAMZA_ON_YEH : HAMZA, ...suffix]
 
-  if (isHamzatedLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
-
   if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
   if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
@@ -205,21 +197,26 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
 
 function conjugateIndicative(verb: Verb): Record<PronounId, string> {
   const stem = derivePresentForms(verb)
+  const feminineSingularStem = buildFeminineSingular(stem, verb)
+  const dualStem = buildDualPresent(stem, verb)
+  const masculinePluralStem = buildMasculinePlural(stem, verb)
+  const femininePluralStem = buildFemininePlural(stem, verb)
+
   return mapRecord(
     {
       '1s': applyPresentPrefix(ALIF_HAMZA, stem),
       '2ms': applyPresentPrefix(TEH, stem),
-      '2fs': applyPresentPrefix(TEH, buildFeminineSingular(stem, verb)),
+      '2fs': applyPresentPrefix(TEH, feminineSingularStem),
       '3ms': stem,
       '3fs': applyPresentPrefix(TEH, stem),
-      '2d': applyPresentPrefix(TEH, buildDualPresent(stem, verb)),
-      '3md': buildDualPresent(stem, verb),
-      '3fd': applyPresentPrefix(TEH, buildDualPresent(stem, verb)),
+      '2d': applyPresentPrefix(TEH, dualStem),
+      '3md': dualStem,
+      '3fd': applyPresentPrefix(TEH, dualStem),
       '1p': applyPresentPrefix(NOON, stem),
-      '2mp': applyPresentPrefix(TEH, buildMasculinePlural(stem, verb)),
-      '2fp': applyPresentPrefix(TEH, buildFemininePlural(stem, verb)),
-      '3mp': buildMasculinePlural(stem, verb),
-      '3fp': buildFemininePlural(stem, verb),
+      '2mp': applyPresentPrefix(TEH, masculinePluralStem),
+      '2fp': applyPresentPrefix(TEH, femininePluralStem),
+      '3mp': masculinePluralStem,
+      '3fp': femininePluralStem,
     },
     (result) => geminateDoubleLetters(normalizeAlifMadda(result)).join('').normalize('NFC'),
   )
@@ -277,7 +274,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       return [...removeFinalDiacritic(word), FATHA]
     }),
-    (letters) => normalizeAlifMadda(letters).join('').normalize('NFC'),
+    (letters) => geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC'),
   )
 }
 
@@ -298,13 +295,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
-        if (isFemininePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, NOON, FATHA]
       }
 
       if (isFormIFinalWeakPresent(verb, 'a')) {
         if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
         if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(FATHA, dropNoonEnding(word))
-        if (isFemininePlural(pronounId)) return word
       }
 
       if (isDual(pronounId)) {
@@ -336,7 +331,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
         return [...dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON]
 
-      if (isFinalWeak) return dropFinalDefectiveGlide(word)
+      if (isFinalWeak) return removeFinalDiacritic(word).slice(0, -1)
 
       if ([1, 3, 4, 7, 8, 10].includes(verb.form) && isGeminate) return [...removeFinalDiacritic(word), FATHA]
 
@@ -351,7 +346,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       return [...removeFinalDiacritic(word), SUKOON]
     }),
-    (letters) => geminateDoubleLetters(letters).join('').normalize('NFC'),
+    (letters) => geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC'),
   )
 }
 
@@ -597,15 +592,6 @@ function dropTerminalWeak(word: readonly string[]): readonly string[] {
   if (!isWeakLetter(lastLetter)) return word
 
   return removeFinalDiacritic(word.slice(0, -2))
-}
-
-function dropFinalDefectiveGlide(word: readonly string[]): readonly string[] {
-  // For other defective verbs, buildFemininePlural adds SUKOON before NOON, but we need to preserve
-  // the existing diacritics before the weak letter. Remove trailing diacritics to find the weak letter,
-  // then preserve everything up to and including it, and add NOON + FATHA.
-  if (word.at(-2) === NOON) return [...removeFinalDiacritic(word).slice(0, -2), NOON, FATHA]
-
-  return removeFinalDiacritic(word).slice(0, -1)
 }
 
 function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {

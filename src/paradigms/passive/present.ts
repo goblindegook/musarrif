@@ -47,7 +47,7 @@ const PRESENT_PREFIXES: Record<PronounId, string> = {
 const INDICATIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '1s': [DAMMA],
   '2ms': [DAMMA],
-  '2fs': [KASRA, YEH, NOON, FATHA],
+  '2fs': [KASRA, YEH, SUKOON, NOON, FATHA],
   '3ms': [DAMMA],
   '3fs': [DAMMA],
   '2d': [FATHA, ALIF, NOON, KASRA],
@@ -175,7 +175,7 @@ function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonl
 
   if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
 
-  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId, false)]
+  if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return MOOD_SUFFIXES[mood][pronounId]
 }
@@ -239,9 +239,7 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
 
   if (isMiddleWeak && isFinalHamza) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [seatedC1, FATHA, ALIF_HAMZA, ...moodSuffix]
-
     if (pronounId === '2fs' || isMasculinePlural(pronounId)) return [seatedC1, FATHA, ALIF, HAMZA_ON_YEH, ...moodSuffix]
-
     return [seatedC1, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
@@ -270,7 +268,7 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
   const seatedC3 = seatHamza(c3, FATHA)
 
   if (isWeakLetter(c3))
-    return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+    return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
@@ -279,7 +277,7 @@ function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, moo
   const [c1, c2, c3] = [...verb.root]
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
 
-  if (isWeakLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+  if (isWeakLetter(c3)) return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, seatedC3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
@@ -290,9 +288,7 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
   if (c2 === c3) {
     if (pronounId === '2fs' && mood !== 'indicative') return [NOON, SUKOON, c1, FATHA, c2, KASRA, YEH]
-
     if (isFemininePlural(pronounId)) return [NOON, SUKOON, c1, FATHA, c2, ...geminateSuffix(mood, pronounId)]
-
     return [NOON, SUKOON, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
@@ -300,7 +296,7 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
   if (isMiddleWeak) return [NOON, SUKOON, c1, FATHA, ALIF, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 
-  if (isWeakLetter(c3)) return [NOON, SUKOON, c1, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId, false)]
+  if (isWeakLetter(c3)) return [NOON, SUKOON, c1, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return [NOON, SUKOON, c1, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
@@ -317,11 +313,8 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
   if (c2 === c3) {
+    if (pronounId === '2fs') return [seatedC1, SUKOON, infix, FATHA, c2, SHADDA, ...moodSuffix]
     if (isFemininePlural(pronounId)) return [seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, ...moodSuffix]
-
-    if (mood === 'indicative' && pronounId === '2fs')
-      return [seatedC1, SUKOON, infix, FATHA, c2, SHADDA, KASRA, YEH, SUKOON, NOON, FATHA]
-
     return [seatedC1, SUKOON, infix, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
@@ -347,15 +340,10 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON)
       return [seatedC1, SUKOON, infix, FATHA, ALIF_HAMZA, ...moodSuffix]
 
-    if (pronounId === '2fs' || isMasculinePlural(pronounId))
-      return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA_ON_YEH, ...moodSuffix]
-
     return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
-  if (infix === c1) return [seatedC1, SHADDA, FATHA, seatedC2, FATHA, c3, ...moodSuffix]
-
-  return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, c3, ...moodSuffix]
+  return [seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, ...moodSuffix]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

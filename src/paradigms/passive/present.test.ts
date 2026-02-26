@@ -33,7 +33,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('كتب', 1), 'indicative')).toEqualT({
           '1s': 'أُكْتَبُ',
           '2ms': 'تُكْتَبُ',
-          '2fs': 'تُكْتَبِينَ',
+          '2fs': 'تُكْتَبِيْنَ',
           '3ms': 'يُكْتَبُ',
           '3fs': 'تُكْتَبُ',
           '2d': 'تُكْتَبَانِ',
@@ -51,7 +51,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وقف', 1), 'indicative')).toEqualT({
           '1s': 'أُوقَفُ',
           '2ms': 'تُوقَفُ',
-          '2fs': 'تُوقَفِينَ',
+          '2fs': 'تُوقَفِيْنَ',
           '3ms': 'يُوقَفُ',
           '3fs': 'تُوقَفُ',
           '2d': 'تُوقَفَانِ',
@@ -80,7 +80,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('لمم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَمُّ',
           '2ms': 'تُلَمُّ',
-          '2fs': 'تُلَمِّينَ',
+          '2fs': 'تُلَمِّيْنَ',
           '3ms': 'يُلَمُّ',
           '3fs': 'تُلَمُّ',
           '2d': 'تُلَمَّانِ',
@@ -98,7 +98,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أمم', 1), 'indicative')).toEqualT({
           '1s': 'أُؤَمُّ',
           '2ms': 'تُؤَمُّ',
-          '2fs': 'تُؤَمِّينَ',
+          '2fs': 'تُؤَمِّيْنَ',
           '3ms': 'يُؤَمُّ',
           '3fs': 'تُؤَمُّ',
           '2d': 'تُؤَمَّانِ',
@@ -116,7 +116,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('ودد', 1), 'indicative')).toEqualT({
           '1s': 'أُوَدُّ',
           '2ms': 'تُوَدُّ',
-          '2fs': 'تُوَدِّينَ',
+          '2fs': 'تُوَدِّيْنَ',
           '3ms': 'يُوَدُّ',
           '3fs': 'تُوَدُّ',
           '2d': 'تُوَدَّانِ',
@@ -149,7 +149,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('يمن', 1), 'indicative')).toEqualT({
           '1s': 'أُومَنُ',
           '2ms': 'تُومَنُ',
-          '2fs': 'تُومَنِينَ',
+          '2fs': 'تُومَنِيْنَ',
           '3ms': 'يُومَنُ',
           '3fs': 'تُومَنُ',
           '2d': 'تُومَنَانِ',
@@ -179,7 +179,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('عوز', 1), 'indicative')).toEqualT({
           '1s': 'أُعْوَزُ',
           '2ms': 'تُعْوَزُ',
-          '2fs': 'تُعْوَزِينَ',
+          '2fs': 'تُعْوَزِيْنَ',
           '3ms': 'يُعْوَزُ',
           '3fs': 'تُعْوَزُ',
           '2d': 'تُعْوَزَانِ',
@@ -197,7 +197,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('لوم', 1), 'indicative')).toEqualT({
           '1s': 'أُلَامُ',
           '2ms': 'تُلَامُ',
-          '2fs': 'تُلَامِينَ',
+          '2fs': 'تُلَامِيْنَ',
           '3ms': 'يُلَامُ',
           '3fs': 'تُلَامُ',
           '2d': 'تُلَامَانِ',
@@ -215,7 +215,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('باع', 1), 'indicative')).toEqualT({
           '1s': 'أُبَاعُ',
           '2ms': 'تُبَاعُ',
-          '2fs': 'تُبَاعِينَ',
+          '2fs': 'تُبَاعِيْنَ',
           '3ms': 'يُبَاعُ',
           '3fs': 'تُبَاعُ',
           '2d': 'تُبَاعَانِ',
@@ -233,7 +233,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('زور', 1), 'indicative')).toEqualT({
           '1s': 'أُزَارُ',
           '2ms': 'تُزَارُ',
-          '2fs': 'تُزَارِينَ',
+          '2fs': 'تُزَارِيْنَ',
           '3ms': 'يُزَارُ',
           '3fs': 'تُزَارُ',
           '2d': 'تُزَارَانِ',
@@ -251,7 +251,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('شيد', 1), 'indicative')).toEqualT({
           '1s': 'أُشَادُ',
           '2ms': 'تُشَادُ',
-          '2fs': 'تُشَادِينَ',
+          '2fs': 'تُشَادِيْنَ',
           '3ms': 'يُشَادُ',
           '3fs': 'تُشَادُ',
           '2d': 'تُشَادَانِ',
@@ -269,7 +269,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('جيد', 1), 'indicative')).toEqualT({
           '1s': 'أُجْيَدُ',
           '2ms': 'تُجْيَدُ',
-          '2fs': 'تُجْيَدِينَ',
+          '2fs': 'تُجْيَدِيْنَ',
           '3ms': 'يُجْيَدُ',
           '3fs': 'تُجْيَدُ',
           '2d': 'تُجْيَدَانِ',
@@ -302,7 +302,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أول', 1), 'indicative')).toEqualT({
           '1s': 'أُؤَالُ',
           '2ms': 'تُؤَالُ',
-          '2fs': 'تُؤَالِينَ',
+          '2fs': 'تُؤَالِيْنَ',
           '3ms': 'يُؤَالُ',
           '3fs': 'تُؤَالُ',
           '2d': 'تُؤَالَانِ',
@@ -329,7 +329,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أخذ', 1), 'indicative')).toEqualT({
           '1s': 'أُوخَذُ',
           '2ms': 'تُؤْخَذُ',
-          '2fs': 'تُؤْخَذِينَ',
+          '2fs': 'تُؤْخَذِيْنَ',
           '3ms': 'يُؤْخَذُ',
           '3fs': 'تُؤْخَذُ',
           '2d': 'تُؤْخَذَانِ',
@@ -400,7 +400,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 1), 'indicative')).toEqualT({
           '1s': 'أُوطَأُ',
           '2ms': 'تُوطَأُ',
-          '2fs': 'تُوطَئِينَ',
+          '2fs': 'تُوطَئِيْنَ',
           '3ms': 'يُوطَأُ',
           '3fs': 'تُوطَأُ',
           '2d': 'تُوطَآنِ',
@@ -418,7 +418,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('كلأ', 1), 'indicative')).toEqualT({
           '1s': 'أُكْلَأُ',
           '2ms': 'تُكْلَأُ',
-          '2fs': 'تُكْلَئِينَ',
+          '2fs': 'تُكْلَئِيْنَ',
           '3ms': 'يُكْلَأُ',
           '3fs': 'تُكْلَأُ',
           '2d': 'تُكْلَآنِ',
@@ -595,7 +595,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'indicative')).toEqualT({
           '1s': 'أُوَطَّأُ',
           '2ms': 'تُوَطَّأُ',
-          '2fs': 'تُوَطَّئِينَ',
+          '2fs': 'تُوَطَّئِيْنَ',
           '3ms': 'يُوَطَّأُ',
           '3fs': 'تُوَطَّأُ',
           '2d': 'تُوَطَّآنِ',
@@ -623,7 +623,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وسط', 2), 'indicative')).toEqualT({
           '1s': 'أُوَسَّطُ',
           '2ms': 'تُوَسَّطُ',
-          '2fs': 'تُوَسَّطِينَ',
+          '2fs': 'تُوَسَّطِيْنَ',
           '3ms': 'يُوَسَّطُ',
           '3fs': 'تُوَسَّطُ',
           '2d': 'تُوَسَّطَانِ',
@@ -653,7 +653,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أول', 2), 'indicative')).toEqualT({
           '1s': 'أُؤَوَّلُ',
           '2ms': 'تُؤَوَّلُ',
-          '2fs': 'تُؤَوَّلِينَ',
+          '2fs': 'تُؤَوَّلِيْنَ',
           '3ms': 'يُؤَوَّلُ',
           '3fs': 'تُؤَوَّلُ',
           '2d': 'تُؤَوَّلَانِ',
@@ -715,7 +715,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('يود', 2), 'indicative')).toEqualT({
           '1s': 'أُيَوَّدُ',
           '2ms': 'تُيَوَّدُ',
-          '2fs': 'تُيَوَّدِينَ',
+          '2fs': 'تُيَوَّدِيْنَ',
           '3ms': 'يُيَوَّدُ',
           '3fs': 'تُيَوَّدُ',
           '2d': 'تُيَوَّدَانِ',
@@ -769,7 +769,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('عمل', 3), 'indicative')).toEqualT({
           '1s': 'أُعَامَلُ',
           '2ms': 'تُعَامَلُ',
-          '2fs': 'تُعَامَلِينَ',
+          '2fs': 'تُعَامَلِيْنَ',
           '3ms': 'يُعَامَلُ',
           '3fs': 'تُعَامَلُ',
           '2d': 'تُعَامَلَانِ',
@@ -809,7 +809,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('سرر', 3), 'indicative')).toEqualT({
           '1s': 'أُسَارُّ',
           '2ms': 'تُسَارُّ',
-          '2fs': 'تُسَارِّينَ',
+          '2fs': 'تُسَارِّيْنَ',
           '3ms': 'يُسَارُّ',
           '3fs': 'تُسَارُّ',
           '2d': 'تُسَارَّانِ',
@@ -827,7 +827,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('ردد', 3), 'indicative')).toEqualT({
           '1s': 'أُرَادُّ',
           '2ms': 'تُرَادُّ',
-          '2fs': 'تُرَادِّينَ',
+          '2fs': 'تُرَادِّيْنَ',
           '3ms': 'يُرَادُّ',
           '3fs': 'تُرَادُّ',
           '2d': 'تُرَادَّانِ',
@@ -845,7 +845,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('مدد', 3), 'indicative')).toEqualT({
           '1s': 'أُمَادُّ',
           '2ms': 'تُمَادُّ',
-          '2fs': 'تُمَادِّينَ',
+          '2fs': 'تُمَادِّيْنَ',
           '3ms': 'يُمَادُّ',
           '3fs': 'تُمَادُّ',
           '2d': 'تُمَادَّانِ',
@@ -891,7 +891,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وأم', 3), 'indicative')).toEqualT({
           '1s': 'أُوَاءَمُ',
           '2ms': 'تُوَاءَمُ',
-          '2fs': 'تُوَاءَمِينَ',
+          '2fs': 'تُوَاءَمِيْنَ',
           '3ms': 'يُوَاءَمُ',
           '3fs': 'تُوَاءَمُ',
           '2d': 'تُوَاءَمَانِ',
@@ -939,7 +939,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وضح', 4), 'indicative')).toEqualT({
           '1s': 'أُوْضَحُ',
           '2ms': 'تُوْضَحُ',
-          '2fs': 'تُوْضَحِينَ',
+          '2fs': 'تُوْضَحِيْنَ',
           '3ms': 'يُوْضَحُ',
           '3fs': 'تُوْضَحُ',
           '2d': 'تُوْضَحَانِ',
@@ -957,7 +957,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('كثر', 4), 'indicative')).toEqualT({
           '1s': 'أُكْثَرُ',
           '2ms': 'تُكْثَرُ',
-          '2fs': 'تُكْثَرِينَ',
+          '2fs': 'تُكْثَرِيْنَ',
           '3ms': 'يُكْثَرُ',
           '3fs': 'تُكْثَرُ',
           '2d': 'تُكْثَرَانِ',
@@ -975,7 +975,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('علم', 4), 'indicative')).toEqualT({
           '1s': 'أُعْلَمُ',
           '2ms': 'تُعْلَمُ',
-          '2fs': 'تُعْلَمِينَ',
+          '2fs': 'تُعْلَمِيْنَ',
           '3ms': 'يُعْلَمُ',
           '3fs': 'تُعْلَمُ',
           '2d': 'تُعْلَمَانِ',
@@ -993,7 +993,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('لحق', 4), 'indicative')).toEqualT({
           '1s': 'أُلْحَقُ',
           '2ms': 'تُلْحَقُ',
-          '2fs': 'تُلْحَقِينَ',
+          '2fs': 'تُلْحَقِيْنَ',
           '3ms': 'يُلْحَقُ',
           '3fs': 'تُلْحَقُ',
           '2d': 'تُلْحَقَانِ',
@@ -1011,7 +1011,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('صبح', 4), 'indicative')).toEqualT({
           '1s': 'أُصْبَحُ',
           '2ms': 'تُصْبَحُ',
-          '2fs': 'تُصْبَحِينَ',
+          '2fs': 'تُصْبَحِيْنَ',
           '3ms': 'يُصْبَحُ',
           '3fs': 'تُصْبَحُ',
           '2d': 'تُصْبَحَانِ',
@@ -1029,7 +1029,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('عرب', 4), 'indicative')).toEqualT({
           '1s': 'أُعْرَبُ',
           '2ms': 'تُعْرَبُ',
-          '2fs': 'تُعْرَبِينَ',
+          '2fs': 'تُعْرَبِيْنَ',
           '3ms': 'يُعْرَبُ',
           '3fs': 'تُعْرَبُ',
           '2d': 'تُعْرَبَانِ',
@@ -1060,7 +1060,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('تمم', 4), 'indicative')).toEqualT({
           '1s': 'أُتَمُّ',
           '2ms': 'تُتَمُّ',
-          '2fs': 'تُتَمِّينَ',
+          '2fs': 'تُتَمِّيْنَ',
           '3ms': 'يُتَمُّ',
           '3fs': 'تُتَمُّ',
           '2d': 'تُتَمَّانِ',
@@ -1217,7 +1217,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('ومأ', 4), 'indicative')).toEqualT({
           '1s': 'أُوْمَأُ',
           '2ms': 'تُوْمَأُ',
-          '2fs': 'تُوْمَئِينَ',
+          '2fs': 'تُوْمَئِيْنَ',
           '3ms': 'يُوْمَأُ',
           '3fs': 'تُوْمَأُ',
           '2d': 'تُوْمَآنِ',
@@ -1252,7 +1252,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('ضوء', 4), 'indicative')).toEqualT({
           '1s': 'أُضَاءُ',
           '2ms': 'تُضَاءُ',
-          '2fs': 'تُضَائِينَ',
+          '2fs': 'تُضَائِيْنَ',
           '3ms': 'يُضَاءُ',
           '3fs': 'تُضَاءُ',
           '2d': 'تُضَاءَانِ',
@@ -1294,7 +1294,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('عرف', 5), 'indicative')).toEqualT({
           '1s': 'أُتَعَرَّفُ',
           '2ms': 'تُتَعَرَّفُ',
-          '2fs': 'تُتَعَرَّفِينَ',
+          '2fs': 'تُتَعَرَّفِيْنَ',
           '3ms': 'يُتَعَرَّفُ',
           '3fs': 'تُتَعَرَّفُ',
           '2d': 'تُتَعَرَّفَانِ',
@@ -1314,7 +1314,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('أثر', 5), 'indicative')).toEqualT({
           '1s': 'أُتَأَثَّرُ',
           '2ms': 'تُتَأَثَّرُ',
-          '2fs': 'تُتَأَثَّرِينَ',
+          '2fs': 'تُتَأَثَّرِيْنَ',
           '3ms': 'يُتَأَثَّرُ',
           '3fs': 'تُتَأَثَّرُ',
           '2d': 'تُتَأَثَّرَانِ',
@@ -1416,7 +1416,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 6), 'indicative')).toEqualT({
           '1s': 'أُتَوَاطَأُ',
           '2ms': 'تُتَوَاطَأُ',
-          '2fs': 'تُتَوَاطَئِينَ',
+          '2fs': 'تُتَوَاطَئِيْنَ',
           '3ms': 'يُتَوَاطَأُ',
           '3fs': 'تُتَوَاطَأُ',
           '2d': 'تُتَوَاطَآنِ',
@@ -1477,7 +1477,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('قصص', 7), 'indicative')).toEqualT({
           '1s': 'أُنْقَصُّ',
           '2ms': 'تُنْقَصُّ',
-          '2fs': 'تُنْقَصِّينَ',
+          '2fs': 'تُنْقَصِّيْنَ',
           '3ms': 'يُنْقَصُّ',
           '3fs': 'تُنْقَصُّ',
           '2d': 'تُنْقَصَّانِ',
@@ -1514,7 +1514,7 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb('عبر', 8), 'indicative')).toEqualT({
           '1s': 'أُعْتَبَرُ',
           '2ms': 'تُعْتَبَرُ',
-          '2fs': 'تُعْتَبَرِينَ',
+          '2fs': 'تُعْتَبَرِيْنَ',
           '3ms': 'يُعْتَبَرُ',
           '3fs': 'تُعْتَبَرُ',
           '2d': 'تُعْتَبَرَانِ',
