@@ -18,6 +18,7 @@ import { SpeechButton } from './components/SpeechButton'
 import { TabBar, TabButton, TabPanel } from './components/Tabs'
 import { VerbPill } from './components/VerbPill'
 import { useI18n } from './hooks/i18n'
+import { RECENT_VERBS_STORAGE_KEY, readPreference, writePreference } from './hooks/preferences'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
@@ -39,6 +40,23 @@ const formIVowelPattern = (pattern: FormIPattern) => {
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 type FormNumber = (typeof FORM_NUMBERS)[number]
+const MAX_RECENT_VERBS = 10
+
+const readRecentVerbIds = (): readonly string[] => {
+  const raw = readPreference(RECENT_VERBS_STORAGE_KEY)
+  if (raw == null) {
+    return []
+  }
+  try {
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) {
+      return []
+    }
+    return parsed.filter((value): value is string => typeof value === 'string')
+  } catch {
+    return []
+  }
+}
 
 export function App() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
@@ -46,6 +64,7 @@ export function App() {
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
+  const [recentVerbIds, setRecentVerbIds] = useState<readonly string[]>(readRecentVerbIds)
   const translateVerb = useCallback(
     (verb: Verb) => (lang !== 'ar' ? t(verb.id) : (enTranslations.verbs as Record<string, string>)[verb.id]),
     [lang, t],
@@ -88,6 +107,22 @@ export function App() {
     () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
     [selectedVerb?.root],
   )
+  const recentVerbs = useMemo(
+    () => recentVerbIds.map((id) => getVerbById(id)).filter((verb): verb is Verb => verb != null),
+    [recentVerbIds],
+  )
+
+  useEffect(() => {
+    if (selectedVerb == null) {
+      return
+    }
+    setRecentVerbIds((currentIds) => {
+      const remainingIds = currentIds.filter((id) => id !== selectedVerb.id && getVerbById(id) != null)
+      const nextIds = [selectedVerb.id, ...remainingIds].slice(0, MAX_RECENT_VERBS)
+      writePreference(RECENT_VERBS_STORAGE_KEY, JSON.stringify(nextIds))
+      return nextIds
+    })
+  }, [selectedVerb?.id])
 
   const selectedFormPattern = selectedVerb?.form === 1 ? selectedVerb.formPattern : undefined
 
@@ -153,6 +188,20 @@ export function App() {
               </VerbList>
             ) : (
               <QuickPickList selectedVerb={selectedVerb} />
+            )}
+
+            {recentVerbs.length > 0 && (
+              <>
+                <Heading dir={dir} lang={lang}>
+                  {t('recentlyViewed')}
+                </Heading>
+                <VerbList>
+                  {recentVerbs.map((verb) => {
+                    const isActive = verb.id === selectedVerb?.id
+                    return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                  })}
+                </VerbList>
+              </>
             )}
           </Panel>
 

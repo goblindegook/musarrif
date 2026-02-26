@@ -410,6 +410,40 @@ test('Order derived form options by form number', () => {
   expect(formLabels).toEqual(['I', 'II', 'VI', 'X'])
 })
 
+describe('Recently viewed verbs', () => {
+  test('shows recently viewed verb pills in deduplicated most-recent-first order', () => {
+    renderApp('/#/en/verbs/ktb-1')
+    renderApp('/#/en/verbs/bdl-1')
+    renderApp('/#/en/verbs/ktb-1')
+
+    const heading = screen.getByText('Recently viewed')
+    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/ktb-1', '/#/en/verbs/bdl-1'])
+  })
+
+  test('limits recently viewed verbs to ten entries', () => {
+    renderApp('/#/en/verbs/ktb-1')
+    renderApp('/#/en/verbs/sfr-1')
+    renderApp('/#/en/verbs/sfr-2')
+    renderApp('/#/en/verbs/klm-2')
+    renderApp('/#/en/verbs/wEd-1')
+    renderApp('/#/en/verbs/lmm-1')
+    renderApp('/#/en/verbs/rkz-1')
+    renderApp('/#/en/verbs/bdl-1')
+    renderApp('/#/en/verbs/krh-1')
+    renderApp('/#/en/verbs/qwl-1')
+    renderApp('/#/en/verbs/Elm-5')
+
+    const heading = screen.getByText('Recently viewed')
+    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+
+    expect(links).toHaveLength(10)
+    expect(links[0]).toHaveAttribute('href', '/#/en/verbs/Elm-5')
+    expect(links[9]).toHaveAttribute('href', '/#/en/verbs/sfr-1')
+  })
+})
+
 describe('Root insights', () => {
   it('displays root semantics when available', async () => {
     renderApp('/#/en/verbs/ktb-1')

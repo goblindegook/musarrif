@@ -2,6 +2,7 @@ const STORAGE_PREFIX = 'conjugator:'
 
 export const LANGUAGE_STORAGE_KEY = `${STORAGE_PREFIX}language`
 export const DIACRITICS_STORAGE_KEY = `${STORAGE_PREFIX}diacriticsPreference`
+export const RECENT_VERBS_STORAGE_KEY = `${STORAGE_PREFIX}recentVerbs`
 
 export function readPreference(key: string): string | null {
   return window?.localStorage?.getItem?.(key) ?? null
