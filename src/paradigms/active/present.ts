@@ -193,31 +193,30 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   return [...removeFinalDiacritic(stem), ...suffix]
 }
 
-function buildDualPresent(word: readonly string[], verb: Verb): readonly string[] {
+function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = verb.root
-  const suffix = [ALIF, NOON, KASRA]
+  const suffix = [FATHA, ALIF, NOON, KASRA]
 
-  if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [YEH, FATHA, c1, FATHA, YEH, FATHA, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [...stem.slice(0, -1), YEH, ...suffix]
 
-  if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, FATHA, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
-  if (isWeakLetter(c2) && isHamzatedLetter(c3)) {
-    const hamzaSeat = verb.form === 5 ? ALIF_HAMZA : verb.form === 4 || c2 === YEH ? HAMZA_ON_YEH : HAMZA
-    return [...removeFinalDiacritic([...word.slice(0, -2), hamzaSeat, ...word.slice(-1)]), FATHA, ...suffix]
-  }
+  if (verb.form === 4 && isHamzatedLetter(c3)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
 
-  if (isHamzatedLetter(c3)) return normalizeAlifMadda([...removeFinalDiacritic(word), FATHA, ...suffix])
+  if (verb.form === 5 && isHamzatedLetter(c3)) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
 
-  if (isHamzatedLetter(c2) && isWeakLetter(c3)) {
-    const dualBase = word.at(-1) === ALIF_MAQSURA ? [...word.slice(0, -1), YEH] : word
-    return [...dualBase, FATHA, ...suffix]
-  }
+  if (isWeakLetter(c2) && isHamzatedLetter(c3))
+    return [...stem.slice(0, -2), c2 === YEH ? HAMZA_ON_YEH : HAMZA, ...suffix]
 
-  if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...word.slice(0, -1), YEH, FATHA, ...suffix]
+  if (isHamzatedLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
-  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...word, FATHA, ...suffix]
+  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
-  return [...removeFinalDiacritic(dropTerminalWeakOrHamza(word, FATHA)), FATHA, ...suffix]
+  if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
+
+  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...stem, ...suffix]
+
+  return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, FATHA)), ...suffix]
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, string> {

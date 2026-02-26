@@ -30,14 +30,14 @@ import { constrainPassiveConjugation } from './support'
 interface PassivePastParams {
   prefix: readonly string[]
   suffix?: readonly string[]
-  suffix3sd: readonly string[]
   suffix3ms?: readonly string[]
+  suffix3sd?: readonly string[]
   suffix3mp?: readonly string[]
   suffix3fp?: readonly string[]
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
-  const { prefix, suffix = [], suffix3sd, suffix3ms, suffix3mp = [], suffix3fp } = params
+  const { prefix, suffix = [], suffix3sd = [], suffix3ms, suffix3mp = [], suffix3fp } = params
 
   return mapRecord(
     {
@@ -254,7 +254,6 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   const isFinalHamza = isHamzatedLetter(c3)
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
   const infix = resolveFormVIIIInfixConsonant(c1)
 
   if (c2 === c3)
@@ -286,10 +285,7 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   if (isMiddleWeak && isFinalHamza)
     return {
       prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, KASRA, YEH],
-      suffix: [seatedC3, SUKOON],
       suffix3ms: [HAMZA, FATHA],
-      suffix3sd: [seatedC3, FATHA],
-      suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   return {
