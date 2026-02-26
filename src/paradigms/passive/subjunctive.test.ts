@@ -1474,6 +1474,26 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test('اُتُّقِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وقي', 8), 'subjunctive')).toEqualT({
+          '1s': 'أُتَّقَى',
+          '2ms': 'تُتَّقَى',
+          '2fs': 'تُتَّقَيْ',
+          '3ms': 'يُتَّقَى',
+          '3fs': 'تُتَّقَى',
+          '2d': 'تُتَّقَيَا',
+          '3md': 'يُتَّقَيَا',
+          '3fd': 'تُتَّقَيَا',
+          '1p': 'نُتَّقَى',
+          '2mp': 'تُتَّقَوْا',
+          '2fp': 'تُتَّقَيْنَ',
+          '3mp': 'يُتَّقَوْا',
+          '3fp': 'يُتَّقَيْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اُرْتُئِيَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('رءي', 8), 'subjunctive')).toEqualT({

@@ -916,6 +916,12 @@ describe('masdar', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['وقي', 'اِتِّقَاء']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([['أخذ', 'اِتِّخَاذ']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())

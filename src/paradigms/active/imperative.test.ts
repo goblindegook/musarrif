@@ -497,7 +497,7 @@ describe('imperative', () => {
           '2fs': 'اِيوِي',
           '2d': 'اِيوِيَا',
           '2mp': 'اِيوُوْا',
-          '2fp': 'اِيوِينَ',
+          '2fp': 'اِيوِيْنَ',
         })
       })
     })
@@ -1726,6 +1726,12 @@ describe('imperative', () => {
           '2mp': 'اِرْتَئُوْا',
           '2fp': 'اِرْتَئِيْنَ',
         })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test.each([['وقي', 'اِتَّقِ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
       })
     })
 

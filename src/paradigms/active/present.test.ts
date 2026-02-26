@@ -1150,7 +1150,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('سرر', 3), 'indicative')).toEqualT({
           '1s': 'أُسَارُّ',
           '2ms': 'تُسَارُّ',
-          '2fs': 'تُسَارِّينَ',
+          '2fs': 'تُسَارِّيْنَ',
           '3ms': 'يُسَارُّ',
           '3fs': 'تُسَارُّ',
           '2d': 'تُسَارَّانِ',
@@ -1168,7 +1168,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('ردد', 3), 'indicative')).toEqualT({
           '1s': 'أُرَادُّ',
           '2ms': 'تُرَادُّ',
-          '2fs': 'تُرَادِّينَ',
+          '2fs': 'تُرَادِّيْنَ',
           '3ms': 'يُرَادُّ',
           '3fs': 'تُرَادُّ',
           '2d': 'تُرَادَّانِ',
@@ -1186,7 +1186,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('مدد', 3), 'indicative')).toEqualT({
           '1s': 'أُمَادُّ',
           '2ms': 'تُمَادُّ',
-          '2fs': 'تُمَادِّينَ',
+          '2fs': 'تُمَادِّيْنَ',
           '3ms': 'يُمَادُّ',
           '3fs': 'تُمَادُّ',
           '2d': 'تُمَادَّانِ',
@@ -2102,7 +2102,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('قصص', 7), 'indicative')).toEqualT({
           '1s': 'أَنْقَصُّ',
           '2ms': 'تَنْقَصُّ',
-          '2fs': 'تَنْقَصِّينَ',
+          '2fs': 'تَنْقَصِّيْنَ',
           '3ms': 'يَنْقَصُّ',
           '3fs': 'تَنْقَصُّ',
           '2d': 'تَنْقَصَّانِ',
@@ -2272,6 +2272,26 @@ describe('active present indicative', () => {
           '2fp': 'تَزْدَوِجْنَ',
           '3mp': 'يَزْدَوِجُوْنَ',
           '3fp': 'يَزْدَوِجْنَ',
+        })
+      })
+    })
+
+    describe('doubly weak roots', () => {
+      test('اِتَّقَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وقي', 8), 'indicative')).toEqualT({
+          '1s': 'أَتَّقِي',
+          '2ms': 'تَتَّقِي',
+          '2fs': 'تَتَّقِيْنَ',
+          '3ms': 'يَتَّقِي',
+          '3fs': 'تَتَّقِي',
+          '2d': 'تَتَّقِيَانِ',
+          '3md': 'يَتَّقِيَانِ',
+          '3fd': 'تَتَّقِيَانِ',
+          '1p': 'نَتَّقِي',
+          '2mp': 'تَتَّقُوْنَ',
+          '2fp': 'تَتَّقِيْنَ',
+          '3mp': 'يَتَّقُوْنَ',
+          '3fp': 'يَتَّقِيْنَ',
         })
       })
     })

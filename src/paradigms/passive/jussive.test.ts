@@ -1600,6 +1600,26 @@ describe('passive present jussive', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test('اُتُّقِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وقي', 8), 'jussive')).toEqualT({
+          '1s': 'أُتَّقَ',
+          '2ms': 'تُتَّقَ',
+          '2fs': 'تُتَّقَيْ',
+          '3ms': 'يُتَّقَ',
+          '3fs': 'تُتَّقَ',
+          '2d': 'تُتَّقَيَا',
+          '3md': 'يُتَّقَيَا',
+          '3fd': 'تُتَّقَيَا',
+          '1p': 'نُتَّقَ',
+          '2mp': 'تُتَّقَوْا',
+          '2fp': 'تُتَّقَيْنَ',
+          '3mp': 'يُتَّقَوْا',
+          '3fp': 'يُتَّقَيْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اُرْتُئِيَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('رءي', 8), 'jussive')).toEqualT({

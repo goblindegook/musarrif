@@ -221,7 +221,7 @@ function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
   if (c2 === c3) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
 
   if (isWeakLetter(c1) || isHamzatedLetter(c1))
-    return [ALIF, KASRA, infix, SUKOON, infix, KASRA, c2, FATHA, ALIF, isHamzatedLetter(c3) ? HAMZA : c3]
+    return [ALIF, KASRA, infix, SUKOON, infix, KASRA, c2, FATHA, ALIF, isWeakLetter(c3) ? HAMZA : seatHamza(c3)]
 
   if (isWeakLetter(c3)) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, seatedC2, FATHA, ALIF, HAMZA]
 

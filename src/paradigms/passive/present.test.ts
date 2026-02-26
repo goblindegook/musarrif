@@ -1558,6 +1558,26 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test('اُتُّقِيَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('وقي', 8), 'indicative')).toEqualT({
+          '1s': 'أُتَّقَى',
+          '2ms': 'تُتَّقَى',
+          '2fs': 'تُتَّقَيْنَ',
+          '3ms': 'يُتَّقَى',
+          '3fs': 'تُتَّقَى',
+          '2d': 'تُتَّقَيَانِ',
+          '3md': 'يُتَّقَيَانِ',
+          '3fd': 'تُتَّقَيَانِ',
+          '1p': 'نُتَّقَى',
+          '2mp': 'تُتَّقَوْنَ',
+          '2fp': 'تُتَّقَيْنَ',
+          '3mp': 'يُتَّقَوْنَ',
+          '3fp': 'يُتَّقَيْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اُرْتُئِيَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('رءي', 8), 'indicative')).toEqualT({

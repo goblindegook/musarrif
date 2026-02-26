@@ -775,6 +775,7 @@
   { "root": "وسع", "form": 5, "passiveVoice": "none" },
   { "root": "وقي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
   { "root": "وقي", "form": 5 },
+  { "root": "وقي", "form": 8 },
   { "root": "وكأ", "form": 5, "passiveVoice": "none" },
   { "root": "وخي", "form": 5 },
   { "root": "ولد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3aala"] },

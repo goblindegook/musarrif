@@ -2180,6 +2180,12 @@ describe('active past', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['وقي', 'اِتَّقَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('اِتَّخَذَ conjugation', () => {
         expect(conjugatePast(getVerb('أخذ', 8))).toEqualT({

@@ -266,12 +266,19 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
 
+  if ((isInitialWeak || isInitialHamza) && isFinalWeak)
+    return {
+      prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2],
+      suffix: [KASRA, YEH],
+      suffix3sd: [KASRA, YEH, FATHA],
+      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
+    }
+
   if (isInitialWeak || isInitialHamza)
     return {
       prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2, KASRA],
-      suffix: [HAMZA_ON_YEH, SUKOON],
       suffix3sd: [HAMZA_ON_YEH, FATHA],
-      suffix3mp: [HAMZA_ON_WAW, DAMMA, WAW, SUKOON, ALIF],
     }
 
   if (infix === c1 && isWeakLetter(c3))
@@ -289,7 +296,7 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
-      suffix3fp: [KASRA, YEH, NOON, FATHA],
+      suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
   if (isMiddleWeak && isFinalHamza)

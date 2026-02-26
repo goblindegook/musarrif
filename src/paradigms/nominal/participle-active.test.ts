@@ -868,6 +868,12 @@ describe('active participle', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['وقي', 'مُتَّقٍ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([['أخذ', 'مُتَّخِذ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)

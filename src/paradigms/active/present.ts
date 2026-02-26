@@ -70,7 +70,7 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 
   if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
 
-  if ([3, 7].includes(verb.form) && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, NOON, FATHA]
+  if ([3, 7].includes(verb.form) && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, SUKOON, NOON, FATHA]
 
   if (verb.form === 6 && isWeakLetter(c3)) {
     const truncated = removeFinalDiacritic(stem)
@@ -108,6 +108,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
     if (verb.form === 5) return [...stem.slice(0, -1), ...suffix]
     if (verb.form === 6) return [...dropTerminalWeak(stem), FATHA, ...suffix]
     if (verb.form === 7) return [...stem, ...suffix]
+    if (verb.form === 8) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
   }
 
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3))
@@ -189,6 +190,8 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
   if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
   if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
+
+  if (verb.form === 8 && isWeakLetter(c3)) return [...stem, ...suffix]
 
   if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...stem, ...suffix]
 
@@ -504,12 +507,15 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
 
   if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SUKOON, c3, DAMMA]
 
+  if ((isHamzatedLetter(c1) || isWeakLetter(c1)) && isWeakLetter(c3))
+    return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, YEH]
+
   if (isHamzatedLetter(c1) || isWeakLetter(c1))
     return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
 
-  if (isWeakLetter(c2) && infix !== DAL) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
-
   if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, seatHamza(c2, KASRA), KASRA, YEH]
+
+  if (isWeakLetter(c2) && infix !== DAL) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3, DAMMA]
 }

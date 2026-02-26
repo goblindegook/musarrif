@@ -55,7 +55,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (pronounId === '2fs') return [...prefix, c2, KASRA, YEH]
             if (pronounId === '2d') return [...prefix, c2, KASRA, YEH, FATHA, ALIF]
             if (pronounId === '2mp') return [...prefix, c2, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [...prefix, c2, KASRA, YEH, NOON, FATHA]
+            if (pronounId === '2fp') return [...prefix, c2, KASRA, YEH, SUKOON, NOON, FATHA]
           }
 
           if (isInitialWeak && isHamzatedLetter(c3)) return stem
