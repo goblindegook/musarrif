@@ -303,6 +303,8 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
 
 function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const isInitialWeak = isWeakLetter(c1)
+  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isMiddleHamza = isHamzatedLetter(c2)
@@ -317,6 +319,8 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     if (isFemininePlural(pronounId)) return [seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, ...moodSuffix]
     return [seatedC1, SUKOON, infix, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
+
+  if (isInitialWeak || isInitialHamza) return [TEH, SHADDA, FATHA, c2, FATHA, seatHamza(c3, FATHA), ...moodSuffix]
 
   if (infix === c1 && isWeakLetter(c3)) {
     if (isMasculinePlural(pronounId))

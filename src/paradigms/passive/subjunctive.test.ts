@@ -1584,6 +1584,12 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وكأ', 'يُتَّكَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hollow roots', () => {
       test.each([
         ['زوج', 'يُزْدَوَجَ'],

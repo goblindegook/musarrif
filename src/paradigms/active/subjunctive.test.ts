@@ -1412,6 +1412,30 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وصل', 'يَتَّصِلَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِتَّكَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وكأ', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَتَّكِئَ',
+          '2ms': 'تَتَّكِئَ',
+          '2fs': 'تَتَّكِئِي',
+          '3ms': 'يَتَّكِئَ',
+          '3fs': 'تَتَّكِئَ',
+          '2d': 'تَتَّكِئَا',
+          '3md': 'يَتَّكِئَا',
+          '3fd': 'تَتَّكِئَا',
+          '1p': 'نَتَّكِئَ',
+          '2mp': 'تَتَّكِئُوْا',
+          '2fp': 'تَتَّكِئْنَ',
+          '3mp': 'يَتَّكِئُوْا',
+          '3fp': 'يَتَّكِئْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial geminate roots', () => {
       test('يَأْتَمَّ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أمم', 8), 'subjunctive')).toEqualT({

@@ -2229,6 +2229,24 @@ describe('active present indicative', () => {
       test.each([['وصل', 'يَتَّصِلُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('اِتَّكَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وكأ', 8), 'indicative')).toEqualT({
+          '1s': 'أَتَّكِئُ',
+          '2ms': 'تَتَّكِئُ',
+          '2fs': 'تَتَّكِئِيْنَ',
+          '3ms': 'يَتَّكِئُ',
+          '3fs': 'تَتَّكِئُ',
+          '2d': 'تَتَّكِئَانِ',
+          '3md': 'يَتَّكِئَانِ',
+          '3fd': 'تَتَّكِئَانِ',
+          '1p': 'نَتَّكِئُ',
+          '2mp': 'تَتَّكِئُوْنَ',
+          '2fp': 'تَتَّكِئْنَ',
+          '3mp': 'يَتَّكِئُوْنَ',
+          '3fp': 'يَتَّكِئْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {

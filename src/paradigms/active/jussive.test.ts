@@ -1721,6 +1721,31 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each<[string, string]>([['وصل', 'يَتَّصِلْ']])('%s pattern', (root, expected3ms) => {
+        const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
+        expect(jussive['3ms']).toBe(expected3ms)
+      })
+
+      test('اِتَّكَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('وكأ', 8), 'jussive')).toEqualT({
+          '1s': 'أَتَّكِئْ',
+          '2ms': 'تَتَّكِئْ',
+          '2fs': 'تَتَّكِئِي',
+          '3ms': 'يَتَّكِئْ',
+          '3fs': 'تَتَّكِئْ',
+          '2d': 'تَتَّكِئَا',
+          '3md': 'يَتَّكِئَا',
+          '3fd': 'تَتَّكِئَا',
+          '1p': 'نَتَّكِئْ',
+          '2mp': 'تَتَّكِئُوْا',
+          '2fp': 'تَتَّكِئْنَ',
+          '3mp': 'يَتَّكِئُوْا',
+          '3fp': 'يَتَّكِئْنَ',
+        })
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test('drops the hamza', () => {
         expect(conjugatePresentMood(getVerb('أخذ', 8), 'jussive')).toMatchObjectT({

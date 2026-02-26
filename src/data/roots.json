@@ -735,6 +735,7 @@
   { "root": "ولي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "ولي", "form": 2 },
   { "root": "ولي", "form": 6 },
+  { "root": "وكأ", "form": 8, "passiveVoice": "impersonal" },
   {
     "root": "وري",
     "form": 1,

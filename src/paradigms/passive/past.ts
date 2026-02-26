@@ -249,6 +249,8 @@ function derivePassivePastFormVII(verb: Verb<7>): PassivePastParams {
 
 function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
+  const isInitialWeak = isWeakLetter(c1)
+  const isInitialHamza = isHamzatedLetter(c1)
   const isFinalWeak = isWeakLetter(c3)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
@@ -262,6 +264,14 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    }
+
+  if (isInitialWeak || isInitialHamza)
+    return {
+      prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2, KASRA],
+      suffix: [HAMZA_ON_YEH, SUKOON],
+      suffix3sd: [HAMZA_ON_YEH, FATHA],
+      suffix3mp: [HAMZA_ON_WAW, DAMMA, WAW, SUKOON, ALIF],
     }
 
   if (infix === c1 && isWeakLetter(c3))

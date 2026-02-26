@@ -1676,6 +1676,16 @@ describe('imperative', () => {
 
         expect(imperative['2ms']).toBe('اِتَّصِلْ')
       })
+
+      test('اِتَّكَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('وكأ', 8))).toMatchObjectT({
+          '2ms': 'اِتَّكِئْ',
+          '2fs': 'اِتَّكِئِي',
+          '2d': 'اِتَّكِئَا',
+          '2mp': 'اِتَّكِئُوْا',
+          '2fp': 'اِتَّكِئْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
