@@ -411,16 +411,26 @@ test('Order derived form options by form number', () => {
 })
 
 describe('Recently viewed verbs', () => {
-  test('shows recently viewed verb pills in deduplicated most-recent-first order excluding the current verb', () => {
+  test('shows recently viewed verb pills in deduplicated most-recent-first order', () => {
     renderApp('/#/en/verbs/ktb-1')
     renderApp('/#/en/verbs/bdl-1')
     renderApp('/#/en/verbs/ktb-1')
-    renderApp('/#/en/verbs/ktb-2')
+    renderApp('/#/en/verbs')
 
     const heading = screen.getByText('Recently viewed')
     const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
 
     expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/ktb-1', '/#/en/verbs/bdl-1'])
+  })
+
+  test('excludes currently viewed verb pill', () => {
+    renderApp('/#/en/verbs/bdl-1')
+    renderApp('/#/en/verbs/ktb-1')
+
+    const heading = screen.getByText('Recently viewed')
+    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/bdl-1'])
   })
 
   test('limits recently viewed verbs to ten entries', () => {
