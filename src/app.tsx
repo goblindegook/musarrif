@@ -40,19 +40,11 @@ const formIVowelPattern = (pattern: FormIPattern) => {
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 type FormNumber = (typeof FORM_NUMBERS)[number]
-const MAX_RECENT_VERBS = 10
 
 const readRecentVerbIds = (): readonly string[] => {
-  const raw = readPreference(RECENT_VERBS_STORAGE_KEY)
-  if (raw == null) {
-    return []
-  }
   try {
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) {
-      return []
-    }
-    return parsed.filter((value): value is string => typeof value === 'string')
+    const parsed = JSON.parse(readPreference(RECENT_VERBS_STORAGE_KEY) ?? '[]')
+    return Array.isArray(parsed) ? parsed : []
   } catch {
     return []
   }
@@ -107,18 +99,20 @@ export function App() {
     () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),
     [selectedVerb?.root],
   )
+
   const recentVerbs = useMemo(
-    () => recentVerbIds.map((id) => getVerbById(id)).filter((verb): verb is Verb => verb != null),
-    [recentVerbIds],
+    () =>
+      recentVerbIds
+        .map((id) => getVerbById(id))
+        .filter((verb): verb is Verb => verb != null)
+        .slice(1),
+    [recentVerbIds, selectedVerb?.id],
   )
 
   useEffect(() => {
-    if (selectedVerb == null) {
-      return
-    }
+    if (!selectedVerb) return
     setRecentVerbIds((currentIds) => {
-      const remainingIds = currentIds.filter((id) => id !== selectedVerb.id && getVerbById(id) != null)
-      const nextIds = [selectedVerb.id, ...remainingIds].slice(0, MAX_RECENT_VERBS)
+      const nextIds = [selectedVerb.id, ...currentIds.filter((id) => id !== selectedVerb.id)].slice(0, 11)
       writePreference(RECENT_VERBS_STORAGE_KEY, JSON.stringify(nextIds))
       return nextIds
     })
