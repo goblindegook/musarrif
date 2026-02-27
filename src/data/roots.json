@@ -47,6 +47,7 @@
   { "root": "نشأ", "form": 4 },
   { "root": "أول", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "أول", "form": 2 },
+  { "root": "أول", "form": 5 },
   { "root": "أوب", "form": 2 },
   { "root": "وفي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "passiveVoice": "none", "masdarPatterns": ["fa3aal"] },
   { "root": "وفي", "form": 2 },

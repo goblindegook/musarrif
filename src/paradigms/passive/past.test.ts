@@ -1248,6 +1248,10 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['أول', 'تُؤُوِّلَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+
       test('تَأَثَّرَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('أثر', 5))).toEqualT({
           '1s': 'تُؤُثِّرْتُ',
