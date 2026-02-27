@@ -1709,7 +1709,10 @@ describe('passive present indicative', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وكأ', 'يُتَّكَأُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وعد', 'يُتَّعَدُ'],
+        ['وكأ', 'يُتَّكَأُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
     })

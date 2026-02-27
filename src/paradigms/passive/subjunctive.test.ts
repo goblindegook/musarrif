@@ -1625,7 +1625,10 @@ describe('passive present subjunctive', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وكأ', 'يُتَّكَأَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وعد', 'يُتَّعَدَ'],
+        ['وكأ', 'يُتَّكَأَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })

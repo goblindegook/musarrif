@@ -903,6 +903,7 @@ describe('masdar', () => {
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'اِتِّصَال'],
+        ['وعد', 'اِتِّعَاد'],
         ['وسخ', 'اِتِّسَاخ'],
         ['وكأ', 'اِتِّكَاء'],
       ])('%s', (root, expected) => {

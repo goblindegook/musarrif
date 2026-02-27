@@ -1456,8 +1456,29 @@ describe('passive past pattern', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وكأ', 'اُتُّكِئَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وعد', 'اُتُّعِدَ'],
+        ['وكأ', 'اُتُّكِئَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
+      test('اُتُّعِدَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('وعد', 8))).toEqualT({
+          '1s': 'اُتُّعِدْتُ',
+          '2ms': 'اُتُّعِدْتَ',
+          '2fs': 'اُتُّعِدْتِ',
+          '3ms': 'اُتُّعِدَ',
+          '3fs': 'اُتُّعِدَتْ',
+          '2d': 'اُتُّعِدْتُمَا',
+          '3md': 'اُتُّعِدَا',
+          '3fd': 'اُتُّعِدَتَا',
+          '1p': 'اُتُّعِدْنَا',
+          '2mp': 'اُتُّعِدْتُمْ',
+          '2fp': 'اُتُّعِدْتُنَّ',
+          '3mp': 'اُتُّعِدُوْا',
+          '3fp': 'اُتُّعِدْنَ',
+        })
       })
     })
 

@@ -774,6 +774,7 @@
   { "root": "وعد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l", "mimi"] },
   { "root": "وعد", "form": 3 },
   { "root": "وعد", "form": 5 },
+  { "root": "وعد", "form": 8 },
   { "root": "وفق", "form": 6, "passiveVoice": "impersonal" },
   { "root": "وفر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "وفر", "form": 6, "passiveVoice": "impersonal" },

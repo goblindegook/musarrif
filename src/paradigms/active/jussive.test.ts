@@ -1787,6 +1787,7 @@ describe('active present jussive', () => {
     describe('assimilated roots', () => {
       test.each<[string, string]>([
         ['وصل', 'يَتَّصِلْ'],
+        ['وعد', 'يَتَّعِدْ'],
         ['وسخ', 'يَتَّسِخْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')

@@ -850,6 +850,7 @@ describe('active participle', () => {
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'مُتَّصِل'],
+        ['وعد', 'مُتَّعِد'],
         ['وسخ', 'مُتَّسِخ'],
         ['وكأ', 'مُتَّكِئ'],
       ])('%s', (root, expected) => {
