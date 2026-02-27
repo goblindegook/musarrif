@@ -306,9 +306,7 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   if (!isFinalHamza && (c2 === YEH || (isMiddleWeak && infix !== DAL)))
     return {
       prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, KASRA, YEH],
-      suffix: [c3, SUKOON],
       suffix3sd: [c3, FATHA],
-      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   if (isMiddleWeak && isFinalHamza)

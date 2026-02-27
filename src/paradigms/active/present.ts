@@ -70,8 +70,6 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 
   if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
 
-  if ([3, 7].includes(verb.form) && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, ...suffix]
-
   if (verb.form === 6 && isWeakLetter(c3)) {
     const truncated = removeFinalDiacritic(stem)
     const lastLetter = findLastLetterIndex(truncated)
