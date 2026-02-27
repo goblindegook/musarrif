@@ -882,6 +882,12 @@ describe('masdar', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['كءب', 'اِكْتِئَاب']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 8))).toEqualT([expected].flat())
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['ضرر', 'اِضْطِرَار'],

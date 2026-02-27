@@ -357,7 +357,7 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
-  return [seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, ...moodSuffix]
+  return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, c3, ...moodSuffix]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

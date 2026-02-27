@@ -599,6 +599,7 @@
   { "root": "كتب", "form": 7 },
   { "root": "كفف", "form": 7 },
   { "root": "كثر", "form": 4 },
+  { "root": "كءب", "form": 8, "passiveVoice": "impersonal" },
   { "root": "كذب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "كلأ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   { "root": "كره", "form": 1, "formPattern": "fa3ila-yaf3alu" },

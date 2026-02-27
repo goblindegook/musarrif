@@ -2072,6 +2072,30 @@ describe('active past', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['كءب', 'اِكْتَأَبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
+      test('اِكْتَأَبَ conjugation', () => {
+        expect(conjugatePast(getVerb('كءب', 8))).toEqualT({
+          '1s': 'اِكْتَأَبْتُ',
+          '2ms': 'اِكْتَأَبْتَ',
+          '2fs': 'اِكْتَأَبْتِ',
+          '3ms': 'اِكْتَأَبَ',
+          '3fs': 'اِكْتَأَبَتْ',
+          '2d': 'اِكْتَأَبْتُمَا',
+          '3md': 'اِكْتَأَبَا',
+          '3fd': 'اِكْتَأَبَتَا',
+          '1p': 'اِكْتَأَبْنَا',
+          '2mp': 'اِكْتَأَبْتُمْ',
+          '2fp': 'اِكْتَأَبْتُنَّ',
+          '3mp': 'اِكْتَأَبُوْا',
+          '3fp': 'اِكْتَأَبْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حلل', 'اِحْتَلَّ'],

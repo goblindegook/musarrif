@@ -1654,6 +1654,22 @@ describe('imperative', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['كءب', 'اِكْتَئِبْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
+      })
+
+      test('اِكْتَأَبَ conjugation', () => {
+        expect(conjugateImperative(getVerb('كءب', 8))).toMatchObjectT({
+          '2ms': 'اِكْتَئِبْ',
+          '2fs': 'اِكْتَئِبِي',
+          '2d': 'اِكْتَئِبَا',
+          '2mp': 'اِكْتَئِبُوْا',
+          '2fp': 'اِكْتَئِبْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حلل', 'اِحْتَلَّ'],

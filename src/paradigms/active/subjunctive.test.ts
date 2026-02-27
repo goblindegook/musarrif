@@ -1317,6 +1317,30 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['كءب', 'يَكْتَئِبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِكْتَأَبَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('كءب', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَكْتَئِبَ',
+          '2ms': 'تَكْتَئِبَ',
+          '2fs': 'تَكْتَئِبِي',
+          '3ms': 'يَكْتَئِبَ',
+          '3fs': 'تَكْتَئِبَ',
+          '2d': 'تَكْتَئِبَا',
+          '3md': 'يَكْتَئِبَا',
+          '3fd': 'تَكْتَئِبَا',
+          '1p': 'نَكْتَئِبَ',
+          '2mp': 'تَكْتَئِبُوْا',
+          '2fp': 'تَكْتَئِبْنَ',
+          '3mp': 'يَكْتَئِبُوْا',
+          '3fp': 'يَكْتَئِبْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حلل', 'يَحْتَلَّ'],

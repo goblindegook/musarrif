@@ -1637,6 +1637,31 @@ describe('active present jussive', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each<[string, string]>([['كءب', 'يَكْتَئِبْ']])('%s pattern', (root, expected3ms) => {
+        const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
+        expect(jussive['3ms']).toBe(expected3ms)
+      })
+
+      test('اِكْتَأَبَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('كءب', 8), 'jussive')).toEqualT({
+          '1s': 'أَكْتَئِبْ',
+          '2ms': 'تَكْتَئِبْ',
+          '2fs': 'تَكْتَئِبِي',
+          '3ms': 'يَكْتَئِبْ',
+          '3fs': 'تَكْتَئِبْ',
+          '2d': 'تَكْتَئِبَا',
+          '3md': 'يَكْتَئِبَا',
+          '3fd': 'تَكْتَئِبَا',
+          '1p': 'نَكْتَئِبْ',
+          '2mp': 'تَكْتَئِبُوْا',
+          '2fp': 'تَكْتَئِبْنَ',
+          '3mp': 'يَكْتَئِبُوْا',
+          '3fp': 'يَكْتَئِبْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each<[string, string]>([
         ['حلل', 'يَحْتَلَّ'],

@@ -2201,6 +2201,30 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('hamzated middle roots', () => {
+      test.each([['كءب', 'يَكْتَئِبُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('اِكْتَأَبَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('كءب', 8), 'indicative')).toEqualT({
+          '1s': 'أَكْتَئِبُ',
+          '2ms': 'تَكْتَئِبُ',
+          '2fs': 'تَكْتَئِبِيْنَ',
+          '3ms': 'يَكْتَئِبُ',
+          '3fs': 'تَكْتَئِبُ',
+          '2d': 'تَكْتَئِبَانِ',
+          '3md': 'يَكْتَئِبَانِ',
+          '3fd': 'تَكْتَئِبَانِ',
+          '1p': 'نَكْتَئِبُ',
+          '2mp': 'تَكْتَئِبُوْنَ',
+          '2fp': 'تَكْتَئِبْنَ',
+          '3mp': 'يَكْتَئِبُوْنَ',
+          '3fp': 'يَكْتَئِبْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['حلل', 'يَحْتَلُّ'],

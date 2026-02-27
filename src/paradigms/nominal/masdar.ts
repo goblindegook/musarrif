@@ -226,7 +226,7 @@ function deriveMasdarFormVIII(verb: Verb<8>): readonly string[] {
 
   if (isWeakLetter(c2) && infix !== DAL) return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, YEH, FATHA, ALIF, c3]
 
-  return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3]
+  return [ALIF, KASRA, seatedC1, SUKOON, infix, KASRA, seatedC2, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormIX(verb: Verb<9>): readonly string[] {
