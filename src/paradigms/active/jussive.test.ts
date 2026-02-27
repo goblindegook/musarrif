@@ -1672,6 +1672,24 @@ describe('active present jussive', () => {
         expect(jussive['3ms']).toBe(expected3ms)
       })
 
+      test('اِزْدَادَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيد', 8), 'jussive')).toEqualT({
+          '1s': 'أَزْدَدْ',
+          '2ms': 'تَزْدَدْ',
+          '2fs': 'تَزْدَادِي',
+          '3ms': 'يَزْدَدْ',
+          '3fs': 'تَزْدَدْ',
+          '2d': 'تَزْدَادَا',
+          '3md': 'يَزْدَادَا',
+          '3fd': 'تَزْدَادَا',
+          '1p': 'نَزْدَدْ',
+          '2mp': 'تَزْدَادُوْا',
+          '2fp': 'تَزْدَدْنَ',
+          '3mp': 'يَزْدَادُوْا',
+          '3fp': 'يَزْدَدْنَ',
+        })
+      })
+
       test('اِزْدَوَجَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('زوج', 8), 'jussive')).toEqualT({
           '1s': 'أَزْدَوِجْ',

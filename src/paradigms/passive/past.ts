@@ -4,6 +4,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
+  DAL,
   DAMMA,
   FATHA,
   geminateDoubleLetters,
@@ -297,6 +298,14 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
+    }
+
+  if (!isFinalHamza && (c2 === YEH || (isMiddleWeak && infix !== DAL)))
+    return {
+      prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, KASRA, YEH],
+      suffix: [c3, SUKOON],
+      suffix3sd: [c3, FATHA],
+      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   if (isMiddleWeak && isFinalHamza)

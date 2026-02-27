@@ -146,7 +146,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (isFinalWeak) return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isMiddleWeak && infix !== DAL) return [...prefix, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
+        if (c2 === YEH || (isMiddleWeak && infix !== DAL)) return [...prefix, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
         return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, c3]
       }

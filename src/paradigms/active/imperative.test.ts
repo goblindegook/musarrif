@@ -1697,6 +1697,16 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
       })
 
+      test('اِزْدَادَ conjugation', () => {
+        expect(conjugateImperative(getVerb('زيد', 8))).toMatchObjectT({
+          '2ms': 'اِزْدَدْ',
+          '2fs': 'اِزْدَادِي',
+          '2d': 'اِزْدَادَا',
+          '2mp': 'اِزْدَادُوْا',
+          '2fp': 'اِزْدَدْنَ',
+        })
+      })
+
       test('اِزْدَوَجَ conjugation', () => {
         expect(conjugateImperative(getVerb('زوج', 8))).toMatchObjectT({
           '2ms': 'اِزْدَوِجْ',

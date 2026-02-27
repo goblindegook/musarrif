@@ -140,7 +140,8 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isFinalWeak) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_KASRA]
 
-        if (isMiddleWeak && infix !== DAL) return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
+        if (c2 === YEH || (isMiddleWeak && infix !== DAL))
+          return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
         return [MEEM, DAMMA, seatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, c3]
       }

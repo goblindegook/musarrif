@@ -163,6 +163,8 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if (verb.form === 7 && isWeakLetter(c2)) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
+  if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
 
   if (verb.form !== 5 && isWeakLetter(c2) && isHamzatedLetter(c3))
@@ -342,9 +344,12 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (hasPattern(verb, 'fa3ila-yaf3alu')) return [...removeFinalDiacritic(word), SUKOON]
 
-      if (verb.form === 8 && resolveFormVIIIInfixConsonant(c1) === DAL) return [...removeFinalDiacritic(word), SUKOON]
+      if ([1, 4, 7, 10].includes(verb.form) && isMiddleWeak)
+        return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
-      if ([1, 4, 7, 8, 10].includes(verb.form) && isMiddleWeak)
+      if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
+
+      if (verb.form === 8 && isMiddleWeak && resolveFormVIIIInfixConsonant(c1) !== DAL)
         return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
       return [...removeFinalDiacritic(word), SUKOON]
@@ -515,7 +520,7 @@ function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
 
   if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, seatHamza(c2, KASRA), KASRA, YEH]
 
-  if (isWeakLetter(c2) && infix !== DAL) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
+  if (c2 === YEH || (isWeakLetter(c2) && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, KASRA, c3, DAMMA]
 }

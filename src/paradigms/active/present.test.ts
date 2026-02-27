@@ -2258,6 +2258,24 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test('اِزْدَادَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيد', 8), 'indicative')).toEqualT({
+          '1s': 'أَزْدَادُ',
+          '2ms': 'تَزْدَادُ',
+          '2fs': 'تَزْدَادِيْنَ',
+          '3ms': 'يَزْدَادُ',
+          '3fs': 'تَزْدَادُ',
+          '2d': 'تَزْدَادَانِ',
+          '3md': 'يَزْدَادَانِ',
+          '3fd': 'تَزْدَادَانِ',
+          '1p': 'نَزْدَادُ',
+          '2mp': 'تَزْدَادُوْنَ',
+          '2fp': 'تَزْدَدْنَ',
+          '3mp': 'يَزْدَادُوْنَ',
+          '3fp': 'يَزْدَدْنَ',
+        })
+      })
+
       test('اِزْدَوَجَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('زوج', 8), 'indicative')).toEqualT({
           '1s': 'أَزْدَوِجُ',

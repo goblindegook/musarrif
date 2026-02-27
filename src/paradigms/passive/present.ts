@@ -5,6 +5,7 @@ import {
   ALIF,
   ALIF_HAMZA,
   ALIF_MAQSURA,
+  DAL,
   DAMMA,
   FATHA,
   HAMZA,
@@ -337,6 +338,13 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     return mood === 'indicative'
       ? [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, WAW, SUKOON, NOON, FATHA]
       : [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, WAW, SUKOON, ALIF]
+
+  if (!isFinalWeak && !isFinalHamza && (c2 === YEH || (isMiddleWeak && infix !== DAL))) {
+    if (mood === 'jussive' && (moodSuffix.at(0) === SUKOON || isFemininePlural(pronounId)))
+      return [seatedC1, SUKOON, infix, FATHA, c3, ...moodSuffix]
+
+    return [seatedC1, SUKOON, infix, FATHA, ALIF, c3, ...moodSuffix]
+  }
 
   if (isFinalWeak && isMasculinePlural(pronounId)) return [seatedC1, SUKOON, infix, FATHA, seatedC2, ...moodSuffix]
 

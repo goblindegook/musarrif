@@ -1404,6 +1404,24 @@ describe('active present subjunctive', () => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
+      test('اِزْدَادَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيد', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَزْدَادَ',
+          '2ms': 'تَزْدَادَ',
+          '2fs': 'تَزْدَادِي',
+          '3ms': 'يَزْدَادَ',
+          '3fs': 'تَزْدَادَ',
+          '2d': 'تَزْدَادَا',
+          '3md': 'يَزْدَادَا',
+          '3fd': 'تَزْدَادَا',
+          '1p': 'نَزْدَادَ',
+          '2mp': 'تَزْدَادُوْا',
+          '2fp': 'تَزْدَدْنَ',
+          '3mp': 'يَزْدَادُوْا',
+          '3fp': 'يَزْدَدْنَ',
+        })
+      })
+
       test('اِزْدَوَجَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('زوج', 8), 'subjunctive')).toEqualT({
           '1s': 'أَزْدَوِجَ',

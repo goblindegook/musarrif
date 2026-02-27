@@ -291,6 +291,7 @@
   { "root": "رمي", "form": 7 },
   { "root": "رود", "form": 4 },
   { "root": "زاد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "زيد", "form": 8, "passiveVoice": "impersonal" },
   { "root": "زال", "form": 4 },
   { "root": "زحزح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "زرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
