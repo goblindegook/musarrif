@@ -1753,6 +1753,7 @@ describe('passive present jussive', () => {
         ['زوج', 'يُزْدَوَجْ'],
         ['سوء', 'يُسْتَأْ'],
         ['زيد', 'يُزْدَدْ'],
+        ['خير', 'يُخْتَرْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'jussive')['3ms']).toEqualT(expected)
       })

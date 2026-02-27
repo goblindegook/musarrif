@@ -1401,7 +1401,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['سوء', 'يَسْتَاءَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['سوء', 'يَسْتَاءَ'],
+        ['خير', 'يَخْتَارَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
 

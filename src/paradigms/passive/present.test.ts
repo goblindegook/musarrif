@@ -1711,6 +1711,7 @@ describe('passive present indicative', () => {
         ['زوج', 'يُزْدَوَجُ'],
         ['سوء', 'يُسْتَاءُ'],
         ['زيد', 'يُزْدَادُ'],
+        ['خير', 'يُخْتَارُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })
