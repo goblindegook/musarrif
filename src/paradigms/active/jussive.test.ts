@@ -269,6 +269,7 @@ describe('active present jussive', () => {
 
     describe('hollow roots', () => {
       test.each([
+        ['زيد', 'يَزِدْ'],
         ['عوز', 'يَعْوَزْ'],
         ['عوم', 'يَعُمْ'],
         ['حول', 'يَحُلْ'],

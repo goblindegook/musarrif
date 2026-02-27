@@ -264,6 +264,7 @@ describe('active present indicative', () => {
     describe('hollow roots', () => {
       test.each([
         ['باع', 'يَبِيعُ'],
+        ['زيد', 'يَزِيدُ'],
         ['زور', 'يَزُورُ'],
         ['لوم', 'يَلُومُ'],
         ['موت', 'يَمُوتُ'],

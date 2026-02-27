@@ -154,6 +154,7 @@ describe('imperative', () => {
 
     describe('hollow roots', () => {
       test.each([
+        ['زيد', 'زِدْ'],
         ['عوم', 'عُمْ'],
         ['حول', 'حُلْ'],
         ['لوم', 'لُمْ'],

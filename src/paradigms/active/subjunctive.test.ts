@@ -183,6 +183,7 @@ describe('active present subjunctive', () => {
 
     describe('hollow roots', () => {
       test.each([
+        ['زيد', 'يَزِيدَ'],
         ['عوز', 'يَعْوَزَ'],
         ['عوم', 'يَعُومَ'],
         ['حول', 'يَحُولَ'],

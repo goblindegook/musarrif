@@ -173,6 +173,7 @@ describe('passive present jussive', () => {
         ['قول', 'يُقَلْ'],
         ['خور', 'يُخْوَرْ'],
         ['خوف', 'يُخَفْ'],
+        ['زيد', 'يُزَدْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })

@@ -161,6 +161,7 @@ describe('passive present subjunctive', () => {
         ['قول', 'يُقَالَ'],
         ['خور', 'يُخْوَرَ'],
         ['خوف', 'يُخَافَ'],
+        ['زيد', 'يُزَادَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })

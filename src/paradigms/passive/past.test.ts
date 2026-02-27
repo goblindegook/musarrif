@@ -56,6 +56,7 @@ describe('passive past pattern', () => {
 
     describe('hollow roots', () => {
       test.each<[string, string]>([
+        ['زيد', 'زِيدَ'],
         ['حول', 'حِيلَ'],
         ['عوم', 'عِيمَ'],
         ['قول', 'قِيلَ'],

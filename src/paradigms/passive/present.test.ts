@@ -166,6 +166,7 @@ describe('passive present indicative', () => {
 
     describe('hollow roots', () => {
       test.each<[string, string]>([
+        ['زيد', 'يُزَادُ'],
         ['حول', 'يُحَالُ'],
         ['عوم', 'يُعَامُ'],
         ['قول', 'يُقَالُ'],

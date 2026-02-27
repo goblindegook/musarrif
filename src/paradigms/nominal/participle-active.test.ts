@@ -74,6 +74,7 @@ describe('active participle', () => {
 
     describe('hollow roots', () => {
       test.each([
+        ['زيد', 'زَائِد'],
         ['باع', 'بَائِع'],
         ['زور', 'زَائِر'],
         ['موت', 'مَائِت'],
