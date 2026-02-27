@@ -10,7 +10,6 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
-  last,
   longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
@@ -116,7 +115,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
           if (isInitialHamza) return stem.slice(2)
 
-          if (c3 === WAW && last(stem) === ALIF) return stem
+          if (c3 === WAW && stem.at(-1) === ALIF) return stem
 
           if (stem.at(1) === SUKOON) return [ALIF, isFormIPresentVowel(verb, 'u') ? DAMMA : KASRA, ...stem]
 

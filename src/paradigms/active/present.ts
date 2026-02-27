@@ -18,7 +18,6 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
-  last,
   longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
@@ -44,7 +43,7 @@ function defectiveGlide(letter: string): string {
 }
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
-  return verb.form === 1 && isWeakLetter(verb.root[2]) && isFormIPresentVowel(verb, vowel)
+  return verb.form === 1 && isWeakLetter(verb.root.at(-1)) && isFormIPresentVowel(verb, vowel)
 }
 
 function replaceVowelAfterGemination(word: readonly string[], vowel: Vowel): readonly string[] {
@@ -55,9 +54,10 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
   const [c1, c2, c3] = [...verb.root]
   const suffix = [SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [YEH, FATHA, c1, FATHA, YEH, ...suffix]
-
-  if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a'))
+    return isHamzatedLetter(c2)
+      ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
+      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
   if (isFormIFinalWeakPresent(verb, 'u')) return [...dropTerminalWeak(stem), KASRA, YEH, ...suffix]
 
@@ -70,7 +70,7 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 
   if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
 
-  if ([3, 7].includes(verb.form) && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, SUKOON, NOON, FATHA]
+  if ([3, 7].includes(verb.form) && c2 === c3) return [...removeFinalDiacritic(stem), KASRA, YEH, ...suffix]
 
   if (verb.form === 6 && isWeakLetter(c3)) {
     const truncated = removeFinalDiacritic(stem)
@@ -114,9 +114,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
   if (isWeakLetter(c1) && isHamzatedLetter(c2) && isWeakLetter(c3))
     return [...dropTerminalWeak(stem.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char))), DAMMA, ...suffix]
 
-  if (isWeakLetter(c1)) return [...dropTerminalWeak(stem), ...suffix]
-
-  if (isWeakLetter(c3)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
+  if (isWeakLetter(c3) && !isWeakLetter(c1)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
 
   return [...dropTerminalWeak(stem), ...suffix]
 }
@@ -125,9 +123,10 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   const [c1, c2, c3] = Array.from(verb.root)
   const suffix = [SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [YEH, FATHA, c1, FATHA, YEH, ...suffix]
-
-  if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a'))
+    return isHamzatedLetter(c2)
+      ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
+      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
   if (c2 === c3) {
     switch (verb.form) {
@@ -165,12 +164,10 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-  if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem), ...suffix]
-
   if (verb.form !== 5 && isWeakLetter(c2) && isHamzatedLetter(c3))
     return [...dropTerminalWeakOrHamza(shortenHollowStem(stem)), ...suffix]
 
-  if (verb.form === 1 && !hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2))
+  if (verb.form === 1 && !hasPattern(verb, 'fa3ila-yaf3alu') && isWeakLetter(c2) && !isWeakLetter(c3))
     return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
   return [...removeFinalDiacritic(stem), ...suffix]
@@ -228,23 +225,11 @@ function conjugateIndicative(verb: Verb): Record<PronounId, string> {
 }
 
 function dropNoonEnding(word: readonly string[]): readonly string[] {
-  const chars = [...word]
-  while (last(chars) === NOON || isDiacritic(last(chars))) chars.pop()
-  return chars
-}
-
-function replaceBeforeFinalWawAlif(vowel: string, word: readonly string[]): readonly string[] {
-  return [...removeFinalDiacritic(word.slice(0, -1)), vowel, WAW, SUKOON, ALIF]
-}
-
-function dropWeakLetterBeforeLastAlif(word: readonly string[]): readonly string[] {
-  const prevBaseIdx = findLastLetterIndex(word, word.lastIndexOf(ALIF))
-  if (isWeakLetter(word.at(prevBaseIdx))) return [...word.slice(0, prevBaseIdx), ALIF]
-  return word
+  return removeFinalDiacritic(word.slice(0, word.lastIndexOf(NOON)))
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [, c2, c3] = Array.from(verb.root)
+  const [, , c3] = Array.from(verb.root)
   const isFinalWeak = isWeakLetter(c3)
 
   return mapRecord(
@@ -255,7 +240,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak && verb.form === 1 && isFormIPresentVowel(verb, 'a')) {
         if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word)), SUKOON]
-        if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(FATHA, dropNoonEnding(word))
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
         return word
       }
 
@@ -265,11 +250,12 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
         return word
       }
 
-      if (pronounId === '2fs' && verb.form === 7 && c2 === c3)
-        return removeFinalDiacritic(dropNoonEnding(word).filter((char) => char !== SHADDA))
-
       if (pronounId === '2fs' && verb.form === 7)
-        return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), KASRA, YEH]
+        return [
+          ...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)).filter((char) => char !== SHADDA),
+          KASRA,
+          YEH,
+        ]
 
       if (pronounId === '2fs') return dropNoonEnding(word)
 
@@ -296,40 +282,42 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
+      if (isFormIFinalWeakPresent(verb, 'a')) {
+        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
+      }
+
       if (verb.form === 5 && isFinalWeak) {
         if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), SUKOON, ALIF]
       }
 
-      if (isFormIFinalWeakPresent(verb, 'a')) {
-        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
-        if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(FATHA, dropNoonEnding(word))
-      }
-
       if (isDual(pronounId)) {
-        if (isMiddleHamza || isMiddleWeak || isFinalHamza) return dropNoonEnding(word)
+        const base = dropNoonEnding(word)
 
-        if (verb.form === 1 && isFinalWeak) {
-          const base = dropNoonEnding(word)
-          if (base.at(-3) === WAW) return [...base.slice(0, -2), SUKOON, ALIF]
-          return base
-        }
+        if (isMiddleHamza || isMiddleWeak || isFinalHamza) return base
+
+        if (verb.form === 1 && isFinalWeak) return base.at(-3) === WAW ? [...base.slice(0, -2), SUKOON, ALIF] : base
 
         if (verb.form === 4 && isFinalWeak) return dropNoonEnding(word)
 
-        return dropWeakLetterBeforeLastAlif(dropNoonEnding(word))
+        const letterBeforeAlif = findLastLetterIndex(base, base.lastIndexOf(ALIF))
+        if (isWeakLetter(base.at(letterBeforeAlif))) return [...base.slice(0, letterBeforeAlif), ALIF]
+
+        return base
       }
 
-      if (verb.form === 7 && isGeminate && pronounId === '2fs')
-        return removeFinalDiacritic(dropNoonEnding(word).filter((char) => char !== SHADDA))
+      if (pronounId === '2fs' && verb.form === 7 && isGeminate)
+        return removeFinalDiacritic(dropNoonEnding(word)).filter((char) => char !== SHADDA)
 
       if (pronounId === '2fs') return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), KASRA, YEH]
 
       if (isMasculinePlural(pronounId) && verb.form === 4 && isHamzatedLetter(c2) && isWeakLetter(c3))
         return [...dropNoonEnding(word), ALIF]
 
-      if (isMasculinePlural(pronounId)) return replaceBeforeFinalWawAlif(DAMMA, dropNoonEnding(word))
+      if (isMasculinePlural(pronounId))
+        return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -1)), DAMMA, WAW, SUKOON, ALIF]
 
       if (isFemininePlural(pronounId)) return [...removeFinalDiacritic(word), FATHA]
 
@@ -338,18 +326,13 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (isFinalWeak) return removeFinalDiacritic(word).slice(0, -1)
 
-      if ([1, 3, 4, 7, 8, 10].includes(verb.form) && isGeminate) return [...removeFinalDiacritic(word), FATHA]
+      if (([1, 3, 4, 7, 8, 10].includes(verb.form) && isGeminate) || verb.form === 9)
+        return [...removeFinalDiacritic(word), FATHA]
 
-      if (verb.form === 9) return [...removeFinalDiacritic(word), FATHA]
-
-      if (hasPattern(verb, 'fa3ila-yaf3alu')) return [...removeFinalDiacritic(word), SUKOON]
-
-      if ([1, 4, 7, 10].includes(verb.form) && isMiddleWeak)
+      if ([1, 4, 7, 10].includes(verb.form) && isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
         return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
-      if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
-
-      if (verb.form === 8 && isMiddleWeak && resolveFormVIIIInfixConsonant(c1) !== DAL)
+      if (verb.form === 8 && (c2 === YEH || (isMiddleWeak && resolveFormVIIIInfixConsonant(c1) !== DAL)))
         return [...removeFinalDiacritic(shortenHollowStem(word)), SUKOON]
 
       return [...removeFinalDiacritic(word), SUKOON]
@@ -429,8 +412,8 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
 
 function derivePresentFormII(verb: Verb<2>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = c1 === ALIF_HAMZA ? HAMZA_ON_WAW : c1
-  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+  const seatedC1 = seatHamza(c1, DAMMA)
+  const seatedC3 = seatHamza(c3, KASRA)
 
   if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3]
 
@@ -534,7 +517,7 @@ function derivePresentFormIX(verb: Verb<9>): readonly string[] {
 function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
-  const seatedC3 = isHamzatedLetter(c3) ? HAMZA_ON_YEH : c3
+  const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
@@ -600,9 +583,7 @@ function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): r
 
 function dropTerminalWeak(word: readonly string[]): readonly string[] {
   const lastLetter = word.findLast((char) => !isDiacritic(char))
-
   if (!isWeakLetter(lastLetter)) return word
-
   return removeFinalDiacritic(word.slice(0, -2))
 }
 

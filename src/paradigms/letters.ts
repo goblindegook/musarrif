@@ -141,10 +141,6 @@ export function findLastLetterIndex(word: readonly string[], beforeIndex?: numbe
   return word.findLastIndex((char, i) => i < index && !isDiacritic(char))
 }
 
-export function last(word: readonly string[]): string | undefined {
-  return word.at(-1)
-}
-
 export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
   return word
     .join('')
