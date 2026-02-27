@@ -844,6 +844,7 @@ describe('active participle', () => {
     describe('assimilated roots', () => {
       test.each([
         ['وصل', 'مُتَّصِل'],
+        ['وسخ', 'مُتَّسِخ'],
         ['وكأ', 'مُتَّكِئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)

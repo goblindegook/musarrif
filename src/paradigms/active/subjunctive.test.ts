@@ -1452,7 +1452,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وصل', 'يَتَّصِلَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وصل', 'يَتَّصِلَ'],
+        ['وسخ', 'يَتَّسِخَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
 

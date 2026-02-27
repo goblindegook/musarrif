@@ -1682,6 +1682,10 @@ describe('imperative', () => {
         expect(imperative['2ms']).toBe('اِتَّصِلْ')
       })
 
+      test.each([['وسخ', 'اِتَّسِخْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
+      })
+
       test('اِتَّكَأَ conjugation', () => {
         expect(conjugateImperative(getVerb('وكأ', 8))).toMatchObjectT({
           '2ms': 'اِتَّكِئْ',

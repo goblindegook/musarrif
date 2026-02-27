@@ -783,6 +783,7 @@
   { "root": "وقف", "form": 5 },
   { "root": "وقف", "form": 4 },
   { "root": "وقف", "form": 2 },
+  { "root": "وسخ", "form": 8, "passiveVoice": "none" },
   { "root": "وسع", "form": 5, "passiveVoice": "none" },
   { "root": "وقي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
   { "root": "وقي", "form": 5 },
