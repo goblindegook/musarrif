@@ -172,6 +172,7 @@ describe('passive present indicative', () => {
         ['قول', 'يُقَالُ'],
         ['خور', 'يُخْوَرُ'],
         ['خوف', 'يُخَافُ'],
+        ['شوق', 'يُشَاقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toBe(expected)
       })
@@ -646,6 +647,7 @@ describe('passive present indicative', () => {
         ['دون', 'يُدَوَّنُ'],
         ['سوف', 'يُسَوَّفُ'],
         ['كيف', 'يُكَيَّفُ'],
+        ['شوق', 'يُشَوَّقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })

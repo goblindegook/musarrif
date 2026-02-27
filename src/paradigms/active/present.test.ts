@@ -278,6 +278,7 @@ describe('active present indicative', () => {
         ['صير', 'يَصِيرُ'],
         ['جيد', 'يَجْيَدُ'],
         ['خوف', 'يَخَافُ'],
+        ['شوق', 'يَشُوقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -951,6 +952,7 @@ describe('active present indicative', () => {
         ['كيف', 'يُكَيِّفُ'],
         ['أول', 'يُؤَوِّلُ'],
         ['أوب', 'يُؤَوِّبُ'],
+        ['شوق', 'يُشَوِّقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -1716,6 +1718,7 @@ describe('active present indicative', () => {
         ['عين', 'يَتَعَيَّنُ'],
         ['غير', 'يَتَغَيَّرُ'],
         ['طور', 'يَتَطَوَّرُ'],
+        ['شوق', 'يَتَشَوَّقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })

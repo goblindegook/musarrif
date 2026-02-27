@@ -6,6 +6,7 @@ describe('canConjugatePassive', () => {
   describe('has passive voice', () => {
     test.each<[string, VerbForm]>([
       ['يود', 2],
+      ['شوق', 2],
       ['عمل', 3],
       ['رءي', 3],
       ['أتي', 4],
@@ -82,6 +83,7 @@ describe('canConjugatePassive', () => {
       ['روح', 8],
       ['شوق', 8],
       ['زيد', 1],
+      ['شوق', 1],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(true)
     })
@@ -131,6 +133,7 @@ describe('canConjugatePassive', () => {
       ['هيء', 5],
       ['طور', 5],
       ['غير', 5],
+      ['شوق', 5],
       ['كمل', 6],
       ['قسم', 6],
       ['نمو', 6],

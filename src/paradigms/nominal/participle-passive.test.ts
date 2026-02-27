@@ -88,6 +88,7 @@ describe('passive participle', () => {
         ['قول', 'مَقُول'],
         ['خور', 'مَخْوُور'],
         ['خوف', 'مَخُوف'],
+        ['شوق', 'مَشُوق'],
         ['موت', ''],
         ['كان', ''],
       ])('%s', (root, expected) => {
@@ -263,6 +264,7 @@ describe('passive participle', () => {
         ['كيف', 'مُكَيَّف'],
         ['أول', 'مُؤَوَّل'],
         ['أوب', 'مُؤَوَّب'],
+        ['شوق', 'مُشَوَّق'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toBe(expected)
       })
@@ -605,6 +607,7 @@ describe('passive participle', () => {
         ['عين', 'مُتَعَيَّن'],
         ['غير', 'مُتَغَيَّر'],
         ['طور', 'مُتَطَوَّر'],
+        ['شوق', 'مُتَشَوَّق'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toBe(expected)
       })

@@ -191,6 +191,7 @@ describe('active present subjunctive', () => {
         ['خور', 'يَخْوَرَ'],
         ['قول', 'يَقُولَ'],
         ['خوف', 'يَخَافَ'],
+        ['شوق', 'يَشُوقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -703,6 +704,7 @@ describe('active present subjunctive', () => {
         ['كيف', 'يُكَيِّفَ'],
         ['أول', 'يُؤَوِّلَ'],
         ['أوب', 'يُؤَوِّبَ'],
+        ['شوق', 'يُشَوِّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -1150,6 +1152,7 @@ describe('active present subjunctive', () => {
         ['عين', 'يَتَعَيَّنَ'],
         ['غير', 'يَتَغَيَّرَ'],
         ['طور', 'يَتَطَوَّرَ'],
+        ['شوق', 'يَتَشَوَّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })

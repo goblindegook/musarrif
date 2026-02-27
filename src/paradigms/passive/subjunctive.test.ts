@@ -162,6 +162,7 @@ describe('passive present subjunctive', () => {
         ['خور', 'يُخْوَرَ'],
         ['خوف', 'يُخَافَ'],
         ['زيد', 'يُزَادَ'],
+        ['شوق', 'يُشَاقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -596,6 +597,7 @@ describe('passive present subjunctive', () => {
         ['دون', 'يُدَوَّنَ'],
         ['سوف', 'يُسَوَّفَ'],
         ['كيف', 'يُكَيَّفَ'],
+        ['شوق', 'يُشَوَّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

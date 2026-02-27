@@ -91,6 +91,7 @@ describe('active participle', () => {
         ['قول', 'قَائِل'],
         ['خور', 'خَاوِر'],
         ['خوف', 'خَائِف'],
+        ['شوق', 'شَائِق'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toBe(expected)
       })
@@ -282,6 +283,7 @@ describe('active participle', () => {
         ['كيف', 'مُكَيِّف'],
         ['أول', 'مُؤَوِّل'],
         ['أوب', 'مُؤَوِّب'],
+        ['شوق', 'مُشَوِّق'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toBe(expected)
       })
@@ -626,6 +628,7 @@ describe('active participle', () => {
         ['عين', 'مُتَعَيِّن'],
         ['غير', 'مُتَغَيِّر'],
         ['طور', 'مُتَطَوِّر'],
+        ['شوق', 'مُتَشَوِّق'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toBe(expected)
       })

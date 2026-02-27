@@ -163,6 +163,7 @@ describe('imperative', () => {
         ['صير', 'صِرْ'],
         ['خور', 'اِخْوَرْ'],
         ['خوف', 'خَفْ'],
+        ['شوق', 'شُقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -711,6 +712,7 @@ describe('imperative', () => {
         ['سوف', 'سَوِّفْ'],
         ['كيف', 'كَيِّفْ'],
         ['أول', 'أَوِّلْ'],
+        ['شوق', 'شَوِّقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
       })
@@ -1321,6 +1323,7 @@ describe('imperative', () => {
         ['عين', 'تَعَيَّنْ'],
         ['غير', 'تَغَيَّرْ'],
         ['طور', 'تَطَوَّرْ'],
+        ['شوق', 'تَشَوَّقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 5))['2ms']).toEqualT(expected)
       })

@@ -276,6 +276,7 @@ describe('active present jussive', () => {
         ['موت', 'يَمُتْ'],
         ['خور', 'يَخْوَرْ'],
         ['خوف', 'يَخَفْ'],
+        ['شوق', 'يَشُقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -808,6 +809,7 @@ describe('active present jussive', () => {
         ['كيف', 'يُكَيِّفْ'],
         ['أول', 'يُؤَوِّلْ'],
         ['أوب', 'يُؤَوِّبْ'],
+        ['شوق', 'يُشَوِّقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -1269,6 +1271,7 @@ describe('active present jussive', () => {
         ['عين', 'يَتَعَيَّنْ'],
         ['غير', 'يَتَغَيَّرْ'],
         ['طور', 'يَتَطَوَّرْ'],
+        ['شوق', 'يَتَشَوَّقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
       })

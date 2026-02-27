@@ -172,6 +172,7 @@ describe('active past', () => {
         ['صير', 'صَارَ'],
         ['جيد', 'جَيِدَ'],
         ['خوف', 'خَافَ'],
+        ['شوق', 'شَاقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -851,6 +852,7 @@ describe('active past', () => {
         ['سوف', 'سَوَّفَ'],
         ['كيف', 'كَيَّفَ'],
         ['أول', 'أَوَّلَ'],
+        ['شوق', 'شَوَّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
@@ -1560,6 +1562,7 @@ describe('active past', () => {
         ['عين', 'تَعَيَّنَ'],
         ['غير', 'تَغَيَّرَ'],
         ['طور', 'تَطَوَّرَ'],
+        ['شوق', 'تَشَوَّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
