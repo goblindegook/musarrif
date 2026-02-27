@@ -1404,6 +1404,9 @@ describe('active present subjunctive', () => {
       test.each([
         ['سوء', 'يَسْتَاءَ'],
         ['خير', 'يَخْتَارَ'],
+        ['عود', 'يَعْتَادَ'],
+        ['روح', 'يَرْتَاحَ'],
+        ['شوق', 'يَشْتَاقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })

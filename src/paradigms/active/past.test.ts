@@ -2112,6 +2112,9 @@ describe('active past', () => {
         ['قود', 'اِقْتَادَ'],
         ['سوء', 'اِسْتَاءَ'],
         ['خير', 'اِخْتَارَ'],
+        ['عود', 'اِعْتَادَ'],
+        ['روح', 'اِرْتَاحَ'],
+        ['شوق', 'اِشْتَاقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })

@@ -1628,6 +1628,9 @@ describe('passive present subjunctive', () => {
         ['سوء', 'يُسْتَاءَ'],
         ['زيد', 'يُزْدَادَ'],
         ['خير', 'يُخْتَارَ'],
+        ['عود', 'يُعْتَادَ'],
+        ['روح', 'يُرْتَاحَ'],
+        ['شوق', 'يُشْتَاقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })

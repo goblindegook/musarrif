@@ -1712,6 +1712,9 @@ describe('passive present indicative', () => {
         ['سوء', 'يُسْتَاءُ'],
         ['زيد', 'يُزْدَادُ'],
         ['خير', 'يُخْتَارُ'],
+        ['عود', 'يُعْتَادُ'],
+        ['روح', 'يُرْتَاحُ'],
+        ['شوق', 'يُشْتَاقُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })

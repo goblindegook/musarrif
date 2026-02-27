@@ -1695,6 +1695,9 @@ describe('imperative', () => {
         ['قود', 'اِقْتَدْ'],
         ['سوء', 'اِسْتَأْ'],
         ['خير', 'اِخْتَرْ'],
+        ['عود', 'اِعْتَدْ'],
+        ['روح', 'اِرْتَحْ'],
+        ['شوق', 'اِشْتَقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 8))['2ms']).toEqualT(expected)
       })

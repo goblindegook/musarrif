@@ -854,6 +854,9 @@ describe('active participle', () => {
         ['زيد', 'مُزْدَاد'],
         ['سوء', 'مُسْتَاء'],
         ['خير', 'مُخْتَار'],
+        ['عود', 'مُعْتَاد'],
+        ['روح', 'مُرْتَاح'],
+        ['شوق', 'مُشْتَاق'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
