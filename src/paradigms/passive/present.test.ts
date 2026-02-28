@@ -1712,6 +1712,7 @@ describe('passive present indicative', () => {
       test.each([
         ['وعد', 'يُتَّعَدُ'],
         ['وكأ', 'يُتَّكَأُ'],
+        ['وحد', 'يُتَّحَدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
       })

@@ -822,6 +822,7 @@ describe('passive participle', () => {
         ['وعد', 'مُتَّعَد'],
         ['وسخ', 'مُتَّسَخ'],
         ['وكأ', 'مُتَّكَأ'],
+        ['وحد', 'مُتَّحَد'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 8))).toBe(expected)
       })

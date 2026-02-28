@@ -1459,6 +1459,7 @@ describe('passive past pattern', () => {
       test.each([
         ['وعد', 'اُتُّعِدَ'],
         ['وكأ', 'اُتُّكِئَ'],
+        ['وحد', 'اُتُّحِدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })

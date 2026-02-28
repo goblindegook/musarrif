@@ -1789,6 +1789,7 @@ describe('active present jussive', () => {
         ['وصل', 'يَتَّصِلْ'],
         ['وعد', 'يَتَّعِدْ'],
         ['وسخ', 'يَتَّسِخْ'],
+        ['وحد', 'يَتَّحِدْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
         expect(jussive['3ms']).toBe(expected3ms)
