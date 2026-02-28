@@ -726,7 +726,7 @@
   { "root": "وصل", "form": 2 },
   { "root": "وصل", "form": 4 },
   { "root": "وصل", "form": 5 },
-  { "root": "وصل", "form": 8 },
+  { "root": "وصل", "form": 8, "passiveVoice": "impersonal" },
   { "root": "وضع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
   { "root": "وثق", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3aala"] },
   { "root": "وجز", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": [] },
