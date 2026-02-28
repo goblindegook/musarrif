@@ -96,6 +96,7 @@
   { "root": "بني", "form": 5 },
   { "root": "بوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "بءس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
+  { "root": "بءس", "form": 8, "passiveVoice": "impersonal" },
   { "root": "أبي", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aal"] },
   { "root": "أني", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3an"] },
   { "root": "بيت", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["mimi"] },

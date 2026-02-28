@@ -2073,7 +2073,10 @@ describe('active past', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['كءب', 'اِكْتَأَبَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['كءب', 'اِكْتَأَبَ'],
+        ['بءس', 'اِبْتَأَسَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
 
