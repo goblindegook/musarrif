@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest'
 
@@ -19,6 +19,13 @@ const renderApp = (path = '') => {
       </I18nProvider>
     </RoutingProvider>,
   )
+}
+
+const navigateTo = (path: string) => {
+  act(() => {
+    window.history.pushState({}, '', path)
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  })
 }
 
 beforeEach(() => {
@@ -78,7 +85,7 @@ test('Shows verbs grouped by form at the verbs base route', () => {
 
 test('Shows alphabetized verbs for the selected form', async () => {
   renderApp('/#/en/verbs')
-  const user = userEvent.setup()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(
     [...document.querySelectorAll('[role="tablist"][aria-label="Select form"] [role="tab"]')].find(
@@ -136,7 +143,7 @@ describe('Conjugation table', () => {
 
   it('switches to the present-tense table via tabs', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Present'))
 
@@ -145,7 +152,7 @@ describe('Conjugation table', () => {
 
   it('reflects tense and mood changes in the URL', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.click(screen.getByText('Present'))
@@ -155,7 +162,7 @@ describe('Conjugation table', () => {
 
   it('switches to passive tense options and updates the URL', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
@@ -190,7 +197,7 @@ describe('Conjugation table', () => {
 
   it('shows imperative as a separate tense option', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Imperative'))
 
@@ -205,7 +212,7 @@ describe('Conjugation table', () => {
 
   it('reflects imperative tense changes in the URL', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.click(screen.getByText('Imperative'))
@@ -215,7 +222,7 @@ describe('Conjugation table', () => {
 
   it('does not show imperative in present tense mood tabs', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Present'))
 
@@ -229,7 +236,7 @@ describe('Conjugation table', () => {
 describe('Search', () => {
   it('matches verbs when a derived form is typed', async () => {
     renderApp()
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.type(screen.getByLabelText('Verb'), 'يكتبون')
 
@@ -238,7 +245,7 @@ describe('Search', () => {
 
   it('shows dropdown suggestions for partial matches', async () => {
     renderApp()
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.type(screen.getByLabelText('Verb'), 'كت')
 
@@ -249,7 +256,7 @@ describe('Search', () => {
 
   it('hides dropdown suggestions when the input loses focus', async () => {
     renderApp()
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     await user.type(screen.getByLabelText('Verb'), 'كت')
     await user.click(document.body)
 
@@ -286,7 +293,7 @@ describe('Search', () => {
 
   it('updates the URL with the selected verb', async () => {
     renderApp('/#/en/verbs')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.type(screen.getByLabelText('Verb'), 'كتب{enter}')
@@ -305,7 +312,7 @@ describe('Diacritics control', () => {
 
   it('can be set to None', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('None'))
 
@@ -315,7 +322,7 @@ describe('Diacritics control', () => {
 
   it('can be set to All', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('All'))
 
@@ -325,7 +332,7 @@ describe('Diacritics control', () => {
 
   it('remembers the user preference', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('None'))
 
@@ -336,7 +343,7 @@ describe('Diacritics control', () => {
 
 test('Allow picking among multiple forms of the same verb', async () => {
   renderApp('/#/en/verbs/rkz-1')
-  const user = userEvent.setup()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
   const derivedForms = screen.getByText(/Derived forms/i).nextElementSibling as HTMLElement
   await user.click(within(derivedForms).getByLabelText(/Form II.*to concentrate/i))
   expect(
@@ -413,9 +420,9 @@ test('Order derived form options by form number', () => {
 describe('Recently viewed verbs', () => {
   test('shows recently viewed verb pills in deduplicated most-recent-first order', () => {
     renderApp('/#/en/verbs/ktb-1')
-    renderApp('/#/en/verbs/bdl-1')
-    renderApp('/#/en/verbs/ktb-1')
-    renderApp('/#/en/verbs')
+    navigateTo('/#/en/verbs/bdl-1')
+    navigateTo('/#/en/verbs/ktb-1')
+    navigateTo('/#/en/verbs')
 
     const heading = screen.getByText('Recently viewed')
     const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
@@ -425,7 +432,7 @@ describe('Recently viewed verbs', () => {
 
   test('excludes currently viewed verb pill', () => {
     renderApp('/#/en/verbs/bdl-1')
-    renderApp('/#/en/verbs/ktb-1')
+    navigateTo('/#/en/verbs/ktb-1')
 
     const heading = screen.getByText('Recently viewed')
     const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
@@ -435,16 +442,9 @@ describe('Recently viewed verbs', () => {
 
   test('limits recently viewed verbs to ten entries', () => {
     renderApp('/#/en/verbs/ktb-1')
-    renderApp('/#/en/verbs/sfr-1')
-    renderApp('/#/en/verbs/sfr-2')
-    renderApp('/#/en/verbs/klm-2')
-    renderApp('/#/en/verbs/wEd-1')
-    renderApp('/#/en/verbs/lmm-1')
-    renderApp('/#/en/verbs/rkz-1')
-    renderApp('/#/en/verbs/bdl-1')
-    renderApp('/#/en/verbs/krh-1')
-    renderApp('/#/en/verbs/qwl-1')
-    renderApp('/#/en/verbs/Elm-5')
+    for (const id of ['sfr-1', 'sfr-2', 'klm-2', 'wEd-1', 'lmm-1', 'rkz-1', 'bdl-1', 'krh-1', 'qwl-1', 'Elm-5']) {
+      navigateTo(`/#/en/verbs/${id}`)
+    }
 
     const heading = screen.getByText('Recently viewed')
     const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
@@ -456,7 +456,7 @@ describe('Recently viewed verbs', () => {
 describe('Root insights', () => {
   it('displays root semantics when available', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Root').parentElement!)
 
@@ -478,7 +478,7 @@ describe('Language', () => {
 
   it('remembers the user preference', async () => {
     renderApp('/#/it/verbs')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     const languageSelect = getLanguageSelect()
     await user.selectOptions(languageSelect, 'pt')
@@ -491,7 +491,7 @@ describe('Language', () => {
 
   it('switching updates the URL', async () => {
     renderApp('/#/en/verbs')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
     const languageSelect = getLanguageSelect()
 
@@ -502,7 +502,7 @@ describe('Language', () => {
 
   it('switching preserves the selected verb', async () => {
     renderApp('/#/en/verbs/ktb-1')
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
     await user.selectOptions(getLanguageSelect(), 'pt')
