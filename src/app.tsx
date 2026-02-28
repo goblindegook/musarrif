@@ -50,6 +50,25 @@ const readRecentVerbIds = (): readonly string[] => {
   }
 }
 
+const verbsByForm = (() => {
+  const grouped = new Map<FormNumber, Verb[]>()
+  for (const form of FORM_NUMBERS) grouped.set(form, [])
+
+  verbs.forEach((verb) => {
+    grouped.get(verb.form)?.push(verb)
+  })
+
+  for (const form of FORM_NUMBERS) {
+    const entries = grouped.get(form) ?? []
+    grouped.set(
+      form,
+      entries.sort((a, b) => a.label.localeCompare(b.label, 'ar')),
+    )
+  }
+
+  return grouped
+})()
+
 export function App() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
   const { verbId, navigateToVerb, tense, mood, voice } = useRouting()
@@ -68,23 +87,6 @@ export function App() {
   )
 
   const selectedVerb = useMemo(() => getVerbById(verbId), [verbId])
-  const verbsByForm = useMemo(() => {
-    const grouped = new Map<FormNumber, Verb[]>()
-    for (const form of FORM_NUMBERS) {
-      grouped.set(form, [])
-    }
-    verbs.forEach((verb) => {
-      grouped.get(verb.form)?.push(verb)
-    })
-    for (const form of FORM_NUMBERS) {
-      const entries = grouped.get(form) ?? []
-      grouped.set(
-        form,
-        entries.sort((left, right) => left.label.localeCompare(right.label, 'ar')),
-      )
-    }
-    return grouped
-  }, [])
 
   useEffect(() => {
     setIsFormInfoOpen(false)
