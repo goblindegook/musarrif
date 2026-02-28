@@ -204,13 +204,13 @@ export function ConjugationTable({
             </Row>
           </thead>
           <TableBody>
-            {PRONOUNS.map((slot, index) => {
+            {PRONOUNS.map((slot) => {
               const conjugation = conjugationEntries[slot.id]
               if (!conjugation) return null
               const displayText = applyDiacriticsPreference(conjugation, diacriticsPreference)
 
               return (
-                <Row key={slot.id} striped={index % 2 === 0}>
+                <Row key={slot.id}>
                   <PronounCell>
                     <span dir="rtl" lang="ar">
                       {applyDiacriticsPreference(slot.label, diacriticsPreference)}
@@ -314,10 +314,13 @@ const TableBody = styled('tbody')`
   tr:last-of-type td {
     padding-bottom: 1.25rem;
   }
+
+  tr:nth-child(odd) {
+    background: #fdfdf9;
+  }
 `
 
-const Row = styled('tr')<{ striped?: boolean }>`
-  background: ${(props) => (props.striped ? '#fdfdf9' : 'transparent')};
+const Row = styled('tr')`
   border-bottom: 1px solid #e2e8f0;
 `
 
