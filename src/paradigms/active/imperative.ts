@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
+import { isFormIPastVowel, isFormIPresentVowel, longVowelFromPattern, shortVowelFromPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -10,12 +10,10 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
-  longVowelFromPattern,
   NOON,
   normalizeAlifMadda,
   SHADDA,
   SUKOON,
-  shortVowelFromPattern,
   WAW,
   YEH,
 } from '../letters'

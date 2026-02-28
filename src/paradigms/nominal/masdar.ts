@@ -1,4 +1,4 @@
-import { isFormIPresentVowel } from '../form-i-vowels'
+import { isFormIPresentVowel, longVowelFromPattern, shortVowelFromPattern } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -14,7 +14,6 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
-  longVowelFromPattern,
   MEEM,
   NOON,
   normalizeAlifMadda,
@@ -24,7 +23,6 @@ import {
   SUKOON,
   seatHamza,
   seatInitialHamza,
-  shortVowelFromPattern,
   TANWEEN_FATHA,
   TANWEEN_KASRA,
   TEH,

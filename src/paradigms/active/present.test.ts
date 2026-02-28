@@ -432,7 +432,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('رمي', 1), 'indicative')).toEqualT({
           '1s': 'أَرْمِي',
           '2ms': 'تَرْمِي',
-          '2fs': 'تَرْمِينَ',
+          '2fs': 'تَرْمِيْنَ',
           '3ms': 'يَرْمِي',
           '3fs': 'تَرْمِي',
           '2d': 'تَرْمِيَانِ',
@@ -539,7 +539,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('روي', 1), 'indicative')).toEqualT({
           '1s': 'أَرْوِي',
           '2ms': 'تَرْوِي',
-          '2fs': 'تَرْوِينَ',
+          '2fs': 'تَرْوِيْنَ',
           '3ms': 'يَرْوِي',
           '3fs': 'تَرْوِي',
           '2d': 'تَرْوِيَانِ',
@@ -784,7 +784,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('أتي', 1), 'indicative')).toEqualT({
           '1s': 'آتِي',
           '2ms': 'تَأْتِي',
-          '2fs': 'تَأْتِينَ',
+          '2fs': 'تَأْتِيْنَ',
           '3ms': 'يَأْتِي',
           '3fs': 'تَأْتِي',
           '2d': 'تَأْتِيَانِ',
@@ -828,7 +828,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('وءي', 1), 'indicative')).toEqualT({
           '1s': 'أَئِي',
           '2ms': 'تَئِي',
-          '2fs': 'تَئِينَ',
+          '2fs': 'تَئِيْنَ',
           '3ms': 'يَئِي',
           '3fs': 'تَئِي',
           '2d': 'تَئِيَانِ',
@@ -852,7 +852,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('أوي', 1), 'indicative')).toEqualT({
           '1s': 'آوِي',
           '2ms': 'تَأْوِي',
-          '2fs': 'تَأْوِينَ',
+          '2fs': 'تَأْوِيْنَ',
           '3ms': 'يَأْوِي',
           '3fs': 'تَأْوِي',
           '2d': 'تَأْوِيَانِ',
@@ -988,7 +988,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('رمي', 2), 'indicative')).toEqualT({
           '1s': 'أُرَمِّي',
           '2ms': 'تُرَمِّي',
-          '2fs': 'تُرَمِّينَ',
+          '2fs': 'تُرَمِّيْنَ',
           '3ms': 'يُرَمِّي',
           '3fs': 'تُرَمِّي',
           '2d': 'تُرَمِّيَانِ',
@@ -1026,7 +1026,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('وفي', 2), 'indicative')).toEqualT({
           '1s': 'أُوَفِّي',
           '2ms': 'تُوَفِّي',
-          '2fs': 'تُوَفِّينَ',
+          '2fs': 'تُوَفِّيْنَ',
           '3ms': 'يُوَفِّي',
           '3fs': 'تُوَفِّي',
           '2d': 'تُوَفِّيَانِ',
@@ -1240,7 +1240,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('وزي', 3), 'indicative')).toEqualT({
           '1s': 'أُوَازِي',
           '2ms': 'تُوَازِي',
-          '2fs': 'تُوَازِينَ',
+          '2fs': 'تُوَازِيْنَ',
           '3ms': 'يُوَازِي',
           '3fs': 'تُوَازِي',
           '2d': 'تُوَازِيَانِ',
@@ -1266,7 +1266,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('وفي', 3), 'indicative')).toEqualT({
           '1s': 'أُوَافِي',
           '2ms': 'تُوَافِي',
-          '2fs': 'تُوَافِينَ',
+          '2fs': 'تُوَافِيْنَ',
           '3ms': 'يُوَافِي',
           '3fs': 'تُوَافِي',
           '2d': 'تُوَافِيَانِ',
@@ -1490,7 +1490,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('حيي', 4), 'indicative')).toEqualT({
           '1s': 'أُحْيِي',
           '2ms': 'تُحْيِي',
-          '2fs': 'تُحْيِينَ',
+          '2fs': 'تُحْيِيْنَ',
           '3ms': 'يُحْيِي',
           '3fs': 'تُحْيِي',
           '2d': 'تُحْيِيَانِ',
@@ -1567,7 +1567,7 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb('رءي', 4), 'indicative')).toEqualT({
           '1s': 'أُرِي',
           '2ms': 'تُرِي',
-          '2fs': 'تُرِينَ',
+          '2fs': 'تُرِيْنَ',
           '3ms': 'يُرِي',
           '3fs': 'تُرِي',
           '2d': 'تُرِيَانِ',
@@ -1575,9 +1575,9 @@ describe('active present indicative', () => {
           '3fd': 'تُرِيَانِ',
           '1p': 'نُرِي',
           '2mp': 'تُرُوْنَ',
-          '2fp': 'تُرِينَ',
+          '2fp': 'تُرِيْنَ',
           '3mp': 'يُرُوْنَ',
-          '3fp': 'يُرِينَ',
+          '3fp': 'يُرِيْنَ',
         })
       })
     })
@@ -2163,9 +2163,9 @@ describe('active present indicative', () => {
           '3fd': 'تَنْزَوِيَانِ',
           '1p': 'نَنْزَوِي',
           '2mp': 'تَنْزَوُوْنَ',
-          '2fp': 'تَنْزَوِينَ',
+          '2fp': 'تَنْزَوِيْنَ',
           '3mp': 'يَنْزَوُوْنَ',
-          '3fp': 'يَنْزَوِينَ',
+          '3fp': 'يَنْزَوِيْنَ',
         })
       })
     })

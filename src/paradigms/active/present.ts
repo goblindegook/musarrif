@@ -50,36 +50,18 @@ function replaceVowelAfterGemination(word: readonly string[], vowel: Vowel): rea
 }
 
 function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const suffix = [SUKOON, NOON, FATHA]
+  const [, c2, c3] = [...verb.root]
+  const suffix = [YEH, SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, 'a'))
-    return isHamzatedLetter(c2)
-      ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
-      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a')) return [...dropTerminalWeak(stem), FATHA, ...suffix]
 
-  if (isFormIFinalWeakPresent(verb, 'u')) return [...dropTerminalWeak(stem), KASRA, YEH, ...suffix]
+  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3)) return [...dropTerminalWeak(stem), FATHA, ...suffix]
 
-  if ([2, 3].includes(verb.form) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
+  if ([5, 6].includes(verb.form) && isWeakLetter(c3)) return [...dropTerminalWeak(stem), FATHA, ...suffix]
 
-  if (verb.form === 5 && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
+  if (isWeakLetter(c3)) return [...dropTerminalWeak(stem), KASRA, ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3))
-    return [...removeFinalDiacritic(stem.slice(0, -1)), FATHA, YEH, ...suffix]
-
-  if (verb.form === 7 && isWeakLetter(c3)) return [...stem, ...suffix]
-
-  if (verb.form === 6 && isWeakLetter(c3)) {
-    const truncated = removeFinalDiacritic(stem)
-    const lastLetter = findLastLetterIndex(truncated)
-    return [...truncated.slice(0, lastLetter), YEH, ...truncated.slice(lastLetter + 1), ...suffix]
-  }
-
-  if (verb.form === 8 && isWeakLetter(c3)) return [...stem, SUKOON, NOON, FATHA]
-
-  if ((!isWeakLetter(c1) || isHamzatedLetter(c2)) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
-
-  return [...removeFinalDiacritic(dropTerminalWeakOrHamza(stem, KASRA)), KASRA, YEH, ...suffix]
+  return [...removeFinalDiacritic(dropTerminalHamza(stem, KASRA)), KASRA, ...suffix]
 }
 
 function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly string[] {
@@ -120,11 +102,6 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   const [c1, c2, c3] = Array.from(verb.root)
   const suffix = [SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, 'a'))
-    return isHamzatedLetter(c2)
-      ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
-      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
-
   if (c2 === c3) {
     switch (verb.form) {
       case 1:
@@ -147,25 +124,25 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
     }
   }
 
-  if (verb.form === 5 && c3 === YEH) return [...stem.slice(0, -1), c3, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a'))
+    return isHamzatedLetter(c2)
+      ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
+      : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
-  if (verb.form === 6 && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
+  if ([2, 3, 4, 5, 6, 7, 8, 9].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
   if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandGemination(stem)), ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3)) return [...stem, NOON, FATHA]
+  if (isWeakLetter(c2)) {
+    if (verb.form !== 5 && isHamzatedLetter(c3)) return [...dropTerminalHamza(shortenHollowStem(stem)), ...suffix]
 
-  if (verb.form === 4 && isHamzatedLetter(c2)) return [...stem, NOON, FATHA]
+    if (verb.form === 1 && !isFormIPastVowel(verb, 'i') && !isWeakLetter(c3))
+      return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c2)) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+    if (verb.form === 7) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-  if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
-
-  if (verb.form !== 5 && isWeakLetter(c2) && isHamzatedLetter(c3))
-    return [...dropTerminalWeakOrHamza(shortenHollowStem(stem)), ...suffix]
-
-  if (verb.form === 1 && !isFormIPastVowel(verb, 'i') && isWeakLetter(c2) && !isWeakLetter(c3))
-    return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+    if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+  }
 
   return [...removeFinalDiacritic(stem), ...suffix]
 }
@@ -180,8 +157,7 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
 
   if (verb.form === 5 && isHamzatedLetter(c3)) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
 
-  if (isWeakLetter(c2) && isHamzatedLetter(c3))
-    return [...stem.slice(0, -2), c2 === YEH ? HAMZA_ON_YEH : HAMZA, ...suffix]
+  if (c2 === YEH && isHamzatedLetter(c3)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
 
   if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
@@ -319,7 +295,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isFemininePlural(pronounId)) return [...removeFinalDiacritic(word), FATHA]
 
       if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
-        return [...dropTerminalWeakOrHamza(shortenHollowStem(word)), SUKOON]
+        return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]
 
       if (isFinalWeak) return removeFinalDiacritic(word).slice(0, -1)
 
@@ -568,16 +544,11 @@ function expandGemination(word: readonly string[]): readonly string[] {
   return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${FATHA}$1`))
 }
 
-function dropTerminalWeakOrHamza(word: readonly string[], hamzaVowel?: Vowel): readonly string[] {
+function dropTerminalHamza(word: readonly string[], hamzaVowel?: Vowel): readonly string[] {
   const lastLetter = word.findLast((char) => !isDiacritic(char))
+  if (!isHamzatedLetter(lastLetter)) return word
   const previous = word.slice(0, -2)
-
-  if (isHamzatedLetter(lastLetter))
-    return [...previous, seatHamza(lastLetter, hamzaVowel ?? (previous.findLast((char) => isDiacritic(char)) as Vowel))]
-
-  if (isWeakLetter(lastLetter)) return previous
-
-  return word
+  return [...previous, seatHamza(lastLetter, hamzaVowel ?? (previous.findLast((char) => isDiacritic(char)) as Vowel))]
 }
 
 function dropTerminalWeak(word: readonly string[]): readonly string[] {

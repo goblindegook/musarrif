@@ -22,8 +22,13 @@ import { RECENT_VERBS_STORAGE_KEY, readPreference, writePreference } from './hoo
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
-import { FORM_I_PAST_VOWELS, FORM_I_PRESENT_VOWELS, type FormIPattern } from './paradigms/form-i-vowels'
-import { applyDiacriticsPreference, shortVowelFromPattern } from './paradigms/letters'
+import {
+  FORM_I_PAST_VOWELS,
+  FORM_I_PRESENT_VOWELS,
+  type FormIPattern,
+  shortVowelFromPattern,
+} from './paradigms/form-i-vowels'
+import { applyDiacriticsPreference } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'

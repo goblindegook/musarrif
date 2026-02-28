@@ -1,5 +1,9 @@
-import { type ShortVowel, shortVowelFromPattern, type Vowel } from './letters'
+import { ALIF, DAMMA, FATHA, KASRA, type Vowel, WAW, YEH } from './letters'
 import type { Verb } from './verbs'
+
+type ShortVowel = 'a' | 'i' | 'u'
+
+type LongVowel = typeof ALIF | typeof YEH | typeof WAW
 
 export type FormIPattern =
   | 'fa3ala-yaf3alu'
@@ -29,6 +33,26 @@ export const FORM_I_PRESENT_VOWELS = {
   'fa3ila-yaf3ilu': 'i',
   'fa3ula-yaf3ulu': 'u',
 } satisfies Record<FormIPattern, ShortVowel>
+
+const SHORT_VOWEL_MAP: Record<ShortVowel, Vowel> = {
+  a: FATHA,
+  i: KASRA,
+  u: DAMMA,
+} as const
+
+const LONG_VOWEL_MAP: Record<ShortVowel, LongVowel> = {
+  a: ALIF,
+  i: YEH,
+  u: WAW,
+} as const
+
+export function shortVowelFromPattern(vowel: ShortVowel): Vowel {
+  return SHORT_VOWEL_MAP[vowel]
+}
+
+export function longVowelFromPattern(vowel: ShortVowel): [Vowel, LongVowel] {
+  return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
+}
 
 export function formIPastShortVowel(verb: Verb<1>): Vowel {
   return shortVowelFromPattern(FORM_I_PAST_VOWELS[verb.formPattern])

@@ -34,27 +34,11 @@ const COMBINING_MARK = /\p{Mn}/u
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
-export type ShortVowel = 'a' | 'i' | 'u'
-
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
-
-type LongVowel = typeof ALIF | typeof YEH | typeof WAW
 
 type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAMZA_ON_YEH
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
-
-const SHORT_VOWEL_MAP: Record<'a' | 'i' | 'u', Vowel> = {
-  a: FATHA,
-  i: KASRA,
-  u: DAMMA,
-} as const
-
-const LONG_VOWEL_MAP: Record<'a' | 'i' | 'u', LongVowel> = {
-  a: ALIF,
-  i: YEH,
-  u: WAW,
-} as const
 
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
@@ -120,15 +104,7 @@ export function seatHamza(letter: string, vowel?: Vowel): string {
   return HAMZA
 }
 
-export function shortVowelFromPattern(vowel: 'a' | 'i' | 'u'): Vowel {
-  return SHORT_VOWEL_MAP[vowel]
-}
-
-export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): [Vowel, LongVowel] {
-  return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
-}
-
-export function longVowel(vowel: Vowel): [Vowel, LongVowel] {
+export function longVowel(vowel: Vowel): [Vowel, string] {
   if (vowel === FATHA) return [FATHA, ALIF]
   if (vowel === KASRA) return [KASRA, YEH]
   return [DAMMA, WAW]
