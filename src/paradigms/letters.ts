@@ -128,6 +128,12 @@ export function longVowelFromPattern(vowel: 'a' | 'i' | 'u'): [Vowel, LongVowel]
   return [SHORT_VOWEL_MAP[vowel], LONG_VOWEL_MAP[vowel]]
 }
 
+export function longVowel(vowel: Vowel): [Vowel, LongVowel] {
+  if (vowel === FATHA) return [FATHA, ALIF]
+  if (vowel === KASRA) return [KASRA, YEH]
+  return [DAMMA, WAW]
+}
+
 export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {
   return word.findIndex((char, i) => i > index && isWeakLetter(char))
 }

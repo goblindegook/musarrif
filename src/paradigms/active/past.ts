@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects.ts'
-import { isFormIPastVowel, resolveFormIPastVowel } from '../form-i-vowels'
+import { formIPastShortVowel, isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -23,7 +23,6 @@ import {
   SHADDA,
   SUKOON,
   seatHamza,
-  shortVowelFromPattern,
   TEH,
   WAW,
   YEH,
@@ -104,9 +103,9 @@ function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
 function derivePastFormI(verb: Verb<1>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
-  const pastVowel = resolveFormIPastVowel(verb)
-  const seatedC2 = seatHamza(c2, shortVowelFromPattern(pastVowel))
-  const seatedC3 = seatHamza(c3, shortVowelFromPattern(pastVowel))
+  const pastVowel = formIPastShortVowel(verb)
+  const seatedC2 = seatHamza(c2, pastVowel)
+  const seatedC3 = seatHamza(c3, pastVowel)
 
   if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
@@ -116,12 +115,12 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
     }
   }
 
-  if (isWeakLetter(c3)) return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), c3], c3)
+  if (isWeakLetter(c3)) return buildForms([c1, FATHA, seatedC2, pastVowel, c3], c3)
 
   if (c2 === c3)
     return {
       base: [c1, FATHA, c2, SHADDA, FATHA],
-      suffixedBase: [c1, FATHA, c2, shortVowelFromPattern(pastVowel), c3, SUKOON],
+      suffixedBase: [c1, FATHA, c2, pastVowel, c3, SUKOON],
     }
 
   if (isMiddleWeak && isHamzatedLetter(c3))
@@ -137,7 +136,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
       pluralBase: [c1, FATHA, ALIF, c3, DAMMA, WAW],
     }
 
-  return buildForms([c1, FATHA, seatedC2, shortVowelFromPattern(pastVowel), seatedC3, FATHA], seatedC3)
+  return buildForms([c1, FATHA, seatedC2, pastVowel, seatedC3, FATHA], seatedC3)
 }
 
 function derivePastFormII(verb: Verb<2>): PastBaseForms {

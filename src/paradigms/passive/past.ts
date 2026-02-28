@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { hasPattern } from '../form-i-vowels'
+import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -60,7 +60,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
   )
 }
 
-function derivePassivePastFormI(verb: Verb): PassivePastParams {
+function derivePassivePastFormI(verb: Verb<1>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -86,7 +86,7 @@ function derivePassivePastFormI(verb: Verb): PassivePastParams {
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
+  if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
     return {
       prefix: [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA],
       suffix: [c3, SUKOON],

@@ -1,4 +1,4 @@
-import { hasPattern } from '../form-i-vowels'
+import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   DAL,
@@ -57,16 +57,16 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isFinalWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        if (isFinalHamza && hasPattern(verb, 'fa3ula-yaf3ulu')) return [c1, FATHA, c2, KASRA, YEH, HAMZA]
+        if (isFinalHamza && isFormIPastVowel(verb, 'u')) return [c1, FATHA, c2, KASRA, YEH, HAMZA]
 
         if (isFinalHamza) return [...prefix, c2, KASRA, seatedC3]
 
         if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
           return [...prefix, c2, KASRA, c3]
 
-        if (isMiddleWeak && hasPattern(verb, 'fa3ila-yaf3alu')) return [...prefix, c2, KASRA, c3]
+        if (isMiddleWeak && isFormIPastVowel(verb, 'i')) return [...prefix, c2, KASRA, c3]
 
-        if (!isInitialWeak && hasPattern(verb, 'fa3ila-yaf3alu')) return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (!isInitialWeak && isFormIPastVowel(verb, 'i')) return [c1, FATHA, c2, KASRA, YEH, c3]
 
         return [...prefix, isMiddleWeak ? HAMZA_ON_YEH : seatedC2, KASRA, c3]
       }

@@ -1,6 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import type { Mood } from '../active/present'
-import { hasPattern } from '../form-i-vowels'
+import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -99,7 +99,7 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
   jussive: JUSSIVE_SUFFIXES,
 }
 
-function buildC1SegmentFormI(verb: Verb, pronounId: PronounId): readonly string[] {
+function buildC1SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
 
   const isInitialHamza = isHamzatedLetter(c1)
@@ -115,8 +115,7 @@ function buildC1SegmentFormI(verb: Verb, pronounId: PronounId): readonly string[
 
   if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
-  if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu') && !isFinalWeak)
-    return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
+  if (isMiddleWeak && !isFormIPastVowel(verb, 'i') && !isFinalWeak) return [isInitialHamza ? HAMZA_ON_WAW : c1, FATHA]
 
   if (isInitialHamza && pronounId === '1s') return [WAW]
 
@@ -127,7 +126,7 @@ function buildC1SegmentFormI(verb: Verb, pronounId: PronounId): readonly string[
   return [isInitialHamza ? HAMZA_ON_WAW : c1, SUKOON]
 }
 
-function buildC2SegmentFormI(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function buildC2SegmentFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   const isMiddleHamza = isHamzatedLetter(c2)
@@ -143,7 +142,7 @@ function buildC2SegmentFormI(verb: Verb, pronounId: PronounId, mood: Mood): read
 
   if (isFinalWeak) return [c2]
 
-  if (!isMiddleWeak || hasPattern(verb, 'fa3ila-yaf3alu')) return [c2, FATHA]
+  if (!isMiddleWeak || isFormIPastVowel(verb, 'i')) return [c2, FATHA]
 
   if (isFemininePlural(pronounId)) return []
 
@@ -152,7 +151,7 @@ function buildC2SegmentFormI(verb: Verb, pronounId: PronounId, mood: Mood): read
   return []
 }
 
-function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): readonly string[] {
+function buildC3SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   const isMiddleWeak = isWeakLetter(c2)
@@ -169,7 +168,7 @@ function buildC3SegmentFormI(verb: Verb, pronounId: PronounId, _mood: Mood): rea
   return []
 }
 
-function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonly string[] {
+function buildSuffixFormI(verb: Verb<1>, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   if (c2 === c3) return geminateSuffix(mood, pronounId)
@@ -181,11 +180,11 @@ function buildSuffixFormI(verb: Verb, mood: Mood, pronounId: PronounId): readonl
   return MOOD_SUFFIXES[mood][pronounId]
 }
 
-function derivePassivePresentStemFormI(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
   return [
     ...buildC1SegmentFormI(verb, pronounId),
     ...buildC2SegmentFormI(verb, pronounId, mood),
-    ...buildC3SegmentFormI(verb, pronounId, mood),
+    ...buildC3SegmentFormI(verb, pronounId),
     ...buildSuffixFormI(verb, mood, pronounId),
   ]
 }

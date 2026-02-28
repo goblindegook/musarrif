@@ -65,15 +65,23 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (isInitialHamza && c2 === c3) {
             const seatedC1 = isFormIPresentVowel(verb, 'i') ? ALIF_HAMZA_BELOW : ALIF_HAMZA
             const pattern = isFormIPresentVowel(verb, 'i') ? 'i' : 'u'
-            const shortVowel = shortVowelFromPattern(pattern)
-            const longVowel = longVowelFromPattern(pattern)
-            const prefix = [seatedC1, shortVowel, c2, SHADDA]
+            const prefix = [seatedC1, shortVowelFromPattern(pattern), c2, SHADDA]
 
             if (pronounId === '2ms') return [...prefix, FATHA]
             if (pronounId === '2fs') return [...prefix, KASRA, YEH]
             if (pronounId === '2d') return [...prefix, FATHA, ALIF]
             if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
-            if (pronounId === '2fp') return [ALIF, ...longVowel, c2, shortVowel, c3, SUKOON, NOON, FATHA]
+            if (pronounId === '2fp')
+              return [
+                ALIF,
+                ...longVowelFromPattern(pattern),
+                c2,
+                shortVowelFromPattern(pattern),
+                c3,
+                SUKOON,
+                NOON,
+                FATHA,
+              ]
           }
 
           if (isInitialWeak && isFinalWeak && isMiddleHamza && pronounId === '2d')

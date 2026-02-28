@@ -1,4 +1,4 @@
-import { hasPattern } from '../form-i-vowels'
+import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_MAQSURA,
@@ -50,16 +50,15 @@ export function derivePassiveParticiple(verb: Verb): string {
     switch (verb.form) {
       case 1: {
         const vowelPattern = c3 === YEH ? 'i' : 'u'
-        const longVowel = longVowelFromPattern(vowelPattern)
         const seatedC2 = seatHamza(c2, shortVowelFromPattern(vowelPattern))
         const prefix = [MEEM, FATHA, c1]
 
-        if (isFinalWeak) return [...prefix, SUKOON, seatedC2, ...longVowel, SHADDA]
+        if (isFinalWeak) return [...prefix, SUKOON, seatedC2, ...longVowelFromPattern(vowelPattern), SHADDA]
 
-        if (isMiddleWeak && !hasPattern(verb, 'fa3ila-yaf3alu'))
+        if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
           return [...prefix, ...longVowelFromPattern(c2 === WAW ? 'u' : 'i'), c3]
 
-        return [...prefix, SUKOON, seatedC2, ...longVowel, isFinalHamza ? HAMZA : c3]
+        return [...prefix, SUKOON, seatedC2, ...longVowelFromPattern(vowelPattern), isFinalHamza ? HAMZA : c3]
       }
 
       case 2: {
