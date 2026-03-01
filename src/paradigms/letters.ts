@@ -76,7 +76,7 @@ export function isHamzatedLetter(value = ''): value is Hamza {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
-export function isDiacritic(char = ''): boolean {
+function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
 }
 
