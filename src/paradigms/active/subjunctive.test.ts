@@ -1554,30 +1554,32 @@ describe('active present subjunctive', () => {
 
   describe('Form IX', () => {
     describe('regular roots', () => {
-      test('shadda is preserved', () => {
-        expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObjectT({
-          '3ms': 'يَحْمَرَّ',
-          '2ms': 'تَحْمَرَّ',
-          '1s': 'أَحْمَرَّ',
-        })
-
-        expect(conjugatePresentMood(getVerb('بيض', 9), 'subjunctive')).toMatchObjectT({
-          '3ms': 'يَبْيَضَّ',
-          '2ms': 'تَبْيَضَّ',
-          '1s': 'أَبْيَضَّ',
+      test('اِخْضَرَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('خضر', 9), 'subjunctive')).toEqualT({
+          '1s': 'أَخْضَرَّ',
+          '2ms': 'تَخْضَرَّ',
+          '2fs': 'تَخْضَرِّي',
+          '3ms': 'يَخْضَرَّ',
+          '3fs': 'تَخْضَرَّ',
+          '2d': 'تَخْضَرَّا',
+          '3md': 'يَخْضَرَّا',
+          '3fd': 'تَخْضَرَّا',
+          '1p': 'نَخْضَرَّ',
+          '2mp': 'تَخْضَرُّوْا',
+          '2fp': 'تَخْضَرِرْنَ',
+          '3mp': 'يَخْضَرُّوْا',
+          '3fp': 'يَخْضَرِرْنَ',
         })
       })
 
-      test('shadda is expanded for feminine plural', () => {
-        expect(conjugatePresentMood(getVerb('حمر', 9), 'subjunctive')).toMatchObjectT({
-          '2fp': 'تَحْمَرَرْنَ',
-          '3fp': 'يَحْمَرَرْنَ',
-        })
-
-        expect(conjugatePresentMood(getVerb('بيض', 9), 'subjunctive')).toMatchObjectT({
-          '2fp': 'تَبْيَضَضْنَ',
-          '3fp': 'يَبْيَضَضْنَ',
-        })
+      test.each([
+        ['حمر', 'يَحْمَرَّ'],
+        ['بيض', 'يَبْيَضَّ'],
+        ['زرق', 'يَزْرَقَّ'],
+        ['صفر', 'يَصْفَرَّ'],
+        ['خضل', 'يَخْضَلَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 9), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
   })

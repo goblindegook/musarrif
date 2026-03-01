@@ -1828,9 +1828,23 @@ describe('imperative', () => {
 
   describe('Form IX', () => {
     describe('regular roots', () => {
+      test('اِخْضَرَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('خضر', 9))).toMatchObjectT({
+          '2ms': 'اِخْضَرَّ',
+          '2fs': 'اِخْضَرِّي',
+          '2d': 'اِخْضَرَّا',
+          '2mp': 'اِخْضَرُّوْا',
+          '2fp': 'اِخْضَرِرْنَ',
+        })
+      })
+
       test.each([
         ['حمر', 'اِحْمَرَّ'],
         ['بيض', 'اِبْيَضَّ'],
+        ['خضر', 'اِخْضَرَّ'],
+        ['زرق', 'اِزْرَقَّ'],
+        ['صفر', 'اِصْفَرَّ'],
+        ['خضل', 'اِخْضَلَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 9))['2ms']).toEqualT(expected)
       })

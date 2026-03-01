@@ -291,7 +291,10 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
 function derivePastFormIX(verb: Verb<9>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  return buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA], c3)
+  return {
+    base: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA],
+    suffixedBase: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, FATHA, c3, SUKOON],
+  }
 }
 
 function derivePastFormX(verb: Verb<10>): PastBaseForms {

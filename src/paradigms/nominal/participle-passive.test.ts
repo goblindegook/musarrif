@@ -894,12 +894,8 @@ describe('passive participle', () => {
 
   describe('Form IX', () => {
     describe('regular roots', () => {
-      test.each([
-        ['حمر', ''],
-        ['بيض', ''],
-        ['صفر', ''],
-      ])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 9))).toBe(expected)
+      test.each([['حمر'], ['بيض'], ['خضر'], ['زرق'], ['صفر'], ['خضل']])('%s', (root) => {
+        expect(derivePassiveParticiple(getVerb(root, 9))).toBe('')
       })
     })
   })

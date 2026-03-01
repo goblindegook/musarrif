@@ -2525,10 +2525,31 @@ describe('active present indicative', () => {
 
   describe('Form IX', () => {
     describe('regular roots', () => {
+      test('اِخْضَرَّ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('خضر', 9), 'indicative')).toEqualT({
+          '1s': 'أَخْضَرُّ',
+          '2ms': 'تَخْضَرُّ',
+          '2fs': 'تَخْضَرِّيْنَ',
+          '3ms': 'يَخْضَرُّ',
+          '3fs': 'تَخْضَرُّ',
+          '2d': 'تَخْضَرَّانِ',
+          '3md': 'يَخْضَرَّانِ',
+          '3fd': 'تَخْضَرَّانِ',
+          '1p': 'نَخْضَرُّ',
+          '2mp': 'تَخْضَرُّوْنَ',
+          '2fp': 'تَخْضَرِرْنَ',
+          '3mp': 'يَخْضَرُّوْنَ',
+          '3fp': 'يَخْضَرِرْنَ',
+        })
+      })
+
       test.each([
         ['حمر', 'يَحْمَرُّ'],
         ['بيض', 'يَبْيَضُّ'],
+        ['خضر', 'يَخْضَرُّ'],
+        ['زرق', 'يَزْرَقُّ'],
         ['صفر', 'يَصْفَرُّ'],
+        ['خضل', 'يَخْضَلُّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 9), 'indicative')['3ms']).toEqualT(expected)
       })

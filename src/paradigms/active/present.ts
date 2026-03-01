@@ -124,7 +124,9 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 
   if ([2, 3, 4, 5, 6, 7, 8, 9].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
 
-  if ([6, 9].includes(verb.form)) return [...removeFinalDiacritic(expandGemination(stem)), ...suffix]
+  if (verb.form === 6) return [...removeFinalDiacritic(expandGemination(stem, FATHA)), ...suffix]
+
+  if (verb.form === 9) return [...removeFinalDiacritic(expandGemination(stem, KASRA)), ...suffix]
 
   if (isWeakLetter(c2)) {
     if (verb.form !== 5 && isHamzatedLetter(c3)) return [...dropTerminalHamza(shortenHollowStem(stem)), ...suffix]
@@ -530,8 +532,8 @@ function shortenHollowStem(word: readonly string[]): readonly string[] {
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
-function expandGemination(word: readonly string[]): readonly string[] {
-  return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${FATHA}$1`))
+function expandGemination(word: readonly string[], vowel: Vowel): readonly string[] {
+  return Array.from(word.join('').replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${vowel}$1`))
 }
 
 function dropTerminalHamza(word: readonly string[], hamzaVowel?: Vowel): readonly string[] {
