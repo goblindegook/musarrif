@@ -45,13 +45,13 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
   const [, c2, c3] = [...verb.root]
   const suffix = [YEH, SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, 'a')) return [...dropTerminalWeak(stem), FATHA, ...suffix]
+  if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, ...suffix]
 
-  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3)) return [...dropTerminalWeak(stem), FATHA, ...suffix]
+  if (verb.form === 7 && isWeakLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -2), FATHA, ...suffix]
 
-  if ([5, 6].includes(verb.form) && isWeakLetter(c3)) return [...dropTerminalWeak(stem), FATHA, ...suffix]
+  if ([5, 6].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -2), FATHA, ...suffix]
 
-  if (isWeakLetter(c3)) return [...dropTerminalWeak(stem), KASRA, ...suffix]
+  if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem.slice(0, -2)), KASRA, ...suffix]
 
   return [...removeFinalDiacritic(dropTerminalHamza(stem, KASRA)), KASRA, ...suffix]
 }
@@ -79,7 +79,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
     if (isHamzatedLetter(c2))
       return [...stem.slice(0, -2).map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char)), DAMMA, ...suffix]
 
-    if (isWeakLetter(c1)) return [...dropTerminalWeak(stem), ...suffix]
+    if (isWeakLetter(c1)) return [...removeFinalDiacritic(stem.slice(0, -2)), ...suffix]
 
     return [...stem.slice(0, -2), DAMMA, ...suffix]
   }
@@ -153,7 +153,7 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
     if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
     if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
     if (verb.form === 8) return [...stem, ...suffix]
-    if (isWeakLetter(c1)) return [...removeFinalDiacritic(dropTerminalWeak(stem)), ...suffix]
+    if (isWeakLetter(c1)) return [...removeFinalDiacritic(stem.slice(0, -2)), ...suffix]
     return [...stem, ...suffix]
   }
 
@@ -526,12 +526,6 @@ function dropTerminalHamza(word: readonly string[], hamzaVowel?: Vowel): readonl
       hamzaVowel ?? (previous.findLast((char) => isDiacritic(char)) as Vowel),
     ),
   ]
-}
-
-function dropTerminalWeak(word: readonly string[]): readonly string[] {
-  const lastLetter = word.findLast((char) => !isDiacritic(char))
-  if (!isWeakLetter(lastLetter)) return word
-  return removeFinalDiacritic(word.slice(0, -2))
 }
 
 function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {
