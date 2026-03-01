@@ -2320,6 +2320,10 @@ describe('active past', () => {
     })
 
     describe('hamzated final roots', () => {
+      test.each([['خبء', 'اِخْتَبَأَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
       test('اِبْتَدَأَ conjugation', () => {
         expect(conjugatePast(getVerb('بدء', 8))).toEqualT({
           '1s': 'اِبْتَدَأْتُ',

@@ -1521,6 +1521,10 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated final roots', () => {
+      test.each([['خبء', 'اُخْتُبِئَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
+      })
+
       test('اِبْتَدَأَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('بدء', 8))).toEqualT({
           '1s': 'اُبْتُدِئْتُ',

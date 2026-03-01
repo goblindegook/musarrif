@@ -215,6 +215,7 @@
   { "root": "حول", "form": 5, "passiveVoice": "none" },
   { "root": "خوف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خبر", "form": 4 },
+  { "root": "خبء", "form": 8 },
   { "root": "خبز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خدم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "خدم", "form": 10 },

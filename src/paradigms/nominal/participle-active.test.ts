@@ -913,7 +913,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['بدء', 'مُبْتَدِئ']])('%s', (root, expected) => {
+      test.each([
+        ['بدء', 'مُبْتَدِئ'],
+        ['خبء', 'مُخْتَبِئ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })
