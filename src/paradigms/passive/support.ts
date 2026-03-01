@@ -3,7 +3,7 @@ import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
 export function canConjugatePassive(verb: Verb): boolean {
-  return verb.passiveVoice !== 'none'
+  return verb.form !== 9 && verb.passiveVoice !== 'none'
 }
 
 export function constrainPassiveConjugation(
