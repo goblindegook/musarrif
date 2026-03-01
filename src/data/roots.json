@@ -95,6 +95,7 @@
   { "root": "بلغ", "form": 3 },
   { "root": "بني", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "بني", "form": 5 },
+  { "root": "بيض", "form": 9, "passiveVoice": "none" },
   { "root": "بوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "بءس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "بءس", "form": 8, "passiveVoice": "impersonal" },

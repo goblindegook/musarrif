@@ -896,6 +896,7 @@ describe('passive participle', () => {
     describe('regular roots', () => {
       test.each([
         ['حمر', ''],
+        ['بيض', ''],
         ['صفر', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 9))).toBe(expected)

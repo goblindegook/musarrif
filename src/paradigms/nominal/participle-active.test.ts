@@ -926,6 +926,7 @@ describe('active participle', () => {
     describe('regular roots', () => {
       test.each([
         ['حمر', 'مُحْمَرّ'],
+        ['بيض', 'مُبْيَضّ'],
         ['صفر', 'مُصْفَرّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 9))).toBe(expected)

@@ -980,6 +980,7 @@ describe('masdar', () => {
     describe('regular roots', () => {
       test.each([
         ['حمر', 'اِحْمِرَار'],
+        ['بيض', 'اِبْيِضَاض'],
         ['صفر', 'اِصْفِرَار'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 9))).toEqualT([expected].flat())

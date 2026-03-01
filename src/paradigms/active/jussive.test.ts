@@ -2064,12 +2064,23 @@ describe('active present jussive', () => {
           '2ms': 'تَحْمَرَّ',
           '1s': 'أَحْمَرَّ',
         })
+
+        expect(conjugatePresentMood(getVerb('بيض', 9), 'jussive')).toMatchObjectT({
+          '3ms': 'يَبْيَضَّ',
+          '2ms': 'تَبْيَضَّ',
+          '1s': 'أَبْيَضَّ',
+        })
       })
 
       test('shadda is expanded for feminine plural', () => {
         expect(conjugatePresentMood(getVerb('حمر', 9), 'jussive')).toMatchObjectT({
           '2fp': 'تَحْمَرَرْنَ',
           '3fp': 'يَحْمَرَرْنَ',
+        })
+
+        expect(conjugatePresentMood(getVerb('بيض', 9), 'jussive')).toMatchObjectT({
+          '2fp': 'تَبْيَضَضْنَ',
+          '3fp': 'يَبْيَضَضْنَ',
         })
       })
     })
