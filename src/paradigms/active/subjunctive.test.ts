@@ -394,7 +394,7 @@ describe('active present subjunctive', () => {
       })
 
       test('بَدَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بدأ', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('بدء', 1), 'subjunctive')).toEqualT({
           '1s': 'أَبْدَأَ',
           '2ms': 'تَبْدَأَ',
           '2fs': 'تَبْدَئِي',
@@ -1523,6 +1523,26 @@ describe('active present subjunctive', () => {
           '2fp': 'تَأْتَمِمْنَ',
           '3mp': 'يَأْتَمُّوْا',
           '3fp': 'يَأْتَمِمْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('اِبْتَدَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('بدء', 8), 'subjunctive')).toEqualT({
+          '1s': 'أَبْتَدِئَ',
+          '2ms': 'تَبْتَدِئَ',
+          '2fs': 'تَبْتَدِئِي',
+          '3ms': 'يَبْتَدِئَ',
+          '3fs': 'تَبْتَدِئَ',
+          '2d': 'تَبْتَدِئَا',
+          '3md': 'يَبْتَدِئَا',
+          '3fd': 'تَبْتَدِئَا',
+          '1p': 'نَبْتَدِئَ',
+          '2mp': 'تَبْتَدِئُوْا',
+          '2fp': 'تَبْتَدِئْنَ',
+          '3mp': 'يَبْتَدِئُوْا',
+          '3fp': 'يَبْتَدِئْنَ',
         })
       })
     })

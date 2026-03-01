@@ -311,6 +311,7 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   const isFinalHamza = isHamzatedLetter(c3)
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC2 = seatHamza(c2, FATHA)
+  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
   const infix = resolveFormVIIIInfixConsonant(c1)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
@@ -354,7 +355,7 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
     return [seatedC1, SUKOON, infix, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
 
-  return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, c3, ...moodSuffix]
+  return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, seatedC3, ...moodSuffix]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

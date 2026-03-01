@@ -108,7 +108,10 @@ export function App() {
   )
 
   const recentVerbs = useMemo(
-    () => recentVerbIds.map((id) => getVerbById(id)).filter((verb): verb is Verb => verb?.id !== selectedVerb?.id),
+    () =>
+      recentVerbIds
+        .map((id) => getVerbById(id))
+        .filter((verb): verb is Verb => verb != null && verb.id !== selectedVerb?.id),
     [recentVerbIds, selectedVerb?.id],
   )
 

@@ -622,7 +622,7 @@ describe('active present indicative', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['بدأ', 'يَبْدَأُ'],
+        ['بدء', 'يَبْدَأُ'],
         ['وطء', 'يَطَأُ'],
         ['جرء', 'يَجْرُؤُ'],
         ['كلأ', 'يَكْلُؤُ'],
@@ -631,7 +631,7 @@ describe('active present indicative', () => {
       })
 
       test('بَدَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بدأ', 1), 'indicative')).toEqualT({
+        expect(conjugatePresentMood(getVerb('بدء', 1), 'indicative')).toEqualT({
           '1s': 'أَبْدَأُ',
           '2ms': 'تَبْدَأُ',
           '2fs': 'تَبْدَئِيْنَ',
@@ -2494,6 +2494,26 @@ describe('active present indicative', () => {
           '2fp': 'تَأْتَمِمْنَ',
           '3mp': 'يَأْتَمُّوْنَ',
           '3fp': 'يَأْتَمِمْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('اِبْتَدَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('بدء', 8), 'indicative')).toEqualT({
+          '1s': 'أَبْتَدِئُ',
+          '2ms': 'تَبْتَدِئُ',
+          '2fs': 'تَبْتَدِئِيْنَ',
+          '3ms': 'يَبْتَدِئُ',
+          '3fs': 'تَبْتَدِئُ',
+          '2d': 'تَبْتَدِئَانِ',
+          '3md': 'يَبْتَدِئَانِ',
+          '3fd': 'تَبْتَدِئَانِ',
+          '1p': 'نَبْتَدِئُ',
+          '2mp': 'تَبْتَدِئُوْنَ',
+          '2fp': 'تَبْتَدِئْنَ',
+          '3mp': 'يَبْتَدِئُوْنَ',
+          '3fp': 'يَبْتَدِئْنَ',
         })
       })
     })

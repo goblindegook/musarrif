@@ -197,7 +197,7 @@ describe('active participle', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['بدأ', 'بَادِئ'],
+        ['بدء', 'بَادِئ'],
         ['قرأ', 'قَارِئ'],
         ['جرء', 'جَرِيء'],
         ['كلأ', 'كَالِئ'],
@@ -908,6 +908,12 @@ describe('active participle', () => {
 
     describe('hamzated initial geminate roots', () => {
       test.each([['أمم', 'مُؤْتَمّ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test.each([['بدء', 'مُبْتَدِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toBe(expected)
       })
     })

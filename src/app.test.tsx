@@ -50,6 +50,7 @@ test.each([
   ['klm-2', 'كَلَّمَ'],
   ['sfr-1', 'سَفَرَ'],
   ['sfr-2', 'سَفَّرَ'],
+  ["bd'-1", 'بَدَأَ'],
 ])('renders %s as %s', (id, expectedPast) => {
   renderApp(`/#/en/verbs/${id}`)
 
@@ -438,6 +439,11 @@ describe('Recently viewed verbs', () => {
     const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
 
     expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/bdl-1'])
+  })
+
+  test('does not crash when localStorage contains stale verb IDs', () => {
+    window.localStorage.setItem('conjugator:recentVerbs', JSON.stringify(['nonexistent-99', 'sfr-1']))
+    expect(() => renderApp('/#/en/verbs/ktb-1')).not.toThrow()
   })
 
   test('limits recently viewed verbs to ten entries', () => {

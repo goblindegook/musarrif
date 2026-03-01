@@ -317,9 +317,9 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
 
   return {
     prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, DAMMA, seatedC2, KASRA],
-    suffix: [c3, SUKOON],
-    suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix: [seatedC3, SUKOON],
+    suffix3sd: [seatedC3, FATHA],
+    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

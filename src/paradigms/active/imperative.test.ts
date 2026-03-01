@@ -574,7 +574,7 @@ describe('imperative', () => {
       })
 
       test('بَدَأَ conjugation', () => {
-        expect(conjugateImperative(getVerb('بدأ', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('بدء', 1))).toMatchObjectT({
           '2ms': 'اِبْدَأْ',
           '2fs': 'اِبْدَئِي',
           '2d': 'اِبْدَآ',
@@ -1805,6 +1805,18 @@ describe('imperative', () => {
           '2d': 'اِئْتَمَّا',
           '2mp': 'اِئْتَمُّوْا',
           '2fp': 'اِئْتَمِمْنَ',
+        })
+      })
+    })
+
+    describe('hamzated final roots', () => {
+      test('اِبْتَدَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('بدء', 8))).toMatchObjectT({
+          '2ms': 'اِبْتَدِئْ',
+          '2fs': 'اِبْتَدِئِي',
+          '2d': 'اِبْتَدِئَا',
+          '2mp': 'اِبْتَدِئُوْا',
+          '2fp': 'اِبْتَدِئْنَ',
         })
       })
     })

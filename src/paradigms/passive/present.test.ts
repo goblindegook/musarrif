@@ -1754,5 +1754,25 @@ describe('passive present indicative', () => {
         })
       })
     })
+
+    describe('hamzated final roots', () => {
+      test('اِبْتَدَأَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('بدء', 8), 'indicative')).toEqualT({
+          '1s': 'أُبْتَدَأُ',
+          '2ms': 'تُبْتَدَأُ',
+          '2fs': 'تُبْتَدَئِيْنَ',
+          '3ms': 'يُبْتَدَأُ',
+          '3fs': 'تُبْتَدَأُ',
+          '2d': 'تُبْتَدَآنِ',
+          '3md': 'يُبْتَدَآنِ',
+          '3fd': 'تُبْتَدَآنِ',
+          '1p': 'نُبْتَدَأُ',
+          '2mp': 'تُبْتَدَأُوْنَ',
+          '2fp': 'تُبْتَدَأْنَ',
+          '3mp': 'يُبْتَدَأُوْنَ',
+          '3fp': 'يُبْتَدَأْنَ',
+        })
+      })
+    })
   })
 })
