@@ -51,7 +51,7 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 
   if (isWeakLetter(c3)) return [...removeFinalDiacritic(stem.slice(0, -2)), KASRA, ...suffix]
 
-  return [...removeFinalDiacritic(dropTerminalHamza(stem, KASRA)), KASRA, ...suffix]
+  return [...dropTerminalHamza(stem, KASRA), KASRA, ...suffix]
 }
 
 function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly string[] {
@@ -518,7 +518,7 @@ function expandGemination(word: readonly string[], vowel: Vowel): readonly strin
 
 function dropTerminalHamza(stem: readonly string[], hamzaVowel?: Vowel): readonly string[] {
   const previous = stem.slice(0, -2)
-  return [...previous, seatHamza(removeFinalDiacritic(stem).at(-1) ?? '', hamzaVowel ?? (previous.at(-1) as Vowel))]
+  return [...previous, seatHamza(stem.at(-2) ?? '', hamzaVowel ?? (previous.at(-1) as Vowel))]
 }
 
 function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {

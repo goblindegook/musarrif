@@ -341,8 +341,10 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
       return derivePassivePastFormVII(verb)
     case 8:
       return derivePassivePastFormVIII(verb)
-    default:
-      return { prefix: [], suffix3sd: [] }
+    case 9:
+      return { prefix: [] }
+    case 10:
+      return { prefix: [] }
   }
 }
 

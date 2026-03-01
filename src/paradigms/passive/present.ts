@@ -399,7 +399,9 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
       return derivePassivePresentStemFormVII(verb, pronounId, mood)
     case 8:
       return derivePassivePresentStemFormVIII(verb, pronounId, mood)
-    default:
+    case 9:
+      return []
+    case 10:
       return []
   }
 }
