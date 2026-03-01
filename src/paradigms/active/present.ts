@@ -37,10 +37,6 @@ import type { Verb } from '../verbs'
 
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
-function defectiveGlide(letter: string): string {
-  return letter === YEH ? YEH : WAW
-}
-
 function isFormIFinalWeakPresent(verb: Verb, vowel: 'a' | 'i' | 'u'): boolean {
   return verb.form === 1 && isWeakLetter(verb.root.at(-1)) && isFormIPresentVowel(verb, vowel)
 }
@@ -146,23 +142,22 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
   const [c1, c2, c3] = verb.root
   const suffix = [FATHA, ALIF, NOON, KASRA]
 
-  if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+  if (isHamzatedLetter(c3)) {
+    if (verb.form === 4) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
+    if (verb.form === 5) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
+    if (c2 === YEH) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
+  }
 
-  if (verb.form === 4 && isHamzatedLetter(c3)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
+  if (isWeakLetter(c3)) {
+    if (isHamzatedLetter(c2)) return [...stem.slice(0, -1), YEH, ...suffix]
+    if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+    if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
+    if (verb.form === 8) return [...stem, ...suffix]
+    if (isWeakLetter(c1)) return [...removeFinalDiacritic(dropTerminalWeak(stem)), ...suffix]
+    return [...stem, ...suffix]
+  }
 
-  if (verb.form === 5 && isHamzatedLetter(c3)) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
-
-  if (c2 === YEH && isHamzatedLetter(c3)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
-
-  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
-
-  if ([2, 3, 5, 6].includes(verb.form) && isWeakLetter(c3)) return [...stem.slice(0, -1), YEH, ...suffix]
-
-  if (verb.form === 8 && isWeakLetter(c3)) return [...stem, ...suffix]
-
-  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...stem, ...suffix]
-
-  return [...removeFinalDiacritic(dropTerminalWeak(stem)), ...suffix]
+  return [...removeFinalDiacritic(stem), ...suffix]
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, string> {
@@ -328,7 +323,6 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
-  const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const presentVowel = formIPresentShortVowel(verb)
@@ -339,25 +333,14 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
 
   if (c2 === c3) return [...prefix, seatedC1, presentVowel, c2, SUKOON, c2, DAMMA]
 
-  if (isInitialWeak && isFinalWeak) return [...prefix, seatedC2, presentVowel, defectiveGlide(c3)]
+  if (c1 === WAW && isFinalWeak) return [...prefix, seatedC2, presentVowel, c3]
 
-  if (c1 === YEH) return [...prefix, seatedC1, SUKOON, seatedC2, presentVowel, seatedC3, DAMMA]
-
-  if (isInitialWeak) return [...prefix, seatedC2, presentVowel, seatedC3, DAMMA]
+  if (c1 === WAW) return [...prefix, c2, presentVowel, seatedC3, DAMMA]
 
   if (isInitialHamza && isFinalWeak)
-    return [
-      ...prefix,
-      ALIF_HAMZA,
-      SUKOON,
-      seatedC2,
-      presentVowel,
-      presentVowel === FATHA ? ALIF_MAQSURA : defectiveGlide(c3),
-    ]
+    return [...prefix, ALIF_HAMZA, SUKOON, seatedC2, presentVowel, presentVowel === FATHA ? ALIF_MAQSURA : c3]
 
   if (isInitialHamza && isMiddleWeak) return [...prefix, seatedC1, ...longVowel(presentVowel), c3, DAMMA]
-
-  if (isInitialHamza) return [...prefix, c1, SUKOON, seatedC2, presentVowel, seatedC3, DAMMA]
 
   if (!isFormIPastVowel(verb, 'i') && isMiddleWeak)
     return [...prefix, c1, ...longVowel(c2 === YEH ? KASRA : presentVowel), c3, DAMMA]
@@ -367,14 +350,14 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
   if (isFinalWeak)
     return [
       ...prefix,
-      seatedC1,
+      c1,
       SUKOON,
-      seatedC2,
+      c2,
       c3 === WAW ? DAMMA : presentVowel,
-      c3 === WAW || presentVowel !== FATHA ? defectiveGlide(c3) : ALIF_MAQSURA,
+      c3 === WAW || presentVowel !== FATHA ? (c3 === YEH ? YEH : WAW) : ALIF_MAQSURA,
     ]
 
-  return [...prefix, seatedC1, SUKOON, seatedC2, presentVowel, seatedC3, DAMMA]
+  return [...prefix, c1, SUKOON, seatedC2, presentVowel, seatedC3, DAMMA]
 }
 
 function derivePresentFormII(verb: Verb<2>): readonly string[] {
@@ -382,7 +365,7 @@ function derivePresentFormII(verb: Verb<2>): readonly string[] {
   const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC3 = seatHamza(c3, KASRA)
 
-  if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3]
+  if (isWeakLetter(c3)) return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, c3]
 
   return [YEH, DAMMA, seatedC1, FATHA, c2, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
@@ -396,7 +379,7 @@ function derivePresentFormIII(verb: Verb<3>): readonly string[] {
 
   if (c2 === c3) return [...prefix, SHADDA, DAMMA]
 
-  if (isWeakLetter(c3)) return [...prefix, KASRA, defectiveGlide(c3)]
+  if (isWeakLetter(c3)) return [...prefix, KASRA, c3]
 
   return [...prefix, KASRA, seatedC3, DAMMA]
 }
@@ -407,16 +390,16 @@ function derivePresentFormIV(verb: Verb<4>): readonly string[] {
   const isFinalWeak = isWeakLetter(c3)
   const isMiddleHamza = isHamzatedLetter(c2)
   const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC3 = isHamzatedLetter(c3) ? (isMiddleWeak ? HAMZA : HAMZA_ON_YEH) : c3
+  const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, DAMMA, seatedC1]
 
-  if (isMiddleHamza && isFinalWeak) return [...prefix, KASRA, defectiveGlide(c3)]
+  if (isMiddleHamza && isFinalWeak) return [...prefix, KASRA, c3]
 
-  if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, defectiveGlide(c3)]
+  if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, c3]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
 
-  if (isMiddleWeak) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
+  if (isMiddleWeak) return [...prefix, KASRA, YEH, c3, DAMMA]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
@@ -434,46 +417,44 @@ function derivePresentFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
   const seatedC3 = seatHamza(c3, FATHA)
+  const prefix = [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF]
 
-  if (isWeakLetter(c3)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, ALIF_MAQSURA]
+  if (isWeakLetter(c3)) return [...prefix, seatedC2, FATHA, ALIF_MAQSURA]
 
-  if (c2 === c3) return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, c2, SUKOON, c2, DAMMA]
+  if (c2 === c3) return [...prefix, c2, SUKOON, c2, DAMMA]
 
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF, seatedC2, FATHA, seatedC3, DAMMA]
+  return [...prefix, seatedC2, FATHA, seatedC3, DAMMA]
 }
 
 function derivePresentFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
+  const prefix = [YEH, FATHA, NOON, SUKOON, c1, FATHA]
 
-  if (c2 === c3) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, SHADDA, DAMMA]
+  if (c2 === c3) return [...prefix, c2, SHADDA, DAMMA]
 
-  if (isFinalWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3]
+  if (isFinalWeak) return [...prefix, c2, KASRA, c3]
 
-  if (isMiddleWeak) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, ALIF, c3, DAMMA]
+  if (isMiddleWeak) return [...prefix, ALIF, c3, DAMMA]
 
-  return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
+  return [...prefix, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
 }
 
 function derivePresentFormVIII(verb: Verb<8>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const assimilatedC1 = isHamzatedLetter(c1) || isWeakLetter(c1) ? TEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
   const seatedC2 = seatHamza(c2, KASRA)
+  const seatedC3 = seatHamza(c3, KASRA)
 
   if (c2 === c3) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SUKOON, c3, DAMMA]
 
-  if ((isHamzatedLetter(c1) || isWeakLetter(c1)) && isWeakLetter(c3))
-    return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, YEH]
-
-  if (isHamzatedLetter(c1) || isWeakLetter(c1))
-    return [YEH, FATHA, TEH, SUKOON, TEH, FATHA, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
-
-  if (isWeakLetter(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
+  if (isWeakLetter(c3)) return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
 
   if (c2 === YEH || (isWeakLetter(c2) && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
-  return [YEH, FATHA, c1, SUKOON, infix, FATHA, seatedC2, KASRA, seatHamza(c3, KASRA), DAMMA]
+  return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, seatedC3, DAMMA]
 }
 
 function derivePresentFormIX(verb: Verb<9>): readonly string[] {
