@@ -7,7 +7,6 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  findLastLetterIndex,
   findLetterIndex,
   findWeakLetterIndex,
   geminateDoubleLetters,
@@ -260,12 +259,11 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if (isMiddleHamza || isMiddleWeak || isFinalHamza) return base
 
-        if (verb.form === 1 && isFinalWeak) return base.at(-3) === WAW ? [...base.slice(0, -2), SUKOON, ALIF] : base
+        if (base.at(-3) === WAW) return [...base.slice(0, -3), WAW, SUKOON, ALIF]
 
-        if (verb.form === 4 && isFinalWeak) return base
+        if ([1, 4].includes(verb.form)) return base
 
-        const letterBeforeAlif = findLastLetterIndex(base, base.lastIndexOf(ALIF))
-        if (isWeakLetter(base.at(letterBeforeAlif))) return [...base.slice(0, letterBeforeAlif), ALIF]
+        if (base.at(-3) === YEH) return [...base.slice(0, -3), ALIF]
 
         return base
       }

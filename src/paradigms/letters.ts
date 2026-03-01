@@ -81,7 +81,7 @@ function isDiacritic(char = ''): boolean {
 }
 
 export function removeFinalDiacritic(word: readonly string[]): readonly string[] {
-  const lastIndex = findLastLetterIndex(word)
+  const lastIndex = word.findLastIndex((char) => !isDiacritic(char))
   const base = word.slice(0, lastIndex + 1)
   return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
 }
@@ -116,11 +116,6 @@ export function findWeakLetterIndex(word: readonly string[], index: number = 0):
 
 export function findLetterIndex(word: readonly string[], index: number = 0): number {
   return word.findIndex((char, i) => i > index && !isDiacritic(char))
-}
-
-export function findLastLetterIndex(word: readonly string[], beforeIndex?: number): number {
-  const index = beforeIndex ?? word.length
-  return word.findLastIndex((char, i) => i < index && !isDiacritic(char))
 }
 
 export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
