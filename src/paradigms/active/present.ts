@@ -76,16 +76,16 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 
     if ([2, 3, 8].includes(verb.form)) return [...stem.slice(0, -2), DAMMA, ...suffix]
 
-    if ([5, 6].includes(verb.form)) return [...stem.slice(0, -1), ...suffix]
+    if ([5, 6].includes(verb.form)) return [...stem.slice(0, -2), FATHA, ...suffix]
 
     if (verb.form === 7) return [...stem, ...suffix]
 
     if (isHamzatedLetter(c2))
       return [...stem.slice(0, -2).map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char)), DAMMA, ...suffix]
 
-    if (!isWeakLetter(c1)) return [...dropTerminalWeak(stem), DAMMA, ...suffix]
+    if (isWeakLetter(c1)) return [...dropTerminalWeak(stem), ...suffix]
 
-    return [...dropTerminalWeak(stem), ...suffix]
+    return [...stem.slice(0, -2), DAMMA, ...suffix]
   }
 
   return [...stem, ...suffix]

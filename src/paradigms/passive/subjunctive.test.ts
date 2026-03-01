@@ -11,7 +11,7 @@ describe('passive present subjunctive', () => {
         fc.constantFrom(...verbs.filter((verb) => verb.passiveVoice === 'impersonal')),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
         (verb, pronounId) => {
-          expect(conjugatePassivePresentMood(verb, 'subjunctive')[pronounId]).toBe('')
+          expect(conjugatePassivePresentMood(verb, 'subjunctive')[pronounId]).toEqualT('')
         },
       ),
     )

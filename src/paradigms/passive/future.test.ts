@@ -28,7 +28,7 @@ describe('passive future', () => {
           const present = conjugatePassivePresentMood(verb, 'indicative')
           const future = conjugatePassiveFuture(verb)
 
-          expect(future[pronoun]).toBe(`${SEEN}${FATHA}${present[pronoun]}`)
+          expect(future[pronoun]).toEqualT(`${SEEN}${FATHA}${present[pronoun]}`)
         },
       ),
     )

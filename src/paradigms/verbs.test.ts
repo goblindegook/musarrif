@@ -71,9 +71,9 @@ describe('findVerbsByRoot', () => {
     const matches = search('امن ب')
     const [first, second] = matches
 
-    expect(first?.root).toBe('أمن')
+    expect(first?.root).toEqualT('أمن')
     expect(first?.form).toBe(1)
-    expect(second?.root).toBe('أمن')
+    expect(second?.root).toEqualT('أمن')
     expect(second?.form).toBe(4)
   })
 

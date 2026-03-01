@@ -11,7 +11,7 @@ describe('passive past pattern', () => {
         fc.constantFrom(...verbs.filter((verb) => verb.passiveVoice === 'impersonal')),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
         (verb, pronounId) => {
-          expect(conjugatePassivePast(verb)[pronounId]).toBe('')
+          expect(conjugatePassivePast(verb)[pronounId]).toEqualT('')
         },
       ),
     )
@@ -20,19 +20,19 @@ describe('passive past pattern', () => {
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each<[string, string]>([['بلغ', 'بُلِغَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial hollow-defective roots', () => {
       test.each<[string, string]>([['أوي', 'أُوِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial hollow roots', () => {
       test.each<[string, string]>([['أول', 'إِيلَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('إِيلَ conjugation', () => {
@@ -65,7 +65,7 @@ describe('passive past pattern', () => {
         ['خوف', 'خِيفَ'],
         ['شوق', 'شِيقَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -79,7 +79,7 @@ describe('passive past pattern', () => {
         ['جدو', 'جُدِيَ'],
         ['غشي', 'غُشِيَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -88,7 +88,7 @@ describe('passive past pattern', () => {
         ['جوي', 'جُوِيَ'],
         ['روي', 'رُوِيَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -97,7 +97,7 @@ describe('passive past pattern', () => {
         ['جيء', 'جِيءَ'],
         ['نوء', 'نِيءَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -106,7 +106,7 @@ describe('passive past pattern', () => {
         ['وطء', 'وُطِئَ'],
         ['كلأ', 'كُلِئَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('كَلَأَ conjugation', () => {
@@ -148,7 +148,7 @@ describe('passive past pattern', () => {
         ['أجج', 'أُجَّ'],
         ['أزز', 'أُزَّ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -163,7 +163,7 @@ describe('passive past pattern', () => {
         ['وفد', 'وُفِدَ'],
         ['وقف', 'وُقِفَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
@@ -175,7 +175,7 @@ describe('passive past pattern', () => {
         ['دعم', 'دُعِمَ'],
         ['كلم', 'كُلِمَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
   })
@@ -187,7 +187,7 @@ describe('passive past pattern', () => {
         ['علج', 'تُعُولِجَ'],
         ['عمل', 'تُعُومِلَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
 
@@ -196,7 +196,7 @@ describe('passive past pattern', () => {
         ['ألف', 'تُؤُولِفَ'],
         ['أمر', 'تُؤُومِرَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
 
@@ -206,7 +206,7 @@ describe('passive past pattern', () => {
         ['فوض', 'تُفُووِضَ'],
         ['جوز', 'تُجُووِزَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
 
@@ -216,7 +216,7 @@ describe('passive past pattern', () => {
         ['هيل', 'اُنْهِيلَ'],
         ['حوز', 'اُنْحِيزَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toEqualT(expected)
       })
     })
 
@@ -226,7 +226,7 @@ describe('passive past pattern', () => {
         ['هوي', 'تُهُووِيَ'],
         ['وصي', 'تُوُوصِيَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
 
@@ -257,7 +257,7 @@ describe('passive past pattern', () => {
         ['ضدد', 'تُضُودِدَ'],
         ['ردد', 'تُرُودِدَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
 
@@ -267,7 +267,7 @@ describe('passive past pattern', () => {
         ['وفق', 'تُوُوفِقَ'],
         ['وفر', 'تُوُوفِرَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
     })
   })
@@ -278,7 +278,7 @@ describe('passive past pattern', () => {
         ['خفض', 'اُنْخُفِضَ'],
         ['عكس', 'اُنْعُكِسَ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toEqualT(expected)
       })
     })
 
@@ -289,7 +289,7 @@ describe('passive past pattern', () => {
         ['كفف', 'اُنْكُفَّ'],
         ['دسس', 'اُنْدُسَّ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toEqualT(expected)
       })
 
       test('اِنْقَصَّ conjugation', () => {
@@ -313,7 +313,7 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test.each([['ثني', 'اُنْثُنِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toBe(expected)
+        expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toEqualT(expected)
       })
     })
   })

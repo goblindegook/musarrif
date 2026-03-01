@@ -700,7 +700,7 @@ describe('imperative', () => {
       it('geminate Form II imperative has kasra after shadda (e.g., حَبِّبْ)', () => {
         const imperative = conjugateImperative(getVerb('حبب', 2))
 
-        expect(imperative['2ms']).toBe('حَبِّبْ')
+        expect(imperative['2ms']).toEqualT('حَبِّبْ')
       })
     })
 
@@ -1082,7 +1082,7 @@ describe('imperative', () => {
         ['ضحي', 'أَضْحِ'],
         ['مسي', 'أَمْسِ'],
       ])('drops the final glide for %s', (root, expected2ms) => {
-        expect(conjugateImperative(getVerb(root, 4))['2ms']).toBe(expected2ms)
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected2ms)
       })
     })
 
@@ -1224,7 +1224,7 @@ describe('imperative', () => {
           arbitraryVerb.filter(({ form }) => form === 4),
           arbitraryPronoun,
           (verb, pronounId) => {
-            expect([ALIF_HAMZA, ALIF_MADDA].includes(conjugateImperative(verb)[pronounId][0])).toBe(true)
+            expect([ALIF_HAMZA, ALIF_MADDA].includes(conjugateImperative(verb)[pronounId][0])).toEqualT(true)
           },
         ),
       )
@@ -1698,7 +1698,7 @@ describe('imperative', () => {
       it('assimilates the initial wāw for ٱتَّصِلْ', () => {
         const imperative = conjugateImperative(getVerb('وصل', 8))
 
-        expect(imperative['2ms']).toBe('اِتَّصِلْ')
+        expect(imperative['2ms']).toEqualT('اِتَّصِلْ')
       })
 
       test.each([

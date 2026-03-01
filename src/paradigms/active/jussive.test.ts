@@ -1509,7 +1509,7 @@ describe('active present jussive', () => {
         ['عكس', 'يَنْعَكِسْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
     })
 
@@ -1541,7 +1541,7 @@ describe('active present jussive', () => {
         ['دسس', 'يَنْدَسَّ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِنْقَصَّ conjugation', () => {
@@ -1570,7 +1570,7 @@ describe('active present jussive', () => {
         ['حوز', 'يَنْحَزْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
     })
 
@@ -1581,7 +1581,7 @@ describe('active present jussive', () => {
         ['ثني', 'يَنْثَنِ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 7), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
     })
 
@@ -1615,7 +1615,7 @@ describe('active present jussive', () => {
         ['نظر', 'يَنْتَظِرْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِضْطَلَعَ conjugation', () => {
@@ -1643,7 +1643,7 @@ describe('active present jussive', () => {
         ['بءس', 'يَبْتَئِسْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِكْتَأَبَ conjugation', () => {
@@ -1673,7 +1673,7 @@ describe('active present jussive', () => {
         ['ردد', 'يَرْتَدَّ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِضْطَرَّ conjugation', () => {
@@ -1705,7 +1705,7 @@ describe('active present jussive', () => {
         ['شوق', 'يَشْتَقْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِزْدَادَ conjugation', () => {
@@ -1754,7 +1754,7 @@ describe('active present jussive', () => {
         ['خفي', 'يَخْتَفِ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِرْتَأَى conjugation', () => {
@@ -1783,7 +1783,7 @@ describe('active present jussive', () => {
         ['سوي', 'يَسْتَوِ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
     })
 
@@ -1795,7 +1795,7 @@ describe('active present jussive', () => {
         ['وحد', 'يَتَّحِدْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
 
       test('اِتَّكَأَ conjugation', () => {
@@ -2113,7 +2113,7 @@ describe('active present jussive', () => {
     describe('hollow roots', () => {
       test.each<[string, string]>([['قود', 'يَسْتَقِدْ']])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 10), 'jussive')
-        expect(jussive['3ms']).toBe(expected3ms)
+        expect(jussive['3ms']).toEqualT(expected3ms)
       })
     })
 

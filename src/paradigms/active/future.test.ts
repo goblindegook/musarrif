@@ -13,7 +13,7 @@ describe('active future', () => {
         const present = conjugatePresentMood(verb, 'indicative')
         const future = conjugateFuture(verb)
 
-        expect(future[pronoun]).toBe(`${SEEN}${FATHA}${present[pronoun]}`)
+        expect(future[pronoun]).toEqualT(`${SEEN}${FATHA}${present[pronoun]}`)
       }),
     )
   })
