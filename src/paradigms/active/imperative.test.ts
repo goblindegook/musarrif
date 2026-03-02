@@ -123,31 +123,31 @@ describe('imperative', () => {
 
       test('يَبِسَ conjugation', () => {
         expect(conjugateImperative(getVerb('يبس', 1))).toMatchObjectT({
-          '2ms': 'اِيبَسْ',
-          '2fs': 'اِيبَسِي',
-          '2d': 'اِيبَسَا',
-          '2mp': 'اِيبَسُوْا',
-          '2fp': 'اِيبَسْنَ',
+          '2ms': 'اِيْبَسْ',
+          '2fs': 'اِيْبَسِي',
+          '2d': 'اِيْبَسَا',
+          '2mp': 'اِيْبَسُوْا',
+          '2fp': 'اِيْبَسْنَ',
         })
       })
 
       test('يَسُرَ conjugation', () => {
         expect(conjugateImperative(getVerb('يسر', 1))).toMatchObjectT({
-          '2ms': 'اُوسُرْ',
-          '2fs': 'اُوسُرِي',
-          '2d': 'اُوسُرَا',
-          '2mp': 'اُوسُرُوْا',
-          '2fp': 'اُوسُرْنَ',
+          '2ms': 'اُوْسُرْ',
+          '2fs': 'اُوْسُرِي',
+          '2d': 'اُوْسُرَا',
+          '2mp': 'اُوْسُرُوْا',
+          '2fp': 'اُوْسُرْنَ',
         })
       })
 
       test('يَمَنَ conjugation', () => {
         expect(conjugateImperative(getVerb('يمن', 1))).toMatchObjectT({
-          '2ms': 'اِيمَنْ',
-          '2fs': 'اِيمَنِي',
-          '2d': 'اِيمَنَا',
-          '2mp': 'اِيمَنُوْا',
-          '2fp': 'اِيمَنَّ',
+          '2ms': 'اِيْمَنْ',
+          '2fs': 'اِيْمَنِي',
+          '2d': 'اِيْمَنَا',
+          '2mp': 'اِيْمَنُوْا',
+          '2fp': 'اِيْمَنَّ',
         })
       })
     })
@@ -399,7 +399,7 @@ describe('imperative', () => {
           '2fs': 'وَدِّي',
           '2d': 'وَدَّا',
           '2mp': 'وَدُّوْا',
-          '2fp': 'اِيدَدْنَ',
+          '2fp': 'اِيْدَدْنَ',
         })
       })
     })
@@ -421,21 +421,21 @@ describe('imperative', () => {
 
       test('أَسَرَ conjugation', () => {
         expect(conjugateImperative(getVerb('أسر', 1))).toMatchObjectT({
-          '2ms': 'اِيسِرْ',
-          '2fs': 'اِيسِرِي',
-          '2d': 'اِيسِرَا',
-          '2mp': 'اِيسِرُوْا',
-          '2fp': 'اِيسِرْنَ',
+          '2ms': 'اِيْسِرْ',
+          '2fs': 'اِيْسِرِي',
+          '2d': 'اِيْسِرَا',
+          '2mp': 'اِيْسِرُوْا',
+          '2fp': 'اِيْسِرْنَ',
         })
       })
 
       test('أَذِنَ conjugation', () => {
         expect(conjugateImperative(getVerb('أذن', 1))).toMatchObjectT({
-          '2ms': 'اِيذَنْ',
-          '2fs': 'اِيذَنِي',
-          '2d': 'اِيذَنَا',
-          '2mp': 'اِيذَنُوْا',
-          '2fp': 'اِيذَنَّ',
+          '2ms': 'اِيْذَنْ',
+          '2fs': 'اِيْذَنِي',
+          '2d': 'اِيْذَنَا',
+          '2mp': 'اِيْذَنُوْا',
+          '2fp': 'اِيْذَنَّ',
         })
       })
     })
@@ -448,9 +448,9 @@ describe('imperative', () => {
       test('أُلْ conjugation', () => {
         expect(conjugateImperative(getVerb('أول', 1))).toMatchObjectT({
           '2ms': 'أُلْ',
-          '2fs': 'أُولِي',
-          '2d': 'أُولَا',
-          '2mp': 'أُولُوْا',
+          '2fs': 'أُوْلِي',
+          '2d': 'أُوْلَا',
+          '2mp': 'أُوْلُوْا',
           '2fp': 'أُلْنَ',
         })
       })
@@ -460,7 +460,7 @@ describe('imperative', () => {
       test('أَنَى conjugation', () => {
         expect(conjugateImperative(getVerb('أني', 1))).toMatchObjectT({
           '2ms': 'اِئْنَ',
-          '2fs': 'اِئْنَيْ',
+          '2fs': 'اِئْنَي',
           '2d': 'اِئْنَيَا',
           '2mp': 'اِئْنَوْا',
           '2fp': 'اِئْنَيْنَ',
@@ -470,7 +470,7 @@ describe('imperative', () => {
       test('أَبَى conjugation', () => {
         expect(conjugateImperative(getVerb('أبي', 1))).toMatchObjectT({
           '2ms': 'اِئْبَ',
-          '2fs': 'اِئْبَيْ',
+          '2fs': 'اِئْبَي',
           '2d': 'اِئْبَيَا',
           '2mp': 'اِئْبَوْا',
           '2fp': 'اِئْبَيْنَ',
@@ -480,7 +480,7 @@ describe('imperative', () => {
       test('أَتَى conjugation', () => {
         expect(conjugateImperative(getVerb('أتي', 1))).toMatchObjectT({
           '2ms': 'اِئْتِ',
-          '2fs': 'اِئْتِيْ',
+          '2fs': 'اِئْتِي',
           '2d': 'اِئْتِيَا',
           '2mp': 'اِئْتُوْا',
           '2fp': 'اِئْتِيْنَ',
@@ -489,17 +489,17 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial hollow-defective roots', () => {
-      test.each([['أوي', 'اِيوِ']])('%s pattern', (root, expected) => {
+      test.each([['أوي', 'اِيْوِ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
       test('أَوَى conjugation', () => {
         expect(conjugateImperative(getVerb('أوي', 1))).toMatchObjectT({
-          '2ms': 'اِيوِ',
-          '2fs': 'اِيوِي',
-          '2d': 'اِيوِيَا',
-          '2mp': 'اِيوُوْا',
-          '2fp': 'اِيوِيْنَ',
+          '2ms': 'اِيْوِ',
+          '2fs': 'اِيْوِي',
+          '2d': 'اِيْوِيَا',
+          '2mp': 'اِيْوُوْا',
+          '2fp': 'اِيْوِيْنَ',
         })
       })
     })
@@ -530,11 +530,11 @@ describe('imperative', () => {
 
       test('يَئِسَ conjugation', () => {
         expect(conjugateImperative(getVerb('يئس', 1))).toMatchObjectT({
-          '2ms': 'اِيئَسْ',
-          '2fs': 'اِيئَسِي',
-          '2d': 'اِيئَسَا',
-          '2mp': 'اِيئَسُوْا',
-          '2fp': 'اِيئَسْنَ',
+          '2ms': 'اِيْئَسْ',
+          '2fs': 'اِيْئَسِي',
+          '2d': 'اِيْئَسَا',
+          '2mp': 'اِيْئَسُوْا',
+          '2fp': 'اِيْئَسْنَ',
         })
       })
 

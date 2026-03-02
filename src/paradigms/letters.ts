@@ -104,10 +104,14 @@ export function seatHamza(letter: string, vowel?: Vowel): string {
   return HAMZA
 }
 
-export function longVowel(vowel: Vowel): [Vowel, string] {
-  if (vowel === FATHA) return [FATHA, ALIF]
-  if (vowel === KASRA) return [KASRA, YEH]
-  return [DAMMA, WAW]
+export const longA = [FATHA, ALIF] as const
+export const longI = [KASRA, YEH] as const
+export const longU = [DAMMA, WAW] as const
+
+export function longVowel(vowel: Vowel) {
+  if (vowel === FATHA) return longA
+  if (vowel === KASRA) return longI
+  return longU
 }
 
 export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {
