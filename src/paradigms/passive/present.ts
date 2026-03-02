@@ -363,7 +363,8 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
   const [c1, c2, c3] = [...verb.root]
 
   if (c2 === c3) {
-    if (isFemininePlural(pronounId)) return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
+    if (isFemininePlural(pronounId))
+      return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
     return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
