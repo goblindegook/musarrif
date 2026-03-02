@@ -448,9 +448,9 @@ describe('imperative', () => {
       test('أُلْ conjugation', () => {
         expect(conjugateImperative(getVerb('أول', 1))).toMatchObjectT({
           '2ms': 'أُلْ',
-          '2fs': 'أُوْلِي',
-          '2d': 'أُوْلَا',
-          '2mp': 'أُوْلُوْا',
+          '2fs': 'أُولِي',
+          '2d': 'أُولَا',
+          '2mp': 'أُولُوْا',
           '2fp': 'أُلْنَ',
         })
       })
@@ -470,7 +470,7 @@ describe('imperative', () => {
       test('أَبَى conjugation', () => {
         expect(conjugateImperative(getVerb('أبي', 1))).toMatchObjectT({
           '2ms': 'اِئْبَ',
-          '2fs': 'اِئْبَي',
+          '2fs': 'اِئْبَيْ',
           '2d': 'اِئْبَيَا',
           '2mp': 'اِئْبَوْا',
           '2fp': 'اِئْبَيْنَ',
