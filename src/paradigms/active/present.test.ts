@@ -2564,7 +2564,10 @@ describe('active present indicative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([['حبب', 'يَسْتَحِبُّ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['حبب', 'يَسْتَحِبُّ'],
+        ['مدد', 'يَسْتَمِدُّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
 

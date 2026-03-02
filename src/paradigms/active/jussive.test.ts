@@ -2090,6 +2090,10 @@ describe('active present jussive', () => {
 
   describe('Form X', () => {
     describe('geminate roots', () => {
+      test.each([['مدد', 'يَسْتَمِدَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَحَمَّ conjugation', () => {
         // Wiktionary lists multiple jussive variants; this uses the contracted form with shadda.
         expect(conjugatePresentMood(getVerb('حمم', 10), 'jussive')).toEqualT({

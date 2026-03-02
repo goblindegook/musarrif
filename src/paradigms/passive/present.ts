@@ -17,6 +17,7 @@ import {
   NOON,
   normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
+  SEEN,
   SHADDA,
   SUKOON,
   seatHamza,
@@ -358,6 +359,17 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, seatedC3, ...moodSuffix]
 }
 
+function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3] = [...verb.root]
+
+  if (c2 === c3) {
+    if (isFemininePlural(pronounId)) return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
+    return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
+  }
+
+  return []
+}
+
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
@@ -402,7 +414,7 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
     case 9:
       return []
     case 10:
-      return []
+      return derivePassivePresentStemFormX(verb, pronounId, mood)
   }
 }
 

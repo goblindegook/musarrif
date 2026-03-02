@@ -16,6 +16,7 @@ import {
   KASRA,
   MEEM,
   NOON,
+  SEEN,
   resolveFormVIIIInfixConsonant,
   SHADDA,
   SUKOON,
@@ -323,6 +324,21 @@ function derivePassivePastFormVIII(verb: Verb<8>): PassivePastParams {
   }
 }
 
+function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
+  const [c1, c2, c3] = [...verb.root]
+
+  if (c2 === c3) {
+    return {
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
+      suffix: [c2, KASRA, c3, SUKOON],
+      suffix3sd: [c2, SHADDA, FATHA],
+      suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    }
+  }
+
+  return { prefix: [] }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
   switch (verb.form) {
     case 1:
@@ -344,7 +360,7 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
     case 9:
       return { prefix: [] }
     case 10:
-      return { prefix: [] }
+      return derivePassivePastFormX(verb)
   }
 }
 

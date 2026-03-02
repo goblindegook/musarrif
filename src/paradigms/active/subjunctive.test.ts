@@ -1799,6 +1799,12 @@ describe('active present subjunctive', () => {
   })
 
   describe('Form X', () => {
+    describe('geminate roots', () => {
+      test.each([['مدد', 'يَسْتَمِدَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('قرأ', 10), 'subjunctive')).toEqualT({

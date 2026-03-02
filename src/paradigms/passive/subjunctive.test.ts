@@ -1695,4 +1695,26 @@ describe('passive present subjunctive', () => {
       })
     })
   })
+
+  describe('Form X', () => {
+    describe('geminate roots', () => {
+      test('اِسْتَمَدَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('مدد', 10), 'subjunctive')).toEqualT({
+          '1s': 'أُسْتَمَدَّ',
+          '2ms': 'تُسْتَمَدَّ',
+          '2fs': 'تُسْتَمَدِّي',
+          '3ms': 'يُسْتَمَدَّ',
+          '3fs': 'تُسْتَمَدَّ',
+          '2d': 'تُسْتَمَدَّا',
+          '3md': 'يُسْتَمَدَّا',
+          '3fd': 'تُسْتَمَدَّا',
+          '1p': 'نُسْتَمَدَّ',
+          '2mp': 'تُسْتَمَدُّوْا',
+          '2fp': 'تُسْتَمَدَدْنَ',
+          '3mp': 'يُسْتَمَدُّوْا',
+          '3fp': 'يُسْتَمَدَدْنَ',
+        })
+      })
+    })
+  })
 })
