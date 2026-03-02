@@ -489,17 +489,17 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial hollow-defective roots', () => {
-      test.each([['أوي', 'اِيْوِ']])('%s pattern', (root, expected) => {
+      test.each([['أوي', 'اِئْوِ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
       test('أَوَى conjugation', () => {
         expect(conjugateImperative(getVerb('أوي', 1))).toMatchObjectT({
-          '2ms': 'اِيْوِ',
-          '2fs': 'اِيْوِي',
-          '2d': 'اِيْوِيَا',
-          '2mp': 'اِيْوُوْا',
-          '2fp': 'اِيْوِيْنَ',
+          '2ms': 'اِئْوِ',
+          '2fs': 'اِئْوِي',
+          '2d': 'اِئْوِيَا',
+          '2mp': 'اِئْوُوْا',
+          '2fp': 'اِئْوِيْنَ',
         })
       })
     })

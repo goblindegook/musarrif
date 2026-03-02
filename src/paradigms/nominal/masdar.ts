@@ -70,11 +70,12 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
       return [c1, DAMMA, c2, FATHA, ALIF, c3]
 
     case 'fu3ul':
+      if (isMiddleWeak) return [c1, DAMMA, c2, KASRA, c3, SHADDA]
       return [c1, DAMMA, c2, DAMMA, c3, SHADDA]
 
     case 'fi3aal': {
-      if (isMiddleWeak) return [seatedC1, KASRA, YEH, FATHA, ALIF, c3]
       if (isFinalWeak) return [seatedC1, KASRA, c2, FATHA, ALIF, HAMZA]
+      if (isMiddleWeak) return [seatedC1, KASRA, YEH, FATHA, ALIF, c3]
       return [seatedC1, KASRA, c2, FATHA, ALIF, seatHamza(c3), FATHA, TEH_MARBUTA]
     }
 

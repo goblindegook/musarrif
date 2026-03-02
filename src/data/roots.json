@@ -60,7 +60,7 @@
   { "root": "وضح", "form": 4 },
   { "root": "وءي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
   { "root": "وأم", "form": 3 },
-  { "root": "أوي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["ifi3aal"] },
+  { "root": "أوي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["ifi3aal", "fu3ul", "fi3aal"] },
   { "root": "أوي", "form": 4 },
   { "root": "أوه", "form": 5, "passiveVoice": "none" },
   { "root": "أيد", "form": 2 },

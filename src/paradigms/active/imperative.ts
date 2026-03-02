@@ -10,9 +10,6 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
-  longA,
-  longI,
-  longU,
   NOON,
   normalizeAlifMadda,
   SHADDA,
@@ -48,9 +45,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           const patternLongVowel = longVowelFromPattern(isPatternA || isPatternI ? 'i' : 'u')
 
           if (isInitialWeak) {
-            if (stem.at(1) === FATHA && isFinalWeak) return [...stem.slice(0, 1), ...longI, ...stem.slice(1)]
+            if (stem.at(1) === FATHA && isFinalWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
 
-            if (c2 === c3 && pronounId === '2fp') return [ALIF, ...longI, ...stem.slice(1)]
+            if (c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
             if (c1 !== YEH || isFinalWeak || isFinalHamza) return stem
 
@@ -60,27 +57,25 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (isInitialHamza) {
             const initialHamzatedStem = Array.from(jussive).slice(4)
 
-            if (c2 === c3) {
-              const seatedC1 = isPatternI ? [ALIF_HAMZA_BELOW, KASRA] : [ALIF_HAMZA, DAMMA]
-              const prefix = [...seatedC1, c2, SHADDA]
-
-              if (pronounId === '2ms') return [...prefix, FATHA]
-              if (pronounId === '2fs') return [...prefix, ...longI]
-              if (pronounId === '2d') return [...prefix, ...longA]
-              if (pronounId === '2mp') return [...prefix, ...longU, SUKOON, ALIF]
-              return [ALIF, ...patternLongVowel, ...initialHamzatedStem]
-            }
-
-            if (isMiddleWeak && isFinalWeak) return [ALIF, ...longI, SUKOON, ...initialHamzatedStem]
-
-            if (isMiddleWeak) return [ALIF_HAMZA, DAMMA, ...initialHamzatedStem]
-
             if (isFinalWeak) {
               const glide = c2 === NOON || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
               return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, c2, glide, ...initialHamzatedStem.slice(2)]
             }
 
-            if (isPatternA || isPatternI) return [ALIF, ...longI, SUKOON, ...initialHamzatedStem]
+            if (c2 === c3) {
+              const seatedC1 = isPatternI ? [ALIF_HAMZA_BELOW, KASRA] : [ALIF_HAMZA, DAMMA]
+              const prefix = [...seatedC1, c2, SHADDA]
+
+              if (pronounId === '2ms') return [...prefix, FATHA]
+              if (pronounId === '2fs') return [...prefix, KASRA, YEH]
+              if (pronounId === '2d') return [...prefix, FATHA, ALIF]
+              if (pronounId === '2mp') return [...prefix, DAMMA, WAW, SUKOON, ALIF]
+              return [ALIF, ...patternLongVowel, ...initialHamzatedStem]
+            }
+
+            if (isMiddleWeak) return [ALIF_HAMZA, DAMMA, ...initialHamzatedStem]
+
+            if (isPatternA || isPatternI) return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
 
             return initialHamzatedStem
           }
