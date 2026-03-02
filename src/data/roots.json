@@ -636,7 +636,10 @@
   { "root": "لوم", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
   { "root": "موت", "form": 1, "formPattern": "fa3ala-yaf3ulu", "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "مدح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "مدد", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "مدد", "form": 3 },
+  { "root": "مدد", "form": 4 },
+  { "root": "مدد", "form": 5, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "مدد", "form": 8, "passiveVoice": "impersonal" },
   { "root": "مدد", "form": 10 },
   {

@@ -1291,6 +1291,7 @@ describe('active past', () => {
         ['حبب', 'أَحَبَّ'],
         ['عدد', 'أَعَدَّ'],
         ['همم', 'أَهَمَّ'],
+        ['مدد', 'أَمَدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
@@ -1520,6 +1521,7 @@ describe('active past', () => {
         ['عزز', 'تَعَزَّزَ'],
         ['سبب', 'تَسَبَّبَ'],
         ['قرر', 'تَقَرَّرَ'],
+        ['مدد', 'تَمَدَّدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })

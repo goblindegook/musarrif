@@ -465,6 +465,7 @@ describe('active participle', () => {
         ['حبب', 'مُحِبّ'],
         ['عدد', 'مُعِدّ'],
         ['همم', 'مُهِمّ'],
+        ['مدد', 'مُمِدّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
@@ -602,6 +603,7 @@ describe('active participle', () => {
         ['عزز', 'مُتَعَزِّز'],
         ['سبب', 'مُتَسَبِّب'],
         ['قرر', 'مُتَقَرِّر'],
+        ['مدد', 'مُتَمَدِّد'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })

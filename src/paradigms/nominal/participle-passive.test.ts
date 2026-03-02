@@ -446,6 +446,7 @@ describe('passive participle', () => {
         ['حبب', 'مُحَبّ'],
         ['عدد', 'مُعَدّ'],
         ['همم', 'مُهَمّ'],
+        ['مدد', 'مُمَدّ'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
@@ -582,6 +583,7 @@ describe('passive participle', () => {
         ['عزز', 'مُتَعَزَّز'],
         ['سبب', 'مُتَسَبَّب'],
         ['قرر', 'مُتَقَرَّر'],
+        ['مدد', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })

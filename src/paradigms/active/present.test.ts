@@ -1454,6 +1454,7 @@ describe('active present indicative', () => {
         ['عدد', 'يُعِدُّ'],
         ['همم', 'يُهِمُّ'],
         ['قرر', 'يُقِرُّ'],
+        ['مدد', 'يُمِدُّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -1676,6 +1677,7 @@ describe('active present indicative', () => {
         ['عزز', 'يَتَعَزَّزُ'],
         ['سبب', 'يَتَسَبَّبُ'],
         ['قرر', 'يَتَقَرَّرُ'],
+        ['مدد', 'يَتَمَدَّدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })

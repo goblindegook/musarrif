@@ -1089,6 +1089,7 @@ describe('active present jussive', () => {
         ['حبب', 'يُحِبَّ'],
         ['عدد', 'يُعِدَّ'],
         ['همم', 'يُهِمَّ'],
+        ['مدد', 'يُمِدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -1206,6 +1207,12 @@ describe('active present jussive', () => {
   })
 
   describe('Form V', () => {
+    describe('geminate roots', () => {
+      test.each([['مدد', 'يَتَمَدَّدْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('regular roots', () => {
       test.each([
         ['حدث', 'يَتَحَدَّثْ'],
