@@ -2425,6 +2425,26 @@ describe('active past', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test('اِسْتَدْعَى conjugation', () => {
+        expect(conjugatePast(getVerb('دعو', 10))).toEqualT({
+          '1s': 'اِسْتَدْعَيْتُ',
+          '2ms': 'اِسْتَدْعَيْتَ',
+          '2fs': 'اِسْتَدْعَيْتِ',
+          '3ms': 'اِسْتَدْعَى',
+          '3fs': 'اِسْتَدْعَتْ',
+          '2d': 'اِسْتَدْعَيْتُمَا',
+          '3md': 'اِسْتَدْعَيَا',
+          '3fd': 'اِسْتَدْعَتَا',
+          '1p': 'اِسْتَدْعَيْنَا',
+          '2mp': 'اِسْتَدْعَيْتُمْ',
+          '2fp': 'اِسْتَدْعَيْتُنَّ',
+          '3mp': 'اِسْتَدْعَوْا',
+          '3fp': 'اِسْتَدْعَيْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('اِسْتَوْفَى conjugation', () => {
         expect(conjugatePast(getVerb('وفي', 10))).toEqualT({

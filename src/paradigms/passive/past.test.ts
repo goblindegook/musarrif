@@ -1547,6 +1547,26 @@ describe('passive past pattern', () => {
   })
 
   describe('Form X', () => {
+    describe('defective roots', () => {
+      test('اِسْتَدْعَى conjugation', () => {
+        expect(conjugatePassivePast(getVerb('دعو', 10))).toEqualT({
+          '1s': 'اُسْتُدْعِيتُ',
+          '2ms': 'اُسْتُدْعِيتَ',
+          '2fs': 'اُسْتُدْعِيتِ',
+          '3ms': 'اُسْتُدْعِيَ',
+          '3fs': 'اُسْتُدْعِيَتْ',
+          '2d': 'اُسْتُدْعِيتُمَا',
+          '3md': 'اُسْتُدْعِيَا',
+          '3fd': 'اُسْتُدْعِيَتَا',
+          '1p': 'اُسْتُدْعِينَا',
+          '2mp': 'اُسْتُدْعِيتُمْ',
+          '2fp': 'اُسْتُدْعِيتُنَّ',
+          '3mp': 'اُسْتُدْعُوْا',
+          '3fp': 'اُسْتُدْعِينَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test('اِسْتَمَدَّ conjugation', () => {
         expect(conjugatePassivePast(getVerb('مدد', 10))).toEqualT({

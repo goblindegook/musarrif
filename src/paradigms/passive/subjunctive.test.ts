@@ -1698,6 +1698,26 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form X', () => {
+    describe('defective roots', () => {
+      test('اِسْتَدْعَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('دعو', 10), 'subjunctive')).toEqualT({
+          '1s': 'أُسْتَدْعَى',
+          '2ms': 'تُسْتَدْعَى',
+          '2fs': 'تُسْتَدْعَيْ',
+          '3ms': 'يُسْتَدْعَى',
+          '3fs': 'تُسْتَدْعَى',
+          '2d': 'تُسْتَدْعَيَا',
+          '3md': 'يُسْتَدْعَيَا',
+          '3fd': 'تُسْتَدْعَيَا',
+          '1p': 'نُسْتَدْعَى',
+          '2mp': 'تُسْتَدْعَوْا',
+          '2fp': 'تُسْتَدْعَيْنَ',
+          '3mp': 'يُسْتَدْعَوْا',
+          '3fp': 'يُسْتَدْعَيْنَ',
+        })
+      })
+    })
+
     describe('geminate roots', () => {
       test('اِسْتَمَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('مدد', 10), 'subjunctive')).toEqualT({

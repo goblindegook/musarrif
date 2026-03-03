@@ -336,7 +336,13 @@ function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
     }
   }
 
-  return { prefix: [] }
+  return {
+    prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2],
+    suffix: [KASRA, YEH],
+    suffix3sd: [KASRA, YEH, FATHA],
+    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+    suffix3fp: [KASRA, YEH, NOON, FATHA],
+  }
 }
 
 function derivePassivePastForms(verb: Verb): PassivePastParams {

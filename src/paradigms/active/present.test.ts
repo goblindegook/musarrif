@@ -2602,6 +2602,26 @@ describe('active present indicative', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test('اِسْتَدْعَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('دعو', 10), 'indicative')).toEqualT({
+          '1s': 'أَسْتَدْعِي',
+          '2ms': 'تَسْتَدْعِي',
+          '2fs': 'تَسْتَدْعِيْنَ',
+          '3ms': 'يَسْتَدْعِي',
+          '3fs': 'تَسْتَدْعِي',
+          '2d': 'تَسْتَدْعِيَانِ',
+          '3md': 'يَسْتَدْعِيَانِ',
+          '3fd': 'تَسْتَدْعِيَانِ',
+          '1p': 'نَسْتَدْعِي',
+          '2mp': 'تَسْتَدْعُوْنَ',
+          '2fp': 'تَسْتَدْعِيْنَ',
+          '3mp': 'يَسْتَدْعُوْنَ',
+          '3fp': 'يَسْتَدْعِيْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test('اِسْتَوْفَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 10), 'indicative')).toEqualT({

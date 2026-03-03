@@ -1812,6 +1812,26 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test('اِسْتَدْعَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('دعو', 10), 'subjunctive')).toEqualT({
+          '1s': 'أَسْتَدْعِيَ',
+          '2ms': 'تَسْتَدْعِيَ',
+          '2fs': 'تَسْتَدْعِي',
+          '3ms': 'يَسْتَدْعِيَ',
+          '3fs': 'تَسْتَدْعِيَ',
+          '2d': 'تَسْتَدْعِيَا',
+          '3md': 'يَسْتَدْعِيَا',
+          '3fd': 'تَسْتَدْعِيَا',
+          '1p': 'نَسْتَدْعِيَ',
+          '2mp': 'تَسْتَدْعُوْا',
+          '2fp': 'تَسْتَدْعِيْنَ',
+          '3mp': 'يَسْتَدْعُوْا',
+          '3fp': 'يَسْتَدْعِيْنَ',
+        })
+      })
+    })
+
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('قرأ', 10), 'subjunctive')).toEqualT({

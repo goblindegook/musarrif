@@ -463,13 +463,19 @@ function derivePresentFormIX(verb: Verb<9>): readonly string[] {
 
 function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
+  const isFinalWeak = isWeakLetter(c3)
   const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
 
-  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
+  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
+
+  if (isInitialWeak) return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 
   if (isMiddleWeak) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
+
+  if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }

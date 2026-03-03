@@ -361,14 +361,14 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
 
 function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [SEEN, SUKOON, TEH, FATHA]
 
   if (c2 === c3) {
-    if (isFemininePlural(pronounId))
-      return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
-    return [SEEN, SUKOON, TEH, FATHA, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
+    if (isFemininePlural(pronounId)) return [...prefix, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
+    return [...prefix, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  return []
+  return [...prefix, c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

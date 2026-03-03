@@ -22,7 +22,6 @@ import {
   SHADDA,
   SUKOON,
   seatHamza,
-  seatInitialHamza,
   TANWEEN_FATHA,
   TANWEEN_KASRA,
   TEH,
@@ -40,7 +39,7 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
-  const seatedC1 = seatInitialHamza(c1, KASRA)
+  const seatedC1 = isInitialHamza ? ALIF_HAMZA_BELOW : c1
 
   switch (pattern) {
     case 'fa3l':
