@@ -2382,8 +2382,11 @@ describe('active past', () => {
   describe('Form X', () => {
     describe('regular roots', () => {
       test.each([
+        ['عرض', 'اِسْتَعْرَضَ'],
         ['بدل', 'اِسْتَبْدَلَ'],
+        ['غرق', 'اِسْتَغْرَقَ'],
         ['هدف', 'اِسْتَهْدَفَ'],
+        ['طرد', 'اِسْتَطْرَدَ'],
         ['عمل', 'اِسْتَعْمَلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)

@@ -1548,6 +1548,15 @@ describe('passive past pattern', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عرض', 'اُسْتُعْرِضَ'],
+        ['غرق', 'اُسْتُغْرِقَ'],
+        ['طرد', 'اُسْتُطْرِدَ'],
+        ['عمل', 'اُسْتُعْمِلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَهْدَفَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('هدف', 10))).toEqualT({
           '1s': 'اُسْتُهْدِفْتُ',

@@ -1825,6 +1825,15 @@ describe('passive present jussive', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عرض', 'يُسْتَعْرَضْ'],
+        ['غرق', 'يُسْتَغْرَقْ'],
+        ['طرد', 'يُسْتَطْرَدْ'],
+        ['عمل', 'يُسْتَعْمَلْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَهْدَفَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('هدف', 10), 'jussive')).toEqualT({
           '1s': 'أُسْتَهْدَفْ',

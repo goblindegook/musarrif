@@ -2561,6 +2561,9 @@ describe('active present indicative', () => {
   describe('Form X', () => {
     describe('regular roots', () => {
       test.each([
+        ['عرض', 'يَسْتَعْرِضُ'],
+        ['غرق', 'يَسْتَغْرِقُ'],
+        ['طرد', 'يَسْتَطْرِدُ'],
         ['عمل', 'يَسْتَعْمِلُ'],
         ['هدف', 'يَسْتَهْدِفُ'],
       ])('%s pattern', (root, expected) => {

@@ -905,8 +905,11 @@ describe('passive participle', () => {
   describe('Form X', () => {
     describe('regular roots', () => {
       test.each([
+        ['عرض', 'مُسْتَعْرَض'],
         ['عمل', 'مُسْتَعْمَل'],
+        ['غرق', 'مُسْتَغْرَق'],
         ['هدف', 'مُسْتَهْدَف'],
+        ['طرد', 'مُسْتَطْرَد'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })

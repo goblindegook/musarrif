@@ -1699,6 +1699,15 @@ describe('passive present subjunctive', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
+      test.each([
+        ['عرض', 'يُسْتَعْرَضَ'],
+        ['غرق', 'يُسْتَغْرَقَ'],
+        ['طرد', 'يُسْتَطْرَدَ'],
+        ['عمل', 'يُسْتَعْمَلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَهْدَفَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('هدف', 10), 'subjunctive')).toEqualT({
           '1s': 'أُسْتَهْدَفَ',

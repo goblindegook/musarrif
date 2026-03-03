@@ -1856,6 +1856,9 @@ describe('imperative', () => {
   describe('Form X', () => {
     describe('regular roots', () => {
       test.each([
+        ['عرض', 'اِسْتَعْرِضْ'],
+        ['غرق', 'اِسْتَغْرِقْ'],
+        ['طرد', 'اِسْتَطْرِدْ'],
         ['عمل', 'اِسْتَعْمِلْ'],
         ['هدف', 'اِسْتَهْدِفْ'],
       ])('%s pattern', (root, expected) => {
