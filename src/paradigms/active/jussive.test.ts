@@ -2153,6 +2153,10 @@ describe('active present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['ولي', 'يَسْتَوْلِ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('preserves initial weak and drops final weak for اِسْتَوْفَى jussive', () => {
         expect(conjugatePresentMood(getVerb('وفي', 10), 'jussive')).toEqualT({
           '1s': 'أَسْتَوْفِ',

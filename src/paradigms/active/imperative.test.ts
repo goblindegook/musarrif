@@ -1873,6 +1873,10 @@ describe('imperative', () => {
     })
 
     describe('doubly weak roots', () => {
+      test.each([['ولي', 'اِسْتَوْلِ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
+      })
+
       test('اِسْتَوْفَى conjugation', () => {
         expect(conjugateImperative(getVerb('وفي', 10))).toMatchObjectT({
           '2ms': 'اِسْتَوْفِ',

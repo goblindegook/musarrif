@@ -1850,6 +1850,12 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['ولي', 'يَسْتَوْلِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('قرأ', 10), 'subjunctive')).toEqualT({

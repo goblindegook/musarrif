@@ -1831,6 +1831,12 @@ describe('passive present indicative', () => {
       })
     })
 
+    describe('doubly weak roots', () => {
+      test.each([['ولي', 'يُسْتَوْلَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'يُسْتَشَفُّ'],

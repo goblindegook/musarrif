@@ -243,7 +243,7 @@ function deriveMasdarFormX(verb: Verb<10>): readonly string[] {
 
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
 
-  if (isInitialWeak && isFinalWeak) return [...prefix, c2, FATHA, ALIF, HAMZA]
+  if (isInitialWeak && isFinalWeak) return [...prefix, YEH, c2, FATHA, ALIF, HAMZA]
 
   const seatedC1 = isInitialHamza ? HAMZA_ON_YEH : c1
 

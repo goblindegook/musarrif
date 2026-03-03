@@ -984,7 +984,7 @@ describe('active participle', () => {
     describe('doubly weak roots', () => {
       test.each([
         ['وفي', 'مُسْتَوْفٍ'],
-        ['وفي', 'مُسْتَوْفٍ'],
+        ['ولي', 'مُسْتَوْلٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
