@@ -10,7 +10,6 @@ import {
   findLetterIndex,
   findWeakLetterIndex,
   geminateDoubleLetters,
-  HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isHamzatedLetter,
@@ -406,7 +405,7 @@ function derivePresentFormV(verb: Verb<5>): readonly string[] {
 
 function derivePresentFormVI(verb: Verb<6>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  const seatedC2 = seatHamza(c2)
   const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF]
 
