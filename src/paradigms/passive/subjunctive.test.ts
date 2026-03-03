@@ -1748,6 +1748,15 @@ describe('passive present subjunctive', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['شفف', 'يُسْتَشَفَّ'],
+        ['مرر', 'يُسْتَمَرَّ'],
+        ['حقق', 'يُسْتَحَقَّ'],
+        ['غلل', 'يُسْتَغَلَّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَمَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('مدد', 10), 'subjunctive')).toEqualT({
           '1s': 'أُسْتَمَدَّ',

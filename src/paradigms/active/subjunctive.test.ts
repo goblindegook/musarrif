@@ -1819,7 +1819,13 @@ describe('active present subjunctive', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([['مدد', 'يَسْتَمِدَّ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['شفف', 'يَسْتَشِفَّ'],
+        ['مرر', 'يَسْتَمِرَّ'],
+        ['حقق', 'يَسْتَحِقَّ'],
+        ['غلل', 'يَسْتَغِلَّ'],
+        ['مدد', 'يَسْتَمِدَّ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })

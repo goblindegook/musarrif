@@ -1832,6 +1832,15 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
+      test.each([
+        ['شفف', 'يُسْتَشَفُّ'],
+        ['مرر', 'يُسْتَمَرُّ'],
+        ['حقق', 'يُسْتَحَقُّ'],
+        ['غلل', 'يُسْتَغَلُّ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَمَدَّ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('مدد', 10), 'indicative')).toEqualT({
           '1s': 'أُسْتَمَدُّ',
