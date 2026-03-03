@@ -1698,6 +1698,26 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form X', () => {
+    describe('regular roots', () => {
+      test('اِسْتَهْدَفَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('هدف', 10), 'subjunctive')).toEqualT({
+          '1s': 'أُسْتَهْدَفَ',
+          '2ms': 'تُسْتَهْدَفَ',
+          '2fs': 'تُسْتَهْدَفِي',
+          '3ms': 'يُسْتَهْدَفَ',
+          '3fs': 'تُسْتَهْدَفَ',
+          '2d': 'تُسْتَهْدَفَا',
+          '3md': 'يُسْتَهْدَفَا',
+          '3fd': 'تُسْتَهْدَفَا',
+          '1p': 'نُسْتَهْدَفَ',
+          '2mp': 'تُسْتَهْدَفُوْا',
+          '2fp': 'تُسْتَهْدَفْنَ',
+          '3mp': 'يُسْتَهْدَفُوْا',
+          '3fp': 'يُسْتَهْدَفْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اِسْتَدْعَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('دعو', 10), 'subjunctive')).toEqualT({

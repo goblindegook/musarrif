@@ -2560,7 +2560,10 @@ describe('active present indicative', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
-      test.each([['عمل', 'يَسْتَعْمِلُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['عمل', 'يَسْتَعْمِلُ'],
+        ['هدف', 'يَسْتَهْدِفُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
     })

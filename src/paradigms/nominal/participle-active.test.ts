@@ -941,7 +941,10 @@ describe('active participle', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
-      test.each([['عمل', 'مُسْتَعْمِل']])('%s', (root, expected) => {
+      test.each([
+        ['عمل', 'مُسْتَعْمِل'],
+        ['هدف', 'مُسْتَهْدِف'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

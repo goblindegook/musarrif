@@ -1855,7 +1855,10 @@ describe('imperative', () => {
 
   describe('Form X', () => {
     describe('regular roots', () => {
-      test.each([['عمل', 'اِسْتَعْمِلْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['عمل', 'اِسْتَعْمِلْ'],
+        ['هدف', 'اِسْتَهْدِفْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
     })

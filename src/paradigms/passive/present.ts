@@ -368,7 +368,9 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
     return [...prefix, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  return [...prefix, c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+  if (isWeakLetter(c3)) return [...prefix, c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+
+  return [...prefix, c1, SUKOON, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

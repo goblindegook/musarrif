@@ -1547,6 +1547,26 @@ describe('passive past pattern', () => {
   })
 
   describe('Form X', () => {
+    describe('regular roots', () => {
+      test('اِسْتَهْدَفَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('هدف', 10))).toEqualT({
+          '1s': 'اُسْتُهْدِفْتُ',
+          '2ms': 'اُسْتُهْدِفْتَ',
+          '2fs': 'اُسْتُهْدِفْتِ',
+          '3ms': 'اُسْتُهْدِفَ',
+          '3fs': 'اُسْتُهْدِفَتْ',
+          '2d': 'اُسْتُهْدِفْتُمَا',
+          '3md': 'اُسْتُهْدِفَا',
+          '3fd': 'اُسْتُهْدِفَتَا',
+          '1p': 'اُسْتُهْدِفْنَا',
+          '2mp': 'اُسْتُهْدِفْتُمْ',
+          '2fp': 'اُسْتُهْدِفْتُنَّ',
+          '3mp': 'اُسْتُهْدِفُوْا',
+          '3fp': 'اُسْتُهْدِفْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اِسْتَدْعَى conjugation', () => {
         expect(conjugatePassivePast(getVerb('دعو', 10))).toEqualT({
