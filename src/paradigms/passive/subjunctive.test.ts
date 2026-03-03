@@ -1753,6 +1753,12 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test.each([['جوب', 'يُسْتَجْوَبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'يُسْتَشَفَّ'],

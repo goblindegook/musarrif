@@ -1872,6 +1872,18 @@ describe('imperative', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test('اِسْتَجَابَ conjugation', () => {
+        expect(conjugateImperative(getVerb('جوب', 10))).toMatchObjectT({
+          '2ms': 'اِسْتَجِبْ',
+          '2fs': 'اِسْتَجِيبِي',
+          '2d': 'اِسْتَجِيبَا',
+          '2mp': 'اِسْتَجِيبُوْا',
+          '2fp': 'اِسْتَجِبْنَ',
+        })
+      })
+    })
+
     describe('doubly weak roots', () => {
       test.each([['ولي', 'اِسْتَوْلِ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)

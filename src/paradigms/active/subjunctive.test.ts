@@ -1830,6 +1830,26 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('hollow roots', () => {
+      test('اِسْتَجَابَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('جوب', 10), 'subjunctive')).toEqualT({
+          '1s': 'أَسْتَجِيبَ',
+          '2ms': 'تَسْتَجِيبَ',
+          '2fs': 'تَسْتَجِيبِي',
+          '3ms': 'يَسْتَجِيبَ',
+          '3fs': 'تَسْتَجِيبَ',
+          '2d': 'تَسْتَجِيبَا',
+          '3md': 'يَسْتَجِيبَا',
+          '3fd': 'تَسْتَجِيبَا',
+          '1p': 'نَسْتَجِيبَ',
+          '2mp': 'تَسْتَجِيبُوْا',
+          '2fp': 'تَسْتَجِبْنَ',
+          '3mp': 'يَسْتَجِيبُوْا',
+          '3fp': 'يَسْتَجِبْنَ',
+        })
+      })
+    })
+
     describe('defective roots', () => {
       test('اِسْتَدْعَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('دعو', 10), 'subjunctive')).toEqualT({

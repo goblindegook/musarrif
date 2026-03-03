@@ -310,7 +310,11 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
 
   if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, YEH, FATHA], YEH)
 
-  if (isWeakLetter(c2)) return buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3)
+  if (isWeakLetter(c2))
+    return {
+      base: [...prefix, FATHA, ALIF, c3, FATHA],
+      suffixedBase: [...prefix, FATHA, c3, SUKOON],
+    }
 
   return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
 }

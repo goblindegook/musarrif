@@ -2431,6 +2431,24 @@ describe('active past', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
+
+      test('اِسْتَجَابَ conjugation', () => {
+        expect(conjugatePast(getVerb('جوب', 10))).toEqualT({
+          '1s': 'اِسْتَجَبْتُ',
+          '2ms': 'اِسْتَجَبْتَ',
+          '2fs': 'اِسْتَجَبْتِ',
+          '3ms': 'اِسْتَجَابَ',
+          '3fs': 'اِسْتَجَابَتْ',
+          '2d': 'اِسْتَجَبْتُمَا',
+          '3md': 'اِسْتَجَابَا',
+          '3fd': 'اِسْتَجَابَتَا',
+          '1p': 'اِسْتَجَبْنَا',
+          '2mp': 'اِسْتَجَبْتُمْ',
+          '2fp': 'اِسْتَجَبْتُنَّ',
+          '3mp': 'اِسْتَجَابُوْا',
+          '3fp': 'اِسْتَجَبْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

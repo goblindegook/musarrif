@@ -1026,6 +1026,7 @@ describe('masdar', () => {
         ['ضيف', 'اِسْتِضَافَة'],
         ['عاد', 'اِسْتِعَادَة'],
         ['عون', 'اِسْتِعَانَة'],
+        ['جوب', 'اِسْتِجَابَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
       })

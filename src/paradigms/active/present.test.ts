@@ -2610,6 +2610,24 @@ describe('active present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('اِسْتَجَابَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('جوب', 10), 'indicative')).toEqualT({
+          '1s': 'أَسْتَجِيبُ',
+          '2ms': 'تَسْتَجِيبُ',
+          '2fs': 'تَسْتَجِيبِيْنَ',
+          '3ms': 'يَسْتَجِيبُ',
+          '3fs': 'تَسْتَجِيبُ',
+          '2d': 'تَسْتَجِيبَانِ',
+          '3md': 'يَسْتَجِيبَانِ',
+          '3fd': 'تَسْتَجِيبَانِ',
+          '1p': 'نَسْتَجِيبُ',
+          '2mp': 'تَسْتَجِيبُوْنَ',
+          '2fp': 'تَسْتَجِبْنَ',
+          '3mp': 'يَسْتَجِيبُوْنَ',
+          '3fp': 'يَسْتَجِبْنَ',
+        })
+      })
     })
 
     describe('defective roots', () => {

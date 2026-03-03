@@ -128,7 +128,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
     if (verb.form === 1 && !isFormIPastVowel(verb, 'i') && !isWeakLetter(c3))
       return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-    if (verb.form === 7) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+    if ([7, 10].includes(verb.form)) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
     if (verb.form === 8 && c2 === YEH) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
   }
