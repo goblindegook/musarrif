@@ -29,7 +29,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const isFinalHamza = isHamzatedLetter(c3)
 
   return mapRecord(
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
@@ -49,9 +48,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
-            if (c1 !== YEH || isFinalWeak || isFinalHamza) return stem
-
-            return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+            if (c1 === YEH) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
           }
 
           if (isInitialHamza) {

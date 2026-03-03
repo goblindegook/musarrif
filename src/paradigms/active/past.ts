@@ -133,7 +133,6 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
     return {
       base: [c1, FATHA, ALIF, c3, FATHA],
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
-      pluralBase: [c1, FATHA, ALIF, c3, DAMMA, WAW],
     }
 
   return buildForms([c1, FATHA, seatedC2, pastVowel, seatedC3, FATHA], seatedC3)
@@ -163,7 +162,6 @@ function derivePastFormIII(verb: Verb<3>): PastBaseForms {
     return {
       base: [...prefix, SHADDA, FATHA],
       suffixedBase: [...prefix, FATHA, c3, SUKOON],
-      pluralBase: [...prefix, SHADDA, DAMMA, WAW],
     }
 
   return buildForms([...prefix, FATHA, c3, FATHA], c3)
@@ -240,7 +238,6 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
     return {
       base: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, SUKOON],
-      pluralBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, SHADDA, DAMMA, WAW],
     }
   }
 
@@ -267,7 +264,6 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
     return {
       base: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, SUKOON],
-      pluralBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
@@ -279,7 +275,6 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
     return {
       base: [ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA],
       suffixedBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c3, SUKOON],
-      pluralBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA, WAW],
     }
 
   if (isWeakLetter(c2) && infix !== DAL) return buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3)
@@ -305,7 +300,6 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
     return {
       base: [...prefix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, SUKOON, c2, FATHA, c3, SUKOON],
-      pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, YEH, FATHA], YEH)

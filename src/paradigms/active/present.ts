@@ -332,29 +332,24 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
 
   if (c2 === c3) return [...prefix, seatedC1, presentVowel, c2, SUKOON, c2, DAMMA]
 
-  if (c1 === WAW && isFinalWeak) return [...prefix, seatedC2, presentVowel, c3]
+  if (isFinalWeak) {
+    if (c1 === WAW) return [...prefix, seatedC2, presentVowel, c3]
+
+    if (c3 === WAW) return [...prefix, c1, SUKOON, c2, ...longVowel(DAMMA)]
+
+    if (isMiddleHamza) return [...prefix, c1, FATHA, ALIF_MAQSURA]
+
+    if (presentVowel === FATHA) return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
+
+    return [...prefix, c1, SUKOON, c2, ...longVowel(presentVowel)]
+  }
 
   if (c1 === WAW) return [...prefix, c2, presentVowel, seatedC3, DAMMA]
-
-  if (isInitialHamza && isFinalWeak)
-    return [...prefix, ALIF_HAMZA, SUKOON, seatedC2, presentVowel, presentVowel === FATHA ? ALIF_MAQSURA : c3]
 
   if (isInitialHamza && isMiddleWeak) return [...prefix, seatedC1, ...longVowel(presentVowel), c3, DAMMA]
 
   if (!isFormIPastVowel(verb, 'i') && isMiddleWeak)
     return [...prefix, c1, ...longVowel(c2 === YEH ? KASRA : presentVowel), c3, DAMMA]
-
-  if (isMiddleHamza && isFinalWeak) return [...prefix, c1, FATHA, ALIF_MAQSURA]
-
-  if (isFinalWeak)
-    return [
-      ...prefix,
-      c1,
-      SUKOON,
-      c2,
-      c3 === WAW ? DAMMA : presentVowel,
-      c3 === WAW || presentVowel !== FATHA ? (c3 === YEH ? YEH : WAW) : ALIF_MAQSURA,
-    ]
 
   return [...prefix, c1, SUKOON, seatedC2, presentVowel, seatedC3, DAMMA]
 }
@@ -385,20 +380,17 @@ function derivePresentFormIII(verb: Verb<3>): readonly string[] {
 
 function derivePresentFormIV(verb: Verb<4>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const isMiddleHamza = isHamzatedLetter(c2)
   const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, DAMMA, seatedC1]
 
-  if (isMiddleHamza && isFinalWeak) return [...prefix, KASRA, c3]
+  if (isHamzatedLetter(c2)) return [...prefix, KASRA, c3]
 
-  if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, c3]
+  if (isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, c3]
+
+  if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, c3, DAMMA]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
-
-  if (isMiddleWeak) return [...prefix, KASRA, YEH, c3, DAMMA]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
@@ -427,15 +419,13 @@ function derivePresentFormVI(verb: Verb<6>): readonly string[] {
 
 function derivePresentFormVII(verb: Verb<7>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
   const prefix = [YEH, FATHA, NOON, SUKOON, c1, FATHA]
 
   if (c2 === c3) return [...prefix, c2, SHADDA, DAMMA]
 
-  if (isFinalWeak) return [...prefix, c2, KASRA, c3]
+  if (isWeakLetter(c3)) return [...prefix, c2, KASRA, c3]
 
-  if (isMiddleWeak) return [...prefix, ALIF, c3, DAMMA]
+  if (isWeakLetter(c2)) return [...prefix, ALIF, c3, DAMMA]
 
   return [...prefix, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
 }
@@ -463,19 +453,14 @@ function derivePresentFormIX(verb: Verb<9>): readonly string[] {
 
 function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isInitialWeak = isWeakLetter(c1)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
   const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 
-  if (isInitialWeak) return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
+  if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
 
-  if (isMiddleWeak) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
-
-  if (isFinalWeak) return [...prefix, SUKOON, c2, KASRA, YEH]
+  if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, YEH]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }
