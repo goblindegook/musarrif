@@ -9,8 +9,6 @@ import {
   FATHA,
   geminateDoubleLetters,
   HAMZA,
-  HAMZA_ON_WAW,
-  HAMZA_ON_YEH,
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
@@ -30,53 +28,44 @@ import {
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 
-interface NonDefectivePastBaseForms {
+interface SoundPastBaseForms {
+  kind: 'sound'
   base: readonly string[]
-  suffixedBase?: readonly string[]
-  pluralBase?: readonly string[]
-}
-
-interface DefectivePastBaseForms {
-  base: readonly string[]
-  defectiveGlide: string
   suffixedBase: readonly string[]
   pluralBase: readonly string[]
 }
 
-type PastBaseForms = NonDefectivePastBaseForms | DefectivePastBaseForms
+interface DefectivePastBaseForms {
+  kind: 'defective'
+  base: readonly string[]
+  dualBase?: readonly string[]
+  suffixedBase: readonly string[]
+  pluralBase: readonly string[]
+}
+
+type PastBaseForms = SoundPastBaseForms | DefectivePastBaseForms
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const forms = derivePastForms(verb)
-  const isDefective = 'defectiveGlide' in forms
-  const stem = isDefective ? forms.suffixedBase.slice(0, -2) : null
-  const suffixedBase = forms.suffixedBase ?? [...removeFinalDiacritic(forms.base), SUKOON]
-  const firstSuffixChar = suffixedBase.at(-2)
-  const pluralBase = forms.pluralBase ?? [...removeFinalDiacritic(forms.base), DAMMA, WAW]
-
-  const [, c2, c3] = [...verb.root]
+  const { kind, base, suffixedBase, pluralBase } = forms
 
   return mapRecord(
     {
       '1s': [...suffixedBase, TEH, DAMMA],
       '2ms': [...suffixedBase, TEH, FATHA],
       '2fs': [...suffixedBase, TEH, KASRA],
-      '3ms': forms.base,
-      '3fs': [...(stem ?? forms.base), TEH, SUKOON],
+      '3ms': base,
+      '3fs': kind === 'defective' ? [...suffixedBase.slice(0, -2), TEH, SUKOON] : [...base, TEH, SUKOON],
       '2d': [...suffixedBase, TEH, DAMMA, MEEM, FATHA, ALIF],
       '3md':
-        verb.form === 4 && c2 === c3
-          ? forms.base
-          : stem && firstSuffixChar
-            ? [...stem, firstSuffixChar, firstSuffixChar === WAW ? SUKOON : FATHA, ALIF]
-            : [...forms.base, ALIF],
-      '3fd': [...(stem ?? forms.base), TEH, FATHA, ALIF],
+        kind === 'defective'
+          ? (forms.dualBase ?? [...suffixedBase.slice(0, -1), suffixedBase.at(-2) === WAW ? SUKOON : FATHA, ALIF])
+          : [...base, ALIF],
+      '3fd': kind === 'defective' ? [...suffixedBase.slice(0, -2), TEH, FATHA, ALIF] : [...base, TEH, FATHA, ALIF],
       '1p': [...suffixedBase, NOON, FATHA, ALIF],
       '2mp': [...suffixedBase, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...suffixedBase, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp':
-        isWeakLetter(c2) && isHamzatedLetter(c3)
-          ? [...forms.base.slice(0, -2), HAMZA_ON_WAW, DAMMA, WAW, SUKOON, ALIF]
-          : [...pluralBase, SUKOON, ALIF],
+      '3mp': [...pluralBase, SUKOON, ALIF],
       '3fp': [...suffixedBase, NOON, FATHA],
     },
     (value) => normalizeAlifMadda(geminateDoubleLetters(value)).join('').normalize('NFC'),
@@ -84,13 +73,19 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
 }
 
 function buildForms(base: readonly string[], c3: string): PastBaseForms {
-  if (!isWeakLetter(c3)) return { base }
+  if (!isWeakLetter(c3))
+    return {
+      kind: 'sound',
+      base,
+      suffixedBase: [...removeFinalDiacritic(base), SUKOON],
+      pluralBase: [...removeFinalDiacritic(base), DAMMA, WAW],
+    }
+
   const normalizedBase = removeFinalDiacritic(base).slice(0, -1)
-  const defectiveGlide = c3 === ALIF ? WAW : YEH
   return {
+    kind: 'defective',
     base: [...normalizedBase, c3 === YEH ? ALIF_MAQSURA : ALIF],
-    defectiveGlide,
-    suffixedBase: [...normalizedBase, defectiveGlide, SUKOON],
+    suffixedBase: [...normalizedBase, c3 === ALIF ? WAW : YEH, SUKOON],
     pluralBase: [...normalizedBase, WAW],
   }
 }
@@ -109,6 +104,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
 
   if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
     return {
+      kind: 'sound',
       base: [c1, FATHA, seatedC2, KASRA, YEH, FATHA],
       suffixedBase: [c1, FATHA, seatedC2, KASRA, YEH],
       pluralBase: [c1, FATHA, seatedC2, DAMMA, WAW],
@@ -119,19 +115,22 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
 
   if (c2 === c3)
     return {
+      kind: 'sound',
       base: [c1, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [c1, FATHA, c2, pastVowel, c3, SUKOON],
+      pluralBase: [c1, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isMiddleWeak && isHamzatedLetter(c3))
     return {
-      base: [c1, FATHA, ALIF, c3, FATHA],
-      suffixedBase: [c1, KASRA, HAMZA_ON_YEH, SUKOON],
+      ...buildForms([c1, FATHA, ALIF, c3, FATHA], c3),
+      suffixedBase: [c1, KASRA, seatHamza(c3, KASRA), SUKOON],
+      pluralBase: [c1, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
     }
 
   if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
     return {
-      base: [c1, FATHA, ALIF, c3, FATHA],
+      ...buildForms([c1, FATHA, ALIF, c3, FATHA], c3),
       suffixedBase: [c1, c2 === YEH ? KASRA : DAMMA, c3, SUKOON],
     }
 
@@ -142,14 +141,14 @@ function derivePastFormII(verb: Verb<2>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [c1, FATHA, c2, SHADDA, FATHA]
 
-  if (c2 === YEH && c3 === YEH) {
+  if (c2 === YEH && c3 === YEH)
     return {
+      kind: 'defective',
       base: [...prefix, ALIF],
-      defectiveGlide: YEH,
       suffixedBase: [...prefix, YEH, SUKOON],
       pluralBase: [...prefix, WAW],
     }
-  }
+
   return buildForms([...prefix, seatHamza(c3, FATHA), FATHA], c3)
 }
 
@@ -160,8 +159,10 @@ function derivePastFormIII(verb: Verb<3>): PastBaseForms {
 
   if (c2 === c3)
     return {
+      kind: 'sound',
       base: [...prefix, SHADDA, FATHA],
       suffixedBase: [...prefix, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, SHADDA, DAMMA, WAW],
     }
 
   return buildForms([...prefix, FATHA, c3, FATHA], c3)
@@ -169,15 +170,14 @@ function derivePastFormIII(verb: Verb<3>): PastBaseForms {
 
 function derivePastFormIV(verb: Verb<4>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [ALIF_HAMZA, FATHA, c1]
 
-  if (c2 === YEH && c3 === YEH)
+  if (c2 === c3 && isWeakLetter(c3))
     return {
+      ...buildForms([...prefix, SUKOON, c2, FATHA, ALIF], c3),
+      kind: 'defective',
       base: [...prefix, SUKOON, c2, FATHA, ALIF],
-      defectiveGlide: YEH,
-      suffixedBase: [...prefix, SUKOON, c2, FATHA, YEH, SUKOON],
-      pluralBase: [...prefix, SUKOON, c2, FATHA, WAW],
+      dualBase: [...prefix, SUKOON, c2, FATHA, ALIF],
     }
 
   if (c2 === c3) return buildForms([...prefix, FATHA, c2, SHADDA, FATHA], c3)
@@ -186,18 +186,29 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
 
   if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
 
-  if (isWeakLetter(c2))
+  if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
-      base: [...prefix, FATHA, ALIF, c3, FATHA],
-      suffixedBase: [...prefix, KASRA, seatedC3, SUKOON],
+      ...buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3),
+      suffixedBase: [...prefix, KASRA, seatHamza(c3, KASRA), SUKOON],
+      pluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
     }
+
+  if (isWeakLetter(c2)) return buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3)
 
   return buildForms([...prefix, SUKOON, c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormV(verb: Verb<5>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
-  return buildForms([TEH, FATHA, c1, FATHA, seatHamza(c2, FATHA), SHADDA, FATHA, seatHamza(c3, FATHA), FATHA], c3)
+  const prefix = [TEH, FATHA, c1, FATHA, seatHamza(c2, FATHA), SHADDA, FATHA]
+
+  if (isHamzatedLetter(c3))
+    return {
+      ...buildForms([...prefix, seatHamza(c3, FATHA), FATHA], c3),
+      pluralBase: [...prefix, seatHamza(c3, DAMMA), DAMMA, WAW],
+    }
+
+  return buildForms([...prefix, seatHamza(c3, FATHA), FATHA], c3)
 }
 
 function derivePastFormVI(verb: Verb<6>): PastBaseForms {
@@ -208,62 +219,59 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
 
   if (c2 === c3)
     return {
+      kind: 'sound',
       base: [...prefix, FATHA, ALIF, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, FATHA, ALIF, c2, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, FATHA, ALIF, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
-      base: [...prefix, FATHA, ALIF, c3, FATHA],
+      ...buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3),
       suffixedBase: [...prefix, KASRA, seatHamza(c3, KASRA), SUKOON],
+      pluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
     }
 
-  if (isWeakLetter(c3)) {
-    const normalizedBase = removeFinalDiacritic([...prefix, FATHA, ALIF, seatedC2, FATHA, c3, FATHA]).slice(0, -1)
-    return {
-      base: [...normalizedBase, ALIF_MAQSURA],
-      defectiveGlide: YEH,
-      suffixedBase: [...normalizedBase, YEH, SUKOON],
-      pluralBase: [...normalizedBase, WAW],
-    }
-  }
+  if (isWeakLetter(c3)) return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, YEH, FATHA], YEH)
 
   return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, seatedC3, FATHA], seatedC3)
 }
 
 function derivePastFormVII(verb: Verb<7>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
+  const prefix = [ALIF, KASRA, NOON, SUKOON, c1, FATHA]
 
-  if (c2 === c3) {
+  if (c2 === c3)
     return {
-      base: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, SHADDA, FATHA],
-      suffixedBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, SUKOON],
+      kind: 'sound',
+      base: [...prefix, c2, SHADDA, FATHA],
+      suffixedBase: [...prefix, c2, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, c2, SHADDA, DAMMA, WAW],
     }
-  }
 
   if (isWeakLetter(c2) && isWeakLetter(c3))
     return {
-      base: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, ALIF_MAQSURA],
-      defectiveGlide: YEH,
-      suffixedBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, YEH, SUKOON],
-      pluralBase: [ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2],
+      ...buildForms([...prefix, c2, FATHA, YEH, FATHA], YEH),
+      pluralBase: [...prefix, c2],
     }
 
-  if (isWeakLetter(c2)) return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, ALIF, c3, FATHA], c3)
+  if (isWeakLetter(c2)) return buildForms([...prefix, ALIF, c3, FATHA], c3)
 
-  return buildForms([ALIF, KASRA, NOON, SUKOON, c1, FATHA, c2, FATHA, c3, FATHA], c3)
+  return buildForms([...prefix, c2, FATHA, c3, FATHA], c3)
 }
 
 function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
+  const seatedC1 = seatHamza(c1, KASRA)
   const seatedC2 = seatHamza(c2, FATHA)
 
   if (c2 === c3)
     return {
+      kind: 'sound',
       base: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, FATHA, c3, SUKOON],
+      pluralBase: [ALIF, KASRA, seatedC1, SUKOON, infix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (c1 === WAW || c1 === ALIF_HAMZA) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3, FATHA], c3)
@@ -273,7 +281,7 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 
   if (c2 === YEH)
     return {
-      base: [ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA],
+      ...buildForms([ALIF, KASRA, c1, SUKOON, infix, FATHA, ALIF, c3, FATHA], c3),
       suffixedBase: [ALIF, KASRA, c1, SUKOON, infix, FATHA, c3, SUKOON],
     }
 
@@ -287,8 +295,10 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
 function derivePastFormIX(verb: Verb<9>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   return {
+    kind: 'sound',
     base: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, FATHA],
     suffixedBase: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, FATHA, c3, SUKOON],
+    pluralBase: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SHADDA, DAMMA, WAW],
   }
 }
 
@@ -298,15 +308,17 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
 
   if (c2 === c3)
     return {
+      kind: 'sound',
       base: [...prefix, FATHA, c2, SHADDA, FATHA],
       suffixedBase: [...prefix, SUKOON, c2, FATHA, c3, SUKOON],
+      pluralBase: [...prefix, FATHA, c2, SHADDA, DAMMA, WAW],
     }
 
   if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, YEH, FATHA], YEH)
 
   if (isWeakLetter(c2))
     return {
-      base: [...prefix, FATHA, ALIF, c3, FATHA],
+      ...buildForms([...prefix, FATHA, ALIF, c3, FATHA], c3),
       suffixedBase: [...prefix, FATHA, c3, SUKOON],
     }
 
@@ -314,10 +326,8 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {
-  // Handle quadriliteral and longer roots
   if (verb.root.length === 4) return deriveQuadriliteralPastForms(verb)
 
-  // Triliteral roots (3 letters)
   switch (verb.form) {
     case 1:
       return derivePastFormI(verb)
