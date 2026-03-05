@@ -295,7 +295,10 @@ describe('passive present jussive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أني', 'يُؤْنَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أجر', 'يُؤْجَرْ'],
+        ['أني', 'يُؤْنَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
@@ -537,6 +540,7 @@ describe('passive present jussive', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أخر', 'يُؤَخَّرْ'],
+        ['أجر', 'يُؤَجَّرْ'],
         ['أمر', 'يُؤَمَّرْ'],
         ['أثر', 'يُؤَثَّرْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {

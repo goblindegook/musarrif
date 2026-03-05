@@ -7,6 +7,7 @@ describe('active present subjunctive', () => {
     describe('regular roots', () => {
       test.each([
         ['نظر', 'يَنْظُرَ'],
+        ['سلم', 'يَسْلَمَ'],
         ['بعد', 'يَبْعَدَ'],
         ['مثل', 'يَمْثُلَ'],
         ['دعم', 'يَدْعَمَ'],
@@ -572,7 +573,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أمر', 'يَأْمُرَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أجر', 'يَأْجُرَ'],
+        ['أمر', 'يَأْمُرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -639,6 +643,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
+        ['أجر', 'يُؤَجِّرَ'],
         ['أجج', 'يُؤَجِّجَ'],
         ['أسس', 'يُؤَسِّسَ'],
         ['أخر', 'يُؤَخِّرَ'],

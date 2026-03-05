@@ -81,6 +81,9 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
     case 'fi3la':
       return [seatedC1, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
+    case 'fu3la':
+      return [isInitialHamza ? ALIF_HAMZA : c1, DAMMA, c2, SUKOON, seatHamza(c3, FATHA), FATHA, TEH_MARBUTA]
+
     case 'fi3al':
       return [seatedC1, KASRA, c2, FATHA, c3]
 

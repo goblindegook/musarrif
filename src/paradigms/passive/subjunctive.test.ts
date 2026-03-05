@@ -293,6 +293,7 @@ describe('passive present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
+        ['أجر', 'يُؤْجَرَ'],
         ['أبي', 'يُؤْبَى'],
         ['أني', 'يُؤْنَى'],
       ])('%s pattern', (root, expected) => {
@@ -501,6 +502,7 @@ describe('passive present subjunctive', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أخر', 'يُؤَخَّرَ'],
+        ['أجر', 'يُؤَجَّرَ'],
         ['أمر', 'يُؤَمَّرَ'],
         ['أثر', 'يُؤَثَّرَ'],
       ])('%s pattern', (root, expected) => {

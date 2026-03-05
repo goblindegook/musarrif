@@ -56,6 +56,7 @@ describe('masdar', () => {
         ['لعب', 'لُعْب'],
         ['شكر', 'شُكْر'],
         ['شرب', ['شُرْب', 'مَشْرَب']],
+        ['سلم', ['سَلَامَة', 'سَلَم']],
         ['لزم', []],
         ['بعد', []],
         ['هدم', []],
@@ -173,6 +174,7 @@ describe('masdar', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أمر', 'أَمْر'],
+        ['أجر', ['أَجْر', 'أُجْرَة']],
         ['أمن', 'أَمْن'],
         ['أذن', 'أَذَن'],
         ['أسر', 'أَسْر'],
@@ -297,6 +299,7 @@ describe('masdar', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أخر', 'تَأْخِير'],
+        ['أجر', 'تَأْجِير'],
         ['أمر', 'تَأْمِير'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())

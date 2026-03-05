@@ -162,7 +162,7 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
       masculineDualBase: [...prefix, SUKOON, c2, FATHA],
     }
 
-  if (c2 === c3) return buildForms([...prefix, FATHA, c2, SHADDA], c3)
+  if (c2 === c3) return buildForms([...prefix, FATHA, c2, SUKOON, c3], c3)
 
   if (isHamzatedLetter(c2) && isWeakLetter(c3)) return buildForms([...prefix, FATHA, c3], c3)
 
@@ -229,7 +229,7 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
 
   if (isWeakLetter(c2) && isWeakLetter(c3))
     return {
-      ...buildForms([...prefix, c2, FATHA, YEH], YEH),
+      ...buildForms([...prefix, c2, FATHA, c3], c3),
       thirdPersonMasculinePluralBase: [...prefix, c2],
     }
 

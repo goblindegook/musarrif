@@ -6,6 +6,7 @@ import {
   ALIF_HAMZA_BELOW,
   DAMMA,
   FATHA,
+  HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isHamzatedLetter,
   isWeakLetter,
@@ -54,6 +55,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (isInitialHamza) {
             const initialHamzatedStem = Array.from(jussive).slice(4)
 
+            if (verb.contractedImperative) return initialHamzatedStem
+
             if (isFinalWeak) {
               const glide = c2 === NOON || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
               return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, c2, glide, ...initialHamzatedStem.slice(2)]
@@ -74,7 +77,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (isPatternA || isPatternI) return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
 
-            return initialHamzatedStem
+            if (isPatternU) return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
           }
 
           if (c3 === WAW && stem.at(-1) === ALIF) return stem

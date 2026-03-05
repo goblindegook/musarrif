@@ -66,6 +66,7 @@ describe('passive participle', () => {
         ['وفد', 'مَوْفُود'],
         ['وهن', 'مَوْهُون'],
         ['وقف', 'مَوْقُوف'],
+        ['سلم', 'مَسْلُوم'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -134,6 +135,7 @@ describe('passive participle', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أذن', 'مَأْذُون'],
+        ['أجر', 'مَأْجُور'],
         ['أسر', 'مَأْسُور'],
         ['أكل', 'مَأْكُول'],
         ['أخذ', 'مَأْخُوذ'],
@@ -309,6 +311,7 @@ describe('passive participle', () => {
       test.each([
         ['أثر', 'مُؤَثَّر'],
         ['أجج', 'مُؤَجَّج'],
+        ['أجر', 'مُؤَجَّر'],
         ['أكد', 'مُؤَكَّد'],
         ['أيد', 'مُؤَيَّد'],
         ['أسس', 'مُؤَسَّس'],

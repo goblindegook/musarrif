@@ -18,6 +18,7 @@ export type MasdarPattern =
   | 'fi3an'
   | 'fi3l'
   | 'fi3la'
+  | 'fu3la'
   | 'fu3aal'
   | 'fu3l'
   | 'fu3ool'
@@ -36,6 +37,7 @@ type RawFormI = {
   masdarPatterns?: readonly MasdarPattern[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
+  contractedImperative?: boolean
 }
 
 type RawNonFormI = {

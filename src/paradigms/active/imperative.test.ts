@@ -30,6 +30,7 @@ describe('imperative', () => {
         ['بلغ', 'اُبْلُغْ'],
         ['دخل', 'اُدْخُلْ'],
         ['ذهب', 'اِذْهَبْ'],
+        ['سلم', 'اِسْلَمْ'],
         ['بعد', 'اِبْعَدْ'],
         ['دعم', 'اِدْعَمْ'],
         ['كلم', 'اِكْلِمْ'],
@@ -409,6 +410,16 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
+      test('أَجَرَ conjugation', () => {
+        expect(conjugateImperative(getVerb('أجر', 1))).toMatchObjectT({
+          '2ms': 'اُؤْجُرْ',
+          '2fs': 'اُؤْجُرِي',
+          '2d': 'اُؤْجُرَا',
+          '2mp': 'اُؤْجُرُوْا',
+          '2fp': 'اُؤْجُرْنَ',
+        })
+      })
+
       test('أَخَذَ conjugation', () => {
         expect(conjugateImperative(getVerb('أخذ', 1))).toMatchObjectT({
           '2ms': 'خُذْ',
@@ -416,6 +427,16 @@ describe('imperative', () => {
           '2d': 'خُذَا',
           '2mp': 'خُذُوْا',
           '2fp': 'خُذْنَ',
+        })
+      })
+
+      test('أَكَلَ conjugation', () => {
+        expect(conjugateImperative(getVerb('أكل', 1))).toMatchObjectT({
+          '2ms': 'كُلْ',
+          '2fs': 'كُلِي',
+          '2d': 'كُلَا',
+          '2mp': 'كُلُوْا',
+          '2fp': 'كُلْنَ',
         })
       })
 
@@ -759,6 +780,7 @@ describe('imperative', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أكد', 'أَكِّدْ'],
+        ['أجر', 'أَجِّرْ'],
         ['أجج', 'أَجِّجْ'],
         ['أسس', 'أَسِّسْ'],
       ])('%s pattern', (root, expected) => {

@@ -37,6 +37,7 @@ describe('active present indicative', () => {
         ['قفز', 'يَقْفِزُ'],
         ['كسر', 'يَكْسِرُ'],
         ['هجر', 'يَهْجُرُ'],
+        ['سلم', 'يَسْلَمُ'],
         ['صغر', 'يَصْغُرُ'],
         ['دخل', 'يَدْخُلُ'],
       ])('%s pattern', (root, expected) => {
@@ -557,6 +558,7 @@ describe('active present indicative', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أذن', 'يَأْذَنُ'],
+        ['أجر', 'يَأْجُرُ'],
         ['أسر', 'يَأْسِرُ'],
         ['أخذ', 'يَأْخُذُ'],
         ['أمر', 'يَأْمُرُ'],
@@ -1044,6 +1046,7 @@ describe('active present indicative', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أكد', 'يُؤَكِّدُ'],
+        ['أجر', 'يُؤَجِّرُ'],
         ['أثر', 'يُؤَثِّرُ'],
         ['أجج', 'يُؤَجِّجُ'],
         ['أسس', 'يُؤَسِّسُ'],

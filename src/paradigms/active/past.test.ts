@@ -22,6 +22,7 @@ describe('active past', () => {
         ['بلغ', 'بَلَغَ'],
         ['صبح', 'صَبَحَ'],
         ['بعد', 'بَعِدَ'],
+        ['سلم', 'سَلِمَ'],
         ['مثل', 'مَثَلَ'],
         ['نظر', 'نَظَرَ'],
         ['صغر', 'صَغُرَ'],
@@ -438,6 +439,7 @@ describe('active past', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أمن', 'أَمِنَ'],
+        ['أجر', 'أَجَرَ'],
         ['أذن', 'أَذِنَ'],
         ['أسر', 'أَسَرَ'],
         ['أخذ', 'أَخَذَ'],
@@ -883,7 +885,10 @@ describe('active past', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أخر', 'أَخَّرَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أخر', 'أَخَّرَ'],
+        ['أجر', 'أَجَّرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })

@@ -545,6 +545,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
+        ['أجر', 'أُجِرَ'],
         ['أبي', 'أُبِيَ'],
         ['أني', 'أُنِيَ'],
       ])('%s pattern', (root, expected) => {
@@ -708,6 +709,7 @@ describe('passive past pattern', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أخر', 'أُخِّرَ'],
+        ['أجر', 'أُجِّرَ'],
         ['أمر', 'أُمِّرَ'],
         ['أثر', 'أُثِّرَ'],
       ])('%s pattern', (root, expected) => {

@@ -7,6 +7,7 @@ describe('active present jussive', () => {
     describe('regular roots', () => {
       test.each([
         ['نظر', 'يَنْظُرْ'],
+        ['سلم', 'يَسْلَمْ'],
         ['بعد', 'يَبْعَدْ'],
         ['مثل', 'يَمْثُلْ'],
         ['دعم', 'يَدْعَمْ'],
@@ -462,6 +463,24 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
+      test('أَجَرَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('أجر', 1), 'jussive')).toEqualT({
+          '1s': 'آجُرْ',
+          '2ms': 'تَأْجُرْ',
+          '2fs': 'تَأْجُرِي',
+          '3ms': 'يَأْجُرْ',
+          '3fs': 'تَأْجُرْ',
+          '2d': 'تَأْجُرَا',
+          '3md': 'يَأْجُرَا',
+          '3fd': 'تَأْجُرَا',
+          '1p': 'نَأْجُرْ',
+          '2mp': 'تَأْجُرُوْا',
+          '2fp': 'تَأْجُرْنَ',
+          '3mp': 'يَأْجُرُوْا',
+          '3fp': 'يَأْجُرْنَ',
+        })
+      })
+
       test('أَسَرَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('أسر', 1), 'jussive')).toEqualT({
           '1s': 'آسِرْ',
@@ -818,6 +837,7 @@ describe('active present jussive', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['أخر', 'يُؤَخِّرْ'],
+        ['أجر', 'يُؤَجِّرْ'],
         ['أمر', 'يُؤَمِّرْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
