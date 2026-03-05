@@ -99,12 +99,11 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
       suffixedBase: [...prefix, pastVowel, c3],
     }
 
-  if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i')) {
+  if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i'))
     return {
       ...buildForms([...prefix, KASRA, YEH], ''),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA, WAW],
     }
-  }
 
   if (isWeakLetter(c3)) return buildForms([...prefix, pastVowel, c3], c3)
 
