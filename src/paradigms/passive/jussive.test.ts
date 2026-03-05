@@ -1912,8 +1912,26 @@ describe('passive present jussive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'يُسْتَجْوَبْ']])('%s pattern', (root, expected) => {
+      test.each([['جوب', 'يُسْتَجَبْ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِسْتَشَارَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('شور', 10), 'jussive')).toEqualT({
+          '1s': 'أُسْتَشَرْ',
+          '2ms': 'تُسْتَشَرْ',
+          '2fs': 'تُسْتَشَارِي',
+          '3ms': 'يُسْتَشَرْ',
+          '3fs': 'تُسْتَشَرْ',
+          '2d': 'تُسْتَشَارَا',
+          '3md': 'يُسْتَشَارَا',
+          '3fd': 'تُسْتَشَارَا',
+          '1p': 'نُسْتَشَرْ',
+          '2mp': 'تُسْتَشَارُوْا',
+          '2fp': 'تُسْتَشَرْنَ',
+          '3mp': 'يُسْتَشَارُوْا',
+          '3fp': 'يُسْتَشَرْنَ',
+        })
       })
     })
 

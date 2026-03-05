@@ -77,7 +77,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (isPatternA || isPatternI) return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
 
-            if (isPatternU) return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
+            return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
           }
 
           if (c3 === WAW && stem.at(-1) === ALIF) return stem

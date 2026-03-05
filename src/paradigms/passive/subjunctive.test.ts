@@ -1784,8 +1784,26 @@ describe('passive present subjunctive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'يُسْتَجْوَبَ']])('%s pattern', (root, expected) => {
+      test.each([['جوب', 'يُسْتَجَابَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِسْتَشَارَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('شور', 10), 'subjunctive')).toEqualT({
+          '1s': 'أُسْتَشَارَ',
+          '2ms': 'تُسْتَشَارَ',
+          '2fs': 'تُسْتَشَارِي',
+          '3ms': 'يُسْتَشَارَ',
+          '3fs': 'تُسْتَشَارَ',
+          '2d': 'تُسْتَشَارَا',
+          '3md': 'يُسْتَشَارَا',
+          '3fd': 'تُسْتَشَارَا',
+          '1p': 'نُسْتَشَارَ',
+          '2mp': 'تُسْتَشَارُوْا',
+          '2fp': 'تُسْتَشَرْنَ',
+          '3mp': 'يُسْتَشَارُوْا',
+          '3fp': 'يُسْتَشَرْنَ',
+        })
       })
     })
 

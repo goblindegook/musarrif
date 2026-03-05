@@ -943,6 +943,7 @@ describe('passive participle', () => {
         ['ضيف', 'مُسْتَضَاف'],
         ['عون', 'مُسْتَعَان'],
         ['جوب', 'مُسْتَجَاب'],
+        ['شور', 'مُسْتَشَار'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })

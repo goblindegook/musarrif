@@ -404,6 +404,7 @@
   { "root": "شكك", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "شهد", "form": 3 },
   { "root": "شيد", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": [] },
+  { "root": "شور", "form": 10 },
   { "root": "شوق", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "شوق", "form": 2 },
   { "root": "شوق", "form": 5, "passiveVoice": "none" },

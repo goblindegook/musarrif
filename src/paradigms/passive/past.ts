@@ -344,6 +344,14 @@ function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
       suffix3sd: [HAMZA, FATHA],
     }
 
+  if (isWeakLetter(c2))
+    return {
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, KASRA],
+      suffix: [c3, SUKOON],
+      suffix3sd: [YEH, c3, FATHA],
+      suffix3mp: [YEH, c3, DAMMA, WAW, SUKOON, ALIF],
+    }
+
   return {
     prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, SUKOON, c2, KASRA],
     suffix: [seatedC3, SUKOON],

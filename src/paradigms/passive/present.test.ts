@@ -1868,8 +1868,26 @@ describe('passive present indicative', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'يُسْتَجْوَبُ']])('%s pattern', (root, expected) => {
+      test.each([['جوب', 'يُسْتَجَابُ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('اِسْتَشَارَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('شور', 10), 'indicative')).toEqualT({
+          '1s': 'أُسْتَشَارُ',
+          '2ms': 'تُسْتَشَارُ',
+          '2fs': 'تُسْتَشَارِيْنَ',
+          '3ms': 'يُسْتَشَارُ',
+          '3fs': 'تُسْتَشَارُ',
+          '2d': 'تُسْتَشَارَانِ',
+          '3md': 'يُسْتَشَارَانِ',
+          '3fd': 'تُسْتَشَارَانِ',
+          '1p': 'نُسْتَشَارُ',
+          '2mp': 'تُسْتَشَارُوْنَ',
+          '2fp': 'تُسْتَشَرْنَ',
+          '3mp': 'يُسْتَشَارُوْنَ',
+          '3fp': 'يُسْتَشَرْنَ',
+        })
       })
     })
 

@@ -1647,8 +1647,26 @@ describe('passive past pattern', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'اُسْتُجْوِبَ']])('%s pattern', (root, expected) => {
+      test.each([['جوب', 'اُسْتُجِيبَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+
+      test('اِسْتَشَارَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('شور', 10))).toEqualT({
+          '1s': 'اُسْتُشِرْتُ',
+          '2ms': 'اُسْتُشِرْتَ',
+          '2fs': 'اُسْتُشِرْتِ',
+          '3ms': 'اُسْتُشِيرَ',
+          '3fs': 'اُسْتُشِيرَتْ',
+          '2d': 'اُسْتُشِرْتُمَا',
+          '3md': 'اُسْتُشِيرَا',
+          '3fd': 'اُسْتُشِيرَتَا',
+          '1p': 'اُسْتُشِرْنَا',
+          '2mp': 'اُسْتُشِرْتُمْ',
+          '2fp': 'اُسْتُشِرْتُنَّ',
+          '3mp': 'اُسْتُشِيرُوْا',
+          '3fp': 'اُسْتُشِرْنَ',
+        })
       })
     })
 

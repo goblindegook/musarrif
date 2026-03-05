@@ -2166,7 +2166,10 @@ describe('active present jussive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each<[string, string]>([['قود', 'يَسْتَقِدْ']])('%s pattern', (root, expected3ms) => {
+      test.each<[string, string]>([
+        ['قود', 'يَسْتَقِدْ'],
+        ['شور', 'يَسْتَشِرْ'],
+      ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 10), 'jussive')
         expect(jussive['3ms']).toEqualT(expected3ms)
       })

@@ -1904,6 +1904,10 @@ describe('imperative', () => {
     })
 
     describe('hollow roots', () => {
+      test.each([['شور', 'اِسْتَشِرْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
+      })
+
       test('اِسْتَجَابَ conjugation', () => {
         expect(conjugateImperative(getVerb('جوب', 10))).toMatchObjectT({
           '2ms': 'اِسْتَجِبْ',
