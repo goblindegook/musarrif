@@ -943,7 +943,10 @@ describe('passive participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['دعو', 'مُسْتَدْعًى']])('%s', (root, expected) => {
+      test.each([
+        ['دعو', 'مُسْتَدْعًى'],
+        ['أني', 'مُسْتَأْنًى'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

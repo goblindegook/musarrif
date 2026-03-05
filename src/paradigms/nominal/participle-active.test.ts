@@ -980,7 +980,10 @@ describe('active participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['دعو', 'مُسْتَدْعٍ']])('%s', (root, expected) => {
+      test.each([
+        ['دعو', 'مُسْتَدْعٍ'],
+        ['أني', 'مُسْتَأْنٍ'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

@@ -120,6 +120,7 @@
   { "root": "بءس", "form": 8, "passiveVoice": "impersonal" },
   { "root": "أبي", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aal"] },
   { "root": "أني", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3an"] },
+  { "root": "أني", "form": 10 },
   { "root": "بيت", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["mimi"] },
   { "root": "تاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "تاج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
