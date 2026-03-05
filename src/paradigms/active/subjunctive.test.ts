@@ -1823,6 +1823,12 @@ describe('active present subjunctive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وجب', 'يَسْتَوْجِبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'يَسْتَشِفَّ'],

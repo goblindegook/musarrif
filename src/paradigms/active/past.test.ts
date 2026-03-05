@@ -2398,6 +2398,12 @@ describe('active past', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وجب', 'اِسْتَوْجَبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'اِسْتَشَفَّ'],

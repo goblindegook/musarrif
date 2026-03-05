@@ -1578,6 +1578,12 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وجب', 'اُسْتُوْجِبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test('اِسْتَأْنَى conjugation', () => {
         expect(conjugatePassivePast(getVerb('أني', 10))).toEqualT({

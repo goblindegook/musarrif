@@ -1729,6 +1729,12 @@ describe('passive present subjunctive', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وجب', 'يُسْتَوْجَبَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('defective roots', () => {
       test.each([['أني', 'يُسْتَأْنَى']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)

@@ -789,6 +789,7 @@
   { "root": "وطن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "وطن", "form": 2 },
   { "root": "وجب", "form": 1, "formPattern": "fa3ala-yaf3ilu", "passiveVoice": "none", "masdarPatterns": ["fu3ool"] },
+  { "root": "وجب", "form": 10 },
   { "root": "وصف", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "وفد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3ool"] },
   { "root": "ولي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": ["fa3l"] },

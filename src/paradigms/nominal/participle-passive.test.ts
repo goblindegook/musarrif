@@ -918,6 +918,12 @@ describe('passive participle', () => {
       })
     })
 
+    describe('assimilated roots', () => {
+      test.each([['وجب', 'مُسْتَوْجَب']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'مُسْتَشَفّ'],

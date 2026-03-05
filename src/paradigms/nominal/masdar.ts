@@ -241,19 +241,18 @@ function deriveMasdarFormX(verb: Verb<10>): readonly string[] {
   const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isFinalHamza = isHamzatedLetter(c3)
-  const seatedC1 = isInitialHamza ? HAMZA_ON_YEH : c1
+  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_YEH : c1
+  const seatedC3 = isHamzatedLetter(c3) || isFinalWeak ? HAMZA : c3
 
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
 
-  if (isInitialWeak && isFinalWeak) return [...prefix, YEH, c2, FATHA, ALIF, HAMZA]
+  if (isInitialWeak) return [...prefix, YEH, c2, FATHA, ALIF, seatedC3]
 
-  if (isFinalWeak) return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, HAMZA]
+  if (isFinalWeak) return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, seatedC3]
 
   if (isMiddleWeak) return [...prefix, seatedC1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-  return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, isFinalHamza || isFinalWeak ? HAMZA : c3]
+  return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, seatedC3]
 }
 
 function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
