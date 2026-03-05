@@ -66,8 +66,6 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
     return [...prefix, verb.form === 5 ? HAMZA_ON_WAW : HAMZA_ON_YEH, DAMMA, ...suffix]
 
   if (isWeakLetter(c3)) {
-    if (verb.form === 10 && isWeakLetter(c2)) return [...prefix, DAMMA, ...suffix]
-
     if (isWeakLetter(c2)) return [...prefix, DAMMA, ...suffix]
 
     if ([2, 3, 8].includes(verb.form)) return [...prefix, DAMMA, ...suffix]
@@ -150,11 +148,15 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
 
   if (isWeakLetter(c3)) {
     if (isHamzatedLetter(c2)) return [...stem.slice(0, -1), YEH, ...suffix]
+
     if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+
     if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
+
     if (verb.form === 8) return [...stem, ...suffix]
-    if (verb.form === 10 && isWeakLetter(c2)) return [...stem, ...suffix]
+
     if (isWeakLetter(c1)) return [...removeFinalDiacritic(stem.slice(0, -2)), ...suffix]
+
     return [...stem, ...suffix]
   }
 
