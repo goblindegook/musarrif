@@ -142,7 +142,7 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
   if (isHamzatedLetter(c3)) {
     if (verb.form === 4) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
     if (verb.form === 5) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
-    if (c2 === YEH) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
+    if ((verb.form === 10 && isWeakLetter(c2)) || c2 === YEH) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
   }
 
   if (isWeakLetter(c3)) {
@@ -452,16 +452,15 @@ function derivePresentFormIX(verb: Verb<9>): readonly string[] {
 
 function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 
-  if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, seatedC3, DAMMA]
+  if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, c3, DAMMA]
 
   if (!isWeakLetter(c1) && isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, YEH]
 
-  return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
+  return [...prefix, SUKOON, c2, KASRA, seatHamza(c3, KASRA), DAMMA]
 }
 
 function derivePresentForms(verb: Verb): readonly string[] {

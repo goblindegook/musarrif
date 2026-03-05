@@ -440,6 +440,7 @@
   { "root": "ضحي", "form": 4 },
   { "root": "ضوء", "form": 4 },
   { "root": "ضوء", "form": 5, "passiveVoice": "none" },
+  { "root": "ضوء", "form": 10, "passiveVoice": "impersonal" },
   { "root": "ضيق", "form": 3 },
   { "root": "ضدد", "form": 6 },
   { "root": "ضرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },

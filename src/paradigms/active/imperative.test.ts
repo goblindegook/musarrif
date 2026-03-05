@@ -1965,6 +1965,12 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'اِسْتَضِئْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
+      })
+    })
   })
 
   test('stems from jussive for non-hamzated roots', () => {

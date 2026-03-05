@@ -2233,5 +2233,11 @@ describe('active present jussive', () => {
         })
       })
     })
+
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'يَسْتَضِئْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
   })
 })

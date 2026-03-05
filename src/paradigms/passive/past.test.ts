@@ -1638,5 +1638,11 @@ describe('passive past pattern', () => {
         })
       })
     })
+
+    describe('hamzated final hollow roots', () => {
+      test.each([['ضوء', 'اُسْتُضِيءَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+    })
   })
 })
