@@ -1911,6 +1911,16 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
 
+      test('اِسْتَحْيَا conjugation', () => {
+        expect(conjugateImperative(getVerb('حيي', 10))).toMatchObjectT({
+          '2ms': 'اِسْتَحْيِ',
+          '2fs': 'اِسْتَحْيِي',
+          '2d': 'اِسْتَحْيِيَا',
+          '2mp': 'اِسْتَحْيُوْا',
+          '2fp': 'اِسْتَحْيِيْنَ',
+        })
+      })
+
       test('اِسْتَوْفَى conjugation', () => {
         expect(conjugateImperative(getVerb('وفي', 10))).toMatchObjectT({
           '2ms': 'اِسْتَوْفِ',

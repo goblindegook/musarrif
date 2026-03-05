@@ -2658,6 +2658,24 @@ describe('active present indicative', () => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test('اِسْتَحْيَا conjugation', () => {
+        expect(conjugatePresentMood(getVerb('حيي', 10), 'indicative')).toEqualT({
+          '1s': 'أَسْتَحْيِي',
+          '2ms': 'تَسْتَحْيِي',
+          '2fs': 'تَسْتَحْيِيْنَ',
+          '3ms': 'يَسْتَحْيِي',
+          '3fs': 'تَسْتَحْيِي',
+          '2d': 'تَسْتَحْيِيَانِ',
+          '3md': 'يَسْتَحْيِيَانِ',
+          '3fd': 'تَسْتَحْيِيَانِ',
+          '1p': 'نَسْتَحْيِي',
+          '2mp': 'تَسْتَحْيُوْنَ',
+          '2fp': 'تَسْتَحْيِيْنَ',
+          '3mp': 'يَسْتَحْيُوْنَ',
+          '3fp': 'يَسْتَحْيِيْنَ',
+        })
+      })
+
       test('اِسْتَوْفَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('وفي', 10), 'indicative')).toEqualT({
           '1s': 'أَسْتَوْفِيُ',

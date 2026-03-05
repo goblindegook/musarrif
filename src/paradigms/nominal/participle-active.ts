@@ -153,11 +153,11 @@ export function deriveActiveParticiple(verb: Verb): string | null {
       case 10: {
         const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA]
 
-        if (c2 === c3) return [...prefix, c1, KASRA, c2, SHADDA]
+        if (isFinalWeak) return [...prefix, c1, SUKOON, c2, TANWEEN_KASRA]
 
         if (isMiddleWeak) return [...prefix, c1, KASRA, YEH, c3]
 
-        if (isFinalWeak) return [...prefix, c1, SUKOON, c2, TANWEEN_KASRA]
+        if (c2 === c3) return [...prefix, c1, KASRA, c2, SHADDA]
 
         return [...prefix, c1, SUKOON, c2, KASRA, seatedC3]
       }

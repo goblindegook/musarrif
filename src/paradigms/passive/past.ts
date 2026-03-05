@@ -320,28 +320,27 @@ function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const seatedC3 = seatHamza(c3, KASRA)
 
-  if (c2 === c3) {
+  if (isWeakLetter(c3))
+    return {
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2],
+      suffix: [KASRA, YEH, SUKOON],
+      suffix3sd: [KASRA, YEH, FATHA],
+      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
+    }
+
+  if (c2 === c3)
     return {
       prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
-  }
-
-  if (isWeakLetter(c3))
-    return {
-      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2],
-      suffix: [KASRA, YEH],
-      suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
-      suffix3fp: [KASRA, YEH, NOON, FATHA],
-    }
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {
       prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA, YEH],
-      suffix: [HAMZA_ON_YEH, SUKOON],
+      suffix: [seatedC3, SUKOON],
       suffix3sd: [HAMZA, FATHA],
       suffix3mp: [HAMZA, DAMMA, WAW, SUKOON, ALIF],
     }

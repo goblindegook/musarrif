@@ -1879,6 +1879,24 @@ describe('active present subjunctive', () => {
       test.each([['ولي', 'يَسْتَوْلِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('اِسْتَحْيَا conjugation', () => {
+        expect(conjugatePresentMood(getVerb('حيي', 10), 'subjunctive')).toEqualT({
+          '1s': 'أَسْتَحْيِيَ',
+          '2ms': 'تَسْتَحْيِيَ',
+          '2fs': 'تَسْتَحْيِي',
+          '3ms': 'يَسْتَحْيِيَ',
+          '3fs': 'تَسْتَحْيِيَ',
+          '2d': 'تَسْتَحْيِيَا',
+          '3md': 'يَسْتَحْيِيَا',
+          '3fd': 'تَسْتَحْيِيَا',
+          '1p': 'نَسْتَحْيِيَ',
+          '2mp': 'تَسْتَحْيُوْا',
+          '2fp': 'تَسْتَحْيِيْنَ',
+          '3mp': 'يَسْتَحْيُوْا',
+          '3fp': 'يَسْتَحْيِيْنَ',
+        })
+      })
     })
 
     describe('hamzated final roots', () => {

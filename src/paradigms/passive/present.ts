@@ -364,6 +364,8 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
   const prefix = [SEEN, SUKOON, TEH, FATHA]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
+  if (isWeakLetter(c3)) return [...prefix, c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
+
   if (c2 === c3) {
     if (isFemininePlural(pronounId)) return [...prefix, c1, FATHA, c2, FATHA, c3, ...geminateSuffix(mood, pronounId)]
     return [...prefix, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
@@ -376,8 +378,6 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
       return [...prefix, c1, FATHA, ALIF, HAMZA_ON_YEH, ...moodSuffix]
     return [...prefix, c1, FATHA, ALIF, HAMZA, ...moodSuffix]
   }
-
-  if (isWeakLetter(c3)) return [...prefix, c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return [...prefix, c1, SUKOON, c2, FATHA, c3, ...moodSuffix]
 }

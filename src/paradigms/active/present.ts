@@ -55,6 +55,7 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 
 function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
+  const prefix = stem.slice(0, -2)
   const suffix = [WAW, SUKOON, NOON, FATHA]
 
   if (isFormIFinalWeakPresent(verb, 'a') && isHamzatedLetter(c2)) return [YEH, FATHA, c1, FATHA, ...suffix]
@@ -62,21 +63,23 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
   if (isFormIFinalWeakPresent(verb, 'a')) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
-    return [...stem.slice(0, -2), verb.form === 5 ? HAMZA_ON_WAW : HAMZA_ON_YEH, DAMMA, ...suffix]
+    return [...prefix, verb.form === 5 ? HAMZA_ON_WAW : HAMZA_ON_YEH, DAMMA, ...suffix]
 
   if (isWeakLetter(c3)) {
-    if (isWeakLetter(c2)) return [...stem.slice(0, -2), DAMMA, ...suffix]
+    if (verb.form === 10 && isWeakLetter(c2)) return [...prefix, DAMMA, ...suffix]
 
-    if ([2, 3, 8].includes(verb.form)) return [...stem.slice(0, -2), DAMMA, ...suffix]
+    if (isWeakLetter(c2)) return [...prefix, DAMMA, ...suffix]
 
-    if ([5, 6].includes(verb.form)) return [...stem.slice(0, -2), FATHA, ...suffix]
+    if ([2, 3, 8].includes(verb.form)) return [...prefix, DAMMA, ...suffix]
+
+    if ([5, 6].includes(verb.form)) return [...prefix, FATHA, ...suffix]
 
     if (verb.form === 7) return [...stem, ...suffix]
 
     if (isHamzatedLetter(c2))
-      return [...stem.slice(0, -2).map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char)), DAMMA, ...suffix]
+      return [...prefix.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char)), DAMMA, ...suffix]
 
-    if (isWeakLetter(c1)) return [...removeFinalDiacritic(stem.slice(0, -2)), ...suffix]
+    if (isWeakLetter(c1)) return [...removeFinalDiacritic(prefix), ...suffix]
 
     return [...stem.slice(0, -2), DAMMA, ...suffix]
   }
@@ -150,6 +153,7 @@ function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[
     if (isFormIFinalWeakPresent(verb, 'a')) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
     if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
     if (verb.form === 8) return [...stem, ...suffix]
+    if (verb.form === 10 && isWeakLetter(c2)) return [...stem, ...suffix]
     if (isWeakLetter(c1)) return [...removeFinalDiacritic(stem.slice(0, -2)), ...suffix]
     return [...stem, ...suffix]
   }
@@ -453,6 +457,8 @@ function derivePresentFormIX(verb: Verb<9>): readonly string[] {
 function derivePresentFormX(verb: Verb<10>): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
+
+  if (isWeakLetter(c2) && isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, c3]
 
   if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 

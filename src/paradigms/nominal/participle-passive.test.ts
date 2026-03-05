@@ -952,6 +952,7 @@ describe('passive participle', () => {
       test.each([
         ['وفي', 'مُسْتَوْفًى'],
         ['ولي', 'مُسْتَوْلًى'],
+        ['حيي', 'مُسْتَحْيًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })

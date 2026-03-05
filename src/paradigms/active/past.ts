@@ -280,6 +280,8 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, isHamzatedLetter(c1) ? ALIF_HAMZA : c1]
 
+  if (isWeakLetter(c2) && isWeakLetter(c3)) return buildForms([...prefix, FATHA, ALIF], c3)
+
   if (c2 === c3)
     return {
       ...buildForms([...prefix, FATHA, c2, SUKOON, c3], c3),

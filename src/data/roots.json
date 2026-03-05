@@ -214,6 +214,7 @@
   { "root": "حوز", "form": 7, "passiveVoice": "impersonal" },
   { "root": "حيي", "form": 2 },
   { "root": "حيي", "form": 4 },
+  { "root": "حيي", "form": 10 },
   { "root": "حصد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   {
     "root": "حضر",

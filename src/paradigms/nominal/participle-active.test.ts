@@ -989,6 +989,7 @@ describe('active participle', () => {
       test.each([
         ['وفي', 'مُسْتَوْفٍ'],
         ['ولي', 'مُسْتَوْلٍ'],
+        ['حيي', 'مُسْتَحْيٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })

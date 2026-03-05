@@ -1753,6 +1753,24 @@ describe('passive present subjunctive', () => {
       test.each([['ولي', 'يُسْتَوْلَى']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('اِسْتَحْيَا conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('حيي', 10), 'subjunctive')).toEqualT({
+          '1s': 'أُسْتَحْيَى',
+          '2ms': 'تُسْتَحْيَى',
+          '2fs': 'تُسْتَحْيَيْ',
+          '3ms': 'يُسْتَحْيَى',
+          '3fs': 'تُسْتَحْيَى',
+          '2d': 'تُسْتَحْيَيَا',
+          '3md': 'يُسْتَحْيَيَا',
+          '3fd': 'تُسْتَحْيَيَا',
+          '1p': 'نُسْتَحْيَى',
+          '2mp': 'تُسْتَحْيَوْا',
+          '2fp': 'تُسْتَحْيَيْنَ',
+          '3mp': 'يُسْتَحْيَوْا',
+          '3fp': 'يُسْتَحْيَيْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
