@@ -12,13 +12,13 @@ import {
   geminateDoubleLetters,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
+  isDiacritic,
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
   longVowel,
   NOON,
   normalizeAlifMadda,
-  removeFinalDiacritic,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -334,7 +334,7 @@ function derivePresentFormI(verb: Verb<1>): readonly string[] {
   if (isFinalWeak) {
     if (c1 === WAW) return [...prefix, seatedC2, presentVowel, c3]
 
-    if (c3 === WAW) return [...prefix, c1, SUKOON, c2, ...longVowel(DAMMA)]
+    if (c3 === WAW) return [...prefix, c1, SUKOON, c2, DAMMA, WAW]
 
     if (isMiddleHamza) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
@@ -513,4 +513,10 @@ function dropTerminalHamza(stem: readonly string[], hamzaVowel?: Vowel): readonl
 
 function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {
   return [prefix, ...chars.slice(1)]
+}
+
+function removeFinalDiacritic(word: readonly string[]): readonly string[] {
+  const lastIndex = word.findLastIndex((char) => !isDiacritic(char))
+  const base = word.slice(0, lastIndex + 1)
+  return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
 }

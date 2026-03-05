@@ -76,14 +76,8 @@ export function isHamzatedLetter(value = ''): value is Hamza {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
-function isDiacritic(char = ''): boolean {
+export function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
-}
-
-export function removeFinalDiacritic(word: readonly string[]): readonly string[] {
-  const lastIndex = word.findLastIndex((char) => !isDiacritic(char))
-  const base = word.slice(0, lastIndex + 1)
-  return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
 }
 
 export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
