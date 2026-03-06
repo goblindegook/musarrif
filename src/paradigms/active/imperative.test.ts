@@ -2053,4 +2053,18 @@ describe('imperative', () => {
       }),
     )
   })
+
+  describe('Form Iq', () => {
+    describe('strong roots', () => {
+      test('سَيْطَرَ conjugation', () => {
+        expect(conjugateImperative(getVerb('سيطر', 1))).toMatchObjectT({
+          '2ms': 'سَيْطِرْ',
+          '2fs': 'سَيْطِرِي',
+          '2d': 'سَيْطِرَا',
+          '2mp': 'سَيْطِرُوْا',
+          '2fp': 'سَيْطِرْنَ',
+        })
+      })
+    })
+  })
 })

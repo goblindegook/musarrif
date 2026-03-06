@@ -345,7 +345,26 @@ function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
   }
 }
 
+function derivePassivePastFormIq(verb: Verb<1>): PassivePastParams {
+  const [c1, c2, c3, c4] = [...verb.root]
+  return {
+    prefix: [seatHamza(c1, FATHA), DAMMA, c2 === YEH ? WAW : c2, c3, KASRA, seatHamza(c4, KASRA)],
+    suffix: [SUKOON],
+    suffix3sd: [FATHA],
+    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+  }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
+  if (verb.root.length > 3) {
+    switch (verb.form) {
+      case 1:
+        return derivePassivePastFormIq(verb)
+      default:
+        return { prefix: [] }
+    }
+  }
+
   switch (verb.form) {
     case 1:
       return derivePassivePastFormI(verb)

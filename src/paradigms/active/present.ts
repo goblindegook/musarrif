@@ -87,9 +87,12 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 }
 
 function buildFemininePlural(stem: readonly string[], verb: Verb): readonly string[] {
+  const suffix = [SUKOON, NOON, FATHA]
+
+  if (verb.root.length > 3) return [...removeFinalDiacritic(stem), ...suffix]
+
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
-  const suffix = [SUKOON, NOON, FATHA]
 
   if (c2 === c3) {
     switch (verb.form) {
@@ -204,6 +207,8 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
+      if (verb.root.length > 3) return [...removeFinalDiacritic(word), FATHA]
+
       if (isDual(pronounId)) return dropNoonEnding(word)
 
       if (isFinalWeak && verb.form === 1 && isFormIPresentVowel(verb, 'a')) {
@@ -289,6 +294,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]
 
       if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
+
+      if (letters.length > 3) return [...removeFinalDiacritic(word), SUKOON]
 
       if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
         return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]

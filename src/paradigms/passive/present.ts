@@ -391,6 +391,11 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
   return [...prefix, seatedC1, SUKOON, c2, FATHA, c3, ...moodSuffix]
 }
 
+function derivePassivePresentStemFormIq(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3, c4] = Array.from(verb.root)
+  return [seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, seatHamza(c4, FATHA), ...MOOD_SUFFIXES[mood][pronounId]]
+}
+
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
@@ -415,6 +420,15 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
 }
 
 function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+  if (verb.root.length > 3) {
+    switch (verb.form) {
+      case 1:
+        return derivePassivePresentStemFormIq(verb, pronounId, mood)
+      default:
+        return []
+    }
+  }
+
   switch (verb.form) {
     case 1:
       return derivePassivePresentStemFormI(verb, pronounId, mood)
