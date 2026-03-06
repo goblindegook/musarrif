@@ -66,6 +66,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleWeak && isFormIPastVowel(verb, 'i')) return [...prefix, c2, KASRA, c3]
 
+        if (isInitialHamza && isFormIPastVowel(verb, 'u') && verb.noPassiveParticiple)
+          return [c1, FATHA, c2, KASRA, YEH, c3]
+
         if (!isInitialWeak && isFormIPastVowel(verb, 'i')) return [c1, FATHA, c2, KASRA, YEH, c3]
 
         return [...prefix, isMiddleWeak ? HAMZA_ON_YEH : seatedC2, KASRA, c3]
