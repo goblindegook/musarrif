@@ -1730,7 +1730,13 @@ describe('passive present subjunctive', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وجب', 'يُسْتَوْجَبَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وجب', 'يُسْتَوْجَبَ'],
+        ['وعب', 'يُسْتَوْعَبَ'],
+        ['ورد', 'يُسْتَوْرَدَ'],
+        ['وضح', 'يُسْتَوْضَحَ'],
+        ['وطن', 'يُسْتَوْطَنَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -1738,6 +1744,10 @@ describe('passive present subjunctive', () => {
     describe('defective roots', () => {
       test.each([
         ['أني', 'يُسْتَأْنَى'],
+        ['رعي', 'يُسْتَرْعَى'],
+        ['ثني', 'يُسْتَثْنَى'],
+        ['لقي', 'يُسْتَلْقَى'],
+        ['عصي', 'يُسْتَعْصَى'],
         ['رخو', 'يُسْتَرْخَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
@@ -1787,7 +1797,12 @@ describe('passive present subjunctive', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'يُسْتَجَابَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['فيد', 'يُسْتَفَادَ'],
+        ['جوب', 'يُسْتَجَابَ'],
+        ['لوم', 'يُسْتَلَامَ'],
+        ['حول', 'يُسْتَحَالَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
 

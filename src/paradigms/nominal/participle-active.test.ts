@@ -956,7 +956,13 @@ describe('active participle', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وجب', 'مُسْتَوْجِب']])('%s', (root, expected) => {
+      test.each([
+        ['وجب', 'مُسْتَوْجِب'],
+        ['وعب', 'مُسْتَوْعِب'],
+        ['ورد', 'مُسْتَوْرِد'],
+        ['وضح', 'مُسْتَوْضِح'],
+        ['وطن', 'مُسْتَوْطِن'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })
@@ -977,10 +983,13 @@ describe('active participle', () => {
 
     describe('hollow roots', () => {
       test.each([
+        ['فيد', 'مُسْتَفِيد'],
         ['ضيف', 'مُسْتَضِيف'],
         ['عون', 'مُسْتَعِين'],
         ['جوب', 'مُسْتَجِيب'],
+        ['لوم', 'مُسْتَلِيم'],
         ['شور', 'مُسْتَشِير'],
+        ['حول', 'مُسْتَحِيل'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
@@ -990,6 +999,10 @@ describe('active participle', () => {
       test.each([
         ['دعو', 'مُسْتَدْعٍ'],
         ['أني', 'مُسْتَأْنٍ'],
+        ['رعي', 'مُسْتَرْعٍ'],
+        ['ثني', 'مُسْتَثْنٍ'],
+        ['لقي', 'مُسْتَلْقٍ'],
+        ['عصي', 'مُسْتَعْصٍ'],
         ['رخو', 'مُسْتَرْخٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)

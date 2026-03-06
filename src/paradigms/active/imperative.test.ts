@@ -1889,7 +1889,13 @@ describe('imperative', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وجب', 'اِسْتَوْجِبْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وجب', 'اِسْتَوْجِبْ'],
+        ['وعب', 'اِسْتَوْعِبْ'],
+        ['ورد', 'اِسْتَوْرِدْ'],
+        ['وضح', 'اِسْتَوْضِحْ'],
+        ['وطن', 'اِسْتَوْطِنْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
     })
@@ -1898,6 +1904,10 @@ describe('imperative', () => {
       test.each([
         ['دعو', 'اِسْتَدْعِ'],
         ['أني', 'اِسْتَأْنِ'],
+        ['رعي', 'اِسْتَرْعِ'],
+        ['ثني', 'اِسْتَثْنِ'],
+        ['لقي', 'اِسْتَلْقِ'],
+        ['عصي', 'اِسْتَعْصِ'],
         ['رخو', 'اِسْتَرْخِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
@@ -1905,7 +1915,13 @@ describe('imperative', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['شور', 'اِسْتَشِرْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['فيد', 'اِسْتَفِدْ'],
+        ['جوب', 'اِسْتَجِبْ'],
+        ['لوم', 'اِسْتَلِمْ'],
+        ['شور', 'اِسْتَشِرْ'],
+        ['حول', 'اِسْتَحِلْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
 

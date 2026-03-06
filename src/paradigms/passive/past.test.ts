@@ -1579,7 +1579,13 @@ describe('passive past pattern', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وجب', 'اُسْتُوْجِبَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وجب', 'اُسْتُوْجِبَ'],
+        ['وعب', 'اُسْتُوْعِبَ'],
+        ['ورد', 'اُسْتُوْرِدَ'],
+        ['وضح', 'اُسْتُوْضِحَ'],
+        ['وطن', 'اُسْتُوْطِنَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
     })
@@ -1647,7 +1653,12 @@ describe('passive past pattern', () => {
     })
 
     describe('hollow roots', () => {
-      test.each([['جوب', 'اُسْتُجِيبَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['فيد', 'اُسْتُفِيدَ'],
+        ['جوب', 'اُسْتُجِيبَ'],
+        ['لوم', 'اُسْتُلِيمَ'],
+        ['حول', 'اُسْتُحِيلَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
 
@@ -1671,7 +1682,13 @@ describe('passive past pattern', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['رخو', 'اُسْتُرْخِيَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['رعي', 'اُسْتُرْعِيَ'],
+        ['ثني', 'اُسْتُثْنِيَ'],
+        ['لقي', 'اُسْتُلْقِيَ'],
+        ['عصي', 'اُسْتُعْصِيَ'],
+        ['رخو', 'اُسْتُرْخِيَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
     })

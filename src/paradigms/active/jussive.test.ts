@@ -2129,7 +2129,13 @@ describe('active present jussive', () => {
     })
 
     describe('assimilated roots', () => {
-      test.each([['وجب', 'يَسْتَوْجِبْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['وجب', 'يَسْتَوْجِبْ'],
+        ['وعب', 'يَسْتَوْعِبْ'],
+        ['ورد', 'يَسْتَوْرِدْ'],
+        ['وضح', 'يَسْتَوْضِحْ'],
+        ['وطن', 'يَسْتَوْطِنْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
       })
     })
@@ -2167,8 +2173,12 @@ describe('active present jussive', () => {
 
     describe('hollow roots', () => {
       test.each<[string, string]>([
+        ['فيد', 'يَسْتَفِدْ'],
         ['قود', 'يَسْتَقِدْ'],
+        ['جوب', 'يَسْتَجِبْ'],
+        ['لوم', 'يَسْتَلِمْ'],
         ['شور', 'يَسْتَشِرْ'],
+        ['حول', 'يَسْتَحِلْ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 10), 'jussive')
         expect(jussive['3ms']).toEqualT(expected3ms)
@@ -2197,6 +2207,10 @@ describe('active present jussive', () => {
       test.each([
         ['دعو', 'يَسْتَدْعِ'],
         ['أني', 'يَسْتَأْنِ'],
+        ['رعي', 'يَسْتَرْعِ'],
+        ['ثني', 'يَسْتَثْنِ'],
+        ['لقي', 'يَسْتَلْقِ'],
+        ['عصي', 'يَسْتَعْصِ'],
         ['رخو', 'يَسْتَرْخِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
