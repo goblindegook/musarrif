@@ -88,6 +88,14 @@
   { "root": "أوه", "form": 5, "passiveVoice": "none" },
   { "root": "أيد", "form": 2 },
   { "root": "أود", "form": 2 },
+  {
+    "root": "أصل",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3aala"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
   { "root": "أصل", "form": 10 },
   { "root": "أثر", "form": 2 },
   { "root": "أثر", "form": 10 },
