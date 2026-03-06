@@ -2464,7 +2464,10 @@ describe('active past', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['أني', 'اِسْتَأْنَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أني', 'اِسْتَأْنَى'],
+        ['رخو', 'اِسْتَرْخَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
 
@@ -2530,6 +2533,10 @@ describe('active past', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['أجر', 'اِسْتَأْجَرَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+
       test('اِسْتَأْخَذَ conjugation', () => {
         expect(conjugatePast(getVerb('أخذ', 10))).toEqualT({
           '1s': 'اِسْتَأْخَذْتُ',

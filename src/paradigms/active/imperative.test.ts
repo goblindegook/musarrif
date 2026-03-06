@@ -1898,6 +1898,7 @@ describe('imperative', () => {
       test.each([
         ['دعو', 'اِسْتَدْعِ'],
         ['أني', 'اِسْتَأْنِ'],
+        ['رخو', 'اِسْتَرْخِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
@@ -1974,6 +1975,12 @@ describe('imperative', () => {
           '2mp': 'اِسْتَحِبُّوْا',
           '2fp': 'اِسْتَحْبِبْنَ',
         })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'اِسْتَأْجِرْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 10))['2ms']).toEqualT(expected)
       })
     })
 

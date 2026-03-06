@@ -953,6 +953,7 @@ describe('passive participle', () => {
       test.each([
         ['دعو', 'مُسْتَدْعًى'],
         ['أني', 'مُسْتَأْنًى'],
+        ['رخو', 'مُسْتَرْخًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
@@ -964,6 +965,12 @@ describe('passive participle', () => {
         ['ولي', 'مُسْتَوْلًى'],
         ['حيي', 'مُسْتَحْيًى'],
       ])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'مُسْتَأْجَر']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

@@ -2197,6 +2197,7 @@ describe('active present jussive', () => {
       test.each([
         ['دعو', 'يَسْتَدْعِ'],
         ['أني', 'يَسْتَأْنِ'],
+        ['رخو', 'يَسْتَرْخِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -2241,6 +2242,12 @@ describe('active present jussive', () => {
           '3mp': 'يَسْتَوْفُوْا',
           '3fp': 'يَسْتَوْفِيْنَ',
         })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'يَسْتَأْجِرْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
       })
     })
 

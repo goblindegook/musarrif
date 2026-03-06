@@ -2641,7 +2641,10 @@ describe('active present indicative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['أني', 'يَسْتَأْنِي']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أني', 'يَسْتَأْنِي'],
+        ['رخو', 'يَسْتَرْخِي'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
 
@@ -2703,6 +2706,12 @@ describe('active present indicative', () => {
           '3mp': 'يَسْتَوْفوْنَ',
           '3fp': 'يَسْتَوْفِيْنَ',
         })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'يَسْتَأْجِرُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
     })
 

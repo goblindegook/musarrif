@@ -990,6 +990,7 @@ describe('active participle', () => {
       test.each([
         ['دعو', 'مُسْتَدْعٍ'],
         ['أني', 'مُسْتَأْنٍ'],
+        ['رخو', 'مُسْتَرْخٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
@@ -1001,6 +1002,12 @@ describe('active participle', () => {
         ['ولي', 'مُسْتَوْلٍ'],
         ['حيي', 'مُسْتَحْيٍ'],
       ])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'مُسْتَأْجِر']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

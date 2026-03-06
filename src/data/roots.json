@@ -306,6 +306,7 @@
   { "root": "رسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "رسل", "form": 4 },
   { "root": "رسم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "رخو", "form": 10 },
   { "root": "رفض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "رفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "رقد", "form": 1, "formPattern": "fa3ala-yaf3alu" },

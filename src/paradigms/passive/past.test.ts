@@ -1670,6 +1670,12 @@ describe('passive past pattern', () => {
       })
     })
 
+    describe('defective roots', () => {
+      test.each([['رخو', 'اُسْتُرْخِيَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('geminate roots', () => {
       test.each([
         ['شفف', 'اُسْتُشِفَّ'],
@@ -1696,6 +1702,12 @@ describe('passive past pattern', () => {
           '3mp': 'اُسْتُمِدُّوْا',
           '3fp': 'اُسْتُمِدِدْنَ',
         })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'اُسْتُؤْجِرَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
     })
 

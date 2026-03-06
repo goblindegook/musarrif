@@ -1820,7 +1820,10 @@ describe('passive present indicative', () => {
     })
 
     describe('defective roots', () => {
-      test.each([['أني', 'يُسْتَأْنَى']])('%s pattern', (root, expected) => {
+      test.each([
+        ['أني', 'يُسْتَأْنَى'],
+        ['رخو', 'يُسْتَرْخَى'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
 
@@ -1917,6 +1920,12 @@ describe('passive present indicative', () => {
           '3mp': 'يُسْتَمَدُّوْنَ',
           '3fp': 'يُسْتَمَدَدْنَ',
         })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['أجر', 'يُسْتَأْجَرُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
     })
 
