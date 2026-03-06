@@ -57,7 +57,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isFinalWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        if (isFinalHamza && isFormIPastVowel(verb, 'u')) return [c1, FATHA, c2, KASRA, YEH, HAMZA]
+        if (isFinalHamza && isFormIPastVowel(verb, 'u')) return [c1, FATHA, c2, KASRA, YEH, SUKOON, HAMZA]
 
         if (isFinalHamza) return [...prefix, c2, KASRA, seatedC3]
 
@@ -66,10 +66,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
 
         if (isMiddleWeak && isFormIPastVowel(verb, 'i')) return [...prefix, c2, KASRA, c3]
 
-        if (isInitialHamza && isFormIPastVowel(verb, 'u') && verb.noPassiveParticiple)
-          return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (isInitialHamza && isFormIPastVowel(verb, 'u')) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
 
-        if (!isInitialWeak && isFormIPastVowel(verb, 'i')) return [c1, FATHA, c2, KASRA, YEH, c3]
+        if (!isInitialWeak && isFormIPastVowel(verb, 'i')) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
 
         return [...prefix, isMiddleWeak ? HAMZA_ON_YEH : seatedC2, KASRA, c3]
       }

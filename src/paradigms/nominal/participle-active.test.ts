@@ -11,7 +11,7 @@ describe('active participle', () => {
         ['جمع', 'جَامِع'],
         ['دعم', 'دَاعِم'],
         ['كلم', 'كَالِم'],
-        ['بعد', 'بَعِيد'],
+        ['بعد', 'بَعِيْد'],
         ['ذكر', 'ذَاكِر'],
         ['حضر', 'حَاضِر'],
         ['حدث', 'حَادِث'],
@@ -21,7 +21,7 @@ describe('active participle', () => {
         ['حسب', 'حَاسِب'],
         ['دحرج', 'مُدَحْرِج'],
         ['مثل', 'مَاثِل'],
-        ['سعد', 'سَعِيد'],
+        ['سعد', 'سَعِيْد'],
         ['صعد', 'صَاعِد'],
         ['صغر', 'صَاغِر'],
         ['نظر', 'نَاظِر'],
@@ -136,7 +136,7 @@ describe('active participle', () => {
       test.each([
         ['أذن', 'آذِن'],
         ['أجر', 'آجِر'],
-        ['أصل', 'أَصِيل'],
+        ['أصل', 'أَصِيْل'],
         ['أسر', 'آسِر'],
         ['أكل', 'آكِل'],
         ['أخذ', 'آخِذ'],
@@ -202,7 +202,7 @@ describe('active participle', () => {
       test.each([
         ['بدء', 'بَادِئ'],
         ['قرأ', 'قَارِئ'],
-        ['جرء', 'جَرِيء'],
+        ['جرء', 'جَرِيْء'],
         ['كلأ', 'كَالِئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
@@ -231,7 +231,7 @@ describe('active participle', () => {
       })
 
       test('use fa3eel when the masdar is not fu3ool', () => {
-        expect(deriveActiveParticiple(getVerb('سعد', 1))).toEqualT('سَعِيد')
+        expect(deriveActiveParticiple(getVerb('سعد', 1))).toEqualT('سَعِيْد')
       })
     })
   })
