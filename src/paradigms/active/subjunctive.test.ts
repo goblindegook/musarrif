@@ -60,9 +60,9 @@ describe('active present subjunctive', () => {
     describe('geminate roots', () => {
       test.each([
         ['قرر', 'يَقَرَّ'],
-        ['أدد', 'يَئِدَّ'],
-        ['أجج', 'يَؤُجَّ'],
-        ['أزز', 'يَؤُزَّ'],
+        ['ءدد', 'يَئِدَّ'],
+        ['ءجج', 'يَؤُجَّ'],
+        ['ءزز', 'يَؤُزَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -86,7 +86,7 @@ describe('active present subjunctive', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أمم', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءمم', 1), 'subjunctive')).toEqualT({
           '1s': 'أَؤُمَّ',
           '2ms': 'تَؤُمَّ',
           '2fs': 'تَؤُمِّي',
@@ -353,13 +353,13 @@ describe('active present subjunctive', () => {
     describe('hamzated final roots', () => {
       test.each([
         ['جرء', 'يَجْرُؤَ'],
-        ['كلأ', 'يَكْلُؤَ'],
+        ['كلء', 'يَكْلُؤَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('قَرَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرأ', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('قرء', 1), 'subjunctive')).toEqualT({
           '1s': 'أَقْرَأَ',
           '2ms': 'تَقْرَأَ',
           '2fs': 'تَقْرَئِي',
@@ -377,7 +377,7 @@ describe('active present subjunctive', () => {
       })
 
       test('كَلَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('كلأ', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('كلء', 1), 'subjunctive')).toEqualT({
           '1s': 'أَكْلُؤَ',
           '2ms': 'تَكْلُؤَ',
           '2fs': 'تَكْلُئِي',
@@ -420,12 +420,12 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أني', 'يَأْنِيَ']])('%s pattern', (root, expected) => {
+      test.each([['ءني', 'يَأْنِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('أَبَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أبي', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءبي', 1), 'subjunctive')).toEqualT({
           '1s': 'آبَى',
           '2ms': 'تَأْبَى',
           '2fs': 'تَأْبَيْ',
@@ -443,7 +443,7 @@ describe('active present subjunctive', () => {
       })
 
       test('أَتَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أتي', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءتي', 1), 'subjunctive')).toEqualT({
           '1s': 'آتِيَ',
           '2ms': 'تَأْتِيَ',
           '2fs': 'تَأْتِي',
@@ -525,12 +525,12 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each([['أول', 'يَؤُولَ']])('%s pattern', (root, expected) => {
+      test.each([['ءول', 'يَؤُولَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('يَؤُولَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أول', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءول', 1), 'subjunctive')).toEqualT({
           '1s': 'أَؤُولَ',
           '2ms': 'تَؤُولَ',
           '2fs': 'تَؤُولِي',
@@ -549,12 +549,12 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated hollow-defective roots', () => {
-      test.each([['أوي', 'يَأْوِيَ']])('%s pattern', (root, expected) => {
+      test.each([['ءوي', 'يَأْوِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('أَوَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أوي', 1), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءوي', 1), 'subjunctive')).toEqualT({
           '1s': 'آوِيَ',
           '2ms': 'تَأْوِيَ',
           '2fs': 'تَأْوِي',
@@ -574,9 +574,9 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أجر', 'يَأْجُرَ'],
-        ['أمر', 'يَأْمُرَ'],
-        ['أصل', 'يَأْصُلَ'],
+        ['ءجر', 'يَأْجُرَ'],
+        ['ءمر', 'يَأْمُرَ'],
+        ['ءصل', 'يَأْصُلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -635,8 +635,8 @@ describe('active present subjunctive', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['أذي', 'يُؤَذِّيَ'],
-        ['أسي', 'يُؤَسِّيَ'],
+        ['ءذي', 'يُؤَذِّيَ'],
+        ['ءسي', 'يُؤَسِّيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -644,19 +644,19 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أجر', 'يُؤَجِّرَ'],
-        ['أجج', 'يُؤَجِّجَ'],
-        ['أسس', 'يُؤَسِّسَ'],
-        ['أخر', 'يُؤَخِّرَ'],
-        ['أمر', 'يُؤَمِّرَ'],
-        ['أثر', 'يُؤَثِّرَ'],
+        ['ءجر', 'يُؤَجِّرَ'],
+        ['ءجج', 'يُؤَجِّجَ'],
+        ['ءسس', 'يُؤَسِّسَ'],
+        ['ءخر', 'يُؤَخِّرَ'],
+        ['ءمر', 'يُؤَمِّرَ'],
+        ['ءثر', 'يُؤَثِّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['هنأ', 'يُهَنِّئَ']])('%s pattern', (root, expected) => {
+      test.each([['هنء', 'يُهَنِّئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -683,7 +683,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial hollow roots', () => {
       test('أَيَّدَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أيد', 2), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءيد', 2), 'subjunctive')).toEqualT({
           '1s': 'أُؤَيِّدَ',
           '2ms': 'تُؤَيِّدَ',
           '2fs': 'تُؤَيِّدِي',
@@ -708,8 +708,8 @@ describe('active present subjunctive', () => {
         ['دون', 'يُدَوِّنَ'],
         ['سوف', 'يُسَوِّفَ'],
         ['كيف', 'يُكَيِّفَ'],
-        ['أول', 'يُؤَوِّلَ'],
-        ['أوب', 'يُؤَوِّبَ'],
+        ['ءول', 'يُؤَوِّلَ'],
+        ['ءوب', 'يُؤَوِّبَ'],
         ['شوق', 'يُشَوِّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
@@ -857,14 +857,14 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخذ', 'يُؤَاخِذَ'],
-        ['أجر', 'يُؤَاجِرَ'],
+        ['ءخذ', 'يُؤَاخِذَ'],
+        ['ءجر', 'يُؤَاجِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('آخَذَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أخذ', 3), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءخذ', 3), 'subjunctive')).toEqualT({
           '1s': 'أُؤَاخِذَ',
           '2ms': 'تُؤَاخِذَ',
           '2fs': 'تُؤَاخِذِي',
@@ -882,7 +882,7 @@ describe('active present subjunctive', () => {
       })
 
       test('آجَرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أجر', 3), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءجر', 3), 'subjunctive')).toEqualT({
           '1s': 'أُؤَاجِرَ',
           '2ms': 'تُؤَاجِرَ',
           '2fs': 'تُؤَاجِرِي',
@@ -902,20 +902,20 @@ describe('active present subjunctive', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['وأم', 'يُوَائِمَ'],
-        ['لأم', 'يُلَائِمَ'],
+        ['وءم', 'يُوَائِمَ'],
+        ['لءم', 'يُلَائِمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['فجأ', 'يُفَاجِئَ']])('%s pattern', (root, expected) => {
+      test.each([['فجء', 'يُفَاجِئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
       test('فَاجَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('فجأ', 3), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('فجء', 3), 'subjunctive')).toEqualT({
           '1s': 'أُفَاجِئَ',
           '2ms': 'تُفَاجِئَ',
           '2fs': 'تُفَاجِئِي',
@@ -1048,8 +1048,8 @@ describe('active present subjunctive', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['ومأ', 'يُوْمِئَ'],
-        ['نشأ', 'يُنْشِئَ'],
+        ['ومء', 'يُوْمِئَ'],
+        ['نشء', 'يُنْشِئَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -1057,10 +1057,10 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أذن', 'يُؤْذِنَ'],
-        ['أمن', 'يُؤْمِنَ'],
-        ['ألم', 'يُؤْلِمَ'],
-        ['أجر', 'يُؤْجِرَ'],
+        ['ءذن', 'يُؤْذِنَ'],
+        ['ءمن', 'يُؤْمِنَ'],
+        ['ءلم', 'يُؤْلِمَ'],
+        ['ءجر', 'يُؤْجِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -1091,7 +1091,7 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أتي', 'يُؤْتِيَ']])('%s pattern', (root, expected) => {
+      test.each([['ءتي', 'يُؤْتِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -1121,26 +1121,26 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخر', 'يَتَأَخَّرَ'],
-        ['ألف', 'يَتَأَلَّفَ'],
-        ['أول', 'يَتَأَوَّلَ'],
-        ['أكد', 'يَتَأَكَّدَ'],
-        ['أكل', 'يَتَأَكَّلَ'],
-        ['أثر', 'يَتَأَثَّرَ'],
-        ['أوه', 'يَتَأَوَّهَ'],
+        ['ءخر', 'يَتَأَخَّرَ'],
+        ['ءلف', 'يَتَأَلَّفَ'],
+        ['ءول', 'يَتَأَوَّلَ'],
+        ['ءكد', 'يَتَأَكَّدَ'],
+        ['ءكل', 'يَتَأَكَّلَ'],
+        ['ءثر', 'يَتَأَثَّرَ'],
+        ['ءوه', 'يَتَأَوَّهَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial geminate roots', () => {
-      test.each([['أمم', 'يَتَأَمَّمَ']])('%s pattern', (root, expected) => {
+      test.each([['ءمم', 'يَتَأَمَّمَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أذي', 'يَتَأَذَّى']])('%s pattern', (root, expected) => {
+      test.each([['ءذي', 'يَتَأَذَّى']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -1150,7 +1150,7 @@ describe('active present subjunctive', () => {
         ['وصل', 'يَتَوَصَّلَ'],
         ['وفر', 'يَتَوَفَّرَ'],
         ['وقف', 'يَتَوَقَّفَ'],
-        ['وكأ', 'يَتَوَكَّأَ'],
+        ['وكء', 'يَتَوَكَّأَ'],
         ['وقع', 'يَتَوَقَّعَ'],
         ['وسع', 'يَتَوَسَّعَ'],
       ])('%s pattern', (root, expected) => {
@@ -1502,7 +1502,7 @@ describe('active present subjunctive', () => {
       })
 
       test('اِتَّكَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وكأ', 8), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('وكء', 8), 'subjunctive')).toEqualT({
           '1s': 'أَتَّكِئَ',
           '2ms': 'تَتَّكِئَ',
           '2fs': 'تَتَّكِئِي',
@@ -1522,7 +1522,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial geminate roots', () => {
       test('يَأْتَمَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('أمم', 8), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('ءمم', 8), 'subjunctive')).toEqualT({
           '1s': 'آتَمَّ',
           '2ms': 'تَأْتَمَّ',
           '2fs': 'تَأْتَمِّي',
@@ -1621,16 +1621,16 @@ describe('active present subjunctive', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['ألف', 'يَتَآلَفَ'],
-        ['أكل', 'يَتَآكَلَ'],
-        ['أمر', 'يَتَآمَرَ'],
+        ['ءلف', 'يَتَآلَفَ'],
+        ['ءكل', 'يَتَآكَلَ'],
+        ['ءمر', 'يَتَآمَرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['بطأ', 'يَتَبَاطَأَ']])('%s pattern', (root, expected) => {
+      test.each([['بطء', 'يَتَبَاطَأَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
@@ -1733,7 +1733,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated final roots', () => {
       test('اِنْقَرَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرأ', 7), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('قرء', 7), 'subjunctive')).toEqualT({
           '1s': 'أَنْقَرِئَ',
           '2ms': 'تَنْقَرِئَ',
           '2fs': 'تَنْقَرِئِي',
@@ -1880,7 +1880,7 @@ describe('active present subjunctive', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['أني', 'يَسْتَأْنِيَ'],
+        ['ءني', 'يَسْتَأْنِيَ'],
         ['رعي', 'يَسْتَرْعِيَ'],
         ['ثني', 'يَسْتَثْنِيَ'],
         ['لقي', 'يَسْتَلْقِيَ'],
@@ -1934,14 +1934,14 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أجر', 'يَسْتَأْجِرَ']])('%s pattern', (root, expected) => {
+      test.each([['ءجر', 'يَسْتَأْجِرَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
       test('اِسْتَقْرَأَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرأ', 10), 'subjunctive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('قرء', 10), 'subjunctive')).toEqualT({
           '1s': 'أَسْتَقْرِئَ',
           '2ms': 'تَسْتَقْرِئَ',
           '2fs': 'تَسْتَقْرِئِي',

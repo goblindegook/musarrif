@@ -14,11 +14,17 @@ describe('findVerbsByRoot', () => {
     const matches = search('يكتبون وقرأ')
 
     expect(matches.find((verb) => verb.root === 'كتب')).toBeDefined()
-    expect(matches.find((verb) => verb.root === 'قرأ')).toBeDefined()
+    expect(matches.find((verb) => verb.root === 'قرء')).toBeDefined()
   })
 
   test('returns all derived forms for a matched root', () => {
-    const forms = search('أمن').filter((verb) => verb.root === 'أمن')
+    const forms = search('ءمن').filter((verb) => verb.root === 'ءمن')
+
+    expect(forms.length).toBeGreaterThan(1)
+  })
+
+  test('returns all derived forms for a matched root with regular hamza', () => {
+    const forms = search('ءمن').filter((verb) => verb.root === 'ءمن')
 
     expect(forms.length).toBeGreaterThan(1)
   })
@@ -71,9 +77,9 @@ describe('findVerbsByRoot', () => {
     const matches = search('امن ب')
     const [first, second] = matches
 
-    expect(first?.root).toEqualT('أمن')
+    expect(first?.root).toEqualT('ءمن')
     expect(first?.form).toBe(1)
-    expect(second?.root).toEqualT('أمن')
+    expect(second?.root).toEqualT('ءمن')
     expect(second?.form).toBe(4)
   })
 

@@ -2,7 +2,7 @@ import rawVerbs from '../data/roots.json'
 import { wordDistance } from '../primitives/strings'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { ALIF, stripDiacritics } from './letters'
+import { ALIF, HAMZA, stripDiacritics } from './letters'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -93,7 +93,7 @@ const TRANSLITERATION_MAP: Record<string, string> = {
   ئ: '}',
 }
 
-const normalizeHamza = (value: string): string => value.replace(/[آأإ]/g, ALIF)
+const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
 export function transliterate(text: string): string {
   return Array.from(text)
@@ -132,18 +132,23 @@ for (const verb of verbs) {
   }
 }
 
+function addCandidate(acc: Set<string>, value: string): void {
+  acc.add(value)
+  acc.add(value.replace(new RegExp(ALIF, 'g'), HAMZA))
+}
+
 function extractRootCandidates(query: string): string[] {
   return Array.from(
     query.split(/[^ء-ي]+/).reduce((acc, part) => {
       if (!part) return acc
       const letters = Array.from(part).filter((char) => /[ء-ي]/.test(char))
       if (letters.length < 1) return acc
-      if (letters.length <= 5) acc.add(letters.join(''))
+      if (letters.length <= 5) addCandidate(acc, letters.join(''))
 
       const maxWindow = Math.min(letters.length, 5)
       for (let size = 1; size <= maxWindow; size += 1) {
         for (let start = 0; start <= letters.length - size; start += 1) {
-          acc.add(letters.slice(start, start + size).join(''))
+          addCandidate(acc, letters.slice(start, start + size).join(''))
         }
       }
       return acc

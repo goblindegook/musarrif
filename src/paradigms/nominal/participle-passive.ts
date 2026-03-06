@@ -34,7 +34,7 @@ export function derivePassiveParticiple(verb: Verb): string {
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
 
-      return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
+      return [MEEM, DAMMA, seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, FATHA, q4]
     }
 
     const isInitialWeak = isWeakLetter(c1)
@@ -43,13 +43,12 @@ export function derivePassiveParticiple(verb: Verb): string {
     const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
     const isFinalHamza = isHamzatedLetter(c3)
-    const seatedC1 = seatHamza(c1, DAMMA)
 
     switch (verb.form) {
       case 1: {
         const vowelPattern = c3 === YEH ? 'i' : 'u'
         const seatedC2 = seatHamza(c2, shortVowelFromPattern(vowelPattern))
-        const prefix = [MEEM, FATHA, c1]
+        const prefix = [MEEM, FATHA, seatHamza(c1, FATHA)]
 
         if (isFinalWeak) return [...prefix, SUKOON, seatedC2, ...longVowelFromPattern(vowelPattern), SHADDA]
 
@@ -60,7 +59,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 2: {
-        const prefix = [MEEM, DAMMA, seatedC1, FATHA, c2]
+        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA), FATHA, c2]
 
         if (isFinalWeak) return [...prefix, SHADDA, TANWEEN_FATHA, ALIF_MAQSURA]
 
@@ -68,35 +67,34 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 3: {
-        const prefix = [MEEM, DAMMA, seatedC1, FATHA, ALIF, isMiddleHamza ? HAMZA : c2]
+        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA), FATHA, ALIF, isMiddleHamza ? HAMZA : c2]
 
         if (isFinalWeak) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (c2 === c3) return [...prefix, SHADDA]
 
-        return [...prefix, FATHA, c3]
+        return [...prefix, FATHA, seatHamza(c3, FATHA)]
       }
 
       case 4: {
-        const seatedC3 = seatHamza(c3, FATHA)
-        const prefix = [MEEM, DAMMA, seatedC1]
+        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA)]
 
         if (isMiddleHamza) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isInitialWeak) return [...prefix, c2, FATHA, seatedC3]
+        if (isInitialWeak) return [...prefix, c2, FATHA, seatHamza(c3, FATHA)]
 
         if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
 
         if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
 
-        return [...prefix, SUKOON, c2, FATHA, seatedC3]
+        return [...prefix, SUKOON, c2, FATHA, seatHamza(c3, FATHA)]
       }
 
       case 5: {
         const seatedC2 = seatHamza(c2, FATHA)
-        const prefix = [MEEM, DAMMA, TEH, FATHA, c1]
+        const prefix = [MEEM, DAMMA, TEH, FATHA, seatHamza(c1, FATHA)]
 
         if (isFinalWeak) return [...prefix, FATHA, seatedC2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
 
@@ -104,7 +102,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 6: {
-        const prefix = [MEEM, DAMMA, TEH, FATHA, c1]
+        const prefix = [MEEM, DAMMA, TEH, FATHA, seatHamza(c1, FATHA)]
 
         if (c2 === c3) return [...prefix, FATHA, ALIF, c2, SHADDA]
 
@@ -114,7 +112,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 7: {
-        const prefix = [MEEM, DAMMA, NOON, SUKOON, c1]
+        const prefix = [MEEM, DAMMA, NOON, SUKOON, seatHamza(c1, FATHA)]
 
         if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
 
@@ -126,8 +124,10 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 8: {
-        const infix = resolveFormVIIIInfixConsonant(c1)
+        const infix = resolveFormVIIIInfixConsonant(seatHamza(c1, FATHA))
+        const seatedC1 = seatHamza(c1, DAMMA)
         const seatedC2 = seatHamza(c2, FATHA)
+        const seatedC3 = seatHamza(c3, FATHA)
         const prefix = [MEEM, DAMMA]
 
         if (c2 === c3) return [...prefix, seatedC1, SUKOON, infix, FATHA, c2, SHADDA]
@@ -135,13 +135,13 @@ export function derivePassiveParticiple(verb: Verb): string {
         if ((isInitialHamza || isInitialWeak) && isFinalWeak)
           return [...prefix, infix, SHADDA, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isInitialHamza || isInitialWeak) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, c3]
+        if (isInitialHamza || isInitialWeak) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, seatedC3]
 
         if (isFinalWeak) return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_FATHA, ALIF_MAQSURA]
 
         if (c2 === YEH || (isMiddleWeak && infix !== DAL)) return [...prefix, seatedC1, SUKOON, infix, FATHA, ALIF, c3]
 
-        return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, seatHamza(c3, FATHA)]
+        return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, seatedC3]
       }
 
       case 9: {
@@ -149,7 +149,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 10: {
-        const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, c1]
+        const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, seatHamza(c1, FATHA)]
 
         if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
@@ -157,7 +157,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
 
-        return [...prefix, SUKOON, c2, FATHA, c3]
+        return [...prefix, SUKOON, c2, FATHA, seatHamza(c3, FATHA)]
       }
     }
   })()

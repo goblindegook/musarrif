@@ -25,18 +25,18 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial hollow-defective roots', () => {
-      test.each<[string, string]>([['أوي', 'أُوِيَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([['ءوي', 'أُوِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each<[string, string]>([['أول', 'إِيلَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([['ءول', 'إِيلَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('إِيلَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أول', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءول', 1))).toEqualT({
           '1s': 'إِلْتُ',
           '2ms': 'إِلْتَ',
           '2fs': 'إِلْتِ',
@@ -104,13 +104,13 @@ describe('passive past pattern', () => {
     describe('hamzated final roots', () => {
       test.each<[string, string]>([
         ['وطء', 'وُطِئَ'],
-        ['كلأ', 'كُلِئَ'],
+        ['كلء', 'كُلِئَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('كَلَأَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('كلأ', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('كلء', 1))).toEqualT({
           '1s': 'كُلِئْتُ',
           '2ms': 'كُلِئْتَ',
           '2fs': 'كُلِئْتِ',
@@ -143,10 +143,10 @@ describe('passive past pattern', () => {
     describe('geminate roots', () => {
       test.each<[string, string]>([
         ['جبب', 'جُبَّ'],
-        ['أمم', 'أُمَّ'],
-        ['أدد', 'أُدَّ'],
-        ['أجج', 'أُجَّ'],
-        ['أزز', 'أُزَّ'],
+        ['ءمم', 'أُمَّ'],
+        ['ءدد', 'أُدَّ'],
+        ['ءجج', 'أُجَّ'],
+        ['ءزز', 'أُزَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -193,8 +193,8 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial roots', () => {
       test.each<[string, string]>([
-        ['ألف', 'تُؤُولِفَ'],
-        ['أمر', 'تُؤُومِرَ'],
+        ['ءلف', 'تُؤُولِفَ'],
+        ['ءمر', 'تُؤُومِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
       })
@@ -377,7 +377,7 @@ describe('passive past pattern', () => {
       })
 
       test('أَمَّ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أمم', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءمم', 1))).toEqualT({
           '1s': 'أُمِمْتُ',
           '2ms': 'أُمِمْتَ',
           '2fs': 'أُمِمْتِ',
@@ -545,15 +545,15 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أجر', 'أُجِرَ'],
-        ['أبي', 'أُبِيَ'],
-        ['أني', 'أُنِيَ'],
+        ['ءجر', 'أُجِرَ'],
+        ['ءبي', 'أُبِيَ'],
+        ['ءني', 'أُنِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
       test('أَخَذَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أخذ', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءخذ', 1))).toEqualT({
           '1s': 'أُخِذْتُ',
           '2ms': 'أُخِذْتَ',
           '2fs': 'أُخِذْتِ',
@@ -573,7 +573,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial doubly weak roots', () => {
       test('أَوَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أوي', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءوي', 1))).toEqualT({
           '1s': 'أُوِيتُ',
           '2ms': 'أُوِيتَ',
           '2fs': 'أُوِيتِ',
@@ -657,7 +657,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated final-weak roots', () => {
       test('أَتَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أتي', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءتي', 1))).toEqualT({
           '1s': 'أُتِيتُ',
           '2ms': 'أُتِيتَ',
           '2fs': 'أُتِيتِ',
@@ -693,25 +693,25 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial defective roots', () => {
       test.each([
-        ['أذي', 'أُذِّيَ'],
-        ['أسي', 'أُسِّيَ'],
+        ['ءذي', 'أُذِّيَ'],
+        ['ءسي', 'أُسِّيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['هنأ', 'هُنِّئَ']])('%s pattern', (root, expected) => {
+      test.each([['هنء', 'هُنِّئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخر', 'أُخِّرَ'],
-        ['أجر', 'أُجِّرَ'],
-        ['أمر', 'أُمِّرَ'],
-        ['أثر', 'أُثِّرَ'],
+        ['ءخر', 'أُخِّرَ'],
+        ['ءجر', 'أُجِّرَ'],
+        ['ءمر', 'أُمِّرَ'],
+        ['ءثر', 'أُثِّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
@@ -783,8 +783,8 @@ describe('passive past pattern', () => {
         ['دون', 'دُوِّنَ'],
         ['سوف', 'سُوِّفَ'],
         ['كيف', 'كُيِّفَ'],
-        ['أول', 'أُوِّلَ'],
-        ['أوب', 'أُوِّبَ'],
+        ['ءول', 'أُوِّلَ'],
+        ['ءوب', 'أُوِّبَ'],
         ['شوق', 'شُوِّقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
@@ -792,15 +792,15 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each([['أيد', 'أُيِّدَ']])('%s pattern', (root, expected) => {
+      test.each([['ءيد', 'أُيِّدَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أجج', 'أُجِّجَ'],
-        ['أسس', 'أُسِّسَ'],
+        ['ءجج', 'أُجِّجَ'],
+        ['ءسس', 'أُسِّسَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })
@@ -918,8 +918,8 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخذ', 'أُوخِذَ'],
-        ['أجر', 'أُوجِرَ'],
+        ['ءخذ', 'أُوخِذَ'],
+        ['ءجر', 'أُوجِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
@@ -927,15 +927,15 @@ describe('passive past pattern', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['وأم', 'وُوئِمَ'],
-        ['لأم', 'لُوئِمَ'],
+        ['وءم', 'وُوئِمَ'],
+        ['لءم', 'لُوئِمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['فجأ', 'فُوجِئَ']])('%s pattern', (root, expected) => {
+      test.each([['فجء', 'فُوجِئَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
@@ -1169,8 +1169,8 @@ describe('passive past pattern', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['ومأ', 'أُوْمِئَ'],
-        ['نشأ', 'أُنْشِئَ'],
+        ['ومء', 'أُوْمِئَ'],
+        ['نشء', 'أُنْشِئَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
@@ -1178,10 +1178,10 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أذن', 'أُوْذِنَ'],
-        ['أمن', 'أُوْمِنَ'],
-        ['ألم', 'أُوْلِمَ'],
-        ['أجر', 'أُوْجِرَ'],
+        ['ءذن', 'أُوْذِنَ'],
+        ['ءمن', 'أُوْمِنَ'],
+        ['ءلم', 'أُوْلِمَ'],
+        ['ءجر', 'أُوْجِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
@@ -1213,7 +1213,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial defective roots', () => {
       test('آتَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أتي', 4))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءتي', 4))).toEqualT({
           '1s': 'أُوْتِيتُ',
           '2ms': 'أُوْتِيتَ',
           '2fs': 'أُوْتِيتِ',
@@ -1254,12 +1254,12 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أول', 'تُؤُوِّلَ']])('%s pattern', (root, expected) => {
+      test.each([['ءول', 'تُؤُوِّلَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 5))['3ms']).toEqualT(expected)
       })
 
       test('تَأَثَّرَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أثر', 5))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءثر', 5))).toEqualT({
           '1s': 'تُؤُثِّرْتُ',
           '2ms': 'تُؤُثِّرْتَ',
           '2fs': 'تُؤُثِّرْتِ',
@@ -1464,7 +1464,7 @@ describe('passive past pattern', () => {
     describe('assimilated roots', () => {
       test.each([
         ['وعد', 'اُتُّعِدَ'],
-        ['وكأ', 'اُتُّكِئَ'],
+        ['وكء', 'اُتُّكِئَ'],
         ['وحد', 'اُتُّحِدَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
@@ -1505,7 +1505,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated initial geminate roots', () => {
       test('اُؤْتُمَّ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أمم', 8))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءمم', 8))).toEqualT({
           '1s': 'اُؤْتُمِمْتُ',
           '2ms': 'اُؤْتُمِمْتَ',
           '2fs': 'اُؤْتُمِمْتِ',
@@ -1592,7 +1592,7 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test('اِسْتَأْنَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('أني', 10))).toEqualT({
+        expect(conjugatePassivePast(getVerb('ءني', 10))).toEqualT({
           '1s': 'اُسْتُؤْنِيْتُ',
           '2ms': 'اُسْتُؤْنِيْتَ',
           '2fs': 'اُسْتُؤْنِيْتِ',
@@ -1723,7 +1723,7 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أجر', 'اُسْتُؤْجِرَ']])('%s pattern', (root, expected) => {
+      test.each([['ءجر', 'اُسْتُؤْجِرَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
     })

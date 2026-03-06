@@ -134,30 +134,30 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أذن', 'آذِن'],
-        ['أجر', 'آجِر'],
-        ['أصل', 'أَصِيْل'],
-        ['أسر', 'آسِر'],
-        ['أكل', 'آكِل'],
-        ['أخذ', 'آخِذ'],
-        ['أمر', 'آمِر'],
+        ['ءذن', 'آذِن'],
+        ['ءجر', 'آجِر'],
+        ['ءصل', 'أَصِيْل'],
+        ['ءسر', 'آسِر'],
+        ['ءكل', 'آكِل'],
+        ['ءخذ', 'آخِذ'],
+        ['ءمر', 'آمِر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each([['أول', 'آئِل']])('%s', (root, expected) => {
+      test.each([['ءول', 'آئِل']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial geminate roots', () => {
       test.each([
-        ['أمم', 'آمّ'],
-        ['أدد', 'آدّ'],
-        ['أجج', 'آجّ'],
-        ['أزز', 'آزّ'],
+        ['ءمم', 'آمّ'],
+        ['ءدد', 'آدّ'],
+        ['ءجج', 'آجّ'],
+        ['ءزز', 'آزّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -165,16 +165,16 @@ describe('active participle', () => {
 
     describe('hamzated initial defective roots', () => {
       test.each([
-        ['أتي', 'آتٍ'],
-        ['أبي', 'آبٍ'],
-        ['أني', 'آنٍ'],
+        ['ءتي', 'آتٍ'],
+        ['ءبي', 'آبٍ'],
+        ['ءني', 'آنٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
 
     describe('hamzated hollow-defective roots', () => {
-      test.each([['أوي', 'آوٍ']])('%s', (root, expected) => {
+      test.each([['ءوي', 'آوٍ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
@@ -183,7 +183,7 @@ describe('active participle', () => {
       test.each([
         ['يئس', 'يَائِس'],
         ['بءس', 'بَائِس'],
-        ['سأل', 'سَائِل'],
+        ['سءل', 'سَائِل'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -201,9 +201,9 @@ describe('active participle', () => {
     describe('hamzated final roots', () => {
       test.each([
         ['بدء', 'بَادِئ'],
-        ['قرأ', 'قَارِئ'],
+        ['قرء', 'قَارِئ'],
         ['جرء', 'جَرِيْء'],
-        ['كلأ', 'كَالِئ'],
+        ['كلء', 'كَالِئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -284,8 +284,8 @@ describe('active participle', () => {
         ['دون', 'مُدَوِّن'],
         ['سوف', 'مُسَوِّف'],
         ['كيف', 'مُكَيِّف'],
-        ['أول', 'مُؤَوِّل'],
-        ['أوب', 'مُؤَوِّب'],
+        ['ءول', 'مُؤَوِّل'],
+        ['ءوب', 'مُؤَوِّب'],
         ['شوق', 'مُشَوِّق'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
@@ -314,14 +314,14 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أثر', 'مُؤَثِّر'],
-        ['أجج', 'مُؤَجِّج'],
-        ['أجر', 'مُؤَجِّر'],
-        ['أكد', 'مُؤَكِّد'],
-        ['أيد', 'مُؤَيِّد'],
-        ['أسس', 'مُؤَسِّس'],
-        ['أخر', 'مُؤَخِّر'],
-        ['أمر', 'مُؤَمِّر'],
+        ['ءثر', 'مُؤَثِّر'],
+        ['ءجج', 'مُؤَجِّج'],
+        ['ءجر', 'مُؤَجِّر'],
+        ['ءكد', 'مُؤَكِّد'],
+        ['ءيد', 'مُؤَيِّد'],
+        ['ءسس', 'مُؤَسِّس'],
+        ['ءخر', 'مُؤَخِّر'],
+        ['ءمر', 'مُؤَمِّر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
       })
@@ -329,15 +329,15 @@ describe('active participle', () => {
 
     describe('hamzated initial defective roots', () => {
       test.each([
-        ['أذي', 'مُؤَذٍّ'],
-        ['أسي', 'مُؤَسٍّ'],
+        ['ءذي', 'مُؤَذٍّ'],
+        ['ءسي', 'مُؤَسٍّ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['هنأ', 'مُهَنِّئ']])('%s', (root, expected) => {
+      test.each([['هنء', 'مُهَنِّئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
       })
     })
@@ -417,8 +417,8 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخذ', 'مُؤَاخِذ'],
-        ['أجر', 'مُؤَاجِر'],
+        ['ءخذ', 'مُؤَاخِذ'],
+        ['ءجر', 'مُؤَاجِر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
@@ -426,16 +426,16 @@ describe('active participle', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['سأل', 'مُسَائِل'],
-        ['وأم', 'مُوَائِم'],
-        ['لأم', 'مُلَائِم'],
+        ['سءل', 'مُسَائِل'],
+        ['وءم', 'مُوَائِم'],
+        ['لءم', 'مُلَائِم'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['فجأ', 'مُفَاجِئ']])('%s', (root, expected) => {
+      test.each([['فجء', 'مُفَاجِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
     })
@@ -507,7 +507,7 @@ describe('active participle', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['ومأ', 'مُوْمِئ']])('%s', (root, expected) => {
+      test.each([['ومء', 'مُوْمِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
@@ -526,31 +526,31 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أذن', 'مُؤْذِن'],
-        ['أمن', 'مُؤْمِن'],
-        ['ألم', 'مُؤْلِم'],
-        ['أجر', 'مُؤْجِر'],
+        ['ءذن', 'مُؤْذِن'],
+        ['ءمن', 'مُؤْمِن'],
+        ['ءلم', 'مُؤْلِم'],
+        ['ءجر', 'مُؤْجِر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أتي', 'مُؤْتٍ']])('%s', (root, expected) => {
+      test.each([['ءتي', 'مُؤْتٍ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
 
     describe('hamzated hollow-defective roots', () => {
-      test.each([['أوي', 'مُؤْوٍ']])('%s', (root, expected) => {
+      test.each([['ءوي', 'مُؤْوٍ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
       test.each([
-        ['نشأ', 'مُنْشِئ'],
-        ['نبأ', 'مُنْبِئ'],
+        ['نشء', 'مُنْشِئ'],
+        ['نبء', 'مُنْبِئ'],
         ['ضوء', 'مُضِيْء'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
@@ -575,26 +575,26 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['أخر', 'مُتَأَخِّر'],
-        ['ألف', 'مُتَأَلِّف'],
-        ['أول', 'مُتَأَوِّل'],
-        ['أكد', 'مُتَأَكِّد'],
-        ['أكل', 'مُتَأَكِّل'],
-        ['أثر', 'مُتَأَثِّر'],
-        ['أوه', 'مُتَأَوِّه'],
+        ['ءخر', 'مُتَأَخِّر'],
+        ['ءلف', 'مُتَأَلِّف'],
+        ['ءول', 'مُتَأَوِّل'],
+        ['ءكد', 'مُتَأَكِّد'],
+        ['ءكل', 'مُتَأَكِّل'],
+        ['ءثر', 'مُتَأَثِّر'],
+        ['ءوه', 'مُتَأَوِّه'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial geminate roots', () => {
-      test.each([['أمم', 'مُتَأَمِّم']])('%s', (root, expected) => {
+      test.each([['ءمم', 'مُتَأَمِّم']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['أذي', 'مُتَأَذٍّ']])('%s', (root, expected) => {
+      test.each([['ءذي', 'مُتَأَذٍّ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
     })
@@ -619,7 +619,7 @@ describe('active participle', () => {
         ['وصل', 'مُتَوَصِّل'],
         ['وفر', 'مُتَوَفِّر'],
         ['وقف', 'مُتَوَقِّف'],
-        ['وكأ', 'مُتَوَكِّئ'],
+        ['وكء', 'مُتَوَكِّئ'],
         ['وقع', 'مُتَوَقِّع'],
         ['وسع', 'مُتَوَسِّع'],
       ])('%s', (root, expected) => {
@@ -737,9 +737,9 @@ describe('active participle', () => {
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['ألف', 'مُتَآلِف'],
-        ['أكل', 'مُتَآكِل'],
-        ['أمر', 'مُتَآمِر'],
+        ['ءلف', 'مُتَآلِف'],
+        ['ءكل', 'مُتَآكِل'],
+        ['ءمر', 'مُتَآمِر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toEqualT(expected)
       })
@@ -747,7 +747,7 @@ describe('active participle', () => {
 
     describe('hamzated final roots', () => {
       test.each([
-        ['بطأ', 'مُتَبَاطِئ'],
+        ['بطء', 'مُتَبَاطِئ'],
         ['وطء', 'مُتَوَاطِئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toEqualT(expected)
@@ -755,7 +755,7 @@ describe('active participle', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['سأل', 'مُتَسَائِل']])('%s', (root, expected) => {
+      test.each([['سءل', 'مُتَسَائِل']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toEqualT(expected)
       })
     })
@@ -779,7 +779,7 @@ describe('active participle', () => {
     })
 
     describe('hamzated final roots', () => {
-      test.each([['قرأ', 'مُنْقَرِئ']])('%s', (root, expected) => {
+      test.each([['قرء', 'مُنْقَرِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 7))).toEqualT(expected)
       })
     })
@@ -861,7 +861,7 @@ describe('active participle', () => {
         ['وصل', 'مُتَّصِل'],
         ['وعد', 'مُتَّعِد'],
         ['وسخ', 'مُتَّسِخ'],
-        ['وكأ', 'مُتَّكِئ'],
+        ['وكء', 'مُتَّكِئ'],
         ['وحد', 'مُتَّحِد'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toEqualT(expected)
@@ -907,13 +907,13 @@ describe('active participle', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أخذ', 'مُتَّخِذ']])('%s', (root, expected) => {
+      test.each([['ءخذ', 'مُتَّخِذ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toEqualT(expected)
       })
     })
 
     describe('hamzated initial geminate roots', () => {
-      test.each([['أمم', 'مُؤْتَمّ']])('%s', (root, expected) => {
+      test.each([['ءمم', 'مُؤْتَمّ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toEqualT(expected)
       })
     })
@@ -999,7 +999,7 @@ describe('active participle', () => {
     describe('defective roots', () => {
       test.each([
         ['دعو', 'مُسْتَدْعٍ'],
-        ['أني', 'مُسْتَأْنٍ'],
+        ['ءني', 'مُسْتَأْنٍ'],
         ['رعي', 'مُسْتَرْعٍ'],
         ['ثني', 'مُسْتَثْنٍ'],
         ['لقي', 'مُسْتَلْقٍ'],
@@ -1021,13 +1021,13 @@ describe('active participle', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['أجر', 'مُسْتَأْجِر']])('%s', (root, expected) => {
+      test.each([['ءجر', 'مُسْتَأْجِر']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })
 
     describe('hamzated final roots', () => {
-      test.each([['قرأ', 'مُسْتَقْرِئ']])('%s', (root, expected) => {
+      test.each([['قرء', 'مُسْتَقْرِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

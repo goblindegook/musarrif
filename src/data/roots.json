@@ -1,182 +1,718 @@
 [
-  { "root": "أتي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "أتي", "form": 4 },
-  { "root": "أتي", "form": 8 },
-  { "root": "أجر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l", "fu3la"] },
-  { "root": "أجر", "form": 2 },
-  { "root": "أجر", "form": 10 },
-  { "root": "أجر", "form": 3 },
-  { "root": "أجر", "form": 4 },
   {
-    "root": "أخذ",
+    "root": "ءتي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "ءتي",
+    "form": 4
+  },
+  {
+    "root": "ءتي",
+    "form": 8
+  },
+  {
+    "root": "ءجر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l", "fu3la"]
+  },
+  {
+    "root": "ءجر",
+    "form": 2
+  },
+  {
+    "root": "ءجر",
+    "form": 10
+  },
+  {
+    "root": "ءجر",
+    "form": 3
+  },
+  {
+    "root": "ءجر",
+    "form": 4
+  },
+  {
+    "root": "ءخذ",
     "form": 1,
     "formPattern": "fa3ala-yaf3ulu",
     "masdarPatterns": ["fa3l"],
     "contractedImperative": true
   },
-  { "root": "أخذ", "form": 3 },
-  { "root": "أخذ", "form": 7 },
-  { "root": "أخذ", "form": 8 },
-  { "root": "أخذ", "form": 10 },
-  { "root": "أذن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"], "passiveVoice": "none" },
-  { "root": "أذن", "form": 4 },
-  { "root": "أذن", "form": 10 },
-  { "root": "أذي", "form": 2 },
-  { "root": "أذي", "form": 5, "passiveVoice": "none" },
-  { "root": "أسي", "form": 2 },
-  { "root": "أسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "أسس", "form": 2 },
-  { "root": "أكد", "form": 2 },
-  { "root": "أكد", "form": 5, "passiveVoice": "none" },
-  { "root": "أخر", "form": 2 },
-  { "root": "أخر", "form": 5, "passiveVoice": "none" },
   {
-    "root": "أكل",
+    "root": "ءخذ",
+    "form": 3
+  },
+  {
+    "root": "ءخذ",
+    "form": 7
+  },
+  {
+    "root": "ءخذ",
+    "form": 8
+  },
+  {
+    "root": "ءخذ",
+    "form": 10
+  },
+  {
+    "root": "ءذن",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3al"],
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءذن",
+    "form": 4
+  },
+  {
+    "root": "ءذن",
+    "form": 10
+  },
+  {
+    "root": "ءذي",
+    "form": 2
+  },
+  {
+    "root": "ءذي",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءسي",
+    "form": 2
+  },
+  {
+    "root": "ءسر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "ءسس",
+    "form": 2
+  },
+  {
+    "root": "ءكد",
+    "form": 2
+  },
+  {
+    "root": "ءكد",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءخر",
+    "form": 2
+  },
+  {
+    "root": "ءخر",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءكل",
     "form": 1,
     "formPattern": "fa3ala-yaf3ulu",
     "masdarPatterns": ["fa3l"],
     "contractedImperative": true
   },
-  { "root": "أكل", "form": 5, "passiveVoice": "none" },
-  { "root": "أكل", "form": 6, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "ألم", "form": 4 },
   {
-    "root": "أمر",
+    "root": "ءكل",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءكل",
+    "form": 6,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "ءلم",
+    "form": 4
+  },
+  {
+    "root": "ءمر",
     "form": 1,
     "formPattern": "fa3ala-yaf3ulu",
     "masdarPatterns": ["fa3l"],
     "contractedImperative": true,
     "passiveVoice": "none"
   },
-  { "root": "أمل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "أمم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "أمم", "form": 5, "passiveVoice": "none" },
-  { "root": "أمم", "form": 8 },
-  { "root": "أدد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
-  { "root": "أمر", "form": 2 },
-  { "root": "أمر", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "أجج", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "أجج", "form": 2 },
-  { "root": "أزز", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
   {
-    "root": "أمن",
+    "root": "ءمل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "ءمم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "ءمم",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءمم",
+    "form": 8
+  },
+  {
+    "root": "ءدد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "ءمر",
+    "form": 2
+  },
+  {
+    "root": "ءمر",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ءجج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "ءجج",
+    "form": 2
+  },
+  {
+    "root": "ءزز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "ءمن",
     "form": 1,
     "formPattern": "fa3ila-yaf3alu",
     "noPassiveParticiple": true,
     "masdarPatterns": ["fa3l"]
   },
-  { "root": "أمن", "form": 4 },
-  { "root": "نشأ", "form": 4 },
-  { "root": "أول", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "أول", "form": 2 },
-  { "root": "أول", "form": 5 },
-  { "root": "أوب", "form": 2 },
-  { "root": "وفي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "passiveVoice": "none", "masdarPatterns": ["fa3aal"] },
-  { "root": "وفي", "form": 2 },
-  { "root": "وفي", "form": 3 },
-  { "root": "وفي", "form": 4 },
-  { "root": "وفي", "form": 5 },
-  { "root": "وفي", "form": 10 },
-  { "root": "وفي", "form": 1, "formPattern": "fa3ala-yaf3alu", "passiveVoice": "none" },
-  { "root": "وفي", "form": 5 },
-  { "root": "وضح", "form": 4 },
-  { "root": "وضح", "form": 10 },
-  { "root": "وءي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "وأم", "form": 3 },
-  { "root": "أوي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["ifi3aal", "fu3ul", "fi3aal"] },
-  { "root": "أوي", "form": 4 },
-  { "root": "أوه", "form": 5, "passiveVoice": "none" },
-  { "root": "أيد", "form": 2 },
-  { "root": "أود", "form": 2 },
   {
-    "root": "أصل",
+    "root": "ءمن",
+    "form": 4
+  },
+  {
+    "root": "نشء",
+    "form": 4
+  },
+  {
+    "root": "ءول",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "ءول",
+    "form": 2
+  },
+  {
+    "root": "ءول",
+    "form": 5
+  },
+  {
+    "root": "ءوب",
+    "form": 2
+  },
+  {
+    "root": "وفي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "passiveVoice": "none",
+    "masdarPatterns": ["fa3aal"]
+  },
+  {
+    "root": "وفي",
+    "form": 2
+  },
+  {
+    "root": "وفي",
+    "form": 3
+  },
+  {
+    "root": "وفي",
+    "form": 4
+  },
+  {
+    "root": "وفي",
+    "form": 5
+  },
+  {
+    "root": "وفي",
+    "form": 10
+  },
+  {
+    "root": "وفي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وفي",
+    "form": 5
+  },
+  {
+    "root": "وضح",
+    "form": 4
+  },
+  {
+    "root": "وضح",
+    "form": 10
+  },
+  {
+    "root": "وءي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "وءم",
+    "form": 3
+  },
+  {
+    "root": "ءوي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["ifi3aal", "fu3ul", "fi3aal"]
+  },
+  {
+    "root": "ءوي",
+    "form": 4
+  },
+  {
+    "root": "ءوه",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءيد",
+    "form": 2
+  },
+  {
+    "root": "ءود",
+    "form": 2
+  },
+  {
+    "root": "ءصل",
     "form": 1,
     "formPattern": "fa3ula-yaf3ulu",
     "masdarPatterns": ["fa3aala"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
-  { "root": "أصل", "form": 10 },
-  { "root": "أثر", "form": 2 },
-  { "root": "أثر", "form": 10 },
-  { "root": "أثر", "form": 5 },
-  { "root": "ألف", "form": 5, "passiveVoice": "none" },
-  { "root": "ألف", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "باع", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "بحث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "بدء", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "بدء", "form": 8 },
-  { "root": "بدو", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"], "passiveVoice": "none" },
-  { "root": "بدل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "بدل", "form": 10 },
-  { "root": "بدل", "form": 2 },
-  { "root": "بدل", "form": 6 },
-  { "root": "برع", "form": 5 },
-  { "root": "بري", "form": 3 },
-  { "root": "بسط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "بطأ", "form": 6, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "بقي", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal"] },
-  { "root": "بقي", "form": 4 },
-  { "root": "بقي", "form": 5 },
-  { "root": "بكي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3aal"] },
-  { "root": "بثث", "form": 7 },
-  { "root": "بلي", "form": 3 },
-  { "root": "بلغ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool", "fa3aal"] },
-  { "root": "بلغ", "form": 4 },
-  { "root": "بلغ", "form": 3 },
-  { "root": "بني", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "بني", "form": 5 },
-  { "root": "بيض", "form": 9, "passiveVoice": "none" },
-  { "root": "بوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "بءس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "بءس", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "أبي", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aal"] },
-  { "root": "أني", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3an"] },
-  { "root": "أني", "form": 10 },
-  { "root": "بيت", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["mimi"] },
-  { "root": "تاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تاج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تبع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3al", "fa3aala", "mimi"] },
-  { "root": "تبع", "form": 3 },
-  { "root": "تيح", "form": 4 },
-  { "root": "دعم", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "بعد", "form": 1, "formPattern": "fa3ila-yaf3alu", "passiveVoice": "none", "masdarPatterns": [] },
-  { "root": "تحد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حدي", "form": 5, "passiveVoice": "none" },
-  { "root": "تحر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تحو", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تدر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ترجم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ترك", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تغي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تمر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تمم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "تمم", "form": 4 },
-  { "root": "حدث", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
-  { "root": "حدث", "form": 5, "passiveVoice": "none" },
-  { "root": "تنا", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "تنب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ثني", "form": 7, "passiveVoice": "impersonal" },
-  { "root": "ثني", "form": 10 },
-  { "root": "ثاب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "جيء", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "جيء", "form": 4 },
-  { "root": "جيء", "form": 5 },
-  { "root": "جيء", "form": 6, "noPassiveParticiple": true },
-  { "root": "جري", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "جرء", "form": 1, "formPattern": "fa3ula-yaf3ulu", "passiveVoice": "none" },
-  { "root": "جوي", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "جوز", "form": 3 },
-  { "root": "جوز", "form": 6 },
-  { "root": "جدو", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "جاب", "form": 4 },
-  { "root": "جوب", "form": 10 },
-  { "root": "جاد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "جبب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "جيد", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "جرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "جرح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "جعل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
+  {
+    "root": "ءصل",
+    "form": 10
+  },
+  {
+    "root": "ءثر",
+    "form": 2
+  },
+  {
+    "root": "ءثر",
+    "form": 10
+  },
+  {
+    "root": "ءثر",
+    "form": 5
+  },
+  {
+    "root": "ءلف",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ءلف",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "باع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "بحث",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "بدء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "بدء",
+    "form": 8
+  },
+  {
+    "root": "بدو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"],
+    "passiveVoice": "none"
+  },
+  {
+    "root": "بدل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "بدل",
+    "form": 10
+  },
+  {
+    "root": "بدل",
+    "form": 2
+  },
+  {
+    "root": "بدل",
+    "form": 6
+  },
+  {
+    "root": "برع",
+    "form": 5
+  },
+  {
+    "root": "بري",
+    "form": 3
+  },
+  {
+    "root": "بسط",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "بطء",
+    "form": 6,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "بقي",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3aal"]
+  },
+  {
+    "root": "بقي",
+    "form": 4
+  },
+  {
+    "root": "بقي",
+    "form": 5
+  },
+  {
+    "root": "بكي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fu3aal"]
+  },
+  {
+    "root": "بثث",
+    "form": 7
+  },
+  {
+    "root": "بلي",
+    "form": 3
+  },
+  {
+    "root": "بلغ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3ool", "fa3aal"]
+  },
+  {
+    "root": "بلغ",
+    "form": 4
+  },
+  {
+    "root": "بلغ",
+    "form": 3
+  },
+  {
+    "root": "بني",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "بني",
+    "form": 5
+  },
+  {
+    "root": "بيض",
+    "form": 9,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "بوء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "بءس",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "بءس",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ءبي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fi3aal"]
+  },
+  {
+    "root": "ءني",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fi3an"]
+  },
+  {
+    "root": "ءني",
+    "form": 10
+  },
+  {
+    "root": "بيت",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["mimi"]
+  },
+  {
+    "root": "تاب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تاج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تبع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3al", "fa3aala", "mimi"]
+  },
+  {
+    "root": "تبع",
+    "form": 3
+  },
+  {
+    "root": "تيح",
+    "form": 4
+  },
+  {
+    "root": "دعم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "بعد",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "passiveVoice": "none",
+    "masdarPatterns": []
+  },
+  {
+    "root": "تحد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حدي",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "تحر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تحو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تدر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ترجم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ترك",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تغي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تمر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تمم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "تمم",
+    "form": 4
+  },
+  {
+    "root": "حدث",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "حدث",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "تنا",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "تنب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ثني",
+    "form": 7,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ثني",
+    "form": 10
+  },
+  {
+    "root": "ثاب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "جيء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "جيء",
+    "form": 4
+  },
+  {
+    "root": "جيء",
+    "form": 5
+  },
+  {
+    "root": "جيء",
+    "form": 6,
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "جري",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "جرء",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "passiveVoice": "none"
+  },
+  {
+    "root": "جوي",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "جوز",
+    "form": 3
+  },
+  {
+    "root": "جوز",
+    "form": 6
+  },
+  {
+    "root": "جدو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "جاب",
+    "form": 4
+  },
+  {
+    "root": "جوب",
+    "form": 10
+  },
+  {
+    "root": "جاد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "جبب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "جيد",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "جرب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "جرح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "جعل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
   {
     "root": "جلس",
     "form": 1,
@@ -184,18 +720,59 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "جمع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l", "fa3lan", "mimi"] },
-  { "root": "جمع", "form": 2 },
-  { "root": "جمع", "form": 5 },
-  { "root": "جمل", "form": 2 },
-  { "root": "جهد", "form": 3 },
-  { "root": "جهز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حبب", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3l"] },
-  { "root": "حبب", "form": 10 },
-  { "root": "حبب", "form": 2 },
-  { "root": "حبب", "form": 4 },
-  { "root": "حبب", "form": 5 },
-  { "root": "حبب", "form": 6 },
+  {
+    "root": "جمع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l", "fa3lan", "mimi"]
+  },
+  {
+    "root": "جمع",
+    "form": 2
+  },
+  {
+    "root": "جمع",
+    "form": 5
+  },
+  {
+    "root": "جمل",
+    "form": 2
+  },
+  {
+    "root": "جهد",
+    "form": 3
+  },
+  {
+    "root": "جهز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حبب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "حبب",
+    "form": 10
+  },
+  {
+    "root": "حبب",
+    "form": 2
+  },
+  {
+    "root": "حبب",
+    "form": 4
+  },
+  {
+    "root": "حبب",
+    "form": 5
+  },
+  {
+    "root": "حبب",
+    "form": 6
+  },
   {
     "root": "حبط",
     "form": 1,
@@ -203,167 +780,740 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "حدث", "form": 2 },
-  { "root": "حدد", "form": 2 },
-  { "root": "حدد", "form": 5, "passiveVoice": "none" },
-  { "root": "حدق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حرب", "form": 3 },
-  { "root": "حرس", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حرم", "form": 8 },
-  { "root": "حجج", "form": 8 },
-  { "root": "حزن", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "حسب", "form": 1, "formPattern": "fa3ila-yaf3ulu", "masdarPatterns": ["fa3al"] },
-  { "root": "حسب", "form": 2 },
-  { "root": "حسن", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3al"] },
-  { "root": "حسن", "form": 10 },
-  { "root": "حسن", "form": 2 },
-  { "root": "حسن", "form": 3 },
-  { "root": "حسن", "form": 4 },
-  { "root": "حسن", "form": 5 },
-  { "root": "حسن", "form": 5 },
-  { "root": "حسن", "form": 6 },
-  { "root": "حسن", "form": 7 },
-  { "root": "حسن", "form": 8 },
-  { "root": "حني", "form": 7, "passiveVoice": "none" },
-  { "root": "حوز", "form": 7, "passiveVoice": "impersonal" },
-  { "root": "حيي", "form": 2 },
-  { "root": "حيي", "form": 4 },
-  { "root": "حيي", "form": 10 },
-  { "root": "حصد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  {
+    "root": "حدث",
+    "form": 2
+  },
+  {
+    "root": "حدد",
+    "form": 2
+  },
+  {
+    "root": "حدد",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "حدق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حرب",
+    "form": 3
+  },
+  {
+    "root": "حرس",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حرم",
+    "form": 8
+  },
+  {
+    "root": "حجج",
+    "form": 8
+  },
+  {
+    "root": "حزن",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "حسب",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3ulu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "حسب",
+    "form": 2
+  },
+  {
+    "root": "حسن",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "حسن",
+    "form": 10
+  },
+  {
+    "root": "حسن",
+    "form": 2
+  },
+  {
+    "root": "حسن",
+    "form": 3
+  },
+  {
+    "root": "حسن",
+    "form": 4
+  },
+  {
+    "root": "حسن",
+    "form": 5
+  },
+  {
+    "root": "حسن",
+    "form": 5
+  },
+  {
+    "root": "حسن",
+    "form": 6
+  },
+  {
+    "root": "حسن",
+    "form": 7
+  },
+  {
+    "root": "حسن",
+    "form": 8
+  },
+  {
+    "root": "حني",
+    "form": 7,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "حوز",
+    "form": 7,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "حيي",
+    "form": 2
+  },
+  {
+    "root": "حيي",
+    "form": 4
+  },
+  {
+    "root": "حيي",
+    "form": 10
+  },
+  {
+    "root": "حصد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
   {
     "root": "حضر",
     "form": 1,
     "formPattern": "fa3ala-yaf3ulu",
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "حضر", "form": 10 },
-  { "root": "حظر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حفظ", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "حقق", "form": 10 },
-  { "root": "حفل", "form": 8 },
-  { "root": "حكم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "حلل", "form": 8 },
-  { "root": "حلق", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "حلم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3l"] },
-  { "root": "حمر", "form": 9 },
-  { "root": "حمل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "حمم", "form": 10 },
-  { "root": "حول", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "حول", "form": 5, "passiveVoice": "none" },
-  { "root": "حول", "form": 10, "passiveVoice": "impersonal" },
-  { "root": "خوف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خبر", "form": 4 },
-  { "root": "خبء", "form": 8 },
-  { "root": "خبز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خدم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خدم", "form": 10 },
-  { "root": "خور", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al"] },
-  { "root": "خرج", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3ool"] },
-  { "root": "خرج", "form": 10 },
-  { "root": "خسر", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3l"] },
-  { "root": "خطب", "form": 6 },
-  { "root": "خطط", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "خطط", "form": 2 },
-  { "root": "خفض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خفض", "form": 7, "passiveVoice": "impersonal" },
-  { "root": "خضر", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "خضل", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "خلع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خلف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خفي", "form": 8 },
-  { "root": "خلق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "خوف", "form": 4 },
-  { "root": "خير", "form": 8 },
-  { "root": "دار", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "دار", "form": 10 },
-  { "root": "داف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "دحرج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "دخل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
-  { "root": "درب", "form": 5 },
-  { "root": "درس", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "درس", "form": 10 },
-  { "root": "درس", "form": 2 },
-  { "root": "درس", "form": 5 },
-  { "root": "دسس", "form": 7 },
-  { "root": "دعا", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "دعو", "form": 10 },
-  { "root": "دعو", "form": 8 },
-  { "root": "دفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "دور", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "دون", "form": 2 },
-  { "root": "ذكر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3l"] },
-  { "root": "ذكر", "form": 2 },
-  { "root": "ذكر", "form": 5 },
-  { "root": "ذمم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رءي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رءي", "form": 3 },
-  { "root": "رءي", "form": 4 },
-  { "root": "رءي", "form": 5, "passiveVoice": "impersonal" },
-  { "root": "رءي", "form": 6 },
-  { "root": "رءي", "form": 8 },
-  { "root": "رأي", "form": 4 },
-  { "root": "رعي", "form": 3 },
-  { "root": "رعي", "form": 10 },
-  { "root": "روي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": [] },
-  { "root": "روي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3aala"] },
-  { "root": "راح", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
-  { "root": "راح", "form": 10 },
-  { "root": "راد", "form": 4 },
-  { "root": "راق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رتب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رجع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رحب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ردد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ردد", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "ردي", "form": 8 },
-  { "root": "ردد", "form": 3 },
-  { "root": "ردد", "form": 6 },
-  { "root": "رسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رسل", "form": 4 },
-  { "root": "رسم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رخو", "form": 10 },
-  { "root": "رفض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رقد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رقص", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ركب", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "ركز", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "ركز", "form": 2 },
-  { "root": "ركض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ركل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رمش", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "رمي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "رمي", "form": 2 },
-  { "root": "رمي", "form": 7 },
-  { "root": "رود", "form": 4 },
-  { "root": "روح", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "زيد", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aala", "fa3l"] },
-  { "root": "زيد", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "زال", "form": 4 },
-  { "root": "زحزح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "زرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "زرق", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "زلزل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "زوج", "form": 8 },
-  { "root": "زوي", "form": 2 },
-  { "root": "زوي", "form": 5, "passiveVoice": "none" },
-  { "root": "زوي", "form": 7, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "هوي", "form": 2 },
-  { "root": "هوي", "form": 6 },
-  { "root": "هنأ", "form": 2 },
-  { "root": "سأل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3aal"] },
-  { "root": "سأل", "form": 3 },
-  { "root": "سأل", "form": 6 },
-  { "root": "ساف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سبب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "سبب", "form": 2 },
-  { "root": "سبب", "form": 5, "passiveVoice": "none" },
-  { "root": "سبب", "form": 6, "passiveVoice": "none" },
-  { "root": "سبح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سجد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سجن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سحب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  {
+    "root": "حضر",
+    "form": 10
+  },
+  {
+    "root": "حظر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حفظ",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "حقق",
+    "form": 10
+  },
+  {
+    "root": "حفل",
+    "form": 8
+  },
+  {
+    "root": "حكم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "حلل",
+    "form": 8
+  },
+  {
+    "root": "حلق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "حلم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "حمر",
+    "form": 9
+  },
+  {
+    "root": "حمل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "حمم",
+    "form": 10
+  },
+  {
+    "root": "حول",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "حول",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "حول",
+    "form": 10,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "خوف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خبر",
+    "form": 4
+  },
+  {
+    "root": "خبء",
+    "form": 8
+  },
+  {
+    "root": "خبز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خدم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خدم",
+    "form": 10
+  },
+  {
+    "root": "خور",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "خرج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "خرج",
+    "form": 10
+  },
+  {
+    "root": "خسر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "خطب",
+    "form": 6
+  },
+  {
+    "root": "خطط",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "خطط",
+    "form": 2
+  },
+  {
+    "root": "خفض",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خفض",
+    "form": 7,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "خضر",
+    "form": 9,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "خضل",
+    "form": 9,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "خلع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خلف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خفي",
+    "form": 8
+  },
+  {
+    "root": "خلق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "خوف",
+    "form": 4
+  },
+  {
+    "root": "خير",
+    "form": 8
+  },
+  {
+    "root": "دار",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "دار",
+    "form": 10
+  },
+  {
+    "root": "داف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "دحرج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "دخل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "درب",
+    "form": 5
+  },
+  {
+    "root": "درس",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "درس",
+    "form": 10
+  },
+  {
+    "root": "درس",
+    "form": 2
+  },
+  {
+    "root": "درس",
+    "form": 5
+  },
+  {
+    "root": "دسس",
+    "form": 7
+  },
+  {
+    "root": "دعا",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "دعو",
+    "form": 10
+  },
+  {
+    "root": "دعو",
+    "form": 8
+  },
+  {
+    "root": "دفع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "دور",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "دون",
+    "form": 2
+  },
+  {
+    "root": "ذكر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fi3l"]
+  },
+  {
+    "root": "ذكر",
+    "form": 2
+  },
+  {
+    "root": "ذكر",
+    "form": 5
+  },
+  {
+    "root": "ذمم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رءي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رءي",
+    "form": 3
+  },
+  {
+    "root": "رءي",
+    "form": 4
+  },
+  {
+    "root": "رءي",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "رءي",
+    "form": 6
+  },
+  {
+    "root": "رءي",
+    "form": 8
+  },
+  {
+    "root": "رءي",
+    "form": 4
+  },
+  {
+    "root": "رعي",
+    "form": 3
+  },
+  {
+    "root": "رعي",
+    "form": 10
+  },
+  {
+    "root": "روي",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3ilu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "روي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fi3aala"]
+  },
+  {
+    "root": "راح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3aal"]
+  },
+  {
+    "root": "راح",
+    "form": 10
+  },
+  {
+    "root": "راد",
+    "form": 4
+  },
+  {
+    "root": "راق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رتب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رجع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رحب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ردد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ردد",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ردي",
+    "form": 8
+  },
+  {
+    "root": "ردد",
+    "form": 3
+  },
+  {
+    "root": "ردد",
+    "form": 6
+  },
+  {
+    "root": "رسب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رسل",
+    "form": 4
+  },
+  {
+    "root": "رسم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رخو",
+    "form": 10
+  },
+  {
+    "root": "رفض",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رفع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رقد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رقص",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ركب",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "ركز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "ركز",
+    "form": 2
+  },
+  {
+    "root": "ركض",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ركل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رمش",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "رمي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "رمي",
+    "form": 2
+  },
+  {
+    "root": "رمي",
+    "form": 7
+  },
+  {
+    "root": "رود",
+    "form": 4
+  },
+  {
+    "root": "روح",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "زيد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fi3aala", "fa3l"]
+  },
+  {
+    "root": "زيد",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "زال",
+    "form": 4
+  },
+  {
+    "root": "زحزح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "زرع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "زرق",
+    "form": 9,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "زلزل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "زوج",
+    "form": 8
+  },
+  {
+    "root": "زوي",
+    "form": 2
+  },
+  {
+    "root": "زوي",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "زوي",
+    "form": 7,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "زور",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "هوي",
+    "form": 2
+  },
+  {
+    "root": "هوي",
+    "form": 6
+  },
+  {
+    "root": "هنء",
+    "form": 2
+  },
+  {
+    "root": "سءل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fu3aal"]
+  },
+  {
+    "root": "سءل",
+    "form": 3
+  },
+  {
+    "root": "سءل",
+    "form": 6
+  },
+  {
+    "root": "ساف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سبب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "سبب",
+    "form": 2
+  },
+  {
+    "root": "سبب",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "سبب",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "سبح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سجد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سجن",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سحب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
   {
     "root": "سعد",
     "form": 1,
@@ -371,78 +1521,337 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fa3aala"]
   },
-  { "root": "سعد", "form": 3 },
-  { "root": "صحب", "form": 3 },
-  { "root": "وزي", "form": 3 },
-  { "root": "وسي", "form": 3 },
-  { "root": "سعي", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["mimi"] },
-  { "root": "سفر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "سفر", "form": 2 },
-  { "root": "سفر", "form": 3 },
-  { "root": "سرر", "form": 3 },
-  { "root": "سوء", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "سوف", "form": 2 },
-  { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سلم", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aala", "fa3al"] },
-  { "root": "سلم", "form": 10 },
-  { "root": "سلم", "form": 2 },
-  { "root": "كيف", "form": 2 },
-  { "root": "سمح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سمع", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "سمع", "form": 10 },
-  { "root": "سوي", "form": 8 },
-  { "root": "سفف", "form": 4 },
-  { "root": "شاخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شاد", "form": 4 },
-  { "root": "شور", "form": 4 },
-  { "root": "شدد", "form": 2 },
-  { "root": "شبب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شجع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شرب", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l", "mimi"] },
-  { "root": "شرب", "form": 10 },
-  { "root": "شرب", "form": 2 },
-  { "root": "شرب", "form": 3 },
-  { "root": "شرب", "form": 4 },
-  { "root": "شرب", "form": 5 },
-  { "root": "شرب", "form": 7 },
-  { "root": "شفي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3aal"] },
-  { "root": "شرح", "form": 2 },
-  { "root": "شرد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شرع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شرف", "form": 4 },
-  { "root": "شرك", "form": 3 },
-  { "root": "شرك", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "شري", "form": 8 },
-  { "root": "شعر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شكر", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3l"] },
-  { "root": "شكر", "form": 5 },
-  { "root": "شفف", "form": 10 },
-  { "root": "شكك", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "شهد", "form": 3 },
-  { "root": "شيد", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": [] },
-  { "root": "شور", "form": 10 },
-  { "root": "شوق", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "شوق", "form": 2 },
-  { "root": "شوق", "form": 5, "passiveVoice": "none" },
-  { "root": "شوق", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "صاح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "صاح", "form": 4 },
-  { "root": "صبح", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "صبح", "form": 2 },
-  { "root": "صبح", "form": 4 },
-  { "root": "صبر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "صبر", "form": 2 },
-  { "root": "صدق", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3l"] },
-  { "root": "صدق", "form": 2 },
-  { "root": "صدق", "form": 3 },
-  { "root": "صرح", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "صرح", "form": 2 },
-  { "root": "صرخ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3aal"] },
-  { "root": "صرخ", "form": 4 },
-  { "root": "صرف", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "صرف", "form": 2 },
-  { "root": "صرف", "form": 3 },
-  { "root": "صرف", "form": 10 },
+  {
+    "root": "سعد",
+    "form": 3
+  },
+  {
+    "root": "صحب",
+    "form": 3
+  },
+  {
+    "root": "وزي",
+    "form": 3
+  },
+  {
+    "root": "وسي",
+    "form": 3
+  },
+  {
+    "root": "سعي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["mimi"]
+  },
+  {
+    "root": "سفر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "سفر",
+    "form": 2
+  },
+  {
+    "root": "سفر",
+    "form": 3
+  },
+  {
+    "root": "سرر",
+    "form": 3
+  },
+  {
+    "root": "سوء",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "سوف",
+    "form": 2
+  },
+  {
+    "root": "سكن",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سلم",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3aala", "fa3al"]
+  },
+  {
+    "root": "سلم",
+    "form": 10
+  },
+  {
+    "root": "سلم",
+    "form": 2
+  },
+  {
+    "root": "كيف",
+    "form": 2
+  },
+  {
+    "root": "سمح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سمع",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "سمع",
+    "form": 10
+  },
+  {
+    "root": "سوي",
+    "form": 8
+  },
+  {
+    "root": "سفف",
+    "form": 4
+  },
+  {
+    "root": "شاخ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شاد",
+    "form": 4
+  },
+  {
+    "root": "شور",
+    "form": 4
+  },
+  {
+    "root": "شدد",
+    "form": 2
+  },
+  {
+    "root": "شبب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شجع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شرب",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fu3l", "mimi"]
+  },
+  {
+    "root": "شرب",
+    "form": 10
+  },
+  {
+    "root": "شرب",
+    "form": 2
+  },
+  {
+    "root": "شرب",
+    "form": 3
+  },
+  {
+    "root": "شرب",
+    "form": 4
+  },
+  {
+    "root": "شرب",
+    "form": 5
+  },
+  {
+    "root": "شرب",
+    "form": 7
+  },
+  {
+    "root": "شفي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fi3aal"]
+  },
+  {
+    "root": "شرح",
+    "form": 2
+  },
+  {
+    "root": "شرد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شرع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شرف",
+    "form": 4
+  },
+  {
+    "root": "شرك",
+    "form": 3
+  },
+  {
+    "root": "شرك",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "شري",
+    "form": 8
+  },
+  {
+    "root": "شعر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شكر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "شكر",
+    "form": 5
+  },
+  {
+    "root": "شفف",
+    "form": 10
+  },
+  {
+    "root": "شكك",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "شهد",
+    "form": 3
+  },
+  {
+    "root": "شيد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "شور",
+    "form": 10
+  },
+  {
+    "root": "شوق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "شوق",
+    "form": 2
+  },
+  {
+    "root": "شوق",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "شوق",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "صاح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "صاح",
+    "form": 4
+  },
+  {
+    "root": "صبح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "صبح",
+    "form": 2
+  },
+  {
+    "root": "صبح",
+    "form": 4
+  },
+  {
+    "root": "صبر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "صبر",
+    "form": 2
+  },
+  {
+    "root": "صدق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fi3l"]
+  },
+  {
+    "root": "صدق",
+    "form": 2
+  },
+  {
+    "root": "صدق",
+    "form": 3
+  },
+  {
+    "root": "صرح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "صرح",
+    "form": 2
+  },
+  {
+    "root": "صرخ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3aal"]
+  },
+  {
+    "root": "صرخ",
+    "form": 4
+  },
+  {
+    "root": "صرف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "صرف",
+    "form": 2
+  },
+  {
+    "root": "صرف",
+    "form": 3
+  },
+  {
+    "root": "صرف",
+    "form": 10
+  },
   {
     "root": "صعد",
     "form": 1,
@@ -450,38 +1859,154 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fu3ool"]
   },
-  { "root": "صغر", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
-  { "root": "صفر", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "صلح", "form": 4 },
-  { "root": "صلّو", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "صمم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "صنع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "صير", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "ضحك", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ضحي", "form": 4 },
-  { "root": "ضوء", "form": 4 },
-  { "root": "ضوء", "form": 5, "passiveVoice": "none" },
-  { "root": "ضوء", "form": 10, "passiveVoice": "impersonal" },
-  { "root": "ضيق", "form": 3 },
-  { "root": "ضدد", "form": 6 },
-  { "root": "ضرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ضرر", "form": 8 },
-  { "root": "ضلل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ضلع", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "ضمن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal"] },
-  { "root": "ضمن", "form": 2 },
-  { "root": "ضمن", "form": 5 },
-  { "root": "ضيف", "form": 10 },
-  { "root": "ضيف", "form": 4 },
-  { "root": "طبخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "طبق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "طرد", "form": 10 },
-  { "root": "طلق", "form": 4 },
-  { "root": "طلق", "form": 7, "noPassiveParticiple": true },
-  { "root": "طور", "form": 5, "passiveVoice": "none" },
-  { "root": "طوع", "form": 10 },
-  { "root": "طير", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "طير", "form": 2 },
+  {
+    "root": "صغر",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu"
+  },
+  {
+    "root": "صفر",
+    "form": 9,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "صلح",
+    "form": 4
+  },
+  {
+    "root": "صلّو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "صمم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "صنع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "صير",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "ضحك",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ضحي",
+    "form": 4
+  },
+  {
+    "root": "ضوء",
+    "form": 4
+  },
+  {
+    "root": "ضوء",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ضوء",
+    "form": 10,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ضيق",
+    "form": 3
+  },
+  {
+    "root": "ضدد",
+    "form": 6
+  },
+  {
+    "root": "ضرب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ضرر",
+    "form": 8
+  },
+  {
+    "root": "ضلل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ضلع",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ضمن",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3aal"]
+  },
+  {
+    "root": "ضمن",
+    "form": 2
+  },
+  {
+    "root": "ضمن",
+    "form": 5
+  },
+  {
+    "root": "ضيف",
+    "form": 10
+  },
+  {
+    "root": "ضيف",
+    "form": 4
+  },
+  {
+    "root": "طبخ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "طبق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "طرد",
+    "form": 10
+  },
+  {
+    "root": "طلق",
+    "form": 4
+  },
+  {
+    "root": "طلق",
+    "form": 7,
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "طور",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "طوع",
+    "form": 10
+  },
+  {
+    "root": "طير",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "طير",
+    "form": 2
+  },
   {
     "root": "ظلل",
     "form": 1,
@@ -489,67 +2014,288 @@
     "masdarPatterns": ["fa3l"],
     "passiveVoice": "none"
   },
-  { "root": "ظنن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عاد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عاد", "form": 10 },
-  { "root": "عار", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عاش", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عبد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عدد", "form": 10 },
-  { "root": "عدد", "form": 4 },
-  { "root": "عذب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عذر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عرف", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "عرف", "form": 5 },
-  { "root": "عرب", "form": 4 },
-  { "root": "عبر", "form": 8 },
-  { "root": "عصي", "form": 10, "passiveVoice": "impersonal" },
-  { "root": "عزز", "form": 5 },
-  { "root": "عين", "form": 5, "passiveVoice": "none" },
-  { "root": "عزم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "عرض", "form": 10 },
-  { "root": "عطي", "form": 4 },
-  { "root": "عفو", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "عكس", "form": 7, "passiveVoice": "impersonal" },
-  { "root": "عوم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "عوز", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
-  { "root": "عود", "form": 3 },
-  { "root": "عود", "form": 4 },
-  { "root": "عود", "form": 8 },
-  { "root": "عظم", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
-  { "root": "عقد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "علم", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "علم", "form": 2 },
-  { "root": "علم", "form": 4 },
-  { "root": "علم", "form": 5 },
-  { "root": "علج", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "علي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "علي", "form": 4 },
-  { "root": "علن", "form": 4 },
-  { "root": "عنن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "عمل", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3al", "mimi"] },
-  { "root": "عمل", "form": 2 },
-  { "root": "عمل", "form": 3 },
-  { "root": "عمل", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "عمل", "form": 10 },
-  { "root": "عمد", "form": 8 },
-  { "root": "عون", "form": 10 },
-  { "root": "عون", "form": 3 },
-  { "root": "عون", "form": 4 },
-  { "root": "عون", "form": 6 },
-  { "root": "غاث", "form": 10 },
-  { "root": "غدو", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fu3ul"] },
-  { "root": "غشي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
-  { "root": "غدر", "form": 3 },
-  { "root": "غرق", "form": 10 },
-  { "root": "غسل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "غفر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "غفر", "form": 10 },
-  { "root": "غلل", "form": 10 },
-  { "root": "غلب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "غلق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "غمض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "غطي", "form": 2 },
+  {
+    "root": "ظنن",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عاد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عاد",
+    "form": 10
+  },
+  {
+    "root": "عار",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عاش",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عبد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عدد",
+    "form": 10
+  },
+  {
+    "root": "عدد",
+    "form": 4
+  },
+  {
+    "root": "عذب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عذر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عرف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "عرف",
+    "form": 5
+  },
+  {
+    "root": "عرب",
+    "form": 4
+  },
+  {
+    "root": "عبر",
+    "form": 8
+  },
+  {
+    "root": "عصي",
+    "form": 10,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "عزز",
+    "form": 5
+  },
+  {
+    "root": "عين",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "عزم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "عرض",
+    "form": 10
+  },
+  {
+    "root": "عطي",
+    "form": 4
+  },
+  {
+    "root": "عفو",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "عكس",
+    "form": 7,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "عوم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "عوز",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "عود",
+    "form": 3
+  },
+  {
+    "root": "عود",
+    "form": 4
+  },
+  {
+    "root": "عود",
+    "form": 8
+  },
+  {
+    "root": "عظم",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu"
+  },
+  {
+    "root": "عقد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "علم",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "علم",
+    "form": 2
+  },
+  {
+    "root": "علم",
+    "form": 4
+  },
+  {
+    "root": "علم",
+    "form": 5
+  },
+  {
+    "root": "علج",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "علي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "علي",
+    "form": 4
+  },
+  {
+    "root": "علن",
+    "form": 4
+  },
+  {
+    "root": "عنن",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "عمل",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3al", "mimi"]
+  },
+  {
+    "root": "عمل",
+    "form": 2
+  },
+  {
+    "root": "عمل",
+    "form": 3
+  },
+  {
+    "root": "عمل",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "عمل",
+    "form": 10
+  },
+  {
+    "root": "عمد",
+    "form": 8
+  },
+  {
+    "root": "عون",
+    "form": 10
+  },
+  {
+    "root": "عون",
+    "form": 3
+  },
+  {
+    "root": "عون",
+    "form": 4
+  },
+  {
+    "root": "عون",
+    "form": 6
+  },
+  {
+    "root": "غاث",
+    "form": 10
+  },
+  {
+    "root": "غدو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fu3ul"]
+  },
+  {
+    "root": "غشي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "غدر",
+    "form": 3
+  },
+  {
+    "root": "غرق",
+    "form": 10
+  },
+  {
+    "root": "غسل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "غفر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "غفر",
+    "form": 10
+  },
+  {
+    "root": "غلل",
+    "form": 10
+  },
+  {
+    "root": "غلب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "غلق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "غمض",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "غطي",
+    "form": 2
+  },
   {
     "root": "غني",
     "form": 1,
@@ -557,146 +2303,650 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fa3l"]
   },
-  { "root": "غني", "form": 10 },
-  { "root": "غني", "form": 2 },
-  { "root": "غني", "form": 4 },
-  { "root": "غني", "form": 5 },
-  { "root": "غني", "form": 8 },
-  { "root": "غير", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "غير", "form": 5, "passiveVoice": "none" },
-  { "root": "فاد", "form": 10 },
-  { "root": "فيد", "form": 10 },
-  { "root": "فاز", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فتح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فجر", "form": 7, "noPassiveParticiple": true },
-  { "root": "فجأ", "form": 3 },
-  { "root": "فوض", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "فحص", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فرح", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "فرقع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فسر", "form": 10 },
-  { "root": "فسر", "form": 2 },
-  { "root": "فشل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فصل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فعل", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3l"] },
-  { "root": "فعل", "form": 2 },
-  { "root": "فعل", "form": 4 },
-  { "root": "فيد", "form": 4 },
-  { "root": "فقد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "فكر", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "فكر", "form": 2 },
-  { "root": "فكر", "form": 5 },
-  { "root": "فكر", "form": 6 },
-  { "root": "فكر", "form": 8 },
-  { "root": "فلت", "form": 4 },
-  { "root": "فهم", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "قول", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "قول", "form": 2 },
-  { "root": "قول", "form": 3 },
-  { "root": "قول", "form": 5 },
-  { "root": "قوس", "form": 2 },
-  { "root": "كون", "form": 2 },
-  { "root": "قبض", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قبل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قبل", "form": 10 },
-  { "root": "قتل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "قتل", "form": 3 },
-  { "root": "قدم", "form": 2 },
-  { "root": "قدم", "form": 5 },
-  { "root": "قدم", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fi3al"] },
-  { "root": "قرأ", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aal"] },
-  { "root": "قرأ", "form": 2 },
-  { "root": "قرأ", "form": 3 },
-  { "root": "قرأ", "form": 7, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "قرأ", "form": 10 },
-  { "root": "قرر", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3l"], "passiveVoice": "none" },
-  { "root": "قرر", "form": 2 },
-  { "root": "قرر", "form": 5 },
-  { "root": "قرر", "form": 4 },
-  { "root": "قرر", "form": 10 },
-  { "root": "قرح", "form": 8 },
-  { "root": "قسم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3la"] },
-  { "root": "قسم", "form": 6, "passiveVoice": "none" },
-  { "root": "قطع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قعد", "form": 6 },
-  { "root": "قفز", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "قفل", "form": 4 },
-  { "root": "قلقل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قلل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قود", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "قضي", "form": 3 },
-  { "root": "قضي", "form": 8 },
-  { "root": "قضي", "form": 7, "passiveVoice": "none" },
-  { "root": "قصص", "form": 7 },
-  { "root": "قود", "form": 10 },
-  { "root": "قود", "form": 2 },
-  { "root": "قود", "form": 3 },
-  { "root": "قود", "form": 4 },
-  { "root": "قود", "form": 5 },
-  { "root": "قود", "form": 6 },
-  { "root": "قود", "form": 7 },
-  { "root": "قود", "form": 8 },
-  { "root": "قوي", "form": 2 },
-  { "root": "قوي", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "قوم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3aal"] },
-  { "root": "قوم", "form": 3 },
-  { "root": "كان", "form": 1, "formPattern": "fa3ala-yaf3ulu", "noPassiveParticiple": true },
-  { "root": "كبر", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
-  { "root": "كبر", "form": 10 },
-  { "root": "كبر", "form": 2 },
-  { "root": "كبر", "form": 3 },
-  { "root": "كبر", "form": 5 },
-  { "root": "كبر", "form": 6 },
-  { "root": "كبر", "form": 8 },
-  { "root": "كتب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3aal"] },
-  { "root": "كتب", "form": 2 },
-  { "root": "كتب", "form": 3 },
-  { "root": "كتب", "form": 4 },
-  { "root": "كتب", "form": 5 },
-  { "root": "كتب", "form": 6 },
-  { "root": "كتب", "form": 7 },
-  { "root": "كفف", "form": 7 },
-  { "root": "كثر", "form": 4 },
-  { "root": "كءب", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "كذب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "كلأ", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "كره", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "كسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "كسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "كشف", "form": 10 },
-  { "root": "كشف", "form": 8 },
-  { "root": "كلم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "كلم", "form": 3 },
-  { "root": "كلم", "form": 2 },
-  { "root": "كلم", "form": 5 },
-  { "root": "كمل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "كمل", "form": 6, "passiveVoice": "none" },
-  { "root": "لاح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "لأم", "form": 3 },
-  { "root": "لبس", "form": 1, "formPattern": "fa3ila-yaf3alu" },
-  { "root": "لحق", "form": 8 },
-  { "root": "لحق", "form": 4 },
-  { "root": "لقي", "form": 4 },
-  { "root": "لقي", "form": 10, "passiveVoice": "impersonal" },
-  { "root": "لزم", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
-  { "root": "لهو", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "لعب", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l"] },
-  { "root": "لكم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "لمح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "لمس", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "لمم", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "لوم", "form": 1, "formPattern": "fa3ala-yaf3ulu" },
-  { "root": "لوم", "form": 10 },
-  { "root": "موت", "form": 1, "formPattern": "fa3ala-yaf3ulu", "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "مدح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "مدد", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "مدد", "form": 2 },
-  { "root": "مدد", "form": 3 },
-  { "root": "مدد", "form": 4 },
-  { "root": "مدد", "form": 5, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "مدد", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "مدد", "form": 10 },
-  { "root": "مرر", "form": 10 },
+  {
+    "root": "غني",
+    "form": 10
+  },
+  {
+    "root": "غني",
+    "form": 2
+  },
+  {
+    "root": "غني",
+    "form": 4
+  },
+  {
+    "root": "غني",
+    "form": 5
+  },
+  {
+    "root": "غني",
+    "form": 8
+  },
+  {
+    "root": "غير",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "غير",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "فاد",
+    "form": 10
+  },
+  {
+    "root": "فيد",
+    "form": 10
+  },
+  {
+    "root": "فاز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فتح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فجر",
+    "form": 7,
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "فجء",
+    "form": 3
+  },
+  {
+    "root": "فوض",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "فحص",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فرح",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "فرقع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فسر",
+    "form": 10
+  },
+  {
+    "root": "فسر",
+    "form": 2
+  },
+  {
+    "root": "فشل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فصل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فعل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fi3l"]
+  },
+  {
+    "root": "فعل",
+    "form": 2
+  },
+  {
+    "root": "فعل",
+    "form": 4
+  },
+  {
+    "root": "فيد",
+    "form": 4
+  },
+  {
+    "root": "فقد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "فكر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "فكر",
+    "form": 2
+  },
+  {
+    "root": "فكر",
+    "form": 5
+  },
+  {
+    "root": "فكر",
+    "form": 6
+  },
+  {
+    "root": "فكر",
+    "form": 8
+  },
+  {
+    "root": "فلت",
+    "form": 4
+  },
+  {
+    "root": "فهم",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "قول",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "قول",
+    "form": 2
+  },
+  {
+    "root": "قول",
+    "form": 3
+  },
+  {
+    "root": "قول",
+    "form": 5
+  },
+  {
+    "root": "قوس",
+    "form": 2
+  },
+  {
+    "root": "كون",
+    "form": 2
+  },
+  {
+    "root": "قبض",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قبل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قبل",
+    "form": 10
+  },
+  {
+    "root": "قتل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "قتل",
+    "form": 3
+  },
+  {
+    "root": "قدم",
+    "form": 2
+  },
+  {
+    "root": "قدم",
+    "form": 5
+  },
+  {
+    "root": "قدم",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fi3al"]
+  },
+  {
+    "root": "قرء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fi3aal"]
+  },
+  {
+    "root": "قرء",
+    "form": 2
+  },
+  {
+    "root": "قرء",
+    "form": 3
+  },
+  {
+    "root": "قرء",
+    "form": 7,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "قرء",
+    "form": 10
+  },
+  {
+    "root": "قرر",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3l"],
+    "passiveVoice": "none"
+  },
+  {
+    "root": "قرر",
+    "form": 2
+  },
+  {
+    "root": "قرر",
+    "form": 5
+  },
+  {
+    "root": "قرر",
+    "form": 4
+  },
+  {
+    "root": "قرر",
+    "form": 10
+  },
+  {
+    "root": "قرح",
+    "form": 8
+  },
+  {
+    "root": "قسم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fi3la"]
+  },
+  {
+    "root": "قسم",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "قطع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قعد",
+    "form": 6
+  },
+  {
+    "root": "قفز",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "قفل",
+    "form": 4
+  },
+  {
+    "root": "قلقل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قلل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قود",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "قضي",
+    "form": 3
+  },
+  {
+    "root": "قضي",
+    "form": 8
+  },
+  {
+    "root": "قضي",
+    "form": 7,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "قصص",
+    "form": 7
+  },
+  {
+    "root": "قود",
+    "form": 10
+  },
+  {
+    "root": "قود",
+    "form": 2
+  },
+  {
+    "root": "قود",
+    "form": 3
+  },
+  {
+    "root": "قود",
+    "form": 4
+  },
+  {
+    "root": "قود",
+    "form": 5
+  },
+  {
+    "root": "قود",
+    "form": 6
+  },
+  {
+    "root": "قود",
+    "form": 7
+  },
+  {
+    "root": "قود",
+    "form": 8
+  },
+  {
+    "root": "قوي",
+    "form": 2
+  },
+  {
+    "root": "قوي",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "قوم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fi3aal"]
+  },
+  {
+    "root": "قوم",
+    "form": 3
+  },
+  {
+    "root": "كان",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "كبر",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu"
+  },
+  {
+    "root": "كبر",
+    "form": 10
+  },
+  {
+    "root": "كبر",
+    "form": 2
+  },
+  {
+    "root": "كبر",
+    "form": 3
+  },
+  {
+    "root": "كبر",
+    "form": 5
+  },
+  {
+    "root": "كبر",
+    "form": 6
+  },
+  {
+    "root": "كبر",
+    "form": 8
+  },
+  {
+    "root": "كتب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fi3aal"]
+  },
+  {
+    "root": "كتب",
+    "form": 2
+  },
+  {
+    "root": "كتب",
+    "form": 3
+  },
+  {
+    "root": "كتب",
+    "form": 4
+  },
+  {
+    "root": "كتب",
+    "form": 5
+  },
+  {
+    "root": "كتب",
+    "form": 6
+  },
+  {
+    "root": "كتب",
+    "form": 7
+  },
+  {
+    "root": "كفف",
+    "form": 7
+  },
+  {
+    "root": "كثر",
+    "form": 4
+  },
+  {
+    "root": "كءب",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "كذب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "كلء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "كره",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "كسب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "كسر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "كشف",
+    "form": 10
+  },
+  {
+    "root": "كشف",
+    "form": 8
+  },
+  {
+    "root": "كلم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "كلم",
+    "form": 3
+  },
+  {
+    "root": "كلم",
+    "form": 2
+  },
+  {
+    "root": "كلم",
+    "form": 5
+  },
+  {
+    "root": "كمل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "كمل",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "لاح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "لءم",
+    "form": 3
+  },
+  {
+    "root": "لبس",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu"
+  },
+  {
+    "root": "لحق",
+    "form": 8
+  },
+  {
+    "root": "لحق",
+    "form": 4
+  },
+  {
+    "root": "لقي",
+    "form": 4
+  },
+  {
+    "root": "لقي",
+    "form": 10,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "لزم",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "لهو",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "لعب",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "لكم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "لمح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "لمس",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "لمم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "لوم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu"
+  },
+  {
+    "root": "لوم",
+    "form": 10
+  },
+  {
+    "root": "موت",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "مدح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "مدد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "مدد",
+    "form": 2
+  },
+  {
+    "root": "مدد",
+    "form": 3
+  },
+  {
+    "root": "مدد",
+    "form": 4
+  },
+  {
+    "root": "مدد",
+    "form": 5,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "مدد",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "مدد",
+    "form": 10
+  },
+  {
+    "root": "مرر",
+    "form": 10
+  },
   {
     "root": "مرض",
     "form": 1,
@@ -704,13 +2954,35 @@
     "noPassiveParticiple": true,
     "masdarPatterns": ["fa3al"]
   },
-  { "root": "مرض", "form": 2 },
-  { "root": "مرض", "form": 4 },
-  { "root": "مرض", "form": 5, "noPassiveParticiple": true },
-  { "root": "مرض", "form": 10 },
-  { "root": "مسك", "form": 4 },
-  { "root": "مسي", "form": 4 },
-  { "root": "مسس", "form": 6 },
+  {
+    "root": "مرض",
+    "form": 2
+  },
+  {
+    "root": "مرض",
+    "form": 4
+  },
+  {
+    "root": "مرض",
+    "form": 5,
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "مرض",
+    "form": 10
+  },
+  {
+    "root": "مسك",
+    "form": 4
+  },
+  {
+    "root": "مسي",
+    "form": 4
+  },
+  {
+    "root": "مسس",
+    "form": 6
+  },
   {
     "root": "ميل",
     "form": 1,
@@ -718,109 +2990,495 @@
     "masdarPatterns": ["fa3al"],
     "passiveVoice": "none"
   },
-  { "root": "مشط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "طلب", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
-  { "root": "طلب", "form": 5, "passiveVoice": "none" },
-  { "root": "مشي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "مشي", "form": 6, "passiveVoice": "none" },
-  { "root": "مثل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
-  { "root": "مثل", "form": 2 },
-  { "root": "مثل", "form": 5, "passiveVoice": "none" },
-  { "root": "مكن", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3aala"] },
-  { "root": "مكن", "form": 2 },
-  { "root": "مكن", "form": 4 },
-  { "root": "مكث", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "منح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "منع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "مني", "form": 2 },
-  { "root": "نمو", "form": 6, "passiveVoice": "none" },
-  { "root": "ندي", "form": 3 },
-  { "root": "ناق", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نام", "form": 2 },
-  { "root": "نبأ", "form": 4 },
-  { "root": "نجح", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نزع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نزل", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نسي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نشر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نصر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نوي", "form": 3 },
-  { "root": "نوي", "form": 8 },
-  { "root": "نضج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نظر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3al"] },
-  { "root": "نظر", "form": 8 },
-  { "root": "نظف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نظم", "form": 2 },
-  { "root": "نفخ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نفذ", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نفع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "نفس", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3al"] },
-  { "root": "نفق", "form": 4 },
-  { "root": "نقص", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "سني", "form": 5, "passiveVoice": "none" },
-  { "root": "سمي", "form": 2 },
-  { "root": "سمي", "form": 4 },
-  { "root": "سمي", "form": 5, "passiveVoice": "none" },
-  { "root": "نوء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "نول", "form": 3 },
-  { "root": "نول", "form": 6 },
-  { "root": "نكر", "form": 10 },
-  { "root": "نكر", "form": 4 },
-  { "root": "نهي", "form": 4 },
-  { "root": "نهي", "form": 8 },
-  { "root": "هات", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هاج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هبط", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هجر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "هدم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هدف", "form": 10 },
-  { "root": "هدد", "form": 5 },
-  { "root": "هرب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هلل", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
-  { "root": "همم", "form": 4 },
-  { "root": "همس", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "هيل", "form": 7, "passiveVoice": "impersonal" },
-  { "root": "هيء", "form": 5, "passiveVoice": "none" },
-  { "root": "واف", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "وجد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "وجد", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "ودع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "ودد", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3l"] },
-  { "root": "ودي", "form": 4 },
-  { "root": "وئد", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "وئد", "form": 5 },
-  { "root": "وصل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "وصل", "form": 2 },
-  { "root": "وصل", "form": 4 },
-  { "root": "وصل", "form": 5 },
-  { "root": "وصل", "form": 8, "passiveVoice": "impersonal" },
-  { "root": "وضع", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "وثق", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3aala"] },
-  { "root": "وجز", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": [] },
-  { "root": "وجه", "form": 2 },
-  { "root": "وجه", "form": 3 },
-  { "root": "وجه", "form": 6, "passiveVoice": "none" },
-  { "root": "وثق", "form": 3 },
-  { "root": "وسط", "form": 2 },
-  { "root": "وصي", "form": 2 },
-  { "root": "وصي", "form": 4 },
-  { "root": "وصي", "form": 6 },
-  { "root": "وحي", "form": 4 },
-  { "root": "وحد", "form": 8 },
-  { "root": "وعب", "form": 10 },
-  { "root": "وطن", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "وطن", "form": 2 },
-  { "root": "وطن", "form": 10 },
-  { "root": "وجب", "form": 1, "formPattern": "fa3ala-yaf3ilu", "passiveVoice": "none", "masdarPatterns": ["fu3ool"] },
-  { "root": "وجب", "form": 10 },
-  { "root": "وصف", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "وفد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3ool"] },
-  { "root": "ورد", "form": 10 },
-  { "root": "ولي", "form": 1, "formPattern": "fa3ila-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "ولي", "form": 2 },
-  { "root": "ولي", "form": 6 },
-  { "root": "ولي", "form": 10 },
-  { "root": "وكأ", "form": 8, "passiveVoice": "impersonal" },
+  {
+    "root": "مشط",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "طلب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "طلب",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "مشي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "مشي",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "مثل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "مثل",
+    "form": 2
+  },
+  {
+    "root": "مثل",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "مكن",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3aala"]
+  },
+  {
+    "root": "مكن",
+    "form": 2
+  },
+  {
+    "root": "مكن",
+    "form": 4
+  },
+  {
+    "root": "مكث",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "منح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "منع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "مني",
+    "form": 2
+  },
+  {
+    "root": "نمو",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "ندي",
+    "form": 3
+  },
+  {
+    "root": "ناق",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نام",
+    "form": 2
+  },
+  {
+    "root": "نبء",
+    "form": 4
+  },
+  {
+    "root": "نجح",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نزع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نزل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نسي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نشر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نصر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نوي",
+    "form": 3
+  },
+  {
+    "root": "نوي",
+    "form": 8
+  },
+  {
+    "root": "نضج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نظر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "نظر",
+    "form": 8
+  },
+  {
+    "root": "نظف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نظم",
+    "form": 2
+  },
+  {
+    "root": "نفخ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نفذ",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نفع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "نفس",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3al"]
+  },
+  {
+    "root": "نفق",
+    "form": 4
+  },
+  {
+    "root": "نقص",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "سني",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "سمي",
+    "form": 2
+  },
+  {
+    "root": "سمي",
+    "form": 4
+  },
+  {
+    "root": "سمي",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "نوء",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "نول",
+    "form": 3
+  },
+  {
+    "root": "نول",
+    "form": 6
+  },
+  {
+    "root": "نكر",
+    "form": 10
+  },
+  {
+    "root": "نكر",
+    "form": 4
+  },
+  {
+    "root": "نهي",
+    "form": 4
+  },
+  {
+    "root": "نهي",
+    "form": 8
+  },
+  {
+    "root": "هات",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هاج",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هبط",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هجر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "هدم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هدف",
+    "form": 10
+  },
+  {
+    "root": "هدد",
+    "form": 5
+  },
+  {
+    "root": "هرب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هلل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "همم",
+    "form": 4
+  },
+  {
+    "root": "همس",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "هيل",
+    "form": 7,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "هيء",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "واف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "وجد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "وجد",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "ودع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "ودد",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fu3l"]
+  },
+  {
+    "root": "ودي",
+    "form": 4
+  },
+  {
+    "root": "وئد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "وئد",
+    "form": 5
+  },
+  {
+    "root": "وصل",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وصل",
+    "form": 2
+  },
+  {
+    "root": "وصل",
+    "form": 4
+  },
+  {
+    "root": "وصل",
+    "form": 5
+  },
+  {
+    "root": "وصل",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "وضع",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وثق",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3aala"]
+  },
+  {
+    "root": "وجز",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "وجه",
+    "form": 2
+  },
+  {
+    "root": "وجه",
+    "form": 3
+  },
+  {
+    "root": "وجه",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وثق",
+    "form": 3
+  },
+  {
+    "root": "وسط",
+    "form": 2
+  },
+  {
+    "root": "وصي",
+    "form": 2
+  },
+  {
+    "root": "وصي",
+    "form": 4
+  },
+  {
+    "root": "وصي",
+    "form": 6
+  },
+  {
+    "root": "وحي",
+    "form": 4
+  },
+  {
+    "root": "وحد",
+    "form": 8
+  },
+  {
+    "root": "وعب",
+    "form": 10
+  },
+  {
+    "root": "وطن",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وطن",
+    "form": 2
+  },
+  {
+    "root": "وطن",
+    "form": 10
+  },
+  {
+    "root": "وجب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "passiveVoice": "none",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "وجب",
+    "form": 10
+  },
+  {
+    "root": "وصف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وفد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "ورد",
+    "form": 10
+  },
+  {
+    "root": "ولي",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "ولي",
+    "form": 2
+  },
+  {
+    "root": "ولي",
+    "form": 6
+  },
+  {
+    "root": "ولي",
+    "form": 10
+  },
+  {
+    "root": "وكء",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
   {
     "root": "وري",
     "form": 1,
@@ -829,52 +3487,231 @@
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
-  { "root": "وري", "form": 2 },
-  { "root": "وري", "form": 4 },
-  { "root": "وعي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
-  { "root": "وهن", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"], "passiveVoice": "none" },
-  { "root": "وني", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": [] },
-  { "root": "ذهب", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3aal"] },
-  { "root": "ذهب", "form": 10 },
-  { "root": "ذهب", "form": 2 },
-  { "root": "ذهب", "form": 4 },
-  { "root": "ذهب", "form": 5 },
-  { "root": "ذهب", "form": 6 },
-  { "root": "وطء", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3l"] },
-  { "root": "وطء", "form": 2 },
-  { "root": "وطء", "form": 6 },
-  { "root": "وظف", "form": 2 },
-  { "root": "وعد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l", "mimi"] },
-  { "root": "وعد", "form": 3 },
-  { "root": "وعد", "form": 5 },
-  { "root": "وعد", "form": 8 },
-  { "root": "وفق", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "وفر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "وفر", "form": 6, "passiveVoice": "impersonal" },
-  { "root": "وفر", "form": 5 },
-  { "root": "وقع", "form": 4 },
-  { "root": "وقع", "form": 5 },
-  { "root": "وقف", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fu3ool"] },
-  { "root": "وقف", "form": 5 },
-  { "root": "وقف", "form": 4 },
-  { "root": "وقف", "form": 2 },
-  { "root": "وسخ", "form": 8, "passiveVoice": "none" },
-  { "root": "وسع", "form": 5, "passiveVoice": "none" },
-  { "root": "وقي", "form": 1, "formPattern": "fa3ala-yaf3ilu" },
-  { "root": "وقي", "form": 5 },
-  { "root": "وقي", "form": 8 },
-  { "root": "وكأ", "form": 5, "passiveVoice": "none" },
-  { "root": "وخي", "form": 5 },
-  { "root": "ولد", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3aala"] },
-  { "root": "ولد", "form": 4 },
-  { "root": "ومأ", "form": 4 },
-  { "root": "وهب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
-  { "root": "وهب", "form": 4 },
-  { "root": "وزن", "form": 6, "passiveVoice": "none" },
-  { "root": "يئس", "form": 1, "formPattern": "fa3ila-yaf3alu", "passiveVoice": "none", "masdarPatterns": ["fa3l"] },
-  { "root": "يبس", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
-  { "root": "يسر", "form": 1, "formPattern": "fa3ula-yaf3ulu", "masdarPatterns": ["fa3l"] },
-  { "root": "يقظ", "form": 10 },
-  { "root": "يمن", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": [] },
-  { "root": "يود", "form": 2 }
+  {
+    "root": "وري",
+    "form": 2
+  },
+  {
+    "root": "وري",
+    "form": 4
+  },
+  {
+    "root": "وعي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وهن",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3l"],
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وني",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "ذهب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3aal"]
+  },
+  {
+    "root": "ذهب",
+    "form": 10
+  },
+  {
+    "root": "ذهب",
+    "form": 2
+  },
+  {
+    "root": "ذهب",
+    "form": 4
+  },
+  {
+    "root": "ذهب",
+    "form": 5
+  },
+  {
+    "root": "ذهب",
+    "form": 6
+  },
+  {
+    "root": "وطء",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "وطء",
+    "form": 2
+  },
+  {
+    "root": "وطء",
+    "form": 6
+  },
+  {
+    "root": "وظف",
+    "form": 2
+  },
+  {
+    "root": "وعد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fa3l", "mimi"]
+  },
+  {
+    "root": "وعد",
+    "form": 3
+  },
+  {
+    "root": "وعد",
+    "form": 5
+  },
+  {
+    "root": "وعد",
+    "form": 8
+  },
+  {
+    "root": "وفق",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "وفر",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "وفر",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "وفر",
+    "form": 5
+  },
+  {
+    "root": "وقع",
+    "form": 4
+  },
+  {
+    "root": "وقع",
+    "form": 5
+  },
+  {
+    "root": "وقف",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fu3ool"]
+  },
+  {
+    "root": "وقف",
+    "form": 5
+  },
+  {
+    "root": "وقف",
+    "form": 4
+  },
+  {
+    "root": "وقف",
+    "form": 2
+  },
+  {
+    "root": "وسخ",
+    "form": 8,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وسع",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وقي",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu"
+  },
+  {
+    "root": "وقي",
+    "form": 5
+  },
+  {
+    "root": "وقي",
+    "form": 8
+  },
+  {
+    "root": "وكء",
+    "form": 5,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "وخي",
+    "form": 5
+  },
+  {
+    "root": "ولد",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ilu",
+    "masdarPatterns": ["fi3aala"]
+  },
+  {
+    "root": "ولد",
+    "form": 4
+  },
+  {
+    "root": "ومء",
+    "form": 4
+  },
+  {
+    "root": "وهب",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu"
+  },
+  {
+    "root": "وهب",
+    "form": 4
+  },
+  {
+    "root": "وزن",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "يئس",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "passiveVoice": "none",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "يبس",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "يسر",
+    "form": 1,
+    "formPattern": "fa3ula-yaf3ulu",
+    "masdarPatterns": ["fa3l"]
+  },
+  {
+    "root": "يقظ",
+    "form": 10
+  },
+  {
+    "root": "يمن",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": []
+  },
+  {
+    "root": "يود",
+    "form": 2
+  }
 ]

@@ -15,6 +15,7 @@ import {
   normalizeAlifMadda,
   SHADDA,
   SUKOON,
+  seatHamza,
   type Vowel,
   WAW,
   YEH,
@@ -26,8 +27,9 @@ import { conjugatePresentMood } from './present'
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
-  const isInitialWeak = isWeakLetter(c1)
-  const isInitialHamza = isHamzatedLetter(c1)
+  const seatedC1 = seatHamza(c1, FATHA)
+  const isInitialWeak = isWeakLetter(seatedC1)
+  const isInitialHamza = isHamzatedLetter(seatedC1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
 
@@ -49,7 +51,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
-            if (c1 === YEH) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+            if (seatedC1 === YEH) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
           }
 
           if (isInitialHamza) {
