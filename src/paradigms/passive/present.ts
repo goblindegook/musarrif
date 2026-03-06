@@ -382,8 +382,6 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
   if (isHamzatedLetter(c3) && moodSuffix.at(0) === SUKOON)
     return [...prefix, seatedC1, FATHA, ALIF_HAMZA, ...moodSuffix]
 
-  if (isHamzatedLetter(c3)) return [...prefix, seatedC1, FATHA, ALIF, HAMZA, ...moodSuffix]
-
   if (isWeakLetter(c2)) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON)
       return [...prefix, seatedC1, FATHA, c3, ...moodSuffix]
