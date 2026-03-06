@@ -2295,7 +2295,7 @@ describe('active present jussive', () => {
     })
   })
   describe('Form Iq', () => {
-    describe('strong roots', () => {
+    describe('hollow roots', () => {
       test('سَيْطَرَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('سيطر', 1), 'jussive')).toEqualT({
           '1s': 'أُسَيْطِرْ',

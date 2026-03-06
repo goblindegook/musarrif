@@ -1096,7 +1096,7 @@ describe('masdar', () => {
     })
   })
   describe('Form Iq', () => {
-    describe('strong roots', () => {
+    describe('hollow roots', () => {
       test.each([['سيطر', 'سَيْطَرَة']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })

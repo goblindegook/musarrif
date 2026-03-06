@@ -2055,7 +2055,7 @@ describe('imperative', () => {
   })
 
   describe('Form Iq', () => {
-    describe('strong roots', () => {
+    describe('hollow roots', () => {
       test('سَيْطَرَ conjugation', () => {
         expect(conjugateImperative(getVerb('سيطر', 1))).toMatchObjectT({
           '2ms': 'سَيْطِرْ',

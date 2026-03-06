@@ -158,12 +158,9 @@ function buildC2SegmentFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): r
 function buildC3SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
+  if (isWeakLetter(c3)) return []
 
-  if (isFinalWeak) return []
-
-  if (isMiddleWeak) return [c3]
+  if (isWeakLetter(c2)) return [c3]
 
   if (isFemininePlural(pronounId)) return [seatHamza(c3, FATHA)]
 
@@ -393,7 +390,7 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
 
 function derivePassivePresentStemFormIq(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3, c4] = Array.from(verb.root)
-  return [seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, seatHamza(c4, FATHA), ...MOOD_SUFFIXES[mood][pronounId]]
+  return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

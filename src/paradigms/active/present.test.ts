@@ -2771,7 +2771,7 @@ describe('active present indicative', () => {
     })
   })
   describe('Form Iq', () => {
-    describe('strong roots', () => {
+    describe('hollow roots', () => {
       test.each([['سيطر', 'يُسَيْطِرُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })

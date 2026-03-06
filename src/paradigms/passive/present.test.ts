@@ -1951,8 +1951,8 @@ describe('passive present indicative', () => {
     })
   })
   describe('Form Iq', () => {
-    describe('strong roots', () => {
-      test.each<[string, string]>([['سيطر', 'يُسَيْطَرُ']])('%s pattern', (root, expected) => {
+    describe('hollow roots', () => {
+      test.each([['سيطر', 'يُسَيْطَرُ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })
     })

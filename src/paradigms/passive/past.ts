@@ -348,10 +348,8 @@ function derivePassivePastFormX(verb: Verb<10>): PassivePastParams {
 function derivePassivePastFormIq(verb: Verb<1>): PassivePastParams {
   const [c1, c2, c3, c4] = [...verb.root]
   return {
-    prefix: [seatHamza(c1, FATHA), DAMMA, c2 === YEH ? WAW : c2, c3, KASRA, seatHamza(c4, KASRA)],
-    suffix: [SUKOON],
+    prefix: [c1, DAMMA, c2 === YEH ? WAW : c2, c3, KASRA, c4],
     suffix3sd: [FATHA],
-    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

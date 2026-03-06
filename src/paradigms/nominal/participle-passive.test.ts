@@ -1002,7 +1002,7 @@ describe('passive participle', () => {
     })
   })
   describe('Form Iq', () => {
-    describe('strong roots', () => {
+    describe('hollow roots', () => {
       test.each([['سيطر', 'مُسَيْطَر']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
