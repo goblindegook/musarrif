@@ -1737,7 +1737,7 @@ describe('passive past pattern', () => {
   describe('Form Iq', () => {
     describe('hollow roots', () => {
       test.each([
-        ['سيطر', 'سُوطِرَ'],
+        ['سيطر', 'سُوْطِرَ'],
         ['ترجم', 'تُرْجِمَ'],
         ['برهن', 'بُرْهِنَ'],
         ['عرقل', 'عُرْقِلَ'],
