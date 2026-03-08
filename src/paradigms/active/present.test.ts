@@ -7,7 +7,6 @@ describe('active present indicative', () => {
     describe('regular roots', () => {
       test.each([
         ['بدل', 'يَبْدِلُ'],
-        ['ترجم', 'يُتَرْجِمُ'],
         ['جلس', 'يَجْلِسُ'],
         ['جعل', 'يَجْعَلُ'],
         ['ذكر', 'يَذْكُرُ'],
@@ -2775,6 +2774,9 @@ describe('active present indicative', () => {
       test.each([
         ['سيطر', 'يُسَيْطِرُ'],
         ['كلور', 'يُكَلْوِرُ'],
+        ['ترجم', 'يُتَرْجِمُ'],
+        ['برهن', 'يُبَرْهِنُ'],
+        ['عرقل', 'يُعَرْقِلُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })

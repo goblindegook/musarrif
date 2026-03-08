@@ -1871,6 +1871,9 @@ describe('passive present subjunctive', () => {
       test.each([
         ['سيطر', 'يُسَيْطَرَ'],
         ['كلور', 'يُكَلْوَرَ'],
+        ['ترجم', 'يُتَرْجَمَ'],
+        ['برهن', 'يُبَرْهَنَ'],
+        ['عرقل', 'يُعَرْقَلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })

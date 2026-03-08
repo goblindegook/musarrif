@@ -6,7 +6,6 @@ describe('passive participle', () => {
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each([
-        ['ترجم', 'مُتَرْجَم'],
         ['جعل', 'مَجْعُول'],
         ['دعم', 'مَدْعُوم'],
         ['بعد', 'مَبْعُود'],
@@ -1006,6 +1005,9 @@ describe('passive participle', () => {
       test.each([
         ['سيطر', 'مُسَيْطَر'],
         ['كلور', 'مُكَلْوَر'],
+        ['ترجم', 'مُتَرْجَم'],
+        ['برهن', 'مُبَرْهَن'],
+        ['عرقل', 'مُعَرْقَل'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })

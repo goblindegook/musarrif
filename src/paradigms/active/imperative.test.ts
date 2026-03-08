@@ -2056,7 +2056,12 @@ describe('imperative', () => {
 
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['كلور', 'كَلْوِرْ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['كلور', 'كَلْوِرْ'],
+        ['ترجم', 'تَرْجِمْ'],
+        ['برهن', 'بَرْهِنْ'],
+        ['عرقل', 'عَرْقِلْ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 

@@ -1736,7 +1736,12 @@ describe('passive past pattern', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'سُوْطِرَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['سيطر', 'سُوطِرَ'],
+        ['ترجم', 'تُرْجِمَ'],
+        ['برهن', 'بُرْهِنَ'],
+        ['عرقل', 'عُرْقِلَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 

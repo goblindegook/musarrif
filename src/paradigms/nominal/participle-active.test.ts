@@ -6,7 +6,6 @@ describe('active participle', () => {
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each([
-        ['ترجم', 'مُتَرْجِم'],
         ['جعل', 'جَاعِل'],
         ['جمع', 'جَامِع'],
         ['دعم', 'دَاعِم'],
@@ -1043,6 +1042,9 @@ describe('active participle', () => {
       test.each([
         ['سيطر', 'مُسَيْطِر'],
         ['كلور', 'مُكَلْوِر'],
+        ['ترجم', 'مُتَرْجِم'],
+        ['برهن', 'مُبَرْهِن'],
+        ['عرقل', 'مُعَرْقِل'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
