@@ -656,6 +656,7 @@
   { "root": "كءب", "form": 8, "passiveVoice": "impersonal" },
   { "root": "كذب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "كلء", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": [] },
+  { "root": "كلور", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3lala"] },
   { "root": "كره", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "كسب", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "كسر", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },

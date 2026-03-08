@@ -1736,8 +1736,26 @@ describe('passive past pattern', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'سُوطِرَ']])('%s pattern', (root, expected) => {
+      test.each([['سيطر', 'سُوْطِرَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
+      })
+
+      test('كَلْوَرَ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('كلور', 1))).toEqualT({
+          '1s': 'كُلْوِرْتُ',
+          '2ms': 'كُلْوِرْتَ',
+          '2fs': 'كُلْوِرْتِ',
+          '3ms': 'كُلْوِرَ',
+          '3fs': 'كُلْوِرَتْ',
+          '2d': 'كُلْوِرْتُمَا',
+          '3md': 'كُلْوِرَا',
+          '3fd': 'كُلْوِرَتَا',
+          '1p': 'كُلْوِرْنَا',
+          '2mp': 'كُلْوِرْتُمْ',
+          '2fp': 'كُلْوِرْتُنَّ',
+          '3mp': 'كُلْوِرُوْا',
+          '3fp': 'كُلْوِرْنَ',
+        })
       })
     })
   })

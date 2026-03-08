@@ -1996,7 +1996,10 @@ describe('passive present jussive', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'يُسَيْطَرْ']])('jussive pattern for %s conjugation', (root, expected) => {
+      test.each([
+        ['سيطر', 'يُسَيْطَرْ'],
+        ['كلور', 'يُكَلْوَرْ'],
+      ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
     })

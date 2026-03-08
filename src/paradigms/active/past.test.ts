@@ -2599,7 +2599,10 @@ describe('active past', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'سَيْطَرَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['سيطر', 'سَيْطَرَ'],
+        ['كلور', 'كَلْوَرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })

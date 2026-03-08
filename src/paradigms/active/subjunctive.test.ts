@@ -1981,7 +1981,10 @@ describe('active present subjunctive', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'يُسَيْطِرَ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['سيطر', 'يُسَيْطِرَ'],
+        ['كلور', 'يُكَلْوِرَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })

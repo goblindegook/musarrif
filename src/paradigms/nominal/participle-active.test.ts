@@ -1040,7 +1040,10 @@ describe('active participle', () => {
   })
   describe('Form Iq', () => {
     describe('hollow roots', () => {
-      test.each([['سيطر', 'مُسَيْطِر']])('%s', (root, expected) => {
+      test.each([
+        ['سيطر', 'مُسَيْطِر'],
+        ['كلور', 'مُكَلْوِر'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
