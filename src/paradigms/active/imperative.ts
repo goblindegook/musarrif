@@ -83,7 +83,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
           }
 
-          if (c3 === WAW && stem.at(-1) === ALIF) return stem
+          if (c3 === WAW && isPatternU && pronounId === '2d') return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
+
+          if (c3 === WAW && stem.at(-1) === ALIF && !isPatternU) return stem
 
           if (stem.at(1) === SUKOON) return [ALIF, isPatternU ? DAMMA : KASRA, ...stem]
 

@@ -213,7 +213,7 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb('دعو', 1))).toMatchObjectT({
           '2ms': 'اُدْعُ',
           '2fs': 'اُدْعِي',
-          '2d': 'اُدْعُوْا',
+          '2d': 'اُدْعُوَا',
           '2mp': 'اُدْعُوْا',
           '2fp': 'اُدْعُوْنَ',
         })
