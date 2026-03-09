@@ -87,7 +87,7 @@ function derivePassivePastFormI(verb: Verb<1>): PassivePastParams {
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
+  if (isMiddleWeak && !isFormIPastVowel(verb, KASRA))
     return {
       prefix: [isInitialHamza ? ALIF_HAMZA_BELOW : c1],
       suffix: [KASRA, c3, SUKOON],

@@ -118,7 +118,7 @@ function buildC1SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly stri
 
   if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, FATHA]
 
-  if (isMiddleWeak && !isFormIPastVowel(verb, 'i') && !isFinalWeak)
+  if (isMiddleWeak && !isFormIPastVowel(verb, KASRA) && !isFinalWeak)
     return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, FATHA]
 
   if (isInitialHamza && pronounId === '1s') return [WAW]
@@ -146,7 +146,7 @@ function buildC2SegmentFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): r
 
   if (isFinalWeak) return [c2]
 
-  if (!isMiddleWeak || isFormIPastVowel(verb, 'i')) return [c2, FATHA]
+  if (!isMiddleWeak || isFormIPastVowel(verb, KASRA)) return [c2, FATHA]
 
   if (isFemininePlural(pronounId)) return []
 

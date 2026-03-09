@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { isFormIPresentVowel, longVowelFromPattern } from '../form-i-vowels'
+import { isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -11,6 +11,7 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
+  longVowel,
   NOON,
   normalizeAlifMadda,
   SHADDA,
@@ -41,10 +42,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       switch (verb.form) {
         case 1: {
-          const isPatternA = isFormIPresentVowel(verb, 'a')
-          const isPatternI = isFormIPresentVowel(verb, 'i')
-          const isPatternU = isFormIPresentVowel(verb, 'u')
-          const patternLongVowel = longVowelFromPattern(isPatternA || isPatternI ? 'i' : 'u')
+          const isPatternA = isFormIPresentVowel(verb, FATHA)
+          const isPatternI = isFormIPresentVowel(verb, KASRA)
+          const isPatternU = isFormIPresentVowel(verb, DAMMA)
+          const patternLongVowel = longVowel(isPatternA || isPatternI ? KASRA : DAMMA)
 
           if (isInitialWeak) {
             if (stem.at(1) === FATHA && isFinalWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]

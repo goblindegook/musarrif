@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects.ts'
-import { formIPastShortVowel, isFormIPastVowel } from '../form-i-vowels'
+import { formIPastVowel, isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -90,7 +90,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const isMiddleWeak = isWeakLetter(c2)
-  const pastVowel = formIPastShortVowel(verb)
+  const pastVowel = formIPastVowel(verb)
   const seatedC2 = seatHamza(c2, pastVowel)
   const seatedC3 = seatHamza(c3, pastVowel)
   const prefix = [seatedC1, FATHA, seatedC2]
@@ -101,7 +101,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
       suffixedBase: [...prefix, pastVowel, c3],
     }
 
-  if (isWeakLetter(c3) && isFormIPastVowel(verb, 'i'))
+  if (isWeakLetter(c3) && isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([...prefix, KASRA, YEH], ''),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA, WAW],
@@ -116,7 +116,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
       thirdPersonMasculinePluralBase: [seatedC1, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
     }
 
-  if (isMiddleWeak && !isFormIPastVowel(verb, 'i'))
+  if (isMiddleWeak && !isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([seatedC1, FATHA, ALIF, c3], c3),
       suffixedBase: [seatedC1, c2 === YEH ? KASRA : DAMMA, c3],

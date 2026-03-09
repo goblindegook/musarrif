@@ -22,24 +22,17 @@ import { RECENT_VERBS_STORAGE_KEY, readPreference, writePreference } from './hoo
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
-import {
-  FORM_I_PAST_VOWELS,
-  FORM_I_PRESENT_VOWELS,
-  type FormIPattern,
-  shortVowelFromPattern,
-} from './paradigms/form-i-vowels'
+import { formIPastVowel, formIPresentVowel } from './paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
 import { getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
 
-const formIVowelPattern = (pattern: FormIPattern) => {
-  const past = FORM_I_PAST_VOWELS[pattern]
-  const present = FORM_I_PRESENT_VOWELS[pattern]
-  return past === present
-    ? `\u25cc${shortVowelFromPattern(past)}`
-    : `\u25cc${shortVowelFromPattern(past)} / \u25cc${shortVowelFromPattern(present)}`
+const formIVowelPattern = (verb: Verb<1>) => {
+  const past = formIPastVowel(verb)
+  const present = formIPresentVowel(verb)
+  return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
@@ -123,8 +116,6 @@ export function App() {
       return nextIds
     })
   }, [selectedVerb?.id])
-
-  const selectedFormPattern = selectedVerb?.form === 1 ? selectedVerb.formPattern : undefined
 
   const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
   const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
@@ -293,10 +284,8 @@ export function App() {
                   ariaExpanded={isFormInfoOpen}
                 >
                   <span>{ROMAN_NUMERALS[selectedVerb.form - 1]}</span>
-                  {selectedFormPattern && diacriticsPreference !== 'none' && (
-                    <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>
-                      {applyDiacriticsPreference(formIVowelPattern(selectedFormPattern), diacriticsPreference)}
-                    </span>
+                  {selectedVerb && selectedVerb.form === 1 && diacriticsPreference !== 'none' && (
+                    <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>{formIVowelPattern(selectedVerb)}</span>
                   )}
                 </Detail>
                 <Detail
