@@ -214,7 +214,7 @@ describe('active present jussive', () => {
       })
 
       test('يَئِسَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('يئس', 1), 'jussive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('يءس', 1), 'jussive')).toEqualT({
           '1s': 'أَيْئَسْ',
           '2ms': 'تَيْئَسْ',
           '2fs': 'تَيْئَسِي',

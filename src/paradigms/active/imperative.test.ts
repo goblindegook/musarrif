@@ -553,7 +553,7 @@ describe('imperative', () => {
       })
 
       test('يَئِسَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يئس', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('يءس', 1))).toMatchObjectT({
           '2ms': 'اِيْئَسْ',
           '2fs': 'اِيْئَسِي',
           '2d': 'اِيْئَسَا',

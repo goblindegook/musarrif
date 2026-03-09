@@ -499,7 +499,7 @@ describe('active past', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['يئس', 'يَئِسَ'],
+        ['يءس', 'يَئِسَ'],
         ['بءس', 'بَؤُسَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)

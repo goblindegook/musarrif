@@ -96,6 +96,10 @@
     "pronoun.2nd.plural.masculine": "٢ م. ج.",
     "pronoun.2nd.plural.feminine": "٢ ف. ج.",
     "pronoun.1st.singular": "١ مف.",
-    "pronoun.1st.plural": "١ ج."
+    "pronoun.1st.plural": "١ ج.",
+    "tabs.search": "بحث",
+    "tabs.build": "بناء",
+    "build.formLabel": "الوزن",
+    "build.patternLabel": "نمط الحركات"
   }
 }

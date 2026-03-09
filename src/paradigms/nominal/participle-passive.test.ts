@@ -180,7 +180,7 @@ describe('passive participle', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['يئس', 'مَيْؤُوس'],
+        ['يءس', 'مَيْؤُوس'],
         ['سءل', 'مَسْؤُول'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)

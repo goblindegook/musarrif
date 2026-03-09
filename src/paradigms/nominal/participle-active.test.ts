@@ -180,7 +180,7 @@ describe('active participle', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['يئس', 'يَائِس'],
+        ['يءس', 'يَائِس'],
         ['بءس', 'بَائِس'],
         ['سءل', 'سَائِل'],
       ])('%s', (root, expected) => {
