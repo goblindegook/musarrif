@@ -45,38 +45,47 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '2ms': [...suffixedBase, SUKOON, TEH, FATHA],
       '2fs': [...suffixedBase, SUKOON, TEH, KASRA],
       '3ms': base,
-      '3fs': [...feminineSingularDualBase, TEH, SUKOON],
+      '3fs': [...feminineSingularDualBase, FATHA, TEH, SUKOON],
       '2d': [...suffixedBase, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF],
       '3md': [...masculineDualBase, ALIF],
-      '3fd': [...feminineSingularDualBase, TEH, FATHA, ALIF],
+      '3fd': [...feminineSingularDualBase, FATHA, TEH, FATHA, ALIF],
       '1p': [...suffixedBase, SUKOON, NOON, FATHA, ALIF],
       '2mp': [...suffixedBase, SUKOON, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...suffixedBase, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp': [...thirdPersonMasculinePluralBase, SUKOON, ALIF],
+      '3mp': [...thirdPersonMasculinePluralBase, WAW, SUKOON, ALIF],
       '3fp': [...suffixedBase, SUKOON, NOON, FATHA],
     },
     (value) => normalizeAlifMadda(geminateDoubleLetters(value)).join('').normalize('NFC'),
   )
 }
 
-function buildForms(base: readonly string[], c3: string): PastBaseForms {
+function buildForms(stem: readonly string[], c3: string): PastBaseForms {
   if (!isWeakLetter(c3))
     return {
-      base: [...base, FATHA],
-      suffixedBase: base,
-      feminineSingularDualBase: [...base, FATHA],
-      masculineDualBase: [...base, FATHA],
-      thirdPersonMasculinePluralBase: [...base, DAMMA, WAW],
+      base: [...stem, FATHA],
+      suffixedBase: stem,
+      feminineSingularDualBase: stem,
+      masculineDualBase: [...stem, FATHA],
+      thirdPersonMasculinePluralBase: [...stem, DAMMA],
     }
 
-  const normalizedBase = base.slice(0, -1)
+  const normalizedStem = stem.slice(0, -2)
+
+  if (c3 === YEH)
+    return {
+      base: [...normalizedStem, FATHA, ALIF_MAQSURA],
+      suffixedBase: [...normalizedStem, FATHA, YEH],
+      feminineSingularDualBase: normalizedStem,
+      masculineDualBase: [...normalizedStem, FATHA, YEH, FATHA],
+      thirdPersonMasculinePluralBase: [...normalizedStem, FATHA],
+    }
 
   return {
-    base: [...normalizedBase, c3 === YEH ? ALIF_MAQSURA : ALIF],
-    suffixedBase: [...normalizedBase, c3 === ALIF ? WAW : YEH],
-    feminineSingularDualBase: normalizedBase,
-    masculineDualBase: c3 === ALIF ? [...normalizedBase, WAW, SUKOON] : [...normalizedBase, YEH, FATHA],
-    thirdPersonMasculinePluralBase: [...normalizedBase, WAW],
+    base: [...normalizedStem, FATHA, ALIF],
+    suffixedBase: [...normalizedStem, FATHA, WAW],
+    feminineSingularDualBase: normalizedStem,
+    masculineDualBase: [...normalizedStem, FATHA, WAW, SUKOON],
+    thirdPersonMasculinePluralBase: [...normalizedStem, FATHA],
   }
 }
 
@@ -104,7 +113,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
   if (isWeakLetter(c3) && isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([...prefix, KASRA, YEH], ''),
-      thirdPersonMasculinePluralBase: [...prefix, DAMMA, WAW],
+      thirdPersonMasculinePluralBase: [...prefix, DAMMA],
     }
 
   if (isWeakLetter(c3)) return buildForms([...prefix, pastVowel, c3], c3)
@@ -113,7 +122,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
     return {
       ...buildForms([seatedC1, FATHA, ALIF, c3], c3),
       suffixedBase: [seatedC1, KASRA, seatHamza(c3, KASRA)],
-      thirdPersonMasculinePluralBase: [seatedC1, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
+      thirdPersonMasculinePluralBase: [seatedC1, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA],
     }
 
   if (isMiddleWeak && !isFormIPastVowel(verb, KASRA))
@@ -177,7 +186,7 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
     return {
       ...buildForms([...prefix, FATHA, ALIF, c3], c3),
       suffixedBase: [...prefix, KASRA, seatHamza(c3, KASRA)],
-      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
+      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA],
     }
 
   if (isWeakLetter(c2)) return buildForms([...prefix, FATHA, ALIF, seatedC3], c3)
@@ -192,7 +201,7 @@ function derivePastFormV(verb: Verb<5>): PastBaseForms {
   if (isHamzatedLetter(c3))
     return {
       ...buildForms([...prefix, seatHamza(c3, FATHA)], c3),
-      thirdPersonMasculinePluralBase: [...prefix, seatHamza(c3, DAMMA), DAMMA, WAW],
+      thirdPersonMasculinePluralBase: [...prefix, seatHamza(c3, DAMMA), DAMMA],
     }
 
   return buildForms([...prefix, seatHamza(c3, FATHA)], c3)
@@ -214,7 +223,7 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
     return {
       ...buildForms([...prefix, FATHA, ALIF, c3], c3),
       suffixedBase: [...prefix, KASRA, seatHamza(c3, KASRA)],
-      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA, WAW],
+      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, seatHamza(c3, DAMMA), DAMMA],
     }
 
   if (isWeakLetter(c3)) return buildForms([...prefix, FATHA, ALIF, seatedC2, FATHA, YEH], YEH)
@@ -236,7 +245,7 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
   if (isWeakLetter(c2) && isWeakLetter(c3))
     return {
       ...buildForms([...prefix, c2, FATHA, seatedC3], c3),
-      thirdPersonMasculinePluralBase: [...prefix, c2],
+      thirdPersonMasculinePluralBase: prefix,
     }
 
   if (isWeakLetter(c2)) return buildForms([...prefix, ALIF, seatedC3], c3)
