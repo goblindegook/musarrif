@@ -158,7 +158,7 @@ describe('active past', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['باع', 'بَاعَ'],
+        ['بيع', 'بَاعَ'],
         ['زيد', 'زَادَ'],
         ['زور', 'زَارَ'],
         ['لوم', 'لَامَ'],
@@ -215,7 +215,7 @@ describe('active past', () => {
       })
 
       test('كَانَ conjugation', () => {
-        expect(conjugatePast(getVerb('كان', 1))).toEqualT({
+        expect(conjugatePast(getVerb('كون', 1))).toEqualT({
           '1s': 'كُنْتُ',
           '2ms': 'كُنْتَ',
           '2fs': 'كُنْتِ',
@@ -307,7 +307,7 @@ describe('active past', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['دعا', 'دَعَا'],
+        ['دعو', 'دَعَا'],
         ['بكي', 'بَكَى'],
         ['بدو', 'بَدَا'],
         ['علي', 'عَلَى'],
@@ -359,7 +359,7 @@ describe('active past', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePast(getVerb('دعا', 1))).toEqualT({
+        expect(conjugatePast(getVerb('دعو', 1))).toEqualT({
           '1s': 'دَعَوْتُ',
           '2ms': 'دَعَوْتَ',
           '2fs': 'دَعَوْتِ',

@@ -216,7 +216,7 @@ describe('passive present jussive', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'jussive')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('بيع', 1), 'jussive')).toEqualT({
           '1s': 'أُبَعْ',
           '2ms': 'تُبَعْ',
           '2fs': 'تُبَاعِي',
@@ -452,7 +452,7 @@ describe('passive present jussive', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'jussive')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('دعو', 1), 'jussive')).toEqualT({
           '1s': 'أُدْعَ',
           '2ms': 'تُدْعَ',
           '2fs': 'تُدْعَيْ',

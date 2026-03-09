@@ -263,7 +263,7 @@ describe('active present indicative', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['باع', 'يَبِيعُ'],
+        ['بيع', 'يَبِيعُ'],
         ['زيد', 'يَزِيدُ'],
         ['زور', 'يَزُورُ'],
         ['لوم', 'يَلُومُ'],
@@ -284,7 +284,7 @@ describe('active present indicative', () => {
       })
 
       test('كَانَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('كان', 1), 'indicative')).toEqualT({
+        expect(conjugatePresentMood(getVerb('كون', 1), 'indicative')).toEqualT({
           '1s': 'أَكُونُ',
           '2ms': 'تَكُونُ',
           '2fs': 'تَكُونِيْنَ',
@@ -414,7 +414,7 @@ describe('active present indicative', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['دعا', 'يَدْعُو'],
+        ['دعو', 'يَدْعُو'],
         ['بكي', 'يَبْكِي'],
         ['بدو', 'يَبْدُو'],
         ['علي', 'يَعْلِي'],
@@ -466,7 +466,7 @@ describe('active present indicative', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('دعا', 1), 'indicative')).toEqualT({
+        expect(conjugatePresentMood(getVerb('دعو', 1), 'indicative')).toEqualT({
           '1s': 'أَدْعُو',
           '2ms': 'تَدْعُو',
           '2fs': 'تَدْعِيْنَ',

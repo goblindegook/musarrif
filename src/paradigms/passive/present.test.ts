@@ -214,7 +214,7 @@ describe('passive present indicative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('باع', 1), 'indicative')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('بيع', 1), 'indicative')).toEqualT({
           '1s': 'أُبَاعُ',
           '2ms': 'تُبَاعُ',
           '2fs': 'تُبَاعِيْنَ',
@@ -479,7 +479,7 @@ describe('passive present indicative', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعا', 1), 'indicative')).toEqualT({
+        expect(conjugatePassivePresentMood(getVerb('دعو', 1), 'indicative')).toEqualT({
           '1s': 'أُدْعَى',
           '2ms': 'تُدْعَى',
           '2fs': 'تُدْعَيْنَ',

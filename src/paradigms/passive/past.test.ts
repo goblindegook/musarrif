@@ -471,7 +471,7 @@ describe('passive past pattern', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('باع', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('بيع', 1))).toEqualT({
           '1s': 'بِعْتُ',
           '2ms': 'بِعْتَ',
           '2fs': 'بِعْتِ',
@@ -617,7 +617,7 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test('دَعَا conjugation', () => {
-        expect(conjugatePassivePast(getVerb('دعا', 1))).toEqualT({
+        expect(conjugatePassivePast(getVerb('دعو', 1))).toEqualT({
           '1s': 'دُعِيتُ',
           '2ms': 'دُعِيتَ',
           '2fs': 'دُعِيتِ',

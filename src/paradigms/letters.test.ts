@@ -5,7 +5,7 @@ describe('analyzeRoot', () => {
   it.each([
     ['كتب', 'strong', [], []],
     ['قام', 'hollow', [1], []],
-    ['دعا', 'defective', [2], []],
+    ['دعو', 'defective', [2], []],
     ['وصل', 'assimilated', [0], []],
     ['وقي', 'doubly-weak', [0, 2], []],
     ['روي', 'doubly-weak', [1, 2], []],

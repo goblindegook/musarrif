@@ -380,7 +380,7 @@ describe('active present jussive', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('دعا', 1), 'jussive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('دعو', 1), 'jussive')).toEqualT({
           '1s': 'أَدْعُ',
           '2ms': 'تَدْعُ',
           '2fs': 'تَدْعِي',

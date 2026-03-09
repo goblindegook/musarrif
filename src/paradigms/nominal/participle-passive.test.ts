@@ -74,7 +74,7 @@ describe('passive participle', () => {
     describe('hollow roots', () => {
       test.each([
         ['زيد', 'مَزِيد'],
-        ['باع', 'مَبِيع'],
+        ['بيع', 'مَبِيع'],
         ['زور', 'مَزُور'],
         ['جيد', 'مَجْيُود'],
         ['حول', 'مَحُول'],
@@ -90,7 +90,7 @@ describe('passive participle', () => {
         ['خوف', 'مَخُوف'],
         ['شوق', 'مَشُوق'],
         ['موت', ''],
-        ['كان', ''],
+        ['كون', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -98,7 +98,7 @@ describe('passive participle', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['دعا', 'مَدْعُوّ'],
+        ['دعو', 'مَدْعُوّ'],
         ['بكي', 'مَبْكِيّ'],
         ['جري', 'مَجْرِيّ'],
         ['بدو', 'مَبْدُوّ'],

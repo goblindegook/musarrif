@@ -180,7 +180,7 @@ describe('imperative', () => {
       })
 
       test('كَانَ conjugation', () => {
-        expect(conjugateImperative(getVerb('كان', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('كون', 1))).toMatchObjectT({
           '2ms': 'كُنْ',
           '2fs': 'كُونِي',
           '2d': 'كُونَا',
@@ -210,7 +210,7 @@ describe('imperative', () => {
       })
 
       test('دَعَا conjugation', () => {
-        expect(conjugateImperative(getVerb('دعا', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('دعو', 1))).toMatchObjectT({
           '2ms': 'اُدْعُ',
           '2fs': 'اُدْعِي',
           '2d': 'اُدْعُوْا',
@@ -220,7 +220,7 @@ describe('imperative', () => {
       })
 
       test('بَاعَ conjugation', () => {
-        expect(conjugateImperative(getVerb('باع', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('بيع', 1))).toMatchObjectT({
           '2ms': 'بِعْ',
           '2fs': 'بِيعِي',
           '2d': 'بِيعَا',
