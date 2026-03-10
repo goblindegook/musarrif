@@ -171,6 +171,7 @@ describe('passive present jussive', () => {
       test.each([
         ['حول', 'يُحَلْ'],
         ['عوم', 'يُعَمْ'],
+        ['نوم', 'يُنَمْ'],
         ['قول', 'يُقَلْ'],
         ['خور', 'يُخْوَرْ'],
         ['خوف', 'يُخَفْ'],
@@ -663,6 +664,7 @@ describe('passive present jussive', () => {
         ['ءجج', 'يُؤَجَّجْ'],
         ['ءيد', 'يُؤَيَّدْ'],
         ['ءوب', 'يُؤَوَّبْ'],
+        ['نوم', 'يُنَوَّمْ'],
         ['ءسس', 'يُؤَسَّسْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
@@ -1113,6 +1115,7 @@ describe('passive present jussive', () => {
       test.each([
         ['شور', 'يُشَرْ'],
         ['رود', 'يُرَدْ'],
+        ['نوم', 'يُنَمْ'],
         ['تيح', 'يُتَحْ'],
         ['فيد', 'يُفَدْ'],
         ['عود', 'يُعَدْ'],

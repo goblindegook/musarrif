@@ -714,6 +714,16 @@
   { "root": "نسي", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نشر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "نصر", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  {
+    "root": "نوم",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3alu",
+    "masdarPatterns": ["fa3l", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  { "root": "نوم", "form": 2 },
+  { "root": "نوم", "form": 4 },
+  { "root": "نوم", "form": 10 },
   { "root": "نوي", "form": 3 },
   { "root": "نوي", "form": 8 },
   { "root": "نضج", "form": 1, "formPattern": "fa3ala-yaf3alu" },
