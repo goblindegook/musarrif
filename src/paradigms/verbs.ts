@@ -261,14 +261,19 @@ export function getVerb(root: string, form: VerbForm): Verb {
 export function buildVerb(root: string, form: 1, formPattern: FormIPattern): Verb
 export function buildVerb(root: string, form: Exclude<VerbForm, 1>): Verb
 export function buildVerb(root: string, form: VerbForm, formPattern?: FormIPattern): Verb {
-  const existingFormI = getVerbById(`${transliterate(root)}-1`)
+  const matchingFormI =
+    form === 1
+      ? verbs.find(
+          (entry): entry is Verb<1> => entry.form === 1 && entry.root === root && entry.formPattern === formPattern,
+        )
+      : undefined
   const raw: RawVerb =
     form === 1
       ? {
           root,
           form: 1,
           formPattern: formPattern ?? 'fa3ala-yaf3alu',
-          masdarPatterns: existingFormI?.form === 1 ? existingFormI.masdarPatterns : undefined,
+          masdarPatterns: matchingFormI?.masdarPatterns,
         }
       : { root, form }
   const past = conjugatePast({ ...raw, id: '', label: '' })

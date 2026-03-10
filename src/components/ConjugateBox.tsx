@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
 import type { Verb, VerbForm } from '../paradigms/verbs'
-import { buildVerb, getVerbById, transliterate, verbs } from '../paradigms/verbs'
+import { buildVerb, getVerbById, transliterate } from '../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -20,14 +20,36 @@ const PATTERN_LABELS: Record<FormIPattern, string> = {
   'fa3ula-yaf3ulu': 'فَعُلَ / يَفْعُلُ',
 }
 
-const LETTERS: readonly string[] = (() => {
-  const set = new Set<string>()
-  for (const verb of verbs) {
-    const letters = Array.from(verb.root)
-    for (const letter of letters) set.add(letter)
-  }
-  return Array.from(set).sort((a, b) => (a.codePointAt(0) ?? 0) - (b.codePointAt(0) ?? 0))
-})()
+const LETTERS: readonly string[] = [
+  'ء',
+  'ب',
+  'ت',
+  'ث',
+  'ج',
+  'ح',
+  'خ',
+  'د',
+  'ذ',
+  'ر',
+  'ز',
+  'س',
+  'ش',
+  'ص',
+  'ض',
+  'ط',
+  'ظ',
+  'ع',
+  'غ',
+  'ف',
+  'ق',
+  'ك',
+  'ل',
+  'م',
+  'ن',
+  'ه',
+  'و',
+  'ي',
+]
 
 const SLOT_HEADERS = ['1', '2', '3'] as const
 
@@ -66,7 +88,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
     const root = [c1, c2, c3].join('')
     const existing = getVerbById(`${transliterate(root)}-${form}`)
     const nextVerb =
-      existing?.form === 1 && existing.formPattern === formPattern
+      existing?.form === 1 && existing.formPattern === formPattern && (existing.masdarPatterns?.length ?? 0) > 0
         ? existing
         : form === 1
           ? buildVerb(root, form, formPattern)
@@ -74,12 +96,14 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
 
     const currentSelectedVerb = selectedVerbRef.current
     if (currentSelectedVerb?.id === nextVerb.id) {
-      if (
-        currentSelectedVerb.form !== 1 ||
-        nextVerb.form !== 1 ||
-        currentSelectedVerb.formPattern === nextVerb.formPattern
-      )
+      if (currentSelectedVerb.form !== 1 || nextVerb.form !== 1) return
+      if (currentSelectedVerb.formPattern !== nextVerb.formPattern) {
+        onSelectRef.current(nextVerb)
         return
+      }
+      const noCurrentMasdar = currentSelectedVerb.masdarPatterns?.length === 0
+      const noNextMasdar = nextVerb.masdarPatterns?.length === 0
+      if (noCurrentMasdar === noNextMasdar) return
     }
 
     onSelectRef.current(nextVerb)

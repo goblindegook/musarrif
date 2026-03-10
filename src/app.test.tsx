@@ -572,12 +572,10 @@ describe('Build tab', () => {
 
     fireEvent.click(getBuildButton('فَعِلَ / يَفْعَلُ'))
 
-    await waitFor(() => {
-      expect(screen.getAllByText('بَنِرَ').length).toBeGreaterThan(0)
-    })
+    expect(screen.getAllByText('بَنِرَ').length).toBeGreaterThan(0)
   })
 
-  it('updates the conjugation when changing vowel pattern for a known Form I verb', async () => {
+  it('falls back to default masdar derivation when changing vowel pattern for a known Form I verb', async () => {
     renderApp('/#/en/verbs/bdl-1')
 
     fireEvent.click(screen.getByText('Build'))
@@ -588,7 +586,37 @@ describe('Build tab', () => {
     })
 
     const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('بَدل')).toBeInTheDocument()
+    expect(within(detail).getByText('—')).toBeInTheDocument()
+  })
+
+  it('uses default masdar branch when building a known Form I verb whose masdar patterns are empty', async () => {
+    window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
+    renderApp('/#/en/verbs')
+
+    fireEvent.click(screen.getByText('Build'))
+    setLetter(1, 'غ')
+    setLetter(2, 'ش')
+    setLetter(3, 'ي')
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفْعِلُ'))
+
+    const detail = screen.getByText('Verbal noun').parentElement!
+    expect(within(detail).getByText('غُشَّة')).toBeInTheDocument()
+  })
+
+  it('uses default masdar derivation when building an unknown Form I verb', async () => {
+    window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
+    renderApp('/#/en/verbs')
+
+    fireEvent.click(screen.getByText('Build'))
+    setLetter(1, 'ث')
+    setLetter(2, 'ن')
+    setLetter(3, 'ي')
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+
+    const detail = screen.getByText('Verbal noun').parentElement!
+    expect(within(detail).getByText('ثُنَّة')).toBeInTheDocument()
   })
 
   it('pre-populates root and form when switching to Build tab with a selected verb', async () => {
@@ -619,9 +647,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
     await user.click(screen.getByText('Present'))
 
-    await waitFor(() => {
-      expect(window.location.hash).toBe('#/en/verbs/qqq-1/active/present')
-    })
+    expect(window.location.hash).toBe('#/en/verbs/qqq-1/active/present')
   })
 
   it('keeps Build tab selected when choosing an existing verb from builder controls', async () => {
@@ -635,9 +661,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
 
-    await waitFor(() => {
-      expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
-    })
+    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
   })
 
   it('does not auto-switch tabs after initial load when the URL changes', () => {
@@ -653,9 +677,7 @@ describe('Build tab', () => {
   it('keeps requested conjugation when loading a built verb URL', async () => {
     renderApp('/#/en/verbs/%24zb-1/active/present/subjunctive')
 
-    await waitFor(() => {
-      expect(window.location.hash).toBe('#/en/verbs/%24zb-1/active/present/subjunctive')
-    })
+    expect(window.location.hash).toBe('#/en/verbs/%24zb-1/active/present/subjunctive')
   })
 
   it('navigates when selecting a form-insights example while in Build tab', async () => {
@@ -671,8 +693,6 @@ describe('Build tab', () => {
 
     await user.click(exampleLink)
 
-    await waitFor(() => {
-      expect(window.location.hash).toBe(expectedHash)
-    })
+    expect(window.location.hash).toBe(expectedHash)
   })
 })

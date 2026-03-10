@@ -77,5 +77,5 @@ export const TabPanel = styled('div')`
   flex-direction: column;
   gap: 1rem;
   outline: none;
-  padding-top: 0.75rem;
+  padding-top: 0.5rem;
 `
