@@ -32,13 +32,11 @@ import {
 } from '../letters'
 import type { MasdarPattern, Verb } from '../verbs'
 
-function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly string[] {
+function deriveMasdarFormI(verb: Verb<1>, pattern: MasdarPattern = 'fi3aal'): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const isInitialWeak = isWeakLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
   const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleHamza = isHamzatedLetter(c2)
   const isFinalHamza = isHamzatedLetter(c3)
 
   switch (pattern) {
@@ -100,33 +98,10 @@ function deriveMasdarFormI(verb: Verb<1>, pattern?: MasdarPattern): readonly str
     case 'mimi': {
       // a -> a, i -> i, u -> i
       const shortVowel = isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA
-      if (isMiddleWeak) return [MEEM, FATHA, seatHamza(c1, FATHA), ...longVowel(shortVowel), c3]
-      return [MEEM, FATHA, seatHamza(c1, FATHA), SUKOON, c2, shortVowel, c3 === YEH ? ALIF_MAQSURA : c3]
-    }
-
-    default: {
-      if (isInitialWeak && isMiddleHamza && isFinalWeak)
-        return [seatHamza(c1, FATHA), FATHA, seatHamza(c2, FATHA), SUKOON, YEH]
-
-      if (isInitialWeak && isFinalWeak) return [seatHamza(c1, FATHA), KASRA, c2, FATHA, ALIF, YEH, FATHA, TEH_MARBUTA]
-
-      if (isMiddleHamza && isFinalWeak)
-        return [seatHamza(c1, FATHA), DAMMA, seatHamza(c2, DAMMA), SUKOON, YEH, FATHA, TEH_MARBUTA]
-
-      if (isMiddleWeak && isFinalHamza) return [MEEM, FATHA, seatHamza(c1, FATHA), KASRA, YEH, c3]
-
-      if (isInitialHamza && isFinalWeak)
-        return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, SUKOON, YEH, FATHA, ALIF, NOON]
-
-      if (c3 === YEH) return [seatHamza(c1, FATHA), DAMMA, c2, SHADDA, FATHA, TEH_MARBUTA]
-
-      if (isFinalWeak) return [seatHamza(c1, FATHA), DAMMA, c2, FATHA, ALIF, HAMZA]
-
-      if (isFinalHamza) return [seatHamza(c1, FATHA), DAMMA, c2, SUKOON, seatHamza(c3, FATHA), FATHA, TEH_MARBUTA]
-
-      if (isMiddleWeak) return [seatHamza(c1, FATHA), FATHA, isFormIPresentVowel(verb, KASRA) ? YEH : WAW, SUKOON, c3]
-
-      return []
+      const prefix = [MEEM, FATHA, seatHamza(c1, FATHA)]
+      if (isFinalHamza) return [...prefix, KASRA, YEH, seatHamza(c3)]
+      if (isMiddleWeak) return [...prefix, ...longVowel(shortVowel), seatHamza(c3)]
+      return [...prefix, SUKOON, c2, shortVowel, c3 === YEH ? ALIF_MAQSURA : c3]
     }
   }
 }
@@ -288,7 +263,7 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly string[] {
-  const patterns = (verb.form === 1 && verb.masdarPatterns) || [undefined]
+  const patterns = (verb.form === 1 && verb.masdarPatterns) || ['fi3aal']
   return patterns
     .map((pattern) => {
       return geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))

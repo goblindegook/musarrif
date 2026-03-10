@@ -574,34 +574,6 @@ describe('Build tab', () => {
     expect(screen.getAllByText('بَنِرَ').length).toBeGreaterThan(0)
   })
 
-  it('falls back to default masdar derivation when changing vowel pattern for a known Form I verb', async () => {
-    renderApp('/#/en/verbs/bdl-1')
-
-    fireEvent.click(screen.getByText('Build'))
-    fireEvent.click(getBuildButton('فَعِلَ / يَفعَلُ'))
-
-    await waitFor(() => {
-      expect(screen.getAllByText('بَدِلَ').length).toBeGreaterThan(0)
-    })
-
-    const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('—')).toBeInTheDocument()
-  })
-
-  it('uses default masdar branch when building a known Form I verb whose masdar patterns are empty', async () => {
-    renderApp('/#/en/verbs')
-
-    fireEvent.click(screen.getByText('Build'))
-    setLetter(1, 'غ')
-    setLetter(2, 'ش')
-    setLetter(3, 'ي')
-    fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفعِلُ'))
-
-    const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('غُشَّة')).toBeInTheDocument()
-  })
-
   it('uses default masdar derivation when building an unknown Form I verb', async () => {
     renderApp('/#/en/verbs')
 
@@ -613,7 +585,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
     const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('ثُنَّة')).toBeInTheDocument()
+    expect(within(detail).getByText('ثِناء')).toBeInTheDocument()
   })
 
   it('pre-populates root and form when switching to Build tab with a selected verb', async () => {

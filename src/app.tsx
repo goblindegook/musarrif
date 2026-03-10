@@ -169,16 +169,7 @@ export function App() {
     [navigateToVerb, selectedVoice, verbId],
   )
 
-  const masdar = useMemo(() => {
-    if (!selectedVerb) return null
-
-    const derived = deriveMasdar(selectedVerb)
-    if (derived.length > 0) return derived
-    if (selectedVerb.form !== 1) return derived
-    if (selectedVerb.masdarPatterns?.length !== 0) return derived
-
-    return deriveMasdar({ ...selectedVerb, masdarPatterns: undefined })
-  }, [selectedVerb])
+  const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
   const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
   const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
 
