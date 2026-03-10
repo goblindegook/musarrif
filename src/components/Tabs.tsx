@@ -32,7 +32,7 @@ export const TabButton = styled('button')<{
   gap: 0.1rem;
   justify-content: center;
   letter-spacing: 0.08em;
-  min-width: ${({ fluid }) => (fluid ? 'calc(20% - 0.5rem)' : '0')};
+  min-width: ${({ fluid }) => (fluid ? 'calc(50% - 0.25rem)' : '0')};
   padding: 0.4rem 0.6rem;
   position: relative;
   text-transform: uppercase;
@@ -46,7 +46,7 @@ export const TabButton = styled('button')<{
   }
 
   @media (min-width: 720px) {
-    min-width: ${({ fluid }) => (fluid ? 'calc(50% - 0.25rem)' : '0')};
+    min-width: 0;
 
     ${({ active, hasChildren }) =>
       active &&
