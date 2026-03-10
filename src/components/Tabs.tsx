@@ -46,7 +46,7 @@ export const TabButton = styled('button')<{
   }
 
   @media (min-width: 720px) {
-    min-width: 0;
+    min-width: ${({ fluid }) => (fluid ? 'calc(50% - 0.25rem)' : '0')};
 
     ${({ active, hasChildren }) =>
       active &&

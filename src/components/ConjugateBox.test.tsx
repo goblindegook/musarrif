@@ -75,6 +75,23 @@ describe('ConjugateBox', () => {
     expect(within(popup).getByRole('option', { name: 'ك' })).toBeInTheDocument()
   })
 
+  test('clicking input again after picking a letter re-opens the popup', async () => {
+    const user = userEvent.setup()
+    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+
+    const c1Group = screen.getByRole('group', { name: '1' })
+    const c1Input = within(c1Group).getByRole('textbox')
+
+    await user.click(c1Input)
+    await user.click(within(c1Group).getByRole('option', { name: 'ك' }))
+
+    expect(within(c1Group).queryByRole('listbox')).not.toBeInTheDocument()
+
+    await user.click(c1Input)
+
+    expect(within(c1Group).getByRole('listbox')).toBeInTheDocument()
+  })
+
   test('pre-populates letters and form from selectedVerb', () => {
     render(
       <ConjugateBox

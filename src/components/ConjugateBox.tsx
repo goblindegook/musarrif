@@ -134,6 +134,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                   aria-haspopup="listbox"
                   aria-expanded={isOpen}
                   onFocus={() => setOpenSlot(pos)}
+                  onClick={() => setOpenSlot(pos)}
                   onBlur={() => setOpenSlot(null)}
                   onInput={(e) => {
                     const char = (e as InputEvent).data ?? ''
@@ -283,12 +284,25 @@ const LetterDropdown = styled('div')`
   z-index: 100;
   padding: 0.25rem;
   gap: 2px;
+
+  @media (max-width: 640px) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: min(280px, 90vw);
+    z-index: 200;
+  }
 `
 
 const LetterChoice = styled('button')<{ 'aria-selected'?: boolean }>`
   font-family: inherit;
   font-size: 1rem;
   padding: 0.2rem;
+  min-width: 22px;
+  min-height: 22px;
+  aspect-ratio: 1;
   border: 1px solid ${({ 'aria-selected': sel }) => (sel ? '#facc15' : 'transparent')};
   border-radius: 0.25rem;
   background: ${({ 'aria-selected': sel }) => (sel ? '#fff8e1' : 'transparent')};
@@ -299,6 +313,10 @@ const LetterChoice = styled('button')<{ 'aria-selected'?: boolean }>`
   &:hover {
     background: #f1f5f9;
     border-color: #cbd5e1;
+  }
+
+  @media (max-width: 720px) {
+    font-size: 1.2rem;
   }
 `
 
@@ -317,15 +335,19 @@ const SectionLabel = styled('div')`
 `
 
 const FormGrid = styled('div')`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
   gap: 0.35rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 `
 
 const FormButton = styled('button')<{ active?: boolean }>`
   font-family: inherit;
   font-size: 0.85rem;
   padding: 0.3rem 0;
-  flex: 1;
   min-width: 0;
   border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
   border-radius: 0.5rem;
