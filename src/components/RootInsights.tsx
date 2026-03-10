@@ -41,14 +41,18 @@ export const RootInsights = ({ root }: { root: string }) => {
       <Text dir={dir} lang={lang}>
         {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
       </Text>
-      <Heading dir={dir} lang={lang}>
-        {t('rootInfo.forms')}
-      </Heading>
-      <SuggestionsList>
-        {derivedForms.map((v) => (
-          <VerbPill key={v.id} verb={v} />
-        ))}
-      </SuggestionsList>
+      {derivedForms.length > 0 && (
+        <>
+          <Heading dir={dir} lang={lang}>
+            {t('rootInfo.forms')}
+          </Heading>
+          <SuggestionsList>
+            {derivedForms.map((v) => (
+              <VerbPill key={v.id} verb={v} />
+            ))}
+          </SuggestionsList>
+        </>
+      )}
     </>
   )
 }

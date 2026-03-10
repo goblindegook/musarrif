@@ -376,7 +376,7 @@
     "masdarPatterns": ["fa3lala"],
     "passiveVoice": "impersonal"
   },
-  { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "سكن", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool", "fa3al"] },
   { "root": "سلم", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aala", "fa3al"] },
   { "root": "سلم", "form": 10 },
   { "root": "سلم", "form": 2 },
@@ -443,7 +443,7 @@
   { "root": "صغر", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
   { "root": "صفر", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "صلح", "form": 4 },
-  { "root": "صلّو", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "صلو", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "صمم", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "صنع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "صير", "form": 1, "formPattern": "fa3ala-yaf3ilu" },

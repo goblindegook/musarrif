@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
 import en from '../locales/en.json'
-import { search } from './verbs'
+import { buildVerb, search } from './verbs'
 
 describe('findVerbsByRoot', () => {
   test('matches a verb when only an inflected form is provided', () => {
@@ -88,5 +88,29 @@ describe('findVerbsByRoot', () => {
     const matches = search('translate', { translate: (key) => translations[key] })
 
     expect(matches.find((verb) => verb.id === 'trjm-1')).toBeDefined()
+  })
+})
+
+describe('buildSyntheticVerb', () => {
+  test('Form I', () => {
+    const verb = buildVerb('كتب', 1, 'fa3ala-yaf3ulu')
+    expect(verb).toEqual({
+      id: 'ktb-1',
+      form: 1,
+      formPattern: 'fa3ala-yaf3ulu',
+      masdarPatterns: ['fi3aal'],
+      label: 'كَتَبَ',
+      root: 'كتب',
+    })
+  })
+
+  test('Forms II-X', () => {
+    const verb = buildVerb('كتب', 2)
+    expect(verb).toEqual({
+      form: 2,
+      id: 'ktb-2',
+      label: 'كَتَّبَ',
+      root: 'كتب',
+    })
   })
 })

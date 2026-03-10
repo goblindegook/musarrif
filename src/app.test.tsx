@@ -387,6 +387,28 @@ describe('Form', () => {
     fireEvent.click(within(dialog).getByLabelText('Close'))
     expect(document.querySelector('[role="dialog"]')).toBeNull()
   })
+
+  it('shows the selected Form I past/present pattern in form insights', () => {
+    renderApp('/#/en/verbs/bdl-1')
+    const formDetail = screen.getByText('Form')
+
+    fireEvent.click(formDetail)
+
+    const dialogTitle = screen.getByText('Form insights')
+    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
+    expect(within(dialog).getByText('فَعَلَ / يَفْعِلُ')).toBeInTheDocument()
+  })
+
+  it('shows both past and present patterns in non-Form-I insights', () => {
+    renderApp('/#/en/verbs/Elm-5')
+    const formDetail = screen.getByText('Form')
+
+    fireEvent.click(formDetail)
+
+    const dialogTitle = screen.getByText('Form insights')
+    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
+    expect(within(dialog).getByText('تَفَعَّلَ / يَتَفَعَّلُ')).toBeInTheDocument()
+  })
 })
 
 test('Show a feedback panel with an issues link', () => {
@@ -514,5 +536,143 @@ describe('Language', () => {
     await user.selectOptions(getLanguageSelect(), 'pt')
 
     expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/pt/verbs/ktb-1')
+  })
+})
+
+describe('Build tab', () => {
+  function getBuildPanel(): HTMLElement {
+    return document.getElementById('panel-content-build')!
+  }
+
+  function getLetter(slotHeader: number): HTMLInputElement {
+    return getBuildPanel().querySelector(
+      `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[type="text"]`,
+    )!
+  }
+
+  function setLetter(slotHeader: number, letter: string) {
+    fireEvent.input(getLetter(slotHeader), { data: letter, target: { value: letter } })
+  }
+
+  function getBuildButton(label: string): HTMLElement {
+    return within(getBuildPanel()).getByText(label)
+  }
+
+  it('updates the conjugation when the vowel pattern changes', async () => {
+    renderApp('/#/en/verbs')
+
+    fireEvent.click(screen.getByText('Build'))
+    setLetter(1, 'ب')
+    setLetter(2, 'ن')
+    setLetter(3, 'ر')
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+
+    expect(screen.getAllByText('بَنَرَ').length).toBeGreaterThan(0)
+
+    fireEvent.click(getBuildButton('فَعِلَ / يَفْعَلُ'))
+
+    await waitFor(() => {
+      expect(screen.getAllByText('بَنِرَ').length).toBeGreaterThan(0)
+    })
+  })
+
+  it('updates the conjugation when changing vowel pattern for a known Form I verb', async () => {
+    renderApp('/#/en/verbs/bdl-1')
+
+    fireEvent.click(screen.getByText('Build'))
+    fireEvent.click(getBuildButton('فَعِلَ / يَفْعَلُ'))
+
+    await waitFor(() => {
+      expect(screen.getAllByText('بَدِلَ').length).toBeGreaterThan(0)
+    })
+
+    const detail = screen.getByText('Verbal noun').parentElement!
+    expect(within(detail).getByText('بَدل')).toBeInTheDocument()
+  })
+
+  it('pre-populates root and form when switching to Build tab with a selected verb', async () => {
+    renderApp('/#/en/verbs/ktb-2')
+
+    fireEvent.click(screen.getByText('Build'))
+
+    expect(getLetter(1)).toHaveValue('ك')
+    expect(getLetter(2)).toHaveValue('ت')
+    expect(getLetter(3)).toHaveValue('ب')
+    expect(within(getBuildPanel()).getByText('II')).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('opens Build tab and pre-populates the requested root for unknown verbs in the URL', () => {
+    renderApp('/#/en/verbs/qqq-2')
+
+    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+    expect(getLetter(1)).toHaveValue('ق')
+    expect(getLetter(2)).toHaveValue('ق')
+    expect(getLetter(3)).toHaveValue('ق')
+  })
+
+  it('keeps selected tense when switching conjugation for a built Form I verb', async () => {
+    renderApp('/#/en/verbs/qqq-2')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+    await user.click(screen.getByText('Present'))
+
+    await waitFor(() => {
+      expect(window.location.hash).toBe('#/en/verbs/qqq-1/active/present')
+    })
+  })
+
+  it('keeps Build tab selected when choosing an existing verb from builder controls', async () => {
+    renderApp('/#/en/verbs/qqq-2')
+
+    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+
+    setLetter(1, 'ك')
+    setLetter(2, 'ت')
+    setLetter(3, 'ب')
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+    })
+  })
+
+  it('does not auto-switch tabs after initial load when the URL changes', () => {
+    renderApp('/#/en/verbs/ktb-1')
+
+    expect(screen.getByRole('tab', { name: 'Search' })).toHaveAttribute('aria-selected', 'true')
+
+    navigateTo('/#/en/verbs/qqq-2')
+
+    expect(screen.getByRole('tab', { name: 'Search' })).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('keeps requested conjugation when loading a built verb URL', async () => {
+    renderApp('/#/en/verbs/%24zb-1/active/present/subjunctive')
+
+    await waitFor(() => {
+      expect(window.location.hash).toBe('#/en/verbs/%24zb-1/active/present/subjunctive')
+    })
+  })
+
+  it('navigates when selecting a form-insights example while in Build tab', async () => {
+    renderApp('/#/en/verbs/qqq-2')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    fireEvent.click(getBuildButton('I'))
+    fireEvent.click(screen.getByLabelText(/View form insights/i))
+
+    const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
+    const exampleLink = dialog.querySelector('a[href]') as HTMLAnchorElement
+    const expectedHash = (exampleLink.getAttribute('href') ?? '').replace(/^\/#/, '#')
+
+    await user.click(exampleLink)
+
+    await waitFor(() => {
+      expect(window.location.hash).toBe(expectedHash)
+    })
   })
 })

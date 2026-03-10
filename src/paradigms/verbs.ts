@@ -93,6 +93,10 @@ const TRANSLITERATION_MAP: Record<string, string> = {
   ئ: '}',
 }
 
+const ARABIC_MAP_BY_TRANSLITERATION = Object.fromEntries(
+  Object.entries(TRANSLITERATION_MAP).map(([arabic, transliterated]) => [transliterated, arabic]),
+)
+
 const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
 export function transliterate(text: string): string {
@@ -225,8 +229,48 @@ export function getVerbById(id?: string): Verb | undefined {
   return id ? verbsById.get(id) : undefined
 }
 
+function parseVerbId(id?: string): { readonly root: string; readonly form: VerbForm } | undefined {
+  const [transliteratedRoot, formText] = (id ?? '').split('-')
+  if (!transliteratedRoot) return undefined
+
+  const root = Array.from(transliteratedRoot)
+    .map((letter) => ARABIC_MAP_BY_TRANSLITERATION[letter])
+    .filter((i) => i)
+
+  const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
+
+  return { root: root.join(''), form }
+}
+
+export function buildVerbFromId(id?: string): Verb | undefined {
+  const existingVerb = getVerbById(id)
+  if (existingVerb) return existingVerb
+
+  const parsed = parseVerbId(id)
+  if (!parsed) return undefined
+
+  return parsed.form === 1 ? buildVerb(parsed.root, 1, 'fa3ala-yaf3alu') : buildVerb(parsed.root, parsed.form)
+}
+
 export function getVerb(root: string, form: VerbForm): Verb {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)
   if (!verb) throw new Error(`Verb with root ${root} and form ${form} not found`)
   return verb
+}
+
+export function buildVerb(root: string, form: 1, formPattern: FormIPattern): Verb
+export function buildVerb(root: string, form: Exclude<VerbForm, 1>): Verb
+export function buildVerb(root: string, form: VerbForm, formPattern?: FormIPattern): Verb {
+  const existingFormI = getVerbById(`${transliterate(root)}-1`)
+  const raw: RawVerb =
+    form === 1
+      ? {
+          root,
+          form: 1,
+          formPattern: formPattern ?? 'fa3ala-yaf3alu',
+          masdarPatterns: existingFormI?.form === 1 ? existingFormI.masdarPatterns : undefined,
+        }
+      : { root, form }
+  const past = conjugatePast({ ...raw, id: '', label: '' })
+  return { ...raw, id: `${transliterate(root)}-${form}`, label: past['3ms'] }
 }

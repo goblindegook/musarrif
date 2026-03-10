@@ -1,34 +1,49 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
-import { type Verb, verbs } from '../paradigms/verbs'
+import type { FormIPattern } from '../paradigms/form-i-vowels'
+import { type Verb, type VerbForm, verbs } from '../paradigms/verbs'
 import { Heading } from './atoms/Heading'
 import { Text } from './atoms/Text'
 import { SuggestionsList } from './QuickPickList'
 import { VerbPill } from './VerbPill'
 
-const FORM_PATTERNS: Record<number, string> = {
-  1: 'فَعَلَ',
-  2: 'فَعَّلَ',
-  3: 'فَاعَلَ',
-  4: 'أَفْعَلَ',
-  5: 'تَفَعَّلَ',
-  6: 'تَفَاعَلَ',
-  7: 'اِنْفَعَلَ',
-  8: 'اِفْتَعَلَ',
-  9: 'اِفْعَلَّ',
-  10: 'اِسْتَفْعَلَ',
+const FORM_I_PATTERNS: Record<FormIPattern, string> = {
+  'fa3ala-yaf3alu': 'فَعَلَ / يَفْعَلُ',
+  'fa3ala-yaf3ilu': 'فَعَلَ / يَفْعِلُ',
+  'fa3ala-yaf3ulu': 'فَعَلَ / يَفْعُلُ',
+  'fa3ila-yaf3alu': 'فَعِلَ / يَفْعَلُ',
+  'fa3ila-yaf3ilu': 'فَعِلَ / يَفْعِلُ',
+  'fa3ila-yaf3ulu': 'فَعِلَ / يَفْعُلُ',
+  'fa3ula-yaf3alu': 'فَعُلَ / يَفْعَلُ',
+  'fa3ula-yaf3ilu': 'فَعُلَ / يَفْعِلُ',
+  'fa3ula-yaf3ulu': 'فَعُلَ / يَفْعُلُ',
 }
 
-export const FormInsights = ({ form }: { form: number }) => {
+const FORM_PATTERNS: Record<Exclude<VerbForm, 1>, string> = {
+  2: 'فَعَّلَ / يُفَعِّلُ',
+  3: 'فَاعَلَ / يُفَاعِلُ',
+  4: 'أَفْعَلَ / يُفْعِلُ',
+  5: 'تَفَعَّلَ / يَتَفَعَّلُ',
+  6: 'تَفَاعَلَ / يَتَفَاعَلُ',
+  7: 'اِنْفَعَلَ / يَنْفَعِلُ',
+  8: 'اِفْتَعَلَ / يَفْتَعِلُ',
+  9: 'اِفْعَلَّ / يَفْعَلُّ',
+  10: 'اِسْتَفْعَلَ / يَسْتَفْعِلُ',
+}
+
+const getFormPattern = (verb: Verb): string =>
+  verb.form === 1 ? FORM_I_PATTERNS[verb.formPattern] : FORM_PATTERNS[verb.form]
+
+export const FormInsights = ({ verb }: { verb: Verb }) => {
   const { t, dir, lang } = useI18n()
-  const pattern = FORM_PATTERNS[form] ?? ''
+  const pattern = getFormPattern(verb)
 
   const formInsightExamples = useMemo<Verb[]>(() => {
-    const pool = verbs.filter((verb) => verb.form === form)
+    const pool = verbs.filter((example) => example.form === verb.form)
     const shuffled = pool.sort(() => Math.random() - 0.5)
     return shuffled.slice(0, 5)
-  }, [form])
+  }, [verb.form])
 
   return (
     <>
@@ -36,10 +51,10 @@ export const FormInsights = ({ form }: { form: number }) => {
         <PatternText>{pattern}</PatternText>
       </PatternDisplay>
       <Text dir={dir} lang={lang}>
-        {t(`formInfo.form${form}.description`)}
+        {t(`formInfo.form${verb.form}.description`)}
       </Text>
       <Text dir={dir} lang={lang}>
-        {t(`formInfo.form${form}.relationship`)}
+        {t(`formInfo.form${verb.form}.relationship`)}
       </Text>
       <Heading dir={dir} lang={lang}>
         {t('formInfo.examples')}

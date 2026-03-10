@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { AppHeader } from './components/AppHeader'
 import { Heading } from './components/atoms/Heading'
 import { Text } from './components/atoms/Text'
-import { VisuallyHiddenLabel } from './components/atoms/VisuallyHidden'
+import { ConjugateBox } from './components/ConjugateBox'
 import { ConjugationTable } from './components/ConjugationTable'
 import { CopyButton } from './components/CopyButton'
 import { Detail } from './components/Detail'
@@ -12,7 +12,7 @@ import { Modal } from './components/Modal'
 import { Panel } from './components/Panel'
 import { QuickPickList } from './components/QuickPickList'
 import { RootInsights } from './components/RootInsights'
-import { Search as SearchBox } from './components/SearchBox'
+import { Search } from './components/SearchBox'
 import { ShareButton } from './components/ShareButton'
 import { SpeechButton } from './components/SpeechButton'
 import { TabBar, TabButton, TabPanel } from './components/Tabs'
@@ -27,7 +27,7 @@ import { applyDiacriticsPreference } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
+import { buildVerbFromId, getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
 
 const formIVowelPattern = (verb: Verb<1>) => {
   const past = formIPastVowel(verb)
@@ -74,8 +74,19 @@ export function App() {
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const [recentVerbIds, setRecentVerbIds] = useState<readonly string[]>(readRecentVerbIds)
+  const [syntheticVerb, setSyntheticVerb] = useState<Verb | undefined>()
+  const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
+  const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
+    if (getVerbById(verbId)) return 'search'
+    return routeVerb ? 'build' : 'search'
+  })
+
   const translateVerb = useCallback(
-    (verb: Verb) => (lang !== 'ar' ? t(verb.id) : (enTranslations.verbs as Record<string, string>)[verb.id]),
+    (verb: Verb) => {
+      if (!getVerbById(verb.id)) return '—'
+      if (lang === 'ar') return (enTranslations.verbs as Record<string, string>)[verb.id]
+      return t(verb.id)
+    },
     [lang, t],
   )
 
@@ -84,7 +95,18 @@ export function App() {
     [diacriticsPreference],
   )
 
-  const selectedVerb = useMemo(() => getVerbById(verbId), [verbId])
+  const selectedVerb = useMemo(
+    () => (syntheticVerb?.id === verbId ? syntheticVerb : routeVerb),
+    [syntheticVerb, verbId, routeVerb],
+  )
+
+  const handleSelect = useCallback(
+    (verb: Verb) => {
+      setSyntheticVerb(verb)
+      navigateToVerb(verb.id)
+    },
+    [navigateToVerb],
+  )
 
   useEffect(() => {
     setIsFormInfoOpen(false)
@@ -157,42 +179,80 @@ export function App() {
       <Main hasVerb={!!selectedVerb}>
         <Stack area="search">
           <Panel>
-            <VisuallyHiddenLabel as="label" htmlFor="verb-search-input">
-              {t('verbLabel')}
-            </VisuallyHiddenLabel>
-            <SearchBox
-              id="verb-search-input"
-              onSelect={(verb: Verb) => navigateToVerb(verb.id)}
-              selectedVerb={selectedVerb}
-            />
+            <TabBar role="tablist">
+              <TabButton
+                role="tab"
+                type="button"
+                aria-selected={searchTab === 'search'}
+                aria-controls="panel-content-search"
+                active={searchTab === 'search'}
+                fluid
+                onClick={() => setSearchTab('search')}
+              >
+                {t('tabs.search')}
+              </TabButton>
+              <TabButton
+                role="tab"
+                type="button"
+                aria-selected={searchTab === 'build'}
+                aria-controls="panel-content-build"
+                active={searchTab === 'build'}
+                fluid
+                onClick={() => setSearchTab('build')}
+              >
+                {t('tabs.build')}
+              </TabButton>
+            </TabBar>
 
-            <Heading dir={dir} lang={lang}>
-              {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
-            </Heading>
+            {searchTab === 'search' && (
+              <TabPanel
+                id="panel-content-search"
+                role="tabpanel"
+                aria-labelledby="panel-tab-search"
+                aria-label={t('tabs.search')}
+              >
+                <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
 
-            {derivedForms.length > 1 ? (
-              <VerbList>
-                {derivedForms.map((verb) => {
-                  const isActive = verb.id === selectedVerb?.id
-                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                })}
-              </VerbList>
-            ) : (
-              <QuickPickList selectedVerb={selectedVerb} />
+                <Heading dir={dir} lang={lang}>
+                  {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
+                </Heading>
+
+                {derivedForms.length > 1 ? (
+                  <VerbList>
+                    {derivedForms.map((verb) => {
+                      const isActive = verb.id === selectedVerb?.id
+                      return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                    })}
+                  </VerbList>
+                ) : (
+                  <QuickPickList selectedVerb={selectedVerb} />
+                )}
+
+                {recentVerbs.length > 0 && (
+                  <>
+                    <Heading dir={dir} lang={lang}>
+                      {t('recentlyViewed')}
+                    </Heading>
+                    <VerbList>
+                      {recentVerbs.map((verb) => {
+                        const isActive = verb.id === selectedVerb?.id
+                        return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                      })}
+                    </VerbList>
+                  </>
+                )}
+              </TabPanel>
             )}
 
-            {recentVerbs.length > 0 && (
-              <>
-                <Heading dir={dir} lang={lang}>
-                  {t('recentlyViewed')}
-                </Heading>
-                <VerbList>
-                  {recentVerbs.map((verb) => {
-                    const isActive = verb.id === selectedVerb?.id
-                    return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                  })}
-                </VerbList>
-              </>
+            {searchTab === 'build' && (
+              <TabPanel
+                id="panel-content-build"
+                role="tabpanel"
+                aria-labelledby="panel-tab-build"
+                aria-label={t('tabs.build')}
+              >
+                <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />
+              </TabPanel>
             )}
           </Panel>
 
@@ -378,7 +438,7 @@ export function App() {
         {selectedVerb && (
           <>
             <Modal isOpen={isFormInfoOpen} onClose={() => setIsFormInfoOpen(false)} title={t('formInfo.title')}>
-              <FormInsights form={selectedVerb.form} />
+              <FormInsights verb={selectedVerb} />
             </Modal>
             <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
               <RootInsights root={selectedVerb.root} />
