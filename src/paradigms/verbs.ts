@@ -266,15 +266,7 @@ export function buildVerb(root: string, form: VerbForm, formPattern?: FormIPatte
   )
 
   const raw: RawVerb =
-    form === 1
-      ? {
-          root,
-          form: 1,
-          formPattern: formPattern ?? 'fa3ala-yaf3alu',
-          masdarPatterns: matchingFormI?.masdarPatterns ?? ['fi3aal'],
-        }
-      : { root, form }
-
+    form === 1 ? { ...matchingFormI, root, form: 1, formPattern: formPattern ?? 'fa3ala-yaf3alu' } : { root, form }
   const past = conjugatePast({ ...raw, id: '', label: '' })
   return { ...raw, id: `${transliterate(root)}-${form}`, label: past['3ms'] }
 }

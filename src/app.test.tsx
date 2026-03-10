@@ -111,14 +111,6 @@ test('shows multiple masdars with a mimi label', () => {
   expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
-test('shows a dash when the masdar is missing', () => {
-  renderApp('/#/en/verbs/lmm-1')
-
-  const detail = screen.getByText('Verbal noun').parentElement!
-  expect(within(detail).getByText('—')).toBeInTheDocument()
-  expect(detail.textContent?.trim()).toBe('Verbal noun—')
-})
-
 describe('Conjugation table', () => {
   it('shows active and passive voice tabs', () => {
     renderApp('/#/en/verbs/ktb-1')
@@ -585,7 +577,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
     const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('ثِناء')).toBeInTheDocument()
+    expect(within(detail).getByText('مَثنِى')).toBeInTheDocument()
   })
 
   it('pre-populates root and form when switching to Build tab with a selected verb', async () => {

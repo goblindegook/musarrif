@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb, verbs } from '../verbs'
+import { getVerb } from '../verbs'
 import { deriveMasdar } from './masdar'
 
 describe('masdar', () => {
@@ -57,8 +57,8 @@ describe('masdar', () => {
         ['شرب', ['شُرْب', 'مَشْرَب']],
         ['سلم', ['سَلَامَة', 'سَلَم']],
         ['سكن', ['سُكُون', 'سَكَن']],
-        ['لزم', []],
-        ['بعد', []],
+        ['لزم', 'لُزُوم'],
+        ['بعد', 'بُعْد'],
         ['هدم', 'هَدْم'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
@@ -75,8 +75,8 @@ describe('masdar', () => {
         ['ودد', 'وُدّ'],
         ['خطط', 'خَطّ'],
         ['ظلل', 'ظَلّ'],
-        ['لمم', []],
-        ['هلل', []],
+        ['لمم', 'لَمّ'],
+        ['هلل', 'هَلّ'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -95,10 +95,11 @@ describe('masdar', () => {
         ['وهن', 'وَهْن'],
         ['وقف', 'وُقُوف'],
         ['وعد', ['وَعْد', 'مَوْعِد']],
-        ['يمن', []],
-        ['يبس', []],
+        ['وني', 'وَنْي'],
+        ['يمن', 'يُمْن'],
+        ['يبس', 'يُبْس'],
         ['وثق', 'وَثَاقَة'],
-        ['وجز', []],
+        ['وجز', 'وَجْز'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -123,9 +124,9 @@ describe('masdar', () => {
         ['حول', 'حَوْل'],
         ['قول', 'قَوْل'],
         ['شوق', 'شَوْق'],
-        ['شيد', []],
-        ['عوز', []],
-        ['عوم', []],
+        ['شيد', 'شَيْد'],
+        ['عوز', 'عَوَز'],
+        ['عوم', 'عَوْم'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -136,7 +137,7 @@ describe('masdar', () => {
         ['بقي', 'بَقَاء'],
         ['بكي', 'بُكَاء'],
         ['بدو', 'بَدْو'],
-        ['جدو', []],
+        ['جدو', 'جَدْو'],
         ['لهو', 'لَهْو'],
         ['علي', 'عَلْي'],
         ['شفي', 'شِفَاء'],
@@ -144,7 +145,7 @@ describe('masdar', () => {
         ['غدو', 'غُدُوّ'],
         ['دعو', 'دُعَاء'],
         ['سعي', ['مَسْعَى']],
-        ['غشي', []],
+        ['غشي', 'غَشْي'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -158,17 +159,9 @@ describe('masdar', () => {
         ['وعي', 'وَعْي'],
         ['وري', 'وَرْي'],
         ['قوي', 'قِوًى'],
-        ['روي', []],
+        ['روي', 'رِوَايَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
-      })
-
-      test('روي (a/i)', () => {
-        // biome-ignore lint/style/noNonNullAssertion: must exist
-        const verb = verbs.find(
-          (entry) => entry.form === 1 && entry.root === 'روي' && entry.formPattern === 'fa3ala-yaf3ilu',
-        )!
-        expect(deriveMasdar(verb)).toEqualT(['رِوَايَة'])
       })
     })
 
@@ -190,9 +183,9 @@ describe('masdar', () => {
     describe('hamzated initial geminate roots', () => {
       test.each([
         ['ءمم', 'أَمّ'],
-        ['ءدد', []],
-        ['ءجج', []],
-        ['ءزز', []],
+        ['ءدد', 'أَدّ'],
+        ['ءجج', 'أَجّ'],
+        ['ءزز', 'أَزّ'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -244,7 +237,7 @@ describe('masdar', () => {
         ['بدء', 'بَدْء'],
         ['قرء', 'قِرَاءَة'],
         ['جرء', 'جُرْأَة'],
-        ['كلء', []],
+        ['كلء', 'كَلْء'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })

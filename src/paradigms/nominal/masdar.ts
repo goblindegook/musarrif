@@ -32,7 +32,7 @@ import {
 } from '../letters'
 import type { MasdarPattern, Verb } from '../verbs'
 
-function deriveMasdarFormI(verb: Verb<1>, pattern: MasdarPattern = 'fi3aal'): readonly string[] {
+function deriveMasdarFormI(verb: Verb<1>, pattern: MasdarPattern): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -235,7 +235,7 @@ function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
   return [seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
 }
 
-function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
+function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
   if (verb.root.length === 4) return deriveMasdarQuadriliteral(verb)
 
   switch (verb.form) {
@@ -263,7 +263,7 @@ function masdar(verb: Verb, pattern?: MasdarPattern): readonly string[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly string[] {
-  const patterns = (verb.form === 1 && verb.masdarPatterns) || ['fi3aal']
+  const patterns = (verb.form === 1 && verb.masdarPatterns) || ['mimi']
   return patterns
     .map((pattern) => {
       return geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))

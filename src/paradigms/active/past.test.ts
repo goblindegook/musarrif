@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb, verbs } from '../verbs'
+import { getVerb } from '../verbs'
 import { conjugatePast } from './past'
 
 describe('active past', () => {
@@ -393,14 +393,6 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
-      test('روي pattern (a/i)', () => {
-        // biome-ignore lint/style/noNonNullAssertion: must exist
-        const verb = verbs.find(
-          (entry) => entry.form === 1 && entry.root === 'روي' && entry.formPattern === 'fa3ala-yaf3ilu',
-        )!
-        expect(conjugatePast(verb)['3ms']).toEqualT('رَوَى')
-      })
-
       test('وَفَى conjugation', () => {
         expect(conjugatePast(getVerb('وفي', 1))).toEqualT({
           '1s': 'وَفَيْتُ',
@@ -416,24 +408,6 @@ describe('active past', () => {
           '2fp': 'وَفَيْتُنَّ',
           '3mp': 'وَفَوْا',
           '3fp': 'وَفَيْنَ',
-        })
-      })
-
-      test('رَوِيَ conjugation', () => {
-        expect(conjugatePast(getVerb('روي', 1))).toEqualT({
-          '1s': 'رَوِيْتُ',
-          '2ms': 'رَوِيْتَ',
-          '2fs': 'رَوِيْتِ',
-          '3ms': 'رَوِيَ',
-          '3fs': 'رَوِيَتْ',
-          '2d': 'رَوِيْتُمَا',
-          '3md': 'رَوِيَا',
-          '3fd': 'رَوِيَتَا',
-          '1p': 'رَوِيْنَا',
-          '2mp': 'رَوِيْتُمْ',
-          '2fp': 'رَوِيْتُنَّ',
-          '3mp': 'رَوُوْا',
-          '3fp': 'رَوِيْنَ',
         })
       })
     })
