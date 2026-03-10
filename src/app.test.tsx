@@ -207,7 +207,7 @@ describe('Conjugation table', () => {
     )
     expect(imperativeHeader).toBeTruthy()
     const imperativeCells = Array.from(document.querySelectorAll('td'))
-    const hasImperativeContent = imperativeCells.some((cell) => /ك.*ت.*ب/.test(cell.textContent ?? ''))
+    const hasImperativeContent = imperativeCells.some((cell) => /ك.*ت.*ب/.test(cell.textContent))
     expect(hasImperativeContent).toBe(true)
   })
 
@@ -394,9 +394,8 @@ describe('Form', () => {
 
     fireEvent.click(formDetail)
 
-    const dialogTitle = screen.getByText('Form insights')
-    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
-    expect(within(dialog).getByText('فَعَلَ / يَفْعِلُ')).toBeInTheDocument()
+    const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
+    expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
   })
 
   it('shows both past and present patterns in non-Form-I insights', () => {
@@ -475,7 +474,7 @@ describe('Recently viewed verbs', () => {
     }
 
     const heading = screen.getByText('Recently viewed')
-    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+    const links = heading.nextElementSibling!.querySelectorAll('a')
 
     expect(links).toHaveLength(10)
   })
@@ -566,11 +565,11 @@ describe('Build tab', () => {
     setLetter(2, 'ن')
     setLetter(3, 'ر')
     fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
     expect(screen.getAllByText('بَنَرَ').length).toBeGreaterThan(0)
 
-    fireEvent.click(getBuildButton('فَعِلَ / يَفْعَلُ'))
+    fireEvent.click(getBuildButton('فَعِلَ / يَفعَلُ'))
 
     expect(screen.getAllByText('بَنِرَ').length).toBeGreaterThan(0)
   })
@@ -579,7 +578,7 @@ describe('Build tab', () => {
     renderApp('/#/en/verbs/bdl-1')
 
     fireEvent.click(screen.getByText('Build'))
-    fireEvent.click(getBuildButton('فَعِلَ / يَفْعَلُ'))
+    fireEvent.click(getBuildButton('فَعِلَ / يَفعَلُ'))
 
     await waitFor(() => {
       expect(screen.getAllByText('بَدِلَ').length).toBeGreaterThan(0)
@@ -590,7 +589,6 @@ describe('Build tab', () => {
   })
 
   it('uses default masdar branch when building a known Form I verb whose masdar patterns are empty', async () => {
-    window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
     renderApp('/#/en/verbs')
 
     fireEvent.click(screen.getByText('Build'))
@@ -598,14 +596,13 @@ describe('Build tab', () => {
     setLetter(2, 'ش')
     setLetter(3, 'ي')
     fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفْعِلُ'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفعِلُ'))
 
     const detail = screen.getByText('Verbal noun').parentElement!
     expect(within(detail).getByText('غُشَّة')).toBeInTheDocument()
   })
 
   it('uses default masdar derivation when building an unknown Form I verb', async () => {
-    window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
     renderApp('/#/en/verbs')
 
     fireEvent.click(screen.getByText('Build'))
@@ -613,7 +610,7 @@ describe('Build tab', () => {
     setLetter(2, 'ن')
     setLetter(3, 'ي')
     fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
     const detail = screen.getByText('Verbal noun').parentElement!
     expect(within(detail).getByText('ثُنَّة')).toBeInTheDocument()
@@ -633,7 +630,7 @@ describe('Build tab', () => {
   it('opens Build tab and pre-populates the requested root for unknown verbs in the URL', () => {
     renderApp('/#/en/verbs/qqq-2')
 
-    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Build')).toHaveAttribute('aria-selected', 'true')
     expect(getLetter(1)).toHaveValue('ق')
     expect(getLetter(2)).toHaveValue('ق')
     expect(getLetter(3)).toHaveValue('ق')
@@ -644,7 +641,7 @@ describe('Build tab', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
     await user.click(screen.getByText('Present'))
 
     expect(window.location.hash).toBe('#/en/verbs/qqq-1/active/present')
@@ -653,25 +650,25 @@ describe('Build tab', () => {
   it('keeps Build tab selected when choosing an existing verb from builder controls', async () => {
     renderApp('/#/en/verbs/qqq-2')
 
-    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Build')).toHaveAttribute('aria-selected', 'true')
 
     setLetter(1, 'ك')
     setLetter(2, 'ت')
     setLetter(3, 'ب')
     fireEvent.click(getBuildButton('I'))
-    fireEvent.click(getBuildButton('فَعَلَ / يَفْعُلُ'))
+    fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(screen.getByRole('tab', { name: 'Build' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Build')).toHaveAttribute('aria-selected', 'true')
   })
 
   it('does not auto-switch tabs after initial load when the URL changes', () => {
     renderApp('/#/en/verbs/ktb-1')
 
-    expect(screen.getByRole('tab', { name: 'Search' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Search')).toHaveAttribute('aria-selected', 'true')
 
     navigateTo('/#/en/verbs/qqq-2')
 
-    expect(screen.getByRole('tab', { name: 'Search' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Search')).toHaveAttribute('aria-selected', 'true')
   })
 
   it('keeps requested conjugation when loading a built verb URL', async () => {
@@ -682,17 +679,14 @@ describe('Build tab', () => {
 
   it('navigates when selecting a form-insights example while in Build tab', async () => {
     renderApp('/#/en/verbs/qqq-2')
-    const user = userEvent.setup({ pointerEventsCheck: 0 })
-
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
-    const exampleLink = dialog.querySelector('a[href]') as HTMLAnchorElement
-    const expectedHash = (exampleLink.getAttribute('href') ?? '').replace(/^\/#/, '#')
+    const exampleLink = dialog.querySelector<HTMLAnchorElement>('a[href]')!
 
-    await user.click(exampleLink)
+    fireEvent.click(exampleLink)
 
-    expect(window.location.hash).toBe(expectedHash)
+    expect(`/${window.location.hash}`).toBe(exampleLink.getAttribute('href'))
   })
 })

@@ -2,6 +2,7 @@ import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
+import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { Verb, VerbForm } from '../paradigms/verbs'
 import { buildVerb, getVerbById, transliterate } from '../paradigms/verbs'
 
@@ -59,7 +60,7 @@ interface ConjugateBoxProps {
 }
 
 export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
-  const { t } = useI18n()
+  const { t, diacriticsPreference } = useI18n()
 
   const initialLetters = selectedVerb ? Array.from(selectedVerb.root) : ([undefined, undefined, undefined] as const)
 
@@ -206,7 +207,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                 dir="rtl"
                 onClick={() => setFormPattern(p as FormIPattern)}
               >
-                {l}
+                {applyDiacriticsPreference(l, diacriticsPreference)}
               </OptionButton>
             ))}
           </PatternGrid>

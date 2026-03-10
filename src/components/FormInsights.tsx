@@ -2,6 +2,7 @@ import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
+import { applyDiacriticsPreference } from '../paradigms/letters'
 import { type Verb, type VerbForm, verbs } from '../paradigms/verbs'
 import { Heading } from './atoms/Heading'
 import { Text } from './atoms/Text'
@@ -36,8 +37,8 @@ const getFormPattern = (verb: Verb): string =>
   verb.form === 1 ? FORM_I_PATTERNS[verb.formPattern] : FORM_PATTERNS[verb.form]
 
 export const FormInsights = ({ verb }: { verb: Verb }) => {
-  const { t, dir, lang } = useI18n()
-  const pattern = getFormPattern(verb)
+  const { t, dir, lang, diacriticsPreference } = useI18n()
+  const pattern = applyDiacriticsPreference(getFormPattern(verb), diacriticsPreference)
 
   const formInsightExamples = useMemo<Verb[]>(() => {
     const pool = verbs.filter((example) => example.form === verb.form)

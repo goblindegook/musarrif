@@ -20,7 +20,7 @@ describe('ConjugateBox', () => {
   test('pattern selector is not shown before Form I is selected', () => {
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    expect(screen.queryByText('فَعَلَ / يَفْعُلُ')).not.toBeInTheDocument()
+    expect(screen.queryByText('فَعَلَ / يَفعُلُ')).not.toBeInTheDocument()
   })
 
   test('pattern selector appears when Form I is selected', async () => {
@@ -28,7 +28,7 @@ describe('ConjugateBox', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'I' }))
 
-    expect(screen.getByText('فَعَلَ / يَفْعُلُ')).toBeInTheDocument()
+    expect(screen.getByText('فَعَلَ / يَفعُلُ')).toBeInTheDocument()
   })
 
   test('pattern selector is hidden when Form II is selected after Form I', async () => {
@@ -38,7 +38,7 @@ describe('ConjugateBox', () => {
     await user.click(screen.getByRole('button', { name: 'I' }))
     await user.click(screen.getByRole('button', { name: 'II' }))
 
-    expect(screen.queryByText('فَعَلَ / يَفْعُلُ')).not.toBeInTheDocument()
+    expect(screen.queryByText('فَعَلَ / يَفعُلُ')).not.toBeInTheDocument()
   })
 
   test('each letter slot has a text input', () => {
