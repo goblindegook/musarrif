@@ -24,9 +24,9 @@ import {
   WAW,
   YEH,
 } from '../letters'
-import type { RawVerb } from '../verbs'
+import type { Verb } from '../verbs'
 
-export function derivePassiveParticiple(verb: RawVerb): string {
+export function derivePassiveParticiple(verb: Verb): string {
   if (verb.noPassiveParticiple) return ''
 
   const result = (() => {

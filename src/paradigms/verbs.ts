@@ -1,8 +1,7 @@
 import rawVerbs from '../data/roots.json'
-import { wordDistance } from '../primitives/strings'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { ALIF, HAMZA, stripDiacritics } from './letters'
+import { HAMZA, isHamzatedLetter, isWeakLetter } from './letters'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -30,7 +29,7 @@ export type Tense = 'past' | 'present' | 'future' | 'imperative'
 export type Voice = 'active' | 'passive'
 export type PassiveVoice = 'none' | 'impersonal'
 
-export type RawFormI = {
+export type FormIVerb = {
   root: string
   form: 1
   formPattern: FormIPattern
@@ -40,18 +39,18 @@ export type RawFormI = {
   contractedImperative?: boolean
 }
 
-export type RawNonFormI = {
+export type NonFormIVerb = {
   root: string
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
 
-export type RawVerb = RawFormI | RawNonFormI
+export type Verb = FormIVerb | NonFormIVerb
 
-type VerbBase<T extends RawVerb> = T & { id: string; label: string }
+type VerbBase<T extends Verb> = T & { id: string; label: string }
 
-export type Verb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<RawFormI> : VerbBase<RawNonFormI>
+export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<FormIVerb> : VerbBase<NonFormIVerb>
 
 const TRANSLITERATION_MAP: Record<string, string> = {
   آ: '|',
@@ -97,7 +96,7 @@ const ARABIC_MAP_BY_TRANSLITERATION = Object.fromEntries(
   Object.entries(TRANSLITERATION_MAP).map(([arabic, transliterated]) => [transliterated, arabic]),
 )
 
-const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
+export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
 export function transliterate(text: string): string {
   return Array.from(text)
@@ -105,22 +104,22 @@ export function transliterate(text: string): string {
     .join('')
 }
 
-function verbId({ root, form }: RawVerb): string {
+function verbId({ root, form }: Verb): string {
   return [transliterate(root), String(form)].join('-')
 }
 
-export const verbs: Verb[] = (rawVerbs as RawVerb[]).map((verb) => {
+export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((verb) => {
   const past = conjugatePast(verb)
   return { ...verb, label: past['3ms'], id: verbId(verb) }
 })
 
-const verbsById = new Map<string, Verb>()
+const verbsById = new Map<string, DisplayVerb>()
 
 for (const verb of verbs) {
   verbsById.set(verbId(verb), verb)
 }
 
-const verbsByRoot = new Map<string, Verb[]>()
+export const verbsByRoot = new Map<string, DisplayVerb[]>()
 
 for (const verb of verbs) {
   const existing = verbsByRoot.get(verb.root)
@@ -135,96 +134,7 @@ for (const verb of verbs) {
   }
 }
 
-function addCandidate(acc: Set<string>, value: string): void {
-  acc.add(value)
-  acc.add(value.replace(new RegExp(ALIF, 'g'), HAMZA))
-}
-
-function extractRootCandidates(query: string): string[] {
-  return Array.from(
-    query.split(/[^ء-ي]+/).reduce((acc, part) => {
-      if (!part) return acc
-      const letters = Array.from(part).filter((char) => /[ء-ي]/.test(char))
-      if (letters.length < 1) return acc
-      if (letters.length <= 5) addCandidate(acc, letters.join(''))
-
-      const maxWindow = Math.min(letters.length, 5)
-      for (let size = 1; size <= maxWindow; size += 1) {
-        for (let start = 0; start <= letters.length - size; start += 1) {
-          addCandidate(acc, letters.slice(start, start + size).join(''))
-        }
-      }
-      return acc
-    }, new Set<string>()),
-  )
-}
-
-function matchVerbsForCandidate(candidate: string): Verb[] {
-  const matches: Verb[] = []
-  if (!candidate) return matches
-
-  const exact = verbsByRoot.get(candidate) ?? []
-  if (exact.length > 0) return exact
-
-  for (const [root, rootVerbs] of verbsByRoot.entries()) {
-    if (root.startsWith(candidate)) matches.push(...rootVerbs)
-  }
-  return matches
-}
-
-type SearchOptions = {
-  exactRoot?: boolean
-  translate?: (key: string, params?: Record<string, string>) => string
-}
-
-const normalizeQuery = (value: string): string =>
-  normalizeHamza(stripDiacritics(value))
-    .normalize('NFD')
-    .replace(/\p{M}|\u0640/gu, '')
-    .toLowerCase()
-    .trim()
-
-export function search(query: string, options: SearchOptions = {}): Verb[] {
-  const t = options.translate ?? ((key) => key)
-  const matches: Verb[] = []
-  const normalizedQuery = normalizeQuery(query)
-  if (!normalizedQuery) return matches
-
-  const candidates = extractRootCandidates(normalizedQuery)
-  const distance = new Map<string, number>()
-
-  const addMatches = (verbsForRoot: Verb[]) => {
-    for (const verb of verbsForRoot) {
-      if (distance.has(verb.id)) continue
-      matches.push(verb)
-      distance.set(verb.id, wordDistance(normalizedQuery, normalizeQuery(verb.label)))
-    }
-  }
-
-  if (options.exactRoot) {
-    addMatches(verbsByRoot.get(normalizedQuery) ?? [])
-  } else {
-    addMatches(candidates.flatMap(matchVerbsForCandidate))
-    addMatches(
-      verbs.filter((v) => {
-        const translated = t(v.id)
-        return translated != null && normalizeQuery(translated).includes(normalizedQuery)
-      }),
-    )
-  }
-
-  return matches.sort((v1, v2) => {
-    const d1 = distance.get(v1.id) ?? 0
-    const d2 = distance.get(v2.id) ?? 0
-    if (d1 !== d2) return d1 - d2
-    if (v1.root !== v2.root) return v1.root.localeCompare(v2.root)
-    const t1 = t(v1.id) ?? v1.id
-    const t2 = t(v2.id) ?? v2.id
-    return normalizeQuery(t1).localeCompare(normalizeQuery(t2))
-  })
-}
-
-export function getVerbById(id?: string): Verb | undefined {
+export function getVerbById(id?: string): DisplayVerb | undefined {
   return id ? verbsById.get(id) : undefined
 }
 
@@ -241,7 +151,7 @@ function parseVerbId(id?: string): { readonly root: string; readonly form: VerbF
   return { root: root.join(''), form }
 }
 
-export function buildVerbFromId(id?: string): Verb | undefined {
+export function buildVerbFromId(id?: string): DisplayVerb | undefined {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
 
@@ -251,22 +161,65 @@ export function buildVerbFromId(id?: string): Verb | undefined {
   return parsed.form === 1 ? buildVerb(parsed.root, 1, 'fa3ala-yaf3alu') : buildVerb(parsed.root, parsed.form)
 }
 
-export function getVerb(root: string, form: VerbForm): Verb {
+export function getVerb(root: string, form: VerbForm): DisplayVerb {
   const verb = verbs.find((entry) => entry.root === root && entry.form === form)
   if (!verb) throw new Error(`Verb with root ${root} and form ${form} not found`)
   return verb
 }
 
-export function buildVerb(root: string, form: 1, pattern: FormIPattern): Verb
-export function buildVerb(root: string, form: Exclude<VerbForm, 1>): Verb
-export function buildVerb(root: string, form: VerbForm, pattern?: FormIPattern): Verb {
+export function buildVerb(root: string, form: 1, pattern: FormIPattern): DisplayVerb
+export function buildVerb(root: string, form: Exclude<VerbForm, 1>): DisplayVerb
+export function buildVerb(root: string, form: VerbForm, pattern?: FormIPattern): DisplayVerb {
   const matchingFormI = verbs.find(
-    (entry): entry is VerbBase<RawFormI> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
+    (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
   )
-  const raw: RawVerb =
+  const raw: Verb =
     form === 1
       ? { root, form, formPattern: pattern ?? 'fa3ala-yaf3alu', masdarPatterns: matchingFormI?.masdarPatterns }
       : { root, form }
   const past = conjugatePast(raw)
   return { ...raw, id: `${transliterate(root)}-${form}`, label: past['3ms'] }
+}
+
+interface RootAnalysis {
+  type:
+    | 'strong'
+    | 'hollow'
+    | 'defective'
+    | 'doubly-weak'
+    | 'assimilated'
+    | 'hamzated'
+    | 'hamzated-hollow'
+    | 'hamzated-defective'
+    | 'hamzated-hollow-defective'
+  weakPositions: number[]
+  hamzaPositions: number[]
+}
+
+export function analyzeRoot(root: string): RootAnalysis {
+  const letters = Array.from(root)
+  const weakPositions: number[] = []
+  const hamzaPositions: number[] = []
+
+  letters.forEach((letter, index) => {
+    if (isWeakLetter(letter)) weakPositions.push(index)
+    if (isHamzatedLetter(letter)) hamzaPositions.push(index)
+  })
+
+  const [c1, c2, c3] = Array.from(letters)
+  const isInitialWeak = isWeakLetter(c1)
+  const isMiddleWeak = isWeakLetter(c2)
+  const isFinalWeak = isWeakLetter(c3)
+  const hasHamza = hamzaPositions.length > 0
+
+  if (!hasHamza && weakPositions.length >= 2) return { type: 'doubly-weak', weakPositions, hamzaPositions }
+  if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
+  if (hasHamza && isMiddleWeak && isFinalWeak)
+    return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
+  if (hasHamza && isMiddleWeak) return { type: 'hamzated-hollow', weakPositions, hamzaPositions }
+  if (hasHamza && isFinalWeak) return { type: 'hamzated-defective', weakPositions, hamzaPositions }
+  if (hasHamza) return { type: 'hamzated', weakPositions, hamzaPositions }
+  if (isMiddleWeak) return { type: 'hollow', weakPositions, hamzaPositions }
+  if (isFinalWeak) return { type: 'defective', weakPositions, hamzaPositions }
+  return { type: 'strong', weakPositions, hamzaPositions }
 }

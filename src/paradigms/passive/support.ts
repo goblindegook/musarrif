@@ -1,13 +1,13 @@
 import { mapRecord } from '../../primitives/objects'
 import type { PronounId } from '../pronouns'
-import type { RawVerb } from '../verbs'
+import type { Verb } from '../verbs'
 
-export function canConjugatePassive(verb: RawVerb): boolean {
+export function canConjugatePassive(verb: Verb): boolean {
   return verb.form !== 9 && verb.passiveVoice !== 'none'
 }
 
 export function constrainPassiveConjugation(
-  verb: RawVerb,
+  verb: Verb,
   conjugation: Record<PronounId, string>,
 ): Record<PronounId, string> {
   if (verb.passiveVoice !== 'impersonal') return conjugation

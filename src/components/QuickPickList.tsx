@@ -1,22 +1,21 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { getClosestVerbs, getRandomVerbs } from '../paradigms/selection'
-import type { Verb } from '../paradigms/verbs'
-import { verbs } from '../paradigms/verbs'
+import type { DisplayVerb } from '../paradigms/verbs'
 import { VerbPill } from './VerbPill'
 
 interface QuickPickListProps {
-  selectedVerb?: Verb | null
+  selectedVerb?: DisplayVerb | null
 }
 
 export function QuickPickList({ selectedVerb }: QuickPickListProps) {
   const picks = useMemo(
     () =>
       selectedVerb
-        ? getClosestVerbs(selectedVerb.root, verbs, 10)
+        ? getClosestVerbs(selectedVerb.root, 10)
             .filter(({ id }) => id !== selectedVerb.id)
             .slice(0, 5)
-        : getRandomVerbs(verbs, 5),
+        : getRandomVerbs(5),
     [selectedVerb],
   )
 

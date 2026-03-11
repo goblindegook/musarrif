@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
-import { type Verb, type VerbForm, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
 import { Heading } from './atoms/Heading'
 import { Text } from './atoms/Text'
 import { SuggestionsList } from './QuickPickList'
@@ -33,14 +33,14 @@ const FORM_PATTERNS: Record<Exclude<VerbForm, 1>, string> = {
   10: 'اِسْتَفْعَلَ / يَسْتَفْعِلُ',
 }
 
-const getFormPattern = (verb: Verb): string =>
+const getFormPattern = (verb: DisplayVerb): string =>
   verb.form === 1 ? FORM_I_PATTERNS[verb.formPattern] : FORM_PATTERNS[verb.form]
 
-export const FormInsights = ({ verb }: { verb: Verb }) => {
+export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   const { t, dir, lang, diacriticsPreference } = useI18n()
   const pattern = applyDiacriticsPreference(getFormPattern(verb), diacriticsPreference)
 
-  const formInsightExamples = useMemo<Verb[]>(() => {
+  const formInsightExamples = useMemo<DisplayVerb[]>(() => {
     const pool = verbs.filter((example) => example.form === verb.form)
     const shuffled = pool.sort(() => Math.random() - 0.5)
     return shuffled.slice(0, 5)

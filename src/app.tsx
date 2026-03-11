@@ -27,9 +27,10 @@ import { applyDiacriticsPreference } from './paradigms/letters'
 import { deriveMasdar } from './paradigms/nominal/masdar'
 import { deriveActiveParticiple } from './paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from './paradigms/nominal/participle-passive'
-import { buildVerbFromId, getVerbById, search, type Tense, type Verb, type Voice, verbs } from './paradigms/verbs'
+import { search } from './paradigms/selection'
+import { buildVerbFromId, type DisplayVerb, getVerbById, type Tense, type Voice, verbs } from './paradigms/verbs'
 
-const formIVowelPattern = (verb: Verb<1>) => {
+const formIVowelPattern = (verb: DisplayVerb<1>) => {
   const past = formIPastVowel(verb)
   const present = formIPresentVowel(verb)
   return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
@@ -49,7 +50,7 @@ const readRecentVerbIds = (): readonly string[] => {
 }
 
 const verbsByForm = (() => {
-  const grouped = new Map<FormNumber, Verb[]>()
+  const grouped = new Map<FormNumber, DisplayVerb[]>()
   for (const form of FORM_NUMBERS) grouped.set(form, [])
 
   verbs.forEach((verb) => {
@@ -74,7 +75,7 @@ export function App() {
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const [recentVerbIds, setRecentVerbIds] = useState<readonly string[]>(readRecentVerbIds)
-  const [syntheticVerb, setSyntheticVerb] = useState<Verb | undefined>()
+  const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
     if (getVerbById(verbId)) return 'search'
@@ -82,7 +83,7 @@ export function App() {
   })
 
   const translateVerb = useCallback(
-    (verb: Verb) => {
+    (verb: DisplayVerb) => {
       if (!getVerbById(verb.id)) return '—'
       if (lang === 'ar') return (enTranslations.verbs as Record<string, string>)[verb.id]
       return t(verb.id)
@@ -101,7 +102,7 @@ export function App() {
   )
 
   const handleSelect = useCallback(
-    (verb: Verb) => {
+    (verb: DisplayVerb) => {
       setSyntheticVerb(verb)
       navigateToVerb(verb.id)
     },
@@ -126,7 +127,7 @@ export function App() {
     () =>
       recentVerbIds
         .map((id) => getVerbById(id))
-        .filter((verb): verb is Verb => verb != null && verb.id !== selectedVerb?.id),
+        .filter((verb): verb is DisplayVerb => verb != null && verb.id !== selectedVerb?.id),
     [recentVerbIds, selectedVerb?.id],
   )
 

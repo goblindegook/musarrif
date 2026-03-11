@@ -2,16 +2,16 @@ import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { applyDiacriticsPreference } from '../paradigms/letters'
-import type { Verb } from '../paradigms/verbs'
-import { search } from '../paradigms/verbs'
+import { search } from '../paradigms/selection'
+import type { DisplayVerb } from '../paradigms/verbs'
 import { Overlay, type OverlayProps } from './Overlay'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 interface SearchProps {
   id?: string
-  onSelect: (verb: Verb) => void
-  selectedVerb?: Verb | null
+  onSelect: (verb: DisplayVerb) => void
+  selectedVerb?: DisplayVerb | null
 }
 
 export function Search({ id, onSelect, selectedVerb }: SearchProps) {
@@ -23,7 +23,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const suggestionWrapperRef = useRef<HTMLDivElement | null>(null)
   const isMobile = useMemo(() => window.innerWidth < 960, [])
 
-  const matchingVerbs = useMemo<Verb[]>(() => {
+  const matchingVerbs = useMemo<DisplayVerb[]>(() => {
     if (!query.trim()) return []
     return search(query, { translate: t })
   }, [query, t])
@@ -41,7 +41,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   }, [selectedVerb])
 
   const handleSelect = useCallback(
-    (verb: Verb) => {
+    (verb: DisplayVerb) => {
       onSelect(verb)
       setQuery(verb.label)
       setSuggestionsOpen(false)

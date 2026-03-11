@@ -23,9 +23,9 @@ import {
   TEH,
   YEH,
 } from '../letters'
-import type { RawVerb } from '../verbs'
+import type { Verb } from '../verbs'
 
-export function deriveActiveParticiple(verb: RawVerb): string | null {
+export function deriveActiveParticiple(verb: Verb): string | null {
   const result = (() => {
     const letters = [...verb.root]
 

@@ -26,7 +26,7 @@ import {
   YEH,
 } from '../letters'
 import type { PronounId } from '../pronouns'
-import type { RawFormI, RawNonFormI, RawVerb } from '../verbs'
+import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 interface PassivePastParams {
@@ -61,7 +61,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
   )
 }
 
-function derivePassivePastFormI(verb: RawFormI): PassivePastParams {
+function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
@@ -111,7 +111,7 @@ function derivePassivePastFormI(verb: RawFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormII(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = seatHamza(c2, KASRA)
   const seatedC3 = seatHamza(c3, KASRA)
@@ -123,7 +123,7 @@ function derivePassivePastFormII(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIII(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const seatedC2 = seatHamza(c2, KASRA)
   const seatedC3 = seatHamza(c3, KASRA)
@@ -135,7 +135,7 @@ function derivePassivePastFormIII(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIV(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const isMiddleHamza = isHamzatedLetter(c2)
   const isMiddleWeak = isWeakLetter(c2)
@@ -186,7 +186,7 @@ function derivePassivePastFormIV(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormV(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormV(verb: NonFormIVerb): PassivePastParams {
   const [c1] = [...verb.root]
   const formII = derivePassivePastFormII(verb)
 
@@ -196,7 +196,7 @@ function derivePassivePastFormV(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormVI(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC3 = seatHamza(c3, KASRA)
@@ -215,7 +215,7 @@ function derivePassivePastFormVI(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormVII(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
 
   if (c2 === c3) {
@@ -239,7 +239,7 @@ function derivePassivePastFormVII(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormVIII(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const isInitialWeak = isWeakLetter(c1)
   const isInitialHamza = isHamzatedLetter(c1)
@@ -307,7 +307,7 @@ function derivePassivePastFormVIII(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormX(verb: RawNonFormI): PassivePastParams {
+function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
   const seatedC3 = seatHamza(c3, KASRA)
@@ -345,7 +345,7 @@ function derivePassivePastFormX(verb: RawNonFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIq(verb: RawFormI): PassivePastParams {
+function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
   const [c1, c2, c3, c4] = [...verb.root]
 
   return {
@@ -356,7 +356,7 @@ function derivePassivePastFormIq(verb: RawFormI): PassivePastParams {
   }
 }
 
-function derivePassivePastForms(verb: RawVerb): PassivePastParams {
+function derivePassivePastForms(verb: Verb): PassivePastParams {
   if (verb.root.length > 3) {
     switch (verb.form) {
       case 1:
@@ -390,6 +390,6 @@ function derivePassivePastForms(verb: RawVerb): PassivePastParams {
   }
 }
 
-export function conjugatePassivePast(verb: RawVerb): Record<PronounId, string> {
+export function conjugatePassivePast(verb: Verb): Record<PronounId, string> {
   return constrainPassiveConjugation(verb, toConjugation(derivePassivePastForms(verb)))
 }

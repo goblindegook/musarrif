@@ -11,7 +11,7 @@ import { conjugatePassivePast } from '../paradigms/passive/past'
 import { conjugatePassivePresentMood } from '../paradigms/passive/present'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import type { Tense, Verb, Voice } from '../paradigms/verbs'
+import type { DisplayVerb, Tense, Voice } from '../paradigms/verbs'
 import { CopyButton } from './CopyButton'
 import { SpeechButton } from './SpeechButton'
 import { TabBar, TabButton, TabPanel } from './Tabs'
@@ -50,7 +50,7 @@ const PRONOUNS: readonly PronounSlot[] = [
 ] as const
 
 interface ConjugationProps {
-  verb: Verb
+  verb: DisplayVerb
   voice: Voice
   diacriticsPreference?: DiacriticsPreference
   onTenseChange: (tense: Tense) => void

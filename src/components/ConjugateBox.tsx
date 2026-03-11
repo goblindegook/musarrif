@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
-import type { Verb, VerbForm } from '../paradigms/verbs'
+import type { DisplayVerb, VerbForm } from '../paradigms/verbs'
 import { buildVerb, getVerbById, transliterate } from '../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
@@ -55,8 +55,8 @@ const LETTERS: readonly string[] = [
 const SLOT_HEADERS = ['1', '2', '3'] as const
 
 interface ConjugateBoxProps {
-  onSelect: (verb: Verb) => void
-  selectedVerb?: Verb | null
+  onSelect: (verb: DisplayVerb) => void
+  selectedVerb?: DisplayVerb | null
 }
 
 export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
