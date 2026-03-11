@@ -1,5 +1,5 @@
 import { DAMMA, FATHA, KASRA, type Vowel } from './letters'
-import type { Verb } from './verbs'
+import type { RawFormI } from './verbs'
 
 export type FormIPattern =
   | 'fa3ala-yaf3alu'
@@ -36,18 +36,18 @@ const FORM_I_PRESENT_VOWELS = {
   'fa3ula-yaf3ulu': DAMMA,
 } satisfies Record<FormIPattern, Vowel>
 
-export function formIPastVowel(verb: Verb<1>): Vowel {
+export function formIPastVowel(verb: RawFormI): Vowel {
   return FORM_I_PAST_VOWELS[verb.formPattern]
 }
 
-export function formIPresentVowel(verb: Verb<1>): Vowel {
+export function formIPresentVowel(verb: RawFormI): Vowel {
   return FORM_I_PRESENT_VOWELS[verb.formPattern]
 }
 
-export function isFormIPastVowel(verb: Verb<1>, vowel: Vowel): boolean {
+export function isFormIPastVowel(verb: RawFormI, vowel: Vowel): boolean {
   return FORM_I_PAST_VOWELS[verb.formPattern] === vowel
 }
 
-export function isFormIPresentVowel(verb: Verb<1>, vowel: Vowel): boolean {
+export function isFormIPresentVowel(verb: RawFormI, vowel: Vowel): boolean {
   return FORM_I_PRESENT_VOWELS[verb.formPattern] === vowel
 }

@@ -24,7 +24,7 @@ import {
   YEH,
 } from '../letters'
 import type { PronounId } from '../pronouns'
-import type { Verb } from '../verbs'
+import type { RawFormI, RawNonFormI, RawVerb } from '../verbs'
 
 interface PastBaseForms {
   base: readonly string[]
@@ -34,7 +34,7 @@ interface PastBaseForms {
   thirdPersonMasculinePluralBase: readonly string[]
 }
 
-export function conjugatePast(verb: Verb): Record<PronounId, string> {
+export function conjugatePast(verb: RawVerb): Record<PronounId, string> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =
     derivePastForms(verb)
 
@@ -88,13 +88,13 @@ function buildForms(stem: readonly string[], c3: string): PastBaseForms {
   }
 }
 
-function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
+function deriveQuadriliteralPastForms(verb: RawVerb): PastBaseForms {
   const [c1, c2, c3, c4] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   return buildForms([seatedC1, FATHA, c2, SUKOON, c3, FATHA, c4], c4)
 }
 
-function derivePastFormI(verb: Verb<1>): PastBaseForms {
+function derivePastFormI(verb: RawFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const isMiddleWeak = isWeakLetter(c2)
@@ -131,7 +131,7 @@ function derivePastFormI(verb: Verb<1>): PastBaseForms {
   return buildForms([...prefix, pastVowel, seatHamza(c3, pastVowel)], c3)
 }
 
-function derivePastFormII(verb: Verb<2>): PastBaseForms {
+function derivePastFormII(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [seatHamza(c1, FATHA), FATHA, c2, SHADDA, FATHA]
 
@@ -144,7 +144,7 @@ function derivePastFormII(verb: Verb<2>): PastBaseForms {
   return buildForms([...prefix, seatHamza(c3, FATHA)], c3)
 }
 
-function derivePastFormIII(verb: Verb<3>): PastBaseForms {
+function derivePastFormIII(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [seatHamza(c1, FATHA), FATHA, ALIF, seatHamza(c2)]
 
@@ -157,7 +157,7 @@ function derivePastFormIII(verb: Verb<3>): PastBaseForms {
   return buildForms([...prefix, FATHA, seatHamza(c3, FATHA)], c3)
 }
 
-function derivePastFormIV(verb: Verb<4>): PastBaseForms {
+function derivePastFormIV(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [ALIF_HAMZA, FATHA, seatHamza(c1, FATHA)]
@@ -187,7 +187,7 @@ function derivePastFormIV(verb: Verb<4>): PastBaseForms {
   return buildForms([...prefix, SUKOON, c2, FATHA, seatedC3], c3)
 }
 
-function derivePastFormV(verb: Verb<5>): PastBaseForms {
+function derivePastFormV(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [TEH, FATHA, seatHamza(c1, FATHA), FATHA, seatHamza(c2, FATHA), SHADDA, FATHA]
 
@@ -200,7 +200,7 @@ function derivePastFormV(verb: Verb<5>): PastBaseForms {
   return buildForms([...prefix, seatHamza(c3, FATHA)], c3)
 }
 
-function derivePastFormVI(verb: Verb<6>): PastBaseForms {
+function derivePastFormVI(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const prefix = [TEH, FATHA, seatHamza(c1, FATHA)]
 
@@ -222,7 +222,7 @@ function derivePastFormVI(verb: Verb<6>): PastBaseForms {
   return buildForms([...prefix, FATHA, ALIF, seatHamza(c2), FATHA, seatHamza(c3, FATHA)], c3)
 }
 
-function derivePastFormVII(verb: Verb<7>): PastBaseForms {
+function derivePastFormVII(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [ALIF, KASRA, NOON, SUKOON, seatHamza(c1, FATHA), FATHA]
@@ -244,7 +244,7 @@ function derivePastFormVII(verb: Verb<7>): PastBaseForms {
   return buildForms([...prefix, c2, FATHA, seatedC3], c3)
 }
 
-function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
+function derivePastFormVIII(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const infix = resolveFormVIIIInfixConsonant(c1)
   const seatedC2 = seatHamza(c2, FATHA)
@@ -275,7 +275,7 @@ function derivePastFormVIII(verb: Verb<8>): PastBaseForms {
   return buildForms([...prefix, seatedC2, FATHA, seatHamza(c3, FATHA)], c3)
 }
 
-function derivePastFormIX(verb: Verb<9>): PastBaseForms {
+function derivePastFormIX(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   return {
@@ -284,7 +284,7 @@ function derivePastFormIX(verb: Verb<9>): PastBaseForms {
   }
 }
 
-function derivePastFormX(verb: Verb<10>): PastBaseForms {
+function derivePastFormX(verb: RawNonFormI): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, seatHamza(c1, FATHA)]
@@ -308,7 +308,7 @@ function derivePastFormX(verb: Verb<10>): PastBaseForms {
   return buildForms([...prefix, SUKOON, c2, FATHA, seatedC3], c3)
 }
 
-function derivePastForms(verb: Verb): PastBaseForms {
+function derivePastForms(verb: RawVerb): PastBaseForms {
   if (verb.root.length === 4) return deriveQuadriliteralPastForms(verb)
 
   switch (verb.form) {

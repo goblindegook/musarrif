@@ -22,10 +22,10 @@ import {
   YEH,
 } from '../letters'
 import type { PronounId } from '../pronouns'
-import type { Verb } from '../verbs'
+import type { RawVerb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
-export function conjugateImperative(verb: Verb): Record<PronounId, string> {
+export function conjugateImperative(verb: RawVerb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
   const seatedC1 = seatHamza(c1, FATHA)

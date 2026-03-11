@@ -5,7 +5,6 @@ import { I18nProvider } from './hooks/i18n'
 import { RoutingProvider } from './hooks/routing'
 import './index.css'
 
-// Setup goober with Preact's h function
 setup(h)
 
 render(

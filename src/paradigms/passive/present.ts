@@ -27,7 +27,7 @@ import {
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
-import type { Verb } from '../verbs'
+import type { RawFormI, RawNonFormI, RawVerb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 const PRESENT_PREFIXES: Record<PronounId, string> = {
@@ -100,7 +100,7 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
   jussive: JUSSIVE_SUFFIXES,
 }
 
-function buildC1SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly string[] {
+function buildC1SegmentFormI(verb: RawFormI, pronounId: PronounId): readonly string[] {
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
 
@@ -130,7 +130,7 @@ function buildC1SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly stri
   return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, SUKOON]
 }
 
-function buildC2SegmentFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
+function buildC2SegmentFormI(verb: RawFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   const isMiddleHamza = isHamzatedLetter(c2)
@@ -155,7 +155,7 @@ function buildC2SegmentFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): r
   return []
 }
 
-function buildC3SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly string[] {
+function buildC3SegmentFormI(verb: RawFormI, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   if (isWeakLetter(c3)) return []
@@ -169,7 +169,7 @@ function buildC3SegmentFormI(verb: Verb<1>, pronounId: PronounId): readonly stri
   return []
 }
 
-function buildSuffixFormI(verb: Verb<1>, mood: Mood, pronounId: PronounId): readonly string[] {
+function buildSuffixFormI(verb: RawFormI, mood: Mood, pronounId: PronounId): readonly string[] {
   const [, c2, c3] = Array.from(verb.root)
 
   if (c2 === c3) return geminateSuffix(mood, pronounId)
@@ -181,7 +181,7 @@ function buildSuffixFormI(verb: Verb<1>, mood: Mood, pronounId: PronounId): read
   return MOOD_SUFFIXES[mood][pronounId]
 }
 
-function derivePassivePresentStemFormI(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormI(verb: RawFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   return [
     ...buildC1SegmentFormI(verb, pronounId),
     ...buildC2SegmentFormI(verb, pronounId, mood),
@@ -190,7 +190,7 @@ function derivePassivePresentStemFormI(verb: Verb<1>, pronounId: PronounId, mood
   ]
 }
 
-function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormII(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
@@ -207,7 +207,7 @@ function derivePassivePresentStemFormII(verb: Verb, pronounId: PronounId, mood: 
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIII(verb: Verb<3>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormIII(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC1 = seatHamza(c1, DAMMA)
@@ -225,7 +225,7 @@ function derivePassivePresentStemFormIII(verb: Verb<3>, pronounId: PronounId, mo
   return [...prefix, FATHA, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormIV(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const isInitialHamza = isHamzatedLetter(c1)
@@ -262,7 +262,7 @@ function derivePassivePresentStemFormIV(verb: Verb, pronounId: PronounId, mood: 
   return [...prefix, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormV(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const seatedC1 = seatHamza(c1, FATHA)
@@ -275,7 +275,7 @@ function derivePassivePresentStemFormV(verb: Verb, pronounId: PronounId, mood: M
   return [TEH, FATHA, seatedC1, FATHA, seatedC2, SHADDA, FATHA, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormVI(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
@@ -285,7 +285,7 @@ function derivePassivePresentStemFormVI(verb: Verb<6>, pronounId: PronounId, moo
   return [TEH, FATHA, seatedC1, FATHA, ALIF, c2, FATHA, seatedC3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormVII(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const isMiddleWeak = isWeakLetter(c2)
@@ -305,7 +305,7 @@ function derivePassivePresentStemFormVII(verb: Verb<7>, pronounId: PronounId, mo
   return [NOON, SUKOON, seatedC1, FATHA, c2, FATHA, c3, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormVIII(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialWeak = isWeakLetter(c1)
   const isInitialHamza = isHamzatedLetter(c1)
@@ -362,7 +362,7 @@ function derivePassivePresentStemFormVIII(verb: Verb<8>, pronounId: PronounId, m
   return [seatedC1, SUKOON, infix, FATHA, seatedC2, FATHA, seatedC3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormX(verb: RawNonFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
   const prefix = [SEEN, SUKOON, TEH, FATHA]
@@ -388,7 +388,7 @@ function derivePassivePresentStemFormX(verb: Verb<10>, pronounId: PronounId, moo
   return [...prefix, seatedC1, SUKOON, c2, FATHA, c3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIq(verb: Verb<1>, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStemFormIq(verb: RawFormI, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3, c4] = Array.from(verb.root)
   return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
@@ -416,7 +416,7 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
   return [ALIF_MAQSURA]
 }
 
-function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly string[] {
+function derivePassivePresentStem(verb: RawVerb, pronounId: PronounId, mood: Mood): readonly string[] {
   if (verb.root.length > 3) {
     switch (verb.form) {
       case 1:
@@ -450,7 +450,7 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
   }
 }
 
-export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
+export function conjugatePassivePresentMood(verb: RawVerb, mood: Mood): Record<PronounId, string> {
   return constrainPassiveConjugation(
     verb,
     mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>

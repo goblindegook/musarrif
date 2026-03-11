@@ -30,7 +30,7 @@ export type Tense = 'past' | 'present' | 'future' | 'imperative'
 export type Voice = 'active' | 'passive'
 export type PassiveVoice = 'none' | 'impersonal'
 
-type RawFormI = {
+export type RawFormI = {
   root: string
   form: 1
   formPattern: FormIPattern
@@ -40,14 +40,14 @@ type RawFormI = {
   contractedImperative?: boolean
 }
 
-type RawNonFormI = {
+export type RawNonFormI = {
   root: string
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
 
-type RawVerb = RawFormI | RawNonFormI
+export type RawVerb = RawFormI | RawNonFormI
 
 type VerbBase<T extends RawVerb> = T & { id: string; label: string }
 
@@ -110,9 +110,8 @@ function verbId({ root, form }: RawVerb): string {
 }
 
 export const verbs: Verb[] = (rawVerbs as RawVerb[]).map((verb) => {
-  const id = verbId(verb)
-  const past = conjugatePast({ ...verb, label: '', id })
-  return { ...verb, label: past['3ms'], id }
+  const past = conjugatePast(verb)
+  return { ...verb, label: past['3ms'], id: verbId(verb) }
 })
 
 const verbsById = new Map<string, Verb>()
@@ -258,15 +257,16 @@ export function getVerb(root: string, form: VerbForm): Verb {
   return verb
 }
 
-export function buildVerb(root: string, form: 1, formPattern: FormIPattern): Verb
+export function buildVerb(root: string, form: 1, pattern: FormIPattern): Verb
 export function buildVerb(root: string, form: Exclude<VerbForm, 1>): Verb
-export function buildVerb(root: string, form: VerbForm, formPattern?: FormIPattern): Verb {
+export function buildVerb(root: string, form: VerbForm, pattern?: FormIPattern): Verb {
   const matchingFormI = verbs.find(
-    (entry): entry is Verb<1> => entry.form === 1 && entry.root === root && entry.formPattern === formPattern,
+    (entry): entry is VerbBase<RawFormI> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
   )
-
   const raw: RawVerb =
-    form === 1 ? { ...matchingFormI, root, form: 1, formPattern: formPattern ?? 'fa3ala-yaf3alu' } : { root, form }
-  const past = conjugatePast({ ...raw, id: '', label: '' })
+    form === 1
+      ? { root, form, formPattern: pattern ?? 'fa3ala-yaf3alu', masdarPatterns: matchingFormI?.masdarPatterns }
+      : { root, form }
+  const past = conjugatePast(raw)
   return { ...raw, id: `${transliterate(root)}-${form}`, label: past['3ms'] }
 }
