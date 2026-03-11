@@ -1049,6 +1049,7 @@ describe('active present indicative', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['ءكد', 'يُؤَكِّدُ'],
+        ['ءكل', 'يُؤَكِّلُ'],
         ['ءجر', 'يُؤَجِّرُ'],
         ['ءثر', 'يُؤَثِّرُ'],
         ['ءجج', 'يُؤَجِّجُ'],

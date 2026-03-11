@@ -543,6 +543,7 @@ describe('passive present jussive', () => {
       test.each([
         ['ءخر', 'يُؤَخَّرْ'],
         ['ءجر', 'يُؤَجَّرْ'],
+        ['ءكل', 'يُؤَكَّلْ'],
         ['ءمر', 'يُؤَمَّرْ'],
         ['ءثر', 'يُؤَثَّرْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {

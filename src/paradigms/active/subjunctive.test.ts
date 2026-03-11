@@ -647,6 +647,7 @@ describe('active present subjunctive', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['ءجر', 'يُؤَجِّرَ'],
+        ['ءكل', 'يُؤَكِّلَ'],
         ['ءجج', 'يُؤَجِّجَ'],
         ['ءسس', 'يُؤَسِّسَ'],
         ['ءخر', 'يُؤَخِّرَ'],

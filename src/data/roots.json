@@ -37,6 +37,7 @@
     "masdarPatterns": ["fa3l"],
     "contractedImperative": true
   },
+  { "root": "ءكل", "form": 2 },
   { "root": "ءكل", "form": 5, "passiveVoice": "none" },
   { "root": "ءكل", "form": 6, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "ءلم", "form": 4 },

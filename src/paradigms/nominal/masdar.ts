@@ -264,11 +264,9 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
 
 export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = (verb.form === 1 && verb.masdarPatterns) || ['mimi']
-  return patterns
-    .map((pattern) => {
-      return geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))
-        .join('')
-        .normalize('NFC')
-    })
-    .filter(Boolean)
+  return patterns.map((pattern) =>
+    geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))
+      .join('')
+      .normalize('NFC'),
+  )
 }
