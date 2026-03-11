@@ -548,7 +548,7 @@ function expandGemination(word: readonly string[], vowel: Vowel): readonly strin
 
 function dropTerminalHamza(stem: readonly string[], hamzaVowel?: Vowel): readonly string[] {
   const previous = stem.slice(0, -2)
-  return [...previous, seatHamza(stem.at(-2) ?? '', hamzaVowel ?? (previous.at(-1) as Vowel))]
+  return [...previous, seatHamza(stem.at(-2), hamzaVowel ?? (previous.at(-1) as Vowel))]
 }
 
 function applyPresentPrefix(prefix: string, chars: readonly string[]): readonly string[] {
