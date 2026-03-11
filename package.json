@@ -20,7 +20,7 @@
     "preact": "^10.19.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
+    "@biomejs/biome": "^2.4.6",
     "@preact/preset-vite": "^2.8.2",
     "@stryker-mutator/core": "^9.4.0",
     "@stryker-mutator/vitest-runner": "^9.4.0",
