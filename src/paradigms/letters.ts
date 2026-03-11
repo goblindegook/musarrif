@@ -42,8 +42,8 @@ type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
-  [KASRA]: new Set([YEH]),
-  [DAMMA]: new Set([WAW]),
+  [KASRA]: new Set([YEH, HAMZA_ON_YEH]),
+  [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
 }
 
 export function stripDiacritics(input: string): string {

@@ -886,6 +886,7 @@ describe('passive present indicative', () => {
       test.each([
         ['ءخذ', 'يُؤَاخَذُ'],
         ['ءجر', 'يُؤَاجَرُ'],
+        ['ءتي', 'يُؤَاتَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -1279,6 +1280,10 @@ describe('passive present indicative', () => {
     })
 
     describe('hamzated initial defective roots', () => {
+      test.each([['ءتي', 'يُؤْتَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('آتَى conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('ءتي', 4), 'indicative')).toEqualT({
           '1s': 'أُوتَى',

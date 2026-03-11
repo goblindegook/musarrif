@@ -87,9 +87,22 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
       return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, SUKOON, c3]
 
     case 'fa3aala':
+      if (isMiddleWeak) return [seatHamza(c1, FATHA), DAMMA, WAW, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
       return [seatHamza(c1, FATHA), FATHA, c2, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
     case 'fi3aala':
+      if (isMiddleWeak)
+        return [
+          seatHamza(c1, FATHA),
+          KASRA,
+          isFinalWeak ? WAW : YEH,
+          FATHA,
+          ALIF,
+          isFinalWeak ? YEH : c3,
+          FATHA,
+          TEH_MARBUTA,
+        ]
+
       return [seatHamza(c1, FATHA), KASRA, c2, FATHA, ALIF, isFinalWeak ? YEH : c3, FATHA, TEH_MARBUTA]
 
     case 'ifi3aal':
@@ -100,6 +113,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
       const shortVowel = isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA
       const prefix = [MEEM, FATHA, seatHamza(c1, FATHA)]
       if (isFinalHamza) return [...prefix, KASRA, YEH, seatHamza(c3)]
+      if (isMiddleWeak && isFormIPresentVowel(verb, DAMMA)) return [...prefix, FATHA, ALIF, seatHamza(c3)]
       if (isMiddleWeak) return [...prefix, ...longVowel(shortVowel), seatHamza(c3)]
       return [...prefix, SUKOON, c2, shortVowel, c3 === YEH ? ALIF_MAQSURA : c3]
     }
