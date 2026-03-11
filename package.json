@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.2",
-    "@preact/preset-vite": "^2.8.2",
+    "@preact/preset-vite": "^2.10.3",
     "@stryker-mutator/core": "^9.4.0",
     "@stryker-mutator/vitest-runner": "^9.4.0",
     "@testing-library/jest-dom": "^6.1.5",
