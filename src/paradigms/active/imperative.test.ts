@@ -2081,6 +2081,26 @@ describe('imperative', () => {
           '2fp': 'سَيْطِرْنَ',
         })
       })
+
+      test('وَسْوَسَ conjugation', () => {
+        expect(conjugateImperative(getVerb('وسوس', 1))).toMatchObjectT({
+          '2ms': 'وَسْوِسْ',
+          '2fs': 'وَسْوِسِي',
+          '2d': 'وَسْوِسَا',
+          '2mp': 'وَسْوِسُوْا',
+          '2fp': 'وَسْوِسْنَ',
+        })
+      })
+
+      test('لَأْلَأَ conjugation', () => {
+        expect(conjugateImperative(getVerb('لءلء', 1))).toMatchObjectT({
+          '2ms': 'لَأْلِئْ',
+          '2fs': 'لَأْلِئِي',
+          '2d': 'لَأْلِئَا',
+          '2mp': 'لَأْلِئُوْا',
+          '2fp': 'لَأْلِئْنَ',
+        })
+      })
     })
   })
 })

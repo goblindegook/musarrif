@@ -229,14 +229,37 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly string[] {
   return [...prefix, seatedC1, SUKOON, c2, FATHA, ALIF, seatedC3]
 }
 
-function deriveMasdarQuadriliteral(verb: Verb): readonly string[] {
+function deriveMasdarFormIq(verb: FormIVerb, pattern: MasdarPattern): readonly string[] {
   const [q1, q2, q3, q4] = Array.from(verb.root)
 
-  return [seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
+  if (pattern === 'fa3aal')
+    return [seatHamza(q1, FATHA), FATHA, seatHamza(q2, FATHA), SUKOON, seatHamza(q3, FATHA), FATHA, ALIF, q4]
+
+  if (pattern === 'fi3aal')
+    return [seatHamza(q1, KASRA), KASRA, seatHamza(q2, FATHA), SUKOON, seatHamza(q3, FATHA), FATHA, ALIF, q4]
+
+  return [
+    seatHamza(q1, FATHA),
+    FATHA,
+    seatHamza(q2, FATHA),
+    SUKOON,
+    seatHamza(q3, FATHA),
+    FATHA,
+    seatHamza(q4, FATHA),
+    FATHA,
+    TEH_MARBUTA,
+  ]
 }
 
 function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
-  if (verb.root.length === 4) return deriveMasdarQuadriliteral(verb)
+  if (verb.root.length > 3) {
+    switch (verb.form) {
+      case 1:
+        return deriveMasdarFormIq(verb, pattern)
+      default:
+        return []
+    }
+  }
 
   switch (verb.form) {
     case 1:

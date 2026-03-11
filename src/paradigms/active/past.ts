@@ -88,10 +88,25 @@ function buildForms(stem: readonly string[], c3: string): PastBaseForms {
   }
 }
 
-function deriveQuadriliteralPastForms(verb: Verb): PastBaseForms {
+function derivePastFormIq(verb: Verb): PastBaseForms {
   const [c1, c2, c3, c4] = [...verb.root]
-  const seatedC1 = seatHamza(c1, FATHA)
-  return buildForms([seatedC1, FATHA, c2, SUKOON, c3, FATHA, c4], c4)
+  const stem = [
+    seatHamza(c1, FATHA),
+    FATHA,
+    seatHamza(c2, FATHA),
+    SUKOON,
+    seatHamza(c3, FATHA),
+    FATHA,
+    seatHamza(c4, FATHA),
+  ]
+
+  if (isHamzatedLetter(c4))
+    return {
+      ...buildForms(stem, c4),
+      thirdPersonMasculinePluralBase: [...stem.slice(0, -1), seatHamza(c4, DAMMA), DAMMA],
+    }
+
+  return buildForms(stem, c4)
 }
 
 function derivePastFormI(verb: FormIVerb): PastBaseForms {
@@ -309,7 +324,7 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {
-  if (verb.root.length === 4) return deriveQuadriliteralPastForms(verb)
+  if (verb.root.length === 4) return derivePastFormIq(verb)
 
   switch (verb.form) {
     case 1:

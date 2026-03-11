@@ -39,6 +39,8 @@ function isFormIFinalWeakPresent(verb: Verb, vowel: Vowel): boolean {
 }
 
 function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly string[] {
+  if (verb.root.length > 3) return [...removeFinalDiacritic(stem), KASRA, YEH, SUKOON, NOON, FATHA]
+
   const [, c2, c3] = [...verb.root]
   const suffix = [YEH, SUKOON, NOON, FATHA]
 
@@ -54,6 +56,8 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 }
 
 function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly string[] {
+  if (verb.root.length > 3) return [...stem, WAW, SUKOON, NOON, FATHA]
+
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
   const prefix = stem.slice(0, -2)
@@ -142,6 +146,8 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
 }
 
 function buildDualPresent(stem: readonly string[], verb: Verb): readonly string[] {
+  if (verb.root.length > 3) return [...removeFinalDiacritic(stem), FATHA, ALIF, NOON, KASRA]
+
   const [c1, c2, c3] = verb.root
   const suffix = [FATHA, ALIF, NOON, KASRA]
 
@@ -207,8 +213,6 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      if (verb.root.length > 3) return [...removeFinalDiacritic(word), FATHA]
-
       if (isDual(pronounId)) return dropNoonEnding(word)
 
       if (isFinalWeak && verb.form === 1 && isFormIPresentVowel(verb, FATHA)) {
@@ -266,6 +270,14 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (isDual(pronounId)) return dropNoonEnding(word)
       }
 
+      if (letters.length > 3) {
+        if (isDual(pronounId)) return dropNoonEnding(word)
+        if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
+        if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
+        return [...removeFinalDiacritic(word), SUKOON]
+      }
+
       if (isDual(pronounId)) {
         const base = dropNoonEnding(word)
 
@@ -294,8 +306,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]
 
       if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
-
-      if (letters.length > 3) return [...removeFinalDiacritic(word), SUKOON]
 
       if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
         return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]
@@ -326,10 +336,21 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
   return conjugateIndicative(verb)
 }
 
-function deriveQuadriliteralPresentForms(verb: Verb): readonly string[] {
+function derivePresentFormIq(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
 
-  return [YEH, DAMMA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
+  return [
+    YEH,
+    DAMMA,
+    seatHamza(c1, FATHA),
+    FATHA,
+    seatHamza(c2, FATHA),
+    SUKOON,
+    seatHamza(c3, KASRA),
+    KASRA,
+    seatHamza(c4, KASRA),
+    DAMMA,
+  ]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly string[] {
@@ -488,7 +509,7 @@ function derivePresentForms(verb: Verb): readonly string[] {
 
   if (letters.length < 3) throw new Error('Root must have at least 3 letters.')
 
-  if (letters.length === 4) return deriveQuadriliteralPresentForms(verb)
+  if (letters.length === 4) return derivePresentFormIq(verb)
 
   switch (verb.form) {
     case 1:

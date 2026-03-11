@@ -1991,11 +1991,30 @@ describe('active present subjunctive', () => {
       test.each([
         ['سيطر', 'يُسَيْطِرَ'],
         ['كلور', 'يُكَلْوِرَ'],
+        ['وسوس', 'يُوَسْوِسَ'],
         ['ترجم', 'يُتَرْجِمَ'],
         ['برهن', 'يُبَرْهِنَ'],
         ['عرقل', 'يُعَرْقِلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('لَأْلَأَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('لءلء', 1), 'subjunctive')).toEqualT({
+          '1s': 'أُلَأْلِئَ',
+          '2ms': 'تُلَأْلِئَ',
+          '2fs': 'تُلَأْلِئِي',
+          '3ms': 'يُلَأْلِئَ',
+          '3fs': 'تُلَأْلِئَ',
+          '2d': 'تُلَأْلِئَا',
+          '3md': 'يُلَأْلِئَا',
+          '3fd': 'تُلَأْلِئَا',
+          '1p': 'نُلَأْلِئَ',
+          '2mp': 'تُلَأْلِئُوْا',
+          '2fp': 'تُلَأْلِئْنَ',
+          '3mp': 'يُلَأْلِئُوْا',
+          '3fp': 'يُلَأْلِئْنَ',
+        })
       })
     })
   })

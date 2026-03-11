@@ -40,6 +40,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       const stem = Array.from(jussive).slice(2)
 
+      if (letters.length === 4) return stem
+
       switch (verb.form) {
         case 1: {
           const isPatternA = isFormIPresentVowel(verb, FATHA)
