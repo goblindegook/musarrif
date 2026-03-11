@@ -579,7 +579,10 @@ describe('passive participle', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test.each([['ءذي', 'مُتَأَذًّى']])('%s', (root, expected) => {
+      test.each([
+        ['ءذي', 'مُتَأَذًّى'],
+        ['ءتي', 'مُتَأَتًّى'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
     })

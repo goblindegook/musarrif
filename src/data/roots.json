@@ -2,6 +2,7 @@
   { "root": "ءتي", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "ءتي", "form": 3 },
   { "root": "ءتي", "form": 4 },
+  { "root": "ءتي", "form": 5, "passiveVoice": "impersonal" },
   { "root": "ءتي", "form": 8 },
   { "root": "ءجر", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l", "fu3la"] },
   { "root": "ءجر", "form": 2 },
