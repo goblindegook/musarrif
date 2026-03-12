@@ -2815,6 +2815,15 @@ describe('active present indicative', () => {
 
   describe('Form IIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['مركز', 'يَتَمَرْكَزُ'],
+        ['بلور', 'يَتَبَلْوَرُ'],
+        ['ذبذب', 'يَتَذَبْذَبُ'],
+        ['غلغل', 'يَتَغَلْغَلُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('تَعَرْقَلَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('عرقل', 2), 'indicative')).toEqualT({
           '1s': 'أَتَعَرْقَلُ',

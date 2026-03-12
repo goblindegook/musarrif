@@ -2025,6 +2025,15 @@ describe('active present subjunctive', () => {
 
   describe('Form IIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['مركز', 'يَتَمَرْكَزَ'],
+        ['بلور', 'يَتَبَلْوَرَ'],
+        ['ذبذب', 'يَتَذَبْذَبَ'],
+        ['غلغل', 'يَتَغَلْغَلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('تَعَرْقَلَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('عرقل', 2), 'subjunctive')).toEqualT({
           '1s': 'أَتَعَرْقَلَ',
