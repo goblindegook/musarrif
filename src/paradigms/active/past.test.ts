@@ -2637,6 +2637,10 @@ describe('active past', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['ءلمن', 'تَأَلْمَنَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
       test('تَأَمْرَكَ conjugation', () => {
         expect(conjugatePast(getVerb('ءمرك', 2))).toEqualT({
           '1s': 'تَأَمْرَكْتُ',

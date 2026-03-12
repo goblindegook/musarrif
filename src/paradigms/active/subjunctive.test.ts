@@ -2045,6 +2045,10 @@ describe('active present subjunctive', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['ءلمن', 'يَتَأَلْمَنَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('تَأَمْرَكَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('ءمرك', 2), 'subjunctive')).toEqualT({
           '1s': 'أَتَأَمْرَكَ',
