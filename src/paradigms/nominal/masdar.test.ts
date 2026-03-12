@@ -1115,7 +1115,13 @@ describe('masdar', () => {
 
   describe('Form IIq', () => {
     describe('regular roots', () => {
-      test.each([['عرقل', 'تَعَرْقُل']])('%s', (root, expected) => {
+      test.each([
+        ['عرقل', 'تَعَرْقُل'],
+        ['مركز', 'تَمَرْكُز'],
+        ['بلور', 'تَبَلْوُر'],
+        ['ذبذب', 'تَذَبْذُب'],
+        ['غلغل', 'تَغَلْغُل'],
+      ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
       })
     })

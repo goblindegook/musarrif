@@ -1778,6 +1778,17 @@ describe('passive past pattern', () => {
   })
 
   describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['مركز', 'تُمُرْكِزَ'],
+        ['بلور', 'تُبُلْوِرَ'],
+        ['ذبذب', 'تُذُبْذِبَ'],
+        ['غلغل', 'تُغُلْغِلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([
         ['ءمرك', 'تُؤُمْرِكَ'],

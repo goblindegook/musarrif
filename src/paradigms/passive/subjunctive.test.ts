@@ -1893,6 +1893,17 @@ describe('passive present subjunctive', () => {
   })
 
   describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['مركز', 'يُتَمَرْكَزَ'],
+        ['بلور', 'يُتَبَلْوَرَ'],
+        ['ذبذب', 'يُتَذَبْذَبَ'],
+        ['غلغل', 'يُتَغَلْغَلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([
         ['ءمرك', 'يُتَأَمْرَكَ'],

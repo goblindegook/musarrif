@@ -2114,6 +2114,15 @@ describe('imperative', () => {
 
   describe('Form IIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['مركز', 'تَمَرْكَزْ'],
+        ['بلور', 'تَبَلْوَرْ'],
+        ['ذبذب', 'تَذَبْذَبْ'],
+        ['غلغل', 'تَغَلْغَلْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
+      })
+
       test('تَعَرْقَلَ conjugation', () => {
         expect(conjugateImperative(getVerb('عرقل', 2))).toMatchObjectT({
           '2ms': 'تَعَرْقَلْ',

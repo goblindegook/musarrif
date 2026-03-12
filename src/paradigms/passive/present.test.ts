@@ -1977,6 +1977,17 @@ describe('passive present indicative', () => {
   })
 
   describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['مركز', 'يُتَمَرْكَزُ'],
+        ['بلور', 'يُتَبَلْوَرُ'],
+        ['ذبذب', 'يُتَذَبْذَبُ'],
+        ['غلغل', 'يُتَغَلْغَلُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+
     describe('hamzated initial roots', () => {
       test.each([
         ['ءمرك', 'يُتَأَمْرَكُ'],

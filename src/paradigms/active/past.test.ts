@@ -2617,6 +2617,15 @@ describe('active past', () => {
 
   describe('Form IIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['مركز', 'تَمَرْكَزَ'],
+        ['بلور', 'تَبَلْوَرَ'],
+        ['ذبذب', 'تَذَبْذَبَ'],
+        ['غلغل', 'تَغَلْغَلَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
+      })
+
       test('تَعَرْقَلَ conjugation', () => {
         expect(conjugatePast(getVerb('عرقل', 2))).toEqualT({
           '1s': 'تَعَرْقَلْتُ',
