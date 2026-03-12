@@ -168,6 +168,7 @@
   { "root": "جيء", "form": 5 },
   { "root": "جيء", "form": 6, "noPassiveParticiple": true },
   { "root": "جري", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
+  { "root": "جلفع", "form": 3, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "جرء", "form": 1, "formPattern": "fa3ula-yaf3ulu", "passiveVoice": "none", "masdarPatterns": ["fu3la"] },
   { "root": "جوي", "form": 1, "formPattern": "fa3ila-yaf3alu" },
   { "root": "جوز", "form": 3 },

@@ -40,7 +40,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       const stem = Array.from(jussive).slice(2)
 
-      if (letters.length === 4) return stem
+      if (letters.length === 4) {
+        if (verb.form === 3) return [ALIF, KASRA, ...stem]
+        return stem
+      }
 
       switch (verb.form) {
         case 1: {

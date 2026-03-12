@@ -1135,4 +1135,12 @@ describe('masdar', () => {
       })
     })
   })
+
+  describe('Form IIIq', () => {
+    describe('regular roots', () => {
+      test.each([['جلفع', 'اِجْلِنْفَاع']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 3))).toEqualT([expected].flat())
+      })
+    })
+  })
 })

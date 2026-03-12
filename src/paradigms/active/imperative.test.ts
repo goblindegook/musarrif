@@ -2150,4 +2150,18 @@ describe('imperative', () => {
       })
     })
   })
+
+  describe('Form IIIq', () => {
+    describe('regular roots', () => {
+      test('اِجْلَنْفَعَ conjugation', () => {
+        expect(conjugateImperative(getVerb('جلفع', 3))).toMatchObjectT({
+          '2ms': 'اِجْلَنْفِعْ',
+          '2fs': 'اِجْلَنْفِعِي',
+          '2d': 'اِجْلَنْفِعَا',
+          '2mp': 'اِجْلَنْفِعُوْا',
+          '2fp': 'اِجْلَنْفِعْنَ',
+        })
+      })
+    })
+  })
 })

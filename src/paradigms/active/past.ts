@@ -114,6 +114,11 @@ function derivePastFormIIq(verb: Verb): PastBaseForms {
   return buildForms([TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4], c4)
 }
 
+function derivePastFormIIIq(verb: Verb): PastBaseForms {
+  const [c1, c2, c3, c4] = [...verb.root]
+  return buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4], c4)
+}
+
 function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
@@ -330,8 +335,16 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastForms(verb: Verb): PastBaseForms {
   if (verb.root.length === 4) {
-    if (verb.form === 2) return derivePastFormIIq(verb)
-    return derivePastFormIq(verb)
+    switch (verb.form) {
+      case 1:
+        return derivePastFormIq(verb)
+      case 2:
+        return derivePastFormIIq(verb)
+      case 3:
+        return derivePastFormIIIq(verb)
+      default:
+        return derivePastFormIq(verb)
+    }
   }
 
   switch (verb.form) {

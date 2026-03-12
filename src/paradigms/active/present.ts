@@ -349,6 +349,12 @@ function derivePresentFormIIq(verb: Verb): readonly string[] {
   return [YEH, FATHA, TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
 }
 
+function derivePresentFormIIIq(verb: Verb): readonly string[] {
+  const [c1, c2, c3, c4] = [...verb.root]
+
+  return [YEH, FATHA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, KASRA, c4, DAMMA]
+}
+
 function derivePresentFormI(verb: FormIVerb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
   const isInitialHamza = isHamzatedLetter(c1)
@@ -511,6 +517,8 @@ function derivePresentForms(verb: Verb): readonly string[] {
         return derivePresentFormIq(verb)
       case 2:
         return derivePresentFormIIq(verb)
+      case 3:
+        return derivePresentFormIIIq(verb)
       default:
         return []
     }
