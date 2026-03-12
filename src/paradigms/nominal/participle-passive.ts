@@ -35,8 +35,14 @@ export function derivePassiveParticiple(verb: Verb): string {
 
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
-
-      return [MEEM, DAMMA, seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, FATHA, q4]
+      switch (verb.form) {
+        case 1:
+          return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
+        case 2:
+          return [MEEM, DAMMA, TEH, FATHA, seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, FATHA, q4]
+        default:
+          return []
+      }
     }
 
     const isInitialWeak = isWeakLetter(c1)
