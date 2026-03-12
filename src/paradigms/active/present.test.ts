@@ -2835,6 +2835,10 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated initial roots', () => {
+      test.each([['ءلمن', 'يَتَأَلْمَنُ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('تَأَمْرَكَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('ءمرك', 2), 'indicative')).toEqualT({
           '1s': 'أَتَأَمْرَكُ',
