@@ -10,6 +10,7 @@
   { "root": "ءجر", "form": 3 },
   { "root": "ءجر", "form": 4 },
   { "root": "ءمرك", "form": 2, "passiveVoice": "impersonal" },
+  { "root": "ءلمن", "form": 2, "passiveVoice": "impersonal" },
   {
     "root": "ءخذ",
     "form": 1,
