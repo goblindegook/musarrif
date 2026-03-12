@@ -1072,7 +1072,10 @@ describe('active participle', () => {
     })
 
     describe('hamzated initial roots', () => {
-      test.each([['ءمرك', 'مُتَأَمْرِك']])('%s', (root, expected) => {
+      test.each([
+        ['ءمرك', 'مُتَأَمْرِك'],
+        ['ءلمن', 'مُتَأَلْمِن'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
       })
     })

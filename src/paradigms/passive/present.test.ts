@@ -1978,7 +1978,10 @@ describe('passive present indicative', () => {
 
   describe('Form IIq', () => {
     describe('hamzated initial roots', () => {
-      test.each([['ءمرك', 'يُتَأَمْرَكُ']])('%s pattern', (root, expected) => {
+      test.each([
+        ['ءمرك', 'يُتَأَمْرَكُ'],
+        ['ءلمن', 'يُتَأَلْمَنُ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })
     })
