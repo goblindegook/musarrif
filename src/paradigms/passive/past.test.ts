@@ -1798,4 +1798,17 @@ describe('passive past pattern', () => {
       })
     })
   })
+
+  describe('Form IIIq', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['حرجم', 'اُحْرُنْجِمَ'],
+        ['حرشف', 'اُحْرُنْشِفَ'],
+        ['حرفز', 'اُحْرُنْفِزَ'],
+        ['خرطم', 'اُخْرُنْطِمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

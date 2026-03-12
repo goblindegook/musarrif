@@ -1997,4 +1997,17 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('Form IIIq', () => {
+    describe('regular roots', () => {
+      test.each([
+        ['حرجم', 'يُحْرَنْجَمُ'],
+        ['حرشف', 'يُحْرَنْشَفُ'],
+        ['حرفز', 'يُحْرَنْفَزُ'],
+        ['خرطم', 'يُخْرَنْطَمُ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

@@ -1089,7 +1089,13 @@ describe('active participle', () => {
 
   describe('Form IIIq', () => {
     describe('regular roots', () => {
-      test.each([['جلفع', 'مُجْلَنْفِع']])('%s', (root, expected) => {
+      test.each([
+        ['جلفع', 'مُجْلَنْفِع'],
+        ['حرجم', 'مُحْرَنْجِم'],
+        ['حرشف', 'مُحْرَنْشِف'],
+        ['حرفز', 'مُحْرَنْفِز'],
+        ['خرطم', 'مُخْرَنْطِم'],
+      ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
     })

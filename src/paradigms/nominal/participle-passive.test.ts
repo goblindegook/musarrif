@@ -1052,7 +1052,13 @@ describe('passive participle', () => {
 
   describe('Form IIIq', () => {
     describe('regular roots', () => {
-      test.each([['جلفع', '']])('%s', (root, expected) => {
+      test.each([
+        ['جلفع', ''],
+        ['حرجم', 'مُحْرَنْجَم'],
+        ['حرشف', 'مُحْرَنْشَف'],
+        ['حرفز', 'مُحْرَنْفَز'],
+        ['خرطم', 'مُخْرَنْطَم'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
     })

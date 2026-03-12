@@ -2672,6 +2672,15 @@ describe('active past', () => {
 
   describe('Form IIIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['حرجم', 'اِحْرَنْجَمَ'],
+        ['حرشف', 'اِحْرَنْشَفَ'],
+        ['حرفز', 'اِحْرَنْفَزَ'],
+        ['خرطم', 'اِخْرَنْطَمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+
       test('اِجْلَنْفَعَ conjugation', () => {
         expect(conjugatePast(getVerb('جلفع', 3))).toEqualT({
           '1s': 'اِجْلَنْفَعْتُ',

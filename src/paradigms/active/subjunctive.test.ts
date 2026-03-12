@@ -2080,6 +2080,15 @@ describe('active present subjunctive', () => {
 
   describe('Form IIIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['حرجم', 'يَحْرَنْجِمَ'],
+        ['حرشف', 'يَحْرَنْشِفَ'],
+        ['حرفز', 'يَحْرَنْفِزَ'],
+        ['خرطم', 'يَخْرَنْطِمَ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 3), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اِجْلَنْفَعَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('جلفع', 3), 'subjunctive')).toEqualT({
           '1s': 'أَجْلَنْفِعَ',

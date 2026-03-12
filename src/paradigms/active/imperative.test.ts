@@ -2153,6 +2153,15 @@ describe('imperative', () => {
 
   describe('Form IIIq', () => {
     describe('regular roots', () => {
+      test.each([
+        ['حرجم', 'اِحْرَنْجِمْ'],
+        ['حرشف', 'اِحْرَنْشِفْ'],
+        ['حرفز', 'اِحْرَنْفِزْ'],
+        ['خرطم', 'اِخْرَنْطِمْ'],
+      ])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 3))['2ms']).toEqualT(expected)
+      })
+
       test('اِجْلَنْفَعَ conjugation', () => {
         expect(conjugateImperative(getVerb('جلفع', 3))).toMatchObjectT({
           '2ms': 'اِجْلَنْفِعْ',

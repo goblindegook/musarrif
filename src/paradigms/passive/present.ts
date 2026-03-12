@@ -398,6 +398,11 @@ function derivePassivePresentStemFormIIq(verb: NonFormIVerb, pronounId: PronounI
   return [TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
+function derivePassivePresentStemFormIIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly string[] {
+  const [c1, c2, c3, c4] = Array.from(verb.root)
+  return [c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
+}
+
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
@@ -428,6 +433,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
         return derivePassivePresentStemFormIq(verb, pronounId, mood)
       case 2:
         return derivePassivePresentStemFormIIq(verb, pronounId, mood)
+      case 3:
+        return derivePassivePresentStemFormIIIq(verb, pronounId, mood)
       default:
         return []
     }
