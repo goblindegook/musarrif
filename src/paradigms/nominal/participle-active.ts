@@ -32,17 +32,14 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters
 
-      return [
-        MEEM,
-        DAMMA,
-        seatHamza(q1, FATHA),
-        FATHA,
-        seatHamza(q2, FATHA),
-        SUKOON,
-        seatHamza(q3, KASRA),
-        KASRA,
-        seatHamza(q4, KASRA),
-      ]
+      switch (verb.form) {
+        case 1:
+          return [MEEM, DAMMA, q1, FATHA, seatHamza(q2, FATHA), SUKOON, q3, KASRA, seatHamza(q4, KASRA)]
+        case 2:
+          return [MEEM, DAMMA, TEH, FATHA, seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, KASRA, q4]
+        default:
+          return []
+      }
     }
 
     const [c1, c2, c3] = letters
