@@ -7,6 +7,7 @@ describe('canConjugatePassive', () => {
     test.each<[string, VerbForm]>([
       ['يود', 2],
       ['شوق', 2],
+      ['زور', 2],
       ['عرقل', 2],
       ['مركز', 2],
       ['بلور', 2],

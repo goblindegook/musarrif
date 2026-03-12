@@ -353,6 +353,7 @@
     "formPattern": "fa3ala-yaf3ulu",
     "masdarPatterns": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"]
   },
+  { "root": "زور", "form": 2 },
   { "root": "هوي", "form": 2 },
   { "root": "هوي", "form": 6 },
   { "root": "هنء", "form": 2 },
