@@ -2111,4 +2111,30 @@ describe('imperative', () => {
       })
     })
   })
+
+  describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test('تَعَرْقَلَ conjugation', () => {
+        expect(conjugateImperative(getVerb('عرقل', 2))).toMatchObjectT({
+          '2ms': 'تَعَرْقَلْ',
+          '2fs': 'تَعَرْقَلِي',
+          '2d': 'تَعَرْقَلَا',
+          '2mp': 'تَعَرْقَلُوْا',
+          '2fp': 'تَعَرْقَلْنَ',
+        })
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test('تَأَمْرَكَ conjugation', () => {
+        expect(conjugateImperative(getVerb('ءمرك', 2))).toMatchObjectT({
+          '2ms': 'تَأَمْرَكْ',
+          '2fs': 'تَأَمْرَكِي',
+          '2d': 'تَأَمْرَكَا',
+          '2mp': 'تَأَمْرَكُوْا',
+          '2fp': 'تَأَمْرَكْنَ',
+        })
+      })
+    })
+  })
 })

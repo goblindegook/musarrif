@@ -212,13 +212,13 @@ export function analyzeRoot(root: string): RootAnalysis {
   const isFinalWeak = isWeakLetter(c3)
   const hasHamza = hamzaPositions.length > 0
 
-  if (!hasHamza && weakPositions.length >= 2) return { type: 'doubly-weak', weakPositions, hamzaPositions }
-  if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
   if (hasHamza && isMiddleWeak && isFinalWeak)
     return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
   if (hasHamza && isMiddleWeak) return { type: 'hamzated-hollow', weakPositions, hamzaPositions }
   if (hasHamza && isFinalWeak) return { type: 'hamzated-defective', weakPositions, hamzaPositions }
   if (hasHamza) return { type: 'hamzated', weakPositions, hamzaPositions }
+  if (weakPositions.length >= 2) return { type: 'doubly-weak', weakPositions, hamzaPositions }
+  if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
   if (isMiddleWeak) return { type: 'hollow', weakPositions, hamzaPositions }
   if (isFinalWeak) return { type: 'defective', weakPositions, hamzaPositions }
   return { type: 'strong', weakPositions, hamzaPositions }
