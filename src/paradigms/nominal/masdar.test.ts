@@ -1112,4 +1112,18 @@ describe('masdar', () => {
       })
     })
   })
+
+  describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([['عرقل', 'تَعَرْقُل']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
+      })
+    })
+
+    describe('hamzated initial roots', () => {
+      test.each([['ءمرك', 'تَأَمْرُك']])('%s', (root, expected) => {
+        expect(deriveMasdar(getVerb(root, 2))).toEqualT([expected].flat())
+      })
+    })
+  })
 })
