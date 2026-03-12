@@ -9,6 +9,7 @@
   { "root": "ءجر", "form": 10 },
   { "root": "ءجر", "form": 3 },
   { "root": "ءجر", "form": 4 },
+  { "root": "ءمرك", "form": 2, "passiveVoice": "impersonal" },
   {
     "root": "ءخذ",
     "form": 1,
@@ -339,7 +340,12 @@
   { "root": "زوي", "form": 2 },
   { "root": "زوي", "form": 5, "passiveVoice": "none" },
   { "root": "زوي", "form": 7, "passiveVoice": "none", "noPassiveParticiple": true },
-  { "root": "زور", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"] },
+  {
+    "root": "زور",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"]
+  },
   { "root": "هوي", "form": 2 },
   { "root": "هوي", "form": 6 },
   { "root": "هنء", "form": 2 },
@@ -486,6 +492,7 @@
   { "root": "عرف", "form": 5 },
   { "root": "عرب", "form": 4 },
   { "root": "عرقل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3lala"] },
+  { "root": "عرقل", "form": 2 },
   { "root": "عبر", "form": 8 },
   { "root": "عصي", "form": 10, "passiveVoice": "impersonal" },
   { "root": "عزز", "form": 5 },
