@@ -1026,4 +1026,12 @@ describe('passive participle', () => {
       })
     })
   })
+
+  describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([['عرقل', 'مُتَعَرْقَل']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 2))).toEqualT(expected)
+      })
+    })
+  })
 })

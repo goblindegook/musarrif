@@ -1063,4 +1063,12 @@ describe('active participle', () => {
       })
     })
   })
+
+  describe('Form IIq', () => {
+    describe('regular roots', () => {
+      test.each([['عرقل', 'مُتَعَرْقِل']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 2))).toEqualT(expected)
+      })
+    })
+  })
 })

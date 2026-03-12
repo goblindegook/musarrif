@@ -491,6 +491,7 @@
   { "root": "عرف", "form": 5 },
   { "root": "عرب", "form": 4 },
   { "root": "عرقل", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3lala"] },
+  { "root": "عرقل", "form": 2 },
   { "root": "عبر", "form": 8 },
   { "root": "عصي", "form": 10, "passiveVoice": "impersonal" },
   { "root": "عزز", "form": 5 },
