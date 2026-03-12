@@ -1033,5 +1033,11 @@ describe('passive participle', () => {
         expect(derivePassiveParticiple(getVerb(root, 2))).toEqualT(expected)
       })
     })
+
+    describe('hamzated initial roots', () => {
+      test.each([['ءمرك', 'مُتَأَمْرَك']])('%s', (root, expected) => {
+        expect(derivePassiveParticiple(getVerb(root, 2))).toEqualT(expected)
+      })
+    })
   })
 })

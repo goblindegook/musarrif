@@ -36,7 +36,7 @@ export function deriveActiveParticiple(verb: Verb): string | null {
         case 1:
           return [MEEM, DAMMA, q1, FATHA, seatHamza(q2, FATHA), SUKOON, q3, KASRA, seatHamza(q4, KASRA)]
         case 2:
-          return [MEEM, DAMMA, TEH, FATHA, q1, FATHA, q2, SUKOON, q3, KASRA, q4]
+          return [MEEM, DAMMA, TEH, FATHA, seatHamza(q1, FATHA), FATHA, q2, SUKOON, q3, KASRA, q4]
         default:
           return []
       }

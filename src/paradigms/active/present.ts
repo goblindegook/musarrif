@@ -56,12 +56,13 @@ function buildFeminineSingular(stem: readonly string[], verb: Verb): readonly st
 }
 
 function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly string[] {
-  if (verb.root.length > 3) return [...stem, WAW, SUKOON, NOON, FATHA]
+  const suffix = [WAW, SUKOON, NOON, FATHA]
+
+  if (verb.root.length > 3) return [...stem, ...suffix]
 
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
   const prefix = stem.slice(0, -2)
-  const suffix = [WAW, SUKOON, NOON, FATHA]
 
   if (isFormIFinalWeakPresent(verb, FATHA) && isHamzatedLetter(c2)) return [YEH, FATHA, seatedC1, FATHA, ...suffix]
 
@@ -345,7 +346,7 @@ function derivePresentFormIq(verb: Verb): readonly string[] {
 function derivePresentFormIIq(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
 
-  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
+  return [YEH, FATHA, TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly string[] {

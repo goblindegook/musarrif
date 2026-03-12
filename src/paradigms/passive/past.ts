@@ -360,7 +360,7 @@ function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3, c4] = [...verb.root]
 
   return {
-    prefix: [TEH, DAMMA, c1, DAMMA, c2, SUKOON, c3, KASRA, c4],
+    prefix: [TEH, DAMMA, seatHamza(c1, DAMMA), DAMMA, c2, SUKOON, c3, KASRA, c4],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
     suffix3mp: [DAMMA, WAW, SUKOON, ALIF],

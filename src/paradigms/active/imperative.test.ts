@@ -2124,5 +2124,17 @@ describe('imperative', () => {
         })
       })
     })
+
+    describe('hamzated initial roots', () => {
+      test('تَأَمْرَكَ conjugation', () => {
+        expect(conjugateImperative(getVerb('ءمرك', 2))).toMatchObjectT({
+          '2ms': 'تَأَمْرَكْ',
+          '2fs': 'تَأَمْرَكِي',
+          '2d': 'تَأَمْرَكَا',
+          '2mp': 'تَأَمْرَكُوْا',
+          '2fp': 'تَأَمْرَكْنَ',
+        })
+      })
+    })
   })
 })

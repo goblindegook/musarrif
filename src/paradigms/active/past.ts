@@ -111,7 +111,7 @@ function derivePastFormIq(verb: Verb): PastBaseForms {
 
 function derivePastFormIIq(verb: Verb): PastBaseForms {
   const [c1, c2, c3, c4] = [...verb.root]
-  return buildForms([TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4], c4)
+  return buildForms([TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4], c4)
 }
 
 function derivePastFormI(verb: FormIVerb): PastBaseForms {

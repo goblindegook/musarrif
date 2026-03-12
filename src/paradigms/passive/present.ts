@@ -395,7 +395,7 @@ function derivePassivePresentStemFormIq(verb: FormIVerb, pronounId: PronounId, m
 
 function derivePassivePresentStemFormIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly string[] {
   const [c1, c2, c3, c4] = Array.from(verb.root)
-  return [TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
+  return [TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {

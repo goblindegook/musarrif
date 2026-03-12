@@ -2021,4 +2021,12 @@ describe('passive present jussive', () => {
       })
     })
   })
+
+  describe('Form IIq', () => {
+    describe('hamzated initial roots', () => {
+      test.each([['ءمرك', 'يُتَأَمْرَكْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })
