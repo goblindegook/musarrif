@@ -2011,4 +2011,12 @@ describe('passive present indicative', () => {
       })
     })
   })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test.each([['قشعر', 'يُقْشَعَرُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

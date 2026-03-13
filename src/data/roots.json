@@ -614,6 +614,7 @@
   { "root": "قرح", "form": 8 },
   { "root": "قسم", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3la"] },
   { "root": "قسم", "form": 6, "passiveVoice": "none" },
+  { "root": "قشعر", "form": 4, "passiveVoice": "impersonal" },
   { "root": "قطع", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "قعد", "form": 6 },
   { "root": "قفز", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },

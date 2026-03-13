@@ -1927,4 +1927,12 @@ describe('passive present subjunctive', () => {
       })
     })
   })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test.each([['قشعر', 'يُقْشَعَرَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

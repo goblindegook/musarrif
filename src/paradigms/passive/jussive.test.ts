@@ -2057,4 +2057,12 @@ describe('passive present jussive', () => {
       })
     })
   })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test.each([['قشعر', 'يُقْشَعْرَرْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

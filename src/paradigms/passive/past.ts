@@ -378,6 +378,18 @@ function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
+function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
+  const [c1, c2, c3, c4] = [...verb.root]
+
+  return {
+    prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, c3, KASRA],
+    suffix: [c4, FATHA, c4],
+    suffix3ms: [c4, SHADDA, FATHA],
+    suffix3sd: [c4, SHADDA, FATHA],
+    suffix3mp: [c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+  }
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
   if (verb.root.length > 3) {
     switch (verb.form) {
@@ -387,6 +399,8 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
         return derivePassivePastFormIIq(verb)
       case 3:
         return derivePassivePastFormIIIq(verb)
+      case 4:
+        return derivePassivePastFormIVq(verb)
       default:
         return { prefix: [] }
     }

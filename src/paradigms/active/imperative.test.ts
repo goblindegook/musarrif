@@ -1258,7 +1258,7 @@ describe('imperative', () => {
     test('all conjugations begin with alif hamza or alif madda', () => {
       fc.assert(
         fc.property(
-          arbitraryVerb.filter(({ form }) => form === 4),
+          arbitraryVerb.filter(({ form, root }) => root.length === 3 && form === 4),
           arbitraryPronoun,
           (verb, pronounId) => {
             expect([ALIF_HAMZA, ALIF_MADDA].includes(conjugateImperative(verb)[pronounId][0])).toEqualT(true)
@@ -2170,6 +2170,20 @@ describe('imperative', () => {
           '2d': 'اِجْلَنْفِعَا',
           '2mp': 'اِجْلَنْفِعُوْا',
           '2fp': 'اِجْلَنْفِعْنَ',
+        })
+      })
+    })
+  })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test('اِقْشَعَرَّ conjugation', () => {
+        expect(conjugateImperative(getVerb('قشعر', 4))).toMatchObjectT({
+          '2ms': 'اِقْشَعْرِرْ',
+          '2fs': 'اِقْشَعِرِّي',
+          '2d': 'اِقْشَعِرَّا',
+          '2mp': 'اِقْشَعِرُّوْا',
+          '2fp': 'اِقْشَعْرِرْنَ',
         })
       })
     })

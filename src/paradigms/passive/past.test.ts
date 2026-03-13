@@ -1812,4 +1812,12 @@ describe('passive past pattern', () => {
       })
     })
   })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test.each([['قشعر', 'اُقْشُعِرَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+    })
+  })
 })

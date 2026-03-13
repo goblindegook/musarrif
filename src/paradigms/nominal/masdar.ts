@@ -275,6 +275,11 @@ function deriveMasdarFormIIIq(verb: Verb): readonly string[] {
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, NOON, SUKOON, q3, FATHA, ALIF, q4]
 }
 
+function deriveMasdarFormIVq(verb: Verb): readonly string[] {
+  const [q1, q2, q3, q4] = Array.from(verb.root)
+  return [ALIF, KASRA, q1, SUKOON, q2, KASRA, q3, SUKOON, q4, FATHA, ALIF, q4]
+}
+
 function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
   if (verb.root.length > 3) {
     switch (verb.form) {
@@ -284,6 +289,8 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
         return deriveMasdarFormIIq(verb)
       case 3:
         return deriveMasdarFormIIIq(verb)
+      case 4:
+        return deriveMasdarFormIVq(verb)
       default:
         return []
     }

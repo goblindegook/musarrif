@@ -119,6 +119,19 @@ function derivePastFormIIIq(verb: Verb): PastBaseForms {
   return buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4], c4)
 }
 
+function derivePastFormIVq(verb: Verb): PastBaseForms {
+  const [c1, c2, c3, c4] = [...verb.root]
+  const prefix = [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3]
+
+  return {
+    base: [...prefix, FATHA, c4, SUKOON, c4, FATHA],
+    suffixedBase: [...prefix, SUKOON, c4, FATHA, c4],
+    feminineSingularDualBase: [...prefix, FATHA, c4, SUKOON, c4],
+    masculineDualBase: [...prefix, FATHA, c4, SUKOON, c4, FATHA],
+    thirdPersonMasculinePluralBase: [...prefix, FATHA, c4, SUKOON, c4, DAMMA],
+  }
+}
+
 function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const [c1, c2, c3] = [...verb.root]
   const seatedC1 = seatHamza(c1, FATHA)
@@ -342,6 +355,8 @@ function derivePastForms(verb: Verb): PastBaseForms {
         return derivePastFormIIq(verb)
       case 3:
         return derivePastFormIIIq(verb)
+      case 4:
+        return derivePastFormIVq(verb)
       default:
         return derivePastFormIq(verb)
     }

@@ -94,7 +94,12 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
 function buildFemininePlural(stem: readonly string[], verb: Verb): readonly string[] {
   const suffix = [SUKOON, NOON, FATHA]
 
-  if (verb.root.length > 3) return [...removeFinalDiacritic(stem), ...suffix]
+  if (verb.root.length > 3) {
+    const [, , c3, c4] = Array.from(verb.root)
+    return verb.form === 4
+      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...suffix]
+      : [...removeFinalDiacritic(stem), ...suffix]
+  }
 
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
@@ -272,11 +277,15 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       }
 
       if (letters.length > 3) {
+        const [, , c3, c4] = Array.from(verb.root)
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
         if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
-        return [...removeFinalDiacritic(word), SUKOON]
+
+        return verb.form === 4
+          ? [...word.slice(0, 6), c3, SUKOON, c4, KASRA, c4, SUKOON]
+          : [...removeFinalDiacritic(word), SUKOON]
       }
 
       if (isDual(pronounId)) {
@@ -353,6 +362,12 @@ function derivePresentFormIIIq(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
 
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, KASRA, c4, DAMMA]
+}
+
+function derivePresentFormIVq(verb: Verb): readonly string[] {
+  const [c1, c2, c3, c4] = [...verb.root]
+
+  return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, KASRA, c4, SUKOON, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly string[] {
@@ -519,6 +534,8 @@ function derivePresentForms(verb: Verb): readonly string[] {
         return derivePresentFormIIq(verb)
       case 3:
         return derivePresentFormIIIq(verb)
+      case 4:
+        return derivePresentFormIVq(verb)
       default:
         return []
     }

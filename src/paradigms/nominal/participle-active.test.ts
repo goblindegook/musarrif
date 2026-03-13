@@ -1101,4 +1101,12 @@ describe('active participle', () => {
       })
     })
   })
+
+  describe('Form IVq', () => {
+    describe('regular roots', () => {
+      test.each([['قشعر', 'مُقْشَعِرّ']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
+      })
+    })
+  })
 })
