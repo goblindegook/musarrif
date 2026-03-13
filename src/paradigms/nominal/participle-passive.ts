@@ -43,7 +43,7 @@ export function derivePassiveParticiple(verb: Verb): string {
         case 3:
           return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, NOON, SUKOON, q3, FATHA, q4]
         case 4:
-          return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, q3, FATHA, q4, SHADDA]
+          return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, seatHamza(q3, FATHA), FATHA, q4, SHADDA]
         default:
           return []
       }

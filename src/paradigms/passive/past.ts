@@ -382,11 +382,11 @@ function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3, c4] = [...verb.root]
 
   return {
-    prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, c3, KASRA],
-    suffix: [c4, FATHA, c4],
-    suffix3ms: [c4, SHADDA, FATHA],
-    suffix3sd: [c4, SHADDA, FATHA],
-    suffix3mp: [c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA],
+    suffix: [seatHamza(c3, DAMMA), SUKOON, c4, KASRA, c4, SUKOON],
+    suffix3ms: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, FATHA],
+    suffix3sd: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, FATHA],
+    suffix3mp: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

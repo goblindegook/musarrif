@@ -2017,6 +2017,24 @@ describe('passive present indicative', () => {
       test.each([['قشعر', 'يُقْشَعَرُّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
+
+      test('يُشْمَأَزُّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('شمءز', 4), 'indicative')).toEqualT({
+          '1s': 'أُشْمَأَزُّ',
+          '2ms': 'تُشْمَأَزُّ',
+          '2fs': 'تُشْمَأَزِّيْنَ',
+          '3ms': 'يُشْمَأَزُّ',
+          '3fs': 'تُشْمَأَزُّ',
+          '2d': 'تُشْمَأَزَّانِ',
+          '3md': 'يُشْمَأَزَّانِ',
+          '3fd': 'تُشْمَأَزَّانِ',
+          '1p': 'نُشْمَأَزُّ',
+          '2mp': 'تُشْمَأَزُّوْنَ',
+          '2fp': 'تُشْمَأْزَزْنَ',
+          '3mp': 'يُشْمَأَزُّوْنَ',
+          '3fp': 'يُشْمَأْزَزْنَ',
+        })
+      })
     })
   })
 })

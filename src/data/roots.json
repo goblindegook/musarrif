@@ -427,6 +427,7 @@
   { "root": "شكر", "form": 5 },
   { "root": "شفف", "form": 10 },
   { "root": "شكك", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  { "root": "شمءز", "form": 4 },
   { "root": "شهد", "form": 3 },
   { "root": "شيد", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
   { "root": "شور", "form": 10 },

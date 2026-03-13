@@ -1933,6 +1933,24 @@ describe('passive present subjunctive', () => {
       test.each([['قشعر', 'يُقْشَعَرَّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
+
+      test('يُشْمَأَزَّ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('شمءز', 4), 'subjunctive')).toEqualT({
+          '1s': 'أُشْمَأَزَّ',
+          '2ms': 'تُشْمَأَزَّ',
+          '2fs': 'تُشْمَأَزِّي',
+          '3ms': 'يُشْمَأَزَّ',
+          '3fs': 'تُشْمَأَزَّ',
+          '2d': 'تُشْمَأَزَّا',
+          '3md': 'يُشْمَأَزَّا',
+          '3fd': 'تُشْمَأَزَّا',
+          '1p': 'نُشْمَأَزَّ',
+          '2mp': 'تُشْمَأَزُّوْا',
+          '2fp': 'تُشْمَأْزَزْنَ',
+          '3mp': 'يُشْمَأَزُّوْا',
+          '3fp': 'يُشْمَأْزَزْنَ',
+        })
+      })
     })
   })
 })

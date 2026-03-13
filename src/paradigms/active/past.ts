@@ -121,7 +121,7 @@ function derivePastFormIIIq(verb: Verb): PastBaseForms {
 
 function derivePastFormIVq(verb: Verb): PastBaseForms {
   const [c1, c2, c3, c4] = [...verb.root]
-  const prefix = [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3]
+  const prefix = [ALIF, KASRA, c1, SUKOON, c2, FATHA, seatHamza(c3, FATHA)]
 
   return {
     base: [...prefix, FATHA, c4, SUKOON, c4, FATHA],

@@ -97,7 +97,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   if (verb.root.length > 3) {
     const [, , c3, c4] = Array.from(verb.root)
     return verb.form === 4
-      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...suffix]
+      ? [...stem.slice(0, 6), seatHamza(c3, FATHA), SUKOON, c4, KASRA, c4, ...suffix]
       : [...removeFinalDiacritic(stem), ...suffix]
   }
 
@@ -284,7 +284,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
 
         return verb.form === 4
-          ? [...word.slice(0, 6), c3, SUKOON, c4, KASRA, c4, SUKOON]
+          ? [...word.slice(0, 6), seatHamza(c3, FATHA), SUKOON, c4, KASRA, c4, SUKOON]
           : [...removeFinalDiacritic(word), SUKOON]
       }
 
@@ -367,7 +367,7 @@ function derivePresentFormIIIq(verb: Verb): readonly string[] {
 function derivePresentFormIVq(verb: Verb): readonly string[] {
   const [c1, c2, c3, c4] = [...verb.root]
 
-  return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, KASRA, c4, SUKOON, c4, DAMMA]
+  return [YEH, FATHA, c1, SUKOON, c2, FATHA, seatHamza(c3, KASRA), KASRA, c4, SUKOON, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly string[] {

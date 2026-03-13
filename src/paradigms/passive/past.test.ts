@@ -1818,6 +1818,24 @@ describe('passive past pattern', () => {
       test.each([['قشعر', 'اُقْشُعِرَّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
+
+      test('اُشْمُئِزَّ conjugation', () => {
+        expect(conjugatePassivePast(getVerb('شمءز', 4))).toEqualT({
+          '1s': 'اُشْمُؤْزِزْتُ',
+          '2ms': 'اُشْمُؤْزِزْتَ',
+          '2fs': 'اُشْمُؤْزِزْتِ',
+          '3ms': 'اُشْمُئِزَّ',
+          '3fs': 'اُشْمُئِزَّتْ',
+          '2d': 'اُشْمُؤْزِزْتُمَا',
+          '3md': 'اُشْمُئِزَّا',
+          '3fd': 'اُشْمُئِزَّتَا',
+          '1p': 'اُشْمُؤْزِزْنَا',
+          '2mp': 'اُشْمُؤْزِزْتُمْ',
+          '2fp': 'اُشْمُؤْزِزْتُنَّ',
+          '3mp': 'اُشْمُئِزُّوْا',
+          '3fp': 'اُشْمُؤْزِزْنَ',
+        })
+      })
     })
   })
 })

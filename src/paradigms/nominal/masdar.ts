@@ -277,7 +277,7 @@ function deriveMasdarFormIIIq(verb: Verb): readonly string[] {
 
 function deriveMasdarFormIVq(verb: Verb): readonly string[] {
   const [q1, q2, q3, q4] = Array.from(verb.root)
-  return [ALIF, KASRA, q1, SUKOON, q2, KASRA, q3, SUKOON, q4, FATHA, ALIF, q4]
+  return [ALIF, KASRA, q1, SUKOON, q2, KASRA, seatHamza(q3, KASRA), SUKOON, q4, FATHA, ALIF, q4]
 }
 
 function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {

@@ -1067,7 +1067,10 @@ describe('passive participle', () => {
 
   describe('Form IVq', () => {
     describe('regular roots', () => {
-      test.each([['قشعر', 'مُقْشَعَرّ']])('%s', (root, expected) => {
+      test.each([
+        ['قشعر', 'مُقْشَعَرّ'],
+        ['شمءز', 'مُشْمَأَزّ'],
+      ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
