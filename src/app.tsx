@@ -228,20 +228,6 @@ export function App() {
                 ) : (
                   <QuickPickList selectedVerb={selectedVerb} />
                 )}
-
-                {recentVerbs.length > 0 && (
-                  <>
-                    <Heading dir={dir} lang={lang}>
-                      {t('recentlyViewed')}
-                    </Heading>
-                    <VerbList>
-                      {recentVerbs.map((verb) => {
-                        const isActive = verb.id === selectedVerb?.id
-                        return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                      })}
-                    </VerbList>
-                  </>
-                )}
               </TabPanel>
             )}
 
@@ -257,8 +243,19 @@ export function App() {
             )}
           </Panel>
 
+          {recentVerbs.length > 0 && (
+            <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+              <VerbList>
+                {recentVerbs.map((verb) => {
+                  const isActive = verb.id === selectedVerb?.id
+                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                })}
+              </VerbList>
+            </Panel>
+          )}
+
           {!selectedVerb && (
-            <Panel title={t('verbsByForm.title')} dir={dir} lang={lang}>
+            <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
               <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
                 {FORM_NUMBERS.map((form) => {
                   const isActive = selectedFormTab === form
@@ -427,7 +424,7 @@ export function App() {
 
         {selectedVerb && (
           <Stack area="footer">
-            <Panel title={t('footer.feedback.title')} dir={dir} lang={lang}>
+            <Panel title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
               <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
               <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
                 {t('footer.feedback.cta')}

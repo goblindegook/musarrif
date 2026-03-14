@@ -438,20 +438,21 @@ describe('Recently viewed verbs', () => {
     navigateTo('/#/en/verbs/ktb-1')
     navigateTo('/#/en/verbs')
 
-    const heading = screen.getByText('Recently viewed')
-    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+    const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/ktb-1', '/#/en/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual([
+      '/#/en/verbs/ktb-1',
+      '/#/en/verbs/bdl-1',
+    ])
   })
 
   test('excludes currently viewed verb pill', () => {
     renderApp('/#/en/verbs/bdl-1')
     navigateTo('/#/en/verbs/ktb-1')
 
-    const heading = screen.getByText('Recently viewed')
-    const links = within(heading.nextElementSibling as HTMLElement).getAllByRole('link')
+    const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['/#/en/verbs/bdl-1'])
   })
 
   test('does not crash when localStorage contains stale verb IDs', () => {
@@ -465,8 +466,7 @@ describe('Recently viewed verbs', () => {
       navigateTo(`/#/en/verbs/${id}`)
     }
 
-    const heading = screen.getByText('Recently viewed')
-    const links = heading.nextElementSibling!.querySelectorAll('a')
+    const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
     expect(links).toHaveLength(10)
   })
