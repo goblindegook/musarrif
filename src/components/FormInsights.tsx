@@ -48,7 +48,10 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
 
   return (
     <>
-      <PatternDisplay dir="rtl" lang="ar">
+      <SemanticAnchor data-testid="form-semantic-anchor" dir={dir} lang={lang}>
+        {t(`formInfo.form${verb.form}.semantic`)}
+      </SemanticAnchor>
+      <PatternDisplay data-testid="form-pattern" dir="rtl" lang="ar">
         <PatternText>{pattern}</PatternText>
       </PatternDisplay>
       <Text dir={dir} lang={lang}>
@@ -68,6 +71,15 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
     </>
   )
 }
+
+const SemanticAnchor = styled('p')`
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  color: #92400e;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.01em;
+`
 
 const PatternDisplay = styled('div')`
   display: flex;
