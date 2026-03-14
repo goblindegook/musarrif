@@ -9,9 +9,13 @@ import { RoutingProvider, useRouting } from './hooks/routing'
 
 const normalizeButtonText = (text: string | null) => text?.replace(/\s+/g, ' ').trim()
 
-function I18nBridge({ children }: { children: preact.ComponentChildren }) {
+function RoutedApp() {
   const { lang } = useRouting()
-  return <I18nProvider lang={lang}>{children}</I18nProvider>
+  return (
+    <I18nProvider lang={lang}>
+      <App />
+    </I18nProvider>
+  )
 }
 
 const renderApp = (path = '') => {
@@ -19,9 +23,7 @@ const renderApp = (path = '') => {
   window.history.replaceState({}, '', path)
   render(
     <RoutingProvider>
-      <I18nBridge>
-        <App />
-      </I18nBridge>
+      <RoutedApp />
     </RoutingProvider>,
   )
 }
@@ -34,14 +36,11 @@ const navigateTo = (path: string) => {
 }
 
 beforeEach(() => {
-  vi.unstubAllEnvs()
+  cleanup()
   window.localStorage.clear()
 })
 
 afterEach(() => {
-  cleanup()
-  vi.unstubAllEnvs()
-  window.localStorage.clear()
   vi.restoreAllMocks()
 })
 

@@ -1,37 +1,28 @@
-import { useCallback, useMemo, useState } from 'preact/hooks'
+import { useCallback, useMemo } from 'preact/hooks'
 import { buildVerbFromId, type DisplayVerb } from '../paradigms/verbs'
 import { useLocalStorage } from './local-storage'
 
 export function useFavourites() {
-  const storage = useLocalStorage()
+  const [verbIds, setVerbIds] = useLocalStorage<readonly string[]>('favouriteVerbs', [])
 
-  const [favouriteIds, setFavouriteIds] = useState<readonly string[]>(() => {
-    try {
-      const parsed = JSON.parse(storage.getItem(`favouriteVerbs`) ?? '[]')
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return []
-    }
-  })
+  const isFavourite = useCallback((id: string) => verbIds.includes(id), [verbIds])
 
-  const isFavourite = useCallback((id: string) => favouriteIds.includes(id), [favouriteIds])
-
-  const toggleFavourite = useCallback((id: string) => {
-    setFavouriteIds((currentIds) => {
-      const nextIds = currentIds.includes(id) ? currentIds.filter((currentId) => currentId !== id) : [...currentIds, id]
-      storage.setItem(`favouriteVerbs`, JSON.stringify(nextIds))
-      return nextIds
-    })
-  }, [])
+  const toggleFavourite = useCallback(
+    (toggledId: string) =>
+      setVerbIds((current) =>
+        current.includes(toggledId) ? current.filter((id) => id !== toggledId) : [...current, toggledId],
+      ),
+    [],
+  )
 
   const favourites = useMemo(
     () =>
-      favouriteIds
+      verbIds
         .map((id) => buildVerbFromId(id))
         .filter((verb): verb is DisplayVerb => verb != null)
         .sort((a, b) => a.label.localeCompare(b.label, 'ar')),
-    [favouriteIds],
+    [verbIds],
   )
 
-  return { favourites, isFavourite, toggleFavourite }
+  return { favourites, toggleFavourite, isFavourite }
 }

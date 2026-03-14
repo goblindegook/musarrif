@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/compat'
+import { useContext, useEffect, useMemo } from 'preact/compat'
 import ar from '../locales/ar.json'
 import en from '../locales/en.json'
 import it from '../locales/it.json'
@@ -15,14 +15,7 @@ export function isLanguageSupported(lang: unknown): lang is Language {
   return SUPPORTED_LANGUAGES.includes(lang as Language)
 }
 
-export function setStoredLanguage(lang: Language): void {
-  window?.localStorage?.setItem?.('language', lang)
-}
-
-export function getPreferredLanguage(): Language {
-  const stored = window?.localStorage?.getItem?.('language')
-  if (stored && isLanguageSupported(stored)) return stored
-
+export function detectBrowserLanguage(): Language {
   return (
     [...(navigator?.languages ?? []), navigator?.language ?? '']
       .map((locale) => locale.toLowerCase().split('-').at(0))
@@ -106,27 +99,14 @@ function sanitizeHtml(raw: string, diacriticsPreference: DiacriticsPreference): 
   return doc.body.innerHTML
 }
 
-export function I18nProvider({
-  lang = getPreferredLanguage(),
-  children,
-}: {
+interface I18nProviderProps {
   lang?: Language
   children: ComponentChildren
-}) {
-  const storage = useLocalStorage()
+}
 
-  const [diacriticsPreference, setDiacriticsPreferenceState] = useState<DiacriticsPreference>(() => {
-    const stored = storage.getItem('diacriticsPreference')
-    return stored === 'all' || stored === 'some' || stored === 'none' ? stored : 'some'
-  })
-
-  const setDiacriticsPreference = useCallback(
-    (next: DiacriticsPreference) => {
-      setDiacriticsPreferenceState(next)
-      storage.setItem('diacriticsPreference', next)
-    },
-    [setDiacriticsPreferenceState],
-  )
+export function I18nProvider({ lang = detectBrowserLanguage(), children }: I18nProviderProps) {
+  const [storedDiacritics, setDiacriticsPreference] = useLocalStorage<string>('diacriticsPreference', 'some')
+  const diacriticsPreference = storedDiacritics === 'all' || storedDiacritics === 'none' ? storedDiacritics : 'some'
 
   useEffect(() => {
     const { dir } = TRANSLATIONS[lang]
@@ -135,19 +115,19 @@ export function I18nProvider({
   }, [lang])
 
   const value = useMemo<I18nContextValue>(() => {
-    const current = TRANSLATIONS[lang] ?? TRANSLATIONS[getPreferredLanguage()]
+    const current = TRANSLATIONS[lang] ?? TRANSLATIONS[detectBrowserLanguage()]
 
     return {
       lang,
       dir: current.dir,
       t: (key, params) => {
         const template = current.strings[key] || current.verbs?.[key] || current.roots?.[key] || key
-        const rendered = format(String(template), params)
+        const rendered = format(template, params)
         return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
       },
       tHtml: (key, params) => {
         const template = current.strings[key] || key
-        return sanitizeHtml(format(String(template), params), diacriticsPreference)
+        return sanitizeHtml(format(template, params), diacriticsPreference)
       },
       diacriticsPreference,
       setDiacriticsPreference,

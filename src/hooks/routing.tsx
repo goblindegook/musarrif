@@ -3,7 +3,8 @@ import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import type { Mood } from '../paradigms/active/present'
 import type { Tense, Voice } from '../paradigms/verbs'
-import { getPreferredLanguage, isLanguageSupported, type Language, setStoredLanguage } from './i18n'
+import { detectBrowserLanguage, isLanguageSupported, type Language } from './i18n'
+import { useLocalStorage } from './local-storage'
 
 interface RoutingState {
   lang: Language
@@ -86,7 +87,7 @@ function getCurrentPath(): string {
   return ensureLeadingSlash(fallbackPath)
 }
 
-function parsePath(pathname: string, fallbackLang: Language = getPreferredLanguage()): RoutingState {
+function parsePath(pathname: string, fallbackLang: Language = detectBrowserLanguage()): RoutingState {
   const effectivePath = stripBasePath(pathname)
   const segments = effectivePath
     .split('/')
@@ -166,7 +167,8 @@ export function buildVerbHref(lang: Language, id: string): string {
 }
 
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
-  const preferredLanguage = getPreferredLanguage()
+  const [storedLanguage, setStoredLanguage] = useLocalStorage<string>('language', detectBrowserLanguage())
+  const preferredLanguage = isLanguageSupported(storedLanguage) ? storedLanguage : detectBrowserLanguage()
 
   const [route, setRoute] = useState<RoutingState>(() => parsePath(getCurrentPath(), preferredLanguage))
 
