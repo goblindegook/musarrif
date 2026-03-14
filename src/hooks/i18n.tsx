@@ -7,16 +7,27 @@ import it from '../locales/it.json'
 import pt from '../locales/pt.json'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { useLocalStorage } from './local-storage'
-import { useRouting } from './routing'
 
 const SUPPORTED_LANGUAGES = ['en', 'it', 'pt', 'ar'] as const
 export type Language = (typeof SUPPORTED_LANGUAGES)[number]
-export const DEFAULT_LANGUAGE = 'en'
-export const LANGUAGE_STORAGE_KEY = `conjugator:language`
-const DIACRITICS_STORAGE_KEY = `conjugator:diacriticsPreference`
 
 export function isLanguageSupported(lang: unknown): lang is Language {
   return SUPPORTED_LANGUAGES.includes(lang as Language)
+}
+
+export function setStoredLanguage(lang: Language): void {
+  window?.localStorage?.setItem?.('language', lang)
+}
+
+export function getPreferredLanguage(): Language {
+  const stored = window?.localStorage?.getItem?.('language')
+  if (stored && isLanguageSupported(stored)) return stored
+
+  return (
+    [...(navigator?.languages ?? []), navigator?.language ?? '']
+      .map((locale) => locale.toLowerCase().split('-').at(0))
+      .find(isLanguageSupported) ?? 'en'
+  )
 }
 
 interface Translation {
@@ -95,19 +106,24 @@ function sanitizeHtml(raw: string, diacriticsPreference: DiacriticsPreference): 
   return doc.body.innerHTML
 }
 
-export function I18nProvider({ children }: { children: ComponentChildren }) {
-  const { lang } = useRouting()
+export function I18nProvider({
+  lang = getPreferredLanguage(),
+  children,
+}: {
+  lang?: Language
+  children: ComponentChildren
+}) {
   const storage = useLocalStorage()
 
   const [diacriticsPreference, setDiacriticsPreferenceState] = useState<DiacriticsPreference>(() => {
-    const stored = storage.getItem(DIACRITICS_STORAGE_KEY)
+    const stored = storage.getItem('diacriticsPreference')
     return stored === 'all' || stored === 'some' || stored === 'none' ? stored : 'some'
   })
 
   const setDiacriticsPreference = useCallback(
     (next: DiacriticsPreference) => {
       setDiacriticsPreferenceState(next)
-      storage.setItem(DIACRITICS_STORAGE_KEY, next)
+      storage.setItem('diacriticsPreference', next)
     },
     [setDiacriticsPreferenceState],
   )
@@ -119,7 +135,7 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
   }, [lang])
 
   const value = useMemo<I18nContextValue>(() => {
-    const current = TRANSLATIONS[lang] ?? TRANSLATIONS[DEFAULT_LANGUAGE]
+    const current = TRANSLATIONS[lang] ?? TRANSLATIONS[getPreferredLanguage()]
 
     return {
       lang,

@@ -2,14 +2,12 @@ import { useCallback, useMemo, useState } from 'preact/hooks'
 import { buildVerbFromId, type DisplayVerb } from '../paradigms/verbs'
 import { useLocalStorage } from './local-storage'
 
-const STORAGE_KEY = `conjugator:favouriteVerbs`
-
 export function useFavourites() {
   const storage = useLocalStorage()
 
   const [favouriteIds, setFavouriteIds] = useState<readonly string[]>(() => {
     try {
-      const parsed = JSON.parse(storage.getItem(STORAGE_KEY) ?? '[]')
+      const parsed = JSON.parse(storage.getItem(`favouriteVerbs`) ?? '[]')
       return Array.isArray(parsed) ? parsed : []
     } catch {
       return []
@@ -21,7 +19,7 @@ export function useFavourites() {
   const toggleFavourite = useCallback((id: string) => {
     setFavouriteIds((currentIds) => {
       const nextIds = currentIds.includes(id) ? currentIds.filter((currentId) => currentId !== id) : [...currentIds, id]
-      storage.setItem(STORAGE_KEY, JSON.stringify(nextIds))
+      storage.setItem(`favouriteVerbs`, JSON.stringify(nextIds))
       return nextIds
     })
   }, [])

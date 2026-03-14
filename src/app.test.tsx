@@ -5,18 +5,23 @@ import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest'
 
 import { App } from './app'
 import { I18nProvider } from './hooks/i18n'
-import { RoutingProvider } from './hooks/routing'
+import { RoutingProvider, useRouting } from './hooks/routing'
 
 const normalizeButtonText = (text: string | null) => text?.replace(/\s+/g, ' ').trim()
+
+function I18nBridge({ children }: { children: preact.ComponentChildren }) {
+  const { lang } = useRouting()
+  return <I18nProvider lang={lang}>{children}</I18nProvider>
+}
 
 const renderApp = (path = '') => {
   cleanup()
   window.history.replaceState({}, '', path)
   render(
     <RoutingProvider>
-      <I18nProvider>
+      <I18nBridge>
         <App />
-      </I18nProvider>
+      </I18nBridge>
     </RoutingProvider>,
   )
 }

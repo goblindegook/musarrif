@@ -2,14 +2,12 @@ import { useCallback, useMemo, useState } from 'preact/hooks'
 import { type DisplayVerb, getVerbById } from '../paradigms/verbs'
 import { useLocalStorage } from './local-storage'
 
-const STORAGE_KEY = `conjugator:recentVerbs`
-
 export function useRecent() {
   const storage = useLocalStorage()
 
   const [recentIds, setRecentIds] = useState<readonly string[]>(() => {
     try {
-      const parsed = JSON.parse(storage.getItem(STORAGE_KEY) ?? '[]')
+      const parsed = JSON.parse(storage.getItem('recentVerbs') ?? '[]')
       return Array.isArray(parsed) ? parsed : []
     } catch {
       return []
@@ -19,7 +17,7 @@ export function useRecent() {
   const addRecent = useCallback((id: string) => {
     setRecentIds((currentIds) => {
       const nextIds = [id, ...currentIds.filter((currentId) => currentId !== id)].slice(0, 11)
-      storage.setItem(STORAGE_KEY, JSON.stringify(nextIds))
+      storage.setItem('recentVerbs', JSON.stringify(nextIds))
       return nextIds
     })
   }, [])

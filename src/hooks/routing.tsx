@@ -3,8 +3,7 @@ import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import type { Mood } from '../paradigms/active/present'
 import type { Tense, Voice } from '../paradigms/verbs'
-import { DEFAULT_LANGUAGE, isLanguageSupported, LANGUAGE_STORAGE_KEY, type Language } from './i18n'
-import { useLocalStorage } from './local-storage'
+import { getPreferredLanguage, isLanguageSupported, type Language, setStoredLanguage } from './i18n'
 
 interface RoutingState {
   lang: Language
@@ -87,7 +86,7 @@ function getCurrentPath(): string {
   return ensureLeadingSlash(fallbackPath)
 }
 
-function parsePath(pathname: string, fallbackLang: Language = DEFAULT_LANGUAGE): RoutingState {
+function parsePath(pathname: string, fallbackLang: Language = getPreferredLanguage()): RoutingState {
   const effectivePath = stripBasePath(pathname)
   const segments = effectivePath
     .split('/')
@@ -167,19 +166,7 @@ export function buildVerbHref(lang: Language, id: string): string {
 }
 
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
-  const storage = useLocalStorage()
-  const preferredLanguage = (() => {
-    const storedLanguage = storage.getItem(LANGUAGE_STORAGE_KEY)
-    if (storedLanguage && isLanguageSupported(storedLanguage)) return storedLanguage
-
-    const browserLanguage = [...(navigator?.languages ?? []), navigator?.language ?? '']
-      .filter(Boolean)
-      .map((locale) => locale.toLowerCase().split('-').at(0))
-      .find((language) => isLanguageSupported(language))
-    if (browserLanguage) return browserLanguage
-
-    return DEFAULT_LANGUAGE
-  })()
+  const preferredLanguage = getPreferredLanguage()
 
   const [route, setRoute] = useState<RoutingState>(() => parsePath(getCurrentPath(), preferredLanguage))
 
@@ -204,7 +191,7 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
   }, [preferredLanguage])
 
   useEffect(() => {
-    storage.setItem(LANGUAGE_STORAGE_KEY, route.lang)
+    setStoredLanguage(route.lang)
   }, [route.lang])
 
   const navigate = useCallback(
