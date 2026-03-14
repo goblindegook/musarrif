@@ -101,6 +101,7 @@ describe('ConjugateBox', () => {
           root: 'كتب',
           form: 2,
           label: 'كَتَّبَ',
+          rootId: 'ktb',
         }}
       />,
       { wrapper: Wrapper },

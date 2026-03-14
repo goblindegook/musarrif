@@ -12,6 +12,7 @@ describe('buildSyntheticVerb', () => {
       masdarPatterns: ['fi3aal'],
       label: 'كَتَبَ',
       root: 'كتب',
+      rootId: 'ktb',
     })
   })
 
@@ -22,6 +23,7 @@ describe('buildSyntheticVerb', () => {
       id: 'ktb-2',
       label: 'كَتَّبَ',
       root: 'كتب',
+      rootId: 'ktb',
     })
   })
 })

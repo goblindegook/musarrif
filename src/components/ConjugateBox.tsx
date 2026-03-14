@@ -4,7 +4,7 @@ import { useI18n } from '../hooks/i18n'
 import type { FormIPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { DisplayVerb, VerbForm } from '../paradigms/verbs'
-import { buildVerb, getVerbById, transliterate } from '../paradigms/verbs'
+import { buildVerb, verbsByRoot } from '../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -87,7 +87,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
     if (!c1 || !c2 || !c3 || !form) return
     if (form === 1 && !formPattern) return
     const root = [c1, c2, c3].join('')
-    const existing = getVerbById(`${transliterate(root)}-${form}`)
+    const existing = verbsByRoot.get(root)?.find((v) => v.form === form)
     const nextVerb =
       existing?.form === 1 && existing.formPattern === formPattern && (existing.masdarPatterns?.length ?? 0) > 0
         ? existing

@@ -2,6 +2,7 @@ import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { HAMZA, isHamzatedLetter, isWeakLetter } from './letters'
+import { detransliterate, transliterate } from './transliteration'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -48,76 +49,21 @@ export type NonFormIVerb = {
 
 export type Verb = FormIVerb | NonFormIVerb
 
-type VerbBase<T extends Verb> = T & { id: string; label: string }
+type VerbBase<T extends Verb> = T & { id: string; label: string; rootId: string }
 
 export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<FormIVerb> : VerbBase<NonFormIVerb>
 
-const TRANSLITERATION_MAP: Record<string, string> = {
-  آ: '|',
-  أ: '>',
-  إ: '<',
-  ٱ: '{',
-  ا: 'A',
-  ب: 'b',
-  ت: 't',
-  ث: 'v',
-  ج: 'j',
-  ح: 'H',
-  خ: 'x',
-  د: 'd',
-  ذ: '*',
-  ر: 'r',
-  ز: 'z',
-  س: 's',
-  ش: '$',
-  ص: 'S',
-  ض: 'D',
-  ط: 'T',
-  ظ: 'Z',
-  ع: 'E',
-  غ: 'g',
-  ف: 'f',
-  ق: 'q',
-  ك: 'k',
-  ل: 'l',
-  م: 'm',
-  ن: 'n',
-  ه: 'h',
-  و: 'w',
-  ي: 'y',
-  ة: 'p',
-  ى: 'Y',
-  ء: "'",
-  ؤ: '&',
-  ئ: '}',
-}
-
-const ARABIC_MAP_BY_TRANSLITERATION = Object.fromEntries(
-  Object.entries(TRANSLITERATION_MAP).map(([arabic, transliterated]) => [transliterated, arabic]),
-)
-
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
-export function transliterate(text: string): string {
-  return Array.from(text)
-    .map((char) => TRANSLITERATION_MAP[char] ?? char)
-    .join('')
-}
-
-function verbId({ root, form }: Verb): string {
-  return [transliterate(root), String(form)].join('-')
-}
-
-export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((verb) => {
+export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((rawVerb) => {
+  const rootId = rawVerb.root
+  const verb = { ...rawVerb, root: detransliterate(rootId) }
   const past = conjugatePast(verb)
-  return { ...verb, label: past['3ms'], id: verbId(verb) }
+  return { ...verb, label: past['3ms'], id: `${rootId}-${rawVerb.form}`, rootId }
 })
 
 const verbsById = new Map<string, DisplayVerb>()
-
-for (const verb of verbs) {
-  verbsById.set(verbId(verb), verb)
-}
+for (const verb of verbs) verbsById.set(verb.id, verb)
 
 export const verbsByRoot = new Map<string, DisplayVerb[]>()
 
@@ -138,27 +84,18 @@ export function getVerbById(id?: string): DisplayVerb | undefined {
   return id ? verbsById.get(id) : undefined
 }
 
-function parseVerbId(id?: string): { readonly root: string; readonly form: VerbForm } | undefined {
-  const [transliteratedRoot, formText] = (id ?? '').split('-')
-  if (!transliteratedRoot) return undefined
-
-  const root = Array.from(transliteratedRoot)
-    .map((letter) => ARABIC_MAP_BY_TRANSLITERATION[letter])
-    .filter((i) => i)
-
-  const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
-
-  return { root: root.join(''), form }
-}
-
 export function buildVerbFromId(id?: string): DisplayVerb | undefined {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
 
-  const parsed = parseVerbId(id)
-  if (!parsed) return undefined
+  const [rootId, formText] = (id ?? '').split('-')
+  if (!rootId || !formText) return undefined
 
-  return parsed.form === 1 ? buildVerb(parsed.root, 1, 'fa3ala-yaf3alu') : buildVerb(parsed.root, parsed.form)
+  const root = detransliterate(rootId)
+
+  const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
+
+  return form === 1 ? buildVerb(root, 1, 'fa3ala-yaf3alu') : buildVerb(root, form)
 }
 
 export function getVerb(root: string, form: VerbForm): DisplayVerb {
@@ -178,7 +115,8 @@ export function buildVerb(root: string, form: VerbForm, pattern?: FormIPattern):
       ? { root, form, formPattern: pattern ?? 'fa3ala-yaf3alu', masdarPatterns: matchingFormI?.masdarPatterns }
       : { root, form }
   const past = conjugatePast(raw)
-  return { ...raw, id: `${transliterate(root)}-${form}`, label: past['3ms'] }
+  const rootId = transliterate(root)
+  return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId }
 }
 
 interface RootAnalysis {

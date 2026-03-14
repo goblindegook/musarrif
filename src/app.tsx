@@ -441,7 +441,7 @@ export function App() {
               <FormInsights verb={selectedVerb} />
             </Modal>
             <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
-              <RootInsights root={selectedVerb.root} />
+              <RootInsights root={selectedVerb.root} rootId={selectedVerb.rootId} />
             </Modal>
           </>
         )}

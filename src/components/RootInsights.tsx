@@ -2,22 +2,21 @@ import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { search } from '../paradigms/selection'
-import { analyzeRoot, transliterate } from '../paradigms/verbs'
+import { analyzeRoot } from '../paradigms/verbs'
 import { Heading } from './atoms/Heading'
 import { Text } from './atoms/Text'
 import { SuggestionsList } from './QuickPickList'
 import { VerbPill } from './VerbPill'
 
-export const RootInsights = ({ root }: { root: string }) => {
+export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
   const { t, dir, lang } = useI18n()
   const rootAnalysis = analyzeRoot(root)
-  const transliteratedRoot = transliterate(root)
-  const semanticMeaning = t(transliteratedRoot)
+  const semanticMeaning = t(rootId)
   const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
   return (
     <>
       <RootDisplay>
-        {semanticMeaning !== transliteratedRoot && (
+        {semanticMeaning !== rootId && (
           <Text dir={dir} lang={lang}>
             <em>
               <q>{semanticMeaning}</q>
