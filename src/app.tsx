@@ -18,13 +18,9 @@ import { ShareButton } from './components/ShareButton'
 import { SpeechButton } from './components/SpeechButton'
 import { TabBar, TabButton, TabPanel } from './components/Tabs'
 import { VerbPill } from './components/VerbPill'
+import { useFavourites } from './hooks/favourites'
 import { useI18n } from './hooks/i18n'
-import {
-  FAVOURITE_VERBS_STORAGE_KEY,
-  RECENT_VERBS_STORAGE_KEY,
-  readPreference,
-  writePreference,
-} from './hooks/preferences'
+import { useRecent } from './hooks/recent'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
@@ -45,24 +41,6 @@ const formIVowelPattern = (verb: DisplayVerb<1>) => {
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 type FormNumber = (typeof FORM_NUMBERS)[number]
-
-const readRecentVerbIds = (): readonly string[] => {
-  try {
-    const parsed = JSON.parse(readPreference(RECENT_VERBS_STORAGE_KEY) ?? '[]')
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
-const readFavouriteVerbIds = (): readonly string[] => {
-  try {
-    const parsed = JSON.parse(readPreference(FAVOURITE_VERBS_STORAGE_KEY) ?? '[]')
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
 
 const verbsByForm = (() => {
   const grouped = new Map<FormNumber, DisplayVerb[]>()
@@ -86,11 +64,11 @@ const verbsByForm = (() => {
 export function App() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
   const { verbId, navigateToVerb, tense, mood, voice } = useRouting()
+  const { favourites, isFavourite, toggleFavourite } = useFavourites()
+  const { recents, addRecent } = useRecent()
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
-  const [recentVerbIds, setRecentVerbIds] = useState<readonly string[]>(readRecentVerbIds)
-  const [favouriteVerbIds, setFavouriteVerbIds] = useState<readonly string[]>(readFavouriteVerbIds)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
@@ -139,43 +117,10 @@ export function App() {
     [selectedVerb?.root],
   )
 
-  const recentVerbs = useMemo(
-    () =>
-      recentVerbIds
-        .map((id) => getVerbById(id))
-        .filter((verb): verb is DisplayVerb => verb != null && verb.id !== selectedVerb?.id),
-    [recentVerbIds, selectedVerb?.id],
-  )
-
-  const isFavourite = selectedVerb ? favouriteVerbIds.includes(selectedVerb.id) : false
-
-  const toggleFavourite = useCallback(() => {
-    if (!selectedVerb) return
-    setFavouriteVerbIds((currentIds) => {
-      const nextIds = currentIds.includes(selectedVerb.id)
-        ? currentIds.filter((id) => id !== selectedVerb.id)
-        : [...currentIds, selectedVerb.id]
-      writePreference(FAVOURITE_VERBS_STORAGE_KEY, JSON.stringify(nextIds))
-      return nextIds
-    })
-  }, [selectedVerb])
-
-  const favouriteVerbs = useMemo(
-    () =>
-      favouriteVerbIds
-        .map((id) => buildVerbFromId(id))
-        .filter((verb): verb is DisplayVerb => verb != null)
-        .sort((a, b) => a.label.localeCompare(b.label, 'ar')),
-    [favouriteVerbIds],
-  )
+  const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== selectedVerb?.id), [recents, selectedVerb?.id])
 
   useEffect(() => {
-    if (!selectedVerb) return
-    setRecentVerbIds((currentIds) => {
-      const nextIds = [selectedVerb.id, ...currentIds.filter((id) => id !== selectedVerb.id)].slice(0, 11)
-      writePreference(RECENT_VERBS_STORAGE_KEY, JSON.stringify(nextIds))
-      return nextIds
-    })
+    if (selectedVerb) addRecent(selectedVerb.id)
   }, [selectedVerb?.id])
 
   const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
@@ -293,9 +238,9 @@ export function App() {
           )}
 
           <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
-            {favouriteVerbs.length > 0 ? (
+            {favourites.length > 0 ? (
               <VerbList>
-                {favouriteVerbs.map((verb) => {
+                {favourites.map((verb) => {
                   const isActive = verb.id === selectedVerb?.id
                   return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
                 })}
@@ -355,7 +300,10 @@ export function App() {
               actions={
                 <>
                   <ShareButton />
-                  <FavouriteButton isFavourite={isFavourite} onToggle={toggleFavourite} />
+                  <FavouriteButton
+                    isFavourite={isFavourite(selectedVerb.id)}
+                    onToggle={() => toggleFavourite(selectedVerb.id)}
+                  />
                   <CopyButton
                     text={formatArabic(selectedVerb.label)}
                     ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}

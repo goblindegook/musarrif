@@ -6,12 +6,14 @@ import en from '../locales/en.json'
 import it from '../locales/it.json'
 import pt from '../locales/pt.json'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
-import { DIACRITICS_STORAGE_KEY, readPreference, writePreference } from './preferences'
+import { useLocalStorage } from './local-storage'
 import { useRouting } from './routing'
 
 const SUPPORTED_LANGUAGES = ['en', 'it', 'pt', 'ar'] as const
 export type Language = (typeof SUPPORTED_LANGUAGES)[number]
 export const DEFAULT_LANGUAGE = 'en'
+export const LANGUAGE_STORAGE_KEY = `conjugator:language`
+const DIACRITICS_STORAGE_KEY = `conjugator:diacriticsPreference`
 
 export function isLanguageSupported(lang: unknown): lang is Language {
   return SUPPORTED_LANGUAGES.includes(lang as Language)
@@ -95,16 +97,17 @@ function sanitizeHtml(raw: string, diacriticsPreference: DiacriticsPreference): 
 
 export function I18nProvider({ children }: { children: ComponentChildren }) {
   const { lang } = useRouting()
+  const storage = useLocalStorage()
 
   const [diacriticsPreference, setDiacriticsPreferenceState] = useState<DiacriticsPreference>(() => {
-    const stored = readPreference(DIACRITICS_STORAGE_KEY)
+    const stored = storage.getItem(DIACRITICS_STORAGE_KEY)
     return stored === 'all' || stored === 'some' || stored === 'none' ? stored : 'some'
   })
 
   const setDiacriticsPreference = useCallback(
     (next: DiacriticsPreference) => {
       setDiacriticsPreferenceState(next)
-      writePreference(DIACRITICS_STORAGE_KEY, next)
+      storage.setItem(DIACRITICS_STORAGE_KEY, next)
     },
     [setDiacriticsPreferenceState],
   )

@@ -3,8 +3,8 @@ import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import type { Mood } from '../paradigms/active/present'
 import type { Tense, Voice } from '../paradigms/verbs'
-import { DEFAULT_LANGUAGE, isLanguageSupported, type Language } from './i18n'
-import { LANGUAGE_STORAGE_KEY, readPreference, writePreference } from './preferences'
+import { DEFAULT_LANGUAGE, isLanguageSupported, LANGUAGE_STORAGE_KEY, type Language } from './i18n'
+import { useLocalStorage } from './local-storage'
 
 interface RoutingState {
   lang: Language
@@ -167,8 +167,9 @@ export function buildVerbHref(lang: Language, id: string): string {
 }
 
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
+  const storage = useLocalStorage()
   const preferredLanguage = (() => {
-    const storedLanguage = readPreference(LANGUAGE_STORAGE_KEY)
+    const storedLanguage = storage.getItem(LANGUAGE_STORAGE_KEY)
     if (storedLanguage && isLanguageSupported(storedLanguage)) return storedLanguage
 
     const browserLanguage = [...(navigator?.languages ?? []), navigator?.language ?? '']
@@ -203,7 +204,7 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
   }, [preferredLanguage])
 
   useEffect(() => {
-    writePreference(LANGUAGE_STORAGE_KEY, route.lang)
+    storage.setItem(LANGUAGE_STORAGE_KEY, route.lang)
   }, [route.lang])
 
   const navigate = useCallback(
