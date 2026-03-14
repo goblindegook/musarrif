@@ -245,7 +245,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
   const isInitialHamza = isHamzatedLetter(c1)
   const isFinalWeak = isWeakLetter(c3)
   const isMiddleWeak = isWeakLetter(c2)
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
+  const seatedC1 = seatHamza(c1, DAMMA)
   const seatedC2 = seatHamza(c2, KASRA)
   const seatedC3 = seatHamza(c3, KASRA)
   const infix = resolveFormVIIIInfixConsonant(c1)

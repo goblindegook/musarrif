@@ -1,6 +1,5 @@
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
-import { ALIF_HAMZA, ALIF_MADDA } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { getVerb, verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
@@ -1261,7 +1260,7 @@ describe('imperative', () => {
           arbitraryVerb.filter(({ form, root }) => root.length === 3 && form === 4),
           arbitraryPronoun,
           (verb, pronounId) => {
-            expect([ALIF_HAMZA, ALIF_MADDA].includes(conjugateImperative(verb)[pronounId][0])).toEqualT(true)
+            expect(['\u0622', '\u0623'].includes(conjugateImperative(verb)[pronounId][0])).toEqualT(true)
           },
         ),
       )
@@ -2038,18 +2037,13 @@ describe('imperative', () => {
     })
   })
 
-  test('stems from jussive for non-hamzated roots', () => {
+  test('stems from the jussive', () => {
     fc.assert(
-      fc.property(
-        arbitraryVerb.filter(({ root }) => root[0] !== ALIF_HAMZA),
-        arbitraryPronoun,
-        (verb, pronounId) => {
-          const jussive = conjugatePresentMood(verb, 'jussive')
-          const imperative = conjugateImperative(verb)
-
-          expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
-        },
-      ),
+      fc.property(arbitraryVerb, arbitraryPronoun, (verb, pronounId) => {
+        const jussive = conjugatePresentMood(verb, 'jussive')
+        const imperative = conjugateImperative(verb)
+        expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
+      }),
     )
   })
 

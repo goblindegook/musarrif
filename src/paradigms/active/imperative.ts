@@ -29,8 +29,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const letters = Array.from(verb.root)
   const [c1, c2, c3] = letters
   const seatedC1 = seatHamza(c1, FATHA)
-  const isInitialWeak = isWeakLetter(seatedC1)
-  const isInitialHamza = isHamzatedLetter(seatedC1)
+  const isInitialWeak = isWeakLetter(c1)
+  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleWeak = isWeakLetter(c2)
   const isFinalWeak = isWeakLetter(c3)
 

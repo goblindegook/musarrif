@@ -136,8 +136,8 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly string[] {
 
 function deriveMasdarFormIII(verb: NonFormIVerb): readonly string[] {
   const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
-  const seatedC2 = isHamzatedLetter(c2) ? HAMZA : c2
+  const seatedC1 = seatHamza(c1, DAMMA)
+  const seatedC2 = seatHamza(c2)
   const seatedC3 = seatHamza(c3, FATHA)
   const prefix = [MEEM, DAMMA, seatedC1, FATHA, ALIF]
 

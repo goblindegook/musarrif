@@ -104,7 +104,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly st
   const [c1, c2, c3] = Array.from(verb.root)
   const seatedC1 = seatHamza(c1, FATHA)
 
-  const isInitialHamza = isHamzatedLetter(seatedC1)
+  const isInitialHamza = isHamzatedLetter(c1)
   const isMiddleHamza = isHamzatedLetter(c2)
   const isInitialWeak = isWeakLetter(seatedC1)
   const isMiddleWeak = isWeakLetter(c2)
