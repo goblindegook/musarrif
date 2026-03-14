@@ -22,8 +22,11 @@ export function VerbPill({ verb, className }: VerbPillProps) {
   )
 
   const translateVerb = useCallback(
-    (candidate: DisplayVerb) =>
-      lang !== 'ar' ? t(candidate.id) : (enTranslations.verbs as Record<string, string>)[candidate.id],
+    (candidate: DisplayVerb) => {
+      const verbTranslations = enTranslations.verbs as Record<string, string>
+      if (!verbTranslations[candidate.id]) return '—'
+      return lang !== 'ar' ? t(candidate.id) : verbTranslations[candidate.id]
+    },
     [lang, t],
   )
 

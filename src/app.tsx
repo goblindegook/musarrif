@@ -7,6 +7,7 @@ import { ConjugateBox } from './components/ConjugateBox'
 import { ConjugationTable } from './components/ConjugationTable'
 import { CopyButton } from './components/CopyButton'
 import { Detail } from './components/Detail'
+import { FavouriteButton } from './components/FavouriteButton'
 import { FormInsights } from './components/FormInsights'
 import { Modal } from './components/Modal'
 import { Panel } from './components/Panel'
@@ -18,7 +19,12 @@ import { SpeechButton } from './components/SpeechButton'
 import { TabBar, TabButton, TabPanel } from './components/Tabs'
 import { VerbPill } from './components/VerbPill'
 import { useI18n } from './hooks/i18n'
-import { RECENT_VERBS_STORAGE_KEY, readPreference, writePreference } from './hooks/preferences'
+import {
+  FAVOURITE_VERBS_STORAGE_KEY,
+  RECENT_VERBS_STORAGE_KEY,
+  readPreference,
+  writePreference,
+} from './hooks/preferences'
 import { useRouting } from './hooks/routing'
 import enTranslations from './locales/en.json'
 import type { Mood } from './paradigms/active/present'
@@ -43,6 +49,15 @@ type FormNumber = (typeof FORM_NUMBERS)[number]
 const readRecentVerbIds = (): readonly string[] => {
   try {
     const parsed = JSON.parse(readPreference(RECENT_VERBS_STORAGE_KEY) ?? '[]')
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+const readFavouriteVerbIds = (): readonly string[] => {
+  try {
+    const parsed = JSON.parse(readPreference(FAVOURITE_VERBS_STORAGE_KEY) ?? '[]')
     return Array.isArray(parsed) ? parsed : []
   } catch {
     return []
@@ -75,6 +90,7 @@ export function App() {
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const [recentVerbIds, setRecentVerbIds] = useState<readonly string[]>(readRecentVerbIds)
+  const [favouriteVerbIds, setFavouriteVerbIds] = useState<readonly string[]>(readFavouriteVerbIds)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
@@ -129,6 +145,28 @@ export function App() {
         .map((id) => getVerbById(id))
         .filter((verb): verb is DisplayVerb => verb != null && verb.id !== selectedVerb?.id),
     [recentVerbIds, selectedVerb?.id],
+  )
+
+  const isFavourite = selectedVerb ? favouriteVerbIds.includes(selectedVerb.id) : false
+
+  const toggleFavourite = useCallback(() => {
+    if (!selectedVerb) return
+    setFavouriteVerbIds((currentIds) => {
+      const nextIds = currentIds.includes(selectedVerb.id)
+        ? currentIds.filter((id) => id !== selectedVerb.id)
+        : [...currentIds, selectedVerb.id]
+      writePreference(FAVOURITE_VERBS_STORAGE_KEY, JSON.stringify(nextIds))
+      return nextIds
+    })
+  }, [selectedVerb])
+
+  const favouriteVerbs = useMemo(
+    () =>
+      favouriteVerbIds
+        .map((id) => buildVerbFromId(id))
+        .filter((verb): verb is DisplayVerb => verb != null)
+        .sort((a, b) => a.label.localeCompare(b.label, 'ar')),
+    [favouriteVerbIds],
   )
 
   useEffect(() => {
@@ -254,6 +292,21 @@ export function App() {
             </Panel>
           )}
 
+          <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+            {favouriteVerbs.length > 0 ? (
+              <VerbList>
+                {favouriteVerbs.map((verb) => {
+                  const isActive = verb.id === selectedVerb?.id
+                  return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+                })}
+              </VerbList>
+            ) : (
+              <Text dir={dir} lang={lang}>
+                {t('favourites.empty')}
+              </Text>
+            )}
+          </Panel>
+
           {!selectedVerb && (
             <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
               <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
@@ -302,6 +355,7 @@ export function App() {
               actions={
                 <>
                   <ShareButton />
+                  <FavouriteButton isFavourite={isFavourite} onToggle={toggleFavourite} />
                   <CopyButton
                     text={formatArabic(selectedVerb.label)}
                     ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}
