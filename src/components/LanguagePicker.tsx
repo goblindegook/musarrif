@@ -1,6 +1,5 @@
 import { styled } from 'goober'
 import { LANGUAGE_OPTIONS, useI18n } from '../hooks/i18n'
-import { useRouting } from '../hooks/routing'
 import { LanguageIcon } from './icons/LanguageIcon'
 
 const Wrapper = styled('div')`
@@ -61,8 +60,7 @@ const Select = styled('select')`
 `
 
 export function LanguagePicker() {
-  const { lang, dir, t } = useI18n()
-  const { setLang } = useRouting()
+  const { lang, dir, t, setLang } = useI18n()
 
   return (
     <Wrapper>

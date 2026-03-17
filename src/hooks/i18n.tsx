@@ -1,6 +1,6 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
-import { useContext, useEffect, useMemo } from 'preact/compat'
+import { useCallback, useContext, useEffect, useMemo } from 'preact/compat'
 import ar from '../locales/ar.json'
 import en from '../locales/en.json'
 import it from '../locales/it.json'
@@ -45,6 +45,7 @@ interface I18nContextValue {
   tHtml: (key: string, params?: Record<string, string>) => string
   diacriticsPreference: DiacriticsPreference
   setDiacriticsPreference: (next: DiacriticsPreference) => void
+  setLang: (lang: string) => void
 }
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined)
@@ -99,12 +100,10 @@ function sanitizeHtml(raw: string, diacriticsPreference: DiacriticsPreference): 
   return doc.body.innerHTML
 }
 
-interface I18nProviderProps {
-  lang?: Language
-  children: ComponentChildren
-}
+export function I18nProvider({ children }: { children: ComponentChildren }) {
+  const [storedLanguage, setStoredLanguage] = useLocalStorage<string>('language', detectBrowserLanguage())
+  const lang: Language = isLanguageSupported(storedLanguage) ? storedLanguage : detectBrowserLanguage()
 
-export function I18nProvider({ lang = detectBrowserLanguage(), children }: I18nProviderProps) {
   const [storedDiacritics, setDiacriticsPreference] = useLocalStorage<string>('diacriticsPreference', 'some')
   const diacriticsPreference = storedDiacritics === 'all' || storedDiacritics === 'none' ? storedDiacritics : 'some'
 
@@ -113,6 +112,13 @@ export function I18nProvider({ lang = detectBrowserLanguage(), children }: I18nP
     document.documentElement.lang = lang
     document.documentElement.dir = dir
   }, [lang])
+
+  const setLang = useCallback(
+    (newLang: string) => {
+      if (isLanguageSupported(newLang)) setStoredLanguage(newLang)
+    },
+    [setStoredLanguage],
+  )
 
   const value = useMemo<I18nContextValue>(() => {
     const current = TRANSLATIONS[lang] ?? TRANSLATIONS[detectBrowserLanguage()]
@@ -131,8 +137,9 @@ export function I18nProvider({ lang = detectBrowserLanguage(), children }: I18nP
       },
       diacriticsPreference,
       setDiacriticsPreference,
+      setLang,
     }
-  }, [lang, diacriticsPreference, setDiacriticsPreference])
+  }, [lang, diacriticsPreference, setDiacriticsPreference, setLang])
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }

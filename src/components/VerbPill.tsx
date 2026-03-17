@@ -32,7 +32,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
 
   return (
     <VerbPillLink
-      href={buildVerbHref(lang, verb.id)}
+      href={buildVerbHref(verb.id)}
       className={className}
       aria-label={`${formatArabic(verb.label)} - ${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}${
         lang !== 'ar' ? ` - ${translateVerb(verb)}` : ''
