@@ -1836,6 +1836,14 @@ describe('passive past pattern', () => {
           '3fp': 'اُشْمُؤْزِزْنَ',
         })
       })
+
+      test.each([['برغش', 'اُبْرُغِشَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'اُجْلُعِبَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
     })
   })
 })

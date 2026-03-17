@@ -22,6 +22,8 @@ describe('canConjugatePassive', () => {
       ['خرطم', 3],
       ['قشعر', 4],
       ['شمءز', 4],
+      ['برغش', 4],
+      ['جلعب', 4],
       ['ءتي', 3],
       ['رءي', 3],
       ['ءتي', 4],
@@ -223,6 +225,8 @@ describe('canConjugatePassive', () => {
       ['صفر', 9],
       ['خضل', 9],
       ['جلفع', 3],
+      ['جرمز', 4],
+      ['جلعد', 4],
       ['لءلء', 1],
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(false)

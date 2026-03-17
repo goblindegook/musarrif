@@ -1951,6 +1951,14 @@ describe('passive present subjunctive', () => {
           '3fp': 'يُشْمَأْزَزْنَ',
         })
       })
+
+      test.each([['برغش', 'يُبْرَغَشَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'يُجْلَعَبَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
+      })
     })
   })
 })

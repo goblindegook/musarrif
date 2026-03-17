@@ -2937,6 +2937,22 @@ describe('active present indicative', () => {
           '3fp': 'يَشْمَأْزِزْنَ',
         })
       })
+
+      test.each([['برغش', 'يَبْرَغِشُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جرمز', 'يَجْرَمِزُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'يَجْلَعِبُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعد', 'يَجْلَعِدُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
     })
   })
 })

@@ -2190,6 +2190,22 @@ describe('imperative', () => {
           '2fp': 'اِشْمَأْزِزْنَ',
         })
       })
+
+      test.each([['برغش', 'اِبْرَغْشِشْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+
+      test.each([['جرمز', 'اِجْرَمْزِزْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'اِجْلَعْبِبْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعد', 'اِجْلَعْدِدْ']])('%s pattern', (root, expected) => {
+        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
+      })
     })
   })
 })

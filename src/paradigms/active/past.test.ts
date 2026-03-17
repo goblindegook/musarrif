@@ -2739,6 +2739,22 @@ describe('active past', () => {
           '3fp': 'اِشْمَأْزَزْنَ',
         })
       })
+
+      test.each([['برغش', 'اِبْرَغَشَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جرمز', 'اِجْرَمَزَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'اِجْلَعَبَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعد', 'اِجْلَعَدَّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
+      })
     })
   })
 })

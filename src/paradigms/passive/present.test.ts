@@ -2035,6 +2035,14 @@ describe('passive present indicative', () => {
           '3fp': 'يُشْمَأْزَزْنَ',
         })
       })
+
+      test.each([['برغش', 'يُبْرَغَشُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test.each([['جلعب', 'يُجْلَعَبُّ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
     })
   })
 })
