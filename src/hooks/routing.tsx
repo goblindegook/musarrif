@@ -4,7 +4,10 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/ho
 import type { Mood } from '../paradigms/active/present'
 import type { Tense, Voice } from '../paradigms/verbs'
 
+type Page = 'conjugation' | 'test'
+
 interface RouteParams {
+  page: Page
   verbId?: string
   voice?: Voice
   tense?: Tense
@@ -13,6 +16,7 @@ interface RouteParams {
 
 interface RoutingContextValue extends RouteParams {
   navigateToVerb: (verbId?: string, voice?: Voice, tense?: Tense, mood?: Mood) => void
+  navigateToTest: () => void
 }
 
 const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
@@ -91,6 +95,10 @@ function parsePath(pathname: string): RouteParams {
       }
     })
 
+  if (segments.at(0) === 'test') {
+    return { page: 'test' }
+  }
+
   const start = segments.at(0) === 'verbs' ? 1 : 0
 
   const verbId = segments.at(start)
@@ -100,6 +108,7 @@ function parsePath(pathname: string): RouteParams {
   if (voice) {
     const normalized = normalizeConjugation(segments[start + 2], segments[start + 3])
     return {
+      page: 'conjugation',
       verbId,
       voice,
       tense: segments.length > start + 2 ? normalized.tense : undefined,
@@ -108,17 +117,21 @@ function parsePath(pathname: string): RouteParams {
   }
 
   return {
+    page: 'conjugation',
     verbId,
     tense: undefined,
     mood: undefined,
   }
 }
 
-function buildHashPath({ verbId, voice, tense, mood }: RouteParams): string {
-  const voiceSegment = tense ? `/${voice ?? 'active'}` : ''
-  const tenseSegment = tense ? `/${tense}` : ''
-  const moodSegment = tense === 'present' && mood ? `/${mood}` : ''
-  const verbSegment = verbId ? `/${encodeURIComponent(verbId)}${voiceSegment}${tenseSegment}${moodSegment}` : ''
+function buildHashPath(state: RouteParams): string {
+  if (state.page === 'test') return '/test'
+  const voiceSegment = state.tense ? `/${state.voice ?? 'active'}` : ''
+  const tenseSegment = state.tense ? `/${state.tense}` : ''
+  const moodSegment = state.tense === 'present' && state.mood ? `/${state.mood}` : ''
+  const verbSegment = state.verbId
+    ? `/${encodeURIComponent(state.verbId)}${voiceSegment}${tenseSegment}${moodSegment}`
+    : ''
   return `/verbs${verbSegment}`
 }
 
@@ -159,10 +172,11 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
   }, [])
 
   const navigate = useCallback(
-    ({ verbId, voice, tense, mood }: RouteParams) => {
+    ({ verbId, voice, tense, mood }: Omit<RouteParams, 'page'>) => {
       const normalized = normalizeConjugation(tense, mood)
       const normalizedVoice = isVoice(voice) ? voice : undefined
       const nextState: RouteParams = {
+        page: 'conjugation',
         verbId,
         voice: normalizedVoice,
         tense: normalized.tense,
@@ -174,12 +188,20 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
     [setRoute],
   )
 
-  const value = useMemo<RoutingContextValue>((): RoutingContextValue => {
-    return {
+  const navigateToTest = useCallback(() => {
+    const testState: RouteParams = { page: 'test' }
+    window.history.pushState({}, '', buildUrl(testState))
+    setRoute(testState)
+  }, [setRoute])
+
+  const value = useMemo<RoutingContextValue>(
+    (): RoutingContextValue => ({
       ...route,
       navigateToVerb: (verbId, voice, tense, mood) => navigate({ verbId, voice, tense, mood }),
-    }
-  }, [route.verbId, route.voice, route.tense, route.mood])
+      navigateToTest,
+    }),
+    [route.page, route.verbId, route.voice, route.tense, route.mood, navigate, navigateToTest],
+  )
 
   return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
 }
