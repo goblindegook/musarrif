@@ -33,19 +33,21 @@ describe('generateFormExercise', () => {
 
   test('options are Roman numerals sorted in ascending form order', () => {
     const { options } = formExercise()
-    const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
-    const formNumbers = options.map((o) => ROMAN_NUMERALS.indexOf(o) + 1)
+
+    const formNumbers = options.map((o) => ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'].indexOf(o) + 1)
     expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
   })
 
   test('correctAnswer is a valid index into options', () => {
     const { options, answer: correctAnswer } = formExercise()
+
     expect(correctAnswer).toBeGreaterThanOrEqual(0)
     expect(correctAnswer).toBeLessThan(options.length)
   })
 
   test('options[correctAnswer] matches the verb form', () => {
     const { options, answer: correctAnswer, word } = formExercise()
+
     expect(options[correctAnswer]).toMatch(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)$/)
     expect(word.length).toBeGreaterThan(0)
   })
@@ -63,28 +65,22 @@ describe('formExercise difficulty', () => {
 
   test('easy uses 3ms active past tense when random picks past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
+
     const { word } = formExercise('easy')
+
     expect(word).toBe(conjugatePast(verbs[0])['3ms'])
   })
 
   test('easy always uses 3ms — word is 3ms active past or 3ms present indicative of selected verb', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const verb = verbs[0]
-    const { word } = formExercise('easy')
-    const past3ms = conjugatePast(verb)['3ms']
-    const present3ms = conjugatePresentMood(verb, 'indicative')['3ms']
-    expect([past3ms, present3ms]).toContain(word)
-  })
 
-  test('medium uses 3ms for non-imperative tenses (random=0 picks active past)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = formExercise('medium')
-    expect(word).toBe(conjugatePast(verbs[0])['3ms'])
+    const { word } = formExercise('easy')
+
+    expect(word).toBeOneOf([conjugatePast(verbs[0])['3ms'], conjugatePresentMood(verbs[0], 'indicative')['3ms']])
   })
 
   test('hard uses pronoun from ALL_PRONOUNS and strips diacritics (random=0 → active past, 1s)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    // random=0 → verbs[0], ACTIVE_TENSES[0]={voice:'active', tense:'past'}, ALL_PRONOUNS[0]='1s'
     const { word } = formExercise('hard')
     expect(word).toBe(applyDiacriticsPreference(conjugatePast(verbs[0])['1s'], 'none'))
   })

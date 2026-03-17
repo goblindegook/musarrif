@@ -2,62 +2,90 @@ import { conjugateFuture } from '../paradigms/active/future'
 import { conjugateImperative } from '../paradigms/active/imperative'
 import { conjugatePast } from '../paradigms/active/past'
 import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
+import type { DiacriticsPreference } from '../paradigms/letters'
 import { conjugatePassiveFuture } from '../paradigms/passive/future'
 import { conjugatePassivePast } from '../paradigms/passive/past'
 import { conjugatePassivePresentMood } from '../paradigms/passive/present'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import type { Verb } from '../paradigms/verbs'
+import { type Verb, type Voice, verbs } from '../paradigms/verbs'
+import type { Difficulty } from './types'
 
 export type TenseConfig =
-  | { voice: 'active'; tense: 'imperative' }
-  | { voice: 'active' | 'passive'; tense: 'past' | 'future' }
-  | { voice: 'active' | 'passive'; tense: 'present'; mood: Mood }
+  | [voice: 'active', mood: 'imperative']
+  | [voice: Voice, tense: 'past' | 'future']
+  | [voice: Voice, tense: 'present', mood: Mood]
 
-export const ACTIVE_TENSES: TenseConfig[] = [
-  { voice: 'active', tense: 'past' },
-  { voice: 'active', tense: 'present', mood: 'indicative' },
-  { voice: 'active', tense: 'present', mood: 'subjunctive' },
-  { voice: 'active', tense: 'present', mood: 'jussive' },
-  { voice: 'active', tense: 'future' },
-  { voice: 'active', tense: 'imperative' },
+const EASY_TENSES: TenseConfig[] = [
+  ['active', 'past'],
+  ['active', 'present', 'indicative'],
 ]
 
-export const PASSIVE_TENSES: TenseConfig[] = [
-  { voice: 'passive', tense: 'past' },
-  { voice: 'passive', tense: 'present', mood: 'indicative' },
-  { voice: 'passive', tense: 'present', mood: 'subjunctive' },
-  { voice: 'passive', tense: 'present', mood: 'jussive' },
-  { voice: 'passive', tense: 'future' },
+const ACTIVE_TENSES: TenseConfig[] = [
+  ['active', 'past'],
+  ['active', 'present', 'indicative'],
+  ['active', 'present', 'subjunctive'],
+  ['active', 'present', 'jussive'],
+  ['active', 'future'],
+  ['active', 'imperative'],
+]
+
+const PASSIVE_TENSES: TenseConfig[] = [
+  ['passive', 'past'],
+  ['passive', 'present', 'indicative'],
+  ['passive', 'present', 'subjunctive'],
+  ['passive', 'present', 'jussive'],
+  ['passive', 'future'],
 ]
 
 const PRONOUNS: PronounId[] = ['1s', '1p', '2ms', '2fs', '2d', '2mp', '2fp', '3ms', '3fs', '3md', '3fd', '3mp', '3fp']
 
-export function supportedTenses(verb: Verb): TenseConfig[] {
-  return canConjugatePassive(verb) ? [...ACTIVE_TENSES, ...PASSIVE_TENSES] : ACTIVE_TENSES
+export function randomVerb(difficulty: Difficulty): Verb {
+  return random(difficulty === 'easy' ? verbs : verbs.filter(({ root }) => root.length === 3))
 }
 
-export function conjugate(verb: Verb, config: TenseConfig): Record<PronounId, string> {
-  switch (config.tense) {
+export function randomTense(verb: Verb, difficulty: Difficulty): TenseConfig {
+  if (difficulty === 'easy') return random(EASY_TENSES)
+  if (difficulty === 'medium' || !canConjugatePassive(verb)) return random(ACTIVE_TENSES)
+  return random([...ACTIVE_TENSES, ...PASSIVE_TENSES])
+}
+
+export function randomPronoun(verb: Verb, [voice, tense]: TenseConfig, difficulty: Difficulty): PronounId {
+  const pronouns = difficulty === 'easy' ? PRONOUNS.filter((p) => !p.includes('d')) : PRONOUNS
+  if (tense === 'imperative') return random(pronouns.filter((p) => p.startsWith('2')))
+  if (voice === 'passive' && verb.passiveVoice === 'impersonal') return '3ms'
+  return random(pronouns)
+}
+
+export function diacriticsDifficulty(difficulty: Difficulty): DiacriticsPreference {
+  if (difficulty === 'easy') return 'all'
+  if (difficulty === 'medium') return 'some'
+  return 'none'
+}
+
+export function conjugate(verb: Verb, [voice, tense, mood]: TenseConfig): Record<PronounId, string> {
+  if (voice === 'passive')
+    switch (tense) {
+      case 'past':
+        return conjugatePassivePast(verb)
+      case 'present':
+        return conjugatePassivePresentMood(verb, mood)
+      case 'future':
+        return conjugatePassiveFuture(verb)
+    }
+
+  switch (tense) {
     case 'past':
-      return config.voice === 'passive' ? conjugatePassivePast(verb) : conjugatePast(verb)
+      return conjugatePast(verb)
     case 'present':
-      return config.voice === 'passive'
-        ? conjugatePassivePresentMood(verb, config.mood)
-        : conjugatePresentMood(verb, config.mood)
+      return conjugatePresentMood(verb, mood)
     case 'future':
-      return config.voice === 'passive' ? conjugatePassiveFuture(verb) : conjugateFuture(verb)
+      return conjugateFuture(verb)
     case 'imperative':
       return conjugateImperative(verb)
   }
 }
 
-export function randomPronoun(verb: Verb, config: TenseConfig): PronounId {
-  if (config.tense === 'imperative') return random(PRONOUNS.filter((p) => p.startsWith('2')))
-  if (config.voice === 'passive' && verb.passiveVoice === 'impersonal') return '3ms'
-  return random(PRONOUNS)
-}
-
-export function random<T>(arr: T[]): T {
+function random<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
