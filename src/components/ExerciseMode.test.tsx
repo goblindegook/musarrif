@@ -8,6 +8,7 @@ import { ExerciseMode } from './ExerciseMode'
 
 afterEach(() => {
   cleanup()
+  localStorage.removeItem('conjugator:exerciseDifficulty')
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -124,6 +125,21 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getByRole('button', { name: /hard/i }))
       expect(gen).toHaveBeenCalledWith('hard')
+    })
+  })
+
+  describe('difficulty persistence', () => {
+    test('restores stored difficulty on mount', () => {
+      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'true')
+      expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'false')
+    })
+
+    test('persists difficulty to localStorage when changed', () => {
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getByRole('button', { name: /hard/i }))
+      expect(localStorage.getItem('conjugator:exerciseDifficulty')).toBe(JSON.stringify('hard'))
     })
   })
 })

@@ -1,13 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
-import {
-  ALIF,
-  ALIF_MAQSURA,
-  applyDiacriticsPreference,
-  isWeakLetter,
-  stripDiacritics,
-  WAW,
-  YEH,
-} from '../paradigms/letters'
+import { ALIF, ALIF_MAQSURA, isWeakLetter, stripDiacritics, WAW, YEH } from '../paradigms/letters'
 import { getClosestVerbs } from '../paradigms/selection'
 import { conjugate } from '../paradigms/tense'
 import { verbs } from '../paradigms/verbs'
@@ -21,8 +13,8 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
-  const word = applyDiacriticsPreference(conjugate(verb, tense)[pronoun], diacriticsDifficulty(difficulty))
-  const options = buildOptions(verb.root, word)
+  const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
+  const options = buildOptions(verb.root, word, difficulty)
 
   return {
     kind: 'root',
@@ -33,7 +25,7 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
   }
 }
 
-function buildOptions(root: string, word: string): readonly string[] {
+function buildOptions(root: string, word: string, difficulty: Difficulty): readonly string[] {
   const wordLetters = Array.from(stripDiacritics(word))
 
   const generators = [
@@ -45,7 +37,7 @@ function buildOptions(root: string, word: string): readonly string[] {
 
   const options = new Set<string>([root])
 
-  while (options.size < 4) options.add(random(generators)())
+  while (options.size < 4) options.add(diacriticsDifficulty(random(generators)(), difficulty))
 
   return shuffle(Array.from(options))
 }

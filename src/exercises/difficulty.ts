@@ -1,4 +1,4 @@
-import type { DiacriticsPreference } from '../paradigms/letters'
+import { applyDiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
@@ -11,7 +11,7 @@ const EASY_TENSES: VerbTense[] = [
   ['active', 'present', 'indicative'],
 ]
 
-const ACTIVE_TENSES: VerbTense[] = [
+export const ACTIVE_TENSES: VerbTense[] = [
   ['active', 'past'],
   ['active', 'present', 'indicative'],
   ['active', 'present', 'subjunctive'],
@@ -20,7 +20,7 @@ const ACTIVE_TENSES: VerbTense[] = [
   ['active', 'imperative'],
 ]
 
-const PASSIVE_TENSES: VerbTense[] = [
+export const PASSIVE_TENSES: VerbTense[] = [
   ['passive', 'past'],
   ['passive', 'present', 'indicative'],
   ['passive', 'present', 'subjunctive'],
@@ -51,8 +51,8 @@ export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-export function diacriticsDifficulty(difficulty: Difficulty): DiacriticsPreference {
-  if (difficulty === 'easy') return 'all'
-  if (difficulty === 'medium') return 'some'
-  return 'none'
+export function diacriticsDifficulty(word: string, difficulty: Difficulty): string {
+  if (difficulty === 'easy') return applyDiacriticsPreference(word, 'all')
+  if (difficulty === 'medium') return applyDiacriticsPreference(word, 'some')
+  return applyDiacriticsPreference(word, 'none')
 }

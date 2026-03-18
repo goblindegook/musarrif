@@ -4,6 +4,7 @@ import type { Difficulty } from '../exercises/difficulty'
 import { randomExercise } from '../exercises/random'
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
+import { useLocalStorage } from '../hooks/local-storage'
 import { DifficultyToggle } from './DifficultyToggle'
 
 type Props = {
@@ -12,7 +13,9 @@ type Props = {
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t } = useI18n()
-  const [difficulty, setDifficulty] = useState<Difficulty>('easy')
+  const [storedDifficulty, setDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
+  const difficulty: Difficulty =
+    storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise('easy'))
   const [selected, setSelected] = useState<number | null>(null)
 
@@ -51,9 +54,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
                 disabled={isAnswered}
                 data-state={state}
                 data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
-                aria-label={option}
+                aria-label={t(option)}
               >
-                {option}
+                {t(option)}
               </OptionButton>
             )
           })}
