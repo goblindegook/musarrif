@@ -8,9 +8,10 @@ import {
   WAW,
   YEH,
 } from '../paradigms/letters'
+import { getClosestVerbs } from '../paradigms/selection'
 import { conjugate } from '../paradigms/tense'
 import { verbs } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import { type Difficulty, diacriticsDifficulty, random, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
 const RANDOM_ROOT_LETTERS = Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root))))
@@ -21,8 +22,7 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
   const word = applyDiacriticsPreference(conjugate(verb, tense)[pronoun], diacriticsDifficulty(difficulty))
-  const distractors = buildDistractors(verb.root, Array.from(stripDiacritics(word)))
-  const options = shuffle([verb.root, ...distractors])
+  const options = buildOptions(verb.root, word)
 
   return {
     kind: 'root',
@@ -33,75 +33,71 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
   }
 }
 
-function buildDistractors(correct: string, wordLetters: readonly string[]): readonly string[] {
-  const distractors = new Set<string>()
-  const weakAlternatives = weakLetterAlternatives(correct)
+function buildOptions(root: string, word: string): readonly string[] {
+  const wordLetters = Array.from(stripDiacritics(word))
+
+  const generators = [
+    closestRootDistractor(root),
+    sourceSliceDistractor(root, wordLetters),
+    mixedDistractor(root, wordLetters),
+    Array.from(root).some(isWeakLetter) ? weakAlternativeDistractor(root) : null,
+  ].filter((generator) => generator != null)
+
+  const options = new Set<string>([root])
+
+  while (options.size < 4) options.add(random(generators)())
+
+  return shuffle(Array.from(options))
+}
+
+function closestRootDistractor(correct: string): () => string {
+  let offset = 1
+
+  const closestRoots = Array.from(
+    new Set(
+      getClosestVerbs(correct, 20)
+        .map((verb) => verb.root)
+        .filter((root) => root !== correct),
+    ),
+  )
+
+  return () => closestRoots[offset++]
+}
+
+function weakAlternativeDistractor(correct: string): () => string {
+  const letters = Array.from(correct)
+  const weakAlternatives = letters.flatMap((letter, index) => {
+    if (!isWeakLetter(letter)) return []
+    return WEAK_LETTER_REPLACEMENTS.filter((replacement) => replacement !== letter).map((replacement) => {
+      const next = [...letters]
+      next[index] = replacement
+      return next.join('')
+    })
+  })
+
+  return () => random(weakAlternatives)
+}
+
+function sourceSliceDistractor(correct: string, sourceLetters: readonly string[]): () => string {
+  let offset = 1
+  return () => cyclicSlice(sourceLetters, correct.length, offset++)
+}
+
+function mixedDistractor(correct: string, wordLetters: readonly string[]): () => string {
   const sourceLetters = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
+  let offset = 0
 
-  if (weakAlternatives.length > 0) distractors.add(random(weakAlternatives))
-
-  for (let attempt = 0; distractors.size < 3 && attempt < 200; attempt += 1) {
-    const strategy = Math.floor(Math.random() * 4)
-    const base = cyclicSlice(sourceLetters, correct.length, attempt + 1)
-    const candidate =
-      strategy === 0 && weakAlternatives.length > 0
-        ? random(weakAlternatives)
-        : strategy === 1
-          ? base
-          : strategy === 2
-            ? varyCandidate(base, attempt + 1)
-            : mixedCandidate(correct.length, sourceLetters, attempt)
-
-    if (candidate !== correct) distractors.add(candidate)
+  return () => {
+    offset += 1
+    if (correct.length < 2) return cyclicSlice(sourceLetters, correct.length, offset)
+    const fromWordLength = 1 + (offset % (correct.length - 1))
+    return (
+      cyclicSlice(sourceLetters, fromWordLength, offset) +
+      cyclicSlice(RANDOM_ROOT_LETTERS, correct.length - fromWordLength, offset + sourceLetters.length + 1)
+    )
   }
-
-  for (let attempt = 0; distractors.size < 3; attempt += 1) {
-    const candidate = varyCandidate(cyclicSlice(sourceLetters, correct.length, attempt), attempt + sourceLetters.length)
-    if (candidate !== correct) distractors.add(candidate)
-  }
-
-  return Array.from(distractors).slice(0, 3)
-}
-
-function random<T>(arr: readonly T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
-
-function mixedCandidate(length: number, sourceLetters: readonly string[], attempt: number): string {
-  if (length < 2) return varyCandidate(cyclicSlice(sourceLetters, length, attempt), attempt + 1)
-
-  const fromWordLength = 1 + (attempt % (length - 1))
-  const fromWord = cyclicSlice(sourceLetters, fromWordLength, attempt)
-  const fromRandom = cyclicSlice(RANDOM_ROOT_LETTERS, length - fromWordLength, attempt + sourceLetters.length)
-  return `${fromWord}${fromRandom}`
 }
 
 function cyclicSlice(pool: readonly string[], length: number, offset: number): string {
   return Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]).join('')
-}
-
-function varyCandidate(candidate: string, variation: number): string {
-  if (variation === 0) return candidate
-  const next = [...candidate]
-  const index = variation % next.length
-  next[index] = RANDOM_ROOT_LETTERS[(variation + index) % RANDOM_ROOT_LETTERS.length]
-  return next.join('')
-}
-
-function weakLetterAlternatives(root: string): readonly string[] {
-  const letters = Array.from(root)
-  const alternatives: string[] = []
-
-  letters.forEach((letter, index) => {
-    if (!isWeakLetter(letter)) return
-
-    WEAK_LETTER_REPLACEMENTS.forEach((replacement) => {
-      if (replacement === letter) return
-      const next = [...letters]
-      next[index] = replacement
-      alternatives.push(next.join(''))
-    })
-  })
-
-  return alternatives
 }

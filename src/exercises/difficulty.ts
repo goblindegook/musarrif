@@ -47,7 +47,7 @@ export function randomPronoun(verb: Verb, [voice, tense]: VerbTense, difficulty:
   return random(pronouns)
 }
 
-export function random<T>(arr: T[]): T {
+export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
