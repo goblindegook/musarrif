@@ -1,15 +1,16 @@
 import { shuffle } from '@pacote/shuffle'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, verbs } from '../paradigms/verbs'
+import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
 import {
+  ACTIVE_TENSES,
   type Difficulty,
   diacriticsDifficulty,
-  pronounPool,
+  EASY_TENSES,
+  PASSIVE_TENSES,
   randomPronoun,
   randomTense,
   randomVerb,
-  tensePool,
 } from './difficulty'
 import type { Exercise } from './types'
 
@@ -44,44 +45,64 @@ function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
   return `exercise.conjugation.tense.${tense[0]}.${slug}`
 }
 
+const ALL_FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const ALL_TENSES = [...ACTIVE_TENSES, ...PASSIVE_TENSES]
+const ALL_PRONOUNS: PronounId[] = [
+  '1s',
+  '1p',
+  '2ms',
+  '2fs',
+  '2d',
+  '2mp',
+  '2fp',
+  '3ms',
+  '3fs',
+  '3md',
+  '3fd',
+  '3mp',
+  '3fp',
+]
+const NO_DUAL_PRONOUNS = ALL_PRONOUNS.filter((p) => !p.includes('d'))
+
 function tensesEqual(a: VerbTense, b: VerbTense): boolean {
   return a.join('.') === b.join('.')
 }
 
-function getSiblings(verb: DisplayVerb): DisplayVerb[] {
-  return verbs.filter((v) => v.root === verb.root && v.form !== verb.form)
+function distractorTenses(difficulty: Difficulty): VerbTense[] {
+  if (difficulty === 'easy') return EASY_TENSES
+  if (difficulty === 'medium') return ACTIVE_TENSES
+  return ALL_TENSES
 }
 
-function tryConjugate(verb: DisplayVerb, tense: VerbTense, pronoun: PronounId): string | null {
-  try {
-    return conjugate(verb, tense)[pronoun]
-  } catch {
-    return null
-  }
+function distractorPronouns(tense: VerbTense, difficulty: Difficulty): PronounId[] {
+  const base = difficulty === 'easy' ? NO_DUAL_PRONOUNS : ALL_PRONOUNS
+  return tense[1] === 'imperative' ? base.filter((p) => p.startsWith('2')) : base
 }
 
-function toSet(raws: Array<string | null>, difficulty: Difficulty): Set<string> {
-  return new Set(raws.filter((r): r is string => r !== null).map((r) => diacriticsDifficulty(r, difficulty)))
+function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
+  return ALL_FORMS.filter((f) => f !== verb.form).flatMap((form) => {
+    try {
+      return [form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form)]
+    } catch {
+      return []
+    }
+  })
 }
 
 function easyCandidates(
-  verb: DisplayVerb,
   targetTense: VerbTense,
   targetPronoun: PronounId,
-  siblings: DisplayVerb[],
+  verb: DisplayVerb,
   difficulty: Difficulty,
-): Set<string> {
-  return toSet(
-    [...siblings, verb].flatMap((v) =>
-      tensePool(v, difficulty)
-        .filter((t) => !tensesEqual(t, targetTense))
-        .flatMap((t) =>
-          pronounPool(v, t, difficulty)
-            .filter((p) => p !== targetPronoun)
-            .map((p) => tryConjugate(v, t, p)),
-        ),
-    ),
-    difficulty,
+): string[] {
+  return buildSiblings(verb).flatMap((v) =>
+    distractorTenses(difficulty)
+      .filter((t) => !tensesEqual(t, targetTense))
+      .flatMap((t) =>
+        distractorPronouns(t, difficulty)
+          .filter((p) => p !== targetPronoun)
+          .map((p) => conjugate(v, t)[p]),
+      ),
   )
 }
 
@@ -89,44 +110,43 @@ function mediumCandidates(
   verb: DisplayVerb,
   targetTense: VerbTense,
   targetPronoun: PronounId,
-  siblings: DisplayVerb[],
   difficulty: Difficulty,
-): Set<string> {
-  const typeA = tensePool(verb, difficulty)
+): string[] {
+  const siblings = buildSiblings(verb)
+  const typeA = distractorTenses(difficulty)
     .filter((t) => !tensesEqual(t, targetTense))
     .flatMap((t) =>
-      pronounPool(verb, t, difficulty)
+      distractorPronouns(t, difficulty)
         .filter((p) => p !== targetPronoun)
-        .map((p) => tryConjugate(verb, t, p)),
+        .map((p) => conjugate(verb, t)[p]),
     )
   const typeB = siblings.flatMap((sibling) =>
-    pronounPool(sibling, targetTense, difficulty)
+    distractorPronouns(targetTense, difficulty)
       .filter((p) => p !== targetPronoun)
-      .map((p) => tryConjugate(sibling, targetTense, p)),
+      .map((p) => conjugate(sibling, targetTense)[p]),
   )
   const typeC = siblings.flatMap((sibling) =>
-    tensePool(sibling, difficulty)
+    distractorTenses(difficulty)
       .filter((t) => !tensesEqual(t, targetTense))
-      .map((t) => tryConjugate(sibling, t, targetPronoun)),
+      .map((t) => conjugate(sibling, t)[targetPronoun]),
   )
-  return toSet([...typeA, ...typeB, ...typeC], difficulty)
+  return [...typeA, ...typeB, ...typeC]
 }
 
 function hardCandidates(
   verb: DisplayVerb,
   targetTense: VerbTense,
   targetPronoun: PronounId,
-  siblings: DisplayVerb[],
   difficulty: Difficulty,
-): Set<string> {
-  const type1 = pronounPool(verb, targetTense, difficulty)
+): string[] {
+  const type1 = distractorPronouns(targetTense, difficulty)
     .filter((p) => p !== targetPronoun)
-    .map((p) => tryConjugate(verb, targetTense, p))
-  const type2 = tensePool(verb, difficulty)
+    .map((p) => conjugate(verb, targetTense)[p])
+  const type2 = distractorTenses(difficulty)
     .filter((t) => !tensesEqual(t, targetTense))
-    .map((t) => tryConjugate(verb, t, targetPronoun))
-  const type3 = siblings.map((sibling) => tryConjugate(sibling, targetTense, targetPronoun))
-  return toSet([...type1, ...type2, ...type3], difficulty)
+    .map((t) => conjugate(verb, t)[targetPronoun])
+  const type3 = buildSiblings(verb).map((sibling) => conjugate(sibling, targetTense)[targetPronoun])
+  return [...type1, ...type2, ...type3]
 }
 
 export function conjugationExercise(difficulty: Difficulty): Exercise {
@@ -136,14 +156,15 @@ export function conjugationExercise(difficulty: Difficulty): Exercise {
   const targetPronoun = randomPronoun(verb, targetTense, difficulty)
   const answer = diacriticsDifficulty(conjugate(verb, targetTense)[targetPronoun], difficulty)
 
-  const siblings = getSiblings(verb)
-  const candidates =
+  const raw =
     difficulty === 'hard'
-      ? hardCandidates(verb, targetTense, targetPronoun, siblings, difficulty)
+      ? hardCandidates(verb, targetTense, targetPronoun, difficulty)
       : difficulty === 'medium'
-        ? mediumCandidates(verb, targetTense, targetPronoun, siblings, difficulty)
-        : easyCandidates(verb, targetTense, targetPronoun, siblings, difficulty)
+        ? mediumCandidates(verb, targetTense, targetPronoun, difficulty)
+        : easyCandidates(targetTense, targetPronoun, verb, difficulty)
 
+  const candidates = new Set(raw.map((r) => diacriticsDifficulty(r, difficulty)))
+  candidates.delete('')
   candidates.delete(answer)
   const options = new Set<string>([answer])
   for (const candidate of shuffle(Array.from(candidates))) {
