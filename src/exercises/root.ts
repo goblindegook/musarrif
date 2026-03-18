@@ -33,85 +33,46 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
 }
 
 function buildDistractors(correct: string, wordLetters: readonly string[]): readonly string[] {
-  const options = new Set<string>()
+  const distractors = new Set<string>()
   const weakAlternatives = weakLetterAlternatives(correct)
-  if (weakAlternatives.length > 0) options.add(random(weakAlternatives))
+  const sourceLetters = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
 
-  const strategies: readonly DistractorStrategy[] = [
-    weakAlternativeStrategy,
-    wordSliceStrategy,
-    wordMutationStrategy,
-    mixedWordAndRandomStrategy,
-  ]
+  if (weakAlternatives.length > 0) distractors.add(random(weakAlternatives))
 
-  let attempt = 0
-  while (options.size < 3 && attempt < 200) {
-    const strategy = random(strategies)
-    const candidate = strategy(correct, wordLetters, weakAlternatives, attempt)
-    if (candidate !== correct) options.add(candidate)
-    attempt += 1
+  for (let attempt = 0; distractors.size < 3 && attempt < 200; attempt += 1) {
+    const strategy = Math.floor(Math.random() * 4)
+    const base = cyclicSlice(sourceLetters, correct.length, attempt + 1)
+    const candidate =
+      strategy === 0 && weakAlternatives.length > 0
+        ? random(weakAlternatives)
+        : strategy === 1
+          ? base
+          : strategy === 2
+            ? varyCandidate(base, attempt + 1)
+            : mixedCandidate(correct.length, sourceLetters, attempt)
+
+    if (candidate !== correct) distractors.add(candidate)
   }
 
-  return Array.from(options)
-}
+  for (let attempt = 0; distractors.size < 3; attempt += 1) {
+    const candidate = varyCandidate(cyclicSlice(sourceLetters, correct.length, attempt), attempt + sourceLetters.length)
+    if (candidate !== correct) distractors.add(candidate)
+  }
 
-type DistractorStrategy = (
-  correct: string,
-  wordLetters: readonly string[],
-  weakAlternatives: readonly string[],
-  attempt: number,
-) => string
-
-function weakAlternativeStrategy(
-  correct: string,
-  wordLetters: readonly string[],
-  weakAlternatives: readonly string[],
-  attempt: number,
-): string {
-  if (weakAlternatives.length === 0) return wordSliceStrategy(correct, wordLetters, weakAlternatives, attempt)
-  return weakAlternatives[attempt % weakAlternatives.length]
-}
-
-function wordSliceStrategy(
-  correct: string,
-  wordLetters: readonly string[],
-  _: readonly string[],
-  attempt: number,
-): string {
-  const pool = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
-  const offset = attempt + 1
-  const candidate = cyclicSlice(pool, correct.length, offset)
-  if (pool.length === 0) return candidate
-  return varyCandidate(candidate, Math.floor(offset / pool.length))
-}
-
-function wordMutationStrategy(
-  correct: string,
-  wordLetters: readonly string[],
-  _: readonly string[],
-  attempt: number,
-): string {
-  const pool = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
-  return varyCandidate(cyclicSlice(pool, correct.length, attempt), attempt + 1)
-}
-
-function mixedWordAndRandomStrategy(
-  correct: string,
-  wordLetters: readonly string[],
-  _: readonly string[],
-  attempt: number,
-): string {
-  if (correct.length < 2) return wordMutationStrategy(correct, wordLetters, [], attempt)
-
-  const source = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
-  const fromWordLength = 1 + (attempt % (correct.length - 1))
-  const fromWord = cyclicSlice(source, fromWordLength, attempt)
-  const fromRandom = cyclicSlice(RANDOM_ROOT_LETTERS, correct.length - fromWordLength, attempt + source.length)
-  return `${fromWord}${fromRandom}`
+  return Array.from(distractors).slice(0, 3)
 }
 
 function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
+}
+
+function mixedCandidate(length: number, sourceLetters: readonly string[], attempt: number): string {
+  if (length < 2) return varyCandidate(cyclicSlice(sourceLetters, length, attempt), attempt + 1)
+
+  const fromWordLength = 1 + (attempt % (length - 1))
+  const fromWord = cyclicSlice(sourceLetters, fromWordLength, attempt)
+  const fromRandom = cyclicSlice(RANDOM_ROOT_LETTERS, length - fromWordLength, attempt + sourceLetters.length)
+  return `${fromWord}${fromRandom}`
 }
 
 function cyclicSlice(pool: readonly string[], length: number, offset: number): string {
