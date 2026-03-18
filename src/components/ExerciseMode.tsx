@@ -1,18 +1,18 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import { formExercise } from '../exercises/form'
+import { randomExercise } from '../exercises/random'
 import type { Difficulty, Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { DifficultyToggle } from './DifficultyToggle'
 
 type Props = {
-  randomExercise?: (difficulty: Difficulty) => Exercise
+  generateExercise?: (difficulty: Difficulty) => Exercise
 }
 
-export function ExerciseMode({ randomExercise = formExercise }: Props) {
+export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t } = useI18n()
   const [difficulty, setDifficulty] = useState<Difficulty>('easy')
-  const [exercise, setExercise] = useState<Exercise>(() => randomExercise('easy'))
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise('easy'))
   const [selected, setSelected] = useState<number | null>(null)
 
   const isAnswered = selected != null
@@ -25,7 +25,7 @@ export function ExerciseMode({ randomExercise = formExercise }: Props) {
           onChangeDifficulty={(d: Difficulty) => {
             if (d === difficulty) return
             setDifficulty(d)
-            setExercise(randomExercise(d))
+            setExercise(generateExercise(d))
             setSelected(null)
           }}
         />
@@ -61,7 +61,7 @@ export function ExerciseMode({ randomExercise = formExercise }: Props) {
           <NextButton
             type="button"
             onClick={() => {
-              setExercise(randomExercise(difficulty))
+              setExercise(generateExercise(difficulty))
               setSelected(null)
             }}
           >

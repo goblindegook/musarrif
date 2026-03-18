@@ -12,14 +12,14 @@ export function formExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
-  const incorrectAnswers = shuffle(FORMS.filter((f) => f !== verb.form)).slice(0, 3)
-  const options = [verb.form, ...incorrectAnswers].sort((a, b) => a - b).map((f) => FORM_LABELS[f - 1])
+  const distrators = shuffle(FORMS.filter((f) => f !== verb.form)).slice(0, 3)
+  const options = [verb.form, ...distrators].sort((a, b) => a - b)
 
   return {
     kind: 'form',
     promptTranslationKey: 'exercise.form.prompt',
     word: applyDiacriticsPreference(conjugate(verb, tense)[pronoun], diacriticsDifficulty(difficulty)),
-    options,
-    answer: options.indexOf(FORM_LABELS[verb.form - 1]),
+    options: options.map((f) => FORM_LABELS[f - 1]),
+    answer: options.indexOf(verb.form),
   }
 }

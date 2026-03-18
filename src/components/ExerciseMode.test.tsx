@@ -30,23 +30,23 @@ function testExercise(): Exercise {
 
 describe('ExerciseMode', () => {
   test('shows four option buttons', () => {
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })).toHaveLength(4)
   })
 
   test('does not show next button before answering', () => {
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
   })
 
   test('shows next button after selecting an option', () => {
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
   })
 
   test('option buttons are disabled after answering', () => {
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     const options = screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })
     fireEvent.click(options[0])
     for (const option of options) {
@@ -55,7 +55,7 @@ describe('ExerciseMode', () => {
   })
 
   test('clicking next loads a fresh question with enabled options', () => {
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
     fireEvent.click(screen.getByRole('button', { name: /next/i }))
     const freshOptions = screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })
@@ -67,7 +67,7 @@ describe('ExerciseMode', () => {
 
   test('correct option is marked after selecting any answer', () => {
     // answer=0 → option at index 0 (I) is correct
-    render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
     expect(screen.getByTestId('correct-option')).toBeInTheDocument()
     expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
@@ -75,21 +75,21 @@ describe('ExerciseMode', () => {
 
   describe('difficulty toggle', () => {
     test('shows three difficulty buttons', () => {
-      render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
       expect(screen.getByRole('button', { name: /easy/i })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /medium/i })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: /hard/i })).toBeInTheDocument()
     })
 
     test('easy is the default selected difficulty', () => {
-      render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
       expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'true')
       expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'false')
       expect(screen.getByRole('button', { name: /hard/i })).toHaveAttribute('aria-pressed', 'false')
     })
 
     test('selecting a difficulty updates the active button', () => {
-      render(<ExerciseMode randomExercise={testExercise} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
       fireEvent.click(screen.getByRole('button', { name: /medium/i }))
       expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'true')
       expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'false')
@@ -97,7 +97,7 @@ describe('ExerciseMode', () => {
 
     test('selecting a difficulty resets the in-progress answer', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode randomExercise={gen} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
       fireEvent.click(screen.getByRole('button', { name: /hard/i }))
@@ -106,13 +106,13 @@ describe('ExerciseMode', () => {
 
     test('calls the generator with easy on mount', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode randomExercise={gen} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       expect(gen).toHaveBeenCalledWith('easy')
     })
 
     test('calls the generator with the current difficulty when next is clicked', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode randomExercise={gen} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getByRole('button', { name: /medium/i }))
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       fireEvent.click(screen.getByRole('button', { name: /next/i }))
@@ -121,7 +121,7 @@ describe('ExerciseMode', () => {
 
     test('calls the generator with the new difficulty when difficulty changes', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode randomExercise={gen} />, { wrapper: Wrapper })
+      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getByRole('button', { name: /hard/i }))
       expect(gen).toHaveBeenCalledWith('hard')
     })

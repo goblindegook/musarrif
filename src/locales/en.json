@@ -22,6 +22,7 @@
     "exercise.open": "Test mode",
     "exercise.back": "Conjugation",
     "exercise.form.prompt": "What form is this verb?",
+    "exercise.root.prompt": "What is the root of this verb?",
     "exercise.next": "Next",
     "exercise.difficulty.title": "Difficulty",
     "exercise.difficulty.easy": "Easy",

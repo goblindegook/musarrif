@@ -11,17 +11,17 @@ import type { PronounId } from '../paradigms/pronouns'
 import { type Verb, type Voice, verbs } from '../paradigms/verbs'
 import type { Difficulty } from './types'
 
-export type TenseConfig =
+type VerbTense =
   | [voice: 'active', mood: 'imperative']
   | [voice: Voice, tense: 'past' | 'future']
   | [voice: Voice, tense: 'present', mood: Mood]
 
-const EASY_TENSES: TenseConfig[] = [
+const EASY_TENSES: VerbTense[] = [
   ['active', 'past'],
   ['active', 'present', 'indicative'],
 ]
 
-const ACTIVE_TENSES: TenseConfig[] = [
+const ACTIVE_TENSES: VerbTense[] = [
   ['active', 'past'],
   ['active', 'present', 'indicative'],
   ['active', 'present', 'subjunctive'],
@@ -30,7 +30,7 @@ const ACTIVE_TENSES: TenseConfig[] = [
   ['active', 'imperative'],
 ]
 
-const PASSIVE_TENSES: TenseConfig[] = [
+const PASSIVE_TENSES: VerbTense[] = [
   ['passive', 'past'],
   ['passive', 'present', 'indicative'],
   ['passive', 'present', 'subjunctive'],
@@ -44,13 +44,13 @@ export function randomVerb(difficulty: Difficulty): Verb {
   return random(difficulty === 'easy' ? verbs : verbs.filter(({ root }) => root.length === 3))
 }
 
-export function randomTense(verb: Verb, difficulty: Difficulty): TenseConfig {
+export function randomTense(verb: Verb, difficulty: Difficulty): VerbTense {
   if (difficulty === 'easy') return random(EASY_TENSES)
   if (difficulty === 'medium' || !canConjugatePassive(verb)) return random(ACTIVE_TENSES)
   return random([...ACTIVE_TENSES, ...PASSIVE_TENSES])
 }
 
-export function randomPronoun(verb: Verb, [voice, tense]: TenseConfig, difficulty: Difficulty): PronounId {
+export function randomPronoun(verb: Verb, [voice, tense]: VerbTense, difficulty: Difficulty): PronounId {
   const pronouns = difficulty === 'easy' ? PRONOUNS.filter((p) => !p.includes('d')) : PRONOUNS
   if (tense === 'imperative') return random(pronouns.filter((p) => p.startsWith('2')))
   if (voice === 'passive' && verb.passiveVoice === 'impersonal') return '3ms'
@@ -63,7 +63,7 @@ export function diacriticsDifficulty(difficulty: Difficulty): DiacriticsPreferen
   return 'none'
 }
 
-export function conjugate(verb: Verb, [voice, tense, mood]: TenseConfig): Record<PronounId, string> {
+export function conjugate(verb: Verb, [voice, tense, mood]: VerbTense): Record<PronounId, string> {
   if (voice === 'passive')
     switch (tense) {
       case 'past':
@@ -86,6 +86,6 @@ export function conjugate(verb: Verb, [voice, tense, mood]: TenseConfig): Record
   }
 }
 
-function random<T>(arr: T[]): T {
+export function random<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
