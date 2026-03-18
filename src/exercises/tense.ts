@@ -54,7 +54,7 @@ function buildOptions(
   pronoun: PronounId,
   difficulty: Difficulty,
 ): [string, readonly VerbTense[]] {
-  const stripDiacritics = (word: string) => diacriticsDifficulty(word, difficulty === 'easy' ? 'easy' : 'medium')
+  const stripDiacritics = (word: string) => diacriticsDifficulty(word, difficulty)
 
   const word = stripDiacritics(conjugate(verb, tense)[pronoun])
 

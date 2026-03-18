@@ -16,7 +16,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const [storedDifficulty, setDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const difficulty: Difficulty =
     storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise('easy'))
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty))
   const [selected, setSelected] = useState<number | null>(null)
 
   const isAnswered = selected != null

@@ -77,9 +77,9 @@ describe('tenseExercise difficulty', () => {
     expect(tenseExercise('medium').word).toEqualT('شَعَرتُ')
   })
 
-  test('hard: word is شَعَرتُ (active past 1s, some diacritics, random=0)', () => {
+  test('hard: word is شعرت (active past 1s, some diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(tenseExercise('hard').word).toEqualT('شَعَرتُ')
+    expect(tenseExercise('hard').word).toEqualT('شعرت')
   })
 
   test('easy: options are unvoiced tense keys', () => {
