@@ -1,18 +1,19 @@
-# Muṣarrif
+# [Muṣarrif](https://goblindegook.github.io/musarrif/)
 
-Interactive Arabic verb conjugator. Search and browse verbs, drill into derived forms, and view full conjugation
+Interactive Arabic verb conjugator. Search and build verbs, drill into derived forms, and view full conjugation
 tables with speech playback (where supported).
 
 ## Features
 
-- Arabic-aware search with diacritic stripping and autocomplete suggestions
-- Browse verbs by form
+- Search and browse verbs by form
+- Build verbs from arbitrary triliteral roots
+- Full conjugation tables for active and passive past, present, and future, as well as imperative
+- Nominals: active and passive participles and masdar paradigms
 - Derived‑form selector
 - Root and form insights
-- Full conjugation tables for active/passive past, present, future, and imperative
-- Nominals: active/passive participles and masdar
-- Multilingual UI (Arabic, English, Italian, Portuguese) with RTL/LTR support
+- Quiz mode
 - Diacritics toggle plus copy, share, and speech playback controls
+- Multilingual UI supporting Arabic, English, Italian, and Portuguese
 
 ## Getting Started
 

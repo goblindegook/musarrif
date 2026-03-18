@@ -38,8 +38,8 @@ function buildOptions(root: string, word: string): readonly string[] {
 
   const generators = [
     closestRootDistractor(root),
-    sourceSliceDistractor(root, wordLetters),
-    mixedDistractor(root, wordLetters),
+    sourceSliceDistractor(wordLetters, root.length),
+    mixedDistractor(wordLetters, root.length),
     Array.from(root).some(isWeakLetter) ? weakAlternativeDistractor(root) : null,
   ].filter((generator) => generator != null)
 
@@ -50,14 +50,14 @@ function buildOptions(root: string, word: string): readonly string[] {
   return shuffle(Array.from(options))
 }
 
-function closestRootDistractor(correct: string): () => string {
+function closestRootDistractor(root: string): () => string {
   let offset = 1
 
   const closestRoots = Array.from(
     new Set(
-      getClosestVerbs(correct, 20)
+      getClosestVerbs(root, 20)
         .map((verb) => verb.root)
-        .filter((root) => root !== correct),
+        .filter((candidate) => candidate !== root),
     ),
   )
 
@@ -78,22 +78,21 @@ function weakAlternativeDistractor(correct: string): () => string {
   return () => random(weakAlternatives)
 }
 
-function sourceSliceDistractor(correct: string, sourceLetters: readonly string[]): () => string {
+function sourceSliceDistractor(sourceLetters: readonly string[], size: number): () => string {
   let offset = 1
-  return () => cyclicSlice(sourceLetters, correct.length, offset++)
+  return () => cyclicSlice(sourceLetters, size, offset++)
 }
 
-function mixedDistractor(correct: string, wordLetters: readonly string[]): () => string {
+function mixedDistractor(wordLetters: readonly string[], size: number): () => string {
   const sourceLetters = wordLetters.length > 0 ? wordLetters : RANDOM_ROOT_LETTERS
   let offset = 0
 
   return () => {
     offset += 1
-    if (correct.length < 2) return cyclicSlice(sourceLetters, correct.length, offset)
-    const fromWordLength = 1 + (offset % (correct.length - 1))
+    const fromWordLength = 1 + (offset % (size - 1))
     return (
       cyclicSlice(sourceLetters, fromWordLength, offset) +
-      cyclicSlice(RANDOM_ROOT_LETTERS, correct.length - fromWordLength, offset + sourceLetters.length + 1)
+      cyclicSlice(RANDOM_ROOT_LETTERS, size - fromWordLength, offset + sourceLetters.length + 1)
     )
   }
 }
