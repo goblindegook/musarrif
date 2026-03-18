@@ -2,7 +2,7 @@ import { shuffle } from '@pacote/shuffle'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import type { Verb } from '../paradigms/verbs'
+import type { DisplayVerb } from '../paradigms/verbs'
 import {
   ACTIVE_TENSES,
   type Difficulty,
@@ -49,7 +49,7 @@ export function tenseExercise(difficulty: Difficulty = 'easy'): Exercise {
 }
 
 function buildOptions(
-  verb: Verb,
+  verb: DisplayVerb,
   tense: VerbTense,
   pronoun: PronounId,
   difficulty: Difficulty,

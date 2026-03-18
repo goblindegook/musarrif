@@ -38,7 +38,13 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
-        <Prompt>{t(exercise.promptTranslationKey)}</Prompt>
+        <Prompt>
+          {t(
+            exercise.promptTranslationKey,
+            exercise.promptParams &&
+              Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+          )}
+        </Prompt>
         <OptionsGrid>
           {exercise.options.map((option, index) => {
             const isCorrect = index === exercise.answer

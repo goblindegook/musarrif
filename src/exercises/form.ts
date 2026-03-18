@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { type Verb, type VerbForm, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -25,7 +25,7 @@ export function formExercise(difficulty: Difficulty = 'easy'): Exercise {
 }
 
 function buildOptions(
-  verb: Verb,
+  verb: DisplayVerb,
   tense: VerbTense,
   pronoun: PronounId,
   difficulty: Difficulty,
