@@ -1,8 +1,9 @@
 import { shuffle } from '@pacote/shuffle'
 import { applyDiacriticsPreference } from '../paradigms/letters'
+import { conjugate } from '../paradigms/tense'
 import type { VerbForm } from '../paradigms/verbs'
-import { conjugate, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './selectors'
-import type { Difficulty, Exercise } from './types'
+import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import type { Exercise } from './types'
 
 const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 

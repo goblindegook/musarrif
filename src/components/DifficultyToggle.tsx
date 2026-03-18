@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import type { Difficulty } from '../exercises/types'
+import type { Difficulty } from '../exercises/difficulty'
 import { useI18n } from '../hooks/i18n'
 
 const DIFFICULTY_OPTIONS: readonly Difficulty[] = ['easy', 'medium', 'hard']

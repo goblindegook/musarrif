@@ -1,17 +1,12 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
-import { conjugateFuture } from '../paradigms/active/future'
-import { conjugateImperative } from '../paradigms/active/imperative'
-import { conjugatePast } from '../paradigms/active/past'
-import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
+import type { Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
-import { conjugatePassiveFuture } from '../paradigms/passive/future'
-import { conjugatePassivePast } from '../paradigms/passive/past'
-import { conjugatePassivePresentMood } from '../paradigms/passive/present'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import type { DisplayVerb, Tense, Voice } from '../paradigms/verbs'
+import { conjugate, type Tense, type Voice } from '../paradigms/tense'
+import type { DisplayVerb } from '../paradigms/verbs'
 import { CopyButton } from './CopyButton'
 import { SpeechButton } from './SpeechButton'
 import { TabBar, TabButton, TabPanel } from './Tabs'
@@ -97,21 +92,16 @@ export function ConjugationTable({
   const { t, dir, lang } = useI18n()
   const passiveAvailable = canConjugatePassive(verb)
   const availableVoices = passiveAvailable ? VOICE_OPTIONS : (['active'] as const)
-  const activeVoice = passiveAvailable ? voice : 'active'
-  const conjugations = useMemo(() => {
-    if (activeVoice === 'passive') {
-      if (tense === 'past') return conjugatePassivePast(verb)
-      if (tense === 'future') return conjugatePassiveFuture(verb)
-      if (tense === 'present') return conjugatePassivePresentMood(verb, mood)
-      return null
-    }
-    if (tense === 'past') return conjugatePast(verb)
-    if (tense === 'future') return conjugateFuture(verb)
-    if (tense === 'imperative') return conjugateImperative(verb)
-    return conjugatePresentMood(verb, mood)
-  }, [activeVoice, verb, tense, mood])
+  const selectedVoice = passiveAvailable ? voice : 'active'
+  const conjugations = useMemo(
+    () =>
+      tense === 'imperative'
+        ? conjugate(verb, ['active', 'imperative'])
+        : conjugate(verb, mood ? [selectedVoice, tense, mood] : [selectedVoice, tense]),
+    [selectedVoice, verb, tense, mood],
+  )
   const conjugationEntries: Partial<Record<PronounId, string>> = conjugations ?? {}
-  const availableTenses = TENSE_OPTIONS_BY_VOICE[activeVoice]
+  const availableTenses = TENSE_OPTIONS_BY_VOICE[selectedVoice]
 
   return (
     <TabsContainer>
@@ -121,13 +111,13 @@ export function ConjugationTable({
             <TabButton
               type="button"
               key={option}
-              active={option === activeVoice}
+              active={option === selectedVoice}
               hasChildren
               role="tab"
               id={`voice-tab-${option}`}
-              aria-selected={option === activeVoice}
+              aria-selected={option === selectedVoice}
               aria-controls={'conjugation-panel'}
-              tabIndex={option === activeVoice ? 0 : -1}
+              tabIndex={option === selectedVoice ? 0 : -1}
               aria-label={t(VOICE_LABELS[option])}
               onClick={() => onVoiceChange(option)}
               dir={dir}

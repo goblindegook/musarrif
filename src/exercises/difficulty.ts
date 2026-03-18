@@ -1,20 +1,10 @@
-import { conjugateFuture } from '../paradigms/active/future'
-import { conjugateImperative } from '../paradigms/active/imperative'
-import { conjugatePast } from '../paradigms/active/past'
-import { conjugatePresentMood, type Mood } from '../paradigms/active/present'
 import type { DiacriticsPreference } from '../paradigms/letters'
-import { conjugatePassiveFuture } from '../paradigms/passive/future'
-import { conjugatePassivePast } from '../paradigms/passive/past'
-import { conjugatePassivePresentMood } from '../paradigms/passive/present'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import { type Verb, type Voice, verbs } from '../paradigms/verbs'
-import type { Difficulty } from './types'
+import type { VerbTense } from '../paradigms/tense'
+import { type Verb, verbs } from '../paradigms/verbs'
 
-type VerbTense =
-  | [voice: 'active', mood: 'imperative']
-  | [voice: Voice, tense: 'past' | 'future']
-  | [voice: Voice, tense: 'present', mood: Mood]
+export type Difficulty = 'easy' | 'medium' | 'hard'
 
 const EASY_TENSES: VerbTense[] = [
   ['active', 'past'],
@@ -57,35 +47,12 @@ export function randomPronoun(verb: Verb, [voice, tense]: VerbTense, difficulty:
   return random(pronouns)
 }
 
+export function random<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
 export function diacriticsDifficulty(difficulty: Difficulty): DiacriticsPreference {
   if (difficulty === 'easy') return 'all'
   if (difficulty === 'medium') return 'some'
   return 'none'
-}
-
-export function conjugate(verb: Verb, [voice, tense, mood]: VerbTense): Record<PronounId, string> {
-  if (voice === 'passive')
-    switch (tense) {
-      case 'past':
-        return conjugatePassivePast(verb)
-      case 'present':
-        return conjugatePassivePresentMood(verb, mood)
-      case 'future':
-        return conjugatePassiveFuture(verb)
-    }
-
-  switch (tense) {
-    case 'past':
-      return conjugatePast(verb)
-    case 'present':
-      return conjugatePresentMood(verb, mood)
-    case 'future':
-      return conjugateFuture(verb)
-    case 'imperative':
-      return conjugateImperative(verb)
-  }
-}
-
-export function random<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]
 }

@@ -26,8 +26,6 @@ export type MasdarPattern =
   | 'ifi3aal'
   | 'mimi'
 
-export type Tense = 'past' | 'present' | 'future' | 'imperative'
-export type Voice = 'active' | 'passive'
 export type PassiveVoice = 'none' | 'impersonal'
 
 export type FormIVerb = {

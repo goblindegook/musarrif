@@ -8,9 +8,10 @@ import {
   WAW,
   YEH,
 } from '../paradigms/letters'
+import { conjugate } from '../paradigms/tense'
 import { verbs } from '../paradigms/verbs'
-import { conjugate, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './selectors'
-import type { Difficulty, Exercise } from './types'
+import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import type { Exercise } from './types'
 
 const RANDOM_ROOT_LETTERS = Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root))))
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const

@@ -1,7 +1,8 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
+import type { Difficulty } from '../exercises/difficulty'
 import { randomExercise } from '../exercises/random'
-import type { Difficulty, Exercise } from '../exercises/types'
+import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { DifficultyToggle } from './DifficultyToggle'
 
