@@ -9,7 +9,7 @@
     "exercise.form.prompt": "ما صيغة هذا الفعل؟",
     "exercise.root.prompt": "ما جذر هذا الفعل؟",
     "exercise.tense.prompt": "ما زمن هذا الفعل؟",
-    "exercise.conjugation.prompt": "صرِّف هذا الفعل في {tense} للضمير {pronoun}.",
+    "exercise.conjugation.prompt": "صرِّف هذا الفعل في <strong>{tense}</strong> للضمير <strong>{pronoun}</strong>.",
     "exercise.conjugation.tense.past": "الماضي",
     "exercise.conjugation.tense.present": "المضارع",
     "exercise.conjugation.tense.subjunctive": "المنصوب",

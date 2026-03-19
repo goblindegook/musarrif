@@ -9,7 +9,7 @@
     "exercise.form.prompt": "A quale forma appartiene questo verbo?",
     "exercise.root.prompt": "Qual è la radice di questo verbo?",
     "exercise.tense.prompt": "A quale tempo è coniugato questo verbo?",
-    "exercise.conjugation.prompt": "Coniuga questo verbo al {tense} per il {pronoun}.",
+    "exercise.conjugation.prompt": "Coniuga questo verbo al <strong>{tense}</strong> per la <strong>{pronoun}</strong>.",
     "exercise.conjugation.tense.past": "passato",
     "exercise.conjugation.tense.present": "presente",
     "exercise.conjugation.tense.subjunctive": "congiuntivo",

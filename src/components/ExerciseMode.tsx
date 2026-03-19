@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
-  const { t } = useI18n()
+  const { t, tHtml } = useI18n()
   const [storedDifficulty, setDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const difficulty: Difficulty =
     storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
@@ -38,13 +38,15 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
-        <Prompt>
-          {t(
-            exercise.promptTranslationKey,
-            exercise.promptParams &&
-              Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
-          )}
-        </Prompt>
+        <Prompt
+          dangerouslySetInnerHTML={{
+            __html: tHtml(
+              exercise.promptTranslationKey,
+              exercise.promptParams &&
+                Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+            ),
+          }}
+        />
         <OptionsGrid>
           {exercise.options.map((option, index) => {
             const isCorrect = index === exercise.answer

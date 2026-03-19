@@ -24,7 +24,7 @@
     "exercise.form.prompt": "What form is this verb?",
     "exercise.root.prompt": "What is the root of this verb?",
     "exercise.tense.prompt": "What tense is this verb conjugated in?",
-    "exercise.conjugation.prompt": "Conjugate this verb in the {tense} for {pronoun}.",
+    "exercise.conjugation.prompt": "Conjugate this verb in the <strong>{tense}</strong> for <strong>{pronoun}</strong>.",
     "exercise.conjugation.tense.past": "past",
     "exercise.conjugation.tense.present": "present",
     "exercise.conjugation.tense.subjunctive": "subjunctive",
