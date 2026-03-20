@@ -102,6 +102,8 @@
     "rootInfo.hamzated-defective.description": "Esta raiz combina uma hamza (ء) com um padrão defeituoso (final fraca). A radical inicial é uma hamza e a radical final é uma letra fraca (و, ي, ou ا).",
     "rootInfo.hamzated-hollow-defective.description": "Esta raiz combina múltiplas irregularidades: contém uma hamza (ء) na posição inicial, tem uma radical do meio fraca (و ou ي), e tem uma radical final fraca (و, ي, ou ا). Esta combinação requer tratamento especial na conjugação.",
     "modal.close": "Fechar",
+    "mode.conjugate": "Conjugar",
+    "mode.exercise": "Exercícios",
     "footer.feedback.title": "Viu algo errado?",
     "footer.feedback.body": "O Muṣarrif é mantido por <strong>voluntários</strong>. Avise-nos sobre erros ou casos em falta.",
     "footer.feedback.cta": "Comunicar um problema",

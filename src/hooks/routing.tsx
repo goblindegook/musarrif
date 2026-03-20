@@ -15,8 +15,7 @@ interface RouteParams {
 }
 
 interface RoutingContextValue extends RouteParams {
-  navigateToVerb: (verbId?: string, voice?: Voice, tense?: Tense, mood?: Mood) => void
-  navigateToTest: () => void
+  navigateTo: (url: string) => void
 }
 
 const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
@@ -148,6 +147,18 @@ export function buildVerbHref(id: string): string {
   return `${baseWithTrailingSlash}#/verbs/${encodedId}`
 }
 
+export function buildVerbUrl(verbId?: string, voice?: Voice, tense?: Tense, mood?: Mood): string {
+  const normalized = normalizeConjugation(tense, mood)
+  const normalizedVoice = isVoice(voice) ? voice : undefined
+  return buildUrl({
+    page: 'conjugation',
+    verbId,
+    voice: normalizedVoice,
+    tense: normalized.tense,
+    mood: normalized.mood,
+  })
+}
+
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
   const [route, setRoute] = useState<RouteParams>(() => parsePath(getCurrentPath()))
 
@@ -171,36 +182,24 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
     }
   }, [])
 
-  const navigate = useCallback(
-    ({ verbId, voice, tense, mood }: Omit<RouteParams, 'page'>) => {
-      const normalized = normalizeConjugation(tense, mood)
-      const normalizedVoice = isVoice(voice) ? voice : undefined
-      const nextState: RouteParams = {
-        page: 'conjugation',
-        verbId,
-        voice: normalizedVoice,
-        tense: normalized.tense,
-        mood: normalized.mood,
-      }
+  const navigateTo = useCallback(
+    (url: string) => {
+      const hashIndex = url.indexOf('#')
+      const hashPath = hashIndex >= 0 ? url.slice(hashIndex + 1) : url
+      const normalizedPath = ensureLeadingSlash(hashPath)
+      const nextState = parsePath(normalizedPath)
       window.history.pushState({}, '', buildUrl(nextState))
       setRoute(nextState)
     },
     [setRoute],
   )
 
-  const navigateToTest = useCallback(() => {
-    const testState: RouteParams = { page: 'test' }
-    window.history.pushState({}, '', buildUrl(testState))
-    setRoute(testState)
-  }, [setRoute])
-
   const value = useMemo<RoutingContextValue>(
     (): RoutingContextValue => ({
       ...route,
-      navigateToVerb: (verbId, voice, tense, mood) => navigate({ verbId, voice, tense, mood }),
-      navigateToTest,
+      navigateTo,
     }),
-    [route.page, route.verbId, route.voice, route.tense, route.mood, navigate, navigateToTest],
+    [route.page, route.verbId, route.voice, route.tense, route.mood, navigateTo],
   )
 
   return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>

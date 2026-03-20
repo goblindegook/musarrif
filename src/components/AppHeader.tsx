@@ -1,13 +1,20 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
+import { useRouting } from '../hooks/routing'
 import { DiacriticsToggle } from './DiacriticsToggle'
 import { IconButton } from './IconButton'
+import { ConjugateIcon } from './icons/ConjugateIcon'
+import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
 import { LanguagePicker } from './LanguagePicker'
+import { ModeToggle } from './ModeToggle'
+
+const MODES = ['conjugation', 'test'] as const
 
 export const AppHeader = () => {
   const { t, lang, dir } = useI18n()
+  const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   return (
@@ -21,17 +28,29 @@ export const AppHeader = () => {
             {t('title')}
           </PageTitle>
         </TitleGroup>
-        <SettingsButtonWrapper>
-          <IconButton
-            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            ariaLabel={t('settings.toggle')}
-            ariaExpanded={isSettingsOpen}
-            title={t('settings.toggle')}
-            active={isSettingsOpen}
-          >
-            <SettingsIcon />
-          </IconButton>
-        </SettingsButtonWrapper>
+        <RightGroup>
+          <ModeToggle
+            activeMode={MODES.indexOf(page)}
+            labels={[t('mode.conjugate'), t('mode.exercise')]}
+            icons={[<ConjugateIcon />, <ExerciseIcon />]}
+            ariaLabel="Mode"
+            onClick={(index) => {
+              if (index === 0) navigateTo('/#/verbs')
+              else navigateTo('/#/test')
+            }}
+          />
+          <SettingsButtonWrapper>
+            <IconButton
+              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+              ariaLabel={t('settings.toggle')}
+              ariaExpanded={isSettingsOpen}
+              title={t('settings.toggle')}
+              active={isSettingsOpen}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </SettingsButtonWrapper>
+        </RightGroup>
       </TopBarHeader>
       <Controls visible={isSettingsOpen}>
         <DiacriticsToggle />
@@ -56,16 +75,6 @@ const TopBar = styled('header')`
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
   transition: padding 200ms ease;
-
-  @media (min-width: 960px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0 2rem;
-    position: static;
-    background: transparent;
-    box-shadow: none;
-  }
 `
 
 const TopBarHeader = styled('div')`
@@ -81,7 +90,6 @@ const TitleGroup = styled('div')`
   flex-direction: column;
   align-items: flex-start;
   gap: 0.15rem;
-  align-self: flex-start;
 `
 
 const Eyebrow = styled('p')`
@@ -108,17 +116,13 @@ const PageTitle = styled('h1')`
   &[lang='ar'] {
     letter-spacing: 0;
   }
-
-  @media (min-width: 960px) {
-    font-size: clamp(1.9rem, 3vw, 2.4rem);
-    line-height: 1.5;
-  }
 `
 
 const Controls = styled('aside')<{ visible: boolean }>`
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: flex-start;
+  align-self: flex-start;
   gap: 0.75rem;
   max-height: ${({ visible }) => (visible ? '200px' : '0')};
   opacity: ${({ visible }) => (visible ? '1' : '0')};
@@ -131,17 +135,16 @@ const Controls = styled('aside')<{ visible: boolean }>`
     align-items: center;
     gap: 1.25rem;
   }
-
-  @media (min-width: 960px) {
-    max-height: none;
-    opacity: 1;
-    margin-top: 0;
-    overflow: visible;
-  }
 `
 
 const SettingsButtonWrapper = styled('div')`
-  @media (min-width: 960px) {
-    display: none;
-  }
+  display: flex;
+  justify-content: flex-end;
+`
+
+const RightGroup = styled('div')`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
 `

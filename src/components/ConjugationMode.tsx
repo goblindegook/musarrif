@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../hooks/favourites'
 import { useI18n } from '../hooks/i18n'
 import { useRecent } from '../hooks/recent'
-import { useRouting } from '../hooks/routing'
+import { buildVerbUrl, useRouting } from '../hooks/routing'
 import enTranslations from '../locales/en.json'
 import type { Mood } from '../paradigms/active/present'
 import { formIPastVowel, formIPresentVowel } from '../paradigms/form-i-vowels'
@@ -63,7 +63,7 @@ const verbsByForm = (() => {
 
 export function ConjugationMode() {
   const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
-  const { verbId, navigateToVerb, tense, mood, voice } = useRouting()
+  const { verbId, navigateTo, tense, mood, voice } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
@@ -98,9 +98,9 @@ export function ConjugationMode() {
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       setSyntheticVerb(verb)
-      navigateToVerb(verb.id)
+      navigateTo(buildVerbUrl(verb.id))
     },
-    [navigateToVerb],
+    [navigateTo],
   )
 
   useEffect(() => {
@@ -134,23 +134,23 @@ export function ConjugationMode() {
   const handleVoiceChange = useCallback(
     (nextVoice: Voice) => {
       const nextTense = nextVoice === 'passive' && selectedTense === 'imperative' ? 'past' : selectedTense
-      navigateToVerb(verbId, nextVoice, nextTense, nextTense === 'present' ? routeMood : undefined)
+      navigateTo(buildVerbUrl(verbId, nextVoice, nextTense, nextTense === 'present' ? routeMood : undefined))
     },
-    [navigateToVerb, routeMood, selectedTense, verbId],
+    [navigateTo, routeMood, selectedTense, verbId],
   )
 
   const handleTenseChange = useCallback(
     (nextTense: Tense) => {
-      navigateToVerb(verbId, selectedVoice, nextTense, nextTense === 'present' ? routeMood : undefined)
+      navigateTo(buildVerbUrl(verbId, selectedVoice, nextTense, nextTense === 'present' ? routeMood : undefined))
     },
-    [navigateToVerb, routeMood, selectedVoice, verbId],
+    [navigateTo, routeMood, selectedVoice, verbId],
   )
 
   const handleMoodChange = useCallback(
     (nextMood: Mood) => {
-      navigateToVerb(verbId, selectedVoice, 'present', nextMood)
+      navigateTo(buildVerbUrl(verbId, selectedVoice, 'present', nextMood))
     },
-    [navigateToVerb, selectedVoice, verbId],
+    [navigateTo, selectedVoice, verbId],
   )
 
   const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
