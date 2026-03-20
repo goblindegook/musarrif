@@ -2,6 +2,7 @@ import { conjugationExercise } from './conjugation'
 import { type Difficulty, random } from './difficulty'
 import { masdarFormExercise } from './masdar-form'
 import { masdarRootExercise } from './masdar-root'
+import { masdarVerbExercise } from './masdar-verb'
 import type { Exercise } from './types'
 import { verbFormExercise } from './verb-form'
 import { verbRootExercise } from './verb-root'
@@ -14,11 +15,12 @@ interface ExerciseGenerator {
 
 const EXERCISES: readonly ExerciseGenerator[] = [
   { generate: verbFormExercise },
-  { generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
   { generate: verbRootExercise },
-  { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
   { generate: verbTenseExercise },
   { generate: conjugationExercise },
+  { generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
+  { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
+  { generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
 ]
 
 export function randomExercise(difficulty: Difficulty = 'easy'): Exercise {

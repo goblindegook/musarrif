@@ -23,6 +23,7 @@
     "exercise.back": "Conjugation",
     "exercise.prompt.verbForm": "What form is this verb?",
     "exercise.prompt.masdarForm": "What form is this masdar?",
+    "exercise.prompt.masdarVerb": "What verb does this masdar belong to?",
     "exercise.prompt.verbRoot": "What is the root of this verb?",
     "exercise.prompt.masdarRoot": "What is the root of this masdar?",
     "exercise.prompt.verbTense": "What tense is this verb conjugated in?",
