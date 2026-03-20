@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
+import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -36,7 +36,9 @@ function buildOptions(
     (f) =>
       f !== verb.form &&
       diacriticsDifficulty(
-        conjugate(f === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, f), tense)[pronoun],
+        conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, f), tense)[
+          pronoun
+        ],
         difficulty,
       ) !== word,
   )

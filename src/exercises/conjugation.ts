@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
+import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import {
   ACTIVE_TENSES,
   type Difficulty,
@@ -81,7 +81,7 @@ function distractorPronouns(tense: VerbTense, difficulty: Difficulty): PronounId
 
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
   return ALL_FORMS.filter((f) => f !== verb.form).flatMap((form) => [
-    form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form),
+    form === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, form),
   ])
 }
 

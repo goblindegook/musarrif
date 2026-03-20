@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: tests can tolerate it */
 import { describe, expect, test } from 'vitest'
-import { analyzeRoot, buildVerb } from './verbs'
+import { analyzeRoot, synthesizeVerb } from './verbs'
 
 describe('buildSyntheticVerb', () => {
   test('Form I', () => {
-    const verb = buildVerb('كتب', 1, 'fa3ala-yaf3ulu')
+    const verb = synthesizeVerb('كتب', 1, 'fa3ala-yaf3ulu')
     expect(verb).toEqual({
       id: 'ktb-1',
       form: 1,
@@ -17,7 +17,7 @@ describe('buildSyntheticVerb', () => {
   })
 
   test('Forms II-X', () => {
-    const verb = buildVerb('كتب', 2)
+    const verb = synthesizeVerb('كتب', 2)
     expect(verb).toEqual({
       form: 2,
       id: 'ktb-2',

@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
+import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -25,7 +25,7 @@ function buildOptions(verb: DisplayVerb, difficulty: Difficulty): [string, reado
 
   const eligibleForms = FORMS.filter((form) => {
     if (form === verb.form) return false
-    const alternative = form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form)
+    const alternative = form === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, form)
     return !deriveMasdar(alternative).some((masdar) => diacriticsDifficulty(masdar, difficulty) === word)
   })
 

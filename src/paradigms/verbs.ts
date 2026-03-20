@@ -93,7 +93,7 @@ export function buildVerbFromId(id?: string): DisplayVerb | undefined {
 
   const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
 
-  return form === 1 ? buildVerb(root, 1, 'fa3ala-yaf3alu') : buildVerb(root, form)
+  return form === 1 ? synthesizeVerb(root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(root, form)
 }
 
 export function getVerb(root: string, form: VerbForm): DisplayVerb {
@@ -102,9 +102,9 @@ export function getVerb(root: string, form: VerbForm): DisplayVerb {
   return verb
 }
 
-export function buildVerb(root: string, form: 1, pattern: FormIPattern): DisplayVerb
-export function buildVerb(root: string, form: Exclude<VerbForm, 1>): DisplayVerb
-export function buildVerb(root: string, form: VerbForm, pattern?: FormIPattern): DisplayVerb {
+export function synthesizeVerb(root: string, form: 1, pattern: FormIPattern): DisplayVerb
+export function synthesizeVerb(root: string, form: Exclude<VerbForm, 1>): DisplayVerb
+export function synthesizeVerb(root: string, form: VerbForm, pattern?: FormIPattern): DisplayVerb {
   const matchingFormI = verbs.find(
     (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
   )

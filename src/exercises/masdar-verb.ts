@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { ALIF, ALIF_MAQSURA, isWeakLetter, WAW, YEH } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { buildVerb, type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -100,6 +100,6 @@ function formPool(root: string): readonly VerbForm[] {
 }
 
 function buildGeneratedVerb(root: string, form: VerbForm, template: DisplayVerb): DisplayVerb {
-  if (form === 1) return buildVerb(root, 1, template.form === 1 ? template.formPattern : 'fa3ala-yaf3alu')
-  return buildVerb(root, form)
+  if (form === 1) return synthesizeVerb(root, 1, template.form === 1 ? template.formPattern : 'fa3ala-yaf3alu')
+  return synthesizeVerb(root, form)
 }
