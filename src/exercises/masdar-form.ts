@@ -1,0 +1,36 @@
+import { shuffle } from '@pacote/shuffle'
+import { deriveMasdar } from '../paradigms/nominal/masdar'
+import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
+import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
+import type { Exercise } from './types'
+
+const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+export function masdarFormExercise(difficulty: Difficulty = 'easy'): Exercise {
+  const verb = randomVerb(difficulty)
+  const [word, options] = buildOptions(verb, difficulty)
+
+  return {
+    kind: 'masdarForm',
+    promptTranslationKey: 'exercise.prompt.masdarForm',
+    word,
+    options: options.map((form) => FORM_LABELS[form - 1]),
+    answer: options.indexOf(verb.form),
+  }
+}
+
+function buildOptions(verb: DisplayVerb, difficulty: Difficulty): [string, readonly number[]] {
+  const word = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
+
+  const eligibleForms = FORMS.filter((form) => {
+    if (form === verb.form) return false
+    const alternative = form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form)
+    return !deriveMasdar(alternative).some((masdar) => diacriticsDifficulty(masdar, difficulty) === word)
+  })
+
+  const distractors = shuffle(eligibleForms).slice(0, 3)
+  const options = [verb.form, ...distractors].sort((a, b) => a - b)
+
+  return [word, options]
+}

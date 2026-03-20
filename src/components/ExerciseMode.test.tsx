@@ -28,9 +28,9 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 
 function testExercise(): Exercise {
   return {
-    kind: 'form',
+    kind: 'verbForm',
     word: 'كَتَبَ',
-    promptTranslationKey: 'exercise.form.prompt',
+    promptTranslationKey: 'exercise.prompt.verbForm',
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
   }

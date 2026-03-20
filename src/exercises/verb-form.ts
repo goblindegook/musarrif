@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import { buildVerb, type DisplayVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -17,7 +17,7 @@ export function verbFormExercise(difficulty: Difficulty = 'easy'): Exercise {
 
   return {
     kind: 'verbForm',
-    promptTranslationKey: 'exercise.form.prompt',
+    promptTranslationKey: 'exercise.prompt.verbForm',
     word,
     options: options.map((f) => FORM_LABELS[f - 1]),
     answer: options.indexOf(verb.form),
@@ -32,18 +32,14 @@ function buildOptions(
 ): [string, readonly number[]] {
   const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
 
-  const siblings = verbs.filter((v) => v.root === verb.root && v.form !== verb.form)
-
-  const eligibleForms = FORMS.filter((f) => {
-    if (f === verb.form) return false
-    const sibling = siblings.find((v) => v.form === f)
-    if (!sibling) return true
-    try {
-      return diacriticsDifficulty(conjugate(sibling, tense)[pronoun], difficulty) !== word
-    } catch {
-      return true
-    }
-  })
+  const eligibleForms = FORMS.filter(
+    (f) =>
+      f !== verb.form &&
+      diacriticsDifficulty(
+        conjugate(f === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, f), tense)[pronoun],
+        difficulty,
+      ) !== word,
+  )
 
   const distractors = shuffle(eligibleForms).slice(0, 3)
   const options = [verb.form, ...distractors].sort((a, b) => a - b)

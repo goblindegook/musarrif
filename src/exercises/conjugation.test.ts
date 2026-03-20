@@ -18,8 +18,8 @@ describe('conjugationExercise', () => {
     expect(conjugationExercise('easy').word.length).toBeGreaterThan(0)
   })
 
-  test('returns promptTranslationKey "exercise.conjugation.prompt"', () => {
-    expect(conjugationExercise('easy').promptTranslationKey).toBe('exercise.conjugation.prompt')
+  test('returns promptTranslationKey "exercise.prompt.conjugation"', () => {
+    expect(conjugationExercise('easy').promptTranslationKey).toBe('exercise.prompt.conjugation')
   })
 
   test('returns promptParams with tense and pronoun keys', () => {

@@ -1,5 +1,5 @@
 export interface Exercise {
-  kind: 'verbForm' | 'verbRoot' | 'verbTense' | 'conjugation'
+  kind: 'verbForm' | 'masdarForm' | 'verbRoot' | 'masdarRoot' | 'verbTense' | 'conjugation'
   word: string
   promptTranslationKey: string
   promptParams?: Record<string, string>

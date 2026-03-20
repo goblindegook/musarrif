@@ -1,12 +1,29 @@
 import { conjugationExercise } from './conjugation'
 import { type Difficulty, random } from './difficulty'
+import { masdarFormExercise } from './masdar-form'
+import { masdarRootExercise } from './masdar-root'
 import type { Exercise } from './types'
 import { verbFormExercise } from './verb-form'
 import { verbRootExercise } from './verb-root'
 import { verbTenseExercise } from './verb-tense'
 
-const EXERCISES = [verbFormExercise, verbRootExercise, verbTenseExercise, conjugationExercise]
+interface ExerciseGenerator {
+  generate: (difficulty: Difficulty) => Exercise
+  difficulty?: Difficulty[]
+}
+
+const EXERCISES: readonly ExerciseGenerator[] = [
+  { generate: verbFormExercise },
+  { generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
+  { generate: verbRootExercise },
+  { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
+  { generate: verbTenseExercise },
+  { generate: conjugationExercise },
+]
 
 export function randomExercise(difficulty: Difficulty = 'easy'): Exercise {
-  return random(EXERCISES)(difficulty)
+  const available = EXERCISES.filter(
+    (exercise) => exercise.difficulty == null || exercise.difficulty.includes(difficulty),
+  )
+  return random(available).generate(difficulty)
 }

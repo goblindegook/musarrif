@@ -171,7 +171,7 @@ export function conjugationExercise(difficulty: Difficulty): Exercise {
 
   return {
     kind: 'conjugation',
-    promptTranslationKey: 'exercise.conjugation.prompt',
+    promptTranslationKey: 'exercise.prompt.conjugation',
     promptParams: {
       tense: tensePromptKey(targetTense, difficulty === 'hard'),
       pronoun: PRONOUN_KEYS[targetPronoun],

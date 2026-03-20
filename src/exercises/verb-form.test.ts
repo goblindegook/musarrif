@@ -20,7 +20,7 @@ describe('generateFormExercise', () => {
   })
 
   test('returns the correct translation key', () => {
-    expect(verbFormExercise().promptTranslationKey).toBe('exercise.form.prompt')
+    expect(verbFormExercise().promptTranslationKey).toBe('exercise.prompt.verbForm')
   })
 
   test('returns exactly four options', () => {

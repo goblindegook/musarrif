@@ -41,7 +41,7 @@ export function verbTenseExercise(difficulty: Difficulty = 'easy'): Exercise {
 
   return {
     kind: 'verbTense',
-    promptTranslationKey: 'exercise.tense.prompt',
+    promptTranslationKey: 'exercise.prompt.verbTense',
     word,
     options: options.map((t) => tenseKey(t, difficulty === 'hard')),
     answer: options.findIndex((t) => tensesEqual(t, tense)),

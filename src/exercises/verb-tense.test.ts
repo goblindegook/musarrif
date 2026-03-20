@@ -38,7 +38,7 @@ describe('tenseExercise', () => {
   })
 
   test('returns the correct translation key', () => {
-    expect(verbTenseExercise().promptTranslationKey).toBe('exercise.tense.prompt')
+    expect(verbTenseExercise().promptTranslationKey).toBe('exercise.prompt.verbTense')
   })
 
   test('returns exactly four options', () => {

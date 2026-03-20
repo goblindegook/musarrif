@@ -1,25 +1,23 @@
 import { shuffle } from '@pacote/shuffle'
 import { ALIF, ALIF_MAQSURA, isWeakLetter, stripDiacritics, WAW, YEH } from '../paradigms/letters'
-import { conjugate } from '../paradigms/tense'
+import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { verbs } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, random, randomPronoun, randomTense, randomVerb } from './difficulty'
+import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
 const RANDOM_ROOT_LETTERS = Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root))))
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
 const DISTRACTOR_LETTERS = Array.from(new Set([...RANDOM_ROOT_LETTERS, ...WEAK_LETTER_REPLACEMENTS]))
 
-export function verbRootExercise(difficulty: Difficulty = 'easy'): Exercise {
+export function masdarRootExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
-  const tense = randomTense(verb, difficulty)
-  const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
-  const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
-  const options = buildOptions(verb.root, word, difficulty)
+  const masdar = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
+  const options = buildOptions(verb.root, masdar, difficulty)
 
   return {
-    kind: 'verbRoot',
-    promptTranslationKey: 'exercise.prompt.verbRoot',
-    word,
+    kind: 'masdarRoot',
+    promptTranslationKey: 'exercise.prompt.masdarRoot',
+    word: masdar,
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
   }
