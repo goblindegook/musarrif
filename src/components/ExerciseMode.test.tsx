@@ -1,14 +1,21 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import type { Exercise } from '../exercises/types'
 import { I18nProvider } from '../hooks/i18n'
 import { RoutingProvider } from '../hooks/routing'
 import { ExerciseMode } from './ExerciseMode'
 
+beforeEach(() => {
+  cleanup()
+  localStorage.removeItem('conjugator:exerciseDifficulty')
+  localStorage.removeItem('conjugator:exerciseStats')
+})
+
 afterEach(() => {
   cleanup()
   localStorage.removeItem('conjugator:exerciseDifficulty')
+  localStorage.removeItem('conjugator:exerciseStats')
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -125,6 +132,34 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getByRole('button', { name: /hard/i }))
       expect(gen).toHaveBeenCalledWith('hard')
+    })
+  })
+
+  describe('statistics panel', () => {
+    test('uses a shared width container for difficulty, exercise card, and statistics', () => {
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      const lane = screen.getByTestId('exercise-lane')
+      expect(lane).toContainElement(screen.getByRole('group', { name: /difficulty/i }))
+      expect(lane).toContainElement(screen.getByText('كَتَبَ'))
+      expect(lane).toContainElement(screen.getByRole('button', { name: /statistics/i }))
+    })
+
+    test('shows a statistics toggle below the exercise', () => {
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      expect(screen.getByRole('button', { name: /statistics/i })).toBeInTheDocument()
+    })
+
+    test('shows the streak label when expanded', () => {
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+      expect(screen.getByText('Streak')).toBeInTheDocument()
+    })
+
+    test('streak becomes 1 after answering the first exercise', () => {
+      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+      expect(screen.getByText('1 days')).toBeInTheDocument()
     })
   })
 

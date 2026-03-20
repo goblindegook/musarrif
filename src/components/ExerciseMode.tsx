@@ -1,11 +1,14 @@
 import { styled } from 'goober'
-import { useState } from 'preact/hooks'
+import { useCallback, useMemo, useState } from 'preact/hooks'
 import type { Difficulty } from '../exercises/difficulty'
 import { randomExercise } from '../exercises/random'
+import type { DayStats, SerializedDayStats } from '../exercises/stats'
+import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '../exercises/stats'
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
 import { DifficultyToggle } from './DifficultyToggle'
+import { ExerciseStats } from './ExerciseStats'
 
 type Props = {
   generateExercise?: (difficulty: Difficulty) => Exercise
@@ -18,69 +21,84 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty))
   const [selected, setSelected] = useState<number | null>(null)
+  const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
+  const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
+  const updateStats = useCallback(
+    (updater: (current: DayStats[]) => DayStats[]) => {
+      setRawStats((raw) => serializeDayStats(updater(deserializeDayStats(raw))))
+    },
+    [setRawStats],
+  )
 
   const isAnswered = selected != null
+  const streak = getStreak(storedStats)
 
   return (
     <ExercisePageBody>
-      <ControlsBar>
-        <DifficultyToggle
-          difficulty={difficulty}
-          onChangeDifficulty={(d: Difficulty) => {
-            if (d === difficulty) return
-            setDifficulty(d)
-            setExercise(generateExercise(d))
-            setSelected(null)
-          }}
-        />
-      </ControlsBar>
-      <ExerciseCard>
-        <VerbDisplay lang="ar" dir="rtl">
-          {exercise.word}
-        </VerbDisplay>
-        <Prompt
-          dangerouslySetInnerHTML={{
-            __html: tHtml(
-              exercise.promptTranslationKey,
-              exercise.promptParams &&
-                Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
-            ),
-          }}
-        />
-        <OptionsGrid>
-          {exercise.options.map((option, index) => {
-            const isCorrect = index === exercise.answer
-            const isSelected = index === selected
-            const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
-            return (
-              <OptionButton
-                key={option}
-                type="button"
-                onClick={() => {
-                  if (!isAnswered) setSelected(index)
-                }}
-                disabled={isAnswered}
-                data-state={state}
-                data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
-                aria-label={t(option)}
-              >
-                {t(option)}
-              </OptionButton>
-            )
-          })}
-        </OptionsGrid>
-        {isAnswered && (
-          <NextButton
-            type="button"
-            onClick={() => {
-              setExercise(generateExercise(difficulty))
+      <ExerciseLane data-testid="exercise-lane">
+        <ControlsBar>
+          <DifficultyToggle
+            difficulty={difficulty}
+            onChangeDifficulty={(d: Difficulty) => {
+              if (d === difficulty) return
+              setDifficulty(d)
+              setExercise(generateExercise(d))
               setSelected(null)
             }}
-          >
-            {t('exercise.next')}
-          </NextButton>
-        )}
-      </ExerciseCard>
+          />
+        </ControlsBar>
+        <ExerciseCard>
+          <VerbDisplay lang="ar" dir="rtl">
+            {exercise.word}
+          </VerbDisplay>
+          <Prompt
+            dangerouslySetInnerHTML={{
+              __html: tHtml(
+                exercise.promptTranslationKey,
+                exercise.promptParams &&
+                  Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+              ),
+            }}
+          />
+          <OptionsGrid>
+            {exercise.options.map((option, index) => {
+              const isCorrect = index === exercise.answer
+              const isSelected = index === selected
+              const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
+              return (
+                <OptionButton
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    if (!isAnswered) {
+                      setSelected(index)
+                      updateStats((current) => addResult(current, index === exercise.answer))
+                    }
+                  }}
+                  disabled={isAnswered}
+                  data-state={state}
+                  data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
+                  aria-label={t(option)}
+                >
+                  {t(option)}
+                </OptionButton>
+              )
+            })}
+          </OptionsGrid>
+          {isAnswered && (
+            <NextButton
+              type="button"
+              onClick={() => {
+                setExercise(generateExercise(difficulty))
+                setSelected(null)
+              }}
+            >
+              {t('exercise.next')}
+            </NextButton>
+          )}
+        </ExerciseCard>
+        <ExerciseStats stats={storedStats} streak={streak} />
+      </ExerciseLane>
     </ExercisePageBody>
   )
 }
@@ -93,18 +111,23 @@ const ExercisePageBody = styled('div')`
   gap: 1rem;
 `
 
-const ControlsBar = styled('div')`
+const ExerciseLane = styled('div')`
   width: 100%;
   max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+const ControlsBar = styled('div')`
+  width: 100%;
 `
 
 const ExerciseCard = styled('div')`
   background: #ffffff;
   border-radius: 1.5rem;
   padding: 2.5rem 2rem;
-  max-width: 480px;
   width: 100%;
-  margin: 0 auto;
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
   border: 1px solid #e2e8f0;
   display: flex;

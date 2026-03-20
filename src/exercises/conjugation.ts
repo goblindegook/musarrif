@@ -80,13 +80,9 @@ function distractorPronouns(tense: VerbTense, difficulty: Difficulty): PronounId
 }
 
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
-  return ALL_FORMS.filter((f) => f !== verb.form).flatMap((form) => {
-    try {
-      return [form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form)]
-    } catch {
-      return []
-    }
-  })
+  return ALL_FORMS.filter((f) => f !== verb.form).flatMap((form) => [
+    form === 1 ? buildVerb(verb.root, 1, 'fa3ala-yaf3alu') : buildVerb(verb.root, form),
+  ])
 }
 
 function easyCandidates(

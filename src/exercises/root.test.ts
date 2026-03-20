@@ -3,10 +3,6 @@ import { stripDiacritics } from '../paradigms/letters'
 import { verbs } from '../paradigms/verbs'
 import { rootExercise } from './root'
 
-function spacedLetters(value: string): string {
-  return Array.from(value).join(' ')
-}
-
 describe('rootExercise', () => {
   beforeEach(() => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
@@ -42,7 +38,7 @@ describe('rootExercise', () => {
 
   test('correct option matches root letters separated by spaces', () => {
     const { options, answer } = rootExercise()
-    expect(options[answer]).toBe(spacedLetters(verbs[0].root))
+    expect(options[answer]).toBe('ش ع ر')
   })
 
   test('all options use the same number of letters as the root', () => {

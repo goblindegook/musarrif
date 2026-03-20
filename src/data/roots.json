@@ -112,7 +112,7 @@
   { "root": "'wl", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "'wl", "form": 2 },
   { "root": "'wl", "form": 5 },
-  { "root": "'wy", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["ifi3aal", "fu3ul", "fi3aal"] },
+  { "root": "'wy", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fi3iil", "fu3ul", "fi3aal"] },
   { "root": "'wy", "form": 4 },
   {
     "root": "'x*",

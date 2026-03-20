@@ -105,7 +105,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
 
       return [seatHamza(c1, FATHA), KASRA, c2, FATHA, ALIF, isFinalWeak ? YEH : c3, FATHA, TEH_MARBUTA]
 
-    case 'ifi3aal':
+    case 'fi3iil':
       return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {

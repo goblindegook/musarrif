@@ -1,7 +1,4 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { conjugatePast } from '../paradigms/active/past'
-import { applyDiacriticsPreference } from '../paradigms/letters'
-import { verbs } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
 
 describe('conjugationExercise', () => {
@@ -61,25 +58,25 @@ describe('conjugationExercise difficulty', () => {
   test('easy: word is 3ms active past with all diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = conjugationExercise('easy')
-    expect(word).toEqualT(conjugatePast(verbs[0])['3ms'])
+    expect(word).toEqualT('شَعَرَ')
   })
 
   test('medium: word is 3ms active past with essential diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = conjugationExercise('medium')
-    expect(word).toEqualT(applyDiacriticsPreference(conjugatePast(verbs[0])['3ms'], 'some'))
+    expect(word).toEqualT('شَعَرَ')
   })
 
   test('hard: word has no diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = conjugationExercise('hard')
-    expect(word).toBe(applyDiacriticsPreference(conjugatePast(verbs[0])['3ms'], 'none'))
+    expect(word).toBe('شعر')
   })
 
   test('easy: answer is 1s active past with all diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = conjugationExercise('easy')
-    expect(options[answer]).toEqualT(conjugatePast(verbs[0])['1s'])
+    expect(options[answer]).toEqualT('شَعَرْتُ')
   })
 
   test('easy: promptParams.tense is unvoiced tense key for active past (random=0)', () => {

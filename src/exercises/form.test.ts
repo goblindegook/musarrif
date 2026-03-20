@@ -1,8 +1,4 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { conjugatePast } from '../paradigms/active/past'
-import { conjugatePresentMood } from '../paradigms/active/present'
-import { applyDiacriticsPreference } from '../paradigms/letters'
-import { verbs } from '../paradigms/verbs'
 import { formExercise } from './form'
 
 describe('generateFormExercise', () => {
@@ -68,7 +64,7 @@ describe('formExercise difficulty', () => {
 
     const { word } = formExercise('easy')
 
-    expect(word).toBe(conjugatePast(verbs[0])['3ms'])
+    expect(word).toBe('شَعَرَ')
   })
 
   test('easy always uses 3ms — word is 3ms active past or 3ms present indicative of selected verb', () => {
@@ -76,13 +72,13 @@ describe('formExercise difficulty', () => {
 
     const { word } = formExercise('easy')
 
-    expect(word).toBeOneOf([conjugatePast(verbs[0])['3ms'], conjugatePresentMood(verbs[0], 'indicative')['3ms']])
+    expect(word).toBeOneOf(['شَعَرَ', 'يَشْعَرُ'])
   })
 
   test('hard uses pronoun from ALL_PRONOUNS and strips diacritics (random=0 → active past, 1s)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = formExercise('hard')
-    expect(word).toBe(applyDiacriticsPreference(conjugatePast(verbs[0])['1s'], 'none'))
+    expect(word).toBe('شعرت')
   })
 
   test('defaults to easy difficulty', () => {

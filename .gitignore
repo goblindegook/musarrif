@@ -27,3 +27,5 @@ dist-ssr
 /coverage/
 /.stryker-tmp/
 /reports/
+
+/.claude/settings.local.json
