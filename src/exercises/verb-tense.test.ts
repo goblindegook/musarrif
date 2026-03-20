@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { tenseExercise } from './tense'
+import { verbTenseExercise } from './verb-tense'
 
 const UNVOICED_KEYS = new Set([
   'exercise.tense.option.past',
@@ -34,30 +34,30 @@ describe('tenseExercise', () => {
   })
 
   test('returns kind "tense"', () => {
-    expect(tenseExercise().kind).toBe('tense')
+    expect(verbTenseExercise().kind).toBe('verbTense')
   })
 
   test('returns the correct translation key', () => {
-    expect(tenseExercise().promptTranslationKey).toBe('exercise.tense.prompt')
+    expect(verbTenseExercise().promptTranslationKey).toBe('exercise.tense.prompt')
   })
 
   test('returns exactly four options', () => {
-    expect(tenseExercise().options).toHaveLength(4)
+    expect(verbTenseExercise().options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    const { options } = tenseExercise()
+    const { options } = verbTenseExercise()
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = tenseExercise()
+    const { options, answer } = verbTenseExercise()
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('word is non-empty', () => {
-    expect(tenseExercise().word.length).toBeGreaterThan(0)
+    expect(verbTenseExercise().word.length).toBeGreaterThan(0)
   })
 })
 
@@ -69,45 +69,45 @@ describe('tenseExercise difficulty', () => {
   // شعر Form I, active past 1s — شَعَرَ "to feel/sense"
   test('easy: word is شَعَرْتُ (active past 1s, all diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(tenseExercise('easy').word).toEqualT('شَعَرْتُ')
+    expect(verbTenseExercise('easy').word).toEqualT('شَعَرْتُ')
   })
 
   test('medium: word is شَعَرتُ (active past 1s, some diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(tenseExercise('medium').word).toEqualT('شَعَرتُ')
+    expect(verbTenseExercise('medium').word).toEqualT('شَعَرتُ')
   })
 
   test('hard: word is شعرت (active past 1s, some diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(tenseExercise('hard').word).toEqualT('شعرت')
+    expect(verbTenseExercise('hard').word).toEqualT('شعرت')
   })
 
   test('easy: options are unvoiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = tenseExercise('easy')
+    const { options } = verbTenseExercise('easy')
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('medium: options are unvoiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = tenseExercise('medium')
+    const { options } = verbTenseExercise('medium')
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('hard: options are voiced tense keys (imperative unprefixed)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = tenseExercise('hard')
+    const { options } = verbTenseExercise('hard')
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
   })
 
   test('defaults to easy difficulty', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(tenseExercise().word).toBe(tenseExercise('easy').word)
+    expect(verbTenseExercise().word).toBe(verbTenseExercise('easy').word)
   })
 
   test('easy: correct answer is the past tense key (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = tenseExercise('easy')
+    const { options, answer } = verbTenseExercise('easy')
     expect(options[answer]).toBe('exercise.tense.option.past')
   })
 })
@@ -119,7 +119,7 @@ describe('tenseExercise distractor strategies', () => {
 
   test('easy: three distractors are unvoiced tense keys distinct from the correct answer', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = tenseExercise('easy')
+    const { options, answer } = verbTenseExercise('easy')
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => UNVOICED_KEYS.has(d))).toBe(true)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)
@@ -127,7 +127,7 @@ describe('tenseExercise distractor strategies', () => {
 
   test('hard: all options are voiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
-    const { options, answer } = tenseExercise('hard')
+    const { options, answer } = verbTenseExercise('hard')
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS.has(options[answer])).toBe(true)
   })

@@ -9,14 +9,14 @@ const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'
 
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-export function formExercise(difficulty: Difficulty = 'easy'): Exercise {
+export function verbFormExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
   const [word, options] = buildOptions(verb, tense, pronoun, difficulty)
 
   return {
-    kind: 'form',
+    kind: 'verbForm',
     promptTranslationKey: 'exercise.form.prompt',
     word,
     options: options.map((f) => FORM_LABELS[f - 1]),

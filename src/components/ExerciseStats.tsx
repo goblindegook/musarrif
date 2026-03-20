@@ -119,13 +119,10 @@ function StatsChart({
 }
 
 const DetailsRow = styled('div')`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   width: 100%;
-
-  & > * {
-    flex: 1;
-  }
 `
 
 function buildDayWindow(stats: DayStats[], days: number): DayStats[] {

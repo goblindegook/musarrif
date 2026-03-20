@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { stripDiacritics } from '../paradigms/letters'
 import { verbs } from '../paradigms/verbs'
-import { rootExercise } from './root'
+import { verbRootExercise } from './verb-root'
 
 describe('rootExercise', () => {
   beforeEach(() => {
@@ -13,36 +13,36 @@ describe('rootExercise', () => {
   })
 
   test('returns kind "root"', () => {
-    expect(rootExercise().kind).toBe('root')
+    expect(verbRootExercise().kind).toBe('verbRoot')
   })
 
   test('returns the correct translation key', () => {
-    expect(rootExercise().promptTranslationKey).toBe('exercise.root.prompt')
+    expect(verbRootExercise().promptTranslationKey).toBe('exercise.root.prompt')
   })
 
   test('returns exactly four options', () => {
-    expect(rootExercise().options).toHaveLength(4)
+    expect(verbRootExercise().options).toHaveLength(4)
   })
 
   test('returns unique options', () => {
-    const { options } = rootExercise()
+    const { options } = verbRootExercise()
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('correct answer is a valid index', () => {
-    const { options, answer } = rootExercise()
+    const { options, answer } = verbRootExercise()
 
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('correct option matches root letters separated by spaces', () => {
-    const { options, answer } = rootExercise()
+    const { options, answer } = verbRootExercise()
     expect(options[answer]).toBe('ش ع ر')
   })
 
   test('all options use the same number of letters as the root', () => {
-    const { options } = rootExercise()
+    const { options } = verbRootExercise()
     const rootLength = Array.from(verbs[0].root).length
 
     expect(
@@ -54,7 +54,7 @@ describe('rootExercise', () => {
   })
 
   test('wrong options include letters from the conjugated verb shown to the user', () => {
-    const { word, options, answer } = rootExercise()
+    const { word, options, answer } = verbRootExercise()
     const lettersInWord = new Set(Array.from(stripDiacritics(word)))
     const wrongOptions = options.filter((_, index) => index !== answer)
 

@@ -9,7 +9,7 @@ import type { Exercise } from './types'
 const RANDOM_ROOT_LETTERS = Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root))))
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
 
-export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
+export function verbRootExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
@@ -17,7 +17,7 @@ export function rootExercise(difficulty: Difficulty = 'easy'): Exercise {
   const options = buildOptions(verb.root, word, difficulty)
 
   return {
-    kind: 'root',
+    kind: 'verbRoot',
     promptTranslationKey: 'exercise.root.prompt',
     word,
     options: options.map((option) => Array.from(option).join(' ')),

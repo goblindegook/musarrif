@@ -33,14 +33,14 @@ function tenseKey(tense: VerbTense, includeVoice: boolean): string {
   return `exercise.tense.option.${tense[0]}.${slug}`
 }
 
-export function tenseExercise(difficulty: Difficulty = 'easy'): Exercise {
+export function verbTenseExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty === 'hard' ? 'hard' : 'medium')
   const pronoun = randomPronoun(verb, tense, difficulty === 'hard' ? 'hard' : 'medium')
   const [word, options] = buildOptions(verb, tense, pronoun, difficulty)
 
   return {
-    kind: 'tense',
+    kind: 'verbTense',
     promptTranslationKey: 'exercise.tense.prompt',
     word,
     options: options.map((t) => tenseKey(t, difficulty === 'hard')),
