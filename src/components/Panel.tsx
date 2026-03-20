@@ -50,6 +50,7 @@ export const PanelContainer = styled('section')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;

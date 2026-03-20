@@ -136,14 +136,6 @@ describe('ExerciseMode', () => {
   })
 
   describe('statistics panel', () => {
-    test('uses a shared width container for difficulty, exercise card, and statistics', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      const lane = screen.getByTestId('exercise-lane')
-      expect(lane).toContainElement(screen.getByRole('group', { name: /difficulty/i }))
-      expect(lane).toContainElement(screen.getByText('كَتَبَ'))
-      expect(lane).toContainElement(screen.getByRole('button', { name: /statistics/i }))
-    })
-
     test('shows a statistics toggle below the exercise', () => {
       render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
       expect(screen.getByRole('button', { name: /statistics/i })).toBeInTheDocument()

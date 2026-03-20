@@ -34,86 +34,79 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const streak = getStreak(storedStats)
 
   return (
-    <ExercisePageBody>
-      <ExerciseLane data-testid="exercise-lane">
-        <ControlsBar>
-          <DifficultyToggle
-            difficulty={difficulty}
-            onChangeDifficulty={(d: Difficulty) => {
-              if (d === difficulty) return
-              setDifficulty(d)
-              setExercise(generateExercise(d))
+    <ExerciseLayout>
+      <ControlsBar>
+        <DifficultyToggle
+          difficulty={difficulty}
+          onChangeDifficulty={(d: Difficulty) => {
+            if (d === difficulty) return
+            setDifficulty(d)
+            setExercise(generateExercise(d))
+            setSelected(null)
+          }}
+        />
+      </ControlsBar>
+
+      <ExerciseCard>
+        <VerbDisplay lang="ar" dir="rtl">
+          {exercise.word}
+        </VerbDisplay>
+        <Prompt
+          dangerouslySetInnerHTML={{
+            __html: tHtml(
+              exercise.promptTranslationKey,
+              exercise.promptParams &&
+                Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+            ),
+          }}
+        />
+        <OptionsGrid>
+          {exercise.options.map((option, index) => {
+            const isCorrect = index === exercise.answer
+            const isSelected = index === selected
+            const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
+            return (
+              <OptionButton
+                key={option}
+                type="button"
+                onClick={() => {
+                  if (!isAnswered) {
+                    setSelected(index)
+                    updateStats((current) => addResult(current, index === exercise.answer))
+                  }
+                }}
+                disabled={isAnswered}
+                data-state={state}
+                data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
+                aria-label={t(option)}
+              >
+                {t(option)}
+              </OptionButton>
+            )
+          })}
+        </OptionsGrid>
+        {isAnswered && (
+          <NextButton
+            type="button"
+            onClick={() => {
+              setExercise(generateExercise(difficulty))
               setSelected(null)
             }}
-          />
-        </ControlsBar>
-        <ExerciseCard>
-          <VerbDisplay lang="ar" dir="rtl">
-            {exercise.word}
-          </VerbDisplay>
-          <Prompt
-            dangerouslySetInnerHTML={{
-              __html: tHtml(
-                exercise.promptTranslationKey,
-                exercise.promptParams &&
-                  Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
-              ),
-            }}
-          />
-          <OptionsGrid>
-            {exercise.options.map((option, index) => {
-              const isCorrect = index === exercise.answer
-              const isSelected = index === selected
-              const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
-              return (
-                <OptionButton
-                  key={option}
-                  type="button"
-                  onClick={() => {
-                    if (!isAnswered) {
-                      setSelected(index)
-                      updateStats((current) => addResult(current, index === exercise.answer))
-                    }
-                  }}
-                  disabled={isAnswered}
-                  data-state={state}
-                  data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
-                  aria-label={t(option)}
-                >
-                  {t(option)}
-                </OptionButton>
-              )
-            })}
-          </OptionsGrid>
-          {isAnswered && (
-            <NextButton
-              type="button"
-              onClick={() => {
-                setExercise(generateExercise(difficulty))
-                setSelected(null)
-              }}
-            >
-              {t('exercise.next')}
-            </NextButton>
-          )}
-        </ExerciseCard>
-        <ExerciseStats stats={storedStats} streak={streak} />
-      </ExerciseLane>
-    </ExercisePageBody>
+          >
+            {t('exercise.next')}
+          </NextButton>
+        )}
+      </ExerciseCard>
+
+      <ExerciseStats stats={storedStats} streak={streak} />
+    </ExerciseLayout>
   )
 }
 
-const ExercisePageBody = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 1rem;
-`
-
-const ExerciseLane = styled('div')`
+const ExerciseLayout = styled('div')`
   width: 100%;
   max-width: 480px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
