@@ -480,8 +480,7 @@ describe('Root insights', () => {
 })
 
 describe('Language', () => {
-  const getLanguageSelect = () =>
-    document.querySelector('select[aria-labelledby="language-label"]') as HTMLSelectElement
+  const getLanguageSelect = () => document.querySelector('select[aria-label]') as HTMLSelectElement
 
   it('is English by default', () => {
     renderApp('/')

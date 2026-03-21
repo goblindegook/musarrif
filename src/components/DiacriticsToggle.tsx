@@ -3,31 +3,6 @@ import { useI18n } from '../hooks/i18n'
 import type { DiacriticsPreference } from '../paradigms/letters'
 
 const DIACRITICS_OPTIONS: readonly DiacriticsPreference[] = ['all', 'some', 'none']
-const DIACRITICS_ICON = '\u25cc\u064b'
-
-const Wrapper = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-`
-
-const Label = styled('span')`
-  color: #1e293b;
-  display: inline-flex;
-  align-items: center;
-`
-
-const Icon = styled('span')`
-  display: inline-flex;
-  align-items: center;
-  user-select: none;
-  justify-content: center;
-  font-size: 1.75rem;
-  width: 1.75rem;
-  height: 1.75rem;
-  flex-shrink: 0;
-`
 
 const Options = styled('div')`
   display: flex;
@@ -77,24 +52,19 @@ export function DiacriticsToggle() {
   const { diacriticsPreference: preference, setDiacriticsPreference: setPreference, t: translate } = useI18n()
 
   return (
-    <Wrapper>
-      <Label id="diacritics-label" aria-label={translate('diacritics.title')} title={translate('diacritics.title')}>
-        <Icon aria-hidden="true">{DIACRITICS_ICON}</Icon>
-      </Label>
-      <Options role="group">
-        {DIACRITICS_OPTIONS.map((option) => (
-          <Option
-            type="button"
-            key={option}
-            active={preference === option}
-            aria-pressed={preference === option}
-            onClick={() => setPreference(option)}
-            title={`${translate('diacritics.title')}: ${translate(`diacritics.${option}`)}`}
-          >
-            {translate(`diacritics.${option}`)}
-          </Option>
-        ))}
-      </Options>
-    </Wrapper>
+    <Options role="group" aria-label={translate('diacritics.title')}>
+      {DIACRITICS_OPTIONS.map((option) => (
+        <Option
+          type="button"
+          key={option}
+          active={preference === option}
+          aria-pressed={preference === option}
+          onClick={() => setPreference(option)}
+          title={`${translate('diacritics.title')}: ${translate(`diacritics.${option}`)}`}
+        >
+          {translate(`diacritics.${option}`)}
+        </Option>
+      ))}
+    </Options>
   )
 }

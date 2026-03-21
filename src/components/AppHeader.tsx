@@ -50,12 +50,18 @@ export const AppHeader = () => {
               <SettingsIcon />
             </IconButton>
           </SettingsButtonWrapper>
+          <Controls visible={isSettingsOpen}>
+            <ControlGroup>
+              <ControlLabel>{t('diacritics.title')}</ControlLabel>
+              <DiacriticsToggle />
+            </ControlGroup>
+            <ControlGroup>
+              <ControlLabel>{t('languagePicker.label')}</ControlLabel>
+              <LanguagePicker />
+            </ControlGroup>
+          </Controls>
         </RightGroup>
       </TopBarHeader>
-      <Controls visible={isSettingsOpen}>
-        <DiacriticsToggle />
-        <LanguagePicker />
-      </Controls>
     </TopBar>
   )
 }
@@ -131,33 +137,26 @@ const PageTitle = styled('h1')`
 `
 
 const Controls = styled('aside')<{ visible: boolean }>`
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  inset-inline-end: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.75rem;
-  max-height: ${({ visible }) => (visible ? '200px' : '0')};
+  gap: 1.25rem;
+  width: max-content;
+  min-width: min(360px, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
   opacity: ${({ visible }) => (visible ? '1' : '0')};
-  margin-top: ${({ visible }) => (visible ? '0' : '-1rem')};
-  overflow: hidden;
-  transition: max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease;
-
-  @media (min-width: 480px) {
-    flex-direction: row;
-    align-items: center;
-    gap: 1.25rem;
-
-    & > *:first-child {
-      flex: 2;
-    }
-
-    & > *:last-child {
-      flex: 1;
-    }
-  }
-
-  @media (min-width: 720px) {
-    align-self: flex-end;
-  }
+  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
+  transform: ${({ visible }) => (visible ? 'translateY(0)' : 'translateY(-6px)')};
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 10;
 `
 
 const SettingsButtonWrapper = styled('div')`
@@ -170,4 +169,20 @@ const RightGroup = styled('div')`
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+`
+
+const ControlGroup = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+`
+
+const ControlLabel = styled('span')`
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  padding-inline-start: 0.25rem;
 `

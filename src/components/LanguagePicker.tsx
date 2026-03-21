@@ -1,37 +1,5 @@
 import { styled } from 'goober'
 import { LANGUAGE_OPTIONS, useI18n } from '../hooks/i18n'
-import { LanguageIcon } from './icons/LanguageIcon'
-
-const Wrapper = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-`
-
-const Label = styled('span')`
-  font-weight: 600;
-  color: #1e293b;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-`
-
-const Icon = styled('span')`
-  display: inline-flex;
-  user-select: none;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  flex-shrink: 0;
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0.125rem;
-  }
-`
 
 const Select = styled('select')`
   border-radius: 0.9rem;
@@ -63,27 +31,19 @@ export function LanguagePicker() {
   const { lang, dir, t, setLang } = useI18n()
 
   return (
-    <Wrapper>
-      <Label id="language-label" aria-label={t('languagePicker.label')} title={t('languagePicker.label')}>
-        <Icon aria-hidden="true">
-          <LanguageIcon />
-        </Icon>
-      </Label>
-      <Select
-        value={lang}
-        onChange={(event) => setLang(event.currentTarget.value)}
-        dir={dir}
-        lang={lang}
-        aria-label={t('languagePicker.label')}
-        aria-labelledby="language-label"
-        title={t('languagePicker.label')}
-      >
-        {LANGUAGE_OPTIONS.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.label}
-          </option>
-        ))}
-      </Select>
-    </Wrapper>
+    <Select
+      value={lang}
+      onChange={(event) => setLang(event.currentTarget.value)}
+      dir={dir}
+      lang={lang}
+      aria-label={t('languagePicker.label')}
+      title={t('languagePicker.label')}
+    >
+      {LANGUAGE_OPTIONS.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.label}
+        </option>
+      ))}
+    </Select>
   )
 }
