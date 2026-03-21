@@ -1,6 +1,7 @@
 import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
+  ALIF_HAMZA,
   DAL,
   DAMMA,
   FATHA,
@@ -60,6 +61,9 @@ export function deriveActiveParticiple(verb: Verb): string | null {
     switch (verb.form) {
       case 1: {
         const prefix = [seatHamza(c1, FATHA), FATHA, ALIF]
+
+        if (verb.passiveVoice === 'impersonal' && isFormIPastVowel(verb, KASRA))
+          return [ALIF_HAMZA, FATHA, c1, SUKOON, c2, FATHA, c3]
 
         if (c2 === c3) return [...prefix, c2, SHADDA]
 

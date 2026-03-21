@@ -7,7 +7,7 @@ import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '..
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
-import { SegmentedControlButton, SegmentedControl } from './atoms/SegmentedControl'
+import { SegmentedControl, SegmentedControlButton } from './atoms/SegmentedControl'
 import { ExerciseStats } from './ExerciseStats'
 
 const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'] as const

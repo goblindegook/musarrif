@@ -19,7 +19,10 @@ describe('passive past pattern', () => {
 
   describe('Form I', () => {
     describe('regular roots', () => {
-      test.each<[string, string]>([['بلغ', 'بُلِغَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([
+        ['بلغ', 'بُلِغَ'],
+        ['زرق', 'زُرِقَ'],
+      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
     })
@@ -684,6 +687,7 @@ describe('passive past pattern', () => {
         ['مكن', 'مُكِّنَ'],
         ['مثل', 'مُثِّلَ'],
         ['سبب', 'سُبِّبَ'],
+        ['زرق', 'زُرِّقَ'],
         ['خطط', 'خُطِّطَ'],
         ['حدد', 'حُدِّدَ'],
         ['قرر', 'قُرِّرَ'],

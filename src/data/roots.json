@@ -895,6 +895,14 @@
   { "root": "zHzH", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "zlzl", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "zrE", "form": 1, "formPattern": "fa3ala-yaf3alu" },
+  {
+    "root": "zrq",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3al"],
+    "passiveVoice": "impersonal"
+  },
+  { "root": "zrq", "form": 2 },
   { "root": "zrq", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "zwj", "form": 8 },
   {

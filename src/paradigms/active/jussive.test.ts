@@ -13,6 +13,7 @@ describe('active present jussive', () => {
         ['مثل', 'يَمْثُلْ'],
         ['دعم', 'يَدْعَمْ'],
         ['كلم', 'يَكْلِمْ'],
+        ['زرق', 'يَزْرَقْ'],
         ['قدم', 'يَقْدُمْ'],
         ['نفس', 'يَنْفُسْ'],
         ['مكن', 'يَمْكُنْ'],
@@ -790,6 +791,7 @@ describe('active present jussive', () => {
         ['مكن', 'يُمَكِّنْ'],
         ['مثل', 'يُمَثِّلْ'],
         ['سبب', 'يُسَبِّبْ'],
+        ['زرق', 'يُزَرِّقْ'],
         ['خطط', 'يُخَطِّطْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)

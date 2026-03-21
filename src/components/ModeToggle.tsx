@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import type { ComponentChild } from 'preact'
-import { SegmentedControlButton, SegmentedControl } from './atoms/SegmentedControl'
+import { SegmentedControl, SegmentedControlButton } from './atoms/SegmentedControl'
 
 type Props = {
   activeMode: number

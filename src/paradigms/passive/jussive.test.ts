@@ -25,6 +25,7 @@ describe('passive present jussive', () => {
         ['دعم', 'يُدْعَمْ'],
         ['بلغ', 'يُبْلَغْ'],
         ['كلم', 'يُكْلَمْ'],
+        ['زرق', 'يُزْرَقْ'],
         ['سكن', 'يُسْكَنْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
@@ -503,6 +504,7 @@ describe('passive present jussive', () => {
         ['مكن', 'يُمَكَّنْ'],
         ['مثل', 'يُمَثَّلْ'],
         ['سبب', 'يُسَبَّبْ'],
+        ['زرق', 'يُزَرَّقْ'],
         ['خطط', 'يُخَطَّطْ'],
         ['حدد', 'يُحَدَّدْ'],
         ['قرر', 'يُقَرَّرْ'],

@@ -13,6 +13,7 @@
     "exercise.prompt.masdarRoot": "ما جذر هذا المصدر؟",
     "exercise.prompt.verbTense": "ما زمن هذا الفعل؟",
     "exercise.prompt.conjugation": "صرِّف هذا الفعل في <strong>{tense}</strong> للضمير <strong>{pronoun}</strong>.",
+    "exercise.prompt.verbPronoun": "لأيِّ ضمير صُرِّف هذا الفعل؟",
     "exercise.conjugation.tense.past": "الماضي",
     "exercise.conjugation.tense.present": "المضارع",
     "exercise.conjugation.tense.subjunctive": "المنصوب",

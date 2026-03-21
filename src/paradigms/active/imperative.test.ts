@@ -34,6 +34,7 @@ describe('imperative', () => {
         ['بعد', 'اِبْعَدْ'],
         ['دعم', 'اِدْعَمْ'],
         ['كلم', 'اِكْلِمْ'],
+        ['زرق', 'اِزْرَقْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -664,6 +665,7 @@ describe('imperative', () => {
           ['مكن', 'مَكِّنْ'],
           ['مثل', 'مَثِّلْ'],
           ['سبب', 'سَبِّبْ'],
+          ['زرق', 'زَرِّقْ'],
           ['خطط', 'خَطِّطْ'],
         ])('%s pattern', (root, expected) => {
           expect(conjugateImperative(getVerb(root, 2))['2ms']).toEqualT(expected)
