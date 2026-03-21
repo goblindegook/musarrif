@@ -1,10 +1,6 @@
 import { styled } from 'goober'
-import { useI18n } from '../hooks/i18n'
-import type { DiacriticsPreference } from '../paradigms/letters'
 
-const DIACRITICS_OPTIONS: readonly DiacriticsPreference[] = ['all', 'some', 'none']
-
-const Options = styled('div')`
+export const SegmentedControlRoot = styled('div')`
   display: flex;
   align-items: center;
   border: 1px solid #e2e8f0;
@@ -18,7 +14,7 @@ const Options = styled('div')`
   width: 100%;
 `
 
-const Option = styled('button')<{ active: boolean }>`
+export const SegmentedControlButton = styled('button')<{ active: boolean }>`
   background: ${({ active }) => (active ? '#fff8e1' : 'transparent')};
   border-radius: 0.75rem;
   border: 1px solid ${({ active }) => (active ? '#facc15' : 'transparent')};
@@ -47,24 +43,3 @@ const Option = styled('button')<{ active: boolean }>`
     padding: 0.5rem 0.9rem;
   }
 `
-
-export function DiacriticsToggle() {
-  const { diacriticsPreference: preference, setDiacriticsPreference: setPreference, t: translate } = useI18n()
-
-  return (
-    <Options role="group" aria-label={translate('diacritics.title')}>
-      {DIACRITICS_OPTIONS.map((option) => (
-        <Option
-          type="button"
-          key={option}
-          active={preference === option}
-          aria-pressed={preference === option}
-          onClick={() => setPreference(option)}
-          title={`${translate('diacritics.title')}: ${translate(`diacritics.${option}`)}`}
-        >
-          {translate(`diacritics.${option}`)}
-        </Option>
-      ))}
-    </Options>
-  )
-}

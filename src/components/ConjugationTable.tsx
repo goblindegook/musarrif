@@ -7,8 +7,8 @@ import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type Tense, type Voice } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
-import { CopyButton } from './CopyButton'
-import { SpeechButton } from './SpeechButton'
+import { CopyButton } from './buttons/CopyButton'
+import { SpeechButton } from './buttons/SpeechButton'
 import { TabBar, TabButton, TabPanel } from './Tabs'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]

@@ -1,6 +1,6 @@
 import { useCallback } from 'preact/hooks'
-import { IconButton } from './IconButton'
-import { CopyIcon } from './icons/CopyIcon'
+import { IconButton } from '../atoms/IconButton'
+import { CopyIcon } from '../icons/CopyIcon'
 
 interface CopyButtonProps {
   text: string

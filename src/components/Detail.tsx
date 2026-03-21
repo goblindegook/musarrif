@@ -1,8 +1,8 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useI18n } from '../hooks/i18n'
-import { CopyButton } from './CopyButton'
-import { SpeechButton } from './SpeechButton'
+import { CopyButton } from './buttons/CopyButton'
+import { SpeechButton } from './buttons/SpeechButton'
 
 interface DetailProps {
   label: string

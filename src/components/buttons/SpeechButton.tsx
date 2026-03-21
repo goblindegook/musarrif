@@ -1,6 +1,6 @@
 import { useCallback } from 'preact/hooks'
-import { IconButton } from './IconButton'
-import { SpeakIcon } from './icons/SpeakIcon'
+import { IconButton } from '../atoms/IconButton'
+import { SpeakIcon } from '../icons/SpeakIcon'
 
 interface SpeechButtonProps {
   text: string

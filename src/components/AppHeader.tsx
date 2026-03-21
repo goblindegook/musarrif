@@ -2,8 +2,8 @@ import { styled } from 'goober'
 import { useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { useRouting } from '../hooks/routing'
-import { DiacriticsToggle } from './DiacriticsToggle'
-import { IconButton } from './IconButton'
+import { IconButton } from './atoms/IconButton'
+import { SegmentedControlButton, SegmentedControlRoot } from './atoms/SegmentedControl'
 import { ConjugateIcon } from './icons/ConjugateIcon'
 import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
@@ -11,9 +11,10 @@ import { LanguagePicker } from './LanguagePicker'
 import { ModeToggle } from './ModeToggle'
 
 const MODES = ['conjugation', 'test'] as const
+const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 
 export const AppHeader = () => {
-  const { t, lang, dir } = useI18n()
+  const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
@@ -33,7 +34,7 @@ export const AppHeader = () => {
             activeMode={MODES.indexOf(page)}
             labels={[t('mode.conjugate'), t('mode.exercise')]}
             icons={[<ConjugateIcon />, <ExerciseIcon />]}
-            ariaLabel="Mode"
+            ariaLabel={t('mode.label')}
             onClick={(index) => {
               if (index === 0) navigateTo('/#/verbs')
               else navigateTo('/#/test')
@@ -53,7 +54,20 @@ export const AppHeader = () => {
           <Controls visible={isSettingsOpen}>
             <ControlGroup>
               <ControlLabel>{t('diacritics.title')}</ControlLabel>
-              <DiacriticsToggle />
+              <SegmentedControlRoot role="group" aria-label={t('diacritics.title')}>
+                {DIACRITICS_OPTIONS.map((option) => (
+                  <SegmentedControlButton
+                    type="button"
+                    key={option}
+                    active={diacriticsPreference === option}
+                    aria-pressed={diacriticsPreference === option}
+                    onClick={() => setDiacriticsPreference(option)}
+                    title={`${t('diacritics.title')}: ${t(`diacritics.${option}`)}`}
+                  >
+                    {t(`diacritics.${option}`)}
+                  </SegmentedControlButton>
+                ))}
+              </SegmentedControlRoot>
             </ControlGroup>
             <ControlGroup>
               <ControlLabel>{t('languagePicker.label')}</ControlLabel>

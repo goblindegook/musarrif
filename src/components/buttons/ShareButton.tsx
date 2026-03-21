@@ -1,7 +1,7 @@
 import { useCallback } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import { IconButton } from './IconButton'
-import { ShareIcon } from './icons/ShareIcon'
+import { useI18n } from '../../hooks/i18n'
+import { IconButton } from '../atoms/IconButton'
+import { ShareIcon } from '../icons/ShareIcon'
 
 export function ShareButton() {
   const supported = typeof navigator?.share === 'function'

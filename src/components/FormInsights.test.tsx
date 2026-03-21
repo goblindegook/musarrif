@@ -1,4 +1,3 @@
-// biome-ignore-all lint/style/noNonNullAssertion: tests are expected to fail on null values.
 import { cleanup, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test } from 'vitest'

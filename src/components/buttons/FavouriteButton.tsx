@@ -1,7 +1,7 @@
-import { useI18n } from '../hooks/i18n'
-import { IconButton } from './IconButton'
-import { HeartIcon } from './icons/HeartIcon'
-import { HeartOutlineIcon } from './icons/HeartOutlineIcon'
+import { useI18n } from '../../hooks/i18n'
+import { IconButton } from '../atoms/IconButton'
+import { HeartIcon } from '../icons/HeartIcon'
+import { HeartOutlineIcon } from '../icons/HeartOutlineIcon'
 
 interface FavouriteButtonProps {
   isFavourite: boolean
