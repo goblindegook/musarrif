@@ -1,8 +1,9 @@
+import type { FormIPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -57,8 +58,21 @@ export function randomPronoun(verb: DisplayVerb, tense: VerbTense, difficulty: D
   return random(pronounPool(verb, tense, difficulty))
 }
 
-export function randomForm(): VerbForm {
-  return random(FORMS)
+const FORM_I_PATTERNS: FormIPattern[] = [
+  'fa3ala-yaf3alu',
+  'fa3ala-yaf3ilu',
+  'fa3ala-yaf3ulu',
+  'fa3ila-yaf3alu',
+  'fa3ila-yaf3ilu',
+  'fa3ila-yaf3ulu',
+  'fa3ula-yaf3alu',
+  'fa3ula-yaf3ilu',
+  'fa3ula-yaf3ulu',
+]
+
+export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)): DisplayVerb {
+  if (form === 1) return synthesizeVerb(root, 1, random(FORM_I_PATTERNS))
+  return synthesizeVerb(root, form)
 }
 
 export function random<T>(arr: readonly T[]): T {

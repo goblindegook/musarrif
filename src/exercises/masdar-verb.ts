@@ -1,7 +1,7 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, random, randomForm, randomVerb } from './difficulty'
+import type { DisplayVerb } from '../paradigms/verbs'
+import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
@@ -37,7 +37,7 @@ function buildOptions(verb: DisplayVerb, difficulty: Difficulty): readonly strin
 
 function sameRootDifferentFormDistractor(verb: DisplayVerb, difficulty: Difficulty): () => string {
   return () => {
-    const candidate = buildGeneratedVerb(verb.root, randomForm())
+    const candidate = randomGeneratedVerb(verb.root)
     return diacriticsDifficulty(candidate.label, difficulty)
   }
 }
@@ -46,7 +46,7 @@ function weakAlternativeDistractor(verb: DisplayVerb, difficulty: Difficulty): (
   const rootGenerator = weakAlternativeRootDistractor(verb.root)
 
   return () => {
-    const candidate = buildGeneratedVerb(rootGenerator(), verb.form)
+    const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
     return diacriticsDifficulty(candidate.label, difficulty)
   }
 }
@@ -55,7 +55,7 @@ function singleLetterDistractor(verb: DisplayVerb, difficulty: Difficulty): () =
   const rootGenerator = singleLetterWordDistractor(verb.root)
 
   return () => {
-    const candidate = buildGeneratedVerb(rootGenerator(), verb.form)
+    const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
     return diacriticsDifficulty(candidate.label, difficulty)
   }
 }
@@ -64,12 +64,7 @@ function mediumDifferentFormSingleLetterDistractor(verb: DisplayVerb, difficulty
   const rootGenerator = singleLetterWordDistractor(verb.root)
 
   return () => {
-    const candidate = buildGeneratedVerb(rootGenerator(), randomForm())
+    const candidate = randomGeneratedVerb(rootGenerator())
     return diacriticsDifficulty(candidate.label, difficulty)
   }
-}
-
-function buildGeneratedVerb(root: string, form: VerbForm): DisplayVerb {
-  if (form === 1) return synthesizeVerb(root, 1, 'fa3ala-yaf3alu')
-  return synthesizeVerb(root, form)
 }

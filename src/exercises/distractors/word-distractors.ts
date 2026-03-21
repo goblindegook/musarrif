@@ -1,4 +1,4 @@
-import { ALIF, ALIF_MAQSURA, stripDiacritics, WAW, YEH } from '../../paradigms/letters'
+import { ALIF, ALIF_MAQSURA, isDiacritic, stripDiacritics, WAW, YEH } from '../../paradigms/letters'
 import { verbs } from '../../paradigms/verbs'
 import { random } from '../difficulty'
 import type { DistractorGenerator } from './distractors'
@@ -37,13 +37,14 @@ function cyclicSlice(pool: readonly string[], length: number, offset: number): s
   return Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]).join('')
 }
 
-export function singleLetterWordDistractor(root: string): DistractorGenerator<string> {
-  const letters = Array.from(root)
+export function singleLetterWordDistractor(word: string): DistractorGenerator<string> {
+  const chars = Array.from(word)
+  const letterIndices = chars.map((_c, i) => i).filter((i) => !isDiacritic(chars[i]))
 
   return () => {
-    const index = Math.floor(Math.random() * letters.length)
-    const replacements = RANDOM_LETTERS.filter((letter) => letter !== letters[index])
-    const candidate = [...letters]
+    const index = letterIndices[Math.floor(Math.random() * letterIndices.length)]
+    const replacements = RANDOM_LETTERS.filter((letter) => letter !== chars[index])
+    const candidate = [...chars]
     candidate[index] = random(replacements)
     return candidate.join('')
   }

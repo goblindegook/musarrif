@@ -9,6 +9,7 @@
     "exercise.prompt.verbForm": "ما صيغة هذا الفعل؟",
     "exercise.prompt.masdarForm": "ما صيغة هذا المصدر؟",
     "exercise.prompt.masdarVerb": "إلى أيّ فعل ينتمي هذا المصدر؟",
+    "exercise.prompt.verbMasdar": "ما مصدر هذا الفعل؟",
     "exercise.prompt.verbRoot": "ما جذر هذا الفعل؟",
     "exercise.prompt.masdarRoot": "ما جذر هذا المصدر؟",
     "exercise.prompt.verbTense": "ما زمن هذا الفعل؟",

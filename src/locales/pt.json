@@ -9,6 +9,7 @@
     "exercise.prompt.verbForm": "A que forma pertence este verbo?",
     "exercise.prompt.masdarForm": "A que forma pertence este masdar?",
     "exercise.prompt.masdarVerb": "A que verbo pertence este masdar?",
+    "exercise.prompt.verbMasdar": "Qual é um masdar deste verbo?",
     "exercise.prompt.verbRoot": "Qual é a raiz deste verbo?",
     "exercise.prompt.masdarRoot": "Qual é a raiz deste masdar?",
     "exercise.prompt.verbTense": "Em que tempo está conjugado este verbo?",

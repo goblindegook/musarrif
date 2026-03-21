@@ -5,6 +5,7 @@ import { masdarRootExercise } from './masdar-root'
 import { masdarVerbExercise } from './masdar-verb'
 import type { Exercise } from './types'
 import { verbFormExercise } from './verb-form'
+import { verbMasdarExercise } from './verb-masdar'
 import { verbPronounExercise } from './verb-pronoun'
 import { verbRootExercise } from './verb-root'
 import { verbTenseExercise } from './verb-tense'
@@ -20,6 +21,7 @@ const EXERCISES: readonly ExerciseGenerator[] = [
   { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
   { generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
   { generate: verbFormExercise },
+  { generate: verbMasdarExercise, difficulty: ['medium', 'hard'] },
   { generate: verbPronounExercise },
   { generate: verbRootExercise },
   { generate: verbTenseExercise },
