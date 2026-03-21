@@ -121,8 +121,7 @@ const PageTitle = styled('h1')`
 const Controls = styled('aside')<{ visible: boolean }>`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  align-self: flex-start;
+  align-items: stretch;
   gap: 0.75rem;
   max-height: ${({ visible }) => (visible ? '200px' : '0')};
   opacity: ${({ visible }) => (visible ? '1' : '0')};
@@ -130,10 +129,22 @@ const Controls = styled('aside')<{ visible: boolean }>`
   overflow: hidden;
   transition: max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease;
 
-  @media (min-width: 720px) {
+  @media (min-width: 480px) {
     flex-direction: row;
     align-items: center;
     gap: 1.25rem;
+
+    & > *:first-child {
+      flex: 2;
+    }
+
+    & > *:last-child {
+      flex: 1;
+    }
+  }
+
+  @media (min-width: 720px) {
+    align-self: flex-end;
   }
 `
 
