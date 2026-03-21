@@ -1,7 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
-import type { PronounId } from '../paradigms/pronouns'
-import { conjugate, type VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
+import { conjugate } from '../paradigms/tense'
+import { FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
@@ -11,23 +10,6 @@ export function verbFormExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
-  const [word, options, answer] = buildOptions(verb, tense, pronoun, difficulty)
-
-  return {
-    kind: 'verbForm',
-    promptTranslationKey: 'exercise.prompt.verbForm',
-    word,
-    options,
-    answer,
-  }
-}
-
-function buildOptions(
-  verb: DisplayVerb,
-  tense: VerbTense,
-  pronoun: PronounId,
-  difficulty: Difficulty,
-): [string, readonly string[], number] {
   const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
 
   const eligibleForms = FORMS.filter(
@@ -44,5 +26,11 @@ function buildOptions(
   const distractors = shuffle(eligibleForms).slice(0, 3)
   const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
-  return [word, options.map((f) => FORM_LABELS[f - 1]), options.indexOf(verb.form)]
+  return {
+    kind: 'verbForm',
+    promptTranslationKey: 'exercise.prompt.verbForm',
+    word,
+    options: options.map((f) => FORM_LABELS[f - 1]),
+    answer: options.indexOf(verb.form),
+  }
 }

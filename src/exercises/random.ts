@@ -15,14 +15,14 @@ interface ExerciseGenerator {
 }
 
 const EXERCISES: readonly ExerciseGenerator[] = [
-  { generate: verbFormExercise },
-  { generate: verbRootExercise },
-  { generate: verbTenseExercise },
-  { generate: verbPronounExercise },
   { generate: conjugationExercise },
   { generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
   { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
   { generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
+  { generate: verbFormExercise },
+  { generate: verbPronounExercise },
+  { generate: verbRootExercise },
+  { generate: verbTenseExercise },
 ]
 
 export function randomExercise(difficulty: Difficulty = 'easy'): Exercise {
