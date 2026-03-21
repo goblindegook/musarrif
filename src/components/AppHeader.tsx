@@ -75,6 +75,13 @@ const TopBar = styled('header')`
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
   transition: padding 200ms ease;
+
+  @media (min-width: 960px) {
+    position: static;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0 2rem;
+  }
 `
 
 const TopBarHeader = styled('div')`
@@ -115,6 +122,11 @@ const PageTitle = styled('h1')`
 
   &[lang='ar'] {
     letter-spacing: 0;
+  }
+
+  @media (min-width: 960px) {
+    font-size: clamp(1.9rem, 3vw, 2.4rem);
+    line-height: 1.5;
   }
 `
 
