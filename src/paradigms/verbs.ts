@@ -6,6 +6,8 @@ import { detransliterate, transliterate } from './transliteration'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
+export const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+
 export type MasdarPattern =
   | 'fa3aal'
   | 'fa3aala'

@@ -1,10 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { verbs } from '../paradigms/verbs'
+import { FORM_LABELS, verbs } from '../paradigms/verbs'
 import { diacriticsDifficulty } from './difficulty'
 import { masdarFormExercise } from './masdar-form'
-
-const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 function labelToForm(label: string): number {
   return FORM_LABELS.indexOf(label as (typeof FORM_LABELS)[number]) + 1

@@ -1,5 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
-import type { PronounId } from '../paradigms/pronouns'
+import { PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import {
@@ -47,22 +47,6 @@ function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
 
 const ALL_FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 const ALL_TENSES = [...ACTIVE_TENSES, ...PASSIVE_TENSES]
-const ALL_PRONOUNS: PronounId[] = [
-  '1s',
-  '1p',
-  '2ms',
-  '2fs',
-  '2d',
-  '2mp',
-  '2fp',
-  '3ms',
-  '3fs',
-  '3md',
-  '3fd',
-  '3mp',
-  '3fp',
-]
-const NO_DUAL_PRONOUNS = ALL_PRONOUNS.filter((p) => !p.includes('d'))
 
 function tensesEqual(a: VerbTense, b: VerbTense): boolean {
   return a.join('.') === b.join('.')
@@ -75,7 +59,7 @@ function distractorTenses(difficulty: Difficulty): VerbTense[] {
 }
 
 function distractorPronouns(tense: VerbTense, difficulty: Difficulty): PronounId[] {
-  const base = difficulty === 'easy' ? NO_DUAL_PRONOUNS : ALL_PRONOUNS
+  const base = difficulty === 'easy' ? PRONOUN_IDS.filter((p) => !p.includes('d')) : PRONOUN_IDS
   return tense[1] === 'imperative' ? base.filter((p) => p.startsWith('2')) : base
 }
 

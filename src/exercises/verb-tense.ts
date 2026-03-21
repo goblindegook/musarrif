@@ -23,10 +23,6 @@ const TENSE_OPTION_SLUG: Record<string, string> = {
   'present.jussive': 'jussive',
 }
 
-function tensesEqual(a: VerbTense, b: VerbTense): boolean {
-  return a.join('.') === b.join('.')
-}
-
 function tenseKey(tense: VerbTense, includeVoice: boolean): string {
   const slug = TENSE_OPTION_SLUG[tense.slice(1).join('.')]
   if (!includeVoice || tense[1] === 'imperative') return `exercise.tense.option.${slug}`
@@ -44,7 +40,7 @@ export function verbTenseExercise(difficulty: Difficulty = 'easy'): Exercise {
     promptTranslationKey: 'exercise.prompt.verbTense',
     word,
     options: options.map((t) => tenseKey(t, difficulty === 'hard')),
-    answer: options.findIndex((t) => tensesEqual(t, tense)),
+    answer: options.findIndex((t) => t.join('.') === tense.join('.')),
   }
 }
 

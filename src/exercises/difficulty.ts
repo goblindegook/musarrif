@@ -2,7 +2,7 @@ import { applyDiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -30,6 +30,8 @@ export const PASSIVE_TENSES: VerbTense[] = [
 
 const PRONOUNS: PronounId[] = ['1s', '1p', '2ms', '2fs', '2d', '2mp', '2fp', '3ms', '3fs', '3md', '3fd', '3mp', '3fp']
 
+const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 export function randomVerb(difficulty: Difficulty): DisplayVerb {
   return random(difficulty === 'easy' ? verbs : verbs.filter(({ root }) => root.length === 3))
 }
@@ -44,7 +46,7 @@ export function randomTense(verb: DisplayVerb, difficulty: Difficulty): VerbTens
   return random(tensePool(verb, difficulty))
 }
 
-export function pronounPool(verb: DisplayVerb, [voice, tense]: VerbTense, difficulty: Difficulty): PronounId[] {
+function pronounPool(verb: DisplayVerb, [voice, tense]: VerbTense, difficulty: Difficulty): PronounId[] {
   const pronouns = difficulty === 'easy' ? PRONOUNS.filter((p) => !p.includes('d')) : PRONOUNS
   if (tense === 'imperative') return pronouns.filter((p) => p.startsWith('2'))
   if (voice === 'passive' && verb.passiveVoice === 'impersonal') return ['3ms']
@@ -53,6 +55,10 @@ export function pronounPool(verb: DisplayVerb, [voice, tense]: VerbTense, diffic
 
 export function randomPronoun(verb: DisplayVerb, tense: VerbTense, difficulty: Difficulty): PronounId {
   return random(pronounPool(verb, tense, difficulty))
+}
+
+export function randomForm(): VerbForm {
+  return random(FORMS)
 }
 
 export function random<T>(arr: readonly T[]): T {

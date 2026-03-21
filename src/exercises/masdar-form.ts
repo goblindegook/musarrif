@@ -1,10 +1,9 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
+import { type DisplayVerb, FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
 import type { Exercise } from './types'
 
-const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export function masdarFormExercise(difficulty: Difficulty = 'easy'): Exercise {
