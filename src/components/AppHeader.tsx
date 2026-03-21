@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { useRouting } from '../hooks/routing'
 import { IconButton } from './atoms/IconButton'
-import { SegmentedControlButton, SegmentedControlRoot } from './atoms/SegmentedControl'
+import { SegmentedControlButton, SegmentedControl } from './atoms/SegmentedControl'
 import { ConjugateIcon } from './icons/ConjugateIcon'
 import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
@@ -54,7 +54,7 @@ export const AppHeader = () => {
           <Controls visible={isSettingsOpen}>
             <ControlGroup>
               <ControlLabel>{t('diacritics.title')}</ControlLabel>
-              <SegmentedControlRoot role="group" aria-label={t('diacritics.title')}>
+              <SegmentedControl fill role="group" aria-label={t('diacritics.title')}>
                 {DIACRITICS_OPTIONS.map((option) => (
                   <SegmentedControlButton
                     type="button"
@@ -67,7 +67,7 @@ export const AppHeader = () => {
                     {t(`diacritics.${option}`)}
                   </SegmentedControlButton>
                 ))}
-              </SegmentedControlRoot>
+              </SegmentedControl>
             </ControlGroup>
             <ControlGroup>
               <ControlLabel>{t('languagePicker.label')}</ControlLabel>

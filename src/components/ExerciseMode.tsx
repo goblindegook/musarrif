@@ -7,7 +7,7 @@ import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '..
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
-import { SegmentedControlButton, SegmentedControlRoot } from './atoms/SegmentedControl'
+import { SegmentedControlButton, SegmentedControl } from './atoms/SegmentedControl'
 import { ExerciseStats } from './ExerciseStats'
 
 const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'] as const
@@ -38,7 +38,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   return (
     <ExerciseLayout>
       <ControlsBar>
-        <SegmentedControlRoot role="group" aria-label={t('exercise.difficulty.title')}>
+        <SegmentedControl fill role="group" aria-label={t('exercise.difficulty.title')}>
           {DIFFICULTY_OPTIONS.map((option) => (
             <SegmentedControlButton
               type="button"
@@ -56,7 +56,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
               {t(`exercise.difficulty.${option}`)}
             </SegmentedControlButton>
           ))}
-        </SegmentedControlRoot>
+        </SegmentedControl>
       </ControlsBar>
 
       <ExerciseCard>

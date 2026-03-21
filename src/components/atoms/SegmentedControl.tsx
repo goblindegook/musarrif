@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const SegmentedControlRoot = styled('div')`
+export const SegmentedControl = styled('div')<{ fill?: boolean }>`
   display: flex;
   align-items: center;
   border: 1px solid #e2e8f0;
@@ -8,10 +8,8 @@ export const SegmentedControlRoot = styled('div')`
   padding: 0.25rem;
   border-radius: 0.95rem;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
-  flex: 1;
   gap: 0.25rem;
-  min-width: 0;
-  width: 100%;
+  ${({ fill }) => fill && 'flex: 1; min-width: 0; width: 100%;'}
 `
 
 export const SegmentedControlButton = styled('button')<{ active: boolean }>`
