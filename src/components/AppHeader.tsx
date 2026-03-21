@@ -105,10 +105,11 @@ const TopBar = styled('header')`
 `
 
 const TopBarHeader = styled('div')`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  width: 100%;
+  min-width: 0;
   gap: 1rem;
 `
 
@@ -117,6 +118,8 @@ const TitleGroup = styled('div')`
   flex-direction: column;
   align-items: flex-start;
   gap: 0.15rem;
+  min-width: 0;
+  overflow: hidden;
 `
 
 const Eyebrow = styled('p')`
@@ -125,6 +128,10 @@ const Eyebrow = styled('p')`
   font-size: 0.78rem;
   color: #92400e;
   margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &[lang='ar'] {
     letter-spacing: 0;
@@ -184,6 +191,8 @@ const RightGroup = styled('div')`
   align-items: center;
   gap: 0.5rem;
   position: relative;
+  justify-self: end;
+  flex-shrink: 0;
 `
 
 const ControlGroup = styled('div')`
