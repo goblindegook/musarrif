@@ -8,18 +8,18 @@ const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export function masdarFormExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
-  const [word, options] = buildOptions(verb, difficulty)
+  const [word, options, answer] = buildOptions(verb, difficulty)
 
   return {
     kind: 'masdarForm',
     promptTranslationKey: 'exercise.prompt.masdarForm',
     word,
-    options: options.map((form) => FORM_LABELS[form - 1]),
-    answer: options.indexOf(verb.form),
+    options,
+    answer,
   }
 }
 
-function buildOptions(verb: DisplayVerb, difficulty: Difficulty): [string, readonly number[]] {
+function buildOptions(verb: DisplayVerb, difficulty: Difficulty): [string, readonly string[], number] {
   const word = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
 
   const eligibleForms = FORMS.filter((form) => {
@@ -31,5 +31,5 @@ function buildOptions(verb: DisplayVerb, difficulty: Difficulty): [string, reado
   const distractors = shuffle(eligibleForms).slice(0, 3)
   const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
-  return [word, options]
+  return [word, options.map((form) => FORM_LABELS[form - 1]), options.indexOf(verb.form)]
 }

@@ -4,7 +4,7 @@ import type { DistractorGenerator } from './distractors'
 
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
 
-export function weakAlternativeRootDistractor(correct: string): DistractorGenerator {
+export function weakAlternativeRootDistractor(correct: string): DistractorGenerator<string> {
   const letters = Array.from(correct)
   const weakAlternatives = letters.flatMap((letter, index) => {
     if (!isWeakLetter(letter)) return []

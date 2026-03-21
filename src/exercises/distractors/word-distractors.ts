@@ -11,7 +11,7 @@ const RANDOM_LETTERS = [
   ALIF_MAQSURA,
 ]
 
-export function mixedWordDistractor(word: string, size: number): DistractorGenerator {
+export function mixedWordDistractor(word: string, size: number): DistractorGenerator<string> {
   const letters = Array.from(stripDiacritics(word))
 
   return () => {
@@ -27,7 +27,7 @@ export function mixedWordDistractor(word: string, size: number): DistractorGener
   }
 }
 
-export function wordSliceDistractor(word: string, size: number): DistractorGenerator {
+export function wordSliceDistractor(word: string, size: number): DistractorGenerator<string> {
   let offset = 1
   const letters = Array.from(stripDiacritics(word))
   return () => cyclicSlice(letters, size, offset++)
@@ -37,7 +37,7 @@ function cyclicSlice(pool: readonly string[], length: number, offset: number): s
   return Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]).join('')
 }
 
-export function singleLetterWordDistractor(root: string): DistractorGenerator {
+export function singleLetterWordDistractor(root: string): DistractorGenerator<string> {
   const letters = Array.from(root)
 
   return () => {

@@ -11,14 +11,14 @@ export function verbFormExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const tense = randomTense(verb, difficulty)
   const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
-  const [word, options] = buildOptions(verb, tense, pronoun, difficulty)
+  const [word, options, answer] = buildOptions(verb, tense, pronoun, difficulty)
 
   return {
     kind: 'verbForm',
     promptTranslationKey: 'exercise.prompt.verbForm',
     word,
-    options: options.map((f) => FORM_LABELS[f - 1]),
-    answer: options.indexOf(verb.form),
+    options,
+    answer,
   }
 }
 
@@ -27,7 +27,7 @@ function buildOptions(
   tense: VerbTense,
   pronoun: PronounId,
   difficulty: Difficulty,
-): [string, readonly number[]] {
+): [string, readonly string[], number] {
   const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
 
   const eligibleForms = FORMS.filter(
@@ -44,5 +44,5 @@ function buildOptions(
   const distractors = shuffle(eligibleForms).slice(0, 3)
   const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
-  return [word, options]
+  return [word, options.map((f) => FORM_LABELS[f - 1]), options.indexOf(verb.form)]
 }
