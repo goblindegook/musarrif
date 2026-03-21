@@ -16,6 +16,22 @@ export const PRONOUN_IDS = [
 
 export type PronounId = (typeof PRONOUN_IDS)[number]
 
+export const ARABIC_PRONOUNS: Record<PronounId, string> = {
+  '1s': 'أَنَا',
+  '1p': 'نَحْنُ',
+  '2ms': 'أَنْتَ',
+  '2fs': 'أَنْتِ',
+  '2d': 'أَنْتُمَا',
+  '2mp': 'أَنْتُمْ',
+  '2fp': 'أَنْتُنَّ',
+  '3ms': 'هُوَ',
+  '3fs': 'هِيَ',
+  '3md': 'هُمَا',
+  '3fd': 'هُمَا',
+  '3mp': 'هُمْ',
+  '3fp': 'هُنَّ',
+} as const
+
 export function isMasculinePlural(pronounId: PronounId): pronounId is '2mp' | '3mp' {
   return pronounId === '2mp' || pronounId === '3mp'
 }

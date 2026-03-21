@@ -4,7 +4,7 @@ import { useI18n } from '../hooks/i18n'
 import type { Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
-import type { PronounId } from '../paradigms/pronouns'
+import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
 import { conjugate, type Tense, type Voice } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { CopyButton } from './buttons/CopyButton'
@@ -15,33 +15,32 @@ type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
 
 interface PronounSlot {
   id: PronounId
-  label: string
   number: 'singular' | 'dual' | 'plural'
   person: '1st' | '2nd' | '3rd'
   gender?: 'masculine' | 'feminine'
 }
 
 const PRONOUNS: readonly PronounSlot[] = [
-  { id: '1s', label: 'أَنَا', number: 'singular', person: '1st' },
+  { id: '1s', number: 'singular', person: '1st' },
 
-  { id: '2ms', label: 'أَنْتَ', number: 'singular', person: '2nd', gender: 'masculine' },
-  { id: '2fs', label: 'أَنْتِ', number: 'singular', person: '2nd', gender: 'feminine' },
+  { id: '2ms', number: 'singular', person: '2nd', gender: 'masculine' },
+  { id: '2fs', number: 'singular', person: '2nd', gender: 'feminine' },
 
-  { id: '3ms', label: 'هُوَ', number: 'singular', person: '3rd', gender: 'masculine' },
-  { id: '3fs', label: 'هِيَ', number: 'singular', person: '3rd', gender: 'feminine' },
+  { id: '3ms', number: 'singular', person: '3rd', gender: 'masculine' },
+  { id: '3fs', number: 'singular', person: '3rd', gender: 'feminine' },
 
-  { id: '2d', label: 'أَنْتُمَا', number: 'dual', person: '2nd' },
+  { id: '2d', number: 'dual', person: '2nd' },
 
-  { id: '3md', label: 'هُمَا', number: 'dual', person: '3rd', gender: 'masculine' },
-  { id: '3fd', label: 'هُمَا', number: 'dual', person: '3rd', gender: 'feminine' },
+  { id: '3md', number: 'dual', person: '3rd', gender: 'masculine' },
+  { id: '3fd', number: 'dual', person: '3rd', gender: 'feminine' },
 
-  { id: '1p', label: 'نَحْنُ', number: 'plural', person: '1st' },
+  { id: '1p', number: 'plural', person: '1st' },
 
-  { id: '2mp', label: 'أَنْتُمْ', number: 'plural', person: '2nd', gender: 'masculine' },
-  { id: '2fp', label: 'أَنْتُنَّ', number: 'plural', person: '2nd', gender: 'feminine' },
+  { id: '2mp', number: 'plural', person: '2nd', gender: 'masculine' },
+  { id: '2fp', number: 'plural', person: '2nd', gender: 'feminine' },
 
-  { id: '3mp', label: 'هُمْ', number: 'plural', person: '3rd', gender: 'masculine' },
-  { id: '3fp', label: 'هُنَّ', number: 'plural', person: '3rd', gender: 'feminine' },
+  { id: '3mp', number: 'plural', person: '3rd', gender: 'masculine' },
+  { id: '3fp', number: 'plural', person: '3rd', gender: 'feminine' },
 ] as const
 
 interface ConjugationProps {
@@ -203,7 +202,7 @@ export function ConjugationTable({
                 <Row key={slot.id}>
                   <PronounCell>
                     <span dir="rtl" lang="ar">
-                      {applyDiacriticsPreference(slot.label, diacriticsPreference)}
+                      {applyDiacriticsPreference(ARABIC_PRONOUNS[slot.id], diacriticsPreference)}
                     </span>
                     <PronounDescription dir={dir} lang={lang}>
                       {formatDescription(slot, t)}
