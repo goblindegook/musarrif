@@ -7,7 +7,7 @@ import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '..
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
-import { SegmentedControl, SegmentedControlButton } from './atoms/SegmentedControl'
+import { SegmentedControl } from './atoms/SegmentedControl'
 import { ExerciseStats } from './ExerciseStats'
 
 const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'] as const
@@ -38,25 +38,22 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   return (
     <ExerciseLayout>
       <ControlsBar>
-        <SegmentedControl fill role="group" aria-label={t('exercise.difficulty.title')}>
-          {DIFFICULTY_OPTIONS.map((option) => (
-            <SegmentedControlButton
-              type="button"
-              key={option}
-              active={difficulty === option}
-              aria-pressed={difficulty === option}
-              onClick={() => {
-                if (option === difficulty) return
-                setDifficulty(option)
-                setExercise(generateExercise(option))
-                setSelected(null)
-              }}
-              title={`${t('exercise.difficulty.title')}: ${t(`exercise.difficulty.${option}`)}`}
-            >
-              {t(`exercise.difficulty.${option}`)}
-            </SegmentedControlButton>
-          ))}
-        </SegmentedControl>
+        <SegmentedControl
+          fill
+          options={DIFFICULTY_OPTIONS.map((option) => ({
+            value: option,
+            label: t(`exercise.difficulty.${option}`),
+            title: `${t('exercise.difficulty.title')}: ${t(`exercise.difficulty.${option}`)}`,
+          }))}
+          value={difficulty}
+          onChange={(option) => {
+            if (option === difficulty) return
+            setDifficulty(option)
+            setExercise(generateExercise(option))
+            setSelected(null)
+          }}
+          aria-label={t('exercise.difficulty.title')}
+        />
       </ControlsBar>
 
       <ExerciseCard>

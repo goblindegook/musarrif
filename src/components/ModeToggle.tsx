@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import type { ComponentChild } from 'preact'
-import { SegmentedControl, SegmentedControlButton } from './atoms/SegmentedControl'
+import { SegmentedControl } from './atoms/SegmentedControl'
 
 type Props = {
   activeMode: number
@@ -11,47 +11,44 @@ type Props = {
 }
 
 export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel }: Props) {
+  const options = labels.map((label, index) => ({
+    value: `${index}`,
+    label,
+    content: (
+      <SegmentContent>
+        {icons[index]}
+        <SegmentLabel>{label}</SegmentLabel>
+      </SegmentContent>
+    ),
+  }))
+
   return (
-    <Control role="group" aria-label={ariaLabel}>
-      {labels.map((label, i) => (
-        <Segment
-          key={label}
-          type="button"
-          active={i === activeMode}
-          aria-pressed={i === activeMode}
-          onClick={() => onClick(i)}
-        >
-          {icons[i]}
-          <SegmentLabel>{label}</SegmentLabel>
-        </Segment>
-      ))}
+    <Control>
+      <SegmentedControl
+        options={options}
+        value={`${activeMode}`}
+        onChange={(_value: string, index: number) => onClick(index)}
+        compact
+        aria-label={ariaLabel}
+      />
     </Control>
   )
 }
 
-const Control = styled(SegmentedControl)`
+const Control = styled('div')`
   height: 36px;
 `
 
-const Segment = styled(SegmentedControlButton)`
-  position: relative;
+const SegmentContent = styled('span')`
   display: flex;
   align-items: center;
-  align-self: stretch;
-  flex: none;
   gap: 0.5rem;
-  padding: 0 0.75rem;
-  min-width: unset;
+  justify-content: center;
 
   svg {
     width: 1rem;
     height: 1rem;
     flex-shrink: 0;
-  }
-
-  @media (min-width: 720px) {
-    min-width: unset;
-    padding: 0 0.75rem;
   }
 `
 

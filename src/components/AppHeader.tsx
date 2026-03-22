@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { useRouting } from '../hooks/routing'
 import { IconButton } from './atoms/IconButton'
-import { SegmentedControl, SegmentedControlButton } from './atoms/SegmentedControl'
+import { SegmentedControl } from './atoms/SegmentedControl'
 import { ConjugateIcon } from './icons/ConjugateIcon'
 import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
@@ -78,20 +78,17 @@ export const AppHeader = () => {
           <Controls data-settings-panel visible={isSettingsOpen}>
             <ControlGroup>
               <ControlLabel>{t('diacritics.title')}</ControlLabel>
-              <SegmentedControl fill role="group" aria-label={t('diacritics.title')}>
-                {DIACRITICS_OPTIONS.map((option) => (
-                  <SegmentedControlButton
-                    type="button"
-                    key={option}
-                    active={diacriticsPreference === option}
-                    aria-pressed={diacriticsPreference === option}
-                    onClick={() => setDiacriticsPreference(option)}
-                    title={`${t('diacritics.title')}: ${t(`diacritics.${option}`)}`}
-                  >
-                    {t(`diacritics.${option}`)}
-                  </SegmentedControlButton>
-                ))}
-              </SegmentedControl>
+              <SegmentedControl
+                fill
+                options={DIACRITICS_OPTIONS.map((option) => ({
+                  value: option,
+                  label: t(`diacritics.${option}`),
+                  title: `${t('diacritics.title')}: ${t(`diacritics.${option}`)}`,
+                }))}
+                value={diacriticsPreference}
+                onChange={(option) => setDiacriticsPreference(option)}
+                aria-label={t('diacritics.title')}
+              />
             </ControlGroup>
             <ControlGroup>
               <ControlLabel>{t('languagePicker.label')}</ControlLabel>
