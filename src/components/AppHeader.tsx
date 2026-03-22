@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { useRouting } from '../hooks/routing'
 import { IconButton } from './atoms/IconButton'
@@ -17,6 +17,30 @@ export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isSettingsOpen) return
+
+    const abortController = new AbortController()
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target =
+        event.target instanceof Element
+          ? event.target
+          : event.target instanceof Node
+            ? event.target.parentElement
+            : null
+      if (target == null) return
+      if (target.closest('[data-settings-panel]') != null) return
+      if (target.closest('[data-settings-toggle]') != null) return
+      setIsSettingsOpen(false)
+    }
+
+    document.addEventListener('mousedown', handleClickOutside, { signal: abortController.signal })
+    document.addEventListener('touchstart', handleClickOutside, { signal: abortController.signal })
+
+    return () => abortController.abort()
+  }, [isSettingsOpen])
 
   return (
     <TopBar>
@@ -40,7 +64,7 @@ export const AppHeader = () => {
               else navigateTo('/#/test')
             }}
           />
-          <SettingsButtonWrapper>
+          <SettingsButtonWrapper data-settings-toggle>
             <IconButton
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
               ariaLabel={t('settings.toggle')}
@@ -51,7 +75,7 @@ export const AppHeader = () => {
               <SettingsIcon />
             </IconButton>
           </SettingsButtonWrapper>
-          <Controls visible={isSettingsOpen}>
+          <Controls data-settings-panel visible={isSettingsOpen}>
             <ControlGroup>
               <ControlLabel>{t('diacritics.title')}</ControlLabel>
               <SegmentedControl fill role="group" aria-label={t('diacritics.title')}>

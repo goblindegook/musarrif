@@ -38,3 +38,22 @@ it('clicking the Conjugate segment when in exercise mode pushes /#/verbs to hist
   fireEvent.click(screen.getByText('Conjugate').closest('button')!)
   expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/verbs')
 })
+
+it('clicking the settings button opens the settings popover', () => {
+  renderHeader('/#/verbs')
+  const settingsButton = screen.getByTitle('Toggle settings')
+
+  fireEvent.click(settingsButton)
+
+  expect(settingsButton).toHaveAttribute('aria-expanded', 'true')
+})
+
+it('clicking outside the settings panel dismisses it', () => {
+  renderHeader('/#/verbs')
+  const settingsButton = screen.getByTitle('Toggle settings')
+  fireEvent.click(settingsButton)
+
+  fireEvent.mouseDown(document.body)
+
+  expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
+})
