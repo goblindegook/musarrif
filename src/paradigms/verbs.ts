@@ -104,16 +104,14 @@ export function getVerb(root: string, form: VerbForm): DisplayVerb {
   return verb
 }
 
-export function synthesizeVerb(root: string, form: 1, pattern: FormIPattern): DisplayVerb
-export function synthesizeVerb(root: string, form: Exclude<VerbForm, 1>): DisplayVerb
-export function synthesizeVerb(root: string, form: VerbForm, pattern?: FormIPattern): DisplayVerb {
+export function synthesizeVerb(root: string, form: 1, pattern?: FormIPattern): DisplayVerb
+export function synthesizeVerb(root: string, form: VerbForm): DisplayVerb
+export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'fa3ala-yaf3alu'): DisplayVerb {
   const matchingFormI = verbs.find(
     (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
   )
   const raw: Verb =
-    form === 1
-      ? { root, form, formPattern: pattern ?? 'fa3ala-yaf3alu', masdarPatterns: matchingFormI?.masdarPatterns }
-      : { root, form }
+    form === 1 ? { root, form, formPattern: pattern, masdarPatterns: matchingFormI?.masdarPatterns } : { root, form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
   return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId }

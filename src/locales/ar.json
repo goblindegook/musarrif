@@ -8,6 +8,8 @@
     "exercise.back": "ٱلتَّصرِيف",
     "exercise.prompt.verbForm": "ما صيغة هذا الفعل؟",
     "exercise.prompt.masdarForm": "ما صيغة هذا المصدر؟",
+    "exercise.prompt.activeParticipleForm": "ما صيغة اسم الفاعل هذا؟",
+    "exercise.prompt.passiveParticipleForm": "ما صيغة اسم المفعول هذا؟",
     "exercise.prompt.masdarVerb": "إلى أيّ فعل ينتمي هذا المصدر؟",
     "exercise.prompt.verbMasdar": "ما مصدر هذا الفعل؟",
     "exercise.prompt.verbRoot": "ما جذر هذا الفعل؟",

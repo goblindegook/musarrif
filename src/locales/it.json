@@ -8,6 +8,8 @@
     "exercise.back": "Coniugazione",
     "exercise.prompt.verbForm": "A quale forma appartiene questo verbo?",
     "exercise.prompt.masdarForm": "A quale forma appartiene questo masdar?",
+    "exercise.prompt.activeParticipleForm": "A quale forma appartiene questo participio attivo?",
+    "exercise.prompt.passiveParticipleForm": "A quale forma appartiene questo participio passivo?",
     "exercise.prompt.masdarVerb": "A quale verbo appartiene questo masdar?",
     "exercise.prompt.verbMasdar": "Qual è un masdar di questo verbo?",
     "exercise.prompt.verbRoot": "Qual è la radice di questo verbo?",

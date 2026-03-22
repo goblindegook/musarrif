@@ -26,7 +26,7 @@ import {
 } from '../letters'
 import type { Verb } from '../verbs'
 
-export function deriveActiveParticiple(verb: Verb): string | null {
+export function deriveActiveParticiple(verb: Verb): string {
   const result = (() => {
     const letters = [...verb.root]
 
