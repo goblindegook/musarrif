@@ -80,8 +80,8 @@ export function importUserData(raw: string): boolean {
   return true
 }
 
-export function useLocalStorage<T>(key: string, fallback: T): [T, (updater: Updater<T>) => void] {
-  const [value, setValue] = useState<T>(() => {
+export function useLocalStorage<T>(key: string, fallback: T): [T, (updater: Updater<T>) => void, () => T] {
+  const read = useCallback((): T => {
     const raw = window?.localStorage?.getItem?.(`conjugator:${key}`) ?? null
     if (raw == null) return fallback
     try {
@@ -89,7 +89,9 @@ export function useLocalStorage<T>(key: string, fallback: T): [T, (updater: Upda
     } catch {
       return raw as unknown as T
     }
-  })
+  }, [fallback, key])
+
+  const [value, setValue] = useState<T>(() => read())
 
   const update = useCallback(
     (updater: Updater<T>) => {
@@ -102,5 +104,11 @@ export function useLocalStorage<T>(key: string, fallback: T): [T, (updater: Upda
     [key],
   )
 
-  return [value, update]
+  const refetch = useCallback(() => {
+    const next = read()
+    setValue(next)
+    return next
+  }, [read])
+
+  return [value, update, refetch]
 }

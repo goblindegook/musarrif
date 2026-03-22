@@ -73,6 +73,22 @@ describe('ExerciseMode', () => {
     }
   })
 
+  test('clicking pass loads a fresh question', () => {
+    const nextExercise: Exercise = {
+      kind: 'verbForm',
+      word: 'دَخَلَ',
+      promptTranslationKey: 'exercise.prompt.verbForm',
+      options: ['I', 'II', 'III', 'IV'],
+      answer: 0,
+    }
+    const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValueOnce(nextExercise)
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByRole('button', { name: /pass/i }))
+
+    expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
+  })
+
   test('correct option is marked after selecting any answer', () => {
     // answer=0 → option at index 0 (I) is correct
     render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })

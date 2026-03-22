@@ -133,7 +133,6 @@ export const AppHeader = () => {
                 onChange={(option) => {
                   if (option === exerciseDifficulty) return
                   setDifficulty(option)
-                  if (page === 'test') window.location.reload()
                 }}
                 aria-label={t('exercise.difficulty.title')}
               />

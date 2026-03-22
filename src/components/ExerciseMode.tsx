@@ -13,11 +13,14 @@ type Props = {
   generateExercise?: (difficulty: Difficulty) => Exercise
 }
 
+function normalizeDifficulty(raw: unknown): Difficulty {
+  return raw === 'medium' || raw === 'hard' ? raw : 'easy'
+}
+
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
-  const [storedDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
-  const difficulty: Difficulty =
-    storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
+  const [storedDifficulty, , refetchDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
+  const difficulty = normalizeDifficulty(storedDifficulty)
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty))
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
@@ -28,6 +31,10 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     },
     [setRawStats],
   )
+  const loadNextExercise = useCallback(() => {
+    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty())))
+    setSelected(null)
+  }, [generateExercise, refetchDifficulty])
 
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
@@ -72,16 +79,14 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             )
           })}
         </OptionsGrid>
-        {isAnswered && (
-          <NextButton
-            type="button"
-            onClick={() => {
-              setExercise(generateExercise(difficulty))
-              setSelected(null)
-            }}
-          >
+        {isAnswered ? (
+          <NextButton type="button" onClick={loadNextExercise}>
             {t('exercise.next')}
           </NextButton>
+        ) : (
+          <PassButton type="button" onClick={loadNextExercise}>
+            {t('exercise.pass')}
+          </PassButton>
         )}
       </ExerciseCard>
 
@@ -194,4 +199,17 @@ const NextButton = styled('button')`
     background: #0f172a;
     outline: none;
   }
+`
+
+const PassButton = styled('button')`
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 `
