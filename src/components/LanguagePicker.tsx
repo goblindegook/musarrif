@@ -11,6 +11,8 @@ const Select = styled('select')`
   cursor: pointer;
   flex: 1;
   min-width: 0;
+  min-height: 36px;
+  height: 36px;
   width: 100%;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 

@@ -1,6 +1,7 @@
 import { styled } from 'goober'
-import { useEffect, useState } from 'preact/hooks'
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
+import { getUserData, importUserData } from '../hooks/local-storage'
 import { useRouting } from '../hooks/routing'
 import { IconButton } from './atoms/IconButton'
 import { SegmentedControl } from './atoms/SegmentedControl'
@@ -17,6 +18,7 @@ export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const importInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!isSettingsOpen) return
@@ -41,6 +43,27 @@ export const AppHeader = () => {
 
     return () => abortController.abort()
   }, [isSettingsOpen])
+
+  const exportUserData = useCallback(() => {
+    const payload = getUserData()
+
+    const link = document.createElement('a')
+    link.href = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(payload, null, 2))}`
+    link.download = 'musarrif-data.json'
+    link.click()
+  }, [])
+
+  const importData = useCallback(async (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement | null
+    const file = input?.files?.[0]
+    if (input == null || file == null) return
+
+    try {
+      if (importUserData(await file.text())) window.location.reload()
+    } finally {
+      input.value = ''
+    }
+  }, [])
 
   return (
     <TopBar>
@@ -93,6 +116,18 @@ export const AppHeader = () => {
             <ControlGroup>
               <ControlLabel>{t('languagePicker.label')}</ControlLabel>
               <LanguagePicker />
+            </ControlGroup>
+            <ControlGroup>
+              <ControlLabel>{t('settings.data.title')}</ControlLabel>
+              <ActionRow>
+                <ActionButton type="button" onClick={exportUserData}>
+                  {t('settings.data.export')}
+                </ActionButton>
+                <ActionButton type="button" onClick={() => importInputRef.current?.click()}>
+                  {t('settings.data.import')}
+                </ActionButton>
+              </ActionRow>
+              <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
             </ControlGroup>
           </Controls>
         </RightGroup>
@@ -229,4 +264,30 @@ const ControlLabel = styled('span')`
   text-transform: uppercase;
   color: #94a3b8;
   padding-inline-start: 0.25rem;
+`
+
+const ActionRow = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+`
+
+const ActionButton = styled('button')`
+  border: 1px solid #cbd5e1;
+  border-radius: 0.6rem;
+  background: #f8fafc;
+  color: #334155;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: #fff8e1;
+    border-color: #facc15;
+    color: #0f172a;
+    outline: none;
+  }
 `

@@ -4,6 +4,9 @@
   "strings": {
     "eyebrow": "Coniugatore di verbi arabi",
     "settings.toggle": "Mostra/nascondi impostazioni",
+    "settings.data.title": "Dati",
+    "settings.data.export": "Esporta dati",
+    "settings.data.import": "Importa dati",
     "exercise.open": "Modalità test",
     "exercise.back": "Coniugazione",
     "exercise.prompt.verbForm": "A quale forma appartiene questo verbo?",

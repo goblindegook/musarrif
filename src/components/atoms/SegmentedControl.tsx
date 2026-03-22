@@ -118,7 +118,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   justify-content: center;
   letter-spacing: 0.08em;
   min-inline-size: ${({ compact }) => (compact ? '0' : '64px')};
-  padding: ${({ compact }) => (compact ? '0 0.75rem' : '0.45rem 0.75rem')};
+  padding: ${({ compact }) => (compact ? '0.2rem 0.75rem' : '0.45rem 0.75rem')};
   text-transform: uppercase;
   position: relative;
   z-index: 1;
@@ -133,6 +133,6 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
 
   @media (min-width: 720px) {
     min-inline-size: ${({ compact }) => (compact ? '0' : '96px')};
-    padding: ${({ compact }) => (compact ? '0 0.75rem' : '0.5rem 0.9rem')};
+    padding: ${({ compact }) => (compact ? '0.2rem 0.75rem' : '0.5rem 0.9rem')};
   }
 `

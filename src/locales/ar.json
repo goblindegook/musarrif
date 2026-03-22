@@ -4,6 +4,9 @@
   "strings": {
     "eyebrow": "مُصَــرِّف الأفعَــال العربية",
     "settings.toggle": "تبديل الإعدادات",
+    "settings.data.title": "البيانات",
+    "settings.data.export": "تصدير البيانات",
+    "settings.data.import": "استيراد البيانات",
     "exercise.open": "وضع الاختبار",
     "exercise.back": "ٱلتَّصرِيف",
     "exercise.prompt.verbForm": "ما صيغة هذا الفعل؟",
