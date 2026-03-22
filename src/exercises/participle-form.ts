@@ -7,13 +7,13 @@ import type { Exercise } from './types'
 
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-type ParticipleKind = 'active' | 'passive'
+type Participle = 'active' | 'passive'
 
 export function participleFormExercise(difficulty: Difficulty = 'easy'): Exercise {
   const verb = randomVerb(difficulty)
   const active = deriveActiveParticiple(verb)
   const passive = derivePassiveParticiple(verb)
-  const kind: ParticipleKind = passive.length > 0 ? random(['active', 'passive']) : 'active'
+  const kind: Participle = passive ? random(['active', 'passive']) : 'active'
   const word = diacriticsDifficulty(kind === 'active' ? active : passive, difficulty)
 
   const eligibleForms = FORMS.filter((form) => {

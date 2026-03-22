@@ -6,6 +6,7 @@ export interface Exercise {
     | 'masdarVerb'
     | 'participleForm'
     | 'participleRoot'
+    | 'participleVerb'
     | 'verbForm'
     | 'verbMasdar'
     | 'verbPronoun'

@@ -5,6 +5,7 @@ import { masdarRootExercise } from './masdar-root'
 import { masdarVerbExercise } from './masdar-verb'
 import { participleFormExercise } from './participle-form'
 import { participleRootExercise } from './participle-root'
+import { participleVerbExercise } from './participle-verb'
 import type { Exercise } from './types'
 import { verbFormExercise } from './verb-form'
 import { verbMasdarExercise } from './verb-masdar'
@@ -24,6 +25,7 @@ const EXERCISES: readonly ExerciseGenerator[] = [
   { generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
   { generate: participleFormExercise },
   { generate: participleRootExercise },
+  { generate: participleVerbExercise },
   { generate: verbFormExercise },
   { generate: verbMasdarExercise, difficulty: ['medium', 'hard'] },
   { generate: verbPronounExercise },

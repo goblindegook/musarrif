@@ -12,6 +12,8 @@
     "exercise.prompt.passiveParticipleForm": "ما صيغة اسم المفعول هذا؟",
     "exercise.prompt.activeParticipleRoot": "ما جذر اسم الفاعل هذا؟",
     "exercise.prompt.passiveParticipleRoot": "ما جذر اسم المفعول هذا؟",
+    "exercise.prompt.activeParticipleVerb": "إلى أيّ فعل ينتمي اسم الفاعل هذا؟",
+    "exercise.prompt.passiveParticipleVerb": "إلى أيّ فعل ينتمي اسم المفعول هذا؟",
     "exercise.prompt.masdarVerb": "إلى أيّ فعل ينتمي هذا المصدر؟",
     "exercise.prompt.verbMasdar": "ما مصدر هذا الفعل؟",
     "exercise.prompt.verbRoot": "ما جذر هذا الفعل؟",

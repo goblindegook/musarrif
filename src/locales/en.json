@@ -27,6 +27,8 @@
     "exercise.prompt.passiveParticipleForm": "What form is this passive participle?",
     "exercise.prompt.activeParticipleRoot": "What is the root of this active participle?",
     "exercise.prompt.passiveParticipleRoot": "What is the root of this passive participle?",
+    "exercise.prompt.activeParticipleVerb": "What verb does this active participle belong to?",
+    "exercise.prompt.passiveParticipleVerb": "What verb does this passive participle belong to?",
     "exercise.prompt.masdarVerb": "What verb does this masdar belong to?",
     "exercise.prompt.verbMasdar": "What is a masdar of this verb?",
     "exercise.prompt.verbRoot": "What is the root of this verb?",
