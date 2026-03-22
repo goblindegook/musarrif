@@ -15,6 +15,8 @@
     "exercise.prompt.activeParticipleVerb": "A quale verbo appartiene questo participio attivo?",
     "exercise.prompt.passiveParticipleVerb": "A quale verbo appartiene questo participio passivo?",
     "exercise.prompt.masdarVerb": "A quale verbo appartiene questo masdar?",
+    "exercise.prompt.verbActiveParticiple": "Qual è il participio attivo di questo verbo?",
+    "exercise.prompt.verbPassiveParticiple": "Qual è il participio passivo di questo verbo?",
     "exercise.prompt.verbMasdar": "Qual è un masdar di questo verbo?",
     "exercise.prompt.verbRoot": "Qual è la radice di questo verbo?",
     "exercise.prompt.masdarRoot": "Qual è la radice di questo masdar?",

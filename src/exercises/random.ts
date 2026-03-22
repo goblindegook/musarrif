@@ -9,6 +9,7 @@ import { participleVerbExercise } from './participle-verb'
 import type { Exercise } from './types'
 import { verbFormExercise } from './verb-form'
 import { verbMasdarExercise } from './verb-masdar'
+import { verbParticipleExercise } from './verb-participle'
 import { verbPronounExercise } from './verb-pronoun'
 import { verbRootExercise } from './verb-root'
 import { verbTenseExercise } from './verb-tense'
@@ -28,6 +29,7 @@ const EXERCISES: readonly ExerciseGenerator[] = [
   { generate: participleVerbExercise },
   { generate: verbFormExercise },
   { generate: verbMasdarExercise, difficulty: ['medium', 'hard'] },
+  { generate: verbParticipleExercise },
   { generate: verbPronounExercise },
   { generate: verbRootExercise },
   { generate: verbTenseExercise },
