@@ -9,13 +9,13 @@ import { ExerciseMode } from './ExerciseMode'
 beforeEach(() => {
   cleanup()
   localStorage.removeItem('conjugator:exerciseDifficulty')
-  localStorage.removeItem('conjugator:exerciseStats')
+  localStorage.removeItem('conjugator:exercise:daily')
 })
 
 afterEach(() => {
   cleanup()
   localStorage.removeItem('conjugator:exerciseDifficulty')
-  localStorage.removeItem('conjugator:exerciseStats')
+  localStorage.removeItem('conjugator:exercise:daily')
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -81,57 +81,27 @@ describe('ExerciseMode', () => {
     expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
   })
 
-  describe('difficulty toggle', () => {
-    test('shows three difficulty buttons', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      expect(screen.getByRole('button', { name: /easy/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /medium/i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /hard/i })).toBeInTheDocument()
-    })
-
-    test('easy is the default selected difficulty', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'true')
-      expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'false')
-      expect(screen.getByRole('button', { name: /hard/i })).toHaveAttribute('aria-pressed', 'false')
-    })
-
-    test('selecting a difficulty updates the active button', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /medium/i }))
-      expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'true')
-      expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'false')
-    })
-
-    test('selecting a difficulty resets the in-progress answer', () => {
-      const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-      expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-      fireEvent.click(screen.getByRole('button', { name: /hard/i }))
-      expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
-    })
-
+  describe('difficulty', () => {
     test('calls the generator with easy on mount', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       expect(gen).toHaveBeenCalledWith('easy')
     })
 
-    test('calls the generator with the current difficulty when next is clicked', () => {
+    test('restores stored difficulty on mount', () => {
+      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /medium/i }))
+      expect(gen).toHaveBeenCalledWith('medium')
+    })
+
+    test('calls the generator with the current stored difficulty when next is clicked', () => {
+      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
+      const gen = vi.fn().mockReturnValue(testExercise())
+      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       fireEvent.click(screen.getByRole('button', { name: /next/i }))
       expect(gen).toHaveBeenLastCalledWith('medium')
-    })
-
-    test('calls the generator with the new difficulty when difficulty changes', () => {
-      const gen = vi.fn().mockReturnValue(testExercise())
-      render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /hard/i }))
-      expect(gen).toHaveBeenCalledWith('hard')
     })
   })
 
@@ -155,18 +125,4 @@ describe('ExerciseMode', () => {
     })
   })
 
-  describe('difficulty persistence', () => {
-    test('restores stored difficulty on mount', () => {
-      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      expect(screen.getByRole('button', { name: /medium/i })).toHaveAttribute('aria-pressed', 'true')
-      expect(screen.getByRole('button', { name: /easy/i })).toHaveAttribute('aria-pressed', 'false')
-    })
-
-    test('persists difficulty to localStorage when changed', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /hard/i }))
-      expect(localStorage.getItem('conjugator:exerciseDifficulty')).toBe(JSON.stringify('hard'))
-    })
-  })
 })

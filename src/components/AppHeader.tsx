@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
-import { getUserData, importUserData } from '../hooks/local-storage'
+import { getUserData, importUserData, useLocalStorage } from '../hooks/local-storage'
 import { useRouting } from '../hooks/routing'
 import { IconButton } from './atoms/IconButton'
 import { SegmentedControl } from './atoms/SegmentedControl'
@@ -13,12 +13,15 @@ import { ModeToggle } from './ModeToggle'
 
 const MODES = ['conjugation', 'test'] as const
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
+const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'] as const
 
 export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [storedDifficulty, setDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const importInputRef = useRef<HTMLInputElement>(null)
+  const exerciseDifficulty = storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
 
   useEffect(() => {
     if (!isSettingsOpen) return
@@ -116,6 +119,24 @@ export const AppHeader = () => {
             <ControlGroup>
               <ControlLabel>{t('languagePicker.label')}</ControlLabel>
               <LanguagePicker />
+            </ControlGroup>
+            <ControlGroup>
+              <ControlLabel>{t('exercise.difficulty.title')}</ControlLabel>
+              <SegmentedControl
+                fill
+                options={DIFFICULTY_OPTIONS.map((option) => ({
+                  value: option,
+                  label: t(`exercise.difficulty.${option}`),
+                  title: `${t('exercise.difficulty.title')}: ${t(`exercise.difficulty.${option}`)}`,
+                }))}
+                value={exerciseDifficulty}
+                onChange={(option) => {
+                  if (option === exerciseDifficulty) return
+                  setDifficulty(option)
+                  if (page === 'test') window.location.reload()
+                }}
+                aria-label={t('exercise.difficulty.title')}
+              />
             </ControlGroup>
             <ControlGroup>
               <ControlLabel>{t('settings.data.title')}</ControlLabel>

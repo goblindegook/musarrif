@@ -70,6 +70,19 @@ it('shows export and import buttons in the settings panel', () => {
   expect(screen.getByText('Import data')).toBeInTheDocument()
 })
 
+it('shows and persists exercise difficulty controls in settings', () => {
+  renderHeader('/#/verbs')
+  fireEvent.click(getSettingsButton())
+
+  expect(screen.getByText('Exercise difficulty')).toBeInTheDocument()
+  expect(screen.getByText('Easy')).toBeInTheDocument()
+  expect(screen.getByText('Medium')).toBeInTheDocument()
+  expect(screen.getByText('Hard')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByText('Hard'))
+  expect(window.localStorage.getItem('conjugator:exerciseDifficulty')).toBe(JSON.stringify('hard'))
+})
+
 it('exports user data in JSON format', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
   window.localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('hard'))

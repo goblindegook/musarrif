@@ -7,10 +7,7 @@ import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '..
 import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
-import { SegmentedControl } from './atoms/SegmentedControl'
 import { ExerciseStats } from './ExerciseStats'
-
-const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard'] as const
 
 type Props = {
   generateExercise?: (difficulty: Difficulty) => Exercise
@@ -18,7 +15,7 @@ type Props = {
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
-  const [storedDifficulty, setDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
+  const [storedDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const difficulty: Difficulty =
     storedDifficulty === 'medium' || storedDifficulty === 'hard' ? storedDifficulty : 'easy'
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty))
@@ -37,25 +34,6 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
 
   return (
     <ExerciseLayout>
-      <ControlsBar>
-        <SegmentedControl
-          fill
-          options={DIFFICULTY_OPTIONS.map((option) => ({
-            value: option,
-            label: t(`exercise.difficulty.${option}`),
-            title: `${t('exercise.difficulty.title')}: ${t(`exercise.difficulty.${option}`)}`,
-          }))}
-          value={difficulty}
-          onChange={(option) => {
-            if (option === difficulty) return
-            setDifficulty(option)
-            setExercise(generateExercise(option))
-            setSelected(null)
-          }}
-          aria-label={t('exercise.difficulty.title')}
-        />
-      </ControlsBar>
-
       <ExerciseCard>
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
@@ -119,10 +97,6 @@ const ExerciseLayout = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-`
-
-const ControlsBar = styled('div')`
-  width: 100%;
 `
 
 const ExerciseCard = styled('div')`
