@@ -20,12 +20,12 @@ function parse<T>(raw: string | null): T | null {
 }
 
 export function getUserData() {
-  const { getItem } = window.localStorage
-  const language = parse<Language>(getItem('conjugator:language')) ?? 'en'
-  const diacriticsPreference = parse<DiacriticsPreference>(getItem('conjugator:diacriticsPreference')) ?? 'some'
-  const exerciseDifficulty = parse<Difficulty>(getItem('conjugator:exerciseDifficulty')) ?? 'easy'
-  const favouriteVerbs = parse<string[]>(getItem('conjugator:favouriteVerbs')) ?? []
-  const trackedExercises = parse<ExerciseResult[]>(getItem('conjugator:exercise:daily')) ?? []
+  const storage = window.localStorage
+  const language = parse<Language>(storage.getItem('conjugator:language')) ?? 'en'
+  const diacriticsPreference = parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference')) ?? 'some'
+  const exerciseDifficulty = parse<Difficulty>(storage.getItem('conjugator:exerciseDifficulty')) ?? 'easy'
+  const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
+  const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
 
   return {
     version: 1,
@@ -69,13 +69,13 @@ export function importUserData(raw: string): boolean {
       )
     : []
 
-  const { setItem } = window.localStorage
+  const storage = window.localStorage
 
-  setItem('conjugator:language', JSON.stringify(language))
-  setItem('conjugator:diacriticsPreference', JSON.stringify(diacriticsPreference))
-  setItem('conjugator:exerciseDifficulty', JSON.stringify(exerciseDifficulty))
-  setItem('conjugator:favouriteVerbs', JSON.stringify(favouriteVerbs))
-  setItem('conjugator:exercise:daily', JSON.stringify(trackedExercises))
+  storage.setItem('conjugator:language', JSON.stringify(language))
+  storage.setItem('conjugator:diacriticsPreference', JSON.stringify(diacriticsPreference))
+  storage.setItem('conjugator:exerciseDifficulty', JSON.stringify(exerciseDifficulty))
+  storage.setItem('conjugator:favouriteVerbs', JSON.stringify(favouriteVerbs))
+  storage.setItem('conjugator:exercise:daily', JSON.stringify(trackedExercises))
 
   return true
 }
