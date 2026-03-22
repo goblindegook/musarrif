@@ -124,5 +124,4 @@ describe('ExerciseMode', () => {
       expect(screen.getByText('1 days')).toBeInTheDocument()
     })
   })
-
 })
