@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { Difficulty } from '../exercises/difficulty'
+import type { CardState, SrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import type { Language } from './i18n'
 
@@ -26,12 +27,14 @@ export function getUserData() {
   const exerciseDifficulty = parse<Difficulty>(storage.getItem('conjugator:exerciseDifficulty')) ?? 'easy'
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
+  const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
 
   return {
     version: 1,
     settings: { language, diacriticsPreference, exerciseDifficulty },
     favouriteVerbs,
     trackedExercises,
+    srs,
   } as const
 }
 
@@ -69,6 +72,26 @@ export function importUserData(raw: string): boolean {
       )
     : []
 
+  const rawSrs = payload.srs != null && typeof payload.srs === 'object' ? payload.srs : {}
+  const srs: SrsStore = {}
+  for (const [key, rawVal] of Object.entries(rawSrs)) {
+    const val = rawVal as CardState | null
+    if (
+      typeof key === 'string' &&
+      key.length &&
+      val &&
+      Number.isFinite(val.interval) &&
+      val.interval > 0 &&
+      Number.isFinite(val.ef) &&
+      val.ef >= 1.3 &&
+      Number.isInteger(val.repetitions) &&
+      val.repetitions >= 0 &&
+      /^\d{4}-\d{2}-\d{2}$/.test(String(val.dueDate))
+    ) {
+      srs[key] = val
+    }
+  }
+
   const storage = window.localStorage
 
   storage.setItem('conjugator:language', JSON.stringify(language))
@@ -76,6 +99,7 @@ export function importUserData(raw: string): boolean {
   storage.setItem('conjugator:exerciseDifficulty', JSON.stringify(exerciseDifficulty))
   storage.setItem('conjugator:favouriteVerbs', JSON.stringify(favouriteVerbs))
   storage.setItem('conjugator:exercise:daily', JSON.stringify(trackedExercises))
+  storage.setItem('conjugator:srs', JSON.stringify(srs))
 
   return true
 }

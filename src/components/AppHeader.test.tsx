@@ -118,6 +118,7 @@ it('exports user data in JSON format', () => {
     },
     favouriteVerbs: ['ktb-1', 'sfr-1'],
     trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1 }],
+    srs: {},
   })
 })
 

@@ -1,15 +1,7 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { verbFormExercise } from './verb-form'
 
 describe('generateFormExercise', () => {
-  beforeEach(() => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
   test('returns kind "form"', () => {
     expect(verbFormExercise().kind).toBe('verbForm')
   })
@@ -84,5 +76,11 @@ describe('formExercise difficulty', () => {
   test('defaults to easy difficulty', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbFormExercise().word).toBe(verbFormExercise('easy').word)
+  })
+})
+
+describe('verbFormExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(verbFormExercise('easy').cardKey).toMatch(/^verbForm:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 })

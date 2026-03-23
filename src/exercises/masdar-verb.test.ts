@@ -58,3 +58,9 @@ describe('masdarVerbExercise', () => {
     ).toBe(true)
   })
 })
+
+describe('masdarVerbExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(masdarVerbExercise('easy').cardKey).toMatch(/^masdarVerb:[a-z]+:\d+$/)
+  })
+})

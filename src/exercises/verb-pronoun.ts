@@ -1,15 +1,18 @@
 import { shuffle } from '@pacote/shuffle'
 import { stripDiacritics } from '../paradigms/letters'
 import { ARABIC_PRONOUNS, PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
+import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbPronounExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
-  const tense = randomTense(verb, difficulty)
-  const pronoun = randomPronoun(verb, tense, difficulty)
+export function verbPronounExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
+  const tense = constraints?.tense ?? randomTense(verb, difficulty)
+  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, difficulty)
   const [word, options, answer] = buildOptions(verb, tense, pronoun, difficulty)
 
   return {
@@ -18,6 +21,7 @@ export function verbPronounExercise(difficulty: Difficulty = 'easy'): Exercise {
     word,
     options,
     answer,
+    cardKey: buildCardKey('verbPronoun', getRootType(verb.root), verb.form, tense, pronoun),
   }
 }
 

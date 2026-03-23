@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { verbTenseExercise } from './verb-tense'
 
 const UNVOICED_KEYS = new Set([
@@ -25,10 +25,6 @@ const VOICED_KEYS = new Set([
 ])
 
 describe('tenseExercise', () => {
-  beforeEach(() => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-  })
-
   afterEach(() => {
     vi.restoreAllMocks()
   })
@@ -130,5 +126,11 @@ describe('tenseExercise distractor strategies', () => {
     const { options, answer } = verbTenseExercise('hard')
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS.has(options[answer])).toBe(true)
+  })
+})
+
+describe('verbTenseExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(verbTenseExercise('easy').cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 })

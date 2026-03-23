@@ -64,3 +64,9 @@ describe('participleFormExercise', () => {
     ).toBe(true)
   })
 })
+
+describe('participleFormExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(participleFormExercise('easy').cardKey).toMatch(/^participleForm:[a-z]+:\d+$/)
+  })
+})

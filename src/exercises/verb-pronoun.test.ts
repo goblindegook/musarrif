@@ -11,40 +11,33 @@ describe('verbPronounExercise', () => {
   })
 
   test('returns kind "verbPronoun"', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbPronounExercise().kind).toBe('verbPronoun')
   })
 
   test('returns the correct translation key', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbPronounExercise().promptTranslationKey).toBe('exercise.prompt.verbPronoun')
   })
 
   test('returns exactly four options', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbPronounExercise().options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbPronounExercise()
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('answer is a valid index', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = verbPronounExercise()
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('word is non-empty', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbPronounExercise().word.length).toBeGreaterThan(0)
   })
 
   test('options are Arabic pronouns', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbPronounExercise()
     expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
   })
@@ -120,5 +113,11 @@ describe('verbPronounExercise distractor strategies', () => {
     const { options } = verbPronounExercise('hard')
     expect(options).not.toContain('أَنْتَ')
     expect(options).not.toContain('أَنْتِ')
+  })
+})
+
+describe('verbPronounExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(verbPronounExercise('easy').cardKey).toMatch(/^verbPronoun:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 })

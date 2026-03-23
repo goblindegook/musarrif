@@ -63,3 +63,9 @@ describe('verbParticipleExercise', () => {
     ).toBe(true)
   })
 })
+
+describe('verbParticipleExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(verbParticipleExercise('easy').cardKey).toMatch(/^verbParticiple:[a-z]+:\d+$/)
+  })
+})

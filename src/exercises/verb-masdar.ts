@@ -1,14 +1,17 @@
 import { shuffle } from '@pacote/shuffle'
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
+import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbMasdarExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
+export function verbMasdarExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const masdars = deriveMasdar(verb).map((m) => diacriticsDifficulty(m, difficulty))
   const answer = random(masdars)
   const word = diacriticsDifficulty(verb.label, difficulty)
@@ -20,6 +23,7 @@ export function verbMasdarExercise(difficulty: Difficulty = 'easy'): Exercise {
     word,
     options,
     answer: options.indexOf(answer),
+    cardKey: buildCardKey('verbMasdar', getRootType(verb.root), verb.form),
   }
 }
 

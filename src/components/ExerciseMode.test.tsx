@@ -101,14 +101,14 @@ describe('ExerciseMode', () => {
     test('calls the generator with easy on mount', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith('easy')
+      expect(gen).toHaveBeenCalledWith('easy', expect.any(Object))
     })
 
     test('restores stored difficulty on mount', () => {
       localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith('medium')
+      expect(gen).toHaveBeenCalledWith('medium', expect.any(Object))
     })
 
     test('calls the generator with the current stored difficulty when next is clicked', () => {
@@ -117,7 +117,7 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       fireEvent.click(screen.getByRole('button', { name: /next/i }))
-      expect(gen).toHaveBeenLastCalledWith('medium')
+      expect(gen).toHaveBeenLastCalledWith('medium', expect.any(Object))
     })
   })
 
@@ -139,5 +139,31 @@ describe('ExerciseMode', () => {
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       expect(screen.getByText('1 days')).toBeInTheDocument()
     })
+  })
+})
+
+describe('SRS recording', () => {
+  test('records answer in SRS store when option selected', () => {
+    localStorage.clear()
+    const exercise: Exercise = {
+      kind: 'conjugation',
+      word: 'كَتَبَ',
+      promptTranslationKey: 'exercise.prompt.conjugation',
+      promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'exercise.conjugation.pronoun.3ms' },
+      options: ['كَتَبَ', 'يَكْتُبُ', 'كَتَبْتَ', 'كُتِبَ'],
+      answer: 0,
+      cardKey: 'conjugation:regular:1:active-past:3ms',
+    }
+    render(<ExerciseMode generateExercise={() => exercise} />, {
+      wrapper: ({ children }: { children: ComponentChildren }) => (
+        <RoutingProvider>
+          <I18nProvider>{children}</I18nProvider>
+        </RoutingProvider>
+      ),
+    })
+    fireEvent.click(screen.getAllByRole('button')[0])
+    const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
+    expect(srs['conjugation:regular:1:active-past:3ms']).toBeDefined()
+    localStorage.clear()
   })
 })

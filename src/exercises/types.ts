@@ -18,4 +18,5 @@ export interface Exercise {
   promptParams?: Record<string, string>
   options: readonly string[]
   answer: number
+  cardKey?: string
 }

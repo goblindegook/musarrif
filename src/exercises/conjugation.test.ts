@@ -1,11 +1,7 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { conjugationExercise } from './conjugation'
 
 describe('conjugationExercise', () => {
-  beforeEach(() => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-  })
-
   afterEach(() => {
     vi.restoreAllMocks()
   })
@@ -155,5 +151,24 @@ describe('conjugationExercise distractors', () => {
       'exercise.conjugation.pronoun.3fd',
     ])
     expect(DUAL_KEYS.has(conjugationExercise('easy').promptParams?.pronoun ?? '')).toBe(false)
+  })
+})
+
+describe('conjugationExercise with constraints', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  test('attaches cardKey to returned exercise', () => {
+    const exercise = conjugationExercise('easy')
+    expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:\d+:[\w-]+:\w+$/)
+  })
+
+  test('cardKey reflects constrained form', () => {
+    const exercise = conjugationExercise('easy', { form: 2 })
+    expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:2:/)
+  })
+
+  test('cardKey reflects constrained tense', () => {
+    const exercise = conjugationExercise('easy', { tense: ['active', 'past'], pronoun: '3ms' })
+    expect(exercise.cardKey).toContain(':active-past:3ms')
   })
 })

@@ -1,18 +1,21 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
+import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { synthesizeVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
 type Participle = 'active' | 'passive'
 
-export function verbParticipleExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
+export function verbParticipleExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const active = deriveActiveParticiple(verb)
   const passive = derivePassiveParticiple(verb)
   const kind: Participle = passive ? random(['active', 'passive']) : 'active'
@@ -27,6 +30,7 @@ export function verbParticipleExercise(difficulty: Difficulty = 'easy'): Exercis
     word,
     options,
     answer: options.indexOf(answer),
+    cardKey: buildCardKey('verbParticiple', getRootType(verb.root), verb.form),
   }
 }
 

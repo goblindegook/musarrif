@@ -1,16 +1,19 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
+import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 type Participle = 'active' | 'passive'
 
-export function participleFormExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
+export function participleFormExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const active = deriveActiveParticiple(verb)
   const passive = derivePassiveParticiple(verb)
   const kind: Participle = passive ? random(['active', 'passive']) : 'active'
@@ -34,5 +37,6 @@ export function participleFormExercise(difficulty: Difficulty = 'easy'): Exercis
     word,
     options: options.map((form) => FORM_LABELS[form - 1]),
     answer: options.indexOf(verb.form),
+    cardKey: buildCardKey('participleForm', getRootType(verb.root), verb.form),
   }
 }

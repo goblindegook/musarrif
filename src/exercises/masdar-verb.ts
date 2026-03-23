@@ -1,14 +1,17 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
+import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function masdarVerbExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
+export function masdarVerbExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const word = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
   const options = buildOptions(verb, difficulty)
   const answerLabel = diacriticsDifficulty(verb.label, difficulty)
@@ -19,6 +22,7 @@ export function masdarVerbExercise(difficulty: Difficulty = 'easy'): Exercise {
     word,
     options,
     answer: options.indexOf(answerLabel),
+    cardKey: buildCardKey('masdarVerb', getRootType(verb.root), verb.form),
   }
 }
 

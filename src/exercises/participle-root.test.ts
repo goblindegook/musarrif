@@ -65,3 +65,9 @@ describe('participleRootExercise', () => {
     expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
   })
 })
+
+describe('participleRootExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(participleRootExercise('easy').cardKey).toMatch(/^participleRoot:[a-z]+:\d+$/)
+  })
+})

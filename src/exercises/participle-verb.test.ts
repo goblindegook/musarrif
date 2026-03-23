@@ -64,3 +64,9 @@ describe('participleVerbExercise', () => {
     expect(hardValid).toBe(true)
   })
 })
+
+describe('participleVerbExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(participleVerbExercise('easy').cardKey).toMatch(/^participleVerb:[a-z]+:\d+$/)
+  })
+})

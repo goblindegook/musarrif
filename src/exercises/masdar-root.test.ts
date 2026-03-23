@@ -50,3 +50,9 @@ describe('masdarRootExercise', () => {
     expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
   })
 })
+
+describe('masdarRootExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(masdarRootExercise('easy').cardKey).toMatch(/^masdarRoot:[a-z]+:\d+$/)
+  })
+})

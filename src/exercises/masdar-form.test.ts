@@ -57,3 +57,9 @@ describe('masdarFormExercise', () => {
     ).toBe(true)
   })
 })
+
+describe('masdarFormExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(masdarFormExercise('easy').cardKey).toMatch(/^masdarForm:[a-z]+:\d+$/)
+  })
+})

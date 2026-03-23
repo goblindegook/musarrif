@@ -1,15 +1,18 @@
 import { isWeakLetter } from '../paradigms/letters'
+import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { mixedWordDistractor, singleLetterWordDistractor, wordSliceDistractor } from './distractors/word-distractors'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbRootExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
-  const tense = randomTense(verb, difficulty)
-  const pronoun = difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty)
+export function verbRootExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
+  const tense = constraints?.tense ?? randomTense(verb, difficulty)
+  const pronoun = constraints?.pronoun ?? (difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty))
   const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
   const options = buildOptions(verb.root, word, difficulty)
 
@@ -19,6 +22,7 @@ export function verbRootExercise(difficulty: Difficulty = 'easy'): Exercise {
     word,
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
+    cardKey: buildCardKey('verbRoot', getRootType(verb.root), verb.form, tense, pronoun),
   }
 }
 

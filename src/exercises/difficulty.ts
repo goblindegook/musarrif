@@ -2,8 +2,10 @@ import type { FormIPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
+import { getRootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import type { CardConstraints } from './srs'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -33,8 +35,11 @@ const PRONOUNS: PronounId[] = ['1s', '1p', '2ms', '2fs', '2d', '2mp', '2fp', '3m
 
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-export function randomVerb(difficulty: Difficulty): DisplayVerb {
-  return random(difficulty === 'easy' ? verbs : verbs.filter(({ root }) => root.length === 3))
+export function randomVerb(constraints?: CardConstraints): DisplayVerb {
+  let pool: DisplayVerb[] = verbs
+  if (constraints?.rootType) pool = pool.filter((v) => getRootType(v.root) === constraints.rootType)
+  if (constraints?.form) pool = pool.filter((v) => v.form === constraints.form)
+  return random(pool.length > 0 ? pool : verbs)
 }
 
 export function tensePool(verb: DisplayVerb, difficulty: Difficulty): VerbTense[] {

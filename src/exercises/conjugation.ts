@@ -1,5 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
+import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import {
@@ -12,6 +13,8 @@ import {
   randomTense,
   randomVerb,
 } from './difficulty'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
 const PRONOUN_KEYS: Record<PronounId, string> = {
@@ -129,11 +132,11 @@ function hardCandidates(
   return [...type1, ...type2, ...type3]
 }
 
-export function conjugationExercise(difficulty: Difficulty): Exercise {
-  const verb = randomVerb(difficulty)
+export function conjugationExercise(difficulty: Difficulty, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const word = diacriticsDifficulty(verb.label, difficulty)
-  const targetTense = randomTense(verb, difficulty)
-  const targetPronoun = randomPronoun(verb, targetTense, difficulty)
+  const targetTense = constraints?.tense ?? randomTense(verb, difficulty)
+  const targetPronoun = constraints?.pronoun ?? randomPronoun(verb, targetTense, difficulty)
   const answer = diacriticsDifficulty(conjugate(verb, targetTense)[targetPronoun], difficulty)
 
   const raw =
@@ -163,5 +166,6 @@ export function conjugationExercise(difficulty: Difficulty): Exercise {
     word,
     options: shuffled,
     answer: shuffled.indexOf(answer),
+    cardKey: buildCardKey('conjugation', getRootType(verb.root), verb.form, targetTense, targetPronoun),
   }
 }

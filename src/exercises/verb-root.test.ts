@@ -52,3 +52,9 @@ describe('rootExercise', () => {
     expect(wrongOptions).toHaveLength(3)
   })
 })
+
+describe('verbRootExercise with constraints', () => {
+  test('attaches cardKey to returned exercise', () => {
+    expect(verbRootExercise('easy').cardKey).toMatch(/^verbRoot:[a-z]+:\d+:[\w-]+:\w+$/)
+  })
+})

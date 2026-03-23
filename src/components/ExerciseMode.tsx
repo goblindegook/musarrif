@@ -2,6 +2,8 @@ import { styled } from 'goober'
 import { useCallback, useMemo, useState } from 'preact/hooks'
 import type { Difficulty } from '../exercises/difficulty'
 import { randomExercise } from '../exercises/random'
+import type { SrsStore } from '../exercises/srs'
+import { recordAnswer } from '../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../exercises/stats'
 import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '../exercises/stats'
 import type { Exercise } from '../exercises/types'
@@ -10,7 +12,7 @@ import { useLocalStorage } from '../hooks/local-storage'
 import { ExerciseStats } from './ExerciseStats'
 
 type Props = {
-  generateExercise?: (difficulty: Difficulty) => Exercise
+  generateExercise?: (difficulty: Difficulty, srsStore: SrsStore) => Exercise
 }
 
 function normalizeDifficulty(raw: unknown): Difficulty {
@@ -21,7 +23,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
   const [storedDifficulty, , refetchDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const difficulty = normalizeDifficulty(storedDifficulty)
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty))
+  const [srsStore, updateSrsStore] = useLocalStorage<SrsStore>('srs', {})
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty, srsStore))
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
@@ -32,9 +35,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     [setRawStats],
   )
   const loadNextExercise = useCallback(() => {
-    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty())))
+    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty()), srsStore))
     setSelected(null)
-  }, [generateExercise, refetchDifficulty])
+  }, [generateExercise, refetchDifficulty, srsStore])
 
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
@@ -65,8 +68,10 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
                 type="button"
                 onClick={() => {
                   if (!isAnswered) {
+                    const isCorrect = index === exercise.answer
                     setSelected(index)
-                    updateStats((current) => addResult(current, index === exercise.answer))
+                    updateStats((current) => addResult(current, isCorrect))
+                    updateSrsStore((current) => recordAnswer(current, exercise.cardKey, isCorrect))
                   }
                 }}
                 disabled={isAnswered}

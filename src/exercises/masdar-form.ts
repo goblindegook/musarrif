@@ -1,13 +1,16 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
+import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
+import type { CardConstraints } from './srs'
+import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
 const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-export function masdarFormExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const verb = randomVerb(difficulty)
+export function masdarFormExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(constraints)
   const word = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
 
   const eligibleForms = FORMS.filter((form) => {
@@ -25,5 +28,6 @@ export function masdarFormExercise(difficulty: Difficulty = 'easy'): Exercise {
     word,
     options: options.map((form) => FORM_LABELS[form - 1]),
     answer: options.indexOf(verb.form),
+    cardKey: buildCardKey('masdarForm', getRootType(verb.root), verb.form),
   }
 }
