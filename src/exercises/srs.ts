@@ -4,6 +4,8 @@ import type { VerbTense } from '../paradigms/tense'
 import type { VerbForm } from '../paradigms/verbs'
 import type { Exercise } from './types'
 
+export type AnswerResult = 'correct' | 'wrong' | 'pass'
+
 export interface CardConstraints {
   rootType?: RootType
   form?: VerbForm
@@ -62,7 +64,7 @@ function utcAddDays(date: string, days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
-export function updateCardState(current: CardState | undefined, correct: boolean, today: string): CardState {
+export function updateCardState(current: CardState | undefined, result: AnswerResult, today: string): CardState {
   const ef = current?.ef ?? 2.5
   const repetitions = current?.repetitions ?? 0
   const interval = current?.interval ?? 1
@@ -70,7 +72,10 @@ export function updateCardState(current: CardState | undefined, correct: boolean
   let newInterval: number
   let newRepetitions: number
 
-  if (!correct) {
+  if (result === 'pass') {
+    newInterval = Math.max(1, Math.round(interval / 2))
+    newRepetitions = repetitions
+  } else if (result === 'wrong') {
     newInterval = 1
     newRepetitions = 0
   } else {
@@ -80,8 +85,8 @@ export function updateCardState(current: CardState | undefined, correct: boolean
     newRepetitions = repetitions + 1
   }
 
-  const grade = correct ? 4 : 1
-  const newEf = Math.max(1.3, ef + 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02))
+  const grade = result === 'correct' ? 4 : result === 'wrong' ? 1 : 3
+  const newEf = result === 'pass' ? ef : Math.max(1.3, ef + 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02))
 
   return { interval: newInterval, ef: newEf, repetitions: newRepetitions, dueDate: utcAddDays(today, newInterval) }
 }
@@ -112,9 +117,9 @@ function utcToday(): string {
 export function recordAnswer(
   store: SrsStore,
   cardKey: string | undefined,
-  correct: boolean,
+  result: AnswerResult,
   today = utcToday(),
 ): SrsStore {
   if (cardKey == null) return store
-  return { ...store, [cardKey]: updateCardState(store[cardKey], correct, today) }
+  return { ...store, [cardKey]: updateCardState(store[cardKey], result, today) }
 }

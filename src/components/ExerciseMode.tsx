@@ -23,8 +23,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
   const [storedDifficulty, , refetchDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
   const difficulty = normalizeDifficulty(storedDifficulty)
-  const [srsStore, updateSrsStore] = useLocalStorage<SrsStore>('srs', {})
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty, srsStore))
+  const [srs, updateSrs] = useLocalStorage<SrsStore>('srs', {})
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty, srs))
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
@@ -35,9 +35,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     [setRawStats],
   )
   const loadNextExercise = useCallback(() => {
-    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty()), srsStore))
+    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty()), srs))
     setSelected(null)
-  }, [generateExercise, refetchDifficulty, srsStore])
+  }, [generateExercise, refetchDifficulty, srs])
 
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
@@ -68,10 +68,11 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
                 type="button"
                 onClick={() => {
                   if (!isAnswered) {
-                    const isCorrect = index === exercise.answer
                     setSelected(index)
-                    updateStats((current) => addResult(current, isCorrect))
-                    updateSrsStore((current) => recordAnswer(current, exercise.cardKey, isCorrect))
+                    updateStats((current) => addResult(current, index === exercise.answer))
+                    updateSrs((current) =>
+                      recordAnswer(current, exercise.cardKey, index === exercise.answer ? 'correct' : 'wrong'),
+                    )
                   }
                 }}
                 disabled={isAnswered}
@@ -89,7 +90,13 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             {t('exercise.next')}
           </NextButton>
         ) : (
-          <PassButton type="button" onClick={loadNextExercise}>
+          <PassButton
+            type="button"
+            onClick={() => {
+              updateSrs((current) => recordAnswer(current, exercise.cardKey, 'pass'))
+              loadNextExercise()
+            }}
+          >
             {t('exercise.pass')}
           </PassButton>
         )}

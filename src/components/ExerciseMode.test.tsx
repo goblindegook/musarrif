@@ -10,12 +10,14 @@ beforeEach(() => {
   cleanup()
   localStorage.removeItem('conjugator:exerciseDifficulty')
   localStorage.removeItem('conjugator:exercise:daily')
+  localStorage.removeItem('conjugator:srs')
 })
 
 afterEach(() => {
   cleanup()
   localStorage.removeItem('conjugator:exerciseDifficulty')
   localStorage.removeItem('conjugator:exercise:daily')
+  localStorage.removeItem('conjugator:srs')
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -165,5 +167,37 @@ describe('SRS recording', () => {
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs['conjugation:regular:1:active-past:3ms']).toBeDefined()
     localStorage.clear()
+  })
+})
+
+describe('pass SRS recording', () => {
+  test('clicking pass halves the card interval without updating daily stats', () => {
+    const cardKey = 'verbForm:regular:1'
+    const exercise: Exercise = {
+      kind: 'verbForm',
+      word: 'كَتَبَ',
+      promptTranslationKey: 'exercise.prompt.verbForm',
+      options: ['I', 'II', 'III', 'IV'],
+      answer: 0,
+      cardKey,
+    }
+    // Pre-populate the SRS store with interval 6
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({ [cardKey]: { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-29' } }),
+    )
+    // Pre-populate stats so we can assert they don't change
+    localStorage.setItem('conjugator:exercise:daily', JSON.stringify([]))
+
+    render(<ExerciseMode generateExercise={() => exercise} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /pass/i }))
+
+    const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
+    expect(srs[cardKey].interval).toBe(3)
+    expect(srs[cardKey].repetitions).toBe(2)
+    expect(srs[cardKey].ef).toBeCloseTo(2.5)
+
+    const daily = JSON.parse(localStorage.getItem('conjugator:exercise:daily') ?? '[]')
+    expect(daily).toEqual([])
   })
 })
