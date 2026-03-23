@@ -169,15 +169,15 @@ describe('weightedRandomSrs', () => {
 
 describe('recordAnswer', () => {
   test('creates a new entry on first answer', () => {
-    const store = recordAnswer({}, 'conjugation:regular:1:active-past:1s', 'correct', '2026-03-23')
-    expect(store['conjugation:regular:1:active-past:1s'].repetitions).toBe(1)
-    expect(store['conjugation:regular:1:active-past:1s'].dueDate).toBe('2026-03-24')
+    const store = recordAnswer({}, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
+    expect(store['conjugation:sound:1:active-past:1s'].repetitions).toBe(1)
+    expect(store['conjugation:sound:1:active-past:1s'].dueDate).toBe('2026-03-24')
   })
 
   test('updates existing entry on subsequent answer', () => {
-    const s1 = recordAnswer({}, 'conjugation:regular:1:active-past:1s', 'correct', '2026-03-23')
-    const s2 = recordAnswer(s1, 'conjugation:regular:1:active-past:1s', 'correct', '2026-03-23')
-    expect(s2['conjugation:regular:1:active-past:1s'].repetitions).toBe(2)
+    const s1 = recordAnswer({}, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
+    const s2 = recordAnswer(s1, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
+    expect(s2['conjugation:sound:1:active-past:1s'].repetitions).toBe(2)
   })
 
   test('returns store unchanged when cardKey is undefined', () => {

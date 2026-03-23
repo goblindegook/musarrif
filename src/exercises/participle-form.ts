@@ -2,13 +2,11 @@ import { shuffle } from '@pacote/shuffle'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
 import { getRootType } from '../paradigms/roots'
-import { FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
+import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
-
-const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 type Participle = 'active' | 'passive'
 

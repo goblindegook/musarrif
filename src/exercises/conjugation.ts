@@ -2,7 +2,7 @@ import { shuffle } from '@pacote/shuffle'
 import { PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
 import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
+import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import {
   ACTIVE_TENSES,
   type Difficulty,
@@ -48,7 +48,6 @@ function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
   return `exercise.conjugation.tense.${tense[0]}.${slug}`
 }
 
-const ALL_FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 const ALL_TENSES = [...ACTIVE_TENSES, ...PASSIVE_TENSES]
 
 function tensesEqual(a: VerbTense, b: VerbTense): boolean {
@@ -67,7 +66,7 @@ function distractorPronouns(tense: VerbTense, difficulty: Difficulty): PronounId
 }
 
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
-  return ALL_FORMS.filter((f) => f !== verb.form).flatMap((form) => [
+  return FORMS.filter((f) => f !== verb.form).flatMap((form) => [
     form === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, form),
   ])
 }

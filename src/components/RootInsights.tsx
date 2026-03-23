@@ -38,7 +38,7 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
         </RootLetters>
       </RootDisplay>
       <Text dir={dir} lang={lang}>
-        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.strong.description')}
+        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.sound.description')}
       </Text>
       {derivedForms.length > 0 && (
         <>

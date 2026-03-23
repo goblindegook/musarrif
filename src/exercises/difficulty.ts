@@ -4,7 +4,7 @@ import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import { getRootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
 import type { CardConstraints } from './srs'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
@@ -32,8 +32,6 @@ export const PASSIVE_TENSES: VerbTense[] = [
 ]
 
 const PRONOUNS: PronounId[] = ['1s', '1p', '2ms', '2fs', '2d', '2mp', '2fp', '3ms', '3fs', '3md', '3fd', '3mp', '3fp']
-
-const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export function randomVerb(constraints?: CardConstraints): DisplayVerb {
   let pool: DisplayVerb[] = verbs

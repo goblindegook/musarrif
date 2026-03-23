@@ -1,13 +1,11 @@
 import { shuffle } from '@pacote/shuffle'
 import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
-import { FORM_LABELS, synthesizeVerb, type VerbForm } from '../paradigms/verbs'
+import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
-
-const FORMS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export function verbFormExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
   const verb = randomVerb(constraints)

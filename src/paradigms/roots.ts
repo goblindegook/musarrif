@@ -1,16 +1,16 @@
 import { isHamzatedLetter, isWeakLetter } from './letters'
 
-export type RootType = 'regular' | 'weak' | 'hamzated'
+export type RootType = 'sound' | 'weak' | 'hamzated'
 
 export function getRootType(root: string): RootType {
   if (Array.from(root).some(isWeakLetter)) return 'weak'
   if (Array.from(root).some(isHamzatedLetter)) return 'hamzated'
-  return 'regular'
+  return 'sound'
 }
 
 interface RootAnalysis {
   type:
-    | 'strong'
+    | 'sound'
     | 'hollow'
     | 'defective'
     | 'doubly-weak'
@@ -48,5 +48,5 @@ export function analyzeRoot(root: string): RootAnalysis {
   if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
   if (isMiddleWeak) return { type: 'hollow', weakPositions, hamzaPositions }
   if (isFinalWeak) return { type: 'defective', weakPositions, hamzaPositions }
-  return { type: 'strong', weakPositions, hamzaPositions }
+  return { type: 'sound', weakPositions, hamzaPositions }
 }

@@ -8,6 +8,7 @@ import { masdarVerbExercise } from './masdar-verb'
 import { participleFormExercise } from './participle-form'
 import { participleRootExercise } from './participle-root'
 import { participleVerbExercise } from './participle-verb'
+import { rootFormVerbExercise } from './root-form-verb'
 import type { CardConstraints, SrsStore } from './srs'
 import { cardSrsWeight, parseCardKey, weightedRandomSrs } from './srs'
 import type { Exercise } from './types'
@@ -26,19 +27,20 @@ interface ExerciseGenerator {
 }
 
 const EXERCISES: readonly ExerciseGenerator[] = [
-  { kind: 'conjugation', generate: conjugationExercise, weight: 3 },
+  { kind: 'conjugation', generate: conjugationExercise, weight: 5 },
   { kind: 'masdarForm', generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
   { kind: 'masdarRoot', generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
   { kind: 'masdarVerb', generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
   { kind: 'participleForm', generate: participleFormExercise },
+  { kind: 'rootFormVerb', generate: rootFormVerbExercise },
   { kind: 'participleRoot', generate: participleRootExercise },
   { kind: 'participleVerb', generate: participleVerbExercise },
   { kind: 'verbForm', generate: verbFormExercise },
   { kind: 'verbMasdar', generate: verbMasdarExercise, difficulty: ['medium', 'hard'] },
   { kind: 'verbParticiple', generate: verbParticipleExercise },
-  { kind: 'verbPronoun', generate: verbPronounExercise },
+  { kind: 'verbPronoun', generate: verbPronounExercise, weight: 2 },
   { kind: 'verbRoot', generate: verbRootExercise },
-  { kind: 'verbTense', generate: verbTenseExercise },
+  { kind: 'verbTense', generate: verbTenseExercise, weight: 2 },
 ]
 
 function utcToday(): string {

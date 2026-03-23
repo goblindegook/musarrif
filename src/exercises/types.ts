@@ -12,6 +12,7 @@ export interface Exercise {
     | 'verbMasdar'
     | 'verbPronoun'
     | 'verbRoot'
+    | 'rootFormVerb'
     | 'verbTense'
   word: string
   promptTranslationKey: string

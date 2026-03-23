@@ -2,8 +2,8 @@ import { describe, expect, test } from 'vitest'
 import { analyzeRoot, getRootType } from './roots'
 
 describe('getRootType', () => {
-  test('returns regular for a plain triliteral root', () => {
-    expect(getRootType('كتب')).toBe('regular')
+  test('returns sound for a plain triliteral root', () => {
+    expect(getRootType('كتب')).toBe('sound')
   })
 
   test('returns weak when root contains و', () => {
@@ -25,7 +25,7 @@ describe('getRootType', () => {
 
 describe('analyzeRoot', () => {
   test.each([
-    ['كتب', 'strong', [], []],
+    ['كتب', 'sound', [], []],
     ['قام', 'hollow', [1], []],
     ['دعو', 'defective', [2], []],
     ['وصل', 'assimilated', [0], []],
