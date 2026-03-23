@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { analyzeRoot, synthesizeVerb } from './verbs'
+import { synthesizeVerb } from './verbs'
 
 describe('buildSyntheticVerb', () => {
   test('Form I', () => {
@@ -24,21 +24,5 @@ describe('buildSyntheticVerb', () => {
       root: 'كتب',
       rootId: 'ktb',
     })
-  })
-})
-
-describe('analyzeRoot', () => {
-  test.each([
-    ['كتب', 'strong', [], []],
-    ['قام', 'hollow', [1], []],
-    ['دعو', 'defective', [2], []],
-    ['وصل', 'assimilated', [0], []],
-    ['وقي', 'doubly-weak', [0, 2], []],
-    ['روي', 'doubly-weak', [1, 2], []],
-    ['ءكل', 'hamzated', [], [0]],
-    ['ءوي', 'hamzated-hollow-defective', [1, 2], [0]],
-    ['ءتى', 'hamzated-defective', [2], [0]],
-  ])('identifies %s as %s', (root, type, weakPositions, hamzaPositions) => {
-    expect(analyzeRoot(root)).toEqual({ type, weakPositions, hamzaPositions })
   })
 })

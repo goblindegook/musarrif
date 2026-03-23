@@ -1,7 +1,7 @@
 import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { HAMZA, isHamzatedLetter, isWeakLetter } from './letters'
+import { HAMZA } from './letters'
 import { detransliterate, transliterate } from './transliteration'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -115,47 +115,4 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
   return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId }
-}
-
-interface RootAnalysis {
-  type:
-    | 'strong'
-    | 'hollow'
-    | 'defective'
-    | 'doubly-weak'
-    | 'assimilated'
-    | 'hamzated'
-    | 'hamzated-hollow'
-    | 'hamzated-defective'
-    | 'hamzated-hollow-defective'
-  weakPositions: number[]
-  hamzaPositions: number[]
-}
-
-export function analyzeRoot(root: string): RootAnalysis {
-  const letters = Array.from(root)
-  const weakPositions: number[] = []
-  const hamzaPositions: number[] = []
-
-  letters.forEach((letter, index) => {
-    if (isWeakLetter(letter)) weakPositions.push(index)
-    if (isHamzatedLetter(letter)) hamzaPositions.push(index)
-  })
-
-  const [c1, c2, c3] = Array.from(letters)
-  const isInitialWeak = isWeakLetter(c1)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const hasHamza = hamzaPositions.length > 0
-
-  if (hasHamza && isMiddleWeak && isFinalWeak)
-    return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
-  if (hasHamza && isMiddleWeak) return { type: 'hamzated-hollow', weakPositions, hamzaPositions }
-  if (hasHamza && isFinalWeak) return { type: 'hamzated-defective', weakPositions, hamzaPositions }
-  if (hasHamza) return { type: 'hamzated', weakPositions, hamzaPositions }
-  if (weakPositions.length >= 2) return { type: 'doubly-weak', weakPositions, hamzaPositions }
-  if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
-  if (isMiddleWeak) return { type: 'hollow', weakPositions, hamzaPositions }
-  if (isFinalWeak) return { type: 'defective', weakPositions, hamzaPositions }
-  return { type: 'strong', weakPositions, hamzaPositions }
 }
