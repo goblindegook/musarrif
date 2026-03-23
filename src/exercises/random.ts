@@ -17,10 +17,11 @@ import { verbTenseExercise } from './verb-tense'
 interface ExerciseGenerator {
   generate: (difficulty: Difficulty) => Exercise
   difficulty?: Difficulty[]
+  weight?: number
 }
 
 const EXERCISES: readonly ExerciseGenerator[] = [
-  { generate: conjugationExercise },
+  { generate: conjugationExercise, weight: 3 },
   { generate: masdarFormExercise, difficulty: ['medium', 'hard'] },
   { generate: masdarRootExercise, difficulty: ['medium', 'hard'] },
   { generate: masdarVerbExercise, difficulty: ['medium', 'hard'] },
@@ -35,9 +36,10 @@ const EXERCISES: readonly ExerciseGenerator[] = [
   { generate: verbTenseExercise },
 ]
 
-export function randomExercise(difficulty: Difficulty = 'easy'): Exercise {
-  const available = EXERCISES.filter(
-    (exercise) => exercise.difficulty == null || exercise.difficulty.includes(difficulty),
-  )
-  return random(available).generate(difficulty)
+export function randomExercise(difficulty: Difficulty): Exercise {
+  return random(
+    EXERCISES.filter((exercise) => exercise.difficulty == null || exercise.difficulty.includes(difficulty)).flatMap(
+      (e) => Array<ExerciseGenerator>(e.weight ?? 1).fill(e),
+    ),
+  ).generate(difficulty)
 }
