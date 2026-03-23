@@ -4,9 +4,7 @@ import { buildCardKey, cardSrsWeight, parseCardKey, recordAnswer, updateCardStat
 
 describe('buildCardKey', () => {
   test('conjugation-style key includes kind, rootType, form, tense, pronoun', () => {
-    expect(buildCardKey('conjugation', 'regular', 1, ['active', 'past'], '1s')).toBe(
-      'conjugation:regular:1:active-past:1s',
-    )
+    expect(buildCardKey('conjugation', 'sound', 1, ['active', 'past'], '1s')).toBe('conjugation:sound:1:active-past:1s')
   })
 
   test('3-tuple tense serialises all three parts', () => {
@@ -16,8 +14,8 @@ describe('buildCardKey', () => {
   })
 
   test('imperative serialises as 2-token tense', () => {
-    expect(buildCardKey('conjugation', 'regular', 1, ['active', 'imperative'], '2ms')).toBe(
-      'conjugation:regular:1:active-imperative:2ms',
+    expect(buildCardKey('conjugation', 'sound', 1, ['active', 'imperative'], '2ms')).toBe(
+      'conjugation:sound:1:active-imperative:2ms',
     )
   })
 
@@ -38,9 +36,9 @@ describe('parseCardKey', () => {
   })
 
   test('parses 2-token tense key', () => {
-    expect(parseCardKey('conjugation:regular:1:active-past:1s')).toEqual({
+    expect(parseCardKey('conjugation:sound:1:active-past:1s')).toEqual({
       kind: 'conjugation',
-      rootType: 'regular',
+      rootType: 'sound',
       form: 1,
       tense: ['active', 'past'],
       pronoun: '1s',
