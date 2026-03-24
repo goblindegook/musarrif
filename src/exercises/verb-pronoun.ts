@@ -1,19 +1,27 @@
 import { shuffle } from '@pacote/shuffle'
 import { stripDiacritics } from '../paradigms/letters'
-import { ARABIC_PRONOUNS, PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
+import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
 import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import {
+  type DimensionProfile,
+  exerciseDiacritics,
+  type PronounsLevel,
+  randomPronoun,
+  randomTense,
+  randomVerb,
+  rawPronounPool,
+} from './dimensions'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbPronounExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
-  const tense = constraints?.tense ?? randomTense(verb, difficulty)
-  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, difficulty)
-  const [word, options, answer] = buildOptions(verb, tense, pronoun, difficulty)
+export function verbPronounExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
+  const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
+  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+  const [word, options, answer] = buildOptions(verb, tense, pronoun, profile)
 
   return {
     kind: 'verbPronoun',
@@ -29,16 +37,18 @@ function buildOptions(
   verb: DisplayVerb,
   tense: VerbTense,
   pronoun: PronounId,
-  difficulty: Difficulty,
+  profile: DimensionProfile,
 ): [string, readonly string[], number] {
   const conjugated = conjugate(verb, tense)
-  const word = diacriticsDifficulty(conjugated[pronoun], difficulty)
+  const word = exerciseDiacritics(conjugated[pronoun], profile.diacritics)
 
-  const allPronouns = difficulty === 'easy' ? PRONOUN_IDS.filter((p) => !p.includes('d')) : PRONOUN_IDS
+  // Use at least pronouns level 2 for distractor generation to ensure variety
+  const minPronouns = Math.max(profile.pronouns, 2) as PronounsLevel
+  const allPronouns = [...rawPronounPool(minPronouns)]
 
   const isSameConjugation = (p: PronounId): boolean => {
-    const form = diacriticsDifficulty(conjugated[p], difficulty)
-    return difficulty === 'hard' ? stripDiacritics(form) === stripDiacritics(word) : form === word
+    const form = exerciseDiacritics(conjugated[p], profile.diacritics)
+    return profile.diacritics >= 2 ? stripDiacritics(form) === stripDiacritics(word) : form === word
   }
 
   const eligible = allPronouns.filter(

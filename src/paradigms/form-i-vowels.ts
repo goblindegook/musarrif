@@ -12,6 +12,18 @@ export type FormIPattern =
   | 'fa3ula-yaf3ilu'
   | 'fa3ula-yaf3ulu'
 
+export const FORM_I_PATTERNS: FormIPattern[] = [
+  'fa3ala-yaf3alu',
+  'fa3ala-yaf3ilu',
+  'fa3ala-yaf3ulu',
+  'fa3ila-yaf3alu',
+  'fa3ila-yaf3ilu',
+  'fa3ila-yaf3ulu',
+  'fa3ula-yaf3alu',
+  'fa3ula-yaf3ilu',
+  'fa3ula-yaf3ulu',
+]
+
 const FORM_I_PAST_VOWELS = {
   'fa3ala-yaf3alu': FATHA,
   'fa3ala-yaf3ilu': FATHA,

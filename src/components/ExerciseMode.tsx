@@ -1,6 +1,12 @@
 import { styled } from 'goober'
 import { useCallback, useMemo, useState } from 'preact/hooks'
-import type { Difficulty } from '../exercises/difficulty'
+import {
+  type DimensionProfile,
+  type DimensionStore,
+  INITIAL_DIMENSION_STORE,
+  promoteDimensions,
+  recordDimensionAnswer,
+} from '../exercises/dimensions'
 import { randomExercise } from '../exercises/random'
 import type { SrsStore } from '../exercises/srs'
 import { recordAnswer } from '../exercises/srs'
@@ -12,19 +18,14 @@ import { useLocalStorage } from '../hooks/local-storage'
 import { ExerciseStats } from './ExerciseStats'
 
 type Props = {
-  generateExercise?: (difficulty: Difficulty, srsStore: SrsStore) => Exercise
-}
-
-function normalizeDifficulty(raw: unknown): Difficulty {
-  return raw === 'medium' || raw === 'hard' ? raw : 'easy'
+  generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise
 }
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
-  const [storedDifficulty, , refetchDifficulty] = useLocalStorage<string>('exerciseDifficulty', 'easy')
-  const difficulty = normalizeDifficulty(storedDifficulty)
+  const [dimensionStore, setDimensionStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
   const [srs, updateSrs] = useLocalStorage<SrsStore>('srs', {})
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(difficulty, srs))
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(dimensionStore.profile, srs))
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
@@ -34,10 +35,13 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     },
     [setRawStats],
   )
-  const loadNextExercise = useCallback(() => {
-    setExercise(generateExercise(normalizeDifficulty(refetchDifficulty()), srs))
-    setSelected(null)
-  }, [generateExercise, refetchDifficulty, srs])
+  const loadNextExercise = useCallback(
+    (store: DimensionStore) => {
+      setExercise(generateExercise(store.profile, srs))
+      setSelected(null)
+    },
+    [generateExercise, srs],
+  )
 
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
@@ -68,10 +72,12 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
                 type="button"
                 onClick={() => {
                   if (!isAnswered) {
+                    const isCorrect = index === exercise.answer
                     setSelected(index)
-                    updateStats((current) => addResult(current, index === exercise.answer))
-                    updateSrs((current) =>
-                      recordAnswer(current, exercise.cardKey, index === exercise.answer ? 'correct' : 'wrong'),
+                    updateStats((current) => addResult(current, isCorrect))
+                    updateSrs((current) => recordAnswer(current, exercise.cardKey, isCorrect ? 'correct' : 'wrong'))
+                    setDimensionStore(
+                      promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect)),
                     )
                   }
                 }}
@@ -86,7 +92,12 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
           })}
         </OptionsGrid>
         {isAnswered ? (
-          <NextButton type="button" onClick={loadNextExercise}>
+          <NextButton
+            type="button"
+            onClick={() => {
+              loadNextExercise(dimensionStore)
+            }}
+          >
             {t('exercise.next')}
           </NextButton>
         ) : (
@@ -94,7 +105,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             type="button"
             onClick={() => {
               updateSrs((current) => recordAnswer(current, exercise.cardKey, 'pass'))
-              loadNextExercise()
+              const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, false))
+              setDimensionStore(promoted)
+              loadNextExercise(promoted)
             }}
           >
             {t('exercise.pass')}

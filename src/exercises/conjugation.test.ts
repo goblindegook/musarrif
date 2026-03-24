@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { conjugationExercise } from './conjugation'
+import { INITIAL_DIMENSION_PROFILE } from './dimensions'
 
 describe('conjugationExercise', () => {
   afterEach(() => {
@@ -7,41 +8,41 @@ describe('conjugationExercise', () => {
   })
 
   test('returns kind "conjugation"', () => {
-    expect(conjugationExercise('easy').kind).toBe('conjugation')
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('conjugation')
   })
 
   test('returns a non-empty Arabic word', () => {
-    expect(conjugationExercise('easy').word.length).toBeGreaterThan(0)
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
   })
 
   test('returns promptTranslationKey "exercise.prompt.conjugation"', () => {
-    expect(conjugationExercise('easy').promptTranslationKey).toBe('exercise.prompt.conjugation')
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.conjugation')
   })
 
   test('returns promptParams with tense and pronoun keys', () => {
-    const { promptParams } = conjugationExercise('easy')
+    const { promptParams } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(promptParams).toBeDefined()
     expect(promptParams?.tense).toBeDefined()
     expect(promptParams?.pronoun).toBeDefined()
   })
 
   test('returns exactly four options', () => {
-    expect(conjugationExercise('easy').options).toHaveLength(4)
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    const { options } = conjugationExercise('easy')
+    const { options } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = conjugationExercise('easy')
+    const { options, answer } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('options[answer] is a non-empty Arabic string', () => {
-    const { options, answer } = conjugationExercise('easy')
+    const { options, answer } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(options[answer].length).toBeGreaterThan(0)
   })
 })
@@ -51,46 +52,50 @@ describe('conjugationExercise difficulty', () => {
     vi.restoreAllMocks()
   })
 
-  test('easy: word is 3ms active past with all diacritics (random=0)', () => {
+  test('diacritics:0 (all): word is شَعَرَ (3ms active past, all diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = conjugationExercise('easy')
+    const { word } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(word).toEqualT('شَعَرَ')
   })
 
-  test('medium: word is 3ms active past with essential diacritics (random=0)', () => {
+  test('medium profile: word is شَعَرَ (3ms active past, some diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = conjugationExercise('medium')
+    const { word } = conjugationExercise({ ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2 })
     expect(word).toEqualT('شَعَرَ')
   })
 
-  test('hard: word has no diacritics (random=0)', () => {
+  test('diacritics:2 (none): word has no diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = conjugationExercise('hard')
+    const { word } = conjugationExercise({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 2, diacritics: 2 })
     expect(word).toBe('شعر')
   })
 
-  test('easy: answer is 1s active past with all diacritics (random=0)', () => {
+  test('pronouns:0/tenses:0: answer is 3ms active past with all diacritics (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = conjugationExercise('easy')
-    expect(options[answer]).toEqualT('شَعَرْتُ')
+    const { options, answer } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
+    expect(options[answer]).toEqualT('شَعَرَ')
   })
 
-  test('easy: promptParams.tense is unvoiced tense key for active past (random=0)', () => {
+  test('pronouns:0/tenses:0: promptParams.tense is unvoiced tense key for active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise('easy').promptParams?.tense).toBe('exercise.conjugation.tense.past')
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).promptParams?.tense).toBe('exercise.conjugation.tense.past')
   })
 
-  test('hard: promptParams.tense uses voiced key for active past (random=0)', () => {
+  test('tenses:4: promptParams.tense uses voiced key for active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise('hard').promptParams?.tense).toBe('exercise.conjugation.tense.active.past')
+    expect(
+      conjugationExercise({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4, diacritics: 2 }).promptParams?.tense,
+    ).toBe('exercise.conjugation.tense.active.past')
   })
 
-  test('easy: promptParams.pronoun is exercise.conjugation.pronoun.1s (random=0 → 1s)', () => {
+  test('pronouns:0/tenses:0: promptParams.pronoun is exercise.conjugation.pronoun.3ms (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise('easy').promptParams?.pronoun).toBe('exercise.conjugation.pronoun.1s')
+    expect(conjugationExercise(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBe(
+      'exercise.conjugation.pronoun.3ms',
+    )
   })
 
-  test('easy: pronoun key is one of the known pronoun translation keys', () => {
+  test('pronouns:0/tenses:0: pronoun key is one of the known pronoun translation keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const KNOWN_PRONOUN_KEYS = new Set([
       'exercise.conjugation.pronoun.1s',
@@ -107,7 +112,9 @@ describe('conjugationExercise difficulty', () => {
       'exercise.conjugation.pronoun.3mp',
       'exercise.conjugation.pronoun.3fp',
     ])
-    expect(KNOWN_PRONOUN_KEYS.has(conjugationExercise('easy').promptParams?.pronoun ?? '')).toBe(true)
+    expect(KNOWN_PRONOUN_KEYS.has(conjugationExercise(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun ?? '')).toBe(
+      true,
+    )
   })
 })
 
@@ -116,41 +123,49 @@ describe('conjugationExercise distractors', () => {
     vi.restoreAllMocks()
   })
 
-  test('easy: all options are non-empty strings', () => {
+  test('pronouns:0/tenses:0: all options are non-empty strings', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = conjugationExercise('easy')
+    const { options } = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(options.every((o) => o.length > 0)).toBe(true)
   })
 
-  test('medium: all options are non-empty strings', () => {
+  test('medium profile: all options are non-empty strings', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = conjugationExercise('medium')
+    const { options } = conjugationExercise({ ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2 })
     expect(options.every((o) => o.length > 0)).toBe(true)
   })
 
-  test('hard: all options are non-empty strings', () => {
+  test('hard profile: all options are non-empty strings', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = conjugationExercise('hard')
+    const { options } = conjugationExercise({
+      ...INITIAL_DIMENSION_PROFILE,
+      pronouns: 2,
+      tenses: 2,
+      diacritics: 2,
+    })
     expect(options.every((o) => o.length > 0)).toBe(true)
   })
 
-  test('hard: three distractors are each distinct from the answer', () => {
+  test('hard profile: three distractors are each distinct from the answer', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = conjugationExercise('hard')
+    const { options, answer } = conjugationExercise({
+      ...INITIAL_DIMENSION_PROFILE,
+      pronouns: 2,
+      tenses: 2,
+      diacritics: 2,
+    })
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)
   })
 
-  test('easy: no dual pronoun forms appear in any option (random=0)', () => {
-    // Easy mode excludes dual pronouns, so no options should be dual conjugations of the target verb
-    // (We verify this indirectly: promptParams.pronoun must not be a dual key)
+  test('pronouns:0/tenses:0: no dual pronoun forms appear in any option (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const DUAL_KEYS = new Set([
       'exercise.conjugation.pronoun.2d',
       'exercise.conjugation.pronoun.3md',
       'exercise.conjugation.pronoun.3fd',
     ])
-    expect(DUAL_KEYS.has(conjugationExercise('easy').promptParams?.pronoun ?? '')).toBe(false)
+    expect(DUAL_KEYS.has(conjugationExercise(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun ?? '')).toBe(false)
   })
 })
 
@@ -158,17 +173,17 @@ describe('conjugationExercise with constraints', () => {
   afterEach(() => vi.restoreAllMocks())
 
   test('attaches cardKey to returned exercise', () => {
-    const exercise = conjugationExercise('easy')
+    const exercise = conjugationExercise(INITIAL_DIMENSION_PROFILE)
     expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 
   test('cardKey reflects constrained form', () => {
-    const exercise = conjugationExercise('easy', { form: 2 })
+    const exercise = conjugationExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 1 }, { form: 2 })
     expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:2:/)
   })
 
   test('cardKey reflects constrained tense', () => {
-    const exercise = conjugationExercise('easy', { tense: ['active', 'past'], pronoun: '3ms' })
+    const exercise = conjugationExercise(INITIAL_DIMENSION_PROFILE, { tense: ['active', 'past'], pronoun: '3ms' })
     expect(exercise.cardKey).toContain(':active-past:3ms')
   })
 })

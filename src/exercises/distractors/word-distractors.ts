@@ -1,6 +1,6 @@
 import { ALIF, ALIF_MAQSURA, isDiacritic, stripDiacritics, WAW, YEH } from '../../paradigms/letters'
 import { verbs } from '../../paradigms/verbs'
-import { random } from '../difficulty'
+import { random } from '../dimensions'
 import type { DistractorGenerator } from './distractors'
 
 const RANDOM_LETTERS = [

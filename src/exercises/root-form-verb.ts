@@ -1,20 +1,20 @@
 import { shuffle } from '@pacote/shuffle'
 import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, randomVerb } from './dimensions'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function rootFormVerbExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
-  const answerDisplay = diacriticsDifficulty(verb.label, difficulty)
+export function rootFormVerbExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
+  const answerDisplay = exerciseDiacritics(verb.label, profile.diacritics)
 
   const distractors = shuffle(
     FORMS.filter((form) => {
       if (form === verb.form) return false
       const candidate = synthesizeVerb(verb.root, form)
-      return diacriticsDifficulty(candidate.label, difficulty) !== answerDisplay
+      return exerciseDiacritics(candidate.label, profile.diacritics) !== answerDisplay
     }),
   )
     .slice(0, 3)
@@ -27,7 +27,7 @@ export function rootFormVerbExercise(difficulty: Difficulty = 'easy', constraint
     promptTranslationKey: 'exercise.prompt.rootFormVerb',
     promptParams: { form: FORM_LABELS[verb.form - 1] },
     word: Array.from(verb.root).join(' '),
-    options: options.map(({ label }) => diacriticsDifficulty(label, difficulty)),
+    options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
     answer: options.findIndex(({ form }) => form === verb.form),
     cardKey: buildCardKey('rootFormVerb', getRootType(verb.root), verb.form),
   }

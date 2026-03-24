@@ -1,7 +1,7 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
-import { type Difficulty, diacriticsDifficulty, randomPronoun, randomTense, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { mixedWordDistractor, singleLetterWordDistractor, wordSliceDistractor } from './distractors/word-distractors'
@@ -9,12 +9,12 @@ import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbRootExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
-  const tense = constraints?.tense ?? randomTense(verb, difficulty)
-  const pronoun = constraints?.pronoun ?? (difficulty === 'easy' ? '3ms' : randomPronoun(verb, tense, difficulty))
-  const word = diacriticsDifficulty(conjugate(verb, tense)[pronoun], difficulty)
-  const options = buildOptions(verb.root, word, difficulty)
+export function verbRootExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
+  const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
+  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+  const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
+  const options = buildOptions(verb.root, word, profile)
 
   return {
     kind: 'verbRoot',
@@ -26,7 +26,7 @@ export function verbRootExercise(difficulty: Difficulty = 'easy', constraints?: 
   }
 }
 
-function buildOptions(answer: string, word: string, difficulty: Difficulty): readonly string[] {
+function buildOptions(answer: string, word: string, profile: DimensionProfile): readonly string[] {
   const generators = [
     singleLetterWordDistractor(answer),
     wordSliceDistractor(word, answer.length),
@@ -34,5 +34,5 @@ function buildOptions(answer: string, word: string, difficulty: Difficulty): rea
     Array.from(answer).some(isWeakLetter) ? weakAlternativeRootDistractor(answer) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(answer, generators, difficulty)
+  return randomizeOptions(answer, generators, profile)
 }

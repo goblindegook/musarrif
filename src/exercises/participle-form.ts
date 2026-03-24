@@ -3,26 +3,26 @@ import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
 import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from './dimensions'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
 type Participle = 'active' | 'passive'
 
-export function participleFormExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
+export function participleFormExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
   const active = deriveActiveParticiple(verb)
   const passive = derivePassiveParticiple(verb)
   const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-  const word = diacriticsDifficulty(kind === 'active' ? active : passive, difficulty)
+  const word = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
 
   const eligibleForms = FORMS.filter((form) => {
     if (form === verb.form) return false
     const alternative = synthesizeVerb(verb.root, form)
     return kind === 'active'
-      ? diacriticsDifficulty(deriveActiveParticiple(alternative), difficulty) !== word
-      : diacriticsDifficulty(derivePassiveParticiple(alternative), difficulty) !== word
+      ? exerciseDiacritics(deriveActiveParticiple(alternative), profile.diacritics) !== word
+      : exerciseDiacritics(derivePassiveParticiple(alternative), profile.diacritics) !== word
   })
 
   const distractors = shuffle(eligibleForms).slice(0, 3)

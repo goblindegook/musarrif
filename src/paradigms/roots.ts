@@ -1,10 +1,12 @@
 import { isHamzatedLetter, isWeakLetter } from './letters'
 
-export type RootType = 'sound' | 'weak' | 'hamzated'
+export type RootType = 'sound' | 'doubled' | 'hamzated' | 'weak'
 
 export function getRootType(root: string): RootType {
-  if (Array.from(root).some(isWeakLetter)) return 'weak'
-  if (Array.from(root).some(isHamzatedLetter)) return 'hamzated'
+  const letters = Array.from(root)
+  if (letters.some(isWeakLetter)) return 'weak'
+  if (letters.some(isHamzatedLetter)) return 'hamzated'
+  if (letters.length >= 3 && letters[1] === letters[2]) return 'doubled'
   return 'sound'
 }
 

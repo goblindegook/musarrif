@@ -3,19 +3,19 @@ import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
 import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function verbMasdarExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
-  const masdars = deriveMasdar(verb).map((m) => diacriticsDifficulty(m, difficulty))
+export function verbMasdarExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
+  const masdars = deriveMasdar(verb).map((m) => exerciseDiacritics(m, profile.diacritics))
   const answer = random(masdars)
-  const word = diacriticsDifficulty(verb.label, difficulty)
-  const options = buildOptions(verb, answer, masdars, difficulty)
+  const word = exerciseDiacritics(verb.label, profile.diacritics)
+  const options = buildOptions(verb, answer, masdars, profile)
 
   return {
     kind: 'verbMasdar',
@@ -31,46 +31,46 @@ function buildOptions(
   verb: DisplayVerb,
   answer: string,
   masdars: readonly string[],
-  difficulty: Difficulty,
+  profile: DimensionProfile,
 ): readonly string[] {
   const generators = [
-    formDistractor(verb, difficulty),
-    rootDistractor(verb, difficulty),
-    Array.from(verb.root).some(isWeakLetter) ? weakRootDistractor(verb, difficulty) : null,
+    formDistractor(verb, profile),
+    rootDistractor(verb, profile),
+    Array.from(verb.root).some(isWeakLetter) ? weakRootDistractor(verb, profile) : null,
     singleLetterWordDistractor(answer),
   ].filter((g) => g != null)
 
   const options = new Set<string>([answer])
 
   while (options.size < 4) {
-    const candidate = diacriticsDifficulty(random(generators)(), difficulty)
+    const candidate = exerciseDiacritics(random(generators)(), profile.diacritics)
     if (!masdars.includes(candidate)) options.add(candidate)
   }
 
   return shuffle(Array.from(options))
 }
 
-function formDistractor(verb: DisplayVerb, difficulty: Difficulty): () => string {
+function formDistractor(verb: DisplayVerb, profile: DimensionProfile): () => string {
   return () => {
     const candidate = randomGeneratedVerb(verb.root)
-    return diacriticsDifficulty(random(deriveMasdar(candidate)), difficulty)
+    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
   }
 }
 
-function rootDistractor(verb: DisplayVerb, difficulty: Difficulty): () => string {
+function rootDistractor(verb: DisplayVerb, profile: DimensionProfile): () => string {
   const rootGenerator = singleLetterWordDistractor(verb.root)
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return diacriticsDifficulty(random(deriveMasdar(candidate)), difficulty)
+    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
   }
 }
 
-function weakRootDistractor(verb: DisplayVerb, difficulty: Difficulty): () => string {
+function weakRootDistractor(verb: DisplayVerb, profile: DimensionProfile): () => string {
   const rootGenerator = weakAlternativeRootDistractor(verb.root)
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return diacriticsDifficulty(random(deriveMasdar(candidate)), difficulty)
+    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
   }
 }

@@ -8,14 +8,14 @@ import { ExerciseMode } from './ExerciseMode'
 
 beforeEach(() => {
   cleanup()
-  localStorage.removeItem('conjugator:exerciseDifficulty')
+  localStorage.removeItem('conjugator:dimensions')
   localStorage.removeItem('conjugator:exercise:daily')
   localStorage.removeItem('conjugator:srs')
 })
 
 afterEach(() => {
   cleanup()
-  localStorage.removeItem('conjugator:exerciseDifficulty')
+  localStorage.removeItem('conjugator:dimensions')
   localStorage.removeItem('conjugator:exercise:daily')
   localStorage.removeItem('conjugator:srs')
 })
@@ -92,34 +92,81 @@ describe('ExerciseMode', () => {
   })
 
   test('correct option is marked after selecting any answer', () => {
-    // answer=0 → option at index 0 (I) is correct
     render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
     expect(screen.getByTestId('correct-option')).toBeInTheDocument()
     expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
   })
 
-  describe('difficulty', () => {
-    test('calls the generator with easy on mount', () => {
+  describe('profile-based generation', () => {
+    test('calls the generator with INITIAL_DIMENSION_STORE profile on mount', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith('easy', expect.any(Object))
+      expect(gen).toHaveBeenCalledWith(
+        { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
+        expect.any(Object),
+      )
     })
 
-    test('restores stored difficulty on mount', () => {
-      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
+    test('calls the generator with stored dimension profile on mount', () => {
+      localStorage.setItem(
+        'conjugator:dimensions',
+        JSON.stringify({
+          profile: {
+            tenses: 1,
+            pronouns: 0,
+            diacritics: 0,
+            forms: 0,
+            rootTypes: 0,
+            nominals: 0,
+          },
+          windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        }),
+      )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith('medium', expect.any(Object))
+      expect(gen).toHaveBeenCalledWith(
+        {
+          tenses: 1,
+          pronouns: 0,
+          diacritics: 0,
+          forms: 0,
+          rootTypes: 0,
+          nominals: 0,
+        },
+        expect.any(Object),
+      )
     })
 
-    test('calls the generator with the current stored difficulty when next is clicked', () => {
-      localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('medium'))
+    test('calls the generator with the current stored profile when next is clicked', () => {
+      localStorage.setItem(
+        'conjugator:dimensions',
+        JSON.stringify({
+          profile: {
+            tenses: 2,
+            pronouns: 0,
+            diacritics: 0,
+            forms: 0,
+            rootTypes: 0,
+            nominals: 0,
+          },
+          windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        }),
+      )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       fireEvent.click(screen.getByRole('button', { name: /next/i }))
-      expect(gen).toHaveBeenLastCalledWith('medium', expect.any(Object))
+      for (const call of gen.mock.calls) {
+        expect(call[0]).toMatchObject({
+          tenses: 2,
+          pronouns: 0,
+          diacritics: 0,
+          forms: 0,
+          rootTypes: 0,
+          nominals: 0,
+        })
+      }
     })
   })
 
@@ -181,12 +228,10 @@ describe('pass SRS recording', () => {
       answer: 0,
       cardKey,
     }
-    // Pre-populate the SRS store with interval 6
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({ [cardKey]: { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-29' } }),
     )
-    // Pre-populate stats so we can assert they don't change
     localStorage.setItem('conjugator:exercise:daily', JSON.stringify([]))
 
     render(<ExerciseMode generateExercise={() => exercise} />, { wrapper: Wrapper })

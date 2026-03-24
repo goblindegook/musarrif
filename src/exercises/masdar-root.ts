@@ -1,7 +1,7 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { getRootType } from '../paradigms/roots'
-import { type Difficulty, diacriticsDifficulty, random, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from './dimensions'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { mixedWordDistractor, singleLetterWordDistractor, wordSliceDistractor } from './distractors/word-distractors'
@@ -9,10 +9,10 @@ import type { CardConstraints } from './srs'
 import { buildCardKey } from './srs'
 import type { Exercise } from './types'
 
-export function masdarRootExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
-  const masdar = diacriticsDifficulty(random(deriveMasdar(verb)), difficulty)
-  const options = buildOptions(verb.root, masdar, difficulty)
+export function masdarRootExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
+  const masdar = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
+  const options = buildOptions(verb.root, masdar, profile)
 
   return {
     kind: 'masdarRoot',
@@ -24,7 +24,7 @@ export function masdarRootExercise(difficulty: Difficulty = 'easy', constraints?
   }
 }
 
-function buildOptions(root: string, word: string, difficulty: Difficulty): readonly string[] {
+function buildOptions(root: string, word: string, profile: DimensionProfile): readonly string[] {
   const generators = [
     singleLetterWordDistractor(root),
     wordSliceDistractor(word, root.length),
@@ -32,5 +32,5 @@ function buildOptions(root: string, word: string, difficulty: Difficulty): reado
     Array.from(root).some(isWeakLetter) ? weakAlternativeRootDistractor(root) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(root, generators, difficulty)
+  return randomizeOptions(root, generators, profile)
 }

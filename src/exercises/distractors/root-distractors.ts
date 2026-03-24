@@ -1,5 +1,5 @@
 import { ALIF, ALIF_MAQSURA, isWeakLetter, WAW, YEH } from '../../paradigms/letters'
-import { random } from '../difficulty'
+import { random } from '../dimensions'
 import type { DistractorGenerator } from './distractors'
 
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const

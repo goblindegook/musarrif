@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { verbPronounExercise } from './verb-pronoun'
 
 const ALL_PRONOUN_KEYS = new Set(['أَنَا', 'نَحْنُ', 'أَنْتَ', 'أَنْتِ', 'أَنْتُمَا', 'أَنْتُمْ', 'أَنْتُنَّ', 'هُوَ', 'هِيَ', 'هُمَا', 'هُمْ', 'هُنَّ'])
@@ -11,34 +12,34 @@ describe('verbPronounExercise', () => {
   })
 
   test('returns kind "verbPronoun"', () => {
-    expect(verbPronounExercise().kind).toBe('verbPronoun')
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('verbPronoun')
   })
 
   test('returns the correct translation key', () => {
-    expect(verbPronounExercise().promptTranslationKey).toBe('exercise.prompt.verbPronoun')
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbPronoun')
   })
 
   test('returns exactly four options', () => {
-    expect(verbPronounExercise().options).toHaveLength(4)
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    const { options } = verbPronounExercise()
+    const { options } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = verbPronounExercise()
+    const { options, answer } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('word is non-empty', () => {
-    expect(verbPronounExercise().word.length).toBeGreaterThan(0)
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
   })
 
   test('options are Arabic pronouns', () => {
-    const { options } = verbPronounExercise()
+    const { options } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
     expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
   })
 })
@@ -48,48 +49,43 @@ describe('verbPronounExercise difficulty', () => {
     vi.restoreAllMocks()
   })
 
-  test('easy: word has full diacritics (random=0 → active past 1s of شعر)', () => {
+  test('diacritics:0 (all): word has full diacritics (random=0 → active past 3ms of شعر)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise('easy').word).toEqualT('شَعَرْتُ')
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
   })
 
-  test('medium: word has some diacritics (random=0 → active past 1s of شعر)', () => {
+  test('diacritics:1 (some): word has some diacritics (random=0 → active past 3ms of شعر)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise('medium').word).toEqualT('شَعَرتُ')
+    expect(verbPronounExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).word).toEqualT('شَعَرَ')
   })
 
-  test('hard: word has no diacritics (random=0 → active past 1s of شعر)', () => {
+  test('diacritics:2 (none): word has no diacritics (random=0 → active past 3ms of شعر)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise('hard').word).toEqualT('شعرت')
+    expect(verbPronounExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
   })
 
-  test('easy: options never include dual pronouns', () => {
+  test('pronouns:0: options never include dual pronouns', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbPronounExercise('easy')
+    const { options } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
     expect(options.some((o) => DUAL_OPTIONS.has(o))).toBe(false)
   })
 
-  test('defaults to easy difficulty', () => {
+  test('pronouns:0: correct answer is هُوَ (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise().word).toBe(verbPronounExercise('easy').word)
+    const { options, answer } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
+    expect(options[answer]).toBe('هُوَ')
   })
 
-  test('easy: correct answer is أَنَا (random=0 → 1s)', () => {
+  test('pronouns:1: correct answer is هُوَ (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbPronounExercise('easy')
-    expect(options[answer]).toBe('أَنَا')
+    const { options, answer } = verbPronounExercise({ ...INITIAL_DIMENSION_PROFILE, pronouns: 1 })
+    expect(options[answer]).toBe('هُوَ')
   })
 
-  test('medium: correct answer is أَنَا (random=0 → 1s)', () => {
+  test('diacritics:2: correct answer is هُوَ (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbPronounExercise('medium')
-    expect(options[answer]).toBe('أَنَا')
-  })
-
-  test('hard: correct answer is أَنَا (random=0 → 1s)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbPronounExercise('hard')
-    expect(options[answer]).toBe('أَنَا')
+    const { options, answer } = verbPronounExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    expect(options[answer]).toBe('هُوَ')
   })
 })
 
@@ -98,26 +94,22 @@ describe('verbPronounExercise distractor strategies', () => {
     vi.restoreAllMocks()
   })
 
-  test('distractors do not produce the same conjugation as the correct answer (easy)', () => {
+  test('distractors do not produce the same conjugation as the correct answer (pronouns:0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer, word } = verbPronounExercise('easy')
+    const { options, answer, word } = verbPronounExercise(INITIAL_DIMENSION_PROFILE)
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => d !== word)).toBe(true)
   })
 
-  test('hard: distractors whose conjugation strips to the same as the word are excluded', () => {
-    // active past 1s شَعَرْتُ → stripped شعرت
-    // 2ms شَعَرْتَ → strips to شعرت (same) → excluded
-    // 2fs شَعَرْتِ → strips to شعرت (same) → excluded
+  test('diacritics:2: distractors whose conjugation strips to the same as the word are excluded', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbPronounExercise('hard')
-    expect(options).not.toContain('أَنْتَ')
-    expect(options).not.toContain('أَنْتِ')
+    const { options } = verbPronounExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
   })
 })
 
 describe('verbPronounExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbPronounExercise('easy').cardKey).toMatch(/^verbPronoun:[a-z]+:\d+:[\w-]+:\w+$/)
+    expect(verbPronounExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbPronoun:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 })

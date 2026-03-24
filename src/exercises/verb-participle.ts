@@ -4,7 +4,7 @@ import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive
 import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { synthesizeVerb } from '../paradigms/verbs'
-import { type Difficulty, diacriticsDifficulty, random, randomGeneratedVerb, randomVerb } from './difficulty'
+import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
 import { randomizeOptions } from './distractors/distractors'
 import { weakAlternativeRootDistractor } from './distractors/root-distractors'
 import { singleLetterWordDistractor } from './distractors/word-distractors'
@@ -14,14 +14,14 @@ import type { Exercise } from './types'
 
 type Participle = 'active' | 'passive'
 
-export function verbParticipleExercise(difficulty: Difficulty = 'easy', constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(constraints)
+export function verbParticipleExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+  const verb = randomVerb(profile, constraints)
   const active = deriveActiveParticiple(verb)
   const passive = derivePassiveParticiple(verb)
   const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-  const answer = diacriticsDifficulty(kind === 'active' ? active : passive, difficulty)
-  const word = diacriticsDifficulty(verb.label, difficulty)
-  const options = buildOptions(verb, answer, kind, difficulty)
+  const answer = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
+  const word = exerciseDiacritics(verb.label, profile.diacritics)
+  const options = buildOptions(verb, answer, kind, profile)
 
   return {
     kind: 'verbParticiple',
@@ -34,51 +34,56 @@ export function verbParticipleExercise(difficulty: Difficulty = 'easy', constrai
   }
 }
 
-function buildOptions(verb: DisplayVerb, answer: string, kind: Participle, difficulty: Difficulty): readonly string[] {
+function buildOptions(
+  verb: DisplayVerb,
+  answer: string,
+  kind: Participle,
+  profile: DimensionProfile,
+): readonly string[] {
   const generators = [
-    formDistractor(verb, kind, difficulty),
-    rootDistractor(verb, kind, difficulty),
-    Array.from(verb.root).some(isWeakLetter) ? weakRootDistractor(verb, kind, difficulty) : null,
+    formDistractor(verb, kind, profile),
+    rootDistractor(verb, kind, profile),
+    Array.from(verb.root).some(isWeakLetter) ? weakRootDistractor(verb, kind, profile) : null,
     singleLetterWordDistractor(answer),
-    oppositeParticipleDistractor(verb, kind, difficulty),
+    oppositeParticipleDistractor(verb, kind, profile),
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(answer, generators, difficulty)
+  return randomizeOptions(answer, generators, profile)
 }
 
-function formDistractor(verb: DisplayVerb, kind: Participle, difficulty: Difficulty): () => string {
+function formDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
   return () => {
     const alternative = randomGeneratedVerb(verb.root)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return diacriticsDifficulty(participle, difficulty)
+    return exerciseDiacritics(participle, profile.diacritics)
   }
 }
 
-function rootDistractor(verb: DisplayVerb, kind: Participle, difficulty: Difficulty): () => string {
+function rootDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
   const rootGenerator = singleLetterWordDistractor(verb.root)
 
   return () => {
     const alternative = randomGeneratedVerb(rootGenerator(), verb.form)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return diacriticsDifficulty(participle, difficulty)
+    return exerciseDiacritics(participle, profile.diacritics)
   }
 }
 
-function weakRootDistractor(verb: DisplayVerb, kind: Participle, difficulty: Difficulty): () => string {
+function weakRootDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
   const rootGenerator = weakAlternativeRootDistractor(verb.root)
 
   return () => {
     const alternative = randomGeneratedVerb(rootGenerator(), verb.form)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return diacriticsDifficulty(participle, difficulty)
+    return exerciseDiacritics(participle, profile.diacritics)
   }
 }
 
-function oppositeParticipleDistractor(verb: DisplayVerb, kind: Participle, difficulty: Difficulty): () => string {
+function oppositeParticipleDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
   const alternative = synthesizeVerb(verb.root, verb.form)
   return () =>
-    diacriticsDifficulty(
+    exerciseDiacritics(
       kind === 'active' ? derivePassiveParticiple(alternative) : deriveActiveParticiple(alternative),
-      difficulty,
+      profile.diacritics,
     )
 }

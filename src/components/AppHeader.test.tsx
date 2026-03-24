@@ -70,22 +70,8 @@ it('shows export and import buttons in the settings panel', () => {
   expect(screen.getByText('Import data')).toBeInTheDocument()
 })
 
-it('shows and persists exercise difficulty controls in settings', () => {
-  renderHeader('/#/verbs')
-  fireEvent.click(getSettingsButton())
-
-  expect(screen.getByText('Exercise difficulty')).toBeInTheDocument()
-  expect(screen.getByText('Easy')).toBeInTheDocument()
-  expect(screen.getByText('Medium')).toBeInTheDocument()
-  expect(screen.getByText('Hard')).toBeInTheDocument()
-
-  fireEvent.click(screen.getByText('Hard'))
-  expect(window.localStorage.getItem('conjugator:exerciseDifficulty')).toBe(JSON.stringify('hard'))
-})
-
 it('exports user data in JSON format', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
-  window.localStorage.setItem('conjugator:exerciseDifficulty', JSON.stringify('hard'))
   window.localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
   window.localStorage.setItem(
     'conjugator:exercise:daily',
@@ -111,14 +97,14 @@ it('exports user data in JSON format', () => {
   const parsed = JSON.parse(decodeURIComponent(encodedJson ?? ''))
   expect(parsed).toEqual({
     version: 1,
-    settings: {
-      language: 'pt',
-      diacriticsPreference: 'none',
-      exerciseDifficulty: 'hard',
-    },
+    settings: { language: 'pt', diacriticsPreference: 'none' },
     favouriteVerbs: ['ktb-1', 'sfr-1'],
     trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1 }],
     srs: {},
+    dimensions: {
+      profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
+      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+    },
   })
 })
 
@@ -152,7 +138,6 @@ it('imports user data from JSON and updates local storage', async () => {
 
   await waitFor(() => expect(window.localStorage.getItem('conjugator:language')).toBe(JSON.stringify('it')))
   expect(window.localStorage.getItem('conjugator:diacriticsPreference')).toBe(JSON.stringify('all'))
-  expect(window.localStorage.getItem('conjugator:exerciseDifficulty')).toBe(JSON.stringify('medium'))
   expect(window.localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['bdl-1']))
   expect(window.localStorage.getItem('conjugator:exercise:daily')).toBe(
     JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3 }]),

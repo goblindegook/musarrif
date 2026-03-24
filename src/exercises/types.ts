@@ -1,19 +1,21 @@
+export type ExerciseKind =
+  | 'conjugation'
+  | 'masdarForm'
+  | 'masdarRoot'
+  | 'masdarVerb'
+  | 'participleForm'
+  | 'participleRoot'
+  | 'participleVerb'
+  | 'verbParticiple'
+  | 'verbForm'
+  | 'verbMasdar'
+  | 'verbPronoun'
+  | 'verbRoot'
+  | 'rootFormVerb'
+  | 'verbTense'
+
 export interface Exercise {
-  kind:
-    | 'conjugation'
-    | 'masdarForm'
-    | 'masdarRoot'
-    | 'masdarVerb'
-    | 'participleForm'
-    | 'participleRoot'
-    | 'participleVerb'
-    | 'verbParticiple'
-    | 'verbForm'
-    | 'verbMasdar'
-    | 'verbPronoun'
-    | 'verbRoot'
-    | 'rootFormVerb'
-    | 'verbTense'
+  kind: ExerciseKind
   word: string
   promptTranslationKey: string
   promptParams?: Record<string, string>

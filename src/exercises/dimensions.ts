@@ -1,0 +1,208 @@
+import { FORM_I_PATTERNS } from '../paradigms/form-i-vowels'
+import { applyDiacriticsPreference } from '../paradigms/letters'
+import { canConjugatePassive } from '../paradigms/passive/support'
+import type { PronounId } from '../paradigms/pronouns'
+import { getRootType, type RootType } from '../paradigms/roots'
+import type { VerbTense } from '../paradigms/tense'
+import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import type { CardConstraints } from './srs'
+import type { ExerciseKind } from './types'
+
+export type TensesLevel = 0 | 1 | 2 | 3 | 4
+export type PronounsLevel = 0 | 1 | 2 | 3
+export type DiacriticsLevel = 0 | 1 | 2
+export type FormsLevel = 0 | 1 | 2 | 3
+export type RootTypesLevel = 0 | 1 | 2 | 3
+export type NominalsLevel = 0 | 1 | 2
+
+export type DimensionProfile = {
+  tenses: TensesLevel
+  pronouns: PronounsLevel
+  diacritics: DiacriticsLevel
+  forms: FormsLevel
+  rootTypes: RootTypesLevel
+  nominals: NominalsLevel
+}
+
+export type DimensionStore = {
+  profile: DimensionProfile
+  windows: Record<keyof DimensionProfile, boolean[]>
+}
+
+export const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+}
+
+export const INITIAL_DIMENSION_STORE: DimensionStore = {
+  profile: INITIAL_DIMENSION_PROFILE,
+  windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+}
+
+export function random<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
+const T0: VerbTense[] = [['active', 'past']]
+const T1: VerbTense[] = [...T0, ['active', 'present', 'indicative'], ['active', 'future']]
+const T2: VerbTense[] = [...T1, ['active', 'present', 'subjunctive'], ['active', 'present', 'jussive']]
+const T3: VerbTense[] = [...T2, ['active', 'imperative']]
+const T4: VerbTense[] = [
+  ...T3,
+  ['passive', 'past'],
+  ['passive', 'present', 'indicative'],
+  ['passive', 'present', 'subjunctive'],
+  ['passive', 'present', 'jussive'],
+  ['passive', 'future'],
+]
+const TENSE_POOLS = [T0, T1, T2, T3, T4] as const
+
+export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
+  return canConjugatePassive(verb)
+    ? random(TENSE_POOLS[tenses])
+    : random(TENSE_POOLS[tenses].filter(([voice]) => voice === 'active'))
+}
+
+export function distractorTensePool(tenses: TensesLevel): readonly VerbTense[] {
+  return [...TENSE_POOLS[tenses]]
+}
+
+const P0: PronounId[] = ['3ms']
+const P1: PronounId[] = [...P0, '1s', '2ms', '2fs', '3fs']
+const P2: PronounId[] = [...P1, '1p', '2mp', '2fp', '3mp', '3fp']
+const P3: PronounId[] = [...P2, '2d', '3md', '3fd']
+const PRONOUN_POOLS = [P0, P1, P2, P3] as const
+
+export function rawPronounPool(pronouns: PronounsLevel): readonly PronounId[] {
+  return PRONOUN_POOLS[pronouns]
+}
+
+export function randomPronoun(verb: DisplayVerb, tense: VerbTense, pronouns: PronounsLevel): PronounId {
+  const [voice, tenseName] = tense
+  if (tenseName === 'imperative') return random(PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2')))
+  if (voice === 'passive' && verb.passiveVoice === 'impersonal') return '3ms'
+  return random(PRONOUN_POOLS[pronouns])
+}
+
+const F0: VerbForm[] = [1]
+const F1: VerbForm[] = [...F0, 2, 3]
+const F2: VerbForm[] = [...F1, 4, 5, 6]
+const F3: VerbForm[] = [...F2, 7, 8, 9, 10]
+const FORM_POOLS = [F0, F1, F2, F3] as const
+
+export function formsPool(forms: FormsLevel): readonly VerbForm[] {
+  return FORM_POOLS[forms]
+}
+
+const R0: RootType[] = ['sound']
+const R1: RootType[] = [...R0, 'doubled']
+const R2: RootType[] = [...R1, 'hamzated']
+const R3: RootType[] = [...R2, 'weak']
+const ROOT_TYPE_POOLS = [R0, R1, R2, R3] as const
+
+export function rootTypesPool(rootTypes: RootTypesLevel): readonly RootType[] {
+  return ROOT_TYPE_POOLS[rootTypes]
+}
+
+export function randomVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
+  const availableForms = formsPool(profile.forms)
+  const availableRootTypes = rootTypesPool(profile.rootTypes)
+  let pool = verbs.filter(
+    ({ root, form }) =>
+      root.length === 3 &&
+      (availableForms as VerbForm[]).includes(form) &&
+      (availableRootTypes as RootType[]).includes(getRootType(root)),
+  )
+  if (constraints?.form != null) pool = pool.filter((v) => v.form === constraints.form)
+  if (constraints?.rootType != null) pool = pool.filter((v) => getRootType(v.root) === constraints.rootType)
+  const triliterals = verbs.filter(({ root }) => root.length === 3)
+  return random(pool.length > 0 ? pool : triliterals)
+}
+
+export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)): DisplayVerb {
+  if (form === 1) return synthesizeVerb(root, 1, random(FORM_I_PATTERNS))
+  return synthesizeVerb(root, form)
+}
+
+export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): string {
+  const pref = (['all', 'some', 'none'] as const)[diacritics]
+  return applyDiacriticsPreference(word, pref)
+}
+
+const DIMENSION_MAP: Record<ExerciseKind, (keyof DimensionProfile)[]> = {
+  conjugation: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
+  verbForm: ['forms', 'rootTypes', 'diacritics'],
+  verbRoot: ['forms', 'rootTypes', 'diacritics'],
+  verbTense: ['tenses', 'forms', 'rootTypes', 'diacritics'],
+  verbPronoun: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
+  rootFormVerb: ['forms', 'rootTypes', 'diacritics'],
+  verbParticiple: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  verbMasdar: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  participleForm: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  participleRoot: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  participleVerb: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  masdarForm: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  masdarRoot: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+  masdarVerb: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+}
+
+const WINDOW_SIZE = 20
+const PROMOTION_THRESHOLD = 0.8
+
+const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
+  tenses: 4,
+  pronouns: 3,
+  diacritics: 2,
+  forms: 3,
+  rootTypes: 3,
+  nominals: 2,
+}
+
+function prerequisitesMet(profile: DimensionProfile, dimension: keyof DimensionProfile, nextLevel: number): boolean {
+  if (dimension === 'nominals') {
+    if (nextLevel === 1) return profile.tenses >= 2
+    if (nextLevel === 2) return profile.forms >= 1
+  }
+  return true
+}
+
+export function recordDimensionAnswer(store: DimensionStore, kind: ExerciseKind, correct: boolean): DimensionStore {
+  const dims = DIMENSION_MAP[kind]
+  const windows = { ...store.windows }
+  for (const dim of dims) {
+    const appended = [...windows[dim], correct]
+    windows[dim] = appended.length > WINDOW_SIZE ? appended.slice(-WINDOW_SIZE) : appended
+  }
+  return { ...store, windows }
+}
+
+export function promoteDimensions(store: DimensionStore): DimensionStore {
+  const { profile, windows } = store
+  const nextProfile = { ...profile }
+
+  for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
+    const w = windows[dimension]
+    const current = profile[dimension]
+    const next = current + 1
+    if (
+      w.length >= WINDOW_SIZE &&
+      w.filter(Boolean).length / WINDOW_SIZE >= PROMOTION_THRESHOLD &&
+      next <= MAX_LEVELS[dimension] &&
+      prerequisitesMet(profile, dimension, next)
+    ) {
+      ;(nextProfile as Record<string, number>)[dimension] = next
+    }
+  }
+
+  const nextWindows = { ...windows }
+  for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
+    if (nextProfile[dimension] !== profile[dimension]) {
+      nextWindows[dimension] = []
+    }
+  }
+  return { profile: nextProfile, windows: nextWindows }
+}

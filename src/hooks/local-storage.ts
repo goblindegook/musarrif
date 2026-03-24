@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'preact/hooks'
-import type { Difficulty } from '../exercises/difficulty'
+import type { DimensionStore } from '../exercises/dimensions'
+import { INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
 import type { CardState, SrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import type { Language } from './i18n'
@@ -24,17 +25,18 @@ export function getUserData() {
   const storage = window.localStorage
   const language = parse<Language>(storage.getItem('conjugator:language')) ?? 'en'
   const diacriticsPreference = parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference')) ?? 'some'
-  const exerciseDifficulty = parse<Difficulty>(storage.getItem('conjugator:exerciseDifficulty')) ?? 'easy'
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
   const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
+  const dimensions = parse<DimensionStore>(storage.getItem('conjugator:dimensions')) ?? INITIAL_DIMENSION_STORE
 
   return {
     version: 1,
-    settings: { language, diacriticsPreference, exerciseDifficulty },
+    settings: { language, diacriticsPreference },
     favouriteVerbs,
     trackedExercises,
     srs,
+    dimensions,
   } as const
 }
 
@@ -48,14 +50,9 @@ export function importUserData(raw: string): boolean {
       : payload
 
   const language = ['en', 'it', 'pt', 'ar'].includes(settings.language as string) ? settings.language : 'en'
-
   const diacriticsPreference = ['all', 'some', 'none'].includes(settings.diacriticsPreference as string)
     ? settings.diacriticsPreference
     : 'some'
-
-  const exerciseDifficulty = ['easy', 'medium', 'hard'].includes(settings.exerciseDifficulty as string)
-    ? settings.exerciseDifficulty
-    : 'easy'
 
   const favouriteVerbs = Array.isArray(payload.favouriteVerbs)
     ? payload.favouriteVerbs.filter((entry) => typeof entry === 'string')
@@ -92,14 +89,42 @@ export function importUserData(raw: string): boolean {
     }
   }
 
-  const storage = window.localStorage
+  // Validate dimensions profile; always reset windows on import
+  const rawDimensions = payload.dimensions
+  let dimensionsProfile = INITIAL_DIMENSION_STORE.profile
+  if (
+    rawDimensions != null &&
+    typeof rawDimensions === 'object' &&
+    'profile' in rawDimensions &&
+    rawDimensions.profile != null &&
+    typeof rawDimensions.profile === 'object'
+  ) {
+    const p = rawDimensions.profile as Record<string, unknown>
+    if (
+      [0, 1, 2, 3, 4].includes(p.tenses as number) &&
+      [0, 1, 2, 3].includes(p.pronouns as number) &&
+      [0, 1, 2].includes(p.diacritics as number) &&
+      [0, 1, 2, 3].includes(p.forms as number) &&
+      [0, 1, 2, 3].includes(p.rootTypes as number) &&
+      [0, 1, 2].includes(p.nominals as number)
+    ) {
+      dimensionsProfile = p as typeof INITIAL_DIMENSION_STORE.profile
+    }
+  }
 
+  const storage = window.localStorage
   storage.setItem('conjugator:language', JSON.stringify(language))
   storage.setItem('conjugator:diacriticsPreference', JSON.stringify(diacriticsPreference))
-  storage.setItem('conjugator:exerciseDifficulty', JSON.stringify(exerciseDifficulty))
   storage.setItem('conjugator:favouriteVerbs', JSON.stringify(favouriteVerbs))
   storage.setItem('conjugator:exercise:daily', JSON.stringify(trackedExercises))
   storage.setItem('conjugator:srs', JSON.stringify(srs))
+  storage.setItem(
+    'conjugator:dimensions',
+    JSON.stringify({
+      profile: dimensionsProfile,
+      windows: INITIAL_DIMENSION_STORE.windows,
+    }),
+  )
 
   return true
 }

@@ -100,12 +100,6 @@ export function buildVerbFromId(id?: string): DisplayVerb | undefined {
   return form === 1 ? synthesizeVerb(root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(root, form)
 }
 
-export function getVerb(root: string, form: VerbForm): DisplayVerb {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
-  if (!verb) throw new Error(`Verb with root ${root} and form ${form} not found`)
-  return verb
-}
-
 export function synthesizeVerb(root: string, form: 1, pattern?: FormIPattern): DisplayVerb
 export function synthesizeVerb(root: string, form: VerbForm): DisplayVerb
 export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'fa3ala-yaf3alu'): DisplayVerb {
@@ -117,4 +111,10 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
   return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId }
+}
+
+export function getVerb(root: string, form: VerbForm): DisplayVerb {
+  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
+  if (verb == null) throw new Error(`Verb with root ${root} and form ${form} not found`)
+  return verb
 }
