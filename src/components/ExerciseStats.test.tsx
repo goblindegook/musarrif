@@ -12,7 +12,6 @@ vi.mock('uplot', () => {
       constructor(opts: { series?: Array<{ label?: string }> }, _data: unknown, mount: HTMLElement) {
         const root = document.createElement('div')
         root.className = 'uplot'
-        // Simulate uPlot's built-in legend: render label text for each data series
         for (const s of opts.series ?? []) {
           if (s.label) {
             const cell = document.createElement('th')
@@ -97,10 +96,45 @@ describe('ExerciseStats', () => {
   })
 
   test('score pill shows correct percentage', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1 }]
+    const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
+    recentDate.setUTCHours(0, 0, 0, 0)
+    const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('75%')).toBeInTheDocument()
+  })
+
+  test('score pill shows 15-day percentage, not all-time, when they differ', () => {
+    const oldDate = new Date(Date.now() - 20 * 24 * 60 * 60 * 1000)
+    oldDate.setUTCHours(0, 0, 0, 0)
+    const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
+    recentDate.setUTCHours(0, 0, 0, 0)
+    const stats: DayStats[] = [
+      { date: oldDate, correct: 0, incorrect: 10, passed: 0 },
+      { date: recentDate, correct: 4, incorrect: 0, passed: 0 },
+    ]
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.getByText('100%')).toBeInTheDocument()
+  })
+
+  test('score pill shows All time sub-note', () => {
+    const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
+    recentDate.setUTCHours(0, 0, 0, 0)
+    const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.getByText(/All time:/)).toBeInTheDocument()
+  })
+
+  test('streak pill shows Record sub-note', () => {
+    const stats: DayStats[] = [
+      { date: new Date('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
+      { date: new Date('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+    ]
+    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.getByText(/Record:/)).toBeInTheDocument()
   })
 
   test('streak pill shows Streak label when expanded', () => {
@@ -122,14 +156,14 @@ describe('ExerciseStats', () => {
   })
 
   test('uPlot legend shows Date label when expanded', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1 }]
+    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getAllByText(/date/i).length).toBeGreaterThan(0)
   })
 
   test('uPlot legend shows Correct and Incorrect labels when expanded', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1 }]
+    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getAllByText(/correct/i).length).toBeGreaterThan(0)
@@ -137,7 +171,7 @@ describe('ExerciseStats', () => {
   })
 
   test('chart is accessible with aria-label and rendered by uPlot', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1 }]
+    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
     const { container } = render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByRole('img', { name: /statistics chart/i })).toBeInTheDocument()
@@ -149,5 +183,12 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     const chart = screen.getByRole('img', { name: /statistics chart/i })
     expect(chart.style.width).toBe('100%')
+  })
+
+  test('chart renders Passed series label when expanded', () => {
+    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.getAllByText(/passed/i).length).toBeGreaterThan(0)
   })
 })

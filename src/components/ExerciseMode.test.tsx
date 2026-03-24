@@ -218,7 +218,7 @@ describe('SRS recording', () => {
 })
 
 describe('pass SRS recording', () => {
-  test('clicking pass halves the card interval without updating daily stats', () => {
+  test('clicking pass records a daily pass entry and halves the card SRS interval', () => {
     const cardKey = 'verbForm:regular:1'
     const exercise: Exercise = {
       kind: 'verbForm',
@@ -243,6 +243,12 @@ describe('pass SRS recording', () => {
     expect(srs[cardKey].ef).toBeCloseTo(2.5)
 
     const daily = JSON.parse(localStorage.getItem('conjugator:exercise:daily') ?? '[]')
-    expect(daily).toEqual([])
+    expect(daily).toHaveLength(1)
+    expect(daily[0]).toMatchObject({
+      passed: 1,
+      correct: 0,
+      incorrect: 0,
+      date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+    })
   })
 })

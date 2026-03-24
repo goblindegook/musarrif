@@ -244,7 +244,7 @@ describe('promoteDimensions', () => {
   test('demotion cascades via enforcePrerequisites', () => {
     const next = promoteDimensions({
       profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(8) },
+      windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(8, 40) },
     })
     expect(next.profile.tenses).toBe(1)
     expect(next.profile.nominals).toBe(0)
@@ -290,7 +290,7 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4, pronouns: 3 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(4)
   })
@@ -349,7 +349,7 @@ describe('promoteDimensions', () => {
       profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
       windows: {
         ...INITIAL_DIMENSION_STORE.windows,
-        tenses: filledWindow(20),
+        tenses: filledWindow(40, 40),
         nominals: filledWindow(20),
       },
     })
@@ -377,7 +377,7 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(1)
   })
@@ -386,7 +386,7 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(2)
   })

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import type { DayStats } from '../exercises/stats'
-import { getScorePercent } from '../exercises/stats'
+import { getRecentScorePercent, getScorePercent, getStreakRecord } from '../exercises/stats'
 import { useI18n } from '../hooks/i18n'
 import { Detail } from './Detail'
 import { Panel } from './Panel'
@@ -15,27 +15,45 @@ type Props = {
 
 const CHART_H = 240
 
+function StatsDetailsPanel({ stats, streak }: { stats: DayStats[]; streak: number }) {
+  const { t, lang } = useI18n()
+  const recentScore = getRecentScorePercent(stats, 15)
+  const allTimeScore = getScorePercent(stats)
+  const record = getStreakRecord(stats)
+
+  return (
+    <DetailsRow>
+      <Detail label={t('exercise.stats.score.label')} valueLang={lang} valueDir="ltr">
+        <ValueStack>
+          <span>{recentScore}%</span>
+          <SubNote>{t('exercise.stats.score.alltime', { score: String(allTimeScore) })}</SubNote>
+        </ValueStack>
+      </Detail>
+      <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
+        <ValueStack>
+          <span>
+            {streak} {t('exercise.stats.streak.unit')}
+          </span>
+          <SubNote>{t('exercise.stats.streak.record', { days: String(record) })}</SubNote>
+        </ValueStack>
+      </Detail>
+    </DetailsRow>
+  )
+}
+
 export function ExerciseStats({ stats, streak }: Props) {
   const { t, lang } = useI18n()
-  const score = getScorePercent(stats)
 
   return (
     <Panel title={t('exercise.stats.title')} collapsible defaultCollapsed>
-      <DetailsRow>
-        <Detail label={t('exercise.stats.score.label')} value={`${score}%`} valueLang={lang} valueDir="ltr" />
-        <Detail
-          label={t('exercise.stats.streak.label')}
-          value={`${streak} ${t('exercise.stats.streak.unit')}`}
-          valueLang={lang}
-          valueDir="ltr"
-        />
-      </DetailsRow>
+      <StatsDetailsPanel stats={stats} streak={streak} />
       <StatsChart
         stats={stats}
         dateLabel={t('exercise.stats.date.label')}
         lang={lang}
         correctLabel={t('exercise.stats.correct')}
         incorrectLabel={t('exercise.stats.incorrect')}
+        passedLabel={t('exercise.stats.passed')}
       />
     </Panel>
   )
@@ -47,12 +65,14 @@ function StatsChart({
   lang,
   correctLabel,
   incorrectLabel,
+  passedLabel,
 }: {
   stats: DayStats[]
   dateLabel: string
   lang: string
   correctLabel: string
   incorrectLabel: string
+  passedLabel: string
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
@@ -102,19 +122,27 @@ function StatsChart({
           },
           { label: correctLabel, stroke: '#16a34a', width: 2, value: (_, rawValue) => rawValue ?? '—' },
           { label: incorrectLabel, stroke: '#dc2626', width: 2, value: (_, rawValue) => rawValue ?? '—' },
+          { label: passedLabel, stroke: '#94a3b8', width: 2, value: (_, rawValue) => rawValue ?? '—' },
         ],
       },
-      [days.map((d) => d.date.getTime() / 1000), days.map((d) => d.correct), days.map((d) => d.incorrect)],
+      [
+        days.map((d) => d.date.getTime() / 1000),
+        days.map((d) => d.correct),
+        days.map((d) => d.incorrect),
+        days.map((d) => d.passed),
+      ],
       mountRef.current,
     )
 
     return () => plot.destroy()
-  }, [width, days, dateLabel, lang, correctLabel, incorrectLabel])
+  }, [width, days, dateLabel, lang, correctLabel, incorrectLabel, passedLabel])
 
   return (
-    <div ref={containerRef} role="img" aria-label="statistics chart" style={{ width: '100%' }}>
-      <div ref={mountRef} />
-    </div>
+    <ChartContainer>
+      <div ref={containerRef} role="img" aria-label="statistics chart" style={{ width: '100%' }}>
+        <div ref={mountRef} />
+      </div>
+    </ChartContainer>
   )
 }
 
@@ -125,6 +153,32 @@ const DetailsRow = styled('div')`
   width: 100%;
 `
 
+const SubNote = styled('span')`
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-top: 0.15rem;
+`
+
+const ValueStack = styled('span')`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+const ChartContainer = styled('div')`
+  width: 100%;
+
+  .u-legend {
+    font-size: 0.75rem;
+  }
+
+  .u-legend tr:first-child {
+    display: none;
+  }
+`
+
 function buildDayWindow(stats: DayStats[], days: number): DayStats[] {
   const map = new Map(stats.map((d) => [d.date.toISOString().slice(0, 10), d]))
   const result: DayStats[] = []
@@ -133,7 +187,7 @@ function buildDayWindow(stats: DayStats[], days: number): DayStats[] {
     const d = new Date(today)
     d.setUTCDate(today.getUTCDate() - i)
     const key = d.toISOString().slice(0, 10)
-    result.push(map.get(key) ?? { date: new Date(key), correct: 0, incorrect: 0 })
+    result.push(map.get(key) ?? { date: new Date(key), correct: 0, incorrect: 0, passed: 0 })
   }
   return result
 }
