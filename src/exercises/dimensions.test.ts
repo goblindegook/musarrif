@@ -160,6 +160,96 @@ describe('promoteDimensions', () => {
     return Array.from({ length: total }, (_, i) => i < correct)
   }
 
+  test('diacritics does not promote with only 20 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+      }).profile.diacritics,
+    ).toBe(0)
+  })
+
+  test('diacritics does not demote with only 20 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(0) },
+      }).profile.diacritics,
+    ).toBe(1)
+  })
+
+  test('diacritics promotes at 80% over 50 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },
+      }).profile.diacritics,
+    ).toBe(1)
+  })
+
+  test('diacritics demotes at 40% over 50 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20, 50) },
+      }).profile.diacritics,
+    ).toBe(0)
+  })
+
+  test('does not demote with fewer than 20 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(0, 19) },
+      }).profile.forms,
+    ).toBe(1)
+  })
+
+  test('does not demote above 40% accuracy', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(9) },
+      }).profile.forms,
+    ).toBe(1)
+  })
+
+  test('demotes at exactly 40% accuracy', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(8) },
+      }).profile.forms,
+    ).toBe(0)
+  })
+
+  test('does not demote below level 0', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 0 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(0) },
+      }).profile.forms,
+    ).toBe(0)
+  })
+
+  test('clears window after demotion', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(8) },
+      }).windows.forms,
+    ).toEqual([])
+  })
+
+  test('demotion cascades via enforcePrerequisites', () => {
+    const next = promoteDimensions({
+      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1 },
+      windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(8) },
+    })
+    expect(next.profile.tenses).toBe(1)
+    expect(next.profile.nominals).toBe(0)
+  })
+
   test('does not promote with fewer than 20 answers', () => {
     expect(
       promoteDimensions({
@@ -330,7 +420,7 @@ describe('promoteDimensions', () => {
           rootTypes: 3,
           nominals: 2,
         },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },
       }).profile.diacritics,
     ).toBe(2)
   })

@@ -150,8 +150,16 @@ const DIMENSION_MAP: Record<ExerciseKind, (keyof DimensionProfile)[]> = {
   masdarVerb: ['nominals', 'forms', 'rootTypes', 'diacritics'],
 }
 
-const WINDOW_SIZE = 20
+const WINDOW_SIZES: Record<keyof DimensionProfile, number> = {
+  tenses: 20,
+  pronouns: 20,
+  diacritics: 50,
+  forms: 20,
+  rootTypes: 20,
+  nominals: 20,
+}
 const PROMOTION_THRESHOLD = 0.8
+const DEMOTION_THRESHOLD = 0.4
 
 const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
   tenses: 4,
@@ -187,7 +195,7 @@ export function recordDimensionAnswer(store: DimensionStore, kind: ExerciseKind,
   const windows = { ...store.windows }
   for (const dim of dims) {
     const appended = [...windows[dim], correct]
-    windows[dim] = appended.length > WINDOW_SIZE ? appended.slice(-WINDOW_SIZE) : appended
+    windows[dim] = appended.length > WINDOW_SIZES[dim] ? appended.slice(-WINDOW_SIZES[dim]) : appended
   }
   return { ...store, windows }
 }
@@ -199,13 +207,13 @@ export function promoteDimensions(store: DimensionStore): DimensionStore {
   for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
     const w = windows[dimension]
     const current = profile[dimension]
-    const next = current + 1
-    if (
-      w.length >= WINDOW_SIZE &&
-      w.filter(Boolean).length / WINDOW_SIZE >= PROMOTION_THRESHOLD &&
-      next <= MAX_LEVELS[dimension]
-    ) {
-      ;(nextProfile as Record<string, number>)[dimension] = next
+    const windowSize = WINDOW_SIZES[dimension]
+    if (w.length < windowSize) continue
+    const accuracy = w.filter(Boolean).length / windowSize
+    if (accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension]) {
+      ;(nextProfile as Record<string, number>)[dimension] = current + 1
+    } else if (accuracy <= DEMOTION_THRESHOLD && current > 0) {
+      ;(nextProfile as Record<string, number>)[dimension] = current - 1
     }
   }
 
