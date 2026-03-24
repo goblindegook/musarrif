@@ -64,6 +64,16 @@ describe('importUserData', () => {
     expect(stored.profile).toEqual(INITIAL_DIMENSION_STORE.profile)
   })
 
+  test('rolls back dimension levels that violate prerequisites on import', () => {
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile: { tenses: 2, pronouns: 1, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 } },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.tenses).toBe(1)
+  })
+
   test('accepts payload without dimensions field without error', () => {
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all', exerciseDifficulty: 'hard' },

@@ -162,7 +162,37 @@ const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
   nominals: 2,
 }
 
+export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
+  const p = { ...profile }
+  if (p.tenses >= 2 && p.pronouns < 2) p.tenses = 1
+  if (p.nominals >= 1 && p.tenses < 2) p.nominals = 0
+  if (p.nominals >= 2 && p.forms < 1) p.nominals = 1
+  if (
+    p.diacritics >= 2 &&
+    !(
+      p.tenses >= MAX_LEVELS.tenses &&
+      p.pronouns >= MAX_LEVELS.pronouns &&
+      p.forms >= MAX_LEVELS.forms &&
+      p.rootTypes >= MAX_LEVELS.rootTypes &&
+      p.nominals >= MAX_LEVELS.nominals
+    )
+  ) {
+    p.diacritics = 1
+  }
+  return p
+}
+
 function prerequisitesMet(profile: DimensionProfile, dimension: keyof DimensionProfile, nextLevel: number): boolean {
+  if (dimension === 'tenses' && nextLevel >= 2) return profile.pronouns >= 2
+  if (dimension === 'diacritics' && nextLevel >= 2) {
+    return (
+      profile.tenses >= MAX_LEVELS.tenses &&
+      profile.pronouns >= MAX_LEVELS.pronouns &&
+      profile.forms >= MAX_LEVELS.forms &&
+      profile.rootTypes >= MAX_LEVELS.rootTypes &&
+      profile.nominals >= MAX_LEVELS.nominals
+    )
+  }
   if (dimension === 'nominals') {
     if (nextLevel === 1) return profile.tenses >= 2
     if (nextLevel === 2) return profile.forms >= 1

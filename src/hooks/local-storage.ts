@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'preact/hooks'
-import type { DimensionStore } from '../exercises/dimensions'
-import { INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
+import type { DimensionProfile, DimensionStore } from '../exercises/dimensions'
+import { enforcePrerequisites, INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
 import type { CardState, SrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import type { Language } from './i18n'
@@ -108,7 +108,7 @@ export function importUserData(raw: string): boolean {
       [0, 1, 2, 3].includes(p.rootTypes as number) &&
       [0, 1, 2].includes(p.nominals as number)
     ) {
-      dimensionsProfile = p as typeof INITIAL_DIMENSION_STORE.profile
+      dimensionsProfile = enforcePrerequisites(p as DimensionProfile)
     }
   }
 

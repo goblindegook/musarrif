@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'vitest'
 import {
   type DimensionStore,
+  enforcePrerequisites,
   exerciseDiacritics,
+  INITIAL_DIMENSION_PROFILE,
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
   rawPronounPool,
@@ -89,108 +91,231 @@ describe('recordDimensionAnswer', () => {
   })
 })
 
+describe('enforcePrerequisites', () => {
+  test('no-ops a valid profile', () => {
+    expect(enforcePrerequisites(INITIAL_DIMENSION_PROFILE)).toEqual(INITIAL_DIMENSION_PROFILE)
+  })
+
+  test('rolls back tenses from 2 to 1 when pronouns < 2', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 }).tenses).toBe(1)
+  })
+
+  test('keeps tenses at 2 when pronouns >= 2', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 }).tenses).toBe(2)
+  })
+
+  test('rolls back nominals from 1 to 0 when tenses < 2', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1 }).nominals).toBe(0)
+  })
+
+  test('rolls back nominals from 2 to 1 when forms < 1', () => {
+    expect(
+      enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 0 }).nominals,
+    ).toBe(1)
+  })
+
+  test('rolls back diacritics from 2 to 1 when not all dimensions at max', () => {
+    expect(
+      enforcePrerequisites({
+        ...INITIAL_DIMENSION_PROFILE,
+        diacritics: 2,
+        tenses: 4,
+        pronouns: 3,
+        forms: 3,
+        rootTypes: 3,
+        nominals: 1,
+      }).diacritics,
+    ).toBe(1)
+  })
+
+  test('keeps diacritics at 2 when all dimensions at max', () => {
+    expect(
+      enforcePrerequisites({
+        ...INITIAL_DIMENSION_PROFILE,
+        diacritics: 2,
+        tenses: 4,
+        pronouns: 3,
+        forms: 3,
+        rootTypes: 3,
+        nominals: 2,
+      }).diacritics,
+    ).toBe(2)
+  })
+
+  test('cascades: tenses rollback also rolls back nominals', () => {
+    const result = enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 })
+    expect(result.tenses).toBe(1)
+    expect(result.nominals).toBe(0)
+  })
+
+  test('cascades: tenses rollback also rolls back diacritics', () => {
+    const result = enforcePrerequisites({ tenses: 2, pronouns: 1, forms: 3, rootTypes: 3, nominals: 2, diacritics: 2 })
+    expect(result.tenses).toBe(1)
+    expect(result.diacritics).toBe(1)
+  })
+})
+
 describe('promoteDimensions', () => {
   function filledWindow(correct: number, total = 20): boolean[] {
     return Array.from({ length: total }, (_, i) => i < correct)
   }
 
   test('does not promote with fewer than 20 answers', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20, 19) },
-    }
-    expect(promoteDimensions(store).profile.forms).toBe(0)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20, 19) },
+      }).profile.forms,
+    ).toBe(0)
   })
 
   test('does not promote below 80% accuracy', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(15) },
-    }
-    expect(promoteDimensions(store).profile.forms).toBe(0)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(15) },
+      }).profile.forms,
+    ).toBe(0)
   })
 
   test('promotes at exactly 80% accuracy', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
-    }
-    expect(promoteDimensions(store).profile.forms).toBe(1)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
+      }).profile.forms,
+    ).toBe(1)
   })
 
   test('clears window after promotion', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).windows.forms).toEqual([])
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
+      }).windows.forms,
+    ).toEqual([])
   })
 
   test('does not promote beyond max level', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).profile.tenses).toBe(4)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(4)
   })
 
   test('nominals blocked at level 0 until tenses >= 2', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).profile.nominals).toBe(0)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+      }).profile.nominals,
+    ).toBe(0)
   })
 
   test('nominals promotes to level 1 when tenses >= 2', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).profile.nominals).toBe(1)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+      }).profile.nominals,
+    ).toBe(1)
   })
 
   test('nominals blocked at level 1 until forms >= 1', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 0 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).profile.nominals).toBe(1)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 0 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+      }).profile.nominals,
+    ).toBe(1)
   })
 
   test('nominals promotes to level 2 when forms >= 1', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 1 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
-    }
-    expect(promoteDimensions(store).profile.nominals).toBe(2)
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+      }).profile.nominals,
+    ).toBe(2)
   })
 
   test('each dimension advances independently', () => {
-    const store: DimensionStore = {
+    const next = promoteDimensions({
       profile: { ...INITIAL_DIMENSION_STORE.profile },
       windows: {
         ...INITIAL_DIMENSION_STORE.windows,
         forms: filledWindow(20),
         tenses: filledWindow(15),
       },
-    }
-    const next = promoteDimensions(store)
+    })
     expect(next.profile.forms).toBe(1)
     expect(next.profile.tenses).toBe(0)
   })
 
   test('is single-pass: promoting tenses does not cascade to nominals in same call', () => {
-    const store: DimensionStore = {
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1 },
+    const next = promoteDimensions({
+      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
       windows: {
         ...INITIAL_DIMENSION_STORE.windows,
         tenses: filledWindow(20),
         nominals: filledWindow(20),
       },
-    }
-    const next = promoteDimensions(store)
+    })
     expect(next.profile.tenses).toBe(2)
     expect(next.profile.nominals).toBe(0)
+  })
+
+  test('tenses blocked at level 1 until pronouns >= 2', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(1)
+  })
+
+  test('tenses promotes to level 2 when pronouns >= 2', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(2)
+  })
+
+  test('diacritics blocked at level 1 until all other dimensions are at max', () => {
+    expect(
+      promoteDimensions({
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 1,
+          tenses: 4,
+          pronouns: 3,
+          forms: 3,
+          rootTypes: 3,
+          nominals: 1,
+        },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+      }).profile.diacritics,
+    ).toBe(1)
+  })
+
+  test('diacritics promotes to level 2 when all other dimensions are at max', () => {
+    expect(
+      promoteDimensions({
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 1,
+          tenses: 4,
+          pronouns: 3,
+          forms: 3,
+          rootTypes: 3,
+          nominals: 2,
+        },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+      }).profile.diacritics,
+    ).toBe(2)
   })
 })
