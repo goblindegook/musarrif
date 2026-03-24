@@ -34,7 +34,7 @@ export const PASSIVE_TENSES: VerbTense[] = [
 const PRONOUNS: PronounId[] = ['1s', '1p', '2ms', '2fs', '2d', '2mp', '2fp', '3ms', '3fs', '3md', '3fd', '3mp', '3fp']
 
 export function randomVerb(constraints?: CardConstraints): DisplayVerb {
-  let pool: DisplayVerb[] = verbs
+  let pool: DisplayVerb[] = verbs.filter(({ root }) => root.length === 3)
   if (constraints?.rootType) pool = pool.filter((v) => getRootType(v.root) === constraints.rootType)
   if (constraints?.form) pool = pool.filter((v) => v.form === constraints.form)
   return random(pool.length > 0 ? pool : verbs)
