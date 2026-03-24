@@ -16,10 +16,25 @@ describe('getUserData', () => {
   })
 
   test('returns stored dimension profile', () => {
-    const profile = { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 as const }
+    const profile = { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 as const, pronouns: 2 as const }
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_STORE.windows }))
     const data = getUserData()
     expect(data.dimensions.profile.tenses).toBe(2)
+  })
+
+  test('rolls back dimension levels that violate prerequisites', () => {
+    const profile = {
+      ...INITIAL_DIMENSION_STORE.profile,
+      diacritics: 2 as const,
+      tenses: 4 as const,
+      pronouns: 3 as const,
+      forms: 3 as const,
+      rootTypes: 3 as const,
+      nominals: 1 as const,
+    }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_STORE.windows }))
+    const data = getUserData()
+    expect(data.dimensions.profile.diacritics).toBe(1)
   })
 
   test('does not include exerciseDifficulty in export', () => {
@@ -62,16 +77,6 @@ describe('importUserData', () => {
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
     expect(stored.profile).toEqual(INITIAL_DIMENSION_STORE.profile)
-  })
-
-  test('rolls back dimension levels that violate prerequisites on import', () => {
-    const payload = JSON.stringify({
-      settings: { language: 'en', diacriticsPreference: 'all' },
-      dimensions: { profile: { tenses: 2, pronouns: 1, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 } },
-    })
-    importUserData(payload)
-    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile.tenses).toBe(1)
   })
 
   test('accepts payload without dimensions field without error', () => {

@@ -28,7 +28,8 @@ export function getUserData() {
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
   const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
-  const dimensions = parse<DimensionStore>(storage.getItem('conjugator:dimensions')) ?? INITIAL_DIMENSION_STORE
+  const rawDim = parse<DimensionStore>(storage.getItem('conjugator:dimensions')) ?? INITIAL_DIMENSION_STORE
+  const dimensions: DimensionStore = { ...rawDim, profile: enforcePrerequisites(rawDim.profile) }
 
   return {
     version: 1,
@@ -108,7 +109,7 @@ export function importUserData(raw: string): boolean {
       [0, 1, 2, 3].includes(p.rootTypes as number) &&
       [0, 1, 2].includes(p.nominals as number)
     ) {
-      dimensionsProfile = enforcePrerequisites(p as DimensionProfile)
+      dimensionsProfile = p as DimensionProfile
     }
   }
 
