@@ -2,7 +2,7 @@ import type { PronounId } from '../paradigms/pronouns'
 import type { RootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
 import type { VerbForm } from '../paradigms/verbs'
-import type { Exercise } from './types'
+import type { ExerciseKind } from './exercises'
 
 export type AnswerResult = 'correct' | 'wrong' | 'pass'
 
@@ -23,7 +23,7 @@ export interface CardState {
 export type SrsStore = Record<string, CardState>
 
 export interface ParsedCardKey {
-  kind: Exercise['kind']
+  kind: ExerciseKind
   rootType: RootType
   form: VerbForm
   tense: VerbTense | undefined
@@ -31,7 +31,7 @@ export interface ParsedCardKey {
 }
 
 export function buildCardKey(
-  kind: Exercise['kind'],
+  kind: ExerciseKind,
   rootType: RootType,
   form: VerbForm,
   tense?: VerbTense,
@@ -46,7 +46,7 @@ export function parseCardKey(key: string): ParsedCardKey {
   const form = Number(formStr) as VerbForm
   if (tenseStr == null) {
     return {
-      kind: kind as Exercise['kind'],
+      kind: kind as ExerciseKind,
       rootType: rootType as RootType,
       form,
       tense: undefined,
@@ -55,7 +55,7 @@ export function parseCardKey(key: string): ParsedCardKey {
   }
   const parts = tenseStr.split('-')
   const tense = (parts.length === 2 ? [parts[0], parts[1]] : [parts[0], parts[1], parts[2]]) as VerbTense
-  return { kind: kind as Exercise['kind'], rootType: rootType as RootType, form, tense, pronoun: pronoun as PronounId }
+  return { kind: kind as ExerciseKind, rootType: rootType as RootType, form, tense, pronoun: pronoun as PronounId }
 }
 
 function utcAddDays(date: string, days: number): string {

@@ -14,9 +14,8 @@ import {
   rawPronounPool,
   type TensesLevel,
 } from './dimensions'
-import type { CardConstraints } from './srs'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
 const PRONOUN_KEYS: Record<PronounId, string> = {
   '1s': 'exercise.conjugation.pronoun.1s',
@@ -128,40 +127,40 @@ function hardCandidates(
   return [...type1, ...type2, ...type3]
 }
 
-export function conjugationExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const word = exerciseDiacritics(verb.label, profile.diacritics)
-  const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
-  const targetPronoun = constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns)
-  const answer = exerciseDiacritics(conjugate(verb, targetTense)[targetPronoun], profile.diacritics)
+export const conjugationExercise = defineExercise(
+  'conjugation',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const word = exerciseDiacritics(verb.label, profile.diacritics)
+    const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
+    const targetPronoun = constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns)
+    const answer = exerciseDiacritics(conjugate(verb, targetTense)[targetPronoun], profile.diacritics)
 
-  const raw =
-    profile.pronouns >= 2 && profile.tenses >= 2
-      ? hardCandidates(verb, targetTense, targetPronoun, profile)
-      : profile.pronouns < 2 && profile.tenses < 2
-        ? easyCandidates(targetTense, targetPronoun, verb, profile)
-        : mediumCandidates(verb, targetTense, targetPronoun, profile)
+    const raw =
+      profile.pronouns >= 2 && profile.tenses >= 2
+        ? hardCandidates(verb, targetTense, targetPronoun, profile)
+        : profile.pronouns < 2 && profile.tenses < 2
+          ? easyCandidates(targetTense, targetPronoun, verb, profile)
+          : mediumCandidates(verb, targetTense, targetPronoun, profile)
 
-  const candidates = new Set(raw.map((r) => exerciseDiacritics(r, profile.diacritics)))
-  candidates.delete('')
-  candidates.delete(answer)
-  const options = new Set<string>([answer])
-  for (const candidate of shuffle(Array.from(candidates))) {
-    if (options.size >= 4) break
-    options.add(candidate)
-  }
-  const shuffled = shuffle(Array.from(options))
+    const candidates = new Set(raw.map((r) => exerciseDiacritics(r, profile.diacritics)))
+    candidates.delete('')
+    candidates.delete(answer)
+    const options = new Set<string>([answer])
+    for (const candidate of shuffle(Array.from(candidates))) {
+      if (options.size >= 4) break
+      options.add(candidate)
+    }
+    const shuffled = shuffle(Array.from(options))
 
-  return {
-    kind: 'conjugation',
-    promptTranslationKey: 'exercise.prompt.conjugation',
-    promptParams: {
-      tense: tensePromptKey(targetTense, profile.tenses >= 4),
-      pronoun: PRONOUN_KEYS[targetPronoun],
-    },
-    word,
-    options: shuffled,
-    answer: shuffled.indexOf(answer),
-    cardKey: buildCardKey('conjugation', getRootType(verb.root), verb.form, targetTense, targetPronoun),
-  }
-}
+    return {
+      promptTranslationKey: 'exercise.prompt.conjugation',
+      promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 4), pronoun: PRONOUN_KEYS[targetPronoun] },
+      word,
+      options: shuffled,
+      answer: shuffled.indexOf(answer),
+      cardKey: buildCardKey('conjugation', getRootType(verb.root), verb.form, targetTense, targetPronoun),
+    }
+  },
+  { weight: 5 },
+)

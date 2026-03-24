@@ -10,43 +10,45 @@ function labelToForm(label: string): number {
 
 describe('masdarFormExercise', () => {
   test('returns kind "masdarForm"', () => {
-    expect(masdarFormExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarForm')
+    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarForm')
   })
 
   test('returns a non-empty Arabic word', () => {
-    const { word } = masdarFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { word } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(word.length).toBeGreaterThan(0)
   })
 
   test('returns the correct translation key', () => {
-    expect(masdarFormExercise(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.masdarForm')
+    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
+      'exercise.prompt.masdarForm',
+    )
   })
 
   test('returns exactly four options', () => {
-    expect(masdarFormExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('options are Roman numerals sorted in ascending form order', () => {
-    const { options } = masdarFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     const formNumbers = options.map((option) => labelToForm(option))
     expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = masdarFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('all options are unique', () => {
-    const { options } = masdarFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('word matches at least one masdar for the selected form in easy difficulty', () => {
-    const exercise = masdarFormExercise(INITIAL_DIMENSION_PROFILE)
+    const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     const selectedForm = labelToForm(exercise.options[exercise.answer])
     const matchingVerbs = verbs.filter((verb) => verb.form === selectedForm)
 
@@ -60,6 +62,6 @@ describe('masdarFormExercise', () => {
 
 describe('masdarFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarFormExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^masdarForm:[a-z]+:\d+$/)
+    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^masdarForm:[a-z]+:\d+$/)
   })
 })

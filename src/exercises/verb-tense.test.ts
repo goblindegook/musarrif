@@ -4,24 +4,24 @@ import { verbTenseExercise } from './verb-tense'
 
 const UNVOICED_KEYS = new Set([
   'exercise.tense.option.past',
-  'exercise.tense.option.present',
-  'exercise.tense.option.subjunctive',
-  'exercise.tense.option.jussive',
+  'exercise.tense.option.present.indicative',
+  'exercise.tense.option.present.subjunctive',
+  'exercise.tense.option.present.jussive',
   'exercise.tense.option.future',
   'exercise.tense.option.imperative',
 ])
 
 const VOICED_KEYS = new Set([
   'exercise.tense.option.active.past',
-  'exercise.tense.option.active.present',
-  'exercise.tense.option.active.subjunctive',
-  'exercise.tense.option.active.jussive',
+  'exercise.tense.option.active.present.indicative',
+  'exercise.tense.option.active.present.subjunctive',
+  'exercise.tense.option.active.present.jussive',
   'exercise.tense.option.active.future',
   'exercise.tense.option.imperative',
   'exercise.tense.option.passive.past',
-  'exercise.tense.option.passive.present',
-  'exercise.tense.option.passive.subjunctive',
-  'exercise.tense.option.passive.jussive',
+  'exercise.tense.option.passive.present.indicative',
+  'exercise.tense.option.passive.present.subjunctive',
+  'exercise.tense.option.passive.present.jussive',
   'exercise.tense.option.passive.future',
 ])
 
@@ -31,30 +31,30 @@ describe('tenseExercise', () => {
   })
 
   test('returns kind "tense"', () => {
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('verbTense')
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbTense')
   })
 
   test('returns the correct translation key', () => {
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbTense')
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbTense')
   })
 
   test('returns exactly four options', () => {
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    const { options } = verbTenseExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = verbTenseExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('word is non-empty', () => {
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
   })
 })
 
@@ -65,40 +65,40 @@ describe('tenseExercise difficulty', () => {
 
   test('diacritics:0 (all): word is شَعَرَ (active past 3ms, all diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
   })
 
   test('diacritics:1 (some): word is شَعَرَ (active past 3ms, some diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).word).toEqualT('شَعَرَ')
+    expect(verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).word).toEqualT('شَعَرَ')
   })
 
   test('diacritics:2 (none): word is شعر (active past 3ms, no diacritics, random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
+    expect(verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
   })
 
   test('easy: options are unvoiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbTenseExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('medium: options are unvoiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbTenseExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 })
+    const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 })
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('hard: options are voiced tense keys (imperative unprefixed)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbTenseExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
+    const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
   })
 
   test('easy: correct answer is the past tense key (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbTenseExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer]).toBe('exercise.tense.option.past')
   })
 })
@@ -110,7 +110,7 @@ describe('tenseExercise distractor strategies', () => {
 
   test('easy: three distractors are unvoiced tense keys distinct from the correct answer', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbTenseExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => UNVOICED_KEYS.has(d))).toBe(true)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)
@@ -118,7 +118,7 @@ describe('tenseExercise distractor strategies', () => {
 
   test('hard: all options are voiced tense keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
-    const { options, answer } = verbTenseExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
+    const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS.has(options[answer])).toBe(true)
   })
@@ -126,6 +126,6 @@ describe('tenseExercise distractor strategies', () => {
 
 describe('verbTenseExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbTenseExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w-]+:\w+$/)
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w-]+:\w+$/)
   })
 })

@@ -11,36 +11,36 @@ function labelToForm(label: string): number {
 
 describe('participleFormExercise', () => {
   test('returns kind "participleForm"', () => {
-    expect(participleFormExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('participleForm')
+    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleForm')
   })
 
   test('returns a non-empty Arabic word', () => {
-    expect(participleFormExercise(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
   })
 
   test('returns exactly four options', () => {
-    expect(participleFormExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('all options are unique', () => {
-    const { options } = participleFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('options are Roman numerals sorted in ascending form order', () => {
-    const { options } = participleFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     const formNumbers = options.map((option) => labelToForm(option))
     expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = participleFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('returns the prompt translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleFormExercise(INITIAL_DIMENSION_PROFILE)
+    const { promptTranslationKey } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(promptTranslationKey).toBeOneOf([
       'exercise.prompt.activeParticipleForm',
       'exercise.prompt.passiveParticipleForm',
@@ -49,7 +49,7 @@ describe('participleFormExercise', () => {
 
   test('prompt type matches the shown participle word in easy difficulty', () => {
     const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
-    const exercise = participleFormExercise(easyProfile)
+    const exercise = participleFormExercise.generate(easyProfile)
     const selectedForm = labelToForm(exercise.options[exercise.answer])
     const selectedFormVerbs = verbs.filter((verb) => verb.form === selectedForm)
     const activeMatch = selectedFormVerbs.some(
@@ -68,6 +68,6 @@ describe('participleFormExercise', () => {
 
 describe('participleFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleFormExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleForm:[a-z]+:\d+$/)
+    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleForm:[a-z]+:\d+$/)
   })
 })

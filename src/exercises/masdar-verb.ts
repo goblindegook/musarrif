@@ -3,28 +3,30 @@ import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
-import { randomizeOptions } from './distractors/distractors'
-import { weakAlternativeRootDistractor } from './distractors/root-distractors'
-import { singleLetterWordDistractor } from './distractors/word-distractors'
-import type { CardConstraints } from './srs'
+import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-export function masdarVerbExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
-  const options = buildOptions(verb, profile)
-  const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
+export const masdarVerbExercise = defineExercise(
+  'masdarVerb',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
+    const options = buildOptions(verb, profile)
+    const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
 
-  return {
-    kind: 'masdarVerb',
-    promptTranslationKey: 'exercise.prompt.masdarVerb',
-    word,
-    options,
-    answer: options.indexOf(answerLabel),
-    cardKey: buildCardKey('masdarVerb', getRootType(verb.root), verb.form),
-  }
-}
+    return {
+      promptTranslationKey: 'exercise.prompt.masdarVerb',
+      word,
+      options,
+      answer: options.indexOf(answerLabel),
+      cardKey: buildCardKey('masdarVerb', getRootType(verb.root), verb.form),
+    }
+  },
+  {
+    minNominals: 2,
+  },
+)
 
 function buildOptions(verb: DisplayVerb, profile: DimensionProfile): readonly string[] {
   const answer = exerciseDiacritics(verb.label, profile.diacritics)

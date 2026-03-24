@@ -4,28 +4,29 @@ import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
-import { weakAlternativeRootDistractor } from './distractors/root-distractors'
-import { singleLetterWordDistractor } from './distractors/word-distractors'
-import type { CardConstraints } from './srs'
+import { singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-export function verbMasdarExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const masdars = deriveMasdar(verb).map((m) => exerciseDiacritics(m, profile.diacritics))
-  const answer = random(masdars)
-  const word = exerciseDiacritics(verb.label, profile.diacritics)
-  const options = buildOptions(verb, answer, masdars, profile)
+export const verbMasdarExercise = defineExercise(
+  'verbMasdar',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const masdars = deriveMasdar(verb).map((m) => exerciseDiacritics(m, profile.diacritics))
+    const answer = random(masdars)
+    const word = exerciseDiacritics(verb.label, profile.diacritics)
+    const options = buildOptions(verb, answer, masdars, profile)
 
-  return {
-    kind: 'verbMasdar',
-    promptTranslationKey: 'exercise.prompt.verbMasdar',
-    word,
-    options,
-    answer: options.indexOf(answer),
-    cardKey: buildCardKey('verbMasdar', getRootType(verb.root), verb.form),
-  }
-}
+    return {
+      promptTranslationKey: 'exercise.prompt.verbMasdar',
+      word,
+      options,
+      answer: options.indexOf(answer),
+      cardKey: buildCardKey('verbMasdar', getRootType(verb.root), verb.form),
+    }
+  },
+  { minNominals: 2 },
+)
 
 function buildOptions(
   verb: DisplayVerb,

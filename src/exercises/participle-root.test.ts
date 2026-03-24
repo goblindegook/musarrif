@@ -7,11 +7,11 @@ import { participleRootExercise } from './participle-root'
 
 describe('participleRootExercise', () => {
   test('returns kind "participleRoot"', () => {
-    expect(participleRootExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('participleRoot')
+    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleRoot')
   })
 
   test('returns the correct translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleRootExercise(INITIAL_DIMENSION_PROFILE)
+    const { promptTranslationKey } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(promptTranslationKey).toBeOneOf([
       'exercise.prompt.activeParticipleRoot',
       'exercise.prompt.passiveParticipleRoot',
@@ -19,30 +19,30 @@ describe('participleRootExercise', () => {
   })
 
   test('returns exactly four options', () => {
-    expect(participleRootExercise(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('returns unique options', () => {
-    const { options } = participleRootExercise(INITIAL_DIMENSION_PROFILE)
+    const { options } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(new Set(options).size).toBe(options.length)
   })
 
   test('correct answer is a valid index', () => {
-    const { options, answer } = participleRootExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('correct option matches an existing root with letters separated by spaces', () => {
-    const { options, answer } = participleRootExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     const correctRoot = options[answer].split(' ').join('')
     expect(verbs.some((verb) => verb.root === correctRoot)).toBe(true)
   })
 
   test('prompt type matches the shown participle word in easy difficulty', () => {
     const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
-    const exercise = participleRootExercise(easyProfile)
+    const exercise = participleRootExercise.generate(easyProfile)
     const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
     const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
     const matchesActive = matchingVerbs.some(
@@ -59,7 +59,7 @@ describe('participleRootExercise', () => {
   })
 
   test('includes exactly three wrong options and all differ from the correct root', () => {
-    const { options, answer } = participleRootExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     const wrongOptions = options.filter((_, index) => index !== answer)
 
     expect(wrongOptions).toHaveLength(3)
@@ -69,6 +69,6 @@ describe('participleRootExercise', () => {
 
 describe('participleRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleRootExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleRoot:[a-z]+:\d+$/)
+    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleRoot:[a-z]+:\d+$/)
   })
 })

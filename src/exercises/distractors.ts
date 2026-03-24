@@ -1,7 +1,11 @@
-import { ALIF, ALIF_MAQSURA, isDiacritic, stripDiacritics, WAW, YEH } from '../../paradigms/letters'
-import { verbs } from '../../paradigms/verbs'
-import { random } from '../dimensions'
-import type { DistractorGenerator } from './distractors'
+import { shuffle } from '@pacote/shuffle'
+import { ALIF, ALIF_MAQSURA, isDiacritic, isWeakLetter, stripDiacritics, WAW, YEH } from '../paradigms/letters'
+import { verbs } from '../paradigms/verbs'
+import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
+
+type DistractorGenerator<T> = () => T
+
+const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
 
 const RANDOM_LETTERS = [
   ...Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root)))),
@@ -10,6 +14,36 @@ const RANDOM_LETTERS = [
   ALIF,
   ALIF_MAQSURA,
 ]
+
+export function randomizeOptions<T>(
+  answer: T,
+  generators: readonly DistractorGenerator<T>[],
+  profile: DimensionProfile,
+  size = 4,
+): T[] {
+  const options = new Set<T>([answer])
+
+  while (options.size < size) {
+    const candidate = random(generators)()
+    options.add(typeof candidate === 'string' ? (exerciseDiacritics(candidate, profile.diacritics) as T) : candidate)
+  }
+
+  return shuffle(Array.from(options))
+}
+
+export function weakAlternativeRootDistractor(correct: string): DistractorGenerator<string> {
+  const letters = Array.from(correct)
+  const weakAlternatives = letters.flatMap((letter, index) => {
+    if (!isWeakLetter(letter)) return []
+    return WEAK_LETTER_REPLACEMENTS.filter((replacement) => replacement !== letter).map((replacement) => {
+      const next = [...letters]
+      next[index] = replacement
+      return next.join('')
+    })
+  })
+
+  return () => random(weakAlternatives)
+}
 
 export function mixedWordDistractor(word: string, size: number): DistractorGenerator<string> {
   const letters = Array.from(stripDiacritics(word))

@@ -6,39 +6,41 @@ import { verbMasdarExercise } from './verb-masdar'
 
 describe('verbMasdarExercise', () => {
   test('returns kind "verbMasdar"', () => {
-    expect(verbMasdarExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('verbMasdar')
+    expect(verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbMasdar')
   })
 
   test('returns the correct translation key', () => {
-    expect(verbMasdarExercise(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbMasdar')
+    expect(verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
+      'exercise.prompt.verbMasdar',
+    )
   })
 
   test('medium returns exactly four options', () => {
-    expect(verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).options).toHaveLength(4)
+    expect(verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).options).toHaveLength(4)
   })
 
   test('hard returns exactly four options', () => {
-    expect(verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).options).toHaveLength(4)
+    expect(verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).options).toHaveLength(4)
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = verbMasdarExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('all options are unique by visible label', () => {
-    const medium = verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const medium = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
+    const hard = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
 
     expect(new Set(medium.options).size).toBe(medium.options.length)
     expect(new Set(hard.options).size).toBe(hard.options.length)
   })
 
   test('answer is a masdar of the shown verb at the same difficulty', () => {
-    const medium = verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbMasdarExercise({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const medium = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
+    const hard = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
 
     expect(
       verbs
@@ -60,6 +62,6 @@ describe('verbMasdarExercise', () => {
 
 describe('verbMasdarExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbMasdarExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbMasdar:[a-z]+:\d+$/)
+    expect(verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbMasdar:[a-z]+:\d+$/)
   })
 })

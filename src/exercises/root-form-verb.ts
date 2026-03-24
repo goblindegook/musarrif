@@ -1,12 +1,11 @@
 import { shuffle } from '@pacote/shuffle'
 import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
-import { type DimensionProfile, exerciseDiacritics, randomVerb } from './dimensions'
-import type { CardConstraints } from './srs'
+import { exerciseDiacritics, randomVerb } from './dimensions'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-export function rootFormVerbExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
   const answerDisplay = exerciseDiacritics(verb.label, profile.diacritics)
 
@@ -23,7 +22,6 @@ export function rootFormVerbExercise(profile: DimensionProfile, constraints?: Ca
   const options = shuffle([{ form: verb.form, label: verb.label }, ...distractors])
 
   return {
-    kind: 'rootFormVerb',
     promptTranslationKey: 'exercise.prompt.rootFormVerb',
     promptParams: { form: FORM_LABELS[verb.form - 1] },
     word: Array.from(verb.root).join(' '),
@@ -31,4 +29,4 @@ export function rootFormVerbExercise(profile: DimensionProfile, constraints?: Ca
     answer: options.findIndex(({ form }) => form === verb.form),
     cardKey: buildCardKey('rootFormVerb', getRootType(verb.root), verb.form),
   }
-}
+})

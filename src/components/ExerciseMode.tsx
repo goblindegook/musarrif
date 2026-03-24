@@ -7,12 +7,12 @@ import {
   promoteDimensions,
   recordDimensionAnswer,
 } from '../exercises/dimensions'
+import type { Exercise } from '../exercises/exercises'
 import { randomExercise } from '../exercises/random'
 import type { SrsStore } from '../exercises/srs'
 import { recordAnswer } from '../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../exercises/stats'
 import { addResult, deserializeDayStats, getStreak, serializeDayStats } from '../exercises/stats'
-import type { Exercise } from '../exercises/types'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
 import { ExerciseStats } from './ExerciseStats'

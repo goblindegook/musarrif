@@ -5,34 +5,34 @@ import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { synthesizeVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
-import { randomizeOptions } from './distractors/distractors'
-import { weakAlternativeRootDistractor } from './distractors/root-distractors'
-import { singleLetterWordDistractor } from './distractors/word-distractors'
-import type { CardConstraints } from './srs'
+import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
 type Participle = 'active' | 'passive'
 
-export function verbParticipleExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const active = deriveActiveParticiple(verb)
-  const passive = derivePassiveParticiple(verb)
-  const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-  const answer = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
-  const word = exerciseDiacritics(verb.label, profile.diacritics)
-  const options = buildOptions(verb, answer, kind, profile)
+export const verbParticipleExercise = defineExercise(
+  'verbParticiple',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const active = deriveActiveParticiple(verb)
+    const passive = derivePassiveParticiple(verb)
+    const kind: Participle = passive ? random(['active', 'passive']) : 'active'
+    const answer = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
+    const word = exerciseDiacritics(verb.label, profile.diacritics)
+    const options = buildOptions(verb, answer, kind, profile)
 
-  return {
-    kind: 'verbParticiple',
-    promptTranslationKey:
-      kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
-    word,
-    options,
-    answer: options.indexOf(answer),
-    cardKey: buildCardKey('verbParticiple', getRootType(verb.root), verb.form),
-  }
-}
+    return {
+      promptTranslationKey:
+        kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
+      word,
+      options,
+      answer: options.indexOf(answer),
+      cardKey: buildCardKey('verbParticiple', getRootType(verb.root), verb.form),
+    }
+  },
+  { minNominals: 1 },
+)
 
 function buildOptions(
   verb: DisplayVerb,

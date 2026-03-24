@@ -12,40 +12,33 @@ import {
   randomVerb,
   type TensesLevel,
 } from './dimensions'
-import type { CardConstraints } from './srs'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-const TENSE_OPTION_SLUG: Record<string, string> = {
-  past: 'past',
-  future: 'future',
-  imperative: 'imperative',
-  'present.indicative': 'present',
-  'present.subjunctive': 'subjunctive',
-  'present.jussive': 'jussive',
-}
+export const verbTenseExercise = defineExercise(
+  'verbTense',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const minTenses = Math.max(profile.tenses, 2) as TensesLevel
+    const tense = constraints?.tense ?? randomTense(verb, minTenses)
+    const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
+
+    return {
+      promptTranslationKey: 'exercise.prompt.verbTense',
+      word,
+      options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
+      answer: options.findIndex((t) => t.join('.') === tense.join('.')),
+      cardKey: buildCardKey('verbTense', getRootType(verb.root), verb.form, tense, pronoun),
+    }
+  },
+  { weight: 2 },
+)
 
 function tenseKey(tense: VerbTense, includeVoice: boolean): string {
-  const slug = TENSE_OPTION_SLUG[tense.slice(1).join('.')]
+  const slug = tense.slice(1).join('.')
   if (!includeVoice || tense[1] === 'imperative') return `exercise.tense.option.${slug}`
   return `exercise.tense.option.${tense[0]}.${slug}`
-}
-
-export function verbTenseExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const minTenses = Math.max(profile.tenses, 2) as TensesLevel
-  const tense = constraints?.tense ?? randomTense(verb, minTenses)
-  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
-  const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
-
-  return {
-    kind: 'verbTense',
-    promptTranslationKey: 'exercise.prompt.verbTense',
-    word,
-    options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
-    answer: options.findIndex((t) => t.join('.') === tense.join('.')),
-    cardKey: buildCardKey('verbTense', getRootType(verb.root), verb.form, tense, pronoun),
-  }
 }
 
 function buildOptions(

@@ -2,14 +2,17 @@ import { isWeakLetter } from '../paradigms/letters'
 import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
-import { randomizeOptions } from './distractors/distractors'
-import { weakAlternativeRootDistractor } from './distractors/root-distractors'
-import { mixedWordDistractor, singleLetterWordDistractor, wordSliceDistractor } from './distractors/word-distractors'
-import type { CardConstraints } from './srs'
+import {
+  mixedWordDistractor,
+  randomizeOptions,
+  singleLetterWordDistractor,
+  weakAlternativeRootDistractor,
+  wordSliceDistractor,
+} from './distractors'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-export function verbRootExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
+export const verbRootExercise = defineExercise('verbRoot', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
   const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
   const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
@@ -17,14 +20,13 @@ export function verbRootExercise(profile: DimensionProfile, constraints?: CardCo
   const options = buildOptions(verb.root, word, profile)
 
   return {
-    kind: 'verbRoot',
     promptTranslationKey: 'exercise.prompt.verbRoot',
     word,
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
     cardKey: buildCardKey('verbRoot', getRootType(verb.root), verb.form, tense, pronoun),
   }
-}
+})
 
 function buildOptions(answer: string, word: string, profile: DimensionProfile): readonly string[] {
   const generators = [

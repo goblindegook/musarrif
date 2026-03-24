@@ -13,25 +13,27 @@ import {
   randomVerb,
   rawPronounPool,
 } from './dimensions'
-import type { CardConstraints } from './srs'
+import { defineExercise } from './exercises'
 import { buildCardKey } from './srs'
-import type { Exercise } from './types'
 
-export function verbPronounExercise(profile: DimensionProfile, constraints?: CardConstraints): Exercise {
-  const verb = randomVerb(profile, constraints)
-  const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
-  const [word, options, answer] = buildOptions(verb, tense, pronoun, profile)
+export const verbPronounExercise = defineExercise(
+  'verbPronoun',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
+    const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const [word, options, answer] = buildOptions(verb, tense, pronoun, profile)
 
-  return {
-    kind: 'verbPronoun',
-    promptTranslationKey: 'exercise.prompt.verbPronoun',
-    word,
-    options,
-    answer,
-    cardKey: buildCardKey('verbPronoun', getRootType(verb.root), verb.form, tense, pronoun),
-  }
-}
+    return {
+      promptTranslationKey: 'exercise.prompt.verbPronoun',
+      word,
+      options,
+      answer,
+      cardKey: buildCardKey('verbPronoun', getRootType(verb.root), verb.form, tense, pronoun),
+    }
+  },
+  { weight: 2 },
+)
 
 function buildOptions(
   verb: DisplayVerb,

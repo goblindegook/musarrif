@@ -10,11 +10,11 @@ const hardProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics
 
 describe('participleVerbExercise', () => {
   test('returns kind "participleVerb"', () => {
-    expect(participleVerbExercise(INITIAL_DIMENSION_PROFILE).kind).toBe('participleVerb')
+    expect(participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleVerb')
   })
 
   test('returns the correct translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleVerbExercise(INITIAL_DIMENSION_PROFILE)
+    const { promptTranslationKey } = participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(promptTranslationKey).toBeOneOf([
       'exercise.prompt.activeParticipleVerb',
       'exercise.prompt.passiveParticipleVerb',
@@ -22,31 +22,31 @@ describe('participleVerbExercise', () => {
   })
 
   test('medium returns exactly four options', () => {
-    expect(participleVerbExercise(mediumProfile).options).toHaveLength(4)
+    expect(participleVerbExercise.generate(mediumProfile).options).toHaveLength(4)
   })
 
   test('hard returns exactly four options', () => {
-    expect(participleVerbExercise(hardProfile).options).toHaveLength(4)
+    expect(participleVerbExercise.generate(hardProfile).options).toHaveLength(4)
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = participleVerbExercise(INITIAL_DIMENSION_PROFILE)
+    const { options, answer } = participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     expect(answer).toBeGreaterThanOrEqual(0)
     expect(answer).toBeLessThan(options.length)
   })
 
   test('all options are unique by visible label', () => {
-    const medium = participleVerbExercise(mediumProfile)
-    const hard = participleVerbExercise(hardProfile)
+    const medium = participleVerbExercise.generate(mediumProfile)
+    const hard = participleVerbExercise.generate(hardProfile)
 
     expect(new Set(medium.options).size).toBe(medium.options.length)
     expect(new Set(hard.options).size).toBe(hard.options.length)
   })
 
   test('prompt type matches the shown participle word for the selected answer at the same difficulty', () => {
-    const medium = participleVerbExercise(mediumProfile)
-    const hard = participleVerbExercise(hardProfile)
+    const medium = participleVerbExercise.generate(mediumProfile)
+    const hard = participleVerbExercise.generate(hardProfile)
 
     const mediumLabel = medium.options[medium.answer]
     const hardLabel = hard.options[hard.answer]
@@ -80,6 +80,6 @@ describe('participleVerbExercise', () => {
 
 describe('participleVerbExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleVerbExercise(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleVerb:[a-z]+:\d+$/)
+    expect(participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleVerb:[a-z]+:\d+$/)
   })
 })

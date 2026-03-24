@@ -5,8 +5,8 @@ import type { PronounId } from '../paradigms/pronouns'
 import { getRootType, type RootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import type { ExerciseKind } from './exercises'
 import type { CardConstraints } from './srs'
-import type { ExerciseKind } from './types'
 
 export type TensesLevel = 0 | 1 | 2 | 3 | 4
 export type PronounsLevel = 0 | 1 | 2 | 3
