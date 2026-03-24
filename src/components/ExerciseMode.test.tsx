@@ -144,7 +144,7 @@ describe('ExerciseMode', () => {
         JSON.stringify({
           profile: {
             tenses: 2,
-            pronouns: 0,
+            pronouns: 2,
             diacritics: 0,
             forms: 0,
             rootTypes: 0,
@@ -160,7 +160,7 @@ describe('ExerciseMode', () => {
       for (const call of gen.mock.calls) {
         expect(call[0]).toMatchObject({
           tenses: 2,
-          pronouns: 0,
+          pronouns: 2,
           diacritics: 0,
           forms: 0,
           rootTypes: 0,

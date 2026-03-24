@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'preact/hooks'
 import {
   type DimensionProfile,
   type DimensionStore,
+  enforcePrerequisites,
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
   recordDimensionAnswer,
@@ -25,7 +26,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const { t, tHtml } = useI18n()
   const [dimensionStore, setDimensionStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
   const [srs, updateSrs] = useLocalStorage<SrsStore>('srs', {})
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(dimensionStore.profile, srs))
+  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(enforcePrerequisites(dimensionStore.profile), srs))
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])

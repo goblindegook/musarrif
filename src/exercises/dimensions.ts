@@ -182,24 +182,6 @@ export function enforcePrerequisites(profile: DimensionProfile): DimensionProfil
   return p
 }
 
-function prerequisitesMet(profile: DimensionProfile, dimension: keyof DimensionProfile, nextLevel: number): boolean {
-  if (dimension === 'tenses' && nextLevel >= 2) return profile.pronouns >= 2
-  if (dimension === 'diacritics' && nextLevel >= 2) {
-    return (
-      profile.tenses >= MAX_LEVELS.tenses &&
-      profile.pronouns >= MAX_LEVELS.pronouns &&
-      profile.forms >= MAX_LEVELS.forms &&
-      profile.rootTypes >= MAX_LEVELS.rootTypes &&
-      profile.nominals >= MAX_LEVELS.nominals
-    )
-  }
-  if (dimension === 'nominals') {
-    if (nextLevel === 1) return profile.tenses >= 2
-    if (nextLevel === 2) return profile.forms >= 1
-  }
-  return true
-}
-
 export function recordDimensionAnswer(store: DimensionStore, kind: ExerciseKind, correct: boolean): DimensionStore {
   const dims = DIMENSION_MAP[kind]
   const windows = { ...store.windows }
@@ -221,18 +203,19 @@ export function promoteDimensions(store: DimensionStore): DimensionStore {
     if (
       w.length >= WINDOW_SIZE &&
       w.filter(Boolean).length / WINDOW_SIZE >= PROMOTION_THRESHOLD &&
-      next <= MAX_LEVELS[dimension] &&
-      prerequisitesMet(profile, dimension, next)
+      next <= MAX_LEVELS[dimension]
     ) {
       ;(nextProfile as Record<string, number>)[dimension] = next
     }
   }
 
+  const enforced = enforcePrerequisites(nextProfile)
+
   const nextWindows = { ...windows }
   for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
-    if (nextProfile[dimension] !== profile[dimension]) {
+    if (enforced[dimension] !== profile[dimension]) {
       nextWindows[dimension] = []
     }
   }
-  return { profile: nextProfile, windows: nextWindows }
+  return { profile: enforced, windows: nextWindows }
 }

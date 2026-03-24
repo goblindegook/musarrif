@@ -199,7 +199,7 @@ describe('promoteDimensions', () => {
   test('does not promote beyond max level', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4, pronouns: 3 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
       }).profile.tenses,
     ).toBe(4)
@@ -208,7 +208,7 @@ describe('promoteDimensions', () => {
   test('nominals blocked at level 0 until tenses >= 2', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(0)
@@ -217,7 +217,7 @@ describe('promoteDimensions', () => {
   test('nominals promotes to level 1 when tenses >= 2', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
@@ -226,7 +226,7 @@ describe('promoteDimensions', () => {
   test('nominals blocked at level 1 until forms >= 1', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 0 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1, forms: 0 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
@@ -235,7 +235,7 @@ describe('promoteDimensions', () => {
   test('nominals promotes to level 2 when forms >= 1', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, nominals: 1, forms: 1 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1, forms: 1 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(2)
@@ -254,7 +254,7 @@ describe('promoteDimensions', () => {
     expect(next.profile.tenses).toBe(0)
   })
 
-  test('is single-pass: promoting tenses does not cascade to nominals in same call', () => {
+  test('promoting tenses allows nominals to cascade in same call', () => {
     const next = promoteDimensions({
       profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
       windows: {
@@ -264,7 +264,23 @@ describe('promoteDimensions', () => {
       },
     })
     expect(next.profile.tenses).toBe(2)
-    expect(next.profile.nominals).toBe(0)
+    expect(next.profile.nominals).toBe(1)
+  })
+
+  test('corrects legacy diacritics: 2 even with no window activity', () => {
+    expect(
+      promoteDimensions({
+        profile: {
+          diacritics: 2,
+          tenses: 4,
+          pronouns: 3,
+          forms: 3,
+          rootTypes: 3,
+          nominals: 1,
+        },
+        windows: INITIAL_DIMENSION_STORE.windows,
+      }).profile.diacritics,
+    ).toBe(1)
   })
 
   test('tenses blocked at level 1 until pronouns >= 2', () => {
