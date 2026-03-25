@@ -11,11 +11,13 @@ import {
 import type { Exercise } from '../exercises/exercises'
 import { randomExercise } from '../exercises/random'
 import type { SrsStore } from '../exercises/srs'
-import { recordAnswer } from '../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../exercises/stats'
 import { addPass, addResult, deserializeDayStats, getStreak, serializeDayStats } from '../exercises/stats'
 import { useI18n } from '../hooks/i18n'
 import { useLocalStorage } from '../hooks/local-storage'
+import { useSrsStore } from '../hooks/srs-store'
+import { renderExplanation } from '../paradigms/explanation'
+import { Text } from './atoms/Text'
 import { ExerciseStats } from './ExerciseStats'
 
 type Props = {
@@ -23,11 +25,11 @@ type Props = {
 }
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
-  const { t, tHtml } = useI18n()
+  const { dir, lang, t, tHtml } = useI18n()
   const [dimensionStore, setDimensionStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
-  const [srs, updateSrs] = useLocalStorage<SrsStore>('srs', {})
+  const [srsStore, recordSrsAnswer] = useSrsStore()
   const [exercise, setExercise] = useState<Exercise>(() =>
-    generateExercise(enforcePrerequisites(dimensionStore.profile), srs),
+    generateExercise(enforcePrerequisites(dimensionStore.profile), srsStore),
   )
   const [selected, setSelected] = useState<number | null>(null)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
@@ -40,33 +42,38 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   )
   const loadNextExercise = useCallback(
     (store: DimensionStore) => {
-      setExercise(generateExercise(store.profile, srs))
+      setExercise(generateExercise(store.profile, srsStore))
       setSelected(null)
     },
-    [generateExercise, srs],
+    [generateExercise, srsStore],
   )
 
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
+
+  const explanation =
+    isAnswered && exercise.explanation
+      ? renderExplanation(exercise.explanation, t, selected === exercise.answer ? 'concise' : 'full')
+      : []
 
   const handleAnswer = useCallback(
     (index: number) => {
       const isCorrect = index === exercise.answer
       setSelected(index)
       updateStats((current) => addResult(current, isCorrect))
-      updateSrs((current) => recordAnswer(current, exercise.cardKey, isCorrect ? 'correct' : 'wrong'))
+      recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
       setDimensionStore(promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect)))
     },
-    [exercise, dimensionStore, updateStats, updateSrs, setDimensionStore],
+    [exercise, dimensionStore, updateStats, recordSrsAnswer, setDimensionStore],
   )
 
   const handleSkip = useCallback(() => {
-    updateSrs((current) => recordAnswer(current, exercise.cardKey, 'pass'))
+    recordSrsAnswer(exercise.cardKey, 'pass')
     const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, false))
     setDimensionStore(promoted)
     updateStats((s) => addPass(s))
     loadNextExercise(promoted)
-  }, [exercise, dimensionStore, updateSrs, updateStats, setDimensionStore, loadNextExercise])
+  }, [exercise, dimensionStore, recordSrsAnswer, updateStats, setDimensionStore, loadNextExercise])
 
   useEffect(() => {
     if (isAnswered) return
@@ -131,6 +138,13 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             )
           })}
         </OptionsGrid>
+        {explanation.length > 0 && (
+          <Explanation lang={lang} dir={dir}>
+            {explanation.map((paragraph, index) => (
+              <Text key={`${index}-${paragraph}`}>{paragraph}</Text>
+            ))}
+          </Explanation>
+        )}
         {isAnswered ? (
           <NextButton
             autoFocus
@@ -198,6 +212,15 @@ const OptionsGrid = styled('div')`
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   width: 100%;
+`
+
+const Explanation = styled('aside')`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: start;
+  padding: 0.5rem 0;
 `
 
 const OptionButton = styled('button')`

@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import { stripDiacritics } from '../paradigms/letters'
 import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
-import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
 import {
@@ -14,7 +14,7 @@ import {
   rawPronounPool,
 } from './dimensions'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const verbPronounExercise = defineExercise(
   'verbPronoun',
@@ -29,7 +29,8 @@ export const verbPronounExercise = defineExercise(
       word,
       options,
       answer,
-      cardKey: buildCardKey('verbPronoun', getRootType(verb.root), verb.form, tense, pronoun),
+      cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun]),
     }
   },
   { weight: 2 },

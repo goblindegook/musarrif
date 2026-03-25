@@ -1,9 +1,8 @@
 import { shuffle } from '@pacote/shuffle'
-import { getRootType } from '../paradigms/roots'
 import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { exerciseDiacritics, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
@@ -27,6 +26,6 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     word: Array.from(verb.root).join(' '),
     options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
     answer: options.findIndex(({ form }) => form === verb.form),
-    cardKey: buildCardKey('rootFormVerb', getRootType(verb.root), verb.form),
+    cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
   }
 })

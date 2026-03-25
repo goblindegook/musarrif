@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import type { Exercise } from '../exercises/exercises'
 import { I18nProvider } from '../hooks/i18n'
 import { RoutingProvider } from '../hooks/routing'
+import type { ExplanationLayers } from '../paradigms/explanation'
 import { ExerciseMode } from './ExerciseMode'
 
 beforeEach(() => {
@@ -35,7 +36,14 @@ function testExercise(): Exercise {
     promptTranslationKey: 'exercise.prompt.verbForm',
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
+    cardKey: 'verbForm:sound:1',
   }
+}
+
+function utcAddDays(date: string, days: number): string {
+  const d = new Date(date)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
 }
 
 describe('ExerciseMode', () => {
@@ -88,6 +96,7 @@ describe('ExerciseMode', () => {
       promptTranslationKey: 'exercise.prompt.verbForm',
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,
+      cardKey: 'verbForm:sound:1',
     }
     const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValueOnce(nextExercise)
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
@@ -201,6 +210,41 @@ describe('SRS recording', () => {
     expect(srs['conjugation:regular:1:active-past:3ms']).toBeDefined()
     localStorage.clear()
   })
+
+  test('sanitizes oversized persisted SRS state when loading from localStorage', () => {
+    const cardKey = 'conjugation:regular:1:active-past:3ms'
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        [cardKey]: {
+          interval: 145313,
+          ef: 2.5,
+          repetitions: 13,
+          dueDate: '2424-01-30',
+        },
+      }),
+    )
+
+    const gen = vi.fn().mockReturnValue({
+      ...testExercise(),
+      kind: 'conjugation',
+      cardKey,
+    })
+
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
+    expect(gen).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        [cardKey]: expect.objectContaining({ interval: 365, dueDate: expectedDueDate }),
+      }),
+    )
+
+    const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
+    expect(stored[cardKey].interval).toBe(365)
+    expect(stored[cardKey].dueDate).toBe(expectedDueDate)
+  })
 })
 
 describe('keyboard shortcuts', () => {
@@ -211,6 +255,7 @@ describe('keyboard shortcuts', () => {
       promptTranslationKey: 'exercise.prompt.verbForm',
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,
+      cardKey: 'verbForm:sound:1',
     }
   }
 
@@ -307,5 +352,45 @@ describe('pass SRS recording', () => {
       incorrect: 0,
       date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
     })
+  })
+})
+
+const explanationFixture: ExplanationLayers = {
+  rootLetters: ['ك', 'ت', 'ب'],
+  form: 1,
+  arabic: 'كَتَبَ',
+  rootType: 'sound',
+  formIPattern: 'fa3ala-yaf3ulu',
+  formRoot: null,
+  tense: 'active-past',
+  tenseRoot: null,
+  pronoun: '3ms',
+}
+
+function exerciseWithExplanation(): Exercise {
+  return {
+    kind: 'conjugation',
+    word: 'كَتَبَ',
+    promptTranslationKey: 'exercise.prompt.conjugation',
+    promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'exercise.conjugation.pronoun.3ms' },
+    options: ['كَتَبَ', 'يَكْتُبُ', 'كَتَبْتُ', 'كَتَبَتْ'],
+    answer: 0,
+    cardKey: 'conjugation:regular:1:active-past:3ms',
+    explanation: explanationFixture,
+  }
+}
+
+describe('Explanation in ExerciseMode', () => {
+  test('explanation is not visible before answering', () => {
+    render(<ExerciseMode generateExercise={exerciseWithExplanation} />, { wrapper: Wrapper })
+    const paragraphs = document.querySelectorAll('p[class]')
+    expect(paragraphs).toHaveLength(2)
+  })
+
+  test('explanation paragraphs appear after selecting a wrong answer', () => {
+    render(<ExerciseMode generateExercise={exerciseWithExplanation} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getAllByRole('button')[1])
+    const paragraphs = document.querySelectorAll('p[class]')
+    expect(paragraphs).toHaveLength(5)
   })
 })

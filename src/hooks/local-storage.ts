@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionProfile, DimensionStore } from '../exercises/dimensions'
 import { enforcePrerequisites, INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
-import type { CardState, SrsStore } from '../exercises/srs'
+import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import type { Language } from './i18n'
 
@@ -27,7 +27,7 @@ export function getUserData() {
   const diacriticsPreference = parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference')) ?? 'some'
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
-  const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
+  const srs = sanitizeSrsStore(parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {})
   const rawDim = parse<DimensionStore>(storage.getItem('conjugator:dimensions')) ?? INITIAL_DIMENSION_STORE
   const dimensions: DimensionStore = { ...rawDim, profile: enforcePrerequisites(rawDim.profile) }
 
@@ -71,7 +71,7 @@ export function importUserData(raw: string): boolean {
     : []
 
   const rawSrs = payload.srs != null && typeof payload.srs === 'object' ? payload.srs : {}
-  const srs: SrsStore = {}
+  const unboundedSrs: SrsStore = {}
   for (const [key, rawVal] of Object.entries(rawSrs)) {
     const val = rawVal as CardState | null
     if (
@@ -86,9 +86,10 @@ export function importUserData(raw: string): boolean {
       val.repetitions >= 0 &&
       /^\d{4}-\d{2}-\d{2}$/.test(String(val.dueDate))
     ) {
-      srs[key] = val
+      unboundedSrs[key] = val
     }
   }
+  const srs = sanitizeSrsStore(unboundedSrs)
 
   // Validate dimensions profile; always reset windows on import
   const rawDimensions = payload.dimensions

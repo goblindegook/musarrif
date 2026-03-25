@@ -1,12 +1,11 @@
 import { shuffle } from '@pacote/shuffle'
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
 import { singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const verbMasdarExercise = defineExercise(
   'verbMasdar',
@@ -22,7 +21,7 @@ export const verbMasdarExercise = defineExercise(
       word,
       options,
       answer: options.indexOf(answer),
-      cardKey: buildCardKey('verbMasdar', getRootType(verb.root), verb.form),
+      cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),
     }
   },
   { minNominals: 2 },

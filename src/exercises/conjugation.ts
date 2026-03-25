@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import type { PronounId } from '../paradigms/pronouns'
-import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import {
@@ -15,7 +15,7 @@ import {
   type TensesLevel,
 } from './dimensions'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 const PRONOUN_KEYS: Record<PronounId, string> = {
   '1s': 'exercise.conjugation.pronoun.1s',
@@ -134,7 +134,8 @@ export const conjugationExercise = defineExercise(
     const word = exerciseDiacritics(verb.label, profile.diacritics)
     const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const targetPronoun = constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns)
-    const answer = exerciseDiacritics(conjugate(verb, targetTense)[targetPronoun], profile.diacritics)
+    const conjugatedVerb = conjugate(verb, targetTense)[targetPronoun]
+    const answer = exerciseDiacritics(conjugatedVerb, profile.diacritics)
 
     const raw =
       profile.pronouns >= 2 && profile.tenses >= 2
@@ -159,7 +160,8 @@ export const conjugationExercise = defineExercise(
       word,
       options: shuffled,
       answer: shuffled.indexOf(answer),
-      cardKey: buildCardKey('conjugation', getRootType(verb.root), verb.form, targetTense, targetPronoun),
+      cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
+      explanation: resolveVerbExplanationLayers(verb, targetTense, targetPronoun, conjugatedVerb),
     }
   },
   { weight: 5 },

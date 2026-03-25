@@ -1,4 +1,3 @@
-import { getRootType } from '../paradigms/roots'
 import { verbs } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
 import { type DimensionProfile, formsPool, rootTypesPool } from './dimensions'
@@ -11,7 +10,7 @@ import { participleRootExercise } from './participle-root'
 import { participleVerbExercise } from './participle-verb'
 import { rootFormVerbExercise } from './root-form-verb'
 import type { SrsStore } from './srs'
-import { cardSrsWeight, parseCardKey, weightedRandomSrs } from './srs'
+import { cardSrsWeight, getSrsRootType, parseCardKey, weightedRandomSrs } from './srs'
 import { verbFormExercise } from './verb-form'
 import { verbMasdarExercise } from './verb-masdar'
 import { verbParticipleExercise } from './verb-participle'
@@ -73,7 +72,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
     if (generator == null) return weightedRandomSrs(available, (e) => e.weight ?? 1).generate(profile)
 
     const pool = verbs.filter(
-      (v) => (rootType == null || getRootType(v.root) === rootType) && (form == null || v.form === form),
+      (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
     )
     if (pool.length > 0) {
       return { ...generator.generate(profile, { rootType, form, tense, pronoun }), cardKey: dueKey }

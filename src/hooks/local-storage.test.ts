@@ -1,11 +1,19 @@
+import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
 import { getUserData, importUserData } from './local-storage'
+
+function utcAddDays(date: string, days: number): string {
+  const d = new Date(date)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
+}
 
 beforeEach(() => {
   localStorage.clear()
 })
 afterEach(() => {
+  cleanup()
   localStorage.clear()
 })
 
@@ -40,6 +48,25 @@ describe('getUserData', () => {
   test('does not include exerciseDifficulty in export', () => {
     const data = getUserData() as Record<string, unknown>
     expect((data.settings as Record<string, unknown>).exerciseDifficulty).toBeUndefined()
+  })
+
+  test('sanitizes persisted SRS entries above one-year cap', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:1:active-past:3ms': {
+          interval: 145313,
+          ef: 2.5,
+          repetitions: 13,
+          dueDate: '2424-01-30',
+        },
+      }),
+    )
+
+    const data = getUserData()
+    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
+    expect(data.srs['conjugation:sound:1:active-past:3ms'].interval).toBe(365)
+    expect(data.srs['conjugation:sound:1:active-past:3ms'].dueDate).toBe(expectedDueDate)
   })
 })
 
@@ -84,5 +111,25 @@ describe('importUserData', () => {
       settings: { language: 'en', diacriticsPreference: 'all', exerciseDifficulty: 'hard' },
     })
     expect(importUserData(payload)).toBe(true)
+  })
+
+  test('sanitizes imported SRS entries above one-year cap', () => {
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      srs: {
+        'conjugation:sound:1:active-past:3ms': {
+          interval: 145313,
+          ef: 2.5,
+          repetitions: 13,
+          dueDate: '2424-01-30',
+        },
+      },
+    })
+
+    expect(importUserData(payload)).toBe(true)
+    const stored = JSON.parse(localStorage.getItem('conjugator:srs')!)
+    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
+    expect(stored['conjugation:sound:1:active-past:3ms'].interval).toBe(365)
+    expect(stored['conjugation:sound:1:active-past:3ms'].dueDate).toBe(expectedDueDate)
   })
 })

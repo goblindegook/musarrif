@@ -1,6 +1,33 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import type { CardState } from './srs'
-import { buildCardKey, cardSrsWeight, parseCardKey, recordAnswer, updateCardState, weightedRandomSrs } from './srs'
+import {
+  buildCardKey,
+  cardSrsWeight,
+  getSrsRootType,
+  parseCardKey,
+  recordAnswer,
+  sanitizeSrsStore,
+  updateCardState,
+  weightedRandomSrs,
+} from './srs'
+
+describe('getSrsRootType', () => {
+  test('returns sound for plain triliteral root', () => {
+    expect(getSrsRootType('كتب')).toBe('sound')
+  })
+
+  test('returns weak when root contains weak radical', () => {
+    expect(getSrsRootType('قول')).toBe('weak')
+  })
+
+  test('returns hamzated when root contains hamza and no weak radicals', () => {
+    expect(getSrsRootType('سأل')).toBe('hamzated')
+  })
+
+  test('returns doubled when second and third radicals are equal', () => {
+    expect(getSrsRootType('ردد')).toBe('doubled')
+  })
+})
 
 describe('buildCardKey', () => {
   test('conjugation-style key includes kind, rootType, form, tense, pronoun', () => {
@@ -119,6 +146,39 @@ describe('updateCardState', () => {
     expect(result.interval).toBe(1)
     expect(result.repetitions).toBe(1)
     expect(result.dueDate).toBe('2026-03-24')
+  })
+
+  test('correct answer caps interval at 365 days', () => {
+    const state: CardState = { interval: 300, ef: 2.5, repetitions: 5, dueDate: '2026-03-23' }
+    const result = updateCardState(state, 'correct', '2026-03-23')
+    expect(result.interval).toBe(365)
+    expect(result.dueDate).toBe('2027-03-23')
+  })
+
+  test('pass answer also respects 365-day hard cap', () => {
+    const state: CardState = { interval: 1000, ef: 2.5, repetitions: 5, dueDate: '2424-01-30' }
+    const result = updateCardState(state, 'pass', '2026-03-23')
+    expect(result.interval).toBe(365)
+    expect(result.dueDate).toBe('2027-03-23')
+  })
+})
+
+describe('sanitizeSrsStore', () => {
+  test('returns the same store reference when data is already within bounds', () => {
+    const store = {
+      'conjugation:sound:1:active-past:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+    }
+    expect(sanitizeSrsStore(store, '2026-03-23')).toBe(store)
+  })
+
+  test('returns the same store reference for an empty store', () => {
+    const store = {}
+    expect(sanitizeSrsStore(store, '2026-03-23')).toBe(store)
   })
 })
 

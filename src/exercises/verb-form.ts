@@ -1,11 +1,10 @@
 import { shuffle } from '@pacote/shuffle'
-import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
 import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
 import type { CardConstraints } from './srs'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const verbFormExercise = defineExercise(
   'verbForm',
@@ -35,7 +34,7 @@ export const verbFormExercise = defineExercise(
       word,
       options: options.map((f) => FORM_LABELS[f - 1]),
       answer: options.indexOf(verb.form),
-      cardKey: buildCardKey('verbForm', getRootType(verb.root), verb.form, tense, pronoun),
+      cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
     }
   },
 )

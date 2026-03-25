@@ -5,10 +5,11 @@ import type { Mood } from '../paradigms/active/present'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
-import { conjugate, type Tense, type Voice } from '../paradigms/tense'
+import { conjugate, type Tense, type VerbTense, type Voice } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { CopyButton } from './buttons/CopyButton'
 import { SpeechButton } from './buttons/SpeechButton'
+import { ConjugationInsights } from './ConjugationInsights'
 import { TabBar, TabButton, TabPanel } from './Tabs'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
@@ -92,6 +93,8 @@ export function ConjugationTable({
   const passiveAvailable = canConjugatePassive(verb)
   const availableVoices = passiveAvailable ? VOICE_OPTIONS : (['active'] as const)
   const selectedVoice = passiveAvailable ? voice : 'active'
+  const verbTense: VerbTense =
+    tense === 'imperative' ? ['active', 'imperative'] : mood ? [selectedVoice, tense, mood] : [selectedVoice, tense]
   const conjugations = useMemo(
     () =>
       tense === 'imperative'
@@ -215,6 +218,7 @@ export function ConjugationTable({
                   <ActionCell>
                     <ActionButtons>
                       <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                      <ConjugationInsights verb={verb} verbTense={verbTense} pronoun={slot.id} arabic={conjugation} />
                       <SpeechButton text={conjugation} lang="ar" ariaLabel={t('aria.speak', { text: conjugation })} />
                     </ActionButtons>
                   </ActionCell>

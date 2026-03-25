@@ -7,6 +7,7 @@ import { CloseIcon } from './icons/CloseIcon'
 import { Overlay } from './Overlay'
 
 interface ModalProps {
+  readonly dir?: 'auto' | 'rtl' | 'ltr'
   readonly isOpen: boolean
   readonly title: string
   readonly onClose: () => void
@@ -14,7 +15,7 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
-  const { t } = useI18n()
+  const { t, dir } = useI18n()
   const titleId = useId()
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
   if (!isOpen) return null
 
   return (
-    <ModalContainer>
+    <ModalContainer dir={dir}>
       <Overlay zIndex={199} onClick={onClose} />
       <Dialog role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => event.stopPropagation()}>
         <Header>

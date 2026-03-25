@@ -1,3 +1,4 @@
+import type { ExplanationLayers } from '../paradigms/explanation'
 import type { DimensionProfile } from './dimensions'
 import type { CardConstraints } from './srs'
 
@@ -24,7 +25,8 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   promptParams?: Record<string, string>
   options: readonly string[]
   answer: number
-  cardKey?: string
+  cardKey: string
+  explanation?: ExplanationLayers
 }
 
 export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> {

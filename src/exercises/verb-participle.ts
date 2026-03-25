@@ -1,13 +1,12 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { synthesizeVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 type Participle = 'active' | 'passive'
 
@@ -28,7 +27,7 @@ export const verbParticipleExercise = defineExercise(
       word,
       options,
       answer: options.indexOf(answer),
-      cardKey: buildCardKey('verbParticiple', getRootType(verb.root), verb.form),
+      cardKey: buildCardKey('verbParticiple', getSrsRootType(verb.root), verb.form),
     }
   },
   { minNominals: 1 },

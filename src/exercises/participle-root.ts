@@ -1,7 +1,6 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { getRootType } from '../paradigms/roots'
 import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from './dimensions'
 import {
   mixedWordDistractor,
@@ -11,7 +10,7 @@ import {
   wordSliceDistractor,
 } from './distractors'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 type Participle = 'active' | 'passive'
 
@@ -31,7 +30,7 @@ export const participleRootExercise = defineExercise(
       word,
       options: options.map((option) => Array.from(option).join(' ')),
       answer: options.indexOf(verb.root),
-      cardKey: buildCardKey('participleRoot', getRootType(verb.root), verb.form),
+      cardKey: buildCardKey('participleRoot', getSrsRootType(verb.root), verb.form),
     }
   },
   {

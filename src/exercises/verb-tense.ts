@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import type { PronounId } from '../paradigms/pronouns'
-import { getRootType } from '../paradigms/roots'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
 import {
@@ -13,7 +13,7 @@ import {
   type TensesLevel,
 } from './dimensions'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const verbTenseExercise = defineExercise(
   'verbTense',
@@ -29,7 +29,8 @@ export const verbTenseExercise = defineExercise(
       word,
       options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
       answer: options.findIndex((t) => t.join('.') === tense.join('.')),
-      cardKey: buildCardKey('verbTense', getRootType(verb.root), verb.form, tense, pronoun),
+      cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun]),
     }
   },
   { weight: 2 },

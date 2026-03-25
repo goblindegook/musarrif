@@ -12,6 +12,7 @@ describe('defineExerciseGenerator', () => {
         promptTranslationKey: 'exercise.prompt.verbForm',
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
+        cardKey: 'verbForm:sound:1',
       }),
       {},
     )

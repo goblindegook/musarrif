@@ -1,5 +1,4 @@
 import { isWeakLetter } from '../paradigms/letters'
-import { getRootType } from '../paradigms/roots'
 import { conjugate } from '../paradigms/tense'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
 import {
@@ -10,7 +9,7 @@ import {
   wordSliceDistractor,
 } from './distractors'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const verbRootExercise = defineExercise('verbRoot', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
@@ -24,7 +23,7 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
     word,
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
-    cardKey: buildCardKey('verbRoot', getRootType(verb.root), verb.form, tense, pronoun),
+    cardKey: buildCardKey('verbRoot', getSrsRootType(verb.root), verb.form, tense, pronoun),
   }
 })
 

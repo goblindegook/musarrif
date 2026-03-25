@@ -1,13 +1,14 @@
+import { isHamzatedLetter, isWeakLetter } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
-import type { RootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
 import type { VerbForm } from '../paradigms/verbs'
 import type { ExerciseKind } from './exercises'
 
 export type AnswerResult = 'correct' | 'wrong' | 'pass'
+export type SrsRootType = 'sound' | 'doubled' | 'hamzated' | 'weak'
 
 export interface CardConstraints {
-  rootType?: RootType
+  rootType?: SrsRootType
   form?: VerbForm
   tense?: VerbTense
   pronoun?: PronounId
@@ -22,17 +23,27 @@ export interface CardState {
 
 export type SrsStore = Record<string, CardState>
 
+const MAX_SRS_INTERVAL_DAYS = 365
+
 export interface ParsedCardKey {
   kind: ExerciseKind
-  rootType: RootType
+  rootType: SrsRootType
   form: VerbForm
   tense: VerbTense | undefined
   pronoun: PronounId | undefined
 }
 
+export function getSrsRootType(root: string): SrsRootType {
+  const letters = Array.from(root)
+  if (letters.some(isWeakLetter)) return 'weak'
+  if (letters.some(isHamzatedLetter)) return 'hamzated'
+  if (letters.length >= 3 && letters[1] === letters[2]) return 'doubled'
+  return 'sound'
+}
+
 export function buildCardKey(
   kind: ExerciseKind,
-  rootType: RootType,
+  rootType: SrsRootType,
   form: VerbForm,
   tense?: VerbTense,
   pronoun?: PronounId,
@@ -47,7 +58,7 @@ export function parseCardKey(key: string): ParsedCardKey {
   if (tenseStr == null) {
     return {
       kind: kind as ExerciseKind,
-      rootType: rootType as RootType,
+      rootType: rootType as SrsRootType,
       form,
       tense: undefined,
       pronoun: undefined,
@@ -55,7 +66,7 @@ export function parseCardKey(key: string): ParsedCardKey {
   }
   const parts = tenseStr.split('-')
   const tense = (parts.length === 2 ? [parts[0], parts[1]] : [parts[0], parts[1], parts[2]]) as VerbTense
-  return { kind: kind as ExerciseKind, rootType: rootType as RootType, form, tense, pronoun: pronoun as PronounId }
+  return { kind: kind as ExerciseKind, rootType: rootType as SrsRootType, form, tense, pronoun: pronoun as PronounId }
 }
 
 function utcAddDays(date: string, days: number): string {
@@ -73,7 +84,7 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
   let newRepetitions: number
 
   if (result === 'pass') {
-    newInterval = Math.max(1, Math.round(interval / 2))
+    newInterval = Math.min(Math.max(1, Math.round(interval / 2)), MAX_SRS_INTERVAL_DAYS)
     newRepetitions = repetitions
   } else if (result === 'wrong') {
     newInterval = 1
@@ -81,7 +92,7 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
   } else {
     if (repetitions === 0) newInterval = 1
     else if (repetitions === 1) newInterval = 6
-    else newInterval = Math.round(interval * ef)
+    else newInterval = Math.min(Math.round(interval * ef), MAX_SRS_INTERVAL_DAYS)
     newRepetitions = repetitions + 1
   }
 
@@ -112,6 +123,24 @@ export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T
 
 function utcToday(): string {
   return new Date().toISOString().slice(0, 10)
+}
+
+function sanitizeCardState(state: CardState, today = utcToday()): CardState {
+  const maxDue = utcAddDays(today, MAX_SRS_INTERVAL_DAYS)
+  const interval = Math.min(Math.max(1, Math.round(state.interval)), MAX_SRS_INTERVAL_DAYS)
+  const dueDate = state.dueDate > maxDue ? maxDue : state.dueDate
+  return interval === state.interval && dueDate === state.dueDate ? state : { ...state, interval, dueDate }
+}
+
+export function sanitizeSrsStore(store: SrsStore, today = utcToday()): SrsStore {
+  let sanitized = store
+  for (const [key, state] of Object.entries(store)) {
+    const nextState = sanitizeCardState(state, today)
+    if (nextState === state) continue
+    if (sanitized === store) sanitized = { ...store }
+    sanitized[key] = nextState
+  }
+  return sanitized
 }
 
 export function recordAnswer(

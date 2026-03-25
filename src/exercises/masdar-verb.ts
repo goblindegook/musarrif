@@ -1,11 +1,10 @@
 import { isWeakLetter } from '../paradigms/letters'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { getRootType } from '../paradigms/roots'
 import type { DisplayVerb } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
 import { defineExercise } from './exercises'
-import { buildCardKey } from './srs'
+import { buildCardKey, getSrsRootType } from './srs'
 
 export const masdarVerbExercise = defineExercise(
   'masdarVerb',
@@ -20,7 +19,7 @@ export const masdarVerbExercise = defineExercise(
       word,
       options,
       answer: options.indexOf(answerLabel),
-      cardKey: buildCardKey('masdarVerb', getRootType(verb.root), verb.form),
+      cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),
     }
   },
   {

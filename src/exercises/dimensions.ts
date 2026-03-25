@@ -2,11 +2,11 @@ import { FORM_I_PATTERNS } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
-import { getRootType, type RootType } from '../paradigms/roots'
 import type { VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
 import type { ExerciseKind } from './exercises'
 import type { CardConstraints } from './srs'
+import { getSrsRootType, type SrsRootType } from './srs'
 
 export type TensesLevel = 0 | 1 | 2 | 3 | 4
 export type PronounsLevel = 0 | 1 | 2 | 3
@@ -98,13 +98,13 @@ export function formsPool(forms: FormsLevel): readonly VerbForm[] {
   return FORM_POOLS[forms]
 }
 
-const R0: RootType[] = ['sound']
-const R1: RootType[] = [...R0, 'doubled']
-const R2: RootType[] = [...R1, 'hamzated']
-const R3: RootType[] = [...R2, 'weak']
+const R0: SrsRootType[] = ['sound']
+const R1: SrsRootType[] = [...R0, 'doubled']
+const R2: SrsRootType[] = [...R1, 'hamzated']
+const R3: SrsRootType[] = [...R2, 'weak']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3] as const
 
-export function rootTypesPool(rootTypes: RootTypesLevel): readonly RootType[] {
+export function rootTypesPool(rootTypes: RootTypesLevel): readonly SrsRootType[] {
   return ROOT_TYPE_POOLS[rootTypes]
 }
 
@@ -115,10 +115,10 @@ export function randomVerb(profile: DimensionProfile, constraints?: CardConstrai
     ({ root, form }) =>
       root.length === 3 &&
       (availableForms as VerbForm[]).includes(form) &&
-      (availableRootTypes as RootType[]).includes(getRootType(root)),
+      (availableRootTypes as SrsRootType[]).includes(getSrsRootType(root)),
   )
   if (constraints?.form != null) pool = pool.filter((v) => v.form === constraints.form)
-  if (constraints?.rootType != null) pool = pool.filter((v) => getRootType(v.root) === constraints.rootType)
+  if (constraints?.rootType != null) pool = pool.filter((v) => getSrsRootType(v.root) === constraints.rootType)
   const triliterals = verbs.filter(({ root }) => root.length === 3)
   return random(pool.length > 0 ? pool : triliterals)
 }
