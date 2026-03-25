@@ -62,4 +62,29 @@ describe('analyzeRoot', () => {
   ])('identifies %s as %s', (root, type, weakPositions, hamzaPositions) => {
     expect(analyzeRoot(root)).toEqual({ type, weakPositions, hamzaPositions })
   })
+
+  test('analyzeRoot returns doubled for مدد', () => {
+    expect(analyzeRoot('مدد')).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
+  })
+
+  test('analyzeRoot returns doubled for ردد', () => {
+    expect(analyzeRoot('ردد')).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
+  })
+
+  test('analyzeRoot returns hamzated-doubled for أمم', () => {
+    expect(analyzeRoot('أمم')).toEqual({ type: 'hamzated-doubled', weakPositions: [], hamzaPositions: [0] })
+  })
+
+  // Regression guards — these pass before AND after the change:
+  test('getRootType still returns "doubled" for ردد (unchanged — regression guard)', () => {
+    expect(getRootType('ردد')).toBe('doubled')
+  })
+
+  test('analyzeRoot sound root is unaffected', () => {
+    expect(analyzeRoot('كتب').type).toBe('sound')
+  })
+
+  test('analyzeRoot hollow root is unaffected', () => {
+    expect(analyzeRoot('قول').type).toBe('hollow')
+  })
 })
