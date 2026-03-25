@@ -230,9 +230,10 @@ const Controls = styled('aside')<{ visible: boolean }>`
   padding: 1rem 1.25rem;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
   opacity: ${({ visible }) => (visible ? '1' : '0')};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
   transform: ${({ visible }) => (visible ? 'translateY(0)' : 'translateY(-6px)')};
-  transition: opacity 150ms ease, transform 150ms ease;
+  transition: opacity 150ms ease, transform 150ms ease, visibility 0ms linear ${({ visible }) => (visible ? '0ms' : '150ms')};
   z-index: 10;
 `
 

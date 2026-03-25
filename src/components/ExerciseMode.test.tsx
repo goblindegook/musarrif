@@ -55,6 +55,12 @@ describe('ExerciseMode', () => {
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
   })
 
+  test('focuses next button after selecting an option', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+    expect(screen.getByRole('button', { name: /next/i })).toHaveFocus()
+  })
+
   test('option buttons are disabled after answering', () => {
     render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
     const options = screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })

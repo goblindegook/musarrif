@@ -62,6 +62,24 @@ it('clicking outside the settings panel dismisses it', () => {
   expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
 })
 
+it('tab navigation skips settings controls when settings are hidden', async () => {
+  renderHeader('/#/verbs')
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.tab()
+  await user.tab()
+  await user.tab()
+
+  expect(getSettingsButton()).toHaveFocus()
+
+  await user.tab()
+
+  expect(screen.getByLabelText('All')).not.toHaveFocus()
+  expect(screen.getByLabelText('Some')).not.toHaveFocus()
+  expect(screen.getByLabelText('None')).not.toHaveFocus()
+  expect(screen.getByLabelText('Language')).not.toHaveFocus()
+})
+
 it('shows export and import buttons in the settings panel', () => {
   renderHeader('/#/verbs')
   fireEvent.click(getSettingsButton())

@@ -87,6 +87,12 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     return () => abortController.abort()
   }, [isAnswered, exercise.options.length, handleAnswer, handleSkip])
 
+  useEffect(() => {
+    if (!isAnswered) return
+    const nextButton = document.querySelector('button[autofocus]')
+    if (nextButton instanceof HTMLButtonElement) nextButton.focus()
+  }, [isAnswered])
+
   return (
     <ExerciseLayout>
       <ExerciseCard>
@@ -127,6 +133,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         </OptionsGrid>
         {isAnswered ? (
           <NextButton
+            autoFocus
             type="button"
             onClick={() => {
               loadNextExercise(dimensionStore)
