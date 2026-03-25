@@ -197,6 +197,77 @@ describe('SRS recording', () => {
   })
 })
 
+describe('keyboard shortcuts', () => {
+  function nextExercise(): Exercise {
+    return {
+      kind: 'verbForm',
+      word: 'دَخَلَ',
+      promptTranslationKey: 'exercise.prompt.verbForm',
+      options: ['I', 'II', 'III', 'IV'],
+      answer: 0,
+    }
+  }
+
+  test('pressing 1 answers with the first option', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '1' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+  })
+
+  test('pressing 2 answers with the second option', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '2' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[1]).toHaveAttribute('data-state', 'wrong')
+  })
+
+  test('pressing 3 answers with the third option', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '3' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[2]).toHaveAttribute('data-state', 'wrong')
+  })
+
+  test('pressing 4 answers with the fourth option', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '4' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[3]).toHaveAttribute('data-state', 'wrong')
+  })
+
+  test('pressing S before answering skips to the next exercise', () => {
+    const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValue(nextExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: 's' })
+    expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
+  })
+
+  test('pressing S after answering does nothing', () => {
+    const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValue(nextExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '1' })
+    fireEvent.keyDown(document.body, { key: 's' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.queryByText('دَخَلَ')).not.toBeInTheDocument()
+  })
+
+  test('pressing a digit after answering does nothing', () => {
+    const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValue(nextExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '1' })
+    fireEvent.keyDown(document.body, { key: '2' })
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.queryByText('دَخَلَ')).not.toBeInTheDocument()
+  })
+
+  test('modifier key combinations are ignored', () => {
+    render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
+    fireEvent.keyDown(document.body, { key: '1', ctrlKey: true })
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
+  })
+})
+
 describe('pass SRS recording', () => {
   test('clicking pass records a daily pass entry and halves the card SRS interval', () => {
     const cardKey = 'verbForm:regular:1'

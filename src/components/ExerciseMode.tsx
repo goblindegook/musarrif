@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useCallback, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import {
   type DimensionProfile,
   type DimensionStore,
@@ -49,6 +49,44 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
 
+  const handleAnswer = useCallback(
+    (index: number) => {
+      const isCorrect = index === exercise.answer
+      setSelected(index)
+      updateStats((current) => addResult(current, isCorrect))
+      updateSrs((current) => recordAnswer(current, exercise.cardKey, isCorrect ? 'correct' : 'wrong'))
+      setDimensionStore(promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect)))
+    },
+    [exercise, dimensionStore, updateStats, updateSrs, setDimensionStore],
+  )
+
+  const handleSkip = useCallback(() => {
+    updateSrs((current) => recordAnswer(current, exercise.cardKey, 'pass'))
+    const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, false))
+    setDimensionStore(promoted)
+    updateStats((s) => addPass(s))
+    loadNextExercise(promoted)
+  }, [exercise, dimensionStore, updateSrs, updateStats, setDimensionStore, loadNextExercise])
+
+  useEffect(() => {
+    if (isAnswered) return
+    const abortController = new AbortController()
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return
+        if (e.key >= '1' && e.key <= '4') {
+          const index = Number.parseInt(e.key, 10) - 1
+          if (index < exercise.options.length) handleAnswer(index)
+        } else if (e.key === 's' || e.key === 'S') {
+          handleSkip()
+        }
+      },
+      { signal: abortController.signal },
+    )
+    return () => abortController.abort()
+  }, [isAnswered, exercise.options.length, handleAnswer, handleSkip])
+
   return (
     <ExerciseLayout>
       <ExerciseCard>
@@ -74,21 +112,14 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
                 key={option}
                 type="button"
                 onClick={() => {
-                  if (!isAnswered) {
-                    const isCorrect = index === exercise.answer
-                    setSelected(index)
-                    updateStats((current) => addResult(current, isCorrect))
-                    updateSrs((current) => recordAnswer(current, exercise.cardKey, isCorrect ? 'correct' : 'wrong'))
-                    setDimensionStore(
-                      promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect)),
-                    )
-                  }
+                  if (!isAnswered) handleAnswer(index)
                 }}
                 disabled={isAnswered}
                 data-state={state}
                 data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
                 aria-label={t(option)}
               >
+                {!isAnswered && <ShortcutTag aria-hidden="true">{index + 1}</ShortcutTag>}
                 {t(option)}
               </OptionButton>
             )
@@ -104,16 +135,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             {t('exercise.next')}
           </NextButton>
         ) : (
-          <PassButton
-            type="button"
-            onClick={() => {
-              updateSrs((current) => recordAnswer(current, exercise.cardKey, 'pass'))
-              const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, false))
-              setDimensionStore(promoted)
-              updateStats((s) => addPass(s))
-              loadNextExercise(promoted)
-            }}
-          >
+          <PassButton type="button" onClick={handleSkip}>
+            <ShortcutTag aria-hidden="true">S</ShortcutTag>
             {t('exercise.pass')}
           </PassButton>
         )}
@@ -171,12 +194,13 @@ const OptionsGrid = styled('div')`
 `
 
 const OptionButton = styled('button')`
+  position: relative;
   padding: 1rem;
   border-radius: 0.75rem;
   border: 2px solid #e2e8f0;
   background: #ffffff;
   color: #334155;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
@@ -198,12 +222,16 @@ const OptionButton = styled('button')`
     opacity: 0.4;
   }
 
-  &:not(:disabled):hover,
-  &:not(:disabled):focus-visible {
+  &:enabled:hover {
     background: #fff8e1;
     border-color: #facc15;
     color: #0f172a;
     outline: none;
+  }
+
+  &:enabled:focus-visible {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
   }
 
   &:disabled {
@@ -212,25 +240,32 @@ const OptionButton = styled('button')`
 `
 
 const NextButton = styled('button')`
+  position: relative;
   width: 100%;
   padding: 0.85rem 1.5rem;
   border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
+  border: 2px solid #334155;
   background: #334155;
   color: #ffffff;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  outline: none;
 
-  &:hover,
-  &:focus-visible {
-    background: #0f172a;
-    outline: none;
+  &:hover {
+    background: #4a4f38;
+    border-color: #4a4f38;
+  }
+
+  &:focus {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
   }
 `
 
 const PassButton = styled('button')`
+  position: relative;
   width: 100%;
   padding: 0.85rem 1.5rem;
   border-radius: 0.75rem;
@@ -241,4 +276,36 @@ const PassButton = styled('button')`
   font-weight: 600;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+
+  &:hover {
+    background: #fff8e1;
+    border-color: #facc15;
+    color: #92400e;
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
+  }
+`
+
+const ShortcutTag = styled('span')`
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0.85rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #94a3b8;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.35rem;
+  pointer-events: none;
+  font-family: ui-monospace, monospace;
 `
