@@ -90,7 +90,7 @@
     "exercise.stats.date.label": "Data",
     "exercise.stats.correct": "Corretas",
     "exercise.stats.incorrect": "Erradas",
-    "exercise.stats.passed": "Passadas",
+    "exercise.stats.passed": "Saltadas",
     "exercise.stats.score.alltime": "Total: {score}%",
     "exercise.stats.streak.record": "Recorde: {days} dias",
     "title": "Muṣarrif",

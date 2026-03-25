@@ -6,6 +6,10 @@ import { I18nProvider } from '../hooks/i18n'
 import { RoutingProvider } from '../hooks/routing'
 import { ExerciseStats } from './ExerciseStats'
 
+const TODAY = new Date(new Date().toISOString().slice(0, 10))
+const SAMPLE_STATS: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
+const ZERO_SCORE_STATS: DayStats[] = [{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]
+
 vi.mock('uplot', () => {
   return {
     default: class UPlotMock {
@@ -60,37 +64,42 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 }
 
 describe('ExerciseStats', () => {
-  test('is collapsed by default', () => {
+  test('renders nothing when stats is empty', () => {
     render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    expect(screen.queryByRole('button', { name: /statistics/i })).not.toBeInTheDocument()
+  })
+
+  test('is collapsed by default', () => {
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     expect(screen.queryByRole('img', { name: /statistics chart/i })).not.toBeInTheDocument()
   })
 
   test('has a toggle button labelled Statistics', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     expect(screen.getByRole('button', { name: /statistics/i })).toBeInTheDocument()
   })
 
   test('expands when toggle is clicked', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByRole('img', { name: /statistics chart/i })).toBeInTheDocument()
   })
 
   test('collapses again when toggle is clicked twice', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.queryByRole('img', { name: /statistics chart/i })).not.toBeInTheDocument()
   })
 
   test('score pill shows Score label when expanded', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('Score')).toBeInTheDocument()
   })
 
-  test('score pill shows 0% when no data', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+  test('score pill shows 0% when all answers are incorrect', () => {
+    render(<ExerciseStats stats={ZERO_SCORE_STATS} streak={0} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('0%')).toBeInTheDocument()
   })
@@ -138,19 +147,19 @@ describe('ExerciseStats', () => {
   })
 
   test('streak pill shows Streak label when expanded', () => {
-    render(<ExerciseStats stats={[]} streak={5} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('Streak')).toBeInTheDocument()
   })
 
   test('streak pill shows count and unit when expanded', () => {
-    render(<ExerciseStats stats={[]} streak={5} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('5 days')).toBeInTheDocument()
   })
 
-  test('streak pill shows 0 days when expanded with no data', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+  test('streak pill shows 0 days when streak is zero', () => {
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={0} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('0 days')).toBeInTheDocument()
   })
@@ -179,16 +188,16 @@ describe('ExerciseStats', () => {
   })
 
   test('chart container spans full width', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     const chart = screen.getByRole('img', { name: /statistics chart/i })
     expect(chart.style.width).toBe('100%')
   })
 
-  test('chart renders Passed series label when expanded', () => {
+  test('chart renders Skipped series label when expanded', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
-    expect(screen.getAllByText(/passed/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/skipped/i).length).toBeGreaterThan(0)
   })
 })

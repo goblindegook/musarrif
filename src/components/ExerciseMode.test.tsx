@@ -86,7 +86,7 @@ describe('ExerciseMode', () => {
     const gen = vi.fn().mockReturnValueOnce(testExercise()).mockReturnValueOnce(nextExercise)
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: /pass/i }))
+    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
 
     expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
   })
@@ -169,26 +169,6 @@ describe('ExerciseMode', () => {
       }
     })
   })
-
-  describe('statistics panel', () => {
-    test('shows a statistics toggle below the exercise', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      expect(screen.getByRole('button', { name: /statistics/i })).toBeInTheDocument()
-    })
-
-    test('shows the streak label when expanded', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
-      expect(screen.getByText('Streak')).toBeInTheDocument()
-    })
-
-    test('streak becomes 1 after answering the first exercise', () => {
-      render(<ExerciseMode generateExercise={testExercise} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-      expect(screen.getByText('1 days')).toBeInTheDocument()
-    })
-  })
 })
 
 describe('SRS recording', () => {
@@ -235,7 +215,7 @@ describe('pass SRS recording', () => {
     localStorage.setItem('conjugator:exercise:daily', JSON.stringify([]))
 
     render(<ExerciseMode generateExercise={() => exercise} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /pass/i }))
+    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
 
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs[cardKey].interval).toBe(3)

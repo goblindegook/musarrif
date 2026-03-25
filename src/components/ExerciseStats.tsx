@@ -44,6 +44,8 @@ function StatsDetailsPanel({ stats, streak }: { stats: DayStats[]; streak: numbe
 export function ExerciseStats({ stats, streak }: Props) {
   const { t, lang } = useI18n()
 
+  if (stats.length === 0) return null
+
   return (
     <Panel title={t('exercise.stats.title')} collapsible defaultCollapsed>
       <StatsDetailsPanel stats={stats} streak={streak} />
