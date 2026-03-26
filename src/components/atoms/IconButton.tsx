@@ -5,17 +5,27 @@ interface IconButtonProps {
   children: ComponentChildren
   onClick?: () => void
   ariaLabel?: string
+  ariaHasPopup?: 'dialog'
   ariaExpanded?: boolean
   title?: string
   active?: boolean
 }
 
-export function IconButton({ children, onClick, ariaLabel, ariaExpanded, title, active }: IconButtonProps) {
+export function IconButton({
+  children,
+  onClick,
+  ariaLabel,
+  ariaHasPopup,
+  ariaExpanded,
+  title,
+  active,
+}: IconButtonProps) {
   return (
     <StyledIconButton
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
+      aria-haspopup={ariaHasPopup}
       aria-expanded={ariaExpanded}
       title={title}
       active={active}

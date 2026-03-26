@@ -1,10 +1,9 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../hooks/favourites'
-import { useI18n } from '../hooks/i18n'
+import { getEnglishVerbTranslation, useI18n } from '../hooks/i18n'
 import { useRecent } from '../hooks/recent'
 import { buildVerbUrl, useRouting } from '../hooks/routing'
-import enTranslations from '../locales/en.json'
 import type { Mood } from '../paradigms/active/present'
 import { formIPastVowel, formIPresentVowel } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
@@ -78,8 +77,9 @@ export function ConjugationMode() {
 
   const translateVerb = useCallback(
     (verb: DisplayVerb) => {
-      if (!getVerbById(verb.id)) return '—'
-      if (lang === 'ar') return (enTranslations.verbs as Record<string, string>)[verb.id]
+      const englishTranslation = getEnglishVerbTranslation(verb.id)
+      if (!englishTranslation) return '—'
+      if (lang === 'ar') return englishTranslation
       return t(verb.id)
     },
     [lang, t],
@@ -319,10 +319,10 @@ export function ConjugationMode() {
                 label={t('meta.root')}
                 labelLang={lang}
                 labelDir={dir}
-                onClick={() => setIsRootInfoOpen(true)}
-                ariaLabel={t('rootInfo.open')}
-                ariaHasPopup="dialog"
-                ariaExpanded={isRootInfoOpen}
+                insightOnClick={() => setIsRootInfoOpen(true)}
+                insightAriaLabel={t('rootInfo.open')}
+                insightAriaHasPopup="dialog"
+                insightAriaExpanded={isRootInfoOpen}
               >
                 <RootMetaValue dir="rtl" lang="ar">
                   {Array.from(selectedVerb.root).map((letter, index) => (
@@ -335,16 +335,16 @@ export function ConjugationMode() {
                 labelLang={lang}
                 labelDir={dir}
                 valueLang={lang}
-                valueDir={dir}
-                onClick={() => setIsFormInfoOpen(true)}
-                ariaLabel={formInsightsLabel}
-                ariaHasPopup="dialog"
-                ariaExpanded={isFormInfoOpen}
+                valueDir="rtl"
+                insightOnClick={() => setIsFormInfoOpen(true)}
+                insightAriaLabel={formInsightsLabel}
+                insightAriaHasPopup="dialog"
+                insightAriaExpanded={isFormInfoOpen}
               >
-                <span>{ROMAN_NUMERALS[selectedVerb.form - 1]}</span>
-                {selectedVerb && selectedVerb.form === 1 && diacriticsPreference !== 'none' && (
-                  <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>{formIVowelPattern(selectedVerb)}</span>
-                )}
+                <FormMetaValue>
+                  <FormMetaItem>{ROMAN_NUMERALS[selectedVerb.form - 1]}</FormMetaItem>
+                  {selectedVerb.form === 1 && <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>}
+                </FormMetaValue>
               </Detail>
               <Detail
                 label={t('meta.translation')}
@@ -567,4 +567,21 @@ const RootMetaValue = styled('div')`
   align-items: space-between;
   justify-content: center;
   gap: 1rem;
+`
+
+const FormMetaValue = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: baseline;
+  justify-items: start;
+  width: 100%;
+`
+
+const FormMetaItem = styled('span')`
+  font-weight: 600;
+`
+
+const FormPattern = styled(FormMetaItem)`
+  font-size: 1.2rem;
+  font-weight: 400;
 `

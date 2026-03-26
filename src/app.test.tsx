@@ -90,7 +90,7 @@ test('Shows alphabetized verbs for the selected form', async () => {
     )!,
   )
 
-  const formTwoPanel = document.querySelector('[role="tabpanel"][aria-label="Form II"]') as HTMLElement
+  const formTwoPanel = document.querySelector<HTMLElement>('[role="tabpanel"][aria-label="Form II"]')!
   const safarra = within(formTwoPanel).getByText('سَفَّرَ')
   const kallama = within(formTwoPanel).getByText('كَلَّمَ')
 
@@ -111,7 +111,7 @@ describe('Conjugation table', () => {
   it('shows active and passive voice tabs', () => {
     renderApp('/#/verbs/ktb-1')
 
-    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]')!
     const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
     const activeTab = tabs.find((tab) => tab.textContent === 'Active')
     const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
@@ -122,7 +122,7 @@ describe('Conjugation table', () => {
   it('shows only the active voice tab when passive is unavailable', () => {
     renderApp('/#/verbs/Zll-1')
 
-    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]')!
     const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
     const activeTab = tabs.find((tab) => tab.textContent === 'Active')
     const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
@@ -154,14 +154,14 @@ describe('Conjugation table', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
     const pushSpy = vi.spyOn(window.history, 'pushState')
 
-    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]')!
     const passiveTab = Array.from(voiceTabs.querySelectorAll('[role="tab"]')).find(
       (tab) => tab.textContent === 'Passive',
     ) as HTMLElement
     await user.click(passiveTab)
 
     expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/verbs/ktb-1/passive/past')
-    const tenseTabs = document.querySelector('[role="tablist"][aria-label="Select tense"]') as HTMLElement
+    const tenseTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select tense"]')!
     expect(within(tenseTabs).getByText('Past')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Present')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Future')).toBeInTheDocument()
@@ -171,14 +171,14 @@ describe('Conjugation table', () => {
   it('shows mood tabs for passive present tense', async () => {
     renderApp('/#/verbs/ktb-1')
 
-    const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]') as HTMLElement
+    const voiceTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select voice"]')!
     const passiveTab = Array.from(voiceTabs.querySelectorAll('[role="tab"]')).find(
       (tab) => tab.textContent === 'Passive',
     ) as HTMLElement
     fireEvent.click(passiveTab)
     fireEvent.click(screen.getByText('Present'))
 
-    const moodTabs = document.querySelector('[role="tablist"][aria-label="Select mood"]') as HTMLElement
+    const moodTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select mood"]')!
     expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
@@ -215,7 +215,7 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Present'))
 
-    const moodTabs = document.querySelector('[role="tablist"][aria-label="Select mood"]') as HTMLElement
+    const moodTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select mood"]')!
     expect(within(moodTabs).getByText('Indicative')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Subjunctive')).toBeInTheDocument()
     expect(within(moodTabs).getByText('Jussive')).toBeInTheDocument()
@@ -238,7 +238,7 @@ describe('Search', () => {
 
     await user.type(screen.getByLabelText('Verb'), 'كت')
 
-    const listbox = document.querySelector('[role="listbox"][aria-label="Verb"]') as HTMLElement
+    const listbox = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Verb"]')!
     expect(within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)).toBeInTheDocument()
     expect(within(listbox).getAllByText('IV').length).toBeGreaterThan(0)
   })
@@ -270,12 +270,12 @@ describe('Search', () => {
     fireEvent.focus(input)
     fireEvent.input(input, { target: { value: 'كت' } })
 
-    const listbox = document.querySelector('[role="listbox"][aria-label="Verb"]') as HTMLElement
+    const listbox = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Verb"]')!
     const suggestion = within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)
 
     fireEvent.click(suggestion)
 
-    expect((input as HTMLInputElement).value).toBe('أَكتَبَ')
+    expect(input.value).toBe('أَكتَبَ')
     expect(screen.getAllByText('أَكتَبَ')).not.toHaveLength(0)
     expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeNull()
   })
@@ -334,7 +334,7 @@ test('Allow picking among multiple forms of the same verb', async () => {
   renderApp('/#/verbs/rkz-1')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const derivedForms = screen.getByText(/Derived forms/i).nextElementSibling as HTMLElement
-  await user.click(within(derivedForms).getByLabelText(/Form II.*to concentrate/i))
+  await user.click(within(derivedForms).getByLabelText(/II.*Form.*to concentrate/i))
   expect(
     await within(screen.getByText('Translation').parentElement!).findByText('to concentrate', { exact: false }),
   ).toBeInTheDocument()
@@ -357,9 +357,7 @@ describe('Form', () => {
 
   it('has insights with linked examples', async () => {
     renderApp('/#/verbs/Elm-5')
-    const formDetail = screen.getByText('Form')
-
-    fireEvent.click(formDetail)
+    fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialogTitle = screen.getByText('Form insights')
     const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
@@ -378,9 +376,7 @@ describe('Form', () => {
 
   it('shows the selected Form I past/present pattern in form insights', () => {
     renderApp('/#/verbs/bdl-1')
-    const formDetail = screen.getByText('Form')
-
-    fireEvent.click(formDetail)
+    fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
@@ -388,9 +384,7 @@ describe('Form', () => {
 
   it('shows both past and present patterns in non-Form-I insights', () => {
     renderApp('/#/verbs/Elm-5')
-    const formDetail = screen.getByText('Form')
-
-    fireEvent.click(formDetail)
+    fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialogTitle = screen.getByText('Form insights')
     const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
@@ -423,7 +417,7 @@ test('Order derived form options by form number', () => {
   const buttons = Array.from(derivedFormHeading.nextElementSibling!.children)
   const formLabels = buttons
     .map((button) => button.getAttribute('aria-label')!)
-    .map((label) => label.match(/Form\s([IVX]+)/)?.[1])
+    .map((label) => label.match(/-\s([IVX]+)\s-\sForm/i)?.[1])
   expect(formLabels).toEqual(['I', 'II', 'VI', 'X'])
 })
 
@@ -468,18 +462,17 @@ describe('Recently viewed verbs', () => {
 describe('Root insights', () => {
   it('displays root semantics when available', async () => {
     renderApp('/#/verbs/ktb-1')
-    const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-    await user.click(screen.getByText('Root').parentElement!)
+    fireEvent.click(screen.getByLabelText(/View root insights/i))
 
     const dialogTitle = screen.getByText('Root insights')
-    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
+    const dialog = dialogTitle.closest<HTMLElement>('[role="dialog"]')!
     expect(within(dialog).getByText('writing')).toBeInTheDocument()
   })
 })
 
 describe('Language', () => {
-  const getLanguageSelect = () => document.querySelector('select[aria-label]') as HTMLSelectElement
+  const getLanguageSelect = () => document.querySelector<HTMLSelectElement>('select[aria-label]')!
 
   it('is English by default', () => {
     renderApp('/')
@@ -636,7 +629,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
-    const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
+    const dialog = screen.getByText('Form insights').closest<HTMLElement>('[role="dialog"]')!
     const exampleLink = dialog.querySelector<HTMLAnchorElement>('a[href]')!
 
     fireEvent.click(exampleLink)

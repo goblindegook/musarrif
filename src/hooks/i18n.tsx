@@ -1,10 +1,7 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
-import { useCallback, useContext, useEffect, useMemo } from 'preact/compat'
-import ar from '../locales/ar.json'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/compat'
 import en from '../locales/en.json'
-import it from '../locales/it.json'
-import pt from '../locales/pt.json'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { useLocalStorage } from './local-storage'
 
@@ -31,11 +28,20 @@ interface Translation {
   roots?: Record<string, string>
 }
 
-const TRANSLATIONS: Record<Language, Translation> = {
-  en: en as Translation,
-  it: it as Translation,
-  pt: pt as Translation,
-  ar: ar as Translation,
+const EN_TRANSLATION = en as Translation
+
+const LANGUAGE_LABELS: Record<Language, string> = {
+  en: EN_TRANSLATION.label,
+  it: 'Italiano',
+  pt: 'Português',
+  ar: 'العربية',
+}
+
+const LANGUAGE_DIRECTIONS: Record<Language, 'ltr' | 'rtl'> = {
+  en: EN_TRANSLATION.dir,
+  it: 'ltr',
+  pt: 'ltr',
+  ar: 'rtl',
 }
 
 interface I18nContextValue {
@@ -50,7 +56,40 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined)
 
-export const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((id) => ({ id, label: TRANSLATIONS[id].label }))
+export const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((id) => ({ id, label: LANGUAGE_LABELS[id] }))
+
+const TRANSLATION_CACHE: Partial<Record<Language, Translation>> = { en: EN_TRANSLATION }
+
+const TRANSLATION_LOADERS: Record<Language, () => Promise<Translation>> = {
+  en: async () => EN_TRANSLATION,
+  it: async () => (await import('../locales/it.json')).default as Translation,
+  pt: async () => (await import('../locales/pt.json')).default as Translation,
+  ar: async () => (await import('../locales/ar.json')).default as Translation,
+}
+
+const TRANSLATION_PROMISES: Partial<Record<Language, Promise<Translation>>> = {}
+
+async function loadTranslation(lang: Language): Promise<Translation> {
+  const cached = TRANSLATION_CACHE[lang]
+  if (cached) return cached
+
+  const pending = TRANSLATION_PROMISES[lang]
+  if (pending) return pending
+
+  const next = TRANSLATION_LOADERS[lang]().then((translation) => {
+    TRANSLATION_CACHE[lang] = translation
+    return translation
+  })
+
+  TRANSLATION_PROMISES[lang] = next
+  return next.finally(() => {
+    delete TRANSLATION_PROMISES[lang]
+  })
+}
+
+export function getEnglishVerbTranslation(verbId: string): string | undefined {
+  return EN_TRANSLATION.verbs?.[verbId]
+}
 
 function format(template: string, params?: Record<string, string>): string {
   if (!params) return template
@@ -106,11 +145,23 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
 
   const [storedDiacritics, setDiacriticsPreference] = useLocalStorage<string>('diacriticsPreference', 'some')
   const diacriticsPreference = storedDiacritics === 'all' || storedDiacritics === 'none' ? storedDiacritics : 'some'
+  const [translation, setTranslation] = useState<Translation>(() => TRANSLATION_CACHE[lang] ?? EN_TRANSLATION)
 
   useEffect(() => {
-    const { dir } = TRANSLATIONS[lang]
+    let cancelled = false
+    setTranslation(TRANSLATION_CACHE[lang] ?? EN_TRANSLATION)
+    void loadTranslation(lang).then((next) => {
+      if (!cancelled) setTranslation(next)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [lang])
+
+  useEffect(() => {
     document.documentElement.lang = lang
-    document.documentElement.dir = dir
+    document.documentElement.dir = LANGUAGE_DIRECTIONS[lang]
   }, [lang])
 
   const setLang = useCallback(
@@ -121,25 +172,32 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
   )
 
   const value = useMemo<I18nContextValue>(() => {
-    const current = TRANSLATIONS[lang] ?? TRANSLATIONS[detectBrowserLanguage()]
+    const current = translation
 
     return {
       lang,
-      dir: current.dir,
+      dir: LANGUAGE_DIRECTIONS[lang],
       t: (key, params) => {
-        const template = current.strings[key] || current.verbs?.[key] || current.roots?.[key] || key
+        const template =
+          current.strings[key] ??
+          current.verbs?.[key] ??
+          current.roots?.[key] ??
+          EN_TRANSLATION.strings[key] ??
+          EN_TRANSLATION.verbs?.[key] ??
+          EN_TRANSLATION.roots?.[key] ??
+          key
         const rendered = format(template, params)
         return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
       },
       tHtml: (key, params) => {
-        const template = current.strings[key] || key
+        const template = current.strings[key] ?? EN_TRANSLATION.strings[key] ?? key
         return sanitizeHtml(format(template, params), diacriticsPreference)
       },
       diacriticsPreference,
       setDiacriticsPreference,
       setLang,
     }
-  }, [lang, diacriticsPreference, setDiacriticsPreference, setLang])
+  }, [lang, diacriticsPreference, setDiacriticsPreference, setLang, translation])
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }

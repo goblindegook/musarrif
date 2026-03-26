@@ -1,8 +1,10 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useI18n } from '../hooks/i18n'
+import { IconButton } from './atoms/IconButton'
 import { CopyButton } from './buttons/CopyButton'
 import { SpeechButton } from './buttons/SpeechButton'
+import { LightBulbIcon } from './icons/LightBulbIcon'
 
 interface DetailProps {
   label: string
@@ -18,6 +20,10 @@ interface DetailProps {
   ariaLabel?: string
   ariaHasPopup?: 'dialog'
   ariaExpanded?: boolean
+  insightOnClick?: () => void
+  insightAriaLabel?: string
+  insightAriaHasPopup?: 'dialog'
+  insightAriaExpanded?: boolean
 }
 
 export const Detail = ({
@@ -34,6 +40,10 @@ export const Detail = ({
   ariaLabel,
   ariaHasPopup,
   ariaExpanded,
+  insightOnClick,
+  insightAriaLabel,
+  insightAriaHasPopup,
+  insightAriaExpanded,
 }: DetailProps) => {
   const { t } = useI18n()
 
@@ -67,8 +77,18 @@ export const Detail = ({
           {value && <span>{value}</span>}
           {children}
         </DetailContent>
-        {(speechText || copyText) && (
+        {(insightOnClick || speechText || copyText) && (
           <DetailActions>
+            {insightOnClick && (
+              <IconButton
+                onClick={insightOnClick}
+                ariaLabel={insightAriaLabel}
+                ariaHasPopup={insightAriaHasPopup}
+                ariaExpanded={insightAriaExpanded}
+              >
+                <LightBulbIcon />
+              </IconButton>
+            )}
             {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} />}
             {speechText && (
               <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
@@ -118,7 +138,7 @@ const DetailLabel = styled('span')`
 
 const DetailValue = styled('span')`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   flex-direction: row;
   gap: 0.5rem;
@@ -129,12 +149,15 @@ const DetailValue = styled('span')`
 
 const DetailContent = styled('span')`
   display: inline-flex;
-  align-items: flex-start;
+  align-items: baseline;
+  flex: 1;
+  min-width: 0;
   gap: 0.5rem;
 `
 
 const DetailActions = styled('span')`
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 0.35rem;
 `

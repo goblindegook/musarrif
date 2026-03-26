@@ -2,7 +2,6 @@ import { styled } from 'goober'
 import { useCallback } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { buildVerbHref } from '../hooks/routing'
-import enTranslations from '../locales/en.json'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { DisplayVerb } from '../paradigms/verbs'
 
@@ -23,9 +22,9 @@ export function VerbPill({ verb, className }: VerbPillProps) {
 
   const translateVerb = useCallback(
     (candidate: DisplayVerb) => {
-      const verbTranslations = enTranslations.verbs as Record<string, string>
-      if (!verbTranslations[candidate.id]) return '—'
-      return lang !== 'ar' ? t(candidate.id) : verbTranslations[candidate.id]
+      if (lang === 'ar') return ''
+      const translation = t(candidate.id)
+      return translation === candidate.id ? '—' : translation
     },
     [lang, t],
   )
@@ -34,9 +33,9 @@ export function VerbPill({ verb, className }: VerbPillProps) {
     <VerbPillLink
       href={buildVerbHref(verb.id)}
       className={className}
-      aria-label={`${formatArabic(verb.label)} - ${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}${
-        lang !== 'ar' ? ` - ${translateVerb(verb)}` : ''
-      }`}
+      aria-label={[formatArabic(verb.label), ROMAN_NUMERALS[verb.form - 1], t('meta.form'), translateVerb(verb)]
+        .filter(Boolean)
+        .join(' - ')}
     >
       <InlineRow>
         <span dir="rtl" lang="ar">
