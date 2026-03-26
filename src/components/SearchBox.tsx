@@ -50,6 +50,12 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
     [onSelect],
   )
 
+  const inputDir = useMemo<'ltr' | 'rtl'>(() => {
+    const latinCount = Array.from(query).filter((c) => /[a-zA-Z]/.test(c)).length
+    const arabicCount = Array.from(query).filter((c) => /[\u0600-\u06FF]/.test(c)).length
+    return query.length > 0 && latinCount > arabicCount ? 'ltr' : 'rtl'
+  }, [query])
+
   return (
     <>
       {suggestionsOpen && isMobile && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
@@ -110,7 +116,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           }}
           ref={inputRef}
           placeholder={t('placeholder')}
-          dir="rtl"
+          dir={inputDir}
           lang="ar"
           placeholderDir={dir}
           inputMode="text"

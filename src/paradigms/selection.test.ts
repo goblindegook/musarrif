@@ -90,6 +90,17 @@ describe('search', () => {
     expect(second?.form).toBe(4)
   })
 
+  test.each([
+    ['ktb', 'كتب'],
+    ['Elm', 'علم'],
+    ['kt', 'كتب'],
+    ['kataba', 'كتب'],
+  ])('matches verbs by Buckwalter input "%s"', (query, expectedRoot) => {
+    const matches = search(query, { translate: () => '' })
+
+    expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
+  })
+
   test('matches verbs by translated text', () => {
     const translations = (en as { verbs?: Record<string, string> }).verbs ?? {}
     const matches = search('translate', { translate: (key) => translations[key] })

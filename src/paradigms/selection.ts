@@ -1,5 +1,6 @@
 import { wordDistance } from '../primitives/strings'
 import { ALIF, HAMZA, stripDiacritics } from './letters'
+import { detransliterate } from './transliteration'
 import { type DisplayVerb, normalizeHamza, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
@@ -117,10 +118,16 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
     }
   }
 
+  const buckwalterCandidate = Array.from(detransliterate(query))
+    .filter((char) => /[ء-ي]/.test(char))
+    .join('')
+
   if (options.exactRoot) {
     addMatches(verbsByRoot.get(normalizedQuery) ?? [])
+    if (buckwalterCandidate) addMatches(verbsByRoot.get(buckwalterCandidate) ?? [])
   } else {
     addMatches(candidates.flatMap(matchVerbsForCandidate))
+    if (buckwalterCandidate) addMatches(matchVerbsForCandidate(buckwalterCandidate))
     addMatches(
       verbs.filter((v) => {
         const translated = t(v.id)
