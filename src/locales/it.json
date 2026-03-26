@@ -3,7 +3,7 @@
   "label": "Italiano",
   "strings": {
     "eyebrow": "Coniugatore di verbi arabi",
-    "settings.toggle": "Mostra/nascondi impostazioni",
+    "settings.title": "Impostazioni",
     "settings.data.title": "Dati",
     "settings.data.export": "Esporta dati",
     "settings.data.import": "Importa dati",

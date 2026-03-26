@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import type { Exercise } from '../exercises/exercises'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
-import type { ExplanationLayers } from '../paradigms/explanation'
+import type { Exercise } from '../../exercises/exercises'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
+import type { ExplanationLayers } from '../../paradigms/explanation'
 import { ExerciseMode } from './ExerciseMode'
 
 beforeEach(() => {

@@ -21,7 +21,7 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
   useEffect(() => {
     if (!isOpen) return
     const controller = new AbortController()
-    window.addEventListener(
+    document.addEventListener(
       'keydown',
       (event: KeyboardEvent) => {
         if (event.key === 'Escape') onClose()

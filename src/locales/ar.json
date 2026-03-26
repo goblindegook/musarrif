@@ -3,7 +3,7 @@
   "label": "العربية",
   "strings": {
     "eyebrow": "مُصَــرِّف الأفعَــال العربية",
-    "settings.toggle": "تبديل الإعدادات",
+    "settings.title": "الإعدادات",
     "settings.data.title": "البيانات",
     "settings.data.export": "تصدير البيانات",
     "settings.data.import": "استيراد البيانات",

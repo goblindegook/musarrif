@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { AppHeader } from './components/AppHeader'
-import { ConjugationMode } from './components/ConjugationMode'
-import { ExerciseMode } from './components/ExerciseMode'
+import { ConjugationMode } from './components/pages/ConjugationMode'
+import { ExerciseMode } from './components/pages/ExerciseMode'
 import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
 

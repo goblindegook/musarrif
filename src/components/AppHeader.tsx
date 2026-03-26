@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
+import { useCallback, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { getUserData, importUserData } from '../hooks/local-storage'
 import { useRouting } from '../hooks/routing'
@@ -9,6 +9,7 @@ import { ConjugateIcon } from './icons/ConjugateIcon'
 import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
 import { LanguagePicker } from './LanguagePicker'
+import { Modal } from './Modal'
 import { ModeToggle } from './ModeToggle'
 
 const MODES = ['conjugation', 'test'] as const
@@ -19,30 +20,6 @@ export const AppHeader = () => {
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const importInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (!isSettingsOpen) return
-
-    const abortController = new AbortController()
-
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target =
-        event.target instanceof Element
-          ? event.target
-          : event.target instanceof Node
-            ? event.target.parentElement
-            : null
-      if (target == null) return
-      if (target.closest('[data-settings-panel]') != null) return
-      if (target.closest('[data-settings-toggle]') != null) return
-      setIsSettingsOpen(false)
-    }
-
-    document.addEventListener('mousedown', handleClickOutside, { signal: abortController.signal })
-    document.addEventListener('touchstart', handleClickOutside, { signal: abortController.signal })
-
-    return () => abortController.abort()
-  }, [isSettingsOpen])
 
   const exportUserData = useCallback(() => {
     const payload = getUserData()
@@ -87,51 +64,53 @@ export const AppHeader = () => {
               else navigateTo('/#/test')
             }}
           />
-          <SettingsButtonWrapper data-settings-toggle>
+          <SettingsButtonWrapper>
             <IconButton
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              ariaLabel={t('settings.toggle')}
+              ariaLabel={t('settings.title')}
               ariaExpanded={isSettingsOpen}
-              title={t('settings.toggle')}
+              title={t('settings.title')}
               active={isSettingsOpen}
             >
               <SettingsIcon />
             </IconButton>
           </SettingsButtonWrapper>
-          <Controls data-settings-panel visible={isSettingsOpen}>
-            <ControlGroup>
-              <ControlLabel>{t('diacritics.title')}</ControlLabel>
-              <SegmentedControl
-                fill
-                options={DIACRITICS_OPTIONS.map((option) => ({
-                  value: option,
-                  label: t(`diacritics.${option}`),
-                  title: `${t('diacritics.title')}: ${t(`diacritics.${option}`)}`,
-                }))}
-                value={diacriticsPreference}
-                onChange={(option) => setDiacriticsPreference(option)}
-                aria-label={t('diacritics.title')}
-              />
-            </ControlGroup>
-            <ControlGroup>
-              <ControlLabel>{t('languagePicker.label')}</ControlLabel>
-              <LanguagePicker />
-            </ControlGroup>
-            <ControlGroup>
-              <ControlLabel>{t('settings.data.title')}</ControlLabel>
-              <ActionRow>
-                <ActionButton type="button" onClick={exportUserData}>
-                  {t('settings.data.export')}
-                </ActionButton>
-                <ActionButton type="button" onClick={() => importInputRef.current?.click()}>
-                  {t('settings.data.import')}
-                </ActionButton>
-              </ActionRow>
-              <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
-            </ControlGroup>
-          </Controls>
         </RightGroup>
       </TopBarHeader>
+      <Modal isOpen={isSettingsOpen} title={t('settings.title')} onClose={() => setIsSettingsOpen(false)}>
+        <SettingsModalBody>
+          <ControlGroup>
+            <ControlLabel>{t('diacritics.title')}</ControlLabel>
+            <SegmentedControl
+              fill
+              options={DIACRITICS_OPTIONS.map((option) => ({
+                value: option,
+                label: t(`diacritics.${option}`),
+                title: `${t('diacritics.title')}: ${t(`diacritics.${option}`)}`,
+              }))}
+              value={diacriticsPreference}
+              onChange={(option) => setDiacriticsPreference(option)}
+              aria-label={t('diacritics.title')}
+            />
+          </ControlGroup>
+          <ControlGroup>
+            <ControlLabel>{t('languagePicker.label')}</ControlLabel>
+            <LanguagePicker />
+          </ControlGroup>
+          <ControlGroup>
+            <ControlLabel>{t('settings.data.title')}</ControlLabel>
+            <ActionRow>
+              <ActionButton type="button" onClick={exportUserData}>
+                {t('settings.data.export')}
+              </ActionButton>
+              <ActionButton type="button" onClick={() => importInputRef.current?.click()}>
+                {t('settings.data.import')}
+              </ActionButton>
+            </ActionRow>
+            <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
+          </ControlGroup>
+        </SettingsModalBody>
+      </Modal>
     </TopBar>
   )
 }
@@ -213,28 +192,11 @@ const PageTitle = styled('h1')`
   }
 `
 
-const Controls = styled('aside')<{ visible: boolean }>`
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  inset-inline-end: 0;
+const SettingsModalBody = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 1.25rem;
-  width: max-content;
-  min-width: min(360px, calc(100vw - 2rem));
-  max-width: calc(100vw - 2rem);
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-  transform: ${({ visible }) => (visible ? 'translateY(0)' : 'translateY(-6px)')};
-  transition: opacity 150ms ease, transform 150ms ease, visibility 0ms linear ${({ visible }) => (visible ? '0ms' : '150ms')};
-  z-index: 10;
 `
 
 const SettingsButtonWrapper = styled('div')`

@@ -7,18 +7,18 @@ import {
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
   recordDimensionAnswer,
-} from '../exercises/dimensions'
-import type { Exercise } from '../exercises/exercises'
-import { randomExercise } from '../exercises/random'
-import type { SrsStore } from '../exercises/srs'
-import type { DayStats, SerializedDayStats } from '../exercises/stats'
-import { addPass, addResult, deserializeDayStats, getStreak, serializeDayStats } from '../exercises/stats'
-import { useI18n } from '../hooks/i18n'
-import { useLocalStorage } from '../hooks/local-storage'
-import { useSrsStore } from '../hooks/srs-store'
-import { renderExplanation } from '../paradigms/explanation'
-import { Text } from './atoms/Text'
-import { ExerciseStats } from './ExerciseStats'
+} from '../../exercises/dimensions'
+import type { Exercise } from '../../exercises/exercises'
+import { randomExercise } from '../../exercises/random'
+import type { SrsStore } from '../../exercises/srs'
+import type { DayStats, SerializedDayStats } from '../../exercises/stats'
+import { addPass, addResult, deserializeDayStats, getStreak, serializeDayStats } from '../../exercises/stats'
+import { useI18n } from '../../hooks/i18n'
+import { useLocalStorage } from '../../hooks/local-storage'
+import { useSrsStore } from '../../hooks/srs-store'
+import { renderExplanation } from '../../paradigms/explanation'
+import { Text } from '../atoms/Text'
+import { ExerciseStats } from '../ExerciseStats'
 
 type Props = {
   generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise

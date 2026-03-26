@@ -16,12 +16,15 @@ const renderHeader = (path = '/#/verbs') => {
   )
 }
 
-const getSettingsButton = () => document.querySelector('[data-settings-toggle] button') as HTMLButtonElement
-
 afterEach(() => {
   cleanup()
   window.localStorage.clear()
   vi.restoreAllMocks()
+})
+
+it('shows the title', () => {
+  renderHeader('/#/verbs')
+  expect(screen.getByText('Muṣarrif')).toBeInTheDocument()
 })
 
 it('Conjugate segment has aria-pressed="true" by default (conjugation mode)', () => {
@@ -43,46 +46,40 @@ it('clicking the Conjugate segment when in exercise mode pushes /#/verbs to hist
   expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/verbs')
 })
 
-it('clicking the settings button opens the settings popover', () => {
+it('clicking the settings button opens the settings modal', () => {
   renderHeader('/#/verbs')
-  const settingsButton = getSettingsButton()
+  const settingsButton = screen.getByLabelText('Settings')
 
   fireEvent.click(settingsButton)
 
   expect(settingsButton).toHaveAttribute('aria-expanded', 'true')
+  expect(screen.getByText('Settings').closest('[role="dialog"]')).toBeInTheDocument()
 })
 
-it('clicking outside the settings panel dismisses it', () => {
-  renderHeader('/#/verbs')
-  const settingsButton = getSettingsButton()
-  fireEvent.click(settingsButton)
-
-  fireEvent.mouseDown(document.body)
-
-  expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
-})
-
-it('tab navigation skips settings controls when settings are hidden', async () => {
+it('pressing Escape dismisses the settings modal', async () => {
   renderHeader('/#/verbs')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const settingsButton = screen.getByLabelText('Settings')
+  fireEvent.click(settingsButton)
+  await user.keyboard('{Escape}')
 
-  await user.tab()
-  await user.tab()
-  await user.tab()
+  await waitFor(() => {
+    expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
+    expect(document.querySelector('[role="dialog"]')).toBeNull()
+  })
+})
 
-  expect(getSettingsButton()).toHaveFocus()
-
-  await user.tab()
-
-  expect(screen.getByLabelText('All')).not.toHaveFocus()
-  expect(screen.getByLabelText('Some')).not.toHaveFocus()
-  expect(screen.getByLabelText('None')).not.toHaveFocus()
-  expect(screen.getByLabelText('Language')).not.toHaveFocus()
+it('does not render settings controls when settings modal is closed', () => {
+  renderHeader('/#/verbs')
+  expect(screen.queryByLabelText('All')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Some')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('None')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Language')).not.toBeInTheDocument()
 })
 
 it('shows export and import buttons in the settings panel', () => {
   renderHeader('/#/verbs')
-  fireEvent.click(getSettingsButton())
+  fireEvent.click(screen.getByLabelText('Settings'))
 
   expect(screen.getByText('Export data')).toBeInTheDocument()
   expect(screen.getByText('Import data')).toBeInTheDocument()
@@ -97,7 +94,7 @@ it('exports user data in JSON format', () => {
   )
 
   renderHeader('/#/verbs')
-  fireEvent.click(getSettingsButton())
+  fireEvent.click(screen.getByLabelText('Settings'))
 
   let exportedDownload: string | null = null
   let exportedHref: string | null = null
@@ -128,7 +125,7 @@ it('exports user data in JSON format', () => {
 
 it('imports user data from JSON and updates local storage', async () => {
   renderHeader('/#/verbs')
-  fireEvent.click(getSettingsButton())
+  fireEvent.click(screen.getByLabelText('Settings'))
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const reloadSpy = vi.spyOn(Location.prototype, 'reload').mockImplementation(() => {})
 
