@@ -371,10 +371,10 @@ describe('renderExplanation', () => {
       tenseRoot: null,
       pronoun: '3ms',
     }
-    expect(renderExplanation(layers, t, 'full')).toContain('explanation.root.sound')
+    expect(joined(layers, 'full')).toContain('explanation.root.sound')
   })
 
-  test('full mode groups root and formIPattern in first paragraph', () => {
+  test('full mode groups root, form description, and formIPattern in first paragraph', () => {
     const layers: ExplanationLayers = {
       rootLetters: ['ك', 'ت', 'ب'],
       form: 1,
@@ -387,10 +387,55 @@ describe('renderExplanation', () => {
       pronoun: '3ms',
     }
     expect(renderExplanation(layers, t, 'full')).toEqual([
-      'explanation.root.sound explanation.form-i-pattern.fa3ala-yaf3ulu',
-      'explanation.tense.active-past',
+      'explanation.root.sound explanation.form.1 explanation.form-i-pattern.fa3ala-yaf3ulu',
+      'explanation.tense.active-past explanation.tense.active-past.form-i',
       'explanation.pronoun.past.3ms',
     ])
+  })
+
+  test('full mode includes form description in first paragraph for non-form-I', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['أ', 'ت', 'ي'],
+      form: 3,
+      arabic: 'آتَى',
+      rootType: 'defective-yaa',
+      formIPattern: null,
+      formRoot: null,
+      tense: 'active-past',
+      tenseRoot: 'final-isolated',
+      pronoun: '3ms',
+    }
+    expect(renderExplanation(layers, t, 'full')[0]).toContain('explanation.form.3')
+  })
+
+  test('full mode includes form-i past pattern sentence for form I active-past', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كَتَبَ',
+      rootType: 'sound',
+      formIPattern: 'fa3ala-yaf3ulu',
+      formRoot: null,
+      tense: 'active-past',
+      tenseRoot: null,
+      pronoun: '3ms',
+    }
+    expect(joined(layers, 'full')).toContain('explanation.tense.active-past.form-i')
+  })
+
+  test('full mode omits form-i past pattern sentence for non-form-I active-past', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['أ', 'ت', 'ي'],
+      form: 3,
+      arabic: 'آتَى',
+      rootType: 'defective-yaa',
+      formIPattern: null,
+      formRoot: null,
+      tense: 'active-past',
+      tenseRoot: 'final-isolated',
+      pronoun: '3ms',
+    }
+    expect(joined(layers, 'full')).not.toContain('active-past.form-i')
   })
 
   test('full mode omits formIPattern sentence when null', () => {
@@ -528,7 +573,7 @@ describe('renderExplanation', () => {
       pronoun: '3ms',
     }
     expect(renderExplanation(layers, t, 'full')).toEqual([
-      'explanation.root.assimilated explanation.form-root.assimilation-waw',
+      'explanation.root.assimilated explanation.form.8 explanation.form-root.assimilation-waw',
       'explanation.tense.active-past',
       'explanation.pronoun.past.3ms',
     ])

@@ -180,6 +180,7 @@ export function renderExplanation(
   return [
     [
       t(`explanation.root.${layers.rootType}`, params),
+      t(`explanation.form.${layers.form}`, params),
       layers.formIPattern && t(`explanation.form-i-pattern.${layers.formIPattern}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
@@ -191,6 +192,7 @@ export function renderExplanation(
           )
         : '',
       t(`explanation.tense.${layers.tense}`, params),
+      layers.form === 1 && layers.tense === 'active-past' ? t('explanation.tense.active-past.form-i', params) : '',
       tenseRootSentence,
     ],
     [t(resolvePronounKey(layers.tense, layers.pronoun), params)],

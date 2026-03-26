@@ -55,7 +55,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
         <PatternText>{pattern}</PatternText>
       </PatternDisplay>
       <Text dir={dir} lang={lang}>
-        {t(`formInfo.form${verb.form}.description`)}
+        {t(`explanation.form.${verb.form}`)}
       </Text>
       <Text dir={dir} lang={lang}>
         {t(`formInfo.form${verb.form}.relationship`)}
