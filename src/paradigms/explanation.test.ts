@@ -1,7 +1,15 @@
 import { describe, expect, test } from 'vitest'
+import enLocale from '../locales/en.json'
 import type { ExplanationLayers } from './explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from './explanation'
-import { getVerb } from './verbs'
+import { getVerb, getVerbById } from './verbs'
+
+const localeT = (key: string, params?: Record<string, string>): string => {
+  const locale = enLocale as { strings: Record<string, string>; roots?: Record<string, string> }
+  const template = locale.strings[key] ?? locale.roots?.[key] ?? key
+  if (!params) return template
+  return template.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? `{${k}}`)
+}
 
 // ── rootType ──────────────────────────────────────────────────────────────
 
@@ -577,5 +585,33 @@ describe('renderExplanation', () => {
       'explanation.tense.active-past',
       'explanation.pronoun.past.3ms',
     ])
+  })
+
+  test('active-past form-i base pattern renders faʿula for fa3ula-yaf3ulu pattern', () => {
+    const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
+    const layers = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', 'كَبُرَ')
+    const result = renderExplanation(layers, localeT, 'full')
+    expect(result[1]).toContain('faʿula')
+  })
+
+  test('active-past form-i base pattern renders ḍamma for fa3ula-yaf3ulu pattern', () => {
+    const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
+    const layers = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', 'كَبُرَ')
+    const result = renderExplanation(layers, localeT, 'full')
+    expect(result[1]).toContain('ḍamma')
+  })
+
+  test('active-past form-i base pattern renders faʿala for fa3ala-yaf3ulu pattern', () => {
+    const verb = getVerb('كتب', 1) // كَتَبَ, fa3ala-yaf3ulu
+    const layers = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', 'كَتَبَ')
+    const result = renderExplanation(layers, localeT, 'full')
+    expect(result[1]).toContain('faʿala')
+  })
+
+  test('active-past form-i base pattern renders faʿila for fa3ila-yaf3alu pattern', () => {
+    const verb = getVerbById('Elm-1')! // عَلِمَ, fa3ila-yaf3alu, sound root
+    const layers = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', verb.label)
+    const result = renderExplanation(layers, localeT, 'full')
+    expect(result[1]).toContain('faʿila')
   })
 })

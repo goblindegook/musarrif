@@ -17,10 +17,13 @@ function Wrapper({ children }: { children: ComponentChildren }) {
   )
 }
 
-function renderComponent() {
-  render(<ConjugationInsights verb={getVerb('كتب', 1)} verbTense={['active', 'past']} pronoun="3ms" arabic={'كَتَبَ'} />, {
-    wrapper: Wrapper,
-  })
+function renderComponent(pronoun = '3ms', arabic = 'كَتَبَ') {
+  render(
+    <ConjugationInsights verb={getVerb('كتب', 1)} verbTense={['active', 'past']} pronoun={pronoun} arabic={arabic} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
 }
 
 describe('ConjugationInsights', () => {
@@ -33,6 +36,34 @@ describe('ConjugationInsights', () => {
   test('modal displays the Arabic form', () => {
     renderComponent()
     fireEvent.click(screen.getByLabelText(`Show explanation for كَتَبَ`))
-    expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+    expect(screen.getAllByText('كَتَبَ').length).toBeGreaterThan(0)
+  })
+
+  describe('verb context details', () => {
+    test('modal displays root letters', () => {
+      renderComponent('1s', 'كَتَبْتُ')
+      fireEvent.click(screen.getByLabelText('Show explanation for كَتَبْتُ'))
+      expect(screen.getByText('ك')).toBeInTheDocument()
+      expect(screen.getByText('ت')).toBeInTheDocument()
+      expect(screen.getByText('ب')).toBeInTheDocument()
+    })
+
+    test('modal displays form number', () => {
+      renderComponent('1s', 'كَتَبْتُ')
+      fireEvent.click(screen.getByLabelText('Show explanation for كَتَبْتُ'))
+      expect(screen.getByText('I')).toBeInTheDocument()
+    })
+
+    test('modal displays Form I vowel pattern', () => {
+      renderComponent('1s', 'كَتَبْتُ')
+      fireEvent.click(screen.getByLabelText('Show explanation for كَتَبْتُ'))
+      expect(screen.getByText('◌َ / ◌ُ')).toBeInTheDocument()
+    })
+
+    test('modal displays base verb', () => {
+      renderComponent('1s', 'كَتَبْتُ')
+      fireEvent.click(screen.getByLabelText('Show explanation for كَتَبْتُ'))
+      expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+    })
   })
 })

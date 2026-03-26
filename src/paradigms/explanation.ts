@@ -166,12 +166,33 @@ function resolvePronounKey(tense: TenseContext, pronoun: PronounId): string {
   }
 }
 
+const FORM_I_BASE_PATTERNS: Record<
+  FormIPattern,
+  { basePattern: string; pastVowel: string; arabicForm: string; arabicVowel: string }
+> = {
+  'fa3ala-yaf3alu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'fa3ala-yaf3ilu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'fa3ala-yaf3ulu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'fa3ila-yaf3alu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'fa3ila-yaf3ilu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'fa3ila-yaf3ulu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'fa3ula-yaf3alu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+  'fa3ula-yaf3ilu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+  'fa3ula-yaf3ulu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+}
+
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
   mode: 'full' | 'concise',
 ): string[] {
-  const params = { root: layers.rootLetters.join('-'), arabic: layers.arabic, form: String(layers.form) }
+  const formIBaseParams = layers.formIPattern ? FORM_I_BASE_PATTERNS[layers.formIPattern] : {}
+  const params = {
+    root: layers.rootLetters.join('-'),
+    arabic: layers.arabic,
+    form: String(layers.form),
+    ...formIBaseParams,
+  }
 
   const tenseRootSentence = layers.tenseRoot ? t(`explanation.tense-root.${layers.tenseRoot}`, params) : ''
 
