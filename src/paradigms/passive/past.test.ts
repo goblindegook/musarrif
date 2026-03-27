@@ -867,6 +867,10 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
 
+      test.each([['سلم', 'سُولِمَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
+      })
+
       test.each([['صحب', 'صُوحِبَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
@@ -968,6 +972,7 @@ describe('passive past pattern', () => {
         ['وقف', 'أُوْقِفَ'],
         ['وقع', 'أُوْقِعَ'],
         ['ولد', 'أُوْلِدَ'],
+        ['سلم', 'أُسْلِمَ'],
         ['وصل', 'أُوْصِلَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
@@ -1249,6 +1254,10 @@ describe('passive past pattern', () => {
 
   describe('Form V', () => {
     describe('regular roots', () => {
+      test.each([['سلم', 'تُسُلِّمَ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePast(getVerb(root, 5))['3ms']).toEqualT(expected)
+      })
+
       test('تَعَرَّفَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('عرف', 5))).toEqualT({
           '1s': 'تُعُرِّفْتُ',
@@ -1339,6 +1348,7 @@ describe('passive past pattern', () => {
     describe('regular roots', () => {
       test.each([
         ['قرح', 'اُقْتُرِحَ'],
+        ['سلم', 'اُسْتُلِمَ'],
         ['عمد', 'اُعْتُمِدَ'],
         ['نظر', 'اُنْتُظِرَ'],
         ['ضلع', 'اُضْطُلِعَ'],

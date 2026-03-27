@@ -819,6 +819,10 @@ describe('passive present jussive', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
 
+      test.each([['سلم', 'يُسَالَمْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test.each([['صحب', 'يُصَاحَبْ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -989,6 +993,7 @@ describe('passive present jussive', () => {
         ['وقف', 'يُوْقَفْ'],
         ['وقع', 'يُوْقَعْ'],
         ['ولد', 'يُوْلَدْ'],
+        ['سلم', 'يُسْلَمْ'],
         ['وصل', 'يُوْصَلْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
@@ -1321,6 +1326,10 @@ describe('passive present jussive', () => {
 
   describe('Form V', () => {
     describe('regular roots', () => {
+      test.each([['سلم', 'يُتَسَلَّمْ']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
+      })
+
       test('تَعَرَّفَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عرف', 5), 'jussive')).toEqualT({
           '1s': 'أُتَعَرَّفْ',
@@ -1573,6 +1582,7 @@ describe('passive present jussive', () => {
     describe('regular roots', () => {
       test.each([
         ['قرح', 'يُقْتَرَحْ'],
+        ['سلم', 'يُسْتَلَمْ'],
         ['عمد', 'يُعْتَمَدْ'],
         ['نظر', 'يُنْتَظَرْ'],
         ['ضلع', 'يُضْطَلَعْ'],

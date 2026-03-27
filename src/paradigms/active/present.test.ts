@@ -1123,6 +1123,7 @@ describe('active present indicative', () => {
         ['تبع', 'يُتَابِعُ'],
         ['بلغ', 'يُبَالِغُ'],
         ['سعد', 'يُسَاعِدُ'],
+        ['سلم', 'يُسَالِمُ'],
         ['صحب', 'يُصَاحِبُ'],
         ['وجه', 'يُوَاجِهُ'],
         ['وثق', 'يُوَاثِقُ'],
@@ -1414,6 +1415,7 @@ describe('active present indicative', () => {
         ['وقف', 'يُوْقِفُ'],
         ['وقع', 'يُوْقِعُ'],
         ['ولد', 'يُوْلِدُ'],
+        ['سلم', 'يُسْلِمُ'],
         ['وصل', 'يُوْصِلُ'],
         ['عرب', 'يُعْرِبُ'],
       ])('%s pattern', (root, expected) => {
@@ -1631,6 +1633,7 @@ describe('active present indicative', () => {
         ['حدث', 'يَتَحَدَّثُ'],
         ['مثل', 'يَتَمَثَّلُ'],
         ['عرف', 'يَتَعَرَّفُ'],
+        ['سلم', 'يَتَسَلَّمُ'],
         ['طلب', 'يَتَطَلَّبُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
@@ -2195,6 +2198,7 @@ describe('active present indicative', () => {
         ['عبر', 'يَعْتَبِرُ'],
         ['عمد', 'يَعْتَمِدُ'],
         ['حلم', 'يَحْتَلِمُ'],
+        ['سلم', 'يَسْتَلِمُ'],
         ['نظر', 'يَنْتَظِرُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
