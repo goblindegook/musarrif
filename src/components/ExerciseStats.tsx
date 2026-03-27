@@ -32,9 +32,13 @@ function StatsDetailsPanel({ stats, streak }: { stats: DayStats[]; streak: numbe
       <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
         <ValueStack>
           <span>
-            {streak} {t('exercise.stats.streak.unit')}
+            {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
           </span>
-          <SubNote>{t('exercise.stats.streak.record', { days: String(record) })}</SubNote>
+          <SubNote>
+            {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
+              days: String(record),
+            })}
+          </SubNote>
         </ValueStack>
       </Detail>
     </DetailsRow>
