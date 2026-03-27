@@ -21,12 +21,16 @@ const Page = styled('div')`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 6rem 1rem 2rem;
+  padding: 6rem 0.75rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 
+  @media (min-width: 480px) {
+    padding: 6rem 1rem 2rem;
+  }
+
   @media (min-width: 960px) {
-    padding-top: 2rem;
+    padding: 2rem 1rem;
   }
 `

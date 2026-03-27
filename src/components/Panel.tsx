@@ -44,14 +44,19 @@ export const Panel = ({ title, dir, lang, actions, children, collapsible, defaul
 export const PanelContainer = styled('section')`
   position: relative;
   background: #ffffff;
-  border-radius: 1.5rem;
-  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
 
+  @media (min-width: 480px) {
+    border-radius: 1.25rem;
+    padding: 1rem 1.25rem;
+  }
+  
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;
   }
@@ -84,9 +89,13 @@ const PanelTitleButton = styled('button')`
 const PanelTitle = styled('h2')`
   margin: 0;
   font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   flex: 1;
   min-width: 0;
+
+  @media (min-width: 480px) {
+    font-size: 1.4rem;
+  }
 `
 
 const CollapseArrow = styled('span')<{ collapsed: boolean }>`

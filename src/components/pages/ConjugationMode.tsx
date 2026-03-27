@@ -501,8 +501,12 @@ const VerbList = styled('div')`
 
 const VerbMetaSection = styled('section')`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1frr;
   gap: 0.75rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
 
   @media (min-width: 960px) {
     grid-template-columns: repeat(3, 1fr);

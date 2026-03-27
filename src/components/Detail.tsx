@@ -102,14 +102,19 @@ export const Detail = ({
 
 const DetailItem = styled('div')`
   background: #f8fafc;
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
   border: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   align-items: space-between;
   justify-content: flex-start;
   gap: 0.25rem;
+
+  @media (min-width: 480px) {
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+  }
 `
 
 const DetailButton = styled(DetailItem)`
@@ -159,5 +164,9 @@ const DetailActions = styled('span')`
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 0.35rem;
+  gap: 0.25rem;
+
+  @media (min-width: 480px) {
+    gap: 0.35rem;
+  }
 `

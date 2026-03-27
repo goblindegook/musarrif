@@ -267,7 +267,11 @@ const TabBlock = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem;
+
+  @media (min-width: 480px) {
+    padding: 1rem 1.25rem;
+  }
 
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;
@@ -280,7 +284,11 @@ const SubTabBar = styled(TabBar)`
   margin-top: -4px;
   margin-left: -1.25rem;
   margin-right: -1.25rem;
-  padding: 0.75rem 1.25rem 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
+
+  @media (min-width: 480px) {
+    padding: 0.75rem 1.25rem;
+  }
 
   @media (min-width: 720px) {
     margin-left: -2rem;
@@ -318,7 +326,7 @@ const Row = styled('tr')`
 `
 
 const PronounCell = styled('td')`
-  padding: 0.6rem 2rem;
+  padding: 0.6rem 0 0.6rem 1rem;
   text-align: left;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -327,7 +335,11 @@ const PronounCell = styled('td')`
   span {
     font-size: 1.2rem;
   }
-`
+
+  @media (min-width: 480px) {
+    padding: 0.6rem 0 0.6rem 2rem;
+  }
+  `
 
 const PronounDescription = styled('small')`
   display: block;
@@ -341,15 +353,23 @@ const VerbCell = styled('td')`
   padding: 0.6rem;
   font-weight: 600;
   text-align: right;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   vertical-align: middle;
+
+  @media (min-width: 480px) {
+    font-size: 1.8rem;
+  }
 `
 
 const TableHeadCell = styled('th')`
   text-align: left;
-  padding: 0.6rem 2rem;
+  padding: 0.6rem 1rem;
   background: #f8fafc;
   vertical-align: middle;
+
+  @media (min-width: 480px) {
+    padding: 0.6rem 2rem;
+  }
 `
 
 const VerbHeadCell = styled(TableHeadCell)`
@@ -359,15 +379,23 @@ const VerbHeadCell = styled(TableHeadCell)`
 `
 
 const ActionCell = styled('td')`
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1rem;
   vertical-align: middle;
+
+  @media (min-width: 480px) {
+    padding: 0.75rem 2rem;
+  }
 `
 
 const ActionButtons = styled('div')`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.35rem;
+  gap: 0.25rem;
+
+  @media (min-width: 480px) {
+    gap: 0.35rem;
+  }
 `
 
 function formatDescription(slot: PronounSlot, translate: (key: TranslationKey) => string): string {

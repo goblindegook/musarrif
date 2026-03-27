@@ -124,10 +124,14 @@ const TopBar = styled('header')`
   right: 0;
   z-index: 100;
   background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
-  padding: 1rem;
+  padding: 1rem 0.75rem;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
   transition: padding 200ms ease;
 
+  @media (min-width: 480px) {
+    padding: 1rem;
+  }
+  
   @media (min-width: 960px) {
     position: static;
     background: transparent;
