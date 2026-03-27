@@ -3,7 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import {
   type DimensionProfile,
   type DimensionStore,
+  type DimensionUnlock,
   enforcePrerequisites,
+  getDimensionUnlocks,
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
   recordDimensionAnswer,
@@ -34,6 +36,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     generateExercise(enforcePrerequisites(dimensionStore.profile), srsStore),
   )
   const [selected, setSelected] = useState<number | null>(null)
+  const [dimensionUnlocks, setDimensionUnlocks] = useState<readonly DimensionUnlock[]>([])
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
   const updateStats = useCallback(
@@ -46,6 +49,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     (store: DimensionStore) => {
       setExercise(generateExercise(store.profile, srsStore))
       setSelected(null)
+      setDimensionUnlocks([])
     },
     [generateExercise, srsStore],
   )
@@ -57,6 +61,16 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     isAnswered && exercise.explanation
       ? renderExplanation(exercise.explanation, t, selected === exercise.answer ? 'concise' : 'full')
       : []
+  const unlockMessages = useMemo(
+    () =>
+      dimensionUnlocks.map(({ dimension, items }) =>
+        t('exercise.unlock.line', {
+          dimension: t(`exercise.unlock.dimension.${dimension}`),
+          items: items.map((item) => t(item)).join(', '),
+        }),
+      ),
+    [dimensionUnlocks, t],
+  )
 
   const handleAnswer = useCallback(
     (index: number) => {
@@ -64,7 +78,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
       setSelected(index)
       updateStats((current) => addResult(current, isCorrect))
       recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
-      setDimensionStore(promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect)))
+      const nextDimensionStore = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect))
+      setDimensionUnlocks(getDimensionUnlocks(dimensionStore.profile, nextDimensionStore.profile))
+      setDimensionStore(nextDimensionStore)
     },
     [exercise, dimensionStore, updateStats, recordSrsAnswer, setDimensionStore],
   )
@@ -130,9 +146,18 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
           </Explanation>
         )}
         {isAnswered ? (
-          <Button autoFocus variant="primary" onClick={() => loadNextExercise(dimensionStore)}>
-            {t('exercise.next')}
-          </Button>
+          <>
+            {unlockMessages.length > 0 && (
+              <UnlockAlert role="status" aria-live="polite" lang={lang} dir={dir}>
+                {unlockMessages.map((message, index) => (
+                  <UnlockAlertText key={`${index}-${message}`}>{message}</UnlockAlertText>
+                ))}
+              </UnlockAlert>
+            )}
+            <Button autoFocus variant="primary" onClick={() => loadNextExercise(dimensionStore)}>
+              {t('exercise.next')}
+            </Button>
+          </>
         ) : (
           <ShortcutButton shortcutKey="s" onClick={handleSkip}>
             {t('exercise.pass')}
@@ -198,6 +223,26 @@ const Explanation = styled('aside')`
   gap: 0.75rem;
   text-align: start;
   padding: 0.5rem 0;
+`
+
+const UnlockAlert = styled('aside')`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: start;
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+  color: #15803d;
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+`
+
+const UnlockAlertText = styled('p')`
+  margin: 0;
+  color: #15803d;
+  line-height: 1.6;
+  font-size: 0.98rem;
 `
 
 const OPTION_BUTTON_CLASS = css`

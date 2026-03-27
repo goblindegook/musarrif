@@ -3,6 +3,7 @@ import {
   type DimensionStore,
   enforcePrerequisites,
   exerciseDiacritics,
+  getDimensionUnlocks,
   INITIAL_DIMENSION_PROFILE,
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
@@ -423,5 +424,54 @@ describe('promoteDimensions', () => {
         windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },
       }).profile.diacritics,
     ).toBe(2)
+  })
+})
+
+describe('getDimensionUnlocks', () => {
+  test('returns one grouped pronoun unlock item for each pronoun level', () => {
+    expect(
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 }, { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 }),
+    ).toEqual([
+      {
+        dimension: 'pronouns',
+        items: ['exercise.unlock.pronounGroup.singular'],
+      },
+    ])
+  })
+
+  test('returns unlocked forms when forms level increases from 0 to 1', () => {
+    expect(
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
+    ).toEqual([
+      {
+        dimension: 'forms',
+        items: ['exercise.unlock.form.2', 'exercise.unlock.form.3'],
+      },
+    ])
+  })
+
+  test('returns grouped tense unlock items across a multi-level jump', () => {
+    expect(
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 0 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
+    ).toEqual([
+      {
+        dimension: 'tenses',
+        items: ['exercise.unlock.tenseGroup.presentIndicativeFuture', 'exercise.unlock.tenseGroup.subjunctiveJussive'],
+      },
+    ])
+  })
+
+  test('ignores unchanged and demoted dimensions', () => {
+    expect(
+      getDimensionUnlocks(
+        { ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 2 },
+        { ...INITIAL_DIMENSION_PROFILE, forms: 2, rootTypes: 1 },
+      ),
+    ).toEqual([
+      {
+        dimension: 'forms',
+        items: ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'],
+      },
+    ])
   })
 })

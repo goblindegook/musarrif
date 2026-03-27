@@ -29,6 +29,11 @@ export type DimensionStore = {
   windows: Record<keyof DimensionProfile, boolean[]>
 }
 
+export interface DimensionUnlock {
+  dimension: keyof DimensionProfile
+  items: readonly string[]
+}
+
 export const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
   tenses: 0,
   pronouns: 0,
@@ -105,6 +110,42 @@ const R3: SrsRootType[] = [...R2, 'assimilated']
 const R4: SrsRootType[] = [...R3, 'hollow']
 const R5: SrsRootType[] = [...R4, 'defective']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
+
+const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly string[])[]> = {
+  tenses: [
+    [],
+    ['exercise.unlock.tenseGroup.presentIndicativeFuture'],
+    ['exercise.unlock.tenseGroup.subjunctiveJussive'],
+    ['exercise.unlock.tenseGroup.imperative'],
+    ['exercise.unlock.tenseGroup.passive'],
+  ],
+  pronouns: [
+    [],
+    ['exercise.unlock.pronounGroup.singular'],
+    ['exercise.unlock.pronounGroup.plural'],
+    ['exercise.unlock.pronounGroup.dual'],
+  ],
+  diacritics: [[], ['exercise.unlock.diacriticsMode.some'], ['exercise.unlock.diacriticsMode.none']],
+  forms: [
+    [],
+    ['exercise.unlock.form.2', 'exercise.unlock.form.3'],
+    ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'],
+    ['exercise.unlock.form.7', 'exercise.unlock.form.8', 'exercise.unlock.form.9', 'exercise.unlock.form.10'],
+  ],
+  rootTypes: [
+    [],
+    ['exercise.unlock.rootType.doubled'],
+    ['exercise.unlock.rootType.hamzated'],
+    ['exercise.unlock.rootType.assimilated'],
+    ['exercise.unlock.rootType.hollow'],
+    ['exercise.unlock.rootType.defective'],
+  ],
+  nominals: [
+    [],
+    ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
+    ['exercise.unlock.nominal.masdar'],
+  ],
+}
 
 export function rootTypesPool(rootTypes: RootTypesLevel): readonly SrsRootType[] {
   return ROOT_TYPE_POOLS[rootTypes]
@@ -228,4 +269,20 @@ export function promoteDimensions(store: DimensionStore): DimensionStore {
     }
   }
   return { profile: enforced, windows: nextWindows }
+}
+
+export function getDimensionUnlocks(previous: DimensionProfile, next: DimensionProfile): DimensionUnlock[] {
+  const unlocks: DimensionUnlock[] = []
+  for (const dimension of Object.keys(previous) as (keyof DimensionProfile)[]) {
+    const current = previous[dimension]
+    const target = next[dimension]
+    if (target <= current) continue
+    const levelUnlocks = DIMENSION_UNLOCK_KEYS[dimension]
+    const items: string[] = []
+    for (let level = current + 1; level <= target; level++) {
+      items.push(...(levelUnlocks[level] ?? []))
+    }
+    if (items.length > 0) unlocks.push({ dimension, items })
+  }
+  return unlocks
 }

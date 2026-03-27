@@ -160,6 +160,67 @@ describe('ExerciseMode', () => {
       expect(gen).toHaveBeenNthCalledWith(2, testProfile({ tenses: 2, pronouns: 2 }), expect.any(Object))
     })
   })
+
+  describe('unlock alerts', () => {
+    test('shows specific unlocked items when a new level is unlocked', () => {
+      localStorage.setItem(
+        'conjugator:dimensions',
+        JSON.stringify({
+          profile: {
+            tenses: 0,
+            pronouns: 0,
+            diacritics: 0,
+            forms: 0,
+            rootTypes: 0,
+            nominals: 0,
+          },
+          windows: {
+            tenses: [],
+            pronouns: [],
+            diacritics: [],
+            forms: Array(19).fill(true),
+            rootTypes: [],
+            nominals: [],
+          },
+        }),
+      )
+
+      render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+
+      expect(screen.getByText('Forms unlocked: Form II, Form III')).toBeInTheDocument()
+    })
+
+    test('clears unlock alert after loading the next exercise', () => {
+      localStorage.setItem(
+        'conjugator:dimensions',
+        JSON.stringify({
+          profile: {
+            tenses: 0,
+            pronouns: 0,
+            diacritics: 0,
+            forms: 0,
+            rootTypes: 0,
+            nominals: 0,
+          },
+          windows: {
+            tenses: [],
+            pronouns: [],
+            diacritics: [],
+            forms: Array(19).fill(true),
+            rootTypes: [],
+            nominals: [],
+          },
+        }),
+      )
+
+      render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+      fireEvent.click(screen.getByRole('button', { name: /next/i }))
+
+      expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
+    })
+  })
 })
 
 describe('SRS recording', () => {
