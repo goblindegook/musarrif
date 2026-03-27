@@ -2,8 +2,8 @@ import { describe, expect, test } from 'vitest'
 import enLocale from '../locales/en.json'
 import type { ExplanationLayers, TenseContext } from './explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from './explanation'
-import { getVerb, getVerbById } from './verbs'
 import type { PronounId } from './pronouns'
+import { getVerb, getVerbById } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
   const locale = enLocale as { strings: Record<string, string>; roots?: Record<string, string> }
