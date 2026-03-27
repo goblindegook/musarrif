@@ -97,7 +97,6 @@ describe('tenseExercise difficulty', () => {
   })
 
   test('easy: correct answer is the past tense key (random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer]).toBe('exercise.tense.option.past')
   })
