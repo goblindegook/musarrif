@@ -17,6 +17,7 @@ import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { CopyButton } from '../buttons/CopyButton'
 import { FavouriteButton } from '../buttons/FavouriteButton'
+import { LinkButton } from '../buttons/LinkButton'
 import { ShareButton } from '../buttons/ShareButton'
 import { SpeechButton } from '../buttons/SpeechButton'
 import { ConjugateBox } from '../ConjugateBox'
@@ -426,9 +427,9 @@ export function ConjugationMode() {
         <Stack area="footer">
           <Panel title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
             <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
-            <ActionLink dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
+            <LinkButton dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
               {t('footer.feedback.cta')}
-            </ActionLink>
+            </LinkButton>
           </Panel>
         </Stack>
       )}
@@ -532,32 +533,6 @@ const ConjugationSection = styled('div')`
   overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
-`
-
-const ActionLink = styled('a')`
-  align-self: stretch;
-  display: inline-block;
-  align-items: center;
-  text-align: center;
-  gap: 0.35rem;
-  font-weight: 600;
-  color: #334155;
-  text-decoration: none;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  padding: 0.55rem 0.95rem;
-  background: #ffffff;
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
-  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: #f1f5f9;
-    border-color: #cbd5f5;
-    color: #0f172a;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
-    outline: none;
-  }
 `
 
 const RootMetaValue = styled('div')`

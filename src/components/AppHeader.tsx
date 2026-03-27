@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { getUserData, importUserData } from '../hooks/local-storage'
 import { useRouting } from '../hooks/routing'
+import { Button } from './atoms/Button'
 import { IconButton } from './atoms/IconButton'
 import { SegmentedControl } from './atoms/SegmentedControl'
 import { ConjugateIcon } from './icons/ConjugateIcon'
@@ -100,12 +101,8 @@ export const AppHeader = () => {
           <ControlGroup>
             <ControlLabel>{t('settings.data.title')}</ControlLabel>
             <ActionRow>
-              <ActionButton type="button" onClick={exportUserData}>
-                {t('settings.data.export')}
-              </ActionButton>
-              <ActionButton type="button" onClick={() => importInputRef.current?.click()}>
-                {t('settings.data.import')}
-              </ActionButton>
+              <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
+              <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
             </ActionRow>
             <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
           </ControlGroup>
@@ -233,24 +230,4 @@ const ActionRow = styled('div')`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
-`
-
-const ActionButton = styled('button')`
-  border: 1px solid #cbd5e1;
-  border-radius: 0.6rem;
-  background: #f8fafc;
-  color: #334155;
-  padding: 0.45rem 0.6rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: #fff8e1;
-    border-color: #facc15;
-    color: #0f172a;
-    outline: none;
-  }
 `
