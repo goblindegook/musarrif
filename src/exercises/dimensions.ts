@@ -194,7 +194,7 @@ const DIMENSION_MAP: Record<ExerciseKind, (keyof DimensionProfile)[]> = {
 }
 
 const WINDOW_SIZES: Record<keyof DimensionProfile, number> = {
-  tenses: 40,
+  tenses: 20,
   pronouns: 20,
   diacritics: 50,
   forms: 20,

@@ -14,7 +14,14 @@ import type { Exercise } from '../../exercises/exercises'
 import { randomExercise } from '../../exercises/random'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
-import { addPass, addResult, deserializeDayStats, getStreak, serializeDayStats } from '../../exercises/stats'
+import {
+  addPass,
+  addResult,
+  deserializeDayStats,
+  getStreak,
+  getStreakGoalProgress,
+  serializeDayStats,
+} from '../../exercises/stats'
 import { useI18n } from '../../hooks/i18n'
 import { useLocalStorage } from '../../hooks/local-storage'
 import { useSrsStore } from '../../hooks/srs-store'
@@ -37,6 +44,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   )
   const [selected, setSelected] = useState<number | null>(null)
   const [dimensionUnlocks, setDimensionUnlocks] = useState<readonly DimensionUnlock[]>([])
+  const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
   const updateStats = useCallback(
@@ -50,6 +58,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
       setExercise(generateExercise(store.profile, srsStore))
       setSelected(null)
       setDimensionUnlocks([])
+      setStreakExtendedAlert(false)
     },
     [generateExercise, srsStore],
   )
@@ -61,28 +70,34 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     isAnswered && exercise.explanation
       ? renderExplanation(exercise.explanation, t, selected === exercise.answer ? 'concise' : 'full')
       : []
-  const unlockMessages = useMemo(
-    () =>
-      dimensionUnlocks.map(({ dimension, items }) =>
+  const alertMessages = useMemo(
+    () => [
+      ...dimensionUnlocks.map(({ dimension, items }) =>
         t('exercise.unlock.line', {
           dimension: t(`exercise.unlock.dimension.${dimension}`),
           items: items.map((item) => t(item)).join(', '),
         }),
       ),
-    [dimensionUnlocks, t],
+      ...(streakExtendedAlert ? [t('exercise.streak.extended')] : []),
+    ],
+    [dimensionUnlocks, streakExtendedAlert, t],
   )
 
   const handleAnswer = useCallback(
     (index: number) => {
       const isCorrect = index === exercise.answer
+      const nextStats = addResult(storedStats, isCorrect)
+      const previousStreakGoal = getStreakGoalProgress(storedStats)
+      const nextStreakGoal = getStreakGoalProgress(nextStats)
       setSelected(index)
-      updateStats((current) => addResult(current, isCorrect))
+      updateStats(() => nextStats)
       recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
       const nextDimensionStore = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect))
       setDimensionUnlocks(getDimensionUnlocks(dimensionStore.profile, nextDimensionStore.profile))
+      setStreakExtendedAlert(isCorrect && previousStreakGoal.remaining > 0 && nextStreakGoal.remaining === 0)
       setDimensionStore(nextDimensionStore)
     },
-    [exercise, dimensionStore, updateStats, recordSrsAnswer, setDimensionStore],
+    [exercise, dimensionStore, storedStats, updateStats, recordSrsAnswer, setDimensionStore],
   )
 
   const handleSkip = useCallback(() => {
@@ -147,10 +162,10 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         )}
         {isAnswered ? (
           <>
-            {unlockMessages.length > 0 && (
+            {alertMessages.length > 0 && (
               <UnlockAlert role="status" aria-live="polite" lang={lang} dir={dir}>
-                {unlockMessages.map((message, index) => (
-                  <UnlockAlertText key={`${index}-${message}`}>{message}</UnlockAlertText>
+                {alertMessages.map((message, index) => (
+                  <Text key={`${index}-${message}`}>{message}</Text>
                 ))}
               </UnlockAlert>
             )}
@@ -236,13 +251,6 @@ const UnlockAlert = styled('aside')`
   color: #15803d;
   border-radius: 0.75rem;
   padding: 0.625rem 0.75rem;
-`
-
-const UnlockAlertText = styled('p')`
-  margin: 0;
-  color: #15803d;
-  line-height: 1.6;
-  font-size: 0.98rem;
 `
 
 const OPTION_BUTTON_CLASS = css`

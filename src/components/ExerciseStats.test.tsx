@@ -200,4 +200,20 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getAllByText(/skipped/i).length).toBeGreaterThan(0)
   })
+
+  test('shows streak-extension progress and hint when daily goal is not met', () => {
+    const stats: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.getByText('Answer 6 correctly to extend your streak.')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  })
+
+  test('hides streak-extension progress when daily goal is met', () => {
+    const stats: DayStats[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
+    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
+    expect(screen.queryByText(/to extend your streak/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+  })
 })

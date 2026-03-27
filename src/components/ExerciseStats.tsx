@@ -3,7 +3,13 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import type { DayStats } from '../exercises/stats'
-import { getRecentScorePercent, getScorePercent, getStreakRecord } from '../exercises/stats'
+import {
+  getRecentScorePercent,
+  getScorePercent,
+  getStreakGoalProgress,
+  getStreakRecord,
+  STREAK_DAILY_GOAL,
+} from '../exercises/stats'
 import { useI18n } from '../hooks/i18n'
 import { Detail } from './Detail'
 import { Panel } from './Panel'
@@ -20,28 +26,49 @@ function StatsDetailsPanel({ stats, streak }: { stats: DayStats[]; streak: numbe
   const recentScore = getRecentScorePercent(stats, 15)
   const allTimeScore = getScorePercent(stats)
   const record = getStreakRecord(stats)
+  const streakGoal = getStreakGoalProgress(stats)
+  const streakGoalNow = Math.min(streakGoal.correct, STREAK_DAILY_GOAL)
+  const streakGoalPercent = Math.round((streakGoalNow / STREAK_DAILY_GOAL) * 100)
 
   return (
-    <DetailsRow>
-      <Detail label={t('exercise.stats.score.label')} valueLang={lang} valueDir="ltr">
-        <ValueStack>
-          <span>{recentScore}%</span>
-          <SubNote>{t('exercise.stats.score.alltime', { score: String(allTimeScore) })}</SubNote>
-        </ValueStack>
-      </Detail>
-      <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
-        <ValueStack>
-          <span>
-            {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
-          </span>
-          <SubNote>
-            {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
-              days: String(record),
-            })}
-          </SubNote>
-        </ValueStack>
-      </Detail>
-    </DetailsRow>
+    <StatsSummary>
+      <DetailsRow>
+        <Detail label={t('exercise.stats.score.label')} valueLang={lang} valueDir="ltr">
+          <ValueStack>
+            <span>{recentScore}%</span>
+            <SubNote>{t('exercise.stats.score.alltime', { score: String(allTimeScore) })}</SubNote>
+          </ValueStack>
+        </Detail>
+        <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
+          <ValueStack>
+            <span>
+              {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
+            </span>
+            <SubNote>
+              {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
+                days: String(record),
+              })}
+            </SubNote>
+          </ValueStack>
+        </Detail>
+      </DetailsRow>
+      {streakGoal.remaining > 0 && (
+        <StreakGoalSection>
+          <StreakGoalHint>
+            {t('exercise.stats.streak.extendHint', { remaining: String(streakGoal.remaining) })}
+          </StreakGoalHint>
+          <StreakGoalBar
+            aria-label={t('exercise.stats.streak.progress.label')}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={STREAK_DAILY_GOAL}
+            aria-valuenow={streakGoalNow}
+          >
+            <StreakGoalFill style={{ width: `${streakGoalPercent}%` }} />
+          </StreakGoalBar>
+        </StreakGoalSection>
+      )}
+    </StatsSummary>
   )
 }
 
@@ -157,6 +184,42 @@ const DetailsRow = styled('div')`
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   width: 100%;
+`
+
+const StatsSummary = styled('div')`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`
+
+const StreakGoalSection = styled('div')`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.75rem 0rem;
+`
+
+const StreakGoalHint = styled('p')`
+  margin: 0;
+  color: #475569;
+  font-size: 0.9rem;
+`
+
+const StreakGoalBar = styled('div')`
+  width: 100%;
+  height: 0.6rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e2e8f0;
+`
+
+const StreakGoalFill = styled('div')`
+  height: 100%;
+  background: #16a34a;
+  border-radius: 999px;
+  transition: width 220ms ease;
 `
 
 const SubNote = styled('span')`

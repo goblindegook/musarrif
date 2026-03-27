@@ -7,6 +7,7 @@ import {
   getRecentScorePercent,
   getScorePercent,
   getStreak,
+  getStreakGoalProgress,
   getStreakRecord,
   serializeDayStats,
 } from './stats'
@@ -58,44 +59,44 @@ describe('getStreak', () => {
   })
 
   test('returns 1 when only today has exercises', () => {
-    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 }]
+    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 }]
     expect(getStreak(stats, d('2026-03-19'))).toBe(1)
   })
 
   test('returns 2 for today and yesterday', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-18'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreak(stats, d('2026-03-19'))).toBe(2)
   })
 
   test('returns 3 for three consecutive days ending today', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-17'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-18'), correct: 12, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreak(stats, d('2026-03-19'))).toBe(3)
   })
 
   test('resets streak when there is a gap', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-15'), correct: 5, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-15'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreak(stats, d('2026-03-19'))).toBe(1)
   })
 
   test('returns 0 when last exercise was more than one day ago', () => {
-    const stats: DayStats[] = [{ date: d('2026-03-17'), correct: 3, incorrect: 0, passed: 0 }]
+    const stats: DayStats[] = [{ date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 }]
     expect(getStreak(stats, d('2026-03-19'))).toBe(0)
   })
 
   test('counts streak from yesterday when today has no exercises', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-17'), correct: 2, incorrect: 0, passed: 0 },
-      { date: d('2026-03-18'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-18'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreak(stats, d('2026-03-19'))).toBe(2)
   })
@@ -103,9 +104,25 @@ describe('getStreak', () => {
   test('ignores days with zero total exercises', () => {
     const stats: DayStats[] = [
       { date: d('2026-03-18'), correct: 0, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreak(stats, d('2026-03-19'))).toBe(1)
+  })
+
+  test('does not count today when correct answers are below the daily goal', () => {
+    const stats: DayStats[] = [
+      { date: d('2026-03-18'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 9, incorrect: 2, passed: 0 },
+    ]
+    expect(getStreak(stats, d('2026-03-19'))).toBe(1)
+  })
+
+  test('counts today when correct answers reach the daily goal', () => {
+    const stats: DayStats[] = [
+      { date: d('2026-03-18'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 2, passed: 0 },
+    ]
+    expect(getStreak(stats, d('2026-03-19'))).toBe(2)
   })
 })
 
@@ -257,55 +274,80 @@ describe('getStreakRecord', () => {
   })
 
   test('returns 1 for a single active day', () => {
-    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 }]
+    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 }]
     expect(getStreakRecord(stats)).toBe(1)
   })
 
   test('returns the length of a single unbroken run', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-17'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-18'), correct: 12, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(3)
   })
 
   test('returns the longest run when multiple separated runs exist', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-10'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-11'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-15'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-16'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-17'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-18'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-10'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-11'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-15'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-16'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-18'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(4)
   })
 
   test('a gap (no entry) breaks a run', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-17'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(1)
   })
 
   test('a pass-only day does not count and breaks a run', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-17'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-17'), correct: 10, incorrect: 0, passed: 0 },
       { date: d('2026-03-18'), correct: 0, incorrect: 0, passed: 2 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(1)
   })
 
   test('result is always >= getStreak for the same stats', () => {
     const stats: DayStats[] = [
-      { date: d('2026-03-10'), correct: 2, incorrect: 0, passed: 0 },
-      { date: d('2026-03-11'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-12'), correct: 1, incorrect: 0, passed: 0 },
-      { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
+      { date: d('2026-03-10'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-11'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-12'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBeGreaterThanOrEqual(getStreak(stats, d('2026-03-19')))
+  })
+
+  test('only counts days that meet the daily correct-answer goal', () => {
+    const stats: DayStats[] = [
+      { date: d('2026-03-10'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-11'), correct: 9, incorrect: 0, passed: 0 },
+      { date: d('2026-03-12'), correct: 10, incorrect: 0, passed: 0 },
+      { date: d('2026-03-13'), correct: 10, incorrect: 0, passed: 0 },
+    ]
+    expect(getStreakRecord(stats)).toBe(2)
+  })
+})
+
+describe('getStreakGoalProgress', () => {
+  test('reports remaining answers when below goal', () => {
+    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 4, incorrect: 3, passed: 1 }]
+    expect(getStreakGoalProgress(stats, d('2026-03-19'))).toEqual({ correct: 4, remaining: 6 })
+  })
+
+  test('reports goal met at exactly daily goal', () => {
+    const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 }]
+    expect(getStreakGoalProgress(stats, d('2026-03-19'))).toEqual({
+      correct: 10,
+      remaining: 0,
+    })
   })
 })

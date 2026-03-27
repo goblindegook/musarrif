@@ -220,6 +220,30 @@ describe('ExerciseMode', () => {
 
       expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
     })
+
+    test('shows streak-extended alert when daily correct answers reach 10', () => {
+      localStorage.setItem(
+        'conjugator:exercise:daily',
+        JSON.stringify([{ date: new Date().toISOString().slice(0, 10), correct: 9, incorrect: 0, passed: 0 }]),
+      )
+
+      render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+
+      expect(screen.getByText('Streak extended!')).toBeInTheDocument()
+    })
+
+    test('does not show streak-extended alert before daily correct answers reach 10', () => {
+      localStorage.setItem(
+        'conjugator:exercise:daily',
+        JSON.stringify([{ date: new Date().toISOString().slice(0, 10), correct: 8, incorrect: 0, passed: 0 }]),
+      )
+
+      render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+
+      expect(screen.queryByText('Streak extended!')).not.toBeInTheDocument()
+    })
   })
 })
 
@@ -383,14 +407,12 @@ describe('pass SRS recording', () => {
 describe('Explanation in ExerciseMode', () => {
   test('explanation is not visible before answering', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    const paragraphs = document.querySelectorAll('p[class]')
-    expect(paragraphs).toHaveLength(2)
+    expect(screen.queryByText(/Form I is the base triliteral pattern/i)).not.toBeInTheDocument()
   })
 
   test('explanation paragraphs appear after selecting a wrong answer', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button')[1])
-    const paragraphs = document.querySelectorAll('p[class]')
-    expect(paragraphs).toHaveLength(5)
+    expect(screen.getByText(/Form I is the base triliteral pattern/i)).toBeInTheDocument()
   })
 })

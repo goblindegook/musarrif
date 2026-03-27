@@ -1,5 +1,11 @@
 export type DayStats = { date: Date; correct: number; incorrect: number; passed: number }
 export type SerializedDayStats = { date: string; correct: number; incorrect: number; passed?: number }
+export const STREAK_DAILY_GOAL = 10
+
+interface StreakGoalProgress {
+  correct: number
+  remaining: number
+}
 
 export function addResult(stats: DayStats[], correct: boolean, date?: Date): DayStats[] {
   const d = date ?? todayDate()
@@ -32,15 +38,15 @@ export function addPass(stats: DayStats[], date?: Date): DayStats[] {
 
 export function getStreak(stats: DayStats[], today?: Date): number {
   const todayStr = dateKey(today ?? todayDate())
-  const activeDates = new Set(stats.filter((d) => d.correct + d.incorrect > 0).map((d) => dateKey(d.date)))
+  const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => dateKey(d.date)))
 
   // Streak can start from today or yesterday
-  const startDate = activeDates.has(todayStr) ? todayStr : offsetDate(todayStr, -1)
-  if (!activeDates.has(startDate)) return 0
+  const startDate = extendedDates.has(todayStr) ? todayStr : offsetDate(todayStr, -1)
+  if (!extendedDates.has(startDate)) return 0
 
   let streak = 0
   let current = startDate
-  while (activeDates.has(current)) {
+  while (extendedDates.has(current)) {
     streak++
     current = offsetDate(current, -1)
   }
@@ -66,7 +72,7 @@ export function getRecentScorePercent(stats: DayStats[], days: number, today?: D
 
 export function getStreakRecord(stats: DayStats[]): number {
   const activeDates = stats
-    .filter((d) => d.correct + d.incorrect > 0)
+    .filter((d) => d.correct >= STREAK_DAILY_GOAL)
     .map((d) => dateKey(d.date))
     .sort()
 
@@ -81,6 +87,14 @@ export function getStreakRecord(stats: DayStats[]): number {
   }
 
   return max
+}
+
+export function getStreakGoalProgress(stats: DayStats[], today?: Date): StreakGoalProgress {
+  const key = dateKey(today ?? todayDate())
+  const todayStats = stats.find((s) => dateKey(s.date) === key)
+  const correct = todayStats?.correct ?? 0
+  const remaining = Math.max(0, STREAK_DAILY_GOAL - correct)
+  return { correct, remaining }
 }
 
 export function serializeDayStats(stats: DayStats[]): SerializedDayStats[] {
