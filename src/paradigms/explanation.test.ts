@@ -373,7 +373,7 @@ describe('renderExplanation', () => {
     expect(renderExplanation(layers, t, 'full')).toEqual([
       'explanation.root.sound explanation.form.1 explanation.form-i-pattern.fa3ala-yaf3ulu',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
-      'explanation.pronoun.past.3ms',
+      'explanation.pronoun.active.past.3ms',
     ])
   })
 
@@ -404,13 +404,17 @@ describe('renderExplanation', () => {
   })
 
   test.each<[TenseContext, PronounId, string]>([
-    ['active.past', '3ms', 'explanation.pronoun.past.3ms'],
-    ['active.present.subjunctive', '2d', 'explanation.pronoun.present.subjunctive.2d'],
-    ['active.future', '3ms', 'explanation.pronoun.future.3ms'],
+    ['active.past', '3ms', 'explanation.pronoun.active.past.3ms'],
+    ['passive.past', '3ms', 'explanation.pronoun.passive.past.3ms'],
+    ['active.present.indicative', '1s', 'explanation.pronoun.active.present.indicative.1s'],
+    ['passive.present.indicative', '1s', 'explanation.pronoun.passive.present.indicative.1s'],
+    ['active.present.subjunctive', '2d', 'explanation.pronoun.active.present.subjunctive.2d'],
+    ['active.present.jussive', '3mp', 'explanation.pronoun.active.present.jussive.3mp'],
+    ['active.future', '3ms', 'explanation.pronoun.active.future.3ms'],
     ['passive.future', '3ms', 'explanation.pronoun.passive.future.3ms'],
     ['passive.present.jussive', '3ms', 'explanation.pronoun.passive.present.jussive.3ms'],
     ['passive.present.subjunctive', '3ms', 'explanation.pronoun.passive.present.subjunctive.3ms'],
-    ['active.imperative', '3ms', 'explanation.pronoun.imperative.3ms'],
+    ['active.imperative', '2ms', 'explanation.pronoun.active.imperative.2ms'],
   ])('full mode pronoun key for %s %s', (tense, pronoun, expected) => {
     const layers = testExplanationLayers({ tense, pronoun })
     expect(renderExplanation(layers, t, 'full')).toContain(expected)
@@ -446,7 +450,7 @@ describe('renderExplanation', () => {
     expect(renderExplanation(layers, t, 'full')).toEqual([
       'explanation.root.assimilated explanation.form.8 explanation.form-root.assimilation-waw',
       'explanation.tense.active.past',
-      'explanation.pronoun.past.3ms',
+      'explanation.pronoun.active.past.3ms',
     ])
   })
 

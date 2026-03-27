@@ -136,7 +136,7 @@ describe('enforcePrerequisites', () => {
         tenses: 4,
         pronouns: 3,
         forms: 3,
-        rootTypes: 3,
+        rootTypes: 5,
         nominals: 2,
       }).diacritics,
     ).toBe(2)
@@ -417,7 +417,7 @@ describe('promoteDimensions', () => {
           tenses: 4,
           pronouns: 3,
           forms: 3,
-          rootTypes: 3,
+          rootTypes: 5,
           nominals: 2,
         },
         windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },

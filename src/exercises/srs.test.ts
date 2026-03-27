@@ -16,8 +16,8 @@ describe('getSrsRootType', () => {
     expect(getSrsRootType('كتب')).toBe('sound')
   })
 
-  test('returns weak when root contains weak radical', () => {
-    expect(getSrsRootType('قول')).toBe('weak')
+  test('returns hollow when root contains a weak middle radical', () => {
+    expect(getSrsRootType('قول')).toBe('hollow')
   })
 
   test('returns hamzated when root contains hamza and no weak radicals', () => {
@@ -35,8 +35,8 @@ describe('buildCardKey', () => {
   })
 
   test('3-tuple tense serialises all three parts', () => {
-    expect(buildCardKey('verbTense', 'weak', 3, ['passive', 'present', 'indicative'], '3ms')).toBe(
-      'verbTense:weak:3:passive-present-indicative:3ms',
+    expect(buildCardKey('verbTense', 'hollow', 3, ['passive', 'present', 'indicative'], '3ms')).toBe(
+      'verbTense:hollow:3:passive-present-indicative:3ms',
     )
   })
 
@@ -73,9 +73,9 @@ describe('parseCardKey', () => {
   })
 
   test('parses 3-token tense key', () => {
-    expect(parseCardKey('verbTense:weak:3:passive-present-indicative:3ms')).toEqual({
+    expect(parseCardKey('verbTense:hollow:3:passive-present-indicative:3ms')).toEqual({
       kind: 'verbTense',
-      rootType: 'weak',
+      rootType: 'hollow',
       form: 3,
       tense: ['passive', 'present', 'indicative'],
       pronoun: '3ms',

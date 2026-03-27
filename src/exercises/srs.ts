@@ -5,7 +5,7 @@ import type { VerbForm } from '../paradigms/verbs'
 import type { ExerciseKind } from './exercises'
 
 export type AnswerResult = 'correct' | 'wrong' | 'pass'
-export type SrsRootType = 'sound' | 'doubled' | 'hamzated' | 'weak'
+export type SrsRootType = 'sound' | 'doubled' | 'hamzated' | 'assimilated' | 'hollow' | 'defective'
 
 export interface CardConstraints {
   rootType?: SrsRootType
@@ -34,10 +34,12 @@ export interface ParsedCardKey {
 }
 
 export function getSrsRootType(root: string): SrsRootType {
-  const letters = Array.from(root)
-  if (letters.some(isWeakLetter)) return 'weak'
-  if (letters.some(isHamzatedLetter)) return 'hamzated'
-  if (letters.length >= 3 && letters[1] === letters[2]) return 'doubled'
+  const [c1, c2, c3] = Array.from(root)
+  if (isWeakLetter(c3)) return 'defective'
+  if (isWeakLetter(c2)) return 'hollow'
+  if (isWeakLetter(c1)) return 'assimilated'
+  if ([c1, c2, c3].some(isHamzatedLetter)) return 'hamzated'
+  if (c2 === c3) return 'doubled'
   return 'sound'
 }
 

@@ -1,4 +1,5 @@
 import type { FormIPattern } from './form-i-vowels'
+import { WAW } from './letters'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
@@ -48,8 +49,6 @@ export type ExplanationLayers = {
   tenseRoot: TenseRootInteraction | null
   pronoun: PronounId
 }
-
-const WAW = 'و'
 
 function toTenseContext(verbTense: VerbTense): TenseContext {
   const [voice, tenseOrMood, mood] = verbTense
@@ -139,25 +138,6 @@ function toTenseRoot(
   return null
 }
 
-function resolvePronounKey(tense: TenseContext, pronoun: PronounId): string {
-  switch (tense) {
-    case 'active.past':
-    case 'passive.past':
-      return `explanation.pronoun.past.${pronoun}`
-    case 'active.present.indicative':
-    case 'passive.present.indicative':
-      return `explanation.pronoun.present.indicative.${pronoun}`
-    case 'active.future':
-      return `explanation.pronoun.future.${pronoun}`
-    case 'active.present.subjunctive':
-      return `explanation.pronoun.present.subjunctive.${pronoun}`
-    case 'active.imperative':
-      return `explanation.pronoun.imperative.${pronoun}`
-    default:
-      return `explanation.pronoun.${tense}.${pronoun}`
-  }
-}
-
 const FORM_I_BASE_PATTERNS: Record<
   FormIPattern,
   { basePattern: string; pastVowel: string; arabicForm: string; arabicVowel: string }
@@ -202,7 +182,7 @@ export function renderExplanation(
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [t(resolvePronounKey(layers.tense, layers.pronoun), params)],
+    [t(`explanation.pronoun.${layers.tense}.${layers.pronoun}`, params)],
   ].map((paragraph) => paragraph.filter(Boolean).join(' '))
 }
 

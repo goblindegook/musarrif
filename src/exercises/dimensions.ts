@@ -12,7 +12,7 @@ export type TensesLevel = 0 | 1 | 2 | 3 | 4
 export type PronounsLevel = 0 | 1 | 2 | 3
 export type DiacriticsLevel = 0 | 1 | 2
 export type FormsLevel = 0 | 1 | 2 | 3
-export type RootTypesLevel = 0 | 1 | 2 | 3
+export type RootTypesLevel = 0 | 1 | 2 | 3 | 4 | 5
 export type NominalsLevel = 0 | 1 | 2
 
 export type DimensionProfile = {
@@ -101,8 +101,10 @@ export function formsPool(forms: FormsLevel): readonly VerbForm[] {
 const R0: SrsRootType[] = ['sound']
 const R1: SrsRootType[] = [...R0, 'doubled']
 const R2: SrsRootType[] = [...R1, 'hamzated']
-const R3: SrsRootType[] = [...R2, 'weak']
-const ROOT_TYPE_POOLS = [R0, R1, R2, R3] as const
+const R3: SrsRootType[] = [...R2, 'assimilated']
+const R4: SrsRootType[] = [...R3, 'hollow']
+const R5: SrsRootType[] = [...R4, 'defective']
+const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
 
 export function rootTypesPool(rootTypes: RootTypesLevel): readonly SrsRootType[] {
   return ROOT_TYPE_POOLS[rootTypes]
@@ -162,11 +164,11 @@ const PROMOTION_THRESHOLD = 0.8
 const DEMOTION_THRESHOLD = 0.4
 
 const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
-  tenses: 4,
-  pronouns: 3,
+  tenses: TENSE_POOLS.length - 1,
+  pronouns: PRONOUN_POOLS.length - 1,
   diacritics: 2,
-  forms: 3,
-  rootTypes: 3,
+  forms: FORM_POOLS.length - 1,
+  rootTypes: ROOT_TYPE_POOLS.length - 1,
   nominals: 2,
 }
 
