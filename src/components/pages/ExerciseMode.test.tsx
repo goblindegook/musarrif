@@ -34,7 +34,7 @@ function testExercise(overrides = {}): Exercise {
       rootType: 'sound',
       formIPattern: 'fa3ala-yaf3ulu',
       formRoot: null,
-      tense: 'active-past',
+      tense: 'active.past',
       tenseRoot: null,
       pronoun: '3ms',
     },
