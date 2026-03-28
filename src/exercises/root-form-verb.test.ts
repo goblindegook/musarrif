@@ -57,4 +57,20 @@ describe('rootFormVerbExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
     expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^rootFormVerb:[a-z]+:\d+$/)
   })
+
+  test('includes only root-and-form explanation payload', () => {
+    const exercise = rootFormVerbExercise.generate(
+      { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 5 },
+      { form: 2, rootType: 'sound' },
+    )
+
+    expect(exercise.explanation).toEqual({
+      rootLetters: exercise.word.split(' '),
+      form: 2,
+      arabic: exercise.options[exercise.answer],
+      rootType: 'sound',
+      formIPattern: null,
+      formRoot: null,
+    })
+  })
 })

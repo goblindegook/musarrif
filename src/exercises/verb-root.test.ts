@@ -58,4 +58,20 @@ describe('verbRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
     expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbRoot:[a-z]+:\d+:[\w-]+:\w+$/)
   })
+
+  test('includes explanation layers for the selected tense and pronoun', () => {
+    const exercise = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE, {
+      form: 1,
+      rootType: 'sound',
+      tense: ['active', 'past'],
+      pronoun: '3ms',
+    })
+
+    expect(exercise.explanation).toEqual(
+      expect.objectContaining({
+        tense: 'active.past',
+        pronoun: '3ms',
+      }),
+    )
+  })
 })

@@ -43,11 +43,11 @@ export type ExplanationLayers = {
   form: VerbForm
   arabic: string
   rootType: RootAnalysisType
-  formIPattern: FormIPattern | null
+  formIPattern?: FormIPattern | null
   formRoot: FormRootInteraction | null
-  tense: TenseContext
-  tenseRoot: TenseRootInteraction | null
-  pronoun: PronounId
+  tense?: TenseContext
+  tenseRoot?: TenseRootInteraction | null
+  pronoun?: PronounId
 }
 
 function toTenseContext(verbTense: VerbTense): TenseContext {
@@ -160,9 +160,9 @@ export function renderExplanation(
 ): string[] {
   const formIBaseParams = layers.formIPattern ? FORM_I_BASE_PATTERNS[layers.formIPattern] : {}
   const params = {
-    root: layers.rootLetters.join('-'),
-    arabic: layers.arabic,
-    form: String(layers.form),
+    root: layers.rootLetters?.join('-') ?? '',
+    arabic: layers.arabic ?? '',
+    form: layers.form == null ? '' : String(layers.form),
     ...formIBaseParams,
   }
 
@@ -171,19 +171,21 @@ export function renderExplanation(
 
   return [
     [
-      t(`explanation.root.${layers.rootType}`, params),
-      t(`explanation.form.${layers.form}`, params),
+      layers.rootType && t(`explanation.root.${layers.rootType}`, params),
+      layers.form != null && t(`explanation.form.${layers.form}`, params),
       layers.formIPattern && t(`explanation.form-i-pattern.${layers.formIPattern}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
     [
-      layers.tense.startsWith('passive.') ? t(`explanation.voice.${layers.tense}`, params) : '',
-      t(`explanation.tense.${layers.tense}`, params),
+      layers.tense?.startsWith('passive.') ? t(`explanation.voice.${layers.tense}`, params) : '',
+      layers.tense && t(`explanation.tense.${layers.tense}`, params),
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [t(`explanation.pronoun.${layers.tense}.${layers.pronoun}`, params)],
-  ].map((paragraph) => paragraph.filter(Boolean).join(' '))
+    [layers.tense && layers.pronoun ? t(`explanation.pronoun.${layers.tense}.${layers.pronoun}`, params) : ''],
+  ]
+    .map((paragraph) => paragraph.filter(Boolean).join(' '))
+    .filter(Boolean)
 }
 
 export function resolveVerbExplanationLayers(
