@@ -169,7 +169,7 @@ describe('ExerciseMode', () => {
         JSON.stringify({
           profile: {
             tenses: 0,
-            pronouns: 0,
+            pronouns: 1,
             diacritics: 0,
             forms: 0,
             rootTypes: 0,
@@ -198,7 +198,7 @@ describe('ExerciseMode', () => {
         JSON.stringify({
           profile: {
             tenses: 0,
-            pronouns: 0,
+            pronouns: 1,
             diacritics: 0,
             forms: 0,
             rootTypes: 0,

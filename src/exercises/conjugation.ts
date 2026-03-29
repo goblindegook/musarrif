@@ -71,7 +71,7 @@ function easyCandidates(
   profile: DimensionProfile,
 ): string[] {
   // Use minimum pools for distractor generation to ensure variety
-  const tensesLevel = Math.max(profile.tenses, 2) as TensesLevel
+  const tensesLevel = Math.max(profile.tenses, 3) as TensesLevel
   const pronounsLevel = Math.max(profile.pronouns, 2) as PronounsLevel
   return buildSiblings(verb).flatMap((v) =>
     distractorTensePool(tensesLevel)

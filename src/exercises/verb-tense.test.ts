@@ -38,7 +38,7 @@ describe('tenseExercise', () => {
     expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbTense')
   })
 
-  test('returns exactly four options', () => {
+  test('returns four options', () => {
     expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 

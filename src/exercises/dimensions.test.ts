@@ -103,8 +103,8 @@ describe('enforcePrerequisites', () => {
     expect(enforcePrerequisites(INITIAL_DIMENSION_PROFILE)).toEqual(INITIAL_DIMENSION_PROFILE)
   })
 
-  test('rolls back tenses from 2 to 1 when pronouns < 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 }).tenses).toBe(1)
+  test('does not roll back unlocked tenses when pronouns < 2', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 }).tenses).toBe(2)
   })
 
   test('keeps tenses at 2 when pronouns >= 2', () => {
@@ -140,7 +140,7 @@ describe('enforcePrerequisites', () => {
       enforcePrerequisites({
         ...INITIAL_DIMENSION_PROFILE,
         diacritics: 2,
-        tenses: 4,
+        tenses: 5,
         pronouns: 3,
         forms: 3,
         rootTypes: 5,
@@ -149,15 +149,15 @@ describe('enforcePrerequisites', () => {
     ).toBe(2)
   })
 
-  test('cascades: tenses rollback also rolls back nominals', () => {
+  test('does not roll back nominals when pronouns are demoted but tenses stay unlocked', () => {
     const result = enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 })
-    expect(result.tenses).toBe(1)
-    expect(result.nominals).toBe(0)
+    expect(result.tenses).toBe(2)
+    expect(result.nominals).toBe(1)
   })
 
-  test('cascades: tenses rollback also rolls back diacritics', () => {
+  test('keeps unlocked tenses while still rolling back diacritics when prerequisites are unmet', () => {
     const result = enforcePrerequisites({ tenses: 2, pronouns: 1, forms: 3, rootTypes: 3, nominals: 2, diacritics: 2 })
-    expect(result.tenses).toBe(1)
+    expect(result.tenses).toBe(2)
     expect(result.diacritics).toBe(1)
   })
 })
@@ -275,10 +275,19 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('promotes at exactly 80% accuracy', () => {
+  test('forms does not promote at exactly 80% accuracy while pronouns are locked', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
+      }).profile.forms,
+    ).toBe(0)
+  })
+
+  test('forms promotes at exactly 80% accuracy when singular pronouns are unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
       }).profile.forms,
     ).toBe(1)
@@ -287,7 +296,7 @@ describe('promoteDimensions', () => {
   test('clears window after promotion', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
       }).windows.forms,
     ).toEqual([])
@@ -296,10 +305,10 @@ describe('promoteDimensions', () => {
   test('does not promote beyond max level', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 4, pronouns: 3 },
+        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 5, pronouns: 3 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
       }).profile.tenses,
-    ).toBe(4)
+    ).toBe(5)
   })
 
   test('nominals blocked at level 0 until tenses >= 2', () => {
@@ -340,7 +349,7 @@ describe('promoteDimensions', () => {
 
   test('each dimension advances independently', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_STORE.profile },
+      profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
       windows: {
         ...INITIAL_DIMENSION_STORE.windows,
         forms: filledWindow(20),
@@ -349,6 +358,24 @@ describe('promoteDimensions', () => {
     })
     expect(next.profile.forms).toBe(1)
     expect(next.profile.tenses).toBe(0)
+  })
+
+  test('tenses does not promote while pronouns are locked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(0)
+  })
+
+  test('rootTypes does not promote while pronouns are locked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_STORE.profile },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, rootTypes: filledWindow(20) },
+      }).profile.rootTypes,
+    ).toBe(0)
   })
 
   test('promoting tenses allows nominals to cascade in same call', () => {
@@ -380,22 +407,30 @@ describe('promoteDimensions', () => {
     ).toBe(1)
   })
 
-  test('tenses blocked at level 1 until pronouns >= 2', () => {
+  test('tenses blocked at level 0 while pronouns are locked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 0 },
+        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
+      }).profile.tenses,
+    ).toBe(0)
+  })
+
+  test('tenses promotes to level 2 when singular pronouns are unlocked', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1 },
         windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
       }).profile.tenses,
-    ).toBe(1)
+    ).toBe(2)
   })
 
-  test('tenses promotes to level 2 when pronouns >= 2', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
-      }).profile.tenses,
-    ).toBe(2)
+  test('pronoun demotion does not re-lock unlocked tenses, forms, or root types', () => {
+    const next = promoteDimensions({
+      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2, forms: 1, rootTypes: 1 },
+      windows: { ...INITIAL_DIMENSION_STORE.windows, pronouns: filledWindow(8) },
+    })
+    expect(next.profile).toEqual({ diacritics: 0, forms: 1, nominals: 0, pronouns: 0, rootTypes: 1, tenses: 2 })
   })
 
   test('diacritics blocked at level 1 until all other dimensions are at max', () => {
@@ -421,7 +456,7 @@ describe('promoteDimensions', () => {
         profile: {
           ...INITIAL_DIMENSION_PROFILE,
           diacritics: 1,
-          tenses: 4,
+          tenses: 5,
           pronouns: 3,
           forms: 3,
           rootTypes: 5,
@@ -437,34 +472,36 @@ describe('getDimensionUnlocks', () => {
   test('returns one grouped pronoun unlock item for each pronoun level', () => {
     expect(
       getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 }, { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 }),
-    ).toEqual([
-      {
-        dimension: 'pronouns',
-        items: ['exercise.unlock.pronounGroup.singular'],
-      },
-    ])
+    ).toEqual([{ dimension: 'pronouns', items: ['exercise.unlock.pronounGroup.singular'] }])
   })
 
   test('returns unlocked forms when forms level increases from 0 to 1', () => {
     expect(
       getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([
-      {
-        dimension: 'forms',
-        items: ['exercise.unlock.form.2', 'exercise.unlock.form.3'],
-      },
-    ])
+    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.2', 'exercise.unlock.form.3'] }])
   })
 
-  test('returns grouped tense unlock items across a multi-level jump', () => {
+  test('returns split tense unlock items across a multi-level jump', () => {
     expect(
       getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 0 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
     ).toEqual([
       {
         dimension: 'tenses',
-        items: ['exercise.unlock.tenseGroup.presentIndicativeFuture', 'exercise.unlock.tenseGroup.subjunctiveJussive'],
+        items: ['exercise.unlock.tenseGroup.presentIndicative', 'exercise.unlock.tenseGroup.future'],
       },
     ])
+  })
+
+  test('returns only future when advancing one level from present to future', () => {
+    expect(
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 1 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
+    ).toEqual([{ dimension: 'tenses', items: ['exercise.unlock.tenseGroup.future'] }])
+  })
+
+  test('returns passive unlock when advancing to highest tense level', () => {
+    expect(
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 5 }),
+    ).toEqual([{ dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passive'] }])
   })
 
   test('ignores unchanged and demoted dimensions', () => {
@@ -474,10 +511,7 @@ describe('getDimensionUnlocks', () => {
         { ...INITIAL_DIMENSION_PROFILE, forms: 2, rootTypes: 1 },
       ),
     ).toEqual([
-      {
-        dimension: 'forms',
-        items: ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'],
-      },
+      { dimension: 'forms', items: ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'] },
     ])
   })
 })

@@ -19,7 +19,7 @@ export const verbTenseExercise = defineExercise(
   'verbTense',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
-    const minTenses = Math.max(profile.tenses, 2) as TensesLevel
+    const minTenses = Math.max(profile.tenses, 3) as TensesLevel
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
     const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)

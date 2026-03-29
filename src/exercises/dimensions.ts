@@ -7,7 +7,7 @@ import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '.
 import type { CardConstraints } from './srs'
 import { getSrsRootType, type SrsRootType } from './srs'
 
-export type TensesLevel = 0 | 1 | 2 | 3 | 4
+export type TensesLevel = 0 | 1 | 2 | 3 | 4 | 5
 export type PronounsLevel = 0 | 1 | 2 | 3
 export type DiacriticsLevel = 0 | 1 | 2
 export type FormsLevel = 0 | 1 | 2 | 3
@@ -53,18 +53,19 @@ export function random<T>(arr: readonly T[]): T {
 }
 
 const T0: VerbTense[] = [['active', 'past']]
-const T1: VerbTense[] = [...T0, ['active', 'present', 'indicative'], ['active', 'future']]
-const T2: VerbTense[] = [...T1, ['active', 'present', 'subjunctive'], ['active', 'present', 'jussive']]
-const T3: VerbTense[] = [...T2, ['active', 'imperative']]
-const T4: VerbTense[] = [
-  ...T3,
+const T1: VerbTense[] = [...T0, ['active', 'present', 'indicative']]
+const T2: VerbTense[] = [...T1, ['active', 'future']]
+const T3: VerbTense[] = [...T2, ['active', 'present', 'subjunctive'], ['active', 'present', 'jussive']]
+const T4: VerbTense[] = [...T3, ['active', 'imperative']]
+const T5: VerbTense[] = [
+  ...T4,
   ['passive', 'past'],
   ['passive', 'present', 'indicative'],
   ['passive', 'present', 'subjunctive'],
   ['passive', 'present', 'jussive'],
   ['passive', 'future'],
 ]
-const TENSE_POOLS = [T0, T1, T2, T3, T4] as const
+const TENSE_POOLS = [T0, T1, T2, T3, T4, T5] as const
 
 export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
   return canConjugatePassive(verb)
@@ -114,7 +115,8 @@ const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
 const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly string[])[]> = {
   tenses: [
     [],
-    ['exercise.unlock.tenseGroup.presentIndicativeFuture'],
+    ['exercise.unlock.tenseGroup.presentIndicative'],
+    ['exercise.unlock.tenseGroup.future'],
     ['exercise.unlock.tenseGroup.subjunctiveJussive'],
     ['exercise.unlock.tenseGroup.imperative'],
     ['exercise.unlock.tenseGroup.passive'],
@@ -198,7 +200,6 @@ const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
 
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
-  if (p.tenses >= 2 && p.pronouns < 2) p.tenses = 1
   if (p.nominals >= 1 && p.tenses < 2) p.nominals = 0
   if (p.nominals >= 2 && p.forms < 1) p.nominals = 1
   if (
@@ -239,7 +240,9 @@ export function promoteDimensions(store: DimensionStore): DimensionStore {
     const windowSize = WINDOW_SIZES[dimension]
     if (w.length < windowSize) continue
     const accuracy = w.filter(Boolean).length / windowSize
-    if (accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension]) {
+    const canPromote =
+      profile.pronouns >= 1 || !(dimension === 'tenses' || dimension === 'forms' || dimension === 'rootTypes')
+    if (accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension] && canPromote) {
       ;(nextProfile as Record<string, number>)[dimension] = current + 1
     } else if (accuracy <= DEMOTION_THRESHOLD && current > 0) {
       ;(nextProfile as Record<string, number>)[dimension] = current - 1

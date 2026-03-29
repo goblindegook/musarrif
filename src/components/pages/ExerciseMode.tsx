@@ -138,6 +138,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
             return (
               <ShortcutButton
+                size="large"
                 key={option}
                 className={OPTION_BUTTON_CLASS}
                 shortcutKey={`${index + 1}`}
@@ -165,12 +166,15 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         {isAnswered ? (
           <>
             {alertMessages.length > 0 && (
-              <UnlockAlert role="status" aria-live="polite" lang={lang} dir={dir}>
+              <Alerts>
                 {alertMessages.map((message, index) => (
-                  <Text key={`${index}-${message}`}>{message}</Text>
+                  <SuccessAlert key={`${index}-${message}`} role="status" aria-live="polite" lang={lang} dir={dir}>
+                    <Text>{message}</Text>
+                  </SuccessAlert>
                 ))}
-              </UnlockAlert>
+              </Alerts>
             )}
+
             <Button autoFocus variant="primary" onClick={() => loadNextExercise(dimensionStore)}>
               {t('exercise.next')}
             </Button>
@@ -242,12 +246,15 @@ const Explanation = styled('aside')`
   padding: 0.5rem 0;
 `
 
-const UnlockAlert = styled('aside')`
+const Alerts = styled('div')`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
   text-align: start;
+  gap: 0.5rem;
+`
+
+const SuccessAlert = styled('aside')`
   background: #dcfce7;
   border: 2px solid #16a34a;
   color: #15803d;

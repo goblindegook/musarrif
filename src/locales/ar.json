@@ -81,6 +81,8 @@
     "exercise.unlock.pronounGroup.singular": "ضمائر المفرد",
     "exercise.unlock.tenseGroup.imperative": "صيغة الأمر",
     "exercise.unlock.tenseGroup.passive": "أزمنة المبني للمجهول",
+    "exercise.unlock.tenseGroup.future": "المستقبل",
+    "exercise.unlock.tenseGroup.presentIndicative": "المضارع المرفوع",
     "exercise.unlock.tenseGroup.presentIndicativeFuture": "المضارع المرفوع والمستقبل",
     "exercise.unlock.tenseGroup.subjunctiveJussive": "المضارع المنصوب والمجزوم",
     "exercise.unlock.rootType.assimilated": "الجذور المثال",

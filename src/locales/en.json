@@ -81,6 +81,8 @@
     "exercise.unlock.pronounGroup.singular": "singular pronouns",
     "exercise.unlock.tenseGroup.imperative": "imperative",
     "exercise.unlock.tenseGroup.passive": "passive tenses",
+    "exercise.unlock.tenseGroup.future": "future",
+    "exercise.unlock.tenseGroup.presentIndicative": "present indicative",
     "exercise.unlock.tenseGroup.presentIndicativeFuture": "present indicative and future",
     "exercise.unlock.tenseGroup.subjunctiveJussive": "subjunctive and jussive",
     "exercise.unlock.rootType.assimilated": "assimilated roots",

@@ -1,21 +1,21 @@
 import { styled } from 'goober'
 import type { ComponentChildren, JSX } from 'preact'
 import { useEffect } from 'preact/hooks'
-import { Button } from '../atoms/Button'
+import { Button, type ButtonSize, type ButtonVariant } from '../atoms/Button'
 
 interface ShortcutButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
   children: ComponentChildren
   onClick?: () => void
   shortcutKey: string
   showShortcut?: boolean
-  variant?: 'primary' | 'secondary'
+  variant?: ButtonVariant
+  size?: ButtonSize
 }
 
 export function ShortcutButton({
   children,
   shortcutKey,
   showShortcut = true,
-  variant = 'secondary',
   onClick,
   disabled,
   ...props
@@ -43,7 +43,7 @@ export function ShortcutButton({
   }, [disabled, normalizedShortcut, onClick])
 
   return (
-    <Button {...props} onClick={onClick} disabled={disabled} variant={variant}>
+    <Button {...props} onClick={onClick} disabled={disabled}>
       {showShortcut && <ShortcutBadge aria-hidden="true">{shortcutKey.toUpperCase()}</ShortcutBadge>}
       {children}
     </Button>

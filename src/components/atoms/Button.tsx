@@ -1,22 +1,24 @@
 import { styled } from 'goober'
 import type { ComponentChildren, JSX } from 'preact'
 
-type ButtonVariant = 'primary' | 'secondary'
+export type ButtonVariant = 'primary' | 'secondary'
+export type ButtonSize = 'normal' | 'large'
 
 interface ButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   children: ComponentChildren
   variant?: ButtonVariant
+  size?: ButtonSize
 }
 
-export function Button({ children, variant = 'secondary', ...props }: ButtonProps) {
+export function Button({ children, variant = 'secondary', size = 'normal', ...props }: ButtonProps) {
   return (
-    <StyledButton {...props} variant={variant} type="button">
+    <StyledButton {...props} variant={variant} size={size} type="button">
       {children}
     </StyledButton>
   )
 }
 
-const StyledButton = styled('button')<{ variant: ButtonVariant }>`
+const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant }>`
   position: relative;
   width: 100%;
   padding: 0.85rem 1.5rem;
@@ -24,7 +26,7 @@ const StyledButton = styled('button')<{ variant: ButtonVariant }>`
   border: 2px solid ${({ variant }) => (variant === 'primary' ? '#334155' : '#e2e8f0')};
   background: ${({ variant }) => (variant === 'primary' ? '#334155' : '#ffffff')};
   color: ${({ variant }) => (variant === 'primary' ? '#ffffff' : '#334155')};
-  font-size: 1rem;
+  font-size: ${({ size }) => (size === 'normal' ? '1rem' : '1.2rem')};
   font-weight: 600;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
