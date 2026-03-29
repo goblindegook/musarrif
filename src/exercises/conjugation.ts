@@ -155,6 +155,7 @@ export const conjugationExercise = defineExercise(
     const shuffled = shuffle(Array.from(options))
 
     return {
+      dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.conjugation',
       promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 4), pronoun: PRONOUN_KEYS[targetPronoun] },
       word,

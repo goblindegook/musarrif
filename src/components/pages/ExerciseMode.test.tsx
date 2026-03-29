@@ -22,6 +22,7 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 function testExercise(overrides = {}): Exercise {
   return {
     kind: 'verbForm',
+    dimensions: ['forms', 'rootTypes', 'diacritics'],
     word: 'كَتَبَ',
     promptTranslationKey: 'exercise.prompt.verbForm',
     options: ['I', 'II', 'III', 'IV'],
@@ -251,6 +252,7 @@ describe('SRS recording', () => {
   test('records answer in SRS store when option selected', () => {
     const exercise: Exercise = {
       kind: 'conjugation',
+      dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       word: 'كَتَبَ',
       promptTranslationKey: 'exercise.prompt.conjugation',
       promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'exercise.conjugation.pronoun.3ms' },

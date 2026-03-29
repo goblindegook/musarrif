@@ -23,6 +23,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
   const options = shuffle([{ form: verb.form, label: verb.label }, ...distractors])
 
   return {
+    dimensions: ['forms', 'rootTypes', 'diacritics'],
     promptTranslationKey: 'exercise.prompt.rootFormVerb',
     promptParams: { form: FORM_LABELS[verb.form - 1] },
     word: Array.from(verb.root).join(' '),

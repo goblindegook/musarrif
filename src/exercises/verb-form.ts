@@ -30,6 +30,7 @@ export const verbFormExercise = defineExercise(
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
     return {
+      dimensions: ['forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbForm',
       word,
       options: options.map((f) => FORM_LABELS[f - 1]),

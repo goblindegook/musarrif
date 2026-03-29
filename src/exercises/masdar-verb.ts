@@ -15,6 +15,7 @@ export const masdarVerbExercise = defineExercise(
     const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarVerb',
       word,
       options,

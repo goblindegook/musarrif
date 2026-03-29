@@ -17,6 +17,7 @@ export const verbMasdarExercise = defineExercise(
     const options = buildOptions(verb, answer, masdars, profile)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbMasdar',
       word,
       options,

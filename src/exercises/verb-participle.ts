@@ -22,6 +22,7 @@ export const verbParticipleExercise = defineExercise(
     const options = buildOptions(verb, answer, kind, profile)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
       word,

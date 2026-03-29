@@ -63,18 +63,24 @@ describe('diacriticsDifficulty', () => {
 
 describe('recordDimensionAnswer', () => {
   test('appends correct to all touched dimensions', () => {
-    const next = recordDimensionAnswer(INITIAL_DIMENSION_STORE, 'conjugation', true)
-    expect(next.windows.tenses).toEqual([true])
-    expect(next.windows.pronouns).toEqual([true])
-    expect(next.windows.forms).toEqual([true])
-    expect(next.windows.rootTypes).toEqual([true])
-    expect(next.windows.diacritics).toEqual([true])
-    expect(next.windows.nominals).toEqual([])
+    const next = recordDimensionAnswer(
+      INITIAL_DIMENSION_STORE,
+      ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
+      true,
+    )
+    expect(next.windows).toEqual({
+      diacritics: [true],
+      forms: [true],
+      nominals: [],
+      pronouns: [true],
+      rootTypes: [true],
+      tenses: [true],
+    })
   })
 
   test('trims window to 20 entries', () => {
     const fullStore: DimensionStore = {
-      profile: INITIAL_DIMENSION_STORE.profile,
+      ...INITIAL_DIMENSION_STORE,
       windows: {
         ...INITIAL_DIMENSION_STORE.windows,
         forms: Array(20).fill(true),
@@ -82,12 +88,12 @@ describe('recordDimensionAnswer', () => {
         diacritics: Array(20).fill(true),
       },
     }
-    const next = recordDimensionAnswer(fullStore, 'verbRoot', true)
+    const next = recordDimensionAnswer(fullStore, ['forms', 'rootTypes', 'diacritics'], true)
     expect(next.windows.forms).toHaveLength(20)
   })
 
   test('pass answers count as false', () => {
-    const next = recordDimensionAnswer(INITIAL_DIMENSION_STORE, 'verbRoot', false)
+    const next = recordDimensionAnswer(INITIAL_DIMENSION_STORE, ['forms', 'rootTypes', 'diacritics'], false)
     expect(next.windows.forms[0]).toBe(false)
   })
 })
@@ -361,6 +367,7 @@ describe('promoteDimensions', () => {
   test('corrects legacy diacritics: 2 even with no window activity', () => {
     expect(
       promoteDimensions({
+        ...INITIAL_DIMENSION_STORE,
         profile: {
           diacritics: 2,
           tenses: 4,
@@ -369,7 +376,6 @@ describe('promoteDimensions', () => {
           rootTypes: 3,
           nominals: 1,
         },
-        windows: INITIAL_DIMENSION_STORE.windows,
       }).profile.diacritics,
     ).toBe(1)
   })

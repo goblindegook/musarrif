@@ -21,6 +21,7 @@ export const masdarFormExercise = defineExercise(
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
       options: options.map((form) => FORM_LABELS[form - 1]),

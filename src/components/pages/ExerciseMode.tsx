@@ -92,7 +92,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
       setSelected(index)
       updateStats(() => nextStats)
       recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
-      const nextDimensionStore = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, isCorrect))
+      const nextDimensionStore = promoteDimensions(
+        recordDimensionAnswer(dimensionStore, exercise.dimensions, isCorrect),
+      )
       setDimensionUnlocks(getDimensionUnlocks(dimensionStore.profile, nextDimensionStore.profile))
       setStreakExtendedAlert(isCorrect && previousStreakGoal.remaining > 0 && nextStreakGoal.remaining === 0)
       setDimensionStore(nextDimensionStore)
@@ -102,7 +104,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
 
   const handleSkip = useCallback(() => {
     recordSrsAnswer(exercise.cardKey, 'pass')
-    const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.kind, false))
+    const promoted = promoteDimensions(recordDimensionAnswer(dimensionStore, exercise.dimensions, false))
     setDimensionStore(promoted)
     updateStats((s) => addPass(s))
     loadNextExercise(promoted)

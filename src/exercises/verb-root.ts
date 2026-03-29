@@ -21,6 +21,7 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
   const options = buildOptions(verb.root, word, profile)
 
   return {
+    dimensions: ['forms', 'rootTypes', 'diacritics'],
     promptTranslationKey: 'exercise.prompt.verbRoot',
     word,
     options: options.map((option) => Array.from(option).join(' ')),

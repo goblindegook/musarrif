@@ -25,6 +25,7 @@ export const verbTenseExercise = defineExercise(
     const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
 
     return {
+      dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
       options: options.map((t) => tenseKey(t, profile.tenses >= 4)),

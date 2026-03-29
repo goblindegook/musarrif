@@ -4,7 +4,6 @@ import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
-import type { ExerciseKind } from './exercises'
 import type { CardConstraints } from './srs'
 import { getSrsRootType, type SrsRootType } from './srs'
 
@@ -23,6 +22,7 @@ export type DimensionProfile = {
   rootTypes: RootTypesLevel
   nominals: NominalsLevel
 }
+export type DimensionKey = keyof DimensionProfile
 
 export type DimensionStore = {
   profile: DimensionProfile
@@ -176,23 +176,6 @@ export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): s
   return applyDiacriticsPreference(word, pref)
 }
 
-const DIMENSION_MAP: Record<ExerciseKind, (keyof DimensionProfile)[]> = {
-  conjugation: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
-  verbForm: ['forms', 'rootTypes', 'diacritics'],
-  verbRoot: ['forms', 'rootTypes', 'diacritics'],
-  verbTense: ['tenses', 'forms', 'rootTypes', 'diacritics'],
-  verbPronoun: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
-  rootFormVerb: ['forms', 'rootTypes', 'diacritics'],
-  verbParticiple: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  verbMasdar: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  participleForm: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  participleRoot: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  participleVerb: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  masdarForm: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  masdarRoot: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-  masdarVerb: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-}
-
 const WINDOW_SIZES: Record<keyof DimensionProfile, number> = {
   tenses: 20,
   pronouns: 20,
@@ -233,10 +216,13 @@ export function enforcePrerequisites(profile: DimensionProfile): DimensionProfil
   return p
 }
 
-export function recordDimensionAnswer(store: DimensionStore, kind: ExerciseKind, correct: boolean): DimensionStore {
-  const dims = DIMENSION_MAP[kind]
+export function recordDimensionAnswer(
+  store: DimensionStore,
+  dimensions: readonly DimensionKey[],
+  correct: boolean,
+): DimensionStore {
   const windows = { ...store.windows }
-  for (const dim of dims) {
+  for (const dim of dimensions) {
     const appended = [...windows[dim], correct]
     windows[dim] = appended.length > WINDOW_SIZES[dim] ? appended.slice(-WINDOW_SIZES[dim]) : appended
   }

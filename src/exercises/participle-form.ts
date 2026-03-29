@@ -29,6 +29,7 @@ export const participleFormExercise = defineExercise(
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleForm' : 'exercise.prompt.passiveParticipleForm',
       word,

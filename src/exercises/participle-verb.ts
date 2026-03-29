@@ -21,6 +21,7 @@ export const participleVerbExercise = defineExercise(
     const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleVerb' : 'exercise.prompt.passiveParticipleVerb',
       word,

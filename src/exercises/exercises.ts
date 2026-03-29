@@ -1,5 +1,5 @@
 import type { ExplanationLayers } from '../paradigms/explanation'
-import type { DimensionProfile } from './dimensions'
+import type { DimensionKey, DimensionProfile } from './dimensions'
 import type { CardConstraints } from './srs'
 
 export type ExerciseKind =
@@ -26,6 +26,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   options: readonly string[]
   answer: number
   cardKey: string
+  dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers
 }
 

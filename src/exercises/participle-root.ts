@@ -25,6 +25,7 @@ export const participleRootExercise = defineExercise(
     const options = buildOptions(verb.root, word, profile)
 
     return {
+      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleRoot' : 'exercise.prompt.passiveParticipleRoot',
       word,

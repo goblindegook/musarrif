@@ -25,11 +25,12 @@ export const verbPronounExercise = defineExercise(
     const [word, options, answer] = buildOptions(verb, tense, pronoun, profile)
 
     return {
-      promptTranslationKey: 'exercise.prompt.verbPronoun',
       word,
+      promptTranslationKey: 'exercise.prompt.verbPronoun',
       options,
       answer,
       cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      dimensions: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
       explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun]),
     }
   },
