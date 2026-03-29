@@ -5,13 +5,13 @@ import { getUserData, importUserData } from '../hooks/local-storage'
 import { useRouting } from '../hooks/routing'
 import { Button } from './atoms/Button'
 import { IconButton } from './atoms/IconButton'
-import { SegmentedControl } from './atoms/SegmentedControl'
 import { ConjugateIcon } from './icons/ConjugateIcon'
 import { ExerciseIcon } from './icons/ExerciseIcon'
 import { SettingsIcon } from './icons/SettingsIcon'
 import { LanguagePicker } from './LanguagePicker'
-import { Modal } from './Modal'
 import { ModeToggle } from './ModeToggle'
+import { Modal } from './molecules/Modal'
+import { SegmentedControl } from './molecules/SegmentedControl'
 
 const MODES = ['conjugation', 'test'] as const
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const

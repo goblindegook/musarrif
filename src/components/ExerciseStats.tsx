@@ -12,7 +12,7 @@ import {
 } from '../exercises/stats'
 import { useI18n } from '../hooks/i18n'
 import { Detail } from './Detail'
-import { Panel } from './Panel'
+import { Panel } from './molecules/Panel'
 
 type Props = {
   stats: DayStats[]

@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import { afterEach, expect, test, vi } from 'vitest'
-import { ShortcutButton } from './ShortcutButton'
+import { ShortcutButton } from '../molecules/ShortcutButton'
 
 afterEach(() => {
   cleanup()

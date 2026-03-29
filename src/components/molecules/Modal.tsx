@@ -1,10 +1,10 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useEffect, useId } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import { IconButton } from './atoms/IconButton'
-import { CloseIcon } from './icons/CloseIcon'
-import { Overlay } from './Overlay'
+import { useI18n } from '../../hooks/i18n'
+import { IconButton } from '../atoms/IconButton'
+import { Overlay } from '../atoms/Overlay'
+import { CloseIcon } from '../icons/CloseIcon'
 
 interface ModalProps {
   readonly dir?: 'auto' | 'rtl' | 'ltr'

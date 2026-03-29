@@ -2,9 +2,9 @@ import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useI18n } from '../hooks/i18n'
 import { IconButton } from './atoms/IconButton'
-import { CopyButton } from './buttons/CopyButton'
-import { SpeechButton } from './buttons/SpeechButton'
 import { LightBulbIcon } from './icons/LightBulbIcon'
+import { CopyButton } from './molecules/CopyButton'
+import { SpeechButton } from './molecules/SpeechButton'
 
 interface DetailProps {
   label: string
@@ -16,7 +16,6 @@ interface DetailProps {
   valueLang?: string
   valueDir?: 'auto' | 'rtl' | 'ltr'
   children?: ComponentChildren
-  onClick?: () => void
   ariaLabel?: string
   ariaHasPopup?: 'dialog'
   ariaExpanded?: boolean
@@ -36,36 +35,12 @@ export const Detail = ({
   valueLang = 'ar',
   valueDir = 'rtl',
   children,
-  onClick,
-  ariaLabel,
-  ariaHasPopup,
-  ariaExpanded,
   insightOnClick,
   insightAriaLabel,
   insightAriaHasPopup,
   insightAriaExpanded,
 }: DetailProps) => {
   const { t } = useI18n()
-
-  if (onClick) {
-    return (
-      <DetailButton
-        onClick={onClick}
-        aria-label={ariaLabel ?? label}
-        aria-haspopup={ariaHasPopup}
-        aria-expanded={ariaExpanded}
-        aria-role="button"
-      >
-        <DetailLabel dir={labelDir} lang={labelLang}>
-          {label}
-        </DetailLabel>
-        <DetailValue dir={valueDir} lang={valueLang}>
-          {value && <span>{value}</span>}
-          {children}
-        </DetailValue>
-      </DetailButton>
-    )
-  }
 
   return (
     <DetailItem>
@@ -114,22 +89,6 @@ const DetailItem = styled('div')`
   @media (min-width: 480px) {
     border-radius: 1rem;
     padding: 0.75rem 1rem;
-  }
-`
-
-const DetailButton = styled(DetailItem)`
-  cursor: pointer;
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
-
-  &:hover {
-    border-color: #cbd5e1;
-    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
-    transform: translateY(-1px);
-  }
-
-  &:focus-visible {
-    outline: 2px solid #475569;
-    outline-offset: 2px;
   }
 `
 

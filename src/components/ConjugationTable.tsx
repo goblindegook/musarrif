@@ -7,10 +7,10 @@ import { canConjugatePassive } from '../paradigms/passive/support'
 import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
 import { conjugate, type Tense, type VerbTense, type Voice } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
-import { CopyButton } from './buttons/CopyButton'
-import { SpeechButton } from './buttons/SpeechButton'
 import { ConjugationInsights } from './ConjugationInsights'
-import { TabBar, TabButton, TabPanel } from './Tabs'
+import { CopyButton } from './molecules/CopyButton'
+import { SpeechButton } from './molecules/SpeechButton'
+import { TabBar, TabButton, TabPanel } from './molecules/Tabs'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
 
@@ -284,7 +284,7 @@ const SubTabBar = styled(TabBar)`
   margin-top: -4px;
   margin-left: -1.25rem;
   margin-right: -1.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.25rem;
 
   @media (min-width: 480px) {
     padding: 0.75rem 1.25rem;

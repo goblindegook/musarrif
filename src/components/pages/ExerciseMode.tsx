@@ -28,8 +28,8 @@ import { useSrsStore } from '../../hooks/srs-store'
 import { renderExplanation } from '../../paradigms/explanation'
 import { Button } from '../atoms/Button'
 import { Text } from '../atoms/Text'
-import { ShortcutButton } from '../buttons/ShortcutButton'
 import { ExerciseStats } from '../ExerciseStats'
+import { ShortcutButton } from '../molecules/ShortcutButton'
 
 type Props = {
   generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise
@@ -202,7 +202,7 @@ const ExerciseLayout = styled('div')`
 const ExerciseCard = styled('div')`
   background: #ffffff;
   border-radius: 1.5rem;
-  padding: 2.5rem 2rem;
+  padding: 0.75rem;
   width: 100%;
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
   border: 1px solid #e2e8f0;
@@ -210,6 +210,14 @@ const ExerciseCard = styled('div')`
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+
+  @media (min-width: 480px) {
+    padding: 1rem 1.25rem;
+  }
+  
+  @media (min-width: 720px) {
+    padding: 1.5rem 2rem;
+  }
 `
 
 const VerbDisplay = styled('p')`
@@ -220,6 +228,7 @@ const VerbDisplay = styled('p')`
   text-align: center;
   line-height: 1.2;
   direction: rtl;
+  padding: 2rem 0 1rem;
 `
 
 const Prompt = styled('p')`

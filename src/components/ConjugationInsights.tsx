@@ -10,7 +10,7 @@ import { IconButton } from './atoms/IconButton'
 import { Text } from './atoms/Text'
 import { Detail } from './Detail'
 import { LightBulbIcon } from './icons/LightBulbIcon'
-import { Modal } from './Modal'
+import { Modal } from './molecules/Modal'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
