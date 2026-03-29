@@ -76,7 +76,29 @@ describe('formExercise difficulty', () => {
 })
 
 describe('verbFormExercise with constraints', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('attaches cardKey to returned exercise', () => {
     expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbForm:[a-z]+:\d+:[\w-]+:\w+$/)
+  })
+
+  test('includes only root-and-form explanation payload', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+
+    const exercise = verbFormExercise.generate(
+      { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 0 },
+      { form: 10, rootType: 'sound', tense: ['active', 'past'], pronoun: '3ms' },
+    )
+
+    expect(exercise.explanation).toEqual({
+      rootLetters: ['ش', 'ر', 'ب'],
+      form: 10,
+      arabic: 'اِسْتَشْرَبَ',
+      rootType: 'sound',
+      formIPattern: null,
+      formRoot: null,
+    })
   })
 })
