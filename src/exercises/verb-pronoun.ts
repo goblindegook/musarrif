@@ -22,6 +22,8 @@ export const verbPronounExercise = defineExercise(
     const verb = randomVerb(profile, constraints)
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const conjugatedWord = conjugate(verb, tense)[pronoun]
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
     const [word, options, answer] = buildOptions(verb, tense, pronoun, profile)
 
     return {
@@ -31,7 +33,7 @@ export const verbPronounExercise = defineExercise(
       answer,
       cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
       dimensions: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
-      explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun]),
+      explanations: options.map((_, index) => (index === answer ? null : explanation)),
     }
   },
   { weight: 2 },

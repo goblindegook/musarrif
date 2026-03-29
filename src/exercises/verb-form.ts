@@ -16,7 +16,14 @@ export const verbFormExercise = defineExercise(
     const pronoun =
       constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns))
     const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
-    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, word)
+    const explanation = pick(resolveVerbExplanationLayers(verb, tense, pronoun, word), [
+      'rootLetters',
+      'form',
+      'arabic',
+      'rootType',
+      'formIPattern',
+      'formRoot',
+    ])
 
     const eligibleForms = FORMS.filter(
       (f) =>
@@ -31,15 +38,16 @@ export const verbFormExercise = defineExercise(
 
     const distractors = shuffle(eligibleForms).slice(0, 3)
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
+    const answer = options.indexOf(verb.form)
 
     return {
       dimensions: ['forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbForm',
       word,
       options: options.map((f) => FORM_LABELS[f - 1]),
-      answer: options.indexOf(verb.form),
+      answer,
       cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
-      explanation: pick(explanation, ['rootLetters', 'form', 'arabic', 'rootType', 'formIPattern', 'formRoot']),
+      explanations: options.map((_, index) => (index === answer ? null : explanation)),
     }
   },
 )

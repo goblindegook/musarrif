@@ -66,10 +66,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const isAnswered = selected != null
   const streak = getStreak(storedStats)
 
-  const explanation =
-    isAnswered && exercise.explanation
-      ? renderExplanation(exercise.explanation, t, selected === exercise.answer ? 'concise' : 'full')
-      : []
+  const selectedExplanation = isAnswered && selected != null ? exercise.explanations?.[selected] : null
+  const explanation = selectedExplanation ? renderExplanation(selectedExplanation, t, 'full') : []
   const alertMessages = useMemo(
     () => [
       ...dimensionUnlocks.map(({ dimension, items }) =>

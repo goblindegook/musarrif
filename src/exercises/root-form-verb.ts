@@ -8,7 +8,9 @@ import { buildCardKey, getSrsRootType } from './srs'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
-  const explanation = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', verb.label)
+  const baseExplanation = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', verb.label)
+  const explanation = pick(baseExplanation, ['rootLetters', 'form', 'arabic', 'rootType', 'formIPattern', 'formRoot'])
+
   const answerDisplay = exerciseDiacritics(verb.label, profile.diacritics)
 
   const distractors = shuffle(
@@ -22,6 +24,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     .map((form) => ({ form, label: synthesizeVerb(verb.root, form).label }))
 
   const options = shuffle([{ form: verb.form, label: verb.label }, ...distractors])
+  const answer = options.findIndex(({ form }) => form === verb.form)
 
   return {
     dimensions: ['forms', 'rootTypes', 'diacritics'],
@@ -29,8 +32,8 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     promptParams: { form: FORM_LABELS[verb.form - 1] },
     word: Array.from(verb.root).join(' '),
     options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
-    answer: options.findIndex(({ form }) => form === verb.form),
+    answer,
     cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
-    explanation: pick(explanation, ['rootLetters', 'form', 'arabic', 'rootType', 'formIPattern', 'formRoot']),
+    explanations: options.map((_, index) => (index === answer ? null : explanation)),
   }
 })

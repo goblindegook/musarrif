@@ -40,13 +40,13 @@ type TenseRootInteraction =
 
 export type ExplanationLayers = {
   rootLetters: string[]
-  form: VerbForm
   arabic: string
-  rootType: RootAnalysisType
-  formIPattern?: FormIPattern | null
-  formRoot: FormRootInteraction | null
+  rootType?: RootAnalysisType
+  form?: VerbForm
+  formIPattern?: FormIPattern
+  formRoot?: FormRootInteraction
   tense?: TenseContext
-  tenseRoot?: TenseRootInteraction | null
+  tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
 }
 
@@ -57,11 +57,15 @@ function toTenseContext(verbTense: VerbTense): TenseContext {
   return `${voice}.${tenseOrMood}` as TenseContext
 }
 
-function toFormRoot(form: VerbForm, rootType: RootAnalysisType, rootLetters: string[]): FormRootInteraction | null {
-  if (form !== 8) return null
+function toFormRoot(
+  form: VerbForm,
+  rootType: RootAnalysisType,
+  rootLetters: string[],
+): FormRootInteraction | undefined {
+  if (form !== 8) return undefined
   if (rootType === 'assimilated') return rootLetters[0] === WAW ? 'assimilation-waw' : 'assimilation-yaa'
   if (rootType === 'doubled') return 'assimilation-doubled'
-  return null
+  return undefined
 }
 
 function resolveHollow(rootType: RootAnalysisType, tenseContext: TenseContext): TenseRootInteraction {
@@ -111,8 +115,8 @@ function resolveDefective(
   }
 }
 
-function resolveGeminate(tenseContext: TenseContext, form: VerbForm): TenseRootInteraction | null {
-  if (form === 2 || form === 5) return null
+function resolveGeminate(tenseContext: TenseContext, form: VerbForm): TenseRootInteraction | undefined {
+  if (form === 2 || form === 5) return undefined
   return tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative'
     ? 'geminate-jussive'
     : 'geminate-contracts'
@@ -123,19 +127,19 @@ function toTenseRoot(
   tenseContext: TenseContext,
   form: VerbForm,
   pronoun: PronounId,
-): TenseRootInteraction | null {
+): TenseRootInteraction | undefined {
   if (rootType.includes('hollow')) return resolveHollow(rootType, tenseContext)
 
   if (rootType.includes('defective')) return resolveDefective(rootType, tenseContext, pronoun)
 
   if (rootType === 'assimilated')
-    return tenseContext.startsWith('active.present') && form === 1 ? 'initial-drops' : null
+    return tenseContext.startsWith('active.present') && form === 1 ? 'initial-drops' : undefined
 
   if (rootType === 'doubled' || rootType === 'hamzated-doubled') return resolveGeminate(tenseContext, form)
 
   if (rootType === 'hamzated') return 'hamza-seat'
 
-  return null
+  return undefined
 }
 
 const FORM_I_BASE_PATTERNS: Record<
@@ -202,7 +206,7 @@ export function resolveVerbExplanationLayers(
     form: verb.form,
     arabic,
     rootType,
-    formIPattern: verb.form === 1 ? verb.formPattern : null,
+    formIPattern: verb.form === 1 ? verb.formPattern : undefined,
     formRoot: toFormRoot(verb.form, rootType, rootLetters),
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),

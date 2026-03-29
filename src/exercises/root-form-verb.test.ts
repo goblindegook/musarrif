@@ -63,14 +63,14 @@ describe('rootFormVerbExercise with constraints', () => {
       { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 5 },
       { form: 2, rootType: 'sound' },
     )
+    const wrongIndex = (exercise.answer + 1) % exercise.options.length
 
-    expect(exercise.explanation).toEqual({
+    expect(exercise.explanations?.[wrongIndex]).toEqual({
       rootLetters: exercise.word.split(' '),
       form: 2,
       arabic: exercise.options[exercise.answer],
       rootType: 'sound',
-      formIPattern: null,
-      formRoot: null,
     })
+    expect(exercise.explanations?.[exercise.answer]).toBeNull()
   })
 })

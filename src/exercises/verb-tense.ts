@@ -3,6 +3,7 @@ import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import type { DisplayVerb } from '../paradigms/verbs'
+import { pick } from '../primitives/objects'
 import {
   type DimensionProfile,
   distractorTensePool,
@@ -22,16 +23,20 @@ export const verbTenseExercise = defineExercise(
     const minTenses = Math.max(profile.tenses, 3) as TensesLevel
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun])
     const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
+    const answer = options.findIndex((option) => option.join('.') === tense.join('.'))
 
     return {
       dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
       options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
-      answer: options.findIndex((t) => t.join('.') === tense.join('.')),
+      answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
-      explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun]),
+      explanations: options.map((_, index) =>
+        index === answer ? pick(explanation, ['rootLetters', 'arabic', 'tenseRoot']) : explanation,
+      ),
     }
   },
   { weight: 2 },

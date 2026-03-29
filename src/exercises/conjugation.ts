@@ -3,6 +3,7 @@ import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import type { PronounId } from '../paradigms/pronouns'
 import { conjugate, type VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
+import { pick } from '../primitives/objects'
 import {
   type DimensionProfile,
   distractorTensePool,
@@ -136,6 +137,7 @@ export const conjugationExercise = defineExercise(
     const targetPronoun = constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns)
     const conjugatedVerb = conjugate(verb, targetTense)[targetPronoun]
     const answer = exerciseDiacritics(conjugatedVerb, profile.diacritics)
+    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, conjugatedVerb)
 
     const raw =
       profile.pronouns >= 2 && profile.tenses >= 2
@@ -147,22 +149,24 @@ export const conjugationExercise = defineExercise(
     const candidates = new Set(raw.map((r) => exerciseDiacritics(r, profile.diacritics)))
     candidates.delete('')
     candidates.delete(answer)
-    const options = new Set<string>([answer])
+    const uniqueOptions = new Set<string>([answer])
     for (const candidate of shuffle(Array.from(candidates))) {
-      if (options.size >= 4) break
-      options.add(candidate)
+      if (uniqueOptions.size >= 4) break
+      uniqueOptions.add(candidate)
     }
-    const shuffled = shuffle(Array.from(options))
+    const options = shuffle(Array.from(uniqueOptions))
 
     return {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.conjugation',
       promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 4), pronoun: PRONOUN_KEYS[targetPronoun] },
       word,
-      options: shuffled,
-      answer: shuffled.indexOf(answer),
+      options,
+      answer: options.indexOf(answer),
       cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
-      explanation: resolveVerbExplanationLayers(verb, targetTense, targetPronoun, conjugatedVerb),
+      explanations: options.map((option) =>
+        option === answer ? pick(explanation, ['rootLetters', 'arabic', 'tenseRoot']) : explanation,
+      ),
     }
   },
   { weight: 5 },

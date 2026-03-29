@@ -17,6 +17,8 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
   const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
   const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
   const conjugatedWord = conjugate(verb, tense)[pronoun]
+  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
+
   const word = exerciseDiacritics(conjugatedWord, profile.diacritics)
   const options = buildOptions(verb.root, word, profile)
 
@@ -27,7 +29,7 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
     cardKey: buildCardKey('verbRoot', getSrsRootType(verb.root), verb.form, tense, pronoun),
-    explanation: resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord),
+    explanations: options.map((option) => (option === verb.root ? null : explanation)),
   }
 })
 

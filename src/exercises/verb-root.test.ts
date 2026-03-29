@@ -66,8 +66,9 @@ describe('verbRootExercise with constraints', () => {
       tense: ['active', 'past'],
       pronoun: '3ms',
     })
+    const wrongIndex = (exercise.answer + 1) % exercise.options.length
 
-    expect(exercise.explanation).toEqual(
+    expect(exercise.explanations?.[wrongIndex]).toEqual(
       expect.objectContaining({
         tense: 'active.past',
         pronoun: '3ms',

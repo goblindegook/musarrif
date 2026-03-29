@@ -67,10 +67,10 @@ describe('resolveVerbExplanationLayers formIPattern', () => {
     expect(layers.formIPattern).toBe('fa3ala-yaf3ulu')
   })
 
-  test('Form II verb → formIPattern is null', () => {
+  test('Form II verb → formIPattern is undefined', () => {
     const verb = getVerb('كتب', 2)
     const layers = resolveVerbExplanationLayers(verb, ['active', 'past'], '3ms', 'كَتَّبَ')
-    expect(layers.formIPattern).toBeNull()
+    expect(layers.formIPattern).toBeUndefined()
   })
 })
 
@@ -271,13 +271,14 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
     )
   })
 
-  test('assimilated + Form I + active.past → null', () => {
-    expect(resolveVerbExplanationLayers(waSala, ['active', 'past'], '3ms', 'وَصَلَ').tenseRoot).toBeNull()
+  test('assimilated + Form I + active.past → undefined', () => {
+    expect(resolveVerbExplanationLayers(waSala, ['active', 'past'], '3ms', 'وَصَلَ').tenseRoot).toBeUndefined()
   })
 
-  test('assimilated + Form II + active.present.indicative → null', () => {
-    const verb2 = getVerb('وصل', 2)
-    expect(resolveVerbExplanationLayers(verb2, ['active', 'present', 'indicative'], '3ms', 'يُوَصِّلُ').tenseRoot).toBeNull()
+  test('assimilated + Form II + active.present.indicative → undefined', () => {
+    expect(
+      resolveVerbExplanationLayers(getVerb('وصل', 2), ['active', 'present', 'indicative'], '3ms', 'يُوَصِّلُ').tenseRoot,
+    ).toBeUndefined()
   })
 })
 
@@ -308,14 +309,14 @@ describe('resolveVerbExplanationLayers tenseRoot geminate', () => {
     )
   })
 
-  test('doubled + Form II + active.past → null', () => {
+  test('doubled + Form II + active.past → undefined', () => {
     const verb2 = getVerb('مدد', 2)
-    expect(resolveVerbExplanationLayers(verb2, ['active', 'past'], '3ms', 'مَدَّدَ').tenseRoot).toBeNull()
+    expect(resolveVerbExplanationLayers(verb2, ['active', 'past'], '3ms', 'مَدَّدَ').tenseRoot).toBeUndefined()
   })
 
-  test('doubled + Form V + active.past → null', () => {
+  test('doubled + Form V + active.past → undefined', () => {
     const verb5 = getVerb('مدد', 5)
-    expect(resolveVerbExplanationLayers(verb5, ['active', 'past'], '3ms', 'تَمَدَّدَ').tenseRoot).toBeNull()
+    expect(resolveVerbExplanationLayers(verb5, ['active', 'past'], '3ms', 'تَمَدَّدَ').tenseRoot).toBeUndefined()
   })
 })
 
@@ -345,9 +346,7 @@ describe('renderExplanation', () => {
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
       formIPattern: 'fa3ala-yaf3ulu',
-      formRoot: null,
       tense: 'active.past',
-      tenseRoot: null,
       pronoun: '3ms',
       ...overrides,
     }
@@ -359,7 +358,7 @@ describe('renderExplanation', () => {
   })
 
   test('concise mode with null tenseRoot returns empty string', () => {
-    const layers = testExplanationLayers({ tenseRoot: null })
+    const layers = testExplanationLayers({ tenseRoot: undefined })
     expect(renderExplanation(layers, t, 'concise')).toEqual([])
   })
 
@@ -427,7 +426,6 @@ describe('renderExplanation', () => {
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
       formIPattern: 'fa3ala-yaf3ulu',
-      formRoot: null,
       tense: 'active.past',
       tenseRoot: 'middle-lengthens-aa',
       pronoun: '3ms',
@@ -441,10 +439,8 @@ describe('renderExplanation', () => {
       form: 8,
       arabic: 'اِتَّصَلَ',
       rootType: 'assimilated',
-      formIPattern: null,
       formRoot: 'assimilation-waw',
       tense: 'active.past',
-      tenseRoot: null,
       pronoun: '3ms',
     }
     expect(renderExplanation(layers, t, 'full')).toEqual([

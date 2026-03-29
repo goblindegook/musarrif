@@ -91,14 +91,14 @@ describe('verbFormExercise with constraints', () => {
       { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 0 },
       { form: 10, rootType: 'sound', tense: ['active', 'past'], pronoun: '3ms' },
     )
+    const wrongIndex = (exercise.answer + 1) % exercise.options.length
 
-    expect(exercise.explanation).toEqual({
+    expect(exercise.explanations?.[wrongIndex]).toEqual({
       rootLetters: ['ش', 'ر', 'ب'],
       form: 10,
       arabic: 'اِسْتَشْرَبَ',
       rootType: 'sound',
-      formIPattern: null,
-      formRoot: null,
     })
+    expect(exercise.explanations?.[exercise.answer]).toBeNull()
   })
 })
