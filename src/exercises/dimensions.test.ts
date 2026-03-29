@@ -293,6 +293,18 @@ describe('promoteDimensions', () => {
     ).toBe(1)
   })
 
+  test('does not promote when allowPromotion is false even above threshold', () => {
+    expect(
+      promoteDimensions(
+        {
+          profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
+          windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
+        },
+        false,
+      ).profile.forms,
+    ).toBe(0)
+  })
+
   test('clears window after promotion', () => {
     expect(
       promoteDimensions({

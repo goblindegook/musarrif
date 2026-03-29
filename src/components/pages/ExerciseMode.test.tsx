@@ -222,6 +222,35 @@ describe('ExerciseMode', () => {
       expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
     })
 
+    test('does not unlock when answer is wrong even if threshold is reached', () => {
+      localStorage.setItem(
+        'conjugator:dimensions',
+        JSON.stringify({
+          profile: {
+            tenses: 0,
+            pronouns: 1,
+            diacritics: 0,
+            forms: 0,
+            rootTypes: 0,
+            nominals: 0,
+          },
+          windows: {
+            tenses: [],
+            pronouns: [],
+            diacritics: [],
+            forms: Array(19).fill(true),
+            rootTypes: [],
+            nominals: [],
+          },
+        }),
+      )
+
+      render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[1])
+
+      expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
+    })
+
     test('shows streak-extended alert when daily correct answers reach 10', () => {
       localStorage.setItem(
         'conjugator:exercise:daily',

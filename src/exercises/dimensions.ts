@@ -230,7 +230,7 @@ export function recordDimensionAnswer(
   return { ...store, windows }
 }
 
-export function promoteDimensions(store: DimensionStore): DimensionStore {
+export function promoteDimensions(store: DimensionStore, allowPromotion = true): DimensionStore {
   const { profile, windows } = store
   const nextProfile = { ...profile }
 
@@ -242,7 +242,7 @@ export function promoteDimensions(store: DimensionStore): DimensionStore {
     const accuracy = w.filter(Boolean).length / windowSize
     const canPromote =
       profile.pronouns >= 1 || !(dimension === 'tenses' || dimension === 'forms' || dimension === 'rootTypes')
-    if (accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension] && canPromote) {
+    if (allowPromotion && accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension] && canPromote) {
       ;(nextProfile as Record<string, number>)[dimension] = current + 1
     } else if (accuracy <= DEMOTION_THRESHOLD && current > 0) {
       ;(nextProfile as Record<string, number>)[dimension] = current - 1
