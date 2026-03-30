@@ -30,7 +30,7 @@ export const verbTenseExercise = defineExercise(
       dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
-      options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
+      options: options.map((t) => tenseKey(t, profile.tenses >= 5)),
       answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
       explanations: options.map((_, index) =>
@@ -42,11 +42,7 @@ export const verbTenseExercise = defineExercise(
 )
 
 function tenseKey(tense: VerbTense, includeVoice: boolean): string {
-  if (!includeVoice || tense === 'active.imperative') {
-    const [, ...parts] = tense.split('.')
-    const slug = parts.join('.')
-    return `exercise.tense.option.${slug}`
-  }
+  if (!includeVoice || tense === 'active.imperative') return `exercise.tense.option.${tense.replace(/^\w+\./, '')}`
   return `exercise.tense.option.${tense}`
 }
 

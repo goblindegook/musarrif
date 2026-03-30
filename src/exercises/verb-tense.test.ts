@@ -79,20 +79,17 @@ describe('tenseExercise difficulty', () => {
   })
 
   test('easy: options are unvoiced tense keys', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('medium: options are unvoiced tense keys', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 })
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
   test('hard: options are voiced tense keys (imperative unprefixed)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
+    const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
   })
 
@@ -103,12 +100,7 @@ describe('tenseExercise difficulty', () => {
 })
 
 describe('tenseExercise distractor strategies', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
   test('easy: three distractors are unvoiced tense keys distinct from the correct answer', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => UNVOICED_KEYS.has(d))).toBe(true)
@@ -116,8 +108,7 @@ describe('tenseExercise distractor strategies', () => {
   })
 
   test('hard: all options are voiced tense keys', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.5)
-    const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
+    const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS.has(options[answer])).toBe(true)
   })
