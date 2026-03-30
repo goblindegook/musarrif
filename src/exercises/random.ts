@@ -63,10 +63,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
     .map(([key]) => key)
 
   if (dueKeys.length > 0) {
-    const kindWeight = (key: string): number => {
-      const { kind } = parseCardKey(key)
-      return available.find((e) => e.kind === kind)?.weight ?? 1
-    }
+    const kindWeight = (key: string): number => available.find((e) => e.kind === parseCardKey(key).kind)?.weight ?? 1
     const srsWeight = (key: string): number => cardSrsWeight(srsStore[key], today) * kindWeight(key)
 
     const dueKey = weightedRandomSrs(dueKeys, srsWeight)
@@ -78,9 +75,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
     const pool = verbs.filter(
       (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
     )
-    if (pool.length > 0) {
-      return { ...generator.generate(profile, { rootType, form, tense, pronoun }), cardKey: dueKey }
-    }
+    if (pool.length > 0) return { ...generator.generate(profile, { rootType, form, tense, pronoun }), cardKey: dueKey }
   }
 
   return weightedRandomSrs(available, (e) => e.weight ?? 1).generate(profile)

@@ -1,8 +1,7 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
-import type { Mood } from '../paradigms/active/present'
-import type { Tense, Voice } from '../paradigms/tense'
+import type { Mood, Tense, Voice } from '../paradigms/tense'
 
 type Page = 'conjugation' | 'test'
 

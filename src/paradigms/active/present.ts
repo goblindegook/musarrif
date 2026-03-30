@@ -30,9 +30,8 @@ import {
   YEH,
 } from '../letters'
 import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../pronouns'
+import type { Mood } from '../tense'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
-
-export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
 function isFormIFinalWeakPresent(verb: Verb, vowel: Vowel): boolean {
   return verb.form === 1 && isWeakLetter(verb.root.at(-1)) && isFormIPresentVowel(verb, vowel)

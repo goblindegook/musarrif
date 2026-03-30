@@ -1,5 +1,4 @@
 import { mapRecord } from '../../primitives/objects'
-import type { Mood } from '../active/present'
 import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
@@ -27,6 +26,7 @@ import {
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
+import type { Mood } from '../tense'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 

@@ -1,15 +1,16 @@
 import { conjugateFuture } from './active/future'
 import { conjugateImperative } from './active/imperative'
 import { conjugatePast } from './active/past'
-import { conjugatePresentMood, type Mood } from './active/present'
+import { conjugatePresentMood } from './active/present'
 import { conjugatePassiveFuture } from './passive/future'
 import { conjugatePassivePast } from './passive/past'
 import { conjugatePassivePresentMood } from './passive/present'
 import type { PronounId } from './pronouns'
 import type { Verb } from './verbs'
 
-export type Tense = 'past' | 'present' | 'future' | 'imperative'
 export type Voice = 'active' | 'passive'
+export type Tense = 'past' | 'present' | 'future' | 'imperative'
+export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
 export type VerbTense =
   | [voice: 'active', mood: 'imperative']
