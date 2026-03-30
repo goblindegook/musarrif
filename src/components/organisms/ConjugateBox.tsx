@@ -1,25 +1,13 @@
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
-import type { FormIPattern } from '../../paradigms/form-i-vowels'
+import { FORM_I_PATTERN_LABELS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import { synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 const FORM_NUMBERS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-const PATTERN_LABELS: Record<FormIPattern, string> = {
-  'fa3ala-yaf3alu': 'فَعَلَ / يَفْعَلُ',
-  'fa3ala-yaf3ilu': 'فَعَلَ / يَفْعِلُ',
-  'fa3ala-yaf3ulu': 'فَعَلَ / يَفْعُلُ',
-  'fa3ila-yaf3alu': 'فَعِلَ / يَفْعَلُ',
-  'fa3ila-yaf3ilu': 'فَعِلَ / يَفْعِلُ',
-  'fa3ila-yaf3ulu': 'فَعِلَ / يَفْعُلُ',
-  'fa3ula-yaf3alu': 'فَعُلَ / يَفْعَلُ',
-  'fa3ula-yaf3ilu': 'فَعُلَ / يَفْعِلُ',
-  'fa3ula-yaf3ulu': 'فَعُلَ / يَفْعُلُ',
-}
 
 const LETTERS: readonly string[] = [
   'ء',
@@ -197,7 +185,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
         <Section>
           <SectionLabel>{t('build.patternLabel')}</SectionLabel>
           <PatternGrid>
-            {Object.entries(PATTERN_LABELS).map(([p, l]) => (
+            {Object.entries(FORM_I_PATTERN_LABELS).map(([p, l]) => (
               <OptionButton
                 key={p}
                 type="button"

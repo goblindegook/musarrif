@@ -11,21 +11,19 @@ type Props = {
 }
 
 export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel }: Props) {
-  const options = labels.map((label, index) => ({
-    value: `${index}`,
-    label,
-    content: (
-      <SegmentContent>
-        {icons[index]}
-        <SegmentLabel>{label}</SegmentLabel>
-      </SegmentContent>
-    ),
-  }))
-
   return (
     <Control>
       <SegmentedControl
-        options={options}
+        options={labels.map((label, index) => ({
+          value: `${index}`,
+          label,
+          content: (
+            <SegmentContent>
+              {icons[index]}
+              <SegmentLabel>{label}</SegmentLabel>
+            </SegmentContent>
+          ),
+        }))}
         value={`${activeMode}`}
         onChange={(_value: string, index: number) => onClick(index)}
         compact

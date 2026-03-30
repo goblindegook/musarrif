@@ -1,25 +1,13 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
-import type { FormIPattern } from '../../paradigms/form-i-vowels'
+import { FORM_I_PATTERN_LABELS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { type DisplayVerb, type VerbForm, verbs } from '../../paradigms/verbs'
 import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { SuggestionsList } from '../molecules/QuickPickList'
 import { VerbPill } from '../molecules/VerbPill'
-
-const FORM_I_PATTERNS: Record<FormIPattern, string> = {
-  'fa3ala-yaf3alu': 'فَعَلَ / يَفْعَلُ',
-  'fa3ala-yaf3ilu': 'فَعَلَ / يَفْعِلُ',
-  'fa3ala-yaf3ulu': 'فَعَلَ / يَفْعُلُ',
-  'fa3ila-yaf3alu': 'فَعِلَ / يَفْعَلُ',
-  'fa3ila-yaf3ilu': 'فَعِلَ / يَفْعِلُ',
-  'fa3ila-yaf3ulu': 'فَعِلَ / يَفْعُلُ',
-  'fa3ula-yaf3alu': 'فَعُلَ / يَفْعَلُ',
-  'fa3ula-yaf3ilu': 'فَعُلَ / يَفْعِلُ',
-  'fa3ula-yaf3ulu': 'فَعُلَ / يَفْعُلُ',
-}
 
 const FORM_PATTERNS: Record<Exclude<VerbForm, 1>, string> = {
   2: 'فَعَّلَ / يُفَعِّلُ',
@@ -34,7 +22,7 @@ const FORM_PATTERNS: Record<Exclude<VerbForm, 1>, string> = {
 }
 
 const getFormPattern = (verb: DisplayVerb): string =>
-  verb.form === 1 ? FORM_I_PATTERNS[verb.formPattern] : FORM_PATTERNS[verb.form]
+  verb.form === 1 ? FORM_I_PATTERN_LABELS[verb.formPattern] : FORM_PATTERNS[verb.form]
 
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   const { t, dir, lang, diacriticsPreference } = useI18n()
