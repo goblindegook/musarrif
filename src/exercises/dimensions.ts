@@ -7,12 +7,15 @@ import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '.
 import type { CardConstraints } from './srs'
 import { getSrsRootType, type SrsRootType } from './srs'
 
-export type TensesLevel = 0 | 1 | 2 | 3 | 4 | 5
-export type PronounsLevel = 0 | 1 | 2 | 3
-export type DiacriticsLevel = 0 | 1 | 2
-export type FormsLevel = 0 | 1 | 2 | 3
-export type RootTypesLevel = 0 | 1 | 2 | 3 | 4 | 5
-export type NominalsLevel = 0 | 1 | 2
+type Level<T extends readonly unknown[]> =
+  Exclude<keyof T, keyof (readonly unknown[])> extends `${infer I extends number}` ? I : never
+
+export type TensesLevel = Level<typeof TENSE_POOLS>
+export type PronounsLevel = Level<typeof PRONOUN_POOLS>
+export type DiacriticsLevel = Level<typeof DIACRITICS_PREFERENCES>
+export type FormsLevel = Level<typeof FORM_POOLS>
+export type RootTypesLevel = Level<typeof ROOT_TYPE_POOLS>
+export type NominalsLevel = Level<typeof NOMINAL_UNLOCK_KEYS>
 
 export type DimensionProfile = {
   tenses: TensesLevel
@@ -83,7 +86,7 @@ const P2: PronounId[] = [...P1, '1p', '2mp', '2fp', '3mp', '3fp']
 const P3: PronounId[] = [...P2, '2d', '3md', '3fd']
 const PRONOUN_POOLS = [P0, P1, P2, P3] as const
 
-export function rawPronounPool(pronouns: PronounsLevel): readonly PronounId[] {
+export function pronounPool(pronouns: PronounsLevel): readonly PronounId[] {
   return PRONOUN_POOLS[pronouns]
 }
 
@@ -110,6 +113,14 @@ const R3: SrsRootType[] = [...R2, 'assimilated']
 const R4: SrsRootType[] = [...R3, 'hollow']
 const R5: SrsRootType[] = [...R4, 'defective']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
+
+const DIACRITICS_PREFERENCES = ['all', 'some', 'none'] as const
+
+const NOMINAL_UNLOCK_KEYS = [
+  [],
+  ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
+  ['exercise.unlock.nominal.masdar'],
+] as const
 
 const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly string[])[]> = {
   tenses: [
@@ -141,15 +152,11 @@ const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly s
     ['exercise.unlock.rootType.hollow'],
     ['exercise.unlock.rootType.defective'],
   ],
-  nominals: [
-    [],
-    ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
-    ['exercise.unlock.nominal.masdar'],
-  ],
+  nominals: [...NOMINAL_UNLOCK_KEYS],
 }
 
-export function rootTypesPool(rootTypes: RootTypesLevel): readonly SrsRootType[] {
-  return ROOT_TYPE_POOLS[rootTypes]
+export function rootTypesPool(level: RootTypesLevel): readonly SrsRootType[] {
+  return ROOT_TYPE_POOLS[level]
 }
 
 export function randomVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
@@ -173,7 +180,7 @@ export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)
 }
 
 export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): string {
-  const pref = (['all', 'some', 'none'] as const)[diacritics]
+  const pref = DIACRITICS_PREFERENCES[diacritics]
   return applyDiacriticsPreference(word, pref)
 }
 
@@ -191,10 +198,10 @@ const DEMOTION_THRESHOLD = 0.4
 const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
   tenses: TENSE_POOLS.length - 1,
   pronouns: PRONOUN_POOLS.length - 1,
-  diacritics: 2,
+  diacritics: DIACRITICS_PREFERENCES.length - 1,
   forms: FORM_POOLS.length - 1,
   rootTypes: ROOT_TYPE_POOLS.length - 1,
-  nominals: 2,
+  nominals: NOMINAL_UNLOCK_KEYS.length - 1,
 }
 
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {

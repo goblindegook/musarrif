@@ -7,17 +7,17 @@ import {
   INITIAL_DIMENSION_PROFILE,
   INITIAL_DIMENSION_STORE,
   promoteDimensions,
-  rawPronounPool,
+  pronounPool,
   recordDimensionAnswer,
 } from './dimensions'
 
 describe('rawPronounPool', () => {
   test('level 0 contains only 3ms', () => {
-    expect(rawPronounPool(0)).toEqual(['3ms'])
+    expect(pronounPool(0)).toEqual(['3ms'])
   })
 
   test('level 1 adds singular forms', () => {
-    const pool = rawPronounPool(1)
+    const pool = pronounPool(1)
     expect(pool).toContain('1s')
     expect(pool).toContain('2ms')
     expect(pool).toContain('2fs')
@@ -27,14 +27,14 @@ describe('rawPronounPool', () => {
   })
 
   test('level 2 adds plurals but not duals', () => {
-    const pool = rawPronounPool(2)
+    const pool = pronounPool(2)
     expect(pool).toContain('1p')
     expect(pool).toContain('2mp')
     expect(pool).not.toContain('2d')
   })
 
   test('level 3 includes all 13 pronouns', () => {
-    const pool = rawPronounPool(3)
+    const pool = pronounPool(3)
     expect(pool).toHaveLength(13)
     expect(pool).toContain('2d')
     expect(pool).toContain('3md')

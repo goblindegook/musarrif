@@ -8,10 +8,10 @@ import {
   type DimensionProfile,
   exerciseDiacritics,
   type PronounsLevel,
+  pronounPool,
   randomPronoun,
   randomTense,
   randomVerb,
-  rawPronounPool,
   type TensesLevel,
   tensePool,
 } from './dimensions'
@@ -52,7 +52,7 @@ function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
 }
 
 function distractorPronouns(tense: VerbTense, profile: DimensionProfile): PronounId[] {
-  const pool = [...rawPronounPool(profile.pronouns)]
+  const pool = [...pronounPool(profile.pronouns)]
   if (tense === 'active.imperative') return pool.filter((p) => p.startsWith('2'))
   return pool
 }

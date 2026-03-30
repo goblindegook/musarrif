@@ -20,11 +20,10 @@ export const verbTenseExercise = defineExercise(
   'verbTense',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
-    const minTenses = Math.max(profile.tenses, 3) as TensesLevel
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun])
-    const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
+    const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(tense)
 
     return {
@@ -56,14 +55,12 @@ function buildOptions(
   tense: VerbTense,
   pronoun: PronounId,
   profile: DimensionProfile,
-  tensesLevel: TensesLevel,
 ): [string, readonly VerbTense[]] {
-  const stripDiacritics = (word: string) => exerciseDiacritics(word, profile.diacritics)
-  const word = stripDiacritics(conjugate(verb, tense)[pronoun])
+  const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
 
-  const distractors = shuffle(
-    tensePool(tensesLevel).filter((option) => stripDiacritics(conjugate(verb, option)[pronoun]) !== word),
-  ).slice(0, 3)
+  const distractors = tensePool(Math.max(profile.tenses, 3) as TensesLevel).filter(
+    (option) => exerciseDiacritics(conjugate(verb, option)[pronoun], profile.diacritics) !== word,
+  )
 
-  return [word, shuffle([tense, ...distractors])]
+  return [word, shuffle([tense, ...shuffle(distractors).slice(0, 3)])]
 }

@@ -1,6 +1,6 @@
 import { verbs } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
-import { type DimensionProfile, formPool, rawPronounPool, rootTypesPool, tensePool } from './dimensions'
+import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises'
 import { masdarFormExercise } from './masdar-form'
 import { masdarRootExercise } from './masdar-root'
@@ -45,12 +45,12 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
   const availableRootTypes = rootTypesPool(profile.rootTypes)
   const availableForms = formPool(profile.forms)
   const availableTenses = tensePool(profile.tenses)
-  const availablePronouns = rawPronounPool(profile.pronouns)
+  const availablePronouns = pronounPool(profile.pronouns)
   const today = utcToday()
 
   const dueKeys = Object.entries(srsStore)
-    .filter(([key, state]) => {
-      if (state.dueDate > today) return false
+    .filter(([key, { dueDate }]) => {
+      if (dueDate > today) return false
       const { kind, rootType, form, tense, pronoun } = parseCardKey(key)
       if (!availableKinds.has(kind)) return false
       if (rootType != null && !availableRootTypes.includes(rootType)) return false
