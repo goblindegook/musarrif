@@ -1,10 +1,10 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
-import { useI18n } from '../hooks/i18n'
-import { IconButton } from './atoms/IconButton'
-import { LightBulbIcon } from './icons/LightBulbIcon'
-import { CopyButton } from './molecules/CopyButton'
-import { SpeechButton } from './molecules/SpeechButton'
+import { useI18n } from '../../hooks/i18n'
+import { IconButton } from '../atoms/IconButton'
+import { LightBulbIcon } from '../icons/LightBulbIcon'
+import { CopyButton } from './CopyButton'
+import { SpeechButton } from './SpeechButton'
 
 interface DetailProps {
   label: string

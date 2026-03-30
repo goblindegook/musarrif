@@ -1,9 +1,9 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test } from 'vitest'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
-import { buildVerbFromId } from '../paradigms/verbs'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
+import { buildVerbFromId } from '../../paradigms/verbs'
 import { FormInsights } from './FormInsights'
 
 afterEach(() => {

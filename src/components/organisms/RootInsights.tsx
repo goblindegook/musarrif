@@ -1,12 +1,12 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import { analyzeRoot } from '../paradigms/roots.ts'
-import { search } from '../paradigms/selection'
-import { Heading } from './atoms/Heading'
-import { Text } from './atoms/Text'
-import { SuggestionsList } from './QuickPickList'
-import { VerbPill } from './VerbPill'
+import { useI18n } from '../../hooks/i18n.tsx'
+import { analyzeRoot } from '../../paradigms/roots.ts'
+import { search } from '../../paradigms/selection.ts'
+import { Heading } from '../atoms/Heading.tsx'
+import { Text } from '../atoms/Text.tsx'
+import { SuggestionsList } from '../molecules/QuickPickList.tsx'
+import { VerbPill } from '../molecules/VerbPill'
 
 export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
   const { t, dir, lang } = useI18n()

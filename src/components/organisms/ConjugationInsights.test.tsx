@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
-import { getVerb } from '../paradigms/verbs'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
+import { getVerb } from '../../paradigms/verbs'
 import { ConjugationInsights } from './ConjugationInsights'
 
 beforeEach(() => cleanup())

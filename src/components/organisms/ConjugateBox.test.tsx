@@ -2,8 +2,8 @@ import { fireEvent, render, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import type { ComponentChildren } from 'preact'
 import { describe, expect, test } from 'vitest'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
 import { ConjugateBox } from './ConjugateBox'
 
 function Wrapper({ children }: { children: ComponentChildren }) {

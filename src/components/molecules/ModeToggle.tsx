@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import type { ComponentChild } from 'preact'
-import { SegmentedControl } from './molecules/SegmentedControl'
+import { SegmentedControl } from './SegmentedControl'
 
 type Props = {
   activeMode: number

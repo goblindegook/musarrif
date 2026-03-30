@@ -1,13 +1,13 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import type { FormIPattern } from '../paradigms/form-i-vowels'
-import { applyDiacriticsPreference } from '../paradigms/letters'
-import { type DisplayVerb, type VerbForm, verbs } from '../paradigms/verbs'
-import { Heading } from './atoms/Heading'
-import { Text } from './atoms/Text'
-import { SuggestionsList } from './QuickPickList'
-import { VerbPill } from './VerbPill'
+import { useI18n } from '../../hooks/i18n'
+import type { FormIPattern } from '../../paradigms/form-i-vowels'
+import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { type DisplayVerb, type VerbForm, verbs } from '../../paradigms/verbs'
+import { Heading } from '../atoms/Heading'
+import { Text } from '../atoms/Text'
+import { SuggestionsList } from '../molecules/QuickPickList'
+import { VerbPill } from '../molecules/VerbPill'
 
 const FORM_I_PATTERNS: Record<FormIPattern, string> = {
   'fa3ala-yaf3alu': 'فَعَلَ / يَفْعَلُ',

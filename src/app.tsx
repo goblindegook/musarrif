@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { AppHeader } from './components/AppHeader'
+import { AppHeader } from './components/organisms/AppHeader'
 import { ConjugationMode } from './components/pages/ConjugationMode'
 import { ExerciseMode } from './components/pages/ExerciseMode'
 import { useI18n } from './hooks/i18n'

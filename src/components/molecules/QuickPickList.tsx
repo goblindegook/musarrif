@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { getClosestVerbs, getRandomVerbs } from '../paradigms/selection'
-import type { DisplayVerb } from '../paradigms/verbs'
+import { getClosestVerbs, getRandomVerbs } from '../../paradigms/selection'
+import type { DisplayVerb } from '../../paradigms/verbs'
 import { VerbPill } from './VerbPill'
 
 interface QuickPickListProps {

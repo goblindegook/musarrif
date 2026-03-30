@@ -1,9 +1,9 @@
 import { styled } from 'goober'
 import { useCallback } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import { buildVerbHref } from '../hooks/routing'
-import { applyDiacriticsPreference } from '../paradigms/letters'
-import type { DisplayVerb } from '../paradigms/verbs'
+import { useI18n } from '../../hooks/i18n'
+import { buildVerbHref } from '../../hooks/routing'
+import { applyDiacriticsPreference } from '../../paradigms/letters'
+import type { DisplayVerb } from '../../paradigms/verbs'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 

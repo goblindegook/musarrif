@@ -28,8 +28,8 @@ import { useSrsStore } from '../../hooks/srs-store'
 import { renderExplanation } from '../../paradigms/explanation'
 import { Button } from '../atoms/Button'
 import { Text } from '../atoms/Text'
-import { ExerciseStats } from '../ExerciseStats'
 import { ShortcutButton } from '../molecules/ShortcutButton'
+import { ExerciseStats } from '../organisms/ExerciseStats'
 
 type Props = {
   generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise

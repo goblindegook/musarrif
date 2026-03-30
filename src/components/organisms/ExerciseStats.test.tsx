@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
-import type { DayStats } from '../exercises/stats'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
+import type { DayStats } from '../../exercises/stats'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
 import { ExerciseStats } from './ExerciseStats'
 
 const TODAY = new Date(new Date().toISOString().slice(0, 10))

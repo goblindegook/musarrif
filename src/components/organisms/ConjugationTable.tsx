@@ -1,14 +1,14 @@
 import { styled } from 'goober'
-import { useI18n } from '../hooks/i18n'
-import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
-import { canConjugatePassive } from '../paradigms/passive/support'
-import { ARABIC_PRONOUNS, type PronounId } from '../paradigms/pronouns'
-import { conjugate, type Mood, type Tense, type VerbTense, type Voice } from '../paradigms/tense'
-import type { DisplayVerb } from '../paradigms/verbs'
+import { useI18n } from '../../hooks/i18n'
+import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/letters'
+import { canConjugatePassive } from '../../paradigms/passive/support'
+import { ARABIC_PRONOUNS, type PronounId } from '../../paradigms/pronouns'
+import { conjugate, type Mood, type Tense, type VerbTense, type Voice } from '../../paradigms/tense'
+import type { DisplayVerb } from '../../paradigms/verbs'
+import { CopyButton } from '../molecules/CopyButton'
+import { SpeechButton } from '../molecules/SpeechButton'
+import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { ConjugationInsights } from './ConjugationInsights'
-import { CopyButton } from './molecules/CopyButton'
-import { SpeechButton } from './molecules/SpeechButton'
-import { TabBar, TabButton, TabPanel } from './molecules/Tabs'
 
 type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
 

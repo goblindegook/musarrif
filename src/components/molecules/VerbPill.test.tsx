@@ -1,10 +1,10 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test } from 'vitest'
-import { I18nProvider } from '../hooks/i18n'
-import { RoutingProvider } from '../hooks/routing'
-import { buildVerbFromId, getVerbById } from '../paradigms/verbs'
-import { VerbPill } from './VerbPill'
+import { I18nProvider } from '../../hooks/i18n'
+import { RoutingProvider } from '../../hooks/routing'
+import { buildVerbFromId, getVerbById } from '../../paradigms/verbs'
+import { VerbPill } from '../molecules/VerbPill'
 
 afterEach(() => {
   cleanup()

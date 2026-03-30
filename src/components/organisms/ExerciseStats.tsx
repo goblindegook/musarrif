@@ -2,17 +2,17 @@ import { styled } from 'goober'
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
-import type { DayStats } from '../exercises/stats'
+import type { DayStats } from '../../exercises/stats'
 import {
   getRecentScorePercent,
   getScorePercent,
   getStreakGoalProgress,
   getStreakRecord,
   STREAK_DAILY_GOAL,
-} from '../exercises/stats'
-import { useI18n } from '../hooks/i18n'
-import { Detail } from './Detail'
-import { Panel } from './molecules/Panel'
+} from '../../exercises/stats'
+import { useI18n } from '../../hooks/i18n'
+import { Detail } from '../molecules/Detail'
+import { Panel } from '../molecules/Panel'
 
 type Props = {
   stats: DayStats[]

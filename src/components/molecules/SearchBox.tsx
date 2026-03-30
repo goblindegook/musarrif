@@ -1,10 +1,10 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
-import { useI18n } from '../hooks/i18n'
-import { applyDiacriticsPreference } from '../paradigms/letters'
-import { search } from '../paradigms/selection'
-import type { DisplayVerb } from '../paradigms/verbs'
-import { Overlay, type OverlayProps } from './atoms/Overlay'
+import { useI18n } from '../../hooks/i18n'
+import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { search } from '../../paradigms/selection'
+import type { DisplayVerb } from '../../paradigms/verbs'
+import { Overlay, type OverlayProps } from '../atoms/Overlay'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
