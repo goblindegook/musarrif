@@ -1,6 +1,7 @@
+import { tenseEquals } from '../paradigms/tense'
 import { verbs } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
-import { type DimensionProfile, formsPool, rootTypesPool } from './dimensions'
+import { type DimensionProfile, formPool, rawPronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises'
 import { masdarFormExercise } from './masdar-form'
 import { masdarRootExercise } from './masdar-root'
@@ -42,18 +43,21 @@ function utcToday(): string {
 export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {}): Exercise<ExerciseKind> {
   const available = EXERCISES.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
   const availableKinds = new Set(available.map((e) => e.kind))
-  const today = utcToday()
-
-  const availableForms = formsPool(profile.forms)
   const availableRootTypes = rootTypesPool(profile.rootTypes)
+  const availableForms = formPool(profile.forms)
+  const availableTenses = tensePool(profile.tenses)
+  const availablePronouns = rawPronounPool(profile.pronouns)
+  const today = utcToday()
 
   const dueKeys = Object.entries(srsStore)
     .filter(([key, state]) => {
       if (state.dueDate > today) return false
-      const { kind, rootType, form } = parseCardKey(key)
+      const { kind, rootType, form, tense, pronoun } = parseCardKey(key)
       if (!availableKinds.has(kind)) return false
       if (rootType != null && !availableRootTypes.includes(rootType)) return false
       if (form != null && !availableForms.includes(form)) return false
+      if (tense != null && !availableTenses.some((t) => tenseEquals(t, tense))) return false
+      if (pronoun != null && !availablePronouns.includes(pronoun)) return false
       return true
     })
     .map(([key]) => key)

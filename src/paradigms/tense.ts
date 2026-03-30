@@ -38,3 +38,7 @@ export function conjugate(verb: Verb, [voice, tense, mood]: VerbTense): Record<P
       return conjugateImperative(verb)
   }
 }
+
+export function tenseEquals(a: VerbTense, b: VerbTense): boolean {
+  return a.join('.') === b.join('.')
+}

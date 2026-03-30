@@ -6,12 +6,12 @@ import type { DisplayVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import {
   type DimensionProfile,
-  distractorTensePool,
   exerciseDiacritics,
   randomPronoun,
   randomTense,
   randomVerb,
   type TensesLevel,
+  tensePool,
 } from './dimensions'
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -59,7 +59,7 @@ function buildOptions(
   const word = stripDiacritics(conjugate(verb, tense)[pronoun])
 
   const distractors = shuffle(
-    distractorTensePool(tensesLevel).filter((option) => stripDiacritics(conjugate(verb, option)[pronoun]) !== word),
+    tensePool(tensesLevel).filter((option) => stripDiacritics(conjugate(verb, option)[pronoun]) !== word),
   ).slice(0, 3)
 
   return [word, shuffle([tense, ...distractors])]

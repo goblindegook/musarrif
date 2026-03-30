@@ -73,7 +73,7 @@ export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
     : random(TENSE_POOLS[tenses].filter(([voice]) => voice === 'active'))
 }
 
-export function distractorTensePool(tenses: TensesLevel): readonly VerbTense[] {
+export function tensePool(tenses: TensesLevel): readonly VerbTense[] {
   return [...TENSE_POOLS[tenses]]
 }
 
@@ -100,7 +100,7 @@ const F2: VerbForm[] = [...F1, 4, 5, 6]
 const F3: VerbForm[] = [...F2, 7, 8, 9, 10]
 const FORM_POOLS = [F0, F1, F2, F3] as const
 
-export function formsPool(forms: FormsLevel): readonly VerbForm[] {
+export function formPool(forms: FormsLevel): readonly VerbForm[] {
   return FORM_POOLS[forms]
 }
 
@@ -154,7 +154,7 @@ export function rootTypesPool(rootTypes: RootTypesLevel): readonly SrsRootType[]
 }
 
 export function randomVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
-  const availableForms = formsPool(profile.forms)
+  const availableForms = formPool(profile.forms)
   const availableRootTypes = rootTypesPool(profile.rootTypes)
   let pool = verbs.filter(
     ({ root, form }) =>

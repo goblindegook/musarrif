@@ -6,7 +6,6 @@ import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import {
   type DimensionProfile,
-  distractorTensePool,
   exerciseDiacritics,
   type PronounsLevel,
   randomPronoun,
@@ -14,6 +13,7 @@ import {
   randomVerb,
   rawPronounPool,
   type TensesLevel,
+  tensePool,
 } from './dimensions'
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -75,7 +75,7 @@ function easyCandidates(
   const tensesLevel = Math.max(profile.tenses, 3) as TensesLevel
   const pronounsLevel = Math.max(profile.pronouns, 2) as PronounsLevel
   return buildSiblings(verb).flatMap((v) =>
-    distractorTensePool(tensesLevel)
+    tensePool(tensesLevel)
       .filter((t) => !tensesEqual(t, targetTense))
       .flatMap((t) =>
         distractorPronouns(t, { ...profile, tenses: tensesLevel, pronouns: pronounsLevel })
@@ -92,7 +92,7 @@ function mediumCandidates(
   profile: DimensionProfile,
 ): string[] {
   const siblings = buildSiblings(verb)
-  const typeA = distractorTensePool(profile.tenses)
+  const typeA = tensePool(profile.tenses)
     .filter((t) => !tensesEqual(t, targetTense))
     .flatMap((t) =>
       distractorPronouns(t, profile)
@@ -105,7 +105,7 @@ function mediumCandidates(
       .map((p) => conjugate(sibling, targetTense)[p]),
   )
   const typeC = siblings.flatMap((sibling) =>
-    distractorTensePool(profile.tenses)
+    tensePool(profile.tenses)
       .filter((t) => !tensesEqual(t, targetTense))
       .map((t) => conjugate(sibling, t)[targetPronoun]),
   )
@@ -121,7 +121,7 @@ function hardCandidates(
   const type1 = distractorPronouns(targetTense, profile)
     .filter((p) => p !== targetPronoun)
     .map((p) => conjugate(verb, targetTense)[p])
-  const type2 = distractorTensePool(profile.tenses)
+  const type2 = tensePool(profile.tenses)
     .filter((t) => !tensesEqual(t, targetTense))
     .map((t) => conjugate(verb, t)[targetPronoun])
   const type3 = buildSiblings(verb).map((sibling) => conjugate(sibling, targetTense)[targetPronoun])
