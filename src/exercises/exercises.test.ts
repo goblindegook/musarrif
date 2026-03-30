@@ -37,24 +37,24 @@ describe('defineExerciseGenerator', () => {
       promptTranslationKey: 'exercise.prompt.verbForm',
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,
-      cardKey: 'verbForm:regular:2:active-past:3ms',
+      cardKey: 'verbForm:regular:2:active.past:3ms',
       dimensions: ['forms', 'rootTypes', 'diacritics'],
     })
 
     const generator = defineExercise('verbForm', build, { minNominals: 1, weight: 2 })
     const exercise = generator.generate(INITIAL_DIMENSION_PROFILE, {
       form: 2,
-      tense: ['active', 'past'],
+      tense: 'active.past',
       pronoun: '3ms',
     })
 
     expect(generator).toMatchObject({ kind: 'verbForm', minNominals: 1, weight: 2 })
     expect(build).toHaveBeenCalledWith(INITIAL_DIMENSION_PROFILE, {
       form: 2,
-      tense: ['active', 'past'],
+      tense: 'active.past',
       pronoun: '3ms',
     })
-    expect(exercise.cardKey).toBe('verbForm:regular:2:active-past:3ms')
+    expect(exercise.cardKey).toBe('verbForm:regular:2:active.past:3ms')
     expect(exercise.dimensions).toEqual(['forms', 'rootTypes', 'diacritics'])
   })
 })

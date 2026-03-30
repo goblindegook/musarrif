@@ -21,7 +21,7 @@ afterEach(() => {
 
 describe('useSRSStore', () => {
   test('sanitizes oversized persisted data and writes sanitized state back', async () => {
-    const cardKey = 'conjugation:sound:1:active-past:3ms'
+    const cardKey = 'conjugation:sound:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
@@ -50,7 +50,7 @@ describe('useSRSStore', () => {
   })
 
   test('records answer updates through the hook API', async () => {
-    const cardKey = 'conjugation:sound:1:active-past:3ms'
+    const cardKey = 'conjugation:sound:1:active.past:3ms'
 
     function Probe() {
       const [, recordSrsAnswer] = useSrsStore()

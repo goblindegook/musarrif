@@ -52,25 +52,25 @@ export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-const T0: VerbTense[] = [['active', 'past']]
-const T1: VerbTense[] = [...T0, ['active', 'present', 'indicative']]
-const T2: VerbTense[] = [...T1, ['active', 'future']]
-const T3: VerbTense[] = [...T2, ['active', 'present', 'subjunctive'], ['active', 'present', 'jussive']]
-const T4: VerbTense[] = [...T3, ['active', 'imperative']]
+const T0: VerbTense[] = ['active.past']
+const T1: VerbTense[] = [...T0, 'active.present.indicative']
+const T2: VerbTense[] = [...T1, 'active.future']
+const T3: VerbTense[] = [...T2, 'active.present.subjunctive', 'active.present.jussive']
+const T4: VerbTense[] = [...T3, 'active.imperative']
 const T5: VerbTense[] = [
   ...T4,
-  ['passive', 'past'],
-  ['passive', 'present', 'indicative'],
-  ['passive', 'present', 'subjunctive'],
-  ['passive', 'present', 'jussive'],
-  ['passive', 'future'],
+  'passive.past',
+  'passive.present.indicative',
+  'passive.present.subjunctive',
+  'passive.present.jussive',
+  'passive.future',
 ]
 const TENSE_POOLS = [T0, T1, T2, T3, T4, T5] as const
 
 export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
   return canConjugatePassive(verb)
     ? random(TENSE_POOLS[tenses])
-    : random(TENSE_POOLS[tenses].filter(([voice]) => voice === 'active'))
+    : random(TENSE_POOLS[tenses].filter((tense) => tense.startsWith('active')))
 }
 
 export function tensePool(tenses: TensesLevel): readonly VerbTense[] {
@@ -88,9 +88,8 @@ export function rawPronounPool(pronouns: PronounsLevel): readonly PronounId[] {
 }
 
 export function randomPronoun(verb: DisplayVerb, tense: VerbTense, pronouns: PronounsLevel): PronounId {
-  const [voice, tenseName] = tense
-  if (tenseName === 'imperative') return random(PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2')))
-  if (voice === 'passive' && verb.passiveVoice === 'impersonal') return '3ms'
+  if (tense === 'active.imperative') return random(PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2')))
+  if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return '3ms'
   return random(PRONOUN_POOLS[pronouns])
 }
 

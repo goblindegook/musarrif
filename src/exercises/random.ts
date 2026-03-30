@@ -1,4 +1,3 @@
-import { tenseEquals } from '../paradigms/tense'
 import { verbs } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
 import { type DimensionProfile, formPool, rawPronounPool, rootTypesPool, tensePool } from './dimensions'
@@ -56,7 +55,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
       if (!availableKinds.has(kind)) return false
       if (rootType != null && !availableRootTypes.includes(rootType)) return false
       if (form != null && !availableForms.includes(form)) return false
-      if (tense != null && !availableTenses.some((t) => tenseEquals(t, tense))) return false
+      if (tense != null && !availableTenses.includes(tense)) return false
       if (pronoun != null && !availablePronouns.includes(pronoun)) return false
       return true
     })

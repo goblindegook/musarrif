@@ -54,7 +54,7 @@ describe('getUserData', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:1:active-past:3ms': {
+        'conjugation:sound:1:active.past:3ms': {
           interval: 145313,
           ef: 2.5,
           repetitions: 13,
@@ -65,8 +65,8 @@ describe('getUserData', () => {
 
     const data = getUserData()
     const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
-    expect(data.srs['conjugation:sound:1:active-past:3ms'].interval).toBe(365)
-    expect(data.srs['conjugation:sound:1:active-past:3ms'].dueDate).toBe(expectedDueDate)
+    expect(data.srs['conjugation:sound:1:active.past:3ms'].interval).toBe(365)
+    expect(data.srs['conjugation:sound:1:active.past:3ms'].dueDate).toBe(expectedDueDate)
   })
 })
 
@@ -117,7 +117,7 @@ describe('importUserData', () => {
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       srs: {
-        'conjugation:sound:1:active-past:3ms': {
+        'conjugation:sound:1:active.past:3ms': {
           interval: 145313,
           ef: 2.5,
           repetitions: 13,
@@ -129,7 +129,7 @@ describe('importUserData', () => {
     expect(importUserData(payload)).toBe(true)
     const stored = JSON.parse(localStorage.getItem('conjugator:srs')!)
     const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
-    expect(stored['conjugation:sound:1:active-past:3ms'].interval).toBe(365)
-    expect(stored['conjugation:sound:1:active-past:3ms'].dueDate).toBe(expectedDueDate)
+    expect(stored['conjugation:sound:1:active.past:3ms'].interval).toBe(365)
+    expect(stored['conjugation:sound:1:active.past:3ms'].dueDate).toBe(expectedDueDate)
   })
 })

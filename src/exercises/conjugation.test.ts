@@ -186,7 +186,7 @@ describe('conjugationExercise with constraints', () => {
 
   test('attaches cardKey to returned exercise', () => {
     const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:\d+:[\w-]+:\w+$/)
+    expect(exercise.cardKey).toMatch(/^conjugation:[a-z]+:\d+:[\w.]+:\w+$/)
   })
 
   test('cardKey reflects constrained form', () => {
@@ -196,9 +196,9 @@ describe('conjugationExercise with constraints', () => {
 
   test('cardKey reflects constrained tense', () => {
     const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE, {
-      tense: ['active', 'past'],
+      tense: 'active.past',
       pronoun: '3ms',
     })
-    expect(exercise.cardKey).toContain(':active-past:3ms')
+    expect(exercise.cardKey).toContain(':active.past:3ms')
   })
 })

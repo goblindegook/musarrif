@@ -18,12 +18,9 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 }
 
 function renderComponent(pronoun = '3ms', arabic = 'كَتَبَ') {
-  render(
-    <ConjugationInsights verb={getVerb('كتب', 1)} verbTense={['active', 'past']} pronoun={pronoun} arabic={arabic} />,
-    {
-      wrapper: Wrapper,
-    },
-  )
+  render(<ConjugationInsights verb={getVerb('كتب', 1)} verbTense="active.past" pronoun={pronoun} arabic={arabic} />, {
+    wrapper: Wrapper,
+  })
 }
 
 describe('ConjugationInsights', () => {

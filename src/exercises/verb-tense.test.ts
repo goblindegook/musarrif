@@ -125,6 +125,6 @@ describe('tenseExercise distractor strategies', () => {
 
 describe('verbTenseExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w-]+:\w+$/)
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w.]+:\w+$/)
   })
 })

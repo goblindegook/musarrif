@@ -5,19 +5,6 @@ import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
 import type { Verb, VerbForm } from './verbs'
 
-export type TenseContext =
-  | 'active.past'
-  | 'active.present.indicative'
-  | 'active.present.subjunctive'
-  | 'active.present.jussive'
-  | 'active.future'
-  | 'active.imperative'
-  | 'passive.past'
-  | 'passive.present.indicative'
-  | 'passive.present.subjunctive'
-  | 'passive.present.jussive'
-  | 'passive.future'
-
 type FormRootInteraction = 'assimilation-waw' | 'assimilation-yaa' | 'assimilation-doubled'
 
 type TenseRootInteraction =
@@ -45,16 +32,9 @@ export type ExplanationLayers = {
   form?: VerbForm
   formIPattern?: FormIPattern
   formRoot?: FormRootInteraction
-  tense?: TenseContext
+  tense?: VerbTense
   tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
-}
-
-function toTenseContext(verbTense: VerbTense): TenseContext {
-  const [voice, tenseOrMood, mood] = verbTense
-  if (tenseOrMood === 'imperative') return 'active.imperative'
-  if (tenseOrMood === 'present') return `${voice}.present.${mood}` as TenseContext
-  return `${voice}.${tenseOrMood}` as TenseContext
 }
 
 function toFormRoot(
@@ -68,7 +48,7 @@ function toFormRoot(
   return undefined
 }
 
-function resolveHollow(rootType: RootAnalysisType, tenseContext: TenseContext): TenseRootInteraction {
+function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): TenseRootInteraction {
   const isWaw = rootType.includes('waw')
   switch (tenseContext) {
     case 'active.past':
@@ -92,7 +72,7 @@ function resolveHollow(rootType: RootAnalysisType, tenseContext: TenseContext): 
 
 function resolveDefective(
   rootType: RootAnalysisType,
-  tenseContext: TenseContext,
+  tenseContext: VerbTense,
   pronoun: PronounId,
 ): TenseRootInteraction {
   const isWaw = rootType.includes('waw')
@@ -115,7 +95,7 @@ function resolveDefective(
   }
 }
 
-function resolveGeminate(tenseContext: TenseContext, form: VerbForm): TenseRootInteraction | undefined {
+function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInteraction | undefined {
   if (form === 2 || form === 5) return undefined
   return tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative'
     ? 'geminate-jussive'
@@ -124,7 +104,7 @@ function resolveGeminate(tenseContext: TenseContext, form: VerbForm): TenseRootI
 
 function toTenseRoot(
   rootType: RootAnalysisType,
-  tenseContext: TenseContext,
+  tenseContext: VerbTense,
   form: VerbForm,
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
@@ -200,7 +180,7 @@ export function resolveVerbExplanationLayers(
 ): ExplanationLayers {
   const rootLetters = Array.from(verb.root)
   const rootType = analyzeRoot(verb.root).type
-  const tense = toTenseContext(verbTense)
+  const tense = verbTense
   return {
     rootLetters,
     form: verb.form,

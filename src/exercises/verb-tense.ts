@@ -25,7 +25,7 @@ export const verbTenseExercise = defineExercise(
     const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun])
     const [word, options] = buildOptions(verb, tense, pronoun, profile, minTenses)
-    const answer = options.findIndex((option) => option.join('.') === tense.join('.'))
+    const answer = options.indexOf(tense)
 
     return {
       dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
@@ -43,9 +43,12 @@ export const verbTenseExercise = defineExercise(
 )
 
 function tenseKey(tense: VerbTense, includeVoice: boolean): string {
-  const slug = tense.slice(1).join('.')
-  if (!includeVoice || tense[1] === 'imperative') return `exercise.tense.option.${slug}`
-  return `exercise.tense.option.${tense[0]}.${slug}`
+  if (!includeVoice || tense === 'active.imperative') {
+    const [, ...parts] = tense.split('.')
+    const slug = parts.join('.')
+    return `exercise.tense.option.${slug}`
+  }
+  return `exercise.tense.option.${tense}`
 }
 
 function buildOptions(

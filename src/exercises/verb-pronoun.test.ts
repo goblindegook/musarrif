@@ -113,7 +113,7 @@ describe('verbPronounExercise distractor strategies', () => {
 describe('verbPronounExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
     expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^verbPronoun:[a-z]+:\d+:[\w-]+:\w+$/,
+      /^verbPronoun:[a-z]+:\d+:[\w.]+:\w+$/,
     )
   })
 })

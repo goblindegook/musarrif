@@ -51,24 +51,29 @@ export function buildCardKey(
   pronoun?: PronounId,
 ): string {
   if (tense == null) return `${kind}:${rootType}:${form}`
-  return `${kind}:${rootType}:${form}:${tense.join('-')}:${pronoun}`
+  return `${kind}:${rootType}:${form}:${tense}:${pronoun}`
 }
 
 export function parseCardKey(key: string): ParsedCardKey {
-  const [kind, rootType, formStr, tenseStr, pronoun] = key.split(':')
-  const form = Number(formStr) as VerbForm
-  if (tenseStr == null) {
+  const [kind, rootType, formStr, tense, pronoun] = key.split(':')
+
+  if (tense == null) {
     return {
       kind: kind as ExerciseKind,
       rootType: rootType as SrsRootType,
-      form,
+      form: Number(formStr) as VerbForm,
       tense: undefined,
       pronoun: undefined,
     }
   }
-  const parts = tenseStr.split('-')
-  const tense = (parts.length === 2 ? [parts[0], parts[1]] : [parts[0], parts[1], parts[2]]) as VerbTense
-  return { kind: kind as ExerciseKind, rootType: rootType as SrsRootType, form, tense, pronoun: pronoun as PronounId }
+
+  return {
+    kind: kind as ExerciseKind,
+    rootType: rootType as SrsRootType,
+    form: Number(formStr) as VerbForm,
+    tense: tense as VerbTense,
+    pronoun: pronoun as PronounId,
+  }
 }
 
 function utcAddDays(date: string, days: number): string {

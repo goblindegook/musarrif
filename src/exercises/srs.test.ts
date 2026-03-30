@@ -31,18 +31,18 @@ describe('getSrsRootType', () => {
 
 describe('buildCardKey', () => {
   test('conjugation-style key includes kind, rootType, form, tense, pronoun', () => {
-    expect(buildCardKey('conjugation', 'sound', 1, ['active', 'past'], '1s')).toBe('conjugation:sound:1:active-past:1s')
+    expect(buildCardKey('conjugation', 'sound', 1, 'active.past', '1s')).toBe('conjugation:sound:1:active.past:1s')
   })
 
   test('3-tuple tense serialises all three parts', () => {
-    expect(buildCardKey('verbTense', 'hollow', 3, ['passive', 'present', 'indicative'], '3ms')).toBe(
-      'verbTense:hollow:3:passive-present-indicative:3ms',
+    expect(buildCardKey('verbTense', 'hollow', 3, 'passive.present.indicative', '3ms')).toBe(
+      'verbTense:hollow:3:passive.present.indicative:3ms',
     )
   })
 
   test('imperative serialises as 2-token tense', () => {
-    expect(buildCardKey('conjugation', 'sound', 1, ['active', 'imperative'], '2ms')).toBe(
-      'conjugation:sound:1:active-imperative:2ms',
+    expect(buildCardKey('conjugation', 'sound', 1, 'active.imperative', '2ms')).toBe(
+      'conjugation:sound:1:active.imperative:2ms',
     )
   })
 
@@ -63,21 +63,21 @@ describe('parseCardKey', () => {
   })
 
   test('parses 2-token tense key', () => {
-    expect(parseCardKey('conjugation:sound:1:active-past:1s')).toEqual({
+    expect(parseCardKey('conjugation:sound:1:active.past:1s')).toEqual({
       kind: 'conjugation',
       rootType: 'sound',
       form: 1,
-      tense: ['active', 'past'],
+      tense: 'active.past',
       pronoun: '1s',
     })
   })
 
   test('parses 3-token tense key', () => {
-    expect(parseCardKey('verbTense:hollow:3:passive-present-indicative:3ms')).toEqual({
+    expect(parseCardKey('verbTense:hollow:3:passive.present.indicative:3ms')).toEqual({
       kind: 'verbTense',
       rootType: 'hollow',
       form: 3,
-      tense: ['passive', 'present', 'indicative'],
+      tense: 'passive.present.indicative',
       pronoun: '3ms',
     })
   })
@@ -166,7 +166,7 @@ describe('updateCardState', () => {
 describe('sanitizeSrsStore', () => {
   test('returns the same store reference when data is already within bounds', () => {
     const store = {
-      'conjugation:sound:1:active-past:3ms': {
+      'conjugation:sound:1:active.past:3ms': {
         interval: 6,
         ef: 2.5,
         repetitions: 2,
@@ -227,15 +227,15 @@ describe('weightedRandomSrs', () => {
 
 describe('recordAnswer', () => {
   test('creates a new entry on first answer', () => {
-    const store = recordAnswer({}, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
-    expect(store['conjugation:sound:1:active-past:1s'].repetitions).toBe(1)
-    expect(store['conjugation:sound:1:active-past:1s'].dueDate).toBe('2026-03-24')
+    const store = recordAnswer({}, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
+    expect(store['conjugation:sound:1:active.past:1s'].repetitions).toBe(1)
+    expect(store['conjugation:sound:1:active.past:1s'].dueDate).toBe('2026-03-24')
   })
 
   test('updates existing entry on subsequent answer', () => {
-    const s1 = recordAnswer({}, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
-    const s2 = recordAnswer(s1, 'conjugation:sound:1:active-past:1s', 'correct', '2026-03-23')
-    expect(s2['conjugation:sound:1:active-past:1s'].repetitions).toBe(2)
+    const s1 = recordAnswer({}, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
+    const s2 = recordAnswer(s1, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
+    expect(s2['conjugation:sound:1:active.past:1s'].repetitions).toBe(2)
   })
 
   test('returns store unchanged when cardKey is undefined', () => {

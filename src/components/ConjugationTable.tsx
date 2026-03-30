@@ -1,5 +1,4 @@
 import { styled } from 'goober'
-import { useMemo } from 'preact/hooks'
 import { useI18n } from '../hooks/i18n'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
 import { canConjugatePassive } from '../paradigms/passive/support'
@@ -93,15 +92,12 @@ export function ConjugationTable({
   const availableVoices = passiveAvailable ? VOICE_OPTIONS : (['active'] as const)
   const selectedVoice = passiveAvailable ? voice : 'active'
   const verbTense: VerbTense =
-    tense === 'imperative' ? ['active', 'imperative'] : mood ? [selectedVoice, tense, mood] : [selectedVoice, tense]
-  const conjugations = useMemo(
-    () =>
-      tense === 'imperative'
-        ? conjugate(verb, ['active', 'imperative'])
-        : conjugate(verb, mood ? [selectedVoice, tense, mood] : [selectedVoice, tense]),
-    [selectedVoice, verb, tense, mood],
-  )
-  const conjugationEntries: Partial<Record<PronounId, string>> = conjugations ?? {}
+    tense === 'imperative'
+      ? 'active.imperative'
+      : tense === 'present'
+        ? `${selectedVoice}.present.${mood}`
+        : `${selectedVoice}.${tense}`
+  const conjugations = conjugate(verb, verbTense)
   const availableTenses = TENSE_OPTIONS_BY_VOICE[selectedVoice]
 
   return (
@@ -196,7 +192,7 @@ export function ConjugationTable({
           </thead>
           <TableBody>
             {PRONOUNS.map((slot) => {
-              const conjugation = conjugationEntries[slot.id]
+              const conjugation = conjugations[slot.id]
               if (!conjugation) return null
               const displayText = applyDiacriticsPreference(conjugation, diacriticsPreference)
 

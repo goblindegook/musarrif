@@ -306,7 +306,7 @@ describe('SRS recording', () => {
       promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'exercise.conjugation.pronoun.3ms' },
       options: ['كَتَبَ', 'يَكْتُبُ', 'كَتَبْتَ', 'كُتِبَ'],
       answer: 0,
-      cardKey: 'conjugation:regular:1:active-past:3ms',
+      cardKey: 'conjugation:regular:1:active.past:3ms',
     }
     render(<ExerciseMode generateExercise={() => exercise} />, {
       wrapper: ({ children }: { children: ComponentChildren }) => (
@@ -317,11 +317,11 @@ describe('SRS recording', () => {
     })
     fireEvent.click(screen.getAllByRole('button')[0])
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(srs['conjugation:regular:1:active-past:3ms']).toBeDefined()
+    expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
   })
 
   test('sanitizes oversized persisted SRS state when loading from localStorage', () => {
-    const cardKey = 'conjugation:regular:1:active-past:3ms'
+    const cardKey = 'conjugation:regular:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({

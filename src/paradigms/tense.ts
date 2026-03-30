@@ -9,37 +9,35 @@ import type { PronounId } from './pronouns'
 import type { Verb } from './verbs'
 
 export type Voice = 'active' | 'passive'
-export type Tense = 'past' | 'present' | 'future' | 'imperative'
+type NonPresentTense = 'past' | 'future'
+export type Tense = NonPresentTense | 'present' | 'imperative'
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
-export type VerbTense =
-  | [voice: 'active', mood: 'imperative']
-  | [voice: Voice, tense: 'past' | 'future']
-  | [voice: Voice, tense: 'present', mood: Mood]
+export type VerbTense = 'active.imperative' | `${Voice}.${NonPresentTense}` | `${Voice}.present.${Mood}`
 
-export function conjugate(verb: Verb, [voice, tense, mood]: VerbTense): Record<PronounId, string> {
-  if (voice === 'passive')
-    switch (tense) {
-      case 'past':
-        return conjugatePassivePast(verb)
-      case 'present':
-        return conjugatePassivePresentMood(verb, mood)
-      case 'future':
-        return conjugatePassiveFuture(verb)
-    }
-
-  switch (tense) {
-    case 'past':
+export function conjugate(verb: Verb, verbTense: VerbTense): Record<PronounId, string> {
+  switch (verbTense) {
+    case 'active.past':
       return conjugatePast(verb)
-    case 'present':
-      return conjugatePresentMood(verb, mood)
-    case 'future':
+    case 'active.present.indicative':
+      return conjugatePresentMood(verb, 'indicative')
+    case 'active.present.subjunctive':
+      return conjugatePresentMood(verb, 'subjunctive')
+    case 'active.present.jussive':
+      return conjugatePresentMood(verb, 'jussive')
+    case 'active.future':
       return conjugateFuture(verb)
-    case 'imperative':
+    case 'active.imperative':
       return conjugateImperative(verb)
+    case 'passive.past':
+      return conjugatePassivePast(verb)
+    case 'passive.present.indicative':
+      return conjugatePassivePresentMood(verb, 'indicative')
+    case 'passive.present.subjunctive':
+      return conjugatePassivePresentMood(verb, 'subjunctive')
+    case 'passive.present.jussive':
+      return conjugatePassivePresentMood(verb, 'jussive')
+    case 'passive.future':
+      return conjugatePassiveFuture(verb)
   }
-}
-
-export function tenseEquals(a: VerbTense, b: VerbTense): boolean {
-  return a.join('.') === b.join('.')
 }
