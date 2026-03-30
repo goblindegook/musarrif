@@ -44,9 +44,9 @@ export function VerbPill({ verb, className }: VerbPillProps) {
         <small>{ROMAN_NUMERALS[verb.form - 1]}</small>
       </InlineRow>
       {lang !== 'ar' && (
-        <small dir={dir} lang={lang}>
+        <VerbTranslation dir={dir} lang={lang}>
           {translateVerb(verb)}
-        </small>
+        </VerbTranslation>
       )}
     </VerbPillLink>
   )
@@ -88,8 +88,8 @@ const VerbPillLink = styled('a')`
 
   small {
     color: #475569;
-    transition: color 120ms ease;
     font-size: 0.75rem;
+    transition: color 120ms ease;
   }
 
   &:hover small {
@@ -101,4 +101,14 @@ const InlineRow = styled('div')`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+`
+
+const VerbTranslation = styled('small')`
+  color: #475569;
+  font-size: 0.75rem;
+  max-width: 5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 120ms ease;
+  white-space: nowrap;
 `

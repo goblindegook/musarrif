@@ -382,7 +382,7 @@
     "formInfo.form9.relationship": "They rarely pair with other forms but still anchor to the base Form I meaning.",
     "formInfo.form9.semantic": "Stative: color or defect",
     "formInfo.open": "View form insights for Form {form}",
-    "formInfo.title": "Form insights",
+    "formInfo.title": "Form {form} insights",
     "languagePicker.label": "Language",
     "meta.activeParticiple": "Active participle",
     "meta.form": "Form",

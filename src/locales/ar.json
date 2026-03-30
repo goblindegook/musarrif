@@ -382,7 +382,7 @@
     "formInfo.form9.relationship": "نادرًا ما تقترن بأبواب أخرى لكنها تبقى مرتبطة بالمعنى الأساسي للباب الأول.",
     "formInfo.form9.semantic": "وصفي: لون أو عيب",
     "formInfo.open": "اعرض ملاحظات الباب {form}",
-    "formInfo.title": "ملاحظات عن الأبواب",
+    "formInfo.title": "ملاحظات الباب {form}",
     "languagePicker.label": "ٱللُّغَةُ",
     "meta.activeParticiple": "ٱسْمُ ٱلْفَاعِلِ",
     "meta.form": "ٱلْبَابُ",

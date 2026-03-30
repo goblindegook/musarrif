@@ -382,7 +382,7 @@
     "formInfo.form9.relationship": "Raramente si affiancano ad altre forme ma rimangono ancorati al significato base della forma I.",
     "formInfo.form9.semantic": "Stativo: colore o difetto",
     "formInfo.open": "Mostra dettagli per la forma {form}",
-    "formInfo.title": "Approfondimenti sulla forma",
+    "formInfo.title": "Approfondimenti sulla forma {form}",
     "languagePicker.label": "Lingua",
     "meta.activeParticiple": "Participio attivo",
     "meta.form": "Forma",

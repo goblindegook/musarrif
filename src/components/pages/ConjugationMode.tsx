@@ -430,7 +430,11 @@ export function ConjugationMode() {
 
       {selectedVerb && (
         <>
-          <Modal isOpen={isFormInfoOpen} onClose={() => setIsFormInfoOpen(false)} title={t('formInfo.title')}>
+          <Modal
+            isOpen={isFormInfoOpen}
+            onClose={() => setIsFormInfoOpen(false)}
+            title={t('formInfo.title', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
+          >
             <FormInsights verb={selectedVerb} />
           </Modal>
           <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>

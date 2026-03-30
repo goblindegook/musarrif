@@ -314,9 +314,7 @@ describe('Form', () => {
     renderConjugationMode('/#/verbs/Elm-5')
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
-    const dialogTitle = screen.getByText('Form insights')
-    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
-    expect(dialog).toBeTruthy()
+    const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText(/reflexive or passive counterpart to Form II/i)).toBeInTheDocument()
     const links = Array.from(dialog.querySelectorAll('a[href]'))
     expect(links.length).toBeGreaterThan(0)
@@ -332,17 +330,14 @@ describe('Form', () => {
   it('shows the selected Form I past/present pattern in form insights', () => {
     renderConjugationMode('/#/verbs/bdl-1')
     fireEvent.click(screen.getByLabelText('View form insights for Form I'))
-
-    const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
+    const dialog = screen.getByText('Form I insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
   })
 
   it('shows both past and present patterns in non-Form-I insights', () => {
     renderConjugationMode('/#/verbs/Elm-5')
     fireEvent.click(screen.getByLabelText('View form insights for Form V'))
-
-    const dialogTitle = screen.getByText('Form insights')
-    const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement
+    const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('تَفَعَّلَ / يَتَفَعَّلُ')).toBeInTheDocument()
   })
 })
@@ -369,8 +364,7 @@ test('Show quick picks related to the selected verb', () => {
 test('Order derived form options by form number', () => {
   renderConjugationMode('/#/verbs/bdl-1')
   const derivedFormHeading = screen.getByText('Derived forms')
-  const buttons = Array.from(derivedFormHeading.nextElementSibling!.children)
-  const formLabels = buttons
+  const formLabels = Array.from(derivedFormHeading.nextElementSibling!.children)
     .map((button) => button.getAttribute('aria-label')!)
     .map((label) => label.match(/-\s([IVX]+)\s-\sForm/i)?.[1])
   expect(formLabels).toEqual(['I', 'II', 'VI', 'X'])
@@ -420,8 +414,7 @@ describe('Root insights', () => {
 
     fireEvent.click(screen.getByLabelText(/View root insights/i))
 
-    const dialogTitle = screen.getByText('Root insights')
-    const dialog = dialogTitle.closest<HTMLElement>('[role="dialog"]')!
+    const dialog = screen.getByText('Root insights').closest<HTMLElement>('[role="dialog"]')!
     expect(within(dialog).getByText('writing')).toBeInTheDocument()
   })
 })
@@ -542,7 +535,7 @@ describe('Build tab', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
-    const dialog = screen.getByText('Form insights').closest<HTMLElement>('[role="dialog"]')!
+    const dialog = screen.getByText('Form I insights').closest<HTMLElement>('[role="dialog"]')!
     const exampleLink = dialog.querySelector<HTMLAnchorElement>('a[href]')!
 
     fireEvent.click(exampleLink)

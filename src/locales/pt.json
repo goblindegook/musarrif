@@ -382,7 +382,7 @@
     "formInfo.form9.relationship": "Eles raramente emparelham com outras formas, mas ainda se ancoram ao sentido básico da forma I.",
     "formInfo.form9.semantic": "Estativo: cor ou defeito",
     "formInfo.open": "Ver detalhes da forma {form}",
-    "formInfo.title": "Sobre a forma",
+    "formInfo.title": "Sobre a forma {form}",
     "languagePicker.label": "Idioma",
     "meta.activeParticiple": "Particípio activo",
     "meta.form": "Forma",
