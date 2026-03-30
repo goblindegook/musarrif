@@ -331,7 +331,7 @@ describe('Form', () => {
 
   it('shows the selected Form I past/present pattern in form insights', () => {
     renderConjugationMode('/#/verbs/bdl-1')
-    fireEvent.click(screen.getByLabelText(/View form insights/i))
+    fireEvent.click(screen.getByLabelText('View form insights for Form I'))
 
     const dialog = screen.getByText('Form insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
@@ -339,7 +339,7 @@ describe('Form', () => {
 
   it('shows both past and present patterns in non-Form-I insights', () => {
     renderConjugationMode('/#/verbs/Elm-5')
-    fireEvent.click(screen.getByLabelText(/View form insights/i))
+    fireEvent.click(screen.getByLabelText('View form insights for Form V'))
 
     const dialogTitle = screen.getByText('Form insights')
     const dialog = dialogTitle.closest('[role="dialog"]') as HTMLElement

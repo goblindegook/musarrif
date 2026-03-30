@@ -159,7 +159,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                   }}
                   aria-label={[
                     verb.label,
-                    `${t('meta.form')} ${ROMAN_NUMERALS[verb.form - 1]}`,
+                    t('meta.form.withNumber', { form: ROMAN_NUMERALS[verb.form - 1] }),
                     lang !== 'ar' && t(verb.id),
                   ]
                     .filter(Boolean)

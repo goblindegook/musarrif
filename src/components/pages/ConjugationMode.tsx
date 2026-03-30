@@ -123,9 +123,6 @@ export function ConjugationMode() {
     if (selectedVerb) addRecent(selectedVerb.id)
   }, [selectedVerb?.id])
 
-  const selectedFormLabel = selectedVerb ? `${t('meta.form')} ${ROMAN_NUMERALS[selectedVerb.form - 1]}` : undefined
-  const formInsightsLabel = selectedFormLabel ? `${selectedFormLabel} — ${t('formInfo.open')}` : t('formInfo.open')
-
   const selectedVoice: Voice = voice ?? 'active'
   const selectedTense = selectedVoice === 'passive' && tense === 'imperative' ? 'past' : (tense ?? 'past')
   const selectedMood = selectedTense === 'present' ? (mood ?? 'indicative') : undefined
@@ -277,7 +274,7 @@ export function ConjugationMode() {
               role="tabpanel"
               id={`form-panel-${selectedFormTab}`}
               aria-labelledby={`form-tab-${selectedFormTab}`}
-              aria-label={`${t('meta.form')} ${ROMAN_NUMERALS[selectedFormTab - 1]}`}
+              aria-label={t('meta.form.withNumber', { form: ROMAN_NUMERALS[selectedFormTab - 1] })}
             >
               <VerbList>
                 {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
@@ -319,10 +316,9 @@ export function ConjugationMode() {
                 label={t('meta.root')}
                 labelLang={lang}
                 labelDir={dir}
-                insightOnClick={() => setIsRootInfoOpen(true)}
-                insightAriaLabel={t('rootInfo.open')}
-                insightAriaHasPopup="dialog"
-                insightAriaExpanded={isRootInfoOpen}
+                onInsightsClick={() => setIsRootInfoOpen(true)}
+                insightsLabel={t('rootInfo.open')}
+                insightsOpen={isRootInfoOpen}
               >
                 <RootMetaValue dir="rtl" lang="ar">
                   {Array.from(selectedVerb.root).map((letter, index) => (
@@ -336,10 +332,9 @@ export function ConjugationMode() {
                 labelDir={dir}
                 valueLang={lang}
                 valueDir="rtl"
-                insightOnClick={() => setIsFormInfoOpen(true)}
-                insightAriaLabel={formInsightsLabel}
-                insightAriaHasPopup="dialog"
-                insightAriaExpanded={isFormInfoOpen}
+                onInsightsClick={() => setIsFormInfoOpen(true)}
+                insightsLabel={t('formInfo.open', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
+                insightsOpen={isFormInfoOpen}
               >
                 <FormMetaValue>
                   <FormMetaItem>{ROMAN_NUMERALS[selectedVerb.form - 1]}</FormMetaItem>

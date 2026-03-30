@@ -11,18 +11,14 @@ interface DetailProps {
   labelLang?: string
   labelDir?: 'auto' | 'rtl' | 'ltr'
   value?: string
+  valueLang?: string
+  children?: ComponentChildren
+  valueDir?: 'auto' | 'rtl' | 'ltr'
   speechText?: string | null
   copyText?: string | null
-  valueLang?: string
-  valueDir?: 'auto' | 'rtl' | 'ltr'
-  children?: ComponentChildren
-  ariaLabel?: string
-  ariaHasPopup?: 'dialog'
-  ariaExpanded?: boolean
-  insightOnClick?: () => void
-  insightAriaLabel?: string
-  insightAriaHasPopup?: 'dialog'
-  insightAriaExpanded?: boolean
+  onInsightsClick?: () => void
+  insightsLabel?: string
+  insightsOpen?: boolean
 }
 
 export const Detail = ({
@@ -35,10 +31,9 @@ export const Detail = ({
   valueLang = 'ar',
   valueDir = 'rtl',
   children,
-  insightOnClick,
-  insightAriaLabel,
-  insightAriaHasPopup,
-  insightAriaExpanded,
+  onInsightsClick,
+  insightsLabel,
+  insightsOpen,
 }: DetailProps) => {
   const { t } = useI18n()
 
@@ -52,14 +47,14 @@ export const Detail = ({
           {value && <span>{value}</span>}
           {children}
         </DetailContent>
-        {(insightOnClick || speechText || copyText) && (
+        {(onInsightsClick || speechText || copyText) && (
           <DetailActions>
-            {insightOnClick && (
+            {onInsightsClick && (
               <IconButton
-                onClick={insightOnClick}
-                ariaLabel={insightAriaLabel}
-                ariaHasPopup={insightAriaHasPopup}
-                ariaExpanded={insightAriaExpanded}
+                onClick={onInsightsClick}
+                ariaLabel={insightsLabel}
+                ariaHasPopup="dialog"
+                ariaExpanded={insightsOpen}
               >
                 <LightBulbIcon />
               </IconButton>
