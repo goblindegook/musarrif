@@ -60,7 +60,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
               <Detail label={t('meta.verb')} value={verb.label} valueLang="ar" valueDir="rtl" />
             </VerbContextSection>
           </VerbDisplayArea>
-          {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t, 'full').map(
+          {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map(
             (paragraph, index) => (
               <Text key={`${index}-${paragraph}`}>{paragraph}</Text>
             ),

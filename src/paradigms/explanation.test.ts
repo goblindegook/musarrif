@@ -330,7 +330,7 @@ describe('resolveVerbExplanationLayers pronoun and arabic', () => {
 describe('renderExplanation', () => {
   // Stub t() that echoes the key so we can assert key structure without locale files
   const t = (key: string) => key
-  const joined = (layers: ExplanationLayers, mode: 'full' | 'concise') => renderExplanation(layers, t, mode).join(' ')
+  const joined = (layers: ExplanationLayers) => renderExplanation(layers, t).join(' ')
 
   function testExplanationLayers(overrides?: Partial<ExplanationLayers>): ExplanationLayers {
     return {
@@ -345,38 +345,28 @@ describe('renderExplanation', () => {
     }
   }
 
-  test('concise mode with non-null tenseRoot returns only tenseRoot sentence', () => {
-    const layers = testExplanationLayers({ tenseRoot: 'middle-lengthens-aa' })
-    expect(renderExplanation(layers, t, 'concise')).toEqual(['explanation.tense-root.middle-lengthens-aa'])
-  })
-
-  test('concise mode with null tenseRoot returns empty string', () => {
-    const layers = testExplanationLayers({ tenseRoot: undefined })
-    expect(renderExplanation(layers, t, 'concise')).toEqual([])
-  })
-
-  test('full mode includes root sentence', () => {
+  test('includes root sentence', () => {
     const layers = testExplanationLayers({ rootType: 'sound' })
-    expect(joined(layers, 'full')).toContain('explanation.root.sound')
+    expect(joined(layers)).toContain('explanation.root.sound')
   })
 
-  test('full mode groups root, form description, and formIPattern in first paragraph', () => {
+  test('groups root, form description, and formIPattern in first paragraph', () => {
     const layers = testExplanationLayers({ form: 1, rootType: 'sound', formIPattern: 'fa3ala-yaf3ulu' })
-    expect(renderExplanation(layers, t, 'full')).toEqual([
+    expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.sound explanation.form.1 explanation.form-i-pattern.fa3ala-yaf3ulu',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
       'explanation.pronoun.active.past.3ms',
     ])
   })
 
-  test('full mode includes form description in first paragraph for non-form-I', () => {
+  test('includes form description in first paragraph for non-form-I', () => {
     const layers = testExplanationLayers({ form: 3 })
-    expect(renderExplanation(layers, t, 'full')[0]).toContain('explanation.form.3')
+    expect(renderExplanation(layers, t)[0]).toContain('explanation.form.3')
   })
 
-  test('full mode includes form-i past pattern sentence for form I active.past', () => {
+  test('includes form-i past pattern sentence for form I active.past', () => {
     const layers = testExplanationLayers({ form: 1, formIPattern: 'fa3ala-yaf3ulu', tense: 'active.past' })
-    expect(joined(layers, 'full')).toContain('explanation.tense.active.past.form-i')
+    expect(joined(layers)).toContain('explanation.tense.active.past.form-i')
   })
 
   test.each<VerbTense>([
@@ -385,14 +375,14 @@ describe('renderExplanation', () => {
     'passive.present.subjunctive',
     'passive.present.jussive',
     'passive.future',
-  ])('full mode includes %s tense sentence', (tense) => {
+  ])('includes %s tense sentence', (tense) => {
     const layers = testExplanationLayers({ tense })
-    expect(joined(layers, 'full')).toContain(`explanation.voice.${tense}`)
+    expect(joined(layers)).toContain(`explanation.voice.${tense}`)
   })
 
-  test('full mode omits voice sentence for active tenses', () => {
+  test('omits voice sentence for active tenses', () => {
     const layers = testExplanationLayers({ tense: 'active.past' })
-    expect(joined(layers, 'full')).not.toContain('explanation.voice')
+    expect(joined(layers)).not.toContain('explanation.voice')
   })
 
   test.each<[VerbTense, PronounId, string]>([
@@ -407,12 +397,12 @@ describe('renderExplanation', () => {
     ['passive.present.jussive', '3ms', 'explanation.pronoun.passive.present.jussive.3ms'],
     ['passive.present.subjunctive', '3ms', 'explanation.pronoun.passive.present.subjunctive.3ms'],
     ['active.imperative', '2ms', 'explanation.pronoun.active.imperative.2ms'],
-  ])('full mode pronoun key for %s %s', (tense, pronoun, expected) => {
+  ])('pronoun key for %s %s', (tense, pronoun, expected) => {
     const layers = testExplanationLayers({ tense, pronoun })
-    expect(renderExplanation(layers, t, 'full')).toContain(expected)
+    expect(renderExplanation(layers, t)).toContain(expected)
   })
 
-  test('full mode includes tenseRoot sentence when non-null', () => {
+  test('includes tenseRoot sentence when non-null', () => {
     const layers: ExplanationLayers = {
       rootLetters: ['ق', 'و', 'ل'],
       form: 1,
@@ -423,10 +413,10 @@ describe('renderExplanation', () => {
       tenseRoot: 'middle-lengthens-aa',
       pronoun: '3ms',
     }
-    expect(joined(layers, 'full')).toContain('explanation.tense-root.middle-lengthens-aa')
+    expect(joined(layers)).toContain('explanation.tense-root.middle-lengthens-aa')
   })
 
-  test('full mode groups root and formRoot in first paragraph', () => {
+  test('groups root and formRoot in first paragraph', () => {
     const layers: ExplanationLayers = {
       rootLetters: ['و', 'ص', 'ل'],
       form: 8,
@@ -436,7 +426,7 @@ describe('renderExplanation', () => {
       tense: 'active.past',
       pronoun: '3ms',
     }
-    expect(renderExplanation(layers, t, 'full')).toEqual([
+    expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.assimilated explanation.form.8 explanation.form-root.assimilation-waw',
       'explanation.tense.active.past',
       'explanation.pronoun.active.past.3ms',
@@ -446,28 +436,28 @@ describe('renderExplanation', () => {
   test('active.past form-i base pattern renders faʿula for fa3ula-yaf3ulu pattern', () => {
     const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
-    const result = renderExplanation(layers, localeT, 'full')
+    const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿula')
   })
 
   test('active.past form-i base pattern renders ḍamma for fa3ula-yaf3ulu pattern', () => {
     const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
-    const result = renderExplanation(layers, localeT, 'full')
+    const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('ḍamma')
   })
 
   test('active.past form-i base pattern renders faʿala for fa3ala-yaf3ulu pattern', () => {
     const verb = getVerb('كتب', 1) // كَتَبَ, fa3ala-yaf3ulu
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
-    const result = renderExplanation(layers, localeT, 'full')
+    const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿala')
   })
 
   test('active.past form-i base pattern renders faʿila for fa3ila-yaf3alu pattern', () => {
     const verb = getVerbById('Elm-1')! // عَلِمَ, fa3ila-yaf3alu, sound root
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
-    const result = renderExplanation(layers, localeT, 'full')
+    const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿila')
   })
 })

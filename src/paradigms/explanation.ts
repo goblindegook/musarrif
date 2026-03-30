@@ -140,7 +140,6 @@ const FORM_I_BASE_PATTERNS: Record<
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
-  mode: 'full' | 'concise',
 ): string[] {
   const formIBaseParams = layers.formIPattern ? FORM_I_BASE_PATTERNS[layers.formIPattern] : {}
   const params = {
@@ -151,7 +150,6 @@ export function renderExplanation(
   }
 
   const tenseRootSentence = layers.tenseRoot ? t(`explanation.tense-root.${layers.tenseRoot}`, params) : ''
-  if (mode === 'concise') return [tenseRootSentence].filter(Boolean)
 
   return [
     [
@@ -161,7 +159,7 @@ export function renderExplanation(
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
     [
-      layers.tense?.startsWith('passive.') ? t(`explanation.voice.${layers.tense}`, params) : '',
+      layers.tense?.startsWith('passive') ? t(`explanation.voice.${layers.tense}`, params) : '',
       layers.tense && t(`explanation.tense.${layers.tense}`, params),
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
