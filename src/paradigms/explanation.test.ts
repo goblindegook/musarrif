@@ -4,7 +4,7 @@ import type { ExplanationLayers } from './explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from './explanation'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
-import { getVerb, getVerbById } from './verbs'
+import { getVerb, getVerbById, synthesizeVerb } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
   const locale = enLocale as { strings: Record<string, string>; roots?: Record<string, string> }
@@ -277,6 +277,41 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
   })
 })
 
+// ── formRoot: form VIII assimilation by first radical ───────────────────────
+
+describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
+  test('Form VIII with ز as first radical → voicing assimilation', () => {
+    const verb = synthesizeVerb('زوج', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِزْدَوَجَ')
+    expect(layers.formRoot).toBe('assimilation-voicing')
+  })
+
+  test('Form VIII with د as first radical → complete assimilation', () => {
+    const verb = synthesizeVerb('دخل', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِدَّخَلَ')
+    expect(layers.formRoot).toBe('assimilation-complete')
+  })
+
+  test('Form VIII with ص as first radical → emphasis assimilation', () => {
+    const verb = synthesizeVerb('صبر', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِصْطَبَرَ')
+    expect(layers.formRoot).toBe('assimilation-emphasis')
+  })
+
+  test('renderExplanation includes voicing assimilation sentence', () => {
+    const verb = synthesizeVerb('زوج', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِزْدَوَجَ')
+    const rendered = renderExplanation(layers, (key) => key)
+    expect(rendered[0]).toContain('explanation.form-root.assimilation-voicing')
+  })
+
+  test('Form VIII with default infix keeps no extra first-radical assimilation sentence', () => {
+    const verb = synthesizeVerb('كتب', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِكْتَتَبَ')
+    expect(layers.formRoot).toBeUndefined()
+  })
+})
+
 // ── tenseRoot: geminate ──────────────────────────────────────────────────────
 
 describe('resolveVerbExplanationLayers tenseRoot geminate', () => {
@@ -418,16 +453,16 @@ describe('renderExplanation', () => {
 
   test('groups root and formRoot in first paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['و', 'ص', 'ل'],
+      rootLetters: ['ز', 'و', 'ج'],
       form: 8,
-      arabic: 'اِتَّصَلَ',
-      rootType: 'assimilated',
-      formRoot: 'assimilation-waw',
+      arabic: 'اِزْدَوَجَ',
+      rootType: 'hollow-waw',
+      formRoot: 'assimilation-voicing',
       tense: 'active.past',
       pronoun: '3ms',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.assimilated explanation.form.8 explanation.form-root.assimilation-waw',
+      'explanation.root.hollow-waw explanation.form.8 explanation.form-root.assimilation-voicing',
       'explanation.tense.active.past',
       'explanation.pronoun.active.past.3ms',
     ])
