@@ -1,7 +1,7 @@
+import { transliterate } from '@pacote/buckwalter'
 import type { MatcherState } from '@vitest/expect'
 import { diff } from '@vitest/utils/diff'
-
-import { transliterateValue } from './transliteration'
+import { mapRecord } from '../primitives/objects'
 
 export const matchers = {
   toMatchObjectT(this: MatcherState, received: unknown, expected: unknown) {
@@ -44,4 +44,14 @@ export const matchers = {
       },
     }
   },
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value != null && typeof value === 'object' && value.constructor === Object
+
+const transliterateValue = (value: unknown): unknown => {
+  if (typeof value === 'string') return transliterate(value)
+  if (Array.isArray(value)) return value.map(transliterateValue)
+  if (isRecord(value)) return mapRecord(value, transliterateValue)
+  return value
 }
