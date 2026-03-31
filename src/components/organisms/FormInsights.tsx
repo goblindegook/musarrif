@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
+import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import { FORM_I_PATTERN_LABELS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { type DisplayVerb, type VerbForm, verbs } from '../../paradigms/verbs'
@@ -27,6 +28,10 @@ const getFormPattern = (verb: DisplayVerb): string =>
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   const { t, dir, lang, diacriticsPreference } = useI18n()
   const pattern = applyDiacriticsPreference(getFormPattern(verb), diacriticsPreference)
+  const formExplanationParagraph = useMemo(() => {
+    const { rootLetters, arabic, form, formRoot } = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
+    return renderExplanation({ rootLetters, arabic, form, formRoot }, t)[0]
+  }, [verb, t])
 
   const formInsightExamples = useMemo<DisplayVerb[]>(() => {
     const pool = verbs.filter((example) => example.form === verb.form)
@@ -42,9 +47,11 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       <PatternDisplay data-testid="form-pattern" dir="rtl" lang="ar">
         <PatternText>{pattern}</PatternText>
       </PatternDisplay>
-      <Text dir={dir} lang={lang}>
-        {t(`explanation.form.${verb.form}`)}
-      </Text>
+      {formExplanationParagraph && (
+        <Text dir={dir} lang={lang}>
+          {formExplanationParagraph}
+        </Text>
+      )}
       <Text dir={dir} lang={lang}>
         {t(`formInfo.form${verb.form}.relationship`)}
       </Text>
