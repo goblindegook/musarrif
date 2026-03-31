@@ -1,6 +1,6 @@
+import { transliterateReverse } from '@pacote/buckwalter'
 import { wordDistance } from '../primitives/strings'
 import { ALIF, HAMZA, stripDiacritics } from './letters'
-import { detransliterate } from './transliteration'
 import { type DisplayVerb, normalizeHamza, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
@@ -118,7 +118,7 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
     }
   }
 
-  const buckwalterCandidate = Array.from(detransliterate(query))
+  const buckwalterCandidate = Array.from(transliterateReverse(query))
     .filter((char) => /[ء-ي]/.test(char))
     .join('')
 

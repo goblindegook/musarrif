@@ -1,8 +1,8 @@
+import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { HAMZA } from './letters'
-import { detransliterate, transliterate } from './transliteration'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -59,7 +59,7 @@ export const normalizeHamza = (value: string): string => value.replace(/[آأإ�
 
 export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((rawVerb) => {
   const rootId = rawVerb.root
-  const verb = { ...rawVerb, root: detransliterate(rootId) }
+  const verb = { ...rawVerb, root: transliterateReverse(rootId) }
   const past = conjugatePast(verb)
   return { ...verb, label: past['3ms'], id: `${rootId}-${rawVerb.form}`, rootId }
 })
@@ -93,7 +93,7 @@ export function buildVerbFromId(id?: string): DisplayVerb | undefined {
   const [rootId, formText] = (id ?? '').split('-')
   if (!rootId || !formText) return undefined
 
-  const root = detransliterate(rootId)
+  const root = transliterateReverse(rootId)
 
   const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
 

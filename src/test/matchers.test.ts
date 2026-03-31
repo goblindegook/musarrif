@@ -8,9 +8,9 @@ describe('toMatchObjectT', () => {
   test('includes transliterated diff for mismatches', () => {
     const run = () => expect({ value: 'كَتَبَ' }).toMatchObjectT({ value: 'كُتِبَ' })
 
-    expect(run).toThrowError(/Transliterated diff/)
-    expect(run).toThrowError(/kataba/)
-    expect(run).toThrowError(/kutiba/)
+    expect(run).toThrow(/Transliterated diff/)
+    expect(run).toThrow(/kataba/)
+    expect(run).toThrow(/kutiba/)
   })
 })
 
@@ -22,16 +22,16 @@ describe('toEqualT', () => {
   test('includes transliterated diff for string mismatches', () => {
     const run = () => expect('كَتَبَ').toEqualT('كُتِبَ')
 
-    expect(run).toThrowError(/Transliterated diff/)
-    expect(run).toThrowError(/kataba/)
-    expect(run).toThrowError(/kutiba/)
+    expect(run).toThrow(/Transliterated diff/)
+    expect(run).toThrow(/kataba/)
+    expect(run).toThrow(/kutiba/)
   })
 
   test('includes transliterated diff for array mismatches', () => {
     const run = () => expect(['كَتَبَ']).toEqualT(['كُتِبَ'])
 
-    expect(run).toThrowError(/Transliterated diff/)
-    expect(run).toThrowError(/kataba/)
-    expect(run).toThrowError(/kutiba/)
+    expect(run).toThrow(/Transliterated diff/)
+    expect(run).toThrow(/kataba/)
+    expect(run).toThrow(/kutiba/)
   })
 })
