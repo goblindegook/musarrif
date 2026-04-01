@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@pacote/buckwalter": "^0.1.0",
-    "@pacote/memoize": "^3.0.0",
+    "@pacote/memoize": "^3.0.1",
     "@pacote/shuffle": "^3.0.0",
     "goober": "^2.1.18",
     "preact": "^10.29.0",
