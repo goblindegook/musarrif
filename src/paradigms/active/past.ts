@@ -358,7 +358,13 @@ function derivePastForms(verb: Verb): PastBaseForms {
       case 4:
         return derivePastFormIVq(verb)
       default:
-        return derivePastFormIq(verb)
+        return {
+          base: [],
+          suffixedBase: [],
+          feminineSingularDualBase: [],
+          masculineDualBase: [],
+          thirdPersonMasculinePluralBase: [],
+        }
     }
   }
 

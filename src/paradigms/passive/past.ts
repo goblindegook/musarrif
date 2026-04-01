@@ -275,15 +275,6 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (infix === c1 && isWeakLetter(c3))
-    return {
-      prefix: [ALIF, DAMMA, seatedC1, SHADDA, DAMMA, c2],
-      suffix: [KASRA, YEH],
-      suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
-      suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
-    }
-
   if (isFinalWeak)
     return {
       prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, DAMMA, seatedC2],
@@ -361,9 +352,7 @@ function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
 
   return {
     prefix: [TEH, DAMMA, seatHamza(c1, DAMMA), DAMMA, c2, SUKOON, c3, KASRA, c4],
-    suffix: [SUKOON],
     suffix3sd: [FATHA],
-    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
@@ -372,9 +361,7 @@ function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
 
   return {
     prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, NOON, SUKOON, c3, KASRA, c4],
-    suffix: [SUKOON],
     suffix3sd: [FATHA],
-    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

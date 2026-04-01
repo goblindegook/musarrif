@@ -175,8 +175,6 @@ function buildSuffixFormI(verb: FormIVerb, mood: Mood, pronounId: PronounId): re
 
   if (c2 === c3) return geminateSuffix(mood, pronounId)
 
-  if (c3 === NOON && isFemininePlural(pronounId)) return [SHADDA, FATHA]
-
   if (isWeakLetter(c3)) return [FATHA, ...defectiveSuffix(mood, pronounId)]
 
   return MOOD_SUFFIXES[mood][pronounId]
@@ -329,15 +327,6 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
     return [TEH, SHADDA, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   if (isInitialWeak || isInitialHamza) return [TEH, SHADDA, FATHA, c2, FATHA, seatHamza(c3, FATHA), ...moodSuffix]
-
-  if (infix === c1 && isFinalWeak) {
-    if (isMasculinePlural(pronounId))
-      return mood === 'indicative'
-        ? [seatedC1, SHADDA, FATHA, c2, DAMMA, WAW, SUKOON, NOON, FATHA]
-        : [seatedC1, SHADDA, FATHA, c2, DAMMA, WAW, SUKOON, ALIF]
-
-    return [seatedC1, SHADDA, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
-  }
 
   if (isMiddleHamza && isFinalWeak && isMasculinePlural(pronounId))
     return mood === 'indicative'
