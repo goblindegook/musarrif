@@ -1,5 +1,13 @@
 import { shuffle } from '@pacote/shuffle'
-import { ALIF, ALIF_MAQSURA, isDiacritic, isWeakLetter, stripDiacritics, WAW, YEH } from '../paradigms/letters'
+import {
+  ALIF,
+  ALIF_MAQSURA,
+  applyDiacriticsPreference,
+  isDiacritic,
+  isWeakLetter,
+  WAW,
+  YEH,
+} from '../paradigms/letters'
 import { verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 
@@ -46,7 +54,7 @@ export function weakAlternativeRootDistractor(correct: string): DistractorGenera
 }
 
 export function mixedWordDistractor(word: string, size: number): DistractorGenerator<string> {
-  const letters = Array.from(stripDiacritics(word))
+  const letters = Array.from(applyDiacriticsPreference(word, 'none'))
 
   return () => {
     const sourceOffset = Math.floor(Math.random() * letters.length)
@@ -63,7 +71,7 @@ export function mixedWordDistractor(word: string, size: number): DistractorGener
 
 export function wordSliceDistractor(word: string, size: number): DistractorGenerator<string> {
   let offset = 1
-  const letters = Array.from(stripDiacritics(word))
+  const letters = Array.from(applyDiacriticsPreference(word, 'none'))
   return () => cyclicSlice(letters, size, offset++)
 }
 

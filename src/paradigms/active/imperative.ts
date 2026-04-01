@@ -6,6 +6,7 @@ import {
   ALIF_HAMZA_BELOW,
   DAMMA,
   FATHA,
+  finalize,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isHamzatedLetter,
@@ -13,7 +14,6 @@ import {
   KASRA,
   longVowel,
   NOON,
-  normalizeAlifMadda,
   SHADDA,
   SUKOON,
   seatHamza,
@@ -123,7 +123,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       return stem
     }),
-    (letters) => normalizeAlifMadda(letters).join('').normalize('NFC'),
+    finalize,
   )
 }
 

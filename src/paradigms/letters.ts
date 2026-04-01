@@ -46,8 +46,10 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
 }
 
-export function stripDiacritics(input: string): string {
-  return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
+export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
+  if (preference === 'all') return input
+  if (preference === 'some') return stripObviousDiacritics(input)
+  return stripDiacritics(input)
 }
 
 function stripObviousDiacritics(input: string): string {
@@ -62,10 +64,8 @@ function stripObviousDiacritics(input: string): string {
     .join('')
 }
 
-export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
-  if (preference === 'all') return input
-  if (preference === 'some') return stripObviousDiacritics(input)
-  return stripDiacritics(input)
+function stripDiacritics(input: string): string {
+  return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
 }
 
 export function isWeakLetter(value = ''): value is WeakLetter {
@@ -78,10 +78,6 @@ export function isHamzatedLetter(value = ''): value is Hamza {
 
 export function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
-}
-
-export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
-  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1)`), `$1${SHADDA}`))
 }
 
 export function seatHamza(letter: string, vowel?: Vowel): string {
@@ -98,21 +94,6 @@ export function longVowel(vowel: Vowel): [Vowel, string] {
   return [DAMMA, WAW]
 }
 
-export function findWeakLetterIndex(word: readonly string[], index: number = 0): number {
-  return word.findIndex((char, i) => i > index && isWeakLetter(char))
-}
-
-export function findLetterIndex(word: readonly string[], index: number = 0): number {
-  return word.findIndex((char, i) => i > index && !isDiacritic(char))
-}
-
-export function normalizeAlifMadda(word: readonly string[]): readonly string[] {
-  return word
-    .join('')
-    .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
-    .split('')
-}
-
 export function resolveFormVIIIInfixConsonant(c1: string): string {
   if (c1 === ZAY) return DAL
   if ([SAD, DAD].includes(c1)) return TAH
@@ -121,5 +102,13 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
 }
 
 export function finalize(letters: readonly string[]): string {
-  return geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC')
+  return geminateDoubleLetters(normalizeAlifMadda(letters.join(''))).normalize('NFC')
+}
+
+function geminateDoubleLetters(word: string): string {
+  return word.replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
+}
+
+function normalizeAlifMadda(word: string): string {
+  return word.replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
 }

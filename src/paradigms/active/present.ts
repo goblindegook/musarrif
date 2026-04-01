@@ -8,9 +8,6 @@ import {
   DAMMA,
   FATHA,
   finalize,
-  findLetterIndex,
-  findWeakLetterIndex,
-  geminateDoubleLetters,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
@@ -19,7 +16,6 @@ import {
   KASRA,
   longVowel,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -248,7 +244,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       return [...removeFinalDiacritic(word), FATHA]
     }),
-    (letters) => geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC'),
+    finalize,
   )
 }
 
@@ -342,7 +338,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       return [...removeFinalDiacritic(word), SUKOON]
     }),
-    (letters) => geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC'),
+    finalize,
   )
 }
 
@@ -573,8 +569,8 @@ function derivePresentForms(verb: Verb): readonly string[] {
 
 function shortenHollowStem(word: readonly string[]): readonly string[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
-  const hollowLetterIndex = findWeakLetterIndex(word, 0)
-  const nextLetterIndex = findLetterIndex(word, hollowLetterIndex)
+  const hollowLetterIndex = word.findIndex((char, i) => i > 0 && isWeakLetter(char))
+  const nextLetterIndex = word.findIndex((char, i) => i > hollowLetterIndex && !isDiacritic(char))
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
