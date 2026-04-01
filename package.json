@@ -23,7 +23,7 @@
     "uplot": "^1.6.32"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.9",
+    "@biomejs/biome": "^2.4.10",
     "@preact/preset-vite": "^2.10.5",
     "@stryker-mutator/core": "^9.4.0",
     "@stryker-mutator/vitest-runner": "^9.6.0",
