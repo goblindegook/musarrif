@@ -306,7 +306,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
           .slice(0, -1)
           .filter((char) => char !== SHADDA)
 
-      if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -3), KASRA, YEH]
+      if (pronounId === '2fs') {
+        if (verb.form === 7) return [...dropNoonEnding(word).slice(0, -3), KASRA, YEH]
+        return dropNoonEnding(word).slice(0, -1)
+      }
 
       if (isMasculinePlural(pronounId) && verb.form === 4 && isHamzatedLetter(c2) && isWeakLetter(c3))
         return [...dropNoonEnding(word).slice(0, -1), ALIF]
@@ -314,7 +317,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isMasculinePlural(pronounId))
         return [...removeFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]
 
-      if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
+      if (isFemininePlural(pronounId)) {
+        if (c3 === NOON) return [...word.slice(0, -2), SUKOON, NOON, FATHA]
+        return [...word.slice(0, -1), FATHA]
+      }
 
       if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
         return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]

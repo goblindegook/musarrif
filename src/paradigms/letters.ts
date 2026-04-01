@@ -81,7 +81,7 @@ export function isDiacritic(char = ''): boolean {
 }
 
 export function geminateDoubleLetters(word: readonly string[]): readonly string[] {
-  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1|\\1)`), `$1${SHADDA}`))
+  return Array.from(word.join('').replace(new RegExp(`(.)(?:${SUKOON}\\1)`), `$1${SHADDA}`))
 }
 
 export function seatHamza(letter: string, vowel?: Vowel): string {

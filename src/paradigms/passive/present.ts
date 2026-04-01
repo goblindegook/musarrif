@@ -7,6 +7,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
+  geminateDoubleLetters,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -329,7 +330,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
 
   if (isInitialWeak || isInitialHamza) return [TEH, SHADDA, FATHA, c2, FATHA, seatHamza(c3, FATHA), ...moodSuffix]
 
-  if (infix === c1 && isWeakLetter(c3)) {
+  if (infix === c1 && isFinalWeak) {
     if (isMasculinePlural(pronounId))
       return mood === 'indicative'
         ? [seatedC1, SHADDA, FATHA, c2, DAMMA, WAW, SUKOON, NOON, FATHA]
@@ -483,7 +484,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   return constrainPassiveConjugation(
     verb,
     mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
-      normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)])
+      geminateDoubleLetters(normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]))
         .join('')
         .normalize('NFC'),
     ),

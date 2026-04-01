@@ -1454,10 +1454,29 @@ describe('passive present subjunctive', () => {
         ['قرح', 'يُقْتَرَحَ'],
         ['سلم', 'يُسْتَلَمَ'],
         ['عمد', 'يُعْتَمَدَ'],
+        ['زحم', 'يُزْدَحَمَ'],
         ['نظر', 'يُنْتَظَرَ'],
         ['ضلع', 'يُضْطَلَعَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
+      test('اِذَّكَرَ conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('ذكر', 8), 'subjunctive')).toEqualT({
+          '1s': 'أُذَّكَرَ',
+          '2ms': 'تُذَّكَرَ',
+          '2fs': 'تُذَّكَرِي',
+          '3ms': 'يُذَّكَرَ',
+          '3fs': 'تُذَّكَرَ',
+          '2d': 'تُذَّكَرَا',
+          '3md': 'يُذَّكَرَا',
+          '3fd': 'تُذَّكَرَا',
+          '1p': 'نُذَّكَرَ',
+          '2mp': 'تُذَّكَرُوْا',
+          '2fp': 'تُذَّكَرْنَ',
+          '3mp': 'يُذَّكَرُوْا',
+          '3fp': 'يُذَّكَرْنَ',
+        })
       })
 
       test('اِعْتَبَرَ conjugation', () => {
