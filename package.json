@@ -15,7 +15,7 @@
     "format": "npm run lint:fix && biome format --write ."
   },
   "dependencies": {
-    "@pacote/buckwalter": "^0.1.0",
+    "@pacote/buckwalter": "^0.1.1",
     "@pacote/memoize": "^3.0.0",
     "@pacote/shuffle": "^3.0.0",
     "goober": "^2.1.18",
