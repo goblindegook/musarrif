@@ -7,13 +7,12 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  geminateDoubleLetters,
+  finalize,
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
   MEEM,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -54,7 +53,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '3mp': [...thirdPersonMasculinePluralBase, WAW, SUKOON, ALIF],
       '3fp': [...suffixedBase, SUKOON, NOON, FATHA],
     },
-    (value) => normalizeAlifMadda(geminateDoubleLetters(value)).join('').normalize('NFC'),
+    finalize,
   )
 }
 

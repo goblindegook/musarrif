@@ -7,7 +7,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  geminateDoubleLetters,
+  finalize,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -17,7 +17,6 @@ import {
   longVowel,
   MEEM,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -322,9 +321,5 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
 
 export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = (verb.form === 1 && verb.masdarPatterns) || ['mimi']
-  return patterns.map((pattern) =>
-    geminateDoubleLetters(normalizeAlifMadda(masdar(verb, pattern)))
-      .join('')
-      .normalize('NFC'),
-  )
+  return patterns.map((pattern) => finalize(masdar(verb, pattern)))
 }

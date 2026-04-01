@@ -7,7 +7,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  geminateDoubleLetters,
+  finalize,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -15,7 +15,6 @@ import {
   isWeakLetter,
   KASRA,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -473,9 +472,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
   return constrainPassiveConjugation(
     verb,
     mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
-      geminateDoubleLetters(normalizeAlifMadda([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]))
-        .join('')
-        .normalize('NFC'),
+      finalize([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]),
     ),
   )
 }

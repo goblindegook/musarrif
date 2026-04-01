@@ -5,7 +5,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  geminateDoubleLetters,
+  finalize,
   HAMZA,
   isHamzatedLetter,
   isWeakLetter,
@@ -13,7 +13,6 @@ import {
   longVowel,
   MEEM,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -174,5 +173,5 @@ export function derivePassiveParticiple(verb: Verb): string {
     }
   })()
 
-  return geminateDoubleLetters(normalizeAlifMadda(result)).join('').normalize('NFC')
+  return finalize(result)
 }

@@ -7,6 +7,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
+  finalize,
   findLetterIndex,
   findWeakLetterIndex,
   geminateDoubleLetters,
@@ -202,7 +203,7 @@ function conjugateIndicative(verb: Verb): Record<PronounId, string> {
       '3mp': masculinePluralStem,
       '3fp': femininePluralStem,
     },
-    (result) => geminateDoubleLetters(normalizeAlifMadda(result)).join('').normalize('NFC'),
+    finalize,
   )
 }
 

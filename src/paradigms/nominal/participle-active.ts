@@ -5,7 +5,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  geminateDoubleLetters,
+  finalize,
   HAMZA,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
@@ -14,7 +14,6 @@ import {
   KASRA,
   MEEM,
   NOON,
-  normalizeAlifMadda,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -188,5 +187,5 @@ export function deriveActiveParticiple(verb: Verb): string {
     }
   })()
 
-  return geminateDoubleLetters(normalizeAlifMadda(result)).join('').normalize('NFC')
+  return finalize(result)
 }

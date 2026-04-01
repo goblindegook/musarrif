@@ -119,3 +119,7 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
   if ([DAL, THEH, THAL, TAH, ZAH].includes(c1)) return c1
   return TEH
 }
+
+export function finalize(letters: readonly string[]): string {
+  return geminateDoubleLetters(normalizeAlifMadda(letters)).join('').normalize('NFC')
+}
