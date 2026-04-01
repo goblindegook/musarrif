@@ -100,13 +100,10 @@ function derivePastFormIq(verb: Verb): PastBaseForms {
     seatHamza(c4, FATHA),
   ]
 
-  if (isHamzatedLetter(c4))
-    return {
-      ...buildForms(stem, c4),
-      thirdPersonMasculinePluralBase: [...stem.slice(0, -1), seatHamza(c4, DAMMA), DAMMA],
-    }
-
-  return buildForms(stem, c4)
+  return {
+    ...buildForms(stem, c4),
+    thirdPersonMasculinePluralBase: [...stem.slice(0, -1), seatHamza(c4, DAMMA), DAMMA],
+  }
 }
 
 function derivePastFormIIq(verb: Verb): PastBaseForms {
