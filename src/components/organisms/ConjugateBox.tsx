@@ -1,8 +1,9 @@
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
-import { FORM_I_PATTERN_LABELS, type FormIPattern } from '../../paradigms/form-i-vowels'
+import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { conjugate } from '../../paradigms/tense'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import { synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 
@@ -46,6 +47,14 @@ interface ConjugateBoxProps {
   onSelect: (verb: DisplayVerb) => void
   selectedVerb?: DisplayVerb | null
 }
+
+const FORM_I_PATTERN_OPTIONS = FORM_I_PATTERNS.map((pattern) => [
+  pattern,
+  [
+    conjugate(synthesizeVerb('فعل', 1, pattern), 'active.past')['3ms'],
+    conjugate(synthesizeVerb('فعل', 1, pattern), 'active.present.indicative')['3ms'],
+  ].join(' / '),
+])
 
 export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   const { t, diacriticsPreference } = useI18n()
@@ -185,7 +194,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
         <Section>
           <SectionLabel>{t('build.patternLabel')}</SectionLabel>
           <PatternGrid>
-            {Object.entries(FORM_I_PATTERN_LABELS).map(([p, l]) => (
+            {FORM_I_PATTERN_OPTIONS.map(([p, l]) => (
               <OptionButton
                 key={p}
                 type="button"

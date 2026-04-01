@@ -2,32 +2,22 @@ import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
-import { FORM_I_PATTERN_LABELS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
-import { type DisplayVerb, type VerbForm, verbs } from '../../paradigms/verbs'
+import { conjugate } from '../../paradigms/tense'
+import { type DisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
 import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { SuggestionsList } from '../molecules/QuickPickList'
 import { VerbPill } from '../molecules/VerbPill'
 
-const FORM_PATTERNS: Record<Exclude<VerbForm, 1>, string> = {
-  2: 'فَعَّلَ / يُفَعِّلُ',
-  3: 'فَاعَلَ / يُفَاعِلُ',
-  4: 'أَفْعَلَ / يُفْعِلُ',
-  5: 'تَفَعَّلَ / يَتَفَعَّلُ',
-  6: 'تَفَاعَلَ / يَتَفَاعَلُ',
-  7: 'اِنْفَعَلَ / يَنْفَعِلُ',
-  8: 'اِفْتَعَلَ / يَفْتَعِلُ',
-  9: 'اِفْعَلَّ / يَفْعَلُّ',
-  10: 'اِسْتَفْعَلَ / يَسْتَفْعِلُ',
+const getFormPattern = (verb: DisplayVerb): string => {
+  const synthetic = verb.form === 1 ? synthesizeVerb('فعل', 1, verb.formPattern) : synthesizeVerb('فعل', verb.form)
+  return [synthetic.label, conjugate(synthetic, 'active.present.indicative')['3ms']].join(' / ')
 }
 
-const getFormPattern = (verb: DisplayVerb): string =>
-  verb.form === 1 ? FORM_I_PATTERN_LABELS[verb.formPattern] : FORM_PATTERNS[verb.form]
-
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
-  const { t, dir, lang, diacriticsPreference } = useI18n()
-  const pattern = applyDiacriticsPreference(getFormPattern(verb), diacriticsPreference)
+  const { t, dir, lang } = useI18n()
+  const pattern = applyDiacriticsPreference(getFormPattern(verb), 'some')
   const formExplanationParagraph = useMemo(() => {
     const { rootLetters, arabic, form, formRoot } = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
     return renderExplanation({ rootLetters, arabic, form, formRoot }, t)[0]

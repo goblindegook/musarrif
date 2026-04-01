@@ -17,18 +17,6 @@ export type FormIPattern = keyof typeof FORM_I_VOWELS
 
 export const FORM_I_PATTERNS = Object.keys(FORM_I_VOWELS) as readonly FormIPattern[]
 
-export const FORM_I_PATTERN_LABELS = {
-  'fa3ala-yaf3alu': 'فَعَلَ / يَفْعَلُ',
-  'fa3ala-yaf3ilu': 'فَعَلَ / يَفْعِلُ',
-  'fa3ala-yaf3ulu': 'فَعَلَ / يَفْعُلُ',
-  'fa3ila-yaf3alu': 'فَعِلَ / يَفْعَلُ',
-  'fa3ila-yaf3ilu': 'فَعِلَ / يَفْعِلُ',
-  'fa3ila-yaf3ulu': 'فَعِلَ / يَفْعُلُ',
-  'fa3ula-yaf3alu': 'فَعُلَ / يَفْعَلُ',
-  'fa3ula-yaf3ilu': 'فَعُلَ / يَفْعِلُ',
-  'fa3ula-yaf3ulu': 'فَعُلَ / يَفْعُلُ',
-} satisfies Readonly<Record<FormIPattern, string>>
-
 export function formIPastVowel(verb: FormIVerb): Vowel {
   return FORM_I_VOWELS[verb.formPattern][0]
 }

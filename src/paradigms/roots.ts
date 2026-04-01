@@ -1,4 +1,4 @@
-import { isHamzatedLetter, isWeakLetter } from './letters'
+import { isHamzatedLetter, isWeakLetter, WAW } from './letters'
 
 export type RootAnalysisType =
   | 'sound'
@@ -17,8 +17,6 @@ export type RootAnalysisType =
   | 'doubly-weak-waw'
   | 'doubly-weak-yaa'
   | 'hamzated-hollow-defective'
-
-const WAW = 'و'
 
 export interface RootAnalysis {
   type: RootAnalysisType
