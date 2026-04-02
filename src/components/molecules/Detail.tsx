@@ -36,39 +36,59 @@ export const Detail = ({
   insightsOpen,
 }: DetailProps) => {
   const { t } = useI18n()
+  const hasActions = onInsightsClick || speechText || copyText
 
   return (
     <DetailItem>
-      <DetailLabel dir={labelDir} lang={labelLang}>
-        {label}
-      </DetailLabel>
-      <DetailValue dir={valueDir} lang={valueLang}>
-        <DetailContent>
+      {hasActions && (
+        <DetailActions>
+          {onInsightsClick && (
+            <IconButton
+              onClick={onInsightsClick}
+              ariaLabel={insightsLabel}
+              ariaHasPopup="dialog"
+              ariaExpanded={insightsOpen}
+              size="sm"
+            >
+              <LightBulbIcon />
+            </IconButton>
+          )}
+          {speechText && (
+            <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} size="sm" />
+          )}
+          {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} size="sm" />}
+        </DetailActions>
+      )}
+      <DetailMain>
+        <DetailLabel dir={labelDir} lang={labelLang}>
+          {label}
+        </DetailLabel>
+        <DetailContent dir={valueDir} lang={valueLang}>
           {value && <span>{value}</span>}
           {children}
         </DetailContent>
-        {(onInsightsClick || speechText || copyText) && (
-          <DetailActions>
-            {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} />}
-            {onInsightsClick && (
-              <IconButton
-                onClick={onInsightsClick}
-                ariaLabel={insightsLabel}
-                ariaHasPopup="dialog"
-                ariaExpanded={insightsOpen}
-              >
-                <LightBulbIcon />
-              </IconButton>
-            )}
-            {speechText && (
-              <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
-            )}
-          </DetailActions>
-        )}
-      </DetailValue>
+      </DetailMain>
     </DetailItem>
   )
 }
+
+const DetailActions = styled('span')`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  margin-inline-start: -0.375rem;
+  padding-inline-end: 0.375rem;
+  border-inline-end: 1px solid #e2e8f0;
+
+  @media (min-width: 480px) {
+    margin-inline-start: -0.5rem;
+    gap: 0.35rem;
+    padding-inline-end: 0.5rem;
+  }
+`
 
 const DetailItem = styled('div')`
   background: #f8fafc;
@@ -76,15 +96,23 @@ const DetailItem = styled('div')`
   padding: 0.75rem;
   border: 1px solid #e2e8f0;
   display: flex;
-  flex-direction: column;
-  align-items: space-between;
-  justify-content: flex-start;
-  gap: 0.25rem;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.5rem;
 
   @media (min-width: 480px) {
     border-radius: 1rem;
     padding: 0.75rem 1rem;
+    gap: 0.625rem;
   }
+`
+
+const DetailMain = styled('span')`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 0.25rem;
 `
 
 const DetailLabel = styled('span')`
@@ -95,32 +123,16 @@ const DetailLabel = styled('span')`
   letter-spacing: 0.08em;
 `
 
-const DetailValue = styled('span')`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  gap: 0.5rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  width: 100%;
-`
-
 const DetailContent = styled('span')`
   display: inline-flex;
   align-items: baseline;
   flex: 1;
   min-width: 0;
   gap: 0.5rem;
-`
-
-const DetailActions = styled('span')`
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 0.25rem;
+  font-size: 1.6rem;
+  font-weight: 600;
 
   @media (min-width: 480px) {
-    gap: 0.35rem;
+    font-size: 1.8rem;
   }
 `

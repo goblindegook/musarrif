@@ -1,3 +1,4 @@
+import { Fragment } from 'preact'
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../../hooks/favourites'
@@ -348,14 +349,44 @@ export function ConjugationMode() {
                   {selectedVerb.form === 1 && <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>}
                 </FormMetaValue>
               </Detail>
+
               <Detail
                 label={t('meta.translation')}
                 labelLang={lang}
                 labelDir={dir}
-                value={translateVerb(selectedVerb)}
                 valueLang="en"
                 valueDir="ltr"
+                value={translateVerb(selectedVerb)}
               />
+              <Detail
+                label={masdar && masdar.length > 1 ? t('meta.verbalNoun.plural') : t('meta.verbalNoun')}
+                labelLang={lang}
+                labelDir={dir}
+                speechText={masdar?.length ? masdar.join('، ') : null}
+                copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
+                onInsightsClick={masdar?.length ? () => setIsMasdarInfoOpen(true) : undefined}
+                insightsLabel={t('nominalInfo.title.masdar')}
+                insightsOpen={isMasdarInfoOpen}
+              >
+                {masdar?.length ? (
+                  <MasdarList>
+                    {masdar.map((value, index) => (
+                      <Fragment key={value}>
+                        <MasdarItem>
+                          <span>{formatArabic(value)}</span>
+                          {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
+                            <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
+                          )}
+                        </MasdarItem>
+                        {index < masdar.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
+                      </Fragment>
+                    ))}
+                  </MasdarList>
+                ) : (
+                  '—'
+                )}
+              </Detail>
+
               <Detail
                 label={t('meta.activeParticiple')}
                 labelLang={lang}
@@ -378,31 +409,6 @@ export function ConjugationMode() {
                 insightsLabel={t('nominalInfo.title.passiveParticiple')}
                 insightsOpen={isPassiveParticipleInfoOpen}
               />
-              <Detail
-                label={t('meta.verbalNoun')}
-                labelLang={lang}
-                labelDir={dir}
-                speechText={masdar?.length ? masdar.join('، ') : null}
-                copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
-                onInsightsClick={masdar?.length ? () => setIsMasdarInfoOpen(true) : undefined}
-                insightsLabel={t('nominalInfo.title.masdar')}
-                insightsOpen={isMasdarInfoOpen}
-              >
-                {masdar?.length ? (
-                  <MasdarList>
-                    {masdar.map((value, index) => (
-                      <MasdarItem key={value}>
-                        <span>{formatArabic(value)}</span>
-                        {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
-                          <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
-                        )}
-                      </MasdarItem>
-                    ))}
-                  </MasdarList>
-                ) : (
-                  '—'
-                )}
-              </Detail>
             </VerbMetaSection>
           </Panel>
 
@@ -550,20 +556,27 @@ const VerbMetaSection = styled('section')`
   }
 
   @media (min-width: 960px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 `
 
 const MasdarList = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
 `
 
 const MasdarItem = styled('div')`
   display: inline-flex;
   align-items: baseline;
   gap: 0.35rem;
+`
+
+const MasdarSeparator = styled('span')`
+  margin-inline-end: 0.3rem;
+  color: #94a3b8;
+  font-weight: 400;
 `
 
 const MasdarNote = styled('span')`

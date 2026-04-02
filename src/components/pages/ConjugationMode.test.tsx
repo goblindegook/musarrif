@@ -95,7 +95,7 @@ test('shows multiple masdars with a mimi label', () => {
   window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderConjugationMode('/#/verbs/wEd-1')
 
-  const detail = screen.getByText('Verbal noun').parentElement!
+  const detail = screen.getByText('Verbal nouns').parentElement!
   expect(within(detail).getByText('وَعْد')).toBeInTheDocument()
   expect(within(detail).getByText('مَوْعِد')).toBeInTheDocument()
   expect(within(detail).getByText('(mimi)')).toBeInTheDocument()

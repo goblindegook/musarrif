@@ -9,6 +9,7 @@ interface IconButtonProps {
   ariaExpanded?: boolean
   title?: string
   active?: boolean
+  size?: 'sm' | 'md'
 }
 
 export function IconButton({
@@ -19,6 +20,7 @@ export function IconButton({
   ariaExpanded,
   title,
   active,
+  size = 'md',
 }: IconButtonProps) {
   return (
     <StyledIconButton
@@ -29,15 +31,16 @@ export function IconButton({
       aria-expanded={ariaExpanded}
       title={title}
       active={active}
+      size={size}
     >
       {children}
     </StyledIconButton>
   )
 }
 
-const StyledIconButton = styled('button')<{ active?: boolean }>`
-  width: 36px;
-  height: 36px;
+const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md' }>`
+  width: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
+  height: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
   border-radius: 50%;
   border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
   background: ${({ active }) => (active ? '#fff8e1' : '#ffffff')};

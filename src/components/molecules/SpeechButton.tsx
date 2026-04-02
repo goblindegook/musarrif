@@ -6,9 +6,10 @@ interface SpeechButtonProps {
   text: string
   lang: string
   ariaLabel?: string
+  size?: 'sm' | 'md'
 }
 
-export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
+export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps) {
   const supported = window?.speechSynthesis && window?.SpeechSynthesisUtterance
 
   const speak = useCallback(
@@ -26,7 +27,7 @@ export function SpeechButton({ text, lang, ariaLabel }: SpeechButtonProps) {
 
   return (
     supported && (
-      <IconButton onClick={() => speak(text)} ariaLabel={ariaLabel ?? `Play pronunciation for ${text}`}>
+      <IconButton onClick={() => speak(text)} ariaLabel={ariaLabel ?? `Play pronunciation for ${text}`} size={size}>
         <SpeakIcon />
       </IconButton>
     )
