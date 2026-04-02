@@ -212,9 +212,9 @@ export function ConjugationTable({
 
                   <ActionCell>
                     <ActionButtons>
-                      <ConjugationInsights verb={verb} verbTense={verbTense} pronoun={slot.id} arabic={conjugation} />
-                      <SpeechButton text={conjugation} lang="ar" ariaLabel={t('aria.speak', { text: conjugation })} />
                       <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                      <SpeechButton text={conjugation} lang="ar" ariaLabel={t('aria.speak', { text: conjugation })} />
+                      <ConjugationInsights verb={verb} verbTense={verbTense} pronoun={slot.id} arabic={conjugation} />
                     </ActionButtons>
                   </ActionCell>
                 </Row>

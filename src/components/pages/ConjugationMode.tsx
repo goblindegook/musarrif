@@ -303,10 +303,6 @@ export function ConjugationMode() {
             actions={
               <>
                 <ShareButton />
-                <FavouriteButton
-                  isFavourite={isFavourite(selectedVerb.id)}
-                  onToggle={() => toggleFavourite(selectedVerb.id)}
-                />
                 <CopyButton
                   text={formatArabic(selectedVerb.label)}
                   ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}
@@ -315,6 +311,10 @@ export function ConjugationMode() {
                   text={selectedVerb.label}
                   lang="ar"
                   ariaLabel={t('aria.speak', { text: selectedVerb.label })}
+                />
+                <FavouriteButton
+                  isFavourite={isFavourite(selectedVerb.id)}
+                  onToggle={() => toggleFavourite(selectedVerb.id)}
                 />
               </>
             }
