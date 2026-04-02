@@ -1,5 +1,5 @@
-import { Fragment } from 'preact'
 import { styled } from 'goober'
+import { Fragment } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../../hooks/favourites'
 import { getEnglishVerbTranslation, useI18n } from '../../hooks/i18n'

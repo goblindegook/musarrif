@@ -54,7 +54,12 @@ export const Detail = ({
             </IconButton>
           )}
           {speechText && (
-            <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} size="sm" />
+            <SpeechButton
+              text={speechText}
+              lang={valueLang}
+              ariaLabel={t('aria.speak', { text: speechText })}
+              size="sm"
+            />
           )}
           {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} size="sm" />}
         </DetailActions>
