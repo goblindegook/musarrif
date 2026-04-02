@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import enLocale from '../locales/en.json'
 import type { ExplanationLayers } from './explanation'
-import { renderExplanation, resolveVerbExplanationLayers } from './explanation'
+import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
 import { getVerb, getVerbById, synthesizeVerb } from './verbs'
@@ -494,5 +494,138 @@ describe('renderExplanation', () => {
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿila')
+  })
+})
+
+// ── resolveNominalExplanationLayers ───────────────────────────────────────────
+
+describe('resolveNominalExplanationLayers', () => {
+  const verb = getVerb('كتب', 1)
+
+  test('returns correct rootLetters', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.rootLetters).toEqual(['ك', 'ت', 'ب'])
+  })
+
+  test('returns form number', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.form).toBe(1)
+  })
+
+  test('returns nominal kind', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.nominal).toBe('activeParticiple')
+  })
+
+  test('returns rootType sound for sound root', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.rootType).toBe('sound')
+  })
+
+  test('returns formIPattern for Form I verb', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.formIPattern).toBe('fa3ala-yaf3ulu')
+  })
+
+  test('formIPattern is undefined for non-Form-I verb', () => {
+    const verb2 = getVerb('كتب', 2)
+    const layers = resolveNominalExplanationLayers(verb2, 'activeParticiple', 'مُكَتِّب')
+    expect(layers.formIPattern).toBeUndefined()
+  })
+
+  test('tense is undefined', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.tense).toBeUndefined()
+  })
+
+  test('pronoun is undefined', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.pronoun).toBeUndefined()
+  })
+
+  test('arabic field matches passed arabic', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.arabic).toBe('كَاتِب')
+  })
+
+  test('passiveParticiple nominal sets nominal to passiveParticiple', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'passiveParticiple', 'مَكْتُوب')
+    expect(layers.nominal).toBe('passiveParticiple')
+  })
+
+  test('masdar nominal sets nominal to masdar', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'masdar', 'كِتَابَة')
+    expect(layers.nominal).toBe('masdar')
+  })
+})
+
+// ── renderExplanation: nominal ────────────────────────────────────────────────
+
+describe('renderExplanation with nominal', () => {
+  const t = (key: string) => key
+
+  test('nominal activeParticiple appears in second paragraph', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كَاتِب',
+      rootType: 'sound',
+      nominal: 'activeParticiple',
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      'explanation.root.sound explanation.form.1',
+      'explanation.nominal.activeParticiple',
+    ])
+  })
+
+  test('nominal passiveParticiple appears in second paragraph', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'مَكْتُوب',
+      rootType: 'sound',
+      nominal: 'passiveParticiple',
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      'explanation.root.sound explanation.form.1',
+      'explanation.nominal.passiveParticiple',
+    ])
+  })
+
+  test('nominal masdar appears in second paragraph', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كِتَابَة',
+      rootType: 'sound',
+      nominal: 'masdar',
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      'explanation.root.sound explanation.form.1',
+      'explanation.nominal.masdar',
+    ])
+  })
+
+  test('nominal with formIPattern includes pattern in first paragraph', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كَاتِب',
+      rootType: 'sound',
+      formIPattern: 'fa3ala-yaf3ulu',
+      nominal: 'activeParticiple',
+    }
+    expect(renderExplanation(layers, t)[0]).toContain('explanation.form-i-pattern.fa3ala-yaf3ulu')
+  })
+
+  test('nominal does not produce a pronoun paragraph', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كَاتِب',
+      rootType: 'sound',
+      nominal: 'activeParticiple',
+    }
+    expect(renderExplanation(layers, t)).toHaveLength(2)
   })
 })

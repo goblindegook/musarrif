@@ -29,6 +29,7 @@ import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 import { ConjugationTable } from '../organisms/ConjugationTable'
 import { FormInsights } from '../organisms/FormInsights'
+import { NominalInsights } from '../organisms/NominalInsights'
 import { RootInsights } from '../organisms/RootInsights'
 
 const formIVowelPattern = (verb: DisplayVerb<1>) => {
@@ -67,6 +68,9 @@ export function ConjugationMode() {
   const { recents, addRecent } = useRecent()
   const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
   const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
+  const [isActiveParticipleInfoOpen, setIsActiveParticipleInfoOpen] = useState(false)
+  const [isPassiveParticipleInfoOpen, setIsPassiveParticipleInfoOpen] = useState(false)
+  const [isMasdarInfoOpen, setIsMasdarInfoOpen] = useState(false)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
@@ -106,6 +110,9 @@ export function ConjugationMode() {
   useEffect(() => {
     setIsFormInfoOpen(false)
     setIsRootInfoOpen(false)
+    setIsActiveParticipleInfoOpen(false)
+    setIsPassiveParticipleInfoOpen(false)
+    setIsMasdarInfoOpen(false)
   }, [selectedVerb])
 
   useEffect(() => {
@@ -356,6 +363,9 @@ export function ConjugationMode() {
                 value={formatArabic(activeParticiple) || '—'}
                 speechText={activeParticiple}
                 copyText={formatArabic(activeParticiple)}
+                onInsightsClick={activeParticiple ? () => setIsActiveParticipleInfoOpen(true) : undefined}
+                insightsLabel={t('nominalInfo.title.activeParticiple')}
+                insightsOpen={isActiveParticipleInfoOpen}
               />
               <Detail
                 label={t('meta.passiveParticiple')}
@@ -364,6 +374,9 @@ export function ConjugationMode() {
                 value={formatArabic(passiveParticiple) || '—'}
                 speechText={passiveParticiple}
                 copyText={formatArabic(passiveParticiple)}
+                onInsightsClick={passiveParticiple ? () => setIsPassiveParticipleInfoOpen(true) : undefined}
+                insightsLabel={t('nominalInfo.title.passiveParticiple')}
+                insightsOpen={isPassiveParticipleInfoOpen}
               />
               <Detail
                 label={t('meta.verbalNoun')}
@@ -371,6 +384,9 @@ export function ConjugationMode() {
                 labelDir={dir}
                 speechText={masdar?.length ? masdar.join('، ') : null}
                 copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
+                onInsightsClick={masdar?.length ? () => setIsMasdarInfoOpen(true) : undefined}
+                insightsLabel={t('nominalInfo.title.masdar')}
+                insightsOpen={isMasdarInfoOpen}
               >
                 {masdar?.length ? (
                   <MasdarList>
@@ -440,6 +456,33 @@ export function ConjugationMode() {
           <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
             <RootInsights root={selectedVerb.root} rootId={selectedVerb.rootId} />
           </Modal>
+          {activeParticiple && (
+            <Modal
+              isOpen={isActiveParticipleInfoOpen}
+              onClose={() => setIsActiveParticipleInfoOpen(false)}
+              title={t('nominalInfo.title.activeParticiple')}
+            >
+              <NominalInsights verb={selectedVerb} nominal="activeParticiple" arabic={activeParticiple} />
+            </Modal>
+          )}
+          {passiveParticiple && (
+            <Modal
+              isOpen={isPassiveParticipleInfoOpen}
+              onClose={() => setIsPassiveParticipleInfoOpen(false)}
+              title={t('nominalInfo.title.passiveParticiple')}
+            >
+              <NominalInsights verb={selectedVerb} nominal="passiveParticiple" arabic={passiveParticiple} />
+            </Modal>
+          )}
+          {masdar?.length && (
+            <Modal
+              isOpen={isMasdarInfoOpen}
+              onClose={() => setIsMasdarInfoOpen(false)}
+              title={t('nominalInfo.title.masdar')}
+            >
+              <NominalInsights verb={selectedVerb} nominal="masdar" arabic={masdar[0]} />
+            </Modal>
+          )}
         </>
       )}
     </Main>

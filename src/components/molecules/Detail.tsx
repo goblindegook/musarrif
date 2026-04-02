@@ -49,6 +49,7 @@ export const Detail = ({
         </DetailContent>
         {(onInsightsClick || speechText || copyText) && (
           <DetailActions>
+            {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} />}
             {onInsightsClick && (
               <IconButton
                 onClick={onInsightsClick}
@@ -59,7 +60,6 @@ export const Detail = ({
                 <LightBulbIcon />
               </IconButton>
             )}
-            {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} />}
             {speechText && (
               <SpeechButton text={speechText} lang={valueLang} ariaLabel={t('aria.speak', { text: speechText })} />
             )}

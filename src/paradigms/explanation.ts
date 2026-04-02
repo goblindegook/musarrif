@@ -25,6 +25,8 @@ type TenseRootInteraction =
   | 'geminate-jussive'
   | 'hamza-seat'
 
+export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
+
 export type ExplanationLayers = {
   rootLetters: string[]
   arabic: string
@@ -35,6 +37,7 @@ export type ExplanationLayers = {
   tense?: VerbTense
   tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
+  nominal?: NominalKind
 }
 
 function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): TenseRootInteraction {
@@ -121,6 +124,7 @@ export function renderExplanation(
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
     [
+      layers.nominal ? t(`explanation.nominal.${layers.nominal}`, params) : '',
       layers.tense?.startsWith('passive') ? t(`explanation.voice.${layers.tense}`, params) : '',
       layers.tense && t(`explanation.tense.${layers.tense}`, params),
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
@@ -181,4 +185,18 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
   return tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative'
     ? 'geminate-jussive'
     : 'geminate-contracts'
+}
+
+export function resolveNominalExplanationLayers(verb: Verb, nominal: NominalKind, arabic: string): ExplanationLayers {
+  const rootLetters = Array.from(verb.root)
+  const rootType = analyzeRoot(verb.root).type
+  return {
+    rootLetters,
+    form: verb.form,
+    arabic,
+    rootType,
+    formIPattern: verb.form === 1 ? verb.formPattern : undefined,
+    formRoot: toFormRoot(verb.form, rootLetters),
+    nominal,
+  }
 }
