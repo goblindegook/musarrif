@@ -67,11 +67,9 @@ export function ConjugationMode() {
   const { verbId, navigateTo, tense, mood, voice } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
-  const [isFormInfoOpen, setIsFormInfoOpen] = useState(false)
-  const [isRootInfoOpen, setIsRootInfoOpen] = useState(false)
-  const [isActiveParticipleInfoOpen, setIsActiveParticipleInfoOpen] = useState(false)
-  const [isPassiveParticipleInfoOpen, setIsPassiveParticipleInfoOpen] = useState(false)
-  const [isMasdarInfoOpen, setIsMasdarInfoOpen] = useState(false)
+  const [openModal, setOpenModal] = useState<
+    'form' | 'root' | 'active-participle' | 'passive-participle' | 'masdar' | null
+  >(null)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
@@ -109,11 +107,7 @@ export function ConjugationMode() {
   )
 
   useEffect(() => {
-    setIsFormInfoOpen(false)
-    setIsRootInfoOpen(false)
-    setIsActiveParticipleInfoOpen(false)
-    setIsPassiveParticipleInfoOpen(false)
-    setIsMasdarInfoOpen(false)
+    setOpenModal(null)
   }, [selectedVerb])
 
   useEffect(() => {
@@ -324,9 +318,9 @@ export function ConjugationMode() {
                 label={t('meta.root')}
                 labelLang={lang}
                 labelDir={dir}
-                onInsightsClick={() => setIsRootInfoOpen(true)}
+                onInsightsClick={() => setOpenModal('root')}
                 insightsLabel={t('rootInfo.open')}
-                insightsOpen={isRootInfoOpen}
+                insightsOpen={openModal === 'root'}
               >
                 <RootMetaValue dir="rtl" lang="ar">
                   {Array.from(selectedVerb.root).map((letter, index) => (
@@ -340,9 +334,9 @@ export function ConjugationMode() {
                 labelDir={dir}
                 valueLang={lang}
                 valueDir="rtl"
-                onInsightsClick={() => setIsFormInfoOpen(true)}
+                onInsightsClick={() => setOpenModal('form')}
                 insightsLabel={t('formInfo.open', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
-                insightsOpen={isFormInfoOpen}
+                insightsOpen={openModal === 'form'}
               >
                 <FormMetaValue>
                   <FormMetaItem>{ROMAN_NUMERALS[selectedVerb.form - 1]}</FormMetaItem>
@@ -364,9 +358,9 @@ export function ConjugationMode() {
                 labelDir={dir}
                 speechText={masdar?.length ? masdar.join('، ') : null}
                 copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
-                onInsightsClick={masdar?.length ? () => setIsMasdarInfoOpen(true) : undefined}
+                onInsightsClick={masdar?.length ? () => setOpenModal('masdar') : undefined}
                 insightsLabel={t('nominalInfo.title.masdar')}
-                insightsOpen={isMasdarInfoOpen}
+                insightsOpen={openModal === 'masdar'}
               >
                 {masdar?.length ? (
                   <MasdarList>
@@ -394,9 +388,9 @@ export function ConjugationMode() {
                 value={formatArabic(activeParticiple) || '—'}
                 speechText={activeParticiple}
                 copyText={formatArabic(activeParticiple)}
-                onInsightsClick={activeParticiple ? () => setIsActiveParticipleInfoOpen(true) : undefined}
+                onInsightsClick={activeParticiple ? () => setOpenModal('active-participle') : undefined}
                 insightsLabel={t('nominalInfo.title.activeParticiple')}
-                insightsOpen={isActiveParticipleInfoOpen}
+                insightsOpen={openModal === 'active-participle'}
               />
               <Detail
                 label={t('meta.passiveParticiple')}
@@ -405,9 +399,9 @@ export function ConjugationMode() {
                 value={formatArabic(passiveParticiple) || '—'}
                 speechText={passiveParticiple}
                 copyText={formatArabic(passiveParticiple)}
-                onInsightsClick={passiveParticiple ? () => setIsPassiveParticipleInfoOpen(true) : undefined}
+                onInsightsClick={passiveParticiple ? () => setOpenModal('passive-participle') : undefined}
                 insightsLabel={t('nominalInfo.title.passiveParticiple')}
-                insightsOpen={isPassiveParticipleInfoOpen}
+                insightsOpen={openModal === 'passive-participle'}
               />
             </VerbMetaSection>
           </Panel>
@@ -453,19 +447,19 @@ export function ConjugationMode() {
       {selectedVerb && (
         <>
           <Modal
-            isOpen={isFormInfoOpen}
-            onClose={() => setIsFormInfoOpen(false)}
+            isOpen={openModal === 'form'}
+            onClose={() => setOpenModal(null)}
             title={t('formInfo.title', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
           >
             <FormInsights verb={selectedVerb} />
           </Modal>
-          <Modal isOpen={isRootInfoOpen} onClose={() => setIsRootInfoOpen(false)} title={t('rootInfo.title')}>
+          <Modal isOpen={openModal === 'root'} onClose={() => setOpenModal(null)} title={t('rootInfo.title')}>
             <RootInsights root={selectedVerb.root} rootId={selectedVerb.rootId} />
           </Modal>
           {activeParticiple && (
             <Modal
-              isOpen={isActiveParticipleInfoOpen}
-              onClose={() => setIsActiveParticipleInfoOpen(false)}
+              isOpen={openModal === 'active-participle'}
+              onClose={() => setOpenModal(null)}
               title={t('nominalInfo.title.activeParticiple')}
             >
               <NominalInsights verb={selectedVerb} nominal="activeParticiple" arabic={activeParticiple} />
@@ -473,8 +467,8 @@ export function ConjugationMode() {
           )}
           {passiveParticiple && (
             <Modal
-              isOpen={isPassiveParticipleInfoOpen}
-              onClose={() => setIsPassiveParticipleInfoOpen(false)}
+              isOpen={openModal === 'passive-participle'}
+              onClose={() => setOpenModal(null)}
               title={t('nominalInfo.title.passiveParticiple')}
             >
               <NominalInsights verb={selectedVerb} nominal="passiveParticiple" arabic={passiveParticiple} />
@@ -482,8 +476,8 @@ export function ConjugationMode() {
           )}
           {masdar?.length && (
             <Modal
-              isOpen={isMasdarInfoOpen}
-              onClose={() => setIsMasdarInfoOpen(false)}
+              isOpen={openModal === 'masdar'}
+              onClose={() => setOpenModal(null)}
               title={t('nominalInfo.title.masdar')}
             >
               <NominalInsights verb={selectedVerb} nominal="masdar" arabic={masdar[0]} />
