@@ -33,4 +33,10 @@ const Page = styled('div')`
   @media (min-width: 960px) {
     padding: 2rem 1rem;
   }
+
+  @media print {
+    max-width: 100%;
+    padding: 0;
+    gap: 0;
+  }
 `

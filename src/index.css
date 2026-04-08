@@ -90,3 +90,18 @@ body {
   min-height: 100vh;
   position: relative;
 }
+
+@page {
+  margin: 8mm;
+}
+
+@media print {
+  body {
+    min-height: auto;
+    background: #fff;
+  }
+
+  #app {
+    min-height: auto;
+  }
+}

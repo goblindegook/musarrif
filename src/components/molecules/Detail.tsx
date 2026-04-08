@@ -93,6 +93,10 @@ const DetailActions = styled('span')`
     gap: 0.35rem;
     padding-inline-end: 0.5rem;
   }
+
+  @media print {
+    display: none;
+  }
 `
 
 const DetailItem = styled('div')`
@@ -110,6 +114,12 @@ const DetailItem = styled('div')`
     padding: 0.75rem 1rem;
     gap: 0.625rem;
   }
+
+  @media print {
+    border-radius: 0.3rem;
+    padding: 0.3rem 0.4rem;
+    gap: 0.3rem;
+  }
 `
 
 const DetailMain = styled('span')`
@@ -118,6 +128,10 @@ const DetailMain = styled('span')`
   flex: 1;
   min-width: 0;
   gap: 0.25rem;
+
+  @media print {
+    gap: 0.1rem;
+  }
 `
 
 const DetailLabel = styled('span')`
@@ -126,6 +140,11 @@ const DetailLabel = styled('span')`
   text-transform: uppercase;
   color: #475569;
   letter-spacing: 0.08em;
+
+  @media print {
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+  }
 `
 
 const DetailContent = styled('span')`
@@ -139,5 +158,11 @@ const DetailContent = styled('span')`
 
   @media (min-width: 480px) {
     font-size: 1.8rem;
+  }
+
+  @media print {
+    gap: 0.25rem;
+    font-size: 1.05rem;
+    line-height: 1.2;
   }
 `

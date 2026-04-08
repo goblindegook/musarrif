@@ -138,6 +138,10 @@ const TopBar = styled('header')`
     box-shadow: none;
     padding: 0 0 2rem;
   }
+
+  @media print {
+    display: none;
+  }
 `
 
 const TopBarHeader = styled('div')`

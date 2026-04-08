@@ -60,6 +60,14 @@ export const PanelContainer = styled('section')`
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;
   }
+
+  @media print {
+    border: none;
+    border-radius: 0;
+    padding: 0.4rem 0;
+    gap: 0.4rem;
+    box-shadow: none;
+  }
 `
 
 const PanelTitleRow = styled('div')`
@@ -95,6 +103,10 @@ const PanelTitle = styled('h2')`
 
   @media (min-width: 480px) {
     font-size: 1.4rem;
+  }
+
+  @media print {
+    font-size: 1.05rem;
   }
 `
 

@@ -77,4 +77,8 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
     background: #ffe58f;
     border-color: #eab308;
   }
+
+  @media print {
+    display: none;
+  }
 `

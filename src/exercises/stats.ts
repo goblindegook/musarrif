@@ -102,15 +102,22 @@ export function serializeDayStats(stats: DayStats[]): SerializedDayStats[] {
 }
 
 export function deserializeDayStats(raw: SerializedDayStats[]): DayStats[] {
-  return raw.map((d) => ({ ...d, date: new Date(d.date), passed: d.passed ?? 0 }))
+  return raw.map((d) => {
+    const [y, m, day] = d.date.split('-').map(Number)
+    return { ...d, date: new Date(y, m - 1, day), passed: d.passed ?? 0 }
+  })
 }
 
 function dateKey(d: Date): string {
-  return d.toISOString().slice(0, 10)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 function todayDate(): Date {
-  return new Date(new Date().toISOString().slice(0, 10))
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
 
 function offsetDate(dateStr: string, days: number): string {

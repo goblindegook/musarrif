@@ -12,7 +12,10 @@ import {
   serializeDayStats,
 } from './stats'
 
-const d = (s: string) => new Date(s)
+const d = (s: string) => {
+  const [y, m, day] = s.split('-').map(Number)
+  return new Date(y, m - 1, day)
+}
 
 describe('addResult', () => {
   test('creates a new entry for today when stats are empty', () => {
@@ -156,6 +159,11 @@ describe('getScorePercent', () => {
 })
 
 describe('serializeDayStats', () => {
+  test('uses local date for a late-evening timestamp (not UTC)', () => {
+    const lateEvening = new Date(2026, 2, 19, 23, 0, 0)
+    expect(serializeDayStats([{ date: lateEvening, correct: 1, incorrect: 0, passed: 0 }])[0].date).toBe('2026-03-19')
+  })
+
   test('converts Date to date-only string', () => {
     const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     expect(serializeDayStats(stats)).toEqual([{ date: '2026-03-19', correct: 3, incorrect: 1, passed: 0 }])

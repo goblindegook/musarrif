@@ -524,6 +524,14 @@ const Main = styled('main')<{ hasVerb: boolean }>`
         'footer verb';
     `}
   }
+
+  @media print {
+    max-width: 100%;
+    margin: 0;
+    gap: 0;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'verb';
+  }
 `
 
 const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
@@ -532,6 +540,10 @@ const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
   flex-direction: column;
   gap: 1rem;
   align-self: flex-start;
+
+  @media print {
+    ${({ area }) => (area === 'verb' ? 'gap: 0.5rem;' : 'display: none;')}
+  }
 `
 
 const VerbList = styled('div')`
@@ -551,6 +563,11 @@ const VerbMetaSection = styled('section')`
 
   @media (min-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media print {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
   }
 `
 
@@ -577,6 +594,10 @@ const MasdarNote = styled('span')`
   font-size: 0.85rem;
   font-weight: 500;
   color: #64748b;
+
+  @media print {
+    font-size: 0.7rem;
+  }
 `
 
 const ConjugationSection = styled('div')`
@@ -585,6 +606,12 @@ const ConjugationSection = styled('div')`
   overflow: hidden;
   background: #fff;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+
+  @media print {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.3rem;
+    box-shadow: none;
+  }
 `
 
 const RootMetaValue = styled('div')`
@@ -595,6 +622,10 @@ const RootMetaValue = styled('div')`
   justify-content: flex-start;
   width: 100%;
   gap: 1rem;
+
+  @media print {
+    gap: 0.35rem;
+  }
 `
 
 const FormMetaValue = styled('div')`
@@ -603,6 +634,11 @@ const FormMetaValue = styled('div')`
   align-items: baseline;
   justify-items: start;
   width: 100%;
+
+  @media print {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.35rem;
+  }
 `
 
 const FormMetaItem = styled('span')`
@@ -612,4 +648,8 @@ const FormMetaItem = styled('span')`
 const FormPattern = styled(FormMetaItem)`
   font-size: 1.2rem;
   font-weight: 400;
+
+  @media print {
+    font-size: 0.9rem;
+  }
 `

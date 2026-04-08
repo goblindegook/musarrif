@@ -256,6 +256,10 @@ const TabsContainer = styled('nav')`
   display: flex;
   flex-direction: column;
   background: #f8fafc;
+
+  @media print {
+    background: #fff;
+  }
 `
 
 const TabBlock = styled('div')`
@@ -270,6 +274,10 @@ const TabBlock = styled('div')`
 
   @media (min-width: 720px) {
     padding: 1.5rem 2rem;
+  }
+
+  @media print {
+    display: none;
   }
 `
 
@@ -304,6 +312,15 @@ const Table = styled('table')`
   font-size: 1.05rem;
   direction: rtl;
   border: none;
+
+  @media print {
+    font-size: 0.86rem;
+    line-height: 1.15;
+    thead th:last-child,
+    tbody td:last-child {
+      display: none;
+    }
+  }
 `
 
 const TableBody = styled('tbody')`
@@ -314,10 +331,24 @@ const TableBody = styled('tbody')`
   tr:nth-child(odd) {
     background: #fdfdf9;
   }
+
+  @media print {
+    tr:last-of-type td {
+      padding-bottom: 0.35rem;
+    }
+
+    tr:nth-child(odd) {
+      background: transparent;
+    }
+  }
 `
 
 const Row = styled('tr')`
   border-bottom: 1px solid #e2e8f0;
+
+  @media print {
+    border-bottom-color: #cbd5e1;
+  }
 `
 
 const PronounCell = styled('td')`
@@ -334,13 +365,26 @@ const PronounCell = styled('td')`
   @media (min-width: 480px) {
     padding: 0.6rem 0 0.6rem 2rem;
   }
-  `
+
+  @media print {
+    padding: 0.35rem 0 0.35rem 0.45rem;
+
+    span {
+      font-size: 0.96rem;
+      line-height: 1.1;
+    }
+  }
+`
 
 const PronounDescription = styled('small')`
   display: block;
   font-size: 0.85rem;
   font-style: italic;
   color: #64748b;
+
+  @media print {
+    display: none;
+  }
 `
 
 const VerbCell = styled('td')`
@@ -354,6 +398,13 @@ const VerbCell = styled('td')`
   @media (min-width: 480px) {
     font-size: 1.8rem;
   }
+
+  @media print {
+    width: auto;
+    padding: 0.35rem 0.35rem;
+    font-size: 1.18rem;
+    line-height: 1.15;
+  }
 `
 
 const TableHeadCell = styled('th')`
@@ -365,12 +416,23 @@ const TableHeadCell = styled('th')`
   @media (min-width: 480px) {
     padding: 0.6rem 2rem;
   }
+
+  @media print {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.7rem;
+    line-height: 1.1;
+    background: transparent;
+  }
 `
 
 const VerbHeadCell = styled(TableHeadCell)`
   text-align: right;
   padding: 0.6rem;
   width: 65%;
+
+  @media print {
+    padding: 0.2rem 0.35rem;
+  }
 `
 
 const ActionCell = styled('td')`
@@ -379,6 +441,10 @@ const ActionCell = styled('td')`
 
   @media (min-width: 480px) {
     padding: 0.75rem 2rem;
+  }
+
+  @media print {
+    display: none;
   }
 `
 
@@ -390,6 +456,10 @@ const ActionButtons = styled('div')`
 
   @media (min-width: 480px) {
     gap: 0.35rem;
+  }
+
+  @media print {
+    display: none;
   }
 `
 
