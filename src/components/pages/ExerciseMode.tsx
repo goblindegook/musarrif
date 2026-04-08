@@ -216,10 +216,6 @@ const ExerciseCard = styled('div')`
   @media (min-width: 480px) {
     padding: 1rem 1.25rem;
   }
-  
-  @media (min-width: 720px) {
-    padding: 1.5rem 2rem;
-  }
 `
 
 const VerbDisplay = styled('p')`

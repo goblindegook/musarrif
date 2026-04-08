@@ -56,10 +56,6 @@ export const PanelContainer = styled('section')`
     border-radius: 1.25rem;
     padding: 1rem 1.25rem;
   }
-  
-  @media (min-width: 720px) {
-    padding: 1rem 1.25rem 1.25rem;
-  }
 
   @media print {
     border: none;
