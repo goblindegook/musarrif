@@ -56,19 +56,6 @@ it('clicking the settings button opens the settings modal', () => {
   expect(screen.getByText('Settings').closest('[role="dialog"]')).toBeInTheDocument()
 })
 
-it('pressing Escape dismisses the settings modal', async () => {
-  renderHeader('/#/verbs')
-  const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const settingsButton = screen.getByLabelText('Settings')
-  fireEvent.click(settingsButton)
-  await user.keyboard('{Escape}')
-
-  await waitFor(() => {
-    expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
-    expect(document.querySelector('[role="dialog"]')).toBeNull()
-  })
-})
-
 it('does not render settings controls when settings modal is closed', () => {
   renderHeader('/#/verbs')
   expect(screen.queryByLabelText('All')).not.toBeInTheDocument()

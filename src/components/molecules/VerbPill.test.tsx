@@ -32,4 +32,10 @@ describe('VerbPill', () => {
       expect(screen.getByText('—')).toBeInTheDocument()
     })
   })
+
+  test('shows q suffix for quadriliteral forms', () => {
+    const verb = getVerbById('brhn-1')!
+    render(<VerbPill verb={verb} />, { wrapper: Wrapper })
+    expect(screen.getByText('Iq')).toBeInTheDocument()
+  })
 })

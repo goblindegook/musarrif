@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { exerciseDiacritics, random, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -33,7 +33,7 @@ export const participleFormExercise = defineExercise(
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleForm' : 'exercise.prompt.passiveParticipleForm',
       word,
-      options: options.map((form) => FORM_LABELS[form - 1]),
+      options: options.map((form) => formatFormLabel(form, verb.root)),
       answer: options.indexOf(verb.form),
       cardKey: buildCardKey('participleForm', getSrsRootType(verb.root), verb.form),
     }

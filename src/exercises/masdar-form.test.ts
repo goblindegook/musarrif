@@ -1,12 +1,31 @@
 import { describe, expect, test } from 'vitest'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { FORM_LABELS, verbs } from '../paradigms/verbs'
+import { formatFormLabel, verbs } from '../paradigms/verbs'
 import { exerciseDiacritics, INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { masdarFormExercise } from './masdar-form'
 
-function labelToForm(label: string): number {
-  return FORM_LABELS.indexOf(label as (typeof FORM_LABELS)[number]) + 1
-}
+const FORM_LABEL_ORDER = [
+  'I',
+  'Iq',
+  'II',
+  'IIq',
+  'III',
+  'IIIq',
+  'IV',
+  'IVq',
+  'V',
+  'Vq',
+  'VI',
+  'VIq',
+  'VII',
+  'VIIq',
+  'VIII',
+  'VIIIq',
+  'IX',
+  'IXq',
+  'X',
+  'Xq',
+]
 
 describe('masdarFormExercise', () => {
   test('returns kind "masdarForm"', () => {
@@ -31,8 +50,8 @@ describe('masdarFormExercise', () => {
   test('options are Roman numerals sorted in ascending form order', () => {
     const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const formNumbers = options.map((option) => labelToForm(option))
-    expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
+    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
   })
 
   test('correct answer is a valid index into options', () => {
@@ -49,8 +68,8 @@ describe('masdarFormExercise', () => {
 
   test('word matches at least one masdar for the selected form in easy difficulty', () => {
     const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const selectedForm = labelToForm(exercise.options[exercise.answer])
-    const matchingVerbs = verbs.filter((verb) => verb.form === selectedForm)
+    const selectedForm = exercise.options[exercise.answer]
+    const matchingVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
 
     expect(
       matchingVerbs.some((verb) =>

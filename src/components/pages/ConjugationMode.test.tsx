@@ -340,6 +340,17 @@ describe('Form', () => {
     const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('تَفَعَّلَ / يَتَفَعَّلُ')).toBeInTheDocument()
   })
+
+  it('appends q to form labels for quadriliteral verbs', () => {
+    renderConjugationMode('/#/verbs/jlEb-4')
+
+    const formLabel = screen.getByText('Form')
+    const formDetail = formLabel.parentElement as HTMLElement
+    expect(within(formDetail).getByText('IVq')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByLabelText('View form insights for Form IVq'))
+    expect(screen.getByText('Form IVq insights')).toBeInTheDocument()
+  })
 })
 
 test('Show a feedback panel with an issues link', () => {
@@ -353,7 +364,7 @@ test('Show quick picks related to the selected verb', () => {
   const quickPicksHeading = screen.getByText('Quick picks')
   const buttons = Array.from(quickPicksHeading.nextElementSibling!.children)
   expect(buttons.map((button) => normalizeButtonText(button.textContent))).toEqual([
-    'بَرهَنَIto prove',
+    'بَرهَنَIqto prove',
     'تَأَوَّهَVto moan',
     'تَبَرَّعَVto donate',
     'بارىIIIto compete',

@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { exerciseDiacritics, random, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -24,7 +24,7 @@ export const masdarFormExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
-      options: options.map((form) => FORM_LABELS[form - 1]),
+      options: options.map((form) => formatFormLabel(form, verb.root)),
       answer: options.indexOf(verb.form),
       cardKey: buildCardKey('masdarForm', getSrsRootType(verb.root), verb.form),
     }

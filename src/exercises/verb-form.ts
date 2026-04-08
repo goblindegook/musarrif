@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import { conjugate } from '../paradigms/tense'
-import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
@@ -44,7 +44,7 @@ export const verbFormExercise = defineExercise(
       dimensions: ['forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbForm',
       word,
-      options: options.map((f) => FORM_LABELS[f - 1]),
+      options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
       cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
       explanations: options.map((_, index) => (index === answer ? null : explanation)),

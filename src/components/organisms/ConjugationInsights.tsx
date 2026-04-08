@@ -5,14 +5,12 @@ import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
-import type { DisplayVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { IconButton } from '../atoms/IconButton'
 import { Text } from '../atoms/Text'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Detail } from '../molecules/Detail'
 import { Modal } from '../molecules/Modal'
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 const formIVowelPattern = (verb: DisplayVerb) => {
   if (verb.form !== 1) return null
@@ -31,6 +29,7 @@ interface ConjugationInsightsProps {
 export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: ConjugationInsightsProps) {
   const { t, dir } = useI18n()
   const [open, setOpen] = useState(false)
+  const formLabel = formatFormLabel(verb.form, verb.root)
 
   return (
     <>
@@ -53,7 +52,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
               </Detail>
               <Detail label={t('meta.form')} valueLang="en" valueDir="rtl">
                 <FormValue>
-                  <FormNumeral>{ROMAN_NUMERALS[verb.form - 1]}</FormNumeral>
+                  <FormNumeral>{formLabel}</FormNumeral>
                   {formIVowelPattern(verb) && <FormPattern>{formIVowelPattern(verb)}</FormPattern>}
                 </FormValue>
               </Detail>

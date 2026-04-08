@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import { FORM_LABELS, FORMS, synthesizeVerb } from '../paradigms/verbs'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import { exerciseDiacritics, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
@@ -29,7 +29,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
   return {
     dimensions: ['forms', 'rootTypes', 'diacritics'],
     promptTranslationKey: 'exercise.prompt.rootFormVerb',
-    promptParams: { form: FORM_LABELS[verb.form - 1] },
+    promptParams: { form: formatFormLabel(verb.form, verb.root) },
     word: Array.from(verb.root).join(' '),
     options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
     answer,

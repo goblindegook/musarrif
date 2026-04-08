@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
-import { getVerb } from '../../paradigms/verbs'
+import { getVerb, getVerbById } from '../../paradigms/verbs'
 import { NominalInsights } from './NominalInsights'
 
 beforeEach(() => cleanup())
@@ -64,5 +64,12 @@ describe('NominalInsights', () => {
       })
       expect(screen.getAllByText('كِتَابَة').length).toBeGreaterThan(0)
     })
+  })
+
+  test('displays q suffix for quadriliteral form numbers', () => {
+    render(<NominalInsights verb={getVerbById('brhn-1')!} nominal="masdar" arabic="بَرهَنَة" />, {
+      wrapper: Wrapper,
+    })
+    expect(screen.getByText('Iq')).toBeInTheDocument()
   })
 })

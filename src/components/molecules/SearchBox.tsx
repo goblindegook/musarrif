@@ -3,10 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { search } from '../../paradigms/selection'
-import type { DisplayVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { Overlay, type OverlayProps } from '../atoms/Overlay'
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 interface SearchProps {
   id?: string
@@ -139,6 +137,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
             {suggested.map((verb, index) => {
               const isHighlighted = index === highligtedIndex
+              const formLabel = formatFormLabel(verb.form, verb.root)
               return (
                 <SuggestionItem
                   id={`search-suggestion-${verb.id}`}
@@ -157,11 +156,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                     event.preventDefault()
                     handleSelect(verb)
                   }}
-                  aria-label={[
-                    verb.label,
-                    t('meta.form.withNumber', { form: ROMAN_NUMERALS[verb.form - 1] }),
-                    lang !== 'ar' && t(verb.id),
-                  ]
+                  aria-label={[verb.label, t('meta.form.withNumber', { form: formLabel }), lang !== 'ar' && t(verb.id)]
                     .filter(Boolean)
                     .join(' ')}
                 >
@@ -174,7 +169,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                     <SuggestionItemVerbLabel dir="rtl" lang="ar">
                       {applyDiacriticsPreference(verb.label, diacriticsPreference)}
                     </SuggestionItemVerbLabel>
-                    <SuggestionItemVerbForm>{ROMAN_NUMERALS[verb.form - 1]}</SuggestionItemVerbForm>
+                    <SuggestionItemVerbForm>{formLabel}</SuggestionItemVerbForm>
                   </SuggestionItemVerb>
                 </SuggestionItem>
               )

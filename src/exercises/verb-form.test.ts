@@ -2,6 +2,29 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { verbFormExercise } from './verb-form'
 
+const FORM_LABEL_ORDER = [
+  'I',
+  'Iq',
+  'II',
+  'IIq',
+  'III',
+  'IIIq',
+  'IV',
+  'IVq',
+  'V',
+  'Vq',
+  'VI',
+  'VIq',
+  'VII',
+  'VIIq',
+  'VIII',
+  'VIIIq',
+  'IX',
+  'IXq',
+  'X',
+  'Xq',
+]
+
 describe('generateFormExercise', () => {
   test('returns kind "form"', () => {
     expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbForm')
@@ -23,8 +46,8 @@ describe('generateFormExercise', () => {
   test('options are Roman numerals sorted in ascending form order', () => {
     const { options } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const formNumbers = options.map((o) => ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'].indexOf(o) + 1)
-    expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
+    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
   })
 
   test('correctAnswer is a valid index into options', () => {
@@ -37,7 +60,7 @@ describe('generateFormExercise', () => {
   test('options[correctAnswer] matches the verb form', () => {
     const { options, answer: correctAnswer, word } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(options[correctAnswer]).toMatch(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)$/)
+    expect(options[correctAnswer]).toMatch(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)q?$/)
     expect(word.length).toBeGreaterThan(0)
   })
 

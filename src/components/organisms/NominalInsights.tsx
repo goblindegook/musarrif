@@ -2,11 +2,9 @@ import { styled } from 'goober'
 import { useI18n } from '../../hooks/i18n'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import type { DisplayVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { Text } from '../atoms/Text'
 import { Detail } from '../molecules/Detail'
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 interface NominalInsightsProps {
   verb: DisplayVerb
@@ -16,6 +14,7 @@ interface NominalInsightsProps {
 
 export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps) {
   const { t } = useI18n()
+  const formLabel = formatFormLabel(verb.form, verb.root)
 
   return (
     <>
@@ -31,7 +30,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
           </RootLetters>
         </Detail>
         <Detail label={t('meta.form')} valueLang="en" valueDir="rtl">
-          <FormNumeral>{ROMAN_NUMERALS[verb.form - 1]}</FormNumeral>
+          <FormNumeral>{formLabel}</FormNumeral>
         </Detail>
         <Detail label={t('meta.verb')} value={verb.label} valueLang="ar" valueDir="rtl" />
       </VerbContextSection>

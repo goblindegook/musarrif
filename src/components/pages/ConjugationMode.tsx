@@ -12,7 +12,7 @@ import { deriveActiveParticiple } from '../../paradigms/nominal/participle-activ
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
 import { search } from '../../paradigms/selection'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
-import { buildVerbFromId, type DisplayVerb, getVerbById, verbs } from '../../paradigms/verbs'
+import { buildVerbFromId, type DisplayVerb, formatFormLabel, getVerbById, verbs } from '../../paradigms/verbs'
 import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
 import { LinkButton } from '../atoms/LinkButton'
@@ -99,6 +99,10 @@ export function ConjugationMode() {
   const selectedVerb = useMemo(
     () => (syntheticVerb?.id === verbId ? syntheticVerb : routeVerb),
     [syntheticVerb, verbId, routeVerb],
+  )
+  const selectedVerbFormLabel = useMemo(
+    () => (selectedVerb ? formatFormLabel(selectedVerb.form, selectedVerb.root) : ''),
+    [selectedVerb],
   )
 
   const handleSelect = useCallback(
@@ -338,11 +342,11 @@ export function ConjugationMode() {
                 valueLang={lang}
                 valueDir="rtl"
                 onInsightsClick={() => setOpenModal('form')}
-                insightsLabel={t('formInfo.open', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
+                insightsLabel={t('formInfo.open', { form: selectedVerbFormLabel })}
                 insightsOpen={openModal === 'form'}
               >
                 <FormMetaValue>
-                  <FormMetaItem>{ROMAN_NUMERALS[selectedVerb.form - 1]}</FormMetaItem>
+                  <FormMetaItem>{selectedVerbFormLabel}</FormMetaItem>
                   {selectedVerb.form === 1 && <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>}
                 </FormMetaValue>
               </Detail>
@@ -452,7 +456,7 @@ export function ConjugationMode() {
           <Modal
             isOpen={openModal === 'form'}
             onClose={() => setOpenModal(null)}
-            title={t('formInfo.title', { form: ROMAN_NUMERALS[selectedVerb.form - 1] })}
+            title={t('formInfo.title', { form: selectedVerbFormLabel })}
           >
             <FormInsights verb={selectedVerb} />
           </Modal>

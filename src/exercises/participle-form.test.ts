@@ -1,13 +1,32 @@
 import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { FORM_LABELS, verbs } from '../paradigms/verbs'
+import { formatFormLabel, verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { participleFormExercise } from './participle-form'
 
-function labelToForm(label: string): number {
-  return FORM_LABELS.indexOf(label as (typeof FORM_LABELS)[number]) + 1
-}
+const FORM_LABEL_ORDER = [
+  'I',
+  'Iq',
+  'II',
+  'IIq',
+  'III',
+  'IIIq',
+  'IV',
+  'IVq',
+  'V',
+  'Vq',
+  'VI',
+  'VIq',
+  'VII',
+  'VIIq',
+  'VIII',
+  'VIIIq',
+  'IX',
+  'IXq',
+  'X',
+  'Xq',
+]
 
 describe('participleFormExercise', () => {
   test('returns kind "participleForm"', () => {
@@ -29,8 +48,8 @@ describe('participleFormExercise', () => {
 
   test('options are Roman numerals sorted in ascending form order', () => {
     const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const formNumbers = options.map((option) => labelToForm(option))
-    expect(formNumbers).toEqual([...formNumbers].sort((a, b) => a - b))
+    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
   })
 
   test('correct answer is a valid index into options', () => {
@@ -50,8 +69,8 @@ describe('participleFormExercise', () => {
   test('prompt type matches the shown participle word in easy difficulty', () => {
     const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
     const exercise = participleFormExercise.generate(easyProfile)
-    const selectedForm = labelToForm(exercise.options[exercise.answer])
-    const selectedFormVerbs = verbs.filter((verb) => verb.form === selectedForm)
+    const selectedForm = exercise.options[exercise.answer]
+    const selectedFormVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
     const activeMatch = selectedFormVerbs.some(
       (verb) => exerciseDiacritics(deriveActiveParticiple(verb), easyProfile.diacritics) === exercise.word,
     )

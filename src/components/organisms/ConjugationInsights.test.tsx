@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
-import { getVerb } from '../../paradigms/verbs'
+import { getVerb, getVerbById } from '../../paradigms/verbs'
 import { ConjugationInsights } from './ConjugationInsights'
 
 beforeEach(() => cleanup())
@@ -61,6 +61,15 @@ describe('ConjugationInsights', () => {
       renderComponent('1s', 'كَتَبْتُ')
       fireEvent.click(screen.getByLabelText('Show explanation for كَتَبْتُ'))
       expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+    })
+
+    test('modal appends q to quadriliteral form number', () => {
+      render(
+        <ConjugationInsights verb={getVerbById('brhn-1')!} verbTense="active.past" pronoun="3ms" arabic="بَرهَنَ" />,
+        { wrapper: Wrapper },
+      )
+      fireEvent.click(screen.getByLabelText('Show explanation for بَرهَنَ'))
+      expect(screen.getByText('Iq')).toBeInTheDocument()
     })
   })
 })

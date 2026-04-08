@@ -3,9 +3,7 @@ import { useCallback } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
 import { buildVerbHref } from '../../hooks/routing'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
-import type { DisplayVerb } from '../../paradigms/verbs'
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 
 interface VerbPillProps {
   verb: DisplayVerb
@@ -14,6 +12,7 @@ interface VerbPillProps {
 
 export function VerbPill({ verb, className }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
+  const formLabel = formatFormLabel(verb.form, verb.root)
 
   const formatArabic = useCallback(
     (value: string) => applyDiacriticsPreference(value, diacriticsPreference),
@@ -33,7 +32,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
     <VerbPillLink
       href={buildVerbHref(verb.id)}
       className={className}
-      aria-label={[formatArabic(verb.label), ROMAN_NUMERALS[verb.form - 1], t('meta.form'), translateVerb(verb)]
+      aria-label={[formatArabic(verb.label), formLabel, t('meta.form'), translateVerb(verb)]
         .filter(Boolean)
         .join(' - ')}
     >
@@ -41,7 +40,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
         <span dir="rtl" lang="ar">
           {formatArabic(verb.label)}
         </span>
-        <small>{ROMAN_NUMERALS[verb.form - 1]}</small>
+        <small>{formLabel}</small>
       </InlineRow>
       {lang !== 'ar' && (
         <VerbTranslation dir={dir} lang={lang}>

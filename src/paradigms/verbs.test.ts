@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { synthesizeVerb } from './verbs'
+import { formatFormLabel, synthesizeVerb } from './verbs'
 
 describe('buildSyntheticVerb', () => {
   test('Form I', () => {
@@ -24,5 +24,15 @@ describe('buildSyntheticVerb', () => {
       root: 'كتب',
       rootId: 'ktb',
     })
+  })
+})
+
+describe('formatFormLabel', () => {
+  test('renders triliteral form names as roman numerals', () => {
+    expect(formatFormLabel(4, 'كتب')).toBe('IV')
+  })
+
+  test('appends q for quadriliteral form names', () => {
+    expect(formatFormLabel(4, 'برهن')).toBe('IVq')
   })
 })

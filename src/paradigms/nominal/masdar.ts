@@ -108,13 +108,11 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
       return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {
-      // a -> a, i -> i, u -> i
-      const shortVowel = isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA
       const prefix = [MEEM, FATHA, seatHamza(c1, FATHA)]
       if (isFinalHamza) return [...prefix, KASRA, YEH, seatHamza(c3)]
-      if (isMiddleWeak && isFormIPresentVowel(verb, DAMMA)) return [...prefix, FATHA, ALIF, seatHamza(c3)]
-      if (isMiddleWeak) return [...prefix, ...longVowel(shortVowel), seatHamza(c3)]
-      return [...prefix, SUKOON, c2, shortVowel, c3 === YEH ? ALIF_MAQSURA : c3]
+      if (isMiddleWeak)
+        return [...prefix, ...longVowel(isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA), seatHamza(c3)]
+      return [...prefix, SUKOON, c2, isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA, c3 === YEH ? ALIF_MAQSURA : c3]
     }
   }
 }

@@ -3,7 +3,6 @@ import type { ComponentChildren } from 'preact'
 import { useEffect, useId } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
 import { IconButton } from '../atoms/IconButton'
-import { Overlay } from '../atoms/Overlay'
 import { CloseIcon } from '../icons/CloseIcon'
 
 interface ModalProps {
@@ -16,69 +15,72 @@ interface ModalProps {
 
 export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
   const { t, dir } = useI18n()
+  const dialogId = useId()
   const titleId = useId()
 
   useEffect(() => {
     if (!isOpen) return
-    const controller = new AbortController()
-    document.addEventListener(
-      'keydown',
-      (event: KeyboardEvent) => {
-        if (event.key === 'Escape') onClose()
-      },
-      { signal: controller.signal },
-    )
-
-    return () => controller.abort()
-  }, [isOpen, onClose])
+    const dialog = document.getElementById(dialogId)
+    if (!(dialog instanceof HTMLDialogElement) || dialog.open) return
+    dialog.showModal()
+  }, [dialogId, isOpen])
 
   if (!isOpen) return null
 
   return (
-    <ModalContainer dir={dir}>
-      <Overlay zIndex={199} onClick={onClose} />
-      <Dialog role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={(event) => event.stopPropagation()}>
-        <Header>
-          <ModalTitle id={titleId}>{title}</ModalTitle>
-          <IconButton onClick={onClose} ariaLabel={t('modal.close')} title={t('modal.close')}>
-            <CloseIcon />
-          </IconButton>
-        </Header>
-        <Content>{children}</Content>
-      </Dialog>
-    </ModalContainer>
+    <Dialog
+      id={dialogId}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      dir={dir}
+      onCancel={(event) => {
+        event.preventDefault()
+        onClose()
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <Header>
+        <ModalTitle id={titleId}>{title}</ModalTitle>
+        <IconButton onClick={onClose} ariaLabel={t('modal.close')} title={t('modal.close')}>
+          <CloseIcon />
+        </IconButton>
+      </Header>
+      <Content>{children}</Content>
+    </Dialog>
   )
 }
 
-const ModalContainer = styled('div')`
+const Dialog = styled('dialog')`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 1rem;
-  overflow-y: auto;
   z-index: 200;
-  pointer-events: none;
-
-  > * {
-    pointer-events: auto;
-  }
-`
-
-const Dialog = styled('div')`
-  position: relative;
-  z-index: 201;
+  margin: auto;
   background: #ffffff;
   border-radius: 1.25rem;
   padding: 1.5rem;
   max-width: 520px;
   width: min(100%, 520px);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   box-shadow: 0 30px 80px rgba(15, 23, 42, 0.2);
   border: 1px solid #e2e8f0;
+
+  &::backdrop {
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `
 
 const Header = styled('div')`
