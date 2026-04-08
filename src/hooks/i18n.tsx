@@ -48,7 +48,6 @@ interface I18nContextValue {
   lang: Language
   dir: 'ltr' | 'rtl'
   t: (key: string, params?: Record<string, string>) => string
-  tHtml: (key: string, params?: Record<string, string>) => string
   diacriticsPreference: DiacriticsPreference
   setDiacriticsPreference: (next: DiacriticsPreference) => void
   setLang: (lang: string) => void
@@ -94,49 +93,6 @@ export function getEnglishVerbTranslation(verbId: string): string | undefined {
 function format(template: string, params?: Record<string, string>): string {
   if (!params) return template
   return template.replace(/\{(\w+)\}/g, (_, key) => params[key] ?? `{${key}}`)
-}
-
-function sanitizeHtml(raw: string, diacriticsPreference: DiacriticsPreference): string {
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(raw, 'text/html')
-
-  Array.from(doc.body.querySelectorAll('*')).forEach((element) => {
-    const tag = element.tagName.toLowerCase()
-    if (!['strong', 'b', 'em', 'i', 'u', 'br', 'a'].includes(tag)) {
-      element.replaceWith(...element.childNodes)
-      return
-    }
-
-    Array.from(element.attributes).forEach((attribute) => {
-      const name = attribute.name.toLowerCase()
-      if (!['href'].includes(name)) {
-        element.removeAttribute(attribute.name)
-        return
-      }
-
-      if (name === 'href') {
-        const href = attribute.value.trim()
-        const isHttp = /^https?:\/\//i.test(href)
-        const isInternal = href.startsWith('/') || href.startsWith('#')
-        if (!isHttp && !isInternal) element.removeAttribute(attribute.name)
-      }
-    })
-  })
-
-  const stack: Node[] = [doc.body]
-  while (stack.length > 0) {
-    const node = stack.pop()
-    if (!node) break
-    for (const child of node.childNodes) {
-      if (child.nodeType === child.TEXT_NODE) {
-        child.textContent = applyDiacriticsPreference(child.textContent ?? '', diacriticsPreference)
-      } else {
-        stack.push(child)
-      }
-    }
-  }
-
-  return doc.body.innerHTML
 }
 
 export function I18nProvider({ children }: { children: ComponentChildren }) {
@@ -188,10 +144,6 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
           key
         const rendered = format(template, params)
         return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
-      },
-      tHtml: (key, params) => {
-        const template = current.strings[key] ?? EN_TRANSLATION.strings[key] ?? key
-        return sanitizeHtml(format(template, params), diacriticsPreference)
       },
       diacriticsPreference,
       setDiacriticsPreference,

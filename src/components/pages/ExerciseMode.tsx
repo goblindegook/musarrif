@@ -27,6 +27,7 @@ import { useLocalStorage } from '../../hooks/local-storage'
 import { useSrsStore } from '../../hooks/srs-store'
 import { renderExplanation } from '../../paradigms/explanation'
 import { Button } from '../atoms/Button'
+import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
 import { ShortcutButton } from '../molecules/ShortcutButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
@@ -36,7 +37,7 @@ type Props = {
 }
 
 export function ExerciseMode({ generateExercise = randomExercise }: Props) {
-  const { dir, lang, t, tHtml } = useI18n()
+  const { dir, lang, t } = useI18n()
   const [dimensionStore, setDimensionStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const [exercise, setExercise] = useState<Exercise>(() =>
@@ -123,14 +124,13 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
-        <Prompt
-          dangerouslySetInnerHTML={{
-            __html: tHtml(
-              exercise.promptTranslationKey,
-              exercise.promptParams &&
-                Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
-            ),
-          }}
+        <FormattedText
+          className={PROMPT_CLASS}
+          text={t(
+            exercise.promptTranslationKey,
+            exercise.promptParams &&
+              Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+          )}
         />
         <OptionsGrid>
           {exercise.options.map((option, index) => {
@@ -229,7 +229,7 @@ const VerbDisplay = styled('p')`
   padding: 2rem 0 1rem;
 `
 
-const Prompt = styled('p')`
+const PROMPT_CLASS = css`
   margin: 0;
   font-size: 1rem;
   color: #64748b;

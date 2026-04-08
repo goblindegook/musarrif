@@ -13,6 +13,7 @@ import { derivePassiveParticiple } from '../../paradigms/nominal/participle-pass
 import { search } from '../../paradigms/selection'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
 import { buildVerbFromId, type DisplayVerb, getVerbById, verbs } from '../../paradigms/verbs'
+import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
 import { LinkButton } from '../atoms/LinkButton'
 import { Text } from '../atoms/Text'
@@ -63,7 +64,7 @@ const verbsByForm = (() => {
 })()
 
 export function ConjugationMode() {
-  const { t, tHtml, lang, dir, diacriticsPreference } = useI18n()
+  const { t, lang, dir, diacriticsPreference } = useI18n()
   const { verbId, navigateTo, tense, mood, voice } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
@@ -436,7 +437,7 @@ export function ConjugationMode() {
       {selectedVerb && (
         <Stack area="footer">
           <Panel title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
-            <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: tHtml('footer.feedback.body') }} />
+            <FormattedText dir={dir} lang={lang} text={t('footer.feedback.body')} />
             <LinkButton dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
               {t('footer.feedback.cta')}
             </LinkButton>
