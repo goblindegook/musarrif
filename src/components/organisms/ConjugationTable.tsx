@@ -273,7 +273,7 @@ const TabBlock = styled('div')`
   }
 
   @media (min-width: 720px) {
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 1.25rem;
   }
 
   @media print {
@@ -285,18 +285,14 @@ const SubTabBar = styled(TabBar)`
   background: linear-gradient(to bottom, #fff8e1 0%, transparent 50%);
   border-top: 1px solid #facc15;
   margin-top: -4px;
-  margin-left: -1.25rem;
-  margin-right: -1.25rem;
-  padding: 0.75rem 1.25rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding: 0.75rem;
 
   @media (min-width: 480px) {
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
     padding: 0.75rem 1.25rem;
-  }
-
-  @media (min-width: 720px) {
-    margin-left: -2rem;
-    margin-right: -2rem;
-    padding: 0.75rem 2rem;
   }
 `
 
@@ -352,7 +348,7 @@ const Row = styled('tr')`
 `
 
 const PronounCell = styled('td')`
-  padding: 0.6rem 0 0.6rem 1rem;
+  padding: 0.6rem 0.75rem;
   text-align: left;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -363,7 +359,7 @@ const PronounCell = styled('td')`
   }
 
   @media (min-width: 480px) {
-    padding: 0.6rem 0 0.6rem 2rem;
+    padding: 0.6rem 1.25rem;
   }
 
   @media print {
@@ -409,12 +405,12 @@ const VerbCell = styled('td')`
 
 const TableHeadCell = styled('th')`
   text-align: left;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 0.75rem;
   background: #f8fafc;
   vertical-align: middle;
 
   @media (min-width: 480px) {
-    padding: 0.6rem 2rem;
+    padding: 0.6rem 1.25rem;
   }
 
   @media print {
@@ -436,11 +432,11 @@ const VerbHeadCell = styled(TableHeadCell)`
 `
 
 const ActionCell = styled('td')`
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   vertical-align: middle;
 
   @media (min-width: 480px) {
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 1.25rem;
   }
 
   @media print {
