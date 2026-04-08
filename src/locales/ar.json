@@ -1,6 +1,4 @@
 {
-  "dir": "rtl",
-  "label": "العربية",
   "strings": {
     "aria.close": "إغلاق",
     "aria.copy": "نَسْخُ {text}",

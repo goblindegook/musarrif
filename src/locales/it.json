@@ -1,6 +1,4 @@
 {
-  "dir": "ltr",
-  "label": "Italiano",
   "strings": {
     "aria.close": "Chiudi",
     "aria.copy": "Copia {text}",

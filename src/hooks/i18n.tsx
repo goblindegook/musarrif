@@ -6,42 +6,13 @@ import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradig
 import { useLocalStorage } from './local-storage'
 
 const SUPPORTED_LANGUAGES = ['en', 'it', 'pt', 'ar'] as const
+
 export type Language = (typeof SUPPORTED_LANGUAGES)[number]
 
-export function isLanguageSupported(lang: unknown): lang is Language {
-  return SUPPORTED_LANGUAGES.includes(lang as Language)
-}
-
-export function detectBrowserLanguage(): Language {
-  return (
-    [...(navigator?.languages ?? []), navigator?.language ?? '']
-      .map((locale) => locale.toLowerCase().split('-').at(0))
-      .find(isLanguageSupported) ?? 'en'
-  )
-}
-
 interface Translation {
-  dir: 'ltr' | 'rtl'
-  label: string
   strings: Record<string, string>
   verbs?: Record<string, string>
   roots?: Record<string, string>
-}
-
-const EN_TRANSLATION = en as Translation
-
-const LANGUAGE_LABELS: Record<Language, string> = {
-  en: EN_TRANSLATION.label,
-  it: 'Italiano',
-  pt: 'Português',
-  ar: 'العربية',
-}
-
-const LANGUAGE_DIRECTIONS: Record<Language, 'ltr' | 'rtl'> = {
-  en: EN_TRANSLATION.dir,
-  it: 'ltr',
-  pt: 'ltr',
-  ar: 'rtl',
 }
 
 interface I18nContextValue {
@@ -55,7 +26,21 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined)
 
-export const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((id) => ({ id, label: LANGUAGE_LABELS[id] }))
+const EN_TRANSLATION = en as Translation
+
+const LANGUAGE_LABELS: Record<Language, string> = {
+  en: 'English',
+  it: 'Italiano',
+  pt: 'Português',
+  ar: 'العربية',
+}
+
+const LANGUAGE_DIRECTIONS: Record<Language, 'ltr' | 'rtl'> = {
+  en: 'ltr',
+  it: 'ltr',
+  pt: 'ltr',
+  ar: 'rtl',
+}
 
 const TRANSLATION_CACHE: Partial<Record<Language, Translation>> = { en: EN_TRANSLATION }
 
@@ -68,36 +53,15 @@ const TRANSLATION_LOADERS: Record<Language, () => Promise<Translation>> = {
 
 const TRANSLATION_PROMISES: Partial<Record<Language, Promise<Translation>>> = {}
 
-async function loadTranslation(lang: Language): Promise<Translation> {
-  const cached = TRANSLATION_CACHE[lang]
-  if (cached) return cached
-
-  const pending = TRANSLATION_PROMISES[lang]
-  if (pending) return pending
-
-  const next = TRANSLATION_LOADERS[lang]().then((translation) => {
-    TRANSLATION_CACHE[lang] = translation
-    return translation
-  })
-
-  TRANSLATION_PROMISES[lang] = next
-  return next.finally(() => {
-    delete TRANSLATION_PROMISES[lang]
-  })
-}
+export const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((id) => ({ id, label: LANGUAGE_LABELS[id] }))
 
 export function getEnglishVerbTranslation(verbId: string): string | undefined {
   return EN_TRANSLATION.verbs?.[verbId]
 }
 
-function format(template: string, params?: Record<string, string>): string {
-  if (!params) return template
-  return template.replace(/\{(\w+)\}/g, (_, key) => params[key] ?? `{${key}}`)
-}
-
 export function I18nProvider({ children }: { children: ComponentChildren }) {
   const [storedLanguage, setStoredLanguage] = useLocalStorage<string>('language', detectBrowserLanguage())
-  const lang: Language = isLanguageSupported(storedLanguage) ? storedLanguage : detectBrowserLanguage()
+  const lang: Language = isSupported(storedLanguage) ? storedLanguage : detectBrowserLanguage()
 
   const [storedDiacritics, setDiacriticsPreference] = useLocalStorage<string>('diacriticsPreference', 'some')
   const diacriticsPreference = storedDiacritics === 'all' || storedDiacritics === 'none' ? storedDiacritics : 'some'
@@ -122,22 +86,20 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
 
   const setLang = useCallback(
     (newLang: string) => {
-      if (isLanguageSupported(newLang)) setStoredLanguage(newLang)
+      if (isSupported(newLang)) setStoredLanguage(newLang)
     },
     [setStoredLanguage],
   )
 
-  const value = useMemo<I18nContextValue>(() => {
-    const current = translation
-
-    return {
+  const value = useMemo<I18nContextValue>(
+    () => ({
       lang,
       dir: LANGUAGE_DIRECTIONS[lang],
       t: (key, params) => {
         const template =
-          current.strings[key] ??
-          current.verbs?.[key] ??
-          current.roots?.[key] ??
+          translation.strings[key] ??
+          translation.verbs?.[key] ??
+          translation.roots?.[key] ??
           EN_TRANSLATION.strings[key] ??
           EN_TRANSLATION.verbs?.[key] ??
           EN_TRANSLATION.roots?.[key] ??
@@ -148,8 +110,9 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
       diacriticsPreference,
       setDiacriticsPreference,
       setLang,
-    }
-  }, [lang, diacriticsPreference, setDiacriticsPreference, setLang, translation])
+    }),
+    [lang, diacriticsPreference, setDiacriticsPreference, setLang, translation],
+  )
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }
@@ -158,4 +121,38 @@ export function useI18n(): I18nContextValue {
   const ctx = useContext(I18nContext)
   if (!ctx) throw new Error('useI18n must be used within an I18nProvider')
   return ctx
+}
+
+async function loadTranslation(lang: Language): Promise<Translation> {
+  const cached = TRANSLATION_CACHE[lang]
+  if (cached) return cached
+
+  const pending = TRANSLATION_PROMISES[lang]
+  if (pending) return pending
+
+  const next = TRANSLATION_LOADERS[lang]().then((translation) => {
+    TRANSLATION_CACHE[lang] = translation
+    return translation
+  })
+
+  TRANSLATION_PROMISES[lang] = next
+  return next.finally(() => {
+    delete TRANSLATION_PROMISES[lang]
+  })
+}
+
+function isSupported(lang: unknown): lang is Language {
+  return SUPPORTED_LANGUAGES.includes(lang as Language)
+}
+
+function detectBrowserLanguage(): Language {
+  return (
+    [...(navigator?.languages ?? []), navigator?.language ?? '']
+      .map((locale) => locale.toLowerCase().split('-').at(0))
+      .find(isSupported) ?? 'en'
+  )
+}
+
+function format(template: string, params?: Record<string, string>): string {
+  return params ? template.replace(/\{(\w+)\}/g, (_, key) => params[key] ?? `{${key}}`) : template
 }

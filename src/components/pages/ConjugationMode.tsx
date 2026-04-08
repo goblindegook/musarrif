@@ -81,10 +81,12 @@ export function ConjugationMode() {
 
   const translateVerb = useCallback(
     (verb: DisplayVerb) => {
-      const englishTranslation = getEnglishVerbTranslation(verb.id)
-      if (!englishTranslation) return '—'
-      if (lang === 'ar') return englishTranslation
-      return t(verb.id)
+      if (lang === 'ar') {
+        const englishTranslation = getEnglishVerbTranslation(verb.id)
+        return englishTranslation ? englishTranslation : '—'
+      }
+      const translation = t(verb.id)
+      return translation !== verb.id ? translation : '—'
     },
     [lang, t],
   )

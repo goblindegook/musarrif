@@ -17,7 +17,6 @@ import {
   SHADDA,
   SUKOON,
   seatHamza,
-  type Vowel,
   WAW,
   YEH,
 } from '../letters'
@@ -44,10 +43,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       switch (verb.form) {
         case 1: {
-          const isPatternA = isFormIPresentVowel(verb, FATHA)
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
-          const patternLongVowel = longVowel(isPatternA || isPatternI ? KASRA : DAMMA)
+          const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
 
           if (isInitialWeak) {
             if (stem.at(1) === FATHA && isFinalWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
@@ -80,9 +78,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (isMiddleWeak) return [ALIF_HAMZA, DAMMA, ...initialHamzatedStem]
 
-            if (isPatternA || isPatternI) return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
+            if (isPatternU) return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
 
-            return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
+            return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
           }
 
           if (c3 === WAW && isPatternU && pronounId === '2d') return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
@@ -108,7 +106,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 5: {
-          return insertAfterShadda(stem, FATHA)
+          const shaddaIndex = stem.lastIndexOf(SHADDA)
+          return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
         }
 
         case 7:
@@ -131,9 +130,4 @@ function restoreWeakLetterBeforeAlif(stem: readonly string[]): readonly string[]
   if (stem.at(-3) === YEH) return stem
   if (stem.at(-2) === FATHA) return [...stem.slice(0, -2), KASRA, YEH, FATHA, ALIF]
   return [...stem.slice(0, -1), YEH, FATHA, ALIF]
-}
-
-function insertAfterShadda(stem: readonly string[], vowel: Vowel): readonly string[] {
-  const shaddaIndex = stem.lastIndexOf(SHADDA)
-  return [...stem.slice(0, shaddaIndex - 1), vowel, ...stem.slice(shaddaIndex)]
 }
