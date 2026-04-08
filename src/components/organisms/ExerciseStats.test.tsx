@@ -6,7 +6,8 @@ import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
 import { ExerciseStats } from './ExerciseStats'
 
-const TODAY = new Date(new Date().toISOString().slice(0, 10))
+const NOW = new Date()
+const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate())
 const SAMPLE_STATS: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
 const ZERO_SCORE_STATS: DayStats[] = [{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]
 

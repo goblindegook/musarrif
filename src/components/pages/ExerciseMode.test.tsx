@@ -68,6 +68,13 @@ function utcAddDays(date: string, days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
+function localDateKey(date = new Date()): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
 describe('ExerciseMode', () => {
   test('shows four option buttons', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
@@ -273,7 +280,7 @@ describe('ExerciseMode', () => {
     test('shows streak-extended alert when daily correct answers reach 10', () => {
       localStorage.setItem(
         'conjugator:exercise:daily',
-        JSON.stringify([{ date: new Date().toISOString().slice(0, 10), correct: 9, incorrect: 0, passed: 0 }]),
+        JSON.stringify([{ date: localDateKey(), correct: 9, incorrect: 0, passed: 0 }]),
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
@@ -285,7 +292,7 @@ describe('ExerciseMode', () => {
     test('does not show streak-extended alert before daily correct answers reach 10', () => {
       localStorage.setItem(
         'conjugator:exercise:daily',
-        JSON.stringify([{ date: new Date().toISOString().slice(0, 10), correct: 8, incorrect: 0, passed: 0 }]),
+        JSON.stringify([{ date: localDateKey(), correct: 8, incorrect: 0, passed: 0 }]),
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
