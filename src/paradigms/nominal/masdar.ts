@@ -129,8 +129,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly string[] {
 
   if (isFinalWeak || isFinalHamza) return [...prefix, SUKOON, c2, KASRA, seatHamza(c3, KASRA), FATHA, TEH_MARBUTA]
 
-  // FIXME: Add missing explicit sukoon.
-  return [...prefix, SUKOON, c2, KASRA, YEH, c3]
+  return [...prefix, SUKOON, c2, KASRA, YEH, SUKOON, c3]
 }
 
 function deriveMasdarFormIII(verb: NonFormIVerb): readonly string[] {
