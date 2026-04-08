@@ -25,13 +25,12 @@ describe('FormattedText', () => {
       />,
     )
 
-    const unsafeLink = screen.getByText('unsafe').closest('a')
-    const safeLink = screen.getByText('safe').closest('a')
-    const text = screen.getByText('unsafe').closest('p')?.textContent?.replace(/\s+/g, ' ').trim()
+    const unsafe = screen.getByText('unsafe')
+    const safe = screen.getByText('safe').closest('a')!
 
-    expect(text).toBe('Read carefully unsafe safe')
-    expect(unsafeLink?.getAttribute('href')).toBeNull()
-    expect(safeLink?.getAttribute('href')).toBe('/docs')
-    expect(safeLink?.getAttribute('data-x')).toBeNull()
+    expect(unsafe.closest('p')!.textContent).toBe('Read carefully unsafe safe')
+    expect(unsafe.closest('a')!.getAttribute('href')).toBeNull()
+    expect(safe.getAttribute('href')).toBe('/docs')
+    expect(safe.getAttribute('data-x')).toBeNull()
   })
 })
