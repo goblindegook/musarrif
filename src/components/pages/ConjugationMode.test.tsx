@@ -351,6 +351,28 @@ describe('Form', () => {
     fireEvent.click(screen.getByLabelText('View form insights for Form IVq'))
     expect(screen.getByText('Form IVq insights')).toBeInTheDocument()
   })
+
+  it('shows only quadriliteral examples for quadriliteral forms', () => {
+    renderConjugationMode('/#/verbs/jlEb-4')
+
+    fireEvent.click(screen.getByLabelText('View form insights for Form IVq'))
+    const dialog = screen.getByText('Form IVq insights').closest('[role="dialog"]') as HTMLElement
+    const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
+
+    expect(links.length).toBeGreaterThan(0)
+    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - IVq - Form - '))).toBe(true)
+  })
+
+  it('shows only triliteral examples for triliteral forms', () => {
+    renderConjugationMode('/#/verbs/ktb-4')
+
+    fireEvent.click(screen.getByLabelText('View form insights for Form IV'))
+    const dialog = screen.getByText('Form IV insights').closest('[role="dialog"]') as HTMLElement
+    const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
+
+    expect(links.length).toBeGreaterThan(0)
+    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - IV - Form - '))).toBe(true)
+  })
 })
 
 test('Show a feedback panel with an issues link', () => {

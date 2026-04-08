@@ -24,10 +24,10 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   }, [verb, t])
 
   const formInsightExamples = useMemo<DisplayVerb[]>(() => {
-    const pool = verbs.filter((example) => example.form === verb.form)
+    const pool = verbs.filter((example) => example.form === verb.form && example.root.length === verb.root.length)
     const shuffled = pool.sort(() => Math.random() - 0.5)
     return shuffled.slice(0, 5)
-  }, [verb.form])
+  }, [verb.form, verb.root.length])
 
   return (
     <>
