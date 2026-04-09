@@ -14,7 +14,6 @@ import {
   MEEM,
   NOON,
   resolveFormVIIIInfixConsonant,
-  SEEN,
   SHADDA,
   SUKOON,
   seatHamza,
@@ -24,6 +23,7 @@ import {
   YEH,
 } from '../letters'
 import type { Verb } from '../verbs'
+import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): string {
   if (verb.noPassiveParticiple) return ''
@@ -48,14 +48,13 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
     }
 
-    const isInitialWeak = isWeakLetter(c1)
-    const isInitialHamza = isHamzatedLetter(c1)
     const isMiddleWeak = isWeakLetter(c2)
     const isMiddleHamza = isHamzatedLetter(c2)
     const isFinalWeak = isWeakLetter(c3)
-    const isFinalHamza = isHamzatedLetter(c3)
 
     const seatedC3 = seatHamza(c3, FATHA)
+
+    const stem = participleStem(verb)
 
     switch (verb.form) {
       case 1: {
@@ -68,83 +67,72 @@ export function derivePassiveParticiple(verb: Verb): string {
         if (isMiddleWeak && !isFormIPastVowel(verb, KASRA))
           return [...prefix, ...longVowel(c2 === WAW ? DAMMA : KASRA), c3]
 
-        return [...prefix, SUKOON, seatedC2, ...longVowel(glide), isFinalHamza ? HAMZA : c3]
+        return [...prefix, SUKOON, seatedC2, ...longVowel(glide), isHamzatedLetter(c3) ? HAMZA : c3]
       }
 
       case 2: {
-        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA), FATHA, c2, SHADDA]
+        if (isFinalWeak) return [...stem, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        return [...prefix, FATHA, seatedC3]
+        return [...stem, FATHA, seatedC3]
       }
 
       case 3: {
-        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA), FATHA, ALIF, isMiddleHamza ? HAMZA : c2]
+        if (isFinalWeak) return [...stem, isMiddleHamza ? HAMZA : c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (c2 === c3) return [...stem, c2, SHADDA]
 
-        if (c2 === c3) return [...prefix, SHADDA]
-
-        return [...prefix, FATHA, seatedC3]
+        return [...stem, isMiddleHamza ? HAMZA : c2, FATHA, seatedC3]
       }
 
       case 4: {
-        const prefix = [MEEM, DAMMA, seatHamza(c1, DAMMA)]
+        if (isMiddleHamza) return [...stem, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isMiddleHamza) return [...prefix, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isFinalWeak) return [...stem, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isMiddleWeak) return [...stem, FATHA, ALIF, c3]
 
-        if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
+        if (c2 === c3) return [...stem, FATHA, c2, SHADDA]
 
-        if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
-
-        return [...prefix, SUKOON, c2, FATHA, seatedC3]
+        return [...stem, SUKOON, c2, FATHA, seatedC3]
       }
 
       case 5: {
-        const prefix = [MEEM, DAMMA, TEH, FATHA, seatHamza(c1, FATHA)]
+        if (isFinalWeak) return [...stem, seatHamza(c2, FATHA), TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, FATHA, seatHamza(c2, FATHA), TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
-
-        return [...prefix, FATHA, seatHamza(c2, FATHA), SHADDA, FATHA, seatedC3]
+        return [...stem, seatHamza(c2, FATHA), SHADDA, FATHA, seatedC3]
       }
 
       case 6: {
-        const prefix = [MEEM, DAMMA, TEH, FATHA, seatHamza(c1, FATHA)]
+        if (c2 === c3) return [...stem, c2, SHADDA]
 
-        if (c2 === c3) return [...prefix, FATHA, ALIF, c2, SHADDA]
+        if (isFinalWeak) return [...stem, isMiddleHamza ? HAMZA : c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        return [...prefix, FATHA, ALIF, isMiddleHamza ? HAMZA : c2, FATHA, seatedC3]
+        return [...stem, isMiddleHamza ? HAMZA : c2, FATHA, seatedC3]
       }
 
       case 7: {
-        const prefix = [MEEM, DAMMA, NOON, SUKOON, seatHamza(c1, FATHA)]
+        if (c2 === c3) return [...stem, c2, SHADDA]
 
-        if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
+        if (isFinalWeak) return [...stem, c2, FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, FATHA, c2, FATHA, ALIF_MAQSURA]
+        if (isMiddleWeak) return [...stem, ALIF, c3]
 
-        if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
-
-        return [...prefix, FATHA, c2, FATHA, c3]
+        return [...stem, c2, FATHA, c3]
       }
 
       case 8: {
         const infix = resolveFormVIIIInfixConsonant(seatHamza(c1, FATHA))
+        const isInitialWeakOrHamza = isWeakLetter(c1) || isHamzatedLetter(c1)
         const seatedC1 = seatHamza(c1, DAMMA)
         const seatedC2 = seatHamza(c2, FATHA)
         const prefix = [MEEM, DAMMA]
 
         if (c2 === c3) return [...prefix, seatedC1, SUKOON, infix, FATHA, c2, SHADDA]
 
-        if ((isInitialHamza || isInitialWeak) && isFinalWeak)
+        if (isInitialWeakOrHamza && isFinalWeak)
           return [...prefix, infix, SHADDA, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isInitialHamza || isInitialWeak) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, seatedC3]
+        if (isInitialWeakOrHamza) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, seatedC3]
 
         if (isFinalWeak) return [...prefix, seatedC1, SUKOON, infix, FATHA, seatedC2, TANWEEN_FATHA, ALIF_MAQSURA]
 
@@ -158,15 +146,13 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 10: {
-        const prefix = [MEEM, DAMMA, SEEN, SUKOON, TEH, FATHA, seatHamza(c1, FATHA)]
+        if (isFinalWeak) return [...stem, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (isFinalWeak) return [...prefix, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+        if (isMiddleWeak) return [...stem, FATHA, ALIF, c3]
 
-        if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3]
+        if (c2 === c3) return [...stem, FATHA, c2, SHADDA]
 
-        if (c2 === c3) return [...prefix, FATHA, c2, SHADDA]
-
-        return [...prefix, SUKOON, c2, FATHA, seatedC3]
+        return [...stem, SUKOON, c2, FATHA, seatedC3]
       }
     }
   })()
