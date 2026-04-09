@@ -1,6 +1,6 @@
+import { conjugate } from '../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import { isWeakLetter } from '../paradigms/letters'
-import { conjugate } from '../paradigms/tense'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
 import {
   mixedWordDistractor,

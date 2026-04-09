@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
+import { conjugate } from '../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import { conjugate } from '../paradigms/tense'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'

@@ -1,7 +1,8 @@
 import { shuffle } from '@pacote/shuffle'
+import { conjugate } from '../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import type { PronounId } from '../paradigms/pronouns'
-import { conjugate, type VerbTense } from '../paradigms/tense'
+import type { VerbTense } from '../paradigms/tense'
 import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
 import {

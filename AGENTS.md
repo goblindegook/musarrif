@@ -12,7 +12,14 @@ When changing system behaviour, write tests covering expected behaviour before c
 
 Node is configured via Mise. Always use `mise exec --` before running `node` or `npm` scripts (no global Node available).
 
-- **npm scripts**: `mise exec -- npm test`
+- **Dev server**: `mise exec -- npm run dev`
+- **Build**: `mise exec -- npm run build`
+- **Preview**: `mise exec -- npm run preview`
+- **Tests**: `mise exec -- npm test`
+- **Coverage**: `mise exec -- npm run test:coverage`
+- **Mutation tests**: `mise exec -- npm run test:mutation`
+- **Lint**: `mise exec -- npm run lint`
+- **Format**: `mise exec -- npm run format`
 - **Node.js scripts**: `mise exec -- node script.js` or `mise exec -- node -e "console.log('code here')"`
 - **Vitest**: Runs in watch mode by default. For single runs (CI/ad-hoc), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`
 - **Scripting tasks**: Prefer Node over external tools (e.g., Python). Always use `mise exec --` to ensure the correct Node version.
@@ -58,21 +65,40 @@ Node is configured via Mise. Always use `mise exec --` before running `node` or 
 
 ```text
 src/
-  components/    # Preact components and UI-related code
-  paradigms/     # Rules implementing verb and nominal derivation
-    active/      # Active tenses and moods (past, present indicative, subjunctive, jussive and imperative)
-    nominal/     # Nominal derivations (masdar, active participle, passive participle)
-  data/          # Raw verb data
-  hooks/         # Shared UI hooks and provider components (i18n, routing)
-  locales/       # Localization files
-  primitives/    # Primitive data handling functions
-  test/          # Test setup files
+  app.tsx                   # App shell; switches between conjugation and exercise pages
+  main.tsx                  # Entry point; mounts RoutingProvider + I18nProvider + App
+  components/
+    atoms/                  # Foundational UI primitives
+    molecules/              # Composed controls (tabs, segmented control, search, share/copy/speech)
+    organisms/              # Feature sections (header, conjugation table, insights, builder, stats)
+    pages/                  # Top-level page components (ConjugationMode, ExerciseMode)
+  exercises/                # Pure exercise generation, dimensions, SRS, and stats logic
+  paradigms/                # Core derivation and grammar rules
+    active/                 # Active voice paradigms
+    passive/                # Passive voice paradigms + passive support rules
+    nominal/                # Nominal derivations (masdar and participles)
+  data/                     # Canonical dataset (`roots.json`)
+  hooks/                    # Shared providers/hooks (routing, i18n, local storage, SRS, favourites, recents)
+  locales/                  # i18n JSON files
+  primitives/               # Generic helpers (objects, strings)
+  test/                     # Vitest setup and custom matchers
 ```
 
 ### File Organization
 
 - **Grammar files**: Pure functions, no Preact dependencies or manipulation of the DOM tree
 - **UI files**: Preact components, styled components, UI logic
+
+### Routing Model
+
+- Routing is hash-first with normalization in `src/hooks/routing.tsx`.
+- Canonical paths:
+  - `#/verbs`
+  - `#/verbs/:verbId`
+  - `#/verbs/:verbId/:voice/:tense`
+  - `#/verbs/:verbId/:voice/present/:mood`
+  - `#/test`
+- The app is deployed under Vite `base: '/musarrif/'` and routing utilities normalize both base-path and hash navigation.
 
 ## Localization
 
@@ -143,6 +169,7 @@ test('descriptive test name', () => {
 - ✅ **DO test edge cases**: Include tests for boundary conditions and error cases.
 - ✅ **DO clean up after tests**: Use `afterEach` to restore the testing environment, especially for Preact components.
 - ❌ **NEVER test implementation details**: Validate behavior through public APIs; don't export internal helpers solely for testing.
+- ❌ **NEVER test styling**: Do not assert CSS classes, style tags, or hover/focus/active visual rules in tests.
 - ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
 - ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
 - ❌ **NEVER test data existence**: Trust fixture existence; if incorrect, tests will fail naturally, so skip "is defined" checks.
@@ -150,10 +177,52 @@ test('descriptive test name', () => {
 - ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
 - ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
 - ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
+- ❌ **Avoid `*ByRole` queries**: While it is a best practice to use `*ByRole` queries to drive tests with accessibility features in mind, these queries introduce a significant performance impact.
 - ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
 - ✅ **Always use static imports**: Do not use dynamic imports in tests.
 - ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
 - ✅ **Unicode normalization in tests is acceptable**: When failures are due solely to Unicode normalization or ordering of combining marks, normalize test expectations rather than altering production output.
+
+## Verb Entry Workflow (Hard Gate)
+
+When adding or correcting verb/root entries, follow this workflow exactly. Do not skip any step.
+
+1. **Source availability check (mandatory before edits)**
+   - Confirm each cited source URL resolves and contains the target entry.
+   - Do not cite links that have not been opened and verified.
+   - If Wiktionary does not have a dedicated page, explicitly switch to another authoritative source (e.g., academy dictionary, recognized lexicon) and state that in the change summary.
+
+2. **Lexical extraction checklist (mandatory before edits)**
+   - Extract and record all relevant lexical data for the target verb entry:
+     - Root
+     - Form
+     - Present vowel pattern (form pattern)
+     - Masdar(s)
+     - Passive voice status (`full`, `impersonal`, or `none` as represented by project fields)
+     - Passive participle availability
+   - Never assume defaults for constrained behavior. If a source indicates a restriction, encode it explicitly.
+
+3. **Required `roots.json` fields gate**
+   - Ensure the entry includes every required lexical rule implied by sources.
+   - At minimum, set the following when applicable:
+     - `formPattern`
+     - `masdarPatterns`
+     - `passiveVoice`
+     - `noPassiveParticiple`
+   - If a field is unknown from authoritative sources, stop and report uncertainty instead of guessing.
+
+4. **Atomic locale update gate**
+   - In the same change, add/update:
+     - verb translation key in `en.json`, `it.json`, `pt.json`
+     - root gloss key in `en.json`, `it.json`, `pt.json`
+   - Keep translations to one meaning unless meanings differ significantly.
+   - Use transliteration conventions already used in the project for key generation.
+
+5. **Final verification gate (mandatory before reporting done)**
+   - Re-open changed entries and verify they match extracted source data field-by-field.
+   - Validate JSON parsing for all modified files.
+   - Confirm no orphan/incorrect keys remain (e.g., wrong transliteration key or form key).
+   - Only then provide completion status and include only working, verified source links.
 
 ### Conjugation Test Strategy
 
@@ -206,7 +275,7 @@ test('descriptive test name', () => {
 - ✅ **DO use literal UI expectations**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` in UI specs). Keep expected UI strings inline with tests instead of sharing "magical" fixtures.
 - ❌ **UI text not a truth source**: Don’t use UI tests to validate word correctness; rely on derivation functions because UI strings can change (e.g., diacritic stripping).
 - ✅ **Async element queries**: Prefer `findBy*` over `waitFor` + `getBy*` combinations.
-- ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/en`) and assert on hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
+- ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/verbs/ktb-1`) and assert on hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
 
 ## Functional Programming Patterns
 
@@ -238,7 +307,7 @@ test('descriptive test name', () => {
 ### Hooks
 
 - Use `useState`, `useEffect`, `useMemo` as needed
-- Prefer `React.useCallback` for functions passed as props to prevent unnecessary re-renders
+- Prefer `useCallback` for functions passed as props to prevent unnecessary re-renders
 - Use `useRef` for DOM references and values that don't trigger re-renders
 
 ### State Management
@@ -259,7 +328,7 @@ test('descriptive test name', () => {
 Example:
 
 ```typescript
-import styled from 'goober'
+import { styled } from 'goober'
 import type { Verb } from './paradigms/verbs'
 import { Button } from './Button'
 ```
@@ -295,7 +364,7 @@ import { Button } from './Button'
 - Write tests first (TDD)
 - Make small, focused commits
 - Ensure all tests pass before committing
-- Run linter before committing: `npm run lint`
+- Run linter before committing: `mise exec -- npm run lint`
 
 ## Examples
 
@@ -303,9 +372,9 @@ import { Button } from './Button'
 
 ```typescript
 test('switches to the present-tense table via tabs', () => {
-  renderWithProviders('/#/en/ktb-1')
+  renderWithProviders('/#/verbs/ktb-1')
 
-  fireEvent.click(screen.getByRole('tab', { name: 'Present' }))
+  fireEvent.click(screen.getByLabelText('Present'))
 
   expect(screen.getByText('يَكتُبُ')).toBeInTheDocument()
 })
@@ -337,6 +406,63 @@ return `${YEH}${FATHA}${c1}${SUKOON}${c2}${KASRA}${YEH}`
 // Get the verb from the URL slug
 const verb = getVerbById(slug)
 ```
+
+## Exercise Mode
+
+The `src/exercises/` layer is pure (no DOM/Preact). It includes generation, adaptive difficulty dimensions, SRS selection, and stats helpers. Keep this layer deterministic under provided inputs and testable in isolation.
+
+**Exercise interface** (`src/exercises/exercises.ts`):
+```typescript
+interface Exercise {
+  kind: ExerciseKind
+  word: string
+  promptTranslationKey: string
+  promptParams?: Record<string, string>
+  options: readonly string[]
+  answer: number
+  cardKey: string
+  dimensions: readonly DimensionKey[]
+  explanations?: readonly (ExplanationLayers | null)[]
+}
+```
+
+**Exercise kinds currently shipped**:
+- `conjugation`
+- `masdarForm`
+- `masdarRoot`
+- `masdarVerb`
+- `participleForm`
+- `participleRoot`
+- `participleVerb`
+- `verbParticiple`
+- `verbForm`
+- `verbMasdar`
+- `verbPronoun`
+- `verbRoot`
+- `rootFormVerb`
+- `verbTense`
+
+**Adaptive dimensions** (`src/exercises/dimensions.ts`) are independent and level-based:
+- `tenses` (0-5): gradually unlocks from active past to full passive set
+- `pronouns` (0-3): from `3ms` to full pronoun inventory
+- `diacritics` (0-2): `all` -> `some` -> `none`
+- `forms` (0-3): form I only -> all ten forms
+- `rootTypes` (0-5): sound -> doubled -> hamzated -> assimilated -> hollow -> defective
+- `nominals` (0-2): no nominals -> participles -> masdar
+
+**Dimension progression rules**:
+- `recordDimensionAnswer` tracks rolling windows per dimension.
+- `promoteDimensions` promotes/demotes using accuracy thresholds and resets affected windows on level changes.
+- `enforcePrerequisites` prevents invalid profiles (e.g., advanced nominals before prerequisite tense/form progress).
+
+**Component pattern**: `ExerciseMode` accepts a `generateExercise` prop (defaults to `randomExercise` which picks from a list of all available exercise types) to allow injection of a fake generator in tests. Keep this pattern when extending or adding new exercise types.
+
+**SRS and persistence**:
+- `randomExercise(profile, srsStore)` prioritizes due cards first, filtered by currently unlocked dimensions.
+- Card identity is `cardKey` (`kind:rootType:form[:tense:pronoun]`).
+- SRS state is stored in `conjugator:srs` and updated with `correct`, `wrong`, or `pass`.
+- Daily stats are stored in `conjugator:exercise:daily`; streak goal is 10 correct answers/day.
+- Dimension state is stored in `conjugator:dimensions` and drives unlock alerts in the UI.
 
 ## Derivation Preferences
 

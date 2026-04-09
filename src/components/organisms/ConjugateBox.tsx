@@ -1,9 +1,9 @@
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
+import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
-import { conjugate } from '../../paradigms/tense'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import { synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 
