@@ -249,14 +249,22 @@ const ChartContainer = styled('div')`
 `
 
 function buildDayWindow(stats: DayStats[], days: number): DayStats[] {
-  const map = new Map(stats.map((d) => [d.date.toISOString().slice(0, 10), d]))
+  const map = new Map(stats.map((d) => [localDateKey(d.date), d]))
   const result: DayStats[] = []
-  const today = new Date()
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(today)
-    d.setUTCDate(today.getUTCDate() - i)
-    const key = d.toISOString().slice(0, 10)
-    result.push(map.get(key) ?? { date: new Date(key), correct: 0, incorrect: 0, passed: 0 })
+    d.setDate(today.getDate() - i)
+    const key = localDateKey(d)
+    result.push(map.get(key) ?? { date: d, correct: 0, incorrect: 0, passed: 0 })
   }
   return result
+}
+
+function localDateKey(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }

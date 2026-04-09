@@ -9,12 +9,13 @@ import { ExerciseStats } from './ExerciseStats'
 const NOW = new Date()
 const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate())
 const SAMPLE_STATS: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
-const ZERO_SCORE_STATS: DayStats[] = [{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]
+let lastPlotData: unknown[] | null = null
 
 vi.mock('uplot', () => {
   return {
     default: class UPlotMock {
-      constructor(opts: { series?: Array<{ label?: string }> }, _data: unknown, mount: HTMLElement) {
+      constructor(opts: { series?: Array<{ label?: string }> }, data: unknown, mount: HTMLElement) {
+        lastPlotData = data as unknown[]
         const root = document.createElement('div')
         root.className = 'uplot'
         for (const s of opts.series ?? []) {
@@ -54,6 +55,9 @@ afterAll(() => {
 
 afterEach(() => {
   cleanup()
+  vi.useRealTimers()
+  vi.unstubAllEnvs()
+  lastPlotData = null
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -100,7 +104,9 @@ describe('ExerciseStats', () => {
   })
 
   test('score pill shows 0% when all answers are incorrect', () => {
-    render(<ExerciseStats stats={ZERO_SCORE_STATS} streak={0} />, { wrapper: Wrapper })
+    render(<ExerciseStats stats={[{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]} streak={0} />, {
+      wrapper: Wrapper,
+    })
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.getByText('0%')).toBeInTheDocument()
   })
@@ -216,5 +222,17 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByRole('button', { name: /statistics/i }))
     expect(screen.queryByText(/to extend your streak/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+  })
+
+  test('keeps today values in the last chart slot when local day differs from UTC', () => {
+    vi.useFakeTimers()
+    vi.stubEnv('TZ', 'America/Los_Angeles')
+    vi.setSystemTime(new Date('2026-03-19T23:30:00-07:00'))
+    const stats: DayStats[] = [{ date: new Date(2026, 2, 19), correct: 4, incorrect: 1, passed: 0 }]
+
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText('Statistics'))
+
+    expect(lastPlotData?.[1]).toEqual([0, 0, 0, 0, 0, 0, 4])
   })
 })
