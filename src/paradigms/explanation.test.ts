@@ -4,6 +4,7 @@ import type { ExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
+import type { VerbForm } from './verbs'
 import { getVerb, getVerbById, synthesizeVerb } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
@@ -494,6 +495,99 @@ describe('renderExplanation', () => {
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿila')
+  })
+})
+
+// ── renderExplanation: pronoun key routing for damma-prefix forms ─────────────
+
+describe('renderExplanation pronoun key routing', () => {
+  const t = (key: string) => key
+
+  function testExplanationLayers(overrides?: Partial<ExplanationLayers>): ExplanationLayers {
+    return {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'يَكْتُبُ',
+      rootType: 'sound',
+      tense: 'active.present.indicative',
+      pronoun: '2fp',
+      ...overrides,
+    }
+  }
+
+  test.each<[VerbForm, string]>([
+    [2, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
+    [3, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
+    [4, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
+  ])('Form %i active present indicative uses forms-ii-iv pronoun key', (form, expected) => {
+    const layers = testExplanationLayers({ form })
+    expect(renderExplanation(layers, t)).toContain(expected)
+  })
+
+  test.each<[VerbForm, string]>([
+    [2, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
+    [3, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
+    [4, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
+  ])('Form %i active present subjunctive uses forms-ii-iv pronoun key', (form, expected) => {
+    const layers = testExplanationLayers({ form, tense: 'active.present.subjunctive' })
+    expect(renderExplanation(layers, t)).toContain(expected)
+  })
+
+  test.each<[VerbForm, string]>([
+    [2, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
+    [3, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
+    [4, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
+  ])('Form %i active present jussive uses forms-ii-iv pronoun key', (form, expected) => {
+    const layers = testExplanationLayers({ form, tense: 'active.present.jussive' })
+    expect(renderExplanation(layers, t)).toContain(expected)
+  })
+
+  test.each<VerbForm>([
+    1, 5, 6, 7, 8, 9, 10,
+  ])('Form %i active present indicative uses generic pronoun key (not forms-ii-iv)', (form) => {
+    const layers = testExplanationLayers({ form })
+    expect(renderExplanation(layers, t)).toContain('explanation.pronoun.active.present.indicative.2fp')
+    expect(renderExplanation(layers, t)).not.toContain('forms-ii-iv')
+  })
+})
+
+describe('renderExplanation pronoun prefix locale content', () => {
+  test('Form III active present indicative 2fp contains damma prefix تُـ', () => {
+    const verb = getVerb('كتب', 3)
+    const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تُكَاتِبْنَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('تُـ')
+  })
+
+  test('Form II active present indicative 2fp contains damma prefix تُـ', () => {
+    const verb = getVerb('كتب', 2)
+    const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تُكَتِّبْنَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('تُـ')
+  })
+
+  test('Form I active present indicative 2fp contains fatha prefix تَـ', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تَكْتُبْنَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('تَـ')
+    expect(result[2]).not.toContain('تُـ')
+  })
+
+  test('Form I passive present indicative 2fp contains damma prefix تُـ', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'passive.present.indicative', '2fp', 'تُكْتَبْنَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('تُـ')
+    expect(result[2]).not.toContain('تَـ')
+  })
+
+  test('Form III passive present indicative 2fp contains damma prefix تُـ', () => {
+    const verb = getVerb('كتب', 3)
+    const layers = resolveVerbExplanationLayers(verb, 'passive.present.indicative', '2fp', 'تُكَاتَبْنَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('تُـ')
+    expect(result[2]).not.toContain('تَـ')
   })
 })
 

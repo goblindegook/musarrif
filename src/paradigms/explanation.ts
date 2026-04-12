@@ -102,6 +102,13 @@ const FORM_I_BASE_PATTERNS: Record<
   'fa3ula-yaf3ulu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
 }
 
+function resolvePronounKey(tense: VerbTense, pronoun: PronounId, form: VerbForm | undefined): string {
+  if (form != null && [2, 3, 4].includes(form) && tense.startsWith('active.present')) {
+    return `explanation.pronoun.${tense}.forms-ii-iv.${pronoun}`
+  }
+  return `explanation.pronoun.${tense}.${pronoun}`
+}
+
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
@@ -130,7 +137,7 @@ export function renderExplanation(
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [layers.tense && layers.pronoun ? t(`explanation.pronoun.${layers.tense}.${layers.pronoun}`, params) : ''],
+    [layers.tense && layers.pronoun ? t(resolvePronounKey(layers.tense, layers.pronoun, layers.form), params) : ''],
   ]
     .map((paragraph) => paragraph.filter(Boolean).join(' '))
     .filter(Boolean)

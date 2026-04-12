@@ -158,7 +158,7 @@ export const conjugationExercise = defineExercise(
     return {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.conjugation',
-      promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 4), pronoun: PRONOUN_KEYS[targetPronoun] },
+      promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 5), pronoun: PRONOUN_KEYS[targetPronoun] },
       word,
       options,
       answer: options.indexOf(answer),
