@@ -1,0 +1,149 @@
+import {
+  type AnnotatedForm,
+  buildMorphemes,
+  type DerivationStep,
+  type MorphemeRole,
+  type TaggedChar,
+} from '../annotation'
+import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../letters'
+import { isDual, type PronounId } from '../pronouns'
+import type { Mood } from '../tense'
+import type { Verb } from '../verbs'
+import { annotatePast } from './past-annotation'
+import { conjugatePresentMood } from './present'
+
+const PRESENT_TENSE_PREFIX_CHARS = 2
+
+const PRESENT_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 5: 2, 6: 2, 7: 2, 10: 4 }
+
+const PRESENT_FORM_INFIX_INDEX: Partial<Record<number, number>> = { 3: 4, 6: 6 }
+
+const INDICATIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 1,
+  '2ms': 1,
+  '2fs': 5,
+  '3ms': 1,
+  '3fs': 1,
+  '2d': 4,
+  '3md': 4,
+  '3fd': 4,
+  '1p': 1,
+  '2mp': 4,
+  '2fp': 3,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+const SUBJUNCTIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 1,
+  '2ms': 1,
+  '2fs': 2,
+  '3ms': 1,
+  '3fs': 1,
+  '2d': 2,
+  '3md': 2,
+  '3fd': 2,
+  '1p': 1,
+  '2mp': 4,
+  '2fp': 3,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>> = {
+  indicative: INDICATIVE_SUFFIX_COUNTS,
+  subjunctive: SUBJUNCTIVE_SUFFIX_COUNTS,
+  jussive: SUBJUNCTIVE_SUFFIX_COUNTS,
+}
+
+function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
+  const formInfixChars = verb.root.length === 3 ? (PRESENT_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
+  const formInfixEnd = PRESENT_TENSE_PREFIX_CHARS + formInfixChars
+  const nonContiguousFormIndex = verb.root.length === 3 ? (PRESENT_FORM_INFIX_INDEX[verb.form] ?? -1) : -1
+  return chars.map((char, i) => ({
+    char,
+    role:
+      i < PRESENT_TENSE_PREFIX_CHARS
+        ? ('tense' as MorphemeRole)
+        : i < formInfixEnd || i === nonContiguousFormIndex
+          ? ('form' as MorphemeRole)
+          : ('root' as MorphemeRole),
+  }))
+}
+
+function tagPresentChars(chars: string[], verb: Verb, suffixCount: number): TaggedChar[] {
+  const stemCount = chars.length - suffixCount
+  const stemTagged = tagPresentStemChars(chars.slice(0, stemCount), verb)
+  const suffixTagged: TaggedChar[] = chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole }))
+  return [...stemTagged, ...suffixTagged]
+}
+
+function droppedPastPrefix(verb: Verb): string | null {
+  if (verb.root.length !== 3) return null
+  if (verb.form === 4) return ALIF_HAMZA + FATHA
+  if (verb.form === 10) return ALIF + KASRA
+  return null
+}
+
+export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
+  if (mood !== 'indicative') {
+    const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
+    const moodArabic = conjugatePresentMood(verb, mood)[pronounId]
+    const suffixCount = PRESENT_MOOD_SUFFIX_COUNTS[mood][pronounId]
+    const baseMorphemes = buildMorphemes(tagPresentChars([...moodArabic], verb, suffixCount))
+    const droppedNoonText = isDual(pronounId)
+      ? NOON + KASRA
+      : pronounId === '2fs' || pronounId === '2mp' || pronounId === '3mp'
+        ? NOON + FATHA
+        : null
+    const droppedNoon = droppedNoonText ? [{ text: droppedNoonText, role: 'dropped' as MorphemeRole }] : []
+    return {
+      morphemes: [...baseMorphemes, ...droppedNoon],
+      steps: [
+        ...indicativeAnnotation.steps,
+        {
+          kind: { type: 'tense', verbTense: `active.present.${mood}` as const },
+          arabic: moodArabic,
+          morphemes: [...baseMorphemes, ...droppedNoon],
+        },
+      ],
+    }
+  }
+
+  const pastAnnotation = annotatePast(verb, '3ms')
+
+  const indicativeForms = conjugatePresentMood(verb, 'indicative')
+  const stemMorphemes = buildMorphemes(tagPresentStemChars([...indicativeForms['3ms']], verb))
+  const dropped = droppedPastPrefix(verb)
+  const presentIndicativeMorphemes = dropped
+    ? [{ text: dropped, role: 'dropped' as MorphemeRole }, ...stemMorphemes]
+    : stemMorphemes
+  const presentIndicativeStep: DerivationStep = {
+    kind: { type: 'tense', verbTense: 'active.present.indicative' },
+    arabic: indicativeForms['3ms'],
+    morphemes: presentIndicativeMorphemes,
+  }
+
+  if (pronounId === '3ms') {
+    return {
+      morphemes: presentIndicativeMorphemes,
+      steps: [pastAnnotation.steps[0], pastAnnotation.steps[1], presentIndicativeStep],
+    }
+  }
+
+  const finalArabic = indicativeForms[pronounId]
+  const suffixCount = INDICATIVE_SUFFIX_COUNTS[pronounId]
+  return {
+    morphemes: buildMorphemes(tagPresentChars([...finalArabic], verb, suffixCount)),
+    steps: [
+      pastAnnotation.steps[0],
+      pastAnnotation.steps[1],
+      presentIndicativeStep,
+      {
+        kind: { type: 'pronoun', pronounId },
+        arabic: finalArabic,
+        morphemes: buildMorphemes(tagPresentChars([...finalArabic], verb, suffixCount)),
+      },
+    ],
+  }
+}

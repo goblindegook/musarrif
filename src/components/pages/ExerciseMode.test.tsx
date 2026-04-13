@@ -310,7 +310,7 @@ describe('SRS recording', () => {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       word: 'كَتَبَ',
       promptTranslationKey: 'exercise.prompt.conjugation',
-      promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'exercise.conjugation.pronoun.3ms' },
+      promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'pronoun.3ms' },
       options: ['كَتَبَ', 'يَكْتُبُ', 'كَتَبْتَ', 'كُتِبَ'],
       answer: 0,
       cardKey: 'conjugation:regular:1:active.past:3ms',

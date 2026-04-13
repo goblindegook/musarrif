@@ -19,22 +19,6 @@ import {
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
 
-const PRONOUN_KEYS: Record<PronounId, string> = {
-  '1s': 'exercise.conjugation.pronoun.1s',
-  '1p': 'exercise.conjugation.pronoun.1p',
-  '2ms': 'exercise.conjugation.pronoun.2ms',
-  '2fs': 'exercise.conjugation.pronoun.2fs',
-  '2d': 'exercise.conjugation.pronoun.2d',
-  '2mp': 'exercise.conjugation.pronoun.2mp',
-  '2fp': 'exercise.conjugation.pronoun.2fp',
-  '3ms': 'exercise.conjugation.pronoun.3ms',
-  '3fs': 'exercise.conjugation.pronoun.3fs',
-  '3md': 'exercise.conjugation.pronoun.3md',
-  '3fd': 'exercise.conjugation.pronoun.3fd',
-  '3mp': 'exercise.conjugation.pronoun.3mp',
-  '3fp': 'exercise.conjugation.pronoun.3fp',
-}
-
 const TENSE_SLUGS: Record<string, string> = {
   past: 'past',
   future: 'future',
@@ -158,7 +142,7 @@ export const conjugationExercise = defineExercise(
     return {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.conjugation',
-      promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 5), pronoun: PRONOUN_KEYS[targetPronoun] },
+      promptParams: { tense: tensePromptKey(targetTense, profile.tenses >= 5), pronoun: `pronoun.${targetPronoun}` },
       word,
       options,
       answer: options.indexOf(answer),

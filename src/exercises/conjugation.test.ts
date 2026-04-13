@@ -106,33 +106,28 @@ describe('conjugationExercise difficulty', () => {
     ).toBe('exercise.conjugation.tense.active.past')
   })
 
-  test('pronouns:0/tenses:0: promptParams.pronoun is exercise.conjugation.pronoun.3ms (random=0 → 3ms)', () => {
+  test('pronouns:0/tenses:0: promptParams.pronoun is pronoun.3ms (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBe(
-      'exercise.conjugation.pronoun.3ms',
-    )
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBe('pronoun.3ms')
   })
 
   test('pronouns:0/tenses:0: pronoun key is one of the known pronoun translation keys', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const KNOWN_PRONOUN_KEYS = new Set([
-      'exercise.conjugation.pronoun.1s',
-      'exercise.conjugation.pronoun.1p',
-      'exercise.conjugation.pronoun.2ms',
-      'exercise.conjugation.pronoun.2fs',
-      'exercise.conjugation.pronoun.2d',
-      'exercise.conjugation.pronoun.2mp',
-      'exercise.conjugation.pronoun.2fp',
-      'exercise.conjugation.pronoun.3ms',
-      'exercise.conjugation.pronoun.3fs',
-      'exercise.conjugation.pronoun.3md',
-      'exercise.conjugation.pronoun.3fd',
-      'exercise.conjugation.pronoun.3mp',
-      'exercise.conjugation.pronoun.3fp',
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBeOneOf([
+      'pronoun.1s',
+      'pronoun.1p',
+      'pronoun.2ms',
+      'pronoun.2fs',
+      'pronoun.2d',
+      'pronoun.2mp',
+      'pronoun.2fp',
+      'pronoun.3ms',
+      'pronoun.3fs',
+      'pronoun.3md',
+      'pronoun.3fd',
+      'pronoun.3mp',
+      'pronoun.3fp',
     ])
-    expect(
-      KNOWN_PRONOUN_KEYS.has(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun ?? ''),
-    ).toBe(true)
   })
 })
 
@@ -178,11 +173,7 @@ describe('conjugationExercise distractors', () => {
 
   test('pronouns:0/tenses:0: no dual pronoun forms appear in any option (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const DUAL_KEYS = new Set([
-      'exercise.conjugation.pronoun.2d',
-      'exercise.conjugation.pronoun.3md',
-      'exercise.conjugation.pronoun.3fd',
-    ])
+    const DUAL_KEYS = new Set(['pronoun.2d', 'pronoun.3md', 'pronoun.3fd'])
     expect(DUAL_KEYS.has(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun ?? '')).toBe(
       false,
     )

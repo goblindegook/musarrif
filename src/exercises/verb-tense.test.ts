@@ -3,26 +3,26 @@ import { INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { verbTenseExercise } from './verb-tense'
 
 const UNVOICED_KEYS = new Set([
-  'exercise.tense.option.past',
-  'exercise.tense.option.present.indicative',
-  'exercise.tense.option.present.subjunctive',
-  'exercise.tense.option.present.jussive',
-  'exercise.tense.option.future',
-  'exercise.tense.option.imperative',
+  'tense.past',
+  'tense.present.indicative',
+  'tense.present.subjunctive',
+  'tense.present.jussive',
+  'tense.future',
+  'tense.active.imperative',
 ])
 
 const VOICED_KEYS = new Set([
-  'exercise.tense.option.active.past',
-  'exercise.tense.option.active.present.indicative',
-  'exercise.tense.option.active.present.subjunctive',
-  'exercise.tense.option.active.present.jussive',
-  'exercise.tense.option.active.future',
-  'exercise.tense.option.imperative',
-  'exercise.tense.option.passive.past',
-  'exercise.tense.option.passive.present.indicative',
-  'exercise.tense.option.passive.present.subjunctive',
-  'exercise.tense.option.passive.present.jussive',
-  'exercise.tense.option.passive.future',
+  'tense.active.past',
+  'tense.active.present.indicative',
+  'tense.active.present.subjunctive',
+  'tense.active.present.jussive',
+  'tense.active.future',
+  'tense.active.imperative',
+  'tense.passive.past',
+  'tense.passive.present.indicative',
+  'tense.passive.present.subjunctive',
+  'tense.passive.present.jussive',
+  'tense.passive.future',
 ])
 
 describe('tenseExercise', () => {
@@ -95,7 +95,7 @@ describe('tenseExercise difficulty', () => {
 
   test('easy: correct answer is the past tense key (random=0)', () => {
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(options[answer]).toBe('exercise.tense.option.past')
+    expect(options[answer]).toBe('tense.past')
   })
 })
 
