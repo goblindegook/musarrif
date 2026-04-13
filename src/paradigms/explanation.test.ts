@@ -2,9 +2,7 @@ import { describe, expect, test } from 'vitest'
 import enLocale from '../locales/en.json'
 import type { ExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
-import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
-import type { VerbForm } from './verbs'
 import { getVerb, getVerbById, synthesizeVerb } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
@@ -363,6 +361,55 @@ describe('resolveVerbExplanationLayers pronoun and arabic', () => {
   })
 })
 
+// ── prefix / suffix extraction ─────────────────────────────────────────────
+
+describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
+  const kataba = getVerb('كتب', 1)
+  const katabaF2 = getVerb('كتب', 2)
+
+  test('past 3ms has no prefix and no suffix (base form)', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
+    expect(layers.prefix).toBeUndefined()
+    expect(layers.suffix).toBeUndefined()
+  })
+
+  test('past 1s has suffix only', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
+    expect(layers.prefix).toBeUndefined()
+    expect(layers.suffix).toBe('ْتُ')
+  })
+
+  test('present indicative 3ms has fatha prefix and no suffix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
+    expect(layers.prefix).toBe('يَ')
+    expect(layers.suffix).toBeUndefined()
+  })
+
+  test('future 3ms collapses seen and person prefix, no suffix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
+    expect(layers.prefix).toBe('سَيَ')
+    expect(layers.suffix).toBeUndefined()
+  })
+
+  test('imperative 2ms Form II has no prefix and no suffix', () => {
+    const layers = resolveVerbExplanationLayers(katabaF2, 'active.imperative', '2ms', 'كَتِّبْ')
+    expect(layers.prefix).toBeUndefined()
+    expect(layers.suffix).toBeUndefined()
+  })
+
+  test('imperative 2ms Form I has alif prefix and no suffix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
+    expect(layers.prefix).toBe('اُ')
+    expect(layers.suffix).toBeUndefined()
+  })
+
+  test('imperative 2fs Form II has suffix only', () => {
+    const layers = resolveVerbExplanationLayers(katabaF2, 'active.imperative', '2fs', 'كَتِّبِي')
+    expect(layers.prefix).toBeUndefined()
+    expect(layers.suffix).toBe('ِي')
+  })
+})
+
 describe('renderExplanation', () => {
   // Stub t() that echoes the key so we can assert key structure without locale files
   const t = (key: string) => key
@@ -391,7 +438,7 @@ describe('renderExplanation', () => {
     expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.sound explanation.form.1 explanation.form-i-pattern.fa3ala-yaf3ulu',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
-      'explanation.pronoun.active.past.3ms',
+      'explanation.pronoun.base-form',
     ])
   })
 
@@ -421,23 +468,6 @@ describe('renderExplanation', () => {
     expect(joined(layers)).not.toContain('explanation.voice')
   })
 
-  test.each<[VerbTense, PronounId, string]>([
-    ['active.past', '3ms', 'explanation.pronoun.active.past.3ms'],
-    ['passive.past', '3ms', 'explanation.pronoun.passive.past.3ms'],
-    ['active.present.indicative', '1s', 'explanation.pronoun.active.present.indicative.1s'],
-    ['passive.present.indicative', '1s', 'explanation.pronoun.passive.present.indicative.1s'],
-    ['active.present.subjunctive', '2d', 'explanation.pronoun.active.present.subjunctive.2d'],
-    ['active.present.jussive', '3mp', 'explanation.pronoun.active.present.jussive.3mp'],
-    ['active.future', '3ms', 'explanation.pronoun.active.future.3ms'],
-    ['passive.future', '3ms', 'explanation.pronoun.passive.future.3ms'],
-    ['passive.present.jussive', '3ms', 'explanation.pronoun.passive.present.jussive.3ms'],
-    ['passive.present.subjunctive', '3ms', 'explanation.pronoun.passive.present.subjunctive.3ms'],
-    ['active.imperative', '2ms', 'explanation.pronoun.active.imperative.2ms'],
-  ])('pronoun key for %s %s', (tense, pronoun, expected) => {
-    const layers = testExplanationLayers({ tense, pronoun })
-    expect(renderExplanation(layers, t)).toContain(expected)
-  })
-
   test('includes tenseRoot sentence when non-null', () => {
     const layers: ExplanationLayers = {
       rootLetters: ['ق', 'و', 'ل'],
@@ -465,7 +495,7 @@ describe('renderExplanation', () => {
     expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.hollow-waw explanation.form.8 explanation.form-root.assimilation-voicing',
       'explanation.tense.active.past',
-      'explanation.pronoun.active.past.3ms',
+      'explanation.pronoun.base-form',
     ])
   })
 
@@ -498,96 +528,69 @@ describe('renderExplanation', () => {
   })
 })
 
-// ── renderExplanation: pronoun key routing for damma-prefix forms ─────────────
+// ── renderExplanation: paragraph 3 template selection ─────────────────────
 
-describe('renderExplanation pronoun key routing', () => {
+describe('renderExplanation paragraph 3 template selection', () => {
   const t = (key: string) => key
+  const kataba = getVerb('كتب', 1)
 
-  function testExplanationLayers(overrides?: Partial<ExplanationLayers>): ExplanationLayers {
-    return {
-      rootLetters: ['ك', 'ت', 'ب'],
-      form: 1,
-      arabic: 'يَكْتُبُ',
-      rootType: 'sound',
-      tense: 'active.present.indicative',
-      pronoun: '2fp',
-      ...overrides,
-    }
-  }
-
-  test.each<[VerbForm, string]>([
-    [2, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
-    [3, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
-    [4, 'explanation.pronoun.active.present.indicative.forms-ii-iv.2fp'],
-  ])('Form %i active present indicative uses forms-ii-iv pronoun key', (form, expected) => {
-    const layers = testExplanationLayers({ form })
-    expect(renderExplanation(layers, t)).toContain(expected)
+  test('past 3ms renders base-form template', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.base-form')
   })
 
-  test.each<[VerbForm, string]>([
-    [2, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
-    [3, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
-    [4, 'explanation.pronoun.active.present.subjunctive.forms-ii-iv.2fp'],
-  ])('Form %i active present subjunctive uses forms-ii-iv pronoun key', (form, expected) => {
-    const layers = testExplanationLayers({ form, tense: 'active.present.subjunctive' })
-    expect(renderExplanation(layers, t)).toContain(expected)
+  test('past 1s renders suffix-only template', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.suffix-only')
   })
 
-  test.each<[VerbForm, string]>([
-    [2, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
-    [3, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
-    [4, 'explanation.pronoun.active.present.jussive.forms-ii-iv.2fp'],
-  ])('Form %i active present jussive uses forms-ii-iv pronoun key', (form, expected) => {
-    const layers = testExplanationLayers({ form, tense: 'active.present.jussive' })
-    expect(renderExplanation(layers, t)).toContain(expected)
+  test('present indicative 1s renders prefix-and-suffix template', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '1s', 'أَكْتُبُ')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
   })
 
-  test.each<VerbForm>([
-    1, 5, 6, 7, 8, 9, 10,
-  ])('Form %i active present indicative uses generic pronoun key (not forms-ii-iv)', (form) => {
-    const layers = testExplanationLayers({ form })
-    expect(renderExplanation(layers, t)).toContain('explanation.pronoun.active.present.indicative.2fp')
-    expect(renderExplanation(layers, t)).not.toContain('forms-ii-iv')
+  test('present indicative 3ms renders prefix-only template', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-only')
   })
-})
 
-describe('renderExplanation pronoun prefix locale content', () => {
-  test('Form III active present indicative 2fp contains damma prefix تُـ', () => {
+  test('future 3ms renders prefix-only template', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-only')
+  })
+
+  test('past 1s paragraph 3 contains tatweel-prefixed suffix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('ـْتُ')
+  })
+
+  test('present indicative 1s paragraph 3 contains tatweel-suffixed prefix and tatweel-prefixed suffix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '1s', 'أَكْتُبُ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('أَـ')
+    expect(result[2]).toContain('ـُ')
+  })
+
+  test('future 3ms paragraph 3 contains collapsed tatweel-suffixed prefix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[2]).toContain('سَيَـ')
+  })
+
+  test('Form III active present indicative 2fp contains damma prefix', () => {
     const verb = getVerb('كتب', 3)
     const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تُكَاتِبْنَ')
     const result = renderExplanation(layers, localeT)
     expect(result[2]).toContain('تُـ')
+    expect(result[2]).not.toContain('تَـ')
   })
 
-  test('Form II active present indicative 2fp contains damma prefix تُـ', () => {
-    const verb = getVerb('كتب', 2)
-    const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تُكَتِّبْنَ')
-    const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('تُـ')
-  })
-
-  test('Form I active present indicative 2fp contains fatha prefix تَـ', () => {
-    const verb = getVerb('كتب', 1)
-    const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تَكْتُبْنَ')
+  test('Form I active present indicative 2fp contains fatha prefix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '2fp', 'تَكْتُبْنَ')
     const result = renderExplanation(layers, localeT)
     expect(result[2]).toContain('تَـ')
     expect(result[2]).not.toContain('تُـ')
-  })
-
-  test('Form I passive present indicative 2fp contains damma prefix تُـ', () => {
-    const verb = getVerb('كتب', 1)
-    const layers = resolveVerbExplanationLayers(verb, 'passive.present.indicative', '2fp', 'تُكْتَبْنَ')
-    const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('تُـ')
-    expect(result[2]).not.toContain('تَـ')
-  })
-
-  test('Form III passive present indicative 2fp contains damma prefix تُـ', () => {
-    const verb = getVerb('كتب', 3)
-    const layers = resolveVerbExplanationLayers(verb, 'passive.present.indicative', '2fp', 'تُكَاتَبْنَ')
-    const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('تُـ')
-    expect(result[2]).not.toContain('تَـ')
   })
 })
 

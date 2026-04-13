@@ -1,3 +1,4 @@
+import { annotate, type Morpheme } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
 import { DAL, resolveFormVIIIInfixConsonant, TAH } from './letters'
 import type { PronounId } from './pronouns'
@@ -38,6 +39,8 @@ export type ExplanationLayers = {
   tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
   nominal?: NominalKind
+  prefix?: string
+  suffix?: string
 }
 
 function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): TenseRootInteraction {
@@ -102,11 +105,23 @@ const FORM_I_BASE_PATTERNS: Record<
   'fa3ula-yaf3ulu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
 }
 
-function resolvePronounKey(tense: VerbTense, pronoun: PronounId, form: VerbForm | undefined): string {
-  if (form != null && [2, 3, 4].includes(form) && tense.startsWith('active.present')) {
-    return `explanation.pronoun.${tense}.forms-ii-iv.${pronoun}`
-  }
-  return `explanation.pronoun.${tense}.${pronoun}`
+function renderPronounParagraph(
+  layers: ExplanationLayers,
+  t: (key: string, params?: Record<string, string>) => string,
+): string {
+  if (!layers.tense || !layers.pronoun) return ''
+
+  const pronounLabel = t(`pronoun.${layers.pronoun}`)
+  const params = { pronounLabel, arabic: layers.arabic ?? '' }
+
+  const fmtPrefix = layers.prefix ? `${layers.prefix}ـ` : undefined
+  const fmtSuffix = layers.suffix ? `ـ${layers.suffix}` : undefined
+
+  if (fmtPrefix && fmtSuffix)
+    return t('explanation.pronoun.prefix-and-suffix', { ...params, prefix: fmtPrefix, suffix: fmtSuffix })
+  if (fmtSuffix) return t('explanation.pronoun.suffix-only', { ...params, suffix: fmtSuffix })
+  if (fmtPrefix) return t('explanation.pronoun.prefix-only', { ...params, prefix: fmtPrefix })
+  return t('explanation.pronoun.base-form', params)
 }
 
 export function renderExplanation(
@@ -137,10 +152,26 @@ export function renderExplanation(
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [layers.tense && layers.pronoun ? t(resolvePronounKey(layers.tense, layers.pronoun, layers.form), params) : ''],
+    [renderPronounParagraph(layers, t)],
   ]
     .map((paragraph) => paragraph.filter(Boolean).join(' '))
     .filter(Boolean)
+}
+
+function extractAffixes(morphemes: Morpheme[]): { prefix?: string; suffix?: string } {
+  const stemRoles = new Set<string>(['root', 'form'])
+  const firstStemIdx = morphemes.findIndex((m) => stemRoles.has(m.role))
+  const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.has(m.role))
+
+  if (firstStemIdx === -1) return {}
+
+  const pre = morphemes.slice(0, firstStemIdx).filter((m) => m.role !== 'dropped')
+  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'dropped')
+
+  return {
+    prefix: pre.length ? pre.map((m) => m.text).join('') : undefined,
+    suffix: post.length ? post.map((m) => m.text).join('') : undefined,
+  }
 }
 
 export function resolveVerbExplanationLayers(
@@ -152,6 +183,8 @@ export function resolveVerbExplanationLayers(
   const rootLetters = Array.from(verb.root)
   const rootType = analyzeRoot(verb.root).type
   const tense = verbTense
+  const annotatedForm = annotate(verb, verbTense, pronoun)
+  const { prefix, suffix } = annotatedForm ? extractAffixes(annotatedForm.morphemes) : {}
   return {
     rootLetters,
     form: verb.form,
@@ -162,6 +195,8 @@ export function resolveVerbExplanationLayers(
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
+    prefix,
+    suffix,
   }
 }
 
