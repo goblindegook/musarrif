@@ -1,24 +1,14 @@
-import { type AnnotatedForm, buildMorphemes, type MorphemeRole, type TaggedChar } from '../annotation'
+import {
+  type AnnotatedForm,
+  buildMorphemes,
+  FUTURE_SUFFIX_COUNTS,
+  type MorphemeRole,
+  type TaggedChar,
+} from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugateFuture } from './future'
 import { annotateActivePresentMood } from './present-annotation'
-
-const FUTURE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 5,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 4,
-  '3md': 4,
-  '3fd': 4,
-  '1p': 1,
-  '2mp': 4,
-  '2fp': 3,
-  '3mp': 4,
-  '3fp': 3,
-}
 
 const FUTURE_SEEN_CHARS = 2
 const FUTURE_PERSON_PREFIX_CHARS = 2

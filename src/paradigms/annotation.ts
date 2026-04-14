@@ -9,10 +9,92 @@ import { annotatePassiveFuture } from './passive/future-annotation'
 import { annotatePassivePast } from './passive/past-annotation'
 import { annotatePassivePresentMood } from './passive/present-annotation'
 import type { PronounId } from './pronouns'
-import type { VerbTense } from './tense'
+import type { Mood, VerbTense } from './tense'
 import type { Verb, VerbForm } from './verbs'
 
 export type MorphemeRole = 'root' | 'form' | 'tense' | 'suffix' | 'dropped'
+
+export const PAST_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 3,
+  '2ms': 3,
+  '2fs': 3,
+  '3ms': 0,
+  '3fs': 3,
+  '2d': 6,
+  '3md': 1,
+  '3fd': 4,
+  '1p': 4,
+  '2mp': 5,
+  '2fp': 6,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+export const PRESENT_INDICATIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 1,
+  '2ms': 1,
+  '2fs': 5,
+  '3ms': 1,
+  '3fs': 1,
+  '2d': 4,
+  '3md': 4,
+  '3fd': 4,
+  '1p': 1,
+  '2mp': 4,
+  '2fp': 3,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+export const PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 1,
+  '2ms': 1,
+  '2fs': 2,
+  '3ms': 1,
+  '3fs': 1,
+  '2d': 2,
+  '3md': 2,
+  '3fd': 2,
+  '1p': 1,
+  '2mp': 4,
+  '2fp': 3,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+export const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>> = {
+  indicative: PRESENT_INDICATIVE_SUFFIX_COUNTS,
+  subjunctive: PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS,
+  jussive: PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS,
+}
+
+export const FUTURE_SUFFIX_COUNTS: Record<PronounId, number> = {
+  '1s': 1,
+  '2ms': 1,
+  '2fs': 5,
+  '3ms': 1,
+  '3fs': 1,
+  '2d': 4,
+  '3md': 4,
+  '3fd': 4,
+  '1p': 1,
+  '2mp': 4,
+  '2fp': 3,
+  '3mp': 4,
+  '3fp': 3,
+}
+
+export function tagChars(
+  chars: string[],
+  suffixCount: number,
+  tagStem: (stem: string[]) => TaggedChar[],
+): TaggedChar[] {
+  const stemCount = chars.length - suffixCount
+  return [
+    ...tagStem(chars.slice(0, stemCount)),
+    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole })),
+  ]
+}
 
 export interface Morpheme {
   text: string

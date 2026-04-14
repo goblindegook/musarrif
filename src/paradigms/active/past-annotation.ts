@@ -3,27 +3,12 @@ import {
   buildMorphemes,
   type DerivationStep,
   type MorphemeRole,
+  PAST_SUFFIX_COUNTS,
   type TaggedChar,
 } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePast } from './past'
-
-const PAST_SUFFIX_CHAR_COUNTS: Record<PronounId, number> = {
-  '1s': 3,
-  '2ms': 3,
-  '2fs': 3,
-  '3ms': 0,
-  '3fs': 3,
-  '2d': 6,
-  '3md': 1,
-  '3fd': 4,
-  '1p': 4,
-  '2mp': 5,
-  '2fp': 6,
-  '3mp': 4,
-  '3fp': 3,
-}
 
 export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const allForms = conjugatePast(verb)
@@ -54,7 +39,7 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
 
   const finalArabic = allForms[pronounId]
   const finalChars = [...finalArabic]
-  const suffixCount = PAST_SUFFIX_CHAR_COUNTS[pronounId]
+  const suffixCount = PAST_SUFFIX_COUNTS[pronounId]
   const stemCount = finalChars.length - suffixCount
   const taggedStem = tagPastStemChars(verb, finalChars.slice(0, stemCount))
   const taggedSuffix: TaggedChar[] = finalChars

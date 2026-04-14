@@ -3,7 +3,10 @@ import {
   buildMorphemes,
   type DerivationStep,
   type MorphemeRole,
+  PRESENT_INDICATIVE_SUFFIX_COUNTS,
+  PRESENT_MOOD_SUFFIX_COUNTS,
   type TaggedChar,
+  tagChars,
 } from '../annotation'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../letters'
 import { isDual, type PronounId } from '../pronouns'
@@ -17,44 +20,6 @@ const PRESENT_TENSE_PREFIX_CHARS = 2
 const PRESENT_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 5: 2, 6: 2, 7: 2, 10: 4 }
 
 const PRESENT_FORM_INFIX_INDEX: Partial<Record<number, number>> = { 3: 4, 6: 6 }
-
-const INDICATIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 5,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 4,
-  '3md': 4,
-  '3fd': 4,
-  '1p': 1,
-  '2mp': 4,
-  '2fp': 3,
-  '3mp': 4,
-  '3fp': 3,
-}
-
-const SUBJUNCTIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 2,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 2,
-  '3md': 2,
-  '3fd': 2,
-  '1p': 1,
-  '2mp': 4,
-  '2fp': 3,
-  '3mp': 4,
-  '3fp': 3,
-}
-
-const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>> = {
-  indicative: INDICATIVE_SUFFIX_COUNTS,
-  subjunctive: SUBJUNCTIVE_SUFFIX_COUNTS,
-  jussive: SUBJUNCTIVE_SUFFIX_COUNTS,
-}
 
 function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
   const formInfixChars = verb.root.length === 3 ? (PRESENT_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
@@ -71,13 +36,6 @@ function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
   }))
 }
 
-function tagPresentChars(chars: string[], verb: Verb, suffixCount: number): TaggedChar[] {
-  const stemCount = chars.length - suffixCount
-  const stemTagged = tagPresentStemChars(chars.slice(0, stemCount), verb)
-  const suffixTagged: TaggedChar[] = chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole }))
-  return [...stemTagged, ...suffixTagged]
-}
-
 function droppedPastPrefix(verb: Verb): string | null {
   if (verb.root.length !== 3) return null
   if (verb.form === 4) return ALIF_HAMZA + FATHA
@@ -90,7 +48,9 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
     const moodArabic = conjugatePresentMood(verb, mood)[pronounId]
     const suffixCount = PRESENT_MOOD_SUFFIX_COUNTS[mood][pronounId]
-    const baseMorphemes = buildMorphemes(tagPresentChars([...moodArabic], verb, suffixCount))
+    const baseMorphemes = buildMorphemes(
+      tagChars([...moodArabic], suffixCount, (stem) => tagPresentStemChars(stem, verb)),
+    )
     const droppedNoonText = isDual(pronounId)
       ? NOON + KASRA
       : pronounId === '2fs' || pronounId === '2mp' || pronounId === '3mp'
@@ -132,9 +92,12 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   }
 
   const finalArabic = indicativeForms[pronounId]
-  const suffixCount = INDICATIVE_SUFFIX_COUNTS[pronounId]
+  const suffixCount = PRESENT_INDICATIVE_SUFFIX_COUNTS[pronounId]
+  const finalMorphemes = buildMorphemes(
+    tagChars([...finalArabic], suffixCount, (stem) => tagPresentStemChars(stem, verb)),
+  )
   return {
-    morphemes: buildMorphemes(tagPresentChars([...finalArabic], verb, suffixCount)),
+    morphemes: finalMorphemes,
     steps: [
       pastAnnotation.steps[0],
       pastAnnotation.steps[1],
@@ -142,7 +105,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       {
         kind: { type: 'pronoun', pronounId },
         arabic: finalArabic,
-        morphemes: buildMorphemes(tagPresentChars([...finalArabic], verb, suffixCount)),
+        morphemes: finalMorphemes,
       },
     ],
   }
