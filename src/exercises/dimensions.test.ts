@@ -18,16 +18,13 @@ const INITIAL_DIMENSION_PROFILE = {
   nominals: 0,
 } as const
 
-const INITIAL_DIMENSION_STORE = {
-  profile: INITIAL_DIMENSION_PROFILE,
-  windows: {
-    tenses: [] as boolean[],
-    pronouns: [] as boolean[],
-    diacritics: [] as boolean[],
-    forms: [] as boolean[],
-    rootTypes: [] as boolean[],
-    nominals: [] as boolean[],
-  },
+const INITIAL_DIMENSION_WINDOWS = {
+  tenses: [],
+  pronouns: [],
+  diacritics: [],
+  forms: [],
+  rootTypes: [],
+  nominals: [],
 }
 
 describe('rawPronounPool', () => {
@@ -83,7 +80,7 @@ describe('diacriticsDifficulty', () => {
 describe('recordDimensionAnswer', () => {
   test('appends correct to all touched dimensions', () => {
     const next = recordDimensionAnswer(
-      INITIAL_DIMENSION_STORE,
+      { profile: INITIAL_DIMENSION_PROFILE, windows: INITIAL_DIMENSION_WINDOWS },
       ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
       true,
     )
@@ -99,9 +96,9 @@ describe('recordDimensionAnswer', () => {
 
   test('trims window to 20 entries', () => {
     const fullStore: DimensionStore = {
-      ...INITIAL_DIMENSION_STORE,
+      profile: INITIAL_DIMENSION_PROFILE,
       windows: {
-        ...INITIAL_DIMENSION_STORE.windows,
+        ...INITIAL_DIMENSION_WINDOWS,
         forms: Array(20).fill(true),
         rootTypes: Array(20).fill(true),
         diacritics: Array(20).fill(true),
@@ -112,7 +109,11 @@ describe('recordDimensionAnswer', () => {
   })
 
   test('pass answers count as false', () => {
-    const next = recordDimensionAnswer(INITIAL_DIMENSION_STORE, ['forms', 'rootTypes', 'diacritics'], false)
+    const next = recordDimensionAnswer(
+      { profile: INITIAL_DIMENSION_PROFILE, windows: INITIAL_DIMENSION_WINDOWS },
+      ['forms', 'rootTypes', 'diacritics'],
+      false,
+    )
     expect(next.windows.forms[0]).toBe(false)
   })
 })
@@ -189,8 +190,8 @@ describe('promoteDimensions', () => {
   test('diacritics does not promote with only 20 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20) },
       }).profile.diacritics,
     ).toBe(0)
   })
@@ -198,8 +199,8 @@ describe('promoteDimensions', () => {
   test('diacritics does not demote with only 20 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(0) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(0) },
       }).profile.diacritics,
     ).toBe(1)
   })
@@ -207,8 +208,8 @@ describe('promoteDimensions', () => {
   test('diacritics promotes at 80% over 50 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 50) },
       }).profile.diacritics,
     ).toBe(1)
   })
@@ -216,8 +217,8 @@ describe('promoteDimensions', () => {
   test('diacritics demotes at 40% over 50 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20, 50) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20, 50) },
       }).profile.diacritics,
     ).toBe(0)
   })
@@ -225,8 +226,8 @@ describe('promoteDimensions', () => {
   test('does not demote with fewer than 20 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(0, 19) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(0, 19) },
       }).profile.forms,
     ).toBe(1)
   })
@@ -234,8 +235,8 @@ describe('promoteDimensions', () => {
   test('does not demote above 40% accuracy', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(9) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(9) },
       }).profile.forms,
     ).toBe(1)
   })
@@ -243,8 +244,8 @@ describe('promoteDimensions', () => {
   test('demotes at exactly 40% accuracy', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(8) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(8) },
       }).profile.forms,
     ).toBe(0)
   })
@@ -252,8 +253,8 @@ describe('promoteDimensions', () => {
   test('does not demote below level 0', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 0 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(0) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, forms: 0 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(0) },
       }).profile.forms,
     ).toBe(0)
   })
@@ -261,16 +262,16 @@ describe('promoteDimensions', () => {
   test('clears window after demotion', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(8) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(8) },
       }).windows.forms,
     ).toEqual([])
   })
 
   test('demotion cascades via enforcePrerequisites', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(8, 40) },
+      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1 },
+      windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(8, 40) },
     })
     expect(next.profile.tenses).toBe(1)
     expect(next.profile.nominals).toBe(0)
@@ -279,8 +280,8 @@ describe('promoteDimensions', () => {
   test('does not promote with fewer than 20 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20, 19) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20, 19) },
       }).profile.forms,
     ).toBe(0)
   })
@@ -288,8 +289,8 @@ describe('promoteDimensions', () => {
   test('does not promote below 80% accuracy', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(15) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(15) },
       }).profile.forms,
     ).toBe(0)
   })
@@ -297,8 +298,8 @@ describe('promoteDimensions', () => {
   test('forms does not promote at exactly 80% accuracy while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(16) },
       }).profile.forms,
     ).toBe(0)
   })
@@ -306,8 +307,8 @@ describe('promoteDimensions', () => {
   test('forms promotes at exactly 80% accuracy when singular pronouns are unlocked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(16) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(16) },
       }).profile.forms,
     ).toBe(1)
   })
@@ -316,8 +317,8 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions(
         {
-          profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
-          windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
+          profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+          windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20) },
         },
         false,
       ).profile.forms,
@@ -327,8 +328,8 @@ describe('promoteDimensions', () => {
   test('clears window after promotion', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, forms: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20) },
       }).windows.forms,
     ).toEqual([])
   })
@@ -336,8 +337,8 @@ describe('promoteDimensions', () => {
   test('does not promote beyond max level', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 5, pronouns: 3 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 3 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(5)
   })
@@ -345,8 +346,8 @@ describe('promoteDimensions', () => {
   test('nominals blocked at level 0 until tenses >= 2', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(0)
   })
@@ -354,8 +355,8 @@ describe('promoteDimensions', () => {
   test('nominals promotes to level 1 when tenses >= 2', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
   })
@@ -363,8 +364,8 @@ describe('promoteDimensions', () => {
   test('nominals blocked at level 1 until forms >= 1', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1, forms: 0 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 0 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
   })
@@ -372,17 +373,17 @@ describe('promoteDimensions', () => {
   test('nominals promotes to level 2 when forms >= 1', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 2, pronouns: 2, nominals: 1, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, nominals: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(2)
   })
 
   test('each dimension advances independently', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_STORE.profile, pronouns: 1 },
+      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
       windows: {
-        ...INITIAL_DIMENSION_STORE.windows,
+        ...INITIAL_DIMENSION_WINDOWS,
         forms: filledWindow(20),
         tenses: filledWindow(15),
       },
@@ -394,8 +395,8 @@ describe('promoteDimensions', () => {
   test('tenses does not promote while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
       }).profile.tenses,
     ).toBe(0)
   })
@@ -403,17 +404,17 @@ describe('promoteDimensions', () => {
   test('rootTypes does not promote while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_STORE.profile },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, rootTypes: filledWindow(20) },
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, rootTypes: filledWindow(20) },
       }).profile.rootTypes,
     ).toBe(0)
   })
 
   test('promoting tenses allows nominals to cascade in same call', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_STORE.profile, tenses: 1, pronouns: 2 },
+      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
       windows: {
-        ...INITIAL_DIMENSION_STORE.windows,
+        ...INITIAL_DIMENSION_WINDOWS,
         tenses: filledWindow(40, 40),
         nominals: filledWindow(20),
       },
@@ -425,7 +426,7 @@ describe('promoteDimensions', () => {
   test('corrects legacy diacritics: 2 even with no window activity', () => {
     expect(
       promoteDimensions({
-        ...INITIAL_DIMENSION_STORE,
+        windows: INITIAL_DIMENSION_WINDOWS,
         profile: {
           diacritics: 2,
           tenses: 4,
@@ -442,7 +443,7 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 0 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(0)
   })
@@ -451,7 +452,7 @@ describe('promoteDimensions', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1 },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, tenses: filledWindow(40, 40) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(2)
   })
@@ -459,7 +460,7 @@ describe('promoteDimensions', () => {
   test('pronoun demotion does not re-lock unlocked tenses, forms, or root types', () => {
     const next = promoteDimensions({
       profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2, forms: 1, rootTypes: 1 },
-      windows: { ...INITIAL_DIMENSION_STORE.windows, pronouns: filledWindow(8) },
+      windows: { ...INITIAL_DIMENSION_WINDOWS, pronouns: filledWindow(8) },
     })
     expect(next.profile).toEqual({ diacritics: 0, forms: 1, nominals: 0, pronouns: 0, rootTypes: 1, tenses: 2 })
   })
@@ -476,7 +477,7 @@ describe('promoteDimensions', () => {
           rootTypes: 3,
           nominals: 1,
         },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(20) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20) },
       }).profile.diacritics,
     ).toBe(1)
   })
@@ -493,7 +494,7 @@ describe('promoteDimensions', () => {
           rootTypes: 5,
           nominals: 2,
         },
-        windows: { ...INITIAL_DIMENSION_STORE.windows, diacritics: filledWindow(40, 50) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 50) },
       }).profile.diacritics,
     ).toBe(2)
   })

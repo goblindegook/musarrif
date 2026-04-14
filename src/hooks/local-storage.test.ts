@@ -3,24 +3,21 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getUserData, importUserData } from './local-storage'
 
 const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0 as const,
-  pronouns: 0 as const,
-  diacritics: 0 as const,
-  forms: 0 as const,
-  rootTypes: 0 as const,
-  nominals: 0 as const,
-}
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+} as const
 
-const INITIAL_DIMENSION_STORE = {
-  profile: INITIAL_DIMENSION_PROFILE,
-  windows: {
-    tenses: [] as boolean[],
-    pronouns: [] as boolean[],
-    diacritics: [] as boolean[],
-    forms: [] as boolean[],
-    rootTypes: [] as boolean[],
-    nominals: [] as boolean[],
-  },
+const INITIAL_DIMENSION_WINDOWS = {
+  tenses: [],
+  pronouns: [],
+  diacritics: [],
+  forms: [],
+  rootTypes: [],
+  nominals: [],
 }
 
 function utcAddDays(date: string, days: number): string {
@@ -38,21 +35,21 @@ afterEach(() => {
 })
 
 describe('getUserData', () => {
-  test('returns INITIAL_DIMENSION_STORE.profile when no dimensions stored', () => {
+  test('returns INITIAL_DIMENSION_PROFILE when no dimensions stored', () => {
     const data = getUserData()
-    expect(data.dimensions.profile).toEqual(INITIAL_DIMENSION_STORE.profile)
+    expect(data.dimensions.profile).toEqual(INITIAL_DIMENSION_PROFILE)
   })
 
   test('returns stored dimension profile', () => {
-    const profile = { ...INITIAL_DIMENSION_STORE.profile, tenses: 2 as const, pronouns: 2 as const }
-    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_STORE.windows }))
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 2 as const, pronouns: 2 as const }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
     expect(data.dimensions.profile.tenses).toBe(2)
   })
 
   test('rolls back dimension levels that violate prerequisites', () => {
     const profile = {
-      ...INITIAL_DIMENSION_STORE.profile,
+      ...INITIAL_DIMENSION_PROFILE,
       diacritics: 2 as const,
       tenses: 4 as const,
       pronouns: 3 as const,
@@ -60,7 +57,7 @@ describe('getUserData', () => {
       rootTypes: 3 as const,
       nominals: 1 as const,
     }
-    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_STORE.windows }))
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
     expect(data.dimensions.profile.diacritics).toBe(1)
   })
@@ -92,7 +89,7 @@ describe('getUserData', () => {
 
 describe('importUserData', () => {
   test('imports valid dimension profile', () => {
-    const profile = { ...INITIAL_DIMENSION_STORE.profile, forms: 1 as const }
+    const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 1 as const }
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       dimensions: { profile },
@@ -103,7 +100,7 @@ describe('importUserData', () => {
   })
 
   test('resets windows to empty on import', () => {
-    const profile = INITIAL_DIMENSION_STORE.profile
+    const profile = INITIAL_DIMENSION_PROFILE
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       dimensions: {
@@ -123,7 +120,7 @@ describe('importUserData', () => {
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile).toEqual(INITIAL_DIMENSION_STORE.profile)
+    expect(stored.profile).toEqual(INITIAL_DIMENSION_PROFILE)
   })
 
   test('accepts payload without dimensions field without error', () => {

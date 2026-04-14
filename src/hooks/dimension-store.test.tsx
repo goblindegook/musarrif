@@ -12,16 +12,13 @@ const INITIAL_DIMENSION_PROFILE = {
   nominals: 0,
 } as const
 
-const INITIAL_DIMENSION_STORE = {
-  profile: INITIAL_DIMENSION_PROFILE,
-  windows: {
-    tenses: [] as boolean[],
-    pronouns: [] as boolean[],
-    diacritics: [] as boolean[],
-    forms: [] as boolean[],
-    rootTypes: [] as boolean[],
-    nominals: [] as boolean[],
-  },
+const INITIAL_DIMENSION_WINDOWS = {
+  tenses: [],
+  pronouns: [],
+  diacritics: [],
+  forms: [],
+  rootTypes: [],
+  nominals: [],
 }
 
 beforeEach(() => {
@@ -39,11 +36,11 @@ describe('useDimensionStore', () => {
       'conjugator:dimensions',
       JSON.stringify({
         profile: {
-          ...INITIAL_DIMENSION_STORE.profile,
+          ...INITIAL_DIMENSION_PROFILE,
           tenses: 1,
           nominals: 1,
         },
-        windows: INITIAL_DIMENSION_STORE.windows,
+        windows: INITIAL_DIMENSION_WINDOWS,
       }),
     )
 
@@ -68,12 +65,12 @@ describe('useDimensionStore', () => {
       'conjugator:dimensions',
       JSON.stringify({
         profile: {
-          ...INITIAL_DIMENSION_STORE.profile,
+          ...INITIAL_DIMENSION_PROFILE,
           pronouns: 1,
           forms: 0,
         },
         windows: {
-          ...INITIAL_DIMENSION_STORE.windows,
+          ...INITIAL_DIMENSION_WINDOWS,
           forms: Array(19).fill(true),
         },
       }),
