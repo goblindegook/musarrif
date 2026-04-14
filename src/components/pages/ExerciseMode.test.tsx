@@ -76,6 +76,12 @@ function localDateKey(date = new Date()): string {
 }
 
 describe('ExerciseMode', () => {
+  test('sets the page title for exercise mode', () => {
+    document.title = 'Muṣarrif'
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    expect(document.title).toBe('Exercise · Muṣarrif')
+  })
+
   test('shows four option buttons', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })).toHaveLength(4)

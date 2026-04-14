@@ -101,6 +101,10 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     if (nextButton instanceof HTMLButtonElement) nextButton.focus()
   }, [isAnswered])
 
+  useEffect(() => {
+    document.title = [t('mode.exercise'), t('title')].join(' · ')
+  }, [t])
+
   return (
     <ExerciseLayout>
       <ExerciseCard>
