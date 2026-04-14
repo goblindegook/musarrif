@@ -1,7 +1,27 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
 import { getUserData, importUserData } from './local-storage'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0 as const,
+  pronouns: 0 as const,
+  diacritics: 0 as const,
+  forms: 0 as const,
+  rootTypes: 0 as const,
+  nominals: 0 as const,
+}
+
+const INITIAL_DIMENSION_STORE = {
+  profile: INITIAL_DIMENSION_PROFILE,
+  windows: {
+    tenses: [] as boolean[],
+    pronouns: [] as boolean[],
+    diacritics: [] as boolean[],
+    forms: [] as boolean[],
+    rootTypes: [] as boolean[],
+    nominals: [] as boolean[],
+  },
+}
 
 function utcAddDays(date: string, days: number): string {
   const d = new Date(date)

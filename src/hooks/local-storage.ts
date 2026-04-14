@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionProfile, DimensionStore } from '../exercises/dimensions'
-import { enforcePrerequisites, INITIAL_DIMENSION_STORE } from '../exercises/dimensions'
+import { enforcePrerequisites } from '../exercises/dimensions'
 import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
+import { INITIAL_DIMENSION_STORE } from './dimension-store'
 import type { Language } from './i18n'
 
 type Updater<T> = T | ((current: T) => T)

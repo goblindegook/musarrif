@@ -1,8 +1,17 @@
 import { describe, expect, test } from 'vitest'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { formatFormLabel, verbs } from '../paradigms/verbs'
-import { exerciseDiacritics, INITIAL_DIMENSION_PROFILE } from './dimensions'
+import { exerciseDiacritics } from './dimensions'
 import { masdarFormExercise } from './masdar-form'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0 as const,
+  pronouns: 0 as const,
+  diacritics: 0 as const,
+  forms: 0 as const,
+  rootTypes: 0 as const,
+  nominals: 0 as const,
+}
 
 const FORM_LABEL_ORDER = [
   'I',

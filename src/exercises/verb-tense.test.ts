@@ -1,6 +1,14 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE } from './dimensions'
 import { verbTenseExercise } from './verb-tense'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+} as const
 
 const UNVOICED_KEYS = new Set([
   'tense.past',
@@ -89,6 +97,7 @@ describe('tenseExercise difficulty', () => {
   })
 
   test('hard: options are voiced tense keys (imperative unprefixed)', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
   })
@@ -108,6 +117,7 @@ describe('tenseExercise distractor strategies', () => {
   })
 
   test('hard: all options are voiced tense keys', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS.has(options[answer])).toBe(true)
@@ -115,7 +125,20 @@ describe('tenseExercise distractor strategies', () => {
 })
 
 describe('verbTenseExercise with constraints', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('attaches cardKey to returned exercise', () => {
     expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w.]+:\w+$/)
+  })
+
+  test('uses a valid imperative pronoun when constrained to imperative at pronoun level 0', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    const exercise = verbTenseExercise.generate(
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 5 },
+      { tense: 'active.imperative' },
+    )
+    expect(exercise.cardKey).toMatch(/:active\.imperative:2\w+$/)
   })
 })

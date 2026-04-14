@@ -109,18 +109,13 @@ function renderPronounParagraph(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
 ): string {
-  if (!layers.tense || !layers.pronoun) return ''
+  const params = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: layers.arabic ?? '' }
+  const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
+  const suffix = layers.suffix ? `ـ${layers.suffix}` : undefined
 
-  const pronounLabel = t(`pronoun.${layers.pronoun}`)
-  const params = { pronounLabel, arabic: layers.arabic ?? '' }
-
-  const fmtPrefix = layers.prefix ? `${layers.prefix}ـ` : undefined
-  const fmtSuffix = layers.suffix ? `ـ${layers.suffix}` : undefined
-
-  if (fmtPrefix && fmtSuffix)
-    return t('explanation.pronoun.prefix-and-suffix', { ...params, prefix: fmtPrefix, suffix: fmtSuffix })
-  if (fmtSuffix) return t('explanation.pronoun.suffix-only', { ...params, suffix: fmtSuffix })
-  if (fmtPrefix) return t('explanation.pronoun.prefix-only', { ...params, prefix: fmtPrefix })
+  if (prefix && suffix) return t('explanation.pronoun.prefix-and-suffix', { ...params, prefix, suffix })
+  if (suffix) return t('explanation.pronoun.suffix-only', { ...params, suffix })
+  if (prefix) return t('explanation.pronoun.prefix-only', { ...params, prefix })
   return t('explanation.pronoun.base-form', params)
 }
 
@@ -152,16 +147,16 @@ export function renderExplanation(
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [renderPronounParagraph(layers, t)],
+    [layers.tense && layers.pronoun && renderPronounParagraph(layers, t)],
   ]
     .map((paragraph) => paragraph.filter(Boolean).join(' '))
     .filter(Boolean)
 }
 
 function extractAffixes(morphemes: Morpheme[]): { prefix?: string; suffix?: string } {
-  const stemRoles = new Set<string>(['root', 'form'])
-  const firstStemIdx = morphemes.findIndex((m) => stemRoles.has(m.role))
-  const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.has(m.role))
+  const stemRoles = ['root', 'form']
+  const firstStemIdx = morphemes.findIndex((m) => stemRoles.includes(m.role))
+  const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.includes(m.role))
 
   if (firstStemIdx === -1) return {}
 
@@ -231,12 +226,11 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
 
 export function resolveNominalExplanationLayers(verb: Verb, nominal: NominalKind, arabic: string): ExplanationLayers {
   const rootLetters = Array.from(verb.root)
-  const rootType = analyzeRoot(verb.root).type
   return {
     rootLetters,
     form: verb.form,
     arabic,
-    rootType,
+    rootType: analyzeRoot(verb.root).type,
     formIPattern: verb.form === 1 ? verb.formPattern : undefined,
     formRoot: toFormRoot(verb.form, rootLetters),
     nominal,

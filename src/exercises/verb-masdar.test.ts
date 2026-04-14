@@ -1,8 +1,17 @@
 import { describe, expect, test } from 'vitest'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { verbs } from '../paradigms/verbs'
-import { exerciseDiacritics, INITIAL_DIMENSION_PROFILE } from './dimensions'
+import { exerciseDiacritics } from './dimensions'
 import { verbMasdarExercise } from './verb-masdar'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+} as const
 
 describe('verbMasdarExercise', () => {
   test('returns kind "verbMasdar"', () => {

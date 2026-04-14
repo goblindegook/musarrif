@@ -4,12 +4,31 @@ import {
   enforcePrerequisites,
   exerciseDiacritics,
   getDimensionUnlocks,
-  INITIAL_DIMENSION_PROFILE,
-  INITIAL_DIMENSION_STORE,
   promoteDimensions,
   pronounPool,
   recordDimensionAnswer,
 } from './dimensions'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+} as const
+
+const INITIAL_DIMENSION_STORE = {
+  profile: INITIAL_DIMENSION_PROFILE,
+  windows: {
+    tenses: [] as boolean[],
+    pronouns: [] as boolean[],
+    diacritics: [] as boolean[],
+    forms: [] as boolean[],
+    rootTypes: [] as boolean[],
+    nominals: [] as boolean[],
+  },
+}
 
 describe('rawPronounPool', () => {
   test('level 0 contains only 3ms', () => {

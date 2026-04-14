@@ -37,20 +37,6 @@ export interface DimensionUnlock {
   items: readonly string[]
 }
 
-export const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-}
-
-export const INITIAL_DIMENSION_STORE: DimensionStore = {
-  profile: INITIAL_DIMENSION_PROFILE,
-  windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
-}
-
 export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
@@ -91,7 +77,10 @@ export function pronounPool(pronouns: PronounsLevel): readonly PronounId[] {
 }
 
 export function randomPronoun(verb: DisplayVerb, tense: VerbTense, pronouns: PronounsLevel): PronounId {
-  if (tense === 'active.imperative') return random(PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2')))
+  if (tense === 'active.imperative') {
+    const imperativePool = PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2'))
+    return imperativePool.length > 0 ? random(imperativePool) : '2ms'
+  }
   if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return '3ms'
   return random(PRONOUN_POOLS[pronouns])
 }

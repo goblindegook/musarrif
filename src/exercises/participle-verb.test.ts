@@ -2,8 +2,17 @@ import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
 import { verbs } from '../paradigms/verbs'
-import { type DimensionProfile, exerciseDiacritics, INITIAL_DIMENSION_PROFILE } from './dimensions'
+import { type DimensionProfile, exerciseDiacritics } from './dimensions'
 import { participleVerbExercise } from './participle-verb'
+
+const INITIAL_DIMENSION_PROFILE = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+} as const
 
 const mediumProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }
 const hardProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }
