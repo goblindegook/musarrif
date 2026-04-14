@@ -1,10 +1,4 @@
-import {
-  type AnnotatedForm,
-  buildMorphemes,
-  FUTURE_SUFFIX_COUNTS,
-  type MorphemeRole,
-  type TaggedChar,
-} from '../annotation'
+import { type AnnotatedForm, buildMorphemes, FUTURE_SUFFIX_COUNTS, type TaggedChar } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugateFuture } from './future'
@@ -26,18 +20,19 @@ function tagFutureChars(
   const stemCount = chars.length - suffixCount
   const personPrefixEnd = FUTURE_SEEN_CHARS + FUTURE_PERSON_PREFIX_CHARS
   const formInfixEnd = personPrefixEnd + formInfixChars
+
   return chars.map((char, i) => ({
     char,
     role:
       i < FUTURE_SEEN_CHARS
-        ? ('tense' as MorphemeRole)
+        ? 'tense'
         : i < personPrefixEnd
-          ? ('suffix' as MorphemeRole)
+          ? 'suffix'
           : i < formInfixEnd || i === nonContiguousFormIndex
-            ? ('form' as MorphemeRole)
+            ? 'form'
             : i < stemCount
-              ? ('root' as MorphemeRole)
-              : ('suffix' as MorphemeRole),
+              ? 'root'
+              : 'suffix',
   }))
 }
 

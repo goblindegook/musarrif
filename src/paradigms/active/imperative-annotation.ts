@@ -20,16 +20,10 @@ function tagImperativeChars(chars: string[], suffixCount: number, formInfixChars
   const tenseChars = chars[0] === ALIF ? 2 : 0
   const formPrefixChars = chars[0] === ALIF_HAMZA ? 2 : 0
   const formEnd = tenseChars + formPrefixChars + formInfixChars
+
   return chars.map((char, i) => ({
     char,
-    role:
-      i < tenseChars
-        ? ('tense' as MorphemeRole)
-        : i < formEnd
-          ? ('form' as MorphemeRole)
-          : i < stemCount
-            ? ('root' as MorphemeRole)
-            : ('suffix' as MorphemeRole),
+    role: i < tenseChars ? 'tense' : i < formEnd ? 'form' : i < stemCount ? 'root' : 'suffix',
   }))
 }
 

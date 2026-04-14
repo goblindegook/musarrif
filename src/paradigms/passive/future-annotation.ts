@@ -1,10 +1,4 @@
-import {
-  type AnnotatedForm,
-  buildMorphemes,
-  FUTURE_SUFFIX_COUNTS,
-  type MorphemeRole,
-  type TaggedChar,
-} from '../annotation'
+import { type AnnotatedForm, buildMorphemes, FUTURE_SUFFIX_COUNTS, type TaggedChar } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePassiveFuture } from './future'
@@ -18,14 +12,7 @@ function tagPassiveFutureChars(chars: string[], suffixCount: number): TaggedChar
   const personPrefixEnd = PASSIVE_FUTURE_SEEN_CHARS + PASSIVE_FUTURE_PERSON_PREFIX_CHARS
   return chars.map((char, i) => ({
     char,
-    role:
-      i < PASSIVE_FUTURE_SEEN_CHARS
-        ? ('tense' as MorphemeRole)
-        : i < personPrefixEnd
-          ? ('suffix' as MorphemeRole)
-          : i < stemCount
-            ? ('root' as MorphemeRole)
-            : ('suffix' as MorphemeRole),
+    role: i < PASSIVE_FUTURE_SEEN_CHARS ? 'tense' : i < personPrefixEnd ? 'suffix' : i < stemCount ? 'root' : 'suffix',
   }))
 }
 

@@ -25,14 +25,10 @@ function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
   const formInfixChars = verb.root.length === 3 ? (PRESENT_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
   const formInfixEnd = PRESENT_TENSE_PREFIX_CHARS + formInfixChars
   const nonContiguousFormIndex = verb.root.length === 3 ? (PRESENT_FORM_INFIX_INDEX[verb.form] ?? -1) : -1
+
   return chars.map((char, i) => ({
     char,
-    role:
-      i < PRESENT_TENSE_PREFIX_CHARS
-        ? ('tense' as MorphemeRole)
-        : i < formInfixEnd || i === nonContiguousFormIndex
-          ? ('form' as MorphemeRole)
-          : ('root' as MorphemeRole),
+    role: i < PRESENT_TENSE_PREFIX_CHARS ? 'tense' : i < formInfixEnd || i === nonContiguousFormIndex ? 'form' : 'root',
   }))
 }
 

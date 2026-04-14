@@ -2,7 +2,6 @@ import {
   type AnnotatedForm,
   buildMorphemes,
   type DerivationStep,
-  type MorphemeRole,
   PRESENT_INDICATIVE_SUFFIX_COUNTS,
   PRESENT_MOOD_SUFFIX_COUNTS,
   type TaggedChar,
@@ -19,7 +18,7 @@ const PASSIVE_PRESENT_TENSE_PREFIX_CHARS = 2
 function tagPassivePresentStemChars(chars: string[]): TaggedChar[] {
   return chars.map((char, i) => ({
     char,
-    role: i < PASSIVE_PRESENT_TENSE_PREFIX_CHARS ? ('tense' as MorphemeRole) : ('root' as MorphemeRole),
+    role: i < PASSIVE_PRESENT_TENSE_PREFIX_CHARS ? 'tense' : 'root',
   }))
 }
 

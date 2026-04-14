@@ -63,48 +63,25 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
 }
 
 function tagPastStemChars(verb: Verb, stemChars: string[]): TaggedChar[] {
-  if (verb.root.length === 3 && verb.form === 3) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i === 2 ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
+  if (verb.root.length !== 3) return stemChars.map((char) => ({ char, role: 'root' }))
+
+  switch (verb.form) {
+    case 3:
+      return stemChars.map((char, i) => ({ char, role: i === 2 ? 'form' : 'root' }))
+    case 4:
+    case 5:
+      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'form' : 'root' }))
+    case 6:
+      return stemChars.map((char, i) => ({ char, role: i < 2 || i === 4 ? 'form' : 'root' }))
+    case 7:
+      return stemChars.map((char, i) => ({ char, role: i < 4 ? 'form' : 'root' }))
+    case 8:
+      return stemChars.map((char, i) => ({ char, role: i < 2 || (i >= 3 && i < 6) ? 'form' : 'root' }))
+    case 9:
+      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'form' : 'root' }))
+    case 10:
+      return stemChars.map((char, i) => ({ char, role: i < 6 ? 'form' : 'root' }))
+    default:
+      return stemChars.map((char) => ({ char, role: 'root' }))
   }
-  if (verb.root.length === 3 && verb.form === 4) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 2 ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  if (verb.root.length === 3 && (verb.form === 5 || verb.form === 6)) {
-    const alif = verb.form === 6
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 2 || (alif && i === 4) ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  if (verb.root.length === 3 && verb.form === 7) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 4 ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  if (verb.root.length === 3 && verb.form === 8) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 2 || (i >= 3 && i < 6) ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  if (verb.root.length === 3 && verb.form === 9) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 2 ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  if (verb.root.length === 3 && verb.form === 10) {
-    return stemChars.map((char, i) => ({
-      char,
-      role: i < 6 ? ('form' as MorphemeRole) : ('root' as MorphemeRole),
-    }))
-  }
-  return stemChars.map((char) => ({ char, role: 'root' as MorphemeRole }))
 }
