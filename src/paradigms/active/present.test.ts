@@ -2389,6 +2389,10 @@ describe('active present indicative', () => {
     })
 
     describe('defective roots', () => {
+      test.each([['صفو', 'يَصْطَفِي']])('%s pattern', (root, expected) => {
+        expect(conjugatePresentMood(getVerb(root, 8), 'indicative')['3ms']).toEqualT(expected)
+      })
+
       test('اِقْتَضَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('قضي', 8), 'indicative')).toEqualT({
           '1s': 'أَقْتَضِي',

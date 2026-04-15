@@ -910,6 +910,7 @@ describe('active participle', () => {
         ['ردي', 'مُرْتَدٍ'],
         ['رءي', 'مُرْتَأٍ'],
         ['شري', 'مُشْتَرٍ'],
+        ['صفو', 'مُصْطَفٍ'],
         ['خفي', 'مُخْتَفٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 8))).toEqualT(expected)

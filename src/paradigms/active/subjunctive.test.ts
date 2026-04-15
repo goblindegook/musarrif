@@ -1412,6 +1412,7 @@ describe('active present subjunctive', () => {
         ['قضي', 'يَقْتَضِيَ'],
         ['ردي', 'يَرْتَدِيَ'],
         ['شري', 'يَشْتَرِيَ'],
+        ['صفو', 'يَصْطَفِيَ'],
         ['خفي', 'يَخْتَفِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)

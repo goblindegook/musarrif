@@ -283,6 +283,7 @@
   { "root": "Sdq", "form": 2 },
   { "root": "Sdq", "form": 3 },
   { "root": "Sfr", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
+  { "root": "Sfw", "form": 8 },
   { "root": "Sgr", "form": 1, "formPattern": "fa3ula-yaf3ulu" },
   { "root": "SlH", "form": 4 },
   { "root": "Slw", "form": 1, "formPattern": "fa3ala-yaf3alu" },

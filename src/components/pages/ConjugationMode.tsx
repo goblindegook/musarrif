@@ -71,7 +71,7 @@ export function ConjugationMode() {
   const [openModal, setOpenModal] = useState<
     'form' | 'root' | 'active-participle' | 'passive-participle' | 'masdar' | null
   >(null)
-  const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(FORM_NUMBERS[0])
+  const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {

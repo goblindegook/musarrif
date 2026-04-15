@@ -1804,6 +1804,7 @@ describe('active present jussive', () => {
         ['قضي', 'يَقْتَضِ'],
         ['ردي', 'يَرْتَدِ'],
         ['شري', 'يَشْتَرِ'],
+        ['صفو', 'يَصْطَفِ'],
         ['خفي', 'يَخْتَفِ'],
       ])('%s pattern', (root, expected3ms) => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')

@@ -1564,6 +1564,10 @@ describe('passive present subjunctive', () => {
     })
 
     describe('defective roots', () => {
+      test.each([['صفو', 'يُصْطَفَى']])('%s pattern', (root, expected) => {
+        expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
+      })
+
       test('اُرْتُئِيَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('رءي', 8), 'subjunctive')).toEqualT({
           '1s': 'أُرْتَأَى',
