@@ -513,7 +513,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   ${({ hasVerb }) =>
     !hasVerb &&
     `
-    place-items: center;
+    justify-items: stretch;
     align-content: center;
   `}
 
