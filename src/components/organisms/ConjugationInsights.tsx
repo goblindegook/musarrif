@@ -102,6 +102,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
   const [open, setOpen] = useState(false)
   const formLabel = formatFormLabel(verb.form, verb.root)
   const annotation = annotate(verb, verbTense, pronoun)
+  const finalStep = annotation?.steps[annotation.steps.length - 1]
 
   return (
     <>
@@ -113,8 +114,8 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
           <VerbDisplayArea>
             <ConjugationDisplay dir="rtl" lang="ar">
               <ConjugationText>
-                {annotation ? (
-                  <AnnotatedArabic morphemes={annotation.morphemes.filter((m) => m.role !== 'dropped')} />
+                {finalStep ? (
+                  <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'dropped')} />
                 ) : (
                   arabic
                 )}

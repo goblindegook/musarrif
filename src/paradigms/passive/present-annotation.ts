@@ -32,7 +32,6 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
       tagChars([...passivePresentMood[pronounId]], suffixCount, tagPassivePresentStemChars),
     )
     return {
-      morphemes: moodMorphemes,
       steps: [
         ...indicativeAnnotation.steps,
         {
@@ -56,7 +55,7 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
   }
 
   if (pronounId === '3ms') {
-    return { morphemes: stemMorphemes, steps: [rootStep, formStep, presentIndicativeStep] }
+    return { steps: [rootStep, formStep, presentIndicativeStep] }
   }
 
   const pronounMorphemes = buildMorphemes(
@@ -67,7 +66,6 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
     ),
   )
   return {
-    morphemes: pronounMorphemes,
     steps: [
       rootStep,
       formStep,

@@ -11,8 +11,7 @@ import type { Verb } from '../verbs'
 import { conjugatePast } from './past'
 
 export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
-  const allForms = conjugatePast(verb)
-  const thirdMs = allForms['3ms']
+  const past = conjugatePast(verb)
 
   const rootStep: DerivationStep = {
     kind: { type: 'root' },
@@ -20,42 +19,37 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
     morphemes: [...verb.root].map((char) => ({ text: char, role: 'root' as MorphemeRole })),
   }
 
-  const formMorphemes = buildMorphemes(tagPastStemChars(verb, [...thirdMs]))
+  const formMorphemes = buildMorphemes(tagPastStemChars(verb, [...past['3ms']]))
   const formStep: DerivationStep = {
     kind: { type: 'form', form: verb.form },
-    arabic: thirdMs,
+    arabic: past['3ms'],
     morphemes: formMorphemes,
   }
 
   const pastStep: DerivationStep = {
     kind: { type: 'tense', verbTense: 'active.past' },
-    arabic: thirdMs,
+    arabic: past['3ms'],
     morphemes: formMorphemes,
   }
 
-  if (pronounId === '3ms') {
-    return { morphemes: formMorphemes, steps: [rootStep, formStep, pastStep] }
-  }
+  if (pronounId === '3ms') return { steps: [rootStep, formStep, pastStep] }
 
-  const finalArabic = allForms[pronounId]
-  const finalChars = [...finalArabic]
-  const suffixCount = PAST_SUFFIX_COUNTS[pronounId]
-  const stemCount = finalChars.length - suffixCount
-  const taggedStem = tagPastStemChars(verb, finalChars.slice(0, stemCount))
-  const taggedSuffix: TaggedChar[] = finalChars
-    .slice(stemCount)
-    .map((char) => ({ char, role: 'suffix' as MorphemeRole }))
-  const morphemes = buildMorphemes([...taggedStem, ...taggedSuffix])
+  const arabic = past[pronounId]
+  const chars = [...arabic]
+  const stemCount = chars.length - PAST_SUFFIX_COUNTS[pronounId]
+  const morphemes = buildMorphemes([
+    ...tagPastStemChars(verb, chars.slice(0, stemCount)),
+    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole })),
+  ])
 
   return {
-    morphemes,
     steps: [
       rootStep,
       formStep,
       pastStep,
       {
         kind: { type: 'pronoun', pronounId },
-        arabic: finalArabic,
+        arabic,
         morphemes,
       },
     ],

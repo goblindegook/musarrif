@@ -114,7 +114,6 @@ export interface DerivationStep {
 }
 
 export interface AnnotatedForm {
-  morphemes: Morpheme[]
   steps: DerivationStep[]
 }
 

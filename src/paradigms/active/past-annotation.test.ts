@@ -6,16 +6,35 @@ describe('annotatePast', () => {
   test('Form I regular — كتب (1s) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 1), '1s')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'كتب' },
-        { kind: { type: 'form', form: 1 }, arabic: 'كَتَبَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'كَتَبَ' },
-        { kind: { type: 'pronoun', pronounId: '1s' }, arabic: 'كَتَبْتُ' },
-      ],
-      morphemes: [
-        { text: 'كَتَب', role: 'root' },
-        { text: 'ْتُ', role: 'suffix' },
+        {
+          kind: { type: 'root' },
+          arabic: 'كتب',
+          morphemes: [
+            { text: 'ك', role: 'root' },
+            { text: 'ت', role: 'root' },
+            { text: 'ب', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'كَتَبَ',
+          morphemes: [{ text: 'كَتَبَ', role: 'root' }],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'كَتَبَ',
+          morphemes: [{ text: 'كَتَبَ', role: 'root' }],
+        },
+        {
+          kind: { type: 'pronoun', pronounId: '1s' },
+          arabic: 'كَتَبْتُ',
+          morphemes: [
+            { text: 'كَتَب', role: 'root' },
+            { text: 'ْتُ', role: 'suffix' },
+          ],
+        },
       ],
     })
   })
@@ -23,15 +42,33 @@ describe('annotatePast', () => {
   test('Form VII — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 7), '3ms')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'كتب' },
-        { kind: { type: 'form', form: 7 }, arabic: 'اِنْكَتَبَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'اِنْكَتَبَ' },
-      ],
-      morphemes: [
-        { text: 'اِنْ', role: 'form' },
-        { text: 'كَتَبَ', role: 'root' },
+        {
+          kind: { type: 'root' },
+          arabic: 'كتب',
+          morphemes: [
+            { text: 'ك', role: 'root' },
+            { text: 'ت', role: 'root' },
+            { text: 'ب', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 7 },
+          arabic: 'اِنْكَتَبَ',
+          morphemes: [
+            { text: 'اِنْ', role: 'form' },
+            { text: 'كَتَبَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'اِنْكَتَبَ',
+          morphemes: [
+            { text: 'اِنْ', role: 'form' },
+            { text: 'كَتَبَ', role: 'root' },
+          ],
+        },
       ],
     })
   })
@@ -39,15 +76,33 @@ describe('annotatePast', () => {
   test('Form IX — خضر (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('خضر', 9), '3ms')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'خضر' },
-        { kind: { type: 'form', form: 9 }, arabic: 'اِخْضَرَّ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'اِخْضَرَّ' },
-      ],
-      morphemes: [
-        { text: 'اِ', role: 'form' },
-        { text: 'خْضَرَّ', role: 'root' },
+        {
+          kind: { type: 'root' },
+          arabic: 'خضر',
+          morphemes: [
+            { text: 'خ', role: 'root' },
+            { text: 'ض', role: 'root' },
+            { text: 'ر', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 9 },
+          arabic: 'اِخْضَرَّ',
+          morphemes: [
+            { text: 'اِ', role: 'form' },
+            { text: 'خْضَرَّ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'اِخْضَرَّ',
+          morphemes: [
+            { text: 'اِ', role: 'form' },
+            { text: 'خْضَرَّ', role: 'root' },
+          ],
+        },
       ],
     })
   })
@@ -55,16 +110,35 @@ describe('annotatePast', () => {
   test('Form III — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 3), '3ms')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'كتب' },
-        { kind: { type: 'form', form: 3 }, arabic: 'كَاتَبَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'كَاتَبَ' },
-      ],
-      morphemes: [
-        { text: 'كَ', role: 'root' },
-        { text: 'ا', role: 'form' },
-        { text: 'تَبَ', role: 'root' },
+        {
+          kind: { type: 'root' },
+          arabic: 'كتب',
+          morphemes: [
+            { text: 'ك', role: 'root' },
+            { text: 'ت', role: 'root' },
+            { text: 'ب', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 3 },
+          arabic: 'كَاتَبَ',
+          morphemes: [
+            { text: 'كَ', role: 'root' },
+            { text: 'ا', role: 'form' },
+            { text: 'تَبَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'كَاتَبَ',
+          morphemes: [
+            { text: 'كَ', role: 'root' },
+            { text: 'ا', role: 'form' },
+            { text: 'تَبَ', role: 'root' },
+          ],
+        },
       ],
     })
   })
@@ -72,15 +146,33 @@ describe('annotatePast', () => {
   test('Form V — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 5), '3ms')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'كتب' },
-        { kind: { type: 'form', form: 5 }, arabic: 'تَكَتَّبَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'تَكَتَّبَ' },
-      ],
-      morphemes: [
-        { text: 'تَ', role: 'form' },
-        { text: 'كَتَّبَ', role: 'root' },
+        {
+          kind: { type: 'root' },
+          arabic: 'كتب',
+          morphemes: [
+            { text: 'ك', role: 'root' },
+            { text: 'ت', role: 'root' },
+            { text: 'ب', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 5 },
+          arabic: 'تَكَتَّبَ',
+          morphemes: [
+            { text: 'تَ', role: 'form' },
+            { text: 'كَتَّبَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'تَكَتَّبَ',
+          morphemes: [
+            { text: 'تَ', role: 'form' },
+            { text: 'كَتَّبَ', role: 'root' },
+          ],
+        },
       ],
     })
   })
@@ -88,17 +180,37 @@ describe('annotatePast', () => {
   test('Form VI — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 6), '3ms')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'كتب' },
-        { kind: { type: 'form', form: 6 }, arabic: 'تَكَاتَبَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'تَكَاتَبَ' },
-      ],
-      morphemes: [
-        { text: 'تَ', role: 'form' },
-        { text: 'كَ', role: 'root' },
-        { text: 'ا', role: 'form' },
-        { text: 'تَبَ', role: 'root' },
+        {
+          kind: { type: 'root' },
+          arabic: 'كتب',
+          morphemes: [
+            { text: 'ك', role: 'root' },
+            { text: 'ت', role: 'root' },
+            { text: 'ب', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 6 },
+          arabic: 'تَكَاتَبَ',
+          morphemes: [
+            { text: 'تَ', role: 'form' },
+            { text: 'كَ', role: 'root' },
+            { text: 'ا', role: 'form' },
+            { text: 'تَبَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'تَكَاتَبَ',
+          morphemes: [
+            { text: 'تَ', role: 'form' },
+            { text: 'كَ', role: 'root' },
+            { text: 'ا', role: 'form' },
+            { text: 'تَبَ', role: 'root' },
+          ],
+        },
       ],
     })
   })
@@ -106,19 +218,48 @@ describe('annotatePast', () => {
   test('Form VIII — حلم (1s) matches annotation object', () => {
     const result = annotatePast(getVerb('حلم', 8), '1s')
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       steps: [
-        { kind: { type: 'root' }, arabic: 'حلم' },
-        { kind: { type: 'form', form: 8 }, arabic: 'اِحْتَلَمَ' },
-        { kind: { type: 'tense', verbTense: 'active.past' }, arabic: 'اِحْتَلَمَ' },
-        { kind: { type: 'pronoun', pronounId: '1s' }, arabic: 'اِحْتَلَمْتُ' },
-      ],
-      morphemes: [
-        { text: 'اِ', role: 'form' },
-        { text: 'ح', role: 'root' },
-        { text: 'ْتَ', role: 'form' },
-        { text: 'لَم', role: 'root' },
-        { text: 'ْتُ', role: 'suffix' },
+        {
+          kind: { type: 'root' },
+          arabic: 'حلم',
+          morphemes: [
+            { text: 'ح', role: 'root' },
+            { text: 'ل', role: 'root' },
+            { text: 'م', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 8 },
+          arabic: 'اِحْتَلَمَ',
+          morphemes: [
+            { text: 'اِ', role: 'form' },
+            { text: 'ح', role: 'root' },
+            { text: 'ْتَ', role: 'form' },
+            { text: 'لَمَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'اِحْتَلَمَ',
+          morphemes: [
+            { text: 'اِ', role: 'form' },
+            { text: 'ح', role: 'root' },
+            { text: 'ْتَ', role: 'form' },
+            { text: 'لَمَ', role: 'root' },
+          ],
+        },
+        {
+          kind: { type: 'pronoun', pronounId: '1s' },
+          arabic: 'اِحْتَلَمْتُ',
+          morphemes: [
+            { text: 'اِ', role: 'form' },
+            { text: 'ح', role: 'root' },
+            { text: 'ْتَ', role: 'form' },
+            { text: 'لَم', role: 'root' },
+            { text: 'ْتُ', role: 'suffix' },
+          ],
+        },
       ],
     })
   })

@@ -24,7 +24,6 @@ export function annotatePassiveFuture(verb: Verb, pronounId: PronounId): Annotat
   const morphemes = buildMorphemes(tagPassiveFutureChars([...future[pronounId]], suffixCount))
 
   return {
-    morphemes,
     steps: [
       ...presentAnnotation.steps,
       {

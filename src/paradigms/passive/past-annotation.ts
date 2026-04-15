@@ -26,7 +26,7 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
   }
 
   if (pronounId === '3ms') {
-    return { morphemes: passivePastMorphemes, steps: [rootStep, formStep, pastThirdMsStep] }
+    return { steps: [rootStep, formStep, pastThirdMsStep] }
   }
 
   const finalArabic = allForms[pronounId]
@@ -39,7 +39,6 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
   ])
 
   return {
-    morphemes,
     steps: [
       rootStep,
       formStep,

@@ -38,22 +38,23 @@ function tagFutureChars(
 
 export function annotateActiveFuture(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const presentIndicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
-  const formInfixChars = verb.root.length === 3 ? (FUTURE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
-  const nonContiguousFormIndex = verb.root.length === 3 ? (FUTURE_FORM_INFIX_INDEX[verb.form] ?? -1) : -1
 
-  const allFutureForms = conjugateFuture(verb)
-  const finalArabic = allFutureForms[pronounId]
-  const suffixCount = pronounId === '3ms' ? 0 : FUTURE_SUFFIX_COUNTS[pronounId]
-  const tagged = tagFutureChars([...finalArabic], suffixCount, formInfixChars, nonContiguousFormIndex)
-  const morphemes = buildMorphemes(tagged)
+  const arabic = conjugateFuture(verb)[pronounId]
+  const morphemes = buildMorphemes(
+    tagFutureChars(
+      [...arabic],
+      pronounId === '3ms' ? 0 : FUTURE_SUFFIX_COUNTS[pronounId],
+      verb.root.length === 3 ? (FUTURE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0,
+      verb.root.length === 3 ? (FUTURE_FORM_INFIX_INDEX[verb.form] ?? -1) : -1,
+    ),
+  )
 
   return {
-    morphemes,
     steps: [
       ...presentIndicativeAnnotation.steps,
       {
         kind: { type: 'tense', verbTense: 'active.future' },
-        arabic: finalArabic,
+        arabic,
         morphemes,
       },
     ],

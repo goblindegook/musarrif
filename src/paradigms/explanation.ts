@@ -179,7 +179,8 @@ export function resolveVerbExplanationLayers(
   const rootType = analyzeRoot(verb.root).type
   const tense = verbTense
   const annotatedForm = annotate(verb, verbTense, pronoun)
-  const { prefix, suffix } = annotatedForm ? extractAffixes(annotatedForm.morphemes) : {}
+  const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
+  const { prefix, suffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
   return {
     rootLetters,
     form: verb.form,

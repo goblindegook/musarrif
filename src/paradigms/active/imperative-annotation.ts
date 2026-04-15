@@ -28,23 +28,26 @@ function tagImperativeChars(chars: string[], suffixCount: number, formInfixChars
 }
 
 export function annotateActiveImperative(verb: Verb, pronounId: PronounId): AnnotatedForm {
+  const arabic = conjugateImperative(verb)[pronounId]
   const jussiveAnnotation = annotateActivePresentMood(verb, 'jussive', pronounId)
-
-  const formInfixChars = verb.root.length === 3 ? (IMPERATIVE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
-  const imperativeArabic = conjugateImperative(verb)[pronounId]
-  const suffixCount = IMPERATIVE_SUFFIX_COUNTS[pronounId] ?? 0
-  const baseMorphemes = buildMorphemes(tagImperativeChars([...imperativeArabic], suffixCount, formInfixChars))
   const jussiveStep = jussiveAnnotation.steps[jussiveAnnotation.steps.length - 1]
-  const droppedPersonText = [...jussiveStep.arabic].slice(0, 2).join('')
-  const morphemes = [{ text: droppedPersonText, role: 'dropped' as MorphemeRole }, ...baseMorphemes]
+  const morphemes = [
+    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'dropped' as MorphemeRole },
+    ...buildMorphemes(
+      tagImperativeChars(
+        [...arabic],
+        IMPERATIVE_SUFFIX_COUNTS[pronounId] ?? 0,
+        verb.root.length === 3 ? (IMPERATIVE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0,
+      ),
+    ),
+  ]
 
   return {
-    morphemes,
     steps: [
       ...jussiveAnnotation.steps,
       {
         kind: { type: 'tense', verbTense: 'active.imperative' },
-        arabic: imperativeArabic,
+        arabic,
         morphemes,
       },
     ],
