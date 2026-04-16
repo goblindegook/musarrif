@@ -60,17 +60,15 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     selected != null && exercise.explanations?.[selected] != null
       ? renderExplanation(exercise.explanations[selected], t)
       : []
-  const alertMessages = useMemo(
-    () => [
-      ...dimensionUnlocks.map(({ dimension, items }) =>
+  const unlockMessages = useMemo(
+    () =>
+      dimensionUnlocks.map(({ dimension, items }) =>
         t('exercise.unlock.line', {
           dimension: t(`exercise.unlock.dimension.${dimension}`),
           items: items.map((item) => t(item)).join(', '),
         }),
       ),
-      ...(streakExtendedAlert ? [t('exercise.streak.extended')] : []),
-    ],
-    [dimensionUnlocks, streakExtendedAlert, t],
+    [dimensionUnlocks, t],
   )
 
   const handleAnswer = useCallback(
@@ -153,13 +151,30 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         )}
         {isAnswered ? (
           <>
-            {alertMessages.length > 0 && (
+            {(unlockMessages.length > 0 || streakExtendedAlert) && (
               <Alerts>
-                {alertMessages.map((message, index) => (
-                  <SuccessAlert key={`${index}-${message}`} role="status" aria-live="polite" lang={lang} dir={dir}>
+                {unlockMessages.map((message, index) => (
+                  <SuccessAlert
+                    key={`${exercise.cardKey}-unlock-${index}`}
+                    role="status"
+                    aria-live="polite"
+                    lang={lang}
+                    dir={dir}
+                  >
                     <Text>{message}</Text>
                   </SuccessAlert>
                 ))}
+                {streakExtendedAlert && (
+                  <StreakAlert
+                    key={`${exercise.cardKey}-streak`}
+                    role="status"
+                    aria-live="polite"
+                    lang={lang}
+                    dir={dir}
+                  >
+                    <Text>{t('exercise.streak.extended')}</Text>
+                  </StreakAlert>
+                )}
               </Alerts>
             )}
 
@@ -253,22 +268,64 @@ const SuccessAlert = styled('aside')`
   color: #15803d;
   border-radius: 0.75rem;
   padding: 0.625rem 0.75rem;
+  animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`
+
+const StreakAlert = styled('aside')`
+  background: #fffbeb;
+  border: 2px solid #facc15;
+  color: #92400e;
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  animation: streak-in 380ms cubic-bezier(0.25, 1, 0.5, 1) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 `
 
 const OPTION_BUTTON_CLASS = css`
+  @keyframes option-correct {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes option-wrong {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(5px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+  }
+
   &[data-state='correct'] {
     background: #dcfce7;
     border-color: #16a34a;
     color: #15803d;
+    animation: option-correct 300ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 
   &[data-state='wrong'] {
     background: #fee2e2;
     border-color: #dc2626;
     color: #b91c1c;
+    animation: option-wrong 350ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 
   &[data-state='dim'] {
     opacity: 0.4;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[data-state='correct'],
+    &[data-state='wrong'] {
+      animation: none;
+    }
   }
 `
