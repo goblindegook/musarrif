@@ -121,9 +121,11 @@ const PanelBodyAnimated = styled('div')<{ collapsed: boolean }>`
   display: grid;
   grid-template-rows: ${({ collapsed }) => (collapsed ? '0fr' : '1fr')};
   margin-block-start: ${({ collapsed }) => (collapsed ? '-1rem' : '0')};
+  visibility: ${({ collapsed }) => (collapsed ? 'hidden' : 'visible')};
   transition:
     grid-template-rows 300ms cubic-bezier(0.25, 1, 0.5, 1),
-    margin-block-start 300ms cubic-bezier(0.25, 1, 0.5, 1);
+    margin-block-start 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    visibility 0s ${({ collapsed }) => (collapsed ? '300ms' : '0s')};
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
