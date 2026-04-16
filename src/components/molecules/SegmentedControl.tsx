@@ -114,7 +114,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   flex: 1 1 0;
   min-width: 0;
   font-size: 0.75rem;
-  font-weight: 300;
+  font-weight: 400;
   justify-content: center;
   letter-spacing: 0.08em;
   min-inline-size: ${({ compact }) => (compact ? '0' : '64px')};

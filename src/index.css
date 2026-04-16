@@ -1,5 +1,5 @@
 :root {
-  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color: #0f172a;
@@ -46,7 +46,7 @@
 }
 
 :lang(ar) {
-  font-family: "Noto Sans Arabic", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  font-family: "Noto Sans Arabic", system-ui, sans-serif;
 }
 
 html {
@@ -57,6 +57,13 @@ html {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 body {

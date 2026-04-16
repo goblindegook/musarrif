@@ -226,7 +226,7 @@ const ControlGroup = styled('div')`
 `
 
 const ControlLabel = styled('span')`
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
