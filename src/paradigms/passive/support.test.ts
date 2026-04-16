@@ -1,5 +1,6 @@
-import { describe, expect, test } from 'vitest'
-import { getVerb, type VerbForm } from '../verbs'
+import fc from 'fast-check'
+import { describe, expect, it, test } from 'vitest'
+import { getVerb, type VerbForm, verbs } from '../verbs'
 import { canConjugatePassive } from './support'
 
 describe('canConjugatePassive', () => {
@@ -242,5 +243,13 @@ describe('canConjugatePassive', () => {
     ])('%s (Form %d)', (root, form) => {
       expect(canConjugatePassive(getVerb(root, form))).toBe(false)
     })
+  })
+
+  it('never allows passive for any Form IX verb in the corpus', () => {
+    fc.assert(
+      fc.property(fc.constantFrom(...verbs.filter((v) => v.form === 9)), (verb) => {
+        expect(canConjugatePassive(verb)).toBe(false)
+      }),
+    )
   })
 })

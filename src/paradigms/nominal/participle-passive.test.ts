@@ -1,5 +1,6 @@
-import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import fc from 'fast-check'
+import { describe, expect, it, test } from 'vitest'
+import { getVerb, verbs } from '../verbs'
 import { derivePassiveParticiple } from './participle-passive'
 
 describe('passive participle', () => {
@@ -1089,5 +1090,13 @@ describe('passive participle', () => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
+  })
+
+  it('always produces an empty passive participle for any Form IX verb in the corpus', () => {
+    fc.assert(
+      fc.property(fc.constantFrom(...verbs.filter((v) => v.form === 9)), (verb) => {
+        expect(derivePassiveParticiple(verb)).toEqualT('')
+      }),
+    )
   })
 })
