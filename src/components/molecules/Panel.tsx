@@ -36,7 +36,13 @@ export const Panel = ({ title, dir, lang, actions, children, collapsible, defaul
             {actions}
           </PanelTitleRow>
         ))}
-      <PanelBody hidden={collapsed}>{children}</PanelBody>
+      {collapsible ? (
+        <PanelBodyAnimated collapsed={collapsed}>
+          <PanelBodyInner>{children}</PanelBodyInner>
+        </PanelBodyAnimated>
+      ) : (
+        <PanelBody>{children}</PanelBody>
+      )}
     </PanelContainer>
   )
 }
@@ -107,6 +113,27 @@ const CollapseArrow = styled('span')<{ collapsed: boolean }>`
   user-select: none;
 `
 
-const PanelBody = styled('div')<{ hidden: boolean }>`
-  display: ${({ hidden }) => (hidden ? 'none' : 'contents')};
+const PanelBody = styled('div')`
+  display: contents;
+`
+
+const PanelBodyAnimated = styled('div')<{ collapsed: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ collapsed }) => (collapsed ? '0fr' : '1fr')};
+  margin-block-start: ${({ collapsed }) => (collapsed ? '-1rem' : '0')};
+  transition:
+    grid-template-rows 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    margin-block-start 300ms cubic-bezier(0.25, 1, 0.5, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`
+
+const PanelBodyInner = styled('div')`
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
