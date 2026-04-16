@@ -195,8 +195,8 @@ const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
 
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
-  if (p.nominals >= 1 && p.tenses < 2) p.nominals = 0
-  if (p.nominals >= 2 && p.forms < 1) p.nominals = 1
+  if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
+  if (p.nominals >= 2 && p.forms < 3) p.nominals = 1
   if (
     p.diacritics >= 2 &&
     !(

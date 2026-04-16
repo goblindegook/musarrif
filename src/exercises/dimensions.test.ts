@@ -132,12 +132,16 @@ describe('enforcePrerequisites', () => {
   })
 
   test('rolls back nominals from 1 to 0 when tenses < 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1 }).nominals).toBe(0)
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1, pronouns: 2 }).nominals).toBe(0)
   })
 
-  test('rolls back nominals from 2 to 1 when forms < 1', () => {
+  test('rolls back nominals from 1 to 0 when pronouns < 2', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1 }).nominals).toBe(0)
+  })
+
+  test('rolls back nominals from 2 to 1 when forms < 3', () => {
     expect(
-      enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 0 }).nominals,
+      enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 2 }).nominals,
     ).toBe(1)
   })
 
@@ -169,10 +173,10 @@ describe('enforcePrerequisites', () => {
     ).toBe(2)
   })
 
-  test('does not roll back nominals when pronouns are demoted but tenses stay unlocked', () => {
+  test('rolls back nominals to 0 when pronouns drop below plural level, even when tenses stay unlocked', () => {
     const result = enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 })
     expect(result.tenses).toBe(2)
-    expect(result.nominals).toBe(1)
+    expect(result.nominals).toBe(0)
   })
 
   test('keeps unlocked tenses while still rolling back diacritics when prerequisites are unmet', () => {
@@ -352,6 +356,15 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
+  test('nominals blocked at level 0 until pronouns >= 2', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
+      }).profile.nominals,
+    ).toBe(0)
+  })
+
   test('nominals promotes to level 1 when tenses >= 2', () => {
     expect(
       promoteDimensions({
@@ -361,19 +374,19 @@ describe('promoteDimensions', () => {
     ).toBe(1)
   })
 
-  test('nominals blocked at level 1 until forms >= 1', () => {
+  test('nominals blocked at level 1 until forms >= 3', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 0 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 2 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
   })
 
-  test('nominals promotes to level 2 when forms >= 1', () => {
+  test('nominals promotes to level 2 when forms >= 3', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 1 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 3 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(2)
