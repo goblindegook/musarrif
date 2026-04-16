@@ -142,13 +142,17 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             )
           })}
         </OptionsGrid>
-        {explanation.length > 0 && (
-          <Explanation lang={lang} dir={dir}>
-            {explanation.map((paragraph, index) => (
-              <Text key={`${index}-${paragraph}`}>{paragraph}</Text>
-            ))}
-          </Explanation>
-        )}
+        <ExplanationWrapper visible={explanation.length > 0}>
+          <ExplanationInner>
+            {explanation.length > 0 && (
+              <Explanation lang={lang} dir={dir}>
+                {explanation.map((paragraph, index) => (
+                  <Text key={`${index}-${paragraph}`}>{paragraph}</Text>
+                ))}
+              </Explanation>
+            )}
+          </ExplanationInner>
+        </ExplanationWrapper>
         {isAnswered ? (
           <>
             {(unlockMessages.length > 0 || streakExtendedAlert) && (
@@ -245,8 +249,27 @@ const OptionsGrid = styled('div')`
   width: 100%;
 `
 
-const Explanation = styled('aside')`
+const ExplanationWrapper = styled('div')<{ visible: boolean }>`
+  display: grid;
+  grid-template-rows: ${({ visible }) => (visible ? '1fr' : '0fr')};
+  margin-block-start: ${({ visible }) => (visible ? '0' : '-1.5rem')};
+  transition: ${({ visible }) =>
+    visible
+      ? 'grid-template-rows 320ms cubic-bezier(0.25, 1, 0.5, 1), margin-block-start 320ms cubic-bezier(0.25, 1, 0.5, 1)'
+      : 'none'};
   width: 100%;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`
+
+const ExplanationInner = styled('div')`
+  min-height: 0;
+  overflow: hidden;
+`
+
+const Explanation = styled('aside')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
