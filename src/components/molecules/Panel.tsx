@@ -6,19 +6,18 @@ interface PanelProps {
   title?: string
   dir?: 'auto' | 'rtl' | 'ltr'
   lang?: string
-  actions?: ComponentChildren
   children?: ComponentChildren
   collapsible?: boolean
   defaultCollapsed?: boolean
 }
 
-export const Panel = ({ title, dir, lang, actions, children, collapsible, defaultCollapsed }: PanelProps) => {
+export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapsed }: PanelProps) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed ?? false)
 
   return (
     <PanelContainer>
-      {(title || actions) &&
-        (collapsible && title ? (
+      {title &&
+        (collapsible ? (
           <PanelTitleButton
             dir={dir}
             lang={lang}
@@ -28,12 +27,10 @@ export const Panel = ({ title, dir, lang, actions, children, collapsible, defaul
           >
             <PanelTitle>{title}</PanelTitle>
             <CollapseArrow collapsed={collapsed}>›</CollapseArrow>
-            {actions}
           </PanelTitleButton>
         ) : (
           <PanelTitleRow dir={dir} lang={lang}>
-            {title && <PanelTitle>{title}</PanelTitle>}
-            {actions}
+            <PanelTitle>{title}</PanelTitle>
           </PanelTitleRow>
         ))}
       {collapsible ? (
@@ -75,7 +72,7 @@ export const PanelContainer = styled('section')`
 const PanelTitleRow = styled('div')`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   margin-top: 0;
 `

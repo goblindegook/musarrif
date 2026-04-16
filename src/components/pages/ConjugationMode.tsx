@@ -33,6 +33,7 @@ import { ConjugationTable } from '../organisms/ConjugationTable'
 import { FormInsights } from '../organisms/FormInsights'
 import { NominalInsights } from '../organisms/NominalInsights'
 import { RootInsights } from '../organisms/RootInsights'
+import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 
 const formIVowelPattern = (verb: DisplayVerb<1>) => {
   const past = formIPastVowel(verb)
@@ -158,6 +159,12 @@ export function ConjugationMode() {
     },
     [navigateTo, selectedVoice, verbId],
   )
+
+  const verbTranslation = useMemo(() => {
+    if (!selectedVerb || lang === 'ar') return undefined
+    const result = translateVerb(selectedVerb)
+    return result !== '—' ? result : undefined
+  }, [selectedVerb, lang, translateVerb])
 
   const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
   const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
@@ -297,8 +304,11 @@ export function ConjugationMode() {
 
       {selectedVerb && (
         <Stack area="verb">
-          <Panel
+          <VerbHeaderPanel
             title={formatArabic(selectedVerb.label)}
+            subtitle={verbTranslation}
+            subtitleDir="ltr"
+            subtitleLang={lang}
             dir="rtl"
             lang="ar"
             actions={
@@ -339,8 +349,8 @@ export function ConjugationMode() {
                 label={t('meta.form')}
                 labelLang={lang}
                 labelDir={dir}
-                valueLang={lang}
-                valueDir="rtl"
+                valueLang="en"
+                valueDir="ltr"
                 onInsightsClick={() => setOpenModal('form')}
                 insightsLabel={t('formInfo.open', { form: selectedVerbFormLabel })}
                 insightsOpen={openModal === 'form'}
@@ -350,68 +360,8 @@ export function ConjugationMode() {
                   {selectedVerb.form === 1 && <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>}
                 </FormMetaValue>
               </Detail>
-
-              <Detail
-                label={t('meta.translation')}
-                labelLang={lang}
-                labelDir={dir}
-                valueLang="en"
-                valueDir="ltr"
-                value={translateVerb(selectedVerb)}
-              />
-              <Detail
-                label={masdar && masdar.length > 1 ? t('meta.verbalNoun.plural') : t('meta.verbalNoun')}
-                labelLang={lang}
-                labelDir={dir}
-                speechText={masdar?.length ? masdar.join('، ') : null}
-                copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
-                onInsightsClick={masdar?.length ? () => setOpenModal('masdar') : undefined}
-                insightsLabel={t('nominalInfo.title.masdar')}
-                insightsOpen={openModal === 'masdar'}
-              >
-                {masdar?.length ? (
-                  <MasdarList>
-                    {masdar.map((value, index) => (
-                      <Fragment key={value}>
-                        <MasdarItem>
-                          <span>{formatArabic(value)}</span>
-                          {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
-                            <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
-                          )}
-                        </MasdarItem>
-                        {index < masdar.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
-                      </Fragment>
-                    ))}
-                  </MasdarList>
-                ) : (
-                  '—'
-                )}
-              </Detail>
-
-              <Detail
-                label={t('meta.activeParticiple')}
-                labelLang={lang}
-                labelDir={dir}
-                value={formatArabic(activeParticiple) || '—'}
-                speechText={activeParticiple}
-                copyText={formatArabic(activeParticiple)}
-                onInsightsClick={activeParticiple ? () => setOpenModal('active-participle') : undefined}
-                insightsLabel={t('nominalInfo.title.activeParticiple')}
-                insightsOpen={openModal === 'active-participle'}
-              />
-              <Detail
-                label={t('meta.passiveParticiple')}
-                labelLang={lang}
-                labelDir={dir}
-                value={formatArabic(passiveParticiple) || '—'}
-                speechText={passiveParticiple}
-                copyText={formatArabic(passiveParticiple)}
-                onInsightsClick={passiveParticiple ? () => setOpenModal('passive-participle') : undefined}
-                insightsLabel={t('nominalInfo.title.passiveParticiple')}
-                insightsOpen={openModal === 'passive-participle'}
-              />
             </VerbMetaSection>
-          </Panel>
+          </VerbHeaderPanel>
 
           <ConjugationSection>
             {selectedTense === 'present' ? (
@@ -437,6 +387,63 @@ export function ConjugationMode() {
               />
             )}
           </ConjugationSection>
+
+          <Panel title={t('nominals.title')} dir={dir} lang={lang}>
+            <NominalsGrid>
+              <MasdarSlot>
+                <Detail
+                  label={masdar && masdar.length > 1 ? t('meta.verbalNoun.plural') : t('meta.verbalNoun')}
+                  labelLang={lang}
+                  labelDir={dir}
+                  speechText={masdar?.length ? masdar.join('، ') : null}
+                  copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
+                  onInsightsClick={masdar?.length ? () => setOpenModal('masdar') : undefined}
+                  insightsLabel={t('nominalInfo.title.masdar')}
+                  insightsOpen={openModal === 'masdar'}
+                >
+                  {masdar?.length ? (
+                    <MasdarList>
+                      {masdar.map((value, index) => (
+                        <Fragment key={value}>
+                          <MasdarItem>
+                            <span>{formatArabic(value)}</span>
+                            {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
+                              <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
+                            )}
+                          </MasdarItem>
+                          {index < masdar.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
+                        </Fragment>
+                      ))}
+                    </MasdarList>
+                  ) : (
+                    '—'
+                  )}
+                </Detail>
+              </MasdarSlot>
+              <Detail
+                label={t('meta.activeParticiple')}
+                labelLang={lang}
+                labelDir={dir}
+                value={formatArabic(activeParticiple) || '—'}
+                speechText={activeParticiple}
+                copyText={formatArabic(activeParticiple)}
+                onInsightsClick={activeParticiple ? () => setOpenModal('active-participle') : undefined}
+                insightsLabel={t('nominalInfo.title.activeParticiple')}
+                insightsOpen={openModal === 'active-participle'}
+              />
+              <Detail
+                label={t('meta.passiveParticiple')}
+                labelLang={lang}
+                labelDir={dir}
+                value={formatArabic(passiveParticiple) || '—'}
+                speechText={passiveParticiple}
+                copyText={formatArabic(passiveParticiple)}
+                onInsightsClick={passiveParticiple ? () => setOpenModal('passive-participle') : undefined}
+                insightsLabel={t('nominalInfo.title.passiveParticiple')}
+                insightsOpen={openModal === 'passive-participle'}
+              />
+            </NominalsGrid>
+          </Panel>
         </Stack>
       )}
 
@@ -655,8 +662,26 @@ const FormMetaItem = styled('span')`
 const FormPattern = styled(FormMetaItem)`
   font-size: 1.2rem;
   font-weight: 400;
+  justify-self: end;
+  text-align: right;
 
   @media print {
     font-size: 0.9rem;
+  }
+`
+
+const NominalsGrid = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`
+
+const MasdarSlot = styled('div')`
+  @media (min-width: 480px) {
+    grid-column: 1 / -1;
   }
 `

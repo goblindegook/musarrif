@@ -290,9 +290,7 @@ test('Allow picking among multiple forms of the same verb', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const derivedForms = screen.getByText(/Derived forms/i).nextElementSibling as HTMLElement
   await user.click(within(derivedForms).getByLabelText(/II.*Form.*to concentrate/i))
-  expect(
-    await within(screen.getByText('Translation').parentElement!).findByText('to concentrate', { exact: false }),
-  ).toBeInTheDocument()
+  expect(await screen.findByText('to concentrate', { exact: false, selector: 'p' })).toBeInTheDocument()
 })
 
 describe('Form', () => {
