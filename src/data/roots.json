@@ -690,6 +690,7 @@
   { "root": "rqd", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "rsb", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "rsl", "form": 4 },
+  { "root": "rsl", "form": 10 },
   { "root": "rsm", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "rtb", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "rwH", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3aal"] },
