@@ -169,6 +169,35 @@ export function ConjugationMode() {
   const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
   const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
   const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
+  const recentsAndFavouritesPanels = (
+    <>
+      {recentVerbs.length > 0 && (
+        <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+          <VerbList>
+            {recentVerbs.map((verb) => {
+              const isActive = verb.id === selectedVerb?.id
+              return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+            })}
+          </VerbList>
+        </Panel>
+      )}
+
+      <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+        {favourites.length > 0 ? (
+          <VerbList>
+            {favourites.map((verb) => {
+              const isActive = verb.id === selectedVerb?.id
+              return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+            })}
+          </VerbList>
+        ) : (
+          <Text dir={dir} lang={lang}>
+            {t('favourites.empty')}
+          </Text>
+        )}
+      </Panel>
+    </>
+  )
 
   return (
     <Main hasVerb={!!selectedVerb}>
@@ -274,6 +303,8 @@ export function ConjugationMode() {
             </TabPanel>
           </Panel>
         )}
+
+        {!selectedVerb && recentsAndFavouritesPanels}
       </Stack>
 
       {selectedVerb && (
@@ -421,33 +452,7 @@ export function ConjugationMode() {
         </Stack>
       )}
 
-      <Stack area="recents">
-        {recentVerbs.length > 0 && (
-          <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
-            <VerbList>
-              {recentVerbs.map((verb) => {
-                const isActive = verb.id === selectedVerb?.id
-                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-              })}
-            </VerbList>
-          </Panel>
-        )}
-
-        <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
-          {favourites.length > 0 ? (
-            <VerbList>
-              {favourites.map((verb) => {
-                const isActive = verb.id === selectedVerb?.id
-                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-              })}
-            </VerbList>
-          ) : (
-            <Text dir={dir} lang={lang}>
-              {t('favourites.empty')}
-            </Text>
-          )}
-        </Panel>
-      </Stack>
+      {selectedVerb && <Stack area="recents">{recentsAndFavouritesPanels}</Stack>}
 
       {selectedVerb && (
         <Stack area="footer">
@@ -514,11 +519,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   max-width: 600px;
   margin: 0 auto;
   grid-template-columns: 1fr;
-  grid-template-areas:
-    'search'
-    'verb'
-    'recents'
-    'footer';
+  grid-template-areas: ${({ hasVerb }) => (hasVerb ? "'search' 'verb' 'recents' 'footer'" : "'search'")};
 
   ${({ hasVerb }) =>
     !hasVerb &&
