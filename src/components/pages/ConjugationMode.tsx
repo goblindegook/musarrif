@@ -266,6 +266,8 @@ export function ConjugationMode() {
           )}
         </Panel>
 
+        {!selectedVerb && recentsAndFavouritesPanels}
+
         {!selectedVerb && (
           <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
             <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
@@ -303,8 +305,6 @@ export function ConjugationMode() {
             </TabPanel>
           </Panel>
         )}
-
-        {!selectedVerb && recentsAndFavouritesPanels}
       </Stack>
 
       {selectedVerb && (
