@@ -237,32 +237,6 @@ export function ConjugationMode() {
           )}
         </Panel>
 
-        {recentVerbs.length > 0 && (
-          <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
-            <VerbList>
-              {recentVerbs.map((verb) => {
-                const isActive = verb.id === selectedVerb?.id
-                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-              })}
-            </VerbList>
-          </Panel>
-        )}
-
-        <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
-          {favourites.length > 0 ? (
-            <VerbList>
-              {favourites.map((verb) => {
-                const isActive = verb.id === selectedVerb?.id
-                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-              })}
-            </VerbList>
-          ) : (
-            <Text dir={dir} lang={lang}>
-              {t('favourites.empty')}
-            </Text>
-          )}
-        </Panel>
-
         {!selectedVerb && (
           <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
             <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
@@ -447,6 +421,34 @@ export function ConjugationMode() {
         </Stack>
       )}
 
+      <Stack area="recents">
+        {recentVerbs.length > 0 && (
+          <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+            <VerbList>
+              {recentVerbs.map((verb) => {
+                const isActive = verb.id === selectedVerb?.id
+                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+              })}
+            </VerbList>
+          </Panel>
+        )}
+
+        <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+          {favourites.length > 0 ? (
+            <VerbList>
+              {favourites.map((verb) => {
+                const isActive = verb.id === selectedVerb?.id
+                return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
+              })}
+            </VerbList>
+          ) : (
+            <Text dir={dir} lang={lang}>
+              {t('favourites.empty')}
+            </Text>
+          )}
+        </Panel>
+      </Stack>
+
       {selectedVerb && (
         <Stack area="footer">
           <Panel title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
@@ -515,6 +517,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   grid-template-areas:
     'search'
     'verb'
+    'recents'
     'footer';
 
   ${({ hasVerb }) =>
@@ -532,9 +535,10 @@ const Main = styled('main')<{ hasVerb: boolean }>`
       `
       max-width: inherit;
       grid-template-columns: 1fr 1.5fr;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto auto 1fr;
       grid-template-areas:
         'search verb'
+        'recents verb'
         'footer verb';
     `}
   }
@@ -548,7 +552,7 @@ const Main = styled('main')<{ hasVerb: boolean }>`
   }
 `
 
-const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' }>`
+const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' | 'recents' }>`
   grid-area: ${({ area: gridArea }) => gridArea};
   display: flex;
   flex-direction: column;
@@ -568,19 +572,10 @@ const VerbList = styled('div')`
 
 const VerbMetaSection = styled('section')`
   display: grid;
-  grid-template-columns: 1frr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 
-  @media (min-width: 480px) {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
-  @media (min-width: 960px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   @media print {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.35rem;
   }
 `
