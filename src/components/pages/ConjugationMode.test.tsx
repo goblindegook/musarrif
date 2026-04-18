@@ -398,9 +398,9 @@ test('Show quick picks related to the selected verb', () => {
   expect(buttons.map((button) => normalizeButtonText(button.textContent))).toEqual([
     'بَرهَنَIqto prove',
     'تَأَوَّهَVto moan',
+    'بَرِحَIto leave',
     'تَبَرَّعَVto donate',
     'بارىIIIto compete',
-    'تَرَكَIto leave',
   ])
 })
 

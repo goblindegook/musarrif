@@ -37,6 +37,7 @@ describe('imperative', () => {
         ['دعم', 'اِدْعَمْ'],
         ['كلم', 'اِكْلِمْ'],
         ['زرق', 'اِزْرَقْ'],
+        ['برح', 'اِبْرَحْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -161,6 +162,7 @@ describe('imperative', () => {
         ['زيد', 'زِدْ'],
         ['عوم', 'عُمْ'],
         ['حول', 'حُلْ'],
+        ['دوم', 'دُمْ'],
         ['لوم', 'لُمْ'],
         ['موت', 'مُتْ'],
         ['نوم', 'نَمْ'],
@@ -595,6 +597,7 @@ describe('imperative', () => {
 
     describe('hamzated final roots', () => {
       test.each([
+        ['فتء', 'اِفْتَأْ'],
         ['جرء', 'اُجْرُؤْ'],
         ['كلء', 'اُكْلُؤْ'],
       ])('%s pattern', (root, expected) => {

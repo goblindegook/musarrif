@@ -340,6 +340,7 @@
   { "root": "bqy", "form": 5 },
   { "root": "brE", "form": 5 },
   { "root": "brg$", "form": 4, "passiveVoice": "impersonal" },
+  { "root": "brH", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fa3aal", "fa3al", "fu3ool"] },
   { "root": "brhn", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3lala"] },
   { "root": "bry", "form": 3 },
   { "root": "bsT", "form": 1, "formPattern": "fa3ala-yaf3alu" },
@@ -348,6 +349,13 @@
   { "root": "byD", "form": 9, "passiveVoice": "none" },
   { "root": "byE", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3l"] },
   { "root": "byt", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["mimi"] },
+  {
+    "root": "dwm",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l", "fa3aal"],
+    "passiveVoice": "impersonal"
+  },
   { "root": "dEm", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fa3l"] },
   { "root": "dEw", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3aal"] },
   { "root": "dEw", "form": 8 },
@@ -385,6 +393,13 @@
   { "root": "frqE", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "fsr", "form": 2 },
   { "root": "fsr", "form": 10 },
+  {
+    "root": "ft'",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "masdarPatterns": ["fa3l"],
+    "passiveVoice": "impersonal"
+  },
   { "root": "ftH", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "fwD", "form": 6, "passiveVoice": "impersonal" },
   { "root": "fyd", "form": 4 },

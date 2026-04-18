@@ -32,6 +32,7 @@ describe('active participle', () => {
         ['مكن', 'مَاكِن'],
         ['بلغ', 'بَالِغ'],
         ['كتب', 'كَاتِب'],
+        ['برح', 'بَارِح'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -85,6 +86,7 @@ describe('active participle', () => {
         ['عوم', 'عَائِم'],
         ['عوز', 'عَاوِز'],
         ['نوم', 'نَائِم'],
+        ['دوم', 'دَائِم'],
         ['ميل', 'مَايِل'],
         ['كون', 'كَائِن'],
         ['بيت', 'بَائِت'],

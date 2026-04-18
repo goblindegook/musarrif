@@ -18,6 +18,7 @@ describe('active present subjunctive', () => {
         ['نفس', 'يَنْفُسَ'],
         ['مكن', 'يَمْكُنَ'],
         ['بلغ', 'يَبْلُغَ'],
+        ['برح', 'يَبْرَحَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -193,6 +194,7 @@ describe('active present subjunctive', () => {
         ['موت', 'يَمُوتَ'],
         ['خور', 'يَخْوَرَ'],
         ['قول', 'يَقُولَ'],
+        ['دوم', 'يَدُومَ'],
         ['نوم', 'يَنَامَ'],
         ['خوف', 'يَخَافَ'],
         ['شوق', 'يَشُوقَ'],
@@ -373,6 +375,7 @@ describe('active present subjunctive', () => {
 
     describe('hamzated final roots', () => {
       test.each([
+        ['فتء', 'يَفْتَأَ'],
         ['جرء', 'يَجْرُؤَ'],
         ['كلء', 'يَكْلُؤَ'],
       ])('%s pattern', (root, expected) => {

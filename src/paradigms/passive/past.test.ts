@@ -26,6 +26,7 @@ describe('passive past pattern', () => {
       test.each<[string, string]>([
         ['بلغ', 'بُلِغَ'],
         ['زرق', 'زُرِقَ'],
+        ['برح', 'بُرِحَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -68,6 +69,7 @@ describe('passive past pattern', () => {
         ['عوم', 'عِيمَ'],
         ['قول', 'قِيلَ'],
         ['نوم', 'نِيمَ'],
+        ['دوم', 'دِيمَ'],
         ['خور', 'خُوِرَ'],
         ['عوز', 'عُوِزَ'],
         ['خوف', 'خِيفَ'],
@@ -111,6 +113,7 @@ describe('passive past pattern', () => {
 
     describe('hamzated final roots', () => {
       test.each<[string, string]>([
+        ['فتء', 'فُتِئَ'],
         ['وطء', 'وُطِئَ'],
         ['كلء', 'كُلِئَ'],
       ])('%s pattern', (root, expected) => {

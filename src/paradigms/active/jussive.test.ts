@@ -18,6 +18,7 @@ describe('active present jussive', () => {
         ['نفس', 'يَنْفُسْ'],
         ['مكن', 'يَمْكُنْ'],
         ['بلغ', 'يَبْلُغْ'],
+        ['برح', 'يَبْرَحْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -276,6 +277,7 @@ describe('active present jussive', () => {
         ['عوز', 'يَعْوَزْ'],
         ['عوم', 'يَعُمْ'],
         ['حول', 'يَحُلْ'],
+        ['دوم', 'يَدُمْ'],
         ['موت', 'يَمُتْ'],
         ['خور', 'يَخْوَرْ'],
         ['نوم', 'يَنَمْ'],
@@ -593,6 +595,7 @@ describe('active present jussive', () => {
 
     describe('hamzated final roots', () => {
       test.each([
+        ['فتء', 'يَفْتَأْ'],
         ['جرء', 'يَجْرُؤْ'],
         ['كلء', 'يَكْلُؤْ'],
       ])('%s pattern', (root, expected) => {
