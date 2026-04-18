@@ -12,7 +12,14 @@ import { deriveActiveParticiple } from '../../paradigms/nominal/participle-activ
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
 import { search } from '../../paradigms/selection'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
-import { buildVerbFromId, type DisplayVerb, formatFormLabel, getVerbById, verbs } from '../../paradigms/verbs'
+import {
+  buildVerbFromId,
+  type DisplayVerb,
+  formatFormLabel,
+  getAvailableParadigms,
+  getVerbById,
+  verbs,
+} from '../../paradigms/verbs'
 import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
 import { LinkButton } from '../atoms/LinkButton'
@@ -166,9 +173,21 @@ export function ConjugationMode() {
     return result !== '—' ? result : undefined
   }, [selectedVerb, lang, translateVerb])
 
-  const masdar = useMemo(() => (selectedVerb ? deriveMasdar(selectedVerb) : null), [selectedVerb])
-  const activeParticiple = useMemo(() => (selectedVerb ? deriveActiveParticiple(selectedVerb) : null), [selectedVerb])
-  const passiveParticiple = useMemo(() => (selectedVerb ? derivePassiveParticiple(selectedVerb) : null), [selectedVerb])
+  const availableParadigms = useMemo(() => (selectedVerb ? getAvailableParadigms(selectedVerb) : []), [selectedVerb])
+  const masdar = useMemo(
+    () => (selectedVerb && availableParadigms.includes('masdar') ? deriveMasdar(selectedVerb) : null),
+    [selectedVerb, availableParadigms],
+  )
+  const activeParticiple = useMemo(
+    () =>
+      selectedVerb && availableParadigms.includes('active.participle') ? deriveActiveParticiple(selectedVerb) : null,
+    [selectedVerb, availableParadigms],
+  )
+  const passiveParticiple = useMemo(
+    () =>
+      selectedVerb && availableParadigms.includes('passive.participle') ? derivePassiveParticiple(selectedVerb) : null,
+    [selectedVerb, availableParadigms],
+  )
   const recentsAndFavouritesPanels = (
     <>
       {recentVerbs.length > 0 && (
@@ -362,7 +381,9 @@ export function ConjugationMode() {
               >
                 <FormMetaValue>
                   <FormMetaItem>{selectedVerbFormLabel}</FormMetaItem>
-                  {selectedVerb.form === 1 && <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>}
+                  {selectedVerb.form === 1 && selectedVerb.formPattern != null && (
+                    <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>
+                  )}
                 </FormMetaValue>
               </Detail>
             </VerbMetaSection>

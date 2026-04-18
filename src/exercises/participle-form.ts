@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
+import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../paradigms/verbs'
 import { exerciseDiacritics, random, randomVerb } from './dimensions'
 import { defineExercise } from './exercises'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -12,17 +12,21 @@ export const participleFormExercise = defineExercise(
   'participleForm',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
+    const paradigms = getAvailableParadigms(verb)
     const active = deriveActiveParticiple(verb)
-    const passive = derivePassiveParticiple(verb)
-    const kind: Participle = passive ? random(['active', 'passive']) : 'active'
+    const passive = paradigms.includes('passive.participle') ? derivePassiveParticiple(verb) : ''
+    const kind: Participle = paradigms.includes('passive.participle') ? random(['active', 'passive']) : 'active'
     const word = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
 
     const eligibleForms = FORMS.filter((form) => {
       if (form === verb.form) return false
       const alternative = synthesizeVerb(verb.root, form)
+      const available = getAvailableParadigms(alternative)
       return kind === 'active'
-        ? exerciseDiacritics(deriveActiveParticiple(alternative), profile.diacritics) !== word
-        : exerciseDiacritics(derivePassiveParticiple(alternative), profile.diacritics) !== word
+        ? available.includes('active.participle') &&
+            exerciseDiacritics(deriveActiveParticiple(alternative), profile.diacritics) !== word
+        : available.includes('passive.participle') &&
+            exerciseDiacritics(derivePassiveParticiple(alternative), profile.diacritics) !== word
     })
 
     const distractors = shuffle(eligibleForms).slice(0, 3)

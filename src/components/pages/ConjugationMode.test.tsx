@@ -101,6 +101,18 @@ test('shows multiple masdars with a mimi label', () => {
   expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
+test('loads لَيْسَ without deriving unavailable nominals', () => {
+  expect(() => renderConjugationMode('/#/verbs/lys-1')).not.toThrow()
+
+  const masdarDetail = screen.getByText('Verbal noun').parentElement!
+  const activeDetail = screen.getByText('Active participle').parentElement!
+  const passiveDetail = screen.getByText('Passive participle').parentElement!
+
+  expect(within(masdarDetail).getByText('—')).toBeInTheDocument()
+  expect(within(activeDetail).getByText('—')).toBeInTheDocument()
+  expect(within(passiveDetail).getByText('—')).toBeInTheDocument()
+})
+
 describe('Conjugation table', () => {
   it('shows active and passive voice tabs', () => {
     renderConjugationMode('/#/verbs/ktb-1')
