@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { TENSES } from '../paradigms/tense'
 import { verbTenseExercise } from './verb-tense'
 
 const INITIAL_DIMENSION_PROFILE = {
@@ -10,28 +11,9 @@ const INITIAL_DIMENSION_PROFILE = {
   nominals: 0,
 } as const
 
-const UNVOICED_KEYS = new Set([
-  'tense.past',
-  'tense.present.indicative',
-  'tense.present.subjunctive',
-  'tense.present.jussive',
-  'tense.future',
-  'tense.active.imperative',
-])
+const UNVOICED_KEYS = new Set(TENSES.map((t) => `tense.${t.replace(/^\w+\./, '')}`))
 
-const VOICED_KEYS = new Set([
-  'tense.active.past',
-  'tense.active.present.indicative',
-  'tense.active.present.subjunctive',
-  'tense.active.present.jussive',
-  'tense.active.future',
-  'tense.active.imperative',
-  'tense.passive.past',
-  'tense.passive.present.indicative',
-  'tense.passive.present.subjunctive',
-  'tense.passive.present.jussive',
-  'tense.passive.future',
-])
+const VOICED_KEYS = new Set(TENSES.map((t) => `tense.${t}`))
 
 describe('tenseExercise', () => {
   afterEach(() => {
@@ -86,41 +68,41 @@ describe('tenseExercise difficulty', () => {
     expect(verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
   })
 
-  test('easy: options are unvoiced tense keys', () => {
-    const { options } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
-  })
-
-  test('medium: options are unvoiced tense keys', () => {
+  test('options are unvoiced tense keys', () => {
     const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 })
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
-  test('hard: options are voiced tense keys (imperative unprefixed)', () => {
+  test('options are voiced tense keys (imperative unprefixed) on higher difficulty', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
   })
 
-  test('easy: correct answer is the past tense key (random=0)', () => {
+  test('correct answer is the past tense key (random=0)', () => {
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer]).toBe('tense.past')
+  })
+
+  test('imperative answer uses unvoiced imperative key', () => {
+    const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE, { tense: 'active.imperative' })
+    expect(options[answer]).toBe('tense.imperative')
   })
 })
 
 describe('tenseExercise distractor strategies', () => {
-  test('easy: three distractors are unvoiced tense keys distinct from the correct answer', () => {
+  test('three distractors are unvoiced tense keys distinct from the correct answer', () => {
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => UNVOICED_KEYS.has(d))).toBe(true)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)
   })
 
-  test('hard: all options are voiced tense keys', () => {
+  test('all options are voiced tense keys on higher difficulty', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
-    expect(VOICED_KEYS.has(options[answer])).toBe(true)
+    expect(VOICED_KEYS).toContain(options[answer])
   })
 })
 

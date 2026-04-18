@@ -396,20 +396,14 @@ function derivePastForms(verb: Verb): PastBaseForms {
 
 function conjugateLaysa(): PastBaseForms {
   return {
-    base: [LAM, FATHA, YEH, SUKOON, SEEN, FATHA],
+    ...buildForms([LAM, FATHA, YEH, SUKOON, SEEN], SEEN),
     suffixedBase: [LAM, FATHA, SEEN],
-    feminineSingularDualBase: [LAM, FATHA, YEH, SUKOON, SEEN],
-    masculineDualBase: [LAM, FATHA, YEH, SUKOON, SEEN, FATHA],
-    thirdPersonMasculinePluralBase: [LAM, FATHA, YEH, SUKOON, SEEN, DAMMA],
   }
 }
 
 function conjugateZala(): PastBaseForms {
   return {
-    base: [ZAY, FATHA, ALIF, LAM, FATHA],
+    ...buildForms([ZAY, FATHA, ALIF, LAM], LAM),
     suffixedBase: [ZAY, KASRA, LAM],
-    feminineSingularDualBase: [ZAY, FATHA, ALIF, LAM],
-    masculineDualBase: [ZAY, FATHA, ALIF, LAM, FATHA],
-    thirdPersonMasculinePluralBase: [ZAY, FATHA, ALIF, LAM, DAMMA],
   }
 }

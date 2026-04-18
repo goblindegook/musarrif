@@ -3,7 +3,7 @@ import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { HAMZA } from './letters'
-import type { VerbParadigm } from './tense'
+import { TENSES, type VerbParadigm } from './tense'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -45,7 +45,6 @@ export type FormIVerb = {
   masdarPatterns?: readonly MasdarPattern[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
-  paradigms?: VerbParadigm[]
   contractedImperative?: boolean
 }
 
@@ -54,7 +53,6 @@ export type NonFormIVerb = {
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
-  paradigms?: VerbParadigm[]
 }
 
 export type Verb = FormIVerb | NonFormIVerb
@@ -127,25 +125,19 @@ export function getVerb(root: string, form: VerbForm): DisplayVerb {
   return verb
 }
 
-const ALL_PARADIGMS: readonly VerbParadigm[] = [
-  'active.past',
-  'active.present.indicative',
-  'active.present.subjunctive',
-  'active.present.jussive',
-  'active.future',
-  'active.imperative',
-  'passive.past',
-  'passive.present.indicative',
-  'passive.present.subjunctive',
-  'passive.present.jussive',
-  'passive.future',
-  'active.participle',
-  'passive.participle',
-  'masdar',
-]
+const ALL_PARADIGMS: readonly VerbParadigm[] = [...TENSES, 'active.participle', 'passive.participle', 'masdar']
 
 export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
-  if (verb.paradigms) return [...verb.paradigms]
+  if (verb.form === 1 && verb.root === 'ليس') return ['active.past']
+  if (verb.form === 1 && verb.root === 'زيل')
+    return [
+      'active.past',
+      'active.present.indicative',
+      'active.present.subjunctive',
+      'active.present.jussive',
+      'active.future',
+    ]
+
   return ALL_PARADIGMS.filter((paradigm) => {
     if (paradigm.startsWith('passive') && (verb.form === 9 || verb.passiveVoice === 'none')) return false
     if (paradigm === 'passive.participle' && verb.noPassiveParticiple) return false

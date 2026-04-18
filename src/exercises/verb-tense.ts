@@ -43,7 +43,7 @@ export const verbTenseExercise = defineExercise(
 )
 
 function tenseKey(tense: VerbTense, includeVoice: boolean): string {
-  if (includeVoice || tense === 'active.imperative') return `tense.${tense}`
+  if (includeVoice) return `tense.${tense}`
   return `tense.${tense.replace(/^\w+\./, '')}`
 }
 
