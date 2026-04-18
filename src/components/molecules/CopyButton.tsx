@@ -23,7 +23,7 @@ export function CopyButton({ text, ariaLabel, size }: CopyButtonProps) {
 
   return (
     supported && (
-      <IconButton onClick={copy} ariaLabel={ariaLabel ?? `Copy ${text}`} size={size} active={copied}>
+      <IconButton onClick={copy} aria-label={ariaLabel ?? `Copy ${text}`} size={size} active={copied}>
         {copied ? <CheckIcon /> : <CopyIcon />}
       </IconButton>
     )

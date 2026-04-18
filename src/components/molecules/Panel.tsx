@@ -83,14 +83,31 @@ const PanelTitleButton = styled('button')`
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  padding: 0;
+  padding: 0.1rem 0.2rem;
   background: none;
   border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
   text-align: start;
   width: 100%;
   font: inherit;
   color: inherit;
+  transition:
+    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:focus-visible {
+    outline: 3px solid #fde68a;
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 `
 
 const PanelTitle = styled('h2')`
@@ -104,7 +121,7 @@ const PanelTitle = styled('h2')`
 const CollapseArrow = styled('span')<{ collapsed: boolean }>`
   font-size: 1.2rem;
   line-height: 1;
-  transition: transform 0.2s ease;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
   transform: ${({ collapsed }) => (collapsed ? 'rotate(90deg)' : 'rotate(-90deg)')};
   display: inline-block;
   user-select: none;

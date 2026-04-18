@@ -57,7 +57,7 @@ export function FavouriteButton({ isFavourite, onToggle }: FavouriteButtonProps)
   }
 
   return (
-    <IconButton onClick={handleToggle} ariaLabel={ariaLabel} active={isFavourite}>
+    <IconButton onClick={handleToggle} aria-label={ariaLabel} active={isFavourite}>
       <AnimatedHeart animState={animState} class={heartAnimations}>
         {isFavourite ? <HeartIcon /> : <HeartOutlineIcon />}
       </AnimatedHeart>

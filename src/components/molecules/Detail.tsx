@@ -45,9 +45,9 @@ export const Detail = ({
           {onInsightsClick && (
             <IconButton
               onClick={onInsightsClick}
-              ariaLabel={insightsLabel}
-              ariaHasPopup="dialog"
-              ariaExpanded={insightsOpen}
+              aria-label={insightsLabel}
+              aria-has-popup="dialog"
+              aria-expanded={insightsOpen}
               size="sm"
             >
               <LightBulbIcon />

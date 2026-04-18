@@ -122,13 +122,23 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   text-transform: uppercase;
   position: relative;
   z-index: 1;
-  transition: color 160ms ease;
+  transition: color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
     background: transparent;
     border-color: transparent;
     color: ${({ active }) => (active ? '#92400e' : '#334155')};
     box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #fde68a;
+    outline-offset: 2px;
+    border-color: #facc15;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 
   @media (min-width: 720px) {

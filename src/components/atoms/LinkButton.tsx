@@ -12,7 +12,10 @@ export const LinkButton = styled('a')`
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1);
   outline: none;
   text-decoration: none;
 
@@ -23,7 +26,12 @@ export const LinkButton = styled('a')`
   }
 
   &:focus-visible {
-    outline: 2px solid #facc15;
+    outline: 3px solid #fde68a;
     outline-offset: 2px;
+    border-color: #facc15;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 `

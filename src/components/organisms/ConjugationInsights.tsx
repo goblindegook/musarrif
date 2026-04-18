@@ -106,7 +106,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
 
   return (
     <>
-      <IconButton ariaLabel={t('aria.explanation', { word: arabic })} onClick={() => setOpen(true)}>
+      <IconButton aria-label={t('aria.explanation', { word: arabic })} onClick={() => setOpen(true)}>
         <LightBulbIcon />
       </IconButton>
       {open && (

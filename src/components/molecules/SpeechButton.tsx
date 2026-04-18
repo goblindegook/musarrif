@@ -32,7 +32,7 @@ export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps)
     supported && (
       <IconButton
         onClick={speak}
-        ariaLabel={ariaLabel ?? `Play pronunciation for ${text}`}
+        aria-label={ariaLabel ?? `Play pronunciation for ${text}`}
         size={size}
         active={playing}
       >

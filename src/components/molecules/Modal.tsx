@@ -44,7 +44,7 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
     >
       <Header>
         <ModalTitle id={titleId}>{title}</ModalTitle>
-        <IconButton onClick={onClose} ariaLabel={t('modal.close')} title={t('modal.close')}>
+        <IconButton onClick={onClose} aria-label={t('modal.close')} title={t('modal.close')}>
           <CloseIcon />
         </IconButton>
       </Header>

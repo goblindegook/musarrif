@@ -68,8 +68,8 @@ export const AppHeader = () => {
           <SettingsButtonWrapper>
             <IconButton
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              ariaLabel={t('settings.title')}
-              ariaExpanded={isSettingsOpen}
+              aria-label={t('settings.title')}
+              aria-expanded={isSettingsOpen}
               title={t('settings.title')}
               active={isSettingsOpen}
             >
@@ -126,12 +126,11 @@ const TopBar = styled('header')`
   background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
   padding: 1rem 0.75rem;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
-  transition: padding 200ms ease;
+  transition: padding 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 480px) {
     padding: 1rem;
   }
-  
   @media (min-width: 960px) {
     position: static;
     background: transparent;

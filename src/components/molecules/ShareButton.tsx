@@ -15,7 +15,7 @@ export function ShareButton() {
 
   return (
     supported && (
-      <IconButton onClick={share} ariaLabel={t('aria.share')}>
+      <IconButton onClick={share} aria-label={t('aria.share')}>
         <ShareIcon />
       </IconButton>
     )
