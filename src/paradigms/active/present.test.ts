@@ -282,6 +282,7 @@ describe('active present indicative', () => {
         ['جيد', 'يَجْيَدُ'],
         ['خوف', 'يَخَافُ'],
         ['شوق', 'يَشُوقُ'],
+        ['زيل', 'يَزَالُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -355,6 +356,24 @@ describe('active present indicative', () => {
           '2fp': 'تَقُلْنَ',
           '3mp': 'يَقُولُوْنَ',
           '3fp': 'يَقُلْنَ',
+        })
+      })
+
+      test('زَالَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيل', 1), 'indicative')).toEqualT({
+          '1s': 'أَزَالُ',
+          '2ms': 'تَزَالُ',
+          '2fs': 'تَزَالِيْنَ',
+          '3ms': 'يَزَالُ',
+          '3fs': 'تَزَالُ',
+          '2d': 'تَزَالَانِ',
+          '3md': 'يَزَالَانِ',
+          '3fd': 'تَزَالَانِ',
+          '1p': 'نَزَالُ',
+          '2mp': 'تَزَالُوْنَ',
+          '2fp': 'تَزَلْنَ',
+          '3mp': 'يَزَالُوْنَ',
+          '3fp': 'يَزَلْنَ',
         })
       })
     })

@@ -281,6 +281,7 @@ describe('active present jussive', () => {
         ['نوم', 'يَنَمْ'],
         ['خوف', 'يَخَفْ'],
         ['شوق', 'يَشُقْ'],
+        ['زيل', 'يَزَلْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -336,6 +337,24 @@ describe('active present jussive', () => {
           '2fp': 'تَشِدْنَ',
           '3mp': 'يَشِيدُوْا',
           '3fp': 'يَشِدْنَ',
+        })
+      })
+
+      test('زَالَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيل', 1), 'jussive')).toEqualT({
+          '1s': 'أَزَلْ',
+          '2ms': 'تَزَلْ',
+          '2fs': 'تَزَالِي',
+          '3ms': 'يَزَلْ',
+          '3fs': 'تَزَلْ',
+          '2d': 'تَزَالَا',
+          '3md': 'يَزَالَا',
+          '3fd': 'تَزَالَا',
+          '1p': 'نَزَلْ',
+          '2mp': 'تَزَالُوْا',
+          '2fp': 'تَزَلْنَ',
+          '3mp': 'يَزَالُوْا',
+          '3fp': 'يَزَلْنَ',
         })
       })
 

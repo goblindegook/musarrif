@@ -22,6 +22,7 @@ import {
   TEH,
   WAW,
   YEH,
+  ZAY,
 } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
@@ -34,33 +35,7 @@ interface PastBaseForms {
   thirdPersonMasculinePluralBase: readonly string[]
 }
 
-function conjugateLaysa(): Record<PronounId, string> {
-  const lays = [LAM, FATHA, YEH, SUKOON, SEEN]
-  const las = [LAM, FATHA, SEEN]
-
-  return mapRecord(
-    {
-      '1s': [...las, SUKOON, TEH, DAMMA],
-      '2ms': [...las, SUKOON, TEH, FATHA],
-      '2fs': [...las, SUKOON, TEH, KASRA],
-      '3ms': [...lays, FATHA],
-      '3fs': [...lays, FATHA, TEH, SUKOON],
-      '2d': [...las, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF],
-      '3md': [...lays, FATHA, ALIF],
-      '3fd': [...lays, FATHA, TEH, FATHA, ALIF],
-      '1p': [...las, SUKOON, NOON, FATHA, ALIF],
-      '2mp': [...las, SUKOON, TEH, DAMMA, MEEM, SUKOON],
-      '2fp': [...las, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp': [...lays, DAMMA, WAW, SUKOON, ALIF],
-      '3fp': [...las, SUKOON, NOON, FATHA],
-    },
-    finalize,
-  )
-}
-
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
-  if (verb.root === 'ليس' && verb.form === 1) return conjugateLaysa()
-
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =
     derivePastForms(verb)
 
@@ -370,6 +345,10 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastForms(verb: Verb): PastBaseForms {
+  if (verb.root === 'ليس' && verb.form === 1) return conjugateLaysa()
+
+  if (verb.root === 'زيل' && verb.form === 1) return conjugateZala()
+
   if (verb.root.length === 4) {
     switch (verb.form) {
       case 1:
@@ -412,5 +391,25 @@ function derivePastForms(verb: Verb): PastBaseForms {
       return derivePastFormIX(verb)
     case 10:
       return derivePastFormX(verb)
+  }
+}
+
+function conjugateLaysa(): PastBaseForms {
+  return {
+    base: [LAM, FATHA, YEH, SUKOON, SEEN, FATHA],
+    suffixedBase: [LAM, FATHA, SEEN],
+    feminineSingularDualBase: [LAM, FATHA, YEH, SUKOON, SEEN],
+    masculineDualBase: [LAM, FATHA, YEH, SUKOON, SEEN, FATHA],
+    thirdPersonMasculinePluralBase: [LAM, FATHA, YEH, SUKOON, SEEN, DAMMA],
+  }
+}
+
+function conjugateZala(): PastBaseForms {
+  return {
+    base: [ZAY, FATHA, ALIF, LAM, FATHA],
+    suffixedBase: [ZAY, KASRA, LAM],
+    feminineSingularDualBase: [ZAY, FATHA, ALIF, LAM],
+    masculineDualBase: [ZAY, FATHA, ALIF, LAM, FATHA],
+    thirdPersonMasculinePluralBase: [ZAY, FATHA, ALIF, LAM, DAMMA],
   }
 }

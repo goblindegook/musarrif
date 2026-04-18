@@ -935,5 +935,17 @@
   { "root": "zwy", "form": 5, "passiveVoice": "none" },
   { "root": "zwy", "form": 7, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "zyd", "form": 1, "formPattern": "fa3ala-yaf3alu", "masdarPatterns": ["fi3aala", "fa3l"] },
-  { "root": "zyd", "form": 8, "passiveVoice": "impersonal" }
+  { "root": "zyd", "form": 8, "passiveVoice": "impersonal" },
+  {
+    "root": "zyl",
+    "form": 1,
+    "formPattern": "fa3ila-yaf3alu",
+    "paradigms": [
+      "active.past",
+      "active.present.indicative",
+      "active.present.subjunctive",
+      "active.present.jussive",
+      "active.future"
+    ]
+  }
 ]

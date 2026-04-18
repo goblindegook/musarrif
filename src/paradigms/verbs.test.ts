@@ -39,9 +39,20 @@ describe('formatFormLabel', () => {
 })
 
 describe('getAvailableParadigms', () => {
-  test('returns only active.past for a verb with paradigms: ["active.past"]', () => {
+  test('returns only active past for ليس', () => {
     const verb = getVerb('ليس', 1)
     expect(getAvailableParadigms(verb)).toEqual(['active.past'])
+  })
+
+  test('returns restricted paradigms for زَالَ', () => {
+    const verb = getVerb('زيل', 1)
+    expect(getAvailableParadigms(verb)).toEqual([
+      'active.past',
+      'active.present.indicative',
+      'active.present.subjunctive',
+      'active.present.jussive',
+      'active.future',
+    ])
   })
 
   test('excludes all passive.* for a verb with passiveVoice: none', () => {

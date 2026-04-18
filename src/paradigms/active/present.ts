@@ -14,6 +14,7 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
+  LAM,
   longVowel,
   NOON,
   resolveFormVIIIInfixConsonant,
@@ -25,6 +26,7 @@ import {
   type Vowel,
   WAW,
   YEH,
+  ZAY,
 } from '../letters'
 import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
@@ -136,7 +138,7 @@ function buildFemininePlural(stem: readonly string[], verb: Verb): readonly stri
   if (isWeakLetter(c2)) {
     if (verb.form !== 5 && isHamzatedLetter(c3)) return [...dropTerminalHamza(shortenHollowStem(stem)), ...suffix]
 
-    if (verb.form === 1 && !isFormIPastVowel(verb, KASRA) && !isWeakLetter(c3))
+    if (verb.form === 1 && (stem.includes(ALIF) || !isFormIPastVowel(verb, KASRA)) && !isWeakLetter(c3))
       return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
     if ([7, 10].includes(verb.form)) return [...removeFinalDiacritic(shortenHollowStem(stem)), ...suffix]
@@ -328,7 +330,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...removeFinalDiacritic(word), FATHA]
 
       if (isMiddleWeak) {
-        if (verb.form === 1 && !isFormIPastVowel(verb, KASRA)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]
+        if (verb.form === 1 && (word.includes(ALIF) || !isFormIPastVowel(verb, KASRA)))
+          return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
         if ([4, 7, 10].includes(verb.form)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
@@ -340,6 +343,10 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
     }),
     finalize,
   )
+}
+
+function deriveZalaStem(): readonly string[] {
+  return [YEH, FATHA, ZAY, FATHA, ALIF, LAM, DAMMA]
 }
 
 export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {
@@ -527,6 +534,8 @@ function derivePresentForms(verb: Verb): readonly string[] {
   const letters = [...verb.root]
 
   if (letters.length < 3) throw new Error('Root must have at least 3 letters.')
+
+  if (verb.root === 'زيل' && verb.form === 1) return deriveZalaStem()
 
   if (letters.length === 4) {
     switch (verb.form) {

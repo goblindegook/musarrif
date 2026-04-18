@@ -217,6 +217,24 @@ describe('active present subjunctive', () => {
           '3fp': 'يَشِدْنَ',
         })
       })
+
+      test('زَالَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('زيل', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَزَالَ',
+          '2ms': 'تَزَالَ',
+          '2fs': 'تَزَالِي',
+          '3ms': 'يَزَالَ',
+          '3fs': 'تَزَالَ',
+          '2d': 'تَزَالَا',
+          '3md': 'يَزَالَا',
+          '3fd': 'تَزَالَا',
+          '1p': 'نَزَالَ',
+          '2mp': 'تَزَالُوْا',
+          '2fp': 'تَزَلْنَ',
+          '3mp': 'يَزَالُوْا',
+          '3fp': 'يَزَلْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
