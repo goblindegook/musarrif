@@ -46,7 +46,7 @@ describe('participleRootExercise', () => {
   test('correct option matches an existing root with letters separated by spaces', () => {
     const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.some((verb) => verb.root === correctRoot)).toBe(true)
+    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
   })
 
   test('prompt type matches the shown participle word in easy difficulty', () => {

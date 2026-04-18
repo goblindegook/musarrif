@@ -1,65 +1,56 @@
-# Agent Guidelines for Conjugator Codebase
+# Agent Guidelines — Muṣarrif
 
-This document outlines the coding standards, patterns, and practices that must be followed when working on this codebase.
+Muṣarrif is an interactive Arabic verb conjugator — a PWA that lets users search, browse, and drill Arabic verb conjugation tables, including active/passive voice, all tenses/moods, and nominal derivations (masdar, active/passive participles), with speech synthesis support. It also includes an exercise mode for drilling form identification and root extraction.
 
-## IMPORTANT
+## Version Control
 
-⚠️ TEST-DRIVEN DEVELOPMENT IS NON-NEGOTIABLE ⚠️
+Agents must not commit or push anything. The user retains full control over releases.
 
-When changing system behaviour, write tests covering expected behaviour before changing production code.
+## Commands
 
-## Tooling
+Node is managed via Mise. Always prefix `node`/`npm` commands with `mise exec --`.
 
-Node is configured via Mise. Always use `mise exec --` before running `node` or `npm` scripts (no global Node available).
+```bash
+mise exec -- npm run dev              # Dev server
+mise exec -- npm run build            # tsc + vite build
+mise exec -- npm run preview          # Preview production build
+mise exec -- npm test -- --no-watch   # Run tests once (default is watch mode)
+mise exec -- npm test -- --no-watch src/path/to/file.test.ts  # Single test file
+mise exec -- npm run test:coverage    # Coverage report
+mise exec -- npm run test:mutation    # Stryker mutation testing
+mise exec -- npm run lint             # Biome lint check
+mise exec -- npm run lint:fix         # Auto-fix lint issues
+mise exec -- npm run format           # lint:fix + format
+mise exec -- node script.js           # Node scripts (always with mise exec --)
+```
 
-- **Dev server**: `mise exec -- npm run dev`
-- **Build**: `mise exec -- npm run build`
-- **Preview**: `mise exec -- npm run preview`
-- **Tests**: `mise exec -- npm test`
-- **Coverage**: `mise exec -- npm run test:coverage`
-- **Mutation tests**: `mise exec -- npm run test:mutation`
-- **Lint**: `mise exec -- npm run lint`
-- **Format**: `mise exec -- npm run format`
-- **Node.js scripts**: `mise exec -- node script.js` or `mise exec -- node -e "console.log('code here')"`
-- **Vitest**: Runs in watch mode by default. For single runs (CI/ad-hoc), pass `--no-watch`, e.g. `mise exec -- npm test -- --no-watch src/app.test.tsx`
-- **Scripting tasks**: Prefer Node over external tools (e.g., Python). Always use `mise exec --` to ensure the correct Node version.
+Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer Node over external tools (e.g. Python) for scripting tasks.
 
-## Code Style and Formatting
+## Architecture
 
-### TypeScript Conventions
+**Stack**: Preact + TypeScript (strict), Vite, goober (CSS-in-JS), Vitest + @testing-library/preact, Biome.
 
-- Use TypeScript with strict typing enabled
-- Use `type` keyword for type-only imports: `import type { Verb } from './verbs'`
-- Prefer explicit types over inference when it improves readability
-- Use readonly arrays and objects where immutability is desired: `readonly string[]`
-- Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks when testing for absence
-- When a variable is used only once, prefer inlining it unless it compromises readability.
+**Two-layer separation**:
+- `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for all 13 pronoun forms (`1s`, `2ms`, `2fs`, `2md`, `2fd`, `2mp`, `2fp`, `3ms`, `3fs`, `3md`, `3fd`, `3mp`, `3fp`).
+- `src/components/` — Preact UI components styled with goober.
 
-### Formatting Rules (Biome)
+**State management**: Two context providers in `src/hooks/`:
+- `RoutingProvider` — Hash-based routing, synced with `hashchange`/`popstate`. Canonical paths:
+  - `#/verbs`, `#/verbs/:verbId`, `#/verbs/:verbId/:voice/:tense`, `#/verbs/:verbId/:voice/present/:mood`, `#/test`
+  - App is deployed under Vite `base: '/musarrif/'`; routing utilities normalize base-path and hash navigation.
+- `I18nProvider` — Language (en/it/pt/ar), diacritics preference (`all`/`some`/`none`), RTL/LTR switching.
 
-- **Indentation**: 2 spaces
-- **Line width**: 120 characters
-- **Quotes**: Single quotes for strings
-- **Semicolons**: As needed (Biome will handle this automatically)
-- **Import organization**: Organize imports with external packages first, then internal imports
+**Verb data**: Raw roots in `src/data/roots.json`. Search via fuzzy matching with transliteration and Levenshtein distance in `src/paradigms/verbs.ts`.
 
-### Naming Conventions
+**Paradigm structure**:
+- `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative
+- `src/paradigms/passive/` — past, present, future
+- `src/paradigms/nominal/` — masdar, active participle, passive participle
+- `src/paradigms/letters.ts` — Character/diacritic manipulation constants and utilities
 
-- **Functions/Variables**: camelCase (`conjugateFuture`, `isDefectiveRadical`)
-- **Components/Types/Interfaces**: PascalCase (`Verb`, `VerbMetaProps`)
-- **Constants**: UPPER_SNAKE_CASE for module-level constants (`ALIF_HAMZA`)
-- **Files**: PascalCase for components (`SpeechButton.tsx`), camelCase for utilities (`pronouns.ts`)
+**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers conjugation, nominal, root, form, tense, pronoun, and participle exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/components/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
 
-### Comments
-
-- Do not write comments explaining what code does (code should be self-explanatory)
-- Do not write comments for obvious operations
-- Do write comments to explain non-obvious implementation decisions
-- Do write comments to explain the reason for workarounds or special cases
-- Do write comments to clarify grammatical or syntactical rules
-- Do use comments with linter ignores to explain why a rule is being ignored (e.g., `// biome-ignore lint/style/noNonNullAssertion: <explanation>`)
-
-## Project Structure
+**Localization**: `src/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales.
 
 ### Directory Organization
 
@@ -84,67 +75,102 @@ src/
   test/                     # Vitest setup and custom matchers
 ```
 
-### File Organization
+## Design Context
 
-- **Grammar files**: Pure functions, no Preact dependencies or manipulation of the DOM tree
-- **UI files**: Preact components, styled components, UI logic
+### Users
 
-### Routing Model
+Arabic self-learners studying independently, typically alongside a course or textbook. They use Muṣarrif as a reference and drill companion. The tool should reward attention without demanding it.
 
-- Routing is hash-first with normalization in `src/hooks/routing.tsx`.
-- Canonical paths:
-  - `#/verbs`
-  - `#/verbs/:verbId`
-  - `#/verbs/:verbId/:voice/:tense`
-  - `#/verbs/:verbId/:voice/present/:mood`
-  - `#/test`
-- The app is deployed under Vite `base: '/musarrif/'` and routing utilities normalize both base-path and hash navigation.
+### Brand Personality
 
-## Localization
+Elegant, minimal, and quietly authoritative. Three words: **precise, warm, scholarly**. The emotional goal is **confident calm** — users should feel capable and focused, never overwhelmed.
 
-Supports four languages: **English**, **Italian**, **European Portuguese**, and **Arabic**. Translation files are in `src/locales/`.
+### Aesthetic Direction
 
-### UI Strings
+- **Palette**: Warm parchment (`#f5f4ee`) backgrounds, white card surfaces, amber/ochre accents (`#92400e`, `#facc15`), slate text hierarchy. Semantic green/red for exercise feedback.
+- **Typography**: IBM Plex Sans (UI) + Noto Sans Arabic. Uppercase tracking on labels. Generous Arabic script sizing — the language is always the visual centrepiece.
+- **Layout**: Clean card-based structure, generous whitespace, rounded corners (1–1.5rem) that feel refined, not playful.
+- **Theme**: Light mode today; design with future dark mode compatibility in mind.
 
-All UI strings must be translated into all languages and stored in the `strings` object within each locale file.
+**Anti-references**: No gamified/Duolingo aesthetics, no generic SaaS blue, no dense academic PDF, no dark terminal aesthetic.
 
-### Verb Translations
+### Design Principles
 
-When adding a root to `src/data/roots.json`, also add translated root semantics and translations for all verb forms:
+1. **Arabic script is the hero.** Always give Arabic text room to breathe at generous sizes.
+2. **Clarity over decoration.** Every element earns its presence; whitespace over visual complexity.
+3. **Warm restraint.** Warmth in color (parchment, amber); discipline in layout (aligned, minimal, precise).
+4. **Scholarly credibility.** Typography and hierarchy should evoke a well-designed reference book — trustworthy, not cold.
+5. **Progressive depth.** Simple surface, depth revealed naturally — never overwhelming at first glance.
 
-- **Translate into**: English, Italian, and Portuguese only (not Arabic)
-- **Arabic**: Uses Arabic labels directly (no translations required)
-- **Verb translation location**: Add entries to the `verbs` object in `en.json`, `it.json`, and `pt.json`
-- **Root semantics location**: Add entries to the `roots` object in `en.json`, `it.json`, and `pt.json`
+## Code Style and Formatting
 
-### Translation Guidelines
+### TypeScript Conventions
 
-- **Primary meaning**: Always translate the primary meaning of the verb
-- **Secondary meaning**: You may add a secondary meaning if it significantly diverges from the primary one, separated by a comma (e.g., "to love, to like")
-- **Format**: Use the verb ID as the key (e.g., `"0Hbb-1": "to love"`)
-- **When adding verbs**: Include translations as part of the same change that adds the verb entry
+- Use TypeScript with strict typing enabled
+- Use `type` keyword for type-only imports: `import type { Verb } from './verbs'`
+- Prefer explicit types over inference when it improves readability
+- Use readonly arrays and objects where immutability is desired: `readonly string[]`
+- Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks when testing for absence
+- When a variable is used only once, prefer inlining it unless it compromises readability
+
+### Formatting Rules (Biome)
+
+- **Indentation**: 2 spaces
+- **Line width**: 120 characters
+- **Quotes**: Single quotes for strings
+- **Semicolons**: As needed (Biome handles this automatically)
+- **Import order**: External packages first, then internal imports
+
+### Naming Conventions
+
+- **Functions/Variables**: camelCase (`conjugateFuture`, `isDefectiveRadical`)
+- **Components/Types/Interfaces**: PascalCase (`Verb`, `VerbMetaProps`)
+- **Constants**: UPPER_SNAKE_CASE for module-level constants (`ALIF_HAMZA`)
+- **Files**: PascalCase for components (`SpeechButton.tsx`), camelCase for utilities (`pronouns.ts`)
+
+### Type Definitions
+
+- Define types and interfaces explicitly; prefer `interface` over `type`
+- Use type aliases for complex types
+- Use union types for limited values: `1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10`
+- Use type guards for narrowing: `function isLanguage(lang: unknown): lang is Language`
+
+### Comments
+
+- Do not write comments explaining what code does
+- Do write comments to explain non-obvious implementation decisions, workarounds, or grammatical rules
+- Use comments with linter ignores to explain why a rule is being ignored
+
+### Function and Code Organization
+
+- Keep functions small and focused on a single responsibility; prefer pure functions
+- Use `const` for components and module-level constants; use spread operators over mutation
+- Imports: external packages first, then internal type imports, then internal component/utility imports
+
+## UI Components
+
+**Always reuse existing UI primitives before building new ones.** Check `src/components/atoms/`, `src/components/buttons/`, `src/components/icons/`, `Modal.tsx`, `Overlay.tsx`, and `Panel.tsx` first. Never roll bespoke styled wrappers for things that already exist — use `IconButton` + an SVG icon (not emoji buttons), use `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
+
+### Preact Component Conventions
+
+- Use functional components with hooks; TypeScript interfaces for props
+- Export components as named exports: `export const Component = (...) => { ... }`
+- Use `goober` for styled components; define them at the module level
+- Prefer `useCallback` for functions passed as props; use `useRef` for DOM references
+- Keep state local to components when possible; lift state up only when needed
 
 ## Testing Standards
 
-### Test-Driven Development (TDD) is MANDATORY
+### TDD is MANDATORY ⚠️
 
-**⚠️ TDD IS NON-NEGOTIABLE. YOU MUST ALWAYS WRITE TESTS FIRST.**
+**Never change system behaviour before writing tests.**
 
-1. **Write tests first**: Before implementing features or fixing bugs, write tests describing expected behavior.
-2. **Red-Green-Refactor cycle**:
-   - Write a failing test and **verify it fails** (Red)
-   - Write the minimum code to make it pass (Green)
-   - Refactor while keeping tests green (Refactor)
-3. **Test coverage**: All code must have comprehensive tests covering edge cases.
-4. **Test location**: Co-locate tests with source files using `.test.ts` or `.test.tsx` extensions (e.g., `VerbMeta.tsx` → `VerbMeta.test.tsx`).
+**Red-Green-Refactor**:
+1. Write a failing test and **verify it fails** (Red)
+2. Write the minimum code to make it pass (Green)
+3. Refactor while keeping tests green (Refactor)
 
-### Test Framework
-
-- **Framework**: Vitest
-- **Preact Testing**: `@testing-library/preact`
-- **Test Utilities**: Use `@testing-library/jest-dom` matchers
-
-### Test Structure
+Tests are co-located with source files (`.test.ts` / `.test.tsx`). Framework: Vitest + `@testing-library/preact` + `@testing-library/jest-dom`.
 
 ```typescript
 import { cleanup, render, screen } from '@testing-library/preact'
@@ -155,216 +181,121 @@ afterEach(() => {
 })
 
 test('descriptive test name', () => {
-  // Arrange
-  // Act
-  // Assert
+  // Arrange / Act / Assert
 })
 ```
 
-### Testing Best Practices
+### Testing Rules
 
-- ❌ **NEVER change system behaviour before writing tests. This is a critical error.**
-- ✅ **DO write descriptive test names**: Clearly describe what is being tested.
-- ✅ **DO group related tests**: Use `describe` blocks to group related test cases.
-- ✅ **DO test edge cases**: Include tests for boundary conditions and error cases.
-- ✅ **DO clean up after tests**: Use `afterEach` to restore the testing environment, especially for Preact components.
-- ❌ **NEVER test implementation details**: Validate behavior through public APIs; don't export internal helpers solely for testing.
-- ❌ **NEVER test styling**: Do not assert CSS classes, style tags, or hover/focus/active visual rules in tests.
-- ❌ **NEVER reimplement production logic**: For grammar/paradigm tests, assert exported functions instead of duplicating algorithms.
-- ❌ **NEVER use control flow in tests**: Avoid loops and conditionals in specs. For fixed domains (e.g., pronoun slots), assert each case explicitly.
-- ❌ **NEVER test data existence**: Trust fixture existence; if incorrect, tests will fail naturally, so skip "is defined" checks.
-- ❌ **NEVER assert raw dataset fields**: Validate verb patterns via past/present conjugation functions instead of checking static `roots.json` entries directly.
-- ✅ **DO prefer canonical data**: When validating grammar/paradigm behavior, use the real datasets instead of hand-rolled or filtered fixtures unless a minimal repro is required.
-- ❌ **Avoid mocking**: Prefer real collaborators where feasible; only mock external boundaries or hard-to-reproduce conditions.
-- ✅ **Async testing**: Use `waitFor` and proper async/await patterns for asynchronous operations.
-- ❌ **Avoid `*ByRole` queries**: While it is a best practice to use `*ByRole` queries to drive tests with accessibility features in mind, these queries introduce a significant performance impact.
-- ❌ **Avoid negative assertions**: Don't assert on the absence of behavior. The only exception is when checking that something disappears or stops happening as a result of the user's actions.
-- ✅ **Always use static imports**: Do not use dynamic imports in tests.
-- ✅ **Property-based testing is welcome**: Use property-based testing (e.g., fast-check) for general rules that should hold across many inputs.
-- ✅ **Unicode normalization in tests is acceptable**: When failures are due solely to Unicode normalization or ordering of combining marks, normalize test expectations rather than altering production output.
-
-## Verb Entry Workflow (Hard Gate)
-
-When adding or correcting verb/root entries, follow this workflow exactly. Do not skip any step.
-
-1. **Source availability check (mandatory before edits)**
-   - Confirm each cited source URL resolves and contains the target entry.
-   - Do not cite links that have not been opened and verified.
-   - If Wiktionary does not have a dedicated page, explicitly switch to another authoritative source (e.g., academy dictionary, recognized lexicon) and state that in the change summary.
-
-2. **Lexical extraction checklist (mandatory before edits)**
-   - Extract and record all relevant lexical data for the target verb entry:
-     - Root
-     - Form
-     - Present vowel pattern (form pattern)
-     - Masdar(s)
-     - Passive voice status (`full`, `impersonal`, or `none` as represented by project fields)
-     - Passive participle availability
-   - Never assume defaults for constrained behavior. If a source indicates a restriction, encode it explicitly.
-
-3. **Required `roots.json` fields gate**
-   - Ensure the entry includes every required lexical rule implied by sources.
-   - At minimum, set the following when applicable:
-     - `formPattern`
-     - `masdarPatterns`
-     - `passiveVoice`
-     - `noPassiveParticiple`
-   - If a field is unknown from authoritative sources, stop and report uncertainty instead of guessing.
-
-4. **Atomic locale update gate**
-   - In the same change, add/update:
-     - verb translation key in `en.json`, `it.json`, `pt.json`
-     - root gloss key in `en.json`, `it.json`, `pt.json`
-   - Keep translations to one meaning unless meanings differ significantly.
-   - Use transliteration conventions already used in the project for key generation.
-
-5. **Final verification gate (mandatory before reporting done)**
-   - Re-open changed entries and verify they match extracted source data field-by-field.
-   - Validate JSON parsing for all modified files.
-   - Confirm no orphan/incorrect keys remain (e.g., wrong transliteration key or form key).
-   - Only then provide completion status and include only working, verified source links.
-
-### Conjugation Test Strategy
-
-- **Pattern-first coverage**: When adding a new verb that has the same form, root type and tense as an existing verb that is fully covered, add only a main pattern test. Pattern tests should cover all paradigms: active, passive, and nominal derivations.
-- **Escalation rule**: If a main pattern test fails, write a full conjugation table test for that verb and tense/mood before changing production code. Keep these tests grouped by their type (e.g. regular, geminated, defective, etc.)
-- **Imperative rule**: If an imperative pattern test fails, write full conjugation tables for both the imperative and the jussive before changing the implementation.
-- **Nominals**: Active participle, passive participle, and masdar have no concept of full conjugation, so they stay in the table-driven pattern tests.
-
-### Validating Test Expectations
-
-**⚠️ CRITICAL: When writing test expectations for grammar/linguistic rules, validate from authoritative sources. Do not rely on assumptions or memory.**
-
-**⚠️ CRITICAL: Never assume production code is correct. Tests MUST reflect correct expected behavior from authoritative sources, NOT potentially incorrect production output. Writing tests based on incorrect production code validates and perpetuates bugs. Always verify expected behavior from authoritative sources first, then write tests asserting correct behavior, regardless of current production output.**
-
-1. **Verify from authoritative sources**: Before writing test expectations for Arabic grammar rules (verb conjugations, masdar patterns, etc.):
-   - Search and consult authoritative Arabic grammar references
-   - Cross-check against multiple reliable sources (grammar textbooks, linguistic references, verified conjugation tables)
-   - Use web search to find actual examples of verb forms being tested
-   - Verify complete conjugation paradigms, not just isolated forms
-
-2. **Run tests and note discrepancies**: After writing test expectations:
-   - Run tests to see what production code produces
-   - If tests fail, compare expected values against production output
-   - If there's a discrepancy, add a comment noting it for review
-   - **NEVER assume production code is correct.** If expectations are based on authoritative sources, keep them as-is even if they fail. Changing verified expectations to match potentially incorrect production code is a critical error
-   - Don't fix production code unless explicitly instructed
-
-3. **Document uncertainty**: If uncertain about correct grammar rules:
-   - State uncertainty explicitly in comments
-   - List sources consulted
-   - Ask for verification rather than making assumptions
-   - Check similar verbs in existing test suite for patterns
-
-4. **Cross-reference existing tests**: Before writing new test expectations:
-   - Check existing tests for similar verb patterns to understand expected behavior
-   - Look for patterns in how other verbs of the same type are conjugated
-   - Note inconsistencies in existing tests that might indicate areas needing correction
-
-5. **Verify complete paradigms**: When testing verb conjugations:
-   - Verify ALL pronoun forms, not just a subset
-   - Ensure the pattern is consistent across all forms
-   - Check that special cases (dual, plural, feminine) follow the same rules
-
-6. **Verification order for fixing conjugations**: When fixing incorrect conjugations, verify and fix dependencies first:
-   - **If imperative is incorrect**: Check (from authoritative sources) if jussive is correct, then verify and fix jussive before fixing imperative.
-   - **Before fixing subjunctive or jussive**: Verify present tense is correct first, as both are derived from present tense.
+- ✅ Descriptive test names; use `describe` to group related cases
+- ✅ Test edge cases and boundary conditions
+- ✅ Use `afterEach(cleanup)` for Preact component tests
+- ✅ Prefer `findBy*` over `waitFor` + `getBy*` for async queries
+- ✅ Use real collaborators; only mock external boundaries or hard-to-reproduce conditions
+- ✅ Use static imports only in tests
+- ✅ Property-based testing (e.g. fast-check) is welcome for general rules
+- ✅ Unicode normalization in test expectations is acceptable when failures are due solely to combining-mark ordering
+- ✅ Prefer canonical data (real datasets) over hand-rolled fixtures unless a minimal repro is needed
+- ❌ Never use control flow (loops/conditionals) in test bodies — assert each case explicitly
+- ❌ Never test implementation details; validate behaviour through public APIs
+- ❌ Never export internal helpers solely for testing
+- ❌ Never test styling (CSS classes, style tags, visual rules)
+- ❌ Never reimplement production logic in tests; assert exported functions instead
+- ❌ Never assert on dataset field existence — if incorrect, tests will fail naturally
+- ❌ Avoid `*ByRole` queries — they introduce significant performance overhead
+- ❌ Avoid negative assertions except when verifying something disappears as a result of user action
 
 ### UI Test Best Practices
 
-- ✅ **DO use literal UI expectations**: In UI tests, assert on visible text and avoid mocking or calling production helpers to compute expectations (e.g., no `getClosestVerbs`, no `findVerbById` in UI specs). Keep expected UI strings inline with tests instead of sharing "magical" fixtures.
-- ❌ **UI text not a truth source**: Don’t use UI tests to validate word correctness; rely on derivation functions because UI strings can change (e.g., diacritic stripping).
-- ✅ **Async element queries**: Prefer `findBy*` over `waitFor` + `getBy*` combinations.
-- ✅ **Base-path agnostic routing**: Use root `/` with hash paths (e.g., `/#/verbs/ktb-1`) and assert on hash/path directly; only stub `BASE_URL` when explicitly testing base-url behavior.
+- Assert on visible text inline in tests; do not call production helpers to compute expected strings
+- Do not use UI tests to validate word correctness; rely on derivation functions (UI strings can change with diacritic stripping)
+- Use root `/` with hash paths (e.g. `/#/verbs/ktb-1`) and assert on hash/path directly; only stub `BASE_URL` when explicitly testing base-url behaviour
 
-## Functional Programming Patterns
+### Conjugation Test Strategy
 
-### Immutability
+- **Pattern-first coverage**: When adding a new verb with the same form, root type, and tense as a fully-covered verb, add only a main pattern test covering all paradigms (active, passive, nominal).
+- **Escalation rule**: If a main pattern test fails, write a full conjugation table test for that verb and tense/mood before touching production code.
+- **Imperative rule**: If an imperative pattern test fails, write full conjugation tables for both the imperative and jussive before changing the implementation.
+- **Nominals**: Active participle, passive participle, and masdar have no full-conjugation concept — keep them in table-driven pattern tests.
 
-- Prefer immutable data structures
-- Use `readonly` modifiers for arrays and objects that shouldn't be mutated
-- Use spread operators and functional methods instead of mutations
+### Validating Test Expectations ⚠️
+
+**Never assume production code is correct. Test expectations must reflect correct Arabic grammar from authoritative sources, not production output.**
+
+1. Consult authoritative Arabic grammar references and cross-check against multiple sources before writing expectations.
+2. Run tests and note discrepancies without silently fixing expectations to match production.
+3. Document uncertainty explicitly; ask for verification rather than guessing.
+4. Cross-reference existing tests for similar verb patterns before writing new expectations.
+5. Verify ALL pronoun forms, not just a subset.
+6. **Dependency order when fixing**: for incorrect imperatives, verify/fix jussive first; for incorrect subjunctive/jussive, verify present tense first.
+
+## Localization
+
+Supports English, Italian, European Portuguese, and Arabic. Translation files in `src/locales/`.
+
+- All UI strings must appear in all four locale files under `strings`
+- Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly)
+- Add entries to the `verbs` object and `roots` object in the three non-Arabic locale files
+- Translate the primary meaning; add a secondary only when it diverges significantly (e.g. `"to love, to like"`)
+- Include translations in the same change that adds the verb entry
 
 ## Conjugation Rule Patterns
 
-- **When word structure is fixed and known, use direct slicing/indexing instead of searching and conditionals:** If you know exact positions (e.g., "pronoun prefix is always 2 chars, Form X prefix is always 4 chars, weak letter is always at index 6"), use `word.slice(0, 6)` and `word.slice(8)` rather than `findIndex` and conditional checks.
-- **Avoid redundant condition checks:** If a condition already implies another check, don't repeat it. For example, if `isFinalWeak` checks for weak letters (which includes `WAW`, `YEH` and some others), but you only want to handle `WAW` and `YEH` cases, use `c3 === WAW || c3 === YEH` **only** - don't write `isFinalWeak && (c3 === WAW || c3 === YEH)` because those specific letters are guaranteed to be weak.
+- **Use direct slicing/indexing** when word structure is fixed and known; avoid `findIndex` and conditionals when positions are deterministic.
+- **Avoid redundant condition checks**: if a condition already implies another, don't repeat it.
+- **Fix paradigms via derivation rules first**, then patterns, then overrides as a last resort.
+- **Never hard-code root checks**: derive algorithmically from root features (e.g. hamzated initial + final weak).
 
-## Preact Patterns
+## Verb Entry Workflow (Hard Gate)
 
-### Component Structure
+When adding or correcting verb/root entries, follow every step. Do not skip.
 
-- Use functional components with hooks
-- Use TypeScript interfaces for props: `interface ComponentProps { ... }`
-- Export components as named exports: `export const Component = (...) => { ... }`
+1. **Source availability check**: Confirm each cited source URL resolves and contains the target entry. State explicitly when switching to a fallback source.
 
-### Styling
+2. **Lexical extraction checklist**: Record root, form, present vowel pattern, masdar(s), passive voice status (`full`/`impersonal`/`none`), and passive participle availability. Never assume defaults for constrained behaviour.
 
-- Use `goober` for styled components
-- Define styled components at the module level
-- Use template literals for styled component definitions
+3. **Required `roots.json` fields gate**: Set `formPattern`, `masdarPatterns`, `passiveVoice`, `noPassiveParticiple` where applicable. If a field is unknown, stop and report uncertainty.
 
-### Hooks
+4. **Atomic locale update**: In the same change, add/update verb translation keys and root gloss keys in `en.json`, `it.json`, `pt.json`.
 
-- Use `useState`, `useEffect`, `useMemo` as needed
-- Prefer `useCallback` for functions passed as props to prevent unnecessary re-renders
-- Use `useRef` for DOM references and values that don't trigger re-renders
+5. **Final verification**: Re-open changed entries and verify field-by-field against source data. Validate JSON parsing for all modified files. Confirm no orphan/incorrect keys remain.
 
-### State Management
+## Exercise Mode
 
-- Keep state local to components when possible
-- Lift state up when multiple components need it
-- Use functional updates for state that depends on previous state
-
-## Code Organization
-
-### Imports Order
-
-1. External dependencies (Preact, libraries)
-2. Internal type imports
-3. Internal component/utility imports
-4. Relative imports
-
-Example:
-
+**Interface** (`src/exercises/exercises.ts`):
 ```typescript
-import { styled } from 'goober'
-import type { Verb } from './paradigms/verbs'
-import { Button } from './Button'
+interface Exercise {
+  kind: ExerciseKind
+  word: string
+  promptTranslationKey: string
+  promptParams?: Record<string, string>
+  options: readonly string[]
+  answer: number
+  cardKey: string
+  dimensions: readonly DimensionKey[]
+  explanations?: readonly (ExplanationLayers | null)[]
+}
 ```
 
-### Function Organization
+**Exercise kinds**: `conjugation`, `masdarForm`, `masdarRoot`, `masdarVerb`, `participleForm`, `participleRoot`, `participleVerb`, `verbParticiple`, `verbForm`, `verbMasdar`, `verbPronoun`, `verbRoot`, `rootFormVerb`, `verbTense`.
 
-- Keep functions small and focused on single responsibility
-- Extract complex logic into separate functions
-- Prefer pure functions (no side effects)
-- Document complex algorithms with clear variable names
+**Adaptive dimensions** (`src/exercises/dimensions.ts`):
+- `tenses` (0–5): gradually unlocks from active past to full passive set
+- `pronouns` (0–3): from `3ms` to full inventory
+- `diacritics` (0–2): `all` → `some` → `none`
+- `forms` (0–3): form I only → all ten forms
+- `rootTypes` (0–5): sound → doubled → hamzated → assimilated → hollow → defective
+- `nominals` (0–2): none → participles → masdar
 
-## Type Safety
+`recordDimensionAnswer` tracks rolling windows; `promoteDimensions` promotes/demotes via accuracy thresholds; `enforcePrerequisites` blocks invalid profiles.
 
-### Type Definitions
+**SRS and persistence**:
+- `randomExercise(profile, srsStore)` prioritizes due cards filtered by unlocked dimensions
+- Card identity: `cardKey` (`kind:rootType:form[:tense:pronoun]`)
+- SRS state: `conjugator:srs`; daily stats: `conjugator:exercise:daily`; dimension state: `conjugator:dimensions`
+- Streak goal: 10 correct answers/day
 
-- Define types and interfaces explicitly; prefer `interface` over `type`
-- Use type aliases for complex types
-- Use union types for limited values: `1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10`
-
-### Type Guards
-
-- Use type guards for narrowing
-- Create helper functions for type checking: `function isLanguage(lang: unknown): lang is Language`
-
-## Linting and Formatting
-
-- **Linter**: Biome (configured in `biome.json`)
-- **Format on save**: Ensure Biome formatting is applied
-- **Linter ignores**: Only use with explanation comments explaining WHY the rule is ignored
-
-## Git Workflow
-
-- Write tests first (TDD)
-- Make small, focused commits
-- Ensure all tests pass before committing
-- Run linter before committing: `mise exec -- npm run lint`
+**Component pattern**: `ExerciseMode` accepts a `generateExercise` prop (defaults to `randomExercise`) for test injection. Preserve this pattern when adding exercise types.
 
 ## Examples
 
@@ -373,9 +304,7 @@ import { Button } from './Button'
 ```typescript
 test('switches to the present-tense table via tabs', () => {
   renderWithProviders('/#/verbs/ktb-1')
-
   fireEvent.click(screen.getByLabelText('Present'))
-
   expect(screen.getByText('يَكتُبُ')).toBeInTheDocument()
 })
 ```
@@ -395,93 +324,19 @@ test('future prefixes seen + fatḥa to indicative present 3ms', () => {
 ### Good Comment Example
 
 ```typescript
-// Doubly weak (middle wāw, final yā’) keeps the glide and takes kasra before yā’: يَحْوِي
+// Doubly weak (middle wāw, final yā') keeps the glide and takes kasra before yā': يَحْوِي
 return `${YEH}${FATHA}${c1}${SUKOON}${c2}${KASRA}${YEH}`
 ```
 
-### Bad Comment Example
+## Pre-Submission Checklist
 
-```typescript
-// ❌ BAD: Explains what the code does
-// Get the verb from the URL slug
-const verb = getVerbById(slug)
-```
-
-## Exercise Mode
-
-The `src/exercises/` layer is pure (no DOM/Preact). It includes generation, adaptive difficulty dimensions, SRS selection, and stats helpers. Keep this layer deterministic under provided inputs and testable in isolation.
-
-**Exercise interface** (`src/exercises/exercises.ts`):
-```typescript
-interface Exercise {
-  kind: ExerciseKind
-  word: string
-  promptTranslationKey: string
-  promptParams?: Record<string, string>
-  options: readonly string[]
-  answer: number
-  cardKey: string
-  dimensions: readonly DimensionKey[]
-  explanations?: readonly (ExplanationLayers | null)[]
-}
-```
-
-**Exercise kinds currently shipped**:
-- `conjugation`
-- `masdarForm`
-- `masdarRoot`
-- `masdarVerb`
-- `participleForm`
-- `participleRoot`
-- `participleVerb`
-- `verbParticiple`
-- `verbForm`
-- `verbMasdar`
-- `verbPronoun`
-- `verbRoot`
-- `rootFormVerb`
-- `verbTense`
-
-**Adaptive dimensions** (`src/exercises/dimensions.ts`) are independent and level-based:
-- `tenses` (0-5): gradually unlocks from active past to full passive set
-- `pronouns` (0-3): from `3ms` to full pronoun inventory
-- `diacritics` (0-2): `all` -> `some` -> `none`
-- `forms` (0-3): form I only -> all ten forms
-- `rootTypes` (0-5): sound -> doubled -> hamzated -> assimilated -> hollow -> defective
-- `nominals` (0-2): no nominals -> participles -> masdar
-
-**Dimension progression rules**:
-- `recordDimensionAnswer` tracks rolling windows per dimension.
-- `promoteDimensions` promotes/demotes using accuracy thresholds and resets affected windows on level changes.
-- `enforcePrerequisites` prevents invalid profiles (e.g., advanced nominals before prerequisite tense/form progress).
-
-**Component pattern**: `ExerciseMode` accepts a `generateExercise` prop (defaults to `randomExercise` which picks from a list of all available exercise types) to allow injection of a fake generator in tests. Keep this pattern when extending or adding new exercise types.
-
-**SRS and persistence**:
-- `randomExercise(profile, srsStore)` prioritizes due cards first, filtered by currently unlocked dimensions.
-- Card identity is `cardKey` (`kind:rootType:form[:tense:pronoun]`).
-- SRS state is stored in `conjugator:srs` and updated with `correct`, `wrong`, or `pass`.
-- Daily stats are stored in `conjugator:exercise:daily`; streak goal is 10 correct answers/day.
-- Dimension state is stored in `conjugator:dimensions` and drives unlock alerts in the UI.
-
-## Derivation Preferences
-
-- Fix issues with paradigms by adjusting derivation rules first; if that is insufficient, adopt a pattern, and only fall back to an override as a last resort.
-- Do not hard-code root checks in production code; conjugations must be derived algorithmically from root features (e.g., hamzated initial + final weak).
-
-## Summary Checklist
-
-Before submitting code, ensure:
-
-- [ ] **Tests were written first** (TDD) - Non-negotiable, checked first
+- [ ] Tests were written **before** production code (TDD — non-negotiable)
 - [ ] All tests pass
-- [ ] No production code was written before its corresponding test
 - [ ] No comments unless explaining WHY
-- [ ] Code follows Biome formatting rules
-- [ ] Types are properly defined
-- [ ] Immutability is maintained where appropriate
-- [ ] Preact components are properly structured
-- [ ] Imports are organized correctly
-- [ ] Linter passes without errors (except documented ignores)
+- [ ] Biome formatting rules followed
+- [ ] Types properly defined
+- [ ] Linter passes without undocumented ignores
+- [ ] All four locale files updated if UI text changed
+- [ ] Existing UI primitives reused (no bespoke wrappers)
 
 **If you cannot check the first item, you have violated TDD and must start over.**

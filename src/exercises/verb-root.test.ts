@@ -39,7 +39,7 @@ describe('rootExercise', () => {
   test('correct option matches an existing root with letters separated by spaces', () => {
     const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.some((verb) => verb.root === correctRoot)).toBe(true)
+    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
   })
 
   test('all options use the same number of letters as the root', () => {

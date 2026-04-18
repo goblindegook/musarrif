@@ -2,10 +2,10 @@ import { styled } from 'goober'
 import { useI18n } from '../../hooks/i18n'
 import { conjugate } from '../../paradigms/conjugation'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/letters'
-import { canConjugatePassive } from '../../paradigms/passive/support'
 import { ARABIC_PRONOUNS, type PronounId } from '../../paradigms/pronouns'
 import type { Mood, Tense, VerbTense, Voice } from '../../paradigms/tense'
 import type { DisplayVerb } from '../../paradigms/verbs'
+import { getAvailableParadigms } from '../../paradigms/verbs'
 import { CopyButton } from '../molecules/CopyButton'
 import { SpeechButton } from '../molecules/SpeechButton'
 import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
@@ -89,9 +89,9 @@ export function ConjugationTable({
   diacriticsPreference = 'all',
 }: ConjugationTableProps) {
   const { t, dir, lang } = useI18n()
-  const passiveAvailable = canConjugatePassive(verb)
-  const availableVoices = passiveAvailable ? VOICE_OPTIONS : (['active'] as const)
-  const selectedVoice = passiveAvailable ? voice : 'active'
+  const availableParadigms = getAvailableParadigms(verb)
+  const availableVoices = VOICE_OPTIONS.filter((v) => availableParadigms.some((p) => p.startsWith(`${v}.`)))
+  const selectedVoice: Voice = availableVoices.includes(voice) ? voice : (availableVoices[0] ?? 'active')
   const verbTense: VerbTense =
     tense === 'imperative'
       ? 'active.imperative'
@@ -99,7 +99,9 @@ export function ConjugationTable({
         ? `${selectedVoice}.present.${mood}`
         : `${selectedVoice}.${tense}`
   const conjugations = conjugate(verb, verbTense)
-  const availableTenses = TENSE_OPTIONS_BY_VOICE[selectedVoice]
+  const availableTenses = TENSE_OPTIONS_BY_VOICE[selectedVoice].filter((t) =>
+    availableParadigms.some((p) => p === `${selectedVoice}.${t}` || p.startsWith(`${selectedVoice}.${t}.`)),
+  )
 
   return (
     <TabsContainer>

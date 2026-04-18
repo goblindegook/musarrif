@@ -26,8 +26,6 @@ import type { Verb } from '../verbs'
 import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): string {
-  if (verb.noPassiveParticiple) return ''
-
   const result = (() => {
     const letters = [...verb.root]
     const [c1, c2, c3] = letters

@@ -1,0 +1,420 @@
+-- allium: 3
+-- exercise.allium
+--
+-- Muṣarrif: Exercise System
+--
+-- Scope: Exercise mode — generating, presenting, and answering drills;
+--        learner dimension-based progression; spaced repetition tracking
+-- Includes: exercise generation rules, dimension constraints, exercise session,
+--           dimension profile, spaced repetition, exercise surface
+-- Excludes:
+--   - Conjugation algorithms (see conjugate.allium)
+--   - Distractor generation strategy internals
+--   - SuperMemo-2 algorithm implementation details
+--   - Card key encoding format
+
+-- ─────────────────────────────────────────────
+-- Learner progression
+-- ─────────────────────────────────────────────
+
+-- The exercise system tracks the learner's mastery across six independent dimensions.
+-- Each dimension has a fixed number of levels; advancing unlocks new content.
+--
+-- Dimension levels and the content they unlock:
+--
+--   tenses (0–5)
+--     0: active.past only
+--     1: + active.present.indicative
+--     2: + active.future
+--     3: + active.present.subjunctive, active.present.jussive
+--     4: + active.imperative
+--     5: + all passive tenses (when verb.supportsPassive)
+--
+--   pronouns (0–3)
+--     0: 3ms only
+--     1: + 1s, 2ms, 2fs, 3fs
+--     2: + 1p, 2mp, 2fp, 3mp, 3fp
+--     3: + 2d, 3md, 3fd (dual forms)
+--
+--   diacritics (0–2): all → some → none
+--     Gated: diacritics may advance to level 2 only when all other dimensions
+--     are at their maximum level.
+--
+--   forms (0–3)
+--     0: Form I only
+--     1: + Forms II–III
+--     2: + Forms IV–VI
+--     3: + Forms VII–X
+--
+--   rootTypes (0–5): sound → doubled → hamzated → assimilated → hollow → defective
+--
+--   nominals (0–2)
+--     0: nominal exercises disabled
+--     1: active and passive participle exercises enabled (requires tenses ≥ 2 and pronouns ≥ 2)
+--     2: masdar exercises enabled (additionally requires forms ≥ 3)
+value DimensionProfile {
+    tenses:    Integer    -- 0–5
+    pronouns:  Integer    -- 0–3
+    diacritics: Integer   -- 0–2
+    forms:     Integer    -- 0–3
+    rootTypes: Integer    -- 0–5
+    nominals:  Integer    -- 0–2
+}
+
+-- DimensionStore persists the dimension profile and the accuracy sliding windows
+-- used for automatic promotion and demotion. Accuracy is tracked per dimension
+-- over a fixed window of recent answers; surpassing the promotion threshold
+-- advances the level, falling below the demotion threshold reduces it.
+--
+-- Persisted in the learner's browser across sessions.
+entity DimensionStore {
+    profile: DimensionProfile
+    windows: Map<DimensionKey, List<Boolean>>    -- sliding accuracy window per dimension
+}
+
+invariant ParticipleNominalsRequiresPrerequisites {
+    for s in DimensionStore:
+        s.profile.nominals >= 1 implies s.profile.tenses >= 2 and s.profile.pronouns >= 2
+}
+
+invariant MasdarNominalsRequiresPrerequisites {
+    for s in DimensionStore:
+        s.profile.nominals >= 2 implies s.profile.forms >= 3
+}
+
+invariant DiacriticsRequiresMaxOtherDimensions {
+    for s in DimensionStore:
+        s.profile.diacritics >= 2 implies
+            s.profile.tenses = 5 and s.profile.pronouns = 3
+            and s.profile.forms = 3 and s.profile.rootTypes = 5
+            and s.profile.nominals = 2
+}
+
+-- Tenses and forms dimensions may only advance once the learner has reached
+-- pronoun level 1 (beyond 3ms-only). This prevents advancing on tense/form
+-- complexity before basic pronoun variation is established.
+invariant TensesAndFormsRequirePronounLevel1 {
+    for s in DimensionStore:
+        (s.profile.tenses > 0 or s.profile.forms > 0)
+            implies s.profile.pronouns >= 1
+}
+
+-- ─────────────────────────────────────────────
+-- Spaced repetition
+-- ─────────────────────────────────────────────
+
+-- Each unique (exercise kind, root type, verb form[, tense, pronoun]) combination
+-- has its own SRS card tracked independently. A card that has never been seen
+-- has no entry in the store and is treated as immediately due.
+--
+-- Persisted in the learner's browser across sessions.
+value CardState {
+    interval:    Integer    -- days until next review
+    ef:          Float      -- ease factor (≥ 1.3), governs interval growth
+    repetitions: Integer    -- consecutive correct answers
+    dueDate:     Date
+}
+
+entity SrsStore {
+    cards: Map<String, CardState>    -- keyed by card identifier
+}
+
+-- ─────────────────────────────────────────────
+-- Exercise entities
+-- ─────────────────────────────────────────────
+
+-- All exercises present exactly four labelled options. The answer field holds
+-- the 0-based index of the correct option.
+--
+-- word is the Arabic text shown as the question stimulus. Its content depends
+-- on the exercise kind:
+--   - verb exercises: the verb citation form (3ms active past)
+--   - conjugated-form exercises: a specific conjugated form of the verb
+--   - nominal exercises: a masdar or participle form
+--   - root exercises: the root letters (space-separated)
+--
+-- Exercise kind selection is weighted: conjugation is weighted highest (5×);
+-- pronoun and tense identification are medium weight (2×); all others are base weight.
+--
+-- cardKey identifies the SRS card for this exercise.
+-- dimensions lists the learner dimensions that this exercise contributes to.
+entity Exercise {
+    kind: conjugation | verbForm | verbRoot | verbTense | verbPronoun
+        | verbMasdar | verbParticiple
+        | masdarForm | masdarRoot | masdarVerb
+        | participleForm | participleRoot | participleVerb
+        | rootFormVerb
+    word: String
+    options: List<String>            -- exactly 4 choices
+    answer: Integer                  -- 0–3
+    cardKey: String
+    dimensions: List<DimensionKey>
+}
+
+invariant ExerciseHasExactlyFourOptions {
+    for e in Exercises: e.options.count = 4
+}
+
+invariant ExerciseAnswerInRange {
+    for e in Exercises: e.answer >= 0 and e.answer <= 3
+}
+
+-- "Conjugate [verb] in [tense/voice] for [pronoun]"
+-- word is the verb citation form (3ms active past) with diacritics per profile.
+-- options are Arabic conjugated forms.
+-- Affects: tenses, pronouns, forms, rootTypes, diacritics.
+variant ConjugationExercise : Exercise {
+    verb: conjugate/Verb
+    tense: conjugate/VerbTense
+    pronoun: PronounId
+}
+
+-- "What form (I–X) is this verb from?"
+-- word is a conjugated form of the verb.
+-- options are Roman numerals (I–X).
+-- Affects: forms, rootTypes, diacritics.
+variant VerbFormExercise : Exercise {
+    verb: conjugate/Verb
+    tense: conjugate/VerbTense
+    wordPronoun: PronounId
+}
+
+-- "What is the root of this conjugated form?"
+-- word is a conjugated form of the verb.
+-- options are Arabic root strings.
+-- Affects: forms, rootTypes, diacritics.
+variant VerbRootExercise : Exercise {
+    verb: conjugate/Verb
+    tense: conjugate/VerbTense
+    wordPronoun: PronounId
+}
+
+-- "What tense and voice is this conjugation?"
+-- word is a conjugated form. At tenses level 5, voice is distinguished in labels.
+-- options are tense+mood (and optionally voice) labels.
+-- Affects: tenses, forms, rootTypes, diacritics.
+variant VerbTenseExercise : Exercise {
+    verb: conjugate/Verb
+    tense: conjugate/VerbTense
+    wordPronoun: PronounId
+}
+
+-- "Which pronoun does this conjugation belong to?"
+-- word is a conjugated form.
+-- options are Arabic pronoun labels.
+-- Affects: pronouns, forms, rootTypes, diacritics.
+variant VerbPronounExercise : Exercise {
+    verb: conjugate/Verb
+    tense: conjugate/VerbTense
+    wordPronoun: PronounId
+}
+
+-- "Which of these is the masdar of [verb]?"
+-- word is the verb citation form.
+-- options are Arabic masdar forms.
+-- Requires: nominals ≥ 2.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant VerbMasdarExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "Which of these is the [active|passive] participle of [verb]?"
+-- word is the verb citation form.
+-- options are Arabic participle forms.
+-- Requires: nominals ≥ 1.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant VerbParticipleExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "What form (I–X) produces this masdar?"
+-- word is a masdar form.
+-- options are Roman numerals (I–X).
+-- Requires: nominals ≥ 2.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant MasdarFormExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "What is the root of this masdar?"
+-- word is a masdar form.
+-- options are Arabic root strings.
+-- Requires: nominals ≥ 2.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant MasdarRootExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "Which verb does this masdar come from?"
+-- word is a masdar form.
+-- options are verb citation forms.
+-- Requires: nominals ≥ 2.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant MasdarVerbExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "What form (I–X) produces this participle?"
+-- word is a participle form.
+-- options are Roman numerals (I–X).
+-- Requires: nominals ≥ 1.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant ParticipleFormExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "What is the root of this participle?"
+-- word is a participle form.
+-- options are Arabic root strings.
+-- Requires: nominals ≥ 1.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant ParticipleRootExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "Which verb does this participle come from?"
+-- word is a participle form.
+-- options are verb citation forms.
+-- Requires: nominals ≥ 1.
+-- Affects: nominals, forms, rootTypes, diacritics.
+variant ParticipleVerbExercise : Exercise {
+    verb: conjugate/Verb
+}
+
+-- "Which of these is the [Form N] of this root?"
+-- word is the root letters (space-separated).
+-- The prompt names the target form (e.g. "Form II").
+-- options are verb citation forms derived from the same root in different forms.
+-- Affects: forms, rootTypes, diacritics.
+variant RootFormVerbExercise : Exercise {
+    verb: conjugate/Verb
+    targetForm: Integer    -- the form the learner must identify (1–10)
+}
+
+-- ─────────────────────────────────────────────
+-- Dimension and generation constraints
+-- ─────────────────────────────────────────────
+
+-- Nominal exercises require minimum nominals level
+invariant NominalsRequireMinLevel {
+    for e in Exercises:
+        (e.kind = verbMasdar or e.kind = masdarForm or e.kind = masdarRoot or e.kind = masdarVerb)
+            implies e.profile.nominals >= 2
+    for e in Exercises:
+        (e.kind = verbParticiple or e.kind = participleForm
+            or e.kind = participleRoot or e.kind = participleVerb)
+            implies e.profile.nominals >= 1
+}
+
+-- Passive tenses are only selected for verbs that support passive voice
+invariant PassiveTenseRequiresSupportedVerb {
+    for e in ConjugationExercise:
+        if e.tense.kind = conjugate/PastOrFuture or e.tense.kind = conjugate/PresentWithMood:
+            e.tense.voice = passive implies e.verb.supportsPassive
+}
+
+-- Imperative conjugation exercises use only 2nd-person pronouns
+invariant ConjugationImperativePronouns {
+    for e in ConjugationExercise:
+        if e.tense.kind = conjugate/ActiveImperative:
+            e.pronoun in { 2ms, 2fs, 2d, 2mp, 2fp }
+}
+
+-- Impersonal passive verbs produce only the 3ms form
+invariant ConjugationImpersonalPassivePronoun {
+    for e in ConjugationExercise:
+        if e.verb.passiveVoice = impersonal and e.tense.voice = passive:
+            e.pronoun = 3ms
+}
+
+-- ─────────────────────────────────────────────
+-- Exercise session
+-- ─────────────────────────────────────────────
+
+-- ExerciseSession captures the ephemeral state of a single exercise attempt.
+-- It is not persisted; a new session begins when the user requests the next exercise.
+entity ExerciseSession {
+    exercise: Exercise
+    selected: Integer?                      -- null before answering; 0–3 after
+    result: correct | wrong | pass | null   -- null before answering
+    is_answered: selected != null
+    is_correct: result = correct
+}
+
+given {
+    dimensionStore: DimensionStore
+    srsStore: SrsStore
+    session: ExerciseSession
+}
+
+rule ExerciseAnswered {
+    when: UserSelectsAnswer(index)
+    requires: not session.is_answered
+    requires: index >= 0 and index <= 3
+    ensures: session.selected = index
+    ensures: session.result = if index = session.exercise.answer then correct else wrong
+    ensures: srsStore updated for session.exercise.cardKey with session.result
+    ensures: dimensionStore updated for session.exercise.dimensions with session.result
+}
+
+rule ExercisePassed {
+    when: UserPassesExercise
+    requires: not session.is_answered
+    ensures: session.result = pass
+    ensures: session.selected = session.exercise.answer    -- reveals the correct answer
+    ensures: srsStore updated for session.exercise.cardKey with pass
+    ensures: dimensionStore updated for session.exercise.dimensions with pass
+}
+
+rule NextExerciseRequested {
+    when: UserRequestsNextExercise
+    requires: session.is_answered
+    ensures: ExerciseSession.created(
+        exercise: Exercise.created(profile: dimensionStore.profile),
+        selected: null,
+        result: null
+    )
+}
+
+-- ─────────────────────────────────────────────
+-- Surface
+-- ─────────────────────────────────────────────
+
+surface ExerciseSurface {
+    facing visitor: conjugate/User
+
+    context session: ExerciseSession
+    context dimensionStore: DimensionStore
+
+    exposes:
+        session.exercise.word
+        session.exercise.options
+        session.exercise.tense
+            when session.exercise.kind in { verbTense, verbPronoun, verbForm, verbRoot }
+        session.exercise.pronoun
+            when session.exercise.kind = conjugation
+        session.exercise.targetForm
+            when session.exercise.kind = rootFormVerb
+        session.selected
+        session.is_answered
+        session.is_correct
+        session.result
+        dimensionStore.profile
+        dimensionStore unlocks    -- notifications when a dimension level is reached
+
+    provides:
+        UserSelectsAnswer(index: Integer)
+            when not session.is_answered
+        UserPassesExercise
+            when not session.is_answered
+        UserRequestsNextExercise
+            when session.is_answered
+
+    @guarantee AnswerFeedback
+        -- After UserSelectsAnswer or UserPassesExercise, each option is marked as
+        -- correct or incorrect. The correct option is always highlighted regardless
+        -- of which option was chosen.
+
+    related:
+        conjugate/ConjugationSurface
+}

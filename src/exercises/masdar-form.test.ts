@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { formatFormLabel, verbs } from '../paradigms/verbs'
+import { formatFormLabel, getAvailableParadigms, verbs } from '../paradigms/verbs'
 import { exerciseDiacritics } from './dimensions'
 import { masdarFormExercise } from './masdar-form'
 
@@ -81,8 +81,10 @@ describe('masdarFormExercise', () => {
     const matchingVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
 
     expect(
-      matchingVerbs.some((verb) =>
-        deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 0) === exercise.word),
+      matchingVerbs.some(
+        (verb) =>
+          getAvailableParadigms(verb).includes('masdar') &&
+          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 0) === exercise.word),
       ),
     ).toBe(true)
   })

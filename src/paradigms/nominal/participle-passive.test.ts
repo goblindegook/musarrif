@@ -28,9 +28,6 @@ describe('passive participle', () => {
         ['بلغ', 'مَبْلُوغ'],
         ['كتب', 'مَكْتُوب'],
         ['سكن', 'مَسْكُون'],
-        ['جلس', ''],
-        ['حبط', ''],
-        ['سعد', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -93,8 +90,6 @@ describe('passive participle', () => {
         ['خور', 'مَخْوُور'],
         ['خوف', 'مَخُوف'],
         ['شوق', 'مَشُوق'],
-        ['موت', ''],
-        ['كون', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -123,7 +118,6 @@ describe('passive participle', () => {
         ['ولي', 'مَوْلِيّ'],
         ['وعي', 'مَوْعِيّ'],
         ['وقي', 'مَوْقِيّ'],
-        ['وري', ''],
         ['وني', 'مَوْنِيّ'],
         ['وفي', 'مَوْفِيّ'],
         ['قوي', 'مَقْوِيّ'],
@@ -139,11 +133,9 @@ describe('passive participle', () => {
       test.each([
         ['ءذن', 'مَأْذُون'],
         ['ءجر', 'مَأْجُور'],
-        ['ءصل', ''],
         ['ءسر', 'مَأْسُور'],
         ['ءكل', 'مَأْكُول'],
         ['ءخذ', 'مَأْخُوذ'],
-        ['ءمن', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -602,7 +594,6 @@ describe('passive participle', () => {
         ['عزز', 'مُتَعَزَّز'],
         ['سبب', 'مُتَسَبَّب'],
         ['قرر', 'مُتَقَرَّر'],
-        ['مدد', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
@@ -753,17 +744,9 @@ describe('passive participle', () => {
     describe('regular roots', () => {
       test.each([
         ['كتب', 'مُنْكَتَب'],
-        ['طلق', ''],
-        ['فجر', ''],
         ['خفض', 'مُنْخَفَض'],
         ['عكس', 'مُنْعَكَس'],
       ])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test.each([['قرء', '']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
       })
     })
@@ -798,12 +781,6 @@ describe('passive participle', () => {
         expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
       })
     })
-
-    describe('doubly weak roots', () => {
-      test.each([['زوي', '']])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
-      })
-    })
   })
 
   describe('Form VIII', () => {
@@ -813,10 +790,7 @@ describe('passive participle', () => {
         ['عبر', 'مُعْتَبَر'],
         ['عمد', 'مُعْتَمَد'],
         ['زحم', 'مُزْدَحَم'],
-        ['ظلم', ''],
         ['ذكر', 'مُذَّكَر'],
-        ['ضرب', ''],
-        ['حلم', ''],
         ['سلم', 'مُسْتَلَم'],
         ['نظر', 'مُنْتَظَر'],
         ['ضلع', 'مُضْطَلَع'],
@@ -1030,7 +1004,6 @@ describe('passive participle', () => {
         ['سيطر', 'مُسَيْطَر'],
         ['كلور', 'مُكَلْوَر'],
         ['وسوس', 'مُوَسْوَس'],
-        ['لءلء', ''],
         ['ترجم', 'مُتَرْجَم'],
         ['برهن', 'مُبَرْهَن'],
         ['عرقل', 'مُعَرْقَل'],
@@ -1066,7 +1039,6 @@ describe('passive participle', () => {
   describe('Form IIIq', () => {
     describe('regular roots', () => {
       test.each([
-        ['جلفع', ''],
         ['حرجم', 'مُحْرَنْجَم'],
         ['حرشف', 'مُحْرَنْشَف'],
         ['حرفز', 'مُحْرَنْفَز'],
@@ -1083,9 +1055,7 @@ describe('passive participle', () => {
         ['قشعر', 'مُقْشَعَرّ'],
         ['شمءز', 'مُشْمَأَزّ'],
         ['برغش', 'مُبْرَغَشّ'],
-        ['جرمز', ''],
         ['جلعب', 'مُجْلَعَبّ'],
-        ['جلعد', ''],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })

@@ -42,7 +42,7 @@ describe('masdarRootExercise', () => {
   test('correct option matches an existing root with letters separated by spaces', () => {
     const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.some((verb) => verb.root === correctRoot)).toBe(true)
+    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
   })
 
   test("word is one of the selected verb's masdars", () => {
@@ -50,7 +50,7 @@ describe('masdarRootExercise', () => {
     const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
     const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
 
-    expect(matchingVerbs.some((verb) => deriveMasdar(verb).includes(exercise.word))).toBe(true)
+    expect(matchingVerbs.flatMap((verb) => deriveMasdar(verb))).toContain(exercise.word)
   })
 
   test('includes exactly three wrong options and all differ from the correct root', () => {

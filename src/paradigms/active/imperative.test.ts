@@ -1,11 +1,13 @@
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { PRONOUN_IDS } from '../pronouns'
-import { getVerb, verbs } from '../verbs'
+import { getAvailableParadigms, getVerb, verbs } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { conjugatePresentMood } from './present'
 
-const arbitraryVerb = fc.constantFrom(...verbs)
+const arbitraryVerb = fc.constantFrom(
+  ...verbs.filter((verb) => getAvailableParadigms(verb).includes('active.imperative')),
+)
 
 const arbitraryPronoun = fc.constantFrom(...PRONOUN_IDS).filter((pronounId) => pronounId.startsWith('2'))
 

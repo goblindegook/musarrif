@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { formatFormLabel, verbs } from '../paradigms/verbs'
+import { formatFormLabel, getAvailableParadigms, verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics } from './dimensions'
 import { participleFormExercise } from './participle-form'
 
@@ -81,10 +81,14 @@ describe('participleFormExercise', () => {
     const selectedForm = exercise.options[exercise.answer]
     const selectedFormVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
     const activeMatch = selectedFormVerbs.some(
-      (verb) => exerciseDiacritics(deriveActiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+      (verb) =>
+        getAvailableParadigms(verb).includes('active.participle') &&
+        exerciseDiacritics(deriveActiveParticiple(verb), easyProfile.diacritics) === exercise.word,
     )
     const passiveMatch = selectedFormVerbs.some(
-      (verb) => exerciseDiacritics(derivePassiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+      (verb) =>
+        getAvailableParadigms(verb).includes('passive.participle') &&
+        exerciseDiacritics(derivePassiveParticiple(verb), easyProfile.diacritics) === exercise.word,
     )
 
     expect(

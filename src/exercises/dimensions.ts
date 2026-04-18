@@ -1,9 +1,15 @@
 import { FORM_I_PATTERNS } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
-import { canConjugatePassive } from '../paradigms/passive/support'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, FORMS, synthesizeVerb, type VerbForm, verbs } from '../paradigms/verbs'
+import {
+  type DisplayVerb,
+  FORMS,
+  getAvailableParadigms,
+  synthesizeVerb,
+  type VerbForm,
+  verbs,
+} from '../paradigms/verbs'
 import type { CardConstraints } from './srs'
 import { getSrsRootType, type SrsRootType } from './srs'
 
@@ -57,9 +63,8 @@ const T5: VerbTense[] = [
 const TENSE_POOLS = [T0, T1, T2, T3, T4, T5] as const
 
 export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
-  return canConjugatePassive(verb)
-    ? random(TENSE_POOLS[tenses])
-    : random(TENSE_POOLS[tenses].filter((tense) => tense.startsWith('active')))
+  const available = getAvailableParadigms(verb)
+  return random(TENSE_POOLS[tenses].filter((tense) => available.includes(tense)))
 }
 
 export function tensePool(tenses: TensesLevel): readonly VerbTense[] {

@@ -525,6 +525,7 @@
   { "root": "lqy", "form": 10, "passiveVoice": "impersonal" },
   { "root": "lwm", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fa3l"] },
   { "root": "lwm", "form": 10 },
+  { "root": "lys", "form": 1, "paradigms": ["active.past"] },
   { "root": "lzm", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fu3ool"] },
   { "root": "m$T", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "m$y", "form": 1, "formPattern": "fa3ala-yaf3alu" },

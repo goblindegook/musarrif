@@ -11,6 +11,7 @@ import {
   isHamzatedLetter,
   isWeakLetter,
   KASRA,
+  LAM,
   MEEM,
   NOON,
   resolveFormVIIIInfixConsonant,
@@ -33,7 +34,33 @@ interface PastBaseForms {
   thirdPersonMasculinePluralBase: readonly string[]
 }
 
+function conjugateLaysa(): Record<PronounId, string> {
+  const lays = [LAM, FATHA, YEH, SUKOON, SEEN]
+  const las = [LAM, FATHA, SEEN]
+
+  return mapRecord(
+    {
+      '1s': [...las, SUKOON, TEH, DAMMA],
+      '2ms': [...las, SUKOON, TEH, FATHA],
+      '2fs': [...las, SUKOON, TEH, KASRA],
+      '3ms': [...lays, FATHA],
+      '3fs': [...lays, FATHA, TEH, SUKOON],
+      '2d': [...las, SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF],
+      '3md': [...lays, FATHA, ALIF],
+      '3fd': [...lays, FATHA, TEH, FATHA, ALIF],
+      '1p': [...las, SUKOON, NOON, FATHA, ALIF],
+      '2mp': [...las, SUKOON, TEH, DAMMA, MEEM, SUKOON],
+      '2fp': [...las, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA],
+      '3mp': [...lays, DAMMA, WAW, SUKOON, ALIF],
+      '3fp': [...las, SUKOON, NOON, FATHA],
+    },
+    finalize,
+  )
+}
+
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
+  if (verb.root === 'ليس' && verb.form === 1) return conjugateLaysa()
+
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =
     derivePastForms(verb)
 

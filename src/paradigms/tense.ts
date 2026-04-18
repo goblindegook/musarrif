@@ -4,3 +4,5 @@ export type Tense = NonPresentTense | 'present' | 'imperative'
 export type Mood = 'indicative' | 'subjunctive' | 'jussive'
 
 export type VerbTense = 'active.imperative' | `${Voice}.${NonPresentTense}` | `${Voice}.present.${Mood}`
+
+export type VerbParadigm = VerbTense | 'active.participle' | 'passive.participle' | 'masdar'
