@@ -470,12 +470,12 @@ describe('pass SRS recording', () => {
 describe('Explanation in ExerciseMode', () => {
   test('explanation is not visible before answering', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.queryByText(/Form I is the base triliteral pattern/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Form I is the base pattern/i)).not.toBeInTheDocument()
   })
 
   test('explanation paragraphs appear after selecting a wrong answer', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByRole('button')[1])
-    expect(screen.getByText(/Form I is the base triliteral pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 })
