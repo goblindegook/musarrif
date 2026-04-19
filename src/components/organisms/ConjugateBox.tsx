@@ -183,9 +183,15 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
         <SectionLabel>{t('build.formLabel')}</SectionLabel>
         <FormGrid>
           {FORM_NUMBERS.map((f, i) => (
-            <FormButton key={f} type="button" active={form === f} aria-pressed={form === f} onClick={() => setForm(f)}>
+            <OptionButton
+              key={f}
+              type="button"
+              active={form === f}
+              aria-pressed={form === f}
+              onClick={() => setForm(f)}
+            >
               {ROMAN_NUMERALS[i]}
-            </FormButton>
+            </OptionButton>
           ))}
         </FormGrid>
       </Section>
@@ -309,8 +315,9 @@ const LetterChoice = styled('button')<{ 'aria-selected'?: boolean }>`
   text-align: center;
 
   &:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
+    background: #fefce8;
+    border-color: #facc15;
+    color: #0f172a;
   }
 
   @media (max-width: 720px) {
@@ -342,11 +349,11 @@ const FormGrid = styled('div')`
   }
 `
 
-const FormButton = styled('button')<{ active?: boolean }>`
+const OptionButton = styled('button')<{ active?: boolean }>`
   font-family: inherit;
   font-size: 0.85rem;
-  padding: 0.3rem 0;
   min-width: 0;
+  padding: 0.3rem 0;
   border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
   border-radius: 0.5rem;
   background: ${({ active }) => (active ? '#fff8e1' : '#fff')};
@@ -355,8 +362,9 @@ const FormButton = styled('button')<{ active?: boolean }>`
   transition: background 80ms ease, border-color 80ms ease;
 
   &:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#f1f5f9')};
-    border-color: ${({ active }) => (active ? '#facc15' : '#cbd5e1')};
+    background: ${({ active }) => (active ? '#fff8e1' : '#fefce8')};
+    border-color: #facc15;
+    color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
   }
 `
 
@@ -364,21 +372,4 @@ const PatternGrid = styled('div')`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.25rem;
-`
-
-const OptionButton = styled('button')<{ active?: boolean }>`
-  font-family: inherit;
-  font-size: 0.85rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
-  border-radius: 0.5rem;
-  background: ${({ active }) => (active ? '#fff8e1' : '#fff')};
-  color: ${({ active }) => (active ? '#92400e' : '#475569')};
-  cursor: pointer;
-  transition: background 80ms ease, border-color 80ms ease;
-
-  &:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#f1f5f9')};
-    border-color: ${({ active }) => (active ? '#facc15' : '#cbd5e1')};
-  }
 `

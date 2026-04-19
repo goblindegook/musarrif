@@ -43,9 +43,9 @@ export const TabButton = styled('button')<{
     color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#f1f5f9')};
-    border-color: ${({ active }) => (active ? '#facc15' : '#cbd5f5')};
-    color: ${({ active }) => (active ? '#92400e' : '#334155')};
+    background: ${({ active }) => (active ? '#fff8e1' : '#fefce8')};
+    border-color: #facc15;
+    color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
     box-shadow: ${({ active }) => (active ? '0' : '0 6px 14px rgba(15, 23, 42, 0.1)')};
   }
 

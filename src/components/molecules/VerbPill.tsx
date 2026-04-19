@@ -66,9 +66,9 @@ const VerbPillLink = styled('a')`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
-    background: #f1f5f9;
-    border-color: #cbd5f5;
-    color: #334155;
+    background: #fefce8;
+    border-color: #facc15;
+    color: #0f172a;
     box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
   }
 

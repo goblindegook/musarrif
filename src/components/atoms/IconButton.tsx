@@ -53,9 +53,9 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   &:enabled:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#fff8e1')};
+    background: #fefce8;
     color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
-    border-color: ${({ active }) => (active ? '#facc15' : '#facc15')};
+    border-color: #facc15;
     box-shadow: ${({ active }) => (active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : '0 6px 16px rgba(15, 23, 42, 0.14)')};
   }
 

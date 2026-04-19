@@ -37,7 +37,7 @@ const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant
   outline: none;
 
   &:enabled:hover {
-    background: ${({ variant }) => (variant === 'primary' ? '#4a4f38' : '#fff8e1')};
+    background: ${({ variant }) => (variant === 'primary' ? '#4a4f38' : '#fefce8')};
     border-color: ${({ variant }) => (variant === 'primary' ? '#4a4f38' : '#facc15')};
     color: ${({ variant }) => (variant === 'primary' ? '#ffffff' : '#0f172a')};
   }
