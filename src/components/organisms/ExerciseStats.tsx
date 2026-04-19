@@ -107,6 +107,7 @@ function StatsChart({
   incorrectLabel: string
   passedLabel: string
 }) {
+  const { t } = useI18n()
   const containerRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
@@ -172,7 +173,7 @@ function StatsChart({
 
   return (
     <ChartContainer>
-      <div ref={containerRef} role="img" aria-label="statistics chart" style={{ width: '100%' }}>
+      <div ref={containerRef} role="img" aria-label={t('exercise.stats.chart.aria')} style={{ width: '100%' }}>
         <div ref={mountRef} />
       </div>
     </ChartContainer>

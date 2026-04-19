@@ -51,8 +51,9 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const inputDir = useMemo<'ltr' | 'rtl'>(() => {
     const latinCount = Array.from(query).filter((c) => /[a-zA-Z]/.test(c)).length
     const arabicCount = Array.from(query).filter((c) => /[\u0600-\u06FF]/.test(c)).length
-    return query.length > 0 && latinCount > arabicCount ? 'ltr' : 'rtl'
-  }, [query])
+    if (query.length === 0) return lang === 'ar' ? 'rtl' : 'ltr'
+    return latinCount > arabicCount ? 'ltr' : 'rtl'
+  }, [query, lang])
 
   return (
     <>
@@ -116,7 +117,6 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           placeholder={t('placeholder')}
           dir={inputDir}
           lang="ar"
-          placeholderDir={dir}
           inputMode="text"
           autoCapitalize="none"
           autoComplete="off"
@@ -243,7 +243,7 @@ const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
   }
 `
 
-const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
+const Input = styled('input')`
   border-radius: 0.9rem;
   border: 1px solid #cbd5f5;
   padding: 0.9rem 1rem;
@@ -252,13 +252,21 @@ const Input = styled('input')<{ placeholderDir?: 'ltr' | 'rtl' }>`
   background: #f8fafc;
   width: 100%;
   box-sizing: border-box;
+  appearance: none;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
   position: relative;
   z-index: 103;
 
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+
   &::placeholder {
-    direction: ${({ placeholderDir }) => placeholderDir ?? 'auto'};
-    text-align: ${({ placeholderDir }) => (placeholderDir === 'rtl' ? 'right' : 'left')};
+    direction: inherit;
+    text-align: inherit;
   }
 
   &:hover {
