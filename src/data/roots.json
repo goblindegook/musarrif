@@ -575,7 +575,7 @@
   { "root": "mrr", "form": 10 },
   { "root": "msk", "form": 4 },
   { "root": "mss", "form": 6 },
-  { "root": "msy", "form": 4 },
+  { "root": "msw", "form": 4 },
   { "root": "mvl", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fu3ool"] },
   { "root": "mvl", "form": 2 },
   { "root": "mvl", "form": 5, "passiveVoice": "none" },

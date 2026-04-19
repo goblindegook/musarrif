@@ -1153,6 +1153,24 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
 
+      test('أَمْسَى conjugation', () => {
+        expect(conjugatePassivePast(getVerb('مسو', 4))).toEqualT({
+          '1s': 'أُمْسِيتُ',
+          '2ms': 'أُمْسِيتَ',
+          '2fs': 'أُمْسِيتِ',
+          '3ms': 'أُمْسِيَ',
+          '3fs': 'أُمْسِيَتْ',
+          '2d': 'أُمْسِيتُمَا',
+          '3md': 'أُمْسِيَا',
+          '3fd': 'أُمْسِيَتَا',
+          '1p': 'أُمْسِينَا',
+          '2mp': 'أُمْسِيتُمْ',
+          '2fp': 'أُمْسِيتُنَّ',
+          '3mp': 'أُمْسُوْا',
+          '3fp': 'أُمْسِينَ',
+        })
+      })
+
       test('أَحْيَا conjugation', () => {
         expect(conjugatePassivePast(getVerb('حيي', 4))).toEqualT({
           '1s': 'أُحْيِيتُ',

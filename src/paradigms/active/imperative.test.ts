@@ -1119,9 +1119,18 @@ describe('imperative', () => {
         ['عطي', 'أَعْطِ'],
         ['لقي', 'أَلْقِ'],
         ['ضحي', 'أَضْحِ'],
-        ['مسي', 'أَمْسِ'],
       ])('drops the final glide for %s', (root, expected2ms) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected2ms)
+      })
+
+      test('أَمْسَى conjugation', () => {
+        expect(conjugateImperative(getVerb('مسو', 4))).toMatchObjectT({
+          '2ms': 'أَمْسِ',
+          '2fs': 'أَمْسِي',
+          '2d': 'أَمْسِيَا',
+          '2mp': 'أَمْسُوْا',
+          '2fp': 'أَمْسِيْنَ',
+        })
       })
     })
 

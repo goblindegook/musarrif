@@ -1127,6 +1127,24 @@ describe('passive present indicative', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
 
+      test('أَمْسَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('مسو', 4), 'indicative')).toEqualT({
+          '1s': 'أُمْسَى',
+          '2ms': 'تُمْسَى',
+          '2fs': 'تُمْسَيْنَ',
+          '3ms': 'يُمْسَى',
+          '3fs': 'تُمْسَى',
+          '2d': 'تُمْسَيَانِ',
+          '3md': 'يُمْسَيَانِ',
+          '3fd': 'تُمْسَيَانِ',
+          '1p': 'نُمْسَى',
+          '2mp': 'تُمْسَوْنَ',
+          '2fp': 'تُمْسَيْنَ',
+          '3mp': 'يُمْسَوْنَ',
+          '3fp': 'يُمْسَيْنَ',
+        })
+      })
+
       test('أَحْيَا conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('حيي', 4), 'indicative')).toEqualT({
           '1s': 'أُحْيَا',

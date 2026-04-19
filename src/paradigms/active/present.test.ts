@@ -1517,10 +1517,27 @@ describe('active present indicative', () => {
         ['سمي', 'يُسْمِي'],
         ['عطي', 'يُعْطِي'],
         ['لقي', 'يُلْقِي'],
-        ['مسي', 'يُمْسِي'],
         ['ضحي', 'يُضْحِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
+      })
+
+      test('أَمْسَى conjugation', () => {
+        expect(conjugatePresentMood(getVerb('مسو', 4), 'indicative')).toEqualT({
+          '1s': 'أُمْسِي',
+          '2ms': 'تُمْسِي',
+          '2fs': 'تُمْسِيْنَ',
+          '3ms': 'يُمْسِي',
+          '3fs': 'تُمْسِي',
+          '2d': 'تُمْسِيَانِ',
+          '3md': 'يُمْسِيَانِ',
+          '3fd': 'تُمْسِيَانِ',
+          '1p': 'نُمْسِي',
+          '2mp': 'تُمْسُوْنَ',
+          '2fp': 'تُمْسِيْنَ',
+          '3mp': 'يُمْسُوْنَ',
+          '3fp': 'يُمْسِيْنَ',
+        })
       })
 
       test('أَحْيَا conjugation', () => {

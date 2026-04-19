@@ -207,9 +207,9 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
   if (c2 === c3) return buildForms([...prefix, FATHA, c2, SUKOON, c3], c3)
 
-  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return buildForms([...prefix, FATHA, c3], c3)
+  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return buildForms([...prefix, FATHA, c3], YEH)
 
-  if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, c3], c3)
+  if (isWeakLetter(c3)) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH)
 
   if (isWeakLetter(c2) && isHamzatedLetter(c3))
     return {

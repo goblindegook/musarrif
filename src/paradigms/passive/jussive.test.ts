@@ -1154,6 +1154,24 @@ describe('passive present jussive', () => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
 
+      test('أَمْسَى conjugation', () => {
+        expect(conjugatePassivePresentMood(getVerb('مسو', 4), 'jussive')).toEqualT({
+          '1s': 'أُمْسَ',
+          '2ms': 'تُمْسَ',
+          '2fs': 'تُمْسَيْ',
+          '3ms': 'يُمْسَ',
+          '3fs': 'تُمْسَ',
+          '2d': 'تُمْسَيَا',
+          '3md': 'يُمْسَيَا',
+          '3fd': 'تُمْسَيَا',
+          '1p': 'نُمْسَ',
+          '2mp': 'تُمْسَوْا',
+          '2fp': 'تُمْسَيْنَ',
+          '3mp': 'يُمْسَوْا',
+          '3fp': 'يُمْسَيْنَ',
+        })
+      })
+
       test('أَحْيَا conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('حيي', 4), 'jussive')).toEqualT({
           '1s': 'أُحْيَ',
