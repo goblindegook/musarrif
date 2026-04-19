@@ -38,6 +38,11 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
     setSuggestionsOpen(false)
   }, [selectedVerb])
 
+  useEffect(() => {
+    if (!suggestionsOpen || highligtedIndex < 0 || !suggested[highligtedIndex]) return
+    document.getElementById(`search-suggestion-${suggested[highligtedIndex].id}`)?.scrollIntoView({ block: 'nearest' })
+  }, [highligtedIndex, suggested, suggestionsOpen])
+
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       onSelect(verb)
