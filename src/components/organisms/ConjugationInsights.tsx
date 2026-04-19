@@ -9,14 +9,13 @@ import {
   type MorphemeRole,
 } from '../../paradigms/annotation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
-import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { IconButton } from '../atoms/IconButton'
 import { Text } from '../atoms/Text'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
-import { Detail } from '../molecules/Detail'
 import { Modal } from '../molecules/Modal'
 
 const MORPHEME_COLOURS: Record<MorphemeRole, string> = {
@@ -25,13 +24,6 @@ const MORPHEME_COLOURS: Record<MorphemeRole, string> = {
   tense: '#15803d',
   suffix: '#7e22ce',
   dropped: '#ef4444',
-}
-
-const formIVowelPattern = (verb: DisplayVerb) => {
-  if (verb.form !== 1) return null
-  const past = formIPastVowel(verb)
-  const present = formIPresentVowel(verb)
-  return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
 
 interface ConjugationInsightsProps {
@@ -100,7 +92,6 @@ function DerivationSteps({
 export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: ConjugationInsightsProps) {
   const { t, dir } = useI18n()
   const [open, setOpen] = useState(false)
-  const formLabel = formatFormLabel(verb.form, verb.root)
   const annotation = annotate(verb, verbTense, pronoun)
   const finalStep = annotation?.steps[annotation.steps.length - 1]
 
@@ -112,35 +103,14 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
       {open && (
         <Modal dir={dir} isOpen={open} onClose={() => setOpen(false)} title={t('conjugationInfo.title')}>
           <VerbDisplayArea>
-            <ConjugationDisplay dir="rtl" lang="ar">
-              <ConjugationText>
-                {finalStep ? (
-                  <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'dropped')} />
-                ) : (
-                  arabic
-                )}
-              </ConjugationText>
-            </ConjugationDisplay>
-            {annotation ? (
-              <DerivationSteps steps={annotation.steps} verb={verb} t={t} />
-            ) : (
-              <VerbContextSection>
-                <Detail label={t('meta.root')} valueDir="rtl" valueLang="ar">
-                  <RootLetters dir="rtl" lang="ar">
-                    {Array.from(verb.root).map((letter, i) => (
-                      <span key={i}>{letter}</span>
-                    ))}
-                  </RootLetters>
-                </Detail>
-                <Detail label={t('meta.form')} valueLang="en" valueDir="rtl">
-                  <FormValue>
-                    <FormNumeral>{formLabel}</FormNumeral>
-                    {formIVowelPattern(verb) && <FormPattern>{formIVowelPattern(verb)}</FormPattern>}
-                  </FormValue>
-                </Detail>
-                <Detail label={t('meta.verb')} value={verb.label} valueLang="ar" valueDir="rtl" />
-              </VerbContextSection>
-            )}
+            <ArabicDisplay>
+              {finalStep ? (
+                <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'dropped')} />
+              ) : (
+                arabic
+              )}
+            </ArabicDisplay>
+            {annotation && <DerivationSteps steps={annotation.steps} verb={verb} t={t} />}
           </VerbDisplayArea>
           {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map(
             (paragraph, index) => (
@@ -189,58 +159,11 @@ const StepArabic = styled('span')`
   text-align: right;
 `
 
-const VerbContextSection = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-`
-
-const FormValue = styled('div')`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
-  gap: 0.5rem;
-`
-
-const FormNumeral = styled('span')`
-  font-weight: 600;
-`
-
-const FormPattern = styled('span')`
-  font-size: 1.2rem;
-  font-weight: 400;
-`
-
-const RootLetters = styled('div')`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.75rem;
-`
-
 const VerbDisplayArea = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1rem;
-`
-
-const ConjugationDisplay = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-`
-
-const ConjugationText = styled('span')`
-  font-size: 2rem;
-  font-weight: 600;
-  color: #0f172a;
-  text-align: center;
-  word-break: break-word;
 `
 
 const DroppedMorpheme = styled('del')`

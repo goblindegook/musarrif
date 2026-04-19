@@ -3,6 +3,7 @@ import { useI18n } from '../../hooks/i18n'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Text } from '../atoms/Text'
 import { Detail } from '../molecules/Detail'
 
@@ -18,9 +19,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
 
   return (
     <>
-      <NominalDisplay dir="rtl" lang="ar">
-        <NominalText>{arabic}</NominalText>
-      </NominalDisplay>
+      <ArabicDisplay>{arabic}</ArabicDisplay>
       <VerbContextSection>
         <Detail label={t('meta.root')} valueDir="rtl" valueLang="ar">
           <RootLetters dir="rtl" lang="ar">
@@ -56,23 +55,4 @@ const RootLetters = styled('div')`
 
 const FormNumeral = styled('span')`
   font-weight: 600;
-`
-
-const NominalDisplay = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 0.25rem;
-`
-
-const NominalText = styled('span')`
-  font-size: 2rem;
-  font-weight: 600;
-  color: #0f172a;
-  text-align: center;
-  word-break: break-word;
 `

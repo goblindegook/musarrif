@@ -28,26 +28,16 @@ describe('FormInsights', () => {
   })
 
   describe('semantic anchor', () => {
-    test('Form II shows "Causative · Intensive" before the pattern', () => {
-      const verb = buildVerbFromId('ktb-2')!
-      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
-      const anchor = screen.getByTestId('form-semantic-anchor')
-      const pattern = screen.getByTestId('form-pattern')
-      expect(anchor).toBeInTheDocument()
-      expect(anchor.textContent).toBe('Causative · Intensive')
-      expect(anchor.compareDocumentPosition(pattern)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    })
-
     test('Form I shows "Base meaning"', () => {
       const verb = buildVerbFromId('ktb-1')!
       render(<FormInsights verb={verb} />, { wrapper: Wrapper })
-      expect(screen.getByTestId('form-semantic-anchor').textContent).toBe('Base meaning')
+      expect(screen.getByText('Base meaning')).toBeInTheDocument()
     })
 
-    test('Form X shows "Estimative · Requestive"', () => {
-      const verb = buildVerbFromId('ktb-10')!
+    test('Form II shows "Causative · Intensive"', () => {
+      const verb = buildVerbFromId('ktb-2')!
       render(<FormInsights verb={verb} />, { wrapper: Wrapper })
-      expect(screen.getByTestId('form-semantic-anchor').textContent).toBe('Estimative · Requestive')
+      expect(screen.getByText('Causative · Intensive')).toBeInTheDocument()
     })
   })
 

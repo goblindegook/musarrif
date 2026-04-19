@@ -5,6 +5,7 @@ import { conjugate } from '../../paradigms/conjugation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { type DisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
+import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { SuggestionsList } from '../molecules/QuickPickList'
@@ -31,12 +32,10 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
 
   return (
     <>
-      <SemanticAnchor data-testid="form-semantic-anchor" dir={dir} lang={lang}>
+      <SemanticAnchor dir={dir} lang={lang}>
         {t(`formInfo.form${verb.form}.semantic`)}
       </SemanticAnchor>
-      <PatternDisplay data-testid="form-pattern" dir="rtl" lang="ar">
-        <PatternText>{pattern}</PatternText>
-      </PatternDisplay>
+      <ArabicDisplay>{pattern}</ArabicDisplay>
       {formExplanationParagraph && (
         <Text dir={dir} lang={lang}>
           {formExplanationParagraph}
@@ -64,23 +63,4 @@ const SemanticAnchor = styled('p')`
   color: #92400e;
   margin: 0 0 0.75rem;
   letter-spacing: 0.01em;
-`
-
-const PatternDisplay = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
-`
-
-const PatternText = styled('span')`
-  font-size: 2rem;
-  font-weight: 600;
-  color: #0f172a;
-  text-align: center;
-  word-break: break-word;
 `
