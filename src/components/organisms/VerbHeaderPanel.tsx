@@ -66,7 +66,7 @@ const PanelSubtitle = styled('p')`
   margin: 0;
   font-size: 0.875rem;
   font-weight: 400;
-  color: #64748b;
+  color: #475569;
   text-align: right;
 `
 

@@ -624,7 +624,7 @@ const MasdarSeparator = styled('span')`
 const MasdarNote = styled('span')`
   font-size: 0.85rem;
   font-weight: 500;
-  color: #64748b;
+  color: #475569;
 
   @media print {
     font-size: 0.7rem;

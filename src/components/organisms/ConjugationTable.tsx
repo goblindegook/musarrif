@@ -379,7 +379,7 @@ const PronounDescription = styled('small')`
   display: block;
   font-size: 0.85rem;
   font-style: italic;
-  color: #64748b;
+  color: #475569;
 
   @media print {
     display: none;

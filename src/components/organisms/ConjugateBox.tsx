@@ -242,7 +242,7 @@ const SlotHeader = styled('label')`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #64748b;
+  color: #475569;
 `
 
 const SlotInputWrapper = styled('div')`
@@ -336,7 +336,7 @@ const SectionLabel = styled('div')`
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #64748b;
+  color: #475569;
 `
 
 const FormGrid = styled('div')`

@@ -180,7 +180,7 @@ const StepLabel = styled('span')`
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #64748b;
+  color: #475569;
 `
 
 const StepArabic = styled('span')`

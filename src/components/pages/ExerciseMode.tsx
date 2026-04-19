@@ -238,7 +238,7 @@ const VerbDisplay = styled('p')`
 const PROMPT_CLASS = css`
   margin: 0;
   font-size: 1rem;
-  color: #64748b;
+  color: #475569;
   text-align: center;
 `
 
