@@ -74,7 +74,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
     const pool = verbs.filter(
       (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
     )
-    if (pool.length > 0) return { ...generator.generate(profile, { rootType, form, tense, pronoun }), cardKey: dueKey }
+    if (pool.length > 0) return generator.generate(profile, { rootType, form, tense, pronoun })
   }
 
   return weightedRandomSrs(available, (e) => e.weight ?? 1).generate(profile)

@@ -1,7 +1,14 @@
 import { conjugate } from '../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import { isWeakLetter } from '../paradigms/letters'
-import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
+import {
+  type DimensionProfile,
+  exerciseDiacritics,
+  normalizeExercisePronoun,
+  randomPronoun,
+  randomTense,
+  randomVerb,
+} from './dimensions'
 import {
   mixedWordDistractor,
   randomizeOptions,
@@ -15,7 +22,11 @@ import { buildCardKey, getSrsRootType } from './srs'
 export const verbRootExercise = defineExercise('verbRoot', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
   const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-  const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+  const pronoun = normalizeExercisePronoun(
+    verb,
+    tense,
+    constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
+  )
   const conjugatedWord = conjugate(verb, tense)[pronoun]
   const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
 

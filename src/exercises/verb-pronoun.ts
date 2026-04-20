@@ -7,6 +7,7 @@ import type { DisplayVerb } from '../paradigms/verbs'
 import {
   type DimensionProfile,
   exerciseDiacritics,
+  normalizeExercisePronoun,
   type PronounsLevel,
   pronounPool,
   randomPronoun,
@@ -21,7 +22,11 @@ export const verbPronounExercise = defineExercise(
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-    const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const pronoun = normalizeExercisePronoun(
+      verb,
+      tense,
+      constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
+    )
     const conjugatedWord = conjugate(verb, tense)[pronoun]
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
     const [word, options] = buildOptions(verb, tense, pronoun, profile)

@@ -41,7 +41,7 @@ type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAM
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
-const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
+const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
   [KASRA]: new Set([YEH, HAMZA_ON_YEH]),
   [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
@@ -58,7 +58,7 @@ function stripObviousDiacritics(input: string): string {
     .reduce<string[]>((result, current, index, chars) => {
       if (current === SUKOON) return result
       const nextBase = chars.slice(index + 1).find((char) => char !== TATWEEL)
-      if (nextBase && LONG_VOWEL_TARGETS[current]?.has(nextBase)) return result
+      if (LONG_VOWEL_TARGETS[current as Vowel]?.has(nextBase ?? '')) return result
       result.push(current)
       return result
     }, [])
@@ -103,13 +103,9 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
 }
 
 export function finalize(letters: readonly string[]): string {
-  return geminateDoubleLetters(normalizeAlifMadda(letters.join(''))).normalize('NFC')
-}
-
-function geminateDoubleLetters(word: string): string {
-  return word.replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
-}
-
-function normalizeAlifMadda(word: string): string {
-  return word.replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
+  return letters
+    .join('')
+    .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
+    .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
+    .normalize('NFC')
 }

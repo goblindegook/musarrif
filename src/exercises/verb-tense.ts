@@ -8,6 +8,7 @@ import { pick } from '../primitives/objects'
 import {
   type DimensionProfile,
   exerciseDiacritics,
+  normalizeExercisePronoun,
   randomPronoun,
   randomTense,
   randomVerb,
@@ -22,7 +23,11 @@ export const verbTenseExercise = defineExercise(
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-    const pronoun = constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns)
+    const pronoun = normalizeExercisePronoun(
+      verb,
+      tense,
+      constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
+    )
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun])
     const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(tense)

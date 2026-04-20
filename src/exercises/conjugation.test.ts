@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { getVerbById } from '../paradigms/verbs'
 import { conjugationExercise } from './conjugation'
+import * as dimensions from './dimensions'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
@@ -207,5 +209,18 @@ describe('conjugationExercise with constraints', () => {
       pronoun: '3ms',
     })
     expect(exercise.cardKey).toContain(':active.past:3ms')
+  })
+
+  test('forces 3ms for impersonal passive constraints and keeps the answer non-empty', () => {
+    vi.spyOn(dimensions, 'randomVerb').mockReturnValue(getVerbById('lqy-10')!)
+
+    const exercise = conjugationExercise.generate(
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 3, rootTypes: 5 },
+      { rootType: 'defective', form: 10, tense: 'passive.present.subjunctive', pronoun: '2mp' },
+    )
+
+    expect(exercise.promptParams?.pronoun).toBe('pronoun.3ms')
+    expect(exercise.cardKey).toContain(':passive.present.subjunctive:3ms')
+    expect(exercise.options[exercise.answer]).not.toBe('')
   })
 })

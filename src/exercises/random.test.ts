@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
+import { getVerbById } from '../paradigms/verbs'
+import * as dimensions from './dimensions'
 import { randomExercise } from './random'
 
 const INITIAL_DIMENSION_PROFILE = {
@@ -11,6 +13,10 @@ const INITIAL_DIMENSION_PROFILE = {
 } as const
 
 describe('randomExercise', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('serves a due card when one exists in srsStore', () => {
     const store = { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() } }
 
@@ -30,6 +36,25 @@ describe('randomExercise', () => {
     )
 
     expect(keys).not.toContain('verbTense:sound:1:active.present.subjunctive:3ms')
+  })
+
+  test('uses normalized cardKey when due key has an incompatible pronoun for impersonal passive', () => {
+    vi.spyOn(dimensions, 'randomVerb').mockReturnValue(getVerbById('lqy-10')!)
+    const store = {
+      'conjugation:defective:10:passive.present.subjunctive:2mp': {
+        interval: 1,
+        ef: 2.5,
+        repetitions: 1,
+        dueDate: today(),
+      },
+    }
+
+    const exercise = randomExercise(
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 3, rootTypes: 5 },
+      store,
+    )
+
+    expect(exercise.cardKey).toBe('conjugation:defective:10:passive.present.subjunctive:3ms')
   })
 })
 

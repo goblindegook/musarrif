@@ -3,7 +3,14 @@ import { conjugate } from '../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../paradigms/explanation'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
 import { pick } from '../primitives/objects'
-import { type DimensionProfile, exerciseDiacritics, randomPronoun, randomTense, randomVerb } from './dimensions'
+import {
+  type DimensionProfile,
+  exerciseDiacritics,
+  normalizeExercisePronoun,
+  randomPronoun,
+  randomTense,
+  randomVerb,
+} from './dimensions'
 import { defineExercise } from './exercises'
 import type { CardConstraints } from './srs'
 import { buildCardKey, getSrsRootType } from './srs'
@@ -13,8 +20,11 @@ export const verbFormExercise = defineExercise(
   (profile: DimensionProfile, constraints?: CardConstraints) => {
     const verb = randomVerb(profile, constraints)
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-    const pronoun =
-      constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns))
+    const pronoun = normalizeExercisePronoun(
+      verb,
+      tense,
+      constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns)),
+    )
     const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
     const explanation = pick(resolveVerbExplanationLayers(verb, tense, pronoun, word), [
       'rootLetters',

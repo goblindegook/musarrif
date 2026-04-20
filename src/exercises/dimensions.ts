@@ -90,6 +90,11 @@ export function randomPronoun(verb: DisplayVerb, tense: VerbTense, pronouns: Pro
   return random(PRONOUN_POOLS[pronouns])
 }
 
+export function normalizeExercisePronoun(verb: DisplayVerb, tense: VerbTense, pronoun: PronounId): PronounId {
+  if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return '3ms'
+  return pronoun
+}
+
 const F0: VerbForm[] = [1]
 const F1: VerbForm[] = [...F0, 2, 3]
 const F2: VerbForm[] = [...F1, 4, 5, 6]
