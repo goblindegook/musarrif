@@ -1,10 +1,10 @@
 import { styled } from 'goober'
-import type { ComponentChildren, JSX } from 'preact'
+import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 
 export type ButtonVariant = 'primary' | 'secondary'
 export type ButtonSize = 'normal' | 'large'
 
-interface ButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   children: ComponentChildren
   variant?: ButtonVariant
   size?: ButtonSize

@@ -96,10 +96,16 @@ export function normalizeExercisePronoun(verb: DisplayVerb, tense: VerbTense, pr
 }
 
 const F0: VerbForm[] = [1]
-const F1: VerbForm[] = [...F0, 2, 3]
-const F2: VerbForm[] = [...F1, 4, 5, 6]
-const F3: VerbForm[] = [...F2, 7, 8, 9, 10]
-const FORM_POOLS = [F0, F1, F2, F3] as const
+const F1: VerbForm[] = [...F0, 2]
+const F2: VerbForm[] = [...F1, 3]
+const F3: VerbForm[] = [...F2, 4]
+const F4: VerbForm[] = [...F3, 5]
+const F5: VerbForm[] = [...F4, 6]
+const F6: VerbForm[] = [...F5, 7]
+const F7: VerbForm[] = [...F6, 8]
+const F8: VerbForm[] = [...F7, 9]
+const F9: VerbForm[] = [...F8, 10]
+const FORM_POOLS = [F0, F1, F2, F3, F4, F5, F6, F7, F8, F9] as const
 
 export function formPool(forms: FormsLevel): readonly VerbForm[] {
   return FORM_POOLS[forms]
@@ -139,9 +145,15 @@ const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly s
   diacritics: [[], ['exercise.unlock.diacriticsMode.some'], ['exercise.unlock.diacriticsMode.none']],
   forms: [
     [],
-    ['exercise.unlock.form.2', 'exercise.unlock.form.3'],
-    ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'],
-    ['exercise.unlock.form.7', 'exercise.unlock.form.8', 'exercise.unlock.form.9', 'exercise.unlock.form.10'],
+    ['exercise.unlock.form.2'],
+    ['exercise.unlock.form.3'],
+    ['exercise.unlock.form.4'],
+    ['exercise.unlock.form.5'],
+    ['exercise.unlock.form.6'],
+    ['exercise.unlock.form.7'],
+    ['exercise.unlock.form.8'],
+    ['exercise.unlock.form.9'],
+    ['exercise.unlock.form.10'],
   ],
   rootTypes: [
     [],
@@ -206,7 +218,7 @@ const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
   if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
-  if (p.nominals >= 2 && p.forms < 3) p.nominals = 1
+  if (p.nominals >= 2 && p.forms < FORM_POOLS.length - 1) p.nominals = 1
   if (
     p.diacritics >= 2 &&
     !(

@@ -139,7 +139,7 @@ describe('enforcePrerequisites', () => {
     expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1 }).nominals).toBe(0)
   })
 
-  test('rolls back nominals from 2 to 1 when forms < 3', () => {
+  test('rolls back nominals from 2 to 1 when forms < max', () => {
     expect(
       enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 2 }).nominals,
     ).toBe(1)
@@ -166,7 +166,7 @@ describe('enforcePrerequisites', () => {
         diacritics: 2,
         tenses: 5,
         pronouns: 3,
-        forms: 3,
+        forms: 9,
         rootTypes: 5,
         nominals: 2,
       }).diacritics,
@@ -374,7 +374,7 @@ describe('promoteDimensions', () => {
     ).toBe(1)
   })
 
-  test('nominals blocked at level 1 until forms >= 3', () => {
+  test('nominals blocked at level 1 until forms >= max', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 2 },
@@ -383,10 +383,10 @@ describe('promoteDimensions', () => {
     ).toBe(1)
   })
 
-  test('nominals promotes to level 2 when forms >= 3', () => {
+  test('nominals promotes to level 2 when forms >= max', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 3 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 9 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(2)
@@ -503,7 +503,7 @@ describe('promoteDimensions', () => {
           diacritics: 1,
           tenses: 5,
           pronouns: 3,
-          forms: 3,
+          forms: 9,
           rootTypes: 5,
           nominals: 2,
         },
@@ -523,7 +523,7 @@ describe('getDimensionUnlocks', () => {
   test('returns unlocked forms when forms level increases from 0 to 1', () => {
     expect(
       getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.2', 'exercise.unlock.form.3'] }])
+    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.2'] }])
   })
 
   test('returns split tense unlock items across a multi-level jump', () => {
@@ -555,8 +555,6 @@ describe('getDimensionUnlocks', () => {
         { ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 2 },
         { ...INITIAL_DIMENSION_PROFILE, forms: 2, rootTypes: 1 },
       ),
-    ).toEqual([
-      { dimension: 'forms', items: ['exercise.unlock.form.4', 'exercise.unlock.form.5', 'exercise.unlock.form.6'] },
-    ])
+    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.3'] }])
   })
 })

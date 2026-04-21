@@ -1,9 +1,9 @@
 import { styled } from 'goober'
-import type { ComponentChildren, JSX } from 'preact'
+import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 import { useEffect } from 'preact/hooks'
 import { Button, type ButtonSize, type ButtonVariant } from '../atoms/Button'
 
-interface ShortcutButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
+interface ShortcutButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
   children: ComponentChildren
   onClick?: () => void
   shortcutKey: string

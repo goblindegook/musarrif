@@ -1,7 +1,7 @@
 import { styled } from 'goober'
-import type { ComponentChildren, JSX } from 'preact'
+import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 
-interface IconButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   children: ComponentChildren
   active?: boolean
   size?: 'sm' | 'md'

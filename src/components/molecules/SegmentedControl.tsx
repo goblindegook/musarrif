@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import type { ComponentChild, JSX } from 'preact'
+import type { ComponentChild, HTMLAttributes } from 'preact'
 
 export interface SegmentedControlOption<T extends string = string> {
   readonly value: T
@@ -9,7 +9,7 @@ export interface SegmentedControlOption<T extends string = string> {
 }
 
 interface SegmentedControlProps<T extends string = string>
-  extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange' | 'value'> {
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'value'> {
   readonly options: readonly SegmentedControlOption<T>[]
   readonly value: T
   readonly onChange: (value: T, index: number) => void
