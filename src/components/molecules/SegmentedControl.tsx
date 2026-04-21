@@ -64,7 +64,7 @@ const Control = styled('div')<{
   background: var(--color-bg-surface);
   padding: 0.25rem;
   border-radius: 0.95rem;
-  box-shadow: 0 6px 18px var(--color-shadow-sm);
+  box-shadow: var(--shadow-surface);
   gap: 0;
   position: relative;
   overflow: hidden;
@@ -88,7 +88,7 @@ const Control = styled('div')<{
     border-radius: 0.75rem;
     background: var(--color-bg-accent);
     border: 1px solid var(--color-accent);
-    box-shadow: 0 4px 14px var(--color-shadow-lg);
+    box-shadow: var(--shadow-interactive-active);
     transform: translateX(calc(100% * var(--segmented-active-index) * var(--segmented-direction)));
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
@@ -109,7 +109,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   border-radius: 0.75rem;
   border: 1px solid transparent;
   box-shadow: none;
-  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
+  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   flex: 1 1 0;
   min-width: 0;
@@ -127,7 +127,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   &:hover {
     background: transparent;
     border-color: transparent;
-    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
+    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-tertiary)')};
     box-shadow: none;
   }
 

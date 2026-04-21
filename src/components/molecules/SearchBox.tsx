@@ -216,8 +216,8 @@ const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at top, var(--color-header-bg-start) 0%, var(--color-header-bg-mid) 60%, var(--color-header-bg-end) 100%);
-        box-shadow: 0 4px 12px var(--color-shadow-md);
+        background: radial-gradient(circle at top, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-mid) 60%, var(--color-bg-gradient-end) 100%);
+        box-shadow: var(--shadow-interactive);
         z-index: 101;
       }
 
@@ -278,7 +278,7 @@ const Input = styled('input')`
   &:hover {
     background: var(--color-bg-surface);
     border-color: var(--color-border-input);
-    box-shadow: 0 6px 14px var(--color-shadow-md);
+    box-shadow: var(--shadow-interactive-hover);
   }
 
   &:focus {
@@ -298,7 +298,7 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
   border-left: none;
   border-right: none;
   background: var(--color-bg-surface);
-  box-shadow: 0 10px 20px var(--color-shadow-sm);
+  box-shadow: var(--shadow-surface);
   width: calc(100% + 1rem);
   z-index: 102;
   max-height: calc(100vh - 5rem);

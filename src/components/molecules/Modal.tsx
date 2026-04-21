@@ -66,7 +66,7 @@ const Dialog = styled('dialog')`
   width: min(100%, 520px);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  box-shadow: 0 30px 80px var(--color-shadow-2xl);
+  box-shadow: var(--shadow-elevated);
   border: 1px solid var(--color-border);
 
   &::backdrop {

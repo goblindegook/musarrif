@@ -49,7 +49,7 @@ export const PanelContainer = styled('section')`
   background: var(--color-bg-surface);
   border-radius: 0.75rem;
   padding: 0.75rem;
-  box-shadow: 0 20px 55px var(--color-shadow-sm);
+  box-shadow: var(--shadow-elevated);
   display: flex;
   flex-direction: column;
   gap: 1rem;

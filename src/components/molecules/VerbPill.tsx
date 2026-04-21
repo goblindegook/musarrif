@@ -69,19 +69,19 @@ const VerbPillLink = styled('a')`
     background: var(--color-bg-accent-hover);
     border-color: var(--color-accent);
     color: var(--color-text-primary);
-    box-shadow: 0 6px 14px var(--color-shadow-md);
+    box-shadow: var(--shadow-interactive-hover);
   }
 
   &.active {
     border-color: var(--color-accent);
     background: var(--color-bg-accent);
-    color: var(--color-text-accent);
-    box-shadow: 0 6px 14px var(--color-shadow-md);
+    color: var(--color-text-emphasis);
+    box-shadow: var(--shadow-interactive-hover);
 
     &:hover {
       background: var(--color-bg-accent);
       border-color: var(--color-accent);
-      color: var(--color-text-accent);
+      color: var(--color-text-emphasis);
     }
   }
 

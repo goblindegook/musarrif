@@ -140,9 +140,9 @@ const TopBar = styled('header')`
   left: 0;
   right: 0;
   z-index: 100;
-  background: radial-gradient(circle at top, var(--color-header-bg-start) 0%, var(--color-header-bg-mid) 60%, var(--color-header-bg-end) 100%);
+  background: radial-gradient(circle at top, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-mid) 60%, var(--color-bg-gradient-end) 100%);
   padding: 1rem 0.75rem;
-  box-shadow: 0 4px 12px var(--color-shadow-md);
+  box-shadow: var(--shadow-interactive);
   transition: padding 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 480px) {
@@ -182,7 +182,7 @@ const Eyebrow = styled('p')`
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.78rem;
-  color: var(--color-text-accent);
+  color: var(--color-text-emphasis);
   margin: 0;
   max-width: 100%;
   overflow: hidden;

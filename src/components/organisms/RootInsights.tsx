@@ -80,7 +80,7 @@ const RootLetters = styled('div')`
 const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
   font-size: 2rem;
   font-weight: 600;
-  color: ${(props) => (props.weak || props.hamza ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
+  color: ${(props) => (props.weak || props.hamza ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -93,7 +93,7 @@ const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
 
 const RootLetterAnnotation = styled('small')`
   font-size: 0.65rem;
-  color: var(--color-text-accent);
+  color: var(--color-text-emphasis);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;

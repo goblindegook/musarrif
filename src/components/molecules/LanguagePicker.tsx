@@ -32,13 +32,13 @@ const Select = styled('select')`
   &:hover {
     background-color: var(--color-bg-surface);
     border-color: var(--color-border-input);
-    box-shadow: 0 6px 14px var(--color-shadow-md);
+    box-shadow: var(--shadow-interactive-hover);
   }
 
   &:focus {
     outline: 3px solid var(--color-focus-outline);
     border-color: var(--color-accent);
-    box-shadow: 0 6px 14px var(--color-shadow-lg);
+    box-shadow: var(--shadow-interactive-hover);
   }
 
   &[dir='rtl'] {

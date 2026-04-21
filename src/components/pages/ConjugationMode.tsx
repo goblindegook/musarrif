@@ -636,7 +636,7 @@ const ConjugationSection = styled('div')`
   border-radius: 1rem;
   overflow: hidden;
   background: var(--color-bg-surface);
-  box-shadow: 0 10px 28px var(--color-shadow-sm);
+  box-shadow: var(--shadow-elevated);
 
   @media print {
     border: 1px solid #e2e8f0;

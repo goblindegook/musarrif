@@ -21,8 +21,8 @@ export const TabButton = styled('button')<{
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
   border-radius: 0.75rem;
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
-  box-shadow: ${({ active }) => (active ? '0 2px 10px var(--color-shadow-lg)' : 'none')};
-  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
+  box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
+  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -45,8 +45,8 @@ export const TabButton = styled('button')<{
   &:hover {
     background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
     border-color: var(--color-accent);
-    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
-    box-shadow: ${({ active }) => (active ? '0' : '0 6px 14px var(--color-shadow-md)')};
+    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
+    box-shadow: ${({ active }) => (active ? '0' : 'var(--shadow-interactive-hover)')};
   }
 
   &:focus-visible {

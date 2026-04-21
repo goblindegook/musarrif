@@ -284,7 +284,7 @@ const LetterDropdown = styled('div')`
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  box-shadow: 0 4px 12px var(--color-shadow-md);
+  box-shadow: var(--shadow-interactive);
   z-index: 100;
   padding: 0.25rem;
   gap: 2px;
@@ -310,7 +310,7 @@ const LetterChoice = styled('button')<{ 'aria-selected'?: boolean }>`
   border: 1px solid ${({ 'aria-selected': sel }) => (sel ? 'var(--color-accent)' : 'transparent')};
   border-radius: 0.25rem;
   background: ${({ 'aria-selected': sel }) => (sel ? 'var(--color-bg-accent)' : 'transparent')};
-  color: ${({ 'aria-selected': sel }) => (sel ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
+  color: ${({ 'aria-selected': sel }) => (sel ? 'var(--color-text-emphasis)' : 'var(--color-text-tertiary)')};
   cursor: pointer;
   text-align: center;
 
@@ -357,14 +357,14 @@ const OptionButton = styled('button')<{ active?: boolean }>`
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   border-radius: 0.5rem;
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
+  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   transition: background 80ms ease, border-color 80ms ease;
 
   &:hover {
     background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
     border-color: var(--color-accent);
-    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
+    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
   }
 `
 

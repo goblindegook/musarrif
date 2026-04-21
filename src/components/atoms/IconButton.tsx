@@ -28,7 +28,7 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   border-radius: 50%;
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
+  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-tertiary)')};
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1;
@@ -36,7 +36,7 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   place-items: center;
   padding: 0;
   cursor: pointer;
-  box-shadow: ${({ active }) => (active ? `0 4px 14px var(--color-shadow-lg)` : `0 6px 14px var(--color-shadow-sm)`)};
+  box-shadow: ${({ active }) => (active ? `var(--shadow-interactive-active)` : `var(--shadow-interactive)`)};
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     color 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -54,9 +54,9 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
 
   &:enabled:hover {
     background: var(--color-bg-accent-hover);
-    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
+    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
     border-color: var(--color-accent);
-    box-shadow: ${({ active }) => (active ? `0 4px 14px var(--color-shadow-lg)` : `0 6px 16px var(--color-shadow-xl)`)};
+    box-shadow: ${({ active }) => (active ? `var(--shadow-interactive-active)` : `var(--shadow-interactive-hover)`)};
   }
 
   &:focus-visible {
@@ -66,11 +66,11 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   &:enabled:active {
-    color: var(--color-text-accent);
+    color: var(--color-text-emphasis);
     background: var(--color-bg-accent);
     border-color: var(--color-accent);
     transform: translateY(1px);
-    box-shadow: 0 4px 10px var(--color-shadow-md);
+    box-shadow: var(--shadow-interactive-active);
   }
 
   &:disabled {

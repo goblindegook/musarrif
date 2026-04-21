@@ -212,7 +212,7 @@ const ExerciseCard = styled('div')`
   border-radius: 1.5rem;
   padding: 0.75rem;
   width: 100%;
-  box-shadow: 0 20px 55px var(--color-shadow-sm);
+  box-shadow: var(--shadow-elevated);
   border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
