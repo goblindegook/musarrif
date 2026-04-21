@@ -3,15 +3,17 @@ import {
   ALIF,
   ALIF_MAQSURA,
   applyDiacriticsPreference,
+  HAMZA,
   isDiacritic,
   isWeakLetter,
   WAW,
   YEH,
 } from '../paradigms/letters'
-import { verbs } from '../paradigms/verbs'
+import { normalizeHamza, verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 
 type DistractorGenerator<T> = () => T
+type DistractorNormaliser<T> = (distractor: T) => T
 
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
 
@@ -28,15 +30,25 @@ export function randomizeOptions<T>(
   generators: readonly DistractorGenerator<T>[],
   profile: DimensionProfile,
   size = 4,
+  normalizers: DistractorNormaliser<T>[] = [],
 ): T[] {
   const options = new Set<T>([answer])
 
+  const allNormalizers = [
+    ...normalizers,
+    (c: T) => (typeof c === 'string' ? (exerciseDiacritics(c, profile.diacritics) as T) : c),
+  ]
+
   while (options.size < size) {
     const candidate = random(generators)()
-    options.add(typeof candidate === 'string' ? (exerciseDiacritics(candidate, profile.diacritics) as T) : candidate)
+    options.add(allNormalizers.reduce((candidate, normalizer) => normalizer(candidate), candidate))
   }
 
   return shuffle(Array.from(options))
+}
+
+export function normalizeRootDistractorHamza(candidate: string): string {
+  return normalizeHamza(candidate).replace(/آ/g, HAMZA)
 }
 
 export function weakAlternativeRootDistractor(correct: string): DistractorGenerator<string> {

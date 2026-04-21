@@ -3,6 +3,7 @@ import { deriveMasdar } from '../paradigms/nominal/masdar'
 import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from './dimensions'
 import {
   mixedWordDistractor,
+  normalizeRootDistractorHamza,
   randomizeOptions,
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
@@ -40,5 +41,5 @@ function buildOptions(root: string, word: string, profile: DimensionProfile): re
     Array.from(root).some(isWeakLetter) ? weakAlternativeRootDistractor(root) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(root, generators, profile)
+  return randomizeOptions(root, generators, profile, 4, [normalizeRootDistractorHamza])
 }

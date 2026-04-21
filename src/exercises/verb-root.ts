@@ -11,6 +11,7 @@ import {
 } from './dimensions'
 import {
   mixedWordDistractor,
+  normalizeRootDistractorHamza,
   randomizeOptions,
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
@@ -52,5 +53,5 @@ function buildOptions(answer: string, word: string, profile: DimensionProfile): 
     Array.from(answer).some(isWeakLetter) ? weakAlternativeRootDistractor(answer) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(answer, generators, profile)
+  return randomizeOptions(answer, generators, profile, 4, [normalizeRootDistractorHamza])
 }
