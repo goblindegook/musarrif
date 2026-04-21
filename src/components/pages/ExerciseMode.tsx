@@ -193,7 +193,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
         )}
       </ExerciseCard>
 
-      <ExerciseStats stats={storedStats} streak={streak} />
+      <ExerciseStats stats={storedStats} streak={streak} dimensionProfile={dimensionProfile} srsStore={srsStore} />
     </ExerciseLayout>
   )
 }

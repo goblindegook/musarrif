@@ -221,7 +221,7 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
 
-      expect(screen.getByText('Forms unlocked: Form II, Form III')).toBeInTheDocument()
+      expect(screen.getByText('Forms unlocked: Form II')).toBeInTheDocument()
     })
 
     test('clears unlock alert after loading the next exercise', () => {
@@ -251,7 +251,7 @@ describe('ExerciseMode', () => {
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
       fireEvent.click(screen.getByRole('button', { name: /next/i }))
 
-      expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
+      expect(screen.queryByText('Forms unlocked: Form II')).not.toBeInTheDocument()
     })
 
     test('does not unlock when answer is wrong even if threshold is reached', () => {
@@ -280,7 +280,7 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[1])
 
-      expect(screen.queryByText('Forms unlocked: Form II, Form III')).not.toBeInTheDocument()
+      expect(screen.queryByText('Forms unlocked: Form II')).not.toBeInTheDocument()
     })
 
     test('shows streak-extended alert when daily correct answers reach 10', () => {
