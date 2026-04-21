@@ -12,9 +12,22 @@ function mockMatchMedia(prefersDark: boolean) {
   return mq
 }
 
+function insertThemeColorMeta() {
+  const meta = document.createElement('meta')
+  meta.setAttribute('name', 'theme-color')
+  meta.setAttribute('content', '#f5f4ee')
+  document.head.append(meta)
+}
+
+function getThemeColorMetaContent() {
+  return document.querySelector('meta[name="theme-color"]')?.getAttribute('content')
+}
+
 beforeEach(() => {
   localStorage.clear()
   document.documentElement.removeAttribute('data-theme')
+  document.querySelector('meta[name="theme-color"]')?.remove()
+  insertThemeColorMeta()
 })
 
 afterEach(() => {
@@ -34,11 +47,25 @@ test('applies light theme to document when preference is light', () => {
   expect(document.documentElement.getAttribute('data-theme')).toBe('light')
 })
 
+test('applies light theme color meta when preference is light', () => {
+  mockMatchMedia(true)
+  const { result } = renderHook(() => useTheme())
+  act(() => result.current.setThemePreference('light'))
+  expect(getThemeColorMetaContent()).toBe('#f5f4ee')
+})
+
 test('applies dark theme to document when preference is dark', () => {
   mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('dark'))
   expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
+})
+
+test('applies dark theme color meta when preference is dark', () => {
+  mockMatchMedia(false)
+  const { result } = renderHook(() => useTheme())
+  act(() => result.current.setThemePreference('dark'))
+  expect(getThemeColorMetaContent()).toBe('#1c1a14')
 })
 
 test('follows OS dark preference when system is chosen on dark OS', () => {
@@ -53,6 +80,20 @@ test('follows OS light preference when system is chosen on light OS', () => {
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('system'))
   expect(document.documentElement.getAttribute('data-theme')).toBe('light')
+})
+
+test('updates theme color meta when OS preference changes in system mode', () => {
+  const mq = mockMatchMedia(false)
+  const { result } = renderHook(() => useTheme())
+  act(() => result.current.setThemePreference('system'))
+  expect(getThemeColorMetaContent()).toBe('#f5f4ee')
+
+  const systemHandler = mq.addEventListener.mock.calls.find(([event]) => event === 'change')?.[1]
+  expect(systemHandler).toBeDefined()
+  mq.matches = true
+  act(() => (systemHandler as () => void)())
+
+  expect(getThemeColorMetaContent()).toBe('#1c1a14')
 })
 
 test('registers and removes OS change listener when preference is system', () => {

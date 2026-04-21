@@ -6,12 +6,26 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<meta
+    <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="theme-color" content="#f5f4ee" />
     <title>Muṣarrif</title>
+    <script>
+      (() => {
+        const stored = localStorage.getItem('conjugator:theme');
+        let pref;
+        try { pref = JSON.parse(stored); } catch (_e) { pref = 'system'; }
+        const dark = pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        const theme = dark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute('content', theme === 'dark' ? '#1c1a14' : '#f5f4ee');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
