@@ -18,11 +18,11 @@ export const TabButton = styled('button')<{
   hasChildren?: boolean
 }>`
   align-items: center;
-  background: ${({ active }) => (active ? '#fff8e1' : '#fff')};
+  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
   border-radius: 0.75rem;
-  border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
-  box-shadow: ${({ active }) => (active ? '0 2px 10px rgba(15, 23, 42, 0.12)' : 'none')};
-  color: ${({ active }) => (active ? '#92400e' : '#475569')};
+  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
+  box-shadow: ${({ active }) => (active ? '0 2px 10px var(--color-shadow-lg)' : 'none')};
+  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -43,16 +43,16 @@ export const TabButton = styled('button')<{
     color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#fefce8')};
-    border-color: #facc15;
-    color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
-    box-shadow: ${({ active }) => (active ? '0' : '0 6px 14px rgba(15, 23, 42, 0.1)')};
+    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
+    border-color: var(--color-accent);
+    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
+    box-shadow: ${({ active }) => (active ? '0' : '0 6px 14px var(--color-shadow-md)')};
   }
 
   &:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: #facc15;
+    border-color: var(--color-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -77,10 +77,10 @@ export const TabButton = styled('button')<{
         left: -1px;
         right: -1px;
         height: calc(0.5rem + 1px);
-        background: #fff8e1;
+        background: var(--color-bg-accent);
         z-index: 10;
-        border-left: 1px solid #facc15;
-        border-right: 1px solid #facc15;
+        border-left: 1px solid var(--color-accent);
+        border-right: 1px solid var(--color-accent);
       }
     `}
   }

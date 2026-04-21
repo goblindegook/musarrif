@@ -242,7 +242,7 @@ const SlotHeader = styled('label')`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-secondary);
 `
 
 const SlotInputWrapper = styled('div')`
@@ -256,20 +256,20 @@ const SlotInput = styled('input')`
   width: 100%;
   box-sizing: border-box;
   padding: 0.35rem 0.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--color-bg-surface-secondary);
+  color: var(--color-text-primary);
   cursor: pointer;
   outline: none;
 
   &:focus {
-    border-color: #facc15;
-    background: #fff8e1;
+    border-color: var(--color-accent);
+    background: var(--color-bg-accent);
   }
 
   &::placeholder {
-    color: #94a3b8;
+    color: var(--color-text-muted);
   }
 `
 
@@ -281,10 +281,10 @@ const LetterDropdown = styled('div')`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   overflow-y: auto;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px var(--color-shadow-md);
   z-index: 100;
   padding: 0.25rem;
   gap: 2px;
@@ -307,17 +307,17 @@ const LetterChoice = styled('button')<{ 'aria-selected'?: boolean }>`
   min-width: 22px;
   min-height: 22px;
   aspect-ratio: 1;
-  border: 1px solid ${({ 'aria-selected': sel }) => (sel ? '#facc15' : 'transparent')};
+  border: 1px solid ${({ 'aria-selected': sel }) => (sel ? 'var(--color-accent)' : 'transparent')};
   border-radius: 0.25rem;
-  background: ${({ 'aria-selected': sel }) => (sel ? '#fff8e1' : 'transparent')};
-  color: ${({ 'aria-selected': sel }) => (sel ? '#92400e' : '#334155')};
+  background: ${({ 'aria-selected': sel }) => (sel ? 'var(--color-bg-accent)' : 'transparent')};
+  color: ${({ 'aria-selected': sel }) => (sel ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
   cursor: pointer;
   text-align: center;
 
   &:hover {
-    background: #fefce8;
-    border-color: #facc15;
-    color: #0f172a;
+    background: var(--color-bg-accent-hover);
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
   }
 
   @media (max-width: 720px) {
@@ -336,7 +336,7 @@ const SectionLabel = styled('div')`
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #475569;
+  color: var(--color-text-secondary);
 `
 
 const FormGrid = styled('div')`
@@ -354,17 +354,17 @@ const OptionButton = styled('button')<{ active?: boolean }>`
   font-size: 0.85rem;
   min-width: 0;
   padding: 0.3rem 0;
-  border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
+  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   border-radius: 0.5rem;
-  background: ${({ active }) => (active ? '#fff8e1' : '#fff')};
-  color: ${({ active }) => (active ? '#92400e' : '#475569')};
+  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
+  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   transition: background 80ms ease, border-color 80ms ease;
 
   &:hover {
-    background: ${({ active }) => (active ? '#fff8e1' : '#fefce8')};
-    border-color: #facc15;
-    color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
+    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
+    border-color: var(--color-accent);
+    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
   }
 `
 

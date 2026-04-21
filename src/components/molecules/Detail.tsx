@@ -86,7 +86,7 @@ const DetailActions = styled('span')`
   gap: 0.25rem;
   margin-inline-start: -0.375rem;
   padding-inline-end: 0.375rem;
-  border-inline-end: 1px solid #e2e8f0;
+  border-inline-end: 1px solid var(--color-border);
 
   @media (min-width: 480px) {
     margin-inline-start: -0.5rem;
@@ -100,10 +100,10 @@ const DetailActions = styled('span')`
 `
 
 const DetailItem = styled('div')`
-  background: #f8fafc;
+  background: var(--color-bg-surface-secondary);
   border-radius: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -138,7 +138,7 @@ const DetailLabel = styled('span')`
   display: block;
   font-size: 0.78rem;
   text-transform: uppercase;
-  color: #475569;
+  color: var(--color-text-secondary);
   letter-spacing: 0.08em;
 
   @media print {

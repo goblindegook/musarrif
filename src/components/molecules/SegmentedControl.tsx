@@ -60,11 +60,11 @@ const Control = styled('div')<{
 }>`
   display: flex;
   align-items: center;
-  border: 1px solid #e2e8f0;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
   padding: 0.25rem;
   border-radius: 0.95rem;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 18px var(--color-shadow-sm);
   gap: 0;
   position: relative;
   overflow: hidden;
@@ -86,9 +86,9 @@ const Control = styled('div')<{
     inset-inline-start: 0.25rem;
     width: var(--segmented-pill-width);
     border-radius: 0.75rem;
-    background: #fff8e1;
-    border: 1px solid #facc15;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+    background: var(--color-bg-accent);
+    border: 1px solid var(--color-accent);
+    box-shadow: 0 4px 14px var(--color-shadow-lg);
     transform: translateX(calc(100% * var(--segmented-active-index) * var(--segmented-direction)));
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
@@ -109,7 +109,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   border-radius: 0.75rem;
   border: 1px solid transparent;
   box-shadow: none;
-  color: ${({ active }) => (active ? '#92400e' : '#475569')};
+  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   flex: 1 1 0;
   min-width: 0;
@@ -127,14 +127,14 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   &:hover {
     background: transparent;
     border-color: transparent;
-    color: ${({ active }) => (active ? '#92400e' : '#334155')};
+    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
     box-shadow: none;
   }
 
   &:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: #facc15;
+    border-color: var(--color-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {

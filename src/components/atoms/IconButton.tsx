@@ -26,9 +26,9 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   width: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
   height: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
   border-radius: 50%;
-  border: 1px solid ${({ active }) => (active ? '#facc15' : '#e2e8f0')};
-  background: ${({ active }) => (active ? '#fff8e1' : '#ffffff')};
-  color: ${({ active }) => (active ? '#92400e' : '#334155')};
+  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
+  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
+  color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-tertiary)')};
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1;
@@ -36,7 +36,7 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   place-items: center;
   padding: 0;
   cursor: pointer;
-  box-shadow: ${({ active }) => (active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : '0 6px 14px rgba(15, 23, 42, 0.08)')};
+  box-shadow: ${({ active }) => (active ? `0 4px 14px var(--color-shadow-lg)` : `0 6px 14px var(--color-shadow-sm)`)};
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     color 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -53,30 +53,30 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   &:enabled:hover {
-    background: #fefce8;
-    color: ${({ active }) => (active ? '#92400e' : '#0f172a')};
-    border-color: #facc15;
-    box-shadow: ${({ active }) => (active ? '0 4px 14px rgba(15, 23, 42, 0.12)' : '0 6px 16px rgba(15, 23, 42, 0.14)')};
+    background: var(--color-bg-accent-hover);
+    color: ${({ active }) => (active ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
+    border-color: var(--color-accent);
+    box-shadow: ${({ active }) => (active ? `0 4px 14px var(--color-shadow-lg)` : `0 6px 16px var(--color-shadow-xl)`)};
   }
 
   &:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: #facc15;
+    border-color: var(--color-accent);
   }
 
   &:enabled:active {
-    color: #92400e;
-    background: #ffe58f;
-    border-color: #eab308;
+    color: var(--color-text-accent);
+    background: var(--color-bg-accent);
+    border-color: var(--color-accent);
     transform: translateY(1px);
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 4px 10px var(--color-shadow-md);
   }
 
   &:disabled {
-    color: #94a3b8;
-    background: #f8fafc;
-    border-color: #e2e8f0;
+    color: var(--color-text-muted);
+    background: var(--color-bg-surface-secondary);
+    border-color: var(--color-border);
     box-shadow: none;
     cursor: default;
   }

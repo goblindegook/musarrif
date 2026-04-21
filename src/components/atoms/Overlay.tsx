@@ -39,7 +39,7 @@ const OverlayBase = styled('div')<{ zIndex?: number }>`
   bottom: 0;
   z-index: ${({ zIndex }) => zIndex};
   cursor: default;
-  background: rgba(15, 23, 42, 0.55);
+  background: var(--color-overlay);
   backdrop-filter: blur(2px);
   pointer-events: auto;
   animation: fadeIn 0.2s ease-in-out;

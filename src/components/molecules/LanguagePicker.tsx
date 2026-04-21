@@ -3,11 +3,12 @@ import { LANGUAGE_OPTIONS, useI18n } from '../../hooks/i18n'
 
 const Select = styled('select')`
   border-radius: 0.9rem;
-  border: 1px solid #cbd5f5;
+  border: 1px solid var(--color-border-input);
   padding: 0.6rem 1rem;
   font-size: 1rem;
   font-family: inherit;
-  background: #f8fafc;
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface-secondary);
   cursor: pointer;
   flex: 1;
   min-width: 0;
@@ -17,15 +18,15 @@ const Select = styled('select')`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 
   &:hover {
-    background: #fff;
-    border-color: #cbd5f5;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    background: var(--color-bg-surface);
+    border-color: var(--color-border-input);
+    box-shadow: 0 6px 14px var(--color-shadow-md);
   }
 
   &:focus {
-    outline: 3px solid #fde68a;
-    border-color: #facc15;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+    outline: 3px solid var(--color-focus-outline);
+    border-color: var(--color-accent);
+    box-shadow: 0 6px 14px var(--color-shadow-lg);
   }
 `
 

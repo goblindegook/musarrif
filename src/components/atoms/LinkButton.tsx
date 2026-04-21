@@ -6,9 +6,9 @@ export const LinkButton = styled('a')`
   text-align: center;
   padding: 0.85rem 1.5rem;
   border-radius: 0.75rem;
-  border: 2px solid #e2e8f0;
-  background: #ffffff;
-  color: #334155;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-surface);
+  color: var(--color-text-tertiary);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -20,15 +20,15 @@ export const LinkButton = styled('a')`
   text-decoration: none;
 
   &:hover {
-    background: #fefce8;
-    border-color: #facc15;
-    color: #0f172a;
+    background: var(--color-bg-accent-hover);
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
   }
 
   &:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: #facc15;
+    border-color: var(--color-accent);
   }
 
   @media (prefers-reduced-motion: reduce) {

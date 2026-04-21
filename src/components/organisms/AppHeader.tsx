@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'preact/hooks'
 import { useI18n } from '../../hooks/i18n'
 import { getUserData, importUserData } from '../../hooks/local-storage'
 import { useRouting } from '../../hooks/routing'
+import { type ThemePreference, useTheme } from '../../hooks/theme'
 import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
@@ -15,9 +16,11 @@ import { SegmentedControl } from '../molecules/SegmentedControl'
 
 const MODES = ['conjugation', 'test'] as const
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
+const THEME_OPTIONS = ['light', 'dark', 'system'] as const
 
 export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
+  const { themePreference, setThemePreference } = useTheme()
   const { page, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const importInputRef = useRef<HTMLInputElement>(null)
@@ -81,6 +84,10 @@ export const AppHeader = () => {
       <Modal isOpen={isSettingsOpen} title={t('settings.title')} onClose={() => setIsSettingsOpen(false)}>
         <SettingsModalBody>
           <ControlGroup>
+            <ControlLabel>{t('languagePicker.label')}</ControlLabel>
+            <LanguagePicker />
+          </ControlGroup>
+          <ControlGroup>
             <ControlLabel>{t('diacritics.title')}</ControlLabel>
             <SegmentedControl
               fill
@@ -95,8 +102,18 @@ export const AppHeader = () => {
             />
           </ControlGroup>
           <ControlGroup>
-            <ControlLabel>{t('languagePicker.label')}</ControlLabel>
-            <LanguagePicker />
+            <ControlLabel>{t('theme.title')}</ControlLabel>
+            <SegmentedControl
+              fill
+              options={THEME_OPTIONS.map((option) => ({
+                value: option,
+                label: t(`theme.${option}`),
+                title: `${t('theme.title')}: ${t(`theme.${option}`)}`,
+              }))}
+              value={themePreference}
+              onChange={(option) => setThemePreference(option as ThemePreference)}
+              aria-label={t('theme.title')}
+            />
           </ControlGroup>
           <ControlGroup>
             <ControlLabel>{t('settings.data.title')}</ControlLabel>
@@ -123,9 +140,9 @@ const TopBar = styled('header')`
   left: 0;
   right: 0;
   z-index: 100;
-  background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
+  background: radial-gradient(circle at top, var(--color-header-bg-start) 0%, var(--color-header-bg-mid) 60%, var(--color-header-bg-end) 100%);
   padding: 1rem 0.75rem;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 4px 12px var(--color-shadow-md);
   transition: padding 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 480px) {
@@ -165,7 +182,7 @@ const Eyebrow = styled('p')`
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.78rem;
-  color: #92400e;
+  color: var(--color-text-accent);
   margin: 0;
   max-width: 100%;
   overflow: hidden;
@@ -182,7 +199,7 @@ const PageTitle = styled('h1')`
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 1.3rem;
-  color: #334155;
+  color: var(--color-text-tertiary);
   line-height: 1.2;
   font-weight: 500;
 
@@ -229,7 +246,7 @@ const ControlLabel = styled('span')`
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   padding-inline-start: 0.25rem;
 `
 

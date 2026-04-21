@@ -61,9 +61,9 @@ const ShortcutBadge = styled('span')`
   font-size: 0.65rem;
   font-weight: 600;
   line-height: 1;
-  color: #94a3b8;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  color: var(--color-text-muted);
+  background: var(--color-bg-surface-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 0.25rem;
   padding: 0.2rem 0.35rem;
   pointer-events: none;

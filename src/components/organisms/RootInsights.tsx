@@ -63,9 +63,9 @@ const RootDisplay = styled('div')`
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem 4rem;
-  background: #f8fafc;
+  background: var(--color-bg-surface-secondary);
   border-radius: 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   margin-bottom: 1rem;
 `
 
@@ -80,7 +80,7 @@ const RootLetters = styled('div')`
 const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
   font-size: 2rem;
   font-weight: 600;
-  color: ${(props) => (props.weak || props.hamza ? '#92400e' : '#0f172a')};
+  color: ${(props) => (props.weak || props.hamza ? 'var(--color-text-accent)' : 'var(--color-text-primary)')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -93,7 +93,7 @@ const RootLetter = styled('span')<{ weak?: boolean; hamza?: boolean }>`
 
 const RootLetterAnnotation = styled('small')`
   font-size: 0.65rem;
-  color: #92400e;
+  color: var(--color-text-accent);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;

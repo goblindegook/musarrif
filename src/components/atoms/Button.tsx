@@ -23,9 +23,9 @@ const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant
   width: 100%;
   padding: 0.85rem 1.5rem;
   border-radius: 0.75rem;
-  border: 2px solid ${({ variant }) => (variant === 'primary' ? '#334155' : '#e2e8f0')};
-  background: ${({ variant }) => (variant === 'primary' ? '#334155' : '#ffffff')};
-  color: ${({ variant }) => (variant === 'primary' ? '#ffffff' : '#334155')};
+  border: 2px solid ${({ variant }) => (variant === 'primary' ? 'var(--color-text-tertiary)' : 'var(--color-border)')};
+  background: ${({ variant }) => (variant === 'primary' ? 'var(--color-text-tertiary)' : 'var(--color-bg-surface)')};
+  color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-surface)' : 'var(--color-text-tertiary)')};
   font-size: ${({ size }) => (size === 'normal' ? '1rem' : '1.2rem')};
   font-weight: 600;
   cursor: pointer;
@@ -37,22 +37,22 @@ const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant
   outline: none;
 
   &:enabled:hover {
-    background: ${({ variant }) => (variant === 'primary' ? '#4a4f38' : '#fefce8')};
-    border-color: ${({ variant }) => (variant === 'primary' ? '#4a4f38' : '#facc15')};
-    color: ${({ variant }) => (variant === 'primary' ? '#ffffff' : '#0f172a')};
+    background: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-button-primary-hover)' : 'var(--color-bg-accent-hover)')};
+    border-color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-button-primary-hover)' : 'var(--color-accent)')};
+    color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-surface)' : 'var(--color-text-primary)')};
   }
 
   &:enabled:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: #facc15;
+    border-color: var(--color-accent);
   }
 
   &:disabled {
     cursor: default;
-    color: #94a3b8;
-    background: #f8fafc;
-    border-color: #e2e8f0;
+    color: var(--color-text-muted);
+    background: var(--color-bg-surface-secondary);
+    border-color: var(--color-border);
   }
 
   @media (prefers-reduced-motion: reduce) {

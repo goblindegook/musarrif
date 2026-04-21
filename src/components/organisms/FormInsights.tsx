@@ -60,7 +60,7 @@ const SemanticAnchor = styled('p')`
   font-size: 1.25rem;
   font-weight: 700;
   text-align: center;
-  color: #92400e;
+  color: var(--color-text-accent);
   margin: 0 0 0.75rem;
   letter-spacing: 0.01em;
 `

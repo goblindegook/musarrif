@@ -258,7 +258,7 @@ const MOOD_OPTIONS: Readonly<Record<Mood, TranslationKey>> = {
 const TabsContainer = styled('nav')`
   display: flex;
   flex-direction: column;
-  background: #f8fafc;
+  background: var(--color-bg-surface-secondary);
 
   @media print {
     background: #fff;
@@ -285,8 +285,8 @@ const TabBlock = styled('div')`
 `
 
 const SubTabBar = styled(TabBar)`
-  background: linear-gradient(to bottom, #fff8e1 0%, transparent 50%);
-  border-top: 1px solid #facc15;
+  background: linear-gradient(to bottom, var(--color-bg-accent) 0%, transparent 50%);
+  border-top: 1px solid var(--color-accent);
   margin-top: -4px;
   margin-left: -1rem;
   margin-right: -1rem;
@@ -328,7 +328,7 @@ const TableBody = styled('tbody')`
   }
 
   tr:nth-child(odd) {
-    background: #fdfdf9;
+    background: var(--color-table-row-alt);
   }
 
   @media print {
@@ -343,7 +343,7 @@ const TableBody = styled('tbody')`
 `
 
 const Row = styled('tr')`
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
 
   @media print {
     border-bottom-color: #cbd5e1;
@@ -379,7 +379,7 @@ const PronounDescription = styled('small')`
   display: block;
   font-size: 0.85rem;
   font-style: italic;
-  color: #475569;
+  color: var(--color-text-secondary);
 
   @media print {
     display: none;
@@ -409,7 +409,7 @@ const VerbCell = styled('td')`
 const TableHeadCell = styled('th')`
   text-align: left;
   padding: 0.6rem 0.75rem;
-  background: #f8fafc;
+  background: var(--color-bg-surface-secondary);
   vertical-align: middle;
 
   @media (min-width: 480px) {

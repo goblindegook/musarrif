@@ -39,7 +39,8 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
         onClose()
       }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose()
+        if (event.target !== event.currentTarget) return
+        if (isBackdropClick(event.currentTarget, event.clientX, event.clientY)) onClose()
       }}
     >
       <Header>
@@ -57,18 +58,19 @@ const Dialog = styled('dialog')`
   position: fixed;
   z-index: 200;
   margin: auto;
-  background: #ffffff;
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
   border-radius: 1.25rem;
   padding: 1.5rem;
   max-width: 520px;
   width: min(100%, 520px);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.2);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 30px 80px var(--color-shadow-2xl);
+  border: 1px solid var(--color-border);
 
   &::backdrop {
-    background: rgba(15, 23, 42, 0.55);
+    background: var(--color-overlay);
     backdrop-filter: blur(2px);
     animation: fadeIn 0.2s ease-in-out;
   }
@@ -94,7 +96,7 @@ const ModalTitle = styled('h2')`
   margin: 0;
   font-weight: 700;
   font-size: 1.5rem;
-  color: #0f172a;
+  color: var(--color-text-primary);
 `
 
 const Content = styled('div')`
@@ -103,3 +105,8 @@ const Content = styled('div')`
   flex-direction: column;
   gap: 0.75rem;
 `
+
+function isBackdropClick(dialog: HTMLDialogElement, clientX: number, clientY: number): boolean {
+  const { top, right, bottom, left } = dialog.getBoundingClientRect()
+  return clientX < left || clientX > right || clientY < top || clientY > bottom
+}

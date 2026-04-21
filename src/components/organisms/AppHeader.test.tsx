@@ -99,7 +99,7 @@ it('exports user data in JSON format', () => {
   const parsed = JSON.parse(decodeURIComponent(encodedJson ?? ''))
   expect(parsed).toEqual({
     version: 1,
-    settings: { language: 'pt', diacriticsPreference: 'none' },
+    settings: { language: 'pt', diacriticsPreference: 'none', themePreference: 'system' },
     favouriteVerbs: ['ktb-1', 'sfr-1'],
     trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1 }],
     srs: {},

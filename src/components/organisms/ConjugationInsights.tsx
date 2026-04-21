@@ -19,11 +19,11 @@ import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Modal } from '../molecules/Modal'
 
 const MORPHEME_COLOURS: Record<MorphemeRole, string> = {
-  root: '#92400e',
-  form: '#0369a1',
-  tense: '#15803d',
-  suffix: '#7e22ce',
-  dropped: '#ef4444',
+  root: 'var(--color-insight-root)',
+  form: 'var(--color-insight-form)',
+  tense: 'var(--color-insight-tense)',
+  suffix: 'var(--color-insight-suffix)',
+  dropped: 'var(--color-insight-dropped)',
 }
 
 interface ConjugationInsightsProps {
@@ -126,7 +126,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
 const StepsTable = styled('div')`
   display: flex;
   flex-direction: column;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   overflow: hidden;
 `
@@ -137,8 +137,8 @@ const StepRow = styled('div')<{ isFinal: boolean }>`
   align-items: center;
   gap: 1rem;
   padding: 0.6rem 0.875rem;
-  background: ${(p) => (p.isFinal ? '#ffffff' : 'transparent')};
-  border-bottom: 1px solid #e2e8f0;
+  background: ${(p) => (p.isFinal ? 'var(--color-bg-surface)' : 'transparent')};
+  border-bottom: 1px solid var(--color-border);
 
   &:last-child {
     border-bottom: none;
@@ -150,7 +150,7 @@ const StepLabel = styled('span')`
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #475569;
+  color: var(--color-text-secondary);
 `
 
 const StepArabic = styled('span')`

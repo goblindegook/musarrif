@@ -52,10 +52,10 @@ export function VerbPill({ verb, className }: VerbPillProps) {
 }
 
 const VerbPillLink = styled('a')`
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 0.3rem 0.9rem;
-  background: #fff;
+  background: var(--color-bg-surface);
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -66,33 +66,33 @@ const VerbPillLink = styled('a')`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
-    background: #fefce8;
-    border-color: #facc15;
-    color: #0f172a;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    background: var(--color-bg-accent-hover);
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+    box-shadow: 0 6px 14px var(--color-shadow-md);
   }
 
   &.active {
-    border-color: #facc15;
-    background: #fff8e1;
-    color: #92400e;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    border-color: var(--color-accent);
+    background: var(--color-bg-accent);
+    color: var(--color-text-accent);
+    box-shadow: 0 6px 14px var(--color-shadow-md);
 
     &:hover {
-      background: #fff8e1;
-      border-color: #facc15;
-      color: #92400e;
+      background: var(--color-bg-accent);
+      border-color: var(--color-accent);
+      color: var(--color-text-accent);
     }
   }
 
   small {
-    color: #475569;
+    color: var(--color-text-secondary);
     font-size: 0.75rem;
     transition: color 120ms ease;
   }
 
   &:hover small {
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 `
 
@@ -103,7 +103,7 @@ const InlineRow = styled('div')`
 `
 
 const VerbTranslation = styled('small')`
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.75rem;
   max-width: 5rem;
   overflow: hidden;

@@ -11,8 +11,14 @@ import {
   STREAK_DAILY_GOAL,
 } from '../../exercises/stats'
 import { useI18n } from '../../hooks/i18n'
+import { useTheme } from '../../hooks/theme'
 import { Detail } from '../molecules/Detail'
 import { Panel } from '../molecules/Panel'
+
+const CHART_COLORS = {
+  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8', grid: '#e2e8f0' },
+  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060', grid: '#3a342a' },
+}
 
 type Props = {
   stats: DayStats[]
@@ -86,28 +92,24 @@ export function ExerciseStats({ stats, streak }: Props) {
         lang={lang}
         correctLabel={t('exercise.stats.correct')}
         incorrectLabel={t('exercise.stats.incorrect')}
-        passedLabel={t('exercise.stats.passed')}
+        skippedLabel={t('exercise.stats.skipped')}
       />
     </Panel>
   )
 }
 
-function StatsChart({
-  stats,
-  dateLabel,
-  lang,
-  correctLabel,
-  incorrectLabel,
-  passedLabel,
-}: {
+interface StatsChartProps {
   stats: DayStats[]
   dateLabel: string
   lang: string
   correctLabel: string
   incorrectLabel: string
-  passedLabel: string
-}) {
+  skippedLabel: string
+}
+
+function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skippedLabel }: StatsChartProps) {
   const { t } = useI18n()
+  const { themePreference } = useTheme()
   const containerRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
@@ -127,6 +129,10 @@ function StatsChart({
 
   useEffect(() => {
     if (width === 0 || !mountRef.current) return
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const colors = isDark ? CHART_COLORS.dark : CHART_COLORS.light
+
     const plot = new uPlot(
       {
         width,
@@ -144,7 +150,7 @@ function StatsChart({
             gap: 0,
             ticks: { show: false },
             values: () => [],
-            grid: { stroke: '#e2e8f0' },
+            grid: { stroke: colors.grid },
             stroke: 'transparent',
           },
         ],
@@ -154,9 +160,9 @@ function StatsChart({
             label: dateLabel,
             value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
           },
-          { label: correctLabel, stroke: '#16a34a', width: 2, value: (_, rawValue) => rawValue ?? '—' },
-          { label: incorrectLabel, stroke: '#dc2626', width: 2, value: (_, rawValue) => rawValue ?? '—' },
-          { label: passedLabel, stroke: '#94a3b8', width: 2, value: (_, rawValue) => rawValue ?? '—' },
+          { label: correctLabel, stroke: colors.correct, width: 2, value: (_, rawValue) => rawValue ?? '—' },
+          { label: incorrectLabel, stroke: colors.incorrect, width: 2, value: (_, rawValue) => rawValue ?? '—' },
+          { label: skippedLabel, stroke: colors.passed, width: 2, value: (_, rawValue) => rawValue ?? '—' },
         ],
       },
       [
@@ -169,7 +175,7 @@ function StatsChart({
     )
 
     return () => plot.destroy()
-  }, [width, days, dateLabel, lang, correctLabel, incorrectLabel, passedLabel])
+  }, [width, days, dateLabel, lang, correctLabel, incorrectLabel, skippedLabel, themePreference])
 
   return (
     <ChartContainer>
@@ -204,7 +210,7 @@ const StreakGoalSection = styled('div')`
 
 const StreakGoalHint = styled('p')`
   margin: 0;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
 `
 
@@ -213,12 +219,12 @@ const StreakGoalBar = styled('div')`
   height: 0.6rem;
   border-radius: 999px;
   overflow: hidden;
-  background: #e2e8f0;
+  background: var(--color-border);
 `
 
 const StreakGoalFill = styled('div')`
   height: 100%;
-  background: #16a34a;
+  background: var(--color-success-border);
   border-radius: 999px;
   transition: width 220ms ease;
 `
@@ -227,7 +233,7 @@ const SubNote = styled('span')`
   display: block;
   font-size: 0.75rem;
   font-weight: 400;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   margin-top: 0.15rem;
 `
 

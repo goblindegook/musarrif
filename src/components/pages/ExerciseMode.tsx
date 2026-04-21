@@ -208,12 +208,12 @@ const ExerciseLayout = styled('div')`
 `
 
 const ExerciseCard = styled('div')`
-  background: #ffffff;
+  background: var(--color-bg-surface);
   border-radius: 1.5rem;
   padding: 0.75rem;
   width: 100%;
-  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 55px var(--color-shadow-sm);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,7 +228,7 @@ const VerbDisplay = styled('p')`
   margin: 0;
   font-size: clamp(2.5rem, 10vw, 4rem);
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
   text-align: center;
   line-height: 1.2;
   direction: rtl;
@@ -238,7 +238,7 @@ const VerbDisplay = styled('p')`
 const PROMPT_CLASS = css`
   margin: 0;
   font-size: 1rem;
-  color: #475569;
+  color: var(--color-text-secondary);
   text-align: center;
 `
 
@@ -286,9 +286,9 @@ const Alerts = styled('div')`
 `
 
 const SuccessAlert = styled('aside')`
-  background: #dcfce7;
-  border: 2px solid #16a34a;
-  color: #15803d;
+  background: var(--color-success-bg);
+  border: 2px solid var(--color-success-border);
+  color: var(--color-success-text);
   border-radius: 0.75rem;
   padding: 0.625rem 0.75rem;
   animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
@@ -299,9 +299,9 @@ const SuccessAlert = styled('aside')`
 `
 
 const StreakAlert = styled('aside')`
-  background: #fffbeb;
-  border: 2px solid #facc15;
-  color: #92400e;
+  background: var(--color-streak-bg);
+  border: 2px solid var(--color-accent);
+  color: var(--color-streak-text);
   border-radius: 0.75rem;
   padding: 0.625rem 0.75rem;
   animation: streak-in 380ms cubic-bezier(0.25, 1, 0.5, 1) both;
@@ -328,16 +328,16 @@ const OPTION_BUTTON_CLASS = css`
   }
 
   &[data-state='correct'] {
-    background: #dcfce7;
-    border-color: #16a34a;
-    color: #15803d;
+    background: var(--color-success-bg);
+    border-color: var(--color-success-border);
+    color: var(--color-success-text);
     animation: option-correct 300ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 
   &[data-state='wrong'] {
-    background: #fee2e2;
-    border-color: #dc2626;
-    color: #b91c1c;
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
     animation: option-wrong 350ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 

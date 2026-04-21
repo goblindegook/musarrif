@@ -26,6 +26,7 @@ export function getUserData() {
   const storage = window.localStorage
   const language = parse<Language>(storage.getItem('conjugator:language')) ?? 'en'
   const diacriticsPreference = parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference')) ?? 'some'
+  const themePreference = parse<string>(storage.getItem('conjugator:theme')) ?? 'system'
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
   const srs = sanitizeSrsStore(parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {})
@@ -34,7 +35,7 @@ export function getUserData() {
 
   return {
     version: 1,
-    settings: { language, diacriticsPreference },
+    settings: { language, diacriticsPreference, themePreference },
     favouriteVerbs,
     trackedExercises,
     srs,
@@ -55,6 +56,9 @@ export function importUserData(raw: string): boolean {
   const diacriticsPreference = ['all', 'some', 'none'].includes(settings.diacriticsPreference as string)
     ? settings.diacriticsPreference
     : 'some'
+  const themePreference = ['light', 'dark', 'system'].includes(settings.themePreference as string)
+    ? settings.themePreference
+    : 'system'
 
   const favouriteVerbs = Array.isArray(payload.favouriteVerbs)
     ? payload.favouriteVerbs.filter((entry) => typeof entry === 'string')
@@ -118,6 +122,7 @@ export function importUserData(raw: string): boolean {
   const storage = window.localStorage
   storage.setItem('conjugator:language', JSON.stringify(language))
   storage.setItem('conjugator:diacriticsPreference', JSON.stringify(diacriticsPreference))
+  storage.setItem('conjugator:theme', JSON.stringify(themePreference))
   storage.setItem('conjugator:favouriteVerbs', JSON.stringify(favouriteVerbs))
   storage.setItem('conjugator:exercise:daily', JSON.stringify(trackedExercises))
   storage.setItem('conjugator:srs', JSON.stringify(srs))

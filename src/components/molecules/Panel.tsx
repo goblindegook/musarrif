@@ -46,10 +46,10 @@ export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapse
 
 export const PanelContainer = styled('section')`
   position: relative;
-  background: #ffffff;
+  background: var(--color-bg-surface);
   border-radius: 0.75rem;
   padding: 0.75rem;
-  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 55px var(--color-shadow-sm);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -97,7 +97,7 @@ const PanelTitleButton = styled('button')`
     color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:focus-visible {
-    outline: 3px solid #fde68a;
+    outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
   }
 

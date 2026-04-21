@@ -216,8 +216,8 @@ const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at top, #fffdf7 0%, #f5f4ee 60%, #ede9df 100%);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+        background: radial-gradient(circle at top, var(--color-header-bg-start) 0%, var(--color-header-bg-mid) 60%, var(--color-header-bg-end) 100%);
+        box-shadow: 0 4px 12px var(--color-shadow-md);
         z-index: 101;
       }
 
@@ -250,11 +250,12 @@ const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
 
 const Input = styled('input')`
   border-radius: 0.9rem;
-  border: 1px solid #cbd5f5;
+  border: 1px solid var(--color-border-input);
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
   font-family: inherit;
-  background: #f8fafc;
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface-secondary);
   width: 100%;
   box-sizing: border-box;
   appearance: none;
@@ -275,14 +276,14 @@ const Input = styled('input')`
   }
 
   &:hover {
-    background: #fff;
-    border-color: #cbd5f5;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+    background: var(--color-bg-surface);
+    border-color: var(--color-border-input);
+    box-shadow: 0 6px 14px var(--color-shadow-md);
   }
 
   &:focus {
-    outline: 3px solid #fde68a;
-    border-color: #facc15;
+    outline: 3px solid var(--color-focus-outline);
+    border-color: var(--color-accent);
   }
 `
 
@@ -292,12 +293,12 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
   left: -1rem;
   right: -1rem;
   box-sizing: border-box;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 0;
   border-left: none;
   border-right: none;
-  background: #fff;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  background: var(--color-bg-surface);
+  box-shadow: 0 10px 20px var(--color-shadow-sm);
   width: calc(100% + 1rem);
   z-index: 102;
   max-height: calc(100vh - 5rem);
@@ -310,8 +311,8 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
     width: 100%;
     margin-top: 0.35rem;
     border-radius: 0.75rem;
-    border-left: 1px solid #e2e8f0;
-    border-right: 1px solid #e2e8f0;
+    border-left: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
     z-index: 5;
     max-height: 20rem;
   }
@@ -324,14 +325,14 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   width: 100%;
   padding: 0.8rem 1.5rem;
   border: none;
-  background: ${({ highlighted }) => (highlighted ? '#f1f5f9' : '#fff')};
-  color: ${({ highlighted }) => (highlighted ? '#334155' : '#0f172a')};
+  background: ${({ highlighted }) => (highlighted ? 'var(--color-bg-selected)' : 'var(--color-bg-surface)')};
+  color: ${({ highlighted }) => (highlighted ? 'var(--color-text-tertiary)' : 'var(--color-text-primary)')};
   cursor: pointer;
   text-align: left;
   transition: background 120ms ease, color 120ms ease;
 
   &:hover small {
-    color: #0f172a;
+    color: var(--color-text-primary);
   }
 
   @media (min-width: 960px) {
@@ -345,13 +346,13 @@ const SuggestionItemVerbLabel = styled('span')`
 `
 
 const SuggestionItemVerbForm = styled('small')`
-  color: #475569;
+  color: var(--color-text-secondary);
   margin-left: 0.5rem;
   transition: color 120ms ease;
 `
 
 const SuggestionItemTranslation = styled('span')`
-  color: #475569;
+  color: var(--color-text-secondary);
   margin-left: 0.5rem;
   transition: color 120ms ease;
   font-size: 0.8rem;

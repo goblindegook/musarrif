@@ -617,14 +617,14 @@ const MasdarItem = styled('div')`
 
 const MasdarSeparator = styled('span')`
   margin-inline-end: 0.3rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-weight: 400;
 `
 
 const MasdarNote = styled('span')`
   font-size: 0.85rem;
   font-weight: 500;
-  color: #475569;
+  color: var(--color-text-secondary);
 
   @media print {
     font-size: 0.7rem;
@@ -632,11 +632,11 @@ const MasdarNote = styled('span')`
 `
 
 const ConjugationSection = styled('div')`
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  background: var(--color-bg-surface);
+  box-shadow: 0 10px 28px var(--color-shadow-sm);
 
   @media print {
     border: 1px solid #e2e8f0;

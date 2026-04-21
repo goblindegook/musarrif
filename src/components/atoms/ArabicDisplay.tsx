@@ -18,15 +18,15 @@ const Container = styled('div')`
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: #f8fafc;
+  background: var(--color-bg-surface-secondary);
   border-radius: 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
 `
 
 const DisplayText = styled('span')`
   font-size: 2rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-primary);
   text-align: center;
   word-break: break-word;
 `
