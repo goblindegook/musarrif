@@ -2,13 +2,25 @@ import { styled } from 'goober'
 import { LANGUAGE_OPTIONS, useI18n } from '../../hooks/i18n'
 
 const Select = styled('select')`
+  -webkit-appearance: none;
+  appearance: none;
   border-radius: 0.9rem;
   border: 1px solid var(--color-border-input);
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 2.2rem 0.6rem 1rem;
   font-size: 1rem;
   font-family: inherit;
   color: var(--color-text-primary);
-  background: var(--color-bg-surface-secondary);
+  background-color: var(--color-bg-surface-secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
+    linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1rem) 50%,
+    calc(100% - 0.75rem) 50%;
+  background-size:
+    0.35rem 0.35rem,
+    0.35rem 0.35rem;
+  background-repeat: no-repeat;
   cursor: pointer;
   flex: 1;
   min-width: 0;
@@ -18,7 +30,7 @@ const Select = styled('select')`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 
   &:hover {
-    background: var(--color-bg-surface);
+    background-color: var(--color-bg-surface);
     border-color: var(--color-border-input);
     box-shadow: 0 6px 14px var(--color-shadow-md);
   }
@@ -27,6 +39,13 @@ const Select = styled('select')`
     outline: 3px solid var(--color-focus-outline);
     border-color: var(--color-accent);
     box-shadow: 0 6px 14px var(--color-shadow-lg);
+  }
+
+  &[dir='rtl'] {
+    padding: 0.6rem 1rem 0.6rem 2.2rem;
+    background-position:
+      0.75rem 50%,
+      1rem 50%;
   }
 `
 
