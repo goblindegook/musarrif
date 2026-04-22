@@ -20,6 +20,7 @@ export type MasdarPattern =
   | 'fa3aal'
   | 'fa3aala'
   | 'fa3al'
+  | 'fa3iil'
   | 'fa3l'
   | 'fa3lan'
   | 'fi3aal'
