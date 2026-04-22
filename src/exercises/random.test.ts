@@ -50,7 +50,7 @@ describe('randomExercise', () => {
     }
 
     const exercise = randomExercise(
-      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 3, rootTypes: 5 },
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 9, rootTypes: 5 },
       store,
     )
 

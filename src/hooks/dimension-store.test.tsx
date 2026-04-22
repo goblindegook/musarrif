@@ -95,7 +95,7 @@ describe('useDimensionStore', () => {
 
     await waitFor(() => {
       expect(screen.getByText('1')).toBeInTheDocument()
-      expect(screen.getByText('exercise.unlock.form.2|exercise.unlock.form.3')).toBeInTheDocument()
+      expect(screen.getByText('exercise.unlock.form.2')).toBeInTheDocument()
     })
   })
 

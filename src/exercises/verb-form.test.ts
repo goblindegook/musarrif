@@ -119,7 +119,7 @@ describe('verbFormExercise with constraints', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
 
     const exercise = verbFormExercise.generate(
-      { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 0 },
+      { ...INITIAL_DIMENSION_PROFILE, forms: 9, rootTypes: 0 },
       { form: 10, rootType: 'sound', tense: 'active.past', pronoun: '3ms' },
     )
     const wrongIndex = (exercise.answer + 1) % exercise.options.length
