@@ -52,6 +52,45 @@ const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 
 const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 type FormNumber = (typeof FORM_NUMBERS)[number]
 
+const ARABIC_LETTER_NAMES = {
+  ء: 'همزة',
+  ب: 'باء',
+  ت: 'تاء',
+  ث: 'ثاء',
+  ج: 'جيم',
+  ح: 'حاء',
+  خ: 'خاء',
+  د: 'دال',
+  ذ: 'ذال',
+  ر: 'راء',
+  ز: 'زاي',
+  س: 'سين',
+  ش: 'شين',
+  ص: 'صاد',
+  ض: 'ضاد',
+  ط: 'طاء',
+  ظ: 'ظاء',
+  ع: 'عين',
+  غ: 'غين',
+  ف: 'فاء',
+  ق: 'قاف',
+  ك: 'كاف',
+  ل: 'لام',
+  م: 'ميم',
+  ن: 'نون',
+  ه: 'هاء',
+  و: 'واو',
+  ي: 'ياء',
+} as const
+
+type RootLetter = keyof typeof ARABIC_LETTER_NAMES
+
+const spellArabicRootLetters = (root: string): string =>
+  Array.from(root)
+    .map((letter) => ARABIC_LETTER_NAMES[letter as RootLetter])
+    .filter(Boolean)
+    .join(' ،')
+
 const verbsByForm = (() => {
   const grouped = new Map<FormNumber, DisplayVerb[]>()
   for (const form of FORM_NUMBERS) grouped.set(form, [])
@@ -359,6 +398,7 @@ export function ConjugationMode() {
                 label={t('meta.root')}
                 labelLang={lang}
                 labelDir={dir}
+                speechText={spellArabicRootLetters(selectedVerb.root)}
                 onInsightsClick={() => setOpenModal('root')}
                 insightsLabel={t('rootInfo.open')}
                 insightsOpen={openModal === 'root'}
