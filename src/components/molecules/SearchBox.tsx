@@ -17,9 +17,15 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const [query, setQuery] = useState('')
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [highligtedIndex, setHighlightedIndex] = useState(-1)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 960)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const suggestionWrapperRef = useRef<HTMLDivElement | null>(null)
-  const isMobile = useMemo(() => window.innerWidth < 960, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    window.addEventListener('resize', () => setIsMobile(window.innerWidth < 960), { signal: controller.signal })
+    return () => controller.abort()
+  }, [])
 
   const matchingVerbs = useMemo<DisplayVerb[]>(() => {
     if (!query.trim()) return []
