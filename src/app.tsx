@@ -7,12 +7,12 @@ import { useRouting } from './hooks/routing'
 
 export function App() {
   const { lang, dir } = useI18n()
-  const { page } = useRouting()
+  const { route } = useRouting()
 
   return (
     <Page dir={dir} lang={lang}>
       <AppHeader />
-      {page === 'test' ? <ExerciseMode /> : <ConjugationMode />}
+      {route.page === 'test' ? <ExerciseMode /> : <ConjugationMode />}
     </Page>
   )
 }

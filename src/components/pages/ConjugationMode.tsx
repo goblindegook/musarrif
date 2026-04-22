@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../../hooks/favourites'
 import { getEnglishVerbTranslation, useI18n } from '../../hooks/i18n'
 import { useRecent } from '../../hooks/recent'
-import { buildVerbUrl, useRouting } from '../../hooks/routing'
+import { useRouting } from '../../hooks/routing'
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
@@ -83,22 +83,16 @@ const ARABIC_LETTER_NAMES = {
   ي: 'ياء',
 } as const
 
-type RootLetter = keyof typeof ARABIC_LETTER_NAMES
-
 const spellArabicRootLetters = (root: string): string =>
   Array.from(root)
-    .map((letter) => ARABIC_LETTER_NAMES[letter as RootLetter])
+    .map((letter) => ARABIC_LETTER_NAMES[letter as keyof typeof ARABIC_LETTER_NAMES])
     .filter(Boolean)
     .join(' ،')
 
 const verbsByForm = (() => {
   const grouped = new Map<FormNumber, DisplayVerb[]>()
   for (const form of FORM_NUMBERS) grouped.set(form, [])
-
-  verbs.forEach((verb) => {
-    grouped.get(verb.form)?.push(verb)
-  })
-
+  for (const verb of verbs) grouped.get(verb.form)?.push(verb)
   for (const form of FORM_NUMBERS) {
     const entries = grouped.get(form) ?? []
     grouped.set(
@@ -112,7 +106,7 @@ const verbsByForm = (() => {
 
 export function ConjugationMode() {
   const { t, lang, dir, diacriticsPreference } = useI18n()
-  const { verbId, navigateTo, tense, mood, voice } = useRouting()
+  const { route, navigateTo } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
   const [openModal, setOpenModal] = useState<
@@ -120,6 +114,7 @@ export function ConjugationMode() {
   >(null)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
+  const verbId = route.page === 'conjugation' ? route.verbId : undefined
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
     if (getVerbById(verbId)) return 'search'
@@ -155,7 +150,7 @@ export function ConjugationMode() {
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       setSyntheticVerb(verb)
-      navigateTo(buildVerbUrl(verb.id))
+      navigateTo({ page: 'conjugation', verbId: verb.id })
     },
     [navigateTo],
   )
@@ -179,31 +174,36 @@ export function ConjugationMode() {
     if (selectedVerb) addRecent(selectedVerb.id)
   }, [selectedVerb?.id])
 
-  const selectedVoice: Voice = voice ?? 'active'
-  const selectedTense = selectedVoice === 'passive' && tense === 'imperative' ? 'past' : (tense ?? 'past')
-  const selectedMood = selectedTense === 'present' ? (mood ?? 'indicative') : undefined
-  const routeMood = mood
+  const conjugationRoute = route.page === 'conjugation' && route.verbId != null ? route : undefined
+  const voice = conjugationRoute?.voice ?? 'active'
+  const tense =
+    voice === 'passive' && conjugationRoute?.tense === 'imperative' ? 'past' : (conjugationRoute?.tense ?? 'past')
+  const mood = conjugationRoute?.tense === 'present' ? (conjugationRoute.mood ?? 'indicative') : undefined
 
   const handleVoiceChange = useCallback(
     (nextVoice: Voice) => {
-      const nextTense = nextVoice === 'passive' && selectedTense === 'imperative' ? 'past' : selectedTense
-      navigateTo(buildVerbUrl(verbId, nextVoice, nextTense, nextTense === 'present' ? routeMood : undefined))
+      if (verbId == null) return
+      if (tense === 'imperative') navigateTo({ page: 'conjugation', verbId, voice: 'active', tense })
+      else navigateTo({ page: 'conjugation', verbId, voice: nextVoice, tense })
     },
-    [navigateTo, routeMood, selectedTense, verbId],
+    [navigateTo, mood, tense, verbId],
   )
 
   const handleTenseChange = useCallback(
     (nextTense: Tense) => {
-      navigateTo(buildVerbUrl(verbId, selectedVoice, nextTense, nextTense === 'present' ? routeMood : undefined))
+      if (verbId == null) return
+      if (nextTense === 'imperative') navigateTo({ page: 'conjugation', verbId, voice: 'active', tense: nextTense })
+      else navigateTo({ page: 'conjugation', verbId, voice, tense: nextTense })
     },
-    [navigateTo, routeMood, selectedVoice, verbId],
+    [navigateTo, mood, voice, verbId],
   )
 
   const handleMoodChange = useCallback(
     (nextMood: Mood) => {
-      navigateTo(buildVerbUrl(verbId, selectedVoice, 'present', nextMood))
+      if (verbId == null) return
+      navigateTo({ page: 'conjugation', verbId, voice, tense: 'present', mood: nextMood })
     },
-    [navigateTo, selectedVoice, verbId],
+    [navigateTo, voice, verbId],
   )
 
   const verbTranslation = useMemo(() => {
@@ -430,12 +430,12 @@ export function ConjugationMode() {
           </VerbHeaderPanel>
 
           <ConjugationSection>
-            {selectedTense === 'present' ? (
+            {tense === 'present' ? (
               <ConjugationTable
                 verb={selectedVerb}
-                voice={selectedVoice}
+                voice={voice}
                 tense="present"
-                mood={selectedMood ?? 'indicative'}
+                mood={mood ?? 'indicative'}
                 diacriticsPreference={diacriticsPreference}
                 onVoiceChange={handleVoiceChange}
                 onTenseChange={handleTenseChange}
@@ -444,8 +444,8 @@ export function ConjugationMode() {
             ) : (
               <ConjugationTable
                 verb={selectedVerb}
-                voice={selectedVoice}
-                tense={selectedTense}
+                voice={voice}
+                tense={tense}
                 diacriticsPreference={diacriticsPreference}
                 onVoiceChange={handleVoiceChange}
                 onTenseChange={handleTenseChange}

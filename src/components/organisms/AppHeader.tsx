@@ -21,7 +21,7 @@ const THEME_OPTIONS = ['light', 'dark', 'system'] as const
 export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
-  const { page, navigateTo } = useRouting()
+  const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const importInputRef = useRef<HTMLInputElement>(null)
 
@@ -59,13 +59,13 @@ export const AppHeader = () => {
         </TitleGroup>
         <RightGroup>
           <ModeToggle
-            activeMode={MODES.indexOf(page)}
+            activeMode={MODES.indexOf(route.page)}
             labels={[t('mode.conjugate'), t('mode.exercise')]}
             icons={[<ConjugateIcon />, <ExerciseIcon />]}
             ariaLabel={t('mode.label')}
             onClick={(index) => {
-              if (index === 0) navigateTo('/#/verbs')
-              else navigateTo('/#/test')
+              if (index === 0) navigateTo({ page: 'conjugation' })
+              else navigateTo({ page: 'test' })
             }}
           />
           <SettingsButtonWrapper>

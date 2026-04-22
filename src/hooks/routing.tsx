@@ -1,20 +1,63 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
-import type { Mood, Tense, Voice } from '../paradigms/tense'
+import type { Mood, NonPresentTense, Tense, Voice } from '../paradigms/tense'
 
-type Page = 'conjugation' | 'test'
+interface TestRoute {
+  page: 'test'
+}
 
-interface RouteParams {
-  page: Page
-  verbId?: string
-  voice?: Voice
-  tense?: Tense
+interface ConjugationIndexRoute {
+  page: 'conjugation'
+  verbId?: never
+  voice?: never
+  tense?: never
+  mood?: never
+}
+
+interface VerbRoute {
+  page: 'conjugation'
+  verbId: string
+  voice?: never
+  tense?: never
+  mood?: never
+}
+
+interface VerbPresentRoute {
+  page: 'conjugation'
+  verbId: string
+  voice: Voice
+  tense: 'present'
   mood?: Mood
 }
 
-interface RoutingContextValue extends RouteParams {
-  navigateTo: (url: string) => void
+interface VerbNonPresentRoute {
+  page: 'conjugation'
+  verbId: string
+  voice: Voice
+  tense: NonPresentTense
+  mood?: never
+}
+
+interface VerbImperativeRoute {
+  page: 'conjugation'
+  verbId: string
+  voice: 'active'
+  tense: 'imperative'
+  mood?: never
+}
+
+type AppRoute =
+  | TestRoute
+  | ConjugationIndexRoute
+  | VerbRoute
+  | VerbPresentRoute
+  | VerbNonPresentRoute
+  | VerbImperativeRoute
+
+interface RoutingContextValue {
+  route: AppRoute
+  navigateTo: (route: AppRoute) => void
 }
 
 const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
@@ -54,13 +97,6 @@ function isVoice(value: unknown): value is Voice {
   return typeof value === 'string' && (SUPPORTED_VOICES as readonly string[]).includes(value)
 }
 
-function normalizeConjugation(tense?: string | Tense, mood?: string | Mood): { tense?: Tense; mood?: Mood } {
-  return {
-    tense: isTense(tense) ? tense : undefined,
-    mood: isMood(mood) ? mood : undefined,
-  }
-}
-
 function normalizeHashPath(hash: string): string {
   const withoutHash = hash.startsWith('#') ? hash.slice(1) : hash
   if (!withoutHash) return '/'
@@ -80,7 +116,7 @@ function getCurrentPath(): string {
   return ensureLeadingSlash(fallbackPath)
 }
 
-function parsePath(pathname: string): RouteParams {
+function parseRoutePath(pathname: string): AppRoute {
   const effectivePath = stripBasePath(pathname)
   const segments = effectivePath
     .split('/')
@@ -93,49 +129,49 @@ function parsePath(pathname: string): RouteParams {
       }
     })
 
-  if (segments.at(0) === 'test') {
-    return { page: 'test' }
-  }
+  if (segments.at(0) === 'test') return { page: 'test' }
 
   const start = segments.at(0) === 'verbs' ? 1 : 0
 
   const verbId = segments.at(start)
+  if (!verbId) return { page: 'conjugation' }
+
   const voiceSegment = segments.at(start + 1)
   const voice = isVoice(voiceSegment) ? voiceSegment : undefined
+  if (!voice) return { page: 'conjugation', verbId }
 
-  if (voice) {
-    const normalized = normalizeConjugation(segments[start + 2], segments[start + 3])
-    return {
-      page: 'conjugation',
-      verbId,
-      voice,
-      tense: segments.length > start + 2 ? normalized.tense : undefined,
-      mood: segments.length > start + 3 && normalized.tense === 'present' ? normalized.mood : undefined,
-    }
+  const tense = segments.at(start + 2)
+  if (!isTense(tense)) return { page: 'conjugation', verbId }
+
+  if (tense === 'present') {
+    const moodSegment = segments.at(start + 3)
+    const mood = isMood(moodSegment) ? moodSegment : undefined
+    if (!mood) return { page: 'conjugation', verbId, voice, tense: 'present' }
+
+    return { page: 'conjugation', verbId, voice, tense: 'present', mood }
   }
 
-  return {
-    page: 'conjugation',
-    verbId,
-    tense: undefined,
-    mood: undefined,
+  if (tense === 'imperative') {
+    if (voice === 'passive') return { page: 'conjugation', verbId, voice: 'passive', tense: 'past' }
+
+    return { page: 'conjugation', verbId, voice: 'active', tense: 'imperative' }
   }
+
+  return { page: 'conjugation', verbId, voice, tense }
 }
 
-function buildHashPath(state: RouteParams): string {
-  if (state.page === 'test') return '/test'
-  const voiceSegment = state.tense ? `/${state.voice ?? 'active'}` : ''
-  const tenseSegment = state.tense ? `/${state.tense}` : ''
-  const moodSegment = state.tense === 'present' && state.mood ? `/${state.mood}` : ''
-  const verbSegment = state.verbId
-    ? `/${encodeURIComponent(state.verbId)}${voiceSegment}${tenseSegment}${moodSegment}`
-    : ''
-  return `/verbs${verbSegment}`
+function buildHashPath(route: AppRoute): string {
+  if (route.page === 'test') return '/test'
+  if (!route.verbId) return '/verbs'
+  const base = `/verbs/${encodeURIComponent(route.verbId)}`
+  if (!route.voice || !route.tense) return base
+  if (route.tense === 'present' && route.mood) return `${base}/${route.voice}/${route.tense}/${route.mood}`
+  return `${base}/${route.voice}/${route.tense}`
 }
 
-function buildUrl(state: RouteParams): string {
-  const hashPath = buildHashPath(state)
+function buildUrl(route: AppRoute): string {
   const baseWithTrailingSlash = BASE_PATH ? `${BASE_PATH}/` : '/'
+  const hashPath = buildHashPath(route)
   const normalizedHash = hashPath.startsWith('/') ? `#${hashPath}` : `#/${hashPath}`
   return `${baseWithTrailingSlash}${window.location.search}${normalizedHash}`
 }
@@ -146,60 +182,36 @@ export function buildVerbHref(id: string): string {
   return `${baseWithTrailingSlash}#/verbs/${encodedId}`
 }
 
-export function buildVerbUrl(verbId?: string, voice?: Voice, tense?: Tense, mood?: Mood): string {
-  const normalized = normalizeConjugation(tense, mood)
-  const normalizedVoice = isVoice(voice) ? voice : undefined
-  return buildUrl({
-    page: 'conjugation',
-    verbId,
-    voice: normalizedVoice,
-    tense: normalized.tense,
-    mood: normalized.mood,
-  })
-}
-
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
-  const [route, setRoute] = useState<RouteParams>(() => parsePath(getCurrentPath()))
+  const [route, setRoute] = useState<AppRoute>(() => parseRoutePath(getCurrentPath()))
 
   useEffect(() => {
+    const controller = new AbortController()
+
     const syncRouteFromLocation = () => {
       const currentPath = getCurrentPath()
-      const parsed = parsePath(currentPath)
+      const parsed = parseRoutePath(currentPath)
       const currentHashPath = normalizeHashPath(window.location.hash)
       const targetHashPath = buildHashPath(parsed)
-      if (currentHashPath !== targetHashPath) {
-        window.history.replaceState({}, '', buildUrl(parsed))
-      }
+      if (currentHashPath !== targetHashPath) window.history.replaceState({}, '', buildUrl(parsed))
       setRoute(parsed)
     }
+
     syncRouteFromLocation()
-    window.addEventListener('hashchange', syncRouteFromLocation)
-    window.addEventListener('popstate', syncRouteFromLocation)
-    return () => {
-      window.removeEventListener('hashchange', syncRouteFromLocation)
-      window.removeEventListener('popstate', syncRouteFromLocation)
-    }
+    window.addEventListener('hashchange', syncRouteFromLocation, { signal: controller.signal })
+    window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
+    return () => controller.abort()
   }, [])
 
   const navigateTo = useCallback(
-    (url: string) => {
-      const hashIndex = url.indexOf('#')
-      const hashPath = hashIndex >= 0 ? url.slice(hashIndex + 1) : url
-      const normalizedPath = ensureLeadingSlash(hashPath)
-      const nextState = parsePath(normalizedPath)
-      window.history.pushState({}, '', buildUrl(nextState))
-      setRoute(nextState)
+    (nextRoute: AppRoute) => {
+      window.history.pushState({}, '', buildUrl(nextRoute))
+      setRoute(nextRoute)
     },
     [setRoute],
   )
 
-  const value = useMemo<RoutingContextValue>(
-    (): RoutingContextValue => ({
-      ...route,
-      navigateTo,
-    }),
-    [route.page, route.verbId, route.voice, route.tense, route.mood, navigateTo],
-  )
+  const value = useMemo<RoutingContextValue>((): RoutingContextValue => ({ route, navigateTo }), [route, navigateTo])
 
   return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
 }
