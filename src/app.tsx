@@ -2,6 +2,7 @@ import { styled } from 'goober'
 import { AppHeader } from './components/organisms/AppHeader'
 import { ConjugationMode } from './components/pages/ConjugationMode'
 import { ExerciseMode } from './components/pages/ExerciseMode'
+import { Home } from './components/pages/Home'
 import { useI18n } from './hooks/i18n'
 import { useRouting } from './hooks/routing'
 
@@ -12,7 +13,13 @@ export function App() {
   return (
     <Page dir={dir} lang={lang}>
       <AppHeader />
-      {route[0] === 'test' ? <ExerciseMode /> : <ConjugationMode />}
+      {route[0] === 'test' ? (
+        <ExerciseMode />
+      ) : route[1] == null ? (
+        <Home />
+      ) : (
+        <ConjugationMode verbId={route[1]} voice={route[2]} tense={route[3]} mood={route[4]} />
+      )}
     </Page>
   )
 }

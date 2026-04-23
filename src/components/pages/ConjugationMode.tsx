@@ -18,7 +18,6 @@ import {
   formatFormLabel,
   getAvailableParadigms,
   getVerbById,
-  verbs,
 } from '../../paradigms/verbs'
 import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
@@ -47,10 +46,6 @@ const formIVowelPattern = (verb: DisplayVerb<1>) => {
   const present = formIPresentVowel(verb)
   return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
-const FORM_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
-type FormNumber = (typeof FORM_NUMBERS)[number]
 
 const ARABIC_LETTER_NAMES = {
   ء: 'همزة',
@@ -89,32 +84,22 @@ const spellArabicRootLetters = (root: string): string =>
     .filter(Boolean)
     .join(' ،')
 
-const verbsByForm = (() => {
-  const grouped = new Map<FormNumber, DisplayVerb[]>()
-  for (const form of FORM_NUMBERS) grouped.set(form, [])
-  for (const verb of verbs) grouped.get(verb.form)?.push(verb)
-  for (const form of FORM_NUMBERS) {
-    const entries = grouped.get(form) ?? []
-    grouped.set(
-      form,
-      entries.sort((a, b) => a.label.localeCompare(b.label, 'ar')),
-    )
-  }
+interface ConjugationModeProps {
+  verbId: string
+  voice?: Voice
+  tense?: Tense
+  mood?: Mood
+}
 
-  return grouped
-})()
-
-export function ConjugationMode() {
+export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood }: ConjugationModeProps) {
   const { t, lang, dir, diacriticsPreference } = useI18n()
-  const { route, navigateTo } = useRouting()
+  const { navigateTo } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
   const [openModal, setOpenModal] = useState<
     'form' | 'root' | 'active-participle' | 'passive-participle' | 'masdar' | null
   >(null)
-  const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
-  const verbId = route[0] === 'verbs' ? route[1] : undefined
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
     if (getVerbById(verbId)) return 'search'
@@ -168,41 +153,35 @@ export function ConjugationMode() {
     [selectedVerb?.root],
   )
 
-  const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== selectedVerb?.id), [recents, selectedVerb?.id])
+  const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== verbId), [recents, verbId])
 
   useEffect(() => {
-    if (selectedVerb) addRecent(selectedVerb.id)
-  }, [selectedVerb?.id])
+    addRecent(verbId)
+  }, [verbId])
 
-  const conjugationRoute = route[0] === 'verbs' && route[1] ? route : undefined
-  const voice = conjugationRoute?.[2] ?? 'active'
-  const tense =
-    voice === 'passive' && conjugationRoute?.[3] === 'imperative' ? 'past' : (conjugationRoute?.[3] ?? 'past')
-  const mood = conjugationRoute?.[3] === 'present' ? (conjugationRoute[4] ?? 'indicative') : undefined
+  const currentTense = voice === 'passive' && tense === 'imperative' ? 'past' : tense
+  const currentMood = tense === 'present' ? mood : undefined
 
   const handleVoiceChange = useCallback(
     (nextVoice: Voice) => {
-      if (verbId == null) return
-      if (tense === 'imperative') navigateTo(['verbs', verbId, 'active', tense])
-      else navigateTo(['verbs', verbId, nextVoice, tense])
+      if (currentMood) navigateTo(['verbs', verbId, nextVoice, 'present', currentMood])
+      if (nextVoice === 'passive')
+        navigateTo(['verbs', verbId, nextVoice, currentTense === 'imperative' ? 'past' : currentTense])
+      else navigateTo(['verbs', verbId, nextVoice, currentTense])
     },
-    [navigateTo, mood, tense, verbId],
+    [navigateTo, currentTense, verbId],
   )
 
   const handleTenseChange = useCallback(
     (nextTense: Tense) => {
-      if (verbId == null) return
       if (nextTense === 'imperative') navigateTo(['verbs', verbId, 'active', nextTense])
       else navigateTo(['verbs', verbId, voice, nextTense])
     },
-    [navigateTo, mood, voice, verbId],
+    [navigateTo, voice, verbId],
   )
 
   const handleMoodChange = useCallback(
-    (nextMood: Mood) => {
-      if (verbId == null) return
-      navigateTo(['verbs', verbId, voice, 'present', nextMood])
-    },
+    (nextMood: Mood) => navigateTo(['verbs', verbId, voice, 'present', nextMood]),
     [navigateTo, voice, verbId],
   )
 
@@ -232,10 +211,9 @@ export function ConjugationMode() {
       {recentVerbs.length > 0 && (
         <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
           <VerbList>
-            {recentVerbs.map((verb) => {
-              const isActive = verb.id === selectedVerb?.id
-              return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-            })}
+            {recentVerbs.map((verb) => (
+              <VerbPill key={verb.id} verb={verb} />
+            ))}
           </VerbList>
         </Panel>
       )}
@@ -243,10 +221,9 @@ export function ConjugationMode() {
       <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
         {favourites.length > 0 ? (
           <VerbList>
-            {favourites.map((verb) => {
-              const isActive = verb.id === selectedVerb?.id
-              return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-            })}
+            {favourites.map((verb) => (
+              <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+            ))}
           </VerbList>
         ) : (
           <Text dir={dir} lang={lang}>
@@ -301,10 +278,9 @@ export function ConjugationMode() {
 
               {derivedForms.length > 1 ? (
                 <VerbList>
-                  {derivedForms.map((verb) => {
-                    const isActive = verb.id === selectedVerb?.id
-                    return <VerbPill key={verb.id} verb={verb} className={isActive ? 'active' : undefined} />
-                  })}
+                  {derivedForms.map((verb) => (
+                    <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+                  ))}
                 </VerbList>
               ) : (
                 <QuickPickList selectedVerb={selectedVerb} />
@@ -325,44 +301,6 @@ export function ConjugationMode() {
         </Panel>
 
         {!selectedVerb && recentsAndFavouritesPanels}
-
-        {!selectedVerb && (
-          <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
-            <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
-              {FORM_NUMBERS.map((form) => {
-                const isActive = selectedFormTab === form
-                return (
-                  <TabButton
-                    key={form}
-                    id={`form-tab-${form}`}
-                    role="tab"
-                    type="button"
-                    aria-selected={isActive}
-                    aria-controls={`form-panel-${form}`}
-                    size="sm"
-                    fluid
-                    active={isActive}
-                    onClick={() => setSelectedFormTab(form)}
-                  >
-                    {ROMAN_NUMERALS[form - 1]}
-                  </TabButton>
-                )
-              })}
-            </TabBar>
-            <TabPanel
-              role="tabpanel"
-              id={`form-panel-${selectedFormTab}`}
-              aria-labelledby={`form-tab-${selectedFormTab}`}
-              aria-label={t('meta.form.withNumber', { form: ROMAN_NUMERALS[selectedFormTab - 1] })}
-            >
-              <VerbList>
-                {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
-                  <VerbPill key={verb.id} verb={verb} />
-                ))}
-              </VerbList>
-            </TabPanel>
-          </Panel>
-        )}
       </Stack>
 
       {selectedVerb && (
@@ -430,12 +368,12 @@ export function ConjugationMode() {
           </VerbHeaderPanel>
 
           <ConjugationSection>
-            {tense === 'present' ? (
+            {currentTense === 'present' ? (
               <ConjugationTable
                 verb={selectedVerb}
                 voice={voice}
                 tense="present"
-                mood={mood ?? 'indicative'}
+                mood={currentMood ?? 'indicative'}
                 diacriticsPreference={diacriticsPreference}
                 onVoiceChange={handleVoiceChange}
                 onTenseChange={handleTenseChange}
@@ -445,7 +383,7 @@ export function ConjugationMode() {
               <ConjugationTable
                 verb={selectedVerb}
                 voice={voice}
-                tense={tense}
+                tense={currentTense}
                 diacriticsPreference={diacriticsPreference}
                 onVoiceChange={handleVoiceChange}
                 onTenseChange={handleTenseChange}

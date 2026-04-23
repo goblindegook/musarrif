@@ -5,10 +5,7 @@ import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
-import { synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
-
-const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
-const FORM_NUMBERS: VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+import { FORM_LABELS, FORMS, synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 
 const LETTERS: readonly string[] = [
   'ء',
@@ -182,7 +179,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
       <Section>
         <SectionLabel>{t('build.formLabel')}</SectionLabel>
         <FormGrid>
-          {FORM_NUMBERS.map((f, i) => (
+          {FORMS.map((f, i) => (
             <OptionButton
               key={f}
               type="button"
@@ -190,7 +187,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
               aria-pressed={form === f}
               onClick={() => setForm(f)}
             >
-              {ROMAN_NUMERALS[i]}
+              {FORM_LABELS[i]}
             </OptionButton>
           ))}
         </FormGrid>

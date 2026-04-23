@@ -9,7 +9,7 @@ export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 export const FORMS: readonly VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
+export const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
 
 export function formatFormLabel(form: VerbForm, root: string): string {
   const label = FORM_LABELS[form - 1]
