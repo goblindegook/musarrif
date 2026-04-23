@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { TENSES } from '../paradigms/tense'
 import { verbTenseExercise } from './verb-tense'
 
 const INITIAL_DIMENSION_PROFILE = {
@@ -11,9 +10,28 @@ const INITIAL_DIMENSION_PROFILE = {
   nominals: 0,
 } as const
 
-const UNVOICED_KEYS = new Set(TENSES.map((t) => `tense.${t.replace(/^\w+\./, '')}`))
+const UNVOICED_KEYS = new Set([
+  'tense.past',
+  'tense.present.indicative',
+  'tense.present.subjunctive',
+  'tense.present.jussive',
+  'tense.future',
+  'tense.imperative',
+])
 
-const VOICED_KEYS = new Set(TENSES.map((t) => `tense.${t}`))
+const VOICED_KEYS = new Set([
+  'tense.active.past',
+  'tense.active.present.indicative',
+  'tense.active.present.subjunctive',
+  'tense.active.present.jussive',
+  'tense.active.future',
+  'tense.active.imperative',
+  'tense.passive.past',
+  'tense.passive.present.indicative',
+  'tense.passive.present.subjunctive',
+  'tense.passive.present.jussive',
+  'tense.passive.future',
+])
 
 describe('tenseExercise', () => {
   afterEach(() => {

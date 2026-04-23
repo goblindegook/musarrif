@@ -12,7 +12,7 @@ export function App() {
   return (
     <Page dir={dir} lang={lang}>
       <AppHeader />
-      {route.page === 'test' ? <ExerciseMode /> : <ConjugationMode />}
+      {route[0] === 'test' ? <ExerciseMode /> : <ConjugationMode />}
     </Page>
   )
 }

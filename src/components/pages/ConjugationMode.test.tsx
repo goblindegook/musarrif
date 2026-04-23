@@ -152,7 +152,7 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Present'))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/verbs/ktb-1/active/present')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '#/verbs/ktb-1/active/present')
   })
 
   it('switches to passive tense options and updates the URL', async () => {
@@ -166,7 +166,7 @@ describe('Conjugation table', () => {
     ) as HTMLElement
     await user.click(passiveTab)
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/verbs/ktb-1/passive/past')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '#/verbs/ktb-1/passive/past')
     const tenseTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select tense"]')!
     expect(within(tenseTabs).getByText('Past')).toBeInTheDocument()
     expect(within(tenseTabs).getByText('Present')).toBeInTheDocument()
@@ -212,7 +212,7 @@ describe('Conjugation table', () => {
 
     await user.click(screen.getByText('Imperative'))
 
-    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '/#/verbs/ktb-1/active/imperative')
+    expect(pushSpy).toHaveBeenLastCalledWith({}, '', '#/verbs/ktb-1/active/imperative')
   })
 
   it('does not show imperative in present tense mood tabs', async () => {
@@ -293,7 +293,7 @@ describe('Search', () => {
 
     await user.type(screen.getByLabelText('Verb'), 'كتب{enter}')
 
-    expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/verbs/ktb-2')
+    expect(pushSpy).toHaveBeenCalledWith({}, '', '#/verbs/ktb-2')
   })
 })
 
@@ -422,7 +422,7 @@ describe('Recently viewed verbs', () => {
 
     const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['/#/verbs/ktb-1', '/#/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['#/verbs/ktb-1', '#/verbs/bdl-1'])
   })
 
   test('excludes currently viewed verb pill', () => {
@@ -431,7 +431,7 @@ describe('Recently viewed verbs', () => {
 
     const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['/#/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['#/verbs/bdl-1'])
   })
 
   test('does not crash when localStorage contains stale verb IDs', () => {
@@ -583,6 +583,6 @@ describe('Build tab', () => {
 
     fireEvent.click(exampleLink)
 
-    expect(`/${window.location.hash}`).toBe(exampleLink.getAttribute('href'))
+    expect(window.location.hash).toBe(exampleLink.getAttribute('href'))
   })
 })

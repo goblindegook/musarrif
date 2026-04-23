@@ -3,7 +3,7 @@ import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { HAMZA } from './letters'
-import { TENSES, type VerbParadigm } from './tense'
+import { ALL_TENSES, type VerbParadigm } from './tense'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -126,7 +126,7 @@ export function getVerb(root: string, form: VerbForm): DisplayVerb {
   return verb
 }
 
-const ALL_PARADIGMS: readonly VerbParadigm[] = [...TENSES, 'active.participle', 'passive.participle', 'masdar']
+const ALL_PARADIGMS: readonly VerbParadigm[] = [...ALL_TENSES, 'active.participle', 'passive.participle', 'masdar']
 
 export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
   if (verb.form === 1 && verb.root === 'ليس') return ['active.past']

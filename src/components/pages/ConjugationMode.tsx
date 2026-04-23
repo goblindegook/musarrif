@@ -114,7 +114,7 @@ export function ConjugationMode() {
   >(null)
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
-  const verbId = route.page === 'conjugation' ? route.verbId : undefined
+  const verbId = route[0] === 'verbs' ? route[1] : undefined
   const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
     if (getVerbById(verbId)) return 'search'
@@ -150,7 +150,7 @@ export function ConjugationMode() {
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       setSyntheticVerb(verb)
-      navigateTo({ page: 'conjugation', verbId: verb.id })
+      navigateTo(['verbs', verb.id])
     },
     [navigateTo],
   )
@@ -174,17 +174,17 @@ export function ConjugationMode() {
     if (selectedVerb) addRecent(selectedVerb.id)
   }, [selectedVerb?.id])
 
-  const conjugationRoute = route.page === 'conjugation' && route.verbId != null ? route : undefined
-  const voice = conjugationRoute?.voice ?? 'active'
+  const conjugationRoute = route[0] === 'verbs' && route[1] ? route : undefined
+  const voice = conjugationRoute?.[2] ?? 'active'
   const tense =
-    voice === 'passive' && conjugationRoute?.tense === 'imperative' ? 'past' : (conjugationRoute?.tense ?? 'past')
-  const mood = conjugationRoute?.tense === 'present' ? (conjugationRoute.mood ?? 'indicative') : undefined
+    voice === 'passive' && conjugationRoute?.[3] === 'imperative' ? 'past' : (conjugationRoute?.[3] ?? 'past')
+  const mood = conjugationRoute?.[3] === 'present' ? (conjugationRoute[4] ?? 'indicative') : undefined
 
   const handleVoiceChange = useCallback(
     (nextVoice: Voice) => {
       if (verbId == null) return
-      if (tense === 'imperative') navigateTo({ page: 'conjugation', verbId, voice: 'active', tense })
-      else navigateTo({ page: 'conjugation', verbId, voice: nextVoice, tense })
+      if (tense === 'imperative') navigateTo(['verbs', verbId, 'active', tense])
+      else navigateTo(['verbs', verbId, nextVoice, tense])
     },
     [navigateTo, mood, tense, verbId],
   )
@@ -192,8 +192,8 @@ export function ConjugationMode() {
   const handleTenseChange = useCallback(
     (nextTense: Tense) => {
       if (verbId == null) return
-      if (nextTense === 'imperative') navigateTo({ page: 'conjugation', verbId, voice: 'active', tense: nextTense })
-      else navigateTo({ page: 'conjugation', verbId, voice, tense: nextTense })
+      if (nextTense === 'imperative') navigateTo(['verbs', verbId, 'active', nextTense])
+      else navigateTo(['verbs', verbId, voice, nextTense])
     },
     [navigateTo, mood, voice, verbId],
   )
@@ -201,7 +201,7 @@ export function ConjugationMode() {
   const handleMoodChange = useCallback(
     (nextMood: Mood) => {
       if (verbId == null) return
-      navigateTo({ page: 'conjugation', verbId, voice, tense: 'present', mood: nextMood })
+      navigateTo(['verbs', verbId, voice, 'present', nextMood])
     },
     [navigateTo, voice, verbId],
   )

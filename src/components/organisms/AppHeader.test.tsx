@@ -36,14 +36,14 @@ it('clicking the Exercise segment pushes /#/test to history', () => {
   renderHeader('/#/verbs')
   const pushSpy = vi.spyOn(window.history, 'pushState')
   fireEvent.click(screen.getByText('Exercise').closest('button')!)
-  expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/test')
+  expect(pushSpy).toHaveBeenCalledWith({}, '', '#/test')
 })
 
 it('clicking the Conjugate segment when in exercise mode pushes /#/verbs to history', () => {
   renderHeader('/#/test')
   const pushSpy = vi.spyOn(window.history, 'pushState')
   fireEvent.click(screen.getByText('Conjugate').closest('button')!)
-  expect(pushSpy).toHaveBeenCalledWith({}, '', '/#/verbs')
+  expect(pushSpy).toHaveBeenCalledWith({}, '', '#/verbs')
 })
 
 it('clicking the settings button opens the settings modal', () => {

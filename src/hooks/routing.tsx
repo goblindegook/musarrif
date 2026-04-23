@@ -1,124 +1,70 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
-import type { Mood, NonPresentTense, Tense, Voice } from '../paradigms/tense'
+import type { Mood, NonPresentTense, Voice } from '../paradigms/tense'
+import { isMood, isTense, isVoice } from '../paradigms/tense'
 
-interface TestRoute {
-  page: 'test'
+type HomeRoute = readonly ['verbs']
+type VerbRoute = readonly ['verbs', verbId: string]
+type VerbNonPresentRoute = readonly ['verbs', verbId: string, voice: Voice, tense: NonPresentTense]
+type VerbPresentRoute = readonly ['verbs', verbId: string, voice: Voice, tense: 'present', mood?: Mood]
+type VerbImperativeRoute = readonly ['verbs', verbId: string, voice: 'active', tense: 'imperative']
+type TestRoute = readonly ['test']
+type AppRoute = HomeRoute | VerbRoute | VerbPresentRoute | VerbNonPresentRoute | VerbImperativeRoute | TestRoute
+
+interface RoutingContextValue<T> {
+  route: T
+  navigateTo: (route: T) => void
 }
 
-interface ConjugationIndexRoute {
-  page: 'conjugation'
-  verbId?: never
-  voice?: never
-  tense?: never
-  mood?: never
-}
+const RoutingContext = createContext<RoutingContextValue<AppRoute> | undefined>(undefined)
 
-interface VerbRoute {
-  page: 'conjugation'
-  verbId: string
-  voice?: never
-  tense?: never
-  mood?: never
-}
+function sanitizeRoute(segments: readonly string[]): AppRoute {
+  if (segments.at(0) === 'test') return ['test']
 
-interface VerbPresentRoute {
-  page: 'conjugation'
-  verbId: string
-  voice: Voice
-  tense: 'present'
-  mood?: Mood
-}
+  const start = segments.at(0) === 'verbs' ? 1 : 0
 
-interface VerbNonPresentRoute {
-  page: 'conjugation'
-  verbId: string
-  voice: Voice
-  tense: NonPresentTense
-  mood?: never
-}
+  const verbId = segments.at(start)
+  if (!verbId) return ['verbs']
 
-interface VerbImperativeRoute {
-  page: 'conjugation'
-  verbId: string
-  voice: 'active'
-  tense: 'imperative'
-  mood?: never
-}
+  const voiceSegment = segments.at(start + 1)
+  const voice = isVoice(voiceSegment) ? voiceSegment : undefined
+  if (!voice) return ['verbs', verbId]
 
-type AppRoute =
-  | TestRoute
-  | ConjugationIndexRoute
-  | VerbRoute
-  | VerbPresentRoute
-  | VerbNonPresentRoute
-  | VerbImperativeRoute
+  const tense = segments.at(start + 2)
+  if (!isTense(tense)) return ['verbs', verbId]
 
-interface RoutingContextValue {
-  route: AppRoute
-  navigateTo: (route: AppRoute) => void
-}
+  if (tense === 'present') {
+    const moodSegment = segments.at(start + 3)
+    const mood = isMood(moodSegment) ? moodSegment : undefined
+    if (!mood) return ['verbs', verbId, voice, 'present']
 
-const RoutingContext = createContext<RoutingContextValue | undefined>(undefined)
-
-const BASE_PATH = normalizeBasePath(import.meta.env.BASE_URL)
-const SUPPORTED_VOICES: readonly Voice[] = ['active', 'passive']
-const SUPPORTED_TENSES: readonly Tense[] = ['past', 'present', 'future', 'imperative']
-const SUPPORTED_MOODS: readonly Mood[] = ['indicative', 'subjunctive', 'jussive']
-
-function normalizeBasePath(value: string | undefined): string {
-  const trimmed = value?.trim()
-  if (!trimmed || trimmed === '/') return ''
-  const withLeading = trimmed.startsWith('/') ? trimmed : `/${trimmed}`
-  return withLeading.replace(/\/+$/, '')
-}
-
-function ensureLeadingSlash(path: string): string {
-  return path.startsWith('/') ? path : `/${path}`
-}
-
-function stripBasePath(pathname: string): string {
-  if (!BASE_PATH) return pathname
-  if (pathname === BASE_PATH) return '/'
-  if (pathname.startsWith(`${BASE_PATH}/`)) return pathname.slice(BASE_PATH.length)
-  return pathname
-}
-
-function isTense(value: unknown): value is Tense {
-  return typeof value === 'string' && (SUPPORTED_TENSES as readonly string[]).includes(value)
-}
-
-function isMood(value: unknown): value is Mood {
-  return typeof value === 'string' && (SUPPORTED_MOODS as readonly string[]).includes(value)
-}
-
-function isVoice(value: unknown): value is Voice {
-  return typeof value === 'string' && (SUPPORTED_VOICES as readonly string[]).includes(value)
-}
-
-function normalizeHashPath(hash: string): string {
-  const withoutHash = hash.startsWith('#') ? hash.slice(1) : hash
-  if (!withoutHash) return '/'
-  return ensureLeadingSlash(withoutHash)
-}
-
-function getCurrentPath(): string {
-  const hashPath = normalizeHashPath(window.location.hash)
-  if (hashPath !== '/') {
-    return hashPath
+    return ['verbs', verbId, voice, 'present', mood]
   }
 
-  const fallbackPath = stripBasePath(window.location.pathname)
-  if (!fallbackPath || fallbackPath === '/') {
-    return '/'
+  if (tense === 'imperative') {
+    if (voice === 'passive') return ['verbs', verbId, 'passive', 'past']
+
+    return ['verbs', verbId, 'active', 'imperative']
   }
-  return ensureLeadingSlash(fallbackPath)
+
+  return ['verbs', verbId, voice, tense]
 }
 
-function parseRoutePath(pathname: string): AppRoute {
-  const effectivePath = stripBasePath(pathname)
-  const segments = effectivePath
+export function buildUrl(route: AppRoute): string {
+  return (
+    '#/' +
+    route
+      .filter(Boolean)
+      // biome-ignore lint/style/noNonNullAssertion: never undefined
+      .map((component) => encodeURIComponent(component!))
+      .join('/')
+  )
+}
+
+function getUnsafeRoute(): readonly string[] {
+  return window.location.hash
+    .replace(/^#/, '')
     .split('/')
     .filter(Boolean)
     .map((segment) => {
@@ -128,73 +74,18 @@ function parseRoutePath(pathname: string): AppRoute {
         return segment
       }
     })
-
-  if (segments.at(0) === 'test') return { page: 'test' }
-
-  const start = segments.at(0) === 'verbs' ? 1 : 0
-
-  const verbId = segments.at(start)
-  if (!verbId) return { page: 'conjugation' }
-
-  const voiceSegment = segments.at(start + 1)
-  const voice = isVoice(voiceSegment) ? voiceSegment : undefined
-  if (!voice) return { page: 'conjugation', verbId }
-
-  const tense = segments.at(start + 2)
-  if (!isTense(tense)) return { page: 'conjugation', verbId }
-
-  if (tense === 'present') {
-    const moodSegment = segments.at(start + 3)
-    const mood = isMood(moodSegment) ? moodSegment : undefined
-    if (!mood) return { page: 'conjugation', verbId, voice, tense: 'present' }
-
-    return { page: 'conjugation', verbId, voice, tense: 'present', mood }
-  }
-
-  if (tense === 'imperative') {
-    if (voice === 'passive') return { page: 'conjugation', verbId, voice: 'passive', tense: 'past' }
-
-    return { page: 'conjugation', verbId, voice: 'active', tense: 'imperative' }
-  }
-
-  return { page: 'conjugation', verbId, voice, tense }
-}
-
-function buildHashPath(route: AppRoute): string {
-  if (route.page === 'test') return '/test'
-  if (!route.verbId) return '/verbs'
-  const base = `/verbs/${encodeURIComponent(route.verbId)}`
-  if (!route.voice || !route.tense) return base
-  if (route.tense === 'present' && route.mood) return `${base}/${route.voice}/${route.tense}/${route.mood}`
-  return `${base}/${route.voice}/${route.tense}`
-}
-
-function buildUrl(route: AppRoute): string {
-  const baseWithTrailingSlash = BASE_PATH ? `${BASE_PATH}/` : '/'
-  const hashPath = buildHashPath(route)
-  const normalizedHash = hashPath.startsWith('/') ? `#${hashPath}` : `#/${hashPath}`
-  return `${baseWithTrailingSlash}${window.location.search}${normalizedHash}`
-}
-
-export function buildVerbHref(id: string): string {
-  const baseWithTrailingSlash = BASE_PATH ? `${BASE_PATH}/` : '/'
-  const encodedId = encodeURIComponent(id)
-  return `${baseWithTrailingSlash}#/verbs/${encodedId}`
 }
 
 export function RoutingProvider({ children }: { children: ComponentChildren }) {
-  const [route, setRoute] = useState<AppRoute>(() => parseRoutePath(getCurrentPath()))
+  const [route, setRoute] = useState<AppRoute>(() => sanitizeRoute(getUnsafeRoute()))
 
   useEffect(() => {
     const controller = new AbortController()
 
     const syncRouteFromLocation = () => {
-      const currentPath = getCurrentPath()
-      const parsed = parseRoutePath(currentPath)
-      const currentHashPath = normalizeHashPath(window.location.hash)
-      const targetHashPath = buildHashPath(parsed)
-      if (currentHashPath !== targetHashPath) window.history.replaceState({}, '', buildUrl(parsed))
-      setRoute(parsed)
+      const routeFromLocation = sanitizeRoute(getUnsafeRoute())
+      window.history.replaceState({}, '', buildUrl(routeFromLocation))
+      setRoute(routeFromLocation)
     }
 
     syncRouteFromLocation()
@@ -211,12 +102,12 @@ export function RoutingProvider({ children }: { children: ComponentChildren }) {
     [setRoute],
   )
 
-  const value = useMemo<RoutingContextValue>((): RoutingContextValue => ({ route, navigateTo }), [route, navigateTo])
+  const value = useMemo(() => ({ route, navigateTo }), [route, navigateTo])
 
   return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
 }
 
-export function useRouting(): RoutingContextValue {
+export function useRouting() {
   const ctx = useContext(RoutingContext)
   if (!ctx) throw new Error('useRouting must be used within a RoutingProvider')
   return ctx
