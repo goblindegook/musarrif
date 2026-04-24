@@ -366,6 +366,7 @@ const ValueStack = styled('span')`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-variant-numeric: tabular-nums;
 `
 
 const ChartContainer = styled('div')`

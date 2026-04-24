@@ -116,6 +116,7 @@ const PanelTitle = styled('h2')`
   font-size: 1.25rem;
   flex: 1;
   min-width: 0;
+  text-wrap: balance;
 `
 
 const CollapseArrow = styled('span')<{ collapsed: boolean }>`

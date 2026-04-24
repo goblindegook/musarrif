@@ -129,25 +129,22 @@ export function Home() {
 
       <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
         <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
-          {FORMS.map((form) => {
-            const isActive = selectedFormTab === form
-            return (
-              <TabButton
-                key={form}
-                id={`form-tab-${form}`}
-                role="tab"
-                type="button"
-                aria-selected={isActive}
-                aria-controls={`form-panel-${form}`}
-                size="sm"
-                fluid
-                active={isActive}
-                onClick={() => setSelectedFormTab(form)}
-              >
-                {FORM_LABELS[form - 1]}
-              </TabButton>
-            )
-          })}
+          {FORMS.map((form) => (
+            <TabButton
+              key={form}
+              id={`form-tab-${form}`}
+              role="tab"
+              type="button"
+              aria-selected={selectedFormTab === form}
+              aria-controls={`form-panel-${form}`}
+              size="sm"
+              fluid
+              active={selectedFormTab === form}
+              onClick={() => setSelectedFormTab(form)}
+            >
+              {FORM_LABELS[form - 1]}
+            </TabButton>
+          ))}
         </TabBar>
         <TabPanel
           role="tabpanel"

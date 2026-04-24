@@ -97,6 +97,7 @@ const ModalTitle = styled('h2')`
   font-weight: 700;
   font-size: 1.5rem;
   color: var(--color-text-primary);
+  text-wrap: balance;
 `
 
 const Content = styled('div')`

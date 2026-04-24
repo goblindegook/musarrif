@@ -69,7 +69,7 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
     color: var(--color-text-emphasis);
     background: var(--color-bg-accent);
     border-color: var(--color-accent);
-    transform: translateY(1px);
+    transform: scale(0.96);
     box-shadow: var(--shadow-interactive-active);
   }
 
