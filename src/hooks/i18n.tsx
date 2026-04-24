@@ -55,10 +55,6 @@ const TRANSLATION_PROMISES: Partial<Record<Language, Promise<Translation>>> = {}
 
 export const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((id) => ({ id, label: LANGUAGE_LABELS[id] }))
 
-export function getEnglishVerbTranslation(verbId: string): string | undefined {
-  return EN_TRANSLATION.verbs?.[verbId]
-}
-
 export function I18nProvider({ children }: { children: ComponentChildren }) {
   const [storedLanguage, setStoredLanguage] = useLocalStorage<string>('language', detectBrowserLanguage())
   const lang: Language = isSupported(storedLanguage) ? storedLanguage : detectBrowserLanguage()

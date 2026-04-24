@@ -2,7 +2,7 @@ import { styled } from 'goober'
 import { Fragment } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../../hooks/favourites'
-import { getEnglishVerbTranslation, useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/i18n'
 import { useRecent } from '../../hooks/recent'
 import { useRouting } from '../../hooks/routing'
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
@@ -106,18 +106,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     return routeVerb ? 'build' : 'search'
   })
 
-  const translateVerb = useCallback(
-    (verb: DisplayVerb) => {
-      if (lang === 'ar') {
-        const englishTranslation = getEnglishVerbTranslation(verb.id)
-        return englishTranslation ? englishTranslation : '—'
-      }
-      const translation = t(verb.id)
-      return translation !== verb.id ? translation : '—'
-    },
-    [lang, t],
-  )
-
   const formatArabic = useMemo(
     () => (value: string | null) => applyDiacriticsPreference(value ?? '', diacriticsPreference),
     [diacriticsPreference],
@@ -184,12 +172,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     (nextMood: Mood) => navigateTo(['verbs', verbId, voice, 'present', nextMood]),
     [navigateTo, voice, verbId],
   )
-
-  const verbTranslation = useMemo(() => {
-    if (!selectedVerb || lang === 'ar') return undefined
-    const result = translateVerb(selectedVerb)
-    return result !== '—' ? result : undefined
-  }, [selectedVerb, lang, translateVerb])
 
   const availableParadigms = useMemo(() => (selectedVerb ? getAvailableParadigms(selectedVerb) : []), [selectedVerb])
   const masdar = useMemo(
@@ -306,13 +288,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
       {selectedVerb && (
         <Stack area="verb">
           <VerbHeaderPanel
-            title={formatArabic(selectedVerb.label)}
-            synthetic={selectedVerb.synthetic}
-            subtitle={verbTranslation}
-            subtitleDir="ltr"
-            subtitleLang={lang}
-            dir="rtl"
-            lang="ar"
+            verb={selectedVerb}
             actions={
               <>
                 <ShareButton />

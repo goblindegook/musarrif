@@ -1,42 +1,49 @@
-import { render, screen } from '@testing-library/preact'
+import { cleanup, render, screen } from '@testing-library/preact'
 import { describe, expect, test } from 'vitest'
-import { VerbHeaderPanel } from './VerbHeaderPanel'
+import { I18nProvider } from '../../hooks/i18n'
+import { getVerb, synthesizeVerb } from '../../paradigms/verbs'
+import { VerbHeaderPanel, type VerbHeaderPanelProps } from './VerbHeaderPanel'
+
+const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
+  cleanup()
+  window.history.replaceState({}, '', '/')
+  render(
+    <I18nProvider>
+      <VerbHeaderPanel verb={verb} actions={actions}>
+        {children}
+      </VerbHeaderPanel>
+    </I18nProvider>,
+  )
+}
 
 describe('VerbHeaderPanel', () => {
-  test('renders title, subtitle, actions, and content', () => {
-    render(
-      <VerbHeaderPanel
-        title="كَتَبَ"
-        subtitle="to write"
-        subtitleDir="ltr"
-        subtitleLang="en"
-        actions={<button type="button">Share</button>}
-      >
-        <p>Details</p>
-      </VerbHeaderPanel>,
-    )
+  test('renders verb, translation, actions, and content', () => {
+    renderVerbHeaderPanel({
+      verb: getVerb('كتب', 1),
+      actions: <button type="button">Share</button>,
+      children: <p>Details</p>,
+    })
 
     expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
-    expect(screen.getByText('to write')).toBeInTheDocument()
+    const subtitle = screen.getByText('to write')
+    expect(subtitle).toHaveAttribute('dir', 'ltr')
+    expect(subtitle).toHaveAttribute('lang', 'en')
     expect(screen.getByText('Share')).toBeInTheDocument()
     expect(screen.getByText('Details')).toBeInTheDocument()
   })
 
   test('does not show asterisk for corpus verb', () => {
-    render(<VerbHeaderPanel title="كَتَبَ" />)
+    renderVerbHeaderPanel({ verb: getVerb('كتب', 1) })
     expect(screen.getByRole('heading', { level: 2 }).textContent).not.toContain('*')
   })
 
-  test('prepends asterisk to title for synthetic verb', () => {
-    render(<VerbHeaderPanel title="كَتَبَ" synthetic />)
+  test('prepends asterisk to verb for synthetic verb', () => {
+    renderVerbHeaderPanel({ verb: synthesizeVerb('كتب', 9) })
     expect(screen.getByRole('heading', { level: 2 }).textContent).toContain('*')
   })
 
-  test('applies subtitle language metadata', () => {
-    render(<VerbHeaderPanel title="كَتَبَ" subtitle="to write" subtitleDir="ltr" subtitleLang="en" />)
-
-    const subtitle = screen.getByText('to write')
-    expect(subtitle).toHaveAttribute('dir', 'ltr')
-    expect(subtitle).toHaveAttribute('lang', 'en')
+  test('hides translation for synthetic verb', () => {
+    renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu') })
+    expect(screen.queryByText('to do')).not.toBeInTheDocument()
   })
 })

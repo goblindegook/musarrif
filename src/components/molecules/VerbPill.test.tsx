@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
-import { buildVerbFromId, getVerbById } from '../../paradigms/verbs'
+import { getVerbById, synthesizeVerb } from '../../paradigms/verbs'
 import { VerbPill } from '../molecules/VerbPill'
 
 afterEach(() => {
@@ -20,14 +20,14 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 
 describe('VerbPill', () => {
   describe('translation', () => {
-    test('shows translation when verb has one', () => {
+    test('shows translation when corpus verb has one', () => {
       const verb = getVerbById('ktb-1')!
       render(<VerbPill verb={verb} />, { wrapper: Wrapper })
       expect(screen.getByText('to write')).toBeInTheDocument()
     })
 
-    test('shows dash when verb has no translation', () => {
-      const verb = buildVerbFromId('xyz-2')!
+    test('shows dash for synthetic verb even when translation key exists', () => {
+      const verb = synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu')
       render(<VerbPill verb={verb} />, { wrapper: Wrapper })
       expect(screen.getByText('—')).toBeInTheDocument()
     })
@@ -41,7 +41,7 @@ describe('VerbPill', () => {
     })
 
     test('shows asterisk for synthetic verb', () => {
-      const verb = buildVerbFromId('xyz-2')!
+      const verb = synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu')
       render(<VerbPill verb={verb} />, { wrapper: Wrapper })
       expect(screen.getByText('*')).toBeInTheDocument()
     })

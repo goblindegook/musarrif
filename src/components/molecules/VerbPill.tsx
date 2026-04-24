@@ -22,6 +22,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
   const translateVerb = useCallback(
     (candidate: DisplayVerb) => {
       if (lang === 'ar') return ''
+      if (candidate.synthetic) return '—'
       const translation = t(candidate.id)
       return translation === candidate.id ? '—' : translation
     },

@@ -1,48 +1,51 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
+import { useMemo } from 'preact/hooks'
+import { useI18n } from '../../hooks/i18n'
+import { applyDiacriticsPreference } from '../../paradigms/letters'
+import type { DisplayVerb } from '../../paradigms/verbs'
 import { PanelContainer } from '../molecules/Panel'
 
-interface VerbHeaderPanelProps {
-  readonly title: string
-  readonly synthetic?: boolean
-  readonly subtitle?: string
-  readonly subtitleDir?: 'auto' | 'rtl' | 'ltr'
-  readonly subtitleLang?: string
-  readonly dir?: 'auto' | 'rtl' | 'ltr'
-  readonly lang?: string
+export interface VerbHeaderPanelProps {
+  readonly verb: DisplayVerb
   readonly actions?: ComponentChildren
   readonly children?: ComponentChildren
 }
 
-export const VerbHeaderPanel = ({
-  title,
-  synthetic,
-  subtitle,
-  subtitleDir,
-  subtitleLang,
-  dir,
-  lang,
-  actions,
-  children,
-}: VerbHeaderPanelProps) => (
-  <PanelContainer>
-    <PanelTitleRow dir={dir} lang={lang}>
-      <PanelTitleGroup>
-        <PanelTitle>
-          {synthetic && <SyntheticMarker aria-label="synthetic form">* </SyntheticMarker>}
-          {title}
-        </PanelTitle>
-        {subtitle && (
-          <PanelSubtitle dir={subtitleDir} lang={subtitleLang}>
-            {subtitle}
-          </PanelSubtitle>
-        )}
-      </PanelTitleGroup>
-      {actions}
-    </PanelTitleRow>
-    <PanelBody>{children}</PanelBody>
-  </PanelContainer>
-)
+export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
+  const { lang, dir, t, diacriticsPreference } = useI18n()
+
+  const formatArabic = useMemo(
+    () => (value: string | null) => applyDiacriticsPreference(value ?? '', diacriticsPreference),
+    [diacriticsPreference],
+  )
+
+  const translation = useMemo(() => {
+    if (verb.synthetic || lang === 'ar') return undefined
+    const translation = t(verb.id)
+    return translation !== verb.id ? translation : '—'
+  }, [verb, lang])
+
+  return (
+    <PanelContainer>
+      <PanelTitleRow dir="rtl" lang="ar">
+        <PanelTitleGroup>
+          <Verb>
+            {verb.synthetic && <SyntheticMarker aria-label="synthetic form">* </SyntheticMarker>}
+            {formatArabic(verb.label)}
+          </Verb>
+          {translation && (
+            <Translation dir={dir} lang={lang}>
+              {translation}
+            </Translation>
+          )}
+        </PanelTitleGroup>
+        {actions}
+      </PanelTitleRow>
+      <PanelBody>{children}</PanelBody>
+    </PanelContainer>
+  )
+}
 
 const PanelTitleRow = styled('div')`
   display: flex;
@@ -60,14 +63,14 @@ const PanelTitleGroup = styled('div')`
   gap: 0.1rem;
 `
 
-const PanelTitle = styled('h2')`
+const Verb = styled('h2')`
   margin: 0;
   font-size: 2rem;
   font-weight: 600;
   min-width: 0;
 `
 
-const PanelSubtitle = styled('p')`
+const Translation = styled('p')`
   margin: 0;
   font-size: 0.875rem;
   font-weight: 400;
