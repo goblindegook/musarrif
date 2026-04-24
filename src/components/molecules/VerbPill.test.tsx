@@ -33,6 +33,20 @@ describe('VerbPill', () => {
     })
   })
 
+  describe('synthetic marker', () => {
+    test('does not show asterisk for corpus verb', () => {
+      const verb = getVerbById('ktb-1')!
+      render(<VerbPill verb={verb} />, { wrapper: Wrapper })
+      expect(screen.queryByText('*')).not.toBeInTheDocument()
+    })
+
+    test('shows asterisk for synthetic verb', () => {
+      const verb = buildVerbFromId('xyz-2')!
+      render(<VerbPill verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText('*')).toBeInTheDocument()
+    })
+  })
+
   test('shows q suffix for quadriliteral forms', () => {
     const verb = getVerbById('brhn-1')!
     render(<VerbPill verb={verb} />, { wrapper: Wrapper })

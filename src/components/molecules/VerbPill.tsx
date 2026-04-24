@@ -32,12 +32,19 @@ export function VerbPill({ verb, className }: VerbPillProps) {
     <VerbPillLink
       href={buildUrl(['verbs', verb.id])}
       className={className}
-      aria-label={[formatArabic(verb.label), formLabel, t('meta.form'), translateVerb(verb)]
+      aria-label={[
+        verb.synthetic ? '*' : null,
+        formatArabic(verb.label),
+        formLabel,
+        t('meta.form'),
+        translateVerb(verb),
+      ]
         .filter(Boolean)
         .join(' - ')}
     >
       <InlineRow>
         <span dir="rtl" lang="ar">
+          {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
           {formatArabic(verb.label)}
         </span>
         <small>{formLabel}</small>
@@ -94,6 +101,14 @@ const VerbPillLink = styled('a')`
   &:hover small {
     color: var(--color-text-primary);
   }
+`
+
+const SyntheticMarker = styled('span')`
+  color: var(--color-text-muted);
+  font-size: 0.75em;
+  font-weight: 400;
+  align-self: flex-start;
+  line-height: 1.8;
 `
 
 const InlineRow = styled('div')`

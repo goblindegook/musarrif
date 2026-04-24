@@ -58,7 +58,7 @@ export type NonFormIVerb = {
 
 export type Verb = FormIVerb | NonFormIVerb
 
-type VerbBase<T extends Verb> = T & { id: string; label: string; rootId: string }
+type VerbBase<T extends Verb> = T & { id: string; label: string; rootId: string; synthetic?: true }
 
 export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<FormIVerb> : VerbBase<NonFormIVerb>
 
@@ -117,7 +117,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
     form === 1 ? { root, form, formPattern: pattern, masdarPatterns: matchingFormI?.masdarPatterns } : { root, form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
-  return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId }
+  return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId, synthetic: true }
 }
 
 export function getVerb(root: string, form: VerbForm): DisplayVerb {

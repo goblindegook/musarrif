@@ -307,6 +307,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         <Stack area="verb">
           <VerbHeaderPanel
             title={formatArabic(selectedVerb.label)}
+            synthetic={selectedVerb.synthetic}
             subtitle={verbTranslation}
             subtitleDir="ltr"
             subtitleLang={lang}

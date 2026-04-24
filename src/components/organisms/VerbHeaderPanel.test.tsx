@@ -22,6 +22,16 @@ describe('VerbHeaderPanel', () => {
     expect(screen.getByText('Details')).toBeInTheDocument()
   })
 
+  test('does not show asterisk for corpus verb', () => {
+    render(<VerbHeaderPanel title="كَتَبَ" />)
+    expect(screen.getByRole('heading', { level: 2 }).textContent).not.toContain('*')
+  })
+
+  test('prepends asterisk to title for synthetic verb', () => {
+    render(<VerbHeaderPanel title="كَتَبَ" synthetic />)
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toContain('*')
+  })
+
   test('applies subtitle language metadata', () => {
     render(<VerbHeaderPanel title="كَتَبَ" subtitle="to write" subtitleDir="ltr" subtitleLang="en" />)
 

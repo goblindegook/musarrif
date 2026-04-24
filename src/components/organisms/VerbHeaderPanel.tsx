@@ -4,6 +4,7 @@ import { PanelContainer } from '../molecules/Panel'
 
 interface VerbHeaderPanelProps {
   readonly title: string
+  readonly synthetic?: boolean
   readonly subtitle?: string
   readonly subtitleDir?: 'auto' | 'rtl' | 'ltr'
   readonly subtitleLang?: string
@@ -15,6 +16,7 @@ interface VerbHeaderPanelProps {
 
 export const VerbHeaderPanel = ({
   title,
+  synthetic,
   subtitle,
   subtitleDir,
   subtitleLang,
@@ -26,7 +28,10 @@ export const VerbHeaderPanel = ({
   <PanelContainer>
     <PanelTitleRow dir={dir} lang={lang}>
       <PanelTitleGroup>
-        <PanelTitle>{title}</PanelTitle>
+        <PanelTitle>
+          {synthetic && <SyntheticMarker aria-label="synthetic form">* </SyntheticMarker>}
+          {title}
+        </PanelTitle>
         {subtitle && (
           <PanelSubtitle dir={subtitleDir} lang={subtitleLang}>
             {subtitle}
@@ -72,4 +77,13 @@ const PanelSubtitle = styled('p')`
 
 const PanelBody = styled('div')`
   display: contents;
+`
+
+const SyntheticMarker = styled('span')`
+  color: var(--color-text-muted);
+  font-size: 0.75em;
+  font-weight: 400;
+  vertical-align: super;
+  direction: ltr;
+  unicode-bidi: embed;
 `

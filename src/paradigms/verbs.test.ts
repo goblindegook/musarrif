@@ -2,6 +2,20 @@ import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
 import { formatFormLabel, getAvailableParadigms, getVerb, synthesizeVerb, type VerbForm, verbs } from './verbs'
 
+describe('synthesizeVerb', () => {
+  test('marks synthesized Form I verb as synthetic', () => {
+    expect(synthesizeVerb('كتب', 1, 'fa3ala-yaf3ulu').synthetic).toBe(true)
+  })
+
+  test('marks synthesized Form II–X verb as synthetic', () => {
+    expect(synthesizeVerb('كتب', 2).synthetic).toBe(true)
+  })
+
+  test('corpus verbs are not synthetic', () => {
+    expect(getVerb('كتب', 1).synthetic).toBeUndefined()
+  })
+})
+
 describe('buildSyntheticVerb', () => {
   test('Form I', () => {
     const verb = synthesizeVerb('كتب', 1, 'fa3ala-yaf3ulu')
@@ -13,6 +27,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',
+      synthetic: true,
     })
   })
 
@@ -24,6 +39,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَّبَ',
       root: 'كتب',
       rootId: 'ktb',
+      synthetic: true,
     })
   })
 })
