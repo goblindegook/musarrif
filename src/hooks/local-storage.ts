@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionProfile, DimensionStore } from '../exercises/dimensions'
-import { enforcePrerequisites } from '../exercises/dimensions'
+import { enforcePrerequisites, isValidDimensionProfile } from '../exercises/dimensions'
 import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import { INITIAL_DIMENSION_STORE } from './dimension-store'
@@ -97,27 +97,9 @@ export function importUserData(raw: string): boolean {
   const srs = sanitizeSrsStore(unboundedSrs)
 
   // Validate dimensions profile; always reset windows on import
-  const rawDimensions = payload.dimensions
-  let dimensionsProfile = INITIAL_DIMENSION_STORE.profile
-  if (
-    rawDimensions != null &&
-    typeof rawDimensions === 'object' &&
-    'profile' in rawDimensions &&
-    rawDimensions.profile != null &&
-    typeof rawDimensions.profile === 'object'
-  ) {
-    const p = rawDimensions.profile as Record<string, unknown>
-    if (
-      [0, 1, 2, 3, 4].includes(p.tenses as number) &&
-      [0, 1, 2, 3].includes(p.pronouns as number) &&
-      [0, 1, 2].includes(p.diacritics as number) &&
-      [0, 1, 2, 3].includes(p.forms as number) &&
-      [0, 1, 2, 3].includes(p.rootTypes as number) &&
-      [0, 1, 2].includes(p.nominals as number)
-    ) {
-      dimensionsProfile = p as DimensionProfile
-    }
-  }
+  const dimensionsProfile = isValidDimensionProfile(payload.dimensions)
+    ? payload.dimensions.profile
+    : INITIAL_DIMENSION_STORE.profile
 
   const storage = window.localStorage
   storage.setItem('conjugator:language', JSON.stringify(language))

@@ -215,6 +215,22 @@ const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
   nominals: NOMINAL_UNLOCK_KEYS.length - 1,
 }
 
+export function isValidDimensionProfile(raw: unknown): raw is { profile: DimensionProfile } {
+  if (
+    raw == null ||
+    typeof raw !== 'object' ||
+    !('profile' in raw) ||
+    raw.profile == null ||
+    typeof raw.profile !== 'object'
+  )
+    return false
+  const profile = raw.profile as Record<string, unknown>
+  return Object.entries(MAX_LEVELS).every(
+    ([dim, max]) =>
+      typeof profile[dim] === 'number' && Number.isInteger(profile[dim]) && profile[dim] >= 0 && profile[dim] <= max,
+  )
+}
+
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
   if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0

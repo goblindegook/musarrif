@@ -99,6 +99,39 @@ describe('importUserData', () => {
     expect(stored.profile.forms).toBe(1)
   })
 
+  test('imports dimension profile with max tenses level (5)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 3, forms: 9, rootTypes: 5 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.tenses).toBe(5)
+  })
+
+  test('imports dimension profile with high forms level (9)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 9 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.forms).toBe(9)
+  })
+
+  test('imports dimension profile with max rootTypes level (5)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, rootTypes: 5, pronouns: 1 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.rootTypes).toBe(5)
+  })
+
   test('resets windows to empty on import', () => {
     const profile = INITIAL_DIMENSION_PROFILE
     const payload = JSON.stringify({
