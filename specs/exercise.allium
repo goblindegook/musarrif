@@ -40,23 +40,29 @@
 --     Gated: diacritics may advance to level 2 only when all other dimensions
 --     are at their maximum level.
 --
---   forms (0–3)
+--   forms (0–9)
 --     0: Form I only
---     1: + Forms II–III
---     2: + Forms IV–VI
---     3: + Forms VII–X
+--     1: + Form II
+--     2: + Form III
+--     3: + Form IV
+--     4: + Form V
+--     5: + Form VI
+--     6: + Form VII
+--     7: + Form VIII
+--     8: + Form IX
+--     9: + Form X
 --
 --   rootTypes (0–5): sound → doubled → hamzated → assimilated → hollow → defective
 --
 --   nominals (0–2)
 --     0: nominal exercises disabled
 --     1: active and passive participle exercises enabled (requires tenses ≥ 2 and pronouns ≥ 2)
---     2: masdar exercises enabled (additionally requires forms ≥ 3)
+--     2: masdar exercises enabled (additionally requires forms ≥ 9)
 value DimensionProfile {
     tenses:    Integer    -- 0–5
     pronouns:  Integer    -- 0–3
     diacritics: Integer   -- 0–2
-    forms:     Integer    -- 0–3
+    forms:     Integer    -- 0–9
     rootTypes: Integer    -- 0–5
     nominals:  Integer    -- 0–2
 }
@@ -79,23 +85,26 @@ invariant ParticipleNominalsRequiresPrerequisites {
 
 invariant MasdarNominalsRequiresPrerequisites {
     for s in DimensionStore:
-        s.profile.nominals >= 2 implies s.profile.forms >= 3
+        s.profile.nominals >= 2 implies s.profile.forms >= 9
 }
 
 invariant DiacriticsRequiresMaxOtherDimensions {
     for s in DimensionStore:
         s.profile.diacritics >= 2 implies
             s.profile.tenses = 5 and s.profile.pronouns = 3
-            and s.profile.forms = 3 and s.profile.rootTypes = 5
+            and s.profile.forms = 9 and s.profile.rootTypes = 5
             and s.profile.nominals = 2
 }
 
--- Tenses and forms dimensions may only advance once the learner has reached
--- pronoun level 1 (beyond 3ms-only). This prevents advancing on tense/form
--- complexity before basic pronoun variation is established.
-invariant TensesAndFormsRequirePronounLevel1 {
+-- Tenses, forms, and rootTypes may only advance once the learner has reached
+-- pronoun level 1 (beyond 3ms-only). The rationale: exposure to at least singular
+-- and plural pronouns is expected before introducing tense complexity, multi-form
+-- paradigms, or irregular root types.
+-- Enforced via promotion gate, not enforcePrerequisites; a profile cannot reach
+-- these levels through normal exercise flow without pronouns >= 1.
+invariant ComplexDimensionsRequirePronounLevel1 {
     for s in DimensionStore:
-        (s.profile.tenses > 0 or s.profile.forms > 0)
+        (s.profile.tenses > 0 or s.profile.forms > 0 or s.profile.rootTypes > 0)
             implies s.profile.pronouns >= 1
 }
 
