@@ -144,7 +144,7 @@ describe('passive participle', () => {
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each([['ءول', 'مَأُول']])('%s', (root, expected) => {
+      test.each([['ءول', 'مَؤُول']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })

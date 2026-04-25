@@ -136,8 +136,6 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
       const dominant = vowelStrength(before) > vowelStrength(after) ? before : after
       if (dominant === FATHA) return ALIF_HAMZA
       if (dominant === KASRA) return isFirst ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
-      // Avoid waw hamza before a long-waw vowel, seat on alif if fatha:
-      if (dominant === DAMMA && before === FATHA && tokens.at(index + 2) === WAW) return ALIF_HAMZA
       if (dominant === DAMMA) return isFirst ? ALIF_HAMZA : HAMZA_ON_WAW
       return HAMZA
     }
