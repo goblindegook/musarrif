@@ -9,14 +9,12 @@ import {
   finalize,
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
-  isHamzatedLetter,
-  isWeakLetter,
   KASRA,
   longVowel,
   NOON,
+  Root,
   SHADDA,
   SUKOON,
-  seatHamza,
   WAW,
   YEH,
 } from '../letters'
@@ -25,13 +23,8 @@ import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
-  const letters = Array.from(verb.root)
+  const letters = Root(verb.root)
   const [c1, c2, c3] = letters
-  const seatedC1 = seatHamza(c1, FATHA)
-  const isInitialWeak = isWeakLetter(c1)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
 
   return mapRecord(
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
@@ -47,25 +40,25 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
 
-          if (isInitialWeak) {
-            if (stem.at(1) === FATHA && isFinalWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
+          if (c1.isWeak) {
+            if (stem.at(1) === FATHA && c3.isWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
 
-            if (c2 === c3 && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
+            if (c2.equals(c3) && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
-            if (seatedC1 === YEH) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+            if (c1.is(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
           }
 
-          if (isInitialHamza) {
+          if (c1.isHamza) {
             const initialHamzatedStem = Array.from(jussive).slice(4)
 
             if (verb.contractedImperative) return initialHamzatedStem
 
-            if (isFinalWeak) {
-              const glide = c2 === NOON || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
+            if (c3.isWeak) {
+              const glide = c2.is(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
               return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, c2, glide, ...initialHamzatedStem.slice(2)]
             }
 
-            if (c2 === c3) {
+            if (c2.equals(c3)) {
               const seatedC1 = isPatternI ? [ALIF_HAMZA_BELOW, KASRA] : [ALIF_HAMZA, DAMMA]
               const prefix = [...seatedC1, c2, SHADDA]
 
@@ -76,16 +69,16 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
               return [ALIF, ...patternLongVowel, ...initialHamzatedStem]
             }
 
-            if (isMiddleWeak) return [ALIF_HAMZA, DAMMA, ...initialHamzatedStem]
+            if (c2.isWeak) return [ALIF_HAMZA, DAMMA, ...initialHamzatedStem]
 
             if (isPatternU) return [ALIF, DAMMA, HAMZA_ON_WAW, SUKOON, ...initialHamzatedStem]
 
             return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
           }
 
-          if (c3 === WAW && isPatternU && pronounId === '2d') return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
+          if (c3.is(WAW) && isPatternU && pronounId === '2d') return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
 
-          if (c3 === WAW && stem.at(-1) === ALIF && !isPatternU) return stem
+          if (c3.is(WAW) && stem.at(-1) === ALIF && !isPatternU) return stem
 
           if (stem.at(1) === SUKOON) return [ALIF, isPatternU ? DAMMA : KASRA, ...stem]
 
@@ -94,14 +87,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         case 2:
         case 3: {
-          if (isInitialHamza) return [ALIF_HAMZA, ...stem.slice(1)]
-          if (isFinalWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
+          if (c1.isHamza) return [ALIF_HAMZA, ...stem.slice(1)]
+          if (c3.isWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 4: {
-          if (isInitialHamza) return [ALIF_HAMZA, FATHA, ALIF, ...stem.slice(2)]
-          if (isFinalWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
+          if (c1.isHamza) return [ALIF_HAMZA, FATHA, ALIF, ...stem.slice(2)]
+          if (c3.isWeak && pronounId === '2d') return [ALIF_HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
           return [ALIF_HAMZA, FATHA, ...stem]
         }
 
@@ -114,8 +107,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         case 8:
         case 9:
         case 10: {
-          if (isInitialHamza && c2 === c3) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, ...stem.slice(2)]
-          if (isFinalWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
+          if (c1.isHamza && c2.equals(c3)) return [ALIF, KASRA, HAMZA_ON_YEH, SUKOON, ...stem.slice(2)]
+          if (c3.isWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
           return [ALIF, KASRA, ...stem]
         }
       }
