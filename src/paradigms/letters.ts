@@ -44,7 +44,7 @@ type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 // TODO: strictly type Letter
 type Letter = string
 
-class RootLetter {
+export class RootLetter {
   letter: Letter
   isHamza: boolean
   isWeak: boolean
