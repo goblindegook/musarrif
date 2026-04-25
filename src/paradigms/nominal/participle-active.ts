@@ -78,33 +78,33 @@ export function deriveActiveParticiple(verb: Verb): string {
 
         if (c2.equals(c3)) return [c1, FATHA, ALIF, c2, SUKOON, c3]
 
-        if (c3.isWeak()) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
-        if (c2.isWeak() && c3.isHamza()) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
+        if (c2.isWeak && c3.isHamza) return [c1, FATHA, ALIF, HAMZA, TANWEEN_KASRA]
 
-        if (c2.isWeak()) return [c1, FATHA, ALIF, isFormIPastVowel(verb, KASRA) ? c2 : HAMZA_ON_YEH, KASRA, c3]
+        if (c2.isWeak) return [c1, FATHA, ALIF, isFormIPastVowel(verb, KASRA) ? c2 : HAMZA_ON_YEH, KASRA, c3]
 
         // FIXME: This makes no sense.
         if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
           return [c1, FATHA, ALIF, c2, KASRA, c3]
 
-        if (c3.isHamza() && isFormIPastVowel(verb, DAMMA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, HAMZA]
+        if (c3.isHamza && isFormIPastVowel(verb, DAMMA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, HAMZA]
 
-        if (c1.isHamza() && isFormIPastVowel(verb, DAMMA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
+        if (c1.isHamza && isFormIPastVowel(verb, DAMMA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
 
-        if (!c1.isWeak() && isFormIPastVowel(verb, KASRA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
+        if (!c1.isWeak && isFormIPastVowel(verb, KASRA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, c3]
 
         return [c1, FATHA, ALIF, c2, KASRA, c3]
       }
 
       case 2: {
-        if (c3.isWeak()) return [...stem, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, TANWEEN_KASRA]
 
         return [...stem, KASRA, c3]
       }
 
       case 3: {
-        if (c3.isWeak()) return [...stem, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, c2, TANWEEN_KASRA]
 
         if (c2.equals(c3)) return [...stem, c2, SHADDA]
 
@@ -112,11 +112,11 @@ export function deriveActiveParticiple(verb: Verb): string {
       }
 
       case 4: {
-        if (c2.isHamza()) return [...stem, TANWEEN_KASRA]
+        if (c2.isHamza) return [...stem, TANWEEN_KASRA]
 
-        if (c3.isWeak()) return [...stem, SUKOON, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, SUKOON, c2, TANWEEN_KASRA]
 
-        if (c2.isWeak()) return [...stem, KASRA, YEH, SUKOON, c3]
+        if (c2.isWeak) return [...stem, KASRA, YEH, SUKOON, c3]
 
         if (c2.equals(c3)) return [...stem, KASRA, c2, SUKOON, c3]
 
@@ -124,9 +124,9 @@ export function deriveActiveParticiple(verb: Verb): string {
       }
 
       case 5: {
-        if (c3.isWeak() && c1.isWeak()) return [...stem, c2, TANWEEN_KASRA]
+        if (c3.isWeak && c1.isWeak) return [...stem, c2, TANWEEN_KASRA]
 
-        if (c3.isWeak()) return [...stem, c2, SHADDA, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, c2, SHADDA, TANWEEN_KASRA]
 
         return [...stem, c2, SHADDA, KASRA, c3]
       }
@@ -134,9 +134,9 @@ export function deriveActiveParticiple(verb: Verb): string {
       case 6: {
         if (c2.equals(c3)) return [...stem, c2, SUKOON, c3]
 
-        if (c2.isWeak() && c3.isHamza()) return [...stem, c3, TANWEEN_KASRA]
+        if (c2.isWeak && c3.isHamza) return [...stem, c3, TANWEEN_KASRA]
 
-        if (c3.isWeak()) return [...stem, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, c2, TANWEEN_KASRA]
 
         return [...stem, c2, KASRA, c3]
       }
@@ -144,15 +144,15 @@ export function deriveActiveParticiple(verb: Verb): string {
       case 7: {
         if (c2.equals(c3)) return [...stem, c2, SUKOON, c3]
 
-        if (c3.isWeak()) return [...stem, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, c2, TANWEEN_KASRA]
 
-        if (c2.isWeak()) return [...stem, ALIF, c3]
+        if (c2.isWeak) return [...stem, ALIF, c3]
 
         return [...stem, c2, KASRA, c3]
       }
 
       case 8: {
-        const isInitialWeakOrHamza = c1.isWeak() || c1.isHamza()
+        const isInitialWeakOrHamza = c1.isWeak || c1.isHamza
 
         const infix = resolveFormVIIIInfixConsonant(c1.letter)
 
@@ -160,13 +160,13 @@ export function deriveActiveParticiple(verb: Verb): string {
 
         if (c2.equals(c3)) return [...prefix, c2, SUKOON, c3]
 
-        if (isInitialWeakOrHamza && c3.isWeak()) return [MEEM, DAMMA, infix, SHADDA, FATHA, c2, TANWEEN_KASRA]
+        if (isInitialWeakOrHamza && c3.isWeak) return [MEEM, DAMMA, infix, SHADDA, FATHA, c2, TANWEEN_KASRA]
 
         if (isInitialWeakOrHamza) return [MEEM, DAMMA, infix, SHADDA, FATHA, c2, KASRA, c3]
 
-        if (c3.isWeak()) return [...prefix, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        if (c2.is(YEH) || (c2.isWeak() && infix !== DAL)) return [...prefix, ALIF, c3]
+        if (c2.is(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, ALIF, c3]
 
         return [...prefix, c2, KASRA, c3]
       }
@@ -176,9 +176,9 @@ export function deriveActiveParticiple(verb: Verb): string {
       }
 
       case 10: {
-        if (c3.isWeak()) return [...stem, SUKOON, c2, TANWEEN_KASRA]
+        if (c3.isWeak) return [...stem, SUKOON, c2, TANWEEN_KASRA]
 
-        if (c2.isWeak()) return [...stem, KASRA, YEH, c3]
+        if (c2.isWeak) return [...stem, KASRA, YEH, c3]
 
         if (c2.equals(c3)) return [...stem, KASRA, c2, SHADDA]
 

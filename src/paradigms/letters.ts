@@ -46,24 +46,21 @@ type Letter = string
 
 class RootLetter {
   letter: Letter
+  isHamza: boolean
+  isWeak: boolean
+
   constructor(letter: Letter) {
     this.letter = letter
-  }
-
-  equals(other: RootLetter): boolean {
-    return this.is(other.letter)
+    this.isHamza = letter === HAMZA
+    this.isWeak = isWeakLetter(letter)
   }
 
   is(letter: string): boolean {
     return this.letter === letter
   }
 
-  isHamza(): boolean {
-    return this.is(HAMZA)
-  }
-
-  isWeak(): boolean {
-    return isWeakLetter(this.letter)
+  equals(other: RootLetter): boolean {
+    return this.is(other.letter)
   }
 }
 
@@ -133,11 +130,14 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
     if (token instanceof RootLetter && token.letter === HAMZA) {
       const isFirst = index === 0
       const before = isFirst ? undefined : tokens.at(index - 1)
-      const after = index < tokens.length - 1 ? tokens.at(index + 1) : undefined
-      if (before === ALIF && after === FATHA) return token // avoids alif + alif hamza
+      const after = tokens.at(index + 1)
+      // Avoid alif + alif hamza, seat on the line:
+      if (before === ALIF && after === FATHA) return HAMZA
       const dominant = vowelStrength(before) > vowelStrength(after) ? before : after
       if (dominant === FATHA) return ALIF_HAMZA
       if (dominant === KASRA) return isFirst ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
+      // Avoid waw hamza before a long-waw vowel, seat on alif if fatha:
+      if (dominant === DAMMA && before === FATHA && tokens.at(index + 2) === WAW) return ALIF_HAMZA
       if (dominant === DAMMA) return isFirst ? ALIF_HAMZA : HAMZA_ON_WAW
       return HAMZA
     }
