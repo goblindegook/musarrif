@@ -6,6 +6,7 @@ import { ARABIC_PRONOUNS, type PronounId } from '../../paradigms/pronouns'
 import type { Mood, Tense, VerbTense, Voice } from '../../paradigms/tense'
 import type { DisplayVerb } from '../../paradigms/verbs'
 import { getAvailableParadigms } from '../../paradigms/verbs'
+import { keys } from '../../primitives/objects'
 import { CopyButton } from '../molecules/CopyButton'
 import { SpeechButton } from '../molecules/SpeechButton'
 import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
@@ -153,7 +154,7 @@ export function ConjugationTable({
           </SubTabBar>
           {tense === 'present' && (
             <SubTabBar role="tablist" aria-label={t('aria.selectMood')}>
-              {(Object.keys(MOOD_OPTIONS) as Mood[]).map((option) => (
+              {keys(MOOD_OPTIONS).map((option) => (
                 <TabButton
                   type="button"
                   key={option}

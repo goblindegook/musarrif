@@ -1,19 +1,15 @@
 import { styled } from 'goober'
 import type { HTMLAttributes } from 'preact'
+import { clamp } from '../../primitives/numbers'
 
 interface ProgressBarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   value: number
   max: number
 }
 
-function normalizeValue(value: number, max: number): number {
-  if (max <= 0) return 0
-  return Math.min(max, Math.max(0, value))
-}
-
 export function ProgressBar({ value, max, style, ...props }: ProgressBarProps) {
   const effectiveMax = max > 0 ? max : 1
-  const clampedValue = normalizeValue(value, effectiveMax)
+  const clampedValue = clamp(value, 0, effectiveMax)
   const clampedValuePercent = (clampedValue / effectiveMax) * 100
 
   return (

@@ -10,6 +10,8 @@ import {
   type VerbForm,
   verbs,
 } from '../paradigms/verbs'
+import { clamp } from '../primitives/numbers'
+import { keys } from '../primitives/objects'
 import type { CardConstraints } from './srs'
 import { getSrsRootType, type SrsRootType } from './srs'
 
@@ -33,13 +35,15 @@ export type DimensionProfile = {
 }
 export type DimensionKey = keyof DimensionProfile
 
+type DimensionWindows = Record<DimensionKey, boolean[]>
+
 export type DimensionStore = {
   profile: DimensionProfile
-  windows: Record<keyof DimensionProfile, boolean[]>
+  windows: DimensionWindows
 }
 
 export interface DimensionUnlock {
-  dimension: keyof DimensionProfile
+  dimension: DimensionKey
   items: readonly string[]
 }
 
@@ -127,7 +131,7 @@ const NOMINAL_UNLOCK_KEYS = [
   ['exercise.unlock.nominal.masdar'],
 ] as const
 
-const DIMENSION_UNLOCK_KEYS: Record<keyof DimensionProfile, readonly (readonly string[])[]> = {
+const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]> = {
   tenses: [
     [],
     ['exercise.unlock.tenseGroup.presentIndicative'],
@@ -195,7 +199,7 @@ export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): s
   return applyDiacriticsPreference(word, pref)
 }
 
-const WINDOW_SIZES: Record<keyof DimensionProfile, number> = {
+const WINDOW_SIZES: Record<DimensionKey, number> = {
   tenses: 20,
   pronouns: 20,
   diacritics: 50,
@@ -206,7 +210,7 @@ const WINDOW_SIZES: Record<keyof DimensionProfile, number> = {
 const PROMOTION_THRESHOLD = 0.8
 const DEMOTION_THRESHOLD = 0.4
 
-const MAX_LEVELS: Record<keyof DimensionProfile, number> = {
+const MAX_LEVELS: Record<DimensionKey, number> = {
   tenses: TENSE_POOLS.length - 1,
   pronouns: PRONOUN_POOLS.length - 1,
   diacritics: DIACRITICS_PREFERENCES.length - 1,
@@ -237,13 +241,11 @@ export function enforcePrerequisites(profile: DimensionProfile): DimensionProfil
   if (p.nominals >= 2 && p.forms < FORM_POOLS.length - 1) p.nominals = 1
   if (
     p.diacritics >= 2 &&
-    !(
-      p.tenses >= MAX_LEVELS.tenses &&
-      p.pronouns >= MAX_LEVELS.pronouns &&
-      p.forms >= MAX_LEVELS.forms &&
-      p.rootTypes >= MAX_LEVELS.rootTypes &&
-      p.nominals >= MAX_LEVELS.nominals
-    )
+    (p.tenses < MAX_LEVELS.tenses ||
+      p.pronouns < MAX_LEVELS.pronouns ||
+      p.forms < MAX_LEVELS.forms ||
+      p.rootTypes < MAX_LEVELS.rootTypes ||
+      p.nominals < MAX_LEVELS.nominals)
   ) {
     p.diacritics = 1
   }
@@ -265,37 +267,46 @@ export function recordDimensionAnswer(
 
 export function promoteDimensions(store: DimensionStore, allowPromotion = true): DimensionStore {
   const { profile, windows } = store
-  const nextProfile = { ...profile }
+  const nextProfile: DimensionProfile = { ...profile }
 
-  for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
+  for (const dimension of keys(profile)) {
     const w = windows[dimension]
-    const current = profile[dimension]
     const windowSize = WINDOW_SIZES[dimension]
     if (w.length < windowSize) continue
+
+    let nextLevel = profile[dimension]
     const accuracy = w.filter(Boolean).length / windowSize
-    const canPromote =
-      profile.pronouns >= 1 || !(dimension === 'tenses' || dimension === 'forms' || dimension === 'rootTypes')
-    if (allowPromotion && accuracy >= PROMOTION_THRESHOLD && current < MAX_LEVELS[dimension] && canPromote) {
-      ;(nextProfile as Record<string, number>)[dimension] = current + 1
-    } else if (accuracy <= DEMOTION_THRESHOLD && current > 0) {
-      ;(nextProfile as Record<string, number>)[dimension] = current - 1
-    }
+
+    if (allowPromotion && accuracy >= PROMOTION_THRESHOLD && canPromote(profile, dimension)) nextLevel += 1
+    else if (accuracy <= DEMOTION_THRESHOLD) nextLevel -= 1
+
+    ;(nextProfile as Record<string, number>)[dimension] = clamp(nextLevel, 0, MAX_LEVELS[dimension])
   }
 
+  const nextWindows: DimensionWindows = { ...windows }
   const enforced = enforcePrerequisites(nextProfile)
-
-  const nextWindows = { ...windows }
-  for (const dimension of Object.keys(profile) as (keyof DimensionProfile)[]) {
-    if (enforced[dimension] !== profile[dimension]) {
-      nextWindows[dimension] = []
-    }
+  for (const dimension of keys(profile)) {
+    if (enforced[dimension] !== profile[dimension]) nextWindows[dimension] = []
   }
+
   return { profile: enforced, windows: nextWindows }
+}
+
+function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension: T): boolean {
+  const level = profile[dimension]
+
+  // Do not unlock tenses, forms and root types before exposure to all singular pronouns:
+  if (['tenses', 'forms', 'rootTypes'].includes(dimension) && profile.pronouns < 1) return false
+
+  // Do not unlock passive verbs before exposure to all forms:
+  if (dimension === 'tenses' && level >= 4 && profile.forms < MAX_LEVELS.forms) return false
+
+  return true
 }
 
 export function getDimensionUnlocks(previous: DimensionProfile, next: DimensionProfile): DimensionUnlock[] {
   const unlocks: DimensionUnlock[] = []
-  for (const dimension of Object.keys(previous) as (keyof DimensionProfile)[]) {
+  for (const dimension of keys(previous)) {
     const current = previous[dimension]
     const target = next[dimension]
     if (target <= current) continue

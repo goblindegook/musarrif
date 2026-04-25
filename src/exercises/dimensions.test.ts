@@ -184,6 +184,10 @@ describe('enforcePrerequisites', () => {
     expect(result.tenses).toBe(2)
     expect(result.diacritics).toBe(1)
   })
+
+  test('keeps tenses at 5 even when forms < max', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 1, forms: 8 }).tenses).toBe(5)
+  })
 })
 
 describe('promoteDimensions', () => {
@@ -468,6 +472,24 @@ describe('promoteDimensions', () => {
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
     ).toBe(2)
+  })
+
+  test('tenses blocked at level 4 when forms are not all unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 8 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
+      }).profile.tenses,
+    ).toBe(4)
+  })
+
+  test('tenses promotes to level 5 when all forms are unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 9 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
+      }).profile.tenses,
+    ).toBe(5)
   })
 
   test('pronoun demotion does not re-lock unlocked tenses, forms, or root types', () => {

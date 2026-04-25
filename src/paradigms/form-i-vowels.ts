@@ -1,3 +1,4 @@
+import { keys } from '../primitives/objects'
 import { DAMMA, FATHA, KASRA, type Vowel } from './letters'
 import type { FormIVerb } from './verbs'
 
@@ -15,7 +16,7 @@ const FORM_I_VOWELS = {
 
 export type FormIPattern = keyof typeof FORM_I_VOWELS
 
-export const FORM_I_PATTERNS = Object.keys(FORM_I_VOWELS) as readonly FormIPattern[]
+export const FORM_I_PATTERNS = keys(FORM_I_VOWELS)
 
 export function formIPastVowel(verb: FormIVerb): Vowel {
   return FORM_I_VOWELS[verb.formPattern][0]

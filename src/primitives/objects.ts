@@ -7,3 +7,8 @@ export function mapRecord<K extends string, V, R>(record: Record<K, V>, mapper: 
 export function pick<T extends object, K extends keyof T>(value: T, keys: readonly K[]): Pick<T, K> {
   return Object.fromEntries(keys.map((key) => [key, value[key]])) as Pick<T, K>
 }
+
+// biome-ignore lint/suspicious/noExplicitAny: keyof any
+export function keys<T extends Record<keyof any, unknown>>(value: T): readonly (keyof T)[] {
+  return Object.keys(value)
+}
