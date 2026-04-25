@@ -49,6 +49,22 @@ class RootLetter {
   constructor(letter: Letter) {
     this.letter = letter
   }
+
+  equals(other: RootLetter): boolean {
+    return this.is(other.letter)
+  }
+
+  is(letter: string): boolean {
+    return this.letter === letter
+  }
+
+  isHamza(): boolean {
+    return this.is(HAMZA)
+  }
+
+  isWeak(): boolean {
+    return isWeakLetter(this.letter)
+  }
 }
 
 export function Root(root: string): readonly RootLetter[] {
@@ -87,15 +103,6 @@ function stripDiacritics(input: string): string {
 
 export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
-}
-
-// TODO: type guard
-export function isWeakRootLetter(root: RootLetter): boolean {
-  return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(root.letter)
-}
-
-export function isRootLetterHamza(root: RootLetter): boolean {
-  return root.letter === HAMZA
 }
 
 export function isHamzatedLetter(value = ''): value is Hamza {
