@@ -9,14 +9,16 @@ import {
   FATHA,
   finalize,
   HAMZA,
-  HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isHamzatedLetter,
+  isRootLetterHamza,
   isWeakLetter,
+  isWeakRootLetter,
   KASRA,
   longVowel,
   MEEM,
   NOON,
+  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -26,6 +28,7 @@ import {
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
+  type Token,
   WAW,
   YEH,
 } from '../letters'
@@ -65,25 +68,24 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
       return [seatHamza(c1, FATHA), DAMMA, c2, DAMMA, c3, SHADDA]
 
     case 'fi3aal': {
-      if (isFinalWeak) return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, FATHA, ALIF, HAMZA]
-      if (isMiddleWeak) return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, YEH, FATHA, ALIF, c3]
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, FATHA, ALIF, seatHamza(c3), FATHA, TEH_MARBUTA]
+      if (isFinalWeak) return [seatHamza(c1, KASRA, true), KASRA, c2, FATHA, ALIF, HAMZA]
+      return [c1, KASRA, isMiddleWeak ? YEH : c2, FATHA, ALIF, seatHamza(c3)]
     }
 
     case 'fi3la':
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+      return [seatHamza(c1, KASRA, true), KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
     case 'fu3la':
       return [isInitialHamza ? ALIF_HAMZA : c1, DAMMA, c2, SUKOON, seatHamza(c3, FATHA), FATHA, TEH_MARBUTA]
 
     case 'fi3al':
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, FATHA, c3]
+      return [seatHamza(c1, KASRA, true), KASRA, c2, FATHA, c3]
 
     case 'fi3an':
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
+      return [seatHamza(c1, KASRA, true), KASRA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
     case 'fi3l':
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, SUKOON, c3]
+      return [seatHamza(c1, KASRA, true), KASRA, c2, SUKOON, c3]
 
     case 'fa3iil':
       return [c1, FATHA, c2, KASRA, YEH, c3]
@@ -108,7 +110,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly st
       return [seatHamza(c1, FATHA), KASRA, c2, FATHA, ALIF, isFinalWeak ? YEH : c3, FATHA, TEH_MARBUTA]
 
     case 'fi3iil':
-      return [isInitialHamza ? ALIF_HAMZA_BELOW : c1, KASRA, c2, KASRA, c3, SHADDA]
+      return [seatHamza(c1, KASRA, true), KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {
       const prefix = [MEEM, FATHA, seatHamza(c1, FATHA)]
@@ -133,61 +135,50 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly string[] {
   return [...prefix, SUKOON, c2, KASRA, YEH, SUKOON, c3]
 }
 
-function deriveMasdarFormIII(verb: NonFormIVerb): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC2 = seatHamza(c2)
-  const seatedC3 = seatHamza(c3, FATHA)
-  const prefix = [MEEM, DAMMA, seatedC1, FATHA, ALIF]
+function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
+  const [c1, c2, c3] = Root(verb.root)
+  const prefix: readonly Token[] = [MEEM, DAMMA, c1, FATHA, ALIF]
 
-  if (c2 === c3) return [...prefix, seatedC2, SUKOON, c3, FATHA, TEH_MARBUTA]
+  if (c2.letter === c3.letter) return [...prefix, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
-  if (c3 === YEH) return [...prefix, seatedC2, FATHA, ALIF, TEH_MARBUTA]
+  if (c3.letter === YEH) return [...prefix, c2, FATHA, ALIF, TEH_MARBUTA]
 
-  return [...prefix, seatedC2, FATHA, seatedC3, FATHA, TEH_MARBUTA]
+  return [...prefix, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 }
 
-function deriveMasdarFormIV(verb: NonFormIVerb): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const isInitialWeak = isWeakLetter(c1)
-  const isMiddleHamza = isHamzatedLetter(c2)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isFinalHamza = isHamzatedLetter(c3)
-  const prefix = [ALIF_HAMZA_BELOW, KASRA, isInitialWeak || isInitialHamza ? YEH : c1]
+function deriveMasdarFormIV(verb: NonFormIVerb): readonly Token[] {
+  const [c1, c2, c3] = Root(verb.root)
+  const isInitialWeak = isWeakRootLetter(c1)
+  const isMiddleWeak = isWeakRootLetter(c2)
+  const isFinalWeak = isWeakRootLetter(c3)
 
-  if (isMiddleHamza && isFinalWeak) return [...prefix, FATHA, ALIF, HAMZA, FATHA, TEH_MARBUTA]
+  const prefix: readonly Token[] = [ALIF_HAMZA_BELOW, KASRA, isInitialWeak || isRootLetterHamza(c1) ? YEH : c1]
 
+  if (isRootLetterHamza(c2)) return [...prefix, FATHA, ALIF, c2, FATHA, TEH_MARBUTA]
   if (isFinalWeak) return [...prefix, SUKOON, c2, FATHA, ALIF, HAMZA]
-
   if (isMiddleWeak) return [...prefix, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
 
-  return [...prefix, SUKOON, c2, FATHA, ALIF, isFinalHamza ? HAMZA : c3]
+  return [...prefix, SUKOON, c2, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormV(verb: NonFormIVerb): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const isFinalWeak = isWeakLetter(c3)
-  const prefix = [TEH, FATHA, seatHamza(c1, FATHA), FATHA]
+function deriveMasdarFormV(verb: NonFormIVerb): readonly Token[] {
+  const [c1, c2, c3] = Root(verb.root)
+  const prefix: readonly Token[] = [TEH, FATHA, c1, FATHA, c2, SHADDA]
 
-  if (isFinalWeak) return [...prefix, seatHamza(c2, FATHA), SHADDA, TANWEEN_KASRA]
+  if (isWeakRootLetter(c3)) return [...prefix, TANWEEN_KASRA]
 
-  return [...prefix, seatHamza(c2, FATHA), SHADDA, DAMMA, seatHamza(c3, DAMMA)]
+  return [...prefix, DAMMA, c3]
 }
 
-function deriveMasdarFormVI(verb: NonFormIVerb): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalHamza = isHamzatedLetter(c3)
-  const isFinalWeak = isWeakLetter(c3)
-  const prefix = [TEH, FATHA, seatHamza(c1, FATHA), FATHA]
+function deriveMasdarFormVI(verb: NonFormIVerb): readonly Token[] {
+  const [c1, c2, c3] = Root(verb.root)
+  const prefix: readonly Token[] = [TEH, FATHA, c1, FATHA, ALIF]
 
-  if (isMiddleWeak && isFinalHamza) return [...prefix, ALIF, c3, TANWEEN_KASRA]
+  if (isWeakRootLetter(c2) && isRootLetterHamza(c3)) return [...prefix, c3, TANWEEN_KASRA]
 
-  if (isFinalWeak) return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, TANWEEN_KASRA]
+  if (isWeakRootLetter(c3)) return [...prefix, c2, TANWEEN_KASRA]
 
-  return [...prefix, ALIF, isHamzatedLetter(c2) ? HAMZA_ON_WAW : c2, DAMMA, seatHamza(c3, DAMMA)]
+  return [...prefix, c2, DAMMA, c3]
 }
 
 function deriveMasdarFormVII(verb: NonFormIVerb): readonly string[] {
@@ -279,7 +270,7 @@ function deriveMasdarFormIVq(verb: Verb): readonly string[] {
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, seatHamza(q3, KASRA), SUKOON, q4, FATHA, ALIF, q4]
 }
 
-function masdar(verb: Verb, pattern: MasdarPattern): readonly string[] {
+function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
   if (verb.root.length > 3) {
     switch (verb.form) {
       case 1:

@@ -23,7 +23,7 @@ describe('buildSyntheticVerb', () => {
       id: 'ktb-1',
       form: 1,
       formPattern: 'fa3ala-yaf3ulu',
-      masdarPatterns: ['fi3aal'],
+      masdarPatterns: ['fi3aal', 'fa3l', 'fi3aala'],
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',

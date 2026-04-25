@@ -41,6 +41,22 @@ type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAM
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
+// TODO: strictly type Letter
+type Letter = string
+
+class RootLetter {
+  letter: Letter
+  constructor(letter: Letter) {
+    this.letter = letter
+  }
+}
+
+export function Root(root: string): readonly RootLetter[] {
+  return [...root].map((letter) => new RootLetter(letter))
+}
+
+export type Token = Letter | Vowel | RootLetter
+
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
   [KASRA]: new Set([YEH, HAMZA_ON_YEH]),
@@ -73,6 +89,15 @@ export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
+// TODO: type guard
+export function isWeakRootLetter(root: RootLetter): boolean {
+  return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(root.letter)
+}
+
+export function isRootLetterHamza(root: RootLetter): boolean {
+  return root.letter === HAMZA
+}
+
 export function isHamzatedLetter(value = ''): value is Hamza {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
@@ -81,12 +106,36 @@ export function isDiacritic(char = ''): boolean {
   return COMBINING_MARK.test(char)
 }
 
-export function seatHamza(letter: string, vowel?: Vowel): string {
+export function seatHamza(letter: string, dominantVowel?: string, firstLetter = false): string {
   if (!isHamzatedLetter(letter)) return letter
-  if (vowel === FATHA) return ALIF_HAMZA
-  if (vowel === KASRA) return HAMZA_ON_YEH
-  if (vowel === DAMMA) return HAMZA_ON_WAW
+  if (dominantVowel === FATHA) return ALIF_HAMZA
+  if (dominantVowel === KASRA) return firstLetter ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
+  if (dominantVowel === DAMMA) return firstLetter ? ALIF_HAMZA : HAMZA_ON_WAW
   return HAMZA
+}
+
+function vowelStrength(token?: Token): number {
+  if (token === KASRA) return 3
+  if (token === DAMMA) return 2
+  if (token === FATHA) return 1
+  return 0
+}
+
+function seatHamzas(tokens: readonly Token[]): readonly Token[] {
+  return tokens.map((token, index) => {
+    if (token instanceof RootLetter && token.letter === HAMZA) {
+      const isFirst = index === 0
+      const before = isFirst ? undefined : tokens.at(index - 1)
+      const after = index < tokens.length - 1 ? tokens.at(index + 1) : undefined
+      if (before === ALIF && after === FATHA) return token // avoids alif + alif hamza
+      const dominant = vowelStrength(before) > vowelStrength(after) ? before : after
+      if (dominant === FATHA) return ALIF_HAMZA
+      if (dominant === KASRA) return isFirst ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
+      if (dominant === DAMMA) return isFirst ? ALIF_HAMZA : HAMZA_ON_WAW
+      return HAMZA
+    }
+    return token
+  })
 }
 
 export function longVowel(vowel: Vowel): [Vowel, string] {
@@ -102,8 +151,9 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
   return TEH
 }
 
-export function finalize(letters: readonly string[]): string {
-  return letters
+export function finalize(letters: readonly Token[]): string {
+  return seatHamzas(letters)
+    .map((token) => (token instanceof RootLetter ? token.letter : token))
     .join('')
     .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
     .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
