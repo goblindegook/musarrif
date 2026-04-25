@@ -682,7 +682,12 @@
   { "root": "qwl", "form": 2 },
   { "root": "qwl", "form": 3 },
   { "root": "qwl", "form": 5 },
-  { "root": "qwm", "form": 1, "formPattern": "fa3ala-yaf3ulu", "masdarPatterns": ["fi3aal"] },
+  {
+    "root": "qwm",
+    "form": 1,
+    "formPattern": "fa3ala-yaf3ulu",
+    "masdarPatterns": ["fa3l", "fi3aal", "mimi"]
+  },
   { "root": "qwm", "form": 3 },
   { "root": "qws", "form": 2 },
   { "root": "qwy", "form": 1, "formPattern": "fa3ila-yaf3alu", "masdarPatterns": ["fi3an"] },
