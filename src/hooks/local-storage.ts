@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'preact/hooks'
-import type { DimensionProfile, DimensionStore } from '../exercises/dimensions'
+import type { DimensionStore } from '../exercises/dimensions'
 import { enforcePrerequisites, isValidDimensionProfile } from '../exercises/dimensions'
 import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
