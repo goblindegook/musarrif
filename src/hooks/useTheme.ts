@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'preact/hooks'
-import { useLocalStorage } from './local-storage'
+import { useLocalStorage } from './useLocalStorage'
 
 export type ThemePreference = 'light' | 'dark' | 'system'
 

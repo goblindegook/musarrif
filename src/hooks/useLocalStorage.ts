@@ -3,8 +3,8 @@ import type { DimensionStore } from '../exercises/dimensions'
 import { enforcePrerequisites, isValidDimensionProfile } from '../exercises/dimensions'
 import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
-import { INITIAL_DIMENSION_STORE } from './dimension-store'
-import type { Language } from './i18n'
+import { INITIAL_DIMENSION_STORE } from './useDimensionStore'
+import type { Language } from './useI18n'
 
 type Updater<T> = T | ((current: T) => T)
 

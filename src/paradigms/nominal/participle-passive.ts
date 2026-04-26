@@ -50,12 +50,12 @@ export function derivePassiveParticiple(verb: Verb): string {
       case 1: {
         const prefix = [MEEM, FATHA, c1]
 
-        if (c3.isWeak) return [...prefix, SUKOON, c2, ...longVowel(c3.is(YEH) ? KASRA : DAMMA), SHADDA]
+        if (c3.isWeak) return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA]
 
         if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
-          return [...prefix, ...longVowel(c2.is(WAW) ? DAMMA : KASRA), c3]
+          return [...prefix, ...longVowel(c2.equals(WAW) ? DAMMA : KASRA), c3]
 
-        return [...prefix, SUKOON, c2, ...longVowel(c3.is(YEH) ? KASRA : DAMMA), c3]
+        return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), c3]
       }
 
       case 2: {
@@ -121,7 +121,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (c3.isWeak) return [...prefix, c1, SUKOON, infix, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (c2.is(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
+        if (c2.equals(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
 
         return [...prefix, c1, SUKOON, infix, FATHA, c2, FATHA, c3]
       }

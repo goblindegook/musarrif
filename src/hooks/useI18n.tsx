@@ -3,7 +3,7 @@ import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/compat'
 import en from '../locales/en.json'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../paradigms/letters'
-import { useLocalStorage } from './local-storage'
+import { useLocalStorage } from './useLocalStorage'
 
 const SUPPORTED_LANGUAGES = ['en', 'it', 'pt', 'ar'] as const
 

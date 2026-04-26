@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n.tsx'
+import { useI18n } from '../../hooks/useI18n.tsx'
 import { analyzeRoot } from '../../paradigms/roots.ts'
 import { search } from '../../paradigms/selection.ts'
 import { Heading } from '../atoms/Heading.tsx'

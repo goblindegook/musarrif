@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import {
   annotate,
   type DerivationStep,

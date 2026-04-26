@@ -1,8 +1,8 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 
-import { I18nProvider } from '../../hooks/i18n'
-import { RoutingProvider } from '../../hooks/routing'
+import { I18nProvider } from '../../hooks/useI18n'
+import { RoutingProvider } from '../../hooks/useRouting'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
 import { ConjugationMode } from './ConjugationMode'
 

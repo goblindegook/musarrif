@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'

@@ -1,6 +1,6 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/preact'
 import { afterEach, describe, expect, test } from 'vitest'
-import { I18nProvider, useI18n } from './i18n'
+import { I18nProvider, useI18n } from './useI18n'
 
 function TranslationProbe() {
   const { t } = useI18n()

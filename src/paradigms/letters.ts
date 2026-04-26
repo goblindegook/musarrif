@@ -41,7 +41,6 @@ export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
-// FIXME: RootLetter is a bad name, it's used for non-root letters as well
 export class LetterToken {
   readonly letter: string
   readonly isHamza: boolean
@@ -53,12 +52,8 @@ export class LetterToken {
     this.isWeak = isWeakLetter(letter)
   }
 
-  is(letter: string): boolean {
-    return this.letter === letter
-  }
-
-  equals(other: LetterToken): boolean {
-    return this.is(other.letter)
+  equals(other: string | LetterToken): boolean {
+    return other instanceof LetterToken ? this.letter === other.letter : this.letter === other
   }
 }
 

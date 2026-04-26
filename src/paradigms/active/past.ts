@@ -72,7 +72,7 @@ function buildForms(stem: readonly Token[], defective?: LetterToken): PastBaseFo
 
   const normalizedStem = stem.slice(0, -2)
 
-  if (defective.is(YEH))
+  if (defective.equals(YEH))
     return {
       base: [...normalizedStem, FATHA, ALIF_MAQSURA],
       suffixedBase: [...normalizedStem, FATHA, YEH],
@@ -145,7 +145,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([c1, FATHA, ALIF, c3], c3),
-      suffixedBase: [c1, c2.is(YEH) ? KASRA : DAMMA, c3],
+      suffixedBase: [c1, c2.equals(YEH) ? KASRA : DAMMA, c3],
     }
 
   return buildForms([...prefix, pastVowel, c3], c3)
@@ -155,7 +155,7 @@ function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [c1, FATHA, c2, SHADDA, FATHA]
 
-  if (c2.is(YEH) && c3.is(YEH))
+  if (c2.equals(YEH) && c3.equals(YEH))
     return {
       ...buildForms([...prefix, ALIF], c3),
       base: [...prefix, ALIF],
@@ -266,11 +266,11 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, c2, FATHA, c3],
     }
 
-  if (c1.is(WAW) || c1.isHamza) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3], c3)
+  if (c1.equals(WAW) || c1.isHamza) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3], c3)
 
   if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_TOKEN)
 
-  if (c2.is(YEH))
+  if (c2.equals(YEH))
     return {
       ...buildForms([...prefix, ALIF, c3], c3),
       suffixedBase: [...prefix, c3],

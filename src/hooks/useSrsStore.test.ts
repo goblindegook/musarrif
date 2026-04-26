@@ -2,7 +2,7 @@ import { cleanup, render, waitFor } from '@testing-library/preact'
 import { h } from 'preact'
 import { useEffect } from 'preact/hooks'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { useSrsStore } from './srs-store'
+import { useSrsStore } from './useSrsStore'
 
 function utcAddDays(date: string, days: number): string {
   const d = new Date(date)

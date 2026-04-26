@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'

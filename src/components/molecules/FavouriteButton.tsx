@@ -1,6 +1,6 @@
 import { css, styled } from 'goober'
 import { useRef, useState } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { IconButton } from '../atoms/IconButton'
 import { HeartIcon } from '../icons/HeartIcon'
 import { HeartOutlineIcon } from '../icons/HeartOutlineIcon'

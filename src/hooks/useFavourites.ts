@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'preact/hooks'
 import { buildVerbFromId, type DisplayVerb } from '../paradigms/verbs'
-import { useLocalStorage } from './local-storage'
+import { useLocalStorage } from './useLocalStorage'
 
 export function useFavourites() {
   const [verbIds, setVerbIds] = useLocalStorage<readonly string[]>('favouriteVerbs', [])

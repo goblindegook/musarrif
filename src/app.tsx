@@ -3,8 +3,8 @@ import { AppHeader } from './components/organisms/AppHeader'
 import { ConjugationMode } from './components/pages/ConjugationMode'
 import { ExerciseMode } from './components/pages/ExerciseMode'
 import { Home } from './components/pages/Home'
-import { useI18n } from './hooks/i18n'
-import { useRouting } from './hooks/routing'
+import { useI18n } from './hooks/useI18n'
+import { useRouting } from './hooks/useRouting'
 
 export function App() {
   const { lang, dir } = useI18n()

@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { App } from './app'
-import { I18nProvider } from './hooks/i18n'
-import { RoutingProvider } from './hooks/routing'
+import { I18nProvider } from './hooks/useI18n'
+import { RoutingProvider } from './hooks/useRouting'
 
 const renderApp = (path = '') => {
   cleanup()

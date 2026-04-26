@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/preact'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { useTheme } from './theme'
+import { useTheme } from './useTheme'
 
 function mockMatchMedia(prefersDark: boolean) {
   const mq = {

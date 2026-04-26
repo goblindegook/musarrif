@@ -146,7 +146,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 
     if ([7, 10].includes(verb.form)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-    if (verb.form === 8 && c2.is(YEH)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+    if (verb.form === 8 && c2.equals(YEH)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
   }
 
   return [...dropFinalDiacritic(stem), ...suffix]
@@ -161,7 +161,7 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
   if (c3.isHamza) {
     if (verb.form === 4) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
     if (verb.form === 5) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
-    if ((verb.form === 10 && c2.isWeak) || c2.is(YEH)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
+    if ((verb.form === 10 && c2.isWeak) || c2.equals(YEH)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
     if (c2.isWeak) return [...stem.slice(0, -2), HAMZA, ...suffix]
   }
 
@@ -241,7 +241,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
 
-      if (c3.is(YEH) && verb.form === 5) return word
+      if (c3.equals(YEH) && verb.form === 5) return word
 
       return [...dropFinalDiacritic(word), FATHA]
     }),
@@ -318,7 +318,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]
 
       if (isFemininePlural(pronounId)) {
-        if (c3.is(NOON)) return [...word.slice(0, -2), SUKOON, NOON, FATHA]
+        if (c3.equals(NOON)) return [...word.slice(0, -2), SUKOON, NOON, FATHA]
         return [...word.slice(0, -1), FATHA]
       }
 
@@ -337,7 +337,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if ([4, 7, 10].includes(verb.form)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
-        if (verb.form === 8 && (c2.is(YEH) || resolveFormVIIIInfixConsonant(c1.letter) !== DAL))
+        if (verb.form === 8 && (c2.equals(YEH) || resolveFormVIIIInfixConsonant(c1.letter) !== DAL))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
       }
 
@@ -389,9 +389,9 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
   if (c2.equals(c3)) return [...prefix, c1, presentVowel, c2, SUKOON, c2, DAMMA]
 
   if (c3.isWeak) {
-    if (c1.is(WAW)) return [...prefix, c2, presentVowel, c3]
+    if (c1.equals(WAW)) return [...prefix, c2, presentVowel, c3]
 
-    if (c3.is(WAW)) return [...prefix, c1, SUKOON, c2, DAMMA, WAW]
+    if (c3.equals(WAW)) return [...prefix, c1, SUKOON, c2, DAMMA, WAW]
 
     if (c2.isHamza) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
@@ -400,11 +400,11 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
     return [...prefix, c1, SUKOON, c2, ...longVowel(presentVowel)]
   }
 
-  if (c1.is(WAW)) return [...prefix, c2, presentVowel, c3, DAMMA]
+  if (c1.equals(WAW)) return [...prefix, c2, presentVowel, c3, DAMMA]
 
   // FIXME: isFormIPastVowel check doesn't make sense here
   if (!isFormIPastVowel(verb, KASRA) && c2.isWeak)
-    return [...prefix, c1, ...longVowel(c2.is(YEH) ? KASRA : presentVowel), c3, DAMMA]
+    return [...prefix, c1, ...longVowel(c2.equals(YEH) ? KASRA : presentVowel), c3, DAMMA]
 
   return [...prefix, c1, SUKOON, c2, presentVowel, c3, DAMMA]
 }
@@ -446,7 +446,7 @@ function derivePresentFormIV(verb: NonFormIVerb): readonly Token[] {
 function derivePresentFormV(verb: NonFormIVerb): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c3.is(YEH)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
+  if (c3.equals(YEH)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, c3, DAMMA]
 }
@@ -486,7 +486,7 @@ function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
 
   if (c3.isWeak) return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
 
-  if (c2.is(YEH) || (c2.isWeak && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
+  if (c2.equals(YEH) || (c2.isWeak && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, seatedC3, DAMMA]
 }

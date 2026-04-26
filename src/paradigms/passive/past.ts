@@ -243,7 +243,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
-  if (c2.is(YEH) || (c2.isWeak && infix !== DAL))
+  if (c2.equals(YEH) || (c2.isWeak && infix !== DAL))
     return {
       prefix: [ALIF, DAMMA, c1, SUKOON, infix, KASRA, YEH, SUKOON],
       suffix3sd: [c3, FATHA],
@@ -297,7 +297,7 @@ function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
-    prefix: [c1, DAMMA, c2.is(YEH) ? WAW : c2, SUKOON, c3, KASRA, c4],
+    prefix: [c1, DAMMA, c2.equals(YEH) ? WAW : c2, SUKOON, c3, KASRA, c4],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
     suffix3mp: [DAMMA, WAW, SUKOON, ALIF],

@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useMemo } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import type { DisplayVerb } from '../../paradigms/verbs'
 import { PanelContainer } from '../molecules/Panel'
@@ -22,8 +22,8 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
 
   const translation = useMemo(() => {
     if (verb.synthetic || lang === 'ar') return undefined
-    const translation = t(verb.id)
-    return translation !== verb.id ? translation : '—'
+    const result = t(verb.id)
+    return result !== verb.id ? result : '—'
   }, [verb, lang])
 
   return (

@@ -45,7 +45,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (c2.equals(c3) && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
-            if (c1.is(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+            if (c1.equals(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
 
             if (c2.isHamza) return [HAMZA_TOKEN, ...stem.slice(1)]
           }
@@ -56,7 +56,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (verb.contractedImperative) return initialHamzatedStem
 
             if (c3.isWeak) {
-              const glide = c2.is(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
+              const glide = c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
               return [ALIF, KASRA, c1, SUKOON, c2, glide, ...initialHamzatedStem.slice(2)]
             }
 
@@ -78,10 +78,12 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
           }
 
-          if (c3.is(WAW) && isPatternU && pronounId === '2d') return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
+          if (c3.equals(WAW) && isPatternU && pronounId === '2d')
+            return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
 
-          if (c3.is(WAW) && stem.at(-1) === ALIF && !isPatternU) return stem
+          if (c3.equals(WAW) && stem.at(-1) === ALIF && !isPatternU) return stem
 
+          // Words cannot start with two consecutive consonants, add alif al-wasl:
           if (stem.at(1) === SUKOON) return [ALIF, isPatternU ? DAMMA : KASRA, ...stem]
 
           return stem

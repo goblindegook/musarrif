@@ -13,8 +13,8 @@ import {
   getStreakRecord,
   STREAK_DAILY_GOAL,
 } from '../../exercises/stats'
-import { useI18n } from '../../hooks/i18n'
-import { useTheme } from '../../hooks/theme'
+import { useI18n } from '../../hooks/useI18n'
+import { useTheme } from '../../hooks/useTheme'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { LockIcon } from '../icons/LockIcon'

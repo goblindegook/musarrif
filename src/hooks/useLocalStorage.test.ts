@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { getUserData, importUserData } from './local-storage'
+import { getUserData, importUserData } from './useLocalStorage'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

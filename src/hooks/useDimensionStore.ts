@@ -9,7 +9,7 @@ import {
   promoteDimensions,
   recordDimensionAnswer,
 } from '../exercises/dimensions'
-import { useLocalStorage } from './local-storage'
+import { useLocalStorage } from './useLocalStorage'
 
 type RecordDimensionAnswer = (dimensions: readonly DimensionKey[], isCorrect: boolean) => DimensionProfile
 

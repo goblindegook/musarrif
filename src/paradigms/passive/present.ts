@@ -109,7 +109,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly To
 
   if (c1.isHamza && pronounId === '1s') return [WAW]
 
-  if (c1.is(YEH)) return [WAW]
+  if (c1.equals(YEH)) return [WAW]
 
   if (c1.isWeak || c2.isHamza) return [c1]
 
@@ -276,7 +276,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
       ? [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, NOON, FATHA]
       : [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, ALIF]
 
-  if (!c3.isWeak && !c3.isHamza && (c2.is(YEH) || (c2.isWeak && infix !== DAL)))
+  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && infix !== DAL)))
     return mood === 'jussive'
       ? [c1, SUKOON, infix, FATHA, c3, ...moodSuffix]
       : [c1, SUKOON, infix, FATHA, ALIF, c3, ...moodSuffix]

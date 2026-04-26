@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact'
 import { h } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { useDimensionStore } from './dimension-store'
+import { useDimensionStore } from './useDimensionStore'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

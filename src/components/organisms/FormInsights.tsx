@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { conjugate } from '../../paradigms/conjugation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import { applyDiacriticsPreference } from '../../paradigms/letters'

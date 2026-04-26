@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'preact/hooks'
 import { type AnswerResult, recordAnswer, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
-import { useLocalStorage } from './local-storage'
+import { useLocalStorage } from './useLocalStorage'
 
 type AnswerRecorder = (cardKey: string, result: AnswerResult) => void
 

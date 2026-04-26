@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event'
 import type { ComponentChildren } from 'preact'
 import { act } from 'preact/test-utils'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { I18nProvider } from '../../hooks/i18n'
-import { RoutingProvider } from '../../hooks/routing'
+import { I18nProvider } from '../../hooks/useI18n'
+import { RoutingProvider } from '../../hooks/useRouting'
 import { Search } from './SearchBox'
 
 function Wrapper({ children }: { children: ComponentChildren }) {

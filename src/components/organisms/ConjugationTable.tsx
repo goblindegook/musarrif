@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { conjugate } from '../../paradigms/conjugation'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/letters'
 import { ARABIC_PRONOUNS, type PronounId } from '../../paradigms/pronouns'

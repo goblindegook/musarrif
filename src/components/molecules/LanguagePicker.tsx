@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { LANGUAGE_OPTIONS, useI18n } from '../../hooks/i18n'
+import { LANGUAGE_OPTIONS, useI18n } from '../../hooks/useI18n'
 
 const Select = styled('select')`
   -webkit-appearance: none;

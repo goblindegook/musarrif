@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { I18nProvider } from '../../hooks/i18n'
+import { I18nProvider } from '../../hooks/useI18n'
 import { Modal } from './Modal'
 
 afterEach(() => {

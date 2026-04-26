@@ -13,11 +13,11 @@ import {
   getStreakGoalProgress,
   serializeDayStats,
 } from '../../exercises/stats'
-import { useDimensionStore } from '../../hooks/dimension-store'
-import { useDocumentTitle } from '../../hooks/document-title'
-import { useI18n } from '../../hooks/i18n'
-import { useLocalStorage } from '../../hooks/local-storage'
-import { useSrsStore } from '../../hooks/srs-store'
+import { useDimensionStore } from '../../hooks/useDimensionStore'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { useI18n } from '../../hooks/useI18n'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'

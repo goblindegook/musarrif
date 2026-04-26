@@ -165,7 +165,7 @@ export function deriveActiveParticiple(verb: Verb): string {
 
         if (c3.isWeak) return [...prefix, c2, TANWEEN_KASRA]
 
-        if (c2.is(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, ALIF, c3]
+        if (c2.equals(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, ALIF, c3]
 
         return [...prefix, c2, KASRA, c3]
       }

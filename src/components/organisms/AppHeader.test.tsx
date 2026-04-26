@@ -1,8 +1,8 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
-import { I18nProvider } from '../../hooks/i18n'
-import { RoutingProvider } from '../../hooks/routing'
+import { I18nProvider } from '../../hooks/useI18n'
+import { RoutingProvider } from '../../hooks/useRouting'
 import { AppHeader } from './AppHeader'
 
 const renderHeader = (path = '/#/verbs') => {

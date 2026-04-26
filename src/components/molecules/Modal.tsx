@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useEffect, useId } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { IconButton } from '../atoms/IconButton'
 import { CloseIcon } from '../icons/CloseIcon'
 

@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
-import { useI18n } from '../../hooks/i18n'
+import { useI18n } from '../../hooks/useI18n'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { search } from '../../paradigms/selection'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'

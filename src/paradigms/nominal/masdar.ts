@@ -95,7 +95,13 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
       const prefix = [MEEM, FATHA, c1]
       if (c3.isHamza) return [...prefix, KASRA, YEH, c3]
       if (c2.isWeak) return [...prefix, ...longVowel(isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA), c3]
-      return [...prefix, SUKOON, c2, isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA, c3.is(YEH) ? ALIF_MAQSURA : c3]
+      return [
+        ...prefix,
+        SUKOON,
+        c2,
+        isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA,
+        c3.equals(YEH) ? ALIF_MAQSURA : c3,
+      ]
     }
   }
 }
@@ -105,7 +111,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly Token[] {
 
   const prefix = [TEH, FATHA, c1]
 
-  if (c2.is(YEH) && c3.is(YEH)) return [...prefix, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+  if (c2.equals(YEH) && c3.equals(YEH)) return [...prefix, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
   if (c3.isWeak || c3.isHamza) return [...prefix, SUKOON, c2, KASRA, c3, FATHA, TEH_MARBUTA]
 
@@ -118,7 +124,7 @@ function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
 
   if (c2.equals(c3)) return [...prefix, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
-  if (c3.is(YEH)) return [...prefix, c2, FATHA, ALIF, TEH_MARBUTA]
+  if (c3.equals(YEH)) return [...prefix, c2, FATHA, ALIF, TEH_MARBUTA]
 
   return [...prefix, c2, FATHA, c3, FATHA, TEH_MARBUTA]
 }

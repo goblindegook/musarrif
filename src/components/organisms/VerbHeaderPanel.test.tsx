@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import { describe, expect, test } from 'vitest'
-import { I18nProvider } from '../../hooks/i18n'
+import { I18nProvider } from '../../hooks/useI18n'
 import { getVerbById, synthesizeVerb } from '../../paradigms/verbs'
 import { VerbHeaderPanel, type VerbHeaderPanelProps } from './VerbHeaderPanel'
 

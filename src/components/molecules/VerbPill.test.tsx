@@ -1,8 +1,8 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test } from 'vitest'
-import { I18nProvider } from '../../hooks/i18n'
-import { RoutingProvider } from '../../hooks/routing'
+import { I18nProvider } from '../../hooks/useI18n'
+import { RoutingProvider } from '../../hooks/useRouting'
 import { getVerbById, synthesizeVerb } from '../../paradigms/verbs'
 import { VerbPill } from '../molecules/VerbPill'
 
