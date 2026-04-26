@@ -44,6 +44,7 @@ type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 // TODO: strictly type Letter
 type Letter = string
 
+// FIXME: RootLetter is a bad name, it's used for non-root letters as well
 export class RootLetter {
   letter: Letter
   isHamza: boolean
@@ -64,6 +65,7 @@ export class RootLetter {
   }
 }
 
+// FIXME: This should be done once when building the verb:
 export function Root(root: string): readonly RootLetter[] {
   return [...root].map((letter) => new RootLetter(letter))
 }
