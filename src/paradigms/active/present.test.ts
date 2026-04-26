@@ -851,7 +851,7 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated final assimilated roots', () => {
-      test('وَأَى conjugation', () => {
+      test('وءي conjugation', () => {
         expect(conjugatePresentMood(getVerb('وءي', 1), 'indicative')).toEqualT({
           '1s': 'أَئِي',
           '2ms': 'تَئِي',
@@ -862,9 +862,9 @@ describe('active present indicative', () => {
           '3md': 'يَئِيَانِ',
           '3fd': 'تَئِيَانِ',
           '1p': 'نَئِي',
-          '2mp': 'تَأُوْنَ',
+          '2mp': 'تَؤُوْنَ',
           '2fp': 'تَئِيْنَ',
-          '3mp': 'يَأُوْنَ',
+          '3mp': 'يَؤُوْنَ',
           '3fp': 'يَئِيْنَ',
         })
       })

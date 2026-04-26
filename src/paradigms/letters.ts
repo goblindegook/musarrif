@@ -131,8 +131,10 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
       const isFirst = index === 0
       const before = isFirst ? undefined : tokens.at(index - 1)
       const after = tokens.at(index + 1)
+
       // Avoid alif + alif hamza, seat on the line:
       if (before === ALIF && after === FATHA) return HAMZA
+
       const dominant = vowelStrength(before) > vowelStrength(after) ? before : after
       if (dominant === FATHA) return ALIF_HAMZA
       if (dominant === KASRA) return isFirst ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH

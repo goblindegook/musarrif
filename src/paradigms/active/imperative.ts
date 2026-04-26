@@ -46,6 +46,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             if (c2.equals(c3) && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
             if (c1.is(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+
+            if (c2.isHamza) return [stem.at(1) === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA, ...stem.slice(1)]
           }
 
           if (c1.isHamza) {

@@ -79,7 +79,7 @@ function buildMasculinePlural(stem: readonly string[], verb: Verb): readonly str
     if (verb.form === 7) return [...stem, ...suffix]
 
     if (isHamzatedLetter(c2))
-      return [...prefix.map((char) => (char === HAMZA_ON_YEH ? ALIF_HAMZA : char)), DAMMA, ...suffix]
+      return [...prefix.map((char) => (char === HAMZA_ON_YEH ? HAMZA_ON_WAW : char)), DAMMA, ...suffix]
 
     if (isWeakLetter(c1)) return [...removeFinalDiacritic(prefix), ...suffix]
 
