@@ -1,10 +1,10 @@
 import { transliterateReverse } from '@pacote/buckwalter'
+import { memoize } from '@pacote/memoize'
 import { wordDistance } from '../primitives/strings'
 import { ALIF, applyDiacriticsPreference, HAMZA, normalizeHamza } from './letters'
 import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
-const CLOSEST_VERB_CACHE = new Map<string, DisplayVerb[]>()
 
 export function getRandomVerbs(count: number): DisplayVerb[] {
   if (verbs.length <= count) return verbs.slice()
@@ -19,29 +19,26 @@ export function getRandomVerbs(count: number): DisplayVerb[] {
   return result
 }
 
-export function getClosestVerbs(targetRoot: string, count: number): DisplayVerb[] {
-  const cacheKey = [targetRoot, count, verbs.length].join(':')
-  const cached = CLOSEST_VERB_CACHE.get(cacheKey)
-  if (cached) return cached
-
-  const closest = verbs
-    .filter((verb) => verb.root !== targetRoot)
-    .map((verb) => ({
-      verb,
-      matches: countPositionMatches(targetRoot, verb.root),
-      distance: wordDistance(targetRoot, verb.root),
-    }))
-    .sort((a, b) => {
-      if (a.matches !== b.matches) return b.matches - a.matches
-      if (a.distance !== b.distance) return a.distance - b.distance
-      return ARABIC_COLLATOR.compare(a.verb.root, b.verb.root)
-    })
-    .slice(0, count)
-    .map((entry) => entry.verb)
-
-  CLOSEST_VERB_CACHE.set(cacheKey, closest)
-  return closest
-}
+export const getClosestVerbs = memoize(
+  (targetRoot: string, count: number) => [targetRoot, count, verbs.length].join(':'),
+  (targetRoot: string, count: number) => {
+    return verbs
+      .filter((verb) => verb.root !== targetRoot)
+      .map((verb) => ({
+        verb,
+        matches: countPositionMatches(targetRoot, verb.root),
+        distance: wordDistance(targetRoot, verb.root),
+      }))
+      .sort((a, b) => {
+        if (a.matches !== b.matches) return b.matches - a.matches
+        if (a.distance !== b.distance) return a.distance - b.distance
+        return ARABIC_COLLATOR.compare(a.verb.root, b.verb.root)
+      })
+      .slice(0, count)
+      .map((entry) => entry.verb)
+  },
+  { capacity: 9999 },
+)
 
 function countPositionMatches(first: string, second: string): number {
   const limit = Math.min(first.length, second.length)

@@ -7,9 +7,9 @@ import {
   finalize,
   HAMZA,
   KASRA,
+  LetterToken,
   longVowel,
   NOON,
-  RootLetter,
   SHADDA,
   SUKOON,
   WAW,
@@ -20,7 +20,7 @@ import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 // Ensures hamza seating is handled on finalization:
-const HAMZA_TOKEN = new RootLetter(HAMZA)
+const HAMZA_TOKEN = new LetterToken(HAMZA)
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const letters = verb.rootTokens
@@ -62,7 +62,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (c2.equals(c3)) {
               const seatedC1 = isPatternI ? [HAMZA_TOKEN, KASRA] : [HAMZA_TOKEN, DAMMA]
-              const prefix = [...seatedC1, c2, SHADDA]
+              const prefix = [...seatedC1, c2, SUKOON, c3]
 
               if (pronounId === '2ms') return [...prefix, FATHA]
               if (pronounId === '2fs') return [...prefix, KASRA, YEH]

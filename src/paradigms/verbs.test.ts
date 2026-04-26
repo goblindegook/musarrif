@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
-import { RootLetter } from './letters'
+import { LetterToken } from './letters'
 import {
   formatFormLabel,
   getAvailableParadigms,
@@ -36,7 +36,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',
-      rootTokens: [new RootLetter('ك'), new RootLetter('ت'), new RootLetter('ب')],
+      rootTokens: [new LetterToken('ك'), new LetterToken('ت'), new LetterToken('ب')],
       synthetic: true,
     })
   })
@@ -49,7 +49,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَّبَ',
       root: 'كتب',
       rootId: 'ktb',
-      rootTokens: [new RootLetter('ك'), new RootLetter('ت'), new RootLetter('ب')],
+      rootTokens: [new LetterToken('ك'), new LetterToken('ت'), new LetterToken('ب')],
       synthetic: true,
     })
   })

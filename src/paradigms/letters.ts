@@ -1,3 +1,5 @@
+import { memoize } from '@pacote/memoize'
+
 export const HAMZA = '\u0621'
 const ALIF_MADDA = '\u0622'
 export const ALIF_HAMZA = '\u0623'
@@ -37,12 +39,10 @@ export type DiacriticsPreference = 'all' | 'some' | 'none'
 
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
 
-type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAMZA_ON_YEH
-
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
 // FIXME: RootLetter is a bad name, it's used for non-root letters as well
-export class RootLetter {
+export class LetterToken {
   readonly letter: string
   readonly isHamza: boolean
   readonly isWeak: boolean
@@ -57,24 +57,21 @@ export class RootLetter {
     return this.letter === letter
   }
 
-  equals(other: RootLetter): boolean {
+  equals(other: LetterToken): boolean {
     return this.is(other.letter)
   }
 }
 
-const tokenCache = new Map<string, RootLetter>()
+const createToken = memoize(
+  (char) => char,
+  (char: string) => new LetterToken(char),
+)
 
-export function tokenize(text: string): readonly RootLetter[] {
-  return [...text].map((char) => {
-    const token = tokenCache.get(char)
-    if (token) return token
-    const newToken = new RootLetter(char)
-    tokenCache.set(char, newToken)
-    return newToken
-  })
+export function tokenize(text: string): readonly LetterToken[] {
+  return [...text].map(createToken)
 }
 
-export type Token = string | Vowel | RootLetter
+export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
@@ -104,15 +101,15 @@ export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
-export function isHamzatedLetter(token: Token = ''): token is Hamza {
-  if (token instanceof RootLetter) return token.isHamza
-  return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(token)
+export function isHamzatedLetter(token: Token = ''): boolean {
+  if (token instanceof LetterToken) return token.isHamza
+  return [HAMZA, ALIF_HAMZA, ALIF_HAMZA_BELOW, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(token)
 }
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
 export function isDiacritic(token: Token = ''): boolean {
-  return !(token instanceof RootLetter) && COMBINING_MARK.test(token)
+  return !(token instanceof LetterToken) && COMBINING_MARK.test(token)
 }
 
 function vowelStrength(token?: Token): number {
@@ -124,7 +121,7 @@ function vowelStrength(token?: Token): number {
 
 function seatHamzas(tokens: readonly Token[]): readonly Token[] {
   return tokens.map((token, index) => {
-    if (token instanceof RootLetter && token.letter === HAMZA) {
+    if (token instanceof LetterToken ? token.letter === HAMZA : false) {
       const wordInitial = index === 0
       const shaddaOffset = tokens.at(index + 1) === SHADDA ? 2 : 1
       const wordFinal = tokens.at(index + shaddaOffset + 1) == null
@@ -140,9 +137,11 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
       // Seat on the line to avoid alif + alif hamza:
       if (before === ALIF && vowel === FATHA) return HAMZA
 
+      // FIXME: Account for shadda before
+
       // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
       const twoBack = index >= 2 ? tokens.at(index - 2) : undefined
-      const twoBackLetter = twoBack instanceof RootLetter ? twoBack.letter : twoBack
+      const twoBackLetter = twoBack instanceof LetterToken ? twoBack.letter : twoBack
       if (before === SUKOON && (twoBackLetter === YEH || twoBackLetter === WAW)) {
         if (wordFinal) return HAMZA
         if (twoBackLetter === YEH) return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
@@ -175,7 +174,7 @@ export function resolveFormVIIIInfixConsonant(c1: string): string {
 
 export function finalize(letters: readonly Token[]): string {
   return seatHamzas(letters)
-    .map((token) => (token instanceof RootLetter ? token.letter : token))
+    .map((token) => (token instanceof LetterToken ? token.letter : token))
     .join('')
     .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
     .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)

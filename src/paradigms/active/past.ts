@@ -10,9 +10,9 @@ import {
   finalize,
   KASRA,
   LAM,
+  LetterToken,
   MEEM,
   NOON,
-  RootLetter,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -34,7 +34,7 @@ interface PastBaseForms {
   thirdPersonMasculinePluralBase: readonly Token[]
 }
 
-const YEH_TOKEN = new RootLetter(YEH)
+const YEH_TOKEN = new LetterToken(YEH)
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =
@@ -60,7 +60,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   )
 }
 
-function buildForms(stem: readonly Token[], defective?: RootLetter): PastBaseForms {
+function buildForms(stem: readonly Token[], defective?: LetterToken): PastBaseForms {
   if (!defective?.isWeak)
     return {
       base: [...stem, FATHA],
@@ -136,7 +136,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak && pastVowel === KASRA)
     return {
-      ...buildForms([...prefix, KASRA, YEH], new RootLetter('')),
+      ...buildForms([...prefix, KASRA, YEH], new LetterToken('')),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA],
     }
 

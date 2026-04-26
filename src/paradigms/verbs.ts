@@ -2,7 +2,7 @@ import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { normalizeHamza, type RootLetter, tokenize } from './letters'
+import { type LetterToken, normalizeHamza, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -41,7 +41,7 @@ export type PassiveVoice = 'none' | 'impersonal'
 
 export type FormIVerb = {
   root: string
-  rootTokens: readonly RootLetter[]
+  rootTokens: readonly LetterToken[]
   form: 1
   formPattern: FormIPattern
   masdarPatterns?: readonly MasdarPattern[]
@@ -52,7 +52,7 @@ export type FormIVerb = {
 
 export type NonFormIVerb = {
   root: string
-  rootTokens: readonly RootLetter[]
+  rootTokens: readonly LetterToken[]
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean

@@ -495,6 +495,7 @@
   { "root": "klm", "form": 2 },
   { "root": "klm", "form": 3 },
   { "root": "klm", "form": 5 },
+  { "root": "klm", "form": 6 },
   { "root": "klwr", "form": 1, "formPattern": "fa3ala-yaf3ilu", "masdarPatterns": ["fa3lala"] },
   { "root": "kml", "form": 1, "formPattern": "fa3ala-yaf3alu" },
   { "root": "kml", "form": 6, "passiveVoice": "none" },

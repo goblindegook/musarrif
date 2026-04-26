@@ -14,9 +14,9 @@ import {
   isWeakLetter,
   KASRA,
   LAM,
+  LetterToken,
   longVowel,
   NOON,
-  RootLetter,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -568,7 +568,7 @@ function shortenHollowStem(word: readonly Token[]): readonly Token[] {
 function expandGemination(word: readonly Token[], vowel: Vowel): readonly Token[] {
   return Array.from(
     word
-      .map((t) => (t instanceof RootLetter ? t.letter : t))
+      .map((t) => (t instanceof LetterToken ? t.letter : t))
       .join('')
       .replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${vowel}$1`),
   )
