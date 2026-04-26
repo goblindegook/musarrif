@@ -451,13 +451,11 @@ function derivePresentFormIV(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, FATHA)
-  const seatedC2 = seatHamza(c2, FATHA)
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (c3 === YEH) return [YEH, FATHA, TEH, FATHA, seatedC1, FATHA, seatedC2, SUKOON, seatedC2, FATHA, ALIF_MAQSURA]
+  if (c3.is(YEH)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
-  return [YEH, FATHA, TEH, FATHA, seatedC1, FATHA, seatedC2, SUKOON, seatedC2, FATHA, seatHamza(c3, FATHA), DAMMA]
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, c3, DAMMA]
 }
 
 function derivePresentFormVI(verb: NonFormIVerb): readonly Token[] {
@@ -487,18 +485,17 @@ function derivePresentFormVII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = [...verb.root]
-  const assimilatedC1 = isHamzatedLetter(c1) || isWeakLetter(c1) ? TEH : c1
-  const infix = resolveFormVIIIInfixConsonant(c1)
-  const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
+  const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
+  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const seatedC2 = c2
+  const seatedC3 = c3
 
-  if (c2 === c3) return [YEH, FATHA, seatHamza(c1, FATHA), SUKOON, infix, FATHA, c2, SUKOON, c3, DAMMA]
+  if (c2.equals(c3)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, c2, SUKOON, c3, DAMMA]
 
-  if (isWeakLetter(c3)) return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
+  if (c3.isWeak) return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
 
-  if (c2 === YEH || (isWeakLetter(c2) && infix !== DAL))
-    return [YEH, FATHA, seatHamza(c1, FATHA), SUKOON, infix, FATHA, ALIF, c3, DAMMA]
+  if (c2.is(YEH) || (c2.isWeak && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, seatedC3, DAMMA]
 }
