@@ -112,14 +112,6 @@ export function isDiacritic(token: Token = ''): boolean {
   return !(token instanceof RootLetter) && COMBINING_MARK.test(token)
 }
 
-export function seatHamza(letter: string, dominantVowel?: string, firstLetter = false): string {
-  if (!isHamzatedLetter(letter)) return letter
-  if (dominantVowel === FATHA) return ALIF_HAMZA
-  if (dominantVowel === KASRA) return firstLetter ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
-  if (dominantVowel === DAMMA) return firstLetter ? ALIF_HAMZA : HAMZA_ON_WAW
-  return HAMZA
-}
-
 function vowelStrength(token?: Token): number {
   if (token === KASRA) return 3
   if (token === DAMMA) return 2
@@ -147,9 +139,11 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
 
       // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
       const twoBack = index >= 2 ? tokens.at(index - 2) : undefined
-      if (before === SUKOON && (twoBack === YEH || twoBack === WAW)) {
+      const twoBackLetter = twoBack instanceof RootLetter ? twoBack.letter : twoBack
+      if (before === SUKOON && (twoBackLetter === YEH || twoBackLetter === WAW)) {
         if (wordFinal) return HAMZA
-        return twoBack === YEH ? HAMZA_ON_YEH : HAMZA_ON_WAW
+        if (twoBackLetter === YEH) return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
+        return vowel === KASRA ? HAMZA_ON_YEH : HAMZA_ON_WAW
       }
 
       // Word-final hamza: case vowel doesn't govern the seat, only the preceding vowel does:
