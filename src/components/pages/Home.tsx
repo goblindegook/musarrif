@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useCallback, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { useFavourites } from '../../hooks/favourites'
 import { useI18n } from '../../hooks/i18n'
 import { useRecent } from '../../hooks/recent'
@@ -47,6 +47,10 @@ export function Home() {
   )
 
   const sortedRecents = useMemo(() => recents, [recents])
+
+  useEffect(() => {
+    document.title = t('title')
+  }, [t])
 
   return (
     <Main>

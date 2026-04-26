@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
-import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest'
+import { afterEach, describe, expect, it, test, vi } from 'vitest'
 
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
@@ -27,12 +27,10 @@ const renderConjugationMode = ({ verbId, voice, tense, mood }: ConjugationModeRe
   )
 }
 
-beforeEach(() => {
-  cleanup()
-  window.localStorage.clear()
-})
-
 afterEach(() => {
+  document.title = ''
+  window.localStorage.clear()
+  cleanup()
   vi.restoreAllMocks()
 })
 

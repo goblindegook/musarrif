@@ -7,8 +7,10 @@ import { RoutingProvider } from '../../hooks/routing'
 import { ExerciseMode } from './ExerciseMode'
 
 afterEach(() => {
+  document.title = ''
+  window.localStorage.clear()
   cleanup()
-  localStorage.clear()
+  vi.restoreAllMocks()
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -77,7 +79,6 @@ function localDateKey(date = new Date()): string {
 
 describe('ExerciseMode', () => {
   test('sets the page title for exercise mode', () => {
-    document.title = 'Muṣarrif'
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     expect(document.title).toBe('Exercise · Muṣarrif')
   })

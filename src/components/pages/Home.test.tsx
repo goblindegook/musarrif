@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest'
+import { afterEach, describe, expect, it, test, vi } from 'vitest'
 
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
@@ -18,13 +18,16 @@ const renderHome = () => {
   )
 }
 
-beforeEach(() => {
-  cleanup()
+afterEach(() => {
+  document.title = ''
   window.localStorage.clear()
+  cleanup()
+  vi.restoreAllMocks()
 })
 
-afterEach(() => {
-  vi.restoreAllMocks()
+test('sets the page title ', () => {
+  renderHome()
+  expect(document.title).toBe('Muṣarrif')
 })
 
 test('Show up to five random quick pick suggestions by default', () => {
