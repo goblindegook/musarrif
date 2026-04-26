@@ -355,27 +355,27 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
 }
 
 function derivePresentFormIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
-  return [YEH, DAMMA, c1, FATHA, seatHamza(c2, FATHA), SUKOON, c3, KASRA, seatHamza(c4, KASRA), DAMMA]
+  return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
 }
 
 function derivePresentFormIIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
-  return [YEH, FATHA, TEH, FATHA, seatHamza(c1, FATHA), FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
+  return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
 }
 
 function derivePresentFormIIIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, KASRA, c4, DAMMA]
 }
 
 function derivePresentFormIVq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
-  return [YEH, FATHA, c1, SUKOON, c2, FATHA, seatHamza(c3, KASRA), KASRA, c4, SUKOON, c4, DAMMA]
+  return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, KASRA, c4, SUKOON, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly Token[] {
@@ -425,34 +425,29 @@ function derivePresentFormII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = seatHamza(c3, KASRA)
-  const prefix = [YEH, DAMMA, seatedC1, FATHA, ALIF, seatedC2]
+  const [c1, c2, c3] = Root(verb.root)
+  const prefix = [YEH, DAMMA, c1, FATHA, ALIF, c2]
 
-  if (c2 === c3) return [...prefix, SHADDA, DAMMA]
+  if (c2.equals(c3)) return [...prefix, SUKOON, c3, DAMMA]
 
-  if (isWeakLetter(c3)) return [...prefix, KASRA, c3]
+  if (c3.isWeak) return [...prefix, KASRA, c3]
 
-  return [...prefix, KASRA, seatedC3, DAMMA]
+  return [...prefix, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormIV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC3 = seatHamza(c3, KASRA)
-  const prefix = [YEH, DAMMA, seatedC1]
+  const [c1, c2, c3] = Root(verb.root)
+  const prefix = [YEH, DAMMA, c1]
 
-  if (isHamzatedLetter(c2)) return [...prefix, KASRA, c3]
+  if (c2.isHamza) return [...prefix, KASRA, c3]
 
-  if (isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, YEH]
+  if (c3.isWeak) return [...prefix, SUKOON, c2, KASRA, YEH]
 
-  if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, c3, DAMMA]
+  if (c2.isWeak) return [...prefix, KASRA, YEH, c3, DAMMA]
 
-  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
+  if (c2.equals(c3)) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 
-  return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
+  return [...prefix, SUKOON, c2, KASRA, c3, DAMMA]
 }
 
 function derivePresentFormV(verb: NonFormIVerb): readonly Token[] {
