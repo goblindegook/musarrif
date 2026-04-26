@@ -3,25 +3,20 @@ import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_HAMZA,
-  ALIF_HAMZA_BELOW,
   DAL,
   DAMMA,
   FATHA,
   finalize,
-  HAMZA,
-  HAMZA_ON_WAW,
-  HAMZA_ON_YEH,
-  isHamzatedLetter,
-  isWeakLetter,
   KASRA,
   MEEM,
   NOON,
+  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
   SUKOON,
-  seatHamza,
   TEH,
+  type Token,
   WAW,
   YEH,
 } from '../letters'
@@ -30,12 +25,12 @@ import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 interface PassivePastParams {
-  prefix: readonly string[]
-  suffix?: readonly string[]
-  suffix3ms?: readonly string[]
-  suffix3sd?: readonly string[]
-  suffix3mp?: readonly string[]
-  suffix3fp?: readonly string[]
+  prefix: readonly Token[]
+  suffix?: readonly Token[]
+  suffix3ms?: readonly Token[]
+  suffix3sd?: readonly Token[]
+  suffix3mp?: readonly Token[]
+  suffix3fp?: readonly Token[]
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, string> {
@@ -62,49 +57,43 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
 }
 
 function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleHamza = isHamzatedLetter(c2)
-  const seatedC3 = seatHamza(c3, KASRA)
-  const isGeminate = c2 === c3
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (isMiddleHamza && isFinalWeak) {
+  if (c2.isHamza && c3.isWeak) {
     return {
-      prefix: [seatHamza(c1, FATHA), DAMMA],
-      suffix: [HAMZA_ON_YEH, KASRA, YEH],
-      suffix3sd: [HAMZA_ON_YEH, KASRA, YEH, FATHA],
-      suffix3mp: [HAMZA_ON_WAW, DAMMA, WAW, SUKOON, ALIF],
+      prefix: [c1, DAMMA],
+      suffix: [c2, KASRA, YEH],
+      suffix3sd: [c2, KASRA, YEH, FATHA],
+      suffix3mp: [c2, DAMMA, WAW, SUKOON, ALIF],
     }
   }
 
-  if (isFinalWeak)
+  if (c3.isWeak)
     return {
-      prefix: [seatHamza(c1, FATHA), DAMMA, c2],
+      prefix: [c1, DAMMA, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isMiddleWeak && !isFormIPastVowel(verb, KASRA))
+  if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
     return {
-      prefix: [isInitialHamza ? ALIF_HAMZA_BELOW : c1],
-      suffix: [KASRA, c3, SUKOON],
-      suffix3sd: [KASRA, YEH, c3, FATHA],
-      suffix3mp: [KASRA, YEH, c3, DAMMA, WAW, SUKOON, ALIF],
+      prefix: [c1, KASRA],
+      suffix: [c3, SUKOON],
+      suffix3sd: [YEH, SUKOON, c3, FATHA],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isGeminate)
+  if (c2.equals(c3))
     return {
-      prefix: [seatHamza(c1, FATHA), DAMMA, c2],
+      prefix: [c1, DAMMA, c2],
       suffix: [KASRA, c3, SUKOON],
       suffix3sd: [SHADDA, FATHA],
       suffix3mp: [SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
 
   return {
-    prefix: [seatHamza(c1, FATHA), DAMMA, c2, KASRA, seatedC3],
+    prefix: [c1, DAMMA, c2, KASRA, c3],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
     suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
@@ -112,66 +101,56 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
   return {
-    prefix: [seatHamza(c1, FATHA), DAMMA, seatedC2, SHADDA, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [c1, DAMMA, c2, SHADDA, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
   return {
-    prefix: [seatHamza(c1, FATHA), DAMMA, WAW, seatedC2, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [c1, DAMMA, WAW, c2, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const isMiddleHamza = isHamzatedLetter(c2)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalHamza = isHamzatedLetter(c3)
-  const isFinalWeak = isWeakLetter(c3)
-  const seatedC1 = isHamzatedLetter(c1) ? WAW : c1
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (isMiddleHamza)
+  if (c2.isHamza)
     return {
-      prefix: [ALIF_HAMZA, DAMMA, seatedC1],
-      suffix: [KASRA, seatedC3],
-      suffix3sd: [KASRA, seatedC3, FATHA],
+      prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1],
+      suffix: [KASRA, c3],
+      suffix3sd: [KASRA, c3, FATHA],
       suffix3mp: [DAMMA, WAW, ALIF],
     }
 
-  if (isFinalWeak)
+  if (c3.isWeak)
     return {
-      prefix: [ALIF_HAMZA, DAMMA, seatedC1, SUKOON, c2],
+      prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1, SUKOON, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isMiddleWeak)
+  if (c2.isWeak)
     return {
-      prefix: [ALIF_HAMZA, DAMMA, seatedC1, KASRA],
-      suffix: [seatedC3, SUKOON],
-      suffix3ms: [YEH, isFinalHamza ? HAMZA : seatedC3, FATHA],
-      suffix3sd: [YEH, seatedC3, FATHA],
-      suffix3mp: [YEH, seatedC3, DAMMA, WAW, SUKOON, ALIF],
+      prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1, KASRA],
+      suffix: [c3, SUKOON],
+      suffix3ms: [YEH, SUKOON, c3, FATHA],
+      suffix3sd: [YEH, SUKOON, c3, FATHA],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (c2 === c3)
+  if (c2.equals(c3))
     return {
-      prefix: [ALIF_HAMZA, DAMMA, seatedC1],
+      prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1],
       suffix: [SUKOON, c2, KASRA, c3, SUKOON],
       suffix3ms: [KASRA, c2, SHADDA, FATHA],
       suffix3sd: [KASRA, c2, SHADDA, FATHA],
@@ -179,86 +158,76 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
     }
 
   return {
-    prefix: [ALIF_HAMZA, DAMMA, seatedC1, SUKOON, c2, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1, SUKOON, c2, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormV(verb: NonFormIVerb): PassivePastParams {
-  const [c1] = [...verb.root]
   const formII = derivePassivePastFormII(verb)
 
   return {
     ...formII,
-    prefix: [TEH, DAMMA, seatHamza(c1, DAMMA), ...formII.prefix.slice(1)],
+    prefix: [TEH, DAMMA, ...formII.prefix],
   }
 }
 
 function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (isWeakLetter(c3))
+  if (c3.isWeak)
     return {
-      prefix: [TEH, DAMMA, seatedC1, DAMMA, WAW, c2],
+      prefix: [TEH, DAMMA, c1, DAMMA, WAW, c2],
       suffix3sd: [KASRA, YEH, FATHA],
     }
 
   return {
-    prefix: [TEH, DAMMA, seatedC1, DAMMA, WAW, c2, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [TEH, DAMMA, c1, DAMMA, WAW, c2, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (c2 === c3) {
+  if (c2.equals(c3)) {
     return {
-      prefix: [ALIF, DAMMA, NOON, SUKOON, seatHamza(c1, FATHA), DAMMA],
+      prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
   }
 
-  if (isWeakLetter(c2))
+  if (c2.isWeak)
     return {
-      prefix: [ALIF, DAMMA, NOON, SUKOON, seatHamza(c1, FATHA), KASRA, YEH],
+      prefix: [ALIF, DAMMA, NOON, SUKOON, c1, KASRA, YEH],
       suffix3sd: [c3, FATHA],
     }
 
   return {
-    prefix: [ALIF, DAMMA, NOON, SUKOON, seatHamza(c1, FATHA), DAMMA, c2, KASRA],
+    prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA, c2, KASRA],
     suffix3sd: [c3, FATHA],
   }
 }
 
 function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const isInitialWeak = isWeakLetter(c1)
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isFinalWeak = isWeakLetter(c3)
-  const isMiddleWeak = isWeakLetter(c2)
-  const seatedC1 = seatHamza(c1, DAMMA)
-  const seatedC2 = seatHamza(c2, KASRA)
-  const seatedC3 = seatHamza(c3, KASRA)
-  const infix = resolveFormVIIIInfixConsonant(c1)
+  const [c1, c2, c3] = Root(verb.root)
+  const infix = resolveFormVIIIInfixConsonant(c1.letter)
 
-  if (c2 === c3)
+  if (c2.equals(c3))
     return {
-      prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, DAMMA],
+      prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if ((isInitialWeak || isInitialHamza) && isFinalWeak)
+  if ((c1.isWeak || c1.isHamza) && c3.isWeak)
     return {
       prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2],
       suffix: [KASRA, YEH],
@@ -267,80 +236,78 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
-  if (isInitialWeak || isInitialHamza)
+  if (c1.isWeak || c1.isHamza)
     return {
       prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2, KASRA],
-      suffix: [seatedC3, SUKOON],
-      suffix3sd: [seatedC3, FATHA],
-      suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+      suffix: [c3, SUKOON],
+      suffix3sd: [c3, FATHA],
+      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isFinalWeak)
+  if (c3.isWeak)
     return {
-      prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, DAMMA, seatedC2],
+      prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
-  if (c2 === YEH || (isMiddleWeak && infix !== DAL))
+  if (c2.is(YEH) || (c2.isWeak && infix !== DAL))
     return {
-      prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, KASRA, YEH],
+      prefix: [ALIF, DAMMA, c1, SUKOON, infix, KASRA, YEH, SUKOON],
       suffix3sd: [c3, FATHA],
     }
 
   return {
-    prefix: [ALIF, DAMMA, seatedC1, SUKOON, infix, DAMMA, seatedC2, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA, c2, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = isHamzatedLetter(c1) ? HAMZA_ON_WAW : c1
-  const seatedC3 = seatHamza(c3, KASRA)
+  const [c1, c2, c3] = Root(verb.root)
 
-  if (isWeakLetter(c3))
+  if (c3.isWeak)
     return {
-      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, SUKOON, c2],
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2],
       suffix: [KASRA, YEH, SUKOON],
       suffix3sd: [KASRA, YEH, FATHA],
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
-  if (c2 === c3)
+  if (c2.equals(c3))
     return {
-      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, KASRA],
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
       suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
     }
 
-  if (isWeakLetter(c2))
+  if (c2.isWeak)
     return {
-      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, KASRA],
+      prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
       suffix: [c3, SUKOON],
-      suffix3sd: [YEH, c3, FATHA],
-      suffix3mp: [YEH, c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3sd: [YEH, SUKOON, c3, FATHA],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
     }
 
   return {
-    prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, seatedC1, SUKOON, c2, KASRA],
-    suffix: [seatedC3, SUKOON],
-    suffix3sd: [seatedC3, FATHA],
-    suffix3mp: [seatedC3, DAMMA, WAW, SUKOON, ALIF],
+    prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2, KASRA],
+    suffix: [c3, SUKOON],
+    suffix3sd: [c3, FATHA],
+    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 
 function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
   return {
-    prefix: [c1, DAMMA, c2 === YEH ? WAW : c2, SUKOON, c3, KASRA, c4],
+    prefix: [c1, DAMMA, c2.is(YEH) ? WAW : c2, SUKOON, c3, KASRA, c4],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
     suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
@@ -348,16 +315,16 @@ function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
   return {
-    prefix: [TEH, DAMMA, seatHamza(c1, DAMMA), DAMMA, c2, SUKOON, c3, KASRA, c4],
+    prefix: [TEH, DAMMA, c1, DAMMA, c2, SUKOON, c3, KASRA, c4],
     suffix3sd: [FATHA],
   }
 }
 
 function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
   return {
     prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, NOON, SUKOON, c3, KASRA, c4],
@@ -366,14 +333,14 @@ function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = [...verb.root]
+  const [c1, c2, c3, c4] = Root(verb.root)
 
   return {
     prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA],
-    suffix: [seatHamza(c3, DAMMA), SUKOON, c4, KASRA, c4, SUKOON],
-    suffix3ms: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, FATHA],
-    suffix3sd: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, FATHA],
-    suffix3mp: [seatHamza(c3, KASRA), KASRA, c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    suffix: [c3, SUKOON, c4, KASRA, c4, SUKOON],
+    suffix3ms: [c3, KASRA, c4, SHADDA, FATHA],
+    suffix3sd: [c3, KASRA, c4, SHADDA, FATHA],
+    suffix3mp: [c3, KASRA, c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
   }
 }
 

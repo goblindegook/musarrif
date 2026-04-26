@@ -128,17 +128,29 @@ function vowelStrength(token?: Token): number {
 function seatHamzas(tokens: readonly Token[]): readonly Token[] {
   return tokens.map((token, index) => {
     if (token instanceof RootLetter && token.letter === HAMZA) {
-      const isFirst = index === 0
-      const before = isFirst ? undefined : tokens.at(index - 1)
       const after = tokens.at(index + 1)
+
+      if (index === 0) return after === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+
+      const before = tokens.at(index - 1)
 
       // Avoid alif + alif hamza, seat on the line:
       if (before === ALIF && after === FATHA) return HAMZA
 
-      const dominant = vowelStrength(before) > vowelStrength(after) ? before : after
+      const twoBack = index >= 2 ? tokens.at(index - 2) : undefined
+
+      // Hamza after long vowel (yeh/waw + sukoon): standalone at word-end, else seat on yeh/waw:
+      if (before === SUKOON && (twoBack === YEH || twoBack === WAW)) {
+        if (tokens.at(index + 2) === undefined) return HAMZA
+        return twoBack === YEH ? HAMZA_ON_YEH : HAMZA_ON_WAW
+      }
+
+      // When followed by shadda, the effective vowel is after the shadda:
+      const effectiveAfter = after === SHADDA ? tokens.at(index + 2) : after
+      const dominant = vowelStrength(before) > vowelStrength(effectiveAfter) ? before : effectiveAfter
       if (dominant === FATHA) return ALIF_HAMZA
-      if (dominant === KASRA) return isFirst ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
-      if (dominant === DAMMA) return isFirst ? ALIF_HAMZA : HAMZA_ON_WAW
+      if (dominant === KASRA) return HAMZA_ON_YEH
+      if (dominant === DAMMA) return HAMZA_ON_WAW
       return HAMZA
     }
     return token
