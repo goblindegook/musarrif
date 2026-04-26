@@ -150,8 +150,11 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
       }
 
       // When followed by shadda, the effective vowel is after the shadda:
+      const afterOffset = after === SHADDA ? 3 : 2
       const effectiveAfter = after === SHADDA ? tokens.at(index + 2) : after
-      const dominant = vowelStrength(before) > vowelStrength(effectiveAfter) ? before : effectiveAfter
+      // Word-final hamza: case vowel doesn't govern the seat, only the preceding vowel does:
+      const wordFinal = isDiacritic(effectiveAfter as string) && tokens.at(index + afterOffset) === undefined
+      const dominant = wordFinal ? before : vowelStrength(before) > vowelStrength(effectiveAfter) ? before : effectiveAfter
       if (dominant === FATHA) return ALIF_HAMZA
       if (dominant === KASRA) return HAMZA_ON_YEH
       if (dominant === DAMMA) return HAMZA_ON_WAW

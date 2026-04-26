@@ -190,21 +190,18 @@ function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mo
   ]
 }
 
-function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly string[] {
-  const [c1, c2, c3] = [...verb.root]
-  const seatedC1 = seatHamza(c1, FATHA)
+function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
+  const [c1, c2, c3] = Root(verb.root)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-  const seatedC3 = seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)
-  const prefix = [seatHamza(seatedC1, DAMMA), FATHA, c2, SHADDA]
+  const prefix = [c1, FATHA, c2, SHADDA]
 
-  if (isWeakLetter(c3)) {
-    const glide =
-      mood !== 'jussive' || isWeakLetter(c1) || isWeakLetter(c2) ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
+  if (c3.isWeak) {
+    const glide = mood !== 'jussive' || c1.isWeak || c2.isWeak ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
 
-    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, c2 === c3)]
+    return [...prefix, glide, ...defectiveSuffix(mood, pronounId, c2.equals(c3))]
   }
 
-  return [...prefix, FATHA, seatedC3, ...moodSuffix]
+  return [...prefix, FATHA, c3, ...moodSuffix]
 }
 
 function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly string[] {

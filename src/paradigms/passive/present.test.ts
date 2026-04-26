@@ -608,7 +608,7 @@ describe('passive present indicative', () => {
     })
 
     describe('hamzated final assimilated roots', () => {
-      test('يُوَطَّأُ conjugation', () => {
+      test('وَطَّأَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وطء', 2), 'indicative')).toEqualT({
           '1s': 'أُوَطَّأُ',
           '2ms': 'تُوَطَّأُ',
@@ -619,9 +619,9 @@ describe('passive present indicative', () => {
           '3md': 'يُوَطَّآنِ',
           '3fd': 'تُوَطَّآنِ',
           '1p': 'نُوَطَّأُ',
-          '2mp': 'تُوَطَّأُوْنَ',
+          '2mp': 'تُوَطَّؤُوْنَ',
           '2fp': 'تُوَطَّأْنَ',
-          '3mp': 'يُوَطَّأُوْنَ',
+          '3mp': 'يُوَطَّؤُوْنَ',
           '3fp': 'يُوَطَّأْنَ',
         })
       })
