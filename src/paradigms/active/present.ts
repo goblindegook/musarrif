@@ -209,8 +209,7 @@ function dropNoonEnding(word: readonly Token[]): readonly Token[] {
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [, , c3] = Array.from(verb.root)
-  const isFinalWeak = isWeakLetter(c3)
+  const [, , c3] = Root(verb.root)
 
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
@@ -218,13 +217,13 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isDual(pronounId)) return dropNoonEnding(word)
 
-      if (isFinalWeak && verb.form === 1 && isFormIPresentVowel(verb, FATHA)) {
+      if (c3.isWeak && verb.form === 1 && isFormIPresentVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
         return word
       }
 
-      if (isFinalWeak && verb.form === 6) {
+      if (c3.isWeak && verb.form === 6) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
         return word
@@ -241,7 +240,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
 
-      if (c3 === YEH && verb.form === 5) return word
+      if (c3.is(YEH) && verb.form === 5) return word
 
       return [...removeFinalDiacritic(word), FATHA]
     }),
@@ -252,11 +251,6 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
   const letters = Root(verb.root)
   const [c1, c2, c3] = letters
-  const isMiddleWeak = c2.isWeak
-  const isMiddleHamza = c2.isHamza
-  const isFinalWeak = c3.isWeak
-  const isFinalHamza = c3.isHamza
-  const isGeminate = c2.equals(c3)
 
   if (letters.length > 3) {
     return mapRecord(
@@ -286,7 +280,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
       }
 
-      if (verb.form === 5 && isFinalWeak) {
+      if (verb.form === 5 && c3.isWeak) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
         if (isDual(pronounId)) return dropNoonEnding(word)
@@ -295,7 +289,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (isDual(pronounId)) {
         const base = dropNoonEnding(word)
 
-        if (isMiddleHamza || isMiddleWeak || isFinalHamza) return base
+        if (c2.isHamza || c2.isWeak || c3.isHamza) return base
 
         if (base.at(-3) === WAW) return [...base.slice(0, -3), WAW, SUKOON, ALIF]
 
@@ -306,7 +300,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return base
       }
 
-      if (pronounId === '2fs' && verb.form === 7 && isGeminate)
+      if (pronounId === '2fs' && verb.form === 7 && c2.equals(c3))
         return dropNoonEnding(word)
           .slice(0, -1)
           .filter((char) => char !== SHADDA)
@@ -327,15 +321,14 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...word.slice(0, -1), FATHA]
       }
 
-      if (verb.form !== 5 && isMiddleWeak && isFinalHamza)
-        return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]
+      if (verb.form !== 5 && c2.isWeak && c3.isHamza) return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]
 
-      if (isFinalWeak) return removeFinalDiacritic(word).slice(0, -1)
+      if (c3.isWeak) return removeFinalDiacritic(word).slice(0, -1)
 
-      if (([1, 3, 4, 7, 8, 10].includes(verb.form) && isGeminate) || verb.form === 9)
+      if (([1, 3, 4, 7, 8, 10].includes(verb.form) && c2.equals(c3)) || verb.form === 9)
         return [...removeFinalDiacritic(word), FATHA]
 
-      if (isMiddleWeak) {
+      if (c2.isWeak) {
         if (verb.form === 1 && (word.includes(ALIF) || !isFormIPastVowel(verb, KASRA)))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
