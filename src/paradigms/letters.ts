@@ -41,18 +41,15 @@ type Hamza = typeof HAMZA | typeof ALIF_HAMZA | typeof HAMZA_ON_WAW | typeof HAM
 
 type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
 
-// TODO: strictly type Letter
-type Letter = string
-
 // FIXME: RootLetter is a bad name, it's used for non-root letters as well
 export class RootLetter {
-  letter: Letter
-  isHamza: boolean
-  isWeak: boolean
+  readonly letter: string
+  readonly isHamza: boolean
+  readonly isWeak: boolean
 
-  constructor(letter: Letter) {
+  constructor(letter: string) {
     this.letter = letter
-    this.isHamza = letter === HAMZA
+    this.isHamza = isHamzatedLetter(letter)
     this.isWeak = isWeakLetter(letter)
   }
 
@@ -77,7 +74,7 @@ export function tokenize(text: string): readonly RootLetter[] {
   })
 }
 
-export type Token = Letter | Vowel | RootLetter
+export type Token = string | Vowel | RootLetter
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),

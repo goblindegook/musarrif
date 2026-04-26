@@ -272,6 +272,7 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const colors = isDark ? CHART_COLORS.dark : CHART_COLORS.light
+    const spline = uPlot.paths?.spline?.()
 
     const plot = new uPlot(
       {
@@ -300,9 +301,27 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
             label: dateLabel,
             value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
           },
-          { label: correctLabel, stroke: colors.correct, width: 2, value: (_, rawValue) => rawValue ?? '—' },
-          { label: incorrectLabel, stroke: colors.incorrect, width: 2, value: (_, rawValue) => rawValue ?? '—' },
-          { label: skippedLabel, stroke: colors.passed, width: 2, value: (_, rawValue) => rawValue ?? '—' },
+          {
+            label: correctLabel,
+            stroke: colors.correct,
+            width: 2,
+            paths: spline,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
+          {
+            label: incorrectLabel,
+            stroke: colors.incorrect,
+            width: 2,
+            paths: spline,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
+          {
+            label: skippedLabel,
+            stroke: colors.passed,
+            width: 2,
+            paths: spline,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
         ],
       },
       [

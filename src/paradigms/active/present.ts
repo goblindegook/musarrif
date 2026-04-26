@@ -51,8 +51,6 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
 
   if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), KASRA, ...suffix]
 
-  if (c3.isHamza) return [...stem.slice(0, -2), HAMZA_ON_YEH, KASRA, ...suffix]
-
   return [...stem.slice(0, -1), KASRA, ...suffix]
 }
 
