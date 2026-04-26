@@ -143,13 +143,6 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak) return buildForms([...prefix, pastVowel, c3], c3)
 
-  if (c2.isWeak && c3.isHamza)
-    return {
-      ...buildForms([c1, FATHA, ALIF, c3], c3),
-      suffixedBase: [c1, KASRA, c3],
-      thirdPersonMasculinePluralBase: [c1, FATHA, ALIF, c3, DAMMA],
-    }
-
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([c1, FATHA, ALIF, c3], c3),
@@ -216,15 +209,8 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastFormV(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = Root(verb.root)
-  const prefix = [TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA]
 
-  if (c3.isHamza)
-    return {
-      ...buildForms([...prefix, c3], c3),
-      thirdPersonMasculinePluralBase: [...prefix, c3, DAMMA],
-    }
-
-  return buildForms([...prefix, c3], c3)
+  return buildForms([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3], c3)
 }
 
 function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {

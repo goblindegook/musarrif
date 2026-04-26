@@ -445,15 +445,13 @@ function derivePresentFormIV(verb: NonFormIVerb): readonly string[] {
   const seatedC3 = seatHamza(c3, KASRA)
   const prefix = [YEH, DAMMA, seatedC1]
 
-  if (isHamzatedLetter(c2) && isWeakLetter(c3)) return [...prefix, KASRA, YEH]
-
   if (isHamzatedLetter(c2)) return [...prefix, KASRA, c3]
 
   if (isWeakLetter(c3)) return [...prefix, SUKOON, c2, KASRA, YEH]
 
   if (isWeakLetter(c2)) return [...prefix, KASRA, YEH, c3, DAMMA]
 
-  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c2, DAMMA]
+  if (c2 === c3) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 
   return [...prefix, SUKOON, c2, KASRA, seatedC3, DAMMA]
 }

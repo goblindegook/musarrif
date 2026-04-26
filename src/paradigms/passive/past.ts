@@ -59,15 +59,6 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
 function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
   const [c1, c2, c3] = Root(verb.root)
 
-  if (c2.isHamza && c3.isWeak) {
-    return {
-      prefix: [c1, DAMMA],
-      suffix: [c2, KASRA, YEH],
-      suffix3sd: [c2, KASRA, YEH, FATHA],
-      suffix3mp: [c2, DAMMA, WAW, SUKOON, ALIF],
-    }
-  }
-
   if (c3.isWeak)
     return {
       prefix: [c1, DAMMA, c2],

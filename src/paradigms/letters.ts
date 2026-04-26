@@ -128,11 +128,15 @@ function vowelStrength(token?: Token): number {
 function seatHamzas(tokens: readonly Token[]): readonly Token[] {
   return tokens.map((token, index) => {
     if (token instanceof RootLetter && token.letter === HAMZA) {
+      const isFirst = index === 0
+      const isLast = !tokens.at(index + 2)
       const after = tokens.at(index + 1)
 
-      if (index === 0) return after === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+      if (isFirst) return after === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
       const before = tokens.at(index - 1)
+
+      if (isLast && (before === ALIF || before === YEH || before === WAW)) return HAMZA
 
       // Avoid alif + alif hamza, seat on the line:
       if (before === ALIF && after === FATHA) return HAMZA
