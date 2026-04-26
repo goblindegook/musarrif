@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
-import { getVerb, getVerbById } from '../../paradigms/verbs'
+import { getVerbById } from '../../paradigms/verbs'
 import { ConjugationInsights } from './ConjugationInsights'
 
 beforeEach(() => cleanup())
@@ -18,9 +18,12 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 }
 
 function renderComponent(pronoun = '3ms', arabic = 'كَتَبَ') {
-  render(<ConjugationInsights verb={getVerb('كتب', 1)} verbTense="active.past" pronoun={pronoun} arabic={arabic} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ConjugationInsights verb={getVerbById('ktb-1')!} verbTense="active.past" pronoun={pronoun} arabic={arabic} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
 }
 
 describe('ConjugationInsights', () => {
@@ -75,9 +78,12 @@ describe('ConjugationInsights', () => {
   })
 
   test('dropped morphemes are rendered with strikethrough', () => {
-    render(<ConjugationInsights verb={getVerb('خرج', 10)} verbTense="active.future" pronoun="3ms" arabic="سَيَسْتَخْرِجُ" />, {
-      wrapper: Wrapper,
-    })
+    render(
+      <ConjugationInsights verb={getVerbById('xrj-10')!} verbTense="active.future" pronoun="3ms" arabic="سَيَسْتَخْرِجُ" />,
+      {
+        wrapper: Wrapper,
+      },
+    )
     fireEvent.click(screen.getByLabelText('Show explanation for سَيَسْتَخْرِجُ'))
     const dropped = screen.getAllByText('اِ')
     expect(dropped[0].tagName).toBe('DEL')

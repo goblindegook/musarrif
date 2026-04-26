@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
 import { RoutingProvider } from '../../hooks/routing'
 import { ConjugateBox } from './ConjugateBox'
+import { tokenize } from '../../paradigms/letters'
 
 function Wrapper({ children }: { children: ComponentChildren }) {
   return (
@@ -99,6 +100,7 @@ describe('ConjugateBox', () => {
         selectedVerb={{
           id: 'ktb-2',
           root: 'كتب',
+          rootTokens: tokenize('كتب'),
           form: 2,
           label: 'كَتَّبَ',
           rootId: 'ktb',

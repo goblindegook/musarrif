@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import { describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/i18n'
-import { getVerb, synthesizeVerb } from '../../paradigms/verbs'
+import { getVerbById, synthesizeVerb } from '../../paradigms/verbs'
 import { VerbHeaderPanel, type VerbHeaderPanelProps } from './VerbHeaderPanel'
 
 const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
@@ -19,7 +19,7 @@ const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps
 describe('VerbHeaderPanel', () => {
   test('renders verb, translation, actions, and content', () => {
     renderVerbHeaderPanel({
-      verb: getVerb('كتب', 1),
+      verb: getVerbById('ktb-1')!,
       actions: <button type="button">Share</button>,
       children: <p>Details</p>,
     })
@@ -33,7 +33,7 @@ describe('VerbHeaderPanel', () => {
   })
 
   test('does not show asterisk for corpus verb', () => {
-    renderVerbHeaderPanel({ verb: getVerb('كتب', 1) })
+    renderVerbHeaderPanel({ verb: getVerbById('ktb-1')! })
     expect(screen.getByRole('heading', { level: 2 }).textContent).not.toContain('*')
   })
 
