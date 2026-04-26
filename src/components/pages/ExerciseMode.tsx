@@ -14,6 +14,7 @@ import {
   serializeDayStats,
 } from '../../exercises/stats'
 import { useDimensionStore } from '../../hooks/dimension-store'
+import { useDocumentTitle } from '../../hooks/document-title'
 import { useI18n } from '../../hooks/i18n'
 import { useLocalStorage } from '../../hooks/local-storage'
 import { useSrsStore } from '../../hooks/srs-store'
@@ -36,6 +37,9 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const [selected, setSelected] = useState<number | null>(null)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
+
+  useDocumentTitle([t('mode.exercise'), t('title')].join(' · '))
+
   const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
   const updateStats = useCallback(
     (updater: (current: DayStats[]) => DayStats[]) => {
@@ -98,10 +102,6 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     const nextButton = document.querySelector('button[autofocus]')
     if (nextButton instanceof HTMLButtonElement) nextButton.focus()
   }, [isAnswered])
-
-  useEffect(() => {
-    document.title = [t('mode.exercise'), t('title')].join(' · ')
-  }, [t])
 
   return (
     <ExerciseLayout>

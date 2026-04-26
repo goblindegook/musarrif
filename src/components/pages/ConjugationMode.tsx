@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { Fragment } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useDocumentTitle } from '../../hooks/document-title'
 import { useFavourites } from '../../hooks/favourites'
 import { useI18n } from '../../hooks/i18n'
 import { useRecent } from '../../hooks/recent'
@@ -115,6 +116,14 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     () => (syntheticVerb?.id === verbId ? syntheticVerb : routeVerb),
     [syntheticVerb, verbId, routeVerb],
   )
+
+  const documentTitle = useMemo(
+    () => [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · '),
+    [formatArabic, selectedVerb, t],
+  )
+
+  useDocumentTitle(documentTitle)
+
   const selectedVerbFormLabel = useMemo(
     () => (selectedVerb ? formatFormLabel(selectedVerb.form, selectedVerb.root) : ''),
     [selectedVerb],
@@ -131,10 +140,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   useEffect(() => {
     setOpenModal(null)
   }, [selectedVerb])
-
-  useEffect(() => {
-    document.title = [formatArabic(selectedVerb?.label ?? ''), t('title')].filter(Boolean).join(' · ')
-  }, [selectedVerb, formatArabic, t])
 
   const derivedForms = useMemo(
     () => (selectedVerb?.root ? search(selectedVerb?.root, { exactRoot: true }).sort((a, b) => a.form - b.form) : []),

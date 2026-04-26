@@ -1,5 +1,6 @@
 import { styled } from 'goober'
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useMemo, useState } from 'preact/hooks'
+import { useDocumentTitle } from '../../hooks/document-title'
 import { useFavourites } from '../../hooks/favourites'
 import { useI18n } from '../../hooks/i18n'
 import { useRecent } from '../../hooks/recent'
@@ -39,6 +40,8 @@ export function Home() {
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
 
+  useDocumentTitle(t('title'))
+
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       navigateTo(['verbs', verb.id])
@@ -47,10 +50,6 @@ export function Home() {
   )
 
   const sortedRecents = useMemo(() => recents, [recents])
-
-  useEffect(() => {
-    document.title = t('title')
-  }, [t])
 
   return (
     <Main>
