@@ -11,7 +11,6 @@ import {
   longVowel,
   MEEM,
   NOON,
-  Root,
   resolveFormVIIIInfixConsonant,
   SHADDA,
   SUKOON,
@@ -25,7 +24,7 @@ import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): string {
   const result = (() => {
-    const letters = Root(verb.root)
+    const letters = verb.rootTokens
 
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters

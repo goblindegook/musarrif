@@ -3,23 +3,19 @@ import { formIPresentVowel, isFormIPastVowel, isFormIPresentVowel } from '../for
 import {
   ALIF,
   ALIF_HAMZA,
-  ALIF_HAMZA_BELOW,
   ALIF_MAQSURA,
   DAL,
   DAMMA,
   FATHA,
   finalize,
   HAMZA,
-  HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   isDiacritic,
-  isHamzatedLetter,
   isWeakLetter,
   KASRA,
   LAM,
   longVowel,
   NOON,
-  Root,
   RootLetter,
   resolveFormVIIIInfixConsonant,
   SEEN,
@@ -27,6 +23,7 @@ import {
   SUKOON,
   TEH,
   type Token,
+  tokenize,
   type Vowel,
   WAW,
   YEH,
@@ -36,17 +33,17 @@ import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../
 import type { Mood } from '../tense'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 
-function isFormIFinalWeakPresent(verb: Verb, vowel: Vowel): boolean {
+function isFormIDefectiveVowel(verb: Verb, vowel: Vowel): boolean {
   return verb.form === 1 && isWeakLetter(verb.root.at(-1)) && isFormIPresentVowel(verb, vowel)
 }
 
 function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Token[] {
   if (verb.root.length > 3) return [...dropFinalDiacritic(stem), KASRA, YEH, SUKOON, NOON, FATHA]
 
-  const [, c2, c3] = Root(verb.root)
+  const [, c2, c3] = verb.rootTokens
   const suffix = [YEH, SUKOON, NOON, FATHA]
 
-  if (isFormIFinalWeakPresent(verb, FATHA)) return [...stem.slice(0, -2), FATHA, ...suffix]
+  if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, ...suffix]
 
   if (verb.form === 7 && c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, ...suffix]
 
@@ -54,7 +51,9 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
 
   if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), KASRA, ...suffix]
 
-  return [...dropTerminalHamza(stem, KASRA), KASRA, ...suffix]
+  if (c3.isHamza) return [...stem.slice(0, -2), HAMZA_ON_YEH, KASRA, ...suffix]
+
+  return [...stem.slice(0, -1), KASRA, ...suffix]
 }
 
 function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
@@ -62,18 +61,14 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 
   if (verb.root.length > 3) return [...stem, ...suffix]
 
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = stem.slice(0, -2)
 
-  if (isFormIFinalWeakPresent(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
+  if (isFormIDefectiveVowel(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
 
-  if (isFormIFinalWeakPresent(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
+  if (isFormIDefectiveVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
 
-  if (c2.isWeak && c3.isHamza) {
-    const preceding = prefix.at(-1)
-    if (preceding === WAW) return [...prefix, HAMZA, DAMMA, ...suffix]
-    if (preceding === YEH) return [...prefix, HAMZA_ON_WAW, DAMMA, ...suffix]
-  }
+  if (c2.isWeak && c3.isHamza && prefix.at(-1) === WAW) return [...prefix, HAMZA, DAMMA, ...suffix]
 
   if (c3.isWeak) {
     if (c2.isWeak) return [...prefix, DAMMA, ...suffix]
@@ -106,13 +101,13 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
   const suffix = [SUKOON, NOON, FATHA]
 
   if (verb.root.length > 3) {
-    const [, , c3, c4] = Root(verb.root)
+    const [, , c3, c4] = verb.rootTokens
     return verb.form === 4
       ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...suffix]
       : [...dropFinalDiacritic(stem), ...suffix]
   }
 
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
     switch (verb.form) {
@@ -136,7 +131,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
     }
   }
 
-  if (isFormIFinalWeakPresent(verb, FATHA))
+  if (isFormIDefectiveVowel(verb, FATHA))
     return c2.isHamza ? [YEH, FATHA, c1, FATHA, YEH, ...suffix] : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
 
   if ([2, 3, 4, 5, 6, 7, 8, 9].includes(verb.form) && c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
@@ -146,7 +141,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
   if (verb.form === 9) return [...dropFinalDiacritic(expandGemination(stem, KASRA)), ...suffix]
 
   if (c2.isWeak) {
-    if (verb.form !== 5 && c3.isHamza) return [...dropTerminalHamza(shortenHollowStem(stem)), ...suffix]
+    if (verb.form !== 5 && c3.isHamza) return [...shortenHollowStem(stem).slice(0, -2), ...tokenize(HAMZA), ...suffix]
 
     if (verb.form === 1 && (stem.includes(ALIF) || !isFormIPastVowel(verb, KASRA)) && !c3.isWeak)
       return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
@@ -162,7 +157,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] {
   if (verb.root.length > 3) return [...dropFinalDiacritic(stem), FATHA, ALIF, NOON, KASRA]
 
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const suffix = [FATHA, ALIF, NOON, KASRA]
 
   if (c3.isHamza) {
@@ -175,7 +170,7 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
   if (c3.isWeak) {
     if (c2.isHamza) return [...stem.slice(0, -1), YEH, ...suffix]
 
-    if (isFormIFinalWeakPresent(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+    if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
 
     if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
 
@@ -221,7 +216,7 @@ function dropNoonEnding(word: readonly Token[]): readonly Token[] {
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [, , c3] = Root(verb.root)
+  const [, , c3] = verb.rootTokens
 
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
@@ -257,7 +252,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, string> {
-  const letters = Root(verb.root)
+  const letters = verb.rootTokens
   const [c1, c2, c3] = letters
 
   if (letters.length > 3) {
@@ -283,7 +278,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      if (isFormIFinalWeakPresent(verb, FATHA)) {
+      if (isFormIDefectiveVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
       }
@@ -329,12 +324,14 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return [...word.slice(0, -1), FATHA]
       }
 
-      if (verb.form !== 5 && c2.isWeak && c3.isHamza) return [...dropTerminalHamza(shortenHollowStem(word)), SUKOON]
+      if (verb.form !== 5 && c2.isWeak && c3.isHamza)
+        return [...shortenHollowStem(word).slice(0, -2), ...tokenize(HAMZA), SUKOON]
 
       if (c3.isWeak) return dropFinalDiacritic(word).slice(0, -1)
 
-      if (([1, 3, 4, 7, 8, 10].includes(verb.form) && c2.equals(c3)) || verb.form === 9)
-        return [...dropFinalDiacritic(word), FATHA]
+      if (c2.equals(c3) && [1, 3, 4, 7, 8, 9, 10].includes(verb.form)) return [...dropFinalDiacritic(word), FATHA]
+
+      if (verb.form === 9) return [...dropFinalDiacritic(word), FATHA]
 
       if (c2.isWeak) {
         if (verb.form === 1 && (word.includes(ALIF) || !isFormIPastVowel(verb, KASRA)))
@@ -363,31 +360,31 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
 }
 
 function derivePresentFormIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c3, KASRA, c4, DAMMA]
 }
 
 function derivePresentFormIIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, DAMMA]
 }
 
 function derivePresentFormIIIq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, KASRA, c4, DAMMA]
 }
 
 function derivePresentFormIVq(verb: Verb): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, KASRA, c4, SUKOON, c4, DAMMA]
 }
 
 function derivePresentFormI(verb: FormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const presentVowel = formIPresentVowel(verb)
   const prefix = [YEH, FATHA]
 
@@ -407,8 +404,6 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
 
   if (c1.is(WAW)) return [...prefix, c2, presentVowel, c3, DAMMA]
 
-  if (c1.isHamza && c2.isWeak) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
-
   // FIXME: isFormIPastVowel check doesn't make sense here
   if (!isFormIPastVowel(verb, KASRA) && c2.isWeak)
     return [...prefix, c1, ...longVowel(c2.is(YEH) ? KASRA : presentVowel), c3, DAMMA]
@@ -417,7 +412,7 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
 }
 
 function derivePresentFormII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak) return [YEH, DAMMA, c1, FATHA, c2, SUKOON, c2, KASRA, c3]
 
@@ -425,7 +420,7 @@ function derivePresentFormII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [YEH, DAMMA, c1, FATHA, ALIF, c2]
 
   if (c2.equals(c3)) return [...prefix, SUKOON, c3, DAMMA]
@@ -436,7 +431,7 @@ function derivePresentFormIII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormIV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [YEH, DAMMA, c1]
 
   if (c2.isHamza) return [...prefix, KASRA, c3]
@@ -451,7 +446,7 @@ function derivePresentFormIV(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.is(YEH)) return [YEH, FATHA, TEH, FATHA, c1, FATHA, c2, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
@@ -459,7 +454,7 @@ function derivePresentFormV(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormVI(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [YEH, FATHA, TEH, FATHA, c1, FATHA, ALIF]
 
   if (c3.isWeak) return [...prefix, c2, FATHA, ALIF_MAQSURA]
@@ -470,7 +465,7 @@ function derivePresentFormVI(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormVII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [YEH, FATHA, NOON, SUKOON, c1, FATHA]
 
   if (c2.equals(c3)) return [...prefix, c2, SHADDA, DAMMA]
@@ -483,7 +478,7 @@ function derivePresentFormVII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1.letter)
   const seatedC2 = c2
@@ -499,13 +494,13 @@ function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function derivePresentFormIX(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   return [YEH, FATHA, c1, SUKOON, c2, FATHA, c3, SUKOON, c3, DAMMA]
 }
 
 function derivePresentFormX(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1]
 
   if (c2.isWeak && c3.isWeak) return [...prefix, SUKOON, c2, KASRA, c3]
@@ -579,19 +574,6 @@ function expandGemination(word: readonly Token[], vowel: Vowel): readonly Token[
       .join('')
       .replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${vowel}$1`),
   )
-}
-
-function seatHamza(letter: string, dominantVowel?: string, firstLetter = false): string {
-  if (!isHamzatedLetter(letter)) return letter
-  if (dominantVowel === FATHA) return ALIF_HAMZA
-  if (dominantVowel === KASRA) return firstLetter ? ALIF_HAMZA_BELOW : HAMZA_ON_YEH
-  if (dominantVowel === DAMMA) return firstLetter ? ALIF_HAMZA : HAMZA_ON_WAW
-  return HAMZA
-}
-
-function dropTerminalHamza(stem: readonly Token[], hamzaVowel?: Vowel): readonly Token[] {
-  const previous = stem.slice(0, -2)
-  return [...previous, seatHamza(stem.at(-2) as string, hamzaVowel ?? (previous.at(-1) as Vowel))]
 }
 
 function applyPresentPrefix(prefix: string, chars: readonly Token[]): readonly Token[] {

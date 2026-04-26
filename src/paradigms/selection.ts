@@ -1,7 +1,7 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { wordDistance } from '../primitives/strings'
-import { ALIF, applyDiacriticsPreference, HAMZA } from './letters'
-import { type DisplayVerb, normalizeHamza, verbs, verbsByRoot } from './verbs'
+import { ALIF, applyDiacriticsPreference, HAMZA, normalizeHamza } from './letters'
+import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
 const CLOSEST_VERB_CACHE = new Map<string, DisplayVerb[]>()

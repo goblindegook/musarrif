@@ -9,7 +9,6 @@ import {
   KASRA,
   longVowel,
   NOON,
-  Root,
   RootLetter,
   SHADDA,
   SUKOON,
@@ -21,10 +20,10 @@ import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 // Ensures hamza seating is handled on finalization:
-const HAMZA_LETTER = new RootLetter(HAMZA)
+const HAMZA_TOKEN = new RootLetter(HAMZA)
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
-  const letters = Root(verb.root)
+  const letters = verb.rootTokens
   const [c1, c2, c3] = letters
 
   return mapRecord(
@@ -48,7 +47,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
             if (c1.is(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
 
-            if (c2.isHamza) return [HAMZA_LETTER, ...stem.slice(1)]
+            if (c2.isHamza) return [HAMZA_TOKEN, ...stem.slice(1)]
           }
 
           if (c1.isHamza) {
@@ -62,7 +61,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             }
 
             if (c2.equals(c3)) {
-              const seatedC1 = isPatternI ? [HAMZA_LETTER, KASRA] : [HAMZA_LETTER, DAMMA]
+              const seatedC1 = isPatternI ? [HAMZA_TOKEN, KASRA] : [HAMZA_TOKEN, DAMMA]
               const prefix = [...seatedC1, c2, SHADDA]
 
               if (pronounId === '2ms') return [...prefix, FATHA]
@@ -72,7 +71,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
               return [ALIF, ...patternLongVowel, ...initialHamzatedStem]
             }
 
-            if (c2.isWeak) return [HAMZA_LETTER, DAMMA, ...initialHamzatedStem]
+            if (c2.isWeak) return [HAMZA_TOKEN, DAMMA, ...initialHamzatedStem]
 
             if (isPatternU) return [ALIF, DAMMA, c1, SUKOON, ...initialHamzatedStem]
 
@@ -90,15 +89,15 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
         case 2:
         case 3: {
-          if (c1.isHamza) return [HAMZA_LETTER, ...stem.slice(1)]
+          if (c1.isHamza) return [HAMZA_TOKEN, ...stem.slice(1)]
           if (c3.isWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 4: {
-          if (c1.isHamza) return [HAMZA_LETTER, FATHA, ALIF, ...stem.slice(2)]
-          if (c3.isWeak && pronounId === '2d') return [HAMZA_LETTER, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
-          return [HAMZA_LETTER, FATHA, ...stem]
+          if (c1.isHamza) return [HAMZA_TOKEN, FATHA, ALIF, ...stem.slice(2)]
+          if (c3.isWeak && pronounId === '2d') return [HAMZA_TOKEN, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
+          return [HAMZA_TOKEN, FATHA, ...stem]
         }
 
         case 5: {

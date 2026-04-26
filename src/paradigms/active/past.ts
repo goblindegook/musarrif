@@ -12,7 +12,6 @@ import {
   LAM,
   MEEM,
   NOON,
-  Root,
   RootLetter,
   resolveFormVIIIInfixConsonant,
   SEEN,
@@ -35,7 +34,7 @@ interface PastBaseForms {
   thirdPersonMasculinePluralBase: readonly Token[]
 }
 
-const YEH_ROOT = new RootLetter(YEH)
+const YEH_TOKEN = new RootLetter(YEH)
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =
@@ -92,7 +91,7 @@ function buildForms(stem: readonly Token[], defective?: RootLetter): PastBaseFor
 }
 
 function derivePastFormIq(verb: Verb): PastBaseForms {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   const stem = [c1, FATHA, c2, SUKOON, c3, FATHA, c4]
 
   return {
@@ -102,17 +101,17 @@ function derivePastFormIq(verb: Verb): PastBaseForms {
 }
 
 function derivePastFormIIq(verb: Verb): PastBaseForms {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms([TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4], c4)
 }
 
 function derivePastFormIIIq(verb: Verb): PastBaseForms {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4], c4)
 }
 
 function derivePastFormIVq(verb: Verb): PastBaseForms {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   const prefix = [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3]
 
   return {
@@ -125,7 +124,7 @@ function derivePastFormIVq(verb: Verb): PastBaseForms {
 }
 
 function derivePastFormI(verb: FormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const pastVowel = formIPastVowel(verb)
   const prefix = [c1, FATHA, c2]
 
@@ -153,7 +152,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 }
 
 function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [c1, FATHA, c2, SHADDA, FATHA]
 
   if (c2.is(YEH) && c3.is(YEH))
@@ -166,7 +165,7 @@ function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastFormIII(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [c1, FATHA, ALIF, c2]
 
   if (c2.equals(c3))
@@ -179,7 +178,7 @@ function derivePastFormIII(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [ALIF_HAMZA, FATHA, c1]
 
   if (c2.equals(c3) && c3.isWeak)
@@ -191,9 +190,9 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
   if (c2.equals(c3)) return buildForms([...prefix, FATHA, c2, SUKOON, c3], c3)
 
-  if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH_ROOT)
+  if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH_TOKEN)
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_ROOT)
+  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_TOKEN)
 
   if (c2.isWeak && c3.isHamza)
     return {
@@ -208,13 +207,13 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastFormV(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   return buildForms([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3], c3)
 }
 
 function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [TEH, FATHA, c1]
 
   if (c2.equals(c3))
@@ -230,13 +229,13 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
       thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, c3, DAMMA],
     }
 
-  if (c3.isWeak) return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], YEH_ROOT)
+  if (c3.isWeak) return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], YEH_TOKEN)
 
   return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3)
 }
 
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [ALIF, KASRA, NOON, SUKOON, c1, FATHA]
 
   if (c2.equals(c3))
@@ -257,7 +256,7 @@ function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1.letter)
   const prefix = [ALIF, KASRA, c1, SUKOON, infix, FATHA]
 
@@ -269,7 +268,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
 
   if (c1.is(WAW) || c1.isHamza) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3], c3)
 
-  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_ROOT)
+  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_TOKEN)
 
   if (c2.is(YEH))
     return {
@@ -279,13 +278,13 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
 
   if (c2.isWeak && infix !== DAL) return buildForms([...prefix, ALIF, c3], c3)
 
-  if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_ROOT)
+  if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_TOKEN)
 
   return buildForms([...prefix, c2, FATHA, c3], c3)
 }
 
 function derivePastFormIX(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   return {
     ...buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SUKOON, c3], c3),
     suffixedBase: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, FATHA, c3],
@@ -293,7 +292,7 @@ function derivePastFormIX(verb: NonFormIVerb): PastBaseForms {
 }
 
 function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1]
 
   if (c2.isWeak && c3.isWeak) return buildForms([...prefix, FATHA, ALIF], c3)
@@ -304,7 +303,7 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, SUKOON, c2, FATHA, c3],
     }
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_ROOT)
+  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_TOKEN)
 
   if (c2.isWeak)
     return {

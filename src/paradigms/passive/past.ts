@@ -10,7 +10,6 @@ import {
   KASRA,
   MEEM,
   NOON,
-  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -57,7 +56,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, string> {
 }
 
 function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
     return {
@@ -92,7 +91,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   return {
     prefix: [c1, DAMMA, c2, SHADDA, KASRA],
     suffix: [c3, SUKOON],
@@ -102,7 +101,7 @@ function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   return {
     prefix: [c1, DAMMA, WAW, c2, KASRA],
     suffix: [c3, SUKOON],
@@ -112,7 +111,7 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c2.isHamza)
     return {
@@ -166,7 +165,7 @@ function derivePassivePastFormV(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
     return {
@@ -183,7 +182,7 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
     return {
@@ -207,7 +206,7 @@ function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1.letter)
 
   if (c2.equals(c3))
@@ -259,7 +258,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
     return {
@@ -295,7 +294,7 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
     prefix: [c1, DAMMA, c2.is(YEH) ? WAW : c2, SUKOON, c3, KASRA, c4],
@@ -306,7 +305,7 @@ function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
     prefix: [TEH, DAMMA, c1, DAMMA, c2, SUKOON, c3, KASRA, c4],
@@ -315,7 +314,7 @@ function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
     prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA, NOON, SUKOON, c3, KASRA, c4],
@@ -324,7 +323,7 @@ function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
     prefix: [ALIF, DAMMA, c1, SUKOON, c2, DAMMA],

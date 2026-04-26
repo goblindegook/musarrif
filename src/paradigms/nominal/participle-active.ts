@@ -11,7 +11,6 @@ import {
   KASRA,
   MEEM,
   NOON,
-  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -24,7 +23,7 @@ import {
 import type { Verb } from '../verbs'
 
 export function participleStem(verb: Verb): readonly Token[] {
-  const [c1, c2] = Root(verb.root)
+  const [c1, c2] = verb.rootTokens
   switch (verb.form) {
     case 2:
       return [MEEM, DAMMA, c1, FATHA, c2, SHADDA]
@@ -47,7 +46,7 @@ export function participleStem(verb: Verb): readonly Token[] {
 
 export function deriveActiveParticiple(verb: Verb): string {
   const result = (() => {
-    const letters = Root(verb.root)
+    const letters = verb.rootTokens
 
     if (letters.length === 4) {
       const [q1, q2, q3, q4] = letters

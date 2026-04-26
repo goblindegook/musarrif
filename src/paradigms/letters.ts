@@ -65,9 +65,16 @@ export class RootLetter {
   }
 }
 
-// FIXME: This should be done once when building the verb:
-export function Root(root: string): readonly RootLetter[] {
-  return [...root].map((letter) => new RootLetter(letter))
+const tokenCache = new Map<string, RootLetter>()
+
+export function tokenize(text: string): readonly RootLetter[] {
+  return [...text].map((char) => {
+    const token = tokenCache.get(char)
+    if (token) return token
+    const newToken = new RootLetter(char)
+    tokenCache.set(char, newToken)
+    return newToken
+  })
 }
 
 export type Token = Letter | Vowel | RootLetter
@@ -81,7 +88,7 @@ const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
   if (preference === 'all') return input
   if (preference === 'some') return stripObviousDiacritics(input)
-  return stripDiacritics(input)
+  return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
 }
 
 function stripObviousDiacritics(input: string): string {
@@ -96,17 +103,16 @@ function stripObviousDiacritics(input: string): string {
     .join('')
 }
 
-function stripDiacritics(input: string): string {
-  return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
-}
-
 export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
-export function isHamzatedLetter(value = ''): value is Hamza {
-  return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
+export function isHamzatedLetter(token: Token = ''): token is Hamza {
+  if (token instanceof RootLetter) return token.isHamza
+  return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(token)
 }
+
+export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
 
 export function isDiacritic(token: Token = ''): boolean {
   return !(token instanceof RootLetter) && COMBINING_MARK.test(token)

@@ -10,7 +10,6 @@ import {
   finalize,
   KASRA,
   NOON,
-  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -97,7 +96,7 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
 }
 
 function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
     if (!c1.isWeak && isFemininePlural(pronounId)) return [c1, SUKOON]
@@ -118,7 +117,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly To
 }
 
 function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [, c2, c3] = Root(verb.root)
+  const [, c2, c3] = verb.rootTokens
 
   if (c2.isHamza) return []
 
@@ -139,7 +138,7 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 }
 
 function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
-  const [, c2, c3] = Root(verb.root)
+  const [, c2, c3] = verb.rootTokens
 
   if (c3.isWeak) return []
 
@@ -153,7 +152,7 @@ function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly To
 }
 
 function buildSuffixFormI(verb: FormIVerb, mood: Mood, pronounId: PronounId): readonly Token[] {
-  const [, c2, c3] = Root(verb.root)
+  const [, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) return geminateSuffix(mood, pronounId)
 
@@ -172,7 +171,7 @@ function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mo
 }
 
 function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [c1, FATHA, c2, SHADDA]
 
@@ -186,7 +185,7 @@ function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId
 }
 
 function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [c1, FATHA, ALIF, c2]
 
@@ -201,16 +200,10 @@ function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounI
 }
 
 function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
   if (c1.isHamza && pronounId === '1s') return [WAW, c2, FATHA, mood !== 'jussive' ? ALIF_MAQSURA : '']
-
-  if (c2.isWeak && c3.isHamza) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [c1, FATHA, c3, ...moodSuffix]
-    if (pronounId === '2fs' || isMasculinePlural(pronounId)) return [c1, FATHA, ALIF, c3, ...moodSuffix]
-    return [c1, FATHA, ALIF, c3, ...moodSuffix]
-  }
 
   if (c2.isHamza) return [c1, FATHA, ...defectiveSuffix(mood, pronounId)]
 
@@ -230,7 +223,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
 }
 
 function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
   if (c3.isWeak) return [TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, ...defectiveSuffix(mood, pronounId)]
@@ -239,7 +232,7 @@ function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId,
 }
 
 function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak) return [TEH, FATHA, c1, FATHA, ALIF, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
@@ -247,7 +240,7 @@ function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId
 }
 
 function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
     if (pronounId === '2fs' && mood !== 'indicative') return [NOON, SUKOON, c1, FATHA, c2, KASRA, YEH]
@@ -265,7 +258,7 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
 }
 
 function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1.letter)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
@@ -302,7 +295,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
 }
 
 function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [SEEN, SUKOON, TEH, FATHA]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
@@ -313,8 +306,6 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
     return [...prefix, c1, FATHA, c2, SHADDA, ...geminateSuffix(mood, pronounId)]
   }
 
-  if (c3.isHamza && moodSuffix.at(0) === SUKOON) return [...prefix, c1, FATHA, ALIF_HAMZA, ...moodSuffix]
-
   if (c2.isWeak) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [...prefix, c1, FATHA, c3, ...moodSuffix]
     return [...prefix, c1, FATHA, ALIF, c3, ...moodSuffix]
@@ -324,22 +315,22 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
 }
 
 function derivePassivePresentStemFormIq(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function derivePassivePresentStemFormIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   return [TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function derivePassivePresentStemFormIIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
   return [c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function derivePassivePresentStemFormIVq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [c1, c2, c3, c4] = Root(verb.root)
+  const [c1, c2, c3, c4] = verb.rootTokens
 
   const useLongForm =
     isFemininePlural(pronounId) ||

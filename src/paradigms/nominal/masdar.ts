@@ -13,7 +13,6 @@ import {
   longVowel,
   MEEM,
   NOON,
-  Root,
   resolveFormVIIIInfixConsonant,
   SEEN,
   SHADDA,
@@ -29,7 +28,7 @@ import {
 import type { FormIVerb, MasdarPattern, NonFormIVerb, Verb } from '../verbs'
 
 function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   switch (pattern) {
     case 'fa3l':
@@ -102,7 +101,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
 }
 
 function deriveMasdarFormII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [TEH, FATHA, c1]
 
@@ -114,7 +113,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const prefix = [MEEM, DAMMA, c1, FATHA, ALIF]
 
   if (c2.equals(c3)) return [...prefix, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
@@ -125,7 +124,7 @@ function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormIV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [ALIF_HAMZA_BELOW, KASRA, c1.isWeak || c1.isHamza ? YEH : c1]
 
@@ -139,7 +138,7 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormV(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [TEH, FATHA, c1, FATHA, c2, SHADDA]
 
@@ -149,7 +148,7 @@ function deriveMasdarFormV(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormVI(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [TEH, FATHA, c1, FATHA, ALIF]
 
@@ -161,7 +160,7 @@ function deriveMasdarFormVI(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormVII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
 
@@ -173,7 +172,7 @@ function deriveMasdarFormVII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1.letter)
   const prefix = [ALIF, KASRA, c1.isWeak || c1.isHamza ? infix : c1, SUKOON, infix, KASRA]
 
@@ -187,13 +186,13 @@ function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormIX(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   return [ALIF, KASRA, c1, SUKOON, c2, KASRA, c3, FATHA, ALIF, c3]
 }
 
 function deriveMasdarFormX(verb: NonFormIVerb): readonly Token[] {
-  const [c1, c2, c3] = Root(verb.root)
+  const [c1, c2, c3] = verb.rootTokens
 
   const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
 
@@ -207,7 +206,7 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly Token[] {
 }
 
 function deriveMasdarFormIq(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {
-  const [q1, q2, q3, q4] = Root(verb.root)
+  const [q1, q2, q3, q4] = verb.rootTokens
 
   if (pattern === 'fa3aal') return [q1, FATHA, q2, SUKOON, q3, FATHA, ALIF, q4]
 
@@ -217,17 +216,17 @@ function deriveMasdarFormIq(verb: FormIVerb, pattern: MasdarPattern): readonly T
 }
 
 function deriveMasdarFormIIq(verb: Verb): readonly Token[] {
-  const [q1, q2, q3, q4] = Root(verb.root)
+  const [q1, q2, q3, q4] = verb.rootTokens
   return [TEH, FATHA, q1, FATHA, q2, SUKOON, q3, DAMMA, q4]
 }
 
 function deriveMasdarFormIIIq(verb: Verb): readonly Token[] {
-  const [q1, q2, q3, q4] = Root(verb.root)
+  const [q1, q2, q3, q4] = verb.rootTokens
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, NOON, SUKOON, q3, FATHA, ALIF, q4]
 }
 
 function deriveMasdarFormIVq(verb: Verb): readonly Token[] {
-  const [q1, q2, q3, q4] = Root(verb.root)
+  const [q1, q2, q3, q4] = verb.rootTokens
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, q3, SUKOON, q4, FATHA, ALIF, q4]
 }
 

@@ -6,10 +6,11 @@ import {
   HAMZA,
   isDiacritic,
   isWeakLetter,
+  normalizeHamza,
   WAW,
   YEH,
 } from '../paradigms/letters'
-import { normalizeHamza, verbs } from '../paradigms/verbs'
+import { verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 
 type DistractorGenerator<T> = () => T

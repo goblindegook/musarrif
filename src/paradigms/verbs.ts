@@ -2,7 +2,7 @@ import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { HAMZA } from './letters'
+import { normalizeHamza, type RootLetter, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -41,6 +41,7 @@ export type PassiveVoice = 'none' | 'impersonal'
 
 export type FormIVerb = {
   root: string
+  rootTokens: readonly RootLetter[]
   form: 1
   formPattern: FormIPattern
   masdarPatterns?: readonly MasdarPattern[]
@@ -51,6 +52,7 @@ export type FormIVerb = {
 
 export type NonFormIVerb = {
   root: string
+  rootTokens: readonly RootLetter[]
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
@@ -58,17 +60,22 @@ export type NonFormIVerb = {
 
 export type Verb = FormIVerb | NonFormIVerb
 
-type VerbBase<T extends Verb> = T & { id: string; label: string; rootId: string; synthetic?: true }
+type VerbBase<T extends Verb> = T & {
+  id: string
+  label: string
+  rootId: string
+  synthetic?: true
+}
 
 export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<FormIVerb> : VerbBase<NonFormIVerb>
 
-export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
-
-export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((rawVerb) => {
-  const rootId = rawVerb.root
-  const verb = { ...rawVerb, root: transliterateReverse(rootId) }
+export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((raw) => {
+  const rootId = raw.root
+  const root = transliterateReverse(rootId)
+  // FIXME: improve this, there's only a small set of tokens
+  const verb = { ...raw, root, rootTokens: tokenize(root) }
   const past = conjugatePast(verb)
-  return { ...verb, label: past['3ms'], id: `${rootId}-${rawVerb.form}`, rootId }
+  return { ...verb, label: past['3ms'], id: `${rootId}-${raw.form}`, rootId }
 })
 
 const verbsById = new Map<string, DisplayVerb>()
@@ -93,6 +100,12 @@ export function getVerbById(id?: string): DisplayVerb | undefined {
   return id ? verbsById.get(id) : undefined
 }
 
+export function getVerb(root: string, form: VerbForm): Verb {
+  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
+  if (verb == null) throw new Error(`Verb with root ${root} and form ${form} not found`)
+  return verb
+}
+
 export function buildVerbFromId(id?: string): DisplayVerb | undefined {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
@@ -114,16 +127,12 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
     (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
   )
   const raw: Verb =
-    form === 1 ? { root, form, formPattern: pattern, masdarPatterns: matchingFormI?.masdarPatterns } : { root, form }
+    form === 1
+      ? { root, rootTokens: tokenize(root), form, formPattern: pattern, masdarPatterns: matchingFormI?.masdarPatterns }
+      : { root, rootTokens: tokenize(root), form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
   return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId, synthetic: true }
-}
-
-export function getVerb(root: string, form: VerbForm): DisplayVerb {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
-  if (verb == null) throw new Error(`Verb with root ${root} and form ${form} not found`)
-  return verb
 }
 
 const ALL_PARADIGMS: readonly VerbParadigm[] = [...ALL_TENSES, 'active.participle', 'passive.participle', 'masdar']
