@@ -22,8 +22,8 @@ import { Detail } from '../molecules/Detail'
 import { Panel } from '../molecules/Panel'
 
 const CHART_COLORS = {
-  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8', grid: '#e2e8f0' },
-  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060', grid: '#3a342a' },
+  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8', grid: '#e2e8f0', text: '#3a342a' },
+  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060', grid: '#3a342a', text: '#d6dce3' },
 }
 
 type Props = {
@@ -285,14 +285,12 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
           y: { auto: true },
         },
         axes: [
-          {},
           {
-            size: 0,
-            gap: 0,
-            ticks: { show: false },
-            values: () => [],
             grid: { stroke: colors.grid },
-            stroke: 'transparent',
+            stroke: colors.text,
+          },
+          {
+            show: false,
           },
         ],
         series: [
