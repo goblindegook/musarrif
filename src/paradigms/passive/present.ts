@@ -103,52 +103,39 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
 }
 
 function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
-  const [c1, c2, c3] = Array.from(verb.root)
-  const seatedC1 = seatHamza(c1, FATHA)
+  const [c1, c2, c3] = Root(verb.root)
 
-  const isInitialHamza = isHamzatedLetter(c1)
-  const isMiddleHamza = isHamzatedLetter(c2)
-  const isInitialWeak = isWeakLetter(seatedC1)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const isGeminate = c2 === c3
+  if (c2.equals(c3)) {
+    if (!c1.isWeak && isFemininePlural(pronounId)) return [c1, SUKOON]
+    if (isFemininePlural(pronounId)) return [c1]
+    return [c1, FATHA]
+  }
 
-  if (isGeminate && !isInitialWeak && isFemininePlural(pronounId))
-    return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, SUKOON]
+  // FIXME: isFormIPastVowel doesn't make sense here
+  if (c2.isWeak && !isFormIPastVowel(verb, KASRA) && !c3.isWeak) return [c1, FATHA]
 
-  if (isGeminate && isFemininePlural(pronounId)) return [seatedC1]
+  if (c1.isHamza && pronounId === '1s') return [WAW]
 
-  if (isGeminate) return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, FATHA]
+  if (c1.is(YEH)) return [WAW]
 
-  if (isMiddleWeak && !isFormIPastVowel(verb, KASRA) && !isFinalWeak)
-    return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, FATHA]
+  if (c1.isWeak || c2.isHamza) return [c1]
 
-  if (isInitialHamza && pronounId === '1s') return [WAW]
-
-  if (seatedC1 === YEH) return [WAW]
-
-  if (isInitialWeak || isMiddleHamza) return [seatedC1]
-
-  return [isInitialHamza ? HAMZA_ON_WAW : seatedC1, SUKOON]
+  return [c1, SUKOON]
 }
 
 function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [, c2, c3] = Array.from(verb.root)
+  const [, c2, c3] = Root(verb.root)
 
-  const isMiddleHamza = isHamzatedLetter(c2)
-  const isMiddleWeak = isWeakLetter(c2)
-  const isFinalWeak = isWeakLetter(c3)
-  const isGeminate = c2 === c3
+  if (c2.isHamza) return []
 
-  if (isMiddleHamza) return []
+  if (c2.equals(c3)) {
+    if (isFemininePlural(pronounId)) return [c2, FATHA]
+    return [c2, SHADDA]
+  }
 
-  if (isGeminate && isFemininePlural(pronounId)) return [c2, FATHA]
+  if (c3.isWeak) return [c2]
 
-  if (isGeminate) return [c2, SHADDA]
-
-  if (isFinalWeak) return [c2]
-
-  if (!isMiddleWeak || isFormIPastVowel(verb, KASRA)) return [c2, FATHA]
+  if (!c2.isWeak || isFormIPastVowel(verb, KASRA)) return [c2, FATHA]
 
   if (isFemininePlural(pronounId)) return []
 
@@ -158,15 +145,15 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 }
 
 function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
-  const [, c2, c3] = Array.from(verb.root)
+  const [, c2, c3] = Root(verb.root)
 
-  if (isWeakLetter(c3)) return []
+  if (c3.isWeak) return []
 
-  if (isWeakLetter(c2)) return [c3]
+  if (c2.isWeak) return [c3]
 
-  if (isFemininePlural(pronounId)) return [seatHamza(c3, FATHA)]
+  if (isFemininePlural(pronounId)) return [c3]
 
-  if (c2 !== c3) return [seatHamza(c3, pronounId === '2fs' ? KASRA : FATHA)]
+  if (!c2.equals(c3)) return [c3]
 
   return []
 }

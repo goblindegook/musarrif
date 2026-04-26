@@ -106,8 +106,8 @@ export function isHamzatedLetter(value = ''): value is Hamza {
   return [HAMZA, ALIF_HAMZA, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(value)
 }
 
-export function isDiacritic(char = ''): boolean {
-  return COMBINING_MARK.test(char)
+export function isDiacritic(token: Token = ''): boolean {
+  return !(token instanceof RootLetter) && COMBINING_MARK.test(token)
 }
 
 export function seatHamza(letter: string, dominantVowel?: string, firstLetter = false): string {
@@ -128,33 +128,30 @@ function vowelStrength(token?: Token): number {
 function seatHamzas(tokens: readonly Token[]): readonly Token[] {
   return tokens.map((token, index) => {
     if (token instanceof RootLetter && token.letter === HAMZA) {
-      const isFirst = index === 0
-      const isLast = !tokens.at(index + 2)
-      const after = tokens.at(index + 1)
-
-      if (isFirst) return after === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+      const wordInitial = index === 0
+      const shaddaOffset = tokens.at(index + 1) === SHADDA ? 2 : 1
+      const wordFinal = tokens.at(index + shaddaOffset + 1) == null
 
       const before = tokens.at(index - 1)
 
-      if (isLast && (before === ALIF || before === YEH || before === WAW)) return HAMZA
+      // When geminated, the effective vowel is after the shadda:
+      const vowel = tokens.at(index + shaddaOffset)
 
-      // Avoid alif + alif hamza, seat on the line:
-      if (before === ALIF && after === FATHA) return HAMZA
+      // When at the start, seat hamza on alif:
+      if (wordInitial) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
+      // Seat on the line to avoid alif + alif hamza:
+      if (before === ALIF && vowel === FATHA) return HAMZA
+
+      // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
       const twoBack = index >= 2 ? tokens.at(index - 2) : undefined
-
-      // Hamza after long vowel (yeh/waw + sukoon): standalone at word-end, else seat on yeh/waw:
       if (before === SUKOON && (twoBack === YEH || twoBack === WAW)) {
-        if (tokens.at(index + 2) === undefined) return HAMZA
+        if (wordFinal) return HAMZA
         return twoBack === YEH ? HAMZA_ON_YEH : HAMZA_ON_WAW
       }
 
-      // When followed by shadda, the effective vowel is after the shadda:
-      const afterOffset = after === SHADDA ? 3 : 2
-      const effectiveAfter = after === SHADDA ? tokens.at(index + 2) : after
       // Word-final hamza: case vowel doesn't govern the seat, only the preceding vowel does:
-      const wordFinal = isDiacritic(effectiveAfter as string) && tokens.at(index + afterOffset) === undefined
-      const dominant = wordFinal ? before : vowelStrength(before) > vowelStrength(effectiveAfter) ? before : effectiveAfter
+      const dominant = wordFinal || vowelStrength(before) > vowelStrength(vowel) ? before : vowel
       if (dominant === FATHA) return ALIF_HAMZA
       if (dominant === KASRA) return HAMZA_ON_YEH
       if (dominant === DAMMA) return HAMZA_ON_WAW
