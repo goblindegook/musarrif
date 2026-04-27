@@ -30,25 +30,46 @@ import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../
 import type { Mood } from '../tense'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 
-function isFormIDefectiveVowel(verb: Verb, vowel: Vowel): boolean {
-  return verb.form === 1 && isWeakLetter(verb.root.at(-1)) && isFormIPresentVowel(verb, vowel)
-}
-
 function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Token[] {
-  if (verb.root.length > 3) return [...dropFinalDiacritic(stem), KASRA, YEH, SUKOON, NOON, FATHA]
+  const suffix = [KASRA, YEH, SUKOON, NOON, FATHA]
+
+  if (verb.root.length > 3) return [...dropFinalDiacritic(stem), ...suffix]
 
   const [, c2, c3] = verb.rootTokens
-  const suffix = [YEH, SUKOON, NOON, FATHA]
 
-  if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, ...suffix]
-
-  if (verb.form === 7 && c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, ...suffix]
-
-  if ([5, 6].includes(verb.form) && c3.isWeak) return [...stem.slice(0, -2), FATHA, ...suffix]
-
-  if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), KASRA, ...suffix]
-
-  return [...stem.slice(0, -1), KASRA, ...suffix]
+  switch (verb.form) {
+    case 1:
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 2:
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 3:
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 4:
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 5:
+      if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      return [...stem.slice(0, -1), ...suffix]
+    case 6:
+      if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      return [...stem.slice(0, -1), ...suffix]
+    case 7:
+      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 8:
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+    case 9:
+      return [...stem.slice(0, -1), ...suffix]
+    case 10:
+      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...stem.slice(0, -1), ...suffix]
+  }
 }
 
 function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
@@ -61,8 +82,8 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 
   switch (verb.form) {
     case 1:
-      if (isFormIDefectiveVowel(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
-      if (isFormIDefectiveVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
       if (c2.isHamza && c3.isWeak) return [...prefix, DAMMA, ...suffix]
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
       if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
@@ -122,7 +143,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
   switch (verb.form) {
     case 1:
       if (c2.equals(c3)) return [YEH, FATHA, c1, SUKOON, c2, formIPresentVowel(verb), c3, ...suffix]
-      if (isFormIDefectiveVowel(verb, FATHA))
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
         return c2.isHamza
           ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
           : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
@@ -188,7 +209,7 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
   switch (verb.form) {
     case 1:
       if (c3.isWeak && c2.isHamza) return [...stem.slice(0, -1), YEH, ...suffix]
-      if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...dropFinalDiacritic(stem), ...suffix]
 
@@ -317,7 +338,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
       const word = Array.from(indicative)
 
-      if (isFormIDefectiveVowel(verb, FATHA)) {
+      if (verb.form === 1 && c3.isWeak && isFormIPresentVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
         if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
       }
