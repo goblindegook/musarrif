@@ -3,15 +3,15 @@ import { DAMMA, FATHA, KASRA, type Vowel } from './letters'
 import type { FormIVerb } from './verbs'
 
 const FORM_I_VOWELS = {
-  'fa3ala-yaf3alu': [FATHA, FATHA],
-  'fa3ala-yaf3ilu': [FATHA, KASRA],
-  'fa3ala-yaf3ulu': [FATHA, DAMMA],
-  'fa3ila-yaf3alu': [KASRA, FATHA],
-  'fa3ila-yaf3ilu': [KASRA, KASRA],
-  'fa3ila-yaf3ulu': [KASRA, DAMMA],
-  'fa3ula-yaf3alu': [DAMMA, FATHA],
-  'fa3ula-yaf3ilu': [DAMMA, KASRA],
-  'fa3ula-yaf3ulu': [DAMMA, DAMMA],
+  'a-a': [FATHA, FATHA],
+  'a-i': [FATHA, KASRA],
+  'a-u': [FATHA, DAMMA],
+  'i-a': [KASRA, FATHA],
+  'i-i': [KASRA, KASRA],
+  'i-u': [KASRA, DAMMA],
+  'u-a': [DAMMA, FATHA],
+  'u-i': [DAMMA, KASRA],
+  'u-u': [DAMMA, DAMMA],
 } as const
 
 export type FormIPattern = keyof typeof FORM_I_VOWELS
@@ -19,17 +19,17 @@ export type FormIPattern = keyof typeof FORM_I_VOWELS
 export const FORM_I_PATTERNS = keys(FORM_I_VOWELS)
 
 export function formIPastVowel(verb: FormIVerb): Vowel {
-  return FORM_I_VOWELS[verb.formPattern][0]
+  return FORM_I_VOWELS[verb.vowels][0]
 }
 
 export function formIPresentVowel(verb: FormIVerb): Vowel {
-  return FORM_I_VOWELS[verb.formPattern][1]
+  return FORM_I_VOWELS[verb.vowels][1]
 }
 
 export function isFormIPastVowel(verb: FormIVerb, vowel: Vowel): boolean {
-  return FORM_I_VOWELS[verb.formPattern][0] === vowel
+  return FORM_I_VOWELS[verb.vowels][0] === vowel
 }
 
 export function isFormIPresentVowel(verb: FormIVerb, vowel: Vowel): boolean {
-  return FORM_I_VOWELS[verb.formPattern][1] === vowel
+  return FORM_I_VOWELS[verb.vowels][1] === vowel
 }

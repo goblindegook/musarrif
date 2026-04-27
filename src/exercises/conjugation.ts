@@ -45,7 +45,7 @@ function distractorPronouns(tense: VerbTense, profile: DimensionProfile): Pronou
 
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
   return FORMS.filter((f) => f !== verb.form).flatMap((form) => [
-    form === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, form),
+    form === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, form),
   ])
 }
 

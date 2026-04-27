@@ -60,12 +60,12 @@ value Root {
 --   Present component:  yaf3alu (fatha) | yaf3ilu (kasra) | yaf3ulu (damma)
 --
 -- These combine to give 9 possible patterns. The vast majority of Form I
--- verbs use fa3ala-yaf3ulu, fa3ala-yaf3ilu, or fa3ila-yaf3alu.
+-- verbs use a-u, a-i, or i-a.
 -- Forms II–X do not need a pattern because their stem vowels are fixed by form.
-value FormIPattern {
-    name: fa3ala-yaf3alu | fa3ala-yaf3ilu | fa3ala-yaf3ulu
-        | fa3ila-yaf3alu | fa3ila-yaf3ilu | fa3ila-yaf3ulu
-        | fa3ula-yaf3alu | fa3ula-yaf3ilu | fa3ula-yaf3ulu
+value FormIVowelPattern {
+    name: a-a | a-i | a-u
+        | i-a | i-i | i-u
+        | u-a | u-i | u-u
     pastVowel: fatha | kasra | damma
     presentVowel: fatha | kasra | damma
 }
@@ -94,11 +94,11 @@ entity Verb {
 
     -- Form I only; one of 9 vowel patterns.
     -- Absent for forms II–X (stem vowels are determined by the binyan).
-    formPattern: FormIPattern?
+    vowels: FormIVowelPattern?
 
     -- Form I only; lists accepted masdar shapes.
     -- Absent means the form default is used.
-    masdarPatterns: List<MasdarPattern>?
+    masdars: List<MasdarPattern>?
 
     -- Whether this verb allows passive voice conjugation (default: full).
     passiveVoice: PassiveVoice
@@ -210,7 +210,7 @@ invariant ImpersonalPassivePresentConjugation {
 -- but are not conjugated by tense; they show gender/number agreement separately.
 --
 -- A Form I verb may have more than one accepted masdar (one per pattern in
--- masdarPatterns). Forms II–X always produce exactly one masdar.
+-- masdars). Forms II–X always produce exactly one masdar.
 value NominalForms {
     verb: Verb
     diacritics: all | some | none

@@ -13,7 +13,7 @@ export const masdarFormExercise = defineExercise(
 
     const eligibleForms = FORMS.filter((form) => {
       if (form === verb.form) return false
-      const alternative = form === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, form)
+      const alternative = form === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, form)
       return !deriveMasdar(alternative).some((masdar) => exerciseDiacritics(masdar, profile.diacritics) === word)
     })
 

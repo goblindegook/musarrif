@@ -341,8 +341,8 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
               >
                 <FormMetaValue>
                   <FormMetaItem>{selectedVerbFormLabel}</FormMetaItem>
-                  {selectedVerb.form === 1 && selectedVerb.formPattern != null && (
-                    <FormPattern>{formIVowelPattern(selectedVerb)}</FormPattern>
+                  {selectedVerb.form === 1 && selectedVerb.vowels != null && (
+                    <VowelPattern>{formIVowelPattern(selectedVerb)}</VowelPattern>
                   )}
                 </FormMetaValue>
               </Detail>
@@ -393,7 +393,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
                         <Fragment key={value}>
                           <MasdarItem>
                             <span>{formatArabic(value)}</span>
-                            {selectedVerb.form === 1 && selectedVerb.masdarPatterns?.[index] === 'mimi' && (
+                            {selectedVerb.form === 1 && selectedVerb.masdars?.[index] === 'mimi' && (
                               <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
                             )}
                           </MasdarItem>
@@ -636,7 +636,7 @@ const FormMetaItem = styled('span')`
   font-weight: 600;
 `
 
-const FormPattern = styled(FormMetaItem)`
+const VowelPattern = styled(FormMetaItem)`
   font-size: 1.2rem;
   font-weight: 400;
   justify-self: end;

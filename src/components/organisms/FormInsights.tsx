@@ -11,14 +11,14 @@ import { Text } from '../atoms/Text'
 import { SuggestionsList } from '../molecules/QuickPickList'
 import { VerbPill } from '../molecules/VerbPill'
 
-const getFormPattern = (verb: DisplayVerb): string => {
-  const synthetic = verb.form === 1 ? synthesizeVerb('فعل', 1, verb.formPattern) : synthesizeVerb('فعل', verb.form)
+const getVowelPattern = (verb: DisplayVerb): string => {
+  const synthetic = verb.form === 1 ? synthesizeVerb('فعل', 1, verb.vowels) : synthesizeVerb('فعل', verb.form)
   return [synthetic.label, conjugate(synthetic, 'active.present.indicative')['3ms']].join(' / ')
 }
 
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   const { t, dir, lang } = useI18n()
-  const pattern = applyDiacriticsPreference(getFormPattern(verb), 'some')
+  const pattern = applyDiacriticsPreference(getVowelPattern(verb), 'some')
   const formExplanationParagraph = useMemo(() => {
     const { rootLetters, arabic, form, formRoot } = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
     return renderExplanation({ rootLetters, arabic, form, formRoot }, t)[0]

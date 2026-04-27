@@ -43,8 +43,8 @@ export type FormIVerb = {
   root: string
   rootTokens: readonly LetterToken[]
   form: 1
-  formPattern: FormIPattern
-  masdarPatterns?: readonly MasdarPattern[]
+  vowels: FormIPattern
+  masdars?: readonly MasdarPattern[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
@@ -119,18 +119,18 @@ export function buildVerbFromId(id?: string): DisplayVerb | undefined {
 
   const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
 
-  return form === 1 ? synthesizeVerb(root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(root, form)
+  return form === 1 ? synthesizeVerb(root, 1, 'a-a') : synthesizeVerb(root, form)
 }
 
 export function synthesizeVerb(root: string, form: 1, pattern?: FormIPattern): DisplayVerb
 export function synthesizeVerb(root: string, form: VerbForm): DisplayVerb
-export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'fa3ala-yaf3alu'): DisplayVerb {
+export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'a-a'): DisplayVerb {
   const matchingFormI = verbs.find(
-    (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.formPattern === pattern,
+    (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.vowels === pattern,
   )
   const raw: Verb =
     form === 1
-      ? { root, rootTokens: tokenize(root), form, formPattern: pattern, masdarPatterns: matchingFormI?.masdarPatterns }
+      ? { root, rootTokens: tokenize(root), form, vowels: pattern, masdars: matchingFormI?.masdars }
       : { root, rootTokens: tokenize(root), form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)

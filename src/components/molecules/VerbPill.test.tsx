@@ -27,7 +27,7 @@ describe('VerbPill', () => {
     })
 
     test('shows dash for synthetic verb even when translation key exists', () => {
-      const verb = synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu')
+      const verb = synthesizeVerb('فعل', 1, 'a-u')
       render(<VerbPill verb={verb} />, { wrapper: Wrapper })
       expect(screen.getByText('—')).toBeInTheDocument()
     })
@@ -41,7 +41,7 @@ describe('VerbPill', () => {
     })
 
     test('shows asterisk for synthetic verb', () => {
-      const verb = synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu')
+      const verb = synthesizeVerb('فعل', 1, 'a-u')
       render(<VerbPill verb={verb} />, { wrapper: Wrapper })
       expect(screen.getByText('*')).toBeInTheDocument()
     })

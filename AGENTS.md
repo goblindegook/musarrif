@@ -254,7 +254,7 @@ When adding or correcting verb/root entries, follow every step. Do not skip.
 
 2. **Lexical extraction checklist**: Record root, form, present vowel pattern, masdar(s), passive voice status (`full`/`impersonal`/`none`), and passive participle availability. Never assume defaults for constrained behaviour.
 
-3. **Required `roots.json` fields gate**: Set `formPattern`, `masdarPatterns`, `passiveVoice`, `noPassiveParticiple` where applicable. If a field is unknown, stop and report uncertainty.
+3. **Required `roots.json` fields gate**: Set `vowels`, `masdars`, `passiveVoice`, `noPassiveParticiple` where applicable. If a field is unknown, stop and report uncertainty.
 
 4. **Atomic locale update**: In the same change, add/update verb translation keys and root gloss keys in `en.json`, `it.json`, `pt.json`.
 

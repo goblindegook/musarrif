@@ -31,7 +31,7 @@ export const verbFormExercise = defineExercise(
       'form',
       'arabic',
       'rootType',
-      'formIPattern',
+      'vowels',
       'formRoot',
     ])
 
@@ -39,9 +39,7 @@ export const verbFormExercise = defineExercise(
       (f) =>
         f !== verb.form &&
         exerciseDiacritics(
-          conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'fa3ala-yaf3alu') : synthesizeVerb(verb.root, f), tense)[
-            pronoun
-          ],
+          conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, f), tense)[pronoun],
           profile.diacritics,
         ) !== word,
     )

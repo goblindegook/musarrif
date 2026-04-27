@@ -271,6 +271,6 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly string[] {
-  const patterns = (verb.form === 1 && verb.masdarPatterns) || ['mimi']
+  const patterns = (verb.form === 1 && verb.masdars) || ['mimi']
   return patterns.map((pattern) => finalize(masdar(verb, pattern)))
 }

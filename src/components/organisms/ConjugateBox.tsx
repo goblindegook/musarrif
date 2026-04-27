@@ -62,9 +62,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   const [c2, setC2] = useState<string | undefined>(initialLetters[1])
   const [c3, setC3] = useState<string | undefined>(initialLetters[2])
   const [form, setForm] = useState<VerbForm | undefined>(selectedVerb?.form)
-  const [formPattern, setFormPattern] = useState<FormIPattern>(
-    selectedVerb?.form === 1 ? selectedVerb.formPattern : 'fa3ala-yaf3alu',
-  )
+  const [vowelPattern, setVowelPattern] = useState<FormIPattern>(selectedVerb?.form === 1 ? selectedVerb.vowels : 'a-a')
   const [openSlot, setOpenSlot] = useState<0 | 1 | 2 | null>(null)
   const onSelectRef = useRef(onSelect)
   const selectedVerbRef = useRef(selectedVerb)
@@ -79,30 +77,30 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
 
   useEffect(() => {
     if (!c1 || !c2 || !c3 || !form) return
-    if (form === 1 && !formPattern) return
+    if (form === 1 && !vowelPattern) return
     const root = [c1, c2, c3].join('')
     const existing = verbsByRoot.get(root)?.find((v) => v.form === form)
     const nextVerb =
-      existing?.form === 1 && existing.formPattern === formPattern && (existing.masdarPatterns?.length ?? 0) > 0
+      existing?.form === 1 && existing.vowels === vowelPattern && (existing.masdars?.length ?? 0) > 0
         ? existing
         : form === 1
-          ? synthesizeVerb(root, form, formPattern)
+          ? synthesizeVerb(root, form, vowelPattern)
           : (existing ?? synthesizeVerb(root, form))
 
     const currentSelectedVerb = selectedVerbRef.current
     if (currentSelectedVerb?.id === nextVerb.id) {
       if (currentSelectedVerb.form !== 1 || nextVerb.form !== 1) return
-      if (currentSelectedVerb.formPattern !== nextVerb.formPattern) {
+      if (currentSelectedVerb.vowels !== nextVerb.vowels) {
         onSelectRef.current(nextVerb)
         return
       }
-      const noCurrentMasdar = currentSelectedVerb.masdarPatterns?.length === 0
-      const noNextMasdar = nextVerb.masdarPatterns?.length === 0
+      const noCurrentMasdar = currentSelectedVerb.masdars?.length === 0
+      const noNextMasdar = nextVerb.masdars?.length === 0
       if (noCurrentMasdar === noNextMasdar) return
     }
 
     onSelectRef.current(nextVerb)
-  }, [c1, c2, c3, form, formPattern])
+  }, [c1, c2, c3, form, vowelPattern])
 
   return (
     <Container>
@@ -201,11 +199,11 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
               <OptionButton
                 key={p}
                 type="button"
-                active={formPattern === p}
-                aria-pressed={formPattern === p}
+                active={vowelPattern === p}
+                aria-pressed={vowelPattern === p}
                 lang="ar"
                 dir="rtl"
-                onClick={() => setFormPattern(p as FormIPattern)}
+                onClick={() => setVowelPattern(p as FormIPattern)}
               >
                 {applyDiacriticsPreference(l, diacriticsPreference)}
               </OptionButton>

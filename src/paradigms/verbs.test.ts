@@ -13,7 +13,7 @@ import {
 
 describe('synthesizeVerb', () => {
   test('marks synthesized Form I verb as synthetic', () => {
-    expect(synthesizeVerb('كتب', 1, 'fa3ala-yaf3ulu').synthetic).toBe(true)
+    expect(synthesizeVerb('كتب', 1, 'a-u').synthetic).toBe(true)
   })
 
   test('marks synthesized Form II–X verb as synthetic', () => {
@@ -27,12 +27,12 @@ describe('synthesizeVerb', () => {
 
 describe('buildSyntheticVerb', () => {
   test('Form I', () => {
-    const verb = synthesizeVerb('كتب', 1, 'fa3ala-yaf3ulu')
+    const verb = synthesizeVerb('كتب', 1, 'a-u')
     expect(verb).toEqual({
       id: 'ktb-1',
       form: 1,
-      formPattern: 'fa3ala-yaf3ulu',
-      masdarPatterns: ['fi3aal', 'fa3l', 'fi3aala'],
+      vowels: 'a-u',
+      masdars: ['fi3aal', 'fa3l', 'fi3aala'],
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',

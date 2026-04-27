@@ -33,7 +33,7 @@ export type ExplanationLayers = {
   arabic: string
   rootType?: RootAnalysisType
   form?: VerbForm
-  formIPattern?: FormIPattern
+  vowels?: FormIPattern
   formRoot?: FormRootInteraction
   tense?: VerbTense
   tenseRoot?: TenseRootInteraction
@@ -94,15 +94,15 @@ const FORM_I_BASE_PATTERNS: Record<
   FormIPattern,
   { basePattern: string; pastVowel: string; arabicForm: string; arabicVowel: string }
 > = {
-  'fa3ala-yaf3alu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'fa3ala-yaf3ilu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'fa3ala-yaf3ulu': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'fa3ila-yaf3alu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'fa3ila-yaf3ilu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'fa3ila-yaf3ulu': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'fa3ula-yaf3alu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
-  'fa3ula-yaf3ilu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
-  'fa3ula-yaf3ulu': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+  'a-a': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'a-i': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'a-u': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
+  'i-a': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'i-i': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'i-u': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
+  'u-a': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+  'u-i': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+  'u-u': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
 }
 
 function renderPronounParagraph(
@@ -123,7 +123,7 @@ export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
 ): string[] {
-  const formIBaseParams = layers.formIPattern ? FORM_I_BASE_PATTERNS[layers.formIPattern] : {}
+  const formIBaseParams = layers.vowels ? FORM_I_BASE_PATTERNS[layers.vowels] : {}
   const params = {
     root: layers.rootLetters?.join('-') ?? '',
     arabic: layers.arabic ?? '',
@@ -137,7 +137,7 @@ export function renderExplanation(
     [
       layers.rootType && t(`explanation.root.${layers.rootType}`, params),
       layers.form != null && t(`explanation.form.${layers.form}`, params),
-      layers.formIPattern && t(`explanation.form-i-pattern.${layers.formIPattern}`, params),
+      layers.vowels && t(`explanation.form-i-pattern.${layers.vowels}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
     [
@@ -186,7 +186,7 @@ export function resolveVerbExplanationLayers(
     form: verb.form,
     arabic,
     rootType,
-    formIPattern: verb.form === 1 ? verb.formPattern : undefined,
+    vowels: verb.form === 1 ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, rootLetters),
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
@@ -232,7 +232,7 @@ export function resolveNominalExplanationLayers(verb: Verb, nominal: NominalKind
     form: verb.form,
     arabic,
     rootType: analyzeRoot(verb.root).type,
-    formIPattern: verb.form === 1 ? verb.formPattern : undefined,
+    vowels: verb.form === 1 ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, rootLetters),
     nominal,
   }

@@ -64,13 +64,13 @@ describe('resolveVerbExplanationLayers formIPattern', () => {
   test('Form I verb → formIPattern is verb.formPattern', () => {
     const verb = getVerb('كتب', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
-    expect(layers.formIPattern).toBe('fa3ala-yaf3ulu')
+    expect(layers.vowels).toBe('a-u')
   })
 
   test('Form II verb → formIPattern is undefined', () => {
     const verb = getVerb('كتب', 2)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَّبَ')
-    expect(layers.formIPattern).toBeUndefined()
+    expect(layers.vowels).toBeUndefined()
   })
 })
 
@@ -421,7 +421,7 @@ describe('renderExplanation', () => {
       form: 1,
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
-      formIPattern: 'fa3ala-yaf3ulu',
+      vowels: 'a-u',
       tense: 'active.past',
       pronoun: '3ms',
       ...overrides,
@@ -434,9 +434,9 @@ describe('renderExplanation', () => {
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
-    const layers = testExplanationLayers({ form: 1, rootType: 'sound', formIPattern: 'fa3ala-yaf3ulu' })
+    const layers = testExplanationLayers({ form: 1, rootType: 'sound', vowels: 'a-u' })
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1 explanation.form-i-pattern.fa3ala-yaf3ulu',
+      'explanation.root.sound explanation.form.1 explanation.form-i-pattern.a-u',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
       'explanation.pronoun.base-form',
     ])
@@ -448,7 +448,7 @@ describe('renderExplanation', () => {
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
-    const layers = testExplanationLayers({ form: 1, formIPattern: 'fa3ala-yaf3ulu', tense: 'active.past' })
+    const layers = testExplanationLayers({ form: 1, vowels: 'a-u', tense: 'active.past' })
     expect(joined(layers)).toContain('explanation.tense.active.past.form-i')
   })
 
@@ -474,7 +474,7 @@ describe('renderExplanation', () => {
       form: 1,
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
-      formIPattern: 'fa3ala-yaf3ulu',
+      vowels: 'a-u',
       tense: 'active.past',
       tenseRoot: 'middle-lengthens-aa',
       pronoun: '3ms',
@@ -499,29 +499,29 @@ describe('renderExplanation', () => {
     ])
   })
 
-  test('active.past form-i base pattern renders faʿula for fa3ula-yaf3ulu pattern', () => {
-    const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
+  test('active.past form-i base pattern renders faʿula for u-u pattern', () => {
+    const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿula')
   })
 
-  test('active.past form-i base pattern renders ḍamma for fa3ula-yaf3ulu pattern', () => {
-    const verb = getVerbById('kbr-1')! // كَبُرَ, fa3ula-yaf3ulu
+  test('active.past form-i base pattern renders ḍamma for u-u pattern', () => {
+    const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('ḍamma')
   })
 
-  test('active.past form-i base pattern renders faʿala for fa3ala-yaf3ulu pattern', () => {
-    const verb = getVerb('كتب', 1) // كَتَبَ, fa3ala-yaf3ulu
+  test('active.past form-i base pattern renders faʿala for a-u pattern', () => {
+    const verb = getVerb('كتب', 1) // كَتَبَ, a-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿala')
   })
 
-  test('active.past form-i base pattern renders faʿila for fa3ila-yaf3alu pattern', () => {
-    const verb = getVerbById('Elm-1')! // عَلِمَ, fa3ila-yaf3alu, sound root
+  test('active.past form-i base pattern renders faʿila for i-a pattern', () => {
+    const verb = getVerbById('Elm-1')! // عَلِمَ, i-a, sound root
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿila')
@@ -621,13 +621,13 @@ describe('resolveNominalExplanationLayers', () => {
 
   test('returns formIPattern for Form I verb', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.formIPattern).toBe('fa3ala-yaf3ulu')
+    expect(layers.vowels).toBe('a-u')
   })
 
   test('formIPattern is undefined for non-Form-I verb', () => {
     const verb2 = getVerb('كتب', 2)
     const layers = resolveNominalExplanationLayers(verb2, 'activeParticiple', 'مُكَتِّب')
-    expect(layers.formIPattern).toBeUndefined()
+    expect(layers.vowels).toBeUndefined()
   })
 
   test('tense is undefined', () => {
@@ -709,10 +709,10 @@ describe('renderExplanation with nominal', () => {
       form: 1,
       arabic: 'كَاتِب',
       rootType: 'sound',
-      formIPattern: 'fa3ala-yaf3ulu',
+      vowels: 'a-u',
       nominal: 'activeParticiple',
     }
-    expect(renderExplanation(layers, t)[0]).toContain('explanation.form-i-pattern.fa3ala-yaf3ulu')
+    expect(renderExplanation(layers, t)[0]).toContain('explanation.form-i-pattern.a-u')
   })
 
   test('nominal does not produce a pronoun paragraph', () => {

@@ -84,7 +84,7 @@ export function deriveActiveParticiple(verb: Verb): string {
         if (c2.isWeak) return [c1, FATHA, ALIF, isFormIPastVowel(verb, KASRA) ? c2 : HAMZA_ON_YEH, KASRA, c3]
 
         // FIXME: This makes no sense.
-        if (verb.masdarPatterns?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
+        if (verb.masdars?.some((pattern) => ['fu3ool', 'fa3al', 'fa3aal'].includes(pattern)))
           return [c1, FATHA, ALIF, c2, KASRA, c3]
 
         if (c3.isHamza && isFormIPastVowel(verb, DAMMA)) return [c1, FATHA, c2, KASRA, YEH, SUKOON, HAMZA]

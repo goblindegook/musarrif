@@ -43,7 +43,7 @@ describe('VerbHeaderPanel', () => {
   })
 
   test('hides translation for synthetic verb', () => {
-    renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'fa3ala-yaf3ulu') })
+    renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'a-u') })
     expect(screen.queryByText('to do')).not.toBeInTheDocument()
   })
 })
