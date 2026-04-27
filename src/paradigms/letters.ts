@@ -141,7 +141,7 @@ function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
       // When at the start, seat hamza on alif:
       if (index === 0) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
-      const vowelBefore = index > 0 ? tokens[index - 1].letter : undefined
+      const before = tokens[index - 1].letter
       const longVowelBefore = longVowelAt(tokens, index - 2)
       const longVowelAfter = longVowelAt(tokens, index + 1)
 
@@ -152,30 +152,39 @@ function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
         }
 
         // case vowel doesn't govern the seat, only the preceding vowel does:
-        if (vowelBefore === KASRA) return HAMZA_ON_YEH
-        if (vowelBefore === DAMMA) return HAMZA_ON_WAW
-        if (vowelBefore === FATHA) return ALIF_HAMZA
+        if (before === KASRA) return HAMZA_ON_YEH
+        if (before === DAMMA) return HAMZA_ON_WAW
+        if (before === FATHA) return ALIF_HAMZA
         return HAMZA
       }
 
       // Seat on the line to avoid alif + alif hamza:
-      const before = tokens[index - 1]
-      if (before.equals(ALIF) && vowel === FATHA) return HAMZA
+      if (before === ALIF && vowel === FATHA) return HAMZA
 
-      if (before.equals(SUKOON) && tokens.at(index - 2)?.equals(YEH)) {
-        return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
+      if (before === SUKOON) {
+        if (tokens[index - 2].equals(YEH)) {
+          // FIXME: for y's-1 passive participle
+          if (longVowelAfter === 'u') return HAMZA_ON_WAW
+          return HAMZA_ON_YEH
+        }
+        if (tokens[index - 2].equals(WAW)) {
+          // FIXME: for w'y-1 passive participle
+          if (longVowelAfter === 'i') return HAMZA_ON_YEH
+          return HAMZA
+        }
       }
 
       if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
-      if (vowel === FATHA) {
-        if (longVowelBefore === 'u') return HAMZA
+      if (longVowelBefore === 'u') {
+        // FIXME: for bw'-1 active jussive 3fs:
+        if (longVowelAfter === 'i') return HAMZA_ON_YEH
+        // FIXME: for l'm-3 passive past 3ms:
+        if (vowel === KASRA) return HAMZA_ON_YEH
+        return HAMZA
       }
 
-      // Seat on the line between two long equal vowels:
-      if (longVowelBefore && longVowelBefore === longVowelAfter) return HAMZA
-
-      const dominant = vowelStrength(vowelBefore) > vowelStrength(vowel) ? vowelBefore : vowel
+      const dominant = vowelStrength(before) > vowelStrength(vowel) ? before : vowel
       if (dominant === KASRA) return HAMZA_ON_YEH
       if (dominant === DAMMA) return HAMZA_ON_WAW
       if (dominant === FATHA) return ALIF_HAMZA
