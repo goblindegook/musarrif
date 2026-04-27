@@ -62,8 +62,8 @@ const createToken = memoize(
   (char: string) => new LetterToken(char),
 )
 
-export function tokenize(text: string): readonly LetterToken[] {
-  return [...text].map(createToken)
+export function tokenize(text: string | readonly Token[]): readonly LetterToken[] {
+  return [...text].map((token) => (token instanceof LetterToken ? token : createToken(token)))
 }
 
 export type Token = string | Vowel | LetterToken
@@ -107,51 +107,82 @@ export function isDiacritic(token: Token = ''): boolean {
   return !(token instanceof LetterToken) && COMBINING_MARK.test(token)
 }
 
-function vowelStrength(token?: Token): number {
+function vowelStrength(token?: string): number {
   if (token === KASRA) return 3
   if (token === DAMMA) return 2
   if (token === FATHA) return 1
   return 0
 }
 
-function seatHamzas(tokens: readonly Token[]): readonly Token[] {
-  return tokens.map((token, index) => {
-    if (token instanceof LetterToken ? token.letter === HAMZA : false) {
-      const wordInitial = index === 0
-      const shaddaOffset = tokens.at(index + 1) === SHADDA ? 2 : 1
-      const wordFinal = tokens.at(index + shaddaOffset + 1) == null
+function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' | 'u' | undefined {
+  const curr = tokens.at(index)?.letter
+  const next = tokens.at(index + 1)?.letter
 
-      const before = tokens.at(index - 1)
+  // FIXME: Need to clean up sukoons appearing after long vowels in the conjugations:
+  if (curr === SUKOON) return longVowelAt(tokens, index - 1)
 
-      // When geminated, the effective vowel is after the shadda:
-      const vowel = tokens.at(index + shaddaOffset)
+  if (curr === KASRA && next === YEH) return 'i'
+  if (curr === FATHA && next === ALIF) return 'a'
+  if (curr === DAMMA && next === WAW) return 'u'
+}
+
+function findVowelBefore(tokens: readonly LetterToken[], fromIndex: number): string | undefined {
+  if (longVowelAt(tokens, fromIndex - 1)) return undefined
+  const candidate = fromIndex > 0 ? tokens[fromIndex - 1].letter : undefined
+  if (candidate && [KASRA, FATHA, DAMMA].includes(candidate)) return candidate
+}
+
+function findVowel(tokens: readonly LetterToken[], fromIndex: number): string | undefined {
+  const candidate = tokens.at(fromIndex + 1)?.letter ?? ''
+  // When geminated, the effective vowel is after the shadda:
+  if (candidate === SHADDA) return findVowel(tokens, fromIndex + 1)
+  return [KASRA, FATHA, DAMMA].includes(candidate) ? candidate : undefined
+}
+
+function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
+  return tokenize(
+    word.map((token, index, tokens) => {
+      if (!token.equals(HAMZA)) return token
+
+      const vowel = findVowel(tokens, index)
 
       // When at the start, seat hamza on alif:
-      if (wordInitial) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+      if (index === 0) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+
+      const shaddaOffset = tokens.at(index + 1)?.equals(SHADDA) ? 2 : 1
+      const wordFinal = tokens.at(index + shaddaOffset + 1) == null
 
       // Seat on the line to avoid alif + alif hamza:
-      if (before === ALIF && vowel === FATHA) return HAMZA
-
-      // FIXME: Account for shadda before
+      const before = tokens[index - 1]
+      if (before.equals(ALIF) && vowel === FATHA) return HAMZA
 
       // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
-      const twoBack = index >= 2 ? tokens.at(index - 2) : undefined
-      const twoBackLetter = twoBack instanceof LetterToken ? twoBack.letter : twoBack
-      if (before === SUKOON && (twoBackLetter === YEH || twoBackLetter === WAW)) {
-        if (wordFinal) return HAMZA
-        if (twoBackLetter === YEH) return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
-        return vowel === KASRA ? HAMZA_ON_YEH : HAMZA_ON_WAW
+      if (before.equals(SUKOON)) {
+        const beforeSukoon = tokens.at(index - 2)
+        if (beforeSukoon?.equals(YEH) || beforeSukoon?.equals(WAW)) {
+          if (wordFinal) return HAMZA
+          return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
+        }
       }
 
+      const vowelBefore = findVowelBefore(tokens, index)
+      const longVowelBefore = longVowelAt(tokens, index - 2)
+      const longVowelAfter = longVowelAt(tokens, index + 1)
+
+      if (longVowelBefore === 'u' && longVowelAfter === 'a') return HAMZA
+      if (longVowelAfter === 'i') return HAMZA_ON_YEH
+
+      // Seat on the line between two long equal vowels:
+      if (longVowelBefore && longVowelBefore === longVowelAfter) return HAMZA
+
       // Word-final hamza: case vowel doesn't govern the seat, only the preceding vowel does:
-      const dominant = wordFinal || vowelStrength(before) > vowelStrength(vowel) ? before : vowel
-      if (dominant === FATHA) return ALIF_HAMZA
+      const dominant = wordFinal || vowelStrength(vowelBefore) > vowelStrength(vowel) ? vowelBefore : vowel
       if (dominant === KASRA) return HAMZA_ON_YEH
       if (dominant === DAMMA) return HAMZA_ON_WAW
+      if (dominant === FATHA) return ALIF_HAMZA
       return HAMZA
-    }
-    return token
-  })
+    }),
+  )
 }
 
 // ḥurūf al-madd
@@ -169,7 +200,7 @@ export function resolveFormVIIIInfixConsonant(c1: LetterToken): Token {
 }
 
 export function finalize(letters: readonly Token[]): string {
-  return seatHamzas(letters)
+  return seatHamzas(tokenize(letters))
     .map((token) => (token instanceof LetterToken ? token.letter : token))
     .join('')
     .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)

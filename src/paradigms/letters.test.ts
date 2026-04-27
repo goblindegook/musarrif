@@ -15,7 +15,7 @@ test.each<[DiacriticsPreference, string, string]>([
   expect(applyDiacriticsPreference(input, preference)).toEqualT(expected)
 })
 
-test.skip.each<[string, string, string]>([
+test.each<[string, string, string]>([
   // initial
   ['', 'iT', '<iT'],
   ['', 'uT', '>uT'],
@@ -23,6 +23,22 @@ test.skip.each<[string, string, string]>([
   ['', 'iyT', '<iyT'],
   ['', 'uwT', '>uwT'],
   ['', 'aAT', '|T'],
+
+  // before last
+  ['Ti', 'T', 'Ti}T'],
+  ['Tu', 'T', 'Tu&T'],
+  ['Ta', 'T', 'Ta>T'],
+  // ['Tiy', 'T', 'Tiy}T'],
+  ['Tuw', 'T', "Tuw'T"],
+  ['TaA', 'T', "TaA'T"],
+
+  // final
+  ['Ti', '', 'Ti}'],
+  ['Tu', '', 'Tu&'],
+  ['Ta', '', 'Ta>'],
+  ['Tiy', '', "Tiy'"],
+  ['Tuw', '', "Tuw'"],
+  ['TaA', '', "TaA'"],
 
   // medial
   ['Ti', 'iT', 'Ti}iT'],
@@ -47,55 +63,39 @@ test.skip.each<[string, string, string]>([
   ['Ta', 'aAT', 'Ta|T'],
 
   ['Tiy', 'iT', 'Tiy}iT'],
-  ['Tiy', 'uT', 'Tiy}uT'],
-  ['Tiy', 'aT', 'Tiy}aT'],
+  // ['Tiy', 'uT', 'Tiy}uT'],
+  // ['Tiy', 'aT', 'Tiy}aT'],
   ['Tiy', 'iyT', 'Tiy}iyT'],
-  ['Tiy', 'uwT', 'Tiy}uwT'],
-  ['Tiy', 'aAT', 'Tiy}aAT'],
+  // ['Tiy', 'uwT', 'Tiy}uwT'],
+  // ['Tiy', 'aAT', 'Tiy}aAT'],
 
   ['Tayo', 'iT', 'Tayo}iT'],
-  ['Tayo', 'uT', 'Tayo}uT'],
+  // ['Tayo', 'uT', 'Tayo}uT'],
   ['Tayo', 'aT', 'Tayo}aT'],
   ['Tayo', 'iyT', 'Tayo}iyT'],
-  ['Tayo', 'uwT', 'Tayo}uwT'],
+  // ['Tayo', 'uwT', 'Tayo}uwT'],
   ['Tayo', 'aAT', 'Tayo}aAT'],
 
-  ['Tuw', 'iT', "Tuw'iT"],
-  ['Tuw', 'uT', "Tuw'uT"],
-  ['Tuw', 'aT', "Tuw'aT"],
-  ['Tuw', 'iyT', "Tuw'iyT"],
+  // ['Tuw', 'iT', "Tuw'iT"],
+  // ['Tuw', 'uT', "Tuw'uT"],
+  // ['Tuw', 'aT', "Tuw'aT"],
+  // ['Tuw', 'iyT', "Tuw'iyT"],
   ['Tuw', 'uwT', "Tuw'uwT"],
   ['Tuw', 'aAT', "Tuw'aAT"],
 
-  ['Tawo', 'iT', "Tawo'iT"],
-  ['Tawo', 'uT', "Tawo'uT"],
-  ['Tawo', 'aT', "Tawo'aT"],
-  ['Tawo', 'iyT', "Tawo'iyT"],
-  ['Tawo', 'uwT', "Tawo'uwT"],
-  ['Tawo', 'aAT', "Tawo'aAT"],
+  // ['Tawo', 'iT', "Tawo'iT"],
+  // ['Tawo', 'uT', "Tawo'uT"],
+  // ['Tawo', 'aT', "Tawo'aT"],
+  // ['Tawo', 'iyT', "Tawo'iyT"],
+  // ['Tawo', 'uwT', "Tawo'uwT"],
+  // ['Tawo', 'aAT', "Tawo'aAT"],
 
   ['TaA', 'iT', 'TaA}iT'],
   ['TaA', 'uT', 'TaA&uT'],
   ['TaA', 'aT', "TaA'aT"],
   ['TaA', 'iyT', 'TaA}iyT'],
-  ['TaA', 'uwT', "TaA'uwT"],
+  // ['TaA', 'uwT', "TaA'uwT"],
   ['TaA', 'aAT', "TaA'aAT"],
-
-  // before last
-  ['Ti', 'T', 'Ti}T'],
-  ['Tu', 'T', 'Tu&T'],
-  ['Ta', 'T', 'Ta>T'],
-  ['Tiy', 'T', 'Tiy}T'],
-  ['Tuw', 'T', "Tuw'T"],
-  ['TaA', 'T', "TaA'T"],
-
-  // final
-  ['Ti', '', 'Ti}'],
-  ['Tu', '', 'Tu&'],
-  ['Ta', '', 'Ta>'],
-  ['Tiy', '', "Tiy'"],
-  ['Tuw', '', "Tuw'"],
-  ['TaA', '', "TaA'"],
 ])("hamza in %s'%s is seated as %s", (first, second, expected) => {
   expect(transliterate(finalize(tokenize(transliterateReverse(`${first}'${second}`))))).toBe(expected)
 })
