@@ -42,30 +42,28 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
+
     case 2:
-      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
-      return [...stem.slice(0, -1), ...suffix]
     case 3:
-      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
-      return [...stem.slice(0, -1), ...suffix]
     case 4:
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
+
     case 5:
-      if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
-      return [...stem.slice(0, -1), ...suffix]
     case 6:
       if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
       return [...stem.slice(0, -1), ...suffix]
+
     case 7:
       if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
+
     case 8:
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
+
     case 9:
-      return [...stem.slice(0, -1), ...suffix]
     case 10:
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
@@ -91,9 +89,7 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 
     case 2:
     case 3:
-      if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
       if (c3.isWeak) return [...prefix, DAMMA, ...suffix]
-
       return [...stem, ...suffix]
 
     case 4:
@@ -103,15 +99,12 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
       return [...stem, ...suffix]
 
     case 5:
-
     case 6:
-      if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
       if (c3.isWeak) return [...prefix, FATHA, ...suffix]
       return [...stem, ...suffix]
 
     case 7:
       if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
-      if (c3.isWeak) return [...stem, ...suffix]
       return [...stem, ...suffix]
 
     case 8:
@@ -119,8 +112,6 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
       return [...stem, ...suffix]
 
     case 9:
-      return [...stem, ...suffix]
-
     case 10:
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
       if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
@@ -147,7 +138,6 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
         return c2.isHamza
           ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
           : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
-      if (c3.isWeak) return [...dropFinalDiacritic(stem), ...suffix]
 
       if (c2.isWeak && stem.includes(ALIF)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
@@ -219,7 +209,6 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
 
     case 4:
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
-      if (c3.isWeak) return [...stem, ...suffix]
       return [...dropFinalDiacritic(stem), ...suffix]
 
     case 5:
@@ -228,18 +217,12 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
       return [...dropFinalDiacritic(stem), ...suffix]
 
     case 7:
-      return [...dropFinalDiacritic(stem), ...suffix]
-
     case 8:
-      if (c3.isWeak) return [...stem, ...suffix]
-      return [...dropFinalDiacritic(stem), ...suffix]
-
     case 9:
       return [...dropFinalDiacritic(stem), ...suffix]
 
     case 10:
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
-      if (c3.isWeak) return [...stem, ...suffix]
       return [...dropFinalDiacritic(stem), ...suffix]
   }
 }

@@ -27,12 +27,12 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       if (index === 0) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
       const before = tokens[index - 1].letter
+      const after = tokens[index + 1]
       const longVowelBefore = longVowelAt(tokens, index - 2)
-      const longVowelAfter = longVowelAt(tokens, index + 1)
 
       // Word-final hamza
       if (!tokens.at(index + 2)) {
-        if (index < tokens.length - 1 && !tokens[index + 1].isVowel) {
+        if (index < tokens.length - 1 && !after.isVowel) {
           if (longVowelBefore === 'i') return HAMZA_ON_YEH
         }
 
@@ -47,6 +47,7 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       if (before === ALIF && vowel === FATHA) return HAMZA
 
       if (before === SUKOON) {
+        const longVowelAfter = longVowelAt(tokens, index + 1)
         if (tokens[index - 2].equals(YEH)) {
           if (longVowelAfter === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle
           return HAMZA_ON_YEH
