@@ -133,8 +133,6 @@ export function deriveActiveParticiple(verb: Verb): string {
       case 6: {
         if (c2.equals(c3)) return [...stem, c2, SUKOON, c3]
 
-        if (c2.isWeak && c3.isHamza) return [...stem, c3, TANWEEN_KASRA]
-
         if (c3.isWeak) return [...stem, c2, TANWEEN_KASRA]
 
         return [...stem, c2, KASRA, c3]

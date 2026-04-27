@@ -27,30 +27,6 @@ test.each<[DiacriticsPreference, string, string]>([
 })
 
 test.each<[string, string, string, string]>([
-  // initial
-  ['', 'iT', 'below alif', ALIF_HAMZA_BELOW],
-  ['', 'uT', 'on alif', ALIF_HAMZA],
-  ['', 'aT', 'on alif', ALIF_HAMZA],
-  ['', 'iyT', 'below alif', ALIF_HAMZA_BELOW],
-  ['', 'uwT', 'on alif', ALIF_HAMZA],
-  ['', 'aAT', 'on alif', ALIF_MADDA],
-
-  // before last
-  ['Ti', 'T', 'on yeh', HAMZA_ON_YEH],
-  ['Tu', 'T', 'on waw', HAMZA_ON_WAW],
-  ['Ta', 'T', 'on alif', ALIF_HAMZA],
-  ['Tiy', 'T', 'on yeh', HAMZA_ON_YEH],
-  ['Tuw', 'T', 'on the line', HAMZA],
-  ['TaA', 'T', 'on the line', HAMZA],
-
-  // final
-  ['Ti', '', 'on yeh', HAMZA_ON_YEH],
-  ['Tu', '', 'on waw', HAMZA_ON_WAW],
-  ['Ta', '', 'on alif', ALIF_HAMZA],
-  ['Tiy', '', 'on the line', HAMZA],
-  ['Tuw', '', 'on the line', HAMZA],
-  ['TaA', '', 'on the line', HAMZA],
-
   // medial
   ['Ti', 'iT', 'on yeh', HAMZA_ON_YEH],
   ['Ti', 'uT', 'on yeh', HAMZA_ON_YEH],
@@ -113,4 +89,32 @@ test.each<[string, string, string, string]>([
     finalize(tokenize(transliterateReverse(`${first}'${second}`))),
     `hamza in ${first}'${second} seats ${seat}`,
   ).toContain(expected)
+})
+
+test.each<[string, string, string]>([
+  // initial
+  ["'iT", 'below alif', ALIF_HAMZA_BELOW],
+  ["'uT", 'on alif', ALIF_HAMZA],
+  ["'aT", 'on alif', ALIF_HAMZA],
+  ["'iyT", 'below alif', ALIF_HAMZA_BELOW],
+  ["'uwT", 'on alif', ALIF_HAMZA],
+  ["'aAT", 'on alif', ALIF_MADDA],
+
+  // before last
+  ["Ti'T", 'on yeh', HAMZA_ON_YEH],
+  ["Tu'T", 'on waw', HAMZA_ON_WAW],
+  ["Ta'T", 'on alif', ALIF_HAMZA],
+  ["Tiy'T", 'on yeh', HAMZA_ON_YEH],
+  ["Tuw'T", 'on the line', HAMZA],
+  ["TaA'T", 'on the line', HAMZA],
+
+  // final
+  ["Ti'", 'on yeh', HAMZA_ON_YEH],
+  ["Tu'", 'on waw', HAMZA_ON_WAW],
+  ["Ta'", 'on alif', ALIF_HAMZA],
+  ["Tiy'", 'on the line', HAMZA],
+  ["Tuw'", 'on the line', HAMZA],
+  ["TaA'", 'on the line', HAMZA],
+])(`hamza in %s seats %s`, (word, seat, expected) => {
+  expect(finalize(tokenize(transliterateReverse(word))), `hamza in ${word} seats ${seat}`).toContain(expected)
 })
