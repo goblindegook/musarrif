@@ -49,134 +49,156 @@ export function Home() {
     [navigateTo],
   )
 
+  const isMobile = useMemo(() => window.innerWidth < 960, [])
+
   const sortedRecents = useMemo(() => recents, [recents])
 
   return (
     <Main>
-      <Panel>
-        <TabBar role="tablist">
-          <TabButton
-            role="tab"
-            type="button"
-            aria-selected={searchTab === 'search'}
-            aria-controls="panel-content-search"
-            active={searchTab === 'search'}
-            fluid
-            onClick={() => setSearchTab('search')}
-          >
-            {t('tabs.search')}
-          </TabButton>
-          <TabButton
-            role="tab"
-            type="button"
-            aria-selected={searchTab === 'build'}
-            aria-controls="panel-content-build"
-            active={searchTab === 'build'}
-            fluid
-            onClick={() => setSearchTab('build')}
-          >
-            {t('tabs.build')}
-          </TabButton>
-        </TabBar>
-
-        {searchTab === 'search' && (
-          <TabPanel
-            id="panel-content-search"
-            role="tabpanel"
-            aria-labelledby="panel-tab-search"
-            aria-label={t('tabs.search')}
-          >
-            <Search id="verb-search-input" onSelect={handleSelect} />
-            <Heading dir={dir} lang={lang}>
-              {t('quickPicks')}
-            </Heading>
-            <QuickPickList />
-          </TabPanel>
-        )}
-
-        {searchTab === 'build' && (
-          <TabPanel
-            id="panel-content-build"
-            role="tabpanel"
-            aria-labelledby="panel-tab-build"
-            aria-label={t('tabs.build')}
-          >
-            <ConjugateBox onSelect={handleSelect} />
-          </TabPanel>
-        )}
-      </Panel>
-
-      {sortedRecents.length > 0 && (
-        <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
-          <VerbList>
-            {sortedRecents.map((verb) => (
-              <VerbPill key={verb.id} verb={verb} />
-            ))}
-          </VerbList>
-        </Panel>
-      )}
-
-      <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
-        {favourites.length > 0 ? (
-          <VerbList>
-            {favourites.map((verb) => (
-              <VerbPill key={verb.id} verb={verb} />
-            ))}
-          </VerbList>
-        ) : (
-          <Text dir={dir} lang={lang}>
-            {t('favourites.empty')}
-          </Text>
-        )}
-      </Panel>
-
-      <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
-        <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
-          {FORMS.map((form) => (
+      <Stack area="search">
+        <Panel>
+          <TabBar role="tablist">
             <TabButton
-              key={form}
-              id={`form-tab-${form}`}
               role="tab"
               type="button"
-              aria-selected={selectedFormTab === form}
-              aria-controls={`form-panel-${form}`}
-              size="sm"
+              aria-selected={searchTab === 'search'}
+              aria-controls="panel-content-search"
+              active={searchTab === 'search'}
               fluid
-              active={selectedFormTab === form}
-              onClick={() => setSelectedFormTab(form)}
+              onClick={() => setSearchTab('search')}
             >
-              {FORM_LABELS[form - 1]}
+              {t('tabs.search')}
             </TabButton>
-          ))}
-        </TabBar>
-        <TabPanel
-          role="tabpanel"
-          id={`form-panel-${selectedFormTab}`}
-          aria-labelledby={`form-tab-${selectedFormTab}`}
-          aria-label={t('meta.form.withNumber', { form: FORM_LABELS[selectedFormTab - 1] })}
-        >
-          <VerbList>
-            {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
-              <VerbPill key={verb.id} verb={verb} />
+            <TabButton
+              role="tab"
+              type="button"
+              aria-selected={searchTab === 'build'}
+              aria-controls="panel-content-build"
+              active={searchTab === 'build'}
+              fluid
+              onClick={() => setSearchTab('build')}
+            >
+              {t('tabs.build')}
+            </TabButton>
+          </TabBar>
+
+          {searchTab === 'search' && (
+            <TabPanel
+              id="panel-content-search"
+              role="tabpanel"
+              aria-labelledby="panel-tab-search"
+              aria-label={t('tabs.search')}
+            >
+              <Search id="verb-search-input" onSelect={handleSelect} />
+              <Heading dir={dir} lang={lang}>
+                {t('quickPicks')}
+              </Heading>
+              <QuickPickList />
+            </TabPanel>
+          )}
+
+          {searchTab === 'build' && (
+            <TabPanel
+              id="panel-content-build"
+              role="tabpanel"
+              aria-labelledby="panel-tab-build"
+              aria-label={t('tabs.build')}
+            >
+              <ConjugateBox onSelect={handleSelect} />
+            </TabPanel>
+          )}
+        </Panel>
+
+        {sortedRecents.length > 0 && (
+          <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+            <VerbList>
+              {sortedRecents.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+          {favourites.length > 0 ? (
+            <VerbList>
+              {favourites.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} />
+              ))}
+            </VerbList>
+          ) : (
+            <Text dir={dir} lang={lang}>
+              {t('favourites.empty')}
+            </Text>
+          )}
+        </Panel>
+      </Stack>
+
+      <Stack area="verbList">
+        <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed={isMobile}>
+          <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
+            {FORMS.map((form) => (
+              <TabButton
+                key={form}
+                id={`form-tab-${form}`}
+                role="tab"
+                type="button"
+                aria-selected={selectedFormTab === form}
+                aria-controls={`form-panel-${form}`}
+                size="sm"
+                fluid
+                active={selectedFormTab === form}
+                onClick={() => setSelectedFormTab(form)}
+              >
+                {FORM_LABELS[form - 1]}
+              </TabButton>
             ))}
-          </VerbList>
-        </TabPanel>
-      </Panel>
+          </TabBar>
+          <TabPanel
+            role="tabpanel"
+            id={`form-panel-${selectedFormTab}`}
+            aria-labelledby={`form-tab-${selectedFormTab}`}
+            aria-label={t('meta.form.withNumber', { form: FORM_LABELS[selectedFormTab - 1] })}
+          >
+            <VerbList>
+              {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
+                <VerbPill key={verb.id} verb={verb} />
+              ))}
+            </VerbList>
+          </TabPanel>
+        </Panel>
+      </Stack>
     </Main>
   )
 }
 
 const Main = styled('main')`
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1rem;
+  grid-auto-rows: min-content;
+  align-items: start;
   max-width: 600px;
   margin: 0 auto;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'search' 'verbList';
 
   @media (min-width: 960px) {
     gap: 1.25rem;
+    max-width: inherit;
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'search verbList';
   }
+`
+
+const Stack = styled('div')<{ area: 'search' | 'verbList' }>`
+  grid-area: ${({ area: gridArea }) => gridArea};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-self: flex-start;
 `
 
 const VerbList = styled('div')`

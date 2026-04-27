@@ -69,6 +69,10 @@ export function tokenize(text: string | readonly Token[]): readonly LetterToken[
   return [...text].map((token) => (token instanceof LetterToken ? token : createToken(token)))
 }
 
+export function detokenize(tokens: readonly LetterToken[]): readonly string[] {
+  return tokens.map((token) => (token instanceof LetterToken ? token.letter : token))
+}
+
 export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<string>> = {
@@ -124,8 +128,7 @@ export function resolveFormVIIIInfixConsonant(c1: LetterToken): Token {
 }
 
 export function finalize(letters: readonly Token[]): string {
-  return seatHamzas(tokenize(letters))
-    .map((token) => (token instanceof LetterToken ? token.letter : token))
+  return detokenize(seatHamzas(tokenize(letters)))
     .join('')
     .replace(new RegExp(`${ALIF_HAMZA}${FATHA}[${ALIF_HAMZA}${ALIF}]${SUKOON}?`), ALIF_MADDA)
     .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)

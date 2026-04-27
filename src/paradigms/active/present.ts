@@ -545,11 +545,11 @@ function derivePresentFormX(verb: NonFormIVerb): readonly Token[] {
 
   if (c2.isWeak && c3.isWeak) return [...prefix, SUKOON, c2, KASRA, c3]
 
-  if (c2.equals(c3)) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
-
   if (c2.isWeak) return [...prefix, KASRA, YEH, c3, DAMMA]
 
   if (!c1.isWeak && c3.isWeak) return [...prefix, SUKOON, c2, KASRA, YEH]
+
+  if (c2.equals(c3)) return [...prefix, KASRA, c2, SUKOON, c3, DAMMA]
 
   return [...prefix, SUKOON, c2, KASRA, c3, DAMMA]
 }

@@ -108,14 +108,13 @@ export function getVerb(root: string, form: VerbForm): Verb {
   throw new Error(`Verb with root ${root} and form ${form} not found`)
 }
 
-export function buildVerbFromId(id?: string): DisplayVerb | undefined {
+export function buildVerbFromId(id = ''): DisplayVerb {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
 
-  const [rootId, formText] = (id ?? '').split('-')
-  if (!rootId || !formText) return undefined
+  const [rootId, formText] = id.split('-')
 
-  const root = transliterateReverse(rootId)
+  const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
 
   const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
 
