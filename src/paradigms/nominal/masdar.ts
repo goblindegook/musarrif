@@ -92,16 +92,10 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
       return [c1, KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {
-      const prefix = [MEEM, FATHA, c1]
-      if (c3.isHamza) return [...prefix, KASRA, YEH, c3]
-      if (c2.isWeak) return [...prefix, ...longVowel(isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA), c3]
-      return [
-        ...prefix,
-        SUKOON,
-        c2,
-        isFormIPresentVowel(verb, FATHA) ? FATHA : KASRA,
-        c3.equals(YEH) ? ALIF_MAQSURA : c3,
-      ]
+      const vowel = isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA
+      if (c3.isHamza) return [MEEM, FATHA, c1, ...longVowel(KASRA), c3]
+      if (c2.isWeak) return [MEEM, FATHA, c1, ...longVowel(vowel), c3]
+      return [MEEM, FATHA, c1, SUKOON, c2, vowel, c3]
     }
   }
 }

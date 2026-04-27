@@ -248,7 +248,7 @@ describe('Builder navigation', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
     const detail = screen.getByText('Verbal noun').parentElement!
-    expect(within(detail).getByText('مَثنِى')).toBeInTheDocument()
+    expect(within(detail).getByText('مَثنَي')).toBeInTheDocument()
   })
 
   it('keeps selected tense when switching conjugation for a built Form I verb', async () => {

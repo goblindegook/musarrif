@@ -101,9 +101,11 @@ export function getVerbById(id?: string): DisplayVerb | undefined {
 }
 
 export function getVerb(root: string, form: VerbForm): Verb {
-  const verb = verbs.find((entry) => entry.root === root && entry.form === form)
-  if (verb == null) throw new Error(`Verb with root ${root} and form ${form} not found`)
-  return verb
+  const verbByRoot = verbs.find((entry) => entry.root === root && entry.form === form)
+  if (verbByRoot) return verbByRoot
+  const verbById = getVerbById(`${root}-${form}`)
+  if (verbById) return verbById
+  throw new Error(`Verb with root ${root} and form ${form} not found`)
 }
 
 export function buildVerbFromId(id?: string): DisplayVerb | undefined {
