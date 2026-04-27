@@ -194,13 +194,6 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
   if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_TOKEN)
 
-  if (c2.isWeak && c3.isHamza)
-    return {
-      ...buildForms([...prefix, FATHA, ALIF, c3], c3),
-      suffixedBase: [...prefix, KASRA, c3],
-      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, c3, DAMMA],
-    }
-
   if (c2.isWeak) return buildForms([...prefix, FATHA, ALIF, c3], c3)
 
   return buildForms([...prefix, SUKOON, c2, FATHA, c3], c3)
@@ -222,16 +215,7 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, FATHA, ALIF, c2, FATHA, c3],
     }
 
-  if (c2.isWeak && c3.isHamza)
-    return {
-      ...buildForms([...prefix, FATHA, ALIF, c3], c3),
-      suffixedBase: [...prefix, KASRA, c3],
-      thirdPersonMasculinePluralBase: [...prefix, FATHA, ALIF, c3, DAMMA],
-    }
-
-  if (c3.isWeak) return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], YEH_TOKEN)
-
-  return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3)
+  return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3.isWeak ? YEH_TOKEN : c3)
 }
 
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {

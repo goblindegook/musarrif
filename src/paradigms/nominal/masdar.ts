@@ -150,13 +150,9 @@ function deriveMasdarFormV(verb: NonFormIVerb): readonly Token[] {
 function deriveMasdarFormVI(verb: NonFormIVerb): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  const prefix = [TEH, FATHA, c1, FATHA, ALIF]
+  if (c3.isWeak) return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
 
-  if (c2.isWeak && c3.isHamza) return [...prefix, c3, TANWEEN_KASRA]
-
-  if (c3.isWeak) return [...prefix, c2, TANWEEN_KASRA]
-
-  return [...prefix, c2, DAMMA, c3]
+  return [TEH, FATHA, c1, FATHA, ALIF, c2, DAMMA, c3]
 }
 
 function deriveMasdarFormVII(verb: NonFormIVerb): readonly Token[] {

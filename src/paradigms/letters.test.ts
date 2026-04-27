@@ -89,7 +89,7 @@ test.each<[string, string, string, string]>([
 
   // ['Tuw', 'iT', 'on the line', HAMZA],
   // ['Tuw', 'uT', 'on the line', HAMZA],
-  // ['Tuw', 'aT', 'on the line', HAMZA],
+  ['Tuw', 'aT', 'on the line', HAMZA],
   // ['Tuw', 'iyT', 'on the line', HAMZA],
   ['Tuw', 'uwT', 'on the line', HAMZA],
   ['Tuw', 'aAT', 'on the line', HAMZA],

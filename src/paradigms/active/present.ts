@@ -9,7 +9,6 @@ import {
   FATHA,
   finalize,
   HAMZA,
-  HAMZA_ON_YEH,
   isDiacritic,
   isWeakLetter,
   KASRA,
@@ -155,13 +154,6 @@ function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] 
 
   const [c1, c2, c3] = verb.rootTokens
   const suffix = [FATHA, ALIF, NOON, KASRA]
-
-  if (c3.isHamza) {
-    if (verb.form === 4) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
-    if (verb.form === 5) return [...stem.slice(0, -2), ALIF_HAMZA, ...suffix]
-    if ((verb.form === 10 && c2.isWeak) || c2.equals(YEH)) return [...stem.slice(0, -2), HAMZA_ON_YEH, ...suffix]
-    if (c2.isWeak) return [...stem.slice(0, -2), HAMZA, ...suffix]
-  }
 
   if (c3.isWeak) {
     if (c2.isHamza) return [...stem.slice(0, -1), YEH, ...suffix]
@@ -319,9 +311,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         if (c3.equals(NOON)) return [...word.slice(0, -2), SUKOON, NOON, FATHA]
         return [...word.slice(0, -1), FATHA]
       }
-
-      if (verb.form !== 5 && c2.isWeak && c3.isHamza)
-        return [...shortenHollowStem(word).slice(0, -2), ...tokenize(HAMZA), SUKOON]
 
       if (c3.isWeak) return dropFinalDiacritic(word).slice(0, -1)
 

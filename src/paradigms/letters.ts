@@ -98,8 +98,7 @@ export function isWeakLetter(value = ''): value is WeakLetter {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
-export function isHamzatedLetter(token: Token = ''): boolean {
-  if (token instanceof LetterToken) return token.isHamza
+export function isHamzatedLetter(token = ''): boolean {
   return [HAMZA, ALIF_HAMZA, ALIF_HAMZA_BELOW, HAMZA_ON_WAW, HAMZA_ON_YEH].includes(token)
 }
 
@@ -167,8 +166,17 @@ function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
       const longVowelAfter = longVowelAt(tokens, index + 1)
 
       if (wordFinal) {
-        if (index === tokens.length - 2 && !tokens.at(index + 1)?.isVowel) {
+        // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
+
+        if (index === tokens.length - 1) {
+          if (longVowelBefore === 'i') return HAMZA
+          if (longVowelBefore === 'u') return HAMZA
+          if (longVowelBefore === 'a') return HAMZA
+        }
+
+        if (!tokens.at(index + 1)?.isVowel) {
           if (longVowelBefore === 'i') return HAMZA_ON_YEH
+          if (longVowelBefore === 'u') return HAMZA
         }
 
         // Word-final hamza: case vowel doesn't govern the seat, only the preceding vowel does:
@@ -178,22 +186,14 @@ function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
         return HAMZA
       }
 
-      if (longVowelBefore === 'i' && index === tokens.length - 1) return HAMZA
-      if (longVowelBefore === 'i' && vowel === DAMMA && longVowelAfter !== 'u') return HAMZA_ON_YEH
-      if (longVowelBefore === 'i' && vowel === FATHA && longVowelAfter !== 'u') return HAMZA_ON_YEH
-      if (longVowelBefore === 'u' && longVowelAfter === 'a') return HAMZA
+      if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
-      if (longVowelBefore === 'i' && longVowelAfter === 'u') return HAMZA_ON_YEH
+      if (vowel === FATHA) {
+        if (longVowelBefore === 'u') return HAMZA
+      }
 
-      if (longVowelAfter === 'i') return HAMZA_ON_YEH
-
-      if (before.equals(SUKOON)) {
-        const beforeSukoon = tokens.at(index - 2)
-        if (beforeSukoon?.equals(YEH) || beforeSukoon?.equals(WAW)) {
-          // Hamza after long vowel (yeh/waw + sukoon) is standalone at word-end, else seat on yeh/waw:
-          if (wordFinal) return HAMZA
-          return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
-        }
+      if (before.equals(SUKOON) && tokens.at(index - 2)?.equals(YEH)) {
+        return vowel === DAMMA ? HAMZA_ON_WAW : HAMZA_ON_YEH
       }
 
       // Seat on the line between two long equal vowels:
