@@ -66,8 +66,6 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 
   if (isFormIDefectiveVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
 
-  if (c2.isWeak && c3.isHamza && prefix.at(-1) === WAW) return [...prefix, HAMZA, DAMMA, ...suffix]
-
   if (c3.isWeak) {
     if (c2.isWeak) return [...prefix, DAMMA, ...suffix]
 
@@ -311,8 +309,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return dropNoonEnding(word).slice(0, -1)
       }
 
-      if (isMasculinePlural(pronounId) && verb.form === 4 && c2.isHamza && c3.isWeak)
-        return [...dropNoonEnding(word).slice(0, -1), ALIF]
+      // if (isMasculinePlural(pronounId) && verb.form === 4 && c2.isHamza && c3.isWeak)
+      //   return [...dropNoonEnding(word).slice(0, -1), ALIF]
 
       if (isMasculinePlural(pronounId))
         return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]

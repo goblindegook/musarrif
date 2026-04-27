@@ -698,15 +698,21 @@ describe('active present jussive', () => {
         })
       })
 
-      test('drops final hamza for جَاءَ', () => {
-        expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toMatchObjectT({
+      test('جَاءَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toEqualT({
           '1s': 'أَجِئْ',
           '2ms': 'تَجِئْ',
           '2fs': 'تَجِيئِي',
           '3ms': 'يَجِئْ',
           '3fs': 'تَجِئْ',
+          '2d': 'تَجِيئَا',
+          '3md': 'يَجِيئَا',
+          '3fd': 'تَجِيئَا',
           '1p': 'نَجِئْ',
-          '3mp': 'يَجِيؤُوْا',
+          '2mp': 'تَجِيئُوْا',
+          '2fp': 'تَجِئْنَ',
+          '3mp': 'يَجِيئُوْا',
+          '3fp': 'يَجِئْنَ',
         })
       })
     })
@@ -1229,9 +1235,9 @@ describe('active present jussive', () => {
           '3md': 'يُرِيَا',
           '3fd': 'تُرِيَا',
           '1p': 'نُرِ',
-          '2mp': 'تُرُوا',
+          '2mp': 'تُرُوْا',
           '2fp': 'تُرِيْنَ',
-          '3mp': 'يُرُوا',
+          '3mp': 'يُرُوْا',
           '3fp': 'يُرِيْنَ',
         })
       })

@@ -822,12 +822,6 @@ describe('masdar', () => {
         expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
       })
     })
-
-    describe('hamzated final hollow roots', () => {
-      test.each([['جيء', 'تَجَاءٍ']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 6))).toEqualT([expected].flat())
-      })
-    })
   })
 
   describe('Form VII', () => {

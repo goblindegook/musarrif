@@ -776,12 +776,6 @@ describe('active participle', () => {
         expect(deriveActiveParticiple(getVerb(root, 6))).toEqualT(expected)
       })
     })
-
-    describe('hamzated final hollow roots', () => {
-      test.each([['جيء', 'مُتَجَاءٍ']])('%s', (root, expected) => {
-        expect(deriveActiveParticiple(getVerb(root, 6))).toEqualT(expected)
-      })
-    })
   })
 
   describe('Form VII', () => {

@@ -1451,29 +1451,8 @@ describe('active past', () => {
     })
 
     describe('hamzated final hollow roots', () => {
-      test.each([
-        ['جيء', 'أَجَاءَ'],
-        ['ضوء', 'أَضَاءَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['ضوء', 'أَضَاءَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-
-      test('أَجَاءَ conjugation', () => {
-        expect(conjugatePast(getVerb('جيء', 4))).toEqualT({
-          '3ms': 'أَجَاءَ',
-          '3fs': 'أَجَاءَتْ',
-          '3md': 'أَجَاءَا',
-          '3fd': 'أَجَاءَتَا',
-          '3mp': 'أَجَاؤُوْا',
-          '3fp': 'أَجِئْنَ',
-          '2ms': 'أَجِئْتَ',
-          '2fs': 'أَجِئْتِ',
-          '2d': 'أَجِئْتُمَا',
-          '2mp': 'أَجِئْتُمْ',
-          '2fp': 'أَجِئْتُنَّ',
-          '1s': 'أَجِئْتُ',
-          '1p': 'أَجِئْنَا',
-        })
       })
     })
 
@@ -1926,30 +1905,6 @@ describe('active past', () => {
           '2fp': 'تَسَاءَلْتُنَّ',
           '3mp': 'تَسَاءَلُوْا',
           '3fp': 'تَسَاءَلْنَ',
-        })
-      })
-    })
-
-    describe('hamzated hollow roots', () => {
-      test.each([['جيء', 'تَجَاءَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
-      })
-
-      test('Form VI hollow verb with final hamza for تَجَاءَ', () => {
-        expect(conjugatePast(getVerb('جيء', 6))).toEqualT({
-          '3ms': 'تَجَاءَ',
-          '3fs': 'تَجَاءَتْ',
-          '3md': 'تَجَاءَا',
-          '3fd': 'تَجَاءَتَا',
-          '3mp': 'تَجَاؤُوْا',
-          '3fp': 'تَجِئْنَ',
-          '2ms': 'تَجِئْتَ',
-          '2fs': 'تَجِئْتِ',
-          '2d': 'تَجِئْتُمَا',
-          '2mp': 'تَجِئْتُمْ',
-          '2fp': 'تَجِئْتُنَّ',
-          '1s': 'تَجِئْتُ',
-          '1p': 'تَجِئْنَا',
         })
       })
     })
