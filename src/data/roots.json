@@ -56,13 +56,7 @@
   { "root": "'jr", "form": 10 },
   { "root": "'kd", "form": 2 },
   { "root": "'kd", "form": 5, "passiveVoice": "none" },
-  {
-    "root": "'kl",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l"],
-    "contractedImperative": true
-  },
+  { "root": "'kl", "form": 1, "vowels": "a-u", "masdars": ["fa3l"], "contractedImperative": true },
   { "root": "'kl", "form": 2 },
   { "root": "'kl", "form": 5, "passiveVoice": "none" },
   { "root": "'kl", "form": 6, "passiveVoice": "none", "noPassiveParticiple": true },
@@ -74,13 +68,7 @@
   { "root": "'mm", "form": 1, "vowels": "a-u", "masdars": ["fa3l"] },
   { "root": "'mm", "form": 5, "passiveVoice": "none" },
   { "root": "'mm", "form": 8 },
-  {
-    "root": "'mn",
-    "form": 1,
-    "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fa3l"]
-  },
+  { "root": "'mn", "form": 1, "vowels": "i-a", "noPassiveParticiple": true, "masdars": ["fa3l"] },
   { "root": "'mn", "form": 4 },
   {
     "root": "'mr",
@@ -114,13 +102,7 @@
   { "root": "'wl", "form": 5 },
   { "root": "'wy", "form": 1, "vowels": "a-i", "masdars": ["fi3iil", "fu3ul", "fi3aal"] },
   { "root": "'wy", "form": 4 },
-  {
-    "root": "'x*",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l"],
-    "contractedImperative": true
-  },
+  { "root": "'x*", "form": 1, "vowels": "a-u", "masdars": ["fa3l"], "contractedImperative": true },
   { "root": "'x*", "form": 3 },
   { "root": "'x*", "form": 7 },
   { "root": "'x*", "form": 8 },
@@ -210,13 +192,7 @@
   { "root": "HDr", "form": 10 },
   { "root": "HSd", "form": 1, "vowels": "a-a" },
   { "root": "HZr", "form": 1, "vowels": "a-a" },
-  {
-    "root": "HbT",
-    "form": 1,
-    "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fu3ool"]
-  },
+  { "root": "HbT", "form": 1, "vowels": "i-a", "noPassiveParticiple": true, "masdars": ["fu3ool"] },
   { "root": "Hbb", "form": 1, "vowels": "a-i", "masdars": ["fu3l"] },
   { "root": "Hbb", "form": 2 },
   { "root": "Hbb", "form": 4 },
@@ -272,13 +248,7 @@
   { "root": "Hyy", "form": 4 },
   { "root": "Hyy", "form": 10 },
   { "root": "Hzn", "form": 1, "vowels": "i-a" },
-  {
-    "root": "SEd",
-    "form": 1,
-    "vowels": "a-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fu3ool"]
-  },
+  { "root": "SEd", "form": 1, "vowels": "a-a", "noPassiveParticiple": true, "masdars": ["fu3ool"] },
   { "root": "SHb", "form": 3 },
   { "root": "SbH", "form": 1, "vowels": "a-a", "masdars": ["fa3l"] },
   { "root": "SbH", "form": 2 },
@@ -352,13 +322,7 @@
   { "root": "byD", "form": 9, "passiveVoice": "none" },
   { "root": "byE", "form": 1, "vowels": "a-i", "masdars": ["fa3l"] },
   { "root": "byt", "form": 1, "vowels": "a-i", "masdars": ["mimi"] },
-  {
-    "root": "dwm",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l", "fa3aal"],
-    "passiveVoice": "impersonal"
-  },
+  { "root": "dwm", "form": 1, "vowels": "a-u", "masdars": ["fa3l", "fa3aal"], "passiveVoice": "impersonal" },
   { "root": "dEm", "form": 1, "vowels": "a-a", "masdars": ["fa3l"] },
   { "root": "dEw", "form": 1, "vowels": "a-u", "masdars": ["fu3aal"] },
   { "root": "dEw", "form": 8 },
@@ -396,13 +360,7 @@
   { "root": "frqE", "form": 1, "vowels": "a-a" },
   { "root": "fsr", "form": 2 },
   { "root": "fsr", "form": 10 },
-  {
-    "root": "ft'",
-    "form": 1,
-    "vowels": "i-a",
-    "masdars": ["fa3l"],
-    "passiveVoice": "impersonal"
-  },
+  { "root": "ft'", "form": 1, "vowels": "i-a", "masdars": ["fa3l"], "passiveVoice": "impersonal" },
   { "root": "ftH", "form": 1, "vowels": "a-a" },
   { "root": "fwD", "form": 6, "passiveVoice": "impersonal" },
   { "root": "fyd", "form": 4 },
@@ -418,13 +376,7 @@
   { "root": "gll", "form": 10 },
   { "root": "glq", "form": 1, "vowels": "a-a" },
   { "root": "gmD", "form": 1, "vowels": "a-a" },
-  {
-    "root": "gny",
-    "form": 1,
-    "vowels": "a-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fa3l"]
-  },
+  { "root": "gny", "form": 1, "vowels": "a-a", "noPassiveParticiple": true, "masdars": ["fa3l"] },
   { "root": "gny", "form": 2 },
   { "root": "gny", "form": 4 },
   { "root": "gny", "form": 5 },
@@ -456,13 +408,7 @@
   { "root": "jlfE", "form": 3, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "jlEb", "form": 4, "passiveVoice": "impersonal" },
   { "root": "jlEd", "form": 4, "passiveVoice": "none", "noPassiveParticiple": true },
-  {
-    "root": "jls",
-    "form": 1,
-    "vowels": "a-i",
-    "noPassiveParticiple": true,
-    "masdars": ["fu3ool"]
-  },
+  { "root": "jls", "form": 1, "vowels": "a-i", "noPassiveParticiple": true, "masdars": ["fu3ool"] },
   { "root": "jmE", "form": 1, "vowels": "a-a", "masdars": ["fa3l", "fa3lan", "mimi"] },
   { "root": "jmE", "form": 2 },
   { "root": "jmE", "form": 5 },
@@ -513,13 +459,7 @@
   { "root": "ktb", "form": 6 },
   { "root": "ktb", "form": 7 },
   { "root": "kvr", "form": 4 },
-  {
-    "root": "kwn",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l"],
-    "noPassiveParticiple": true
-  },
+  { "root": "kwn", "form": 1, "vowels": "a-u", "masdars": ["fa3l"], "noPassiveParticiple": true },
   { "root": "kwn", "form": 2 },
   { "root": "kyf", "form": 2 },
   {
@@ -564,13 +504,7 @@
   { "root": "mnE", "form": 1, "vowels": "a-a" },
   { "root": "mnH", "form": 1, "vowels": "a-a" },
   { "root": "mny", "form": 2 },
-  {
-    "root": "mrD",
-    "form": 1,
-    "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fa3al"]
-  },
+  { "root": "mrD", "form": 1, "vowels": "i-a", "noPassiveParticiple": true, "masdars": ["fa3al"] },
   { "root": "mrD", "form": 2 },
   { "root": "mrD", "form": 4 },
   { "root": "mrD", "form": 5, "noPassiveParticiple": true },
@@ -623,13 +557,7 @@
   { "root": "nw'", "form": 1, "vowels": "a-u", "masdars": ["fa3l"] },
   { "root": "nwl", "form": 3 },
   { "root": "nwl", "form": 6 },
-  {
-    "root": "nwm",
-    "form": 1,
-    "vowels": "a-a",
-    "masdars": ["fa3l", "mimi"],
-    "passiveVoice": "impersonal"
-  },
+  { "root": "nwm", "form": 1, "vowels": "a-a", "masdars": ["fa3l", "mimi"], "passiveVoice": "impersonal" },
   { "root": "nwm", "form": 2 },
   { "root": "nwm", "form": 4 },
   { "root": "nwm", "form": 10, "passiveVoice": "impersonal" },
@@ -686,12 +614,7 @@
   { "root": "qwl", "form": 2 },
   { "root": "qwl", "form": 3 },
   { "root": "qwl", "form": 5 },
-  {
-    "root": "qwm",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l", "fi3aal", "mimi"]
-  },
+  { "root": "qwm", "form": 1, "vowels": "a-u", "masdars": ["fa3l", "fi3aal", "mimi"] },
   { "root": "qwm", "form": 3 },
   { "root": "qws", "form": 2 },
   { "root": "qwy", "form": 1, "vowels": "i-a", "masdars": ["fi3an"] },
@@ -740,13 +663,7 @@
   { "root": "s'l", "form": 1, "vowels": "a-a", "masdars": ["fu3aal"] },
   { "root": "s'l", "form": 3 },
   { "root": "s'l", "form": 6 },
-  {
-    "root": "sEd",
-    "form": 1,
-    "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fa3aala"]
-  },
+  { "root": "sEd", "form": 1, "vowels": "i-a", "noPassiveParticiple": true, "masdars": ["fa3aala"] },
   { "root": "sEd", "form": 3 },
   { "root": "sEy", "form": 1, "vowels": "a-a", "masdars": ["fa3l"] },
   { "root": "sHb", "form": 1, "vowels": "a-a" },
@@ -781,13 +698,7 @@
   { "root": "sw'", "form": 8, "passiveVoice": "impersonal" },
   { "root": "swf", "form": 2 },
   { "root": "swy", "form": 8 },
-  {
-    "root": "syTr",
-    "form": 1,
-    "vowels": "a-a",
-    "masdars": ["fa3lala"],
-    "passiveVoice": "impersonal"
-  },
+  { "root": "syTr", "form": 1, "vowels": "a-a", "masdars": ["fa3lala"], "passiveVoice": "impersonal" },
   { "root": "tHd", "form": 1, "vowels": "a-a" },
   { "root": "tHr", "form": 1, "vowels": "a-a" },
   { "root": "tHw", "form": 1, "vowels": "a-a" },
@@ -943,22 +854,11 @@
   { "root": "zHm", "form": 8, "passiveVoice": "impersonal" },
   { "root": "zlzl", "form": 1, "vowels": "a-a" },
   { "root": "zrE", "form": 1, "vowels": "a-a" },
-  {
-    "root": "zrq",
-    "form": 1,
-    "vowels": "i-a",
-    "masdars": ["fa3al"],
-    "passiveVoice": "impersonal"
-  },
+  { "root": "zrq", "form": 1, "vowels": "i-a", "masdars": ["fa3al"], "passiveVoice": "impersonal" },
   { "root": "zrq", "form": 2 },
   { "root": "zrq", "form": 9, "passiveVoice": "none", "noPassiveParticiple": true },
   { "root": "zwj", "form": 8 },
-  {
-    "root": "zwr",
-    "form": 1,
-    "vowels": "a-u",
-    "masdars": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"]
-  },
+  { "root": "zwr", "form": 1, "vowels": "a-u", "masdars": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"] },
   { "root": "zwr", "form": 2 },
   { "root": "zwy", "form": 2 },
   { "root": "zwy", "form": 5, "passiveVoice": "none" },

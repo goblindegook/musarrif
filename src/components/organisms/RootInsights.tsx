@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { useI18n } from '../../hooks/useI18n.tsx'
+import { tokenize } from '../../paradigms/letters.ts'
 import { analyzeRoot } from '../../paradigms/roots.ts'
 import { search } from '../../paradigms/selection.ts'
 import { Heading } from '../atoms/Heading.tsx'
@@ -10,7 +11,7 @@ import { VerbPill } from '../molecules/VerbPill'
 
 export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
   const { t, dir, lang } = useI18n()
-  const rootAnalysis = analyzeRoot(root)
+  const rootAnalysis = analyzeRoot(tokenize(root))
   const semanticMeaning = t(rootId)
   const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
   return (

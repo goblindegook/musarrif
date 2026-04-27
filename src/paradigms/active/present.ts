@@ -122,7 +122,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
         return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, ...suffix]
 
       case 8:
-        return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1.letter), FATHA, c2, KASRA, c3, ...suffix]
+        return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, ...suffix]
 
       case 10:
         return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, ...suffix]
@@ -337,7 +337,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if ([4, 7, 10].includes(verb.form)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
-        if (verb.form === 8 && (c2.equals(YEH) || resolveFormVIIIInfixConsonant(c1.letter) !== DAL))
+        if (verb.form === 8 && (c2.equals(YEH) || resolveFormVIIIInfixConsonant(c1) !== DAL))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
       }
 
@@ -478,7 +478,7 @@ function derivePresentFormVII(verb: NonFormIVerb): readonly Token[] {
 function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
   const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
-  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const infix = resolveFormVIIIInfixConsonant(c1)
   const seatedC2 = c2
   const seatedC3 = c3
 

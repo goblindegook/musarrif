@@ -154,16 +154,17 @@ function seatHamzas(tokens: readonly Token[]): readonly Token[] {
   })
 }
 
+// ḥurūf al-madd
 export function longVowel(vowel: Vowel): [Vowel, string] {
   if (vowel === FATHA) return [FATHA, ALIF]
   if (vowel === KASRA) return [KASRA, YEH]
   return [DAMMA, WAW]
 }
 
-export function resolveFormVIIIInfixConsonant(c1: string): string {
-  if (c1 === ZAY) return DAL
-  if ([SAD, DAD].includes(c1)) return TAH
-  if ([DAL, THEH, THAL, TAH, ZAH].includes(c1)) return c1
+export function resolveFormVIIIInfixConsonant(c1: LetterToken): Token {
+  if (c1.equals(ZAY)) return DAL
+  if ([SAD, DAD].includes(c1.letter)) return TAH
+  if ([DAL, THEH, THAL, TAH, ZAH].includes(c1.letter)) return c1
   return TEH
 }
 

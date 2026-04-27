@@ -153,7 +153,7 @@ export function deriveActiveParticiple(verb: Verb): string {
       case 8: {
         const isInitialWeakOrHamza = c1.isWeak || c1.isHamza
 
-        const infix = resolveFormVIIIInfixConsonant(c1.letter)
+        const infix = resolveFormVIIIInfixConsonant(c1)
 
         const prefix = [MEEM, DAMMA, c1, SUKOON, infix, FATHA]
 

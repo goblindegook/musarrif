@@ -1,6 +1,6 @@
 import { annotate, type Morpheme } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
-import { DAL, resolveFormVIIIInfixConsonant, TAH } from './letters'
+import { DAL, type LetterToken, resolveFormVIIIInfixConsonant, TAH } from './letters'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
@@ -9,22 +9,22 @@ import type { Verb, VerbForm } from './verbs'
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
 
 type TenseRootInteraction =
-  | 'middle-lengthens-aa'
-  | 'middle-lengthens-ii'
-  | 'middle-lengthens-uu'
-  | 'middle-passive-ii'
-  | 'middle-passive-aa'
-  | 'middle-shortens'
-  | 'final-isolated'
-  | 'final-resurfaces'
-  | 'final-lengthens-uu'
-  | 'final-lengthens-ii'
-  | 'final-passive'
   | 'final-drops'
-  | 'initial-drops'
+  | 'final-isolated'
+  | 'final-lengthens-ii'
+  | 'final-lengthens-uu'
+  | 'final-passive'
+  | 'final-resurfaces'
   | 'geminate-contracts'
   | 'geminate-jussive'
   | 'hamza-seat'
+  | 'initial-drops'
+  | 'middle-lengthens-aa'
+  | 'middle-lengthens-ii'
+  | 'middle-lengthens-uu'
+  | 'middle-passive-aa'
+  | 'middle-passive-ii'
+  | 'middle-shortens'
 
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
@@ -175,19 +175,18 @@ export function resolveVerbExplanationLayers(
   pronoun: PronounId,
   arabic: string,
 ): ExplanationLayers {
-  const rootLetters = Array.from(verb.root)
-  const rootType = analyzeRoot(verb.root).type
+  const rootType = analyzeRoot(verb.rootTokens).type
   const tense = verbTense
   const annotatedForm = annotate(verb, verbTense, pronoun)
   const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
   const { prefix, suffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
   return {
-    rootLetters,
+    rootLetters: Array.from(verb.root),
     form: verb.form,
     arabic,
     rootType,
     vowels: verb.form === 1 ? verb.vowels : undefined,
-    formRoot: toFormRoot(verb.form, rootLetters),
+    formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
@@ -196,10 +195,10 @@ export function resolveVerbExplanationLayers(
   }
 }
 
-function toFormRoot(form: VerbForm, rootLetters: string[]): FormRootInteraction | undefined {
+function toFormRoot(form: VerbForm, [c1]: readonly LetterToken[]): FormRootInteraction | undefined {
   if (form !== 8) return
-  const infixConsonant = resolveFormVIIIInfixConsonant(rootLetters[0])
-  if (infixConsonant === rootLetters[0]) return 'assimilation-complete'
+  const infixConsonant = resolveFormVIIIInfixConsonant(c1)
+  if (infixConsonant === c1) return 'assimilation-complete'
   if (infixConsonant === DAL) return 'assimilation-voicing'
   if (infixConsonant === TAH) return 'assimilation-emphasis'
 }
@@ -226,14 +225,13 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
 }
 
 export function resolveNominalExplanationLayers(verb: Verb, nominal: NominalKind, arabic: string): ExplanationLayers {
-  const rootLetters = Array.from(verb.root)
   return {
-    rootLetters,
+    rootLetters: Array.from(verb.root),
     form: verb.form,
     arabic,
-    rootType: analyzeRoot(verb.root).type,
+    rootType: analyzeRoot(verb.rootTokens).type,
     vowels: verb.form === 1 ? verb.vowels : undefined,
-    formRoot: toFormRoot(verb.form, rootLetters),
+    formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
   }
 }

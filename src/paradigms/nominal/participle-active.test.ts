@@ -33,8 +33,9 @@ describe('active participle', () => {
         ['بلغ', 'بَالِغ'],
         ['كتب', 'كَاتِب'],
         ['برح', 'بَارِح'],
+        ['mrD', 'مَارِض'],
       ])('%s', (root, expected) => {
-        expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
+        expect([root, deriveActiveParticiple(getVerb(root, 1))]).toEqualT([root, expected])
       })
     })
 

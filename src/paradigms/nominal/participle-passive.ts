@@ -109,7 +109,7 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 8: {
-        const infix = resolveFormVIIIInfixConsonant(c1.letter)
+        const infix = resolveFormVIIIInfixConsonant(c1)
         const isInitialWeakOrHamza = c1.isWeak || c1.isHamza
         const prefix = [MEEM, DAMMA]
 

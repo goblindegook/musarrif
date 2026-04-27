@@ -173,7 +173,7 @@ function deriveMasdarFormVII(verb: NonFormIVerb): readonly Token[] {
 
 function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
-  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [ALIF, KASRA, c1.isWeak || c1.isHamza ? infix : c1, SUKOON, infix, KASRA]
 
   if (c2.equals(c3)) return [ALIF, KASRA, c1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]

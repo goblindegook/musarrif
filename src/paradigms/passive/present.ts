@@ -259,7 +259,7 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
 
 function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
-  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const infix = resolveFormVIIIInfixConsonant(c1)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
   if (c2.equals(c3)) {

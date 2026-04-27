@@ -207,7 +207,7 @@ function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = verb.rootTokens
-  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const infix = resolveFormVIIIInfixConsonant(c1)
 
   if (c2.equals(c3))
     return {

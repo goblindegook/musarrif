@@ -257,7 +257,7 @@ function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
-  const infix = resolveFormVIIIInfixConsonant(c1.letter)
+  const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [ALIF, KASRA, c1, SUKOON, infix, FATHA]
 
   if (c2.equals(c3))

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { tokenize } from './letters'
 import { analyzeRoot } from './roots'
 
 describe('analyzeRoot', () => {
@@ -14,26 +15,26 @@ describe('analyzeRoot', () => {
     ['ءوي', 'hamzated-hollow-defective', [1, 2], [0]],
     ['ءتى', 'hamzated-defective-yaa', [2], [0]],
   ])('identifies %s as %s', (root, type, weakPositions, hamzaPositions) => {
-    expect(analyzeRoot(root)).toEqual({ type, weakPositions, hamzaPositions })
+    expect(analyzeRoot(tokenize(root))).toEqual({ type, weakPositions, hamzaPositions })
   })
 
   test('analyzeRoot returns doubled for مدد', () => {
-    expect(analyzeRoot('مدد')).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
+    expect(analyzeRoot(tokenize('مدد'))).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
   })
 
   test('analyzeRoot returns doubled for ردد', () => {
-    expect(analyzeRoot('ردد')).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
+    expect(analyzeRoot(tokenize('ردد'))).toEqual({ type: 'doubled', weakPositions: [], hamzaPositions: [] })
   })
 
   test('analyzeRoot returns hamzated-doubled for أمم', () => {
-    expect(analyzeRoot('أمم')).toEqual({ type: 'hamzated-doubled', weakPositions: [], hamzaPositions: [0] })
+    expect(analyzeRoot(tokenize('أمم'))).toEqual({ type: 'hamzated-doubled', weakPositions: [], hamzaPositions: [0] })
   })
 
   test('analyzeRoot sound root is unaffected', () => {
-    expect(analyzeRoot('كتب').type).toBe('sound')
+    expect(analyzeRoot(tokenize('كتب')).type).toBe('sound')
   })
 
   test('analyzeRoot hollow root returns the specific weak variant', () => {
-    expect(analyzeRoot('قول').type).toBe('hollow-waw')
+    expect(analyzeRoot(tokenize('قول')).type).toBe('hollow-waw')
   })
 })
