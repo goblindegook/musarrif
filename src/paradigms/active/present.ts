@@ -8,7 +8,6 @@ import {
   DAMMA,
   FATHA,
   finalize,
-  HAMZA,
   isDiacritic,
   isWeakLetter,
   KASRA,
@@ -22,7 +21,6 @@ import {
   SUKOON,
   TEH,
   type Token,
-  tokenize,
   type Vowel,
   WAW,
   YEH,
@@ -61,35 +59,52 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
   const [c1, c2, c3] = verb.rootTokens
   const prefix = stem.slice(0, -2)
 
-  if (isFormIDefectiveVowel(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
+  switch (verb.form) {
+    case 1:
+      if (isFormIDefectiveVowel(verb, FATHA) && c2.isHamza) return [YEH, FATHA, c1, FATHA, ...suffix]
+      if (isFormIDefectiveVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
+      if (c2.isHamza && c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
+      return [...stem, ...suffix]
 
-  if (isFormIDefectiveVowel(verb, FATHA)) return [YEH, FATHA, c1, SUKOON, c2, FATHA, ...suffix]
+    case 2:
+    case 3:
+      if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      if (c3.isWeak) return [...prefix, DAMMA, ...suffix]
 
-  if (c3.isWeak) {
-    if (c2.isWeak) return [...prefix, DAMMA, ...suffix]
+      return [...stem, ...suffix]
 
-    switch (verb.form) {
-      case 2:
-      case 3:
-      case 8:
-        return [...prefix, DAMMA, ...suffix]
+    case 4:
+      if (c2.isHamza && c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
+      return [...stem, ...suffix]
 
-      case 5:
-      case 6:
-        return [...prefix, FATHA, ...suffix]
+    case 5:
 
-      case 7:
-        return [...stem, ...suffix]
-    }
+    case 6:
+      if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      if (c3.isWeak) return [...prefix, FATHA, ...suffix]
+      return [...stem, ...suffix]
 
-    if (c2.isHamza) return [...prefix, DAMMA, ...suffix]
+    case 7:
+      if (c2.isWeak && c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      if (c3.isWeak) return [...stem, ...suffix]
+      return [...stem, ...suffix]
 
-    if (c1.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
+    case 8:
+      if (c3.isWeak) return [...prefix, DAMMA, ...suffix]
+      return [...stem, ...suffix]
 
-    return [...stem.slice(0, -2), DAMMA, ...suffix]
+    case 9:
+      return [...stem, ...suffix]
+
+    case 10:
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
+      return [...stem, ...suffix]
   }
-
-  return [...stem, ...suffix]
 }
 
 function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
@@ -104,72 +119,108 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c2.equals(c3)) {
-    switch (verb.form) {
-      case 1:
-        return [YEH, FATHA, c1, SUKOON, c2, formIPresentVowel(verb), c3, ...suffix]
+  switch (verb.form) {
+    case 1:
+      if (c2.equals(c3)) return [YEH, FATHA, c1, SUKOON, c2, formIPresentVowel(verb), c3, ...suffix]
+      if (isFormIDefectiveVowel(verb, FATHA))
+        return c2.isHamza
+          ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
+          : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
+      if (c3.isWeak) return [...dropFinalDiacritic(stem), ...suffix]
 
-      case 3:
-        return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, ...suffix]
+      if (c2.isWeak && stem.includes(ALIF)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-      case 4:
-        return [YEH, DAMMA, c1, SUKOON, c2, KASRA, c3, ...suffix]
+      // FIXME: isFormIPastVowel check doesn't make sense
+      if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
+        return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-      case 7:
-        return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
 
-      case 8:
+    case 2:
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 3:
+      if (c2.equals(c3)) return [YEH, DAMMA, c1, FATHA, ALIF, c2, KASRA, c2, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 4:
+      if (c2.equals(c3)) return [YEH, DAMMA, c1, SUKOON, c2, KASRA, c3, ...suffix]
+      if (c2.isWeak) return [...shortenHollowStem(stem).slice(0, -2), c3, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 5:
+      if (c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 6:
+      if (c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
+      return [...dropFinalDiacritic(c3.isHamza ? stem : expandGemination(stem, FATHA)), ...suffix]
+
+    case 7:
+      if (c2.equals(c3)) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, ...suffix]
+      if (c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
+      if (c2.isWeak) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 8:
+      if (c2.equals(c3))
         return [YEH, FATHA, c1, SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA, c2, KASRA, c3, ...suffix]
+      if (c2.equals(YEH)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
 
-      case 10:
-        return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, ...suffix]
-    }
+    case 9:
+      return [...dropFinalDiacritic(expandGemination(stem, KASRA)), ...suffix]
+
+    case 10:
+      if (c2.equals(c3)) return [YEH, FATHA, SEEN, SUKOON, TEH, FATHA, c1, SUKOON, c2, KASRA, c3, ...suffix]
+      if (c2.isWeak) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
   }
-
-  if (isFormIDefectiveVowel(verb, FATHA))
-    return c2.isHamza ? [YEH, FATHA, c1, FATHA, YEH, ...suffix] : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
-
-  if ([2, 3, 4, 5, 6, 7, 8, 9].includes(verb.form) && c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
-
-  if (verb.form === 6) return [...dropFinalDiacritic(c3.isHamza ? stem : expandGemination(stem, FATHA)), ...suffix]
-
-  if (verb.form === 9) return [...dropFinalDiacritic(expandGemination(stem, KASRA)), ...suffix]
-
-  if (c2.isWeak) {
-    if (verb.form !== 5 && c3.isHamza) return [...shortenHollowStem(stem).slice(0, -2), ...tokenize(HAMZA), ...suffix]
-
-    if (verb.form === 1 && (stem.includes(ALIF) || !isFormIPastVowel(verb, KASRA)) && !c3.isWeak)
-      return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
-
-    if ([7, 10].includes(verb.form)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
-
-    if (verb.form === 8 && c2.equals(YEH)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
-  }
-
-  return [...dropFinalDiacritic(stem), ...suffix]
 }
 
 function buildDualPresent(stem: readonly Token[], verb: Verb): readonly Token[] {
-  if (verb.root.length > 3) return [...dropFinalDiacritic(stem), FATHA, ALIF, NOON, KASRA]
-
-  const [c1, c2, c3] = verb.rootTokens
   const suffix = [FATHA, ALIF, NOON, KASRA]
 
-  if (c3.isWeak) {
-    if (c2.isHamza) return [...stem.slice(0, -1), YEH, ...suffix]
+  if (verb.root.length > 3) return [...dropFinalDiacritic(stem), ...suffix]
 
-    if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+  const [c1, c2, c3] = verb.rootTokens
 
-    if ([2, 3, 5, 6].includes(verb.form)) return [...stem.slice(0, -1), YEH, ...suffix]
+  switch (verb.form) {
+    case 1:
+      if (c3.isWeak && c2.isHamza) return [...stem.slice(0, -1), YEH, ...suffix]
+      if (isFormIDefectiveVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, ...suffix]
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
 
-    if (verb.form === 8) return [...stem, ...suffix]
+    case 2:
+    case 3:
+      return [...dropFinalDiacritic(stem), ...suffix]
 
-    if (c1.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+    case 4:
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      if (c3.isWeak) return [...stem, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
 
-    return [...stem, ...suffix]
+    case 5:
+    case 6:
+      if (c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 7:
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 8:
+      if (c3.isWeak) return [...stem, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 9:
+      return [...dropFinalDiacritic(stem), ...suffix]
+
+    case 10:
+      if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
+      if (c3.isWeak) return [...stem, ...suffix]
+      return [...dropFinalDiacritic(stem), ...suffix]
   }
-
-  return [...dropFinalDiacritic(stem), ...suffix]
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, string> {
