@@ -68,7 +68,7 @@ describe('search', () => {
   test('returns only exact matches when requested', () => {
     const exact = search('بدل', { exactRoot: true })
 
-    expect(exact.map((verb) => verb.form)).toEqual([1, 2, 6, 10])
+    expect(exact.map((verb) => verb.form)).toEqual([1, 2, 4, 6, 10])
   })
 
   test('exact-only search does not include lemma-prefix suggestions', () => {

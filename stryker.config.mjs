@@ -9,5 +9,5 @@ export default {
   vitest: {
     configFile: 'vitest.config.ts',
   },
-  ignoreStatic: false,
+  ignoreStatic: true,
 }
