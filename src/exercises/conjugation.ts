@@ -155,6 +155,7 @@ export const conjugationExercise = defineExercise(
       explanations: options.map((option) =>
         option === answer ? pick(explanation, ['rootLetters', 'arabic', 'tenseRoot']) : explanation,
       ),
+      supportsTyping: true,
     }
   },
   { weight: 5 },

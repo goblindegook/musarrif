@@ -53,6 +53,7 @@
     "exercise.next": "التالي",
     "exercise.open": "وضع الاختبار",
     "exercise.pass": "تخطَّ",
+    "exercise.typing.placeholder": "اكتب إجابتك…",
     "exercise.unlock.diacriticsMode.none": "بدون تشكيل",
     "exercise.unlock.diacriticsMode.some": "تشكيل جزئي",
     "exercise.unlock.dimension.diacritics": "نمط التشكيل",

@@ -408,13 +408,19 @@ const MasteryContainer = styled('section')`
 const MasteryGrid = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 `
 
 const MasteryCategory = styled('div')`
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   background: color-mix(in srgb, var(--color-bg-surface) 92%, var(--color-bg-base) 8%);
+  overflow: hidden;
+  transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:has(> button:hover) {
+    border-color: var(--color-accent);
+  }
 `
 
 const MasteryHeader = styled('button')`
@@ -429,6 +435,16 @@ const MasteryHeader = styled('button')`
   column-gap: 0.5rem;
   gap: 0.4rem;
   cursor: pointer;
+  transition: background 150ms ease;
+
+  &:hover {
+    background: var(--color-bg-accent-hover);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: -3px;
+  }
 `
 
 const MasteryLabelGroup = styled('span')`

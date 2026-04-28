@@ -53,6 +53,7 @@
     "exercise.next": "Avanti",
     "exercise.open": "Modalità test",
     "exercise.pass": "Salta",
+    "exercise.typing.placeholder": "Scrivi la tua risposta",
     "exercise.unlock.diacriticsMode.none": "senza segni diacritici",
     "exercise.unlock.diacriticsMode.some": "segni diacritici parziali",
     "exercise.unlock.dimension.diacritics": "Modalità segni diacritici",

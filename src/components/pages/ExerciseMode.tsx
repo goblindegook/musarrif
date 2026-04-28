@@ -19,9 +19,11 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
+import { normalizeForComparison } from '../../paradigms/letters'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
+import { ExerciseAnswerArea } from '../molecules/ExerciseAnswerArea'
 import { ShortcutButton } from '../molecules/ShortcutButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
 
@@ -35,6 +37,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise(dimensionProfile, srsStore))
   const [selected, setSelected] = useState<number | null>(null)
+  const [typingMode, setTypingMode] = useState(false)
+  const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
 
@@ -51,6 +55,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     (profile: DimensionProfile) => {
       setExercise(generateExercise(profile, srsStore))
       setSelected(null)
+      setTypedResult('idle')
       clearDimensionUnlocks()
       setStreakExtendedAlert(false)
     },
@@ -90,6 +95,20 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     [exercise, storedStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
   )
 
+  const handleTypedAnswer = useCallback(
+    (typed: string) => {
+      const correct = normalizeForComparison(typed) === normalizeForComparison(exercise.options[exercise.answer])
+      if (correct) {
+        setTypedResult('correct')
+        handleAnswer(exercise.answer)
+      } else {
+        setTypedResult('wrong')
+        handleAnswer((exercise.answer + 1) % exercise.options.length)
+      }
+    },
+    [exercise, handleAnswer],
+  )
+
   const handleSkip = useCallback(() => {
     recordSrsAnswer(exercise.cardKey, 'pass')
     const promotedProfile = recordDimensionAnswer(exercise.dimensions, false)
@@ -117,31 +136,15 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
               Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
           )}
         />
-        <OptionsGrid>
-          {exercise.options.map((option, index) => {
-            const isCorrect = index === exercise.answer
-            const isSelected = index === selected
-            const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
-            return (
-              <ShortcutButton
-                size="large"
-                key={option}
-                className={OPTION_BUTTON_CLASS}
-                shortcutKey={`${index + 1}`}
-                showShortcut={!isAnswered}
-                onClick={() => {
-                  if (!isAnswered) handleAnswer(index)
-                }}
-                disabled={isAnswered}
-                data-state={state}
-                data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
-                aria-label={t(option)}
-              >
-                {t(option)}
-              </ShortcutButton>
-            )
-          })}
-        </OptionsGrid>
+        <ExerciseAnswerArea
+          exercise={exercise}
+          mode={typingMode && exercise.supportsTyping ? 'typing' : 'multiple-choice'}
+          selected={selected}
+          typedResult={typedResult}
+          onAnswer={handleAnswer}
+          onTypedAnswer={handleTypedAnswer}
+          onToggleMode={() => setTypingMode((m) => !m)}
+        />
         <ExplanationWrapper visible={explanation.length > 0}>
           <ExplanationInner>
             {explanation.length > 0 && (
@@ -187,7 +190,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             </Button>
           </>
         ) : (
-          <ShortcutButton shortcutKey="s" onClick={handleSkip}>
+          <ShortcutButton shortcutKey={typingMode && exercise.supportsTyping ? '' : 's'} onClick={handleSkip}>
             {t('exercise.pass')}
           </ShortcutButton>
         )}
@@ -240,13 +243,6 @@ const PROMPT_CLASS = css`
   font-size: 1rem;
   color: var(--color-text-secondary);
   text-align: center;
-`
-
-const OptionsGrid = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  width: 100%;
 `
 
 const ExplanationWrapper = styled('div')<{ visible: boolean }>`
@@ -308,47 +304,5 @@ const StreakAlert = styled('aside')`
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
-  }
-`
-
-const OPTION_BUTTON_CLASS = css`
-  @keyframes option-correct {
-    0%   { transform: scale(1); }
-    45%  { transform: scale(1.04); }
-    100% { transform: scale(1); }
-  }
-
-  @keyframes option-wrong {
-    0%   { transform: translateX(0); }
-    20%  { transform: translateX(-6px); }
-    40%  { transform: translateX(5px); }
-    60%  { transform: translateX(-4px); }
-    80%  { transform: translateX(3px); }
-    100% { transform: translateX(0); }
-  }
-
-  &[data-state='correct'] {
-    background: var(--color-success-bg);
-    border-color: var(--color-success-border);
-    color: var(--color-success-text);
-    animation: option-correct 300ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  &[data-state='wrong'] {
-    background: var(--color-error-bg);
-    border-color: var(--color-error-border);
-    color: var(--color-error-text);
-    animation: option-wrong 350ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  &[data-state='dim'] {
-    opacity: 0.4;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &[data-state='correct'],
-    &[data-state='wrong'] {
-      animation: none;
-    }
   }
 `

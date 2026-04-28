@@ -212,7 +212,7 @@ test('Order derived form options by form number', () => {
   const formLabels = Array.from(derivedFormHeading.nextElementSibling!.children)
     .map((button) => button.getAttribute('aria-label')!)
     .map((label) => label.match(/-\s([IVX]+)\s-\sForm/i)?.[1])
-  expect(formLabels).toEqual(['I', 'II', 'VI', 'X'])
+  expect(formLabels).toEqual(['I', 'II', 'IV', 'VI', 'X'])
 })
 
 describe('Root insights', () => {
