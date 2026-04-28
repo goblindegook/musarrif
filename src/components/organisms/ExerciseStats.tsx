@@ -167,21 +167,21 @@ function masteryProgressBar(score: number, locked: boolean): { value: number; ma
 
 function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
   const { t } = useI18n()
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const [expanded, setExpanded] = useState<string | null>(null)
 
   return (
     <MasteryContainer>
       <Heading as="h3">{t('exercise.stats.mastery.title')}</Heading>
       <MasteryGrid>
         {mastery.categories.map((category) => {
-          const isExpanded = expanded[category.id] === true
+          const isExpanded = expanded === category.id
           const categoryProgress = masteryProgressBar(category.score, category.locked)
           return (
             <MasteryCategory key={category.id}>
               <MasteryHeader
                 data-testid={`mastery-category-header-${category.id}`}
                 type="button"
-                onClick={() => setExpanded((current) => ({ ...current, [category.id]: !isExpanded }))}
+                onClick={() => setExpanded((current) => (current === category.id ? null : category.id))}
               >
                 <MasteryLabelGroup data-testid={`mastery-category-label-${category.id}`}>
                   <span>{t(`exercise.unlock.dimension.${category.id}`)}</span>

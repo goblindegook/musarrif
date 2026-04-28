@@ -348,6 +348,8 @@
     "verbLabel": "ٱلْفِعْلُ",
     "verbsByForm.title": "الأفعال حسب الصيغة",
     "voice.active": "مَعْلُومٌ",
-    "voice.passive": "مَجْهُولٌ"
+    "voice.passive": "مَجْهُولٌ",
+    "exercise.toggle.type": "اكتب الإجابة",
+    "exercise.toggle.options": "اعرض الخيارات"
   }
 }

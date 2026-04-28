@@ -53,6 +53,8 @@
     "exercise.next": "Próximo",
     "exercise.open": "Modo de teste",
     "exercise.pass": "Saltar",
+    "exercise.toggle.type": "Digite a resposta",
+    "exercise.toggle.options": "Ver opções",
     "exercise.typing.placeholder": "Escreva a sua resposta",
     "exercise.unlock.diacriticsMode.none": "sem diacríticos",
     "exercise.unlock.diacriticsMode.some": "diacríticos parciais",

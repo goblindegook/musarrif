@@ -53,6 +53,8 @@
     "exercise.next": "Next",
     "exercise.open": "Test mode",
     "exercise.pass": "Skip question",
+    "exercise.toggle.type": "Type the answer",
+    "exercise.toggle.options": "See options",
     "exercise.typing.placeholder": "Type your answer",
     "exercise.unlock.diacriticsMode.none": "no diacritics",
     "exercise.unlock.diacriticsMode.some": "partial diacritics",

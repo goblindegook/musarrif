@@ -2,8 +2,6 @@ import { css, styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise } from '../../exercises/exercises'
 import { useI18n } from '../../hooks/useI18n'
-import { IconButton } from '../atoms/IconButton'
-import { KeyboardIcon } from '../icons/KeyboardIcon'
 import { ShortcutButton } from './ShortcutButton'
 
 type Props = {
@@ -40,20 +38,6 @@ export function ExerciseAnswerArea({
 
   return (
     <Wrapper>
-      {exercise.supportsTyping && (
-        <ToggleRow>
-          <IconButton
-            aria-label={mode === 'multiple-choice' ? 'Type answer' : 'Multiple choice'}
-            onClick={onToggleMode}
-            disabled={isAnswered}
-            active={mode === 'typing'}
-            size="md"
-          >
-            <KeyboardIcon />
-          </IconButton>
-        </ToggleRow>
-      )}
-
       {mode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
@@ -114,6 +98,18 @@ export function ExerciseAnswerArea({
           )}
         </TypingForm>
       )}
+
+      {exercise.supportsTyping && (
+        <ShortcutButton
+          shortcutKey="t"
+          onClick={onToggleMode}
+          disabled={isAnswered}
+          variant="secondary"
+          style={{ width: '100%' }}
+        >
+          {mode === 'multiple-choice' ? t('exercise.toggle.type') : t('exercise.toggle.options')}
+        </ShortcutButton>
+      )}
     </Wrapper>
   )
 }
@@ -123,12 +119,6 @@ const Wrapper = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-`
-
-const ToggleRow = styled('div')`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0.5rem;
 `
 
 const OptionsGrid = styled('div')`

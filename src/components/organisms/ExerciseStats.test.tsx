@@ -242,6 +242,20 @@ describe('ExerciseStats', () => {
     expect(screen.queryByText('Sound')).not.toBeInTheDocument()
   })
 
+  test('collapses other categories when one is expanded', () => {
+    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    const rootTypesCategory = screen.getByRole('button', { name: /root types/i })
+    const formsCategory = screen.getByRole('button', { name: /forms/i })
+
+    fireEvent.click(rootTypesCategory)
+    expect(screen.getByText('Sound')).toBeInTheDocument()
+
+    fireEvent.click(formsCategory)
+    expect(screen.queryByText('Sound')).not.toBeInTheDocument()
+    expect(screen.getByText('Form I')).toBeInTheDocument()
+  })
+
   test('keeps today values in the last chart slot when local day differs from UTC', () => {
     vi.useFakeTimers()
     vi.stubEnv('TZ', 'America/Los_Angeles')

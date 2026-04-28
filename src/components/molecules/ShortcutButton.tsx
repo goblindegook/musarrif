@@ -33,6 +33,9 @@ export function ShortcutButton({
         if (event.metaKey || event.ctrlKey || event.altKey) return
         if (event.key.toLowerCase() !== normalizedShortcut) return
 
+        const target = event.target as Element
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return
+
         event.preventDefault()
         onClick()
       },

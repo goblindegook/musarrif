@@ -92,7 +92,7 @@ test('toggle button visible when supportsTyping is true', () => {
     />,
     { wrapper: Wrapper },
   )
-  expect(screen.getByRole('button', { name: 'Type answer' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /Type the answer/ })).toBeInTheDocument()
 })
 
 test('clicking the toggle calls onToggleMode', () => {
@@ -109,7 +109,7 @@ test('clicking the toggle calls onToggleMode', () => {
     />,
     { wrapper: Wrapper },
   )
-  fireEvent.click(screen.getByRole('button', { name: 'Type answer' }))
+  fireEvent.click(screen.getByRole('button', { name: /Type the answer/ }))
   expect(onToggleMode).toHaveBeenCalledOnce()
 })
 
@@ -196,5 +196,57 @@ test('toggle button is disabled when typedResult is not idle', () => {
     />,
     { wrapper: Wrapper },
   )
-  expect(screen.getByRole('button', { name: 'Multiple choice' })).toBeDisabled()
+  expect(screen.getByRole('button', { name: /See options/ })).toBeDisabled()
+})
+
+test('toggle button appears below options in MC mode with "Type the answer" text', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ supportsTyping: true })}
+      mode="multiple-choice"
+      selected={null}
+      typedResult="idle"
+      onAnswer={noop}
+      onTypedAnswer={noop}
+      onToggleMode={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  const buttons = screen.getAllByRole('button')
+  const toggleButton = screen.getByRole('button', { name: /Type the answer/ })
+  expect(buttons[buttons.length - 1]).toBe(toggleButton)
+})
+
+test('toggle button appears below input in typing mode with "See options" text', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ supportsTyping: true })}
+      mode="typing"
+      selected={null}
+      typedResult="idle"
+      onAnswer={noop}
+      onTypedAnswer={noop}
+      onToggleMode={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  expect(screen.getByRole('button', { name: /See options/ })).toBeInTheDocument()
+})
+
+test('toggle button has T shortcut', () => {
+  const onToggleMode = vi.fn()
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ supportsTyping: true })}
+      mode="multiple-choice"
+      selected={null}
+      typedResult="idle"
+      onAnswer={noop}
+      onTypedAnswer={noop}
+      onToggleMode={onToggleMode}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.keyDown(document, { key: 't' })
+  expect(onToggleMode).toHaveBeenCalled()
 })
