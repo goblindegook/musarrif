@@ -344,13 +344,13 @@ async function runSingle(roots, locales) {
       }
       state.verbTranslations.en = enVerb
 
-      const itVerb = await inputWithBack('Verb translation (IT):', locales.it.verbs[state.vid] ?? state.verbTranslations.it)
+      const itVerb = await inputWithBack('Verb translation (IT, e.g. "scrivere"):', locales.it.verbs[state.vid] ?? state.verbTranslations.it)
       if (itVerb === BACK) {
         continue
       }
       state.verbTranslations.it = itVerb
 
-      const ptVerb = await inputWithBack('Verb translation (PT):', locales.pt.verbs[state.vid] ?? state.verbTranslations.pt)
+      const ptVerb = await inputWithBack('Verb translation (PT, e.g. "escrever"):', locales.pt.verbs[state.vid] ?? state.verbTranslations.pt)
       if (ptVerb === BACK) {
         continue
       }

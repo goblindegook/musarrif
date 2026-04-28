@@ -3168,6 +3168,15 @@
     "vowels": "a-a"
   },
   {
+    "root": "rHl",
+    "form": 1,
+    "vowels": "a-a",
+    "masdars": [
+      "fa3l",
+      "fa3iil"
+    ]
+  },
+  {
     "root": "rdd",
     "form": 1,
     "vowels": "a-a"
@@ -3395,12 +3404,22 @@
     "form": 4
   },
   {
+    "root": "sfh",
+    "form": 1,
+    "vowels": "u-u",
+    "masdars": [
+      "fa3aala"
+    ]
+  },
+  {
     "root": "sfr",
     "form": 1,
     "vowels": "a-i",
     "masdars": [
-      "fa3l"
-    ]
+      "fa3l",
+      "fu3ool"
+    ],
+    "passiveVoice": "impersonal"
   },
   {
     "root": "sfr",
@@ -3408,7 +3427,8 @@
   },
   {
     "root": "sfr",
-    "form": 3
+    "form": 3,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "sjd",
@@ -3470,7 +3490,12 @@
   {
     "root": "smE",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "masdars": [
+      "fa3l",
+      "fa3aal",
+      "mimi"
+    ]
   },
   {
     "root": "smE",
@@ -4203,6 +4228,29 @@
     "root": "xlq",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "xlw",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": [
+      "fu3ool",
+      "fa3aal"
+    ],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "xlw",
+    "form": 2
+  },
+  {
+    "root": "xlw",
+    "form": 4
+  },
+  {
+    "root": "xlw",
+    "form": 5,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "xrTm",
