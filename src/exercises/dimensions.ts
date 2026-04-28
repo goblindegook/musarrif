@@ -299,7 +299,7 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
   if (['tenses', 'forms', 'rootTypes'].includes(dimension) && profile.pronouns < 1) return false
 
   // Do not unlock present tense before Form V is unlocked:
-  if (dimension === 'tenses' && level === 0 && profile.forms < 4) return false
+  if (dimension === 'tenses' && profile.forms < 4) return false
 
   // Do not unlock passive verbs before exposure to all forms:
   if (dimension === 'tenses' && level >= 4 && profile.forms < MAX_LEVELS.forms) return false
