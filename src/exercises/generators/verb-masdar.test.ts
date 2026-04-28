@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { verbs } from '../paradigms/verbs'
-import { exerciseDiacritics } from './dimensions'
-import { verbMasdarExercise } from './verb-masdar'
+import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import { verbs } from '../../paradigms/verbs.ts'
+import { exerciseDiacritics } from '../dimensions.ts'
+import { verbMasdarExercise } from './verb-masdar.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

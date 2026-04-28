@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { verbFormExercise } from './verb-form'
+import { verbFormExercise } from './verb-form.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

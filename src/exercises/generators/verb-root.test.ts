@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { verbs } from '../paradigms/verbs'
-import { verbRootExercise } from './verb-root'
+import { verbs } from '../../paradigms/verbs.ts'
+import { verbRootExercise } from './verb-root.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

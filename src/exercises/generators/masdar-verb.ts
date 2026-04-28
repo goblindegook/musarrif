@@ -1,36 +1,31 @@
-import { isWeakLetter } from '../paradigms/letters'
-import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
-import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import type { DisplayVerb } from '../paradigms/verbs'
-import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
-import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+import { isWeakLetter } from '../../paradigms/letters.ts'
+import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import type { DisplayVerb } from '../../paradigms/verbs.ts'
+import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from '../dimensions.ts'
+import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
-type Participle = 'active' | 'passive'
-
-export const participleVerbExercise = defineExercise(
-  'participleVerb',
+export const masdarVerbExercise = defineExercise(
+  'masdarVerb',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
-    const active = deriveActiveParticiple(verb)
-    const passive = derivePassiveParticiple(verb)
-    const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-    const word = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
+    const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
     const options = buildOptions(verb, profile)
     const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
-      promptTranslationKey:
-        kind === 'active' ? 'exercise.prompt.activeParticipleVerb' : 'exercise.prompt.passiveParticipleVerb',
+      promptTranslationKey: 'exercise.prompt.masdarVerb',
       word,
       options,
       answer: options.indexOf(answerLabel),
-      cardKey: buildCardKey('participleVerb', getSrsRootType(verb.root), verb.form),
+      cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),
     }
   },
-  { minNominals: 1 },
+  {
+    minNominals: 2,
+  },
 )
 
 function buildOptions(verb: DisplayVerb, profile: DimensionProfile): readonly string[] {

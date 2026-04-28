@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { verbPronounExercise } from './verb-pronoun'
+import { verbPronounExercise } from './verb-pronoun.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

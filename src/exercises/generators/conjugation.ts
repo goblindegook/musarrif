@@ -1,10 +1,10 @@
 import { shuffle } from '@pacote/shuffle'
-import { conjugate } from '../paradigms/conjugation'
-import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import type { PronounId } from '../paradigms/pronouns'
-import type { VerbTense } from '../paradigms/tense'
-import { type DisplayVerb, FORMS, synthesizeVerb } from '../paradigms/verbs'
-import { pick } from '../primitives/objects'
+import { conjugate } from '../../paradigms/conjugation'
+import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
+import type { PronounId } from '../../paradigms/pronouns'
+import type { VerbTense } from '../../paradigms/tense'
+import { type DisplayVerb, FORMS, synthesizeVerb } from '../../paradigms/verbs'
+import { pick } from '../../primitives/objects'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -16,9 +16,9 @@ import {
   randomVerb,
   type TensesLevel,
   tensePool,
-} from './dimensions'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+} from '../dimensions'
+import { defineExercise } from '../exercises'
+import { buildCardKey, getSrsRootType } from '../srs'
 
 const TENSE_SLUGS: Record<string, string> = {
   past: 'past',

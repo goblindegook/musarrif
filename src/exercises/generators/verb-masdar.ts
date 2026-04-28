@@ -1,11 +1,11 @@
 import { shuffle } from '@pacote/shuffle'
-import { isWeakLetter } from '../paradigms/letters'
-import { deriveMasdar } from '../paradigms/nominal/masdar'
-import type { DisplayVerb } from '../paradigms/verbs'
-import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from './dimensions'
-import { singleLetterWordDistractor, weakAlternativeRootDistractor } from './distractors'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+import { isWeakLetter } from '../../paradigms/letters.ts'
+import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import type { DisplayVerb } from '../../paradigms/verbs.ts'
+import { type DimensionProfile, exerciseDiacritics, random, randomGeneratedVerb, randomVerb } from '../dimensions.ts'
+import { singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbMasdarExercise = defineExercise(
   'verbMasdar',

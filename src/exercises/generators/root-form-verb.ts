@@ -1,10 +1,10 @@
 import { shuffle } from '@pacote/shuffle'
-import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
-import { pick } from '../primitives/objects'
-import { exerciseDiacritics, randomVerb } from './dimensions'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+import { resolveVerbExplanationLayers } from '../../paradigms/explanation.ts'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { pick } from '../../primitives/objects.ts'
+import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)

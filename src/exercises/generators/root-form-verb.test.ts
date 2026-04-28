@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { formatFormLabel, verbs } from '../paradigms/verbs'
-import { exerciseDiacritics } from './dimensions'
-import { rootFormVerbExercise } from './root-form-verb'
+import { formatFormLabel, verbs } from '../../paradigms/verbs.ts'
+import { exerciseDiacritics } from '../dimensions.ts'
+import { rootFormVerbExercise } from './root-form-verb.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

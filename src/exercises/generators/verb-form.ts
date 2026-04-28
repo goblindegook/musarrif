@@ -1,8 +1,8 @@
 import { shuffle } from '@pacote/shuffle'
-import { conjugate } from '../paradigms/conjugation'
-import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
-import { pick } from '../primitives/objects'
+import { conjugate } from '../../paradigms/conjugation'
+import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { pick } from '../../primitives/objects.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -10,10 +10,10 @@ import {
   randomPronoun,
   randomTense,
   randomVerb,
-} from './dimensions'
-import { defineExercise } from './exercises'
-import type { CardConstraints } from './srs'
-import { buildCardKey, getSrsRootType } from './srs'
+} from '../dimensions.ts'
+import { defineExercise } from '../exercises.ts'
+import type { CardConstraints } from '../srs.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbFormExercise = defineExercise(
   'verbForm',

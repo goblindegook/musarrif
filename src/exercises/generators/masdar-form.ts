@@ -1,9 +1,9 @@
 import { shuffle } from '@pacote/shuffle'
-import { deriveMasdar } from '../paradigms/nominal/masdar'
-import { FORMS, formatFormLabel, synthesizeVerb } from '../paradigms/verbs'
-import { exerciseDiacritics, random, randomVerb } from './dimensions'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const masdarFormExercise = defineExercise(
   'masdarForm',

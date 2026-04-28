@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
-import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { verbs } from '../paradigms/verbs'
-import { exerciseDiacritics } from './dimensions'
-import { verbParticipleExercise } from './verb-participle'
+import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
+import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { verbs } from '../../paradigms/verbs.ts'
+import { exerciseDiacritics } from '../dimensions.ts'
+import { verbParticipleExercise } from './verb-participle.ts'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,

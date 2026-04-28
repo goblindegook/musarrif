@@ -1,10 +1,10 @@
 import { shuffle } from '@pacote/shuffle'
-import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
-import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../paradigms/verbs'
-import { exerciseDiacritics, random, randomVerb } from './dimensions'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
+import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 type Participle = 'active' | 'passive'
 

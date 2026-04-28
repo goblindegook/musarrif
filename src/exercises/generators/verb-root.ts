@@ -1,6 +1,6 @@
-import { conjugate } from '../paradigms/conjugation'
-import { resolveVerbExplanationLayers } from '../paradigms/explanation'
-import { isWeakLetter } from '../paradigms/letters'
+import { conjugate } from '../../paradigms/conjugation'
+import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
+import { isWeakLetter } from '../../paradigms/letters.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -8,7 +8,7 @@ import {
   randomPronoun,
   randomTense,
   randomVerb,
-} from './dimensions'
+} from '../dimensions.ts'
 import {
   mixedWordDistractor,
   normalizeRootDistractorHamza,
@@ -16,9 +16,9 @@ import {
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
   wordSliceDistractor,
-} from './distractors'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+} from '../distractors.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbRootExercise = defineExercise('verbRoot', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)

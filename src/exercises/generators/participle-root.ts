@@ -1,7 +1,7 @@
-import { isWeakLetter } from '../paradigms/letters'
-import { deriveActiveParticiple } from '../paradigms/nominal/participle-active'
-import { derivePassiveParticiple } from '../paradigms/nominal/participle-passive'
-import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from './dimensions'
+import { isWeakLetter } from '../../paradigms/letters.ts'
+import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
+import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,
   normalizeRootDistractorHamza,
@@ -9,9 +9,9 @@ import {
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
   wordSliceDistractor,
-} from './distractors'
-import { defineExercise } from './exercises'
-import { buildCardKey, getSrsRootType } from './srs'
+} from '../distractors.ts'
+import { defineExercise } from '../exercises.ts'
+import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 type Participle = 'active' | 'passive'
 
