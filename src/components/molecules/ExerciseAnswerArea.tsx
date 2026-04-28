@@ -27,6 +27,7 @@ export function ExerciseAnswerArea({
   const isAnswered = mode === 'typing' ? typedResult !== 'idle' : selected !== null
   const inputRef = useRef<HTMLInputElement>(null)
   const [typedValue, setTypedValue] = useState('')
+  const hasTypedAnswer = typedValue.trim().length > 0
 
   useEffect(() => {
     if (mode === 'typing' && typeof inputRef.current?.focus === 'function') inputRef.current.focus()
@@ -68,7 +69,7 @@ export function ExerciseAnswerArea({
         <TypingForm
           onSubmit={(e) => {
             e.preventDefault()
-            if (!isAnswered) onTypedAnswer(typedValue)
+            if (!isAnswered && hasTypedAnswer) onTypedAnswer(typedValue)
           }}
         >
           <InputRow>
@@ -87,7 +88,7 @@ export function ExerciseAnswerArea({
               autoComplete="off"
               autoCorrect="off"
             />
-            <SubmitButton type="submit" aria-label="Submit" disabled={isAnswered}>
+            <SubmitButton type="submit" aria-label="Submit" disabled={isAnswered || !hasTypedAnswer}>
               ↵
             </SubmitButton>
           </InputRow>

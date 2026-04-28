@@ -530,6 +530,28 @@ describe('typing mode', () => {
     expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
   })
 
+  test('submit is disabled until a non-whitespace answer is typed', () => {
+    render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'كَتَبَ' } })
+    expect(screen.getByRole('button', { name: 'Submit' })).not.toBeDisabled()
+  })
+
+  test('empty typing submit does not answer the exercise', () => {
+    render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
+    fireEvent.submit(screen.getByRole('textbox').closest('form') as HTMLFormElement)
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
+    fireEvent.submit(screen.getByRole('textbox').closest('form') as HTMLFormElement)
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+  })
+
   test('typing the bare correct answer (no diacritics) also records as correct', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
