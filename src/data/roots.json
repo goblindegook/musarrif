@@ -277,6 +277,7 @@
   { "root": "Srx", "form": 1, "vowels": "a-u", "masdars": ["fu3aal"] },
   { "root": "Srx", "form": 4 },
   { "root": "Syr", "form": 1, "vowels": "a-i", "masdars": ["fa3l"] },
+  { "root": "SyH", "form": 1, "vowels": "a-i", "masdars": ["fa3l", "fi3aal"], "passiveVoice": "impersonal" },
   { "root": "Tbq", "form": 1, "vowels": "a-a" },
   { "root": "Tbx", "form": 1, "vowels": "a-a" },
   { "root": "Tlb", "form": 1, "vowels": "a-u", "masdars": ["fa3al"] },
