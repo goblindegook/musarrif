@@ -465,6 +465,33 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
+  test('tenses blocked at level 0 until Form V is unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1, forms: 3 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(0)
+  })
+
+  test('tenses promotes to level 1 when Form V is unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1, forms: 4 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(1)
+  })
+
+  test('tenses promotes beyond level 1 regardless of forms level', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1, forms: 0 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(2)
+  })
+
   test('tenses promotes to level 2 when singular pronouns are unlocked', () => {
     expect(
       promoteDimensions({
