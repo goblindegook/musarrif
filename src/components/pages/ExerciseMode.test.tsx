@@ -516,7 +516,7 @@ describe('typing mode', () => {
   test('clicking toggle again switches back to option buttons', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Multiple choice' }))
+    fireEvent.click(screen.getByRole('button', { name: 'See options' }))
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ/ })).toHaveLength(4)
   })
