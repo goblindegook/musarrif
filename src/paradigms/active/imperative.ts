@@ -1,26 +1,9 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
-import {
-  ALIF,
-  DAMMA,
-  FATHA,
-  finalize,
-  HAMZA,
-  KASRA,
-  LetterToken,
-  longVowel,
-  NOON,
-  SHADDA,
-  SUKOON,
-  WAW,
-  YEH,
-} from '../letters'
+import { ALIF, DAMMA, FATHA, finalize, HAMZA_TOKEN, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
-
-// Ensures hamza seating is handled on finalization:
-const HAMZA_TOKEN = new LetterToken(HAMZA)
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   const letters = verb.rootTokens

@@ -1,7 +1,7 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { memoize } from '@pacote/memoize'
 import { wordDistance } from '../primitives/strings'
-import { ALIF, applyDiacriticsPreference, HAMZA, normalizeHamza } from './letters'
+import { ALIF, HAMZA, normalizeForComparison } from './letters'
 import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
@@ -92,7 +92,7 @@ type SearchOptions = {
 }
 
 const normalizeQuery = (value: string): string =>
-  normalizeHamza(applyDiacriticsPreference(value, 'none'))
+  normalizeForComparison(value)
     .normalize('NFD')
     .replace(/\p{M}|\u0640/gu, '')
     .toLowerCase()

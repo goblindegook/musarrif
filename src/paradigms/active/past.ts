@@ -21,6 +21,7 @@ import {
   type Token,
   WAW,
   YEH,
+  YEH_TOKEN,
   ZAY,
 } from '../letters'
 import type { PronounId } from '../pronouns'
@@ -33,8 +34,6 @@ interface PastBaseForms {
   masculineDualBase: readonly Token[]
   thirdPersonMasculinePluralBase: readonly Token[]
 }
-
-const YEH_TOKEN = new LetterToken(YEH)
 
 export function conjugatePast(verb: Verb): Record<PronounId, string> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } =

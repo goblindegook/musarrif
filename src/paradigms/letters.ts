@@ -40,8 +40,6 @@ export type DiacriticsPreference = 'all' | 'some' | 'none'
 
 export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
 
-type WeakLetter = typeof ALIF | typeof ALIF_MAQSURA | typeof WAW | typeof YEH
-
 export class LetterToken {
   readonly letter: string
   readonly isHamza: boolean
@@ -64,6 +62,9 @@ const createToken = memoize(
   (char) => char,
   (char: string) => new LetterToken(char),
 )
+
+export const HAMZA_TOKEN = createToken(HAMZA)
+export const YEH_TOKEN = createToken(YEH)
 
 export function tokenize(text: string | readonly Token[]): readonly LetterToken[] {
   return [...text].map((token) => (token instanceof LetterToken ? token : createToken(token)))
@@ -99,7 +100,7 @@ function stripObviousDiacritics(input: string): string {
     .join('')
 }
 
-export function isWeakLetter(value = ''): value is WeakLetter {
+export function isWeakLetter(value = ''): boolean {
   return [ALIF, ALIF_MAQSURA, WAW, YEH].includes(value)
 }
 
@@ -108,6 +109,10 @@ export function isHamzatedLetter(token = ''): boolean {
 }
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA)
+
+export function normalizeForComparison(text: string): string {
+  return normalizeHamza(applyDiacriticsPreference(text.trim(), 'none'))
+}
 
 export function isDiacritic(token: Token = ''): boolean {
   return !(token instanceof LetterToken) && COMBINING_MARK.test(token)
