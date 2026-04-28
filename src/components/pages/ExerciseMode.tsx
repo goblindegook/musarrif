@@ -190,7 +190,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
             </Button>
           </>
         ) : (
-          <ShortcutButton shortcutKey={typingMode && exercise.supportsTyping ? '' : 's'} onClick={handleSkip}>
+          <ShortcutButton shortcutKey={'s'} onClick={handleSkip}>
             {t('exercise.pass')}
           </ShortcutButton>
         )}
