@@ -284,7 +284,7 @@ async function runSingle(roots, locales) {
     }
 
     if (step === 5) {
-      if (state.form === 9 || state.passiveVoice === 'none') {
+      if (state.form === 9) {
         state.noPassiveParticiple = undefined
         step += 1
         continue

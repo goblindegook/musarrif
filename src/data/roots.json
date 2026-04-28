@@ -3499,6 +3499,20 @@
   },
   {
     "root": "smE",
+    "form": 2
+  },
+  {
+    "root": "smE",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "smE",
+    "form": 6,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "smE",
     "form": 10
   },
   {
