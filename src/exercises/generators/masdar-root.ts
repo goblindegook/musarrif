@@ -1,3 +1,4 @@
+import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
@@ -18,14 +19,17 @@ export const masdarRootExercise = defineExercise(
     const verb = randomVerb(profile, constraints)
     const masdar = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
     const options = buildOptions(verb.root, masdar, profile)
+    const answer = options.indexOf(verb.root)
+    const explanation = resolveNominalExplanationLayers(verb, 'masdar', masdar)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarRoot',
       word: masdar,
       options: options.map((option) => Array.from(option).join(' ')),
-      answer: options.indexOf(verb.root),
+      answer,
       cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),
+      explanations: options.map((_, index) => (index === answer ? null : explanation)),
     }
   },
   {

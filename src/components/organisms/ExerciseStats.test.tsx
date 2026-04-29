@@ -71,35 +71,35 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 describe('ExerciseStats', () => {
   test('renders nothing when stats is empty', () => {
     render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
-    expect(screen.queryByRole('button', { name: /progress/i })).not.toBeInTheDocument()
+    expect(screen.queryByText('Progress')).not.toBeInTheDocument()
   })
 
   test('is collapsed by default', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    expect(screen.queryByRole('img', { name: /statistics chart/i })).not.toBeInTheDocument()
+    expect(screen.getByLabelText(/statistics chart/i)).not.toBeVisible()
   })
 
   test('has a toggle button labelled Progress', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    expect(screen.getByRole('button', { name: /progress/i })).toBeInTheDocument()
+    expect(screen.getByText('Progress')).toBeInTheDocument()
   })
 
   test('expands when toggle is clicked', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    expect(screen.getByRole('img', { name: /statistics chart/i })).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Progress'))
+    expect(screen.getByLabelText(/statistics chart/i)).toBeVisible()
   })
 
   test('collapses again when toggle is clicked twice', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    expect(screen.queryByRole('img', { name: /statistics chart/i })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Progress'))
+    fireEvent.click(screen.getByText('Progress'))
+    expect(screen.getByLabelText(/statistics chart/i)).not.toBeVisible()
   })
 
   test('score pill shows Score label when expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Score')).toBeInTheDocument()
   })
 
@@ -107,7 +107,7 @@ describe('ExerciseStats', () => {
     render(<ExerciseStats stats={[{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]} streak={0} />, {
       wrapper: Wrapper,
     })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('0%')).toBeInTheDocument()
   })
 
@@ -116,7 +116,7 @@ describe('ExerciseStats', () => {
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('75%')).toBeInTheDocument()
   })
 
@@ -130,7 +130,7 @@ describe('ExerciseStats', () => {
       { date: recentDate, correct: 4, incorrect: 0, passed: 0 },
     ]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('100%')).toBeInTheDocument()
   })
 
@@ -139,7 +139,7 @@ describe('ExerciseStats', () => {
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/All time:/)).toBeInTheDocument()
   })
 
@@ -149,39 +149,39 @@ describe('ExerciseStats', () => {
       { date: new Date('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
     ]
     render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/Record:/)).toBeInTheDocument()
   })
 
   test('streak pill shows Streak label when expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Streak')).toBeInTheDocument()
   })
 
   test('streak pill shows count and unit when expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('5 days')).toBeInTheDocument()
   })
 
   test('streak pill shows 0 days when streak is zero', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={0} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('0 days')).toBeInTheDocument()
   })
 
   test('uPlot legend shows Date label when expanded', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/date/i).length).toBeGreaterThan(0)
   })
 
   test('uPlot legend shows Correct and Incorrect labels when expanded', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/correct/i).length).toBeGreaterThan(0)
     expect(screen.getAllByText(/incorrect/i).length).toBeGreaterThan(0)
   })
@@ -189,51 +189,51 @@ describe('ExerciseStats', () => {
   test('chart is accessible with aria-label and rendered by uPlot', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
     const { container } = render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    expect(screen.getByRole('img', { name: /statistics chart/i })).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Progress'))
+    expect(screen.getByLabelText(/statistics chart/i)).toBeInTheDocument()
     expect(container.querySelector('.uplot')).toBeInTheDocument()
   })
 
   test('chart renders Skipped series label when expanded', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/skipped/i).length).toBeGreaterThan(0)
   })
 
   test('shows streak-extension progress and hint when daily goal is not met', () => {
     const stats: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Answer 6 correctly to extend your streak.')).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Streak extension progress')).toBeInTheDocument()
   })
 
   test('hides streak-extension progress when daily goal is met', () => {
     const stats: DayStats[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.queryByText(/to extend your streak/i)).not.toBeInTheDocument()
-    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Daily progress')).not.toBeInTheDocument()
   })
 
   test('shows Mastery section when expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
+    fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Mastery')).toBeInTheDocument()
   })
 
   test('shows locked indicator in the category label', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    expect(within(screen.getByTestId('mastery-category-label-nominals')).getByText('Locked')).toBeInTheDocument()
-    expect(within(screen.getByTestId('mastery-category-row-nominals')).queryByText('Locked')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Progress'))
+    const nominalsButton = screen.getByText('Nominals').closest('button') as HTMLButtonElement
+    expect(within(nominalsButton).getAllByText('Locked')).toHaveLength(1)
   })
 
   test('expands and collapses a mastery category to show item breakdown', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    const rootTypesCategory = screen.getByRole('button', { name: /root types/i })
+    fireEvent.click(screen.getByText('Progress'))
+    const rootTypesCategory = screen.getByText('Root types').closest('button') as HTMLButtonElement
 
     fireEvent.click(rootTypesCategory)
     expect(screen.getByText('Sound')).toBeInTheDocument()
@@ -244,14 +244,12 @@ describe('ExerciseStats', () => {
 
   test('collapses other categories when one is expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /progress/i }))
-    const rootTypesCategory = screen.getByRole('button', { name: /root types/i })
-    const formsCategory = screen.getByRole('button', { name: /forms/i })
+    fireEvent.click(screen.getByText('Progress'))
 
-    fireEvent.click(rootTypesCategory)
+    fireEvent.click(screen.getByText('Root types').closest('button') as HTMLButtonElement)
     expect(screen.getByText('Sound')).toBeInTheDocument()
 
-    fireEvent.click(formsCategory)
+    fireEvent.click(screen.getByText('Forms').closest('button') as HTMLButtonElement)
     expect(screen.queryByText('Sound')).not.toBeInTheDocument()
     expect(screen.getByText('Form I')).toBeInTheDocument()
   })

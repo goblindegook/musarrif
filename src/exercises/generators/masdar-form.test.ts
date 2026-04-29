@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { formatFormLabel, getAvailableParadigms, verbs } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics } from '../dimensions.ts'
@@ -37,6 +37,10 @@ const FORM_LABEL_ORDER = [
 ]
 
 describe('masdarFormExercise', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('returns kind "masdarForm"', () => {
     expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarForm')
   })
@@ -87,6 +91,15 @@ describe('masdarFormExercise', () => {
           deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 0) === exercise.word),
       ),
     ).toBe(true)
+  })
+
+  test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
+    vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
+    const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    const wrongExplanation = exercise.explanations?.find((_, index) => index !== exercise.answer)
+
+    expect(wrongExplanation?.nominal).toBe('masdar')
+    expect(wrongExplanation?.nominalMimiMasdar).toBe(true)
   })
 })
 

@@ -85,29 +85,29 @@ describe('ExerciseMode', () => {
 
   test('shows four option buttons', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })).toHaveLength(4)
+    expect(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })).toHaveLength(4)
   })
 
   test('does not show next button before answering', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/next/i, { selector: 'button' })).not.toBeInTheDocument()
   })
 
   test('shows next button after selecting an option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    fireEvent.click(screen.getByLabelText('I'))
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
   })
 
   test('focuses next button after selecting an option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-    expect(screen.getByRole('button', { name: /next/i })).toHaveFocus()
+    fireEvent.click(screen.getByLabelText('I'))
+    expect(screen.getByText(/next/i, { selector: 'button' })).toHaveFocus()
   })
 
   test('option buttons are disabled after answering', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    const options = screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })
+    const options = screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })
     fireEvent.click(options[0])
     for (const option of options) {
       expect(option).toBeDisabled()
@@ -116,9 +116,9 @@ describe('ExerciseMode', () => {
 
   test('clicking next loads a fresh question with enabled options', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-    fireEvent.click(screen.getByRole('button', { name: /next/i }))
-    const freshOptions = screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })
+    fireEvent.click(screen.getByLabelText('I'))
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+    const freshOptions = screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })
     expect(freshOptions).toHaveLength(4)
     for (const option of freshOptions) {
       expect(option).not.toBeDisabled()
@@ -132,10 +132,10 @@ describe('ExerciseMode', () => {
       .mockReturnValueOnce(testExercise({ word: 'دَخَلَ' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
     expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
   })
@@ -147,17 +147,17 @@ describe('ExerciseMode', () => {
       .mockReturnValueOnce(testExercise({ word: 'دَخَلَ' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
-    fireEvent.click(screen.getByRole('button', { name: /next/i }))
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
     expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
   })
 
   test('correct option is marked after selecting any answer', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-    expect(screen.getByTestId('correct-option')).toBeInTheDocument()
-    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    fireEvent.click(screen.getByLabelText('I'))
+    expect(screen.getByLabelText('I')).toBeInTheDocument()
+    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
   })
 
   describe('profile-based generation', () => {
@@ -205,8 +205,8 @@ describe('ExerciseMode', () => {
       )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-      fireEvent.click(screen.getByRole('button', { name: /next/i }))
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+      fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
       expect(gen).toHaveBeenNthCalledWith(2, testProfile({ tenses: 2, pronouns: 2 }), expect.any(Object))
     })
   })
@@ -236,7 +236,7 @@ describe('ExerciseMode', () => {
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
       expect(screen.getByText('Forms unlocked: Form II')).toBeInTheDocument()
     })
@@ -265,8 +265,8 @@ describe('ExerciseMode', () => {
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
-      fireEvent.click(screen.getByRole('button', { name: /next/i }))
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+      fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
       expect(screen.queryByText('Forms unlocked: Form II')).not.toBeInTheDocument()
     })
@@ -295,7 +295,7 @@ describe('ExerciseMode', () => {
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[1])
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
 
       expect(screen.queryByText('Forms unlocked: Form II')).not.toBeInTheDocument()
     })
@@ -307,7 +307,7 @@ describe('ExerciseMode', () => {
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
       expect(screen.getByText('Streak extended!')).toBeInTheDocument()
     })
@@ -319,7 +319,7 @@ describe('ExerciseMode', () => {
       )
 
       render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-      fireEvent.click(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[0])
+      fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
       expect(screen.queryByText('Streak extended!')).not.toBeInTheDocument()
     })
@@ -345,7 +345,7 @@ describe('SRS recording', () => {
         </RoutingProvider>
       ),
     })
-    fireEvent.click(screen.getAllByRole('button')[0])
+    fireEvent.click(screen.getByLabelText('كَتَبَ'))
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
   })
@@ -390,29 +390,29 @@ describe('keyboard shortcuts', () => {
   test('pressing 1 answers with the first option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '1' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
   })
 
   test('pressing 2 answers with the second option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '2' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[1]).toHaveAttribute('data-state', 'wrong')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1]).toHaveAttribute('data-state', 'wrong')
   })
 
   test('pressing 3 answers with the third option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '3' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[2]).toHaveAttribute('data-state', 'wrong')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[2]).toHaveAttribute('data-state', 'wrong')
   })
 
   test('pressing 4 answers with the fourth option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '4' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[3]).toHaveAttribute('data-state', 'wrong')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[3]).toHaveAttribute('data-state', 'wrong')
   })
 
   test('pressing S before answering reveals the answer and explanation', () => {
@@ -422,8 +422,8 @@ describe('keyboard shortcuts', () => {
       .mockReturnValue(testExercise({ word: 'دَخَلَ' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: 's' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 
@@ -435,7 +435,7 @@ describe('keyboard shortcuts', () => {
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '1' })
     fireEvent.keyDown(document.body, { key: 's' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.queryByText('دَخَلَ')).not.toBeInTheDocument()
   })
 
@@ -447,14 +447,14 @@ describe('keyboard shortcuts', () => {
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '1' })
     fireEvent.keyDown(document.body, { key: '2' })
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.queryByText('دَخَلَ')).not.toBeInTheDocument()
   })
 
   test('modifier key combinations are ignored', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '1', ctrlKey: true })
-    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/next/i, { selector: 'button' })).not.toBeInTheDocument()
   })
 })
 
@@ -468,7 +468,7 @@ describe('pass SRS recording', () => {
     localStorage.setItem('conjugator:exercise:daily', JSON.stringify([]))
 
     render(<ExerciseMode generateExercise={() => exercise} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs['verbForm:regular:1'].interval).toBe(3)
@@ -494,7 +494,7 @@ describe('Explanation in ExerciseMode', () => {
 
   test('explanation paragraphs appear after selecting a wrong answer', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getAllByRole('button')[1])
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 })
@@ -517,75 +517,75 @@ function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
 describe('typing mode', () => {
   test('non-conjugation exercise shows no typing mode toggle', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.queryByRole('button', { name: 'Type the answer' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Type the answer', { selector: 'button' })).not.toBeInTheDocument()
   })
 
   test('conjugation exercise shows typing mode toggle', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    expect(screen.getByRole('button', { name: 'Type the answer' })).toBeInTheDocument()
+    expect(screen.getByText('Type the answer', { selector: 'button' })).toBeInTheDocument()
   })
 
   test('clicking toggle switches to text input', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
   })
 
   test('clicking toggle again switches back to option buttons', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.click(screen.getByRole('button', { name: 'See options' }))
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ/ })).toHaveLength(4)
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.click(screen.getByText('See options', { selector: 'button' }))
+    expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
+    expect(screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ/, { selector: 'button' })).toHaveLength(4)
   })
 
   test('typing the exact correct answer records as correct', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'كَتَبَ' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.queryByText('كَتَبَ', { selector: 'p' })).not.toBeInTheDocument()
   })
 
   test('submit is disabled until a non-whitespace answer is typed', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'كَتَبَ' } })
-    expect(screen.getByRole('button', { name: 'Submit' })).not.toBeDisabled()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    expect(screen.getByLabelText('Submit')).toBeDisabled()
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: '   ' } })
+    expect(screen.getByLabelText('Submit')).toBeDisabled()
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
+    expect(screen.getByLabelText('Submit')).not.toBeDisabled()
   })
 
   test('empty typing submit does not answer the exercise', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.submit(screen.getByRole('textbox').closest('form') as HTMLFormElement)
-    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
-    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
-    fireEvent.submit(screen.getByRole('textbox').closest('form') as HTMLFormElement)
-    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument()
-    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.submit(screen.getByPlaceholderText('Type your answer').closest('form') as HTMLFormElement)
+    expect(screen.queryByText(/next/i, { selector: 'button' })).not.toBeInTheDocument()
+    expect(screen.queryByText('كَتَبَ', { selector: 'p' })).not.toBeInTheDocument()
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: '   ' } })
+    fireEvent.submit(screen.getByPlaceholderText('Type your answer').closest('form') as HTMLFormElement)
+    expect(screen.queryByText(/next/i, { selector: 'button' })).not.toBeInTheDocument()
+    expect(screen.queryByText('كَتَبَ', { selector: 'p' })).not.toBeInTheDocument()
   })
 
   test('typing the bare correct answer (no diacritics) also records as correct', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'كتب' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كتب' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.queryByText('كَتَبَ', { selector: 'p' })).not.toBeInTheDocument()
   })
 
   test('typing a wrong answer shows the correct answer text', () => {
     render(<ExerciseMode generateExercise={() => conjugationExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'يَكتُبُ' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-    expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('كَتَبَ')
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    expect(screen.getByText('كَتَبَ', { selector: 'p' })).toBeInTheDocument()
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
   })
 
   test('typing mode persists after advancing to next exercise', () => {
@@ -594,11 +594,11 @@ describe('typing mode', () => {
       .mockReturnValueOnce(conjugationExercise())
       .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'conjugation:sound:1:active.past:3fs' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'كَتَبَ' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-    fireEvent.click(screen.getByRole('button', { name: /next/i }))
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+    expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
   })
 
   test('correct-answer reveal is gone after advancing to next exercise', () => {
@@ -607,11 +607,11 @@ describe('typing mode', () => {
       .mockReturnValueOnce(conjugationExercise())
       .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'conjugation:sound:1:active.past:3fs' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'يَكتُبُ' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-    fireEvent.click(screen.getByRole('button', { name: /next/i }))
-    expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+    expect(screen.queryByText('كَتَبَ', { selector: 'p' })).not.toBeInTheDocument()
   })
 
   test('skip in typing mode reveals answer without wrong input state and shows explanation', () => {
@@ -620,12 +620,12 @@ describe('typing mode', () => {
       .mockReturnValueOnce(testExercise({ supportsTyping: true }))
       .mockReturnValueOnce(testExercise({ supportsTyping: true, word: 'دَخَلَ', cardKey: 'verbForm:sound:2' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
-    expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('I')
-    expect(screen.getByRole('textbox')).not.toHaveAttribute('data-state', 'wrong')
+    expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByText('I', { selector: 'p' })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('data-state', 'wrong')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 
@@ -669,8 +669,8 @@ describe('typing mode', () => {
     })
 
     render(<ExerciseMode generateExercise={() => reducedAnswerExercise} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })

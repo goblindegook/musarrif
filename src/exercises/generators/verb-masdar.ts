@@ -1,4 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
@@ -15,14 +16,17 @@ export const verbMasdarExercise = defineExercise(
     const answer = random(masdars)
     const word = exerciseDiacritics(verb.label, profile.diacritics)
     const options = buildOptions(verb, answer, masdars, profile)
+    const answerIndex = options.indexOf(answer)
+    const explanation = resolveNominalExplanationLayers(verb, 'masdar', answer)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbMasdar',
       word,
       options,
-      answer: options.indexOf(answer),
+      answer: answerIndex,
       cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),
+      explanations: options.map((_, index) => (index === answerIndex ? null : explanation)),
     }
   },
   { minNominals: 2 },

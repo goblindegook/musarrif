@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { verbs } from '../../paradigms/verbs.ts'
 import { masdarRootExercise } from './masdar-root.ts'
@@ -13,6 +13,10 @@ const INITIAL_DIMENSION_PROFILE = {
 } as const
 
 describe('masdarRootExercise', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('returns kind "masdarRoot"', () => {
     expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarRoot')
   })
@@ -59,6 +63,15 @@ describe('masdarRootExercise', () => {
 
     expect(wrongOptions).toHaveLength(3)
     expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
+  })
+
+  test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
+    vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
+    const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+    const wrongExplanation = exercise.explanations?.find((_, index) => index !== exercise.answer)
+
+    expect(wrongExplanation?.nominal).toBe('masdar')
+    expect(wrongExplanation?.nominalMimiMasdar).toBe(true)
   })
 })
 

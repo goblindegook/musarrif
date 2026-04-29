@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { Fragment } from 'preact'
 import { useI18n } from '../../hooks/useI18n'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
@@ -10,16 +11,36 @@ import { Detail } from '../molecules/Detail'
 interface NominalInsightsProps {
   verb: DisplayVerb
   nominal: NominalKind
-  arabic: string
+  arabic: string | readonly string[]
 }
 
 export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps) {
   const { t } = useI18n()
   const formLabel = formatFormLabel(verb.form, verb.root)
+  const masdarValues = Array.isArray(arabic) ? arabic : [arabic]
+  const arabicValue = masdarValues.join('، ')
 
   return (
     <>
-      <ArabicDisplay>{arabic}</ArabicDisplay>
+      <ArabicDisplay>
+        {nominal === 'masdar' ? (
+          <MasdarList>
+            {masdarValues.map((value, index) => (
+              <Fragment key={value}>
+                <MasdarItem>
+                  <span>{value}</span>
+                  {verb.form === 1 && verb.masdars?.[index] === 'mimi' && (
+                    <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
+                  )}
+                </MasdarItem>
+                {index < masdarValues.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
+              </Fragment>
+            ))}
+          </MasdarList>
+        ) : (
+          arabicValue
+        )}
+      </ArabicDisplay>
       <VerbContextSection>
         <Detail label={t('meta.root')} valueDir="rtl" valueLang="ar">
           <RootLetters dir="rtl" lang="ar">
@@ -55,4 +76,33 @@ const RootLetters = styled('div')`
 
 const FormNumeral = styled('span')`
   font-weight: 600;
+`
+
+const MasdarList = styled('div')`
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+`
+
+const MasdarItem = styled('div')`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+`
+
+const MasdarNote = styled('span')`
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+
+  @media print {
+    font-size: 0.7rem;
+  }
+`
+
+const MasdarSeparator = styled('span')`
+  margin-inline-end: 0.3rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
 `

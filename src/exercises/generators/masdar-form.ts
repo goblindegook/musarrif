@@ -1,4 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
@@ -19,14 +20,17 @@ export const masdarFormExercise = defineExercise(
 
     const distractors = shuffle(eligibleForms).slice(0, 3)
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
+    const answer = options.indexOf(verb.form)
+    const explanation = resolveNominalExplanationLayers(verb, 'masdar', word)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
       options: options.map((form) => formatFormLabel(form, verb.root)),
-      answer: options.indexOf(verb.form),
+      answer,
       cardKey: buildCardKey('masdarForm', getSrsRootType(verb.root), verb.form),
+      explanations: options.map((_, index) => (index === answer ? null : explanation)),
     }
   },
   {

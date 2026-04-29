@@ -64,6 +64,21 @@ describe('NominalInsights', () => {
       })
       expect(screen.getAllByText('كِتَابَة').length).toBeGreaterThan(0)
     })
+
+    test('displays all masdars comma-separated', () => {
+      render(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />, {
+        wrapper: Wrapper,
+      })
+      expect(screen.getByText('وَعْد')).toBeInTheDocument()
+      expect(screen.getByText('مَوْعِد')).toBeInTheDocument()
+    })
+
+    test('adds mimi-masdar explanation when one masdar is mimi', () => {
+      render(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />, {
+        wrapper: Wrapper,
+      })
+      expect(screen.getByText(/المصدر الميمي/)).toBeInTheDocument()
+    })
   })
 
   test('displays q suffix for quadriliteral form numbers', () => {

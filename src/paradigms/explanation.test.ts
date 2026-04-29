@@ -654,6 +654,24 @@ describe('resolveNominalExplanationLayers', () => {
     const layers = resolveNominalExplanationLayers(verb, 'masdar', 'كِتَابَة')
     expect(layers.nominal).toBe('masdar')
   })
+
+  test('nominalMimiMasdar is true when selected masdar is mimi', () => {
+    const wEd = getVerbById('wEd-1')!
+    const layers = resolveNominalExplanationLayers(wEd, 'masdar', 'مَوْعِد')
+    expect(layers.nominalMimiMasdar).toBe(true)
+  })
+
+  test('nominalMimiMasdar is false when selected masdar is not mimi', () => {
+    const wEd = getVerbById('wEd-1')!
+    const layers = resolveNominalExplanationLayers(wEd, 'masdar', 'وَعْد')
+    expect(layers.nominalMimiMasdar).toBe(false)
+  })
+
+  test('nominalMimiMasdar is true for default Form I mimi masdar when no explicit masdars are stored', () => {
+    const defaultMimi = getVerbById('$Er-1')!
+    const layers = resolveNominalExplanationLayers(defaultMimi, 'masdar', 'مَشْعَر')
+    expect(layers.nominalMimiMasdar).toBe(true)
+  })
 })
 
 // ── renderExplanation: nominal ────────────────────────────────────────────────
@@ -700,6 +718,21 @@ describe('renderExplanation with nominal', () => {
     expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.sound explanation.form.1',
       'explanation.nominal.masdar',
+    ])
+  })
+
+  test('mimi masdar explanation appears when nominalMimiMasdar is true', () => {
+    const layers: ExplanationLayers = {
+      rootLetters: ['و', 'ع', 'د'],
+      form: 1,
+      arabic: ['وَعْد', 'مَوْعِد'],
+      rootType: 'assimilated',
+      nominal: 'masdar',
+      nominalMimiMasdar: true,
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      'explanation.root.assimilated explanation.form.1',
+      'explanation.nominal.masdar explanation.nominal.mimiMasdar',
     ])
   })
 

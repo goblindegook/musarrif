@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { verbs } from '../../paradigms/verbs.ts'
 import { type DimensionProfile, exerciseDiacritics } from '../dimensions.ts'
@@ -17,6 +17,10 @@ const mediumProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacriti
 const hardProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }
 
 describe('masdarVerbExercise', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   test('returns kind "masdarVerb"', () => {
     expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarVerb')
   })
@@ -72,6 +76,15 @@ describe('masdarVerbExercise', () => {
         deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, hardProfile.diacritics) === hard.word),
       ),
     ).toBe(true)
+  })
+
+  test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
+    vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
+    const exercise = masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
+    const wrongExplanation = exercise.explanations?.find((_, index) => index !== exercise.answer)
+
+    expect(wrongExplanation?.nominal).toBe('masdar')
+    expect(wrongExplanation?.nominalMimiMasdar).toBe(true)
   })
 })
 

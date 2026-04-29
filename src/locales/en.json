@@ -186,6 +186,7 @@
     "explanation.form.9": "Form IX adds an initial alif, geminates the final radical, and denotes colors or bodily defects, typically as stative adjectives.",
     "explanation.nominal.activeParticiple": "The active participle (اسم الفاعل) names the doer of the action. In Forms II–X it starts with مُـ. In Form I, the usual pattern is فَاعِل.",
     "explanation.nominal.masdar": "The verbal noun (المصدر) names the action itself. Forms II–X are usually regular. Form I patterns vary, so learn each verb’s masdar.",
+    "explanation.nominal.mimiMasdar": "A mīmī maṣdar (المصدر الميمي) is a verbal noun that starts with an extra مـ. It usually means the same action as the regular masdar; in Form I, common shapes are مَفْعَل / مَفْعِل (sometimes مَفْعَلَة). Because these can also look like time/place nouns, use sentence context to tell them apart.",
     "explanation.nominal.passiveParticiple": "The passive participle (اسم المفعول) names what receives the action. In Forms II–X it starts with مُـ. In Form I, the usual pattern is مَفْعُول.",
     "explanation.pronoun.base-form": "{arabic} is the base form.",
     "explanation.pronoun.prefix-and-suffix": "The {pronounLabel} uses {prefix} as prefix and {suffix} as suffix, giving {arabic}.",
