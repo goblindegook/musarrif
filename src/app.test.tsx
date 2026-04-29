@@ -327,6 +327,12 @@ describe('routing', () => {
 
     expect(window.location.hash).toBe('#/verbs')
   })
+
+  it('accepts verb IDs with non-alphanumeric characters', () => {
+    renderApp('/#/verbs/nf*-1')
+
+    expect(window.location.hash).toBe('#/verbs/nf*-1')
+  })
 })
 
 function getBuildPanel(): HTMLElement {
