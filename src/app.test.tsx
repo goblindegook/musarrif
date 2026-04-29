@@ -315,6 +315,20 @@ describe('Recently viewed', () => {
   })
 })
 
+describe('routing', () => {
+  it('defaults to conjugation mode on unknown routes', () => {
+    renderApp('/#/unknown')
+
+    expect(window.location.hash).toBe('#/verbs')
+  })
+
+  it('defaults to conjugation mode on invalid verb IDs', () => {
+    renderApp('/#/verbs/invalid')
+
+    expect(window.location.hash).toBe('#/verbs')
+  })
+})
+
 function getBuildPanel(): HTMLElement {
   return document.getElementById('panel-content-build')!
 }

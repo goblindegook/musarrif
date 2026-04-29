@@ -20,31 +20,23 @@ interface RoutingContextValue<T> {
 const RoutingContext = createContext<RoutingContextValue<AppRoute> | undefined>(undefined)
 
 function sanitizeRoute(segments: readonly string[]): AppRoute {
+  if (!segments.at(0)) return ['verbs']
   if (segments.at(0) === 'test') return ['test']
+  if (segments.at(0) !== 'verbs') return sanitizeRoute(segments.slice(1))
 
-  const start = segments.at(0) === 'verbs' ? 1 : 0
+  const [_, verbId, voice, tense, mood] = segments
 
-  const verbId = segments.at(start)
-  if (!verbId) return ['verbs']
-
-  const voiceSegment = segments.at(start + 1)
-  const voice = isVoice(voiceSegment) ? voiceSegment : undefined
-  if (!voice) return ['verbs', verbId]
-
-  const tense = segments.at(start + 2)
-  if (!isTense(tense)) return ['verbs', verbId]
+  if (!verbId?.match(/\w+-\d+/)) return ['verbs']
+  if (!isVoice(voice)) return ['verbs', verbId]
+  if (!isTense(tense)) return ['verbs', verbId, voice, 'past']
 
   if (tense === 'present') {
-    const moodSegment = segments.at(start + 3)
-    const mood = isMood(moodSegment) ? moodSegment : undefined
-    if (!mood) return ['verbs', verbId, voice, 'present']
-
+    if (!isMood(mood)) return ['verbs', verbId, voice, 'present']
     return ['verbs', verbId, voice, 'present', mood]
   }
 
   if (tense === 'imperative') {
     if (voice === 'passive') return ['verbs', verbId, 'passive', 'past']
-
     return ['verbs', verbId, 'active', 'imperative']
   }
 
