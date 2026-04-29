@@ -125,7 +125,7 @@ describe('ExerciseMode', () => {
     }
   })
 
-  test('clicking pass loads a fresh question', () => {
+  test('clicking pass reveals the correct answer and waits for next', () => {
     const gen = vi
       .fn()
       .mockReturnValueOnce(testExercise())
@@ -133,6 +133,22 @@ describe('ExerciseMode', () => {
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
     fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
+    expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+  })
+
+  test('clicking next after pass loads a fresh question', () => {
+    const gen = vi
+      .fn()
+      .mockReturnValueOnce(testExercise())
+      .mockReturnValueOnce(testExercise({ word: 'دَخَلَ' }))
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+    fireEvent.click(screen.getByRole('button', { name: /next/i }))
 
     expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
   })
@@ -399,14 +415,16 @@ describe('keyboard shortcuts', () => {
     expect(screen.getAllByRole('button', { name: /^(I|II|III|IV)$/ })[3]).toHaveAttribute('data-state', 'wrong')
   })
 
-  test('pressing S before answering skips to the next exercise', () => {
+  test('pressing S before answering reveals the answer and explanation', () => {
     const gen = vi
       .fn()
       .mockReturnValueOnce(testExercise())
       .mockReturnValue(testExercise({ word: 'دَخَلَ' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: 's' })
-    expect(screen.getByText('دَخَلَ')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByTestId('correct-option')).toHaveAttribute('aria-label', 'I')
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 
   test('pressing S after answering does nothing', () => {
@@ -596,14 +614,64 @@ describe('typing mode', () => {
     expect(screen.queryByTestId('correct-answer-reveal')).not.toBeInTheDocument()
   })
 
-  test('skip button works in typing mode', () => {
+  test('skip in typing mode reveals answer without wrong input state and shows explanation', () => {
     const gen = vi
       .fn()
-      .mockReturnValueOnce(conjugationExercise())
-      .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'conjugation:sound:1:active.past:3fs' }))
+      .mockReturnValueOnce(testExercise({ supportsTyping: true }))
+      .mockReturnValueOnce(testExercise({ supportsTyping: true, word: 'دَخَلَ', cardKey: 'verbForm:sound:2' }))
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
     fireEvent.click(screen.getByRole('button', { name: /skip/i }))
-    expect(screen.getByText('يَذهَبُ')).toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('I')
+    expect(screen.getByRole('textbox')).not.toHaveAttribute('data-state', 'wrong')
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
+  })
+
+  test('skip in typing mode uses the fullest explanation when answer payload is reduced', () => {
+    const reducedAnswerExercise = conjugationExercise({
+      explanations: [
+        {
+          rootLetters: ['ك', 'ت', 'ب'],
+          arabic: 'كَتَبَ',
+          tense: 'active.past',
+          pronoun: '3ms',
+        },
+        {
+          rootLetters: ['ك', 'ت', 'ب'],
+          form: 1,
+          arabic: 'كَتَبَ',
+          rootType: 'sound',
+          vowels: 'a-u',
+          tense: 'active.past',
+          pronoun: '3ms',
+        },
+        {
+          rootLetters: ['ك', 'ت', 'ب'],
+          form: 1,
+          arabic: 'كَتَبَ',
+          rootType: 'sound',
+          vowels: 'a-u',
+          tense: 'active.past',
+          pronoun: '3ms',
+        },
+        {
+          rootLetters: ['ك', 'ت', 'ب'],
+          form: 1,
+          arabic: 'كَتَبَ',
+          rootType: 'sound',
+          vowels: 'a-u',
+          tense: 'active.past',
+          pronoun: '3ms',
+        },
+      ],
+    })
+
+    render(<ExerciseMode generateExercise={() => reducedAnswerExercise} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: 'Type the answer' }))
+    fireEvent.click(screen.getByRole('button', { name: /skip/i }))
+
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 })

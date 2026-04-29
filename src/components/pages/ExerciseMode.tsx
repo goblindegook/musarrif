@@ -19,7 +19,6 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
-import { normalizeForComparison } from '../../paradigms/letters'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
@@ -36,9 +35,8 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const [dimensionProfile, dimensionUnlocks, recordDimensionAnswer, clearDimensionUnlocks] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const [exercise, setExercise] = useState<Exercise>(() => generateExercise(dimensionProfile, srsStore))
-  const [selected, setSelected] = useState<number | null>(null)
-  const [typingMode, setTypingMode] = useState(false)
-  const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
+  const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
+  const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
   const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
 
@@ -54,21 +52,25 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
       setExercise(generateExercise(profile, srsStore))
-      setSelected(null)
-      setTypedResult('idle')
+      setAnsweredIndex(null)
+      setSkipped(false)
       clearDimensionUnlocks()
       setStreakExtendedAlert(false)
     },
     [generateExercise, srsStore, clearDimensionUnlocks],
   )
 
-  const isAnswered = selected != null
+  const isAnswered = answeredIndex !== null || skipped
   const streak = getStreak(storedStats)
 
-  const explanation =
-    selected != null && exercise.explanations?.[selected] != null
-      ? renderExplanation(exercise.explanations[selected], t)
-      : []
+  const explanation = (() => {
+    if (answeredIndex == null && !skipped) return []
+    const selectedExplanation =
+      skipped || answeredIndex == null
+        ? exercise.explanations?.find((_, index) => index !== exercise.answer)
+        : exercise.explanations?.[answeredIndex]
+    return selectedExplanation != null ? renderExplanation(selectedExplanation, t) : []
+  })()
   const unlockMessages = useMemo(
     () =>
       dimensionUnlocks.map(({ dimension, items }) =>
@@ -81,12 +83,11 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
   )
 
   const handleAnswer = useCallback(
-    (index: number) => {
-      const isCorrect = index === exercise.answer
+    (index: number, isCorrect: boolean) => {
       const nextStats = addResult(storedStats, isCorrect)
       const previousStreakGoal = getStreakGoalProgress(storedStats)
       const nextStreakGoal = getStreakGoalProgress(nextStats)
-      setSelected(index)
+      setAnsweredIndex(index)
       updateStats(() => nextStats)
       recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
       recordDimensionAnswer(exercise.dimensions, isCorrect)
@@ -95,26 +96,11 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
     [exercise, storedStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
   )
 
-  const handleTypedAnswer = useCallback(
-    (typed: string) => {
-      const correct = normalizeForComparison(typed) === normalizeForComparison(exercise.options[exercise.answer])
-      if (correct) {
-        setTypedResult('correct')
-        handleAnswer(exercise.answer)
-      } else {
-        setTypedResult('wrong')
-        handleAnswer((exercise.answer + 1) % exercise.options.length)
-      }
-    },
-    [exercise, handleAnswer],
-  )
-
   const handleSkip = useCallback(() => {
     recordSrsAnswer(exercise.cardKey, 'pass')
-    const promotedProfile = recordDimensionAnswer(exercise.dimensions, false)
     updateStats((s) => addPass(s))
-    loadNextExercise(promotedProfile)
-  }, [exercise, recordSrsAnswer, recordDimensionAnswer, updateStats, loadNextExercise])
+    setSkipped(true)
+  }, [exercise, recordSrsAnswer, updateStats])
 
   useEffect(() => {
     if (!isAnswered) return
@@ -136,15 +122,7 @@ export function ExerciseMode({ generateExercise = randomExercise }: Props) {
               Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
           )}
         />
-        <ExerciseAnswerArea
-          exercise={exercise}
-          mode={typingMode && exercise.supportsTyping ? 'typing' : 'multiple-choice'}
-          selected={selected}
-          typedResult={typedResult}
-          onAnswer={handleAnswer}
-          onTypedAnswer={handleTypedAnswer}
-          onToggleMode={() => setTypingMode((m) => !m)}
-        />
+        <ExerciseAnswerArea exercise={exercise} forceReveal={skipped} onAnswer={handleAnswer} />
         <ExplanationWrapper visible={explanation.length > 0}>
           <ExplanationInner>
             {explanation.length > 0 && (

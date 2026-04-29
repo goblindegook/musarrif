@@ -2,32 +2,32 @@ import { css, styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise } from '../../exercises/exercises'
 import { useI18n } from '../../hooks/useI18n'
+import { normalizeForComparison } from '../../paradigms/letters'
 import { ShortcutButton } from './ShortcutButton'
 
 type Props = {
   exercise: Exercise
-  mode: 'multiple-choice' | 'typing'
-  selected: number | null
-  typedResult: 'idle' | 'correct' | 'wrong'
-  onAnswer: (index: number) => void
-  onTypedAnswer: (typed: string) => void
-  onToggleMode: () => void
+  forceReveal?: boolean
+  onAnswer: (index: number, isCorrect: boolean) => void
 }
 
-export function ExerciseAnswerArea({
-  exercise,
-  mode,
-  selected,
-  typedResult,
-  onAnswer,
-  onTypedAnswer,
-  onToggleMode,
-}: Props) {
+export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: Props) {
   const { t } = useI18n()
-  const isAnswered = mode === 'typing' ? typedResult !== 'idle' : selected !== null
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [typingMode, setTypingMode] = useState(false)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
   const [typedValue, setTypedValue] = useState('')
+
+  const mode = typingMode && exercise.supportsTyping ? 'typing' : 'multiple-choice'
+  const isAnswered = selected !== null || typedResult !== 'idle'
+  const reveal = isAnswered || forceReveal
   const hasTypedAnswer = typedValue.trim().length > 0
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setSelected(null)
+    setTypedResult('idle')
+  }, [exercise])
 
   useEffect(() => {
     if (mode === 'typing' && typeof inputRef.current?.focus === 'function') inputRef.current.focus()
@@ -44,20 +44,22 @@ export function ExerciseAnswerArea({
           {exercise.options.map((option, index) => {
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
-            const state = isAnswered ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
+            const state = reveal ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
             return (
               <ShortcutButton
                 size="large"
                 key={option}
                 className={OPTION_BUTTON_CLASS}
                 shortcutKey={`${index + 1}`}
-                showShortcut={!isAnswered}
+                showShortcut={!reveal}
                 onClick={() => {
-                  if (!isAnswered) onAnswer(index)
+                  if (reveal) return
+                  setSelected(index)
+                  onAnswer(index, index === exercise.answer)
                 }}
-                disabled={isAnswered}
+                disabled={reveal}
                 data-state={state}
-                data-testid={isCorrect && isAnswered ? 'correct-option' : undefined}
+                data-testid={isCorrect && reveal ? 'correct-option' : undefined}
                 aria-label={t(option)}
               >
                 {t(option)}
@@ -69,7 +71,13 @@ export function ExerciseAnswerArea({
         <TypingForm
           onSubmit={(e) => {
             e.preventDefault()
-            if (!isAnswered && hasTypedAnswer) onTypedAnswer(typedValue)
+            if (!isAnswered && hasTypedAnswer) {
+              const isCorrect =
+                normalizeForComparison(typedValue) === normalizeForComparison(exercise.options[exercise.answer])
+              const answeredIndex = isCorrect ? exercise.answer : (exercise.answer + 1) % exercise.options.length
+              setTypedResult(isCorrect ? 'correct' : 'wrong')
+              onAnswer(answeredIndex, isCorrect)
+            }
           }}
         >
           <InputRow>
@@ -82,17 +90,17 @@ export function ExerciseAnswerArea({
               placeholder={t('exercise.typing.placeholder')}
               onInput={(e) => setTypedValue((e.target as HTMLInputElement).value)}
               onChange={(e) => setTypedValue((e.target as HTMLInputElement).value)}
-              disabled={isAnswered}
+              disabled={reveal}
               data-state={typedResult !== 'idle' ? typedResult : undefined}
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect="off"
             />
-            <SubmitButton type="submit" aria-label="Submit" disabled={isAnswered || !hasTypedAnswer}>
+            <SubmitButton type="submit" aria-label="Submit" disabled={reveal || !hasTypedAnswer}>
               ↵
             </SubmitButton>
           </InputRow>
-          {typedResult === 'wrong' && (
+          {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
               {t(exercise.options[exercise.answer])}
             </CorrectReveal>
@@ -100,11 +108,10 @@ export function ExerciseAnswerArea({
         </TypingForm>
       )}
 
-      {exercise.supportsTyping && (
+      {exercise.supportsTyping && !reveal && (
         <ShortcutButton
           shortcutKey="t"
-          onClick={onToggleMode}
-          disabled={isAnswered}
+          onClick={() => setTypingMode((m) => !m)}
           variant="secondary"
           style={{ width: '100%' }}
         >
