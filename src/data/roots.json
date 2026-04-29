@@ -612,7 +612,16 @@
   {
     "root": "DHk",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "i-a",
+    "masdars": [
+      "fi3l",
+      "fa3l"
+    ],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "DHk",
+    "form": 2
   },
   {
     "root": "DHy",
