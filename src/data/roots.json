@@ -1354,6 +1354,18 @@
     "form": 4
   },
   {
+    "root": "Swr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": [
+      "fa3l"
+    ]
+  },
+  {
+    "root": "Swr",
+    "form": 2
+  },
+  {
     "root": "SyH",
     "form": 1,
     "vowels": "a-i",
@@ -2129,6 +2141,10 @@
     "form": 3
   },
   {
+    "root": "jhl",
+    "form": 6
+  },
+  {
     "root": "jhz",
     "form": 1,
     "vowels": "a-a"
@@ -2727,7 +2743,11 @@
   {
     "root": "nSr",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": [
+      "fa3l",
+      "fu3ool"
+    ]
   },
   {
     "root": "nSr",
@@ -2844,6 +2864,14 @@
     "root": "nqS",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "nql",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": [
+      "fa3l"
+    ]
   },
   {
     "root": "nsy",
@@ -4479,6 +4507,14 @@
     "form": 9,
     "passiveVoice": "none",
     "noPassiveParticiple": true
+  },
+  {
+    "root": "zwj",
+    "form": 2
+  },
+  {
+    "root": "zwj",
+    "form": 5
   },
   {
     "root": "zwj",
