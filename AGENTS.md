@@ -235,6 +235,7 @@ Supports English, Italian, European Portuguese, and Arabic. Translation files in
 
 - All UI strings must appear in all four locale files under `strings`
 - Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly)
+- Portuguese locale must be `pt_PT` and use pre-AO90 orthography (e.g., `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`)
 - Add entries to the `verbs` object and `roots` object in the three non-Arabic locale files
 - Translate the primary meaning; add a secondary only when it diverges significantly (e.g. `"to love, to like"`)
 - Include translations in the same change that adds the verb entry

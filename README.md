@@ -43,6 +43,12 @@ Preview the production build:
 npm run preview
 ```
 
+Add or change verbs:
+
+```bash
+npm run verb
+```
+
 ## Tests
 
 Vitest powers the suite; tests live alongside source files.
