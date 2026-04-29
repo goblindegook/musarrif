@@ -21,9 +21,7 @@
     "root": "$fy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3aal"
-    ]
+    "masdars": ["fi3aal"]
   },
   {
     "root": "$hd",
@@ -43,9 +41,7 @@
     "root": "$kr",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "$kr",
@@ -68,10 +64,7 @@
     "root": "$rb",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3l",
-      "mimi"
-    ]
+    "masdars": ["fu3l", "mimi"]
   },
   {
     "root": "$rb",
@@ -123,9 +116,7 @@
     "root": "$wq",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "$wq",
@@ -153,17 +144,13 @@
     "root": "$yd",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'*n",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al"
-    ],
+    "masdars": ["fa3al"],
     "passiveVoice": "none"
   },
   {
@@ -191,9 +178,7 @@
     "root": "'Sl",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3aala"
-    ],
+    "masdars": ["fa3aala"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -205,25 +190,19 @@
     "root": "'by",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fi3aal"
-    ]
+    "masdars": ["fi3aal"]
   },
   {
     "root": "'dd",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'jj",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'jj",
@@ -233,10 +212,7 @@
     "root": "'jr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "fu3la"
-    ]
+    "masdars": ["fa3l", "fu3la"]
   },
   {
     "root": "'jr",
@@ -267,9 +243,7 @@
     "root": "'kl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "contractedImperative": true
   },
   {
@@ -310,17 +284,13 @@
     "root": "'ml",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'mm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'mm",
@@ -336,9 +306,7 @@
     "form": 1,
     "vowels": "i-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'mn",
@@ -348,9 +316,7 @@
     "root": "'mr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "contractedImperative": true,
     "passiveVoice": "none"
   },
@@ -372,9 +338,7 @@
     "root": "'ny",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3an"
-    ]
+    "masdars": ["fi3an"]
   },
   {
     "root": "'ny",
@@ -384,9 +348,7 @@
     "root": "'sr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'ss",
@@ -400,9 +362,7 @@
     "root": "'ty",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'ty",
@@ -450,9 +410,7 @@
     "root": "'wl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "'wl",
@@ -466,11 +424,7 @@
     "root": "'wy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3iil",
-      "fu3ul",
-      "fi3aal"
-    ]
+    "masdars": ["fi3iil", "fu3ul", "fi3aal"]
   },
   {
     "root": "'wy",
@@ -480,9 +434,7 @@
     "root": "'x*",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "contractedImperative": true
   },
   {
@@ -518,9 +470,7 @@
     "root": "'zz",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "*b*b",
@@ -531,9 +481,7 @@
     "root": "*hb",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3aal"
-    ]
+    "masdars": ["fa3aal"]
   },
   {
     "root": "*hb",
@@ -559,9 +507,7 @@
     "root": "*kr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fi3l"
-    ]
+    "masdars": ["fi3l"]
   },
   {
     "root": "*kr",
@@ -596,10 +542,7 @@
     "root": "*xr",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3l",
-      "fa3l"
-    ]
+    "masdars": ["fu3l", "fa3l"]
   },
   {
     "root": "*xr",
@@ -613,10 +556,7 @@
     "root": "DHk",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fi3l",
-      "fa3l"
-    ],
+    "masdars": ["fi3l", "fa3l"],
     "passiveVoice": "impersonal"
   },
   {
@@ -635,10 +575,7 @@
     "root": "Djj",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l",
-      "fa3iil"
-    ],
+    "masdars": ["fa3l", "fa3iil"],
     "passiveVoice": "impersonal"
   },
   {
@@ -655,9 +592,7 @@
     "root": "Dmn",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3aal"
-    ]
+    "masdars": ["fa3aal"]
   },
   {
     "root": "Dmn",
@@ -789,9 +724,7 @@
     "root": "Ely",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Ely",
@@ -805,10 +738,7 @@
     "root": "Eml",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al",
-      "mimi"
-    ]
+    "masdars": ["fa3al", "mimi"]
   },
   {
     "root": "Eml",
@@ -831,9 +761,7 @@
     "root": "Enn",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Eqd",
@@ -861,9 +789,7 @@
     "root": "Erql",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala"
-    ]
+    "masdars": ["fa3lala"]
   },
   {
     "root": "Erql",
@@ -885,9 +811,7 @@
     "root": "Ewm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Ewn",
@@ -909,9 +833,7 @@
     "root": "Ewz",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "Eyn",
@@ -931,9 +853,7 @@
     "root": "HDr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "HDr",
@@ -954,17 +874,13 @@
     "form": 1,
     "vowels": "i-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "Hbb",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "Hbb",
@@ -1004,9 +920,7 @@
     "root": "Hdv",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "Hdv",
@@ -1039,9 +953,7 @@
     "root": "Hkm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Hll",
@@ -1051,9 +963,7 @@
     "root": "Hlm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "Hlm",
@@ -1065,9 +975,7 @@
     "root": "Hlq",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Hml",
@@ -1123,9 +1031,7 @@
     "root": "Hsb",
     "form": 1,
     "vowels": "i-u",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "Hsb",
@@ -1147,9 +1053,7 @@
     "root": "Hsn",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "Hsn",
@@ -1191,9 +1095,7 @@
     "root": "Hwl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Hwl",
@@ -1232,9 +1134,7 @@
     "form": 1,
     "vowels": "a-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "SHb",
@@ -1244,9 +1144,7 @@
     "root": "SbH",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "SbH",
@@ -1260,9 +1158,7 @@
     "root": "Sbr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Sbr",
@@ -1272,9 +1168,7 @@
     "root": "Sdq",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fi3l"
-    ]
+    "masdars": ["fi3l"]
   },
   {
     "root": "Sdq",
@@ -1322,9 +1216,7 @@
     "root": "SrH",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "SrH",
@@ -1334,9 +1226,7 @@
     "root": "Srf",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Srf",
@@ -1354,9 +1244,7 @@
     "root": "Srx",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3aal"
-    ]
+    "masdars": ["fu3aal"]
   },
   {
     "root": "Srx",
@@ -1366,9 +1254,7 @@
     "root": "Swr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "Swr",
@@ -1378,27 +1264,20 @@
     "root": "SyH",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l",
-      "fi3aal"
-    ],
+    "masdars": ["fa3l", "fi3aal"],
     "passiveVoice": "impersonal"
   },
   {
     "root": "Syr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "TEm",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "impersonal"
   },
   {
@@ -1429,9 +1308,7 @@
     "root": "Tlb",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "Tlb",
@@ -1473,9 +1350,7 @@
     "root": "Zll",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none"
   },
   {
@@ -1493,9 +1368,7 @@
     "root": "b's",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "b's",
@@ -1507,9 +1380,7 @@
     "form": 1,
     "vowels": "i-a",
     "passiveVoice": "none",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "bHr",
@@ -1530,9 +1401,7 @@
     "root": "bd'",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "bd'",
@@ -1542,9 +1411,7 @@
     "root": "bdl",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "bdl",
@@ -1566,27 +1433,20 @@
     "root": "bdw",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none"
   },
   {
     "root": "bky",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fu3aal"
-    ]
+    "masdars": ["fu3aal"]
   },
   {
     "root": "blg",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool",
-      "fa3aal"
-    ]
+    "masdars": ["fu3ool", "fa3aal"]
   },
   {
     "root": "blg",
@@ -1618,9 +1478,7 @@
     "root": "bqy",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3aal"
-    ]
+    "masdars": ["fa3aal"]
   },
   {
     "root": "bqy",
@@ -1638,11 +1496,7 @@
     "root": "brH",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3aal",
-      "fa3al",
-      "fu3ool"
-    ]
+    "masdars": ["fa3aal", "fa3al", "fu3ool"]
   },
   {
     "root": "brg$",
@@ -1653,9 +1507,7 @@
     "root": "brhn",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala"
-    ]
+    "masdars": ["fa3lala"]
   },
   {
     "root": "bry",
@@ -1674,9 +1526,7 @@
     "root": "bw'",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "byD",
@@ -1687,33 +1537,25 @@
     "root": "byE",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "byt",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "mimi"
-    ]
+    "masdars": ["mimi"]
   },
   {
     "root": "dEm",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "dEw",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3aal"
-    ]
+    "masdars": ["fu3aal"]
   },
   {
     "root": "dEw",
@@ -1741,9 +1583,7 @@
     "root": "drs",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "drs",
@@ -1765,10 +1605,7 @@
     "root": "dwm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "fa3aal"
-    ],
+    "masdars": ["fa3l", "fa3aal"],
     "passiveVoice": "impersonal"
   },
   {
@@ -1793,9 +1630,7 @@
     "root": "dxl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "f$l",
@@ -1806,9 +1641,7 @@
     "root": "fEl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fi3l"
-    ]
+    "masdars": ["fi3l"]
   },
   {
     "root": "fEl",
@@ -1894,18 +1727,14 @@
     "root": "ft'",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "impersonal"
   },
   {
     "root": "ftH",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "fwD",
@@ -1924,9 +1753,7 @@
     "root": "g$y",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "gTy",
@@ -1940,9 +1767,7 @@
     "root": "gdw",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3ul"
-    ]
+    "masdars": ["fu3ul"]
   },
   {
     "root": "gfr",
@@ -1982,9 +1807,7 @@
     "form": 1,
     "vowels": "a-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "gny",
@@ -2014,19 +1837,13 @@
     "root": "gsl",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "gyb",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l",
-      "fi3aal",
-      "mimi"
-    ],
+    "masdars": ["fa3l", "fi3aal", "mimi"],
     "passiveVoice": "impersonal"
   },
   {
@@ -2065,25 +1882,19 @@
     "root": "hdm",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "hjr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "hll",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "hmm",
@@ -2125,25 +1936,19 @@
     "root": "jEl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "jbb",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "jdw",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "jhd",
@@ -2180,19 +1985,13 @@
     "form": 1,
     "vowels": "a-i",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "jmE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l",
-      "fa3lan",
-      "mimi"
-    ]
+    "masdars": ["fa3l", "fa3lan", "mimi"]
   },
   {
     "root": "jmE",
@@ -2211,9 +2010,7 @@
     "form": 1,
     "vowels": "u-u",
     "passiveVoice": "none",
-    "masdars": [
-      "fu3la"
-    ]
+    "masdars": ["fu3la"]
   },
   {
     "root": "jrH",
@@ -2235,17 +2032,13 @@
     "root": "jry",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "jwE",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "noPassiveParticiple": true,
     "passiveVoice": "none"
   },
@@ -2270,10 +2063,7 @@
     "root": "jy'",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "mimi",
-      "fa3l"
-    ]
+    "masdars": ["mimi", "fa3l"]
   },
   {
     "root": "jyd",
@@ -2335,17 +2125,13 @@
     "root": "kl'",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "klm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "klm",
@@ -2367,9 +2153,7 @@
     "root": "klwr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala"
-    ]
+    "masdars": ["fa3lala"]
   },
   {
     "root": "kml",
@@ -2395,19 +2179,13 @@
     "root": "ksr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "ktb",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fi3aal",
-      "fa3l",
-      "fi3aala"
-    ]
+    "masdars": ["fi3aal", "fa3l", "fi3aala"]
   },
   {
     "root": "ktb",
@@ -2441,9 +2219,7 @@
     "root": "kwn",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "noPassiveParticiple": true
   },
   {
@@ -2458,9 +2234,7 @@
     "root": "l'l'",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala"
-    ],
+    "masdars": ["fa3lala"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -2472,9 +2246,7 @@
     "root": "lEb",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "lHq",
@@ -2493,9 +2265,7 @@
     "root": "lhw",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "lkm",
@@ -2511,9 +2281,7 @@
     "root": "lmm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "lms",
@@ -2533,9 +2301,7 @@
     "root": "lwm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "lwm",
@@ -2549,9 +2315,7 @@
     "root": "lzm",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "m$T",
@@ -2577,9 +2341,7 @@
     "root": "mdd",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "mdd",
@@ -2612,9 +2374,7 @@
     "root": "mkn",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3aala"
-    ]
+    "masdars": ["fa3aala"]
   },
   {
     "root": "mkn",
@@ -2648,9 +2408,7 @@
     "form": 1,
     "vowels": "i-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "mrD",
@@ -2686,10 +2444,7 @@
     "root": "mss",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l",
-      "fa3iil"
-    ]
+    "masdars": ["fa3l", "fa3iil"]
   },
   {
     "root": "mss",
@@ -2703,9 +2458,7 @@
     "root": "mvl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "mvl",
@@ -2720,9 +2473,7 @@
     "root": "mwt",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -2730,9 +2481,7 @@
     "root": "myl",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al"
-    ],
+    "masdars": ["fa3al"],
     "passiveVoice": "none"
   },
   {
@@ -2753,10 +2502,7 @@
     "root": "nSr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "fu3ool"
-    ]
+    "masdars": ["fa3l", "fu3ool"]
   },
   {
     "root": "nSr",
@@ -2792,9 +2538,7 @@
     "root": "nZr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "nZr",
@@ -2826,9 +2570,7 @@
     "root": "nfs",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "nfx",
@@ -2839,9 +2581,7 @@
     "root": "nhy",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "nhy",
@@ -2878,9 +2618,7 @@
     "root": "nql",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "nsy",
@@ -2891,9 +2629,7 @@
     "root": "nw'",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "nwl",
@@ -2907,10 +2643,7 @@
     "root": "nwm",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l",
-      "mimi"
-    ],
+    "masdars": ["fa3l", "mimi"],
     "passiveVoice": "impersonal"
   },
   {
@@ -2984,9 +2717,7 @@
     "root": "qbl",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "qbl",
@@ -3022,9 +2753,7 @@
     "root": "qdm",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fi3al"
-    ]
+    "masdars": ["fi3al"]
   },
   {
     "root": "qdm",
@@ -3042,9 +2771,7 @@
     "root": "qfz",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "qll",
@@ -3060,9 +2787,7 @@
     "root": "qr'",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fi3aala"
-    ]
+    "masdars": ["fi3aala"]
   },
   {
     "root": "qr'",
@@ -3090,9 +2815,7 @@
     "root": "qrr",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none"
   },
   {
@@ -3115,9 +2838,7 @@
     "root": "qsm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3la"
-    ]
+    "masdars": ["fi3la"]
   },
   {
     "root": "qsm",
@@ -3128,10 +2849,7 @@
     "root": "qtl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "mimi"
-    ]
+    "masdars": ["fa3l", "mimi"]
   },
   {
     "root": "qtl",
@@ -3197,9 +2915,7 @@
     "root": "qwl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "qwl",
@@ -3217,11 +2933,7 @@
     "root": "qwm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "fi3aal",
-      "mimi"
-    ]
+    "masdars": ["fa3l", "fi3aal", "mimi"]
   },
   {
     "root": "qwm",
@@ -3235,9 +2947,7 @@
     "root": "qwy",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fi3an"
-    ]
+    "masdars": ["fi3an"]
   },
   {
     "root": "qwy",
@@ -3247,9 +2957,7 @@
     "root": "r'y",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "r'y",
@@ -3293,10 +3001,7 @@
     "root": "rHl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l",
-      "fa3iil"
-    ]
+    "masdars": ["fa3l", "fa3iil"]
   },
   {
     "root": "rdd",
@@ -3354,9 +3059,7 @@
     "root": "rkz",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "rkz",
@@ -3417,9 +3120,7 @@
     "root": "rwH",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3aal"
-    ]
+    "masdars": ["fa3aal"]
   },
   {
     "root": "rwH",
@@ -3442,9 +3143,7 @@
     "root": "rwy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3aala"
-    ]
+    "masdars": ["fi3aala"]
   },
   {
     "root": "rxw",
@@ -3454,9 +3153,7 @@
     "root": "s'l",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3aal"
-    ]
+    "masdars": ["fu3aal"]
   },
   {
     "root": "s'l",
@@ -3471,10 +3168,7 @@
     "form": 1,
     "vowels": "i-a",
     "noPassiveParticiple": true,
-    "masdars": [
-      "fa3l",
-      "fa3aala"
-    ],
+    "masdars": ["fa3l", "fa3aala"],
     "passiveVoice": "none"
   },
   {
@@ -3485,9 +3179,7 @@
     "root": "sEy",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "sHb",
@@ -3503,9 +3195,7 @@
     "root": "sbb",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "sbb",
@@ -3529,18 +3219,13 @@
     "root": "sfh",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3aala"
-    ]
+    "masdars": ["fa3aala"]
   },
   {
     "root": "sfr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l",
-      "fu3ool"
-    ],
+    "masdars": ["fa3l", "fu3ool"],
     "passiveVoice": "impersonal"
   },
   {
@@ -3566,19 +3251,13 @@
     "root": "skn",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool",
-      "fa3al"
-    ]
+    "masdars": ["fu3ool", "fa3al"]
   },
   {
     "root": "slm",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3aala",
-      "fa3al"
-    ]
+    "masdars": ["fa3aala", "fa3al"]
   },
   {
     "root": "slm",
@@ -3613,11 +3292,7 @@
     "root": "smE",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l",
-      "fa3aal",
-      "mimi"
-    ]
+    "masdars": ["fa3l", "fa3aal", "mimi"]
   },
   {
     "root": "smE",
@@ -3685,9 +3360,7 @@
     "root": "syTr",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3lala"
-    ],
+    "masdars": ["fa3lala"],
     "passiveVoice": "impersonal"
   },
   {
@@ -3709,11 +3382,7 @@
     "root": "tbE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3al",
-      "fa3aala",
-      "mimi"
-    ]
+    "masdars": ["fa3al", "fa3aala", "mimi"]
   },
   {
     "root": "tbE",
@@ -3733,9 +3402,7 @@
     "root": "tmm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "tmm",
@@ -3755,9 +3422,7 @@
     "root": "trjm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala"
-    ]
+    "masdars": ["fa3lala"]
   },
   {
     "root": "trk",
@@ -3799,17 +3464,13 @@
     "root": "w'y",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wDE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wDH",
@@ -3827,10 +3488,7 @@
     "root": "wEd",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l",
-      "mimi"
-    ]
+    "masdars": ["fa3l", "mimi"]
   },
   {
     "root": "wEd",
@@ -3848,9 +3506,7 @@
     "root": "wEy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wHd",
@@ -3864,17 +3520,13 @@
     "root": "wSf",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wSl",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wSl",
@@ -3909,9 +3561,7 @@
     "root": "wT'",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wT'",
@@ -3925,9 +3575,7 @@
     "root": "wTn",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wTn",
@@ -3950,9 +3598,7 @@
     "root": "wdd",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "wdy",
@@ -3962,9 +3608,7 @@
     "root": "wfd",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "wfq",
@@ -3990,9 +3634,7 @@
     "form": 1,
     "vowels": "a-i",
     "passiveVoice": "none",
-    "masdars": [
-      "fa3aal"
-    ]
+    "masdars": ["fa3aal"]
   },
   {
     "root": "wfy",
@@ -4037,9 +3679,7 @@
     "root": "whn",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none"
   },
   {
@@ -4047,9 +3687,7 @@
     "form": 1,
     "vowels": "a-i",
     "passiveVoice": "none",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "wjb",
@@ -4082,9 +3720,7 @@
     "root": "wjz",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wk'",
@@ -4100,9 +3736,7 @@
     "root": "wld",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fi3aala"
-    ]
+    "masdars": ["fi3aala"]
   },
   {
     "root": "wld",
@@ -4112,9 +3746,7 @@
     "root": "wly",
     "form": 1,
     "vowels": "i-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wly",
@@ -4136,9 +3768,7 @@
     "root": "wny",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wqE",
@@ -4152,9 +3782,7 @@
     "root": "wqf",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "wqf",
@@ -4172,9 +3800,7 @@
     "root": "wqy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "wqy",
@@ -4192,9 +3818,7 @@
     "root": "wry",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3l"
-    ],
+    "masdars": ["fa3l"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -4219,11 +3843,7 @@
     "root": "wsws",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [
-      "fa3lala",
-      "fa3aal",
-      "fi3aal"
-    ],
+    "masdars": ["fa3lala", "fa3aal", "fi3aal"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4239,9 +3859,7 @@
     "root": "wvq",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3aala"
-    ]
+    "masdars": ["fa3aala"]
   },
   {
     "root": "wvq",
@@ -4276,9 +3894,7 @@
     "root": "xTT",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "xTT",
@@ -4333,10 +3949,7 @@
     "root": "xlS",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool",
-      "fa3aal"
-    ],
+    "masdars": ["fu3ool", "fa3aal"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4369,10 +3982,7 @@
     "root": "xlw",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fu3ool",
-      "fa3aal"
-    ],
+    "masdars": ["fu3ool", "fa3aal"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4397,9 +4007,7 @@
     "root": "xrj",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3ool"
-    ]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "xrj",
@@ -4409,17 +4017,13 @@
     "root": "xsr",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "xwf",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "xwf",
@@ -4429,9 +4033,7 @@
     "root": "xwr",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al"
-    ]
+    "masdars": ["fa3al"]
   },
   {
     "root": "xyr",
@@ -4442,25 +4044,19 @@
     "form": 1,
     "vowels": "i-a",
     "passiveVoice": "none",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "ybs",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "ymn",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fu3l"
-    ]
+    "masdars": ["fu3l"]
   },
   {
     "root": "yqZ",
@@ -4470,9 +4066,7 @@
     "root": "ysr",
     "form": 1,
     "vowels": "u-u",
-    "masdars": [
-      "fa3l"
-    ]
+    "masdars": ["fa3l"]
   },
   {
     "root": "ywd",
@@ -4502,9 +4096,7 @@
     "root": "zrq",
     "form": 1,
     "vowels": "i-a",
-    "masdars": [
-      "fa3al"
-    ],
+    "masdars": ["fa3al"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4533,13 +4125,7 @@
     "root": "zwr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": [
-      "fa3l",
-      "fi3aala",
-      "mimi",
-      "fa3aala",
-      "fu3aal"
-    ]
+    "masdars": ["fa3l", "fi3aala", "mimi", "fa3aala", "fu3aal"]
   },
   {
     "root": "zwr",
@@ -4564,10 +4150,7 @@
     "root": "zyd",
     "form": 1,
     "vowels": "a-a",
-    "masdars": [
-      "fi3aala",
-      "fa3l"
-    ]
+    "masdars": ["fi3aala", "fa3l"]
   },
   {
     "root": "zyd",

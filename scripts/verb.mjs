@@ -147,7 +147,9 @@ async function runSingle(roots, locales) {
 
   while (step < 10) {
     if (step === 0) {
-      const rootStr = (await input({ message: 'Enter verb root (Arabic or transliterated):', default: state.rootStr })).trim()
+      const rootStr = (
+        await input({ message: 'Enter verb root (Arabic or transliterated):', default: state.rootStr })
+      ).trim()
       if (!rootStr) {
         console.log('Root required.')
         continue
@@ -337,20 +339,29 @@ async function runSingle(roots, locales) {
 
     if (step === 7) {
       console.log()
-      const enVerb = await inputWithBack('Verb translation (EN, e.g. "to write"):', locales.en.verbs[state.vid] ?? state.verbTranslations.en)
+      const enVerb = await inputWithBack(
+        'Verb translation (EN, e.g. "to write"):',
+        locales.en.verbs[state.vid] ?? state.verbTranslations.en,
+      )
       if (enVerb === BACK) {
         step -= 1
         continue
       }
       state.verbTranslations.en = enVerb
 
-      const itVerb = await inputWithBack('Verb translation (IT, e.g. "scrivere"):', locales.it.verbs[state.vid] ?? state.verbTranslations.it)
+      const itVerb = await inputWithBack(
+        'Verb translation (IT, e.g. "scrivere"):',
+        locales.it.verbs[state.vid] ?? state.verbTranslations.it,
+      )
       if (itVerb === BACK) {
         continue
       }
       state.verbTranslations.it = itVerb
 
-      const ptVerb = await inputWithBack('Verb translation (PT, e.g. "escrever"):', locales.pt.verbs[state.vid] ?? state.verbTranslations.pt)
+      const ptVerb = await inputWithBack(
+        'Verb translation (PT, e.g. "escrever"):',
+        locales.pt.verbs[state.vid] ?? state.verbTranslations.pt,
+      )
       if (ptVerb === BACK) {
         continue
       }
