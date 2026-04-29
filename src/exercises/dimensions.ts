@@ -238,7 +238,7 @@ export function isValidDimensionProfile(raw: unknown): raw is { profile: Dimensi
 export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
   if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
-  if (p.nominals >= 2 && p.forms < FORM_POOLS.length - 1) p.nominals = 1
+  if (p.nominals >= 2 && p.forms < MAX_LEVELS.forms) p.nominals = 1
   if (
     p.diacritics >= 2 &&
     (p.tenses < MAX_LEVELS.tenses ||
@@ -258,7 +258,11 @@ export function recordDimensionAnswer(
   correct: boolean,
 ): DimensionStore {
   const windows = { ...store.windows }
-  for (const dim of dimensions) {
+  const trackedDimensions = new Set<DimensionKey>(dimensions)
+  if (store.profile.nominals === 0 && store.profile.tenses >= 2 && store.profile.pronouns >= 2)
+    trackedDimensions.add('nominals')
+
+  for (const dim of trackedDimensions) {
     const appended = [...windows[dim], correct]
     windows[dim] = appended.length > WINDOW_SIZES[dim] ? appended.slice(-WINDOW_SIZES[dim]) : appended
   }

@@ -116,6 +116,30 @@ describe('recordDimensionAnswer', () => {
     )
     expect(next.windows.forms[0]).toBe(false)
   })
+
+  test('bootstraps nominal window from non-nominal answers after prerequisites are met', () => {
+    const next = recordDimensionAnswer(
+      {
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 0 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      },
+      ['forms', 'rootTypes', 'diacritics'],
+      true,
+    )
+    expect(next.windows.nominals).toEqual([true])
+  })
+
+  test('does not bootstrap nominal window before prerequisites are met', () => {
+    const next = recordDimensionAnswer(
+      {
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2, nominals: 0 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      },
+      ['forms', 'rootTypes', 'diacritics'],
+      true,
+    )
+    expect(next.windows.nominals).toEqual([])
+  })
 })
 
 describe('enforcePrerequisites', () => {
