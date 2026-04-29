@@ -1,5 +1,5 @@
 import { css, styled } from 'goober'
-import { useEffect, useRef, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise } from '../../exercises/exercises'
 import { useI18n } from '../../hooks/useI18n'
 import { normalizeForComparison } from '../../paradigms/letters'
@@ -24,7 +24,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: 
   const hasTypedAnswer = typedValue.trim().length > 0
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setSelected(null)
     setTypedResult('idle')
   }, [exercise])
