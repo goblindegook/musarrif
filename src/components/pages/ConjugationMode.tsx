@@ -366,7 +366,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
           )}
         </ConjugationSection>
 
-        <Panel title={t('nominals.title')} dir={dir} lang={lang}>
+        <Panel title={<NominalsTitle>{t('nominals.title')}</NominalsTitle>} dir={dir} lang={lang}>
           <NominalsGrid>
             <MasdarSlot>
               <Detail
@@ -571,6 +571,12 @@ const ConjugationSection = styled('div')`
     border: 1px solid #e2e8f0;
     border-radius: 0.3rem;
     box-shadow: none;
+  }
+`
+
+const NominalsTitle = styled('span')`
+  @media print {
+    display: none;
   }
 `
 

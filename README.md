@@ -92,7 +92,7 @@ Contributions are welcome, especially for:
 
 ### Contribution Workflow
 
-1. Open an issue describing the bug/change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml)).
+1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
 2. Create a focused branch
 3. Implement the smallest change needed, remembering to add or update tests
 4. Run lint + tests locally before opening a PR
@@ -140,10 +140,9 @@ Keep locale updates atomic with verb entry changes.
 
 ## Reporting Incorrect Conjugations
 
-Use the GitHub issue template: `Incorrect conjugation report`.
-Include verb ID/root/form, tense/mood/voice, pronoun, expected output, and source references.
+Use the GitHub [incorrect conjugation issue form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml). Include verb details, expected output, and source references.
 
 ## License
 
 This project is licensed under the GNU General Public License v3.0.
-See [LICENSE](/Users/lrodrigues/Developer/musarrif/LICENSE).
+See [LICENSE](LICENSE).

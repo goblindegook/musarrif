@@ -75,6 +75,12 @@ test('loads لَيْسَ without deriving unavailable nominals', () => {
 })
 
 describe('Conjugation table', () => {
+  it('shows full tense label in header for active past', () => {
+    renderConjugationMode({ verbId: 'ktb-1', voice: 'active', tense: 'past' })
+
+    expect(screen.getByText('Active Past')).toBeInTheDocument()
+  })
+
   it('shows active and passive voice tabs', () => {
     renderConjugationMode({ verbId: 'ktb-1' })
 

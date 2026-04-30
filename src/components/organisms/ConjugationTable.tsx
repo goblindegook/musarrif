@@ -188,9 +188,7 @@ export function ConjugationTable({
           <thead>
             <Row>
               <TableHeadCell>{t('table.pronoun')}</TableHeadCell>
-              <VerbHeadCell>
-                {tense === 'present' && mood !== 'indicative' ? t(MOOD_OPTIONS[mood]) : t(TENSE_LABELS[tense])}
-              </VerbHeadCell>
+              <VerbHeadCell>{t(`tense.${verbTense}`)}</VerbHeadCell>
               <TableHeadCell></TableHeadCell>
             </Row>
           </thead>
