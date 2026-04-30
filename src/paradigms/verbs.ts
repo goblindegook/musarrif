@@ -4,6 +4,7 @@ import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { type LetterToken, normalizeHamza, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
+import { clamp } from '../primitives/numbers'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
@@ -116,7 +117,8 @@ export function buildVerbFromId(id = ''): DisplayVerb {
 
   const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
 
-  const form = Math.min(Math.max(1, Number(formText)), 10) as VerbForm
+  const parsedForm = Number.parseInt(formText ?? '', 10)
+  const form = Number.isFinite(parsedForm) ? (clamp(parsedForm, 1, 10) as VerbForm) : 1
 
   return form === 1 ? synthesizeVerb(root, 1, 'a-a') : synthesizeVerb(root, form)
 }

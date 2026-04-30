@@ -2,6 +2,7 @@ import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
 import { LetterToken } from './letters'
 import {
+  buildVerbFromId,
   formatFormLabel,
   getAvailableParadigms,
   getVerb,
@@ -52,6 +53,20 @@ describe('buildSyntheticVerb', () => {
       rootTokens: [new LetterToken('ك'), new LetterToken('ت'), new LetterToken('ب')],
       synthetic: true,
     })
+  })
+})
+
+describe('buildVerbFromId', () => {
+  test('falls back to Form I when form segment is missing', () => {
+    const verb = buildVerbFromId('ktb-')
+    expect(verb.form).toBe(1)
+    expect(verb.id).toBe('ktb-1')
+  })
+
+  test('falls back to Form I when form segment is invalid', () => {
+    const verb = buildVerbFromId('ktb-foo')
+    expect(verb.form).toBe(1)
+    expect(verb.id).toBe('ktb-1')
   })
 })
 
