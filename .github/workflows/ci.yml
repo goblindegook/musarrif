@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -47,7 +47,9 @@ jobs:
           path: dist
 
   deploy:
-    needs: build
+    needs:
+      - test
+      - build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
