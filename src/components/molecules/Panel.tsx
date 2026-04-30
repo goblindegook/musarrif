@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { useState } from 'preact/hooks'
 
 interface PanelProps {
-  title?: string
+  title?: ComponentChildren
   dir?: 'auto' | 'rtl' | 'ltr'
   lang?: string
   children?: ComponentChildren
