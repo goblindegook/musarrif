@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../paradigms/verbs'
 import * as dimensions from './dimensions'
-import { randomExercise } from './random'
+import { nextExercise } from './scheduler'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
@@ -12,7 +12,7 @@ const INITIAL_DIMENSION_PROFILE = {
   nominals: 0,
 } as const
 
-describe('randomExercise', () => {
+describe('nextExercise', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
@@ -20,7 +20,7 @@ describe('randomExercise', () => {
   test('serves a due card when one exists in srsStore', () => {
     const store = { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() } }
 
-    const keys = Array.from({ length: 20 }, () => randomExercise(INITIAL_DIMENSION_PROFILE, store).cardKey)
+    const keys = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store).cardKey)
 
     expect(keys).toContain('conjugation:sound:1:active.past:3ms')
   })
@@ -32,7 +32,7 @@ describe('randomExercise', () => {
 
     const keys = Array.from(
       { length: 20 },
-      () => randomExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 }, store).cardKey,
+      () => nextExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 }, store).cardKey,
     )
 
     expect(keys).not.toContain('verbTense:sound:1:active.present.subjunctive:3ms')
@@ -49,12 +49,34 @@ describe('randomExercise', () => {
       },
     }
 
-    const exercise = randomExercise(
+    const exercise = nextExercise(
       { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 9, rootTypes: 5 },
       store,
     )
 
     expect(exercise.cardKey).toBe('conjugation:defective:10:passive.present.subjunctive:3ms')
+  })
+
+  test('forces nominal coverage ahead of due cards when nominals are unlocked but absent from srs history', () => {
+    const store = {
+      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() },
+    }
+
+    const exercise = nextExercise(
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 1, rootTypes: 1, nominals: 1 },
+      store,
+    )
+
+    expect([
+      'participleForm',
+      'participleRoot',
+      'participleVerb',
+      'verbParticiple',
+      'masdarForm',
+      'masdarRoot',
+      'masdarVerb',
+      'verbMasdar',
+    ]).toContain(exercise.kind)
   })
 })
 

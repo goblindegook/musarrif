@@ -1,7 +1,7 @@
-import { verbs } from '../paradigms/verbs'
-import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
-import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises'
-import { conjugationExercise } from './generators/conjugation'
+import { verbs } from '../paradigms/verbs.ts'
+import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions.ts'
+import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises.ts'
+import { conjugationExercise } from './generators/conjugation.ts'
 import { masdarFormExercise } from './generators/masdar-form.ts'
 import { masdarRootExercise } from './generators/masdar-root.ts'
 import { masdarVerbExercise } from './generators/masdar-verb.ts'
@@ -15,8 +15,8 @@ import { verbParticipleExercise } from './generators/verb-participle.ts'
 import { verbPronounExercise } from './generators/verb-pronoun.ts'
 import { verbRootExercise } from './generators/verb-root.ts'
 import { verbTenseExercise } from './generators/verb-tense.ts'
-import type { SrsStore } from './srs'
-import { cardSrsWeight, getSrsRootType, parseCardKey, weightedRandomSrs } from './srs'
+import type { SrsStore } from './srs.ts'
+import { cardSrsWeight, getSrsRootType, parseCardKey, weightedRandomSrs } from './srs.ts'
 
 const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
   conjugationExercise,
@@ -35,11 +35,74 @@ const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
   verbTenseExercise,
 ]
 
+const DIMENSION_KIND_COVERAGE: Record<keyof DimensionProfile, readonly ExerciseKind[]> = {
+  tenses: ['conjugation', 'verbTense'],
+  pronouns: ['conjugation', 'verbPronoun'],
+  diacritics: [
+    'conjugation',
+    'masdarForm',
+    'masdarRoot',
+    'masdarVerb',
+    'participleForm',
+    'rootFormVerb',
+    'participleRoot',
+    'participleVerb',
+    'verbForm',
+    'verbMasdar',
+    'verbParticiple',
+    'verbPronoun',
+    'verbRoot',
+    'verbTense',
+  ],
+  forms: [
+    'conjugation',
+    'masdarForm',
+    'masdarRoot',
+    'masdarVerb',
+    'participleForm',
+    'rootFormVerb',
+    'participleRoot',
+    'participleVerb',
+    'verbForm',
+    'verbMasdar',
+    'verbParticiple',
+    'verbPronoun',
+    'verbRoot',
+    'verbTense',
+  ],
+  rootTypes: [
+    'conjugation',
+    'masdarForm',
+    'masdarRoot',
+    'masdarVerb',
+    'participleForm',
+    'rootFormVerb',
+    'participleRoot',
+    'participleVerb',
+    'verbForm',
+    'verbMasdar',
+    'verbParticiple',
+    'verbPronoun',
+    'verbRoot',
+    'verbTense',
+  ],
+  nominals: [
+    'masdarForm',
+    'masdarRoot',
+    'masdarVerb',
+    'participleForm',
+    'participleRoot',
+    'participleVerb',
+    'verbMasdar',
+    'verbParticiple',
+  ],
+}
+
 function utcToday(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {}): Exercise<ExerciseKind> {
+export function nextExercise(profile: DimensionProfile, srsStore: SrsStore = {}): Exercise<ExerciseKind> {
   const available = EXERCISES.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
   const availableKinds = new Set(available.map((e) => e.kind))
   const availableRootTypes = rootTypesPool(profile.rootTypes)
@@ -47,6 +110,9 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
   const availableTenses = tensePool(profile.tenses)
   const availablePronouns = pronounPool(profile.pronouns)
   const today = utcToday()
+
+  const bootstrap = uncoveredExercises(profile, srsStore, available)
+  if (bootstrap.length > 0) return weightedRandomSrs(bootstrap, (exercise) => exercise.weight ?? 1).generate(profile)
 
   const dueKeys = Object.entries(srsStore)
     .filter(([key, { dueDate }]) => {
@@ -65,8 +131,7 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
     const kindWeight = (key: string): number => available.find((e) => e.kind === parseCardKey(key).kind)?.weight ?? 1
     const srsWeight = (key: string): number => cardSrsWeight(srsStore[key], today) * kindWeight(key)
 
-    const dueKey = weightedRandomSrs(dueKeys, srsWeight)
-    const { kind, rootType, form, tense, pronoun } = parseCardKey(dueKey)
+    const { kind, rootType, form, tense, pronoun } = parseCardKey(weightedRandomSrs(dueKeys, srsWeight))
 
     const generator = available.find((e) => e.kind === kind)
     if (generator == null) return weightedRandomSrs(available, (e) => e.weight ?? 1).generate(profile)
@@ -78,4 +143,24 @@ export function randomExercise(profile: DimensionProfile, srsStore: SrsStore = {
   }
 
   return weightedRandomSrs(available, (e) => e.weight ?? 1).generate(profile)
+}
+
+function uncoveredExercises(
+  profile: DimensionProfile,
+  srsStore: SrsStore = {},
+  available: ExerciseGenerator<ExerciseKind>[],
+) {
+  const srsKinds = new Set(Object.keys(srsStore).map((key) => parseCardKey(key).kind))
+
+  const missingCoverageKinds = new Set<ExerciseKind>()
+  for (const [dimension, kinds] of Object.entries(DIMENSION_KIND_COVERAGE) as [
+    keyof DimensionProfile,
+    readonly ExerciseKind[],
+  ][]) {
+    if (profile[dimension] === 0) continue
+    if (kinds.some((kind) => srsKinds.has(kind))) continue
+    for (const kind of kinds) missingCoverageKinds.add(kind)
+  }
+
+  return available.filter((exercise) => missingCoverageKinds.has(exercise.kind))
 }

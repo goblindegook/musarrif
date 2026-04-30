@@ -2,7 +2,7 @@ import { css, styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import type { DimensionProfile } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
-import { randomExercise } from '../../exercises/random'
+import { nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
 import {
@@ -30,7 +30,7 @@ type Props = {
   generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise
 }
 
-export function ExerciseMode({ generateExercise = randomExercise }: Props) {
+export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { dir, lang, t } = useI18n()
   const [dimensionProfile, dimensionUnlocks, recordDimensionAnswer, clearDimensionUnlocks] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
