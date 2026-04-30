@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/musarrif/',
+  base: './',
   plugins: [
     preact(),
     VitePWA({
@@ -27,8 +27,8 @@ export default defineConfig({
         name: 'Muṣarrif',
         short_name: 'Muṣarrif',
         description: 'Arabic verb conjugator',
-        start_url: '/musarrif/',
-        scope: '/musarrif/',
+        start_url: './',
+        scope: './',
         display: 'standalone',
         background_color: '#f5f4ee',
         theme_color: '#f5f4ee',
