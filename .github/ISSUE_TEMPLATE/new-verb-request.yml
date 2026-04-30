@@ -1,0 +1,161 @@
+name: New verb request
+description: Request adding a new verb/root entry with lexical sources
+title: "[Verb Request] <root> Form <I-X>"
+labels:
+  - enhancement
+  - data
+  - verbs
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to request adding a verb to Muṣarrif.
+        Requests without reliable lexical sources may be deferred.
+
+  - type: input
+    id: root_arabic
+    attributes:
+      label: Root (Arabic)
+      placeholder: كتب
+    validations:
+      required: true
+
+  - type: dropdown
+    id: form
+    attributes:
+      label: Form
+      options:
+        - I
+        - II
+        - III
+        - IV
+        - V
+        - VI
+        - VII
+        - VIII
+        - IX
+        - X
+        - Iq
+        - IIq
+        - IIIq
+        - IVq
+    validations:
+      required: true
+
+  - type: dropdown
+    id: vowels
+    attributes:
+      label: Vowel pattern (Form I only)
+      description: Required for Form I; choose "not applicable" otherwise
+      options:
+        - a-a
+        - a-i
+        - a-u
+        - i-a
+        - i-i
+        - i-u
+        - u-a
+        - u-i
+        - u-u
+        - not applicable
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: masdars
+    attributes:
+      label: Masdar pattern(s)
+      description: Select all that apply, or leave empty if unknown
+      options:
+        - label: fa3aal
+        - label: fa3aala
+        - label: fa3al
+        - label: fa3iil
+        - label: fa3l
+        - label: fa3lala
+        - label: fa3lan
+        - label: fi3aal
+        - label: fi3aala
+        - label: fi3al
+        - label: fi3an
+        - label: fi3iil
+        - label: fi3l
+        - label: fi3la
+        - label: fu3aal
+        - label: fu3l
+        - label: fu3la
+        - label: fu3ool
+        - label: fu3ul
+        - label: mimi
+    validations:
+      required: false
+
+  - type: dropdown
+    id: passive_voice
+    attributes:
+      label: Passive voice support
+      description: If unknown, choose "unknown" and explain in notes
+      options:
+        - full
+        - impersonal
+        - none
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: passive_participle
+    attributes:
+      label: Passive participle availability
+      options:
+        - available
+        - not available
+        - unknown
+    validations:
+      required: true
+
+  - type: input
+    id: verb_translation_en
+    attributes:
+      label: Verb translation (EN)
+      placeholder: to write
+    validations:
+      required: false
+
+  - type: input
+    id: root_gloss_en
+    attributes:
+      label: Root gloss (EN, nominal/gerundive)
+      placeholder: writing
+    validations:
+      required: false
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Lexical sources
+      description: Provide URLs or bibliographic references that explicitly support the requested fields
+      placeholder: |
+        - https://...
+        - Dictionary/grammar title, edition, page
+    validations:
+      required: true
+
+  - type: textarea
+    id: source_extract
+    attributes:
+      label: Source extract / notes
+      description: Paste short relevant excerpts or summarize what each source confirms
+      placeholder: |
+        Source A confirms form and present vowels.
+        Source B confirms masdar and passive behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional notes
+      description: Dialect/variant caveats, uncertainty, or related verbs already in dataset
+    validations:
+      required: false

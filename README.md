@@ -1,75 +1,148 @@
-# [Muṣarrif](https://goblindegook.github.io/musarrif/)
+# Muṣarrif
 
-Interactive Arabic verb conjugator. Search and build verbs, drill into derived forms, and view full conjugation
-tables with speech playback (where supported).
+[Muṣarrif](https://musarrif.com) is an interactive Arabic verb conjugator and drill tool.
+It helps learners search roots, inspect full paradigms, and practice recognition across forms, tenses, pronouns, and nominal derivations.
 
-## Features
+## What It Is
 
-- Search and browse verbs by form
-- Build verbs from arbitrary triliteral roots
-- Full conjugation tables for active and passive past, present, and future, as well as imperative
-- Nominals: active and passive participles and masdar paradigms
-- Derived‑form selector
-- Root and form insights
-- Quiz mode
-- Diacritics toggle plus copy, share, and speech playback controls
-- Multilingual UI supporting Arabic, English, Italian, and Portuguese
+- A reference-first Arabic verb conjugation app
+- A progressive drill environment for form/root/tense/pronoun recognition
+- A multilingual interface (Arabic, English, Italian, and Portuguese)
+- A Progressive Web Application designed for fast lookup on desktop and mobile
 
-## Getting Started
+## What It Is Not
 
-Requirements: Node and npm.
+- Not a full Arabic course or grammar textbook
+- Not an automatic translator
+- Not a conversational tutor or chat assistant
+- Not a corpus-backed frequency trainer
 
-Install dependencies:
+## Who It Is For
+
+- Independent Arabic learners who need quick, reliable conjugation lookup
+- Students following a textbook/class who want fast pattern verification
+- Teachers and tutors who need a compact paradigm reference during instruction
+
+## Setup
+
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-Start the dev server:
+2. Start development server:
 
 ```bash
 npm run dev
 ```
 
-Build for production:
+3. Build production bundle:
 
 ```bash
 npm run build
 ```
 
-Preview the production build:
+4. Preview production build:
 
 ```bash
 npm run preview
 ```
 
-Add or change verbs:
+## Quality Commands
+
+Run tests (single pass, no watch):
+
+```bash
+npm test -- --no-watch
+```
+
+Run one test file:
+
+```bash
+npm test -- --no-watch src/path/to/file.test.ts
+```
+
+Coverage and mutation:
+
+```bash
+npm run test:coverage
+npm run test:mutation
+```
+
+Lint and formatting:
+
+```bash
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+## Contributing
+
+Contributions are welcome, especially for:
+
+- Incorrect or incomplete conjugation behavior
+- Missing verb entries and lexical metadata
+- Exercise quality and distractor quality improvements
+- Localization improvements (EN/IT/PT/AR UI copy)
+- Accessibility and mobile usability fixes
+
+### Contribution Workflow
+
+1. Open an issue describing the bug/change (or use the incorrect conjugation template).
+2. Create a focused branch.
+3. Add or update tests first (TDD).
+4. Implement the smallest change needed.
+5. Run lint + tests locally before opening a PR.
+6. Include lexical sources whenever changing verb data or grammar expectations.
+
+## Verb Adding Utility
+
+Use the interactive wizard to add or edit entries in:
+
+- `src/data/roots.json`
+- `src/locales/en.json`
+- `src/locales/it.json`
+- `src/locales/pt.json`
+
+Run it with:
 
 ```bash
 npm run verb
 ```
 
-## Tests
+The wizard guides you through:
 
-Vitest powers the suite; tests live alongside source files.
+- Root and form selection (`I` to `X`)
+- Form I vowel pattern
+- Passive voice support (`full`, `impersonal`, `none`)
+- Masdar pattern selection
+- Passive participle support
+- Root glosses
+- Verb translations (EN/IT/PT)
 
-```bash
-npm test          # headless
-npm run test:ui   # interactive UI runner
-npm run test:coverage
-```
+It then shows a summary and writes sorted JSON updates.
 
-## Linting and Formatting
+### Data Expectations
 
-Biome enforces style and formatting.
+Before writing changes, verify from lexical sources:
 
-```bash
-npm run lint      # check
-npm run lint:fix  # check and write fixes
-npm run format    # format only
-```
+- Root
+- Form
+- Present vowel pattern (for Form I)
+- Masdar pattern(s)
+- Passive voice support
+- Passive participle support
 
-## Localization and Speech
+Keep locale updates atomic with verb entry changes.
 
-Translations are defined in `src/locales/*.json`; the UI toggles between RTL and LTR automatically. Speech synthesis
-uses the browser `speechSynthesis` API and is available only on supporting platforms.
+## Reporting Incorrect Conjugations
+
+Use the GitHub issue template: `Incorrect conjugation report`.
+Include verb ID/root/form, tense/mood/voice, pronoun, expected output, and source references.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0.
+See [LICENSE](/Users/lrodrigues/Developer/musarrif/LICENSE).

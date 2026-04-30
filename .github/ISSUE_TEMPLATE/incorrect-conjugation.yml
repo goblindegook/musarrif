@@ -1,0 +1,141 @@
+name: Incorrect conjugation report
+description: Report a wrong or suspicious conjugation output
+title: "[Conjugation] <verb-id> <tense/mood/voice> <pronoun>"
+labels:
+  - bug
+  - conjugation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this.
+        Please provide enough detail to reproduce and verify against lexical/grammar sources.
+
+  - type: input
+    id: verb_id
+    attributes:
+      label: Verb ID
+      description: Example `ktb-1` (root-form)
+      placeholder: ktb-1
+    validations:
+      required: true
+
+  - type: input
+    id: root_arabic
+    attributes:
+      label: Root (Arabic)
+      description: Example `كتب`
+      placeholder: كتب
+    validations:
+      required: true
+
+  - type: dropdown
+    id: form
+    attributes:
+      label: Form
+      options:
+        - I
+        - II
+        - III
+        - IV
+        - V
+        - VI
+        - VII
+        - VIII
+        - IX
+        - X
+        - Iq
+        - IIq
+        - IIIq
+        - IVq
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tense
+    attributes:
+      label: Voice / Tense / Mood
+      options:
+        - active past
+        - active imperfect indicative
+        - active imperfect subjunctive
+        - active imperfect jussive
+        - imperative
+        - passive past
+        - passive imperfect indicative
+        - passive imperfect subjunctive
+        - passive imperfect jussive
+        - active participle
+        - passive participle
+        - masdar
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pronoun
+    attributes:
+      label: Pronoun
+      description: Required for finite-verb forms; choose "not applicable" for masdar/participles
+      options:
+        - 1s
+        - 2ms
+        - 2fs
+        - 2md
+        - 2fd
+        - 2mp
+        - 2fp
+        - 3ms
+        - 3fs
+        - 3md
+        - 3fd
+        - 3mp
+        - 3fp
+    validations:
+      required: false
+
+  - type: input
+    id: observed
+    attributes:
+      label: Observed output
+      placeholder: The exact output shown by Muṣarrif
+    validations:
+      required: true
+
+  - type: input
+    id: expected
+    attributes:
+      label: Expected output
+      placeholder: The form you expect
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Provide references (URLs, grammar books, dictionaries) that justify the expected form
+      placeholder: |
+        - https://...
+        - Reference title, page
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include exact URL/hash and any diacritics/language settings used
+      placeholder: |
+        1. Open https://musarrif.com/#/verbs/ktb-1/active/present/indicative
+        2. Set diacritics to "all"
+        3. Check pronoun 3ms
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Optional notes (regional variation, alternative accepted forms, screenshots)
+    validations:
+      required: false
