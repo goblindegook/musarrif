@@ -1,27 +1,29 @@
 # Muṣarrif
 
-[Muṣarrif](https://musarrif.com) is an interactive Arabic verb conjugator and drill tool.
-It helps learners search roots, inspect full paradigms, and practice recognition across forms, tenses, pronouns, and nominal derivations.
+[Muṣarrif](https://musarrif.com) is an interactive Arabic verb conjugator and
+drill tool. It helps learners search roots, inspect full paradigms, and practice
+recognition across forms, tenses, pronouns, and nominal derivations.
+
+Muṣarrif is a Progressive Web Application designed for fast lookup on desktop
+and mobile that is lightweight and works offline.
 
 ## What It Is
 
-- A reference-first Arabic verb conjugation app
-- A progressive drill environment for form/root/tense/pronoun recognition
-- A multilingual interface (Arabic, English, Italian, and Portuguese)
-- A Progressive Web Application designed for fast lookup on desktop and mobile
+- A reference-first Arabic verb conjugation app.
+- A progressive testing environment for paradigm recognition.
 
 ## What It Is Not
 
-- Not a full Arabic course or grammar textbook
-- Not an automatic translator
-- Not a conversational tutor or chat assistant
-- Not a corpus-backed frequency trainer
+- Not a full Arabic course or grammar textbook.
+- Not a dictionary or automatic translator.
+- Not a conversational tutor or chat assistant.
+- Not a corpus-backed frequency trainer.
 
 ## Who It Is For
 
-- Independent Arabic learners who need quick, reliable conjugation lookup
-- Students following a textbook/class who want fast pattern verification
-- Teachers and tutors who need a compact paradigm reference during instruction
+- Independent Arabic learners who need quick, reliable conjugation lookup.
+- Students following a textbook/class who want fast pattern verification.
+- Teachers and tutors who need a compact paradigm reference during instruction.
 
 ## Setup
 
@@ -85,17 +87,16 @@ Contributions are welcome, especially for:
 - Incorrect or incomplete conjugation behavior
 - Missing verb entries and lexical metadata
 - Exercise quality and distractor quality improvements
-- Localization improvements (EN/IT/PT/AR UI copy)
+- Localization improvements (English, Italian, Portuguese or Arabic copy)
 - Accessibility and mobile usability fixes
 
 ### Contribution Workflow
 
-1. Open an issue describing the bug/change (or use the incorrect conjugation template).
-2. Create a focused branch.
-3. Add or update tests first (TDD).
-4. Implement the smallest change needed.
-5. Run lint + tests locally before opening a PR.
-6. Include lexical sources whenever changing verb data or grammar expectations.
+1. Open an issue describing the bug/change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml)).
+2. Create a focused branch
+3. Implement the smallest change needed, remembering to add or update tests
+4. Run lint + tests locally before opening a PR
+5. Include lexical sources whenever changing verb data or grammar expectations
 
 ## Verb Adding Utility
 
@@ -126,7 +127,7 @@ It then shows a summary and writes sorted JSON updates.
 
 ### Data Expectations
 
-Before writing changes, verify from lexical sources:
+Before adding verbs, verify from lexical sources:
 
 - Root
 - Form
