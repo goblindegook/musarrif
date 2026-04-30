@@ -1,10 +1,10 @@
 import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
+import { clamp } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { type LetterToken, normalizeHamza, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
-import { clamp } from '../primitives/numbers'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
