@@ -1,6 +1,6 @@
 import type { VerbForm } from '../paradigms/verbs.ts'
 import { verbs } from '../paradigms/verbs.ts'
-import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions.ts'
+import { type DimensionProfile, formPool, pronounPool, random, rootTypesPool, tensePool } from './dimensions.ts'
 import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises.ts'
 import { conjugationExercise } from './generators/conjugation.ts'
 import { masdarFormExercise } from './generators/masdar-form.ts'
@@ -70,11 +70,6 @@ function uncoveredTriples(
     }
   }
 
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[result[i], result[j]] = [result[j], result[i]]
-  }
-
   return result
 }
 
@@ -108,7 +103,7 @@ export function nextExercise(
   const shouldIntroduceNew = uncovered.length > 0 && (dueKeys.length === 0 || session.reviews - session.lastNewAt >= 3)
 
   if (shouldIntroduceNew) {
-    const { kind, rootType, form } = uncovered[0]
+    const { kind, rootType, form } = random(uncovered)
     const generator = available.find((e) => e.kind === kind)
     if (generator != null) return generator.generate(profile, { rootType, form })
   }
