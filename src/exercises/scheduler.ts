@@ -58,12 +58,14 @@ function uncoveredTriples(
 ): Array<{ kind: ExerciseKind; rootType: SrsRootType; form: VerbForm }> {
   const availableRootTypes = rootTypesPool(profile.rootTypes)
   const availableForms = formPool(profile.forms)
+  const coveredCards = Object.keys(srsStore)
 
   const result: Array<{ kind: ExerciseKind; rootType: SrsRootType; form: VerbForm }> = []
   for (const generator of available) {
     for (const rootType of availableRootTypes) {
       for (const form of availableForms) {
-        if (!isCoveredTriple(`${generator.kind}:${rootType}:${form}`, srsStore)) {
+        const prefix = `${generator.kind}:${rootType}:${form}`
+        if (!coveredCards.some((k) => k === prefix || k.startsWith(`${prefix}:`))) {
           result.push({ kind: generator.kind, rootType, form })
         }
       }

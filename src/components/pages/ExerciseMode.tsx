@@ -105,11 +105,6 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
 
   const handleSkip = useCallback(() => {
-    if (isCoveredTriple(exercise.cardKey, srsStore)) {
-      sessionRef.current = { ...sessionRef.current, reviews: sessionRef.current.reviews + 1 }
-    } else {
-      sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
-    }
     recordSrsAnswer(exercise.cardKey, 'pass')
     updateStats((s) => addPass(s))
     setSkipped(true)

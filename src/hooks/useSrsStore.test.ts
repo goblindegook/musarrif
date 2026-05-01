@@ -1,14 +1,6 @@
-import { cleanup, render, waitFor } from '@testing-library/preact'
-import { h } from 'preact'
-import { useEffect } from 'preact/hooks'
+import { act, cleanup, renderHook, waitFor } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { useSrsStore } from './useSrsStore'
-
-function utcAddDays(date: string, days: number): string {
-  const d = new Date(date)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
-}
 
 beforeEach(() => {
   localStorage.clear()
@@ -20,7 +12,7 @@ afterEach(() => {
 })
 
 describe('useSRSStore', () => {
-  test('sanitizes oversized persisted data and writes sanitized state back', async () => {
+  test('keeps oversized persisted data untouched', async () => {
     const cardKey = 'conjugation:sound:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
@@ -34,35 +26,23 @@ describe('useSRSStore', () => {
       }),
     )
 
-    function Probe() {
-      useSrsStore()
-      return null
-    }
+    renderHook(() => useSrsStore())
 
-    render(h(Probe, {}))
-
-    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-      expect(stored[cardKey].interval).toBe(365)
-      expect(stored[cardKey].dueDate).toBe(expectedDueDate)
+      expect(stored[cardKey].interval).toBe(145313)
+      expect(stored[cardKey].dueDate).toBe('2424-01-30')
     })
   })
 
   test('records answer updates through the hook API', async () => {
     const cardKey = 'conjugation:sound:1:active.past:3ms'
 
-    function Probe() {
-      const [, recordSrsAnswer] = useSrsStore()
-
-      useEffect(() => {
-        recordSrsAnswer(cardKey, 'correct')
-      }, [recordSrsAnswer])
-
-      return null
-    }
-
-    render(h(Probe, {}))
+    const { result } = renderHook(() => useSrsStore())
+    act(() => {
+      const [, recordSrsAnswer] = result.current
+      recordSrsAnswer(cardKey, 'correct')
+    })
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')

@@ -23,8 +23,6 @@ export interface CardState {
 
 export type SrsStore = Record<string, CardState>
 
-const MAX_SRS_INTERVAL_DAYS = 365
-
 export interface ParsedCardKey {
   kind: ExerciseKind
   rootType: SrsRootType
@@ -91,7 +89,7 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
   let newRepetitions: number
 
   if (result === 'pass') {
-    newInterval = Math.min(Math.max(1, Math.round(interval / 2)), MAX_SRS_INTERVAL_DAYS)
+    newInterval = Math.max(1, Math.round(interval / 2))
     newRepetitions = repetitions
   } else if (result === 'wrong') {
     newInterval = 1
@@ -99,7 +97,7 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
   } else {
     if (repetitions === 0) newInterval = 1
     else if (repetitions === 1) newInterval = 6
-    else newInterval = Math.min(Math.round(interval * ef), MAX_SRS_INTERVAL_DAYS)
+    else newInterval = Math.round(interval * ef)
     newRepetitions = repetitions + 1
   }
 
@@ -113,7 +111,11 @@ const MAX_WEIGHT = 10
 
 export function cardSrsWeight(state: CardState | undefined, today: string): number {
   if (state == null) return MAX_WEIGHT
-  if (state.dueDate <= today) return MAX_WEIGHT
+  if (state.dueDate < today) {
+    const daysOverdue = (Date.parse(today) - Date.parse(state.dueDate)) / 86_400_000
+    return MAX_WEIGHT + daysOverdue
+  }
+  if (state.dueDate === today) return MAX_WEIGHT
   const daysUntilDue = (Date.parse(state.dueDate) - Date.parse(today)) / 86_400_000
   return 1 / daysUntilDue
 }
@@ -132,17 +134,15 @@ function utcToday(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-function sanitizeCardState(state: CardState, today = utcToday()): CardState {
-  const maxDue = utcAddDays(today, MAX_SRS_INTERVAL_DAYS)
-  const interval = Math.min(Math.max(1, Math.round(state.interval)), MAX_SRS_INTERVAL_DAYS)
-  const dueDate = state.dueDate > maxDue ? maxDue : state.dueDate
-  return interval === state.interval && dueDate === state.dueDate ? state : { ...state, interval, dueDate }
+function sanitizeCardState(state: CardState): CardState {
+  const interval = Math.max(1, Math.round(state.interval))
+  return interval === state.interval ? state : { ...state, interval }
 }
 
-export function sanitizeSrsStore(store: SrsStore, today = utcToday()): SrsStore {
+export function sanitizeSrsStore(store: SrsStore, _today = utcToday()): SrsStore {
   let sanitized = store
   for (const [key, state] of Object.entries(store)) {
-    const nextState = sanitizeCardState(state, today)
+    const nextState = sanitizeCardState(state)
     if (nextState === state) continue
     if (sanitized === store) sanitized = { ...store }
     sanitized[key] = nextState

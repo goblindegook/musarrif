@@ -64,12 +64,6 @@ function testExercise(overrides = {}): Exercise {
   }
 }
 
-function utcAddDays(date: string, days: number): string {
-  const d = new Date(date)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
-}
-
 function localDateKey(date = new Date()): string {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -356,7 +350,7 @@ describe('SRS recording', () => {
     expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
   })
 
-  test('sanitizes oversized persisted SRS state when loading from localStorage', () => {
+  test('keeps oversized persisted SRS state untouched when loading from localStorage', () => {
     const cardKey = 'conjugation:regular:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
@@ -378,18 +372,17 @@ describe('SRS recording', () => {
 
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
     expect(gen).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({
-        [cardKey]: expect.objectContaining({ interval: 365, dueDate: expectedDueDate }),
+        [cardKey]: expect.objectContaining({ interval: 145313, dueDate: '2424-01-30' }),
       }),
       expect.any(Object),
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(stored[cardKey].interval).toBe(365)
-    expect(stored[cardKey].dueDate).toBe(expectedDueDate)
+    expect(stored[cardKey].interval).toBe(145313)
+    expect(stored[cardKey].dueDate).toBe('2424-01-30')
   })
 })
 

@@ -149,18 +149,18 @@ describe('updateCardState', () => {
     expect(result.dueDate).toBe('2026-03-24')
   })
 
-  test('correct answer caps interval at 365 days', () => {
+  test('correct answer does not cap interval or due date', () => {
     const state: CardState = { interval: 300, ef: 2.5, repetitions: 5, dueDate: '2026-03-23' }
     const result = updateCardState(state, 'correct', '2026-03-23')
-    expect(result.interval).toBe(365)
-    expect(result.dueDate).toBe('2027-03-23')
+    expect(result.interval).toBe(750)
+    expect(result.dueDate).toBe('2028-04-11')
   })
 
-  test('pass answer also respects 365-day hard cap', () => {
+  test('pass answer does not cap interval or due date', () => {
     const state: CardState = { interval: 1000, ef: 2.5, repetitions: 5, dueDate: '2424-01-30' }
     const result = updateCardState(state, 'pass', '2026-03-23')
-    expect(result.interval).toBe(365)
-    expect(result.dueDate).toBe('2027-03-23')
+    expect(result.interval).toBe(500)
+    expect(result.dueDate).toBe('2027-08-05')
   })
 })
 
@@ -212,7 +212,7 @@ describe('sanitizeSrsStore', () => {
     expect(Object.keys(result)).toEqual(['conjugation:sound:1:active.past:3ms'])
   })
 
-  test('sanitizes oversized interval and dueDate to one-year cap', () => {
+  test('keeps oversized interval and dueDate values untouched', () => {
     const result = sanitizeRawSrsStore(
       {
         'conjugation:sound:1:active.past:3ms': {
@@ -225,8 +225,8 @@ describe('sanitizeSrsStore', () => {
       '2026-03-23',
     )
 
-    expect(result['conjugation:sound:1:active.past:3ms'].interval).toBe(365)
-    expect(result['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2027-03-23')
+    expect(result['conjugation:sound:1:active.past:3ms'].interval).toBe(145313)
+    expect(result['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2424-01-30')
   })
 
   test('returns empty store for non-object input', () => {
@@ -244,9 +244,16 @@ describe('cardSrsWeight', () => {
     expect(cardSrsWeight(state, '2026-03-23')).toBe(10)
   })
 
-  test('returns MAX_WEIGHT for overdue card', () => {
+  test('returns higher weight for overdue cards than due-today cards', () => {
+    const dueToday: CardState = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' }
     const state: CardState = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-20' }
-    expect(cardSrsWeight(state, '2026-03-23')).toBe(10)
+    expect(cardSrsWeight(state, '2026-03-23')).toBeGreaterThan(cardSrsWeight(dueToday, '2026-03-23'))
+  })
+
+  test('returns progressively higher weight for more overdue cards', () => {
+    const slightlyOverdue: CardState = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-22' }
+    const veryOverdue: CardState = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-20' }
+    expect(cardSrsWeight(veryOverdue, '2026-03-23')).toBeGreaterThan(cardSrsWeight(slightlyOverdue, '2026-03-23'))
   })
 
   test('returns 1/daysUntilDue for not-yet-due card', () => {
