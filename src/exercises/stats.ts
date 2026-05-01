@@ -2,6 +2,12 @@ export type DayStats = { date: Date; correct: number; incorrect: number; passed:
 export type SerializedDayStats = { date: string; correct: number; incorrect: number; passed?: number }
 export const STREAK_DAILY_GOAL = 10
 
+export interface ExerciseResult {
+  date: string
+  correct: number
+  incorrect: number
+}
+
 interface StreakGoalProgress {
   correct: number
   remaining: number
@@ -124,4 +130,17 @@ function offsetDate(dateStr: string, days: number): string {
   const d = new Date(dateStr)
   d.setUTCDate(d.getUTCDate() + days)
   return d.toISOString().slice(0, 10)
+}
+
+export function sanitizeTrackedExercises(data: unknown): readonly ExerciseResult[] {
+  return Array.isArray(data)
+    ? data.filter(
+        (entry): entry is ExerciseResult =>
+          entry != null &&
+          typeof entry === 'object' &&
+          typeof entry.date === 'string' &&
+          Number.isFinite(entry.correct) &&
+          Number.isFinite(entry.incorrect),
+      )
+    : []
 }
