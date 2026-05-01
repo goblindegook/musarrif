@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionStore } from '../exercises/dimensions'
 import { enforcePrerequisites, sanitizeDimensionProfile } from '../exercises/dimensions'
-import { type SrsStore, sanitizeRawSrsStore, sanitizeSrsStore } from '../exercises/srs'
+import { type SrsStore, sanitizeRawSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import { INITIAL_DIMENSION_STORE } from './useDimensionStore'
 import type { Language } from './useI18n'
@@ -29,7 +29,7 @@ export function getUserData() {
   const themePreference = parse<string>(storage.getItem('conjugator:theme')) ?? 'system'
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
-  const srs = sanitizeSrsStore(parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {})
+  const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
   const parsedDimensions = parse<unknown>(storage.getItem('conjugator:dimensions'))
   const rawDimensions = parsedDimensions != null && typeof parsedDimensions === 'object' ? parsedDimensions : {}
   const baseDimensions = { ...INITIAL_DIMENSION_STORE, ...rawDimensions } as DimensionStore

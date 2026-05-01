@@ -82,25 +82,6 @@ describe('getUserData', () => {
     const data = getUserData() as Record<string, unknown>
     expect((data.settings as Record<string, unknown>).exerciseDifficulty).toBeUndefined()
   })
-
-  test('sanitizes persisted SRS entries above one-year cap', () => {
-    localStorage.setItem(
-      'conjugator:srs',
-      JSON.stringify({
-        'conjugation:sound:1:active.past:3ms': {
-          interval: 145313,
-          ef: 2.5,
-          repetitions: 13,
-          dueDate: '2424-01-30',
-        },
-      }),
-    )
-
-    const data = getUserData()
-    const expectedDueDate = utcAddDays(new Date().toISOString().slice(0, 10), 365)
-    expect(data.srs['conjugation:sound:1:active.past:3ms'].interval).toBe(365)
-    expect(data.srs['conjugation:sound:1:active.past:3ms'].dueDate).toBe(expectedDueDate)
-  })
 })
 
 describe('importUserData', () => {
