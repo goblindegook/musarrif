@@ -6,6 +6,7 @@ import {
   getSrsRootType,
   parseCardKey,
   recordAnswer,
+  sanitizeRawSrsStore,
   sanitizeSrsStore,
   updateCardState,
   weightedRandomSrs,
@@ -179,6 +180,57 @@ describe('sanitizeSrsStore', () => {
   test('returns the same store reference for an empty store', () => {
     const store = {}
     expect(sanitizeSrsStore(store, '2026-03-23')).toBe(store)
+  })
+
+  test('keeps only valid card entries from unknown input', () => {
+    const result = sanitizeRawSrsStore({
+      'conjugation:sound:1:active.past:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+      invalid: {
+        interval: 0,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+      missing: {
+        interval: 3,
+        ef: 2.5,
+        repetitions: 2,
+      },
+      malformedDate: {
+        interval: 3,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026/03/29',
+      },
+    })
+
+    expect(Object.keys(result)).toEqual(['conjugation:sound:1:active.past:3ms'])
+  })
+
+  test('sanitizes oversized interval and dueDate to one-year cap', () => {
+    const result = sanitizeRawSrsStore(
+      {
+        'conjugation:sound:1:active.past:3ms': {
+          interval: 145313,
+          ef: 2.5,
+          repetitions: 13,
+          dueDate: '2424-01-30',
+        },
+      },
+      '2026-03-23',
+    )
+
+    expect(result['conjugation:sound:1:active.past:3ms'].interval).toBe(365)
+    expect(result['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2027-03-23')
+  })
+
+  test('returns empty store for non-object input', () => {
+    expect(sanitizeRawSrsStore('nope')).toEqual({})
   })
 })
 

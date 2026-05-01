@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionStore } from '../exercises/dimensions'
 import { enforcePrerequisites, sanitizeDimensionProfile } from '../exercises/dimensions'
-import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
+import { type SrsStore, sanitizeRawSrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import { INITIAL_DIMENSION_STORE } from './useDimensionStore'
 import type { Language } from './useI18n'
@@ -79,26 +79,7 @@ export function importUserData(raw: string): boolean {
       )
     : []
 
-  const rawSrs = payload.srs != null && typeof payload.srs === 'object' ? payload.srs : {}
-  const unboundedSrs: SrsStore = {}
-  for (const [key, rawVal] of Object.entries(rawSrs)) {
-    const val = rawVal as CardState | null
-    if (
-      typeof key === 'string' &&
-      key.length &&
-      val &&
-      Number.isFinite(val.interval) &&
-      val.interval > 0 &&
-      Number.isFinite(val.ef) &&
-      val.ef >= 1.3 &&
-      Number.isInteger(val.repetitions) &&
-      val.repetitions >= 0 &&
-      /^\d{4}-\d{2}-\d{2}$/.test(String(val.dueDate))
-    ) {
-      unboundedSrs[key] = val
-    }
-  }
-  const srs = sanitizeSrsStore(unboundedSrs)
+  const srs = sanitizeRawSrsStore(payload.srs)
 
   // Clamp stale imported levels to current maxima; always reset windows on import.
   const payloadDimensions =

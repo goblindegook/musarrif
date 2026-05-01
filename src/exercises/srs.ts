@@ -150,6 +150,30 @@ export function sanitizeSrsStore(store: SrsStore, today = utcToday()): SrsStore 
   return sanitized
 }
 
+function isCardState(raw: unknown): raw is CardState {
+  if (raw == null || typeof raw !== 'object') return false
+  const state = raw as Partial<CardState>
+  return (
+    Number.isFinite(state.interval) &&
+    Number(state.interval) > 0 &&
+    Number.isFinite(state.ef) &&
+    Number(state.ef) >= 1.3 &&
+    Number.isInteger(state.repetitions) &&
+    Number(state.repetitions) >= 0 &&
+    /^\d{4}-\d{2}-\d{2}$/.test(String(state.dueDate))
+  )
+}
+
+export function sanitizeRawSrsStore(raw: unknown, today = utcToday()): SrsStore {
+  if (raw == null || typeof raw !== 'object') return {}
+  const imported: SrsStore = {}
+  for (const [key, value] of Object.entries(raw)) {
+    if (typeof key !== 'string' || key.length === 0 || !isCardState(value)) continue
+    imported[key] = value
+  }
+  return sanitizeSrsStore(imported, today)
+}
+
 export function recordAnswer(
   store: SrsStore,
   cardKey: string | undefined,
