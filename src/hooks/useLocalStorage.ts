@@ -14,42 +14,41 @@ interface ExerciseResult {
   incorrect: number
 }
 
-function parse<T>(raw: string | null): T | null {
+function parse<T>(raw: string | null, defaultValue: T): T {
   try {
     return JSON.parse(raw ?? '')
   } catch {
-    return null
+    return defaultValue
   }
 }
 
 export function getUserData() {
   const storage = window.localStorage
-  const language = parse<Language>(storage.getItem('conjugator:language')) ?? 'en'
-  const diacriticsPreference = parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference')) ?? 'some'
-  const themePreference = parse<string>(storage.getItem('conjugator:theme')) ?? 'system'
-  const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
-  const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
-  const srs = parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {}
-  const parsedDimensions = parse<unknown>(storage.getItem('conjugator:dimensions'))
-  const rawDimensions = parsedDimensions != null && typeof parsedDimensions === 'object' ? parsedDimensions : {}
-  const baseDimensions = { ...INITIAL_DIMENSION_STORE, ...rawDimensions } as DimensionStore
+  const dimensionStore = {
+    ...INITIAL_DIMENSION_STORE,
+    ...parse<DimensionStore>(storage.getItem('conjugator:dimensions'), INITIAL_DIMENSION_STORE),
+  } as DimensionStore
 
   return {
     version: 1,
-    settings: { language, diacriticsPreference, themePreference },
-    favouriteVerbs,
-    trackedExercises,
-    srs,
+    settings: {
+      language: parse<Language>(storage.getItem('conjugator:language'), 'en'),
+      diacriticsPreference: parse<DiacriticsPreference>(storage.getItem('conjugator:diacriticsPreference'), 'some'),
+      themePreference: parse<string>(storage.getItem('conjugator:theme'), 'system'),
+    },
+    favouriteVerbs: parse<string[]>(storage.getItem('conjugator:favouriteVerbs'), []),
+    trackedExercises: parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily'), []),
+    srs: parse<SrsStore>(storage.getItem('conjugator:srs'), {}),
     dimensions: {
-      ...baseDimensions,
-      profile: enforcePrerequisites(sanitizeDimensionProfile(baseDimensions.profile, INITIAL_DIMENSION_STORE.profile)),
+      ...dimensionStore,
+      profile: enforcePrerequisites(sanitizeDimensionProfile(dimensionStore.profile, INITIAL_DIMENSION_STORE.profile)),
     },
   } as const
 }
 
 export function importUserData(raw: string): boolean {
-  const payload = parse<Record<string, unknown>>(raw)
-  if (payload == null || typeof payload !== 'object') return false
+  const payload = parse<Record<string, unknown>>(raw, {})
+  if (Object.keys.length === 0) return false
 
   const settings =
     payload.settings != null && typeof payload.settings === 'object'
