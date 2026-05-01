@@ -13,7 +13,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write --unsafe .",
     "format": "npm run lint:fix && biome format --write .",
-    "verb": "node scripts/verb.mjs"
+    "verb": "node scripts/verb.mjs",
+    "explain": "tsx scripts/explain.mjs"
   },
   "dependencies": {
     "@pacote/buckwalter": "^0.1.1",
@@ -38,6 +39,7 @@
     "fast-check": "^4.7.0",
     "happy-dom": "^20.9.0",
     "jsdom": "^29.0.2",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vite": "^7.3.1",
     "vite-plugin-pwa": "^1.2.0",
