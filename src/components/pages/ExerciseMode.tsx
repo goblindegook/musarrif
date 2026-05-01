@@ -1,8 +1,8 @@
 import { css, styled } from 'goober'
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import type { DimensionProfile } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
-import { nextExercise } from '../../exercises/scheduler'
+import { isCoveredTriple, type NewCardSession, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
 import {
@@ -27,14 +27,17 @@ import { ShortcutButton } from '../molecules/ShortcutButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
 
 type Props = {
-  generateExercise?: (profile: DimensionProfile, srsStore: SrsStore) => Exercise
+  generateExercise?: (profile: DimensionProfile, srsStore: SrsStore, session: NewCardSession) => Exercise
 }
 
 export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { dir, lang, t } = useI18n()
   const [dimensionProfile, dimensionUnlocks, recordDimensionAnswer, clearDimensionUnlocks] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
-  const [exercise, setExercise] = useState<Exercise>(() => generateExercise(dimensionProfile, srsStore))
+  const sessionRef = useRef<NewCardSession>({ reviews: 0, lastNewAt: -3 })
+  const [exercise, setExercise] = useState<Exercise>(() =>
+    generateExercise(dimensionProfile, srsStore, sessionRef.current),
+  )
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
@@ -51,7 +54,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
-      setExercise(generateExercise(profile, srsStore))
+      setExercise(generateExercise(profile, srsStore, sessionRef.current))
       setAnsweredIndex(null)
       setSkipped(false)
       clearDimensionUnlocks()
@@ -84,6 +87,11 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   const handleAnswer = useCallback(
     (index: number, isCorrect: boolean) => {
+      if (isCoveredTriple(exercise.cardKey, srsStore)) {
+        sessionRef.current = { ...sessionRef.current, reviews: sessionRef.current.reviews + 1 }
+      } else {
+        sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
+      }
       const nextStats = addResult(storedStats, isCorrect)
       const previousStreakGoal = getStreakGoalProgress(storedStats)
       const nextStreakGoal = getStreakGoalProgress(nextStats)
@@ -93,14 +101,19 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       recordDimensionAnswer(exercise.dimensions, isCorrect)
       setStreakExtendedAlert(isCorrect && previousStreakGoal.remaining > 0 && nextStreakGoal.remaining === 0)
     },
-    [exercise, storedStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
+    [exercise, srsStore, storedStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
   )
 
   const handleSkip = useCallback(() => {
+    if (isCoveredTriple(exercise.cardKey, srsStore)) {
+      sessionRef.current = { ...sessionRef.current, reviews: sessionRef.current.reviews + 1 }
+    } else {
+      sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
+    }
     recordSrsAnswer(exercise.cardKey, 'pass')
     updateStats((s) => addPass(s))
     setSkipped(true)
-  }, [exercise, recordSrsAnswer, updateStats])
+  }, [exercise, srsStore, recordSrsAnswer, updateStats])
 
   useEffect(() => {
     if (!isAnswered) return

@@ -179,6 +179,7 @@ describe('ExerciseMode', () => {
       expect(gen).toHaveBeenCalledWith(
         { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
         expect.any(Object),
+        expect.any(Object),
       )
     })
 
@@ -192,7 +193,7 @@ describe('ExerciseMode', () => {
       )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object))
+      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object))
     })
 
     test('calls the generator with the current stored profile when next is clicked', () => {
@@ -207,7 +208,12 @@ describe('ExerciseMode', () => {
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
       fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
-      expect(gen).toHaveBeenNthCalledWith(2, testProfile({ tenses: 2, pronouns: 2 }), expect.any(Object))
+      expect(gen).toHaveBeenNthCalledWith(
+        2,
+        testProfile({ tenses: 2, pronouns: 2 }),
+        expect.any(Object),
+        expect.any(Object),
+      )
     })
   })
 
@@ -378,6 +384,7 @@ describe('SRS recording', () => {
       expect.objectContaining({
         [cardKey]: expect.objectContaining({ interval: 365, dueDate: expectedDueDate }),
       }),
+      expect.any(Object),
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
