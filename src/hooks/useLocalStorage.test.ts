@@ -62,6 +62,22 @@ describe('getUserData', () => {
     expect(data.dimensions.profile.diacritics).toBe(1)
   })
 
+  test('clamps stored dimension profile levels above current maximums', () => {
+    const profile = {
+      ...INITIAL_DIMENSION_PROFILE,
+      tenses: 5,
+      pronouns: 3,
+      diacritics: 2,
+      forms: 9,
+      rootTypes: 5,
+      nominals: 2,
+    }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
+    const data = getUserData()
+    expect(data.dimensions.profile.tenses).toBe(4)
+    expect(data.dimensions.profile.nominals).toBe(2)
+  })
+
   test('does not include exerciseDifficulty in export', () => {
     const data = getUserData() as Record<string, unknown>
     expect((data.settings as Record<string, unknown>).exerciseDifficulty).toBeUndefined()
@@ -99,7 +115,7 @@ describe('importUserData', () => {
     expect(stored.profile.forms).toBe(1)
   })
 
-  test('imports dimension profile with max tenses level (5)', () => {
+  test('imports dimension profile with max tenses level (4)', () => {
     const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 3, forms: 9, rootTypes: 5 }
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
@@ -107,7 +123,7 @@ describe('importUserData', () => {
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile.tenses).toBe(5)
+    expect(stored.profile.tenses).toBe(4)
   })
 
   test('imports dimension profile with high forms level (9)', () => {
@@ -146,14 +162,14 @@ describe('importUserData', () => {
     expect(stored.windows.tenses).toEqual([])
   })
 
-  test('falls back to INITIAL_DIMENSION_STORE for invalid profile', () => {
+  test('clamps oversized imported dimensions while defaulting missing fields', () => {
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       dimensions: { profile: { tenses: 99 } },
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile).toEqual(INITIAL_DIMENSION_PROFILE)
+    expect(stored.profile).toEqual({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
   })
 
   test('accepts payload without dimensions field without error', () => {

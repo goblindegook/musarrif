@@ -8,6 +8,7 @@ import {
   getDimensionUnlocks,
   promoteDimensions,
   recordDimensionAnswer,
+  sanitizeDimensionProfile,
 } from '../exercises/dimensions'
 import { useLocalStorage } from './useLocalStorage'
 
@@ -41,7 +42,10 @@ function isSameProfile(a: DimensionProfile, b: DimensionProfile): boolean {
 export function useDimensionStore(): [DimensionProfile, readonly DimensionUnlock[], RecordDimensionAnswer, () => void] {
   const [rawStore, setRawStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
   const [dimensionUnlocks, setDimensionUnlocks] = useState<readonly DimensionUnlock[]>([])
-  const profile = useMemo(() => enforcePrerequisites(rawStore.profile), [rawStore.profile])
+  const profile = useMemo(
+    () => enforcePrerequisites(sanitizeDimensionProfile(rawStore.profile, INITIAL_DIMENSION_PROFILE)),
+    [rawStore.profile],
+  )
   const store = useMemo(
     () => (isSameProfile(rawStore.profile, profile) ? rawStore : { ...rawStore, profile }),
     [rawStore, profile],

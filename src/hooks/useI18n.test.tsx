@@ -18,12 +18,12 @@ function TranslationProbe() {
 describe('i18n', () => {
   afterEach(() => {
     cleanup()
-    window.localStorage.clear()
+    localStorage.clear()
   })
 
   test('t() applies diacritics preference before returning translated strings', async () => {
-    window.localStorage.setItem('conjugator:language', JSON.stringify('ar'))
-    window.localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+    localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+    localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
 
     render(
       <I18nProvider>

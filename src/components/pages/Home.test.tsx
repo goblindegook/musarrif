@@ -20,7 +20,7 @@ const renderHome = () => {
 
 afterEach(() => {
   document.title = ''
-  window.localStorage.clear()
+  localStorage.clear()
   cleanup()
   vi.restoreAllMocks()
 })

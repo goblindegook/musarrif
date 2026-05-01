@@ -91,12 +91,6 @@ describe('tenseExercise difficulty', () => {
     expect(options.every((o) => UNVOICED_KEYS.has(o))).toBe(true)
   })
 
-  test('options are voiced tense keys (imperative unprefixed) on higher difficulty', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
-    expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
-  })
-
   test('correct answer is the past tense key (random=0)', () => {
     const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer]).toBe('tense.past')
@@ -118,7 +112,7 @@ describe('tenseExercise distractor strategies', () => {
 
   test('all options are voiced tense keys on higher difficulty', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
+    const { options, answer } = verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
     expect(options.every((o) => VOICED_KEYS.has(o))).toBe(true)
     expect(VOICED_KEYS).toContain(options[answer])
   })
@@ -136,7 +130,7 @@ describe('verbTenseExercise with constraints', () => {
   test('uses a valid imperative pronoun when constrained to imperative at pronoun level 0', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const exercise = verbTenseExercise.generate(
-      { ...INITIAL_DIMENSION_PROFILE, tenses: 5 },
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 4 },
       { tense: 'active.imperative' },
     )
     expect(exercise.cardKey).toMatch(/:active\.imperative:2\w+$/)

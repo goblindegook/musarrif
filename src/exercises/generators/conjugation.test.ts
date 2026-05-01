@@ -103,15 +103,15 @@ describe('conjugationExercise difficulty', () => {
   test('tenses:4: promptParams.tense uses unvoiced key (voice not yet unlocked)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4, diacritics: 2 }).promptParams
+      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 3, diacritics: 2 }).promptParams
         ?.tense,
     ).toBe('exercise.conjugation.tense.past')
   })
 
-  test('tenses:5: promptParams.tense uses voiced key for active past (random=0)', () => {
+  test('tenses:4: promptParams.tense uses voiced key for active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 5, diacritics: 2 }).promptParams
+      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4, diacritics: 2 }).promptParams
         ?.tense,
     ).toBe('exercise.conjugation.tense.active.past')
   })
@@ -215,7 +215,7 @@ describe('conjugationExercise with constraints', () => {
     vi.spyOn(dimensions, 'randomVerb').mockReturnValue(getVerbById('lqy-10')!)
 
     const exercise = conjugationExercise.generate(
-      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 3, rootTypes: 5 },
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 2, forms: 3, rootTypes: 5 },
       { rootType: 'defective', form: 10, tense: 'passive.present.subjunctive', pronoun: '2mp' },
     )
 

@@ -10,7 +10,6 @@ const FORM_ORDER: readonly string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '
 const TENSE_ORDER: readonly VerbTense[] = [
   'active.past',
   'active.present.indicative',
-  'active.future',
   'active.present.subjunctive',
   'active.present.jussive',
   'active.imperative',
@@ -18,7 +17,6 @@ const TENSE_ORDER: readonly VerbTense[] = [
   'passive.present.indicative',
   'passive.present.subjunctive',
   'passive.present.jussive',
-  'passive.future',
 ]
 const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
   '1s',
@@ -220,7 +218,7 @@ function possiblePronouns(
 function buildPossibleCards(): readonly PossibleCard[] {
   const allForms = new Set(formPool(9).map((form) => String(form)))
   const allRootTypes = new Set(rootTypesPool(5))
-  const allTenses = tensePool(5)
+  const allTenses = tensePool(4)
   const allPronouns = pronounPool(3)
   const unique = new Map<string, PossibleCard>()
 

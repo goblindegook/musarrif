@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'preact/hooks'
 import type { DimensionStore } from '../exercises/dimensions'
-import { enforcePrerequisites, isValidDimensionProfile } from '../exercises/dimensions'
+import { enforcePrerequisites, sanitizeDimensionProfile } from '../exercises/dimensions'
 import { type CardState, type SrsStore, sanitizeSrsStore } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/letters'
 import { INITIAL_DIMENSION_STORE } from './useDimensionStore'
@@ -30,8 +30,9 @@ export function getUserData() {
   const favouriteVerbs = parse<string[]>(storage.getItem('conjugator:favouriteVerbs')) ?? []
   const trackedExercises = parse<ExerciseResult[]>(storage.getItem('conjugator:exercise:daily')) ?? []
   const srs = sanitizeSrsStore(parse<SrsStore>(storage.getItem('conjugator:srs')) ?? {})
-  const rawDim = parse<DimensionStore>(storage.getItem('conjugator:dimensions')) ?? INITIAL_DIMENSION_STORE
-  const dimensions: DimensionStore = { ...rawDim, profile: enforcePrerequisites(rawDim.profile) }
+  const parsedDimensions = parse<unknown>(storage.getItem('conjugator:dimensions'))
+  const rawDimensions = parsedDimensions != null && typeof parsedDimensions === 'object' ? parsedDimensions : {}
+  const baseDimensions = { ...INITIAL_DIMENSION_STORE, ...rawDimensions } as DimensionStore
 
   return {
     version: 1,
@@ -39,7 +40,10 @@ export function getUserData() {
     favouriteVerbs,
     trackedExercises,
     srs,
-    dimensions,
+    dimensions: {
+      ...baseDimensions,
+      profile: enforcePrerequisites(sanitizeDimensionProfile(baseDimensions.profile, INITIAL_DIMENSION_STORE.profile)),
+    },
   } as const
 }
 
@@ -96,10 +100,14 @@ export function importUserData(raw: string): boolean {
   }
   const srs = sanitizeSrsStore(unboundedSrs)
 
-  // Validate dimensions profile; always reset windows on import
-  const dimensionsProfile = isValidDimensionProfile(payload.dimensions)
-    ? payload.dimensions.profile
-    : INITIAL_DIMENSION_STORE.profile
+  // Clamp stale imported levels to current maxima; always reset windows on import.
+  const payloadDimensions =
+    payload.dimensions != null && typeof payload.dimensions === 'object' ? payload.dimensions : undefined
+  const rawImportedProfile =
+    payloadDimensions != null && 'profile' in payloadDimensions ? payloadDimensions.profile : undefined
+  const dimensionsProfile = enforcePrerequisites(
+    sanitizeDimensionProfile(rawImportedProfile, INITIAL_DIMENSION_STORE.profile),
+  )
 
   const storage = window.localStorage
   storage.setItem('conjugator:language', JSON.stringify(language))

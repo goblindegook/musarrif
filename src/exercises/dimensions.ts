@@ -53,18 +53,16 @@ export function random<T>(arr: readonly T[]): T {
 
 const T0: VerbTense[] = ['active.past']
 const T1: VerbTense[] = [...T0, 'active.present.indicative']
-const T2: VerbTense[] = [...T1, 'active.future']
-const T3: VerbTense[] = [...T2, 'active.present.subjunctive', 'active.present.jussive']
-const T4: VerbTense[] = [...T3, 'active.imperative']
-const T5: VerbTense[] = [
-  ...T4,
+const T2: VerbTense[] = [...T1, 'active.present.subjunctive', 'active.present.jussive']
+const T3: VerbTense[] = [...T2, 'active.imperative']
+const T4: VerbTense[] = [
+  ...T3,
   'passive.past',
   'passive.present.indicative',
   'passive.present.subjunctive',
   'passive.present.jussive',
-  'passive.future',
 ]
-const TENSE_POOLS = [T0, T1, T2, T3, T4, T5] as const
+const TENSE_POOLS = [T0, T1, T2, T3, T4] as const
 
 export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
   const available = getAvailableParadigms(verb)
@@ -135,7 +133,6 @@ const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]
   tenses: [
     [],
     ['exercise.unlock.tenseGroup.presentIndicative'],
-    ['exercise.unlock.tenseGroup.future'],
     ['exercise.unlock.tenseGroup.subjunctiveJussive'],
     ['exercise.unlock.tenseGroup.imperative'],
     ['exercise.unlock.tenseGroup.passive'],
@@ -217,6 +214,29 @@ const MAX_LEVELS: Record<DimensionKey, number> = {
   forms: FORM_POOLS.length - 1,
   rootTypes: ROOT_TYPE_POOLS.length - 1,
   nominals: NOMINAL_UNLOCK_KEYS.length - 1,
+}
+
+function sanitizeDimensionLevel<T extends DimensionKey>(
+  rawProfile: Partial<Record<DimensionKey, unknown>>,
+  dimension: T,
+  fallback: DimensionProfile[T],
+): DimensionProfile[T] {
+  const value = rawProfile[dimension]
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) return fallback
+  return clamp(value, 0, MAX_LEVELS[dimension]) as DimensionProfile[T]
+}
+
+export function sanitizeDimensionProfile(raw: unknown, fallback: DimensionProfile): DimensionProfile {
+  if (raw == null || typeof raw !== 'object') return fallback
+  const rawProfile = raw as Partial<Record<DimensionKey, unknown>>
+  return {
+    tenses: sanitizeDimensionLevel(rawProfile, 'tenses', fallback.tenses),
+    pronouns: sanitizeDimensionLevel(rawProfile, 'pronouns', fallback.pronouns),
+    diacritics: sanitizeDimensionLevel(rawProfile, 'diacritics', fallback.diacritics),
+    forms: sanitizeDimensionLevel(rawProfile, 'forms', fallback.forms),
+    rootTypes: sanitizeDimensionLevel(rawProfile, 'rootTypes', fallback.rootTypes),
+    nominals: sanitizeDimensionLevel(rawProfile, 'nominals', fallback.nominals),
+  }
 }
 
 export function isValidDimensionProfile(raw: unknown): raw is { profile: DimensionProfile } {

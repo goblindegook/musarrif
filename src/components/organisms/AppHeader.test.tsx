@@ -18,7 +18,7 @@ const renderHeader = (path = '/#/verbs') => {
 
 afterEach(() => {
   cleanup()
-  window.localStorage.clear()
+  localStorage.clear()
   vi.restoreAllMocks()
 })
 
@@ -73,12 +73,9 @@ it('shows export and import buttons in the settings panel', () => {
 })
 
 it('exports user data in JSON format', () => {
-  window.localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
-  window.localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
-  window.localStorage.setItem(
-    'conjugator:exercise:daily',
-    JSON.stringify([{ date: '2026-03-21', correct: 4, incorrect: 1 }]),
-  )
+  localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
+  localStorage.setItem('conjugator:exercise:daily', JSON.stringify([{ date: '2026-03-21', correct: 4, incorrect: 1 }]))
 
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))
@@ -90,7 +87,7 @@ it('exports user data in JSON format', () => {
     exportedHref = this.href
   })
 
-  window.localStorage.setItem('conjugator:language', JSON.stringify('pt'))
+  localStorage.setItem('conjugator:language', JSON.stringify('pt'))
   fireEvent.click(screen.getByText('Export data'))
 
   expect(exportedDownload).toBe('musarrif-data.json')
@@ -138,10 +135,10 @@ it('imports user data from JSON and updates local storage', async () => {
     await user.upload(input, file)
   })
 
-  await waitFor(() => expect(window.localStorage.getItem('conjugator:language')).toBe(JSON.stringify('it')))
-  expect(window.localStorage.getItem('conjugator:diacriticsPreference')).toBe(JSON.stringify('all'))
-  expect(window.localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['bdl-1']))
-  expect(window.localStorage.getItem('conjugator:exercise:daily')).toBe(
+  await waitFor(() => expect(localStorage.getItem('conjugator:language')).toBe(JSON.stringify('it')))
+  expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe(JSON.stringify('all'))
+  expect(localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['bdl-1']))
+  expect(localStorage.getItem('conjugator:exercise:daily')).toBe(
     JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3 }]),
   )
   expect(reloadSpy).toHaveBeenCalledTimes(1)

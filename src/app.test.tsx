@@ -27,7 +27,7 @@ const navigateTo = (path: string) => {
 
 beforeEach(() => {
   cleanup()
-  window.localStorage.clear()
+  localStorage.clear()
 })
 
 afterEach(() => {
@@ -299,7 +299,7 @@ describe('Recently viewed', () => {
   })
 
   it('does not crash when localStorage contains stale verb IDs', () => {
-    window.localStorage.setItem('conjugator:recentVerbs', JSON.stringify(['nonexistent-99', 'sfr-1']))
+    localStorage.setItem('conjugator:recentVerbs', JSON.stringify(['nonexistent-99', 'sfr-1']))
     expect(() => renderApp('/#/verbs/ktb-1')).not.toThrow()
   })
 

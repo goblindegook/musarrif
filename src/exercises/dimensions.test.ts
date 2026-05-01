@@ -188,7 +188,7 @@ describe('enforcePrerequisites', () => {
       enforcePrerequisites({
         ...INITIAL_DIMENSION_PROFILE,
         diacritics: 2,
-        tenses: 5,
+        tenses: 4,
         pronouns: 3,
         forms: 9,
         rootTypes: 5,
@@ -209,8 +209,8 @@ describe('enforcePrerequisites', () => {
     expect(result.diacritics).toBe(1)
   })
 
-  test('keeps tenses at 5 even when forms < max', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 1, forms: 8 }).tenses).toBe(5)
+  test('keeps tenses at 4 even when forms < max', () => {
+    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 8 }).tenses).toBe(4)
   })
 })
 
@@ -369,10 +369,10 @@ describe('promoteDimensions', () => {
   test('does not promote beyond max level', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 3 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 3 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
-    ).toBe(5)
+    ).toBe(4)
   })
 
   test('nominals blocked at level 0 until tenses >= 2', () => {
@@ -540,7 +540,7 @@ describe('promoteDimensions', () => {
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 9 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
-    ).toBe(5)
+    ).toBe(4)
   })
 
   test('pronoun demotion does not re-lock unlocked tenses, forms, or root types', () => {
@@ -574,7 +574,7 @@ describe('promoteDimensions', () => {
         profile: {
           ...INITIAL_DIMENSION_PROFILE,
           diacritics: 1,
-          tenses: 5,
+          tenses: 4,
           pronouns: 3,
           forms: 9,
           rootTypes: 5,
@@ -605,20 +605,14 @@ describe('getDimensionUnlocks', () => {
     ).toEqual([
       {
         dimension: 'tenses',
-        items: ['exercise.unlock.tenseGroup.presentIndicative', 'exercise.unlock.tenseGroup.future'],
+        items: ['exercise.unlock.tenseGroup.presentIndicative', 'exercise.unlock.tenseGroup.subjunctiveJussive'],
       },
     ])
   })
 
-  test('returns only future when advancing one level from present to future', () => {
-    expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 1 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
-    ).toEqual([{ dimension: 'tenses', items: ['exercise.unlock.tenseGroup.future'] }])
-  })
-
   test('returns passive unlock when advancing to highest tense level', () => {
     expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 5 }),
+      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 3 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 4 }),
     ).toEqual([{ dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passive'] }])
   })
 

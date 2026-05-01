@@ -36,7 +36,7 @@ export const verbTenseExercise = defineExercise(
       dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
-      options: options.map((t) => tenseKey(t, profile.tenses >= 5)),
+      options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
       answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
       explanations: options.map((_, index) =>

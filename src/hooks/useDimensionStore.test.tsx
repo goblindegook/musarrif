@@ -1,5 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact'
-import { h } from 'preact'
+import { act, cleanup, renderHook, waitFor } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { useDimensionStore } from './useDimensionStore'
 
@@ -31,6 +30,35 @@ afterEach(() => {
 })
 
 describe('useDimensionStore', () => {
+  test('clamps stored profile levels above current maximums and persists the sanitized profile', async () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          tenses: 5,
+          pronouns: 3,
+          forms: 9,
+          rootTypes: 5,
+          diacritics: 2,
+          nominals: 2,
+        },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }),
+    )
+
+    const { result } = renderHook(() => useDimensionStore())
+
+    expect(result.current[0].tenses).toBe(4)
+    expect(result.current[0].nominals).toBe(2)
+
+    await waitFor(() => {
+      const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
+      expect(stored.profile.tenses).toBe(4)
+      expect(stored.profile.nominals).toBe(2)
+    })
+  })
+
   test('enforces prerequisites on stored profile and persists the enforced profile', async () => {
     localStorage.setItem(
       'conjugator:dimensions',
@@ -44,14 +72,10 @@ describe('useDimensionStore', () => {
       }),
     )
 
-    function Probe() {
-      const [profile] = useDimensionStore()
-      return h('div', {}, `${profile.tenses}-${profile.nominals}`)
-    }
+    const { result } = renderHook(() => useDimensionStore())
 
-    render(h(Probe, {}))
-
-    expect(screen.getByText('1-0')).toBeInTheDocument()
+    expect(result.current[0].tenses).toBe(1)
+    expect(result.current[0].nominals).toBe(0)
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
@@ -76,53 +100,31 @@ describe('useDimensionStore', () => {
       }),
     )
 
-    function Probe() {
-      const [profile, unlocks, recordAnswer] = useDimensionStore()
-      return (
-        <div>
-          <button type="button" onClick={() => recordAnswer(['forms', 'rootTypes', 'diacritics'], true)}>
-            record
-          </button>
-          <span>{profile.forms}</span>
-          <span>{unlocks.map((unlock) => unlock.items.join('|')).join(',')}</span>
-        </div>
-      )
-    }
+    const { result } = renderHook(() => useDimensionStore())
 
-    render(<Probe />)
-
-    fireEvent.click(screen.getByText('record'))
+    act(() => {
+      result.current[2](['forms', 'rootTypes', 'diacritics'], true)
+    })
 
     await waitFor(() => {
-      expect(screen.getByText('1')).toBeInTheDocument()
-      expect(screen.getByText('exercise.unlock.form.2')).toBeInTheDocument()
+      expect(result.current[0].forms).toBe(1)
+      expect(result.current[1].some((unlock) => unlock.items.includes('exercise.unlock.form.2'))).toBe(true)
     })
   })
 
   test('records incorrect answers without unlocks and keeps profile unchanged', async () => {
-    function Probe() {
-      const [profile, unlocks, recordAnswer] = useDimensionStore()
-      return (
-        <div>
-          <button type="button" onClick={() => recordAnswer(['forms'], false)}>
-            record wrong
-          </button>
-          <span>{`forms:${profile.forms}`}</span>
-          <span>{`unlocks:${unlocks.length}`}</span>
-        </div>
-      )
-    }
+    const { result } = renderHook(() => useDimensionStore())
 
-    render(<Probe />)
-
-    fireEvent.click(screen.getByText('record wrong'))
+    act(() => {
+      result.current[2](['forms'], false)
+    })
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
       expect(stored.profile.forms).toBe(0)
       expect(stored.windows.forms).toEqual([false])
-      expect(screen.getByText('forms:0')).toBeInTheDocument()
-      expect(screen.getByText('unlocks:0')).toBeInTheDocument()
+      expect(result.current[0].forms).toBe(0)
+      expect(result.current[1]).toHaveLength(0)
     })
   })
 })

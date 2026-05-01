@@ -34,7 +34,7 @@ describe('nextExercise', () => {
 
     const keys = Array.from(
       { length: 20 },
-      () => nextExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 2 }, store, session).cardKey,
+      () => nextExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 1 }, store, session).cardKey,
     )
 
     expect(keys).not.toContain('verbTense:sound:1:active.present.subjunctive:3ms')
@@ -53,7 +53,7 @@ describe('nextExercise', () => {
     const session = { reviews: 0, lastNewAt: 0 }
 
     const exercise = nextExercise(
-      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 9, rootTypes: 5 },
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 2, forms: 9, rootTypes: 5 },
       store,
       session,
     )

@@ -29,7 +29,7 @@ const renderConjugationMode = ({ verbId, voice, tense, mood }: ConjugationModeRe
 
 afterEach(() => {
   document.title = ''
-  window.localStorage.clear()
+  localStorage.clear()
   cleanup()
   vi.restoreAllMocks()
 })
@@ -53,7 +53,7 @@ test('shows translation subtitle for corpus verb with known translation', () => 
 })
 
 test('shows multiple masdars with a mimi label', () => {
-  window.localStorage.setItem('conjugator:diacriticsPreference', 'all')
+  localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderConjugationMode({ verbId: 'wEd-1' })
 
   const detail = screen.getByText('Verbal nouns').parentElement!
