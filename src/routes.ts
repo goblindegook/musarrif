@@ -1,6 +1,5 @@
 import { createRouting } from './hooks/useRouting'
-import type { Mood, NonPresentTense, Voice } from './paradigms/tense'
-import { isMood, isTense, isVoice } from './paradigms/tense'
+import type { Mood, NonPresentTense, Tense, Voice } from './paradigms/tense'
 
 type AppRoute =
   | readonly ['verbs']
@@ -11,7 +10,9 @@ type AppRoute =
   | readonly ['verbs', verbId: string, voice: 'active', tense: 'imperative']
   | readonly ['test']
 
-const parse = (segments: readonly string[]): AppRoute => {
+export const { Route, Router, RoutingProvider, useRouting } = createRouting({ parse })
+
+function parse(segments: readonly string[]): AppRoute {
   if (!segments.at(0)) return ['verbs']
   if (segments.at(0) === 'test') return ['test']
   if (segments.at(0) !== 'verbs') return parse(segments.slice(1))
@@ -35,4 +36,20 @@ const parse = (segments: readonly string[]): AppRoute => {
   return ['verbs', verbId, voice, tense]
 }
 
-export const { Route, Router, RoutingProvider, useRouting } = createRouting({ parse })
+const VOICES = new Set<Voice>(['active', 'passive'])
+
+function isVoice(value: unknown): value is Voice {
+  return VOICES.has(value as Voice)
+}
+
+const TENSES = new Set<Tense>(['past', 'present', 'future', 'imperative'])
+
+function isTense(value: unknown): value is Tense {
+  return TENSES.has(value as Tense)
+}
+
+const MOODS = new Set<Mood>(['indicative', 'subjunctive', 'jussive'])
+
+function isMood(value: unknown): value is Mood {
+  return MOODS.has(value as Mood)
+}

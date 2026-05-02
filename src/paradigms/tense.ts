@@ -20,19 +20,3 @@ export const ALL_TENSES: VerbTense[] = [
   'passive.present.jussive',
   'passive.future',
 ]
-
-const VOICES = new Set<Voice>(['active', 'passive'])
-const TENSES = new Set<Tense>(['past', 'present', 'future', 'imperative'])
-const MOODS = new Set<Mood>(['indicative', 'subjunctive', 'jussive'])
-
-export function isVoice(value: unknown): value is Voice {
-  return VOICES.has(value as Voice)
-}
-
-export function isTense(value: unknown): value is Tense {
-  return TENSES.has(value as Tense)
-}
-
-export function isMood(value: unknown): value is Mood {
-  return MOODS.has(value as Mood)
-}
