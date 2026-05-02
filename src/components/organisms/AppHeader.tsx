@@ -14,7 +14,6 @@ import { Modal } from '../molecules/Modal'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 
-const MODES = ['verbs', 'test'] as const
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
 
@@ -59,7 +58,7 @@ export const AppHeader = () => {
         </TitleGroup>
         <RightGroup>
           <ModeToggle
-            activeMode={MODES.indexOf(route[0])}
+            activeMode={route[0] === 'test' ? 1 : 0}
             labels={[t('mode.conjugate'), t('mode.exercise')]}
             icons={[<ConjugateIcon />, <ExerciseIcon />]}
             ariaLabel={t('mode.label')}

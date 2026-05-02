@@ -2,17 +2,529 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="description" content="Arabic verb conjugator for Forms I–X. Full active and passive paradigms, all tenses and moods, masdar and participles, plus adaptive spaced-repetition drills." />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://musarrif.com/" />
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://musarrif.com/" />
+    <meta property="og:site_name" content="Muṣarrif" />
+    <meta property="og:title" content="Muṣarrif — Arabic Verb Conjugator" />
+    <meta
+      property="og:description"
+      content="Muṣarrif covers every Arabic verb in Forms I–X — full conjugation tables, active and passive voice, masdar, participles, and adaptive drills."
+    />
+    <meta property="og:image" content="https://musarrif.com/icon.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Muṣarrif — Arabic Verb Conjugator" />
+    <meta
+      name="twitter:description"
+      content="Muṣarrif covers every Arabic verb in Forms I–X — full conjugation tables, active and passive voice, masdar, participles, and adaptive drills."
+    />
+    <meta name="twitter:image" content="https://musarrif.com/icon.png" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="theme-color" content="#f5f4ee" />
-    <title>Muṣarrif</title>
+    <title>Muṣarrif — Arabic Verb Conjugator</title>
+    <style>
+      .landing-shell {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 6rem 0.75rem 3.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .landing-topbar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        flex-wrap: wrap;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: radial-gradient(
+          circle at top,
+          var(--color-bg-gradient-start) 0%,
+          var(--color-bg-gradient-mid) 60%,
+          var(--color-bg-gradient-end) 100%
+        );
+        padding: 1rem 0.75rem;
+        box-shadow: var(--shadow-interactive);
+        transition: padding 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .landing-topbar-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        gap: 1rem;
+      }
+
+      .landing-title-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.15rem;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .landing-eyebrow {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.78rem;
+        color: var(--color-text-emphasis);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .landing-title {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 1.3rem;
+        color: var(--color-text-tertiary);
+        line-height: 1.2;
+        font-weight: 500;
+      }
+
+      .landing-main {
+        width: 100%;
+        max-width: 840px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1.25rem, 3vw, 1.75rem);
+      }
+
+      .landing-panel {
+        position: relative;
+        background: var(--color-bg-surface);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        box-shadow: var(--shadow-elevated);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .landing-panel--hero {
+        padding: 1.5rem;
+      }
+
+      .landing-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .landing-copy {
+        margin: 0;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+
+      .landing-subtitle {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.25rem;
+        text-wrap: balance;
+      }
+
+      .landing-cta {
+        position: relative;
+        width: 100%;
+        display: inline-block;
+        text-align: center;
+        padding: 0.85rem 1.5rem;
+        border-radius: 0.75rem;
+        border: 2px solid var(--color-text-tertiary);
+        background: var(--color-text-tertiary);
+        color: var(--color-bg-surface);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+        outline: none;
+      }
+
+      .landing-cta:hover {
+        background: var(--color-bg-button-primary-hover);
+        border-color: var(--color-bg-button-primary-hover);
+        color: var(--color-bg-surface);
+      }
+
+      .landing-cta:active {
+        transform: scale(0.96);
+      }
+
+      .landing-cta:focus-visible {
+        outline: 3px solid var(--color-focus-outline);
+        outline-offset: 2px;
+        border-color: var(--color-accent);
+      }
+
+      .landing-list {
+        margin: 0;
+        padding-inline-start: 1.1rem;
+      }
+
+      .landing-list li + li {
+        margin-top: 0.55rem;
+      }
+
+      .landing-copy-muted {
+        margin: 0;
+        color: var(--color-text-secondary);
+      }
+
+      .landing-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 960px) {
+        .landing-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .landing-grid .landing-panel:last-child {
+          grid-column: 1 / -1;
+        }
+      }
+
+      @media (min-width: 480px) {
+        .landing-shell {
+          padding: 6rem 1.25rem 3.5rem;
+        }
+
+        .landing-topbar {
+          padding: 1rem;
+        }
+
+        .landing-panel {
+          border-radius: 1.25rem;
+          padding: 1rem 1.25rem;
+        }
+
+        .landing-panel--hero {
+          padding: 2rem;
+        }
+      }
+
+      @media (min-width: 960px) {
+        .landing-shell {
+          padding: 2rem 1.5rem 5rem;
+        }
+
+        .landing-topbar {
+          position: static;
+          background: transparent;
+          box-shadow: none;
+          padding: 0 0 2rem;
+        }
+
+        .landing-title {
+          font-size: clamp(1.9rem, 3vw, 2.4rem);
+          line-height: 1.5;
+        }
+
+        .landing-panel--hero {
+          padding: 2.5rem 3rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .landing-topbar,
+        .landing-cta {
+          transition: none;
+        }
+      }
+
+      /* --- Landing main redesign --- */
+
+      @keyframes arabic-reveal {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .landing-arabic-showcase {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: clamp(2.5rem, 8vw, 5rem);
+        padding: 0.25rem 0 1.75rem;
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: 0.25rem;
+      }
+
+      .landing-arabic-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .landing-arabic-word {
+        font-family: "Noto Sans Arabic", system-ui, sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.3rem);
+        font-weight: 400;
+        line-height: 1.7;
+        color: var(--color-text-secondary);
+        direction: rtl;
+        unicode-bidi: isolate;
+        display: block;
+      }
+
+      .landing-arabic-word--hero {
+        font-size: clamp(3rem, 12vw, 5.5rem);
+        color: var(--color-text-emphasis);
+        font-weight: 500;
+      }
+
+      .landing-arabic-tag {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--color-text-muted);
+      }
+
+      .landing-arabic-form:nth-child(1) .landing-arabic-word {
+        animation: arabic-reveal 500ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+      }
+
+      .landing-arabic-form:nth-child(2) .landing-arabic-word {
+        animation: arabic-reveal 500ms cubic-bezier(0.22, 1, 0.36, 1) 0ms both;
+      }
+
+      .landing-arabic-form:nth-child(3) .landing-arabic-word {
+        animation: arabic-reveal 500ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+      }
+
+      .landing-features {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(0.75rem, 2vw, 1rem);
+      }
+
+      .landing-features .landing-panel {
+        gap: 0;
+        box-shadow: var(--shadow-surface);
+      }
+
+      .landing-feature-eyebrow {
+        margin: 0 0 0.25rem;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--color-text-emphasis);
+        font-weight: 500;
+      }
+
+      .landing-feature-heading {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        line-height: 1.3;
+      }
+
+      .landing-feature-body {
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.65;
+        color: var(--color-text-secondary);
+      }
+
+      .landing-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1.75rem 1rem 0;
+        text-align: center;
+      }
+
+      .landing-footer::before {
+        content: '';
+        display: block;
+        width: 1.75rem;
+        height: 1px;
+        background: var(--color-accent);
+        margin-bottom: 0.5rem;
+      }
+
+      .landing-footer-audience {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--color-text-secondary);
+        line-height: 1.65;
+      }
+
+      .landing-footer-meta {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+      }
+
+      .landing-footer-link {
+        color: var(--color-text-emphasis);
+        text-decoration-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+        text-underline-offset: 2px;
+        transition: text-decoration-color 150ms ease;
+      }
+
+      .landing-footer-link:hover {
+        text-decoration-color: var(--color-accent);
+      }
+
+      @media (min-width: 640px) {
+        .landing-features {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .landing-mode-nav {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg-surface);
+        padding: 0.25rem;
+        border-radius: 0.95rem;
+        box-shadow: var(--shadow-surface);
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .landing-mode-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        flex: 1;
+        padding: 0.45rem 0.75rem;
+        border-radius: 0.7rem;
+        border: 1px solid transparent;
+        text-decoration: none;
+        font-size: 0.75rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-text-secondary);
+        transition:
+          color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .landing-mode-btn:hover {
+        background: var(--color-bg-accent);
+        border-color: var(--color-accent);
+        color: var(--color-text-emphasis);
+      }
+
+      .landing-mode-btn:focus-visible {
+        outline: 3px solid var(--color-focus-outline);
+        outline-offset: 2px;
+        border-color: var(--color-accent);
+      }
+
+      .landing-mode-btn svg {
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .landing-arabic-word {
+          animation: none;
+        }
+        .landing-mode-btn {
+          transition: none;
+        }
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Muṣarrif",
+        "url": "https://musarrif.com/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "inLanguage": ["en", "it", "pt-PT", "ar"],
+        "description": "Arabic verb conjugator for Forms I–X. Full active and passive paradigms, all tenses and moods, masdar and participles, plus adaptive spaced-repetition drills."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Muṣarrif?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Muṣarrif is a web app for studying Arabic verb conjugation. It provides complete conjugation tables for Arabic verbs in Forms I–X, covering active and passive voice, all tenses and moods, and nominal derivations including masdar and participles. An adaptive exercise mode reinforces recognition through spaced repetition."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which Arabic verb forms does Muṣarrif support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Muṣarrif covers Arabic verb Forms I through X. For each form it provides full active and passive paradigms across past, present, future, and imperative tenses, with all 13 pronoun forms. Nominal derivations — masdar, active participle, and passive participle — are included where applicable."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I practice Arabic verb conjugation with exercises?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Muṣarrif has an adaptive exercise mode that uses spaced repetition to drill Arabic verb conjugation, morphology, and root recognition. Difficulty adjusts automatically based on your accuracy, progressively unlocking harder tenses, pronouns, and root types."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Muṣarrif work on mobile?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Muṣarrif is a Progressive Web App (PWA) that works on desktop and mobile browsers and can be installed for offline use."
+            }
+          }
+        ]
+      }
+    </script>
     <script>
       (() => {
         const stored = localStorage.getItem('conjugator:theme');
@@ -29,7 +541,96 @@
     </script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="landing-shell" lang="en" dir="ltr">
+        <header class="landing-topbar">
+          <div class="landing-topbar-header">
+            <div class="landing-title-group">
+              <p class="landing-eyebrow">Arabic Verb Conjugator</p>
+              <h1 class="landing-title">Muṣarrif</h1>
+            </div>
+            <nav class="landing-mode-nav" aria-label="Mode">
+              <a class="landing-mode-btn" href="#/verbs">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="2" y="4" width="20" height="3" rx="1" />
+                  <rect x="2" y="10.5" width="14" height="3" rx="1" />
+                  <rect x="2" y="17" width="17" height="3" rx="1" />
+                </svg>
+                Conjugate
+              </a>
+              <a class="landing-mode-btn" href="#/test">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </svg>
+                Exercise
+              </a>
+            </nav>
+          </div>
+        </header>
+        <main class="landing-main">
+          <section class="landing-panel landing-panel--hero">
+            <div class="landing-arabic-showcase" aria-label="Forms of the verb ṣarrafa — to conjugate">
+              <div class="landing-arabic-form">
+                <span class="landing-arabic-word" lang="ar">صَرَّفَ</span>
+                <span class="landing-arabic-tag">past</span>
+              </div>
+              <div class="landing-arabic-form">
+                <span class="landing-arabic-word landing-arabic-word--hero" lang="ar">مُصَرِّف</span>
+                <span class="landing-arabic-tag">active participle</span>
+              </div>
+              <div class="landing-arabic-form">
+                <span class="landing-arabic-word" lang="ar">يُصَرِّفُ</span>
+                <span class="landing-arabic-tag">present</span>
+              </div>
+            </div>
+            <div class="landing-stack">
+              <p class="landing-copy">
+                A precise reference and drill companion for Arabic verb conjugation — Forms I through X, active and
+                passive voice, every tense and mood, masdar, and participles.
+              </p>
+              <a class="landing-cta" href="#/verbs">Open Muṣarrif</a>
+            </div>
+          </section>
+
+          <div class="landing-features">
+            <section class="landing-panel">
+              <p class="landing-feature-eyebrow">Paradigms</p>
+              <h2 class="landing-feature-heading">Full conjugation tables</h2>
+              <p class="landing-feature-body">
+                Active and passive voice, past, present, future, and imperative — across all 13 pronoun forms for
+                Forms I–X.
+              </p>
+            </section>
+            <section class="landing-panel">
+              <p class="landing-feature-eyebrow">Nominals</p>
+              <h2 class="landing-feature-heading">Masdar &amp; participles</h2>
+              <p class="landing-feature-body">
+                Masdar, active participle, and passive participle for every root type: sound, hollow, defective,
+                doubled, and hamzated.
+              </p>
+            </section>
+            <section class="landing-panel">
+              <p class="landing-feature-eyebrow">Exercise</p>
+              <h2 class="landing-feature-heading">Adaptive drills</h2>
+              <p class="landing-feature-body">
+                Spaced repetition across conjugation, morphology, and root recognition — difficulty adapts as your
+                accuracy improves.
+              </p>
+            </section>
+          </div>
+
+          <footer class="landing-footer">
+            <p class="landing-footer-audience">
+              For independent Arabic learners, textbook students, and teachers who need a lightweight, reliable
+              conjugation reference.
+            </p>
+            <p class="landing-footer-meta">
+              Open source on <a class="landing-footer-link" href="https://github.com/goblindegook/musarrif">GitHub</a>.
+            </p>
+          </footer>
+        </main>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

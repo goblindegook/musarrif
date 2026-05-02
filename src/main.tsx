@@ -1,18 +1,40 @@
 import { setup } from 'goober'
 import { h, render } from 'preact'
-import { App } from './app'
-import { I18nProvider } from './hooks/useI18n'
-import { RoutingProvider } from './hooks/useRouting'
 import './index.css'
 
 setup(h)
 
-render(
-  <RoutingProvider>
-    <I18nProvider>
-      <App />
-    </I18nProvider>
-  </RoutingProvider>,
-  // biome-ignore lint/style/noNonNullAssertion: element exists
-  document.getElementById('app')!,
-)
+const appRoot = document.getElementById('app')
+let mounted = false
+let mounting: Promise<void> | null = null
+
+const hasAppRoute = () => window.location.hash.startsWith('#/')
+
+const mountApp = () => {
+  if (mounted || mounting != null || appRoot == null) return
+
+  mounting = (async () => {
+    const [{ App }, { I18nProvider }, { RoutingProvider }] = await Promise.all([
+      import('./app'),
+      import('./hooks/useI18n'),
+      import('./hooks/useRouting'),
+    ])
+
+    render(
+      <RoutingProvider>
+        <I18nProvider>
+          <App />
+        </I18nProvider>
+      </RoutingProvider>,
+      appRoot,
+    )
+
+    mounted = true
+    mounting = null
+  })()
+}
+
+if (hasAppRoute()) mountApp()
+window.addEventListener('hashchange', () => {
+  if (hasAppRoute()) mountApp()
+})
