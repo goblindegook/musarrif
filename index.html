@@ -508,6 +508,9 @@
           transition: none;
         }
       }
+      html[data-app-route] .landing-shell {
+        display: none;
+      }
     </style>
     <script type="application/ld+json">
       {
@@ -572,6 +575,9 @@
         const themeColorMeta = document.querySelector('meta[name="theme-color"]');
         if (themeColorMeta) {
           themeColorMeta.setAttribute('content', theme === 'dark' ? '#1c1a14' : '#f5f4ee');
+        }
+        if (window.location.hash.startsWith('#/')) {
+          document.documentElement.setAttribute('data-app-route', '');
         }
       })();
     </script>
