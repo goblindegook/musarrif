@@ -17,10 +17,10 @@ test('renders the first matching route', () => {
 
   render(
     <Router route={route}>
-      <Route when={(currentRoute) => currentRoute[0] === 'home'}>
+      <Route path="/home">
         <div>HOME</div>
       </Route>
-      <Route when={(currentRoute) => currentRoute[0] === 'test'}>
+      <Route path="/test">
         <div>TEST</div>
       </Route>
       <Route>
@@ -37,7 +37,7 @@ test('renders fallback route when no matcher matches', () => {
 
   render(
     <Router route={route}>
-      <Route when={(currentRoute) => currentRoute[0] === 'home'}>
+      <Route path="/home">
         <div>HOME</div>
       </Route>
       <Route>
@@ -54,9 +54,7 @@ test('supports render-function children and passes route value', () => {
 
   render(
     <Router route={route}>
-      <Route when={(currentRoute) => currentRoute[0] === 'article'}>
-        {(currentRoute) => <div>ARTICLE:{currentRoute[1]}</div>}
-      </Route>
+      <Route path="/article/:id">{({ id }) => <div>ARTICLE:{id}</div>}</Route>
     </Router>,
   )
 
@@ -80,7 +78,7 @@ test('renders nothing when there is no match and no fallback', () => {
 
   const { container } = render(
     <Router route={route}>
-      <Route when={(currentRoute) => currentRoute[0] === 'home'}>
+      <Route path="/home">
         <div>HOME</div>
       </Route>
     </Router>,

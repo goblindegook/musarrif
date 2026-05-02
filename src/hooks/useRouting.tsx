@@ -5,6 +5,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/ho
 type RouteChildren<TRoute> = ComponentChildren | ((route: TRoute) => ComponentChildren)
 
 type NormalizePath<Path extends string> = Path extends `/${infer Rest}` ? Rest : Path
+
 type SplitPath<Path extends string> =
   NormalizePath<Path> extends `${infer Segment}/${infer Rest}`
     ? [Segment, ...SplitPath<Rest>]
@@ -27,24 +28,12 @@ type RouteParamsForPath<
     ? Record<never, never>
     : never
 
-type InferPathParams<TRoute extends readonly (string | undefined)[], Path extends string> = TRoute extends TRoute
-  ? RouteParamsForPath<TRoute, SplitPath<Path>>
-  : never
-
 interface BaseRouteProps<TRoute> {
   children: RouteChildren<TRoute>
 }
 
-interface BooleanRouteProps<TRoute> extends BaseRouteProps<TRoute> {
-  when?: (route: TRoute) => boolean
-}
-
-interface GuardedRouteProps<TRoute, TMatched extends TRoute> extends BaseRouteProps<TMatched> {
-  when: (route: TRoute) => route is TMatched
-}
-
 interface PathRouteProps<TRoute extends readonly (string | undefined)[], Path extends string>
-  extends BaseRouteProps<InferPathParams<TRoute, Path>> {
+  extends BaseRouteProps<TRoute extends TRoute ? RouteParamsForPath<TRoute, SplitPath<Path>> : never> {
   path: Path
 }
 
@@ -93,7 +82,6 @@ function matchPath(routePath: string, pathPattern: string): Record<string, strin
   return params
 }
 
-// FIXME: string path
 export function buildUrl(path: readonly (string | undefined)[]): string {
   return (
     '#/' +
@@ -118,15 +106,12 @@ function getUnsafeRoute(): readonly string[] {
     })
 }
 
-export function createRouting<TRoute extends readonly (string | undefined)[]>({
-  parse: parseRoute,
-}: RoutingConfig<TRoute>) {
+export function createRouting<TRoute extends readonly (string | undefined)[]>({ parse }: RoutingConfig<TRoute>) {
   const RoutingContext = createContext<RoutingContextValue<TRoute> | undefined>(undefined)
 
   function Route<const TPath extends string>(_props: PathRouteProps<TRoute, TPath>): null
-  function Route<TMatched extends TRoute>(_props: GuardedRouteProps<TRoute, TMatched>): null
-  function Route(_props: BooleanRouteProps<TRoute>): null
-  function Route(_props: BooleanRouteProps<TRoute> | PathRouteProps<TRoute, string>) {
+  function Route(_props: BaseRouteProps<TRoute>): null
+  function Route(_props: BaseRouteProps<TRoute> | PathRouteProps<TRoute, string>) {
     return null
   }
 
@@ -134,8 +119,8 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
     const routePath = route.filter((segment): segment is string => segment != null).join('/')
 
     for (const candidate of toChildArray(children)) {
-      if (!isVNode<BooleanRouteProps<TRoute>>(candidate) || candidate.type !== Route) continue
-      const routeProps = candidate.props as BooleanRouteProps<TRoute> & { path?: string }
+      if (!isVNode<BaseRouteProps<TRoute>>(candidate) || candidate.type !== Route) continue
+      const routeProps = candidate.props as BaseRouteProps<TRoute> & { path?: string }
 
       if (routeProps.path != null) {
         const params = matchPath(routePath, routeProps.path)
@@ -143,7 +128,6 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
         return <>{renderRouteChildren(params, routeProps.children as RouteChildren<typeof params>)}</>
       }
 
-      if (routeProps.when?.(route) === false) continue
       return <>{renderRouteChildren(route, routeProps.children)}</>
     }
 
@@ -151,13 +135,13 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
   }
 
   const RoutingProvider = ({ children }: { children: ComponentChildren }) => {
-    const [route, setRoute] = useState<TRoute>(() => parseRoute(getUnsafeRoute()))
+    const [route, setRoute] = useState<TRoute>(() => parse(getUnsafeRoute()))
 
     useEffect(() => {
       const controller = new AbortController()
 
       const syncRouteFromLocation = () => {
-        const routeFromLocation = parseRoute(getUnsafeRoute())
+        const routeFromLocation = parse(getUnsafeRoute())
         window.history.replaceState({}, '', buildUrl(routeFromLocation))
         setRoute(routeFromLocation)
       }
@@ -184,10 +168,5 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
     return ctx
   }
 
-  return {
-    Route,
-    Router,
-    RoutingProvider,
-    useRouting,
-  }
+  return { Route, Router, RoutingProvider, useRouting }
 }
