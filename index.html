@@ -415,12 +415,20 @@
         font-size: 1rem;
         color: var(--color-text-secondary);
         line-height: 1.65;
+        
+        @media (min-width: 640px) {
+          width: 60%;
+        }
       }
 
       .landing-footer-meta {
         margin: 0;
         font-size: 0.8rem;
         color: var(--color-text-muted);
+
+        @media (min-width: 640px) {
+          width: 60%;
+        }
       }
 
       .landing-footer-link {
@@ -699,11 +707,10 @@
 
           <footer class="landing-footer">
             <p class="landing-footer-audience">
-              For independent Arabic learners, textbook students, and teachers who need a lightweight, reliable
-              conjugation reference.
+              For independent Arabic learners, textbook students, and teachers who need a lightweight, reliable conjugation reference.
             </p>
             <p class="landing-footer-meta">
-              Open source on <a class="landing-footer-link" href="https://github.com/goblindegook/musarrif">GitHub</a>.
+              This application is free software: you can redistribute it and/or modify it under the terms of the <a class="landing-footer-link" href="https://www.gnu.org/licenses/gpl-3.0.html" rel="noopener noreferrer">GNU General Public License v3.0</a>. Source code on <a class="landing-footer-link" href="https://github.com/goblindegook/musarrif" rel="noopener noreferrer">GitHub</a>.
             </p>
           </footer>
         </main>
