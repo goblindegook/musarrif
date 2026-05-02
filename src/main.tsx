@@ -17,7 +17,7 @@ const mountApp = () => {
     const [{ App }, { I18nProvider }, { RoutingProvider }] = await Promise.all([
       import('./app'),
       import('./hooks/useI18n'),
-      import('./hooks/useRouting'),
+      import('./routes'),
     ])
 
     render(

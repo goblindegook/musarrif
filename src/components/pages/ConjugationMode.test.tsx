@@ -1,9 +1,8 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
-
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
+import { RoutingProvider } from '../../routes'
 import { ConjugationMode } from './ConjugationMode'
 
 const normalizeButtonText = (text: string | null) => text?.replace(/\s+/g, ' ').trim()

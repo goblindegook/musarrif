@@ -4,7 +4,7 @@ import { ConjugationMode } from './components/pages/ConjugationMode'
 import { ExerciseMode } from './components/pages/ExerciseMode'
 import { Home } from './components/pages/Home'
 import { useI18n } from './hooks/useI18n'
-import { useRouting } from './hooks/useRouting'
+import { Route, Router, useRouting } from './routes'
 
 export function App() {
   const { lang, dir } = useI18n()
@@ -13,13 +13,26 @@ export function App() {
   return (
     <Page dir={dir} lang={lang}>
       <AppHeader />
-      {route[0] === 'test' ? (
-        <ExerciseMode />
-      ) : route[1] == null ? (
-        <Home />
-      ) : (
-        <ConjugationMode verbId={route[1]} voice={route[2]} tense={route[3]} mood={route[4]} />
-      )}
+      <Router route={route}>
+        <Route path="/test">
+          <ExerciseMode />
+        </Route>
+        <Route path="/verbs/:verbId/:voice/:tense/:mood">
+          {({ mood, tense, verbId, voice }) => (
+            <ConjugationMode verbId={verbId} voice={voice} tense={tense} mood={mood} />
+          )}
+        </Route>
+        <Route path="/verbs/:verbId/:voice/:tense">
+          {({ tense, verbId, voice }) => <ConjugationMode verbId={verbId} voice={voice} tense={tense} />}
+        </Route>
+        <Route path="/verbs/:verbId">{({ verbId }) => <ConjugationMode verbId={verbId} />}</Route>
+        <Route path="/verbs">
+          <Home />
+        </Route>
+        <Route>
+          <Home />
+        </Route>
+      </Router>
     </Page>
   )
 }

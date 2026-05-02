@@ -2,8 +2,8 @@ import { cleanup, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
 import { getVerbById } from '../../paradigms/verbs'
+import { RoutingProvider } from '../../routes'
 import { NominalInsights } from './NominalInsights'
 
 beforeEach(() => cleanup())

@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event'
 import type { ComponentChildren } from 'preact'
 import { describe, expect, test } from 'vitest'
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
 import { tokenize } from '../../paradigms/letters'
+import { RoutingProvider } from '../../routes'
 import { ConjugateBox } from './ConjugateBox'
 
 function Wrapper({ children }: { children: ComponentChildren }) {

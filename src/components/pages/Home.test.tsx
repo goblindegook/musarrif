@@ -1,9 +1,8 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
-
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
+import { RoutingProvider } from '../../routes'
 import { Home } from './Home'
 
 const renderHome = () => {

@@ -4,7 +4,7 @@ import type { ComponentChildren } from 'preact'
 import { act } from 'preact/test-utils'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
+import { RoutingProvider } from '../../routes'
 import { Search } from './SearchBox'
 
 function Wrapper({ children }: { children: ComponentChildren }) {

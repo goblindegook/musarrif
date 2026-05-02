@@ -1,10 +1,9 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
 import { App } from './app'
 import { I18nProvider } from './hooks/useI18n'
-import { RoutingProvider } from './hooks/useRouting'
+import { RoutingProvider } from './routes'
 
 const renderApp = (path = '') => {
   cleanup()

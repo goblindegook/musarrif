@@ -5,7 +5,6 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
-import { useRouting } from '../../hooks/useRouting'
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
@@ -20,6 +19,7 @@ import {
   getAvailableParadigms,
   getVerbById,
 } from '../../paradigms/verbs'
+import { useRouting } from '../../routes'
 import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
 import { LinkButton } from '../atoms/LinkButton'

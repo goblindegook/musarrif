@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 import type { DayStats } from '../../exercises/stats'
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
+import { RoutingProvider } from '../../routes'
 import { ExerciseStats } from './ExerciseStats'
 
 const NOW = new Date()

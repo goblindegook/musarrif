@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import type { Exercise } from '../../exercises/exercises'
 import { I18nProvider } from '../../hooks/useI18n'
-import { RoutingProvider } from '../../hooks/useRouting'
+import { RoutingProvider } from '../../routes'
 import { ExerciseMode } from './ExerciseMode'
 
 afterEach(() => {

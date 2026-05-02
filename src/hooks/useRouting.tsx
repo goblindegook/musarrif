@@ -1,55 +1,105 @@
-import type { ComponentChildren } from 'preact'
-import { createContext } from 'preact'
+import type { ComponentChildren, VNode } from 'preact'
+import { createContext, toChildArray } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
-import type { Mood, NonPresentTense, Voice } from '../paradigms/tense'
-import { isMood, isTense, isVoice } from '../paradigms/tense'
 
-type HomeRoute = readonly ['verbs']
-type VerbRoute = readonly ['verbs', verbId: string]
-type VerbNonPresentRoute = readonly ['verbs', verbId: string, voice: Voice, tense: NonPresentTense]
-type VerbPresentRoute = readonly ['verbs', verbId: string, voice: Voice, tense: 'present', mood?: Mood]
-type VerbImperativeRoute = readonly ['verbs', verbId: string, voice: 'active', tense: 'imperative']
-type TestRoute = readonly ['test']
-type AppRoute = HomeRoute | VerbRoute | VerbPresentRoute | VerbNonPresentRoute | VerbImperativeRoute | TestRoute
+type RouteChildren<TRoute> = ComponentChildren | ((route: TRoute) => ComponentChildren)
 
-interface RoutingContextValue<T> {
-  route: T
-  navigateTo: (route: T) => void
+type NormalizePath<Path extends string> = Path extends `/${infer Rest}` ? Rest : Path
+type SplitPath<Path extends string> =
+  NormalizePath<Path> extends `${infer Segment}/${infer Rest}`
+    ? [Segment, ...SplitPath<Rest>]
+    : NormalizePath<Path> extends ''
+      ? []
+      : [NormalizePath<Path>]
+
+type RouteParamsForPath<
+  Route extends readonly (string | undefined)[],
+  Tokens extends readonly string[],
+> = Tokens extends readonly [infer Token extends string, ...infer RestTokens extends string[]]
+  ? Route extends readonly [infer Segment extends string | undefined, ...infer RestRoute extends (string | undefined)[]]
+    ? Token extends `:${infer Param}`
+      ? { [K in Param]: Exclude<Segment, undefined> } & RouteParamsForPath<RestRoute, RestTokens>
+      : Segment extends Token
+        ? RouteParamsForPath<RestRoute, RestTokens>
+        : never
+    : never
+  : Route extends readonly []
+    ? Record<never, never>
+    : never
+
+type InferPathParams<TRoute extends readonly (string | undefined)[], Path extends string> = TRoute extends TRoute
+  ? RouteParamsForPath<TRoute, SplitPath<Path>>
+  : never
+
+interface BaseRouteProps<TRoute> {
+  children: RouteChildren<TRoute>
 }
 
-const RoutingContext = createContext<RoutingContextValue<AppRoute> | undefined>(undefined)
-
-function sanitizeRoute(segments: readonly string[]): AppRoute {
-  if (!segments.at(0)) return ['verbs']
-  if (segments.at(0) === 'test') return ['test']
-  if (segments.at(0) !== 'verbs') return sanitizeRoute(segments.slice(1))
-
-  const [_, verbId, voice, tense, mood] = segments
-
-  if (!verbId?.match(/^[^-]{3,5}-\d+$/)) return ['verbs']
-  if (!isVoice(voice)) return ['verbs', verbId]
-  if (!isTense(tense)) return ['verbs', verbId, voice, 'past']
-
-  if (tense === 'present') {
-    if (!isMood(mood)) return ['verbs', verbId, voice, 'present']
-    return ['verbs', verbId, voice, 'present', mood]
-  }
-
-  if (tense === 'imperative') {
-    if (voice === 'passive') return ['verbs', verbId, 'passive', 'past']
-    return ['verbs', verbId, 'active', 'imperative']
-  }
-
-  return ['verbs', verbId, voice, tense]
+interface BooleanRouteProps<TRoute> extends BaseRouteProps<TRoute> {
+  when?: (route: TRoute) => boolean
 }
 
-export function buildUrl(route: AppRoute): string {
+interface GuardedRouteProps<TRoute, TMatched extends TRoute> extends BaseRouteProps<TMatched> {
+  when: (route: TRoute) => route is TMatched
+}
+
+interface PathRouteProps<TRoute extends readonly (string | undefined)[], Path extends string>
+  extends BaseRouteProps<InferPathParams<TRoute, Path>> {
+  path: Path
+}
+
+interface RouterProps<TRoute> {
+  route: TRoute
+  children: ComponentChildren
+}
+
+interface RoutingContextValue<TRoute extends readonly (string | undefined)[]> {
+  route: TRoute
+  navigateTo: (route: TRoute) => void
+}
+
+interface RoutingConfig<TRoute extends readonly (string | undefined)[]> {
+  parse: (segments: readonly string[]) => TRoute
+}
+
+const isVNode = <T,>(node: ComponentChildren): node is VNode<T> =>
+  typeof node === 'object' && node != null && 'props' in node
+
+const renderRouteChildren = <TRoute,>(route: TRoute, children: RouteChildren<TRoute>) => {
+  return typeof children === 'function' ? (children as (currentRoute: TRoute) => ComponentChildren)(route) : children
+}
+
+const normalizePath = (path: string): string => path.replace(/^#?\/?/, '').replace(/\/+$/, '')
+
+function matchPath(routePath: string, pathPattern: string): Record<string, string> | null {
+  const routeSegments = normalizePath(routePath).split('/').filter(Boolean)
+  const patternSegments = normalizePath(pathPattern).split('/').filter(Boolean)
+  if (routeSegments.length !== patternSegments.length) return null
+
+  const params: Record<string, string> = {}
+  for (let index = 0; index < patternSegments.length; index += 1) {
+    const patternSegment = patternSegments[index]
+    const routeSegment = routeSegments[index]
+    if (patternSegment == null || routeSegment == null) return null
+
+    if (patternSegment.startsWith(':')) {
+      params[patternSegment.slice(1)] = routeSegment
+      continue
+    }
+
+    if (patternSegment !== routeSegment) return null
+  }
+
+  return params
+}
+
+// FIXME: string path
+export function buildUrl(path: readonly (string | undefined)[]): string {
   return (
     '#/' +
-    route
-      .filter(Boolean)
-      // biome-ignore lint/style/noNonNullAssertion: never undefined
-      .map((component) => encodeURIComponent(component!))
+    path
+      .filter((i): i is string => Boolean(i))
+      .map((component) => encodeURIComponent(component))
       .join('/')
   )
 }
@@ -68,39 +118,76 @@ function getUnsafeRoute(): readonly string[] {
     })
 }
 
-export function RoutingProvider({ children }: { children: ComponentChildren }) {
-  const [route, setRoute] = useState<AppRoute>(() => sanitizeRoute(getUnsafeRoute()))
+export function createRouting<TRoute extends readonly (string | undefined)[]>({
+  parse: parseRoute,
+}: RoutingConfig<TRoute>) {
+  const RoutingContext = createContext<RoutingContextValue<TRoute> | undefined>(undefined)
 
-  useEffect(() => {
-    const controller = new AbortController()
+  function Route<const TPath extends string>(_props: PathRouteProps<TRoute, TPath>): null
+  function Route<TMatched extends TRoute>(_props: GuardedRouteProps<TRoute, TMatched>): null
+  function Route(_props: BooleanRouteProps<TRoute>): null
+  function Route(_props: BooleanRouteProps<TRoute> | PathRouteProps<TRoute, string>) {
+    return null
+  }
 
-    const syncRouteFromLocation = () => {
-      const routeFromLocation = sanitizeRoute(getUnsafeRoute())
-      window.history.replaceState({}, '', buildUrl(routeFromLocation))
-      setRoute(routeFromLocation)
+  const Router = ({ route, children }: RouterProps<TRoute>) => {
+    const routePath = route.filter((segment): segment is string => segment != null).join('/')
+
+    for (const candidate of toChildArray(children)) {
+      if (!isVNode<BooleanRouteProps<TRoute>>(candidate) || candidate.type !== Route) continue
+      const routeProps = candidate.props as BooleanRouteProps<TRoute> & { path?: string }
+
+      if (routeProps.path != null) {
+        const params = matchPath(routePath, routeProps.path)
+        if (params == null) continue
+        return <>{renderRouteChildren(params, routeProps.children as RouteChildren<typeof params>)}</>
+      }
+
+      if (routeProps.when?.(route) === false) continue
+      return <>{renderRouteChildren(route, routeProps.children)}</>
     }
 
-    syncRouteFromLocation()
-    window.addEventListener('hashchange', syncRouteFromLocation, { signal: controller.signal })
-    window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
-    return () => controller.abort()
-  }, [])
+    return null
+  }
 
-  const navigateTo = useCallback(
-    (nextRoute: AppRoute) => {
+  const RoutingProvider = ({ children }: { children: ComponentChildren }) => {
+    const [route, setRoute] = useState<TRoute>(() => parseRoute(getUnsafeRoute()))
+
+    useEffect(() => {
+      const controller = new AbortController()
+
+      const syncRouteFromLocation = () => {
+        const routeFromLocation = parseRoute(getUnsafeRoute())
+        window.history.replaceState({}, '', buildUrl(routeFromLocation))
+        setRoute(routeFromLocation)
+      }
+
+      syncRouteFromLocation()
+      window.addEventListener('hashchange', syncRouteFromLocation, { signal: controller.signal })
+      window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
+      return () => controller.abort()
+    }, [])
+
+    const navigateTo = useCallback((nextRoute: TRoute) => {
       window.history.pushState({}, '', buildUrl(nextRoute))
       setRoute(nextRoute)
-    },
-    [setRoute],
-  )
+    }, [])
 
-  const value = useMemo(() => ({ route, navigateTo }), [route, navigateTo])
+    const value = useMemo<RoutingContextValue<TRoute>>(() => ({ route, navigateTo }), [route, navigateTo])
 
-  return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
-}
+    return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
+  }
 
-export function useRouting() {
-  const ctx = useContext(RoutingContext)
-  if (!ctx) throw new Error('useRouting must be used within a RoutingProvider')
-  return ctx
+  const useRouting = () => {
+    const ctx = useContext(RoutingContext)
+    if (!ctx) throw new Error('useRouting must be used within a RoutingProvider')
+    return ctx
+  }
+
+  return {
+    Route,
+    Router,
+    RoutingProvider,
+    useRouting,
+  }
 }
