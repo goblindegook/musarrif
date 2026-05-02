@@ -7,8 +7,8 @@ import { buildMasterySnapshot, type MasterySnapshot } from '../../exercises/mast
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats } from '../../exercises/stats'
 import {
-  getRecentScorePercent,
-  getScorePercent,
+  getAccuracyPercent,
+  getRecentAccuracyPercent,
   getStreakGoalProgress,
   getStreakRecord,
   STREAK_DAILY_GOAL,
@@ -74,8 +74,8 @@ function StatsDetailsPanel({
   mastery: MasterySnapshot
 }) {
   const { t, lang } = useI18n()
-  const recentScore = getRecentScorePercent(stats, 15)
-  const allTimeScore = getScorePercent(stats)
+  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
+  const allTimeAccuracy = getAccuracyPercent(stats)
   const record = getStreakRecord(stats)
   const streakGoal = getStreakGoalProgress(stats)
   const streakGoalNow = Math.min(streakGoal.correct, STREAK_DAILY_GOAL)
@@ -83,10 +83,10 @@ function StatsDetailsPanel({
   return (
     <StatsSummary>
       <DetailsRow>
-        <Detail label={t('exercise.stats.score.label')} valueLang={lang} valueDir="ltr">
+        <Detail label={t('exercise.stats.accuracy.label')} valueLang={lang} valueDir="ltr">
           <ValueStack>
-            <span>{recentScore}%</span>
-            <SubNote>{t('exercise.stats.score.alltime', { score: String(allTimeScore) })}</SubNote>
+            <span>{recentAccuracy}%</span>
+            <SubNote>{t('exercise.stats.accuracy.alltime', { value: String(allTimeAccuracy) })}</SubNote>
           </ValueStack>
         </Detail>
         <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">

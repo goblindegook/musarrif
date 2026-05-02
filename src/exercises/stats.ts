@@ -59,21 +59,21 @@ export function getStreak(stats: DayStats[], today?: Date): number {
   return streak
 }
 
-export function getScorePercent(stats: DayStats[]): number {
+export function getAccuracyPercent(stats: DayStats[]): number {
   const total = stats.reduce((s, d) => s + d.correct + d.incorrect, 0)
   if (total === 0) return 0
   const correct = stats.reduce((s, d) => s + d.correct, 0)
   return Math.round((correct / total) * 100)
 }
 
-export function getRecentScorePercent(stats: DayStats[], days: number, today?: Date): number {
+export function getRecentAccuracyPercent(stats: DayStats[], days: number, today?: Date): number {
   const todayStr = dateKey(today ?? todayDate())
   const windowStart = offsetDate(todayStr, -(days - 1))
   const filtered = stats.filter((s) => {
     const key = dateKey(s.date)
     return key >= windowStart && key <= todayStr
   })
-  return getScorePercent(filtered)
+  return getAccuracyPercent(filtered)
 }
 
 export function getStreakRecord(stats: DayStats[]): number {

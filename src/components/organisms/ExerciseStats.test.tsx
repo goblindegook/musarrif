@@ -97,13 +97,13 @@ describe('ExerciseStats', () => {
     expect(screen.getByLabelText(/statistics chart/i)).not.toBeVisible()
   })
 
-  test('score pill shows Score label when expanded', () => {
+  test('accuracy pill shows Accuracy label when expanded', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByText('Score')).toBeInTheDocument()
+    expect(screen.getByText('Accuracy')).toBeInTheDocument()
   })
 
-  test('score pill shows 0% when all answers are incorrect', () => {
+  test('accuracy pill shows 0% when all answers are incorrect', () => {
     render(<ExerciseStats stats={[{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]} streak={0} />, {
       wrapper: Wrapper,
     })
@@ -111,7 +111,7 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('0%')).toBeInTheDocument()
   })
 
-  test('score pill shows correct percentage', () => {
+  test('accuracy pill shows correct percentage', () => {
     const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
@@ -120,7 +120,7 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('75%')).toBeInTheDocument()
   })
 
-  test('score pill shows 15-day percentage, not all-time, when they differ', () => {
+  test('accuracy pill shows 15-day percentage, not all-time, when they differ', () => {
     const oldDate = new Date(Date.now() - 20 * 24 * 60 * 60 * 1000)
     oldDate.setUTCHours(0, 0, 0, 0)
     const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
@@ -134,7 +134,7 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('100%')).toBeInTheDocument()
   })
 
-  test('score pill shows All time sub-note', () => {
+  test('accuracy pill shows All time sub-note', () => {
     const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]

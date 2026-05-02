@@ -4,8 +4,8 @@ import {
   addPass,
   addResult,
   deserializeDayStats,
-  getRecentScorePercent,
-  getScorePercent,
+  getAccuracyPercent,
+  getRecentAccuracyPercent,
   getStreak,
   getStreakGoalProgress,
   getStreakRecord,
@@ -129,24 +129,24 @@ describe('getStreak', () => {
   })
 })
 
-describe('getScorePercent', () => {
+describe('getAccuracyPercent', () => {
   test('returns 0 for empty stats', () => {
-    expect(getScorePercent([])).toBe(0)
+    expect(getAccuracyPercent([])).toBe(0)
   })
 
   test('returns 100 when all answers are correct', () => {
     const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 5, incorrect: 0, passed: 0 }]
-    expect(getScorePercent(stats)).toBe(100)
+    expect(getAccuracyPercent(stats)).toBe(100)
   })
 
   test('returns 0 when all answers are incorrect', () => {
     const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 0, incorrect: 4, passed: 0 }]
-    expect(getScorePercent(stats)).toBe(0)
+    expect(getAccuracyPercent(stats)).toBe(0)
   })
 
   test('returns 75 for 3 correct and 1 incorrect', () => {
     const stats: DayStats[] = [{ date: d('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
-    expect(getScorePercent(stats)).toBe(75)
+    expect(getAccuracyPercent(stats)).toBe(75)
   })
 
   test('aggregates across multiple days', () => {
@@ -154,7 +154,7 @@ describe('getScorePercent', () => {
       { date: d('2026-03-18'), correct: 2, incorrect: 2, passed: 0 },
       { date: d('2026-03-19'), correct: 6, incorrect: 2, passed: 0 },
     ]
-    expect(getScorePercent(stats)).toBe(67)
+    expect(getAccuracyPercent(stats)).toBe(67)
   })
 })
 
@@ -235,31 +235,31 @@ describe('addPass', () => {
   })
 })
 
-describe('getRecentScorePercent', () => {
+describe('getRecentAccuracyPercent', () => {
   test('returns 0 for empty stats', () => {
-    expect(getRecentScorePercent([], 15, d('2026-03-24'))).toBe(0)
+    expect(getRecentAccuracyPercent([], 15, d('2026-03-24'))).toBe(0)
   })
 
   test('returns correct percentage for data within the window', () => {
     const stats: DayStats[] = [{ date: d('2026-03-20'), correct: 3, incorrect: 1, passed: 0 }]
-    expect(getRecentScorePercent(stats, 15, d('2026-03-24'))).toBe(75)
+    expect(getRecentAccuracyPercent(stats, 15, d('2026-03-24'))).toBe(75)
   })
 
   test('includes a day exactly 14 days before today', () => {
     // today=2026-03-24, 14 days before = 2026-03-10 (inclusive boundary)
     const stats: DayStats[] = [{ date: d('2026-03-10'), correct: 4, incorrect: 0, passed: 0 }]
-    expect(getRecentScorePercent(stats, 15, d('2026-03-24'))).toBe(100)
+    expect(getRecentAccuracyPercent(stats, 15, d('2026-03-24'))).toBe(100)
   })
 
   test('excludes a day exactly 15 days before today', () => {
     // today=2026-03-24, 15 days before = 2026-03-09 (outside window)
     const stats: DayStats[] = [{ date: d('2026-03-09'), correct: 4, incorrect: 0, passed: 0 }]
-    expect(getRecentScorePercent(stats, 15, d('2026-03-24'))).toBe(0)
+    expect(getRecentAccuracyPercent(stats, 15, d('2026-03-24'))).toBe(0)
   })
 
   test('returns 0 when all data is outside the window', () => {
     const stats: DayStats[] = [{ date: d('2026-01-01'), correct: 5, incorrect: 0, passed: 0 }]
-    expect(getRecentScorePercent(stats, 15, d('2026-03-24'))).toBe(0)
+    expect(getRecentAccuracyPercent(stats, 15, d('2026-03-24'))).toBe(0)
   })
 
   test('only counts data within the window, ignoring older entries', () => {
@@ -267,7 +267,7 @@ describe('getRecentScorePercent', () => {
       { date: d('2026-01-01'), correct: 10, incorrect: 0, passed: 0 },
       { date: d('2026-03-20'), correct: 1, incorrect: 3, passed: 0 },
     ]
-    expect(getRecentScorePercent(stats, 15, d('2026-03-24'))).toBe(25)
+    expect(getRecentAccuracyPercent(stats, 15, d('2026-03-24'))).toBe(25)
   })
 })
 
