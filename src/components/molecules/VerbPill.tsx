@@ -1,9 +1,9 @@
 import { styled } from 'goober'
 import { useCallback } from 'preact/hooks'
 import { useI18n } from '../../hooks/useI18n'
-import { buildUrl } from '../../hooks/useRouting'
 import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import { useRouting } from '../../routes'
 
 interface VerbPillProps {
   verb: DisplayVerb
@@ -12,6 +12,7 @@ interface VerbPillProps {
 
 export function VerbPill({ verb, className }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
+  const { toHref } = useRouting()
   const formLabel = formatFormLabel(verb.form, verb.root)
 
   const formatArabic = useCallback(
@@ -31,7 +32,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
 
   return (
     <VerbPillLink
-      href={buildUrl(['verbs', verb.id])}
+      href={toHref(['verbs', verb.id])}
       className={className}
       aria-label={[
         verb.synthetic ? '*' : null,

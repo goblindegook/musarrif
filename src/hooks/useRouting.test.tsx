@@ -5,6 +5,7 @@ import { createRouting } from './useRouting'
 type DemoRoute = readonly ['home'] | readonly ['article', id: string] | readonly ['test']
 
 const { Route, Router } = createRouting<DemoRoute>({
+  mode: 'hash',
   parse: () => ['home'],
 })
 

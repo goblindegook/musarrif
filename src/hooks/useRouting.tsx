@@ -45,10 +45,14 @@ interface RouterProps<TRoute> {
 interface RoutingContextValue<TRoute extends readonly (string | undefined)[]> {
   route: TRoute
   navigateTo: (route: TRoute) => void
+  toHref: (route: TRoute) => string
 }
+
+type RoutingMode = 'hash' | 'path'
 
 interface RoutingConfig<TRoute extends readonly (string | undefined)[]> {
   parse: (segments: readonly string[]) => TRoute
+  mode?: RoutingMode
 }
 
 const isVNode = <T,>(node: ComponentChildren): node is VNode<T> =>
@@ -82,19 +86,9 @@ function matchPath(routePath: string, pathPattern: string): Record<string, strin
   return params
 }
 
-export function buildUrl(path: readonly (string | undefined)[]): string {
-  return (
-    '#/' +
-    path
-      .filter((i): i is string => Boolean(i))
-      .map((component) => encodeURIComponent(component))
-      .join('/')
-  )
-}
-
-function getUnsafeRoute(): readonly string[] {
-  return window.location.hash
-    .replace(/^#/, '')
+function readSegments(mode: RoutingMode): readonly string[] {
+  const path = mode === 'hash' ? window.location.hash.replace(/^#/, '') : window.location.pathname
+  return path
     .split('/')
     .filter(Boolean)
     .map((segment) => {
@@ -106,13 +100,24 @@ function getUnsafeRoute(): readonly string[] {
     })
 }
 
-export function createRouting<TRoute extends readonly (string | undefined)[]>({ parse }: RoutingConfig<TRoute>) {
+export function createRouting<TRoute extends readonly (string | undefined)[]>({
+  mode = 'hash',
+  parse,
+}: RoutingConfig<TRoute>) {
   const RoutingContext = createContext<RoutingContextValue<TRoute> | undefined>(undefined)
 
   function Route<const TPath extends string>(_props: PathRouteProps<TRoute, TPath>): null
   function Route(_props: BaseRouteProps<TRoute>): null
   function Route(_props: BaseRouteProps<TRoute> | PathRouteProps<TRoute, string>) {
     return null
+  }
+
+  const toHref = (route: TRoute): string => {
+    const path = route
+      .filter((segment): segment is string => segment != null)
+      .map((segment) => encodeURIComponent(segment))
+
+    return [mode === 'path' ? '' : '#', ...path].join('/')
   }
 
   const Router = ({ route, children }: RouterProps<TRoute>) => {
@@ -135,29 +140,37 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({ 
   }
 
   const RoutingProvider = ({ children }: { children: ComponentChildren }) => {
-    const [route, setRoute] = useState<TRoute>(() => parse(getUnsafeRoute()))
+    const [route, setRoute] = useState<TRoute>(() => parse(readSegments(mode)))
 
     useEffect(() => {
-      const controller = new AbortController()
-
       const syncRouteFromLocation = () => {
-        const routeFromLocation = parse(getUnsafeRoute())
-        window.history.replaceState({}, '', buildUrl(routeFromLocation))
+        const routeFromLocation = parse(readSegments(mode))
+        window.history.replaceState({}, '', toHref(routeFromLocation))
         setRoute(routeFromLocation)
       }
 
       syncRouteFromLocation()
-      window.addEventListener('hashchange', syncRouteFromLocation, { signal: controller.signal })
+
+      const controller = new AbortController()
+
+      if (mode === 'hash') window.addEventListener('hashchange', syncRouteFromLocation, { signal: controller.signal })
       window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
+
       return () => controller.abort()
-    }, [])
+    }, [parse, toHref, mode])
 
-    const navigateTo = useCallback((nextRoute: TRoute) => {
-      window.history.pushState({}, '', buildUrl(nextRoute))
-      setRoute(nextRoute)
-    }, [])
+    const navigateTo = useCallback(
+      (nextRoute: TRoute) => {
+        window.history.pushState({}, '', toHref(nextRoute))
+        setRoute(nextRoute)
+      },
+      [toHref],
+    )
 
-    const value = useMemo<RoutingContextValue<TRoute>>(() => ({ route, navigateTo }), [route, navigateTo])
+    const value = useMemo<RoutingContextValue<TRoute>>(
+      () => ({ route, navigateTo, toHref }),
+      [route, navigateTo, toHref],
+    )
 
     return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
   }

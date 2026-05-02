@@ -10,7 +10,10 @@ type AppRoute =
   | readonly ['verbs', verbId: string, voice: 'active', tense: 'imperative']
   | readonly ['test']
 
-export const { Route, Router, RoutingProvider, useRouting } = createRouting({ parse })
+export const { Route, Router, RoutingProvider, useRouting } = createRouting({
+  mode: 'hash',
+  parse,
+})
 
 function parse(segments: readonly string[]): AppRoute {
   if (!segments.at(0)) return ['verbs']
