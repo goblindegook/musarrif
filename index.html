@@ -365,6 +365,42 @@
         color: var(--color-text-secondary);
       }
 
+      .landing-panel--install {
+        gap: 0;
+        box-shadow: var(--shadow-surface);
+      }
+
+      .landing-install-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        margin: 0.875rem 0 0;
+        padding: 0.875rem 0 0;
+        border-top: 1px solid var(--color-border);
+      }
+
+      .landing-install-platform {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--color-text-tertiary);
+        margin: 0 0 0.25rem;
+      }
+
+      .landing-install-step {
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        line-height: 1.5;
+      }
+
+      @media (min-width: 640px) {
+        .landing-install-list {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
       .landing-footer {
         display: flex;
         flex-direction: column;
@@ -618,6 +654,26 @@
               </p>
             </section>
           </div>
+
+          <section class="landing-panel landing-panel--install">
+            <p class="landing-feature-eyebrow">Install</p>
+            <h2 class="landing-feature-heading">Works offline</h2>
+            <p class="landing-feature-body">Muṣarrif is a Progressive Web App. Install it for instant access without a browser — conjugation tables available even without a connection.</p>
+            <dl class="landing-install-list">
+              <div>
+                <dt class="landing-install-platform">iOS — Safari</dt>
+                <dd class="landing-install-step">Tap the Share button → "Add to Home Screen"</dd>
+              </div>
+              <div>
+                <dt class="landing-install-platform">Android — Chrome</dt>
+                <dd class="landing-install-step">Tap ⋮ → "Add to Home Screen" or "Install app"</dd>
+              </div>
+              <div>
+                <dt class="landing-install-platform">Desktop</dt>
+                <dd class="landing-install-step">Click the install icon in the address bar (Chrome, Edge, or Safari)</dd>
+              </div>
+            </dl>
+          </section>
 
           <footer class="landing-footer">
             <p class="landing-footer-audience">
