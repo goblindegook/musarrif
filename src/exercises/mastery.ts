@@ -1,7 +1,7 @@
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, verbs } from '../paradigms/verbs'
-import { clamp } from '../primitives/numbers'
+import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
 import { buildCardKey, getSrsRootType, type SrsRootType, type SrsStore } from './srs'
@@ -251,11 +251,6 @@ function cardStrength(store: SrsStore, key: string, today: string): number {
   if (state == null || state.dueDate <= today) return 0
   const interval = clamp(Math.round(state.interval), 1, MASTERY_THRESHOLD_DAYS)
   return clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
-}
-
-function average(values: readonly number[]): number {
-  if (values.length === 0) return 0
-  return values.reduce((sum, value) => sum + value, 0) / values.length
 }
 
 function computeUnlockedScore(cards: readonly PossibleCard[], store: SrsStore, today: string): number {
