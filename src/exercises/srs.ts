@@ -41,6 +41,14 @@ export function getSrsRootType(root: string): SrsRootType {
   return 'sound'
 }
 
+export function buildCardKey(kind: ExerciseKind, rootType: SrsRootType, form: VerbForm): string
+export function buildCardKey(
+  kind: ExerciseKind,
+  rootType: SrsRootType,
+  form: VerbForm,
+  tense: VerbTense,
+  pronoun: PronounId,
+): string
 export function buildCardKey(
   kind: ExerciseKind,
   rootType: SrsRootType,
@@ -48,8 +56,7 @@ export function buildCardKey(
   tense?: VerbTense,
   pronoun?: PronounId,
 ): string {
-  if (tense == null) return `${kind}:${rootType}:${form}`
-  return `${kind}:${rootType}:${form}:${tense}:${pronoun}`
+  return tense == null ? `${kind}:${rootType}:${form}` : `${kind}:${rootType}:${form}:${tense}:${pronoun}`
 }
 
 export function parseCardKey(key: string): ParsedCardKey {

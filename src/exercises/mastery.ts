@@ -199,7 +199,7 @@ function utcToday(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-function possiblePronouns(
+function pronounSpace(
   tense: VerbTense,
   pronouns: readonly PronounId[],
   impersonalPassive: boolean,
@@ -235,7 +235,7 @@ function cardSpace(): readonly PossibleCard[] {
       }
 
       for (const tense of availableVerbTenses) {
-        for (const pronoun of possiblePronouns(tense, allPronouns, verb.passiveVoice === 'impersonal')) {
+        for (const pronoun of pronounSpace(tense, allPronouns, verb.passiveVoice === 'impersonal')) {
           const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
           unique.set(key, { key, kind, rootType, form, tense, pronoun })
         }
