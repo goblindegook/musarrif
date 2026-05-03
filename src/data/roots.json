@@ -338,7 +338,7 @@
     "root": "'ny",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3an"]
+    "masdars": ["fi3al"]
   },
   {
     "root": "'ny",
@@ -424,7 +424,7 @@
     "root": "'wy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3iil", "fu3ul", "fi3aal"]
+    "masdars": ["fi3iil", "fu3il", "fi3aal"]
   },
   {
     "root": "'wy",
@@ -1767,7 +1767,7 @@
     "root": "gdw",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fu3ul"]
+    "masdars": ["fa3la", "fu3la", "fu3ool"]
   },
   {
     "root": "gfr",
@@ -1991,7 +1991,7 @@
     "root": "jmE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l", "fa3lan", "mimi"]
+    "masdars": ["fa3l", "mimi"]
   },
   {
     "root": "jmE",
@@ -2947,7 +2947,7 @@
     "root": "qwy",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fi3an"]
+    "masdars": ["fu3la"]
   },
   {
     "root": "qwy",

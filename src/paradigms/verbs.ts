@@ -17,25 +17,33 @@ export function formatFormLabel(form: VerbForm, root: string): string {
   return root.length === 4 ? `${label}q` : label
 }
 
+// Not real, productive masdar patterns:
+type LexicalMasdarPattern = 'fi3iil' | 'fu3il'
+
 export type MasdarPattern =
-  | 'fa3aal'
-  | 'fa3aala'
-  | 'fa3al'
-  | 'fa3iil'
-  | 'fa3l'
-  | 'fa3lan'
-  | 'fi3aal'
-  | 'fi3aala'
-  | 'fi3al'
-  | 'fi3an'
-  | 'fi3iil'
-  | 'fi3l'
-  | 'fi3la'
-  | 'fu3aal'
-  | 'fu3l'
-  | 'fu3la'
-  | 'fu3ool'
-  | 'fu3ul'
+  | LexicalMasdarPattern
+  // Basic
+  | 'fa3l' // simple action
+  | 'fi3l' // mental states, abstract qualities
+  | 'fu3l' // inherent states, qualities
+  // Extended vowel
+  | 'fa3aal' // extended activity, occupation
+  | 'fa3iil' // sometimes adjective-like (uncommon)
+  // TOOD: 'fa3ool' // intensive state
+  | 'fi3aal' // ongoing action
+  | 'fu3aal' // bodily state, sound, illness (uncommon)
+  | 'fu3ool' // movement, transition, repeated action
+  // Feminine
+  | 'fa3aala' // profession, craft, continues activity
+  | 'fi3aala' // process, organized activity
+  | 'fu3aala' // abstract quality (rare)
+  | 'fa3la' // single concrete event
+  | 'fi3la' // single concrete event
+  | 'fu3la' // single instance of action
+  // Uncommon
+  | 'fa3al' // abstract result
+  | 'fi3al' // inherent qualities
+  // Mimi
   | 'mimi'
 
 export type PassiveVoice = 'none' | 'impersonal'

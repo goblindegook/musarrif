@@ -67,25 +67,21 @@ body:
       label: Masdar pattern(s)
       description: Select all that apply, or leave empty if unknown
       options:
-        - label: fa3aal
-        - label: fa3aala
-        - label: fa3al
-        - label: fa3iil
         - label: fa3l
-        - label: fa3lala
-        - label: fa3lan
-        - label: fi3aal
-        - label: fi3aala
-        - label: fi3al
-        - label: fi3an
-        - label: fi3iil
         - label: fi3l
-        - label: fi3la
-        - label: fu3aal
         - label: fu3l
-        - label: fu3la
+        - label: fa3aal
+        - label: fa3iil
+        - label: fi3aal
+        - label: fu3aal
         - label: fu3ool
-        - label: fu3ul
+        - label: fi3aala
+        - label: fu3aala
+        - label: fa3la
+        - label: fi3la
+        - label: fu3la
+        - label: fi3al
+        - label: fu3il
         - label: mimi
     validations:
       required: false
