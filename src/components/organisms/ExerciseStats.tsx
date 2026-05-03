@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import type { DimensionProfile } from '../../exercises/dimensions'
-import { buildMasterySnapshot, type MasterySnapshot } from '../../exercises/mastery'
+import { computeMastery, type MasterySnapshot } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats } from '../../exercises/stats'
 import {
@@ -126,7 +126,7 @@ function StatsDetailsPanel({
 
 export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
   const { t, lang } = useI18n()
-  const mastery = useMemo(() => buildMasterySnapshot(dimensionProfile, srsStore), [dimensionProfile, srsStore])
+  const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
 
   if (stats.length === 0) return null
 

@@ -1,6 +1,7 @@
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, verbs } from '../paradigms/verbs'
+import { clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
 import { buildCardKey, getSrsRootType, type SrsRootType, type SrsStore } from './srs'
@@ -73,8 +74,8 @@ const EXERCISE_KINDS: readonly ExerciseKind[] = [
   'verbTense',
 ]
 
-const MAX_INTERVAL_DAYS = 365
-const STRENGTH_DENOMINATOR = Math.log2(MAX_INTERVAL_DAYS + 1)
+const MASTERY_THRESHOLD_DAYS = 365
+const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
 
 export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals'
 
@@ -104,12 +105,8 @@ interface PossibleCard {
   pronoun: PronounId | undefined
 }
 
-export function buildMasterySnapshot(
-  profile: DimensionProfile,
-  srsStore: SrsStore,
-  today = utcToday(),
-): MasterySnapshot {
-  const cards = buildPossibleCards()
+export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, today = utcToday()): MasterySnapshot {
+  const cards = cardSpace()
   const unlockedRootTypes = new Set(rootTypesPool(profile.rootTypes))
   const unlockedForms = new Set(formPool(profile.forms).map((form) => String(form)))
   const unlockedTenses = new Set(tensePool(profile.tenses))
@@ -215,7 +212,7 @@ function possiblePronouns(
   return pronouns
 }
 
-function buildPossibleCards(): readonly PossibleCard[] {
+function cardSpace(): readonly PossibleCard[] {
   const allForms = new Set(formPool(9).map((form) => String(form)))
   const allRootTypes = new Set(rootTypesPool(5))
   const allTenses = tensePool(4)
@@ -252,8 +249,8 @@ function buildPossibleCards(): readonly PossibleCard[] {
 function cardStrength(store: SrsStore, key: string, today: string): number {
   const state = store[key]
   if (state == null || state.dueDate <= today) return 0
-  const interval = Math.min(Math.max(1, Math.round(state.interval)), MAX_INTERVAL_DAYS)
-  return Math.min(1, Math.max(0, Math.log2(interval + 1) / STRENGTH_DENOMINATOR))
+  const interval = clamp(Math.round(state.interval), 1, MASTERY_THRESHOLD_DAYS)
+  return clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
 }
 
 function average(values: readonly number[]): number {

@@ -1,18 +1,14 @@
 import { describe, expect, test } from 'vitest'
 import type { DimensionProfile } from './dimensions'
-import { buildMasterySnapshot } from './mastery'
+import { computeMastery } from './mastery'
 import { buildCardKey, type SrsStore } from './srs'
 
-function getCategory(snapshot: ReturnType<typeof buildMasterySnapshot>, categoryId: string) {
-  const category = snapshot.categories.find((entry) => entry.id === categoryId)
-  if (category == null) throw new Error(`Missing category ${categoryId}`)
-  return category
+function getCategory(snapshot: ReturnType<typeof computeMastery>, categoryId: string) {
+  return snapshot.categories.find((entry) => entry.id === categoryId)!
 }
 
 function getItem(category: ReturnType<typeof getCategory>, itemId: string) {
-  const item = category.items.find((entry) => entry.id === itemId)
-  if (item == null) throw new Error(`Missing item ${itemId}`)
-  return item
+  return category.items.find((entry) => entry.id === itemId)!
 }
 
 const BASE_PROFILE: DimensionProfile = {
@@ -26,7 +22,7 @@ const BASE_PROFILE: DimensionProfile = {
 
 describe('buildMasterySnapshot', () => {
   test('marks nominals category and items as locked at profile level 0', () => {
-    const snapshot = buildMasterySnapshot(BASE_PROFILE, {}, '2026-04-21')
+    const snapshot = computeMastery(BASE_PROFILE, {}, '2026-04-21')
     const nominals = getCategory(snapshot, 'nominals')
     expect(nominals.locked).toBe(true)
     expect(getItem(nominals, 'participles').locked).toBe(true)
@@ -38,7 +34,7 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [key]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-21' },
     }
-    const snapshot = buildMasterySnapshot(BASE_PROFILE, store, '2026-04-21')
+    const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const rootTypes = getCategory(snapshot, 'rootTypes')
     expect(getItem(rootTypes, 'sound').score).toBe(0)
   })
@@ -48,7 +44,7 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [key]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
-    const snapshot = buildMasterySnapshot(BASE_PROFILE, store, '2026-04-21')
+    const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const rootTypes = getCategory(snapshot, 'rootTypes')
     expect(getItem(rootTypes, 'sound').score).toBeGreaterThan(0)
   })
@@ -59,7 +55,7 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [key]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
-    const snapshot = buildMasterySnapshot(profile, store, '2026-04-21')
+    const snapshot = computeMastery(profile, store, '2026-04-21')
     const nominals = getCategory(snapshot, 'nominals')
     const participles = getItem(nominals, 'participles')
     const masdar = getItem(nominals, 'masdar')
@@ -70,7 +66,7 @@ describe('buildMasterySnapshot', () => {
 
   test('orders pronouns using conjugation table order', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
-    const snapshot = buildMasterySnapshot(profile, {}, '2026-04-21')
+    const snapshot = computeMastery(profile, {}, '2026-04-21')
     const pronouns = getCategory(snapshot, 'pronouns')
     expect(pronouns).toEqual({
       id: 'pronouns',
@@ -100,7 +96,7 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [impossibleImperative]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
-    const snapshot = buildMasterySnapshot(profile, store, '2026-04-21')
+    const snapshot = computeMastery(profile, store, '2026-04-21')
     const pronouns = getCategory(snapshot, 'pronouns')
     const tenses = getCategory(snapshot, 'tenses')
     expect(getItem(pronouns, '1s').score).toBe(0)
@@ -112,8 +108,8 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [key]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
-    const lockedFormsSnapshot = buildMasterySnapshot(BASE_PROFILE, store, '2026-04-21')
-    const unlockedFormsSnapshot = buildMasterySnapshot({ ...BASE_PROFILE, forms: 1 }, store, '2026-04-21')
+    const lockedFormsSnapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
+    const unlockedFormsSnapshot = computeMastery({ ...BASE_PROFILE, forms: 1 }, store, '2026-04-21')
     const lockedScore = getItem(getCategory(lockedFormsSnapshot, 'tenses'), 'active.past').score
     const unlockedScore = getItem(getCategory(unlockedFormsSnapshot, 'tenses'), 'active.past').score
     expect(unlockedScore).toBeCloseTo(lockedScore)
@@ -124,7 +120,7 @@ describe('buildMasterySnapshot', () => {
     const store: SrsStore = {
       [key]: { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
-    const snapshot = buildMasterySnapshot(BASE_PROFILE, store, '2026-04-21')
+    const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const activePast = getItem(getCategory(snapshot, 'tenses'), 'active.past').score
     expect(activePast).toBeLessThan(0.2)
   })
