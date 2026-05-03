@@ -167,22 +167,16 @@ function masteryProgressBar(score: number, locked: boolean): { value: number; ma
 
 function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
   const { t } = useI18n()
-  const [expanded, setExpanded] = useState<string | null>(null)
 
   return (
     <MasteryContainer>
       <Heading as="h3">{t('exercise.stats.mastery.title')}</Heading>
       <MasteryGrid>
         {mastery.categories.map((category) => {
-          const isExpanded = expanded === category.id
           const categoryProgress = masteryProgressBar(category.score, category.locked)
           return (
-            <MasteryCategory key={category.id}>
-              <MasteryHeader
-                data-testid={`mastery-category-header-${category.id}`}
-                type="button"
-                onClick={() => setExpanded((current) => (current === category.id ? null : category.id))}
-              >
+            <MasteryCategory key={category.id} name="mastery">
+              <MasterySummary data-testid={`mastery-category-header-${category.id}`}>
                 <MasteryLabelGroup data-testid={`mastery-category-label-${category.id}`}>
                   <span>{t(`exercise.unlock.dimension.${category.id}`)}</span>
                   {category.locked && (
@@ -192,9 +186,7 @@ function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
                     </InlineLock>
                   )}
                 </MasteryLabelGroup>
-                <Chevron data-testid={`mastery-category-chevron-${category.id}`} collapsed={!isExpanded}>
-                  ›
-                </Chevron>
+                <Chevron data-testid={`mastery-category-chevron-${category.id}`}>›</Chevron>
                 <MasteryCategoryRow data-testid={`mastery-category-row-${category.id}`}>
                   <ProgressBar
                     value={categoryProgress.value}
@@ -202,8 +194,8 @@ function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
                     style={{ height: '0.45rem' }}
                   />
                 </MasteryCategoryRow>
-              </MasteryHeader>
-              {isExpanded && (
+              </MasterySummary>
+              {
                 <MasteryItems>
                   {category.items.map((item) => {
                     const itemProgress = masteryProgressBar(item.score, item.locked)
@@ -229,7 +221,7 @@ function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
                     )
                   })}
                 </MasteryItems>
-              )}
+              }
             </MasteryCategory>
           )
         })}
@@ -411,7 +403,7 @@ const MasteryGrid = styled('div')`
   gap: 0.75rem;
 `
 
-const MasteryCategory = styled('div')`
+const MasteryCategory = styled('details')`
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   background: color-mix(in srgb, var(--color-bg-surface) 92%, var(--color-bg-base) 8%);
@@ -423,7 +415,7 @@ const MasteryCategory = styled('div')`
   }
 `
 
-const MasteryHeader = styled('button')`
+const MasterySummary = styled('summary')`
   border: 0;
   width: 100%;
   background: transparent;
@@ -457,18 +449,22 @@ const MasteryLabelGroup = styled('span')`
   grid-row: 1;
 `
 
-const Chevron = styled('span')<{ collapsed: boolean }>`
+const Chevron = styled('span')`
   color: var(--color-text-muted);
   font-size: 1.2rem;
   line-height: 1;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-  transform: ${({ collapsed }) => (collapsed ? 'rotate(90deg)' : 'rotate(-90deg)')};
+  transform: rotate(90deg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   grid-column: 2;
   grid-row: 1 / span 2;
   user-select: none;
+
+  details[open] & {
+    transform: rotate(-90deg);
+  }
 `
 
 const MasteryCategoryRow = styled('span')`

@@ -37,7 +37,7 @@ Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer 
 **State management**: Two context providers in `src/hooks/`:
 - `RoutingProvider` — Hash-based routing, synced with `hashchange`/`popstate`. Canonical paths:
   - `#/verbs`, `#/verbs/:verbId`, `#/verbs/:verbId/:voice/:tense`, `#/verbs/:verbId/:voice/present/:mood`, `#/test`
-  - App is deployed under Vite `base: '/musarrif/'`; routing utilities normalize base-path and hash navigation.
+  - App is deployed using Vite; routing utilities normalize base-path and hash navigation.
 - `I18nProvider` — Language (en/it/pt/ar), diacritics preference (`all`/`some`/`none`), RTL/LTR switching.
 
 **Verb data**: Raw roots in `src/data/roots.json`. Search via fuzzy matching with transliteration and Levenshtein distance in `src/paradigms/verbs.ts`.

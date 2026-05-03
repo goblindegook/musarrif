@@ -226,32 +226,14 @@ describe('ExerciseStats', () => {
   test('shows locked indicator in the category label', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
-    const nominalsButton = screen.getByText('Nominals').closest('button') as HTMLButtonElement
+    const nominalsButton = screen.getByText('Nominals').closest('summary') as HTMLButtonElement
     expect(within(nominalsButton).getAllByText('Locked')).toHaveLength(1)
   })
 
-  test('expands and collapses a mastery category to show item breakdown', () => {
+  test('shows item breakdown', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
-    const rootTypesCategory = screen.getByText('Root types').closest('button') as HTMLButtonElement
-
-    fireEvent.click(rootTypesCategory)
     expect(screen.getByText('Sound')).toBeInTheDocument()
-
-    fireEvent.click(rootTypesCategory)
-    expect(screen.queryByText('Sound')).not.toBeInTheDocument()
-  })
-
-  test('collapses other categories when one is expanded', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByText('Progress'))
-
-    fireEvent.click(screen.getByText('Root types').closest('button') as HTMLButtonElement)
-    expect(screen.getByText('Sound')).toBeInTheDocument()
-
-    fireEvent.click(screen.getByText('Forms').closest('button') as HTMLButtonElement)
-    expect(screen.queryByText('Sound')).not.toBeInTheDocument()
-    expect(screen.getByText('Form I')).toBeInTheDocument()
   })
 
   test('keeps today values in the last chart slot when local day differs from UTC', () => {
