@@ -12,20 +12,31 @@ interface SpeechButtonProps {
 export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps) {
   const supported = window?.speechSynthesis && window?.SpeechSynthesisUtterance
   const [playing, setPlaying] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const cleanupRef = useRef<(() => void) | null>(null)
 
   const speak = useCallback(() => {
     if (!supported) return
 
+    if (cleanupRef.current) {
+      cleanupRef.current()
+      cleanupRef.current = null
+    }
+
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = lang
     utterance.rate = 0.97
+    utterance.onend = () => {
+      setPlaying(false)
+      cleanupRef.current = null
+    }
+
     window.speechSynthesis.cancel()
     window.speechSynthesis.speak(utterance)
-
-    if (timerRef.current) clearTimeout(timerRef.current)
     setPlaying(true)
-    timerRef.current = setTimeout(() => setPlaying(false), 1500)
+
+    cleanupRef.current = () => {
+      utterance.onend = null
+    }
   }, [lang, supported, text])
 
   return (

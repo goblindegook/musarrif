@@ -43,14 +43,16 @@ Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer 
 **Verb data**: Raw roots in `src/data/roots.json`. Search via fuzzy matching with transliteration and Levenshtein distance in `src/paradigms/verbs.ts`.
 
 **Paradigm structure**:
-- `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative
-- `src/paradigms/passive/` — past, present, future
+- `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative (each with annotation files)
+- `src/paradigms/passive/` — past, present, future (each with annotation files)
 - `src/paradigms/nominal/` — masdar, active participle, passive participle
+- `src/paradigms/annotation.ts` — Morpheme annotation system for grammatical breakdowns
+- `src/paradigms/explanation.ts` — Grammatical explanation generation
 - `src/paradigms/letters.ts` — Character/diacritic manipulation constants and utilities
 
-**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers conjugation, nominal, root, form, tense, pronoun, and participle exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/components/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
+**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers 14 exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/components/pages/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
 
-**Localization**: `src/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales.
+**Localization**: `src/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under the `strings` object.
 
 ### Directory Organization
 
@@ -58,20 +60,50 @@ Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer 
 src/
   app.tsx                   # App shell; switches between conjugation and exercise pages
   main.tsx                  # Entry point; mounts RoutingProvider + I18nProvider + App
+  routes.ts                 # Routing configuration and AppRoute type definitions
   components/
-    atoms/                  # Foundational UI primitives
-    molecules/              # Composed controls (tabs, segmented control, search, share/copy/speech)
-    organisms/              # Feature sections (header, conjugation table, insights, builder, stats)
-    pages/                  # Top-level page components (ConjugationMode, ExerciseMode)
-  exercises/                # Pure exercise generation, dimensions, SRS, and stats logic
+    atoms/                  # Foundational UI primitives (Button, ArabicDisplay, Heading, Text, etc.)
+    molecules/              # Composed controls (tabs, segmented control, search, share/copy/speech, Detail, etc.)
+    organisms/              # Feature sections (ConjugateBox, ConjugationTable, ConjugationInsights, FormInsights, etc.)
+    pages/                  # Top-level page components (Home, ConjugationMode, ExerciseMode)
+    icons/                  # SVG icon components
+  exercises/
+    generators/             # Per-kind exercise generators (conjugation.ts, verb-form.ts, masdar-form.ts, etc.)
+    mastery.ts              # Mastery tracking system
+    scheduler.ts            # Exercise scheduling logic
+    stats.ts                # Exercise statistics and streak tracking
+    distractors.ts          # Distractor generation for multiple-choice exercises
+    srs.ts                  # Spaced Repetition System implementation
+    dimensions.ts           # Adaptive difficulty dimensions
+    exercises.ts            # Exercise interface and core logic
   paradigms/                # Core derivation and grammar rules
-    active/                 # Active voice paradigms
-    passive/                # Passive voice paradigms + passive support rules
-    nominal/                # Nominal derivations (masdar and participles)
+    active/                 # Active voice paradigms (past, present, future, imperative + annotations)
+    passive/                # Passive voice paradigms (past, present, future + annotations)
+    nominal/                # Nominal derivations (masdar, active participle, passive participle)
+    annotation.ts           # Morpheme annotation system
+    explanation.ts          # Grammatical explanation generation
+    form-i-vowels.ts        # Form I vowel pattern handling
+    tense.ts                # Tense type definitions
+    selection.ts            # Verb selection/filtering
+    conjugation.ts          # Shared conjugation types
+    hamza.ts                # Hamza handling rules
+    pronouns.ts             # Pronoun definitions
+    roots.ts                # Root analysis
+    letters.ts              # Character/diacritic manipulation constants and utilities
+    verbs.ts                # Verb search via fuzzy matching
   data/                     # Canonical dataset (`roots.json`)
-  hooks/                    # Shared providers/hooks (routing, i18n, local storage, SRS, favourites, recents)
-  locales/                  # i18n JSON files
-  primitives/               # Generic helpers (objects, strings)
+  hooks/                    # Shared providers/hooks
+    useRouting.tsx          # Routing provider (hash-based)
+    useI18n.tsx             # I18n provider (language, diacritics, RTL/LTR)
+    useDimensionStore.ts    # Exercise dimension state
+    useSrsStore.ts          # SRS state persistence
+    useFavourites.ts        # Favourites management
+    useRecent.ts            # Recent verbs tracking
+    useTheme.ts             # Theme management
+    useDocumentTitle.ts     # Document title updates
+    useLocalStorage.ts      # Local storage abstraction
+  locales/                  # i18n JSON files (en, it, pt, ar)
+  primitives/               # Generic helpers (objects, strings, numbers)
   test/                     # Vitest setup and custom matchers
 ```
 
@@ -88,11 +120,18 @@ Elegant, minimal, and quietly authoritative. Three words: **precise, warm, schol
 ### Aesthetic Direction
 
 - **Palette**: Warm parchment (`#f5f4ee`) backgrounds, white card surfaces, amber/ochre accents (`#92400e`, `#facc15`), slate text hierarchy. Semantic green/red for exercise feedback.
-- **Typography**: IBM Plex Sans (UI) + Noto Sans Arabic. Uppercase tracking on labels. Generous Arabic script sizing — the language is always the visual centrepiece.
+- **Typography**: `system-ui` for UI (intentional choice), Noto Sans Arabic for Arabic script. Uppercase tracking on labels. Generous Arabic script sizing — the language is always the visual centrepiece.
 - **Layout**: Clean card-based structure, generous whitespace, rounded corners (1–1.5rem) that feel refined, not playful.
 - **Theme**: Light mode today; design with future dark mode compatibility in mind.
 
 **Anti-references**: No gamified/Duolingo aesthetics, no generic SaaS blue, no dense academic PDF, no dark terminal aesthetic.
+
+### Accessibility
+
+- **WCAG 2.1 AA** compliance required across all interfaces.
+- Support `prefers-reduced-motion` for animations and transitions.
+- Ensure sufficient color contrast ratios for parchment/amber/slate palette.
+- Test with screen readers; Arabic script regions must have appropriate ARIA labels.
 
 ### Design Principles
 
@@ -149,7 +188,7 @@ Elegant, minimal, and quietly authoritative. Three words: **precise, warm, schol
 
 ## UI Components
 
-**Always reuse existing UI primitives before building new ones.** Check `src/components/atoms/`, `src/components/buttons/`, `src/components/icons/`, `Modal.tsx`, `Overlay.tsx`, and `Panel.tsx` first. Never roll bespoke styled wrappers for things that already exist — use `IconButton` + an SVG icon (not emoji buttons), use `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
+**Always reuse existing UI primitives before building new ones.** Check `src/components/atoms/`, `src/components/molecules/`, `src/components/icons/`, `Modal.tsx`, `Overlay.tsx`, and `Panel.tsx` first. Never roll bespoke styled wrappers for things that already exist — use `IconButton` + an SVG icon (not emoji buttons), use `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
 
 ### Preact Component Conventions
 
@@ -280,6 +319,8 @@ interface Exercise {
 
 **Exercise kinds**: `conjugation`, `masdarForm`, `masdarRoot`, `masdarVerb`, `participleForm`, `participleRoot`, `participleVerb`, `verbParticiple`, `verbForm`, `verbMasdar`, `verbPronoun`, `verbRoot`, `rootFormVerb`, `verbTense`.
 
+**Generator pattern**: Each exercise kind has a dedicated generator file in `src/exercises/generators/` (e.g., `conjugation.ts`, `verb-form.ts`, `masdar-form.ts`).
+
 **Adaptive dimensions** (`src/exercises/dimensions.ts`):
 - `tenses` (0–5): gradually unlocks from active past to full passive set
 - `pronouns` (0–3): from `3ms` to full inventory
@@ -297,6 +338,8 @@ interface Exercise {
 - Streak goal: 10 correct answers/day
 
 **Component pattern**: `ExerciseMode` accepts a `generateExercise` prop (defaults to `randomExercise`) for test injection. Preserve this pattern when adding exercise types.
+
+**Annotation/Explanation system**: Morpheme-level annotation of conjugations (prefix, stem, suffix with grammatical roles) and grammatical explanation generation for conjugations and nominals. Used in `ConjugationInsights.tsx`, `FormInsights.tsx`, `NominalInsights.tsx`, and `RootInsights.tsx`.
 
 ## Examples
 
