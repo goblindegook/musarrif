@@ -39,7 +39,7 @@ export type MasdarPattern =
   | 'fu3aala' // abstract quality (rare)
   | 'fa3la' // single concrete event
   | 'fi3la' // single concrete event
-  | 'fu3la' // single instance of action
+  | 'fu3la' // single concrete event
   // Uncommon
   | 'fa3al' // abstract result
   | 'fi3al' // inherent qualities

@@ -107,6 +107,46 @@ it('exports user data in JSON format', () => {
   })
 })
 
+it('shows a warning modal before importing data', () => {
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  fireEvent.click(screen.getByText('Import data'))
+
+  expect(screen.getByText('Import data warning')).toBeInTheDocument()
+  expect(
+    screen.getByText('Importing will overwrite all your existing data. This action cannot be undone.'),
+  ).toBeInTheDocument()
+  expect(screen.getByText('Go back')).toBeInTheDocument()
+  expect(screen.getByText('Choose import file')).toBeInTheDocument()
+})
+
+it('closes the warning modal when Go back is clicked', () => {
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  fireEvent.click(screen.getByText('Import data'))
+
+  fireEvent.click(screen.getByText('Go back'))
+
+  expect(screen.queryByText('Import data warning')).not.toBeInTheDocument()
+})
+
+it('opens the file picker when Choose import file is clicked in the warning modal', async () => {
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  fireEvent.click(screen.getByText('Import data'))
+
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement
+  const clickSpy = vi.spyOn(input, 'click').mockImplementation(() => {})
+
+  await act(async () => {
+    await user.click(screen.getByText('Choose import file'))
+  })
+
+  expect(clickSpy).toHaveBeenCalledTimes(1)
+  expect(screen.queryByText('Import data warning')).not.toBeInTheDocument()
+})
+
 it('imports user data from JSON and updates local storage', async () => {
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))

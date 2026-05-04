@@ -22,6 +22,7 @@ export const AppHeader = () => {
   const { themePreference, setThemePreference } = useTheme()
   const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isImportWarningOpen, setIsImportWarningOpen] = useState(false)
   const importInputRef = useRef<HTMLInputElement>(null)
 
   const exportUserData = useCallback(() => {
@@ -118,10 +119,30 @@ export const AppHeader = () => {
             <ControlLabel>{t('settings.data.title')}</ControlLabel>
             <ActionRow>
               <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
-              <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
+              <Button onClick={() => setIsImportWarningOpen(true)}>{t('settings.data.import')}</Button>
             </ActionRow>
             <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
           </ControlGroup>
+        </SettingsModalBody>
+      </Modal>
+      <Modal
+        isOpen={isImportWarningOpen}
+        title={t('settings.importWarning.title')}
+        onClose={() => setIsImportWarningOpen(false)}
+      >
+        <SettingsModalBody>
+          <p>{t('settings.importWarning.message')}</p>
+          <ActionRow>
+            <Button onClick={() => setIsImportWarningOpen(false)}>{t('settings.importWarning.cancel')}</Button>
+            <Button
+              onClick={() => {
+                setIsImportWarningOpen(false)
+                importInputRef.current?.click()
+              }}
+            >
+              {t('settings.importWarning.confirm')}
+            </Button>
+          </ActionRow>
         </SettingsModalBody>
       </Modal>
     </TopBar>
