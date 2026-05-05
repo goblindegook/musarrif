@@ -67,10 +67,10 @@ test('Shows alphabetized verbs for the selected form', async () => {
   )
 
   const formTwoPanel = document.querySelector<HTMLElement>('[role="tabpanel"][aria-label="Form II"]')!
-  const safarra = within(formTwoPanel).getByText('سَفَّرَ')
-  const kallama = within(formTwoPanel).getByText('كَلَّمَ')
+  const hassana = within(formTwoPanel).getByText('حَسَّنَ')
+  const sammaa = within(formTwoPanel).getByText('سَمَّى')
 
-  expect(safarra.compareDocumentPosition(kallama) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(hassana.compareDocumentPosition(sammaa) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 })
 
 describe('Search', () => {

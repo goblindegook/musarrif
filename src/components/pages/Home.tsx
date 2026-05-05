@@ -16,6 +16,10 @@ import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 
 type FormNumber = (typeof FORMS)[number]
+type VerbFilter = { kind: 'form'; form: FormNumber } | { kind: 'kanaSisters' }
+
+const KANA_SISTERS_IDS = new Set(['DHy-4', 'SbH-4', 'Syr-1', 'Zll-1', 'byt-1', 'kwn-1', 'lys-1', 'msw-4'])
+const VERBS_PER_PAGE = 50
 
 const verbsByForm = (() => {
   const grouped = new Map<FormNumber, DisplayVerb[]>()
@@ -38,6 +42,8 @@ export function Home() {
   const { favourites } = useFavourites()
   const { recents } = useRecent()
   const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
+  const [activeFilter, setActiveFilter] = useState<VerbFilter>({ kind: 'form', form: 1 })
+  const [page, setPage] = useState(1)
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
 
   useDocumentTitle(t('title'))
@@ -52,6 +58,32 @@ export function Home() {
   const isMobile = useMemo(() => window.innerWidth < 960, [])
 
   const sortedRecents = useMemo(() => recents, [recents])
+  const visibleVerbs = useMemo(() => {
+    if (activeFilter.kind === 'kanaSisters') {
+      return verbs.filter((verb) => KANA_SISTERS_IDS.has(verb.id))
+    }
+
+    return verbsByForm.get(activeFilter.form) ?? []
+  }, [activeFilter])
+  const pageCount = Math.max(1, Math.ceil(visibleVerbs.length / VERBS_PER_PAGE))
+  const currentPage = Math.min(page, pageCount)
+  const paginatedVerbs = useMemo(() => {
+    const start = (currentPage - 1) * VERBS_PER_PAGE
+    return visibleVerbs.slice(start, start + VERBS_PER_PAGE)
+  }, [currentPage, visibleVerbs])
+
+  const selectFormFilter = useCallback((form: FormNumber) => {
+    setSelectedFormTab(form)
+    setActiveFilter({ kind: 'form', form })
+    setPage(1)
+  }, [])
+
+  const toggleKanaSistersFilter = useCallback(() => {
+    setActiveFilter((current) =>
+      current.kind === 'kanaSisters' ? { kind: 'form', form: selectedFormTab } : { kind: 'kanaSisters' },
+    )
+    setPage(1)
+  }, [selectedFormTab])
 
   return (
     <Main>
@@ -136,35 +168,74 @@ export function Home() {
 
       <Stack area="verbList">
         <Panel title={t('verbsByForm.title')} dir={dir} lang={lang} collapsible defaultCollapsed={isMobile}>
-          <TabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
-            {FORMS.map((form) => (
-              <TabButton
-                key={form}
-                id={`form-tab-${form}`}
-                role="tab"
+          <FilterGroup>
+            <FilterGroupTitle dir={dir} lang={lang}>
+              {t('verbsByForm.filterByForm')}
+            </FilterGroupTitle>
+            <FormTabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
+              {FORMS.map((form) => (
+                <FormTabButton
+                  key={form}
+                  id={`form-tab-${form}`}
+                  role="tab"
+                  type="button"
+                  aria-selected={activeFilter.kind === 'form' && activeFilter.form === form}
+                  aria-controls={`form-panel-${form}`}
+                  size="sm"
+                  fluid
+                  active={activeFilter.kind === 'form' && activeFilter.form === form}
+                  onClick={() => selectFormFilter(form)}
+                >
+                  {FORM_LABELS[form - 1]}
+                </FormTabButton>
+              ))}
+            </FormTabBar>
+          </FilterGroup>
+
+          <FilterGroup>
+            <FilterGroupTitle dir={dir} lang={lang}>
+              {t('verbsByForm.otherFilters')}
+            </FilterGroupTitle>
+            <FilterBar role="group" aria-label={t('verbsByForm.otherFilters')}>
+              <FilterButton
                 type="button"
-                aria-selected={selectedFormTab === form}
-                aria-controls={`form-panel-${form}`}
-                size="sm"
-                fluid
-                active={selectedFormTab === form}
-                onClick={() => setSelectedFormTab(form)}
+                aria-pressed={activeFilter.kind === 'kanaSisters'}
+                active={activeFilter.kind === 'kanaSisters'}
+                onClick={toggleKanaSistersFilter}
               >
-                {FORM_LABELS[form - 1]}
-              </TabButton>
-            ))}
-          </TabBar>
+                {t('verbsByForm.kanaSisters')}
+              </FilterButton>
+            </FilterBar>
+          </FilterGroup>
+
           <TabPanel
             role="tabpanel"
-            id={`form-panel-${selectedFormTab}`}
-            aria-labelledby={`form-tab-${selectedFormTab}`}
-            aria-label={t('meta.form.withNumber', { form: FORM_LABELS[selectedFormTab - 1] })}
+            id={activeFilter.kind === 'form' ? `form-panel-${activeFilter.form}` : 'other-filter-panel-kana-sisters'}
+            aria-labelledby={activeFilter.kind === 'form' ? `form-tab-${activeFilter.form}` : undefined}
+            aria-label={
+              activeFilter.kind === 'form'
+                ? t('meta.form.withNumber', { form: FORM_LABELS[activeFilter.form - 1] })
+                : t('verbsByForm.kanaSisters')
+            }
           >
-            <VerbList>
-              {(verbsByForm.get(selectedFormTab) ?? []).map((verb) => (
-                <VerbPill key={verb.id} verb={verb} />
+            <IncludedVerbList>
+              {paginatedVerbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} block />
               ))}
-            </VerbList>
+            </IncludedVerbList>
+            {pageCount > 1 && (
+              <PaginationBar>
+                <PaginationButton disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
+                  {t('pagination.previous')}
+                </PaginationButton>
+                <PaginationStatus dir={dir} lang={lang}>
+                  {t('pagination.page', { current: String(currentPage), total: String(pageCount) })}
+                </PaginationStatus>
+                <PaginationButton disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
+                  {t('pagination.next')}
+                </PaginationButton>
+              </PaginationBar>
+            )}
           </TabPanel>
         </Panel>
       </Stack>
@@ -199,6 +270,160 @@ const Stack = styled('div')<{ area: 'search' | 'verbList' }>`
   flex-direction: column;
   gap: 1rem;
   align-self: flex-start;
+`
+
+const FilterGroup = styled('section')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
+
+const FilterGroupTitle = styled('h4')`
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+`
+
+const FormTabBar = styled(TabBar)`
+  @media (max-width: 480px) {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+`
+
+const FormTabButton = styled(TabButton)`
+  @media (max-width: 480px) {
+    min-width: 0;
+    padding-inline: 0.35rem;
+  }
+`
+
+const FilterBar = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`
+
+const FilterButton = styled('button')<{ active: boolean }>`
+  align-items: center;
+  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
+  border-radius: 0.75rem;
+  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
+  box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
+  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.8rem;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  min-height: 2.4rem;
+  padding: 0.4rem 0.75rem;
+  text-transform: uppercase;
+  transition:
+    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:hover {
+    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
+    border-color: var(--color-accent);
+    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
+    box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'var(--shadow-interactive-hover)')};
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`
+
+const IncludedVerbList = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  
+  & > * {
+    min-width: 0;
+  }
+`
+
+const PaginationBar = styled('div')`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+const PaginationButton = styled('button')`
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  color: var(--color-text-tertiary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:enabled:active {
+    transform: scale(0.96);
+  }
+
+  &:enabled:hover {
+    background: var(--color-bg-accent-hover);
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-interactive-hover);
+  }
+
+  &:enabled:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+
+  &:disabled {
+    cursor: default;
+    color: var(--color-text-muted);
+    background: var(--color-bg-surface-secondary);
+    border-color: var(--color-border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`
+
+const PaginationStatus = styled('div')`
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  text-align: center;
 `
 
 const VerbList = styled('div')`

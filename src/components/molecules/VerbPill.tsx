@@ -8,9 +8,10 @@ import { useRouting } from '../../routes'
 interface VerbPillProps {
   verb: DisplayVerb
   className?: string
+  block?: boolean
 }
 
-export function VerbPill({ verb, className }: VerbPillProps) {
+export function VerbPill({ verb, className, block = false }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
   const { toHref } = useRouting()
   const formLabel = formatFormLabel(verb.form, verb.root)
@@ -34,6 +35,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
     <VerbPillLink
       href={toHref(['verbs', verb.id])}
       className={className}
+      block={block}
       aria-label={[
         verb.synthetic ? '*' : null,
         formatArabic(verb.label),
@@ -52,7 +54,7 @@ export function VerbPill({ verb, className }: VerbPillProps) {
         <small>{formLabel}</small>
       </InlineRow>
       {lang !== 'ar' && (
-        <VerbTranslation dir={dir} lang={lang}>
+        <VerbTranslation dir={dir} lang={lang} block={block}>
           {translateVerb(verb)}
         </VerbTranslation>
       )}
@@ -60,11 +62,12 @@ export function VerbPill({ verb, className }: VerbPillProps) {
   )
 }
 
-const VerbPillLink = styled('a')`
+const VerbPillLink = styled('a')<{ block: boolean }>`
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 0.3rem 0.9rem;
   background: var(--color-bg-surface);
+  box-sizing: border-box;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -72,6 +75,7 @@ const VerbPillLink = styled('a')`
   flex-direction: column;
   align-items: flex-start;
   font-size: 1rem;
+  width: ${({ block }) => (block ? '100%' : 'auto')};
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
@@ -119,12 +123,12 @@ const InlineRow = styled('div')`
   gap: 0.5rem;
 `
 
-const VerbTranslation = styled('small')`
+const VerbTranslation = styled('small')<{ block?: boolean }>`
   color: var(--color-text-secondary);
   font-size: 0.75rem;
-  max-width: 5rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: ${({ block }) => (block ? 'none' : '5rem')};
+  overflow: ${({ block }) => (block ? 'visible' : 'hidden')};
+  text-overflow: ${({ block }) => (block ? 'clip' : 'ellipsis')};
   transition: color 120ms ease;
-  white-space: nowrap;
+  white-space: ${({ block }) => (block ? 'normal' : 'nowrap')};
 `
