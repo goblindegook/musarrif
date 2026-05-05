@@ -1,3 +1,4 @@
+import { toRoman } from '../primitives/numbers'
 import { annotate, type Morpheme } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
 import { DAL, type LetterToken, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH } from './letters'
@@ -51,15 +52,15 @@ const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
 export type ExplanationLayers = {
   rootLetters: string[]
   arabic: string | readonly string[]
-  rootType?: RootAnalysisType
-  form?: VerbForm
+  rootType: RootAnalysisType
+  form: VerbForm
   vowels?: FormIPattern
   formRoot?: FormRootInteraction
   tense?: VerbTense
   tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
   nominal?: NominalKind
-  nominalMimiMasdar?: boolean
+  isMasdarMimi?: boolean
   masdarPattern?: string
   prefix?: string
   suffix?: string
@@ -148,9 +149,8 @@ function renderPronounParagraph(
 function resolveNominalExplanationKey(layers: ExplanationLayers): string | undefined {
   if (layers.nominal == null) return
   if (layers.nominal !== 'masdar') return `explanation.nominal.${layers.nominal}`
-  if (layers.form === 1) {
-    return layers.nominalMimiMasdar ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
-  }
+  if (layers.form === 1)
+    return layers.isMasdarMimi ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
   return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : undefined
 }
 
@@ -158,13 +158,12 @@ export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
 ): string[] {
-  const formIBaseParams = layers.vowels ? FORM_I_BASE_PATTERNS[layers.vowels] : {}
   const params = {
-    root: layers.rootLetters?.join('-') ?? '',
+    ...(layers.vowels && FORM_I_BASE_PATTERNS[layers.vowels]),
     arabic: toArabicText(layers.arabic),
-    form: layers.form == null ? '' : String(layers.form),
+    root: layers.rootLetters.join('-'),
+    form: toRoman(layers.form),
     pattern: layers.masdarPattern ?? '',
-    ...formIBaseParams,
   }
 
   const tenseRootSentence = layers.tenseRoot ? t(`explanation.tense-root.${layers.tenseRoot}`, params) : ''
@@ -301,7 +300,7 @@ export function resolveNominalExplanationLayers(
     vowels: verb.form === 1 ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
-    nominalMimiMasdar: nominal === 'masdar' && isMimiMasdarSelection(verb, arabic),
+    isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabic),
     masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabic) : undefined,
   }
 }

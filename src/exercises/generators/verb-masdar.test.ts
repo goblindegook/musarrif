@@ -76,7 +76,7 @@ describe('verbMasdarExercise', () => {
     vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
     const exercise = verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(exercise.explanation?.nominal).toBe('masdar')
-    expect(exercise.explanation?.nominalMimiMasdar).toBe(true)
+    expect(exercise.explanation?.isMasdarMimi).toBe(true)
   })
 })
 

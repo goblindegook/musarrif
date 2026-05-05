@@ -9,3 +9,22 @@ export function sum(values: readonly number[]): number {
 export function average(values: readonly number[]): number {
   return values.length === 0 ? 0 : sum(values) / values.length
 }
+
+export function toRoman(n: number): string {
+  const table = [
+    [10, 'X'],
+    [9, 'IX'],
+    [5, 'V'],
+    [4, 'IV'],
+    [1, 'I'],
+  ] as const
+  let remaining = n
+  let result = ''
+  for (const [n, s] of table) {
+    while (remaining >= n) {
+      result += s
+      remaining -= n
+    }
+  }
+  return result
+}

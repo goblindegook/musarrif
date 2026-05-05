@@ -651,7 +651,7 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.nominal).toBe('passiveParticiple')
   })
 
-  test('masdar nominal sets nominal to masdar', () => {
+  test('masdar sets nominal to masdar', () => {
     const layers = resolveNominalExplanationLayers(verb, 'masdar', 'كِتَابَة')
     expect(layers.nominal).toBe('masdar')
   })
@@ -659,19 +659,19 @@ describe('resolveNominalExplanationLayers', () => {
   test('nominalMimiMasdar is true when selected masdar is mimi', () => {
     const wEd = getVerbById('wEd-1')!
     const layers = resolveNominalExplanationLayers(wEd, 'masdar', 'مَوْعِد')
-    expect(layers.nominalMimiMasdar).toBe(true)
+    expect(layers.isMasdarMimi).toBe(true)
   })
 
   test('nominalMimiMasdar is false when selected masdar is not mimi', () => {
     const wEd = getVerbById('wEd-1')!
     const layers = resolveNominalExplanationLayers(wEd, 'masdar', 'وَعْد')
-    expect(layers.nominalMimiMasdar).toBe(false)
+    expect(layers.isMasdarMimi).toBe(false)
   })
 
   test('nominalMimiMasdar is true for default Form I mimi masdar when no explicit masdars are stored', () => {
     const defaultMimi = getVerbById('$Er-1')!
     const layers = resolveNominalExplanationLayers(defaultMimi, 'masdar', 'مَشْعَر')
-    expect(layers.nominalMimiMasdar).toBe(true)
+    expect(layers.isMasdarMimi).toBe(true)
   })
 })
 
@@ -729,7 +729,7 @@ describe('renderExplanation with nominal', () => {
       arabic: ['وَعْد', 'مَوْعِد'],
       rootType: 'assimilated',
       nominal: 'masdar',
-      nominalMimiMasdar: true,
+      isMasdarMimi: true,
       masdarPattern: 'مَفْعِل',
     }
     expect(renderExplanation(layers, t)).toEqual([
@@ -772,7 +772,7 @@ describe('renderExplanation with nominal', () => {
     expect(rendered).toContain('تَفْعِيل')
   })
 
-  test('localized Form I lexical masdar explanation says it must be memorized without naming pattern', () => {
+  test('localized Form I lexical masdar explanation says it must be memorized', () => {
     const [masdar] = deriveMasdar(getVerb('كتب', 1))
 
     const rendered = renderExplanation(resolveNominalExplanationLayers(getVerb('كتب', 1), 'masdar', masdar), localeT)
@@ -792,5 +792,16 @@ describe('renderExplanation with nominal', () => {
 
     expect(rendered).toContain('مَفْعِل')
     expect(rendered).toContain('mīmī')
+  })
+
+  test('localized non-Form I masdar explanation says it must be memorized without naming pattern', () => {
+    const [masdar] = deriveMasdar(getVerb('كتب', 1))
+
+    const rendered = renderExplanation(
+      resolveNominalExplanationLayers(getVerb('كتب', 2), 'masdar', masdar),
+      localeT,
+    ).join(' ')
+
+    expect(rendered).toContain('The Form II masdar follows the pattern تَفْعِيل.')
   })
 })
