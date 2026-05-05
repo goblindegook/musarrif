@@ -54,7 +54,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
         <small>{formLabel}</small>
       </InlineRow>
       {lang !== 'ar' && (
-        <VerbTranslation dir={dir} lang={lang} block={block}>
+        <VerbTranslation dir={dir} lang={lang}>
           {translateVerb(verb)}
         </VerbTranslation>
       )}
@@ -76,6 +76,7 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
   align-items: flex-start;
   font-size: 1rem;
   width: ${({ block }) => (block ? '100%' : 'auto')};
+  max-width: ${({ block }) => (block ? '100%' : '7rem')};
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
@@ -123,12 +124,12 @@ const InlineRow = styled('div')`
   gap: 0.5rem;
 `
 
-const VerbTranslation = styled('small')<{ block?: boolean }>`
+const VerbTranslation = styled('small')`
   color: var(--color-text-secondary);
   font-size: 0.75rem;
-  max-width: ${({ block }) => (block ? 'none' : '5rem')};
-  overflow: ${({ block }) => (block ? 'visible' : 'hidden')};
-  text-overflow: ${({ block }) => (block ? 'clip' : 'ellipsis')};
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color 120ms ease;
-  white-space: ${({ block }) => (block ? 'normal' : 'nowrap')};
+  white-space: nowrap;
 `
