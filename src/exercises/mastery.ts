@@ -1,6 +1,7 @@
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, verbs } from '../paradigms/verbs'
+import { utcToday } from '../primitives/dates'
 import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
@@ -36,48 +37,15 @@ const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
 ]
 const NOMINAL_ORDER = ['participles', 'masdar'] as const
 
-const TENSED_KINDS = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
-export const PARTICIPLE_KINDS = new Set<ExerciseKind>([
+const VERB_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
+const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
   'participleForm',
   'participleRoot',
   'participleVerb',
   'verbParticiple',
 ])
-export const MASDAR_KINDS = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
-export const ROOT_TYPE_SCORE_KINDS = new Set<ExerciseKind>([
-  'conjugation',
-  'verbForm',
-  'verbPronoun',
-  'verbRoot',
-  'verbTense',
-  'rootFormVerb',
-])
-export const FORM_SCORE_KINDS = new Set<ExerciseKind>([
-  'conjugation',
-  'verbForm',
-  'verbPronoun',
-  'verbRoot',
-  'verbTense',
-  'rootFormVerb',
-])
-export const TENSE_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbTense'])
-export const PRONOUN_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbPronoun'])
-const EXERCISE_KINDS: readonly ExerciseKind[] = [
-  'conjugation',
-  'masdarForm',
-  'masdarRoot',
-  'masdarVerb',
-  'participleForm',
-  'rootFormVerb',
-  'participleRoot',
-  'participleVerb',
-  'verbForm',
-  'verbMasdar',
-  'verbParticiple',
-  'verbPronoun',
-  'verbRoot',
-  'verbTense',
-]
+const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
+const ALL_EXERCISES = new Set([...VERB_EXERCISES, ...PARTICIPLE_EXERCISES, ...MASDAR_EXERCISES])
 
 const MASTERY_THRESHOLD_DAYS = 365
 const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
@@ -101,6 +69,14 @@ export interface MasterySnapshot {
   categories: readonly MasteryCategory[]
 }
 
+export function isVerbExercise(kind: ExerciseKind): boolean {
+  return VERB_EXERCISES.has(kind)
+}
+
+export function isNominalExercise(kind: ExerciseKind): boolean {
+  return MASDAR_EXERCISES.has(kind) || PARTICIPLE_EXERCISES.has(kind)
+}
+
 export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, today = utcToday()): MasterySnapshot {
   const cards = cardSpace()
   const unlockedRootTypes = new Set(rootTypesPool(profile.rootTypes))
@@ -117,82 +93,84 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
         'rootTypes',
         ROOT_TYPES_ORDER.map((rootType) => {
           const locked = !unlockedRootTypes.has(rootType)
-          const score = locked
-            ? 0
-            : computeUnlockedScore(
-                cards.filter((card) => card.rootType === rootType && ROOT_TYPE_SCORE_KINDS.has(card.kind)),
-                srsStore,
-                today,
-              )
-          return { id: rootType, score, locked }
+          return {
+            id: rootType,
+            score: computeScore(
+              cards.filter((card) => card.rootType === rootType),
+              srsStore,
+              today,
+              locked,
+            ),
+            locked,
+          }
         }),
       ),
       buildCategory(
         'forms',
         FORM_ORDER.map((form) => {
           const locked = !unlockedForms.has(form)
-          const score = locked
-            ? 0
-            : computeUnlockedScore(
-                cards.filter((card) => String(card.form) === form && FORM_SCORE_KINDS.has(card.kind)),
-                srsStore,
-                today,
-              )
-          return { id: form, score, locked }
+          return {
+            id: form,
+            score: computeScore(
+              cards.filter((card) => String(card.form) === form),
+              srsStore,
+              today,
+              locked,
+            ),
+            locked,
+          }
         }),
       ),
       buildCategory(
         'tenses',
         TENSE_ORDER.map((tense) => {
           const locked = !unlockedTenses.has(tense)
-          const score = locked
-            ? 0
-            : computeUnlockedScore(
-                cards.filter((card) => card.tense != null && card.tense === tense && TENSE_SCORE_KINDS.has(card.kind)),
-                srsStore,
-                today,
-              )
-          return { id: tense, score, locked }
+          return {
+            id: tense,
+            score: computeScore(
+              cards.filter((card) => card.tense === tense && isVerbExercise(card.kind)),
+              srsStore,
+              today,
+              locked,
+            ),
+            locked,
+          }
         }),
       ),
       buildCategory(
         'pronouns',
         PRONOUN_TABLE_ORDER.map((pronoun) => {
           const locked = !unlockedPronouns.has(pronoun)
-          const score = locked
-            ? 0
-            : computeUnlockedScore(
-                cards.filter(
-                  (card) => card.pronoun != null && card.pronoun === pronoun && PRONOUN_SCORE_KINDS.has(card.kind),
-                ),
-                srsStore,
-                today,
-              )
-          return { id: pronoun, score, locked }
+          return {
+            id: pronoun,
+            score: computeScore(
+              cards.filter((card) => card.pronoun === pronoun && isVerbExercise(card.kind)),
+              srsStore,
+              today,
+              locked,
+            ),
+            locked,
+          }
         }),
       ),
       buildCategory(
         'nominals',
         NOMINAL_ORDER.map((nominal) => {
           const locked = !unlockedNominals.has(nominal)
-          const score = locked
-            ? 0
-            : computeUnlockedScore(
-                cards.filter((card) =>
-                  nominal === 'participles' ? PARTICIPLE_KINDS.has(card.kind) : MASDAR_KINDS.has(card.kind),
-                ),
-                srsStore,
-                today,
-              )
-          return { id: nominal, score, locked }
+          return {
+            id: nominal,
+            score: computeScore(
+              cards.filter((card) => isNominalExercise(card.kind)),
+              srsStore,
+              today,
+              locked,
+            ),
+            locked,
+          }
         }),
       ),
     ],
   }
-}
-
-function utcToday(): string {
-  return new Date().toISOString().slice(0, 10)
 }
 
 function pronounSpace(
@@ -222,8 +200,8 @@ function cardSpace(): readonly SrsCardIdentity[] {
     const paradigms = new Set(getAvailableParadigms(verb))
     const availableVerbTenses = allTenses.filter((tense) => paradigms.has(tense))
 
-    for (const kind of EXERCISE_KINDS) {
-      if (!TENSED_KINDS.has(kind)) {
+    for (const kind of ALL_EXERCISES) {
+      if (!VERB_EXERCISES.has(kind)) {
         const key = buildCardKey(kind, rootType, verb.form)
         unique.set(key, { key, kind, rootType, form: verb.form, tense: undefined, pronoun: undefined })
         continue
@@ -248,7 +226,8 @@ function cardStrength(store: SrsStore, key: string, today: string): number {
   return clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
 }
 
-function computeUnlockedScore(cards: readonly SrsCardIdentity[], store: SrsStore, today: string): number {
+function computeScore(cards: readonly SrsCardIdentity[], store: SrsStore, today: string, isLocked: boolean): number {
+  if (isLocked) return 0
   if (cards.length === 0) return 0
   const grouped = new Map<string, number>()
   for (const card of cards) {
@@ -263,8 +242,8 @@ function computeUnlockedScore(cards: readonly SrsCardIdentity[], store: SrsStore
 
 function combinationGroupKey(card: SrsCardIdentity): string {
   if (card.tense != null && card.pronoun != null) return `${card.rootType}:${card.form}:${card.tense}:${card.pronoun}`
-  if (PARTICIPLE_KINDS.has(card.kind)) return `${card.rootType}:${card.form}:participles`
-  if (MASDAR_KINDS.has(card.kind)) return `${card.rootType}:${card.form}:masdar`
+  if (PARTICIPLE_EXERCISES.has(card.kind)) return `${card.rootType}:${card.form}:participles`
+  if (MASDAR_EXERCISES.has(card.kind)) return `${card.rootType}:${card.form}:masdar`
   return `${card.rootType}:${card.form}:${card.kind}`
 }
 

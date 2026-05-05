@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../paradigms/verbs'
+import { utcToday } from '../primitives/dates'
 import * as dimensions from './dimensions'
 import { isCoveredTriple, nextExercise } from './scheduler'
 
@@ -18,7 +19,9 @@ describe('nextExercise', () => {
   })
 
   test('serves a due card when session does not allow new card introduction', () => {
-    const store = { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() } }
+    const store = {
+      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+    }
     const session = { reviews: 0, lastNewAt: 0 }
 
     const keys = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session).cardKey)
@@ -28,7 +31,7 @@ describe('nextExercise', () => {
 
   test('does not serve due subjunctive cards before subjunctive tenses are unlocked', () => {
     const store = {
-      'verbTense:sound:1:active.present.subjunctive:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() },
+      'verbTense:sound:1:active.present.subjunctive:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
     }
     const session = { reviews: 0, lastNewAt: 0 }
 
@@ -47,7 +50,7 @@ describe('nextExercise', () => {
         interval: 1,
         ef: 2.5,
         repetitions: 1,
-        dueDate: today(),
+        dueDate: utcToday(),
       },
     }
     const session = { reviews: 0, lastNewAt: 0 }
@@ -62,7 +65,7 @@ describe('nextExercise', () => {
   })
 
   test('serves a new triple when session allows and due cards exist', () => {
-    const store = { 'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() } }
+    const store = { 'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() } }
     const session = { reviews: 3, lastNewAt: 0 }
 
     const exercises = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session))
@@ -83,7 +86,7 @@ describe('nextExercise', () => {
     const exercises = Array.from({ length: 50 }, () =>
       nextExercise(
         { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 1, rootTypes: 1, nominals: 1 },
-        { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: today() } },
+        { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() } },
         { reviews: 3, lastNewAt: 0 },
       ),
     )
@@ -131,7 +134,3 @@ describe('isCoveredTriple', () => {
     expect(isCoveredTriple('conjugation:sound:1:active.past:3ms', store)).toBe(false)
   })
 })
-
-function today() {
-  return new Date().toISOString().slice(0, 10)
-}

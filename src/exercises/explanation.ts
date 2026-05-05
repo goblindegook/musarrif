@@ -1,13 +1,7 @@
 import type { ExplanationLayers } from '../paradigms/explanation'
 import type { RootAnalysisType } from '../paradigms/roots'
-import {
-  FORM_SCORE_KINDS,
-  MASDAR_KINDS,
-  PARTICIPLE_KINDS,
-  PRONOUN_SCORE_KINDS,
-  ROOT_TYPE_SCORE_KINDS,
-  TENSE_SCORE_KINDS,
-} from './mastery'
+import { utcToday } from '../primitives/dates'
+import { isNominalExercise, isVerbExercise } from './mastery'
 import { getSrsCards, type SrsCard, type SrsRootType, type SrsStore } from './srs'
 
 interface LayerMastery {
@@ -29,10 +23,6 @@ function toSrsRootType(rootType?: RootAnalysisType): SrsRootType | undefined {
   return 'sound'
 }
 
-function utcToday(): string {
-  return new Date().toISOString().slice(0, 10)
-}
-
 function strongestDeduped(cards: SrsCard[], today: string): number {
   const grouped = new Map<string, number>()
   for (const card of cards) {
@@ -49,25 +39,23 @@ function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers,
 
   return {
     rootType: strongestDeduped(
-      cards.filter((card) => ROOT_TYPE_SCORE_KINDS.has(card.kind) && card.rootType === srsType),
+      cards.filter((card) => card.rootType === srsType),
       today,
     ),
     form: strongestDeduped(
-      cards.filter((card) => FORM_SCORE_KINDS.has(card.kind) && card.form === explanation.form),
+      cards.filter((card) => card.form === explanation.form),
       today,
     ),
     tense: strongestDeduped(
-      cards.filter((card) => TENSE_SCORE_KINDS.has(card.kind) && card.tense === explanation.tense),
+      cards.filter((card) => isVerbExercise(card.kind) && card.tense === explanation.tense),
       today,
     ),
     pronoun: strongestDeduped(
-      cards.filter((card) => PRONOUN_SCORE_KINDS.has(card.kind) && card.pronoun === explanation.pronoun),
+      cards.filter((card) => isVerbExercise(card.kind) && card.pronoun === explanation.pronoun),
       today,
     ),
     nominal: strongestDeduped(
-      cards.filter((card) =>
-        explanation.nominal === 'masdar' ? MASDAR_KINDS.has(card.kind) : PARTICIPLE_KINDS.has(card.kind),
-      ),
+      cards.filter((card) => isNominalExercise(card.kind)),
       today,
     ),
   }

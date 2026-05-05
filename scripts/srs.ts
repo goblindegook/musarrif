@@ -13,6 +13,7 @@ import {
 import type { PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
 import { getAvailableParadigms, type VerbForm, verbs } from '../src/paradigms/verbs.ts'
+import { utcToday } from '../src/primitives/dates.ts'
 
 type CoverageDimension = 'kind' | 'rootType' | 'form' | 'tense' | 'pronoun' | 'nominal'
 type NominalGroup = 'participles' | 'masdar'
@@ -290,7 +291,7 @@ function printTable(headers: readonly string[], rows: readonly (readonly string[
 }
 
 function printDueDistribution(store: SrsStore) {
-  const today = new Date().toISOString().slice(0, 10)
+  const today = utcToday()
   const rows = dueDistribution(store, today)
   const total = Object.keys(store).length
 

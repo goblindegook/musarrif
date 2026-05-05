@@ -1,5 +1,6 @@
 import type { VerbForm } from '../paradigms/verbs.ts'
 import { verbs } from '../paradigms/verbs.ts'
+import { utcToday } from '../primitives/dates.ts'
 import { type DimensionProfile, formPool, pronounPool, random, rootTypesPool, tensePool } from './dimensions.ts'
 import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises.ts'
 import { conjugationExercise } from './generators/conjugation.ts'
@@ -39,10 +40,6 @@ const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
 export interface NewCardSession {
   reviews: number
   lastNewAt: number
-}
-
-function utcToday(): string {
-  return new Date().toISOString().slice(0, 10)
 }
 
 export function isCoveredTriple(cardKey: string, srsStore: SrsStore): boolean {

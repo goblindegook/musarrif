@@ -2,6 +2,7 @@ import { isHamzatedLetter, isWeakLetter } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import type { VerbForm } from '../paradigms/verbs'
+import { utcToday } from '../primitives/dates'
 import type { ExerciseKind } from './exercises'
 
 export type AnswerResult = 'correct' | 'wrong' | 'pass'
@@ -142,16 +143,12 @@ export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T
   return items[items.length - 1]
 }
 
-function utcToday(): string {
-  return new Date().toISOString().slice(0, 10)
-}
-
 function sanitizeCardState(state: CardState): CardState {
   const interval = Math.max(1, Math.round(state.interval))
   return interval === state.interval ? state : { ...state, interval }
 }
 
-export function sanitizeSrsStore(store: SrsStore, _today = utcToday()): SrsStore {
+export function sanitizeSrsStore(store: SrsStore): SrsStore {
   let sanitized = store
   for (const [key, state] of Object.entries(store)) {
     const nextState = sanitizeCardState(state)
@@ -176,14 +173,14 @@ function isCardState(raw: unknown): raw is CardState {
   )
 }
 
-export function sanitizeRawSrsStore(raw: unknown, today = utcToday()): SrsStore {
+export function sanitizeRawSrsStore(raw: unknown): SrsStore {
   if (raw == null || typeof raw !== 'object') return {}
   const imported: SrsStore = {}
   for (const [key, value] of Object.entries(raw)) {
     if (typeof key !== 'string' || key.length === 0 || !isCardState(value)) continue
     imported[key] = value
   }
-  return sanitizeSrsStore(imported, today)
+  return sanitizeSrsStore(imported)
 }
 
 export function recordAnswer(

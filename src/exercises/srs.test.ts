@@ -177,12 +177,12 @@ describe('sanitizeSrsStore', () => {
         dueDate: '2026-03-29',
       },
     }
-    expect(sanitizeSrsStore(store, '2026-03-23')).toBe(store)
+    expect(sanitizeSrsStore(store)).toBe(store)
   })
 
   test('returns the same store reference for an empty store', () => {
     const store = {}
-    expect(sanitizeSrsStore(store, '2026-03-23')).toBe(store)
+    expect(sanitizeSrsStore(store)).toBe(store)
   })
 
   test('keeps only valid card entries from unknown input', () => {
@@ -216,17 +216,14 @@ describe('sanitizeSrsStore', () => {
   })
 
   test('keeps oversized interval and dueDate values untouched', () => {
-    const result = sanitizeRawSrsStore(
-      {
-        'conjugation:sound:1:active.past:3ms': {
-          interval: 145313,
-          ef: 2.5,
-          repetitions: 13,
-          dueDate: '2424-01-30',
-        },
+    const result = sanitizeRawSrsStore({
+      'conjugation:sound:1:active.past:3ms': {
+        interval: 145313,
+        ef: 2.5,
+        repetitions: 13,
+        dueDate: '2424-01-30',
       },
-      '2026-03-23',
-    )
+    })
 
     expect(result['conjugation:sound:1:active.past:3ms'].interval).toBe(145313)
     expect(result['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2424-01-30')
