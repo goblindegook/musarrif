@@ -73,7 +73,8 @@ describe('rootFormVerbExercise with constraints', () => {
       { form: 2, rootType: 'sound' },
     )
     expect(exercise.explanation).toMatchObject({
-      rootLetters: exercise.word.split(' '),
+      paradigmRoots: exercise.word.split(' '),
+      paradigmForm: 2,
       form: 2,
       arabic: exercise.options[exercise.answer],
       rootType: 'sound',

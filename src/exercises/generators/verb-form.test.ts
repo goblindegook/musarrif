@@ -123,7 +123,8 @@ describe('verbFormExercise with constraints', () => {
       { form: 10, rootType: 'sound', tense: 'active.past', pronoun: '3ms' },
     )
     expect(exercise.explanation).toMatchObject({
-      rootLetters: ['ش', 'ر', 'ب'],
+      paradigmRoots: ['ش', 'ر', 'ب'],
+      paradigmForm: 10,
       form: 10,
       arabic: 'اِسْتَشْرَبَ',
       rootType: 'sound',
