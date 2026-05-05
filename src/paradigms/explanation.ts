@@ -50,10 +50,11 @@ const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
 }
 
 export type ExplanationLayers = {
-  rootLetters: string[]
   arabic: string | readonly string[]
-  rootType: RootAnalysisType
-  form: VerbForm
+  paradigmRoots: string[]
+  paradigmForm: VerbForm
+  rootType?: RootAnalysisType
+  form?: VerbForm
   vowels?: FormIPattern
   formRoot?: FormRootInteraction
   tense?: VerbTense
@@ -161,8 +162,8 @@ export function renderExplanation(
   const params = {
     ...(layers.vowels && FORM_I_BASE_PATTERNS[layers.vowels]),
     arabic: toArabicText(layers.arabic),
-    root: layers.rootLetters.join('-'),
-    form: toRoman(layers.form),
+    root: layers.paradigmRoots.join('-'),
+    form: toRoman(layers.paradigmForm),
     pattern: layers.masdarPattern ?? '',
   }
 
@@ -216,7 +217,8 @@ export function resolveVerbExplanationLayers(
   const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
   const { prefix, suffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
   return {
-    rootLetters: Array.from(verb.root),
+    paradigmRoots: Array.from(verb.root),
+    paradigmForm: verb.form,
     form: verb.form,
     arabic,
     rootType,
@@ -293,7 +295,8 @@ export function resolveNominalExplanationLayers(
   arabic: string | readonly string[],
 ): ExplanationLayers {
   return {
-    rootLetters: Array.from(verb.root),
+    paradigmRoots: Array.from(verb.root),
+    paradigmForm: verb.form,
     form: verb.form,
     arabic,
     rootType: analyzeRoot(verb.rootTokens).type,

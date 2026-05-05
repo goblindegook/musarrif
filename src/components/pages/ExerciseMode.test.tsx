@@ -31,7 +31,8 @@ function testExercise(overrides = {}): Exercise {
     answer: 0,
     cardKey: 'verbForm:sound:1',
     explanation: {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'كَتَبَ',
       rootType: 'sound',
@@ -479,15 +480,6 @@ describe('Explanation in ExerciseMode', () => {
 })
 
 function fullExplanationExercise(): Exercise {
-  const explanation = {
-    rootLetters: ['ك', 'ت', 'ب'],
-    form: 1 as const,
-    arabic: 'كَتَبَ',
-    rootType: 'sound' as const,
-    vowels: 'a-u' as const,
-    tense: 'active.past' as const,
-    pronoun: '3ms' as const,
-  }
   return {
     kind: 'verbForm',
     dimensions: ['forms', 'rootTypes', 'diacritics'],
@@ -496,7 +488,16 @@ function fullExplanationExercise(): Exercise {
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
     cardKey: 'verbForm:sound:1:active.past:3ms',
-    explanation,
+    explanation: {
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
+      form: 1 as const,
+      arabic: 'كَتَبَ',
+      rootType: 'sound' as const,
+      vowels: 'a-u' as const,
+      tense: 'active.past' as const,
+      pronoun: '3ms' as const,
+    },
   }
 }
 

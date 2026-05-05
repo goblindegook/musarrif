@@ -20,8 +20,13 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   const { t, dir, lang } = useI18n()
   const pattern = applyDiacriticsPreference(getVowelPattern(verb), 'some')
   const formExplanationParagraph = useMemo(() => {
-    const { rootLetters, arabic, form, formRoot } = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
-    return renderExplanation({ rootLetters, arabic, form, formRoot }, t)[0]
+    const { paradigmRoots, paradigmForm, arabic, form, formRoot } = resolveVerbExplanationLayers(
+      verb,
+      'active.past',
+      '3ms',
+      verb.label,
+    )
+    return renderExplanation({ paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
   }, [verb, t])
 
   const formInsightExamples = useMemo<DisplayVerb[]>(() => {

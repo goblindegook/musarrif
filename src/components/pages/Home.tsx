@@ -4,8 +4,10 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
-import { type DisplayVerb, FORM_LABELS, FORMS, verbs } from '../../paradigms/verbs'
+import { type DisplayVerb, FORMS, verbs } from '../../paradigms/verbs'
+import { toRoman } from '../../primitives/numbers'
 import { useRouting } from '../../routes'
+import { Button } from '../atoms/Button'
 import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { Panel } from '../molecules/Panel'
@@ -183,7 +185,7 @@ export function Home() {
                   active={activeFilter.kind === 'form' && activeFilter.form === form}
                   onClick={() => selectFormFilter(form)}
                 >
-                  {FORM_LABELS[form - 1]}
+                  {toRoman(form)}
                 </FilterButton>
               ))}
             </FilterBar>
@@ -213,15 +215,15 @@ export function Home() {
             </IncludedVerbList>
             {pageCount > 1 && (
               <PaginationBar>
-                <PaginationButton disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
+                <Button disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
                   {t('pagination.previous')}
-                </PaginationButton>
+                </Button>
                 <PaginationStatus dir={dir} lang={lang}>
                   {t('pagination.page', { current: String(currentPage), total: String(pageCount) })}
                 </PaginationStatus>
-                <PaginationButton disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
+                <Button disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
                   {t('pagination.next')}
-                </PaginationButton>
+                </Button>
               </PaginationBar>
             )}
           </VerbResults>
@@ -349,54 +351,6 @@ const PaginationBar = styled('div')`
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
-  }
-`
-
-// TODO: Replace with Button component
-const PaginationButton = styled('button')`
-  width: 100%;
-  padding: 0.6rem 0.9rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-surface);
-  color: var(--color-text-tertiary);
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-
-  &:enabled:active {
-    transform: scale(0.96);
-  }
-
-  &:enabled:hover {
-    background: var(--color-bg-accent-hover);
-    border-color: var(--color-accent);
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-interactive-hover);
-  }
-
-  &:enabled:focus-visible {
-    outline: 3px solid var(--color-focus-outline);
-    outline-offset: 2px;
-    border-color: var(--color-accent);
-  }
-
-  &:disabled {
-    cursor: default;
-    color: var(--color-text-muted);
-    background: var(--color-bg-surface-secondary);
-    border-color: var(--color-border);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 `
 

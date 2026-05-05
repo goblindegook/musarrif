@@ -418,7 +418,8 @@ describe('renderExplanation', () => {
 
   function testExplanationLayers(overrides?: Partial<ExplanationLayers>): ExplanationLayers {
     return {
-      rootLetters: ['ق', 'و', 'ل'],
+      paradigmRoots: ['ق', 'و', 'ل'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
@@ -471,7 +472,8 @@ describe('renderExplanation', () => {
 
   test('includes tenseRoot sentence when non-null', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ق', 'و', 'ل'],
+      paradigmRoots: ['ق', 'و', 'ل'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
@@ -485,7 +487,8 @@ describe('renderExplanation', () => {
 
   test('groups root and formRoot in first paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ز', 'و', 'ج'],
+      paradigmRoots: ['ز', 'و', 'ج'],
+      paradigmForm: 8,
       form: 8,
       arabic: 'اِزْدَوَجَ',
       rootType: 'hollow-waw',
@@ -602,7 +605,7 @@ describe('resolveNominalExplanationLayers', () => {
 
   test('returns correct rootLetters', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.rootLetters).toEqual(['ك', 'ت', 'ب'])
+    expect(layers.paradigmRoots).toEqual(['ك', 'ت', 'ب'])
   })
 
   test('returns form number', () => {
@@ -682,7 +685,8 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal activeParticiple appears in second paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'كَاتِب',
       rootType: 'sound',
@@ -696,7 +700,8 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal passiveParticiple appears in second paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'مَكْتُوب',
       rootType: 'sound',
@@ -710,7 +715,8 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal masdar appears in second paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'كِتَابَة',
       rootType: 'sound',
@@ -724,7 +730,8 @@ describe('renderExplanation with nominal', () => {
 
   test('mimi masdar explanation appears when nominalMimiMasdar is true', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['و', 'ع', 'د'],
+      paradigmRoots: ['و', 'ع', 'د'],
+      paradigmForm: 1,
       form: 1,
       arabic: ['وَعْد', 'مَوْعِد'],
       rootType: 'assimilated',
@@ -740,7 +747,8 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal with formIPattern includes pattern in first paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'كَاتِب',
       rootType: 'sound',
@@ -752,7 +760,8 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal does not produce a pronoun paragraph', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       form: 1,
       arabic: 'كَاتِب',
       rootType: 'sound',

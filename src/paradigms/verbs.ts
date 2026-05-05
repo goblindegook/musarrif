@@ -1,6 +1,6 @@
 import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
-import { clamp } from '../primitives/numbers'
+import { clamp, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { type LetterToken, normalizeHamza, tokenize } from './letters'
@@ -10,11 +10,8 @@ export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 export const FORMS: readonly VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-export const FORM_LABELS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'] as const
-
 export function formatFormLabel(form: VerbForm, root: string): string {
-  const label = FORM_LABELS[form - 1]
-  return root.length === 4 ? `${label}q` : label
+  return root.length === 4 ? `${toRoman(form)}q` : toRoman(form)
 }
 
 // Not real, productive masdar patterns:

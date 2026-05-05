@@ -5,7 +5,8 @@ import { buildCardKey, type SrsStore } from './srs'
 
 describe('filterMasteredLayers', () => {
   const FULL_LAYERS: ExplanationLayers = {
-    rootLetters: ['ك', 'ت', 'ب'],
+    paradigmRoots: ['ك', 'ت', 'ب'],
+    paradigmForm: 1,
     arabic: 'كَتَبَ',
     rootType: 'sound',
     form: 1,
@@ -168,29 +169,33 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides pronoun when pronoun mastery reaches threshold', () => {
-    const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
-      arabic: 'يَكتُبُ',
-      pronoun: '3ms',
-      prefix: 'يَ',
-      suffix: undefined,
-    }
-    const store: SrsStore = {
-      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
-        interval: 21,
-        ef: 2.5,
-        repetitions: 3,
-        dueDate: '2099-01-01',
+    const result = filterMasteredLayers(
+      {
+        [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+          interval: 21,
+          ef: 2.5,
+          repetitions: 3,
+          dueDate: '2099-01-01',
+        },
       },
-    }
-    const result = filterMasteredLayers(store, layers)
+      {
+        paradigmRoots: ['ك', 'ت', 'ب'],
+        paradigmForm: 1,
+        arabic: 'يَكتُبُ',
+        pronoun: '3ms',
+        prefix: 'يَ',
+        suffix: undefined,
+      },
+    )
+
     expect(result.pronoun).toBeUndefined()
     expect(result.prefix).toBeUndefined()
   })
 
   test('hides formRoot only when both form and rootType exceed threshold', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 8,
       arabic: 'اِكْتَتَبَ',
       form: 8,
       rootType: 'sound',
@@ -230,7 +235,8 @@ describe('filterMasteredLayers', () => {
 
   test('hides tenseRoot only when both tense and rootType exceed threshold', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ق', 'و', 'ل'],
+      paradigmRoots: ['ق', 'و', 'ل'],
+      paradigmForm: 1,
       arabic: 'قَالَ',
       tense: 'active.past',
       rootType: 'hollow-waw',
@@ -270,7 +276,8 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using MASDAR_KINDS', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       arabic: 'كِتَابَة',
       nominal: 'masdar',
     }
@@ -283,7 +290,8 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using PARTICIPLE_KINDS', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ك', 'ت', 'ب'],
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      paradigmForm: 1,
       arabic: 'كَاتِب',
       nominal: 'activeParticiple',
     }
@@ -296,7 +304,8 @@ describe('filterMasteredLayers', () => {
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {
     const layers: ExplanationLayers = {
-      rootLetters: ['ق', 'و', 'ل'],
+      paradigmRoots: ['ق', 'و', 'ل'],
+      paradigmForm: 1,
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
     }
@@ -322,7 +331,7 @@ describe('filterMasteredLayers', () => {
       },
     }
     const result = filterMasteredLayers(store, FULL_LAYERS)
-    expect(result.rootLetters).toEqual(['ك', 'ت', 'ب'])
+    expect(result.paradigmRoots).toEqual(['ك', 'ت', 'ب'])
     expect(result.arabic).toBe('كَتَبَ')
   })
 

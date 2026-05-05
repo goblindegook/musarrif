@@ -15,6 +15,7 @@ import {
 } from '../../exercises/stats'
 import { useI18n } from '../../hooks/useI18n'
 import { useTheme } from '../../hooks/useTheme'
+import { toRoman } from '../../primitives/numbers'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { LockIcon } from '../icons/LockIcon'
@@ -42,18 +43,6 @@ const DEFAULT_DIMENSION_PROFILE: DimensionProfile = {
   forms: 0,
   rootTypes: 0,
   nominals: 0,
-}
-const FORM_LABELS: Record<string, string> = {
-  '1': 'I',
-  '2': 'II',
-  '3': 'III',
-  '4': 'IV',
-  '5': 'V',
-  '6': 'VI',
-  '7': 'VII',
-  '8': 'VIII',
-  '9': 'IX',
-  '10': 'X',
 }
 const ROOT_TYPE_LABEL_KEYS = {
   sound: 'exercise.stats.mastery.rootType.sound',
@@ -151,7 +140,7 @@ function masteryItemLabel(
   t: ReturnType<typeof useI18n>['t'],
 ): string {
   if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[itemId as keyof typeof ROOT_TYPE_LABEL_KEYS])
-  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: FORM_LABELS[itemId] ?? itemId })
+  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(parseInt(itemId, 10)) })
   if (categoryId === 'tenses') return t(`tense.${itemId}`)
   if (categoryId === 'pronouns') return t(`pronoun.${itemId}`)
   if (categoryId === 'nominals' && itemId === 'participles') return t('exercise.stats.mastery.nominal.participles')
