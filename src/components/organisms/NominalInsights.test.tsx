@@ -77,7 +77,7 @@ describe('NominalInsights', () => {
       render(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />, {
         wrapper: Wrapper,
       })
-      expect(screen.getByText(/المصدر الميمي/)).toBeInTheDocument()
+      expect(screen.getByText(/pattern مَفْعِل/)).toBeInTheDocument()
     })
   })
 

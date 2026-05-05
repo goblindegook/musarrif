@@ -29,6 +29,25 @@ type TenseRootInteraction =
 
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
+const NON_FORM_I_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
+  2: 'تَفْعِيل',
+  3: 'مُفَاعَلَة',
+  4: 'إِفْعَال',
+  5: 'تَفَعُّل',
+  6: 'تَفَاعُل',
+  7: 'اِنْفِعَال',
+  8: 'اِفْتِعَال',
+  9: 'اِفْعِلَال',
+  10: 'اِسْتِفْعَال',
+}
+
+const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
+  1: 'فَعْلَلَة',
+  2: 'تَفَعْلُل',
+  3: 'اِفْعِنْلَال',
+  4: 'اِفْعِلَّال',
+}
+
 export type ExplanationLayers = {
   rootLetters: string[]
   arabic: string | readonly string[]
@@ -41,6 +60,7 @@ export type ExplanationLayers = {
   pronoun?: PronounId
   nominal?: NominalKind
   nominalMimiMasdar?: boolean
+  masdarPattern?: string
   prefix?: string
   suffix?: string
 }
@@ -125,6 +145,15 @@ function renderPronounParagraph(
   return t('explanation.pronoun.base-form', params)
 }
 
+function resolveNominalExplanationKey(layers: ExplanationLayers): string | undefined {
+  if (layers.nominal == null) return
+  if (layers.nominal !== 'masdar') return `explanation.nominal.${layers.nominal}`
+  if (layers.form === 1) {
+    return layers.nominalMimiMasdar ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
+  }
+  return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : undefined
+}
+
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
@@ -134,6 +163,7 @@ export function renderExplanation(
     root: layers.rootLetters?.join('-') ?? '',
     arabic: toArabicText(layers.arabic),
     form: layers.form == null ? '' : String(layers.form),
+    pattern: layers.masdarPattern ?? '',
     ...formIBaseParams,
   }
 
@@ -146,9 +176,8 @@ export function renderExplanation(
       layers.vowels && t(`explanation.form-i-pattern.${layers.vowels}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
+    [t(resolveNominalExplanationKey(layers) ?? '', params)],
     [
-      layers.nominal ? t(`explanation.nominal.${layers.nominal}`, params) : '',
-      layers.nominalMimiMasdar ? t('explanation.nominal.mimiMasdar', params) : '',
       layers.tense?.startsWith('passive') ? t(`explanation.voice.${layers.tense}`, params) : '',
       layers.tense && t(`explanation.tense.${layers.tense}`, params),
       layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
@@ -242,6 +271,23 @@ function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): 
   )
 }
 
+function resolveMimiPatternLabel(arabic: string, verb: Verb): string {
+  if (arabic.endsWith('ة')) return 'مَفْعَلَة'
+  if (verb.form === 1 && verb.vowels?.endsWith('i')) return 'مَفْعِل'
+  return 'مَفْعَل'
+}
+
+function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): string | undefined {
+  if (verb.form === 1) {
+    const selectedMimiMasdar = verb.form === 1 && isMimiMasdarSelection(verb, arabic) ? toArabicText(arabic) : undefined
+    return selectedMimiMasdar ? resolveMimiPatternLabel(selectedMimiMasdar, verb) : undefined
+  }
+
+  return verb.root.length > 3
+    ? (QUADRILITERAL_MASDAR_PATTERNS[verb.form] ?? '')
+    : (NON_FORM_I_MASDAR_PATTERNS[verb.form] ?? '')
+}
+
 export function resolveNominalExplanationLayers(
   verb: Verb,
   nominal: NominalKind,
@@ -256,5 +302,6 @@ export function resolveNominalExplanationLayers(
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
     nominalMimiMasdar: nominal === 'masdar' && isMimiMasdarSelection(verb, arabic),
+    masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabic) : undefined,
   }
 }

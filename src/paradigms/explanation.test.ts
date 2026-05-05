@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import enLocale from '../locales/en.json'
 import type { ExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
+import { deriveMasdar } from './nominal/masdar'
 import type { VerbTense } from './tense'
 import { getVerb, getVerbById, synthesizeVerb } from './verbs'
 
@@ -717,7 +718,7 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.sound explanation.form.1',
-      'explanation.nominal.masdar',
+      'explanation.nominal.masdar.form-i',
     ])
   })
 
@@ -729,10 +730,11 @@ describe('renderExplanation with nominal', () => {
       rootType: 'assimilated',
       nominal: 'masdar',
       nominalMimiMasdar: true,
+      masdarPattern: 'مَفْعِل',
     }
     expect(renderExplanation(layers, t)).toEqual([
       'explanation.root.assimilated explanation.form.1',
-      'explanation.nominal.masdar explanation.nominal.mimiMasdar',
+      'explanation.nominal.masdar.form-i-mimi',
     ])
   })
 
@@ -757,5 +759,38 @@ describe('renderExplanation with nominal', () => {
       nominal: 'activeParticiple',
     }
     expect(renderExplanation(layers, t)).toHaveLength(2)
+  })
+
+  test('localized Form II masdar explanation names applied pattern', () => {
+    const [masdar] = deriveMasdar(getVerb('كتب', 2))
+
+    const rendered = renderExplanation(
+      resolveNominalExplanationLayers(getVerb('كتب', 2), 'masdar', masdar),
+      localeT,
+    ).join(' ')
+
+    expect(rendered).toContain('تَفْعِيل')
+  })
+
+  test('localized Form I lexical masdar explanation says it must be memorized without naming pattern', () => {
+    const [masdar] = deriveMasdar(getVerb('كتب', 1))
+
+    const rendered = renderExplanation(resolveNominalExplanationLayers(getVerb('كتب', 1), 'masdar', masdar), localeT)
+
+    expect(rendered).toContain(
+      'The masdar names the action itself. In Form I, the masdar is lexical, so it must be memorized with the verb.',
+    )
+  })
+
+  test('localized Form I mimi masdar explanation names mimi pattern', () => {
+    const [, mimiMasdar] = deriveMasdar(getVerb('وعد', 1))
+
+    const rendered = renderExplanation(
+      resolveNominalExplanationLayers(getVerb('وعد', 1), 'masdar', mimiMasdar),
+      localeT,
+    ).join(' ')
+
+    expect(rendered).toContain('مَفْعِل')
+    expect(rendered).toContain('mīmī')
   })
 })
