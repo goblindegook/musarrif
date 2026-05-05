@@ -115,21 +115,20 @@ describe('verbFormExercise with constraints', () => {
     expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbForm:[a-z]+:\d+:[\w.]+:\w+$/)
   })
 
-  test('includes only root-and-form explanation payload', () => {
+  test('includes full explanation for all options', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
 
     const exercise = verbFormExercise.generate(
       { ...INITIAL_DIMENSION_PROFILE, forms: 9, rootTypes: 0 },
       { form: 10, rootType: 'sound', tense: 'active.past', pronoun: '3ms' },
     )
-    const wrongIndex = (exercise.answer + 1) % exercise.options.length
-
-    expect(exercise.explanations?.[wrongIndex]).toEqual({
+    expect(exercise.explanation).toMatchObject({
       rootLetters: ['ش', 'ر', 'ب'],
       form: 10,
       arabic: 'اِسْتَشْرَبَ',
       rootType: 'sound',
+      tense: 'active.past',
+      pronoun: '3ms',
     })
-    expect(exercise.explanations?.[exercise.answer]).toBeNull()
   })
 })

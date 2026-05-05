@@ -2,7 +2,6 @@ import { shuffle } from '@pacote/shuffle'
 import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
-import { pick } from '../../primitives/objects.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -26,14 +25,7 @@ export const verbFormExercise = defineExercise(
       constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns)),
     )
     const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
-    const explanation = pick(resolveVerbExplanationLayers(verb, tense, pronoun, word), [
-      'rootLetters',
-      'form',
-      'arabic',
-      'rootType',
-      'vowels',
-      'formRoot',
-    ])
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, word)
 
     const eligibleForms = FORMS.filter(
       (f) =>
@@ -55,7 +47,7 @@ export const verbFormExercise = defineExercise(
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
       cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
-      explanations: options.map((_, index) => (index === answer ? null : explanation)),
+      explanation,
     }
   },
 )

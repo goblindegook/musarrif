@@ -68,10 +68,8 @@ describe('masdarRootExercise', () => {
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
     vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
     const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const wrongExplanation = exercise.explanations?.find((_, index) => index !== exercise.answer)
-
-    expect(wrongExplanation?.nominal).toBe('masdar')
-    expect(wrongExplanation?.nominalMimiMasdar).toBe(true)
+    expect(exercise.explanation?.nominal).toBe('masdar')
+    expect(exercise.explanation?.nominalMimiMasdar).toBe(true)
   })
 })
 

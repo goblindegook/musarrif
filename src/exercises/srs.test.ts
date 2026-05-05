@@ -55,6 +55,7 @@ describe('buildCardKey', () => {
 describe('parseCardKey', () => {
   test('parses base-form key', () => {
     expect(parseCardKey('masdarForm:hamzated:4')).toEqual({
+      key: 'masdarForm:hamzated:4',
       kind: 'masdarForm',
       rootType: 'hamzated',
       form: 4,
@@ -65,6 +66,7 @@ describe('parseCardKey', () => {
 
   test('parses 2-token tense key', () => {
     expect(parseCardKey('conjugation:sound:1:active.past:1s')).toEqual({
+      key: 'conjugation:sound:1:active.past:1s',
       kind: 'conjugation',
       rootType: 'sound',
       form: 1,
@@ -75,6 +77,7 @@ describe('parseCardKey', () => {
 
   test('parses 3-token tense key', () => {
     expect(parseCardKey('verbTense:hollow:3:passive.present.indicative:3ms')).toEqual({
+      key: 'verbTense:hollow:3:passive.present.indicative:3ms',
       kind: 'verbTense',
       rootType: 'hollow',
       form: 3,

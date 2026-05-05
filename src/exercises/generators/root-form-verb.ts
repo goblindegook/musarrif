@@ -1,15 +1,13 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation.ts'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
-import { pick } from '../../primitives/objects.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
-  const baseExplanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
-  const explanation = pick(baseExplanation, ['rootLetters', 'form', 'arabic', 'rootType', 'vowels', 'formRoot'])
+  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
 
   const answerDisplay = exerciseDiacritics(verb.label, profile.diacritics)
 
@@ -34,6 +32,6 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
     answer,
     cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
-    explanations: options.map((_, index) => (index === answer ? null : explanation)),
+    explanation,
   }
 })

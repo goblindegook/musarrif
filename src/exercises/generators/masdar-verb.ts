@@ -24,7 +24,7 @@ export const masdarVerbExercise = defineExercise(
       options,
       answer,
       cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),
-      explanations: options.map((_, index) => (index === answer ? null : explanation)),
+      explanation,
     }
   },
   {

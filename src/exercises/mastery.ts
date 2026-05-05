@@ -4,7 +4,7 @@ import { getAvailableParadigms, verbs } from '../paradigms/verbs'
 import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
-import { buildCardKey, getSrsRootType, type SrsRootType, type SrsStore } from './srs'
+import { buildCardKey, getSrsRootType, type SrsCardIdentity, type SrsRootType, type SrsStore } from './srs'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const FORM_ORDER: readonly string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
@@ -37,9 +37,14 @@ const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
 const NOMINAL_ORDER = ['participles', 'masdar'] as const
 
 const TENSED_KINDS = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
-const PARTICIPLE_KINDS = new Set<ExerciseKind>(['participleForm', 'participleRoot', 'participleVerb', 'verbParticiple'])
-const MASDAR_KINDS = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
-const ROOT_TYPE_SCORE_KINDS = new Set<ExerciseKind>([
+export const PARTICIPLE_KINDS = new Set<ExerciseKind>([
+  'participleForm',
+  'participleRoot',
+  'participleVerb',
+  'verbParticiple',
+])
+export const MASDAR_KINDS = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
+export const ROOT_TYPE_SCORE_KINDS = new Set<ExerciseKind>([
   'conjugation',
   'verbForm',
   'verbPronoun',
@@ -47,7 +52,7 @@ const ROOT_TYPE_SCORE_KINDS = new Set<ExerciseKind>([
   'verbTense',
   'rootFormVerb',
 ])
-const FORM_SCORE_KINDS = new Set<ExerciseKind>([
+export const FORM_SCORE_KINDS = new Set<ExerciseKind>([
   'conjugation',
   'verbForm',
   'verbPronoun',
@@ -55,8 +60,8 @@ const FORM_SCORE_KINDS = new Set<ExerciseKind>([
   'verbTense',
   'rootFormVerb',
 ])
-const TENSE_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbTense'])
-const PRONOUN_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbPronoun'])
+export const TENSE_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbTense'])
+export const PRONOUN_SCORE_KINDS = new Set<ExerciseKind>(['conjugation', 'verbPronoun'])
 const EXERCISE_KINDS: readonly ExerciseKind[] = [
   'conjugation',
   'masdarForm',
@@ -96,15 +101,6 @@ export interface MasterySnapshot {
   categories: readonly MasteryCategory[]
 }
 
-interface PossibleCard {
-  key: string
-  kind: ExerciseKind
-  rootType: SrsRootType
-  form: string
-  tense: VerbTense | undefined
-  pronoun: PronounId | undefined
-}
-
 export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, today = utcToday()): MasterySnapshot {
   const cards = cardSpace()
   const unlockedRootTypes = new Set(rootTypesPool(profile.rootTypes))
@@ -138,7 +134,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const score = locked
             ? 0
             : computeUnlockedScore(
-                cards.filter((card) => card.form === form && FORM_SCORE_KINDS.has(card.kind)),
+                cards.filter((card) => String(card.form) === form && FORM_SCORE_KINDS.has(card.kind)),
                 srsStore,
                 today,
               )
@@ -212,32 +208,31 @@ function pronounSpace(
   return pronouns
 }
 
-function cardSpace(): readonly PossibleCard[] {
-  const allForms = new Set(formPool(9).map((form) => String(form)))
+function cardSpace(): readonly SrsCardIdentity[] {
+  const allForms = new Set(formPool(9))
   const allRootTypes = new Set(rootTypesPool(5))
   const allTenses = tensePool(4)
   const allPronouns = pronounPool(3)
-  const unique = new Map<string, PossibleCard>()
+  const unique = new Map<string, SrsCardIdentity>()
 
   for (const verb of verbs) {
     if (verb.root.length !== 3) continue
-    const form = String(verb.form)
     const rootType = getSrsRootType(verb.root)
-    if (!allForms.has(form) || !allRootTypes.has(rootType)) continue
+    if (!allForms.has(verb.form) || !allRootTypes.has(rootType)) continue
     const paradigms = new Set(getAvailableParadigms(verb))
     const availableVerbTenses = allTenses.filter((tense) => paradigms.has(tense))
 
     for (const kind of EXERCISE_KINDS) {
       if (!TENSED_KINDS.has(kind)) {
         const key = buildCardKey(kind, rootType, verb.form)
-        unique.set(key, { key, kind, rootType, form, tense: undefined, pronoun: undefined })
+        unique.set(key, { key, kind, rootType, form: verb.form, tense: undefined, pronoun: undefined })
         continue
       }
 
       for (const tense of availableVerbTenses) {
         for (const pronoun of pronounSpace(tense, allPronouns, verb.passiveVoice === 'impersonal')) {
           const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
-          unique.set(key, { key, kind, rootType, form, tense, pronoun })
+          unique.set(key, { key, kind, rootType, form: verb.form, tense, pronoun })
         }
       }
     }
@@ -253,7 +248,7 @@ function cardStrength(store: SrsStore, key: string, today: string): number {
   return clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
 }
 
-function computeUnlockedScore(cards: readonly PossibleCard[], store: SrsStore, today: string): number {
+function computeUnlockedScore(cards: readonly SrsCardIdentity[], store: SrsStore, today: string): number {
   if (cards.length === 0) return 0
   const grouped = new Map<string, number>()
   for (const card of cards) {
@@ -266,7 +261,7 @@ function computeUnlockedScore(cards: readonly PossibleCard[], store: SrsStore, t
   return average([...grouped.values()])
 }
 
-function combinationGroupKey(card: PossibleCard): string {
+function combinationGroupKey(card: SrsCardIdentity): string {
   if (card.tense != null && card.pronoun != null) return `${card.rootType}:${card.form}:${card.tense}:${card.pronoun}`
   if (PARTICIPLE_KINDS.has(card.kind)) return `${card.rootType}:${card.form}:participles`
   if (MASDAR_KINDS.has(card.kind)) return `${card.rootType}:${card.form}:masdar`

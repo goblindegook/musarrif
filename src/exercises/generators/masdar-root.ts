@@ -29,7 +29,7 @@ export const masdarRootExercise = defineExercise(
       options: options.map((option) => Array.from(option).join(' ')),
       answer,
       cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),
-      explanations: options.map((_, index) => (index === answer ? null : explanation)),
+      explanation,
     }
   },
   {

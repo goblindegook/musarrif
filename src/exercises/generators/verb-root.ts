@@ -41,7 +41,7 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
     cardKey: buildCardKey('verbRoot', getSrsRootType(verb.root), verb.form, tense, pronoun),
-    explanations: options.map((option) => (option === verb.root ? null : explanation)),
+    explanation,
   }
 })
 

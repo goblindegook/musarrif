@@ -27,7 +27,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   answer: number
   cardKey: string
   dimensions: readonly DimensionKey[]
-  explanations?: readonly (ExplanationLayers | null)[]
+  explanation?: ExplanationLayers | null
   supportsTyping?: true
 }
 

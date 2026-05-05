@@ -23,13 +23,16 @@ export interface CardState {
 
 export type SrsStore = Record<string, CardState>
 
-export interface ParsedCardKey {
+export interface SrsCardIdentity {
+  key: string
   kind: ExerciseKind
   rootType: SrsRootType
   form: VerbForm
-  tense: VerbTense | undefined
-  pronoun: PronounId | undefined
+  tense?: VerbTense
+  pronoun?: PronounId
 }
+
+export type SrsCard = SrsCardIdentity & CardState
 
 export function getSrsRootType(root: string): SrsRootType {
   const [c1, c2, c3] = Array.from(root)
@@ -59,11 +62,12 @@ export function buildCardKey(
   return tense == null ? `${kind}:${rootType}:${form}` : `${kind}:${rootType}:${form}:${tense}:${pronoun}`
 }
 
-export function parseCardKey(key: string): ParsedCardKey {
+export function parseCardKey(key: string): SrsCardIdentity {
   const [kind, rootType, formStr, tense, pronoun] = key.split(':')
 
   if (tense == null) {
     return {
+      key,
       kind: kind as ExerciseKind,
       rootType: rootType as SrsRootType,
       form: Number(formStr) as VerbForm,
@@ -73,6 +77,7 @@ export function parseCardKey(key: string): ParsedCardKey {
   }
 
   return {
+    key,
     kind: kind as ExerciseKind,
     rootType: rootType as SrsRootType,
     form: Number(formStr) as VerbForm,
@@ -189,4 +194,12 @@ export function recordAnswer(
 ): SrsStore {
   if (cardKey == null) return store
   return { ...store, [cardKey]: updateCardState(store[cardKey], result, today) }
+}
+
+export function getSrsCards(srsStore: SrsStore): readonly SrsCard[] {
+  return Object.entries(srsStore).map(([key, state]) => ({
+    ...parseCardKey(key),
+    ...state,
+    key,
+  }))
 }

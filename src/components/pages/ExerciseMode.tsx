@@ -2,6 +2,7 @@ import { css, styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import type { DimensionProfile } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
+import { filterMasteredLayers } from '../../exercises/explanation'
 import { isCoveredTriple, type NewCardSession, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
@@ -68,11 +69,11 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   const explanation = (() => {
     if (answeredIndex == null && !skipped) return []
-    const selectedExplanation =
-      skipped || answeredIndex == null
-        ? exercise.explanations?.find((_, index) => index !== exercise.answer)
-        : exercise.explanations?.[answeredIndex]
-    return selectedExplanation != null ? renderExplanation(selectedExplanation, t) : []
+    const layers = exercise.explanation
+    if (layers == null) return []
+    const isWrong = answeredIndex !== null && answeredIndex !== exercise.answer
+    if (isWrong || skipped) return renderExplanation(layers, t)
+    return renderExplanation(filterMasteredLayers(srsStore, layers), t)
   })()
   const unlockMessages = useMemo(
     () =>

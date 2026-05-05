@@ -30,36 +30,15 @@ function testExercise(overrides = {}): Exercise {
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
     cardKey: 'verbForm:sound:1',
-    explanations: [
-      null,
-      {
-        rootLetters: ['ك', 'ت', 'ب'],
-        form: 1,
-        arabic: 'كَتَبَ',
-        rootType: 'sound',
-        vowels: 'a-u',
-        tense: 'active.past',
-        pronoun: '3ms',
-      },
-      {
-        rootLetters: ['ك', 'ت', 'ب'],
-        form: 1,
-        arabic: 'كَتَبَ',
-        rootType: 'sound',
-        vowels: 'a-u',
-        tense: 'active.past',
-        pronoun: '3ms',
-      },
-      {
-        rootLetters: ['ك', 'ت', 'ب'],
-        form: 1,
-        arabic: 'كَتَبَ',
-        rootType: 'sound',
-        vowels: 'a-u',
-        tense: 'active.past',
-        pronoun: '3ms',
-      },
-    ],
+    explanation: {
+      rootLetters: ['ك', 'ت', 'ب'],
+      form: 1,
+      arabic: 'كَتَبَ',
+      rootType: 'sound',
+      vowels: 'a-u',
+      tense: 'active.past',
+      pronoun: '3ms',
+    },
     ...overrides,
   }
 }
@@ -499,6 +478,62 @@ describe('Explanation in ExerciseMode', () => {
   })
 })
 
+function fullExplanationExercise(): Exercise {
+  const explanation = {
+    rootLetters: ['ك', 'ت', 'ب'],
+    form: 1 as const,
+    arabic: 'كَتَبَ',
+    rootType: 'sound' as const,
+    vowels: 'a-u' as const,
+    tense: 'active.past' as const,
+    pronoun: '3ms' as const,
+  }
+  return {
+    kind: 'verbForm',
+    dimensions: ['forms', 'rootTypes', 'diacritics'],
+    word: 'كَتَبَ',
+    promptTranslationKey: 'exercise.prompt.verbForm',
+    options: ['I', 'II', 'III', 'IV'],
+    answer: 0,
+    cardKey: 'verbForm:sound:1:active.past:3ms',
+    explanation,
+  }
+}
+
+describe('mastery filtering in ExerciseMode', () => {
+  test('hides mastered rootType from explanation after correct answer', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+      }),
+    )
+
+    render(<ExerciseMode generateExercise={() => fullExplanationExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
+    expect(screen.queryByText(/Sound root/i)).not.toBeInTheDocument()
+  })
+
+  test('wrong answer shows full explanation regardless of mastery', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+      }),
+    )
+
+    render(<ExerciseMode generateExercise={() => fullExplanationExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
+
+    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/Sound root/i)).toBeInTheDocument()
+  })
+})
+
 function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
   return {
     kind: 'conjugation',
@@ -626,52 +661,6 @@ describe('typing mode', () => {
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'p' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('data-state', 'wrong')
-    expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
-  })
-
-  test('skip in typing mode uses the fullest explanation when answer payload is reduced', () => {
-    const reducedAnswerExercise = conjugationExercise({
-      explanations: [
-        {
-          rootLetters: ['ك', 'ت', 'ب'],
-          arabic: 'كَتَبَ',
-          tense: 'active.past',
-          pronoun: '3ms',
-        },
-        {
-          rootLetters: ['ك', 'ت', 'ب'],
-          form: 1,
-          arabic: 'كَتَبَ',
-          rootType: 'sound',
-          vowels: 'a-u',
-          tense: 'active.past',
-          pronoun: '3ms',
-        },
-        {
-          rootLetters: ['ك', 'ت', 'ب'],
-          form: 1,
-          arabic: 'كَتَبَ',
-          rootType: 'sound',
-          vowels: 'a-u',
-          tense: 'active.past',
-          pronoun: '3ms',
-        },
-        {
-          rootLetters: ['ك', 'ت', 'ب'],
-          form: 1,
-          arabic: 'كَتَبَ',
-          rootType: 'sound',
-          vowels: 'a-u',
-          tense: 'active.past',
-          pronoun: '3ms',
-        },
-      ],
-    })
-
-    render(<ExerciseMode generateExercise={() => reducedAnswerExercise} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
-    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
-
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 })

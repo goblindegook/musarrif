@@ -4,7 +4,6 @@ import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns.ts'
 import type { VerbTense } from '../../paradigms/tense.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
-import { pick } from '../../primitives/objects.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -39,9 +38,7 @@ export const verbTenseExercise = defineExercise(
       options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
       answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
-      explanations: options.map((_, index) =>
-        index === answer ? pick(explanation, ['rootLetters', 'arabic', 'tenseRoot']) : explanation,
-      ),
+      explanation,
     }
   },
   { weight: 2 },

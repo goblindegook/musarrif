@@ -67,19 +67,18 @@ describe('rootFormVerbExercise with constraints', () => {
     expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^rootFormVerb:[a-z]+:\d+$/)
   })
 
-  test('includes only root-and-form explanation payload', () => {
+  test('includes full explanation for all options', () => {
     const exercise = rootFormVerbExercise.generate(
       { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 5 },
       { form: 2, rootType: 'sound' },
     )
-    const wrongIndex = (exercise.answer + 1) % exercise.options.length
-
-    expect(exercise.explanations?.[wrongIndex]).toEqual({
+    expect(exercise.explanation).toMatchObject({
       rootLetters: exercise.word.split(' '),
       form: 2,
       arabic: exercise.options[exercise.answer],
       rootType: 'sound',
+      tense: 'active.past',
+      pronoun: '3ms',
     })
-    expect(exercise.explanations?.[exercise.answer]).toBeNull()
   })
 })
