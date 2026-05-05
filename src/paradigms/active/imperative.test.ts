@@ -1119,6 +1119,7 @@ describe('imperative', () => {
         ['عطي', 'أَعْطِ'],
         ['لقي', 'أَلْقِ'],
         ['ضحي', 'أَضْحِ'],
+        ['لفو', 'أَلْفِ'],
       ])('drops the final glide for %s', (root, expected2ms) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected2ms)
       })

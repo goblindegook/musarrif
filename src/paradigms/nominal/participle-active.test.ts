@@ -514,6 +514,7 @@ describe('active participle', () => {
         ['ضحي', 'مُضْحٍ'],
         ['نهي', 'مُنْهٍ'],
         ['حيي', 'مُحْيٍ'],
+        ['لفو', 'مُلْفٍ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
