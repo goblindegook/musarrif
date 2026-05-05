@@ -172,24 +172,21 @@ export function Home() {
             <FilterGroupTitle dir={dir} lang={lang}>
               {t('verbsByForm.filterByForm')}
             </FilterGroupTitle>
-            <FormTabBar wrap role="tablist" aria-label={t('aria.selectForm')}>
+            <FilterBar role="group" aria-label={t('aria.selectForm')}>
               {FORMS.map((form) => (
-                <FormTabButton
+                <FilterButton
                   key={form}
                   id={`form-tab-${form}`}
-                  role="tab"
                   type="button"
                   aria-selected={activeFilter.kind === 'form' && activeFilter.form === form}
                   aria-controls={`form-panel-${form}`}
-                  size="sm"
-                  fluid
                   active={activeFilter.kind === 'form' && activeFilter.form === form}
                   onClick={() => selectFormFilter(form)}
                 >
                   {FORM_LABELS[form - 1]}
-                </FormTabButton>
+                </FilterButton>
               ))}
-            </FormTabBar>
+            </FilterBar>
           </FilterGroup>
 
           <FilterGroup>
@@ -208,16 +205,7 @@ export function Home() {
             </FilterBar>
           </FilterGroup>
 
-          <TabPanel
-            role="tabpanel"
-            id={activeFilter.kind === 'form' ? `form-panel-${activeFilter.form}` : 'other-filter-panel-kana-sisters'}
-            aria-labelledby={activeFilter.kind === 'form' ? `form-tab-${activeFilter.form}` : undefined}
-            aria-label={
-              activeFilter.kind === 'form'
-                ? t('meta.form.withNumber', { form: FORM_LABELS[activeFilter.form - 1] })
-                : t('verbsByForm.kanaSisters')
-            }
-          >
+          <VerbResults>
             <IncludedVerbList>
               {paginatedVerbs.map((verb) => (
                 <VerbPill key={verb.id} verb={verb} block />
@@ -236,7 +224,7 @@ export function Home() {
                 </PaginationButton>
               </PaginationBar>
             )}
-          </TabPanel>
+          </VerbResults>
         </Panel>
       </Stack>
     </Main>
@@ -287,24 +275,15 @@ const FilterGroupTitle = styled('h4')`
   text-transform: uppercase;
 `
 
-const FormTabBar = styled(TabBar)`
-  @media (max-width: 480px) {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-`
-
-const FormTabButton = styled(TabButton)`
-  @media (max-width: 480px) {
-    min-width: 0;
-    padding-inline: 0.35rem;
-  }
-`
-
 const FilterBar = styled('div')`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, auto));
+  }
 `
 
 const FilterButton = styled('button')<{ active: boolean }>`
@@ -373,6 +352,7 @@ const PaginationBar = styled('div')`
   }
 `
 
+// TODO: Replace with Button component
 const PaginationButton = styled('button')`
   width: 100%;
   padding: 0.6rem 0.9rem;
@@ -430,4 +410,12 @@ const VerbList = styled('div')`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+`
+
+const VerbResults = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  outline: none;
+  padding-top: 0.5rem;
 `

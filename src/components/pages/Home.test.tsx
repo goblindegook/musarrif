@@ -43,14 +43,10 @@ test('Shows the main page at the verbs base route', () => {
 test('Shows verbs grouped by form at the verbs base route', () => {
   renderHome()
 
-  expect(document.querySelectorAll('[role="tablist"][aria-label="Select form"] [role="tab"]')).toHaveLength(10)
+  expect(document.querySelectorAll('[role="group"][aria-label="Select form"] button')).toHaveLength(10)
 
-  const formOneTab = document.querySelector(
-    '[role="tablist"][aria-label="Select form"] [role="tab"][aria-selected="true"]',
-  )
-  const formTwoTab = document.querySelector(
-    '[role="tablist"][aria-label="Select form"] [role="tab"][aria-selected="false"]',
-  )
+  const formOneTab = document.querySelector('[role="group"][aria-label="Select form"] button[aria-selected="true"]')
+  const formTwoTab = document.querySelector('[role="group"][aria-label="Select form"] button[aria-selected="false"]')
 
   expect(formOneTab?.textContent).toBe('I')
   expect(formTwoTab?.textContent).toBe('II')
@@ -61,14 +57,13 @@ test('Shows alphabetized verbs for the selected form', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(
-    [...document.querySelectorAll('[role="tablist"][aria-label="Select form"] [role="tab"]')].find(
+    [...document.querySelectorAll('[role="group"][aria-label="Select form"] button')].find(
       (tab) => tab.textContent === 'II',
     )!,
   )
 
-  const formTwoPanel = document.querySelector<HTMLElement>('[role="tabpanel"][aria-label="Form II"]')!
-  const hassana = within(formTwoPanel).getByText('حَسَّنَ')
-  const sammaa = within(formTwoPanel).getByText('سَمَّى')
+  const hassana = screen.getByText('حَسَّنَ')
+  const sammaa = screen.getByText('سَمَّى')
 
   expect(hassana.compareDocumentPosition(sammaa) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 })
