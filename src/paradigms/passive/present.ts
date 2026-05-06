@@ -151,25 +151,16 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 
 function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
   const [, c2, c3] = verb.rootTokens
-
   if (c3.isWeak) return []
-
-  if (c2.isWeak) return [c3]
-
   if (isFemininePlural(pronounId)) return [c3]
-
-  if (!c2.equals(c3)) return [c3]
-
-  return []
+  if (c2.equals(c3)) return []
+  return [c3]
 }
 
 function buildSuffixFormI(verb: FormIVerb, mood: Mood, pronounId: PronounId): readonly Token[] {
   const [, c2, c3] = verb.rootTokens
-
   if (c2.equals(c3)) return geminateSuffix(mood, pronounId)
-
   if (c3.isWeak) return [FATHA, ...defectiveSuffix(mood, pronounId)]
-
   return MOOD_SUFFIXES[mood][pronounId]
 }
 
