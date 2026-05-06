@@ -58,10 +58,7 @@ export function derivePassiveParticiple(verb: Verb): string {
             ? [...prefix, SUKOON, c2, ...longVowel(DAMMA), c3]
             : [...prefix, ...longVowel(DAMMA), c3]
 
-        if (c2.equals(YEH))
-          return verb.presentHollow === 'uncontracted'
-            ? [...prefix, SUKOON, c2, ...longVowel(KASRA), c3]
-            : [...prefix, ...longVowel(KASRA), c3]
+        if (c2.equals(YEH)) return [...prefix, ...longVowel(KASRA), c3]
 
         return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), c3]
       }
