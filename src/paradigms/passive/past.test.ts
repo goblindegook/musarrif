@@ -26,6 +26,7 @@ describe('passive past pattern', () => {
       test.each<[string, string]>([
         ['بلغ', 'بُلِغَ'],
         ['زرق', 'زُرِقَ'],
+        ['زعم', 'زُعِمَ'],
         ['برح', 'بُرِحَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
@@ -71,6 +72,7 @@ describe('passive past pattern', () => {
         ['نوم', 'نِيْمَ'],
         ['دوم', 'دِيْمَ'],
         ['خور', 'خُوِرَ'],
+        // FIXME: ['خيل', 'خِيلَ'],
         ['عوز', 'عُوِزَ'],
         ['خوف', 'خِيْفَ'],
         ['شوق', 'شِيْقَ'],
@@ -81,6 +83,7 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test.each<[string, string]>([
+        ['دري', 'دُرِيَ'],
         ['ولي', 'وُلِيَ'],
         ['وعي', 'وُعِيَ'],
         ['علي', 'عُلِيَ'],
@@ -154,6 +157,7 @@ describe('passive past pattern', () => {
     describe('geminate roots', () => {
       test.each<[string, string]>([
         ['جبب', 'جُبَّ'],
+        ['عدد', 'عُدَّ'],
         ['ءمم', 'أُمَّ'],
         ['ءدد', 'أُدَّ'],
         ['ءجج', 'أُجَّ'],
@@ -180,7 +184,6 @@ describe('passive past pattern', () => {
 
     describe('strong roots', () => {
       test.each<[string, string]>([
-        ['جيد', 'جُيِدَ'],
         ['نظر', 'نُظِرَ'],
         ['مثل', 'مُثِلَ'],
         ['دعم', 'دُعِمَ'],
@@ -535,24 +538,6 @@ describe('passive past pattern', () => {
           '3fp': 'شِدْنَ',
         })
       })
-
-      test('جَيِدَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('جيد', 1))).toEqualT({
-          '1s': 'جُيِدْتُ',
-          '2ms': 'جُيِدْتَ',
-          '2fs': 'جُيِدْتِ',
-          '3ms': 'جُيِدَ',
-          '3fs': 'جُيِدَتْ',
-          '2d': 'جُيِدْتُمَا',
-          '3md': 'جُيِدَا',
-          '3fd': 'جُيِدَتَا',
-          '1p': 'جُيِدْنَا',
-          '2mp': 'جُيِدْتُمْ',
-          '2fp': 'جُيِدْتُنَّ',
-          '3mp': 'جُيِدُوْا',
-          '3fp': 'جُيِدْنَ',
-        })
-      })
     })
 
     describe('hamzated initial roots', () => {
@@ -802,6 +787,7 @@ describe('passive past pattern', () => {
         ['ءوب', 'أُوِّبَ'],
         ['شوق', 'شُوِّقَ'],
         ['زور', 'زُوِّرَ'],
+        ['صير', 'صُيِّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })

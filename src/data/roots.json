@@ -678,6 +678,12 @@
   },
   {
     "root": "Edd",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "Edd",
     "form": 4
   },
   {
@@ -702,7 +708,8 @@
   {
     "root": "Elm",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "masdars": ["fi3l"]
   },
   {
     "root": "Elm",
@@ -1269,6 +1276,10 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "Syr",
+    "form": 2
+  },
+  {
     "root": "TEm",
     "form": 1,
     "vowels": "i-a",
@@ -1348,6 +1359,7 @@
     "masdars": ["fa3l"],
     "passiveVoice": "none"
   },
+
   {
     "root": "Zlm",
     "form": 8,
@@ -1573,6 +1585,12 @@
   {
     "root": "drb",
     "form": 5
+  },
+  {
+    "root": "dry",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fi3aala"]
   },
   {
     "root": "drs",
@@ -2061,11 +2079,6 @@
     "masdars": ["mimi", "fa3l"]
   },
   {
-    "root": "jyd",
-    "form": 1,
-    "vowels": "i-a"
-  },
-  {
     "root": "k$f",
     "form": 8
   },
@@ -2481,7 +2494,12 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "noPassiveParticiple": true,
     "passiveVoice": "none"
+  },
+  {
+    "root": "myl",
+    "form": 2
   },
   {
     "root": "n$'",
@@ -3426,7 +3444,8 @@
   {
     "root": "trk",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": [""]
   },
   {
     "root": "twb",
@@ -3695,7 +3714,8 @@
   {
     "root": "wjd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fi3aal", "fu3ool", "fa3l", "fi3l"]
   },
   {
     "root": "wjd",
@@ -4032,7 +4052,20 @@
     "root": "xwr",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "noPassiveParticiple": true,
+    "passiveVoice": "none"
+  },
+  {
+    "root": "xyl",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3l", "fa3la", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "xyl",
+    "form": 4
   },
   {
     "root": "xyr",
@@ -4070,6 +4103,12 @@
   {
     "root": "ywd",
     "form": 2
+  },
+  {
+    "root": "zEm",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fi3l", "fu3l"]
   },
   {
     "root": "zHm",

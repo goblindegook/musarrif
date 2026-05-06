@@ -1,4 +1,3 @@
-import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_MAQSURA,
@@ -23,6 +22,8 @@ import type { Verb } from '../verbs'
 import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): string {
+  if (verb.noPassiveParticiple) return ''
+
   const result = (() => {
     const letters = verb.rootTokens
 
@@ -52,8 +53,9 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (c3.isWeak) return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA]
 
-        if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
-          return [...prefix, ...longVowel(c2.equals(WAW) ? DAMMA : KASRA), c3]
+        if (c2.equals(WAW)) return [...prefix, ...longVowel(DAMMA), c3]
+
+        if (c2.equals(YEH)) return [...prefix, ...longVowel(KASRA), c3]
 
         return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), c3]
       }

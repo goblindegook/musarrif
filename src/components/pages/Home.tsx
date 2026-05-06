@@ -4,7 +4,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
-import { type DisplayVerb, FORMS, verbs } from '../../paradigms/verbs'
+import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { useRouting } from '../../routes'
 import { Button } from '../atoms/Button'
@@ -17,14 +17,12 @@ import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 
-type FormNumber = (typeof FORMS)[number]
-type VerbFilter = { kind: 'form'; form: FormNumber } | { kind: 'kanaSisters' }
+type VerbFilter = { kind: 'form'; form: VerbForm } | { kind: 'kanaSisters' }
 
-const KANA_SISTERS_IDS = new Set(['DHy-4', 'SbH-4', 'Syr-1', 'Zll-1', 'byt-1', 'kwn-1', 'lys-1', 'msw-4'])
 const VERBS_PER_PAGE = 50
 
 const verbsByForm = (() => {
-  const grouped = new Map<FormNumber, DisplayVerb[]>()
+  const grouped = new Map<VerbForm, DisplayVerb[]>()
   for (const form of FORMS) grouped.set(form, [])
   for (const verb of verbs) grouped.get(verb.form)?.push(verb)
   for (const form of FORMS) {
@@ -43,7 +41,7 @@ export function Home() {
   const { navigateTo } = useRouting()
   const { favourites } = useFavourites()
   const { recents } = useRecent()
-  const [selectedFormTab, setSelectedFormTab] = useState<FormNumber>(1)
+  const [selectedFormTab, setSelectedFormTab] = useState<VerbForm>(1)
   const [activeFilter, setActiveFilter] = useState<VerbFilter>({ kind: 'form', form: 1 })
   const [page, setPage] = useState(1)
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
@@ -62,7 +60,7 @@ export function Home() {
   const sortedRecents = useMemo(() => recents, [recents])
   const visibleVerbs = useMemo(() => {
     if (activeFilter.kind === 'kanaSisters') {
-      return verbs.filter((verb) => KANA_SISTERS_IDS.has(verb.id))
+      return verbs.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
     }
 
     return verbsByForm.get(activeFilter.form) ?? []
@@ -74,7 +72,7 @@ export function Home() {
     return visibleVerbs.slice(start, start + VERBS_PER_PAGE)
   }, [currentPage, visibleVerbs])
 
-  const selectFormFilter = useCallback((form: FormNumber) => {
+  const selectFormFilter = useCallback((form: VerbForm) => {
     setSelectedFormTab(form)
     setActiveFilter({ kind: 'form', form })
     setPage(1)

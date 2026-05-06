@@ -141,10 +141,16 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak) return buildForms([...prefix, pastVowel, c3], c3)
 
+  if (c2.equals(YEH))
+    return {
+      ...buildForms([c1, FATHA, ALIF, c3], c3),
+      suffixedBase: [c1, KASRA, c3],
+    }
+
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
     return {
       ...buildForms([c1, FATHA, ALIF, c3], c3),
-      suffixedBase: [c1, c2.equals(YEH) ? KASRA : DAMMA, c3],
+      suffixedBase: [c1, DAMMA, c3],
     }
 
   return buildForms([...prefix, pastVowel, c3], c3)

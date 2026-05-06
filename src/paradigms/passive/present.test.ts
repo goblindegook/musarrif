@@ -32,6 +32,7 @@ describe('passive present indicative', () => {
         ['برح', 'يُبْرَحُ'],
         ['كلم', 'يُكْلَمُ'],
         ['زرق', 'يُزْرَقُ'],
+        ['زعم', 'يُزْعَمُ'],
         ['سكن', 'يُسْكَنُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
@@ -77,6 +78,7 @@ describe('passive present indicative', () => {
     describe('geminate roots', () => {
       test.each([
         ['جبب', 'يُجَبُّ'],
+        ['عدد', 'يُعَدُّ'],
         ['ءدد', 'يُؤَدُّ'],
         ['ءجج', 'يُؤَجُّ'],
         ['ءزز', 'يُؤَزُّ'],
@@ -181,6 +183,7 @@ describe('passive present indicative', () => {
         ['دوم', 'يُدَامُ'],
         ['قول', 'يُقَالُ'],
         ['خور', 'يُخْوَرُ'],
+        // FIXME: ['خيل', 'يُخَالُ'],
         ['خوف', 'يُخَافُ'],
         ['شوق', 'يُشَاقُ'],
       ])('%s pattern', (root, expected) => {
@@ -274,24 +277,6 @@ describe('passive present indicative', () => {
           '2fp': 'تُشَدْنَ',
           '3mp': 'يُشَادُوْنَ',
           '3fp': 'يُشَدْنَ',
-        })
-      })
-
-      test('جَيِدَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('جيد', 1), 'indicative')).toEqualT({
-          '1s': 'أُجْيَدُ',
-          '2ms': 'تُجْيَدُ',
-          '2fs': 'تُجْيَدِيْنَ',
-          '3ms': 'يُجْيَدُ',
-          '3fs': 'تُجْيَدُ',
-          '2d': 'تُجْيَدَانِ',
-          '3md': 'يُجْيَدَانِ',
-          '3fd': 'تُجْيَدَانِ',
-          '1p': 'نُجْيَدُ',
-          '2mp': 'تُجْيَدُوْنَ',
-          '2fp': 'تُجْيَدْنَ',
-          '3mp': 'يُجْيَدُوْنَ',
-          '3fp': 'يُجْيَدْنَ',
         })
       })
     })
@@ -479,6 +464,7 @@ describe('passive present indicative', () => {
 
     describe('defective roots', () => {
       test.each<[string, string]>([
+        ['دري', 'يُدْرَى'],
         ['وعي', 'يُوعَى'],
         ['علي', 'يُعْلَى'],
         ['لهو', 'يُلْهَى'],
@@ -665,6 +651,7 @@ describe('passive present indicative', () => {
         ['كيف', 'يُكَيَّفُ'],
         ['شوق', 'يُشَوَّقُ'],
         ['زور', 'يُزَوَّرُ'],
+        ['صير', 'يُصَيَّرُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'indicative')['3ms']).toEqualT(expected)
       })

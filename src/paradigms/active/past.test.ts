@@ -10,6 +10,7 @@ describe('active past', () => {
         ['جعل', 'جَعَلَ'],
         ['جمع', 'جَمَعَ'],
         ['برح', 'بَرِحَ'],
+        ['زعم', 'زَعَمَ'],
         ['حدث', 'حَدَثَ'],
         ['ذكر', 'ذَكَرَ'],
         ['دعم', 'دَعَمَ'],
@@ -62,6 +63,7 @@ describe('active past', () => {
         ['ودد', 'وَدَّ'],
         ['قرر', 'قَرَّ'],
         ['جبب', 'جَبَّ'],
+        ['عدد', 'عَدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -173,15 +175,32 @@ describe('active past', () => {
         ['عوم', 'عَامَ'],
         ['قول', 'قَالَ'],
         ['عوز', 'عَوِزَ'],
-        ['ميل', 'مَيِلَ'],
+        ['ميل', 'مَالَ'],
         ['نوم', 'نَامَ'],
         ['صير', 'صَارَ'],
-        ['جيد', 'جَيِدَ'],
         ['خوف', 'خَافَ'],
         ['شوق', 'شَاقَ'],
         ['زيل', 'زَالَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
+      })
+
+      test('خَالَ conjugation', () => {
+        expect(conjugatePast(getVerb('خيل', 1))).toEqualT({
+          '1s': 'خِلْتُ',
+          '2ms': 'خِلْتَ',
+          '2fs': 'خِلْتِ',
+          '3ms': 'خَالَ',
+          '3fs': 'خَالَتْ',
+          '2d': 'خِلْتُمَا',
+          '3md': 'خَالَا',
+          '3fd': 'خَالَتَا',
+          '1p': 'خِلْنَا',
+          '2mp': 'خِلْتُمْ',
+          '2fp': 'خِلْتُنَّ',
+          '3mp': 'خَالُوْا',
+          '3fp': 'خِلْنَ',
+        })
       })
 
       test('عَوِزَ conjugation', () => {
@@ -256,24 +275,6 @@ describe('active past', () => {
         })
       })
 
-      test('جَيِدَ conjugation', () => {
-        expect(conjugatePast(getVerb('جيد', 1))).toEqualT({
-          '1s': 'جَيِدْتُ',
-          '2ms': 'جَيِدْتَ',
-          '2fs': 'جَيِدْتِ',
-          '3ms': 'جَيِدَ',
-          '3fs': 'جَيِدَتْ',
-          '2d': 'جَيِدْتُمَا',
-          '3md': 'جَيِدَا',
-          '3fd': 'جَيِدَتَا',
-          '1p': 'جَيِدْنَا',
-          '2mp': 'جَيِدْتُمْ',
-          '2fp': 'جَيِدْتُنَّ',
-          '3mp': 'جَيِدُوْا',
-          '3fp': 'جَيِدْنَ',
-        })
-      })
-
       test('قَالَ conjugation', () => {
         expect(conjugatePast(getVerb('قول', 1))).toEqualT({
           '1s': 'قُلْتُ',
@@ -341,6 +342,7 @@ describe('active past', () => {
         ['غدو', 'غَدَا'],
         ['غشي', 'غَشَى'],
         ['جري', 'جَرَى'],
+        ['دري', 'دَرَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -858,6 +860,7 @@ describe('active past', () => {
         ['ءول', 'أَوَّلَ'],
         ['شوق', 'شَوَّقَ'],
         ['زور', 'زَوَّرَ'],
+        ['صير', 'صَيَّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
       })

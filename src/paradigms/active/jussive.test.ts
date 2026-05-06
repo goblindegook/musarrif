@@ -19,6 +19,7 @@ describe('active present jussive', () => {
         ['مكن', 'يَمْكُنْ'],
         ['بلغ', 'يَبْلُغْ'],
         ['برح', 'يَبْرَحْ'],
+        ['زعم', 'يَزْعُمْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -80,6 +81,7 @@ describe('active present jussive', () => {
         ['ءدد', 'يَئِدَّ'],
         ['ءجج', 'يَؤُجَّ'],
         ['ءزز', 'يَؤُزَّ'],
+        ['عدد', 'يَعُدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -288,6 +290,24 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
+      test('خَالَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('خيل', 1), 'jussive')).toEqualT({
+          '1s': 'أَخَلْ',
+          '2ms': 'تَخَلْ',
+          '2fs': 'تَخَالِي',
+          '3ms': 'يَخَلْ',
+          '3fs': 'تَخَلْ',
+          '2d': 'تَخَالَا',
+          '3md': 'يَخَالَا',
+          '3fd': 'تَخَالَا',
+          '1p': 'نَخَلْ',
+          '2mp': 'تَخَالُوْا',
+          '2fp': 'تَخَلْنَ',
+          '3mp': 'يَخَالُوْا',
+          '3fp': 'يَخَلْنَ',
+        })
+      })
+
       test('عَوِزَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('عوز', 1), 'jussive')).toEqualT({
           '1s': 'أَعْوَزْ',
@@ -303,24 +323,6 @@ describe('active present jussive', () => {
           '2fp': 'تَعْوَزْنَ',
           '3mp': 'يَعْوَزُوْا',
           '3fp': 'يَعْوَزْنَ',
-        })
-      })
-
-      test('جَيِدَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('جيد', 1), 'jussive')).toEqualT({
-          '1s': 'أَجْيَدْ',
-          '2ms': 'تَجْيَدْ',
-          '2fs': 'تَجْيَدِي',
-          '3ms': 'يَجْيَدْ',
-          '3fs': 'تَجْيَدْ',
-          '2d': 'تَجْيَدَا',
-          '3md': 'يَجْيَدَا',
-          '3fd': 'تَجْيَدَا',
-          '1p': 'نَجْيَدْ',
-          '2mp': 'تَجْيَدُوْا',
-          '2fp': 'تَجْيَدْنَ',
-          '3mp': 'يَجْيَدُوْا',
-          '3fp': 'يَجْيَدْنَ',
         })
       })
 
@@ -381,6 +383,7 @@ describe('active present jussive', () => {
         ['جدو', 'يَجْدُ'],
         ['لهو', 'يَلْهُ'],
         ['شفي', 'يَشْفِ'],
+        ['دري', 'يَدْرِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -866,6 +869,7 @@ describe('active present jussive', () => {
         ['ءوب', 'يُؤَوِّبْ'],
         ['شوق', 'يُشَوِّقْ'],
         ['زور', 'يُزَوِّرْ'],
+        ['صير', 'يُصَيِّرْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'jussive')['3ms']).toEqualT(expected)
       })

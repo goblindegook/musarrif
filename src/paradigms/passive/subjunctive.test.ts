@@ -32,6 +32,7 @@ describe('passive present subjunctive', () => {
         ['برح', 'يُبْرَحَ'],
         ['كلم', 'يُكْلَمَ'],
         ['زرق', 'يُزْرَقَ'],
+        ['زعم', 'يُزْعَمَ'],
         ['سكن', 'يُسْكَنَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
@@ -76,6 +77,7 @@ describe('passive present subjunctive', () => {
 
     describe('geminate roots', () => {
       test.each([
+        ['عدد', 'يُعَدَّ'],
         ['ءدد', 'يُؤَدَّ'],
         ['ءجج', 'يُؤَجَّ'],
         ['ءزز', 'يُؤَزَّ'],
@@ -170,6 +172,7 @@ describe('passive present subjunctive', () => {
         ['دوم', 'يُدَامَ'],
         ['قول', 'يُقَالَ'],
         ['خور', 'يُخْوَرَ'],
+        // FIXME: ['خيل', 'يُخَالَ'],
         ['خوف', 'يُخَافَ'],
         ['زيد', 'يُزَادَ'],
         ['شوق', 'يُشَاقَ'],
@@ -433,6 +436,7 @@ describe('passive present subjunctive', () => {
 
     describe('defective roots', () => {
       test.each([
+        ['دري', 'يُدْرَى'],
         ['غشي', 'يُغْشَى'],
         ['جدو', 'يُجْدَى'],
         ['لهو', 'يُلْهَى'],
@@ -615,6 +619,7 @@ describe('passive present subjunctive', () => {
         ['كيف', 'يُكَيَّفَ'],
         ['شوق', 'يُشَوَّقَ'],
         ['زور', 'يُزَوَّرَ'],
+        ['صير', 'يُصَيَّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })

@@ -61,6 +61,16 @@ describe('imperative', () => {
           '2fp': 'اُنْظُرْنَ',
         })
       })
+
+      test('زَعَمَ conjugation', () => {
+        expect(conjugateImperative(getVerb('زعم', 1))).toMatchObjectT({
+          '2ms': 'اُزْعُمْ',
+          '2fs': 'اُزْعُمِي',
+          '2d': 'اُزْعُمَا',
+          '2mp': 'اُزْعُمُوْا',
+          '2fp': 'اُزْعُمْنَ',
+        })
+      })
     })
 
     describe('assimilated roots', () => {
@@ -175,6 +185,16 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
+      test('خَالَ conjugation', () => {
+        expect(conjugateImperative(getVerb('خيل', 1))).toMatchObjectT({
+          '2ms': 'خَلْ',
+          '2fs': 'خَالِي',
+          '2d': 'خَالَا',
+          '2mp': 'خَالُوْا',
+          '2fp': 'خَلْنَ',
+        })
+      })
+
       test('عَوِزَ conjugation', () => {
         expect(conjugateImperative(getVerb('عوز', 1))).toMatchObjectT({
           '2ms': 'اِعْوَزْ',
@@ -192,16 +212,6 @@ describe('imperative', () => {
           '2d': 'كُونَا',
           '2mp': 'كُونُوْا',
           '2fp': 'كُنَّ',
-        })
-      })
-
-      test('جَيِدَ conjugation', () => {
-        expect(conjugateImperative(getVerb('جيد', 1))).toMatchObjectT({
-          '2ms': 'اِجْيَدْ',
-          '2fs': 'اِجْيَدِي',
-          '2d': 'اِجْيَدَا',
-          '2mp': 'اِجْيَدُوْا',
-          '2fp': 'اِجْيَدْنَ',
         })
       })
 
@@ -260,6 +270,7 @@ describe('imperative', () => {
       test.each([
         ['غشي', 'اِغْشِ'],
         ['بكي', 'اِبْكِ'],
+        ['دري', 'اِدْرِ'],
         ['بدو', 'اُبْدُ'],
         ['علي', 'اِعْلِ'],
         ['جدو', 'اُجْدُ'],
@@ -334,6 +345,7 @@ describe('imperative', () => {
         ['هلل', 'هُلَّ'],
         ['جبب', 'جُبَّ'],
         ['عنن', 'عِنَّ'],
+        ['عدد', 'عُدَّ'],
         ['ءجج', 'أُجَّ'],
         ['ءزز', 'أُزَّ'],
       ])('%s pattern', (root, expected) => {
@@ -739,6 +751,7 @@ describe('imperative', () => {
     describe('hollow roots', () => {
       test.each([
         ['قوس', 'قَوِّسْ'],
+        ['صير', 'صَيِّرْ'],
         ['كون', 'كَوِّنْ'],
         ['دون', 'دَوِّنْ'],
         ['نوم', 'نَوِّمْ'],
@@ -1209,7 +1222,6 @@ describe('imperative', () => {
         ['تمم', 'أَتِمَّ'],
         ['سفف', 'أَسِفَّ'],
         ['حبب', 'أَحِبَّ'],
-        ['عدد', 'أَعِدَّ'],
         ['همم', 'أَهِمَّ'],
         ['مدد', 'أَمِدَّ'],
       ])('%s pattern', (root, expected) => {

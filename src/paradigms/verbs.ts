@@ -10,6 +10,25 @@ export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 export const FORMS: readonly VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
+export const KWN_SISTERS_IDS = new Set(['DHy-4', 'SbH-4', 'Syr-1', 'Zll-1', 'byt-1', 'kwn-1', 'lys-1', 'msw-4'])
+export const ZNN_SISTERS_IDS = new Set([
+  // verbs of affectivity
+  'dry-1',
+  'Elm-1',
+  'Hsb-1',
+  'lfw-4',
+  'wjd-1',
+  'xyl-1',
+  'Znn-1',
+  "r'y-1",
+  // verbs of transformation
+  'Edd-1',
+  'jEl-1',
+  'Syr-2',
+  'trk-1',
+  "'x*-8",
+])
+
 export function formatFormLabel(form: VerbForm, root: string): string {
   return root.length === 4 ? `${toRoman(form)}q` : toRoman(form)
 }

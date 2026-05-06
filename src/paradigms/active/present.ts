@@ -445,8 +445,11 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
   if (c1.equals(WAW)) return [...prefix, c2, presentVowel, c3, DAMMA]
 
   // FIXME: isFormIPastVowel check doesn't make sense here
-  if (!isFormIPastVowel(verb, KASRA) && c2.isWeak)
-    return [...prefix, c1, ...longVowel(c2.equals(YEH) ? KASRA : presentVowel), c3, DAMMA]
+  if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(KASRA), c3, DAMMA]
+
+  if (c2.equals(WAW) && !isFormIPastVowel(verb, KASRA)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
+
+  if (c2.equals(YEH)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
 
   return [...prefix, c1, SUKOON, c2, presentVowel, c3, DAMMA]
 }

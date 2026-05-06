@@ -19,6 +19,7 @@ describe('active present subjunctive', () => {
         ['مكن', 'يَمْكُنَ'],
         ['بلغ', 'يَبْلُغَ'],
         ['برح', 'يَبْرَحَ'],
+        ['زعم', 'يَزْعُمَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -66,6 +67,7 @@ describe('active present subjunctive', () => {
         ['ءدد', 'يَئِدَّ'],
         ['ءجج', 'يَؤُجَّ'],
         ['ءزز', 'يَؤُزَّ'],
+        ['عدد', 'يَعُدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -202,6 +204,24 @@ describe('active present subjunctive', () => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
+      test('خَالَ conjugation', () => {
+        expect(conjugatePresentMood(getVerb('خيل', 1), 'subjunctive')).toEqualT({
+          '1s': 'أَخَالَ',
+          '2ms': 'تَخَالَ',
+          '2fs': 'تَخَالِي',
+          '3ms': 'يَخَالَ',
+          '3fs': 'تَخَالَ',
+          '2d': 'تَخَالَا',
+          '3md': 'يَخَالَا',
+          '3fd': 'تَخَالَا',
+          '1p': 'نَخَالَ',
+          '2mp': 'تَخَالُوْا',
+          '2fp': 'تَخَلْنَ',
+          '3mp': 'يَخَالُوْا',
+          '3fp': 'يَخَلْنَ',
+        })
+      })
+
       test('شَادَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('شيد', 1), 'subjunctive')).toEqualT({
           '1s': 'أَشِيدَ',
@@ -303,6 +323,7 @@ describe('active present subjunctive', () => {
         ['جدو', 'يَجْدُوَ'],
         ['لهو', 'يَلْهُوَ'],
         ['شفي', 'يَشْفِيَ'],
+        ['دري', 'يَدْرِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
@@ -739,6 +760,7 @@ describe('active present subjunctive', () => {
         ['ءوب', 'يُؤَوِّبَ'],
         ['شوق', 'يُشَوِّقَ'],
         ['زور', 'يُزَوِّرَ'],
+        ['صير', 'يُصَيِّرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 2), 'subjunctive')['3ms']).toEqualT(expected)
       })
