@@ -52,7 +52,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
       '1p': [...suffixedBase, SUKOON, NOON, FATHA, ALIF],
       '2mp': [...suffixedBase, SUKOON, TEH, DAMMA, MEEM, SUKOON],
       '2fp': [...suffixedBase, SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA],
-      '3mp': [...thirdPersonMasculinePluralBase, WAW, SUKOON, ALIF],
+      '3mp': [...thirdPersonMasculinePluralBase, WAW, ALIF],
       '3fp': [...suffixedBase, SUKOON, NOON, FATHA],
     },
     finalize,
