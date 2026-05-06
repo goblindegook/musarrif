@@ -66,6 +66,14 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
     }
 
+  if (c2.equals(YEH))
+    return {
+      prefix: [c1, KASRA],
+      suffix: [c3, SUKOON],
+      suffix3sd: [YEH, SUKOON, c3, FATHA],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
+    }
+
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
     return {
       prefix: [c1, KASRA],
