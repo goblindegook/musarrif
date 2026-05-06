@@ -589,6 +589,12 @@
     "vowels": "a-a"
   },
   {
+    "root": "Dmm",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
     "root": "Dmn",
     "form": 1,
     "vowels": "i-a",
