@@ -60,9 +60,6 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
       return [...stem.slice(0, -1), ...suffix]
 
     case 8:
-      if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
-      return [...stem.slice(0, -1), ...suffix]
-
     case 9:
     case 10:
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
@@ -93,7 +90,6 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
       return [...stem, ...suffix]
 
     case 4:
-      if (c2.isHamza && c3.isWeak) return [...prefix, DAMMA, ...suffix]
       if (c1.isWeak && c3.isWeak) return [...dropFinalDiacritic(prefix), ...suffix]
       if (c3.isWeak) return [...stem.slice(0, -2), DAMMA, ...suffix]
       return [...stem, ...suffix]
@@ -447,7 +443,7 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
   // FIXME: isFormIPastVowel check doesn't make sense here
   if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(KASRA), c3, DAMMA]
 
-  if (c2.equals(WAW) && !isFormIPastVowel(verb, KASRA)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
+  if (c2.equals(WAW) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
 
   if (c2.equals(YEH)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
 
