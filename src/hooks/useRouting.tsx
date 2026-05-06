@@ -28,21 +28,21 @@ type RouteParamsForPath<
     ? Record<never, never>
     : never
 
-interface BaseRouteProps<TRoute> {
+export interface BaseRouteProps<TRoute> {
   children: RouteChildren<TRoute>
 }
 
-interface PathRouteProps<TRoute extends readonly (string | undefined)[], Path extends string>
+export interface PathRouteProps<TRoute extends readonly (string | undefined)[], Path extends string>
   extends BaseRouteProps<TRoute extends TRoute ? RouteParamsForPath<TRoute, SplitPath<Path>> : never> {
   path: Path
 }
 
-interface RouterProps<TRoute> {
+export interface RouterProps<TRoute> {
   route: TRoute
   children: ComponentChildren
 }
 
-interface RoutingContextValue<TRoute extends readonly (string | undefined)[]> {
+export interface RoutingContextValue<TRoute extends readonly (string | undefined)[]> {
   route: TRoute
   navigateTo: (route: TRoute) => void
   toHref: (route: TRoute) => string

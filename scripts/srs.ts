@@ -1,7 +1,16 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { select } from '@inquirer/prompts'
-import { formPool, pronounPool, rootTypesPool, tensePool } from '../src/exercises/dimensions.ts'
+import {
+  type DimensionKey,
+  type DimensionProfile,
+  enforcePrerequisites,
+  formPool,
+  pronounPool,
+  rootTypesPool,
+  sanitizeDimensionProfile,
+  tensePool,
+} from '../src/exercises/dimensions.ts'
 import type { ExerciseKind } from '../src/exercises/exercises.ts'
 import {
   buildCardKey,
@@ -44,6 +53,20 @@ interface CoverageRow {
   uncoveredPercent: number
 }
 
+interface DimensionUnlockRow {
+  label: string
+  unlockedLevels: string
+  remainingPercent: number
+  nextAnswered: string
+  nextCorrect: string
+}
+
+interface LoadedDimensions {
+  found: boolean
+  profile: DimensionProfile
+  windows: Record<DimensionKey, readonly boolean[]>
+}
+
 const EXERCISE_KINDS: readonly ExerciseKind[] = [
   'conjugation',
   'masdarForm',
@@ -80,6 +103,39 @@ const PRONOUN_ORDER: readonly PronounId[] = [
   '3fp',
 ]
 const NOMINAL_ORDER: readonly NominalGroup[] = ['participles', 'masdar']
+const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+}
+const DIMENSION_LEVELS: Record<DimensionKey, number> = {
+  tenses: 4,
+  pronouns: 3,
+  diacritics: 2,
+  forms: 9,
+  rootTypes: 5,
+  nominals: 2,
+}
+const DIMENSION_LABELS: Record<DimensionKey, string> = {
+  tenses: 'tenses',
+  pronouns: 'pronouns',
+  diacritics: 'diacritics',
+  forms: 'forms',
+  rootTypes: 'root types',
+  nominals: 'nominals',
+}
+const DIMENSION_ORDER: readonly DimensionKey[] = ['tenses', 'pronouns', 'diacritics', 'forms', 'rootTypes', 'nominals']
+const WINDOW_SIZES: Record<DimensionKey, number> = {
+  tenses: 20,
+  pronouns: 20,
+  diacritics: 50,
+  forms: 20,
+  rootTypes: 20,
+  nominals: 20,
+}
 
 const TENSE_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
 const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
@@ -124,6 +180,60 @@ function extractSrsPayload(raw: unknown): unknown {
   }
 
   return raw
+}
+
+function extractDimensionsPayload(raw: unknown): unknown {
+  if (raw == null || typeof raw !== 'object') return undefined
+
+  const object = raw as Record<string, unknown>
+  if ('dimensions' in object) return object.dimensions
+
+  if ('conjugator:dimensions' in object) {
+    const localStorageDimensions = object['conjugator:dimensions']
+    if (typeof localStorageDimensions === 'string') {
+      try {
+        return JSON.parse(localStorageDimensions)
+      } catch {
+        return undefined
+      }
+    }
+    return localStorageDimensions
+  }
+
+  return undefined
+}
+
+function loadDimensions(raw: unknown): LoadedDimensions {
+  const emptyWindows: Record<DimensionKey, readonly boolean[]> = {
+    tenses: [],
+    pronouns: [],
+    diacritics: [],
+    forms: [],
+    rootTypes: [],
+    nominals: [],
+  }
+  const payload = extractDimensionsPayload(raw)
+  if (payload == null || typeof payload !== 'object') {
+    return { found: false, profile: INITIAL_DIMENSION_PROFILE, windows: emptyWindows }
+  }
+
+  const object = payload as Record<string, unknown>
+  const rawProfile = 'profile' in object ? object.profile : object
+  const rawWindows = 'windows' in object ? object.windows : undefined
+  const windows = { ...emptyWindows }
+  if (rawWindows != null && typeof rawWindows === 'object') {
+    const windowRecord = rawWindows as Partial<Record<DimensionKey, unknown>>
+    for (const dimension of DIMENSION_ORDER) {
+      const value = windowRecord[dimension]
+      if (Array.isArray(value) && value.every((entry) => typeof entry === 'boolean')) windows[dimension] = value
+    }
+  }
+
+  return {
+    found: true,
+    profile: enforcePrerequisites(sanitizeDimensionProfile(rawProfile, INITIAL_DIMENSION_PROFILE)),
+    windows,
+  }
 }
 
 function dueBucket(today: string, dueDate: string): DueBucket {
@@ -352,6 +462,56 @@ function printOverallCoverage(cards: readonly UniverseCard[], store: SrsStore) {
   console.log()
 }
 
+function canPromote(profile: DimensionProfile, dimension: DimensionKey): boolean {
+  if (['tenses', 'forms', 'rootTypes'].includes(dimension) && profile.pronouns < 1) return false
+  if (dimension === 'tenses' && profile.tenses === 0 && profile.forms < 4) return false
+  if (dimension === 'tenses' && profile.tenses >= 4 && profile.forms < DIMENSION_LEVELS.forms) return false
+  return true
+}
+
+function nextUnlockProgress(dimensions: LoadedDimensions, dimension: DimensionKey): [string, string] {
+  const level = dimensions.profile[dimension]
+  const maxLevel = DIMENSION_LEVELS[dimension]
+  const windowSize = WINDOW_SIZES[dimension]
+  const window = dimensions.windows[dimension]
+  const answers = Math.min(window.length, windowSize)
+  const correct = window.filter(Boolean).length
+
+  if (level >= maxLevel) return [`${windowSize}/${windowSize}`, `${windowSize}/${windowSize}`]
+  if (!canPromote(dimensions.profile, dimension)) return [`${answers}/${windowSize}`, `${correct}/${windowSize}`]
+
+  return [`${answers}/${windowSize}`, `${correct}/${windowSize}`]
+}
+
+function printDimensionUnlocks(dimensions: LoadedDimensions) {
+  const rows: DimensionUnlockRow[] = DIMENSION_ORDER.map((dimension) => {
+    const maxLevel = DIMENSION_LEVELS[dimension]
+    const level = Math.min(dimensions.profile[dimension], maxLevel)
+    const [nextAnswered, nextCorrect] = nextUnlockProgress(dimensions, dimension)
+    return {
+      label: DIMENSION_LABELS[dimension],
+      unlockedLevels: `${level + 1}/${maxLevel + 1}`,
+      remainingPercent: toPercent(maxLevel - level, maxLevel + 1),
+      nextAnswered,
+      nextCorrect,
+    }
+  })
+
+  console.log('\nDimension unlock progress')
+  if (!dimensions.found) console.log('No dimensions payload found; using baseline profile.\n')
+  printTable(
+    ['dimension', 'levels', 'remaining to full unlock', 'answered/total', 'correct/total'],
+    rows.map((row) => [
+      row.label,
+      row.unlockedLevels,
+      formatPercent(row.remainingPercent),
+      row.nextAnswered,
+      row.nextCorrect,
+    ]),
+  )
+  console.log()
+}
+
 async function run() {
   const filePath = process.argv[2]
   if (filePath == null) {
@@ -360,9 +520,11 @@ async function run() {
   }
 
   let store: SrsStore
+  let dimensions: LoadedDimensions
   try {
     const raw = JSON.parse(readFileSync(resolve(filePath), 'utf8')) as unknown
     store = sanitizeRawSrsStore(extractSrsPayload(raw))
+    dimensions = loadDimensions(raw)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     console.error(`Failed to load SRS export: ${message}`)
@@ -372,15 +534,16 @@ async function run() {
   console.log(`Loaded SRS cards: ${Object.keys(store).length}`)
 
   const universe = buildUniverse()
-  let lastMainAction: 'due' | 'coverage' | 'exit' = 'due'
+  let lastMainAction: 'due' | 'coverage' | 'dimensions' | 'exit' = 'due'
   let lastCoverageDimension: CoverageDimension = 'kind'
 
   while (true) {
-    const action: 'due' | 'coverage' | 'exit' = await select({
+    const action: 'due' | 'coverage' | 'dimensions' | 'exit' = await select({
       message: 'SRS report menu:',
       choices: [
         { name: 'Card distribution by due date', value: 'due' },
         { name: 'Covered vs uncovered', value: 'coverage' },
+        { name: 'Dimension unlock progress', value: 'dimensions' },
         { name: 'Exit', value: 'exit' },
       ],
       default: lastMainAction,
@@ -390,6 +553,10 @@ async function run() {
     if (action === 'exit') return
     if (action === 'due') {
       printDueDistribution(store)
+      continue
+    }
+    if (action === 'dimensions') {
+      printDimensionUnlocks(dimensions)
       continue
     }
 
