@@ -63,12 +63,14 @@ export type MasdarPattern =
   | 'mimi'
 
 export type PassiveVoice = 'none' | 'impersonal'
+export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
 
 export type FormIVerb = {
   root: string
   rootTokens: readonly LetterToken[]
   form: 1
   vowels: FormIPattern
+  presentHollow?: PresentHollowBehaviour
   masdars?: readonly MasdarPattern[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
@@ -97,10 +99,8 @@ export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<
 export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((raw) => {
   const rootId = raw.root
   const root = transliterateReverse(rootId)
-  // FIXME: improve this, there's only a small set of tokens
   const verb = { ...raw, root, rootTokens: tokenize(root) }
-  const past = conjugatePast(verb)
-  return { ...verb, label: past['3ms'], id: `${rootId}-${raw.form}`, rootId }
+  return { ...verb, label: conjugatePast(verb)['3ms'], id: `${rootId}-${raw.form}`, rootId }
 })
 
 const verbsById = new Map<string, DisplayVerb>()

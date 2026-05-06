@@ -1,6 +1,4 @@
-import { memoize } from '@pacote/memoize'
 import { mapRecord } from '../../primitives/objects'
-import { conjugatePresentMood } from '../active/present'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -96,18 +94,6 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
   jussive: JUSSIVE_SUFFIXES,
 }
 
-const isContractedHollowFormI = memoize(
-  (verb: FormIVerb) => `${verb.root}:${verb.vowels}`,
-  (verb: FormIVerb) => {
-    const [c1, c2, c3] = verb.rootTokens
-    return (
-      c2.isWeak &&
-      !c3.isWeak &&
-      !conjugatePresentMood(verb, 'indicative')['3ms'].includes([c1.letter, SUKOON, c2.letter].join(''))
-    )
-  },
-)
-
 function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
 
@@ -117,7 +103,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly To
     return [c1, FATHA]
   }
 
-  if (isContractedHollowFormI(verb)) return [c1, FATHA]
+  if (c2.isWeak && !c3.isWeak && verb.presentHollow !== 'uncontracted') return [c1, FATHA]
 
   if (c1.isHamza && pronounId === '1s') return [WAW]
 
@@ -140,7 +126,7 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 
   if (c3.isWeak) return [c2]
 
-  if (!isContractedHollowFormI(verb)) return [c2, FATHA]
+  if (!c2.isWeak || c3.isWeak || verb.presentHollow === 'uncontracted') return [c2, FATHA]
 
   if (isFemininePlural(pronounId)) return []
 

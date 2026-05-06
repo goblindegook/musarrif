@@ -137,7 +137,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 
       if (c2.isWeak && stem.includes(ALIF)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
-      // FIXME: isFormIPastVowel check doesn't make sense
+      // FIXME: isFormIPastVowel doesn't make sense
       if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
         return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
@@ -440,12 +440,12 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
 
   if (c1.equals(WAW)) return [...prefix, c2, presentVowel, c3, DAMMA]
 
-  // FIXME: isFormIPastVowel check doesn't make sense here
+  if (verb.presentHollow === 'uncontracted') return [...prefix, c1, SUKOON, c2, FATHA, c3, DAMMA]
+
+  // FIXME: dodgy isFormIPastVowel
   if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(KASRA), c3, DAMMA]
 
-  if (c2.equals(WAW) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
-
-  if (c2.equals(YEH)) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
+  if (c2.isWeak) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
 
   return [...prefix, c1, SUKOON, c2, presentVowel, c3, DAMMA]
 }

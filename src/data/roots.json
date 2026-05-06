@@ -839,6 +839,7 @@
   {
     "root": "Ewz",
     "form": 1,
+    "presentHollow": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"]
   },
@@ -2493,6 +2494,7 @@
     "root": "myl",
     "form": 1,
     "vowels": "i-a",
+    "presentHollow": "uncontracted",
     "masdars": ["fa3al"],
     "noPassiveParticiple": true,
     "passiveVoice": "none"
@@ -4051,6 +4053,7 @@
   {
     "root": "xwr",
     "form": 1,
+    "presentHollow": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "noPassiveParticiple": true,
