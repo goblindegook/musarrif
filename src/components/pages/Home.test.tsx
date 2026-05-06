@@ -45,11 +45,9 @@ test('Shows verbs grouped by form at the verbs base route', () => {
 
   expect(document.querySelectorAll('[role="group"][aria-label="Select form"] button')).toHaveLength(10)
 
-  const formOneTab = document.querySelector('[role="group"][aria-label="Select form"] button[aria-selected="true"]')
-  const formTwoTab = document.querySelector('[role="group"][aria-label="Select form"] button[aria-selected="false"]')
-
-  expect(formOneTab?.textContent).toBe('I')
-  expect(formTwoTab?.textContent).toBe('II')
+  expect(
+    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
+  ).toHaveLength(0)
 })
 
 test('Shows alphabetized verbs for the selected form', async () => {
@@ -62,10 +60,104 @@ test('Shows alphabetized verbs for the selected form', async () => {
     )!,
   )
 
-  const hassana = screen.getByText('حَسَّنَ')
-  const sammaa = screen.getByText('سَمَّى')
+  const athara = screen.getByText('أَثَّرَ')
+  const ajaja = screen.getByText('أَجَّجَ')
 
-  expect(hassana.compareDocumentPosition(sammaa) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(athara.compareDocumentPosition(ajaja) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+
+test('filters included verbs to ẓanna and her sisters', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Ẓanna and her sisters'))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel).toBeTruthy()
+  const scoped = within(includedVerbsPanel as HTMLElement)
+
+  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(13)
+  expect(scoped.getByText('اِتَّخَذَ')).toBeInTheDocument()
+  expect(scoped.getByText('عَدَّ')).toBeInTheDocument()
+  expect(scoped.getByText('عَلِمَ')).toBeInTheDocument()
+  expect(scoped.getByText('حَسِبَ')).toBeInTheDocument()
+  expect(scoped.getByText('صَيَّرَ')).toBeInTheDocument()
+  expect(scoped.getByText('ظَنَّ')).toBeInTheDocument()
+  expect(scoped.getByText('دَرى')).toBeInTheDocument()
+  expect(scoped.getByText('جَعَلَ')).toBeInTheDocument()
+  expect(scoped.getByText('أَلفى')).toBeInTheDocument()
+  expect(scoped.getByText('رَأى')).toBeInTheDocument()
+  expect(scoped.getByText('تَرَكَ')).toBeInTheDocument()
+  expect(scoped.getByText('وَجَدَ')).toBeInTheDocument()
+  expect(scoped.getByText('خالَ')).toBeInTheDocument()
+
+  const alfa = scoped.getByText('أَلفى')
+  const taraka = scoped.getByText('تَرَكَ')
+  const jaala = scoped.getByText('جَعَلَ')
+  expect(alfa.compareDocumentPosition(taraka) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(taraka.compareDocumentPosition(jaala) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+
+test('filters included verbs to kāna and her sisters in alphabetical order', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Kāna and her sisters'))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel).toBeTruthy()
+  const scoped = within(includedVerbsPanel as HTMLElement)
+
+  const asbaha = scoped.getByText('أَصبَحَ')
+  const adha = scoped.getByText('أَضحى')
+  const amsa = scoped.getByText('أَمسى')
+  expect(asbaha.compareDocumentPosition(adha) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(adha.compareDocumentPosition(amsa) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+
+test('allows deselecting a form filter back to unfiltered verbs', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByRole('button', { name: 'II' }))
+  expect(screen.queryByText('آلَ')).toBeNull()
+
+  await user.click(screen.getByRole('button', { name: 'II' }))
+  expect(screen.getByText('آلَ')).toBeInTheDocument()
+  expect(
+    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
+  ).toHaveLength(0)
+})
+
+test('allows deselecting kāna filter back to unfiltered verbs', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Kāna and her sisters'))
+  expect(screen.queryByText('اِتَّخَذَ')).toBeNull()
+
+  await user.click(screen.getByText('Kāna and her sisters'))
+  expect(screen.getByText('اِتَّخَذَ')).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Kāna and her sisters' })).toHaveAttribute('aria-pressed', 'false')
+})
+
+test('allows combining form and kāna filters', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByRole('button', { name: 'IV' }))
+  await user.click(screen.getByText('Kāna and her sisters'))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel).toBeTruthy()
+  const scoped = within(includedVerbsPanel as HTMLElement)
+
+  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(3)
+  expect(scoped.getByText('أَصبَحَ')).toBeInTheDocument()
+  expect(scoped.getByText('أَضحى')).toBeInTheDocument()
+  expect(scoped.getByText('أَمسى')).toBeInTheDocument()
+  expect(scoped.queryByText('كانَ')).toBeNull()
+  expect(scoped.queryByText('آلَ')).toBeNull()
 })
 
 describe('Search', () => {

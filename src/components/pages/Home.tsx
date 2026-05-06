@@ -4,7 +4,7 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
-import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs } from '../../paradigms/verbs'
+import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs, ZNN_SISTERS_IDS } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { useRouting } from '../../routes'
 import { Button } from '../atoms/Button'
@@ -17,32 +17,26 @@ import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 
-type VerbFilter = { kind: 'form'; form: VerbForm } | { kind: 'kanaSisters' }
+const VERBS_PER_PAGE = 30
 
-const VERBS_PER_PAGE = 50
+const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
 
-const verbsByForm = (() => {
-  const grouped = new Map<VerbForm, DisplayVerb[]>()
-  for (const form of FORMS) grouped.set(form, [])
-  for (const verb of verbs) grouped.get(verb.form)?.push(verb)
-  for (const form of FORMS) {
-    const entries = grouped.get(form) ?? []
-    grouped.set(
-      form,
-      entries.sort((a, b) => a.label.localeCompare(b.label, 'ar')),
-    )
-  }
-
-  return grouped
-})()
+type FiltersState = {
+  form: VerbForm | null
+  kanaSisters: boolean
+  zannaSisters: boolean
+}
 
 export function Home() {
   const { t, lang, dir } = useI18n()
   const { navigateTo } = useRouting()
   const { favourites } = useFavourites()
   const { recents } = useRecent()
-  const [selectedFormTab, setSelectedFormTab] = useState<VerbForm>(1)
-  const [activeFilter, setActiveFilter] = useState<VerbFilter>({ kind: 'form', form: 1 })
+  const [filters, setFilters] = useState<FiltersState>({
+    form: null,
+    kanaSisters: false,
+    zannaSisters: false,
+  })
   const [page, setPage] = useState(1)
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
 
@@ -59,12 +53,17 @@ export function Home() {
 
   const sortedRecents = useMemo(() => recents, [recents])
   const visibleVerbs = useMemo(() => {
-    if (activeFilter.kind === 'kanaSisters') {
-      return verbs.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
-    }
+    let filtered = allVerbs
 
-    return verbsByForm.get(activeFilter.form) ?? []
-  }, [activeFilter])
+    if (filters.form != null) filtered = filtered.filter((verb) => verb.form === filters.form)
+
+    if (!filters.kanaSisters && !filters.zannaSisters) return filtered
+
+    return filtered.filter(
+      (verb) =>
+        (filters.kanaSisters && KWN_SISTERS_IDS.has(verb.id)) || (filters.zannaSisters && ZNN_SISTERS_IDS.has(verb.id)),
+    )
+  }, [filters])
   const pageCount = Math.max(1, Math.ceil(visibleVerbs.length / VERBS_PER_PAGE))
   const currentPage = Math.min(page, pageCount)
   const paginatedVerbs = useMemo(() => {
@@ -73,17 +72,22 @@ export function Home() {
   }, [currentPage, visibleVerbs])
 
   const selectFormFilter = useCallback((form: VerbForm) => {
-    setSelectedFormTab(form)
-    setActiveFilter({ kind: 'form', form })
+    setFilters((current) => ({
+      ...current,
+      form: current.form === form ? null : form,
+    }))
     setPage(1)
   }, [])
 
   const toggleKanaSistersFilter = useCallback(() => {
-    setActiveFilter((current) =>
-      current.kind === 'kanaSisters' ? { kind: 'form', form: selectedFormTab } : { kind: 'kanaSisters' },
-    )
+    setFilters((current) => ({ ...current, kanaSisters: !current.kanaSisters }))
     setPage(1)
-  }, [selectedFormTab])
+  }, [])
+
+  const toggleZannaSistersFilter = useCallback(() => {
+    setFilters((current) => ({ ...current, zannaSisters: !current.zannaSisters }))
+    setPage(1)
+  }, [])
 
   return (
     <Main>
@@ -178,9 +182,9 @@ export function Home() {
                   key={form}
                   id={`form-tab-${form}`}
                   type="button"
-                  aria-selected={activeFilter.kind === 'form' && activeFilter.form === form}
+                  aria-selected={filters.form === form}
                   aria-controls={`form-panel-${form}`}
-                  active={activeFilter.kind === 'form' && activeFilter.form === form}
+                  active={filters.form === form}
                   onClick={() => selectFormFilter(form)}
                 >
                   {toRoman(form)}
@@ -196,11 +200,19 @@ export function Home() {
             <FilterBar role="group" aria-label={t('verbsByForm.otherFilters')}>
               <FilterButton
                 type="button"
-                aria-pressed={activeFilter.kind === 'kanaSisters'}
-                active={activeFilter.kind === 'kanaSisters'}
+                aria-pressed={filters.kanaSisters}
+                active={filters.kanaSisters}
                 onClick={toggleKanaSistersFilter}
               >
                 {t('verbsByForm.kanaSisters')}
+              </FilterButton>
+              <FilterButton
+                type="button"
+                aria-pressed={filters.zannaSisters}
+                active={filters.zannaSisters}
+                onClick={toggleZannaSistersFilter}
+              >
+                {t('verbsByForm.zannaSisters')}
               </FilterButton>
             </FilterBar>
           </FilterGroup>
