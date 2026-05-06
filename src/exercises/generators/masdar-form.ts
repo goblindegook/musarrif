@@ -2,14 +2,14 @@ import { shuffle } from '@pacote/shuffle'
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
-import { exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
+import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const masdarFormExercise = defineExercise(
   'masdarForm',
   (profile, constraints) => {
-    const verb = randomVerb(profile, constraints)
+    const verb = randomNominalVerb(profile, constraints)
     const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
 
     const eligibleForms = FORMS.filter((form) => {

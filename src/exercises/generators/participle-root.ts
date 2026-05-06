@@ -1,7 +1,7 @@
 import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
-import { type DimensionProfile, exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
+import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,
   normalizeRootDistractorHamza,
@@ -18,7 +18,7 @@ type Participle = 'active' | 'passive'
 export const participleRootExercise = defineExercise(
   'participleRoot',
   (profile, constraints) => {
-    const verb = randomVerb(profile, constraints)
+    const verb = randomNominalVerb(profile, constraints)
     const active = deriveActiveParticiple(verb)
     const passive = derivePassiveParticiple(verb)
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'

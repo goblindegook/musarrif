@@ -2,7 +2,7 @@ import { shuffle } from '@pacote/shuffle'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
 import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
-import { exerciseDiacritics, random, randomVerb } from '../dimensions.ts'
+import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
 
@@ -11,7 +11,7 @@ type Participle = 'active' | 'passive'
 export const participleFormExercise = defineExercise(
   'participleForm',
   (profile, constraints) => {
-    const verb = randomVerb(profile, constraints)
+    const verb = randomNominalVerb(profile, constraints)
     const paradigms = getAvailableParadigms(verb)
     const active = deriveActiveParticiple(verb)
     const passive = paradigms.includes('passive.participle') ? derivePassiveParticiple(verb) : ''

@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   type DimensionStore,
   enforcePrerequisites,
@@ -6,6 +6,7 @@ import {
   getDimensionUnlocks,
   promoteDimensions,
   pronounPool,
+  randomNominalVerb,
   recordDimensionAnswer,
 } from './dimensions'
 
@@ -74,6 +75,25 @@ describe('diacriticsDifficulty', () => {
 
   test('level 2 strips diacritics', () => {
     expect(exerciseDiacritics(word, 2)).toBe('كتب')
+  })
+})
+
+describe('randomNominalVerb', () => {
+  const NOMINAL_PROFILE = {
+    tenses: 4,
+    pronouns: 3,
+    diacritics: 0,
+    forms: 9,
+    rootTypes: 5,
+    nominals: 2,
+  } as const
+
+  test('excludes lys-1 from nominal exercise pools', () => {
+    const restore = vi.spyOn(Math, 'random').mockReturnValue(0)
+    const selected = randomNominalVerb(NOMINAL_PROFILE)
+    restore.mockRestore()
+
+    expect(selected.id).not.toBe('lys-1')
   })
 })
 

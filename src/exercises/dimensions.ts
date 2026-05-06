@@ -171,19 +171,32 @@ export function rootTypesPool(level: RootTypesLevel): readonly SrsRootType[] {
   return ROOT_TYPE_POOLS[level]
 }
 
-export function randomVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
+const NOMINAL_EXCLUDED_VERB_IDS = new Set(['lys-1'])
+
+function randomVerbFromPool(
+  profile: DimensionProfile,
+  constraints?: CardConstraints,
+  excludedVerbIds?: ReadonlySet<string>,
+): DisplayVerb {
+  const triliterals = verbs.filter(
+    ({ id, root }) => root.length === 3 && (excludedVerbIds == null || !excludedVerbIds.has(id)),
+  )
   const availableForms = formPool(profile.forms)
   const availableRootTypes = rootTypesPool(profile.rootTypes)
-  let pool = verbs.filter(
-    ({ root, form }) =>
-      root.length === 3 &&
-      (availableForms as VerbForm[]).includes(form) &&
-      (availableRootTypes as SrsRootType[]).includes(getSrsRootType(root)),
+  let pool = triliterals.filter(
+    ({ root, form }) => availableForms.includes(form) && availableRootTypes.includes(getSrsRootType(root)),
   )
-  if (constraints?.form != null) pool = pool.filter((v) => v.form === constraints.form)
-  if (constraints?.rootType != null) pool = pool.filter((v) => getSrsRootType(v.root) === constraints.rootType)
-  const triliterals = verbs.filter(({ root }) => root.length === 3)
+  if (constraints?.form) pool = pool.filter((v) => v.form === constraints.form)
+  if (constraints?.rootType) pool = pool.filter((v) => getSrsRootType(v.root) === constraints.rootType)
   return random(pool.length > 0 ? pool : triliterals)
+}
+
+export function randomVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
+  return randomVerbFromPool(profile, constraints)
+}
+
+export function randomNominalVerb(profile: DimensionProfile, constraints?: CardConstraints): DisplayVerb {
+  return randomVerbFromPool(profile, constraints, NOMINAL_EXCLUDED_VERB_IDS)
 }
 
 export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)): DisplayVerb {
