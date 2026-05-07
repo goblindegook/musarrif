@@ -5,9 +5,9 @@ import { I18nProvider } from '../../hooks/useI18n'
 import { RoutingProvider } from '../../routes'
 import { Home } from './Home'
 
-const renderHome = () => {
+const renderHome = (url = '/#/verbs') => {
   cleanup()
-  window.history.replaceState({}, '', '/')
+  window.history.replaceState({}, '', url)
   render(
     <RoutingProvider>
       <I18nProvider>
@@ -158,6 +158,25 @@ test('allows combining form and kāna filters', async () => {
   expect(scoped.getByText('أَمسى')).toBeInTheDocument()
   expect(scoped.queryByText('كانَ')).toBeNull()
   expect(scoped.queryByText('آلَ')).toBeNull()
+})
+
+test('restores verb list filters and pagination from hash query params', () => {
+  renderHome('/#/verbs?form=1&page=2')
+
+  expect(document.querySelector('#form-tab-1')?.getAttribute('aria-selected')).toBe('true')
+  expect(screen.getByText(/Page 2 of \d+/)).toBeInTheDocument()
+  expect(window.location.hash).toBe('#/verbs?form=1&page=2')
+})
+
+test('syncs verb list filters and pagination to hash query params', async () => {
+  renderHome('/#/verbs')
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Next'))
+  expect(window.location.hash).toBe('#/verbs?page=2')
+
+  await user.click(document.querySelector('#form-tab-2') as HTMLButtonElement)
+  expect(window.location.hash).toBe('#/verbs?form=2')
 })
 
 describe('Search', () => {

@@ -28,3 +28,8 @@ export function toRoman(n: number): string {
   }
   return result
 }
+
+export function parseInteger(value: string | null, defaultValue: number): number {
+  const parsed = Number.parseInt(value ?? '', 10)
+  return Number.isFinite(parsed) ? parsed : defaultValue
+}

@@ -1,4 +1,5 @@
-import { cleanup, render, screen } from '@testing-library/preact'
+import { act, cleanup, render, renderHook, screen } from '@testing-library/preact'
+import type { ComponentChildren } from 'preact'
 import { afterEach, expect, test } from 'vitest'
 import { createRouting } from './useRouting'
 
@@ -86,4 +87,37 @@ test('renders nothing when there is no match and no fallback', () => {
   )
 
   expect(container.textContent).toBe('')
+})
+
+test('exposes query params from hash routes', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = createRouting<DemoRoute>({
+    mode: 'hash',
+    parse: () => ['home'],
+  })
+  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+
+  window.history.replaceState({}, '', '/#/home?form=2&page=3')
+
+  const { result } = renderHook(() => useDemoRouting(), { wrapper })
+  expect(result.current.queryParams.get('form')).toBe('2')
+  expect(result.current.queryParams.get('page')).toBe('3')
+})
+
+test('updates query params through useRouting setter', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = createRouting<DemoRoute>({
+    mode: 'hash',
+    parse: () => ['home'],
+  })
+  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+
+  window.history.replaceState({}, '', '/#/home?form=2&page=3')
+
+  const { result } = renderHook(() => useDemoRouting(), { wrapper })
+  act(() => {
+    result.current.setQueryParams(new URLSearchParams([['form', '4'], ['page']]))
+  })
+
+  expect(window.location.hash).toBe('#/home?form=4')
+  expect(result.current.queryParams.get('form')).toBe('4')
+  expect(result.current.queryParams.get('page')).toBeNull()
 })

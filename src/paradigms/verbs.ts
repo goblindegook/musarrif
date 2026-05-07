@@ -1,6 +1,6 @@
 import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
-import { clamp, toRoman } from '../primitives/numbers'
+import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { type LetterToken, normalizeHamza, tokenize } from './letters'
@@ -136,14 +136,9 @@ export function getVerb(root: string, form: VerbForm): Verb {
 export function buildVerbFromId(id = ''): DisplayVerb {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
-
   const [rootId, formText] = id.split('-')
-
   const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
-
-  const parsedForm = Number.parseInt(formText ?? '', 10)
-  const form = Number.isFinite(parsedForm) ? (clamp(parsedForm, 1, 10) as VerbForm) : 1
-
+  const form = clamp(parseInteger(formText, 1), 1, 10) as VerbForm
   return form === 1 ? synthesizeVerb(root, 1, 'a-a') : synthesizeVerb(root, form)
 }
 
