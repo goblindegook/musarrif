@@ -74,6 +74,7 @@
     "exercise.unlock.form.8": "Forma VIII",
     "exercise.unlock.form.9": "Forma IX",
     "exercise.unlock.line": "Nuovo sblocco ({dimension}): {items}",
+    "exercise.demotion.line": "Un passo indietro su {dimension}. Continua a esercitarti e tornerà.",
     "exercise.unlock.nominal.activeParticiple": "participi attivi",
     "exercise.unlock.nominal.masdar": "sostantivi verbali",
     "exercise.unlock.nominal.passiveParticiple": "participi passivi",

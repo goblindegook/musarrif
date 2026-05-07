@@ -33,7 +33,7 @@ type Props = {
 
 export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { dir, lang, t } = useI18n()
-  const [dimensionProfile, dimensionUnlocks, recordDimensionAnswer, clearDimensionUnlocks] = useDimensionStore()
+  const [dimensionProfile, dimensionChanges, recordDimensionAnswer, clearDimensionChanges] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const sessionRef = useRef<NewCardSession>({ reviews: 0, lastNewAt: -3 })
   const [exercise, setExercise] = useState<Exercise>(() =>
@@ -58,10 +58,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       setExercise(generateExercise(profile, srsStore, sessionRef.current))
       setAnsweredIndex(null)
       setSkipped(false)
-      clearDimensionUnlocks()
+      clearDimensionChanges()
       setStreakExtendedAlert(false)
     },
-    [generateExercise, srsStore, clearDimensionUnlocks],
+    [generateExercise, srsStore, clearDimensionChanges],
   )
 
   const isAnswered = answeredIndex !== null || skipped
@@ -69,22 +69,14 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   const explanation = (() => {
     if (answeredIndex == null && !skipped) return []
-    const layers = exercise.explanation
-    if (layers == null) return []
-    const isWrong = answeredIndex !== null && answeredIndex !== exercise.answer
-    if (isWrong || skipped) return renderExplanation(layers, t)
-    return renderExplanation(filterMasteredLayers(srsStore, layers), t)
+    if (exercise.explanation == null) return []
+    return renderExplanation(
+      answeredIndex !== exercise.answer || skipped
+        ? exercise.explanation
+        : filterMasteredLayers(srsStore, exercise.explanation),
+      t,
+    )
   })()
-  const unlockMessages = useMemo(
-    () =>
-      dimensionUnlocks.map(({ dimension, items }) =>
-        t('exercise.unlock.line', {
-          dimension: t(`exercise.unlock.dimension.${dimension}`),
-          items: items.map((item) => t(item)).join(', '),
-        }),
-      ),
-    [dimensionUnlocks, t],
-  )
 
   const handleAnswer = useCallback(
     (index: number, isCorrect: boolean) => {
@@ -145,19 +137,40 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         </ExplanationWrapper>
         {isAnswered ? (
           <>
-            {(unlockMessages.length > 0 || streakExtendedAlert) && (
+            {(dimensionChanges.length || streakExtendedAlert) && (
               <Alerts>
-                {unlockMessages.map((message, index) => (
-                  <SuccessAlert
-                    key={`${exercise.cardKey}-unlock-${index}`}
-                    role="status"
-                    aria-live="polite"
-                    lang={lang}
-                    dir={dir}
-                  >
-                    <Text>{message}</Text>
-                  </SuccessAlert>
-                ))}
+                {dimensionChanges.map((change, index) =>
+                  change.type === 'promotion' ? (
+                    <SuccessAlert
+                      key={`${exercise.cardKey}-change-${index}`}
+                      role="status"
+                      aria-live="polite"
+                      lang={lang}
+                      dir={dir}
+                    >
+                      <Text>
+                        {t('exercise.unlock.line', {
+                          dimension: t(`exercise.unlock.dimension.${change.dimension}`),
+                          items: change.items.map((item) => t(item)).join(', '),
+                        })}
+                      </Text>
+                    </SuccessAlert>
+                  ) : (
+                    <WarningAlert
+                      key={`${exercise.cardKey}-change-${index}`}
+                      role="status"
+                      aria-live="polite"
+                      lang={lang}
+                      dir={dir}
+                    >
+                      <Text>
+                        {t('exercise.demotion.line', {
+                          dimension: t(`exercise.unlock.dimension.${change.dimension}`),
+                        })}
+                      </Text>
+                    </WarningAlert>
+                  ),
+                )}
                 {streakExtendedAlert && (
                   <StreakAlert
                     key={`${exercise.cardKey}-streak`}
@@ -272,6 +285,19 @@ const SuccessAlert = styled('aside')`
   background: var(--color-success-bg);
   border: 2px solid var(--color-success-border);
   color: var(--color-success-text);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`
+
+const WarningAlert = styled('aside')`
+  background: var(--color-warning-bg);
+  border: 2px solid var(--color-warning-border);
+  color: var(--color-warning-text);
   border-radius: 0.75rem;
   padding: 0.625rem 0.75rem;
   animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;

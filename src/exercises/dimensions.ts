@@ -42,10 +42,9 @@ export type DimensionStore = {
   windows: DimensionWindows
 }
 
-export interface DimensionUnlock {
-  dimension: DimensionKey
-  items: readonly string[]
-}
+export type DimensionChange =
+  | { type: 'promotion'; dimension: DimensionKey; items: readonly string[] }
+  | { type: 'demotion'; dimension: DimensionKey }
 
 export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -212,13 +211,21 @@ export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): s
 const WINDOW_SIZES: Record<DimensionKey, number> = {
   tenses: 20,
   pronouns: 20,
-  diacritics: 50,
+  diacritics: 100,
   forms: 20,
   rootTypes: 20,
   nominals: 20,
 }
-const PROMOTION_THRESHOLD = 0.8
+const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
+  tenses: [0.8, 0.8, 0.8, 0.8],
+  pronouns: [0.8, 0.8, 0.8],
+  diacritics: [0.8, 0.9],
+  forms: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+  rootTypes: [0.8, 0.8, 0.8, 0.8, 0.8],
+  nominals: [0.8, 0.8],
+}
 const DEMOTION_THRESHOLD = 0.4
+const MIN_DEMOTION_WINDOW = 20
 
 const MAX_LEVELS: Record<DimensionKey, number> = {
   tenses: TENSE_POOLS.length - 1,
@@ -307,17 +314,22 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
   const nextProfile: DimensionProfile = { ...profile }
 
   for (const dimension of keys(profile)) {
+    let level = profile[dimension]
     const w = windows[dimension]
-    const windowSize = WINDOW_SIZES[dimension]
-    if (w.length < windowSize) continue
+    if (w.length < MIN_DEMOTION_WINDOW) continue
 
-    let nextLevel = profile[dimension]
-    const accuracy = w.filter(Boolean).length / windowSize
+    const accuracy = w.filter(Boolean).length / w.length
 
-    if (allowPromotion && accuracy >= PROMOTION_THRESHOLD && canPromote(profile, dimension)) nextLevel += 1
-    else if (accuracy <= DEMOTION_THRESHOLD) nextLevel -= 1
+    if (
+      allowPromotion &&
+      w.length >= WINDOW_SIZES[dimension] &&
+      accuracy >= PROMOTION_THRESHOLDS[dimension][level] &&
+      canPromote(profile, dimension)
+    )
+      level += 1
+    else if (accuracy <= DEMOTION_THRESHOLD) level -= 1
 
-    ;(nextProfile as Record<string, number>)[dimension] = clamp(nextLevel, 0, MAX_LEVELS[dimension])
+    ;(nextProfile as Record<string, number>)[dimension] = clamp(level, 0, MAX_LEVELS[dimension])
   }
 
   const nextWindows: DimensionWindows = { ...windows }
@@ -344,18 +356,21 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
   return true
 }
 
-export function getDimensionUnlocks(previous: DimensionProfile, next: DimensionProfile): DimensionUnlock[] {
-  const unlocks: DimensionUnlock[] = []
+export function getDimensionChanges(previous: DimensionProfile, next: DimensionProfile): DimensionChange[] {
+  const changes: DimensionChange[] = []
   for (const dimension of keys(previous)) {
     const current = previous[dimension]
     const target = next[dimension]
-    if (target <= current) continue
-    const levelUnlocks = DIMENSION_UNLOCK_KEYS[dimension]
-    const items: string[] = []
-    for (let level = current + 1; level <= target; level++) {
-      items.push(...(levelUnlocks[level] ?? []))
+    if (target > current) {
+      const items: string[] = []
+      for (let level = current + 1; level <= target; level++) {
+        items.push(...(DIMENSION_UNLOCK_KEYS[dimension][level] ?? []))
+      }
+      if (items.length) changes.push({ type: 'promotion', dimension, items })
     }
-    if (items.length > 0) unlocks.push({ dimension, items })
+    if (target < current) {
+      changes.push({ type: 'demotion', dimension })
+    }
   }
-  return unlocks
+  return changes
 }

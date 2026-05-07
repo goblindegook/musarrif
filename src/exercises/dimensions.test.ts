@@ -3,7 +3,7 @@ import {
   type DimensionStore,
   enforcePrerequisites,
   exerciseDiacritics,
-  getDimensionUnlocks,
+  getDimensionChanges,
   promoteDimensions,
   pronounPool,
   randomNominalVerb,
@@ -248,25 +248,52 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('diacritics does not demote with only 20 answers', () => {
+  test('diacritics demotes on partial window when accuracy below threshold', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(0) },
       }).profile.diacritics,
+    ).toBe(0)
+  })
+
+  test('diacritics does not demote on partial window when accuracy above threshold', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(15, 20) },
+      }).profile.diacritics,
     ).toBe(1)
   })
 
-  test('diacritics promotes at 80% over 50 answers', () => {
+  test('diacritics promotes from level 0 to 1 at 80% over 100 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(80, 100) },
+      }).profile.diacritics,
+    ).toBe(1)
+  })
+
+  test('diacritics does not promote from level 0 with only 50 answers', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE },
         windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 50) },
       }).profile.diacritics,
-    ).toBe(1)
+    ).toBe(0)
   })
 
-  test('diacritics demotes at 40% over 50 answers', () => {
+  test('diacritics demotes at 40% over 100 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 100) },
+      }).profile.diacritics,
+    ).toBe(0)
+  })
+
+  test('diacritics demotes from level 1 on partial window at exactly 40% accuracy', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
@@ -275,11 +302,29 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('does not demote with fewer than 20 answers', () => {
+  test('diacritics does not promote from level 1 to 2 at 80% over 100 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1, tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(80, 100) },
+      }).profile.diacritics,
+    ).toBe(1)
+  })
+
+  test('diacritics promotes from level 1 to 2 at 90% over 100 answers', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1, tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(90, 100) },
+      }).profile.diacritics,
+    ).toBe(2)
+  })
+
+  test('does not demote on partial window when accuracy is above threshold', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, forms: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(0, 19) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(10, 19) },
       }).profile.forms,
     ).toBe(1)
   })
@@ -600,48 +645,58 @@ describe('promoteDimensions', () => {
           rootTypes: 5,
           nominals: 2,
         },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 50) },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(90, 100) },
       }).profile.diacritics,
     ).toBe(2)
   })
 })
 
-describe('getDimensionUnlocks', () => {
-  test('returns one grouped pronoun unlock item for each pronoun level', () => {
+describe('getDimensionChanges', () => {
+  test('returns promotion for pronoun level increase', () => {
     expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 }, { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 }),
-    ).toEqual([{ dimension: 'pronouns', items: ['exercise.unlock.pronounGroup.singular'] }])
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 }, { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 }),
+    ).toEqual([{ type: 'promotion', dimension: 'pronouns', items: ['exercise.unlock.pronounGroup.singular'] }])
   })
 
-  test('returns unlocked forms when forms level increases from 0 to 1', () => {
+  test('returns promotion for forms level increase from 0 to 1', () => {
     expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.2'] }])
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
+    ).toEqual([{ type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.2'] }])
   })
 
-  test('returns split tense unlock items across a multi-level jump', () => {
+  test('returns promotion with merged items across a multi-level jump', () => {
     expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 0 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 0 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 2 }),
     ).toEqual([
       {
+        type: 'promotion',
         dimension: 'tenses',
         items: ['exercise.unlock.tenseGroup.presentIndicative', 'exercise.unlock.tenseGroup.subjunctiveJussive'],
       },
     ])
   })
 
-  test('returns passive unlock when advancing to highest tense level', () => {
+  test('returns promotion for passive tense unlock', () => {
     expect(
-      getDimensionUnlocks({ ...INITIAL_DIMENSION_PROFILE, tenses: 3 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 4 }),
-    ).toEqual([{ dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passive'] }])
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 3 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 4 }),
+    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passive'] }])
   })
 
-  test('ignores unchanged and demoted dimensions', () => {
+  test('returns demotion for level decrease', () => {
     expect(
-      getDimensionUnlocks(
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
+    ).toEqual([{ type: 'demotion', dimension: 'forms' }])
+  })
+
+  test('returns both promotion and demotion for simultaneous changes', () => {
+    expect(
+      getDimensionChanges(
         { ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 2 },
         { ...INITIAL_DIMENSION_PROFILE, forms: 2, rootTypes: 1 },
       ),
-    ).toEqual([{ dimension: 'forms', items: ['exercise.unlock.form.3'] }])
+    ).toEqual([
+      { type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.3'] },
+      { type: 'demotion', dimension: 'rootTypes' },
+    ])
   })
 })

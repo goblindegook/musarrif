@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import {
+  type DimensionChange,
   type DimensionKey,
   type DimensionProfile,
   type DimensionStore,
-  type DimensionUnlock,
   enforcePrerequisites,
-  getDimensionUnlocks,
+  getDimensionChanges,
   promoteDimensions,
   recordDimensionAnswer,
   sanitizeDimensionProfile,
@@ -39,9 +39,9 @@ function isSameProfile(a: DimensionProfile, b: DimensionProfile): boolean {
   )
 }
 
-export function useDimensionStore(): [DimensionProfile, readonly DimensionUnlock[], RecordDimensionAnswer, () => void] {
+export function useDimensionStore(): [DimensionProfile, readonly DimensionChange[], RecordDimensionAnswer, () => void] {
   const [rawStore, setRawStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
-  const [dimensionUnlocks, setDimensionUnlocks] = useState<readonly DimensionUnlock[]>([])
+  const [dimensionChanges, setDimensionChanges] = useState<readonly DimensionChange[]>([])
   const profile = useMemo(
     () => enforcePrerequisites(sanitizeDimensionProfile(rawStore.profile, INITIAL_DIMENSION_PROFILE)),
     [rawStore.profile],
@@ -59,16 +59,16 @@ export function useDimensionStore(): [DimensionProfile, readonly DimensionUnlock
   const recordAnswer = useCallback<RecordDimensionAnswer>(
     (dimensions, isCorrect) => {
       const next = promoteDimensions(recordDimensionAnswer(store, dimensions, isCorrect), isCorrect)
-      setDimensionUnlocks(getDimensionUnlocks(store.profile, next.profile))
+      setDimensionChanges(getDimensionChanges(store.profile, next.profile))
       setRawStore(next)
       return next.profile
     },
     [setRawStore, store],
   )
 
-  const clearUnlocks = useCallback(() => {
-    setDimensionUnlocks([])
+  const clearChanges = useCallback(() => {
+    setDimensionChanges([])
   }, [])
 
-  return [store.profile, dimensionUnlocks, recordAnswer, clearUnlocks]
+  return [store.profile, dimensionChanges, recordAnswer, clearChanges]
 }

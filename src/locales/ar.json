@@ -363,6 +363,7 @@
     "voice.active": "مَعْلُومٌ",
     "voice.passive": "مَجْهُولٌ",
     "exercise.toggle.type": "ٱكْتُبِ ٱلْإِجَابَةَ",
-    "exercise.toggle.options": "ٱعْرِضِ ٱلْخِيَارَاتِ"
+    "exercise.toggle.options": "ٱعْرِضِ ٱلْخِيَارَاتِ",
+    "exercise.demotion.line": "نَتَرَاجَعُ قَلِيلاً في {dimension}. وَاصِلِ الْمُمَارَسَةَ وَسَتَعُودُ."
   }
 }
