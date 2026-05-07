@@ -114,7 +114,7 @@ test('updates query params through useRouting setter', () => {
 
   const { result } = renderHook(() => useDemoRouting(), { wrapper })
   act(() => {
-    result.current.setQueryParams(new URLSearchParams([['form', '4'], ['page']]))
+    result.current.setQueryParams(new URLSearchParams([['form', '4']]))
   })
 
   expect(window.location.hash).toBe('#/home?form=4')

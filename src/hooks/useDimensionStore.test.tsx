@@ -107,8 +107,18 @@ describe('useDimensionStore', () => {
     })
 
     await waitFor(() => {
-      expect(result.current[0].forms).toBe(1)
-      expect(result.current[1].some((unlock) => unlock.items.includes('exercise.unlock.form.2'))).toBe(true)
+      expect(result.current[0]).toEqual({
+        ...INITIAL_DIMENSION_PROFILE,
+        forms: 1,
+        pronouns: 1,
+      })
+      expect(result.current[1]).toEqual([
+        {
+          dimension: 'forms',
+          items: ['exercise.unlock.form.2'],
+          type: 'promotion',
+        },
+      ])
     })
   })
 
