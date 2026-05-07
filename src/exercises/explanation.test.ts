@@ -5,6 +5,7 @@ import { buildCardKey, type SrsStore } from './srs'
 
 describe('filterMasteredLayers', () => {
   const FULL_LAYERS: ExplanationLayers = {
+    category: 'verb',
     paradigmRoots: ['ك', 'ت', 'ب'],
     paradigmForm: 1,
     arabic: 'كَتَبَ',
@@ -179,6 +180,7 @@ describe('filterMasteredLayers', () => {
         },
       },
       {
+        category: 'verb',
         paradigmRoots: ['ك', 'ت', 'ب'],
         paradigmForm: 1,
         arabic: 'يَكتُبُ',
@@ -194,6 +196,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides formRoot only when both form and rootType exceed threshold', () => {
     const layers: ExplanationLayers = {
+      category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 8,
       arabic: 'اِكْتَتَبَ',
@@ -235,6 +238,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides tenseRoot only when both tense and rootType exceed threshold', () => {
     const layers: ExplanationLayers = {
+      category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
       arabic: 'قَالَ',
@@ -276,6 +280,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using MASDAR_KINDS', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       arabic: 'كِتَابَة',
@@ -290,6 +295,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using PARTICIPLE_KINDS', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       arabic: 'كَاتِب',
@@ -304,6 +310,7 @@ describe('filterMasteredLayers', () => {
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {
     const layers: ExplanationLayers = {
+      category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
       arabic: 'قَالَ',

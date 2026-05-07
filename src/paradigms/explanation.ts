@@ -49,7 +49,7 @@ const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
   4: 'اِفْعِلَّال',
 }
 
-export type ExplanationLayers = {
+interface BaseExplanationLayers {
   arabic: string | readonly string[]
   paradigmRoots: string[]
   paradigmForm: VerbForm
@@ -57,15 +57,25 @@ export type ExplanationLayers = {
   form?: VerbForm
   vowels?: FormIPattern
   formRoot?: FormRootInteraction
+}
+
+export interface VerbExplanationLayers extends BaseExplanationLayers {
+  category: 'verb'
   tense?: VerbTense
   tenseRoot?: TenseRootInteraction
   pronoun?: PronounId
-  nominal?: NominalKind
-  isMasdarMimi?: boolean
-  masdarPattern?: string
   prefix?: string
   suffix?: string
 }
+
+export interface NominalExplanationLayers extends BaseExplanationLayers {
+  category: 'nominal'
+  nominal?: NominalKind
+  isMasdarMimi?: boolean
+  masdarPattern?: string
+}
+
+export type ExplanationLayers = VerbExplanationLayers | NominalExplanationLayers
 
 function toArabicText(arabic: string | readonly string[]): string {
   return Array.isArray(arabic) ? arabic.join('، ') : (arabic as string)
@@ -134,9 +144,10 @@ const FORM_I_BASE_PATTERNS: Record<
 }
 
 function renderPronounParagraph(
-  layers: ExplanationLayers,
+  layers: VerbExplanationLayers | undefined,
   t: (key: string, params?: Record<string, string>) => string,
 ): string {
+  if (layers?.tense == null || layers.pronoun == null) return ''
   const params = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) }
   const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
   const suffix = layers.suffix ? `ـ${layers.suffix}` : undefined
@@ -147,27 +158,29 @@ function renderPronounParagraph(
   return t('explanation.pronoun.base-form', params)
 }
 
-function resolveNominalExplanationKey(layers: ExplanationLayers): string | undefined {
-  if (layers.nominal == null) return
+function resolveNominalKey(layers?: NominalExplanationLayers): string {
+  if (layers?.nominal == null) return ''
   if (layers.nominal !== 'masdar') return `explanation.nominal.${layers.nominal}`
   if (layers.form === 1)
     return layers.isMasdarMimi ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
-  return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : undefined
+  return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : ''
 }
 
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
 ): string[] {
+  const nominalLayers = layers.category === 'nominal' ? layers : undefined
+  const verbLayers = layers.category === 'verb' ? layers : undefined
   const params = {
     ...(layers.vowels && FORM_I_BASE_PATTERNS[layers.vowels]),
     arabic: toArabicText(layers.arabic),
     root: layers.paradigmRoots.join('-'),
     form: toRoman(layers.paradigmForm),
-    pattern: layers.masdarPattern ?? '',
+    pattern: nominalLayers?.masdarPattern ?? '',
   }
 
-  const tenseRootSentence = layers.tenseRoot ? t(`explanation.tense-root.${layers.tenseRoot}`, params) : ''
+  const tenseRootSentence = verbLayers?.tenseRoot ? t(`explanation.tense-root.${verbLayers.tenseRoot}`, params) : ''
 
   return [
     [
@@ -176,14 +189,14 @@ export function renderExplanation(
       layers.vowels && t(`explanation.form-i-pattern.${layers.vowels}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
-    [t(resolveNominalExplanationKey(layers) ?? '', params)],
+    [t(resolveNominalKey(nominalLayers), params)],
     [
-      layers.tense?.startsWith('passive') ? t(`explanation.voice.${layers.tense}`, params) : '',
-      layers.tense && t(`explanation.tense.${layers.tense}`, params),
-      layers.form === 1 && layers.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
+      verbLayers?.tense?.startsWith('passive') ? t(`explanation.voice.${verbLayers.tense}`, params) : '',
+      verbLayers?.tense && t(`explanation.tense.${verbLayers.tense}`, params),
+      layers.form === 1 && verbLayers?.tense === 'active.past' ? t('explanation.tense.active.past.form-i', params) : '',
       tenseRootSentence,
     ],
-    [layers.tense && layers.pronoun && renderPronounParagraph(layers, t)],
+    [renderPronounParagraph(verbLayers, t)],
   ]
     .map((paragraph) => paragraph.filter(Boolean).join(' '))
     .filter(Boolean)
@@ -210,13 +223,14 @@ export function resolveVerbExplanationLayers(
   verbTense: VerbTense,
   pronoun: PronounId,
   arabic: string,
-): ExplanationLayers {
+): VerbExplanationLayers {
   const rootType = analyzeRoot(verb.rootTokens).type
   const tense = verbTense
   const annotatedForm = annotate(verb, verbTense, pronoun)
   const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
   const { prefix, suffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
   return {
+    category: 'verb',
     paradigmRoots: Array.from(verb.root),
     paradigmForm: verb.form,
     form: verb.form,
@@ -293,8 +307,9 @@ export function resolveNominalExplanationLayers(
   verb: Verb,
   nominal: NominalKind,
   arabic: string | readonly string[],
-): ExplanationLayers {
+): NominalExplanationLayers {
   return {
+    category: 'nominal',
     paradigmRoots: Array.from(verb.root),
     paradigmForm: verb.form,
     form: verb.form,

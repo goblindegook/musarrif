@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import enLocale from '../locales/en.json'
-import type { ExplanationLayers } from './explanation'
+import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'
 import type { VerbTense } from './tense'
@@ -414,10 +414,11 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
 describe('renderExplanation', () => {
   // Stub t() that echoes the key so we can assert key structure without locale files
   const t = (key: string) => key
-  const joined = (layers: ExplanationLayers) => renderExplanation(layers, t).join(' ')
+  const render = (layers: ExplanationLayers) => renderExplanation(layers, t).join(' ')
 
-  function testExplanationLayers(overrides?: Partial<ExplanationLayers>): ExplanationLayers {
+  function testExplanationLayers(overrides?: Partial<VerbExplanationLayers>): VerbExplanationLayers {
     return {
+      category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
       form: 1,
@@ -431,13 +432,11 @@ describe('renderExplanation', () => {
   }
 
   test('includes root sentence', () => {
-    const layers = testExplanationLayers({ rootType: 'sound' })
-    expect(joined(layers)).toContain('explanation.root.sound')
+    expect(render(testExplanationLayers({ rootType: 'sound' }))).toContain('explanation.root.sound')
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
-    const layers = testExplanationLayers({ form: 1, rootType: 'sound', vowels: 'a-u' })
-    expect(renderExplanation(layers, t)).toEqual([
+    expect(renderExplanation(testExplanationLayers({ form: 1, rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
       'explanation.root.sound explanation.form.1 explanation.form-i-pattern.a-u',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
       'explanation.pronoun.base-form',
@@ -445,13 +444,13 @@ describe('renderExplanation', () => {
   })
 
   test('includes form description in first paragraph for non-form-I', () => {
-    const layers = testExplanationLayers({ form: 3 })
-    expect(renderExplanation(layers, t)[0]).toContain('explanation.form.3')
+    expect(renderExplanation(testExplanationLayers({ form: 3 }), t)[0]).toContain('explanation.form.3')
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
-    const layers = testExplanationLayers({ form: 1, vowels: 'a-u', tense: 'active.past' })
-    expect(joined(layers)).toContain('explanation.tense.active.past.form-i')
+    expect(render(testExplanationLayers({ form: 1, vowels: 'a-u', tense: 'active.past' }))).toContain(
+      'explanation.tense.active.past.form-i',
+    )
   })
 
   test.each<VerbTense>([
@@ -461,42 +460,47 @@ describe('renderExplanation', () => {
     'passive.present.jussive',
     'passive.future',
   ])('includes %s tense sentence', (tense) => {
-    const layers = testExplanationLayers({ tense })
-    expect(joined(layers)).toContain(`explanation.voice.${tense}`)
+    expect(render(testExplanationLayers({ tense }))).toContain(`explanation.voice.${tense}`)
   })
 
   test('omits voice sentence for active tenses', () => {
-    const layers = testExplanationLayers({ tense: 'active.past' })
-    expect(joined(layers)).not.toContain('explanation.voice')
+    expect(render(testExplanationLayers({ tense: 'active.past' }))).not.toContain('explanation.voice')
   })
 
   test('includes tenseRoot sentence when non-null', () => {
-    const layers: ExplanationLayers = {
-      paradigmRoots: ['ق', 'و', 'ل'],
-      paradigmForm: 1,
-      form: 1,
-      arabic: 'قَالَ',
-      rootType: 'hollow-waw',
-      vowels: 'a-u',
-      tense: 'active.past',
-      tenseRoot: 'middle-lengthens-aa',
-      pronoun: '3ms',
-    }
-    expect(joined(layers)).toContain('explanation.tense-root.middle-lengthens-aa')
+    expect(
+      render({
+        category: 'verb',
+        paradigmRoots: ['ق', 'و', 'ل'],
+        paradigmForm: 1,
+        form: 1,
+        arabic: 'قَالَ',
+        rootType: 'hollow-waw',
+        vowels: 'a-u',
+        tense: 'active.past',
+        tenseRoot: 'middle-lengthens-aa',
+        pronoun: '3ms',
+      }),
+    ).toContain('explanation.tense-root.middle-lengthens-aa')
   })
 
   test('groups root and formRoot in first paragraph', () => {
-    const layers: ExplanationLayers = {
-      paradigmRoots: ['ز', 'و', 'ج'],
-      paradigmForm: 8,
-      form: 8,
-      arabic: 'اِزْدَوَجَ',
-      rootType: 'hollow-waw',
-      formRoot: 'assimilation-voicing',
-      tense: 'active.past',
-      pronoun: '3ms',
-    }
-    expect(renderExplanation(layers, t)).toEqual([
+    expect(
+      renderExplanation(
+        {
+          category: 'verb',
+          paradigmRoots: ['ز', 'و', 'ج'],
+          paradigmForm: 8,
+          form: 8,
+          arabic: 'اِزْدَوَجَ',
+          rootType: 'hollow-waw',
+          formRoot: 'assimilation-voicing',
+          tense: 'active.past',
+          pronoun: '3ms',
+        },
+        t,
+      ),
+    ).toEqual([
       'explanation.root.hollow-waw explanation.form.8 explanation.form-root.assimilation-voicing',
       'explanation.tense.active.past',
       'explanation.pronoun.base-form',
@@ -634,16 +638,6 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.vowels).toBeUndefined()
   })
 
-  test('tense is undefined', () => {
-    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.tense).toBeUndefined()
-  })
-
-  test('pronoun is undefined', () => {
-    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.pronoun).toBeUndefined()
-  })
-
   test('arabic field matches passed arabic', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
     expect(layers.arabic).toBe('كَاتِب')
@@ -685,6 +679,7 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal activeParticiple appears in second paragraph', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,
@@ -700,6 +695,7 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal passiveParticiple appears in second paragraph', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,
@@ -715,6 +711,7 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal masdar appears in second paragraph', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,
@@ -730,6 +727,7 @@ describe('renderExplanation with nominal', () => {
 
   test('mimi masdar explanation appears when nominalMimiMasdar is true', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['و', 'ع', 'د'],
       paradigmForm: 1,
       form: 1,
@@ -747,6 +745,7 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal with formIPattern includes pattern in first paragraph', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,
@@ -760,6 +759,7 @@ describe('renderExplanation with nominal', () => {
 
   test('nominal does not produce a pronoun paragraph', () => {
     const layers: ExplanationLayers = {
+      category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,

@@ -26,7 +26,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       '3ms',
       verb.label,
     )
-    return renderExplanation({ paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
+    return renderExplanation({ category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
   }, [verb, t])
 
   const formInsightExamples = useMemo<DisplayVerb[]>(() => {

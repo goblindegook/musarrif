@@ -6,7 +6,6 @@ import { IconButton } from '../atoms/IconButton'
 import { CloseIcon } from '../icons/CloseIcon'
 
 interface ModalProps {
-  readonly dir?: 'auto' | 'rtl' | 'ltr'
   readonly isOpen: boolean
   readonly title: string
   readonly onClose: () => void

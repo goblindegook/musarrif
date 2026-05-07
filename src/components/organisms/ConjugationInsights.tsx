@@ -90,7 +90,7 @@ function DerivationSteps({
 }
 
 export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: ConjugationInsightsProps) {
-  const { t, dir } = useI18n()
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const annotation = annotate(verb, verbTense, pronoun)
   const finalStep = annotation?.steps[annotation.steps.length - 1]
@@ -101,7 +101,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
         <LightBulbIcon />
       </IconButton>
       {open && (
-        <Modal dir={dir} isOpen={open} onClose={() => setOpen(false)} title={t('conjugationInfo.title')}>
+        <Modal isOpen={open} onClose={() => setOpen(false)} title={t('conjugationInfo.title')}>
           <VerbDisplayArea>
             <ArabicDisplay>
               {finalStep ? (

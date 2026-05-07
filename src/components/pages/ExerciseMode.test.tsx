@@ -31,6 +31,7 @@ function testExercise(overrides = {}): Exercise {
     answer: 0,
     cardKey: 'verbForm:sound:1',
     explanation: {
+      category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1,
@@ -489,6 +490,7 @@ function fullExplanationExercise(): Exercise {
     answer: 0,
     cardKey: 'verbForm:sound:1:active.past:3ms',
     explanation: {
+      category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
       form: 1 as const,

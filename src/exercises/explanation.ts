@@ -46,14 +46,20 @@ function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers,
       cards.filter((card) => card.form === explanation.form),
       today,
     ),
-    tense: strongestDeduped(
-      cards.filter((card) => isVerbExercise(card.kind) && card.tense === explanation.tense),
-      today,
-    ),
-    pronoun: strongestDeduped(
-      cards.filter((card) => isVerbExercise(card.kind) && card.pronoun === explanation.pronoun),
-      today,
-    ),
+    tense:
+      explanation.category === 'verb'
+        ? strongestDeduped(
+            cards.filter((card) => isVerbExercise(card.kind) && card.tense === explanation.tense),
+            today,
+          )
+        : 0,
+    pronoun:
+      explanation.category === 'verb'
+        ? strongestDeduped(
+            cards.filter((card) => isVerbExercise(card.kind) && card.pronoun === explanation.pronoun),
+            today,
+          )
+        : 0,
     nominal: strongestDeduped(
       cards.filter((card) => isNominalExercise(card.kind)),
       today,
@@ -65,16 +71,31 @@ function on<T>(condition: boolean, value: T): T | undefined {
   return condition ? value : undefined
 }
 
-export function filterMasteredLayers(
+export function filterMasteredLayers<T extends ExplanationLayers>(
   srsStore: SrsStore,
-  layers: ExplanationLayers,
+  layers: T,
   threshold = 21,
   today = utcToday(),
-): ExplanationLayers {
+): T {
   const mastery = computeLayerMastery(srsStore, layers, today)
   const showRootType = mastery.rootType < threshold
   const showForm = mastery.form < threshold
-  const showNominal = mastery.nominal < threshold
+
+  if (layers.category === 'nominal') {
+    const showNominal = mastery.nominal < threshold
+
+    return {
+      ...layers,
+      rootType: on(showRootType, layers.rootType),
+      form: on(showForm, layers.form),
+      vowels: on(showForm, layers.vowels),
+      formRoot: on(showForm || showRootType, layers.formRoot),
+      nominal: on(showNominal, layers.nominal),
+      isMasdarMimi: on(showNominal, layers.isMasdarMimi),
+      masdarPattern: on(showNominal, layers.masdarPattern),
+    }
+  }
+
   const showTense = mastery.tense < threshold
   const showPronoun = mastery.pronoun < threshold
 
@@ -84,7 +105,6 @@ export function filterMasteredLayers(
     form: on(showForm, layers.form),
     vowels: on(showForm, layers.vowels),
     formRoot: on(showForm || showRootType, layers.formRoot),
-    nominal: on(showNominal, layers.nominal),
     tense: on(showTense, layers.tense),
     tenseRoot: on(showTense || showRootType, layers.tenseRoot),
     pronoun: on(showPronoun, layers.pronoun),

@@ -81,8 +81,11 @@ describe('masdarVerbExercise', () => {
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
     vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
     const exercise = masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(exercise.explanation?.nominal).toBe('masdar')
-    expect(exercise.explanation?.isMasdarMimi).toBe(true)
+    expect(exercise.explanation).toMatchObject({
+      category: 'nominal',
+      nominal: 'masdar',
+      isMasdarMimi: true,
+    })
   })
 })
 
