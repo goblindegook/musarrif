@@ -305,7 +305,15 @@ describe('promoteDimensions', () => {
   test('diacritics does not promote from level 1 to 2 at 80% over 100 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1, tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 1,
+          tenses: 4,
+          pronouns: 3,
+          forms: 9,
+          rootTypes: 5,
+          nominals: 2,
+        },
         windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(80, 100) },
       }).profile.diacritics,
     ).toBe(1)
@@ -314,7 +322,15 @@ describe('promoteDimensions', () => {
   test('diacritics promotes from level 1 to 2 at 90% over 100 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1, tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 1,
+          tenses: 4,
+          pronouns: 3,
+          forms: 9,
+          rootTypes: 5,
+          nominals: 2,
+        },
         windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(90, 100) },
       }).profile.diacritics,
     ).toBe(2)
