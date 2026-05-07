@@ -154,12 +154,15 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
   const handleVoiceChange = useCallback(
     (nextVoice: Voice) => {
-      if (currentMood) navigateTo(['verbs', verbId, nextVoice, 'present', currentMood])
+      if (currentMood) {
+        navigateTo(['verbs', verbId, nextVoice, 'present', currentMood])
+        return
+      }
       if (nextVoice === 'passive')
         navigateTo(['verbs', verbId, nextVoice, currentTense === 'imperative' ? 'past' : currentTense])
       else navigateTo(['verbs', verbId, nextVoice, currentTense])
     },
-    [navigateTo, currentTense, verbId],
+    [navigateTo, currentMood, currentTense, verbId],
   )
 
   const handleTenseChange = useCallback(

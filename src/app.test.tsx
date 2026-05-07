@@ -179,6 +179,43 @@ describe('Conjugation', () => {
     expect(within(tenseTabs).queryByText('Imperative')).not.toBeInTheDocument()
   })
 
+  it('preserves indicative mood when switching from passive present to active', async () => {
+    renderApp('/#/verbs/ktb-1/passive/present/indicative')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Active'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/indicative')
+  })
+
+  it('preserves subjunctive mood when switching from passive present to active', async () => {
+    renderApp('/#/verbs/ktb-1/passive/present/subjunctive')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Active'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/subjunctive')
+  })
+
+  it('preserves jussive mood when switching from passive present to active', async () => {
+    renderApp('/#/verbs/ktb-1/passive/present/jussive')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Active'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/jussive')
+  })
+
+  it('preserves jussive mood after changing mood before switching voice', async () => {
+    renderApp('/#/verbs/ktb-1/passive/present')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Jussive'))
+    await user.click(screen.getByText('Active'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/jussive')
+  })
+
   it('reflects imperative tense changes in the URL', async () => {
     renderApp('/#/verbs/ktb-1')
     const user = userEvent.setup({ pointerEventsCheck: 0 })

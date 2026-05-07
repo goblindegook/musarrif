@@ -110,6 +110,22 @@ describe('Conjugation table', () => {
     expect(activeTab?.getAttribute('aria-selected')).toBe('true')
     expect(passiveTab).toBeUndefined()
   })
+
+  it('preserves present mood when switching from passive to active voice', () => {
+    renderConjugationMode({ verbId: 'ktb-1', voice: 'passive', tense: 'present', mood: 'subjunctive' })
+
+    fireEvent.click(screen.getByText('Active'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/subjunctive')
+  })
+
+  it('falls back to passive past when switching from active imperative', () => {
+    renderConjugationMode({ verbId: 'ktb-1', voice: 'active', tense: 'imperative' })
+
+    fireEvent.click(screen.getByText('Passive'))
+
+    expect(window.location.hash).toBe('#/verbs/ktb-1/passive/past')
+  })
 })
 
 describe('Form', () => {
