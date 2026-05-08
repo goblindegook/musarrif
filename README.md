@@ -27,45 +27,45 @@ and mobile that is lightweight and works offline.
 
 ## Setup
 
-1. Install dependencies:
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Start development server:
+Start development server:
 
 ```bash
 npm run dev
 ```
 
-3. Build production bundle:
+Build production bundle:
 
 ```bash
 npm run build
 ```
 
-4. Preview production build:
+Preview production build:
 
-   ```bash
-   npm run preview
-   ```
+```bash
+npm run preview
+```
 
 ## Desktop Target (Tauri 2)
 
 The repository includes a desktop build target via Tauri 2.0.
 
-- Run in desktop dev mode:
+Run in desktop dev mode:
 
-  ```bash
-  npm run tauri:dev
-  ```
+```bash
+npm run tauri:dev
+```
 
-- Build desktop bundles:
+Build desktop bundles:
 
-  ```bash
-  npm run tauri:build
-  ```
+```bash
+npm run tauri:build
+```
 
 ## Quality Commands
 
