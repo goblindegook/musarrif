@@ -9,6 +9,8 @@ import { parseInteger, toRoman } from '../../primitives/numbers'
 import { useRouting } from '../../routes'
 import { Button } from '../atoms/Button'
 import { Heading } from '../atoms/Heading'
+import { SelectableButton } from '../atoms/SelectableButton'
+import { Subheading } from '../atoms/Subheading'
 import { Text } from '../atoms/Text'
 import { Panel } from '../molecules/Panel'
 import { QuickPickList } from '../molecules/QuickPickList'
@@ -215,12 +217,12 @@ export function Home() {
       <Stack area="verbList">
         <Panel title={t('verbList.title')} dir={dir} lang={lang} collapsible>
           <FilterGroup>
-            <FilterGroupTitle dir={dir} lang={lang}>
+            <Subheading dir={dir} lang={lang}>
               {t('verbsList.filter.form.title')}
-            </FilterGroupTitle>
+            </Subheading>
             <FilterBar role="group" aria-label={t('aria.selectForm')}>
               {FORMS.map((form) => (
-                <FilterButton
+                <SelectableButton
                   key={form}
                   id={`form-tab-${form}`}
                   type="button"
@@ -230,32 +232,32 @@ export function Home() {
                   onClick={() => selectFormFilter(form)}
                 >
                   {toRoman(form)}
-                </FilterButton>
+                </SelectableButton>
               ))}
             </FilterBar>
           </FilterGroup>
 
           <FilterGroup>
-            <FilterGroupTitle dir={dir} lang={lang}>
+            <Subheading dir={dir} lang={lang}>
               {t('verbsList.filter.other.title')}
-            </FilterGroupTitle>
+            </Subheading>
             <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
-              <FilterButton
+              <SelectableButton
                 type="button"
                 aria-pressed={filters.kana}
                 active={filters.kana}
                 onClick={toggleKanaSistersFilter}
               >
                 {t('verbsList.filter.kanaSisters.label')}
-              </FilterButton>
-              <FilterButton
+              </SelectableButton>
+              <SelectableButton
                 type="button"
                 aria-pressed={filters.zanna}
                 active={filters.zanna}
                 onClick={toggleZannaSistersFilter}
               >
                 {t('verbsList.filter.zannaSisters.label')}
-              </FilterButton>
+              </SelectableButton>
             </FilterBar>
           </FilterGroup>
 
@@ -330,15 +332,6 @@ const FilterGroup = styled('section')`
   gap: 0.5rem;
 `
 
-const FilterGroupTitle = styled('h4')`
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`
-
 const FilterBar = styled('div')`
   display: flex;
   flex-wrap: wrap;
@@ -347,51 +340,6 @@ const FilterBar = styled('div')`
   @media (max-width: 640px) {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, auto));
-  }
-`
-
-const FilterButton = styled('button')<{ active: boolean }>`
-  align-items: center;
-  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  border-radius: 0.75rem;
-  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
-  box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
-  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
-  cursor: pointer;
-  display: inline-flex;
-  font-family: inherit;
-  font-size: 0.8rem;
-  justify-content: center;
-  letter-spacing: 0.08em;
-  min-height: 2.4rem;
-  padding: 0.4rem 0.75rem;
-  text-transform: uppercase;
-  transition:
-    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-
-  &:active {
-    transform: scale(0.96);
-  }
-
-  &:hover {
-    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
-    border-color: var(--color-accent);
-    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
-    box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'var(--shadow-interactive-hover)')};
-  }
-
-  &:focus-visible {
-    outline: 3px solid var(--color-focus-outline);
-    outline-offset: 2px;
-    border-color: var(--color-accent);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 `
 

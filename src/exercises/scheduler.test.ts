@@ -3,6 +3,7 @@ import { getVerbById } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
 import * as dimensions from './dimensions'
 import { isCoveredTriple, nextExercise } from './scheduler'
+import { parseCardKey } from './srs'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
@@ -102,6 +103,84 @@ describe('nextExercise', () => {
       'verbMasdar',
     ]
     expect(exercises.some((e) => nominalKinds.includes(e.kind))).toBe(true)
+  })
+
+  describe('focus mode', () => {
+    afterEach(() => vi.restoreAllMocks())
+
+    test('routes to pinned form when random < 0.75 and pinned due cards exist', () => {
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
+      const store = {
+        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { pinnedForm: 3 },
+      )
+      expect(parseCardKey(exercise.cardKey).form).toBe(3)
+    })
+
+    test('routes to unconstrained pool when random >= 0.75', () => {
+      // With random >= 0.75, activeForm = undefined → pool includes all forms.
+      // Run 30 draws; if constrained to form 3 only, all would be form 3.
+      const spy = vi.spyOn(Math, 'random')
+      const store = {
+        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const forms = Array.from({ length: 30 }, () => {
+        spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
+        return parseCardKey(
+          nextExercise(
+            { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
+            store,
+            { reviews: 0, lastNewAt: 0 },
+            { pinnedForm: 3 },
+          ).cardKey,
+        ).form
+      })
+      expect(forms.some((f) => f !== 3)).toBe(true)
+    })
+
+    test('falls back when pinned form has no available cards', () => {
+      // forms: 0 → only form 1 unlocked; pin form 3 (not in pool)
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, forms: 0 },
+        {},
+        { reviews: 0, lastNewAt: -3 },
+        { pinnedForm: 3 },
+      )
+      expect(parseCardKey(exercise.cardKey).form).toBe(1)
+    })
+
+    test('appears at roughly 75% across draws', () => {
+      const store = {
+        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const session = { reviews: 0, lastNewAt: 0 }
+      const forms = Array.from(
+        { length: 200 },
+        () =>
+          parseCardKey(
+            nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, session, { pinnedForm: 3 }).cardKey,
+          ).form,
+      )
+      const pinnedCount = forms.filter((f) => f === 3).length
+      expect(pinnedCount).toBeGreaterThan(110)
+      expect(pinnedCount).toBeLessThan(190)
+    })
+
+    test('behaves normally when no focus is set', () => {
+      const store = {
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const exercise = nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, { reviews: 0, lastNewAt: 0 })
+      expect(parseCardKey(exercise.cardKey).form).toBe(1)
+    })
   })
 })
 

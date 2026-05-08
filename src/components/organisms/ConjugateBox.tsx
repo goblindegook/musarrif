@@ -7,6 +7,7 @@ import { applyDiacriticsPreference } from '../../paradigms/letters'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import { FORMS, synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
+import { SelectableButton } from '../atoms/SelectableButton'
 
 const LETTERS: readonly string[] = [
   'ء',
@@ -179,15 +180,16 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
         <SectionLabel>{t('build.formLabel')}</SectionLabel>
         <FormGrid>
           {FORMS.map((f) => (
-            <OptionButton
+            <SelectableButton
               key={f}
               type="button"
               active={form === f}
+              size="compact"
               aria-pressed={form === f}
               onClick={() => setForm(f)}
             >
               {toRoman(f)}
-            </OptionButton>
+            </SelectableButton>
           ))}
         </FormGrid>
       </Section>
@@ -197,17 +199,18 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
           <SectionLabel>{t('build.patternLabel')}</SectionLabel>
           <PatternGrid>
             {FORM_I_PATTERN_OPTIONS.map(([p, l]) => (
-              <OptionButton
+              <SelectableButton
                 key={p}
                 type="button"
                 active={vowelPattern === p}
+                size="compact"
                 aria-pressed={vowelPattern === p}
                 lang="ar"
                 dir="rtl"
                 onClick={() => setVowelPattern(p as FormIPattern)}
               >
                 {applyDiacriticsPreference(l, diacriticsPreference)}
-              </OptionButton>
+              </SelectableButton>
             ))}
           </PatternGrid>
         </Section>
@@ -342,25 +345,6 @@ const FormGrid = styled('div')`
 
   @media (max-width: 480px) {
     grid-template-columns: repeat(5, 1fr);
-  }
-`
-
-const OptionButton = styled('button')<{ active?: boolean }>`
-  font-family: inherit;
-  font-size: 0.85rem;
-  min-width: 0;
-  padding: 0.3rem 0;
-  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
-  border-radius: 0.5rem;
-  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
-  cursor: pointer;
-  transition: background 80ms ease, border-color 80ms ease;
-
-  &:hover {
-    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
-    border-color: var(--color-accent);
-    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
   }
 `
 
