@@ -37,9 +37,13 @@ const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
   verbTenseExercise,
 ]
 
-export interface NewCardSession {
+export interface ExerciseSession {
   reviews: number
   lastNewAt: number
+}
+
+export interface ExerciseFocus {
+  form?: VerbForm | null
 }
 
 export function isCoveredTriple(cardKey: string, srsStore: SrsStore): boolean {
@@ -75,7 +79,8 @@ function uncoveredTriples(
 export function nextExercise(
   profile: DimensionProfile,
   srsStore: SrsStore = {},
-  session: NewCardSession = { reviews: 0, lastNewAt: -3 },
+  session: ExerciseSession = { reviews: 0, lastNewAt: -3 },
+  focus: ExerciseFocus = {},
 ): Exercise<ExerciseKind> {
   const available = EXERCISES.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
   const availableKinds = new Set(available.map((e) => e.kind))
@@ -84,6 +89,8 @@ export function nextExercise(
   const availableTenses = tensePool(profile.tenses)
   const availablePronouns = pronounPool(profile.pronouns)
   const today = utcToday()
+
+  const activeFocusForm = Math.random() < 0.75 ? focus.form : undefined
 
   const dueKeys = Object.entries(srsStore)
     .filter(([key, { dueDate }]) => {
@@ -94,11 +101,16 @@ export function nextExercise(
       if (form != null && !availableForms.includes(form)) return false
       if (tense != null && !availableTenses.includes(tense)) return false
       if (pronoun != null && !availablePronouns.includes(pronoun)) return false
+      // FIXME: Why filter when we can pass the active form focus in the generator constraints object?
+      if (activeFocusForm != null && form !== activeFocusForm) return false
       return true
     })
     .map(([key]) => key)
 
-  const uncovered = uncoveredTriples(profile, srsStore, available)
+  // FIXME: Why filter when we can pass the active form focus in the generator constraints object?
+  const uncovered = uncoveredTriples(profile, srsStore, available).filter(
+    (t) => activeFocusForm == null || t.form === activeFocusForm,
+  )
   const shouldIntroduceNew = uncovered.length > 0 && (dueKeys.length === 0 || session.reviews - session.lastNewAt >= 3)
 
   if (shouldIntroduceNew) {
@@ -110,12 +122,9 @@ export function nextExercise(
   if (dueKeys.length > 0) {
     const kindWeight = (key: string): number => available.find((e) => e.kind === parseCardKey(key).kind)?.weight ?? 1
     const srsWeight = (key: string): number => cardSrsWeight(srsStore[key], today) * kindWeight(key)
-
     const { kind, rootType, form, tense, pronoun } = parseCardKey(weightedRandomSrs(dueKeys, srsWeight))
-
     const generator = available.find((e) => e.kind === kind)
     if (generator == null) return weightedRandomSrs(available, exerciseWeight).generate(profile)
-
     const pool = verbs.filter(
       (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
     )

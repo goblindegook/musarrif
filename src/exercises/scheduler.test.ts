@@ -118,7 +118,7 @@ describe('nextExercise', () => {
         { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
         store,
         { reviews: 0, lastNewAt: 0 },
-        { pinnedForm: 3 },
+        { form: 3 },
       )
       expect(parseCardKey(exercise.cardKey).form).toBe(3)
     })
@@ -134,12 +134,8 @@ describe('nextExercise', () => {
       const forms = Array.from({ length: 30 }, () => {
         spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
         return parseCardKey(
-          nextExercise(
-            { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
-            store,
-            { reviews: 0, lastNewAt: 0 },
-            { pinnedForm: 3 },
-          ).cardKey,
+          nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, { reviews: 0, lastNewAt: 0 }, { form: 3 })
+            .cardKey,
         ).form
       })
       expect(forms.some((f) => f !== 3)).toBe(true)
@@ -151,7 +147,7 @@ describe('nextExercise', () => {
         { ...INITIAL_DIMENSION_PROFILE, forms: 0 },
         {},
         { reviews: 0, lastNewAt: -3 },
-        { pinnedForm: 3 },
+        { form: 3 },
       )
       expect(parseCardKey(exercise.cardKey).form).toBe(1)
     })
@@ -165,9 +161,8 @@ describe('nextExercise', () => {
       const forms = Array.from(
         { length: 200 },
         () =>
-          parseCardKey(
-            nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, session, { pinnedForm: 3 }).cardKey,
-          ).form,
+          parseCardKey(nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, session, { form: 3 }).cardKey)
+            .form,
       )
       const pinnedCount = forms.filter((f) => f === 3).length
       expect(pinnedCount).toBeGreaterThan(110)

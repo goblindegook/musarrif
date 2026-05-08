@@ -155,6 +155,7 @@ describe('ExerciseMode', () => {
         { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
         expect.any(Object),
         expect.any(Object),
+        { pinnedForm: null },
       )
     })
 
@@ -168,7 +169,9 @@ describe('ExerciseMode', () => {
       )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object))
+      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object), {
+        pinnedForm: null,
+      })
     })
 
     test('calls the generator with the current stored profile when next is clicked', () => {
@@ -188,6 +191,7 @@ describe('ExerciseMode', () => {
         testProfile({ tenses: 2, pronouns: 2 }),
         expect.any(Object),
         expect.any(Object),
+        { pinnedForm: null },
       )
     })
   })
@@ -359,6 +363,7 @@ describe('SRS recording', () => {
         [cardKey]: expect.objectContaining({ interval: 145313, dueDate: '2424-01-30' }),
       }),
       expect.any(Object),
+      { pinnedForm: null },
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
@@ -665,5 +670,83 @@ describe('typing mode', () => {
     expect(screen.getByText('I', { selector: 'p' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('data-state', 'wrong')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
+  })
+})
+
+describe('focus chip', () => {
+  function multiFormProfile() {
+    return JSON.stringify({
+      profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
+      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+    })
+  }
+
+  test('chip is hidden when only Form I is unlocked (forms: 0)', () => {
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    expect(screen.queryByRole('button', { name: /focus/i })).not.toBeInTheDocument()
+  })
+
+  test('chip is visible when multiple forms are unlocked (forms: 2)', () => {
+    localStorage.setItem('conjugator:dimensions', multiFormProfile())
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    expect(screen.getByRole('button', { name: /focus/i })).toBeInTheDocument()
+  })
+
+  test('picker shows only forms up to current unlock level', () => {
+    localStorage.setItem('conjugator:dimensions', multiFormProfile())
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
+    expect(screen.getByRole('button', { name: 'I' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'II' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'III' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'IV' })).not.toBeInTheDocument()
+  })
+
+  test('passes pinnedForm to generateExercise after form is selected', () => {
+    localStorage.setItem('conjugator:dimensions', multiFormProfile())
+    const gen = vi.fn().mockReturnValue(testExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'III' }))
+    // answer and advance to trigger next generateExercise call
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { pinnedForm: 3 })
+  })
+
+  test('pinnedForm resets to null on remount (session-only)', () => {
+    localStorage.setItem('conjugator:dimensions', multiFormProfile())
+    const gen = vi.fn().mockReturnValue(testExercise())
+    const { unmount } = render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'III' }))
+    expect(screen.getByText(/Form III/i)).toBeInTheDocument()
+
+    unmount()
+    cleanup()
+
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+    expect(screen.queryByText(/Form III/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /focus/i })).toBeInTheDocument()
+  })
+
+  test('passes pinnedForm: null after clearing focus', () => {
+    localStorage.setItem('conjugator:dimensions', multiFormProfile())
+    const gen = vi.fn().mockReturnValue(testExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    // set focus to form III
+    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'III' }))
+    // clear it
+    fireEvent.click(screen.getByRole('button', { name: /clear focus/i }))
+    // advance
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { pinnedForm: null })
   })
 })

@@ -1,9 +1,10 @@
 import { css, styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import type { DimensionProfile } from '../../exercises/dimensions'
+import { formPool } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
-import { isCoveredTriple, type NewCardSession, nextExercise } from '../../exercises/scheduler'
+import { isCoveredTriple, type ExerciseSession, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
 import {
@@ -20,24 +21,34 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
+import type { VerbForm } from '../../paradigms/verbs'
+import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
 import { ExerciseAnswerArea } from '../molecules/ExerciseAnswerArea'
+import { FocusChip } from '../molecules/FocusChip'
 import { ShortcutButton } from '../molecules/ShortcutButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
 
 type Props = {
-  generateExercise?: (profile: DimensionProfile, srsStore: SrsStore, session: NewCardSession) => Exercise
+  generateExercise?: (
+    profile: DimensionProfile,
+    srsStore: SrsStore,
+    session: ExerciseSession,
+    focus: { pinnedForm: VerbForm | null },
+  ) => Exercise
 }
 
 export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { dir, lang, t } = useI18n()
   const [dimensionProfile, dimensionChanges, recordDimensionAnswer, clearDimensionChanges] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
-  const sessionRef = useRef<NewCardSession>({ reviews: 0, lastNewAt: -3 })
+  const sessionRef = useRef<ExerciseSession>({ reviews: 0, lastNewAt: -3 })
+  const [pinnedForm, setPinnedForm] = useState<VerbForm | null>(null)
+  const [isFocusPickerOpen, setIsFocusPickerOpen] = useState(false)
   const [exercise, setExercise] = useState<Exercise>(() =>
-    generateExercise(dimensionProfile, srsStore, sessionRef.current),
+    generateExercise(dimensionProfile, srsStore, sessionRef.current, { pinnedForm }),
   )
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
@@ -55,13 +66,13 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
-      setExercise(generateExercise(profile, srsStore, sessionRef.current))
+      setExercise(generateExercise(profile, srsStore, sessionRef.current, { pinnedForm }))
       setAnsweredIndex(null)
       setSkipped(false)
       clearDimensionChanges()
       setStreakExtendedAlert(false)
     },
-    [generateExercise, srsStore, clearDimensionChanges],
+    [generateExercise, srsStore, clearDimensionChanges, pinnedForm],
   )
 
   const isAnswered = answeredIndex !== null || skipped
@@ -112,6 +123,20 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   return (
     <ExerciseLayout>
       <ExerciseCard>
+        <FocusChip
+          options={formPool(dimensionProfile.forms).map((form) => ({
+            label: t(`exercise.unlock.form.${form}`),
+            ariaLabel: toRoman(form),
+            value: form,
+          }))}
+          value={pinnedForm}
+          onChange={(v) => setPinnedForm(v as VerbForm | null)}
+          onOpenChange={setIsFocusPickerOpen}
+          label={t('exercise.focus.label')}
+          clearLabel={t('exercise.focus.clear')}
+          pickerTitle={t('exercise.focus.selectForm')}
+          hint={t('exercise.focus.mixedHint')}
+        />
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
@@ -123,7 +148,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
               Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
           )}
         />
-        <ExerciseAnswerArea exercise={exercise} forceReveal={skipped} onAnswer={handleAnswer} />
+        <AnswerAreaContainer aria-hidden={isFocusPickerOpen}>
+          <ExerciseAnswerArea exercise={exercise} forceReveal={skipped} onAnswer={handleAnswer} />
+        </AnswerAreaContainer>
         <ExplanationWrapper visible={explanation.length > 0}>
           <ExplanationInner>
             {explanation.length > 0 && (
@@ -221,6 +248,7 @@ const ExerciseCard = styled('div')`
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  position: relative;
 
   @media (min-width: 480px) {
     padding: 1rem 1.25rem;
@@ -258,6 +286,10 @@ const ExplanationWrapper = styled('div')<{ visible: boolean }>`
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+`
+
+const AnswerAreaContainer = styled('div')`
+  width: 100%;
 `
 
 const ExplanationInner = styled('div')`
