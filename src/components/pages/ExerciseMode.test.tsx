@@ -155,7 +155,7 @@ describe('ExerciseMode', () => {
         { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
         expect.any(Object),
         expect.any(Object),
-        { pinnedForm: null },
+        { form: null },
       )
     })
 
@@ -170,7 +170,7 @@ describe('ExerciseMode', () => {
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
       expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object), {
-        pinnedForm: null,
+        form: null,
       })
     })
 
@@ -191,7 +191,7 @@ describe('ExerciseMode', () => {
         testProfile({ tenses: 2, pronouns: 2 }),
         expect.any(Object),
         expect.any(Object),
-        { pinnedForm: null },
+        { form: null },
       )
     })
   })
@@ -363,7 +363,7 @@ describe('SRS recording', () => {
         [cardKey]: expect.objectContaining({ interval: 145313, dueDate: '2424-01-30' }),
       }),
       expect.any(Object),
-      { pinnedForm: null },
+      { form: null },
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
@@ -702,7 +702,7 @@ describe('focus chip', () => {
     expect(screen.queryByRole('button', { name: 'IV' })).not.toBeInTheDocument()
   })
 
-  test('passes pinnedForm to generateExercise after form is selected', () => {
+  test('passes pinned form to generateExercise after form is selected', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     const gen = vi.fn().mockReturnValue(testExercise())
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
@@ -713,10 +713,10 @@ describe('focus chip', () => {
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
-    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { pinnedForm: 3 })
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { form: 3 })
   })
 
-  test('pinnedForm resets to null on remount (session-only)', () => {
+  test('pinned form resets to null on remount (session-only)', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     const gen = vi.fn().mockReturnValue(testExercise())
     const { unmount } = render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
@@ -733,7 +733,7 @@ describe('focus chip', () => {
     expect(screen.getByRole('button', { name: /focus/i })).toBeInTheDocument()
   })
 
-  test('passes pinnedForm: null after clearing focus', () => {
+  test('passes pinned form: null after clearing focus', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     const gen = vi.fn().mockReturnValue(testExercise())
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
@@ -747,6 +747,6 @@ describe('focus chip', () => {
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
-    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { pinnedForm: null })
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { form: null })
   })
 })

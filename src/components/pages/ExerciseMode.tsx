@@ -4,7 +4,7 @@ import type { DimensionProfile } from '../../exercises/dimensions'
 import { formPool } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
-import { isCoveredTriple, type ExerciseSession, nextExercise } from '../../exercises/scheduler'
+import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
 import {
@@ -36,7 +36,7 @@ type Props = {
     profile: DimensionProfile,
     srsStore: SrsStore,
     session: ExerciseSession,
-    focus: { pinnedForm: VerbForm | null },
+    focus: ExerciseFocus,
   ) => Exercise
 }
 
@@ -48,7 +48,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const [pinnedForm, setPinnedForm] = useState<VerbForm | null>(null)
   const [isFocusPickerOpen, setIsFocusPickerOpen] = useState(false)
   const [exercise, setExercise] = useState<Exercise>(() =>
-    generateExercise(dimensionProfile, srsStore, sessionRef.current, { pinnedForm }),
+    generateExercise(dimensionProfile, srsStore, sessionRef.current, { form: pinnedForm }),
   )
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
@@ -66,7 +66,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
-      setExercise(generateExercise(profile, srsStore, sessionRef.current, { pinnedForm }))
+      setExercise(generateExercise(profile, srsStore, sessionRef.current, { form: pinnedForm }))
       setAnsweredIndex(null)
       setSkipped(false)
       clearDimensionChanges()
