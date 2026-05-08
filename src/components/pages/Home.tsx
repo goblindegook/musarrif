@@ -215,7 +215,7 @@ export function Home() {
       </Stack>
 
       <Stack area="verbList">
-        <Panel title={t('verbList.title')} dir={dir} lang={lang} collapsible>
+        <Panel title={t('verbList.title')} dir={dir} lang={lang}>
           <FilterGroup>
             <Subheading dir={dir} lang={lang}>
               {t('verbsList.filter.form.title')}
