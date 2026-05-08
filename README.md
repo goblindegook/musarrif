@@ -47,9 +47,25 @@ npm run build
 
 4. Preview production build:
 
-```bash
-npm run preview
-```
+   ```bash
+   npm run preview
+   ```
+
+## Desktop Target (Tauri 2)
+
+The repository includes a desktop build target via Tauri 2.0.
+
+- Run in desktop dev mode:
+
+  ```bash
+  npm run tauri:dev
+  ```
+
+- Build desktop bundles:
+
+  ```bash
+  npm run tauri:build
+  ```
 
 ## Quality Commands
 

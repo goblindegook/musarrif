@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Musarrif",
+  "version": "0.1.0",
+  "identifier": "com.musarrif",
+  "build": {
+    "beforeDevCommand": "npm run dev -- --host 0.0.0.0 --port 5173",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Muṣarrif",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 640
+      }
+    ],
+    "security": {
+      "capabilities": ["default"]
+    }
+  }
+}

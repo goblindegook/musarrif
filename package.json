@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:desktop": "tauri build",
     "preview": "vite preview",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
@@ -36,6 +39,7 @@
     "@testing-library/preact": "^3.2.3",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.6.0",
+    "@tauri-apps/cli": "^2.9.2",
     "@vitest/coverage-v8": "^4.1.4",
     "@vitest/ui": "^4.1.5",
     "fast-check": "^4.7.0",
