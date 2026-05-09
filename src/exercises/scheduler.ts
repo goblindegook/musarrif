@@ -19,7 +19,7 @@ import { verbParticipleExercise } from './generators/verb-participle.ts'
 import { verbPronounExercise } from './generators/verb-pronoun.ts'
 import { verbRootExercise } from './generators/verb-root.ts'
 import { verbTenseExercise } from './generators/verb-tense.ts'
-import type { SrsStore } from './srs.ts'
+import type { SrsCardIdentity, SrsStore } from './srs.ts'
 import { cardSrsWeight, getSrsRootType, parseCardKey, type SrsRootType, weightedRandomSrs } from './srs.ts'
 
 export interface ExerciseFocus {
@@ -57,30 +57,6 @@ export function isCoveredTriple(cardKey: string, srsStore: SrsStore): boolean {
   return Object.keys(srsStore).some((k) => k === prefix || k.startsWith(`${prefix}:`))
 }
 
-function uncoveredTriples(
-  profile: DimensionProfile,
-  srsStore: SrsStore,
-  available: readonly ExerciseGenerator<ExerciseKind>[],
-): Array<{ kind: ExerciseKind; rootType: SrsRootType; form: VerbForm }> {
-  const availableRootTypes = rootTypesPool(profile.rootTypes)
-  const availableForms = formPool(profile.forms)
-  const coveredCards = Object.keys(srsStore)
-
-  const result: Array<{ kind: ExerciseKind; rootType: SrsRootType; form: VerbForm }> = []
-  for (const generator of available) {
-    for (const rootType of availableRootTypes) {
-      for (const form of availableForms) {
-        const prefix = `${generator.kind}:${rootType}:${form}`
-        if (!coveredCards.some((k) => k === prefix || k.startsWith(`${prefix}:`))) {
-          result.push({ kind: generator.kind, rootType, form })
-        }
-      }
-    }
-  }
-
-  return result
-}
-
 export function nextExercise(
   profile: DimensionProfile,
   srsStore: SrsStore = {},
@@ -100,25 +76,18 @@ export function nextExercise(
   const dueKeys = Object.entries(srsStore)
     .filter(([key, { dueDate }]) => {
       if (dueDate > today) return false
-      const { kind, rootType, form, tense, pronoun } = parseCardKey(key)
-      if (!availableKinds.has(kind)) return false
-      if (rootType != null && !availableRootTypes.includes(rootType)) return false
-      if (form != null && !availableForms.includes(form)) return false
-      if (tense != null && !availableTenses.includes(tense)) return false
-      if (pronoun != null && !availablePronouns.includes(pronoun)) return false
-      if (activeFocus.form != null && form !== activeFocus.form) return false
-      if (activeFocus.tense != null && tense != null && tense !== activeFocus.tense) return false
-      if (activeFocus.rootType != null && rootType !== activeFocus.rootType) return false
-      if (activeFocus.pronoun != null && pronoun != null && pronoun !== activeFocus.pronoun) return false
-      return true
+      const card = parseCardKey(key)
+      if (!availableKinds.has(card.kind)) return false
+      if (card.rootType != null && !availableRootTypes.includes(card.rootType)) return false
+      if (card.form != null && !availableForms.includes(card.form)) return false
+      if (card.tense != null && !availableTenses.includes(card.tense)) return false
+      if (card.pronoun != null && !availablePronouns.includes(card.pronoun)) return false
+      return isInFocus(card, activeFocus)
     })
     .map(([key]) => key)
 
-  const uncovered = uncoveredTriples(profile, srsStore, available).filter(
-    (t) =>
-      (activeFocus.form == null || t.form === activeFocus.form) &&
-      (activeFocus.rootType == null || t.rootType === activeFocus.rootType),
-  )
+  const uncovered = uncoveredTriples(profile, srsStore, available).filter((t) => isInFocus(t, activeFocus))
+
   const shouldIntroduceNew = uncovered.length > 0 && (dueKeys.length === 0 || session.reviews - session.lastNewAt >= 3)
 
   if (shouldIntroduceNew) {
@@ -143,3 +112,41 @@ export function nextExercise(
 }
 
 const exerciseWeight = (e: ExerciseGenerator) => e.weight ?? 1
+
+function isInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFocus): boolean {
+  if (focus.form != null && card.form !== focus.form) return false
+  if (focus.tense != null && card.tense != null && card.tense !== focus.tense) return false
+  if (focus.rootType != null && card.rootType !== focus.rootType) return false
+  if (focus.pronoun != null && card.pronoun != null && card.pronoun !== focus.pronoun) return false
+  return true
+}
+
+interface Triple {
+  kind: ExerciseKind
+  rootType: SrsRootType
+  form: VerbForm
+}
+
+function uncoveredTriples(
+  profile: DimensionProfile,
+  srsStore: SrsStore,
+  available: readonly ExerciseGenerator<ExerciseKind>[],
+): readonly Triple[] {
+  const availableRootTypes = rootTypesPool(profile.rootTypes)
+  const availableForms = formPool(profile.forms)
+  const coveredCards = Object.keys(srsStore)
+
+  const result: Triple[] = []
+  for (const generator of available) {
+    for (const rootType of availableRootTypes) {
+      for (const form of availableForms) {
+        const prefix = `${generator.kind}:${rootType}:${form}`
+        if (!coveredCards.some((k) => k === prefix || k.startsWith(`${prefix}:`))) {
+          result.push({ kind: generator.kind, rootType, form })
+        }
+      }
+    }
+  }
+
+  return result
+}
