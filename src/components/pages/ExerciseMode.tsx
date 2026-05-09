@@ -218,7 +218,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
               label={t('exercise.focus.label')}
               clearLabel={t('exercise.focus.clear')}
               backLabel={t('exercise.focus.back')}
-              pickerTitle={t('exercise.focus.label')}
+              pickerTitle={t('exercise.focus.pickerTitle')}
               hint={t('exercise.focus.mixedHint')}
             />
           </FocusChipSlot>
