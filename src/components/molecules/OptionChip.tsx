@@ -1,5 +1,5 @@
 import { css, styled } from 'goober'
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import { IconButton } from '../atoms/IconButton'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
@@ -50,6 +50,7 @@ export function OptionChip({
   const [open, setOpen] = useState(false)
   const [selectedGroupKey, setSelectedGroupKey] = useState<string | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const resizeFromRef = useRef<{ w: number; h: number } | null>(null)
 
   const totalOptions = groups.reduce((sum, g) => sum + g.options.length, 0)
   const multiGroup = groups.length > 1
@@ -82,13 +83,23 @@ export function OptionChip({
     })
   }, [])
 
-  const handleGroupSelect = useCallback((key: string) => {
-    setSelectedGroupKey(key)
+  const captureSize = useCallback(() => {
+    const panel = panelRef.current
+    if (panel) resizeFromRef.current = { w: panel.offsetWidth, h: panel.offsetHeight }
   }, [])
 
+  const handleGroupSelect = useCallback(
+    (key: string) => {
+      captureSize()
+      setSelectedGroupKey(key)
+    },
+    [captureSize],
+  )
+
   const handleBack = useCallback(() => {
+    captureSize()
     setSelectedGroupKey(null)
-  }, [])
+  }, [captureSize])
 
   useEffect(() => {
     const panel = panelRef.current
@@ -99,7 +110,40 @@ export function OptionChip({
     } catch {}
   }, [open])
 
-  // Sync state when popover auto-closes (outside click or Escape)
+  useLayoutEffect(() => {
+    const panel = panelRef.current
+    const from = resizeFromRef.current
+    resizeFromRef.current = null
+    if (!panel || from === null) return
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+
+    const toH = panel.offsetHeight
+    if (from.h === toH) return
+
+    panel.style.height = `${from.h}px`
+    panel.style.overflow = 'hidden'
+    panel.dataset.transitioning = 'true'
+
+    const restore = () => {
+      panel.style.height = ''
+      panel.style.overflow = ''
+      panel.style.transition = ''
+      delete panel.dataset.transitioning
+    }
+
+    const raf = requestAnimationFrame(() => {
+      panel.style.transition = 'height 250ms cubic-bezier(0.22, 1, 0.36, 1)'
+      panel.style.height = `${toH}px`
+      panel.addEventListener('transitionend', restore, { once: true })
+    })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      panel.removeEventListener('transitionend', restore)
+      restore()
+    }
+  }, [selectedGroupKey])
+
   useEffect(() => {
     const panel = panelRef.current
     if (!panel) return
@@ -150,7 +194,7 @@ export function OptionChip({
         {open && showGroupPicker ? (
           <>
             <Subheading>{pickerTitle}</Subheading>
-            <FormGrid>
+            <FormGrid class="form-grid">
               {groups.map((g) => (
                 <SelectableButton
                   key={g.key}
@@ -175,7 +219,7 @@ export function OptionChip({
               )}
               <Subheading>{pickerGroup.pickerTitle}</Subheading>
             </TitleRow>
-            <FormGrid>
+            <FormGrid class="form-grid">
               {pickerGroup.options.map((opt) => (
                 <SelectableButton
                   key={opt.value}
@@ -376,6 +420,10 @@ const floatPanelClass = css`
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+  }
+
+  &[data-transitioning] .form-grid > * {
+    animation-play-state: paused;
   }
 
   @media (prefers-reduced-motion: reduce) {
