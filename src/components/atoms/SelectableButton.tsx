@@ -19,14 +19,14 @@ export function SelectableButton({
   ...props
 }: SelectableButtonProps) {
   return (
-    <StyledSelectableButton {...props} active={active} size={size} type="button">
+    <Button {...props} active={active} size={size} type="button">
       {children}
       {badge != null && <Badge>{badge}</Badge>}
-    </StyledSelectableButton>
+    </Button>
   )
 }
 
-const StyledSelectableButton = styled('button')<{
+const Button = styled('button')<{
   active: boolean
   size: SelectableButtonSize
 }>`
@@ -40,14 +40,12 @@ const StyledSelectableButton = styled('button')<{
   display: inline-flex;
   font-family: inherit;
   font-size: ${({ size }) => (size === 'compact' ? '0.78rem' : '0.8rem')};
-  font-weight: 600;
+  font-weight: 500;
   justify-content: center;
-  letter-spacing: 0.08em;
   min-height: ${({ size }) => (size === 'compact' ? '2.2rem' : '2.4rem')};
   min-width: 0;
   padding: ${({ size }) => (size === 'compact' ? '0.35rem 0.5rem' : '0.4rem 0.75rem')};
   text-align: center;
-  text-transform: uppercase;
   gap: 0.5rem;
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),

@@ -1,4 +1,5 @@
 import { css, styled } from 'goober'
+import { forwardRef } from 'preact/compat'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import { IconButton } from '../atoms/IconButton'
 import { SelectableButton } from '../atoms/SelectableButton'
@@ -190,7 +191,7 @@ export function OptionChip({
           </InactiveChip>
         )}
       </ChipRow>
-      <div ref={panelRef} popover="auto" class={floatPanelClass}>
+      <Popover ref={panelRef} popover="auto">
         {open && showGroupPicker ? (
           <>
             <Subheading>{pickerTitle}</Subheading>
@@ -236,7 +237,7 @@ export function OptionChip({
             <PanelHint>{hint}</PanelHint>
           </>
         ) : null}
-      </div>
+      </Popover>
     </div>
   )
 }
@@ -263,9 +264,7 @@ const chipButton = `
   cursor: pointer;
   font: inherit;
   font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 500;
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -385,7 +384,7 @@ const ClearButton = styled('button')`
   }
 `
 
-const floatPanelClass = css`
+const Popover = styled('div', forwardRef)`
   box-sizing: border-box;
   position: fixed;
   position-anchor: --option-chip;
