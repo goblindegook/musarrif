@@ -620,6 +620,10 @@
     "noPassiveParticiple": true
   },
   {
+    "root": "DrE",
+    "form": 3
+  },
+  {
     "root": "Drr",
     "form": 8
   },
@@ -1661,7 +1665,7 @@
     "root": "fEl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fi3l"]
+    "masdars": ["fa3l", "fi3l", "fa3aal"]
   },
   {
     "root": "fEl",
@@ -1976,7 +1980,21 @@
   },
   {
     "root": "jhl",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "jhl",
+    "form": 2
+  },
+  {
+    "root": "jhl",
     "form": 6
+  },
+  {
+    "root": "jhl",
+    "form": 10
   },
   {
     "root": "jhz",
@@ -2388,6 +2406,13 @@
   {
     "root": "mdd",
     "form": 10
+  },
+  {
+    "root": "mDy",
+    "form": 1,
+    "vowels": "a-i",
+    "passiveVoice": "impersonal",
+    "masdars": ["fu3il"]
   },
   {
     "root": "mkn",
