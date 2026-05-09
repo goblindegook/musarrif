@@ -29,6 +29,7 @@ export const verbMasdarExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbMasdar',
       word,
+      spokenWord: verb.label,
       options,
       answer: answerIndex,
       cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),

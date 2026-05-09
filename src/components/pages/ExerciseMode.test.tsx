@@ -26,6 +26,7 @@ function testExercise(overrides = {}): Exercise {
     kind: 'verbForm',
     dimensions: ['forms', 'rootTypes', 'diacritics'],
     word: 'كَتَبَ',
+    spokenWord: 'كَتَبَ',
     promptTranslationKey: 'exercise.prompt.verbForm',
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
@@ -65,34 +66,9 @@ describe('ExerciseMode', () => {
       value: vi.fn(),
     })
 
-    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={() => testExercise({ spokenWord: 'كَتَبَ' })} />, { wrapper: Wrapper })
 
     expect(screen.getByLabelText('Play pronunciation for كَتَبَ')).toBeInTheDocument()
-  })
-
-  test('spells root letters in root-form exercises when speaking', () => {
-    const utterance = vi.fn()
-    Object.defineProperty(window, 'speechSynthesis', {
-      configurable: true,
-      writable: true,
-      value: { speak: vi.fn(), cancel: vi.fn() },
-    })
-    Object.defineProperty(window, 'SpeechSynthesisUtterance', {
-      configurable: true,
-      writable: true,
-      value: utterance,
-    })
-
-    render(
-      <ExerciseMode
-        generateExercise={() => testExercise({ kind: 'rootFormVerb', word: 'ك ت ب', cardKey: 'rootFormVerb:sound:1' })}
-      />,
-      { wrapper: Wrapper },
-    )
-
-    fireEvent.click(screen.getByLabelText('Play pronunciation for ك ت ب'))
-
-    expect(utterance).toHaveBeenCalledWith('كاف ،تاء ،باء')
   })
 
   test('sets the page title for exercise mode', () => {
@@ -353,16 +329,12 @@ describe('ExerciseMode', () => {
 
 describe('SRS recording', () => {
   test('records answer in SRS store when option selected', () => {
-    const exercise: Exercise = {
+    const exercise = testExercise({
       kind: 'conjugation',
-      dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
-      word: 'كَتَبَ',
-      promptTranslationKey: 'exercise.prompt.conjugation',
-      promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'pronoun.3ms' },
-      options: ['كَتَبَ', 'يَكْتُبُ', 'كَتَبْتَ', 'كُتِبَ'],
+      options: ['correct', 'incorrect', 'incorrect', 'incorrect'],
       answer: 0,
       cardKey: 'conjugation:regular:1:active.past:3ms',
-    }
+    })
     render(<ExerciseMode generateExercise={() => exercise} />, {
       wrapper: ({ children }: { children: ComponentChildren }) => (
         <RoutingProvider>
@@ -370,7 +342,7 @@ describe('SRS recording', () => {
         </RoutingProvider>
       ),
     })
-    fireEvent.click(screen.getByLabelText('كَتَبَ'))
+    fireEvent.click(screen.getByLabelText('correct'))
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
   })
@@ -525,29 +497,6 @@ describe('Explanation in ExerciseMode', () => {
   })
 })
 
-function fullExplanationExercise(): Exercise {
-  return {
-    kind: 'verbForm',
-    dimensions: ['forms', 'rootTypes', 'diacritics'],
-    word: 'كَتَبَ',
-    promptTranslationKey: 'exercise.prompt.verbForm',
-    options: ['I', 'II', 'III', 'IV'],
-    answer: 0,
-    cardKey: 'verbForm:sound:1:active.past:3ms',
-    explanation: {
-      category: 'verb',
-      paradigmRoots: ['ك', 'ت', 'ب'],
-      paradigmForm: 1,
-      form: 1 as const,
-      arabic: 'كَتَبَ',
-      rootType: 'sound' as const,
-      vowels: 'a-u' as const,
-      tense: 'active.past' as const,
-      pronoun: '3ms' as const,
-    },
-  }
-}
-
 describe('mastery filtering in ExerciseMode', () => {
   test('hides mastered rootType from explanation after correct answer', () => {
     localStorage.setItem(
@@ -558,7 +507,7 @@ describe('mastery filtering in ExerciseMode', () => {
       }),
     )
 
-    render(<ExerciseMode generateExercise={() => fullExplanationExercise()} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
@@ -574,7 +523,7 @@ describe('mastery filtering in ExerciseMode', () => {
       }),
     )
 
-    render(<ExerciseMode generateExercise={() => fullExplanationExercise()} />, { wrapper: Wrapper })
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
 
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
@@ -587,6 +536,7 @@ function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
     kind: 'conjugation',
     dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
     word: 'يَكتُبُ',
+    spokenWord: 'يَكتُبُ',
     promptTranslationKey: 'exercise.prompt.conjugation',
     promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'pronoun.3ms' },
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],

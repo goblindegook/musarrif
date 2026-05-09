@@ -18,6 +18,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     kind: 'conjugation',
     dimensions: ['tenses'],
     word: 'يَكتُبُ',
+    spokenWord: 'يَكتُبُ',
     promptTranslationKey: 'exercise.prompt.conjugation',
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,

@@ -16,7 +16,8 @@ export const participleFormExercise = defineExercise(
     const active = deriveActiveParticiple(verb)
     const passive = paradigms.includes('passive.participle') ? derivePassiveParticiple(verb) : ''
     const kind: Participle = paradigms.includes('passive.participle') ? random(['active', 'passive']) : 'active'
-    const word = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
+    const participle = kind === 'active' ? active : passive
+    const word = exerciseDiacritics(participle, profile.diacritics)
 
     const eligibleForms = FORMS.filter((form) => {
       if (form === verb.form) return false
@@ -37,6 +38,7 @@ export const participleFormExercise = defineExercise(
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleForm' : 'exercise.prompt.passiveParticipleForm',
       word,
+      spokenWord: participle,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer: options.indexOf(verb.form),
       cardKey: buildCardKey('participleForm', getSrsRootType(verb.root), verb.form),

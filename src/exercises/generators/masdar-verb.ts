@@ -17,7 +17,8 @@ export const masdarVerbExercise = defineExercise(
   'masdarVerb',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
+    const masdar = random(deriveMasdar(verb))
+    const word = exerciseDiacritics(masdar, profile.diacritics)
     const options = buildOptions(verb, profile)
     const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
     const answer = options.indexOf(answerLabel)
@@ -27,6 +28,7 @@ export const masdarVerbExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarVerb',
       word,
+      spokenWord: masdar,
       options,
       answer,
       cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),

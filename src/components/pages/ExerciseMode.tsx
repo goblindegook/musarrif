@@ -21,7 +21,6 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
-import { spell } from '../../paradigms/letters'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbForm } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
@@ -223,11 +222,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
               hint={t('exercise.focus.mixedHint')}
             />
           </FocusChipSlot>
-          <SpeechButton
-            text={exercise.kind === 'rootFormVerb' ? spell(exercise.word).join(' ،') : exercise.word}
-            lang="ar"
-            ariaLabel={t('aria.speak', { text: exercise.word })}
-          />
+          <SpeechButton text={exercise.spokenWord} lang="ar" ariaLabel={t('aria.speak', { text: exercise.word })} />
         </ExerciseTopRow>
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}

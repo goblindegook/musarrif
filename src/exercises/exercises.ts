@@ -21,6 +21,7 @@ export type ExerciseKind =
 export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   kind: T
   word: string
+  spokenWord: string
   promptTranslationKey: string
   promptParams?: Record<string, string>
   options: readonly string[]

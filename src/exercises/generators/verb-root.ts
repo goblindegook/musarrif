@@ -28,16 +28,17 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
     tense,
     constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
   )
-  const conjugatedWord = conjugate(verb, tense)[pronoun]
-  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
+  const conjugatedVerb = conjugate(verb, tense)[pronoun]
+  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedVerb)
 
-  const word = exerciseDiacritics(conjugatedWord, profile.diacritics)
+  const word = exerciseDiacritics(conjugatedVerb, profile.diacritics)
   const options = buildOptions(verb.root, word, profile)
 
   return {
     dimensions: ['forms', 'rootTypes', 'diacritics'],
     promptTranslationKey: 'exercise.prompt.verbRoot',
     word,
+    spokenWord: conjugatedVerb,
     options: options.map((option) => Array.from(option).join(' ')),
     answer: options.indexOf(verb.root),
     cardKey: buildCardKey('verbRoot', getSrsRootType(verb.root), verb.form, tense, pronoun),

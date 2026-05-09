@@ -10,7 +10,8 @@ export const masdarFormExercise = defineExercise(
   'masdarForm',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const word = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
+    const masdar = random(deriveMasdar(verb))
+    const word = exerciseDiacritics(masdar, profile.diacritics)
 
     const eligibleForms = FORMS.filter((form) => {
       if (form === verb.form) return false
@@ -27,6 +28,7 @@ export const masdarFormExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
+      spokenWord: masdar,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
       cardKey: buildCardKey('masdarForm', getSrsRootType(verb.root), verb.form),

@@ -16,6 +16,7 @@ describe('defineExerciseGenerator', () => {
       'verbForm',
       () => ({
         word: 'كَتَبَ',
+        spokenWord: 'كَتَبَ',
         promptTranslationKey: 'exercise.prompt.verbForm',
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
@@ -31,6 +32,7 @@ describe('defineExerciseGenerator', () => {
     expect(exercise).toEqual({
       kind: 'verbForm',
       word: 'كَتَبَ',
+      spokenWord: 'كَتَبَ',
       promptTranslationKey: 'exercise.prompt.verbForm',
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,

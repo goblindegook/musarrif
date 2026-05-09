@@ -24,7 +24,8 @@ export const verbFormExercise = defineExercise(
       tense,
       constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns)),
     )
-    const word = exerciseDiacritics(conjugate(verb, tense)[pronoun], profile.diacritics)
+    const conjugatedVerb = conjugate(verb, tense)[pronoun]
+    const word = exerciseDiacritics(conjugatedVerb, profile.diacritics)
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, word)
 
     const eligibleForms = FORMS.filter(
@@ -44,6 +45,7 @@ export const verbFormExercise = defineExercise(
       dimensions: ['forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbForm',
       word,
+      spokenWord: conjugatedVerb,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
       cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),

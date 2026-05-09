@@ -22,7 +22,8 @@ export const participleRootExercise = defineExercise(
     const active = deriveActiveParticiple(verb)
     const passive = derivePassiveParticiple(verb)
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-    const word = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
+    const participle = kind === 'active' ? active : passive
+    const word = exerciseDiacritics(participle, profile.diacritics)
     const options = buildOptions(verb.root, word, profile)
 
     return {
@@ -30,6 +31,7 @@ export const participleRootExercise = defineExercise(
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleRoot' : 'exercise.prompt.passiveParticipleRoot',
       word,
+      spokenWord: participle,
       options: options.map((option) => Array.from(option).join(' ')),
       answer: options.indexOf(verb.root),
       cardKey: buildCardKey('participleRoot', getSrsRootType(verb.root), verb.form),

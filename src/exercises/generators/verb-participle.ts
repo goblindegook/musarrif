@@ -32,6 +32,7 @@ export const verbParticipleExercise = defineExercise(
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
       word,
+      spokenWord: verb.label,
       options,
       answer: options.indexOf(answer),
       cardKey: buildCardKey('verbParticiple', getSrsRootType(verb.root), verb.form),

@@ -27,13 +27,14 @@ export const verbPronounExercise = defineExercise(
       tense,
       constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
     )
-    const conjugatedWord = conjugate(verb, tense)[pronoun]
-    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedWord)
+    const conjugatedVerb = conjugate(verb, tense)[pronoun]
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedVerb)
     const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(pronoun)
 
     return {
       word,
+      spokenWord: conjugatedVerb,
       promptTranslationKey: 'exercise.prompt.verbPronoun',
       options: options.map((p) => ARABIC_PRONOUNS[p]),
       answer,

@@ -28,6 +28,7 @@ export const verbTenseExercise = defineExercise(
       constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
     )
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugate(verb, tense)[pronoun])
+    const spokenWord = conjugate(verb, tense)[pronoun]
     const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(tense)
 
@@ -35,6 +36,7 @@ export const verbTenseExercise = defineExercise(
       dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
+      spokenWord,
       options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
       answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),

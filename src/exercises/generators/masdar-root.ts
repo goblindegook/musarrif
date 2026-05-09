@@ -17,15 +17,17 @@ export const masdarRootExercise = defineExercise(
   'masdarRoot',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const masdar = exerciseDiacritics(random(deriveMasdar(verb)), profile.diacritics)
-    const options = buildOptions(verb.root, masdar, profile)
+    const masdar = random(deriveMasdar(verb))
+    const word = exerciseDiacritics(masdar, profile.diacritics)
+    const options = buildOptions(verb.root, word, profile)
     const answer = options.indexOf(verb.root)
-    const explanation = resolveNominalExplanationLayers(verb, 'masdar', masdar)
+    const explanation = resolveNominalExplanationLayers(verb, 'masdar', word)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarRoot',
-      word: masdar,
+      word,
+      spokenWord: masdar,
       options: options.map((option) => Array.from(option).join(' ')),
       answer,
       cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),

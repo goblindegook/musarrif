@@ -151,6 +151,7 @@ export const conjugationExercise = defineExercise(
         pronoun: `pronoun.${targetPronoun}`,
       },
       word,
+      spokenWord: verb.label,
       options,
       answer: options.indexOf(answer),
       cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
