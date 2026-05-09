@@ -1,9 +1,10 @@
 import { styled } from 'goober'
 export const Subheading = styled('h4')`
-  margin: 0;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin: 0;
+  padding-inline-start: 0.25rem;
   text-transform: uppercase;
 `

@@ -176,6 +176,133 @@ describe('nextExercise', () => {
       const exercise = nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, { reviews: 0, lastNewAt: 0 })
       expect(parseCardKey(exercise.cardKey).form).toBe(1)
     })
+
+    test('routes to pinned tense when random < 0.75 and pinned due cards exist', () => {
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
+      const store = {
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'conjugation:sound:1:active.present.indicative:3ms': {
+          interval: 1,
+          ef: 2.5,
+          repetitions: 1,
+          dueDate: utcToday(),
+        },
+      }
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { tense: 'active.past' },
+      )
+      expect(parseCardKey(exercise.cardKey).tense).toBe('active.past')
+    })
+
+    test('routes to unconstrained pool for tense when random >= 0.75', () => {
+      const spy = vi.spyOn(Math, 'random')
+      const store = {
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'conjugation:sound:1:active.present.indicative:3ms': {
+          interval: 1,
+          ef: 2.5,
+          repetitions: 1,
+          dueDate: utcToday(),
+        },
+      }
+      const tenses = Array.from({ length: 30 }, () => {
+        spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
+        return parseCardKey(
+          nextExercise(
+            { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+            store,
+            { reviews: 0, lastNewAt: 0 },
+            { tense: 'active.past' },
+          ).cardKey,
+        ).tense
+      })
+      expect(tenses.some((t) => t !== 'active.past')).toBe(true)
+    })
+
+    test('exercises without a tense slot pass through when tense focus is active', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5) // always apply focus
+      const store = {
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'conjugation:sound:1:active.present.indicative:3ms': {
+          interval: 1,
+          ef: 2.5,
+          repetitions: 1,
+          dueDate: utcToday(),
+        },
+      }
+      const exercises = Array.from({ length: 20 }, () =>
+        nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { tense: 'active.past' },
+        ),
+      )
+      expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
+    })
+
+    test('routes to pinned root type when random < 0.75 and pinned due cards exist', () => {
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
+      const store = {
+        'verbForm:hollow:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { rootType: 'hollow' },
+      )
+      expect(parseCardKey(exercise.cardKey).rootType).toBe('hollow')
+    })
+
+    test('root type focus filters uncovered triples', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5)
+      const exercises = Array.from({ length: 30 }, () =>
+        nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
+          {},
+          { reviews: 0, lastNewAt: -3 },
+          { rootType: 'hollow' },
+        ),
+      )
+      expect(exercises.every((e) => parseCardKey(e.cardKey).rootType === 'hollow')).toBe(true)
+    })
+
+    test('routes to pinned pronoun when random < 0.75 and pinned due cards exist', () => {
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
+      const store = {
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { pronoun: '1s' },
+      )
+      expect(parseCardKey(exercise.cardKey).pronoun).toBe('1s')
+    })
+
+    test('exercises without a pronoun slot pass through when pronoun focus is active', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5)
+      const store = {
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: utcToday() },
+      }
+      const exercises = Array.from({ length: 20 }, () =>
+        nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { pronoun: '1s' },
+        ),
+      )
+      expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
+    })
   })
 })
 

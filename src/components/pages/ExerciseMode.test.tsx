@@ -53,6 +53,48 @@ function localDateKey(date = new Date()): string {
 }
 
 describe('ExerciseMode', () => {
+  test('shows a speech button in the exercise header', () => {
+    Object.defineProperty(window, 'speechSynthesis', {
+      configurable: true,
+      writable: true,
+      value: { speak: vi.fn(), cancel: vi.fn() },
+    })
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', {
+      configurable: true,
+      writable: true,
+      value: vi.fn(),
+    })
+
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+
+    expect(screen.getByLabelText('Play pronunciation for كَتَبَ')).toBeInTheDocument()
+  })
+
+  test('spells root letters in root-form exercises when speaking', () => {
+    const utterance = vi.fn()
+    Object.defineProperty(window, 'speechSynthesis', {
+      configurable: true,
+      writable: true,
+      value: { speak: vi.fn(), cancel: vi.fn() },
+    })
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', {
+      configurable: true,
+      writable: true,
+      value: utterance,
+    })
+
+    render(
+      <ExerciseMode
+        generateExercise={() => testExercise({ kind: 'rootFormVerb', word: 'ك ت ب', cardKey: 'rootFormVerb:sound:1' })}
+      />,
+      { wrapper: Wrapper },
+    )
+
+    fireEvent.click(screen.getByLabelText('Play pronunciation for ك ت ب'))
+
+    expect(utterance).toHaveBeenCalledWith('كاف ،تاء ،باء')
+  })
+
   test('sets the page title for exercise mode', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     expect(document.title).toBe('Exercise · Muṣarrif')
@@ -155,7 +197,7 @@ describe('ExerciseMode', () => {
         { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
         expect.any(Object),
         expect.any(Object),
-        { form: null },
+        {},
       )
     })
 
@@ -169,9 +211,7 @@ describe('ExerciseMode', () => {
       )
       const gen = vi.fn().mockReturnValue(testExercise())
       render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
-      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object), {
-        form: null,
-      })
+      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object), {})
     })
 
     test('calls the generator with the current stored profile when next is clicked', () => {
@@ -191,7 +231,7 @@ describe('ExerciseMode', () => {
         testProfile({ tenses: 2, pronouns: 2 }),
         expect.any(Object),
         expect.any(Object),
-        { form: null },
+        {},
       )
     })
   })
@@ -363,7 +403,7 @@ describe('SRS recording', () => {
         [cardKey]: expect.objectContaining({ interval: 145313, dueDate: '2424-01-30' }),
       }),
       expect.any(Object),
-      { form: null },
+      {},
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
@@ -733,7 +773,74 @@ describe('focus chip', () => {
     expect(screen.getByText(/focus/i).closest('button')).toBeInTheDocument()
   })
 
-  test('passes pinned form: null after clearing focus', () => {
+  test('chip is visible when only tenses dimension has multiple options', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    expect(screen.getByText(/focus/i).closest('button')).toBeInTheDocument()
+  })
+
+  test('shows group picker when multiple dimensions have options', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    expect(screen.getByText('Form', { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByText('Tense', { selector: 'button' })).toBeInTheDocument()
+  })
+
+  test('passes tense focus to generateExercise after selecting a tense', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    const gen = vi.fn().mockReturnValue(testExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Tense', { selector: 'button' }))
+    fireEvent.click(screen.getByText('Active Past', { selector: 'button' }))
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), {
+      tense: 'active.past',
+    })
+  })
+
+  test('passes rootType focus to generateExercise after selecting a root type', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 4, nominals: 0 },
+        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    const gen = vi.fn().mockReturnValue(testExercise())
+    render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
+
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Hollow', { selector: 'button' }))
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { rootType: 'hollow' })
+  })
+
+  test('passes empty focus after clearing selection', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     const gen = vi.fn().mockReturnValue(testExercise())
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
@@ -747,6 +854,6 @@ describe('focus chip', () => {
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
-    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { form: null })
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), {})
   })
 })

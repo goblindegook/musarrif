@@ -7,6 +7,6 @@ export const Heading = styled('h3')`
   text-wrap: balance;
 
   @media (min-width: 480px) {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
   }
 `

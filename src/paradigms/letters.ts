@@ -139,3 +139,39 @@ export function finalize(letters: readonly Token[]): string {
     .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
     .normalize('NFC')
 }
+
+const ARABIC_LETTER_NAMES = {
+  ء: 'همزة',
+  ب: 'باء',
+  ت: 'تاء',
+  ث: 'ثاء',
+  ج: 'جيم',
+  ح: 'حاء',
+  خ: 'خاء',
+  د: 'دال',
+  ذ: 'ذال',
+  ر: 'راء',
+  ز: 'زاي',
+  س: 'سين',
+  ش: 'شين',
+  ص: 'صاد',
+  ض: 'ضاد',
+  ط: 'طاء',
+  ظ: 'ظاء',
+  ع: 'عين',
+  غ: 'غين',
+  ف: 'فاء',
+  ق: 'قاف',
+  ك: 'كاف',
+  ل: 'لام',
+  م: 'ميم',
+  ن: 'نون',
+  ه: 'هاء',
+  و: 'واو',
+  ي: 'ياء',
+}
+
+export const spell = (word: string): readonly string[] =>
+  Array.from(word)
+    .map((letter) => ARABIC_LETTER_NAMES[letter as keyof typeof ARABIC_LETTER_NAMES])
+    .filter((name): name is string => name != null)

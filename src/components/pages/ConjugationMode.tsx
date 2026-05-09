@@ -6,7 +6,7 @@ import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
-import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { applyDiacriticsPreference, spell } from '../../paradigms/letters'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
@@ -47,43 +47,6 @@ const formIVowelPattern = (verb: DisplayVerb<1>) => {
   const present = formIPresentVowel(verb)
   return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
-
-const ARABIC_LETTER_NAMES = {
-  ء: 'همزة',
-  ب: 'باء',
-  ت: 'تاء',
-  ث: 'ثاء',
-  ج: 'جيم',
-  ح: 'حاء',
-  خ: 'خاء',
-  د: 'دال',
-  ذ: 'ذال',
-  ر: 'راء',
-  ز: 'زاي',
-  س: 'سين',
-  ش: 'شين',
-  ص: 'صاد',
-  ض: 'ضاد',
-  ط: 'طاء',
-  ظ: 'ظاء',
-  ع: 'عين',
-  غ: 'غين',
-  ف: 'فاء',
-  ق: 'قاف',
-  ك: 'كاف',
-  ل: 'لام',
-  م: 'ميم',
-  ن: 'نون',
-  ه: 'هاء',
-  و: 'واو',
-  ي: 'ياء',
-} as const
-
-const spellArabicRootLetters = (root: string): string =>
-  Array.from(root)
-    .map((letter) => ARABIC_LETTER_NAMES[letter as keyof typeof ARABIC_LETTER_NAMES])
-    .filter(Boolean)
-    .join(' ،')
 
 interface ConjugationModeProps {
   verbId: string
@@ -313,7 +276,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
               label={t('meta.root')}
               labelLang={lang}
               labelDir={dir}
-              speechText={spellArabicRootLetters(selectedVerb.root)}
+              speechText={spell(selectedVerb.root).join(' ،')}
               onInsightsClick={() => setOpenModal('root')}
               insightsLabel={t('rootInfo.open')}
               insightsOpen={openModal === 'root'}

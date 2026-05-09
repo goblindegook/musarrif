@@ -1,7 +1,7 @@
 import { css, styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import type { DimensionProfile } from '../../exercises/dimensions'
-import { formPool } from '../../exercises/dimensions'
+import { formPool, pronounPool, rootTypesPool, tensePool } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
@@ -21,15 +21,18 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
+import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbForm } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
 import { ExerciseAnswerArea } from '../molecules/ExerciseAnswerArea'
-import { FocusChip } from '../molecules/FocusChip'
+import { OptionChip, type OptionGroup, type OptionValue } from '../molecules/OptionChip'
 import { ShortcutButton } from '../molecules/ShortcutButton'
+import { SpeechButton } from '../molecules/SpeechButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
+import { spell } from '../../paradigms/letters'
 
 type Props = {
   generateExercise?: (
@@ -40,15 +43,31 @@ type Props = {
   ) => Exercise
 }
 
+const PRONOUN_ABBREVIATION_LABELS: Record<PronounId, string> = {
+  '1s': 'pronoun.1st.singular',
+  '1p': 'pronoun.1st.plural',
+  '2ms': 'pronoun.2nd.singular.masculine',
+  '2fs': 'pronoun.2nd.singular.feminine',
+  '2d': 'pronoun.2nd.dual',
+  '2mp': 'pronoun.2nd.plural.masculine',
+  '2fp': 'pronoun.2nd.plural.feminine',
+  '3ms': 'pronoun.3rd.singular.masculine',
+  '3fs': 'pronoun.3rd.singular.feminine',
+  '3md': 'pronoun.3rd.dual.masculine',
+  '3fd': 'pronoun.3rd.dual.feminine',
+  '3mp': 'pronoun.3rd.plural.masculine',
+  '3fp': 'pronoun.3rd.plural.feminine',
+}
+
 export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { dir, lang, t } = useI18n()
   const [dimensionProfile, dimensionChanges, recordDimensionAnswer, clearDimensionChanges] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const sessionRef = useRef<ExerciseSession>({ reviews: 0, lastNewAt: -3 })
-  const [pinnedForm, setPinnedForm] = useState<VerbForm | null>(null)
+  const [activeFocus, setActiveFocus] = useState<ExerciseFocus>({})
   const [isFocusPickerOpen, setIsFocusPickerOpen] = useState(false)
   const [exercise, setExercise] = useState<Exercise>(() =>
-    generateExercise(dimensionProfile, srsStore, sessionRef.current, { form: pinnedForm }),
+    generateExercise(dimensionProfile, srsStore, sessionRef.current, {}),
   )
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
@@ -64,15 +83,81 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     },
     [setRawStats],
   )
+  const focusGroups = useMemo((): readonly OptionGroup[] => {
+    const groups: OptionGroup[] = []
+    const forms = formPool(dimensionProfile.forms)
+    if (forms.length >= 2)
+      groups.push({
+        key: 'form',
+        label: t('exercise.focus.form.label'),
+        options: forms.map((f) => ({ value: f, label: t(`exercise.unlock.form.${f}`), ariaLabel: toRoman(f) })),
+        pickerTitle: t('exercise.focus.selectForm'),
+      })
+    const tenses = tensePool(dimensionProfile.tenses)
+    if (tenses.length >= 2)
+      groups.push({
+        key: 'tense',
+        label: t('exercise.focus.tense.label'),
+        options: tenses.map((tense) => ({ value: tense, label: t(`tense.${tense}`) })),
+        pickerTitle: t('exercise.focus.tense.pickerTitle'),
+      })
+    const rootTypes = rootTypesPool(dimensionProfile.rootTypes)
+    if (rootTypes.length >= 2)
+      groups.push({
+        key: 'rootType',
+        label: t('exercise.focus.rootType.label'),
+        options: rootTypes.map((rt) => ({ value: rt, label: t(`exercise.stats.mastery.rootType.${rt}`) })),
+        pickerTitle: t('exercise.focus.rootType.pickerTitle'),
+      })
+    const pronouns = pronounPool(dimensionProfile.pronouns)
+    if (pronouns.length >= 2)
+      groups.push({
+        key: 'pronoun',
+        label: t('exercise.focus.pronoun.label'),
+        options: pronouns.map((p) => ({ value: p, label: t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]) })),
+        pickerTitle: t('exercise.focus.pronoun.pickerTitle'),
+      })
+    return groups
+  }, [dimensionProfile, t])
+
+  const focusOptionValue = useMemo((): OptionValue | null => {
+    if (activeFocus.form) return { groupKey: 'form', value: activeFocus.form }
+    if (activeFocus.tense) return { groupKey: 'tense', value: activeFocus.tense }
+    if (activeFocus.rootType) return { groupKey: 'rootType', value: activeFocus.rootType }
+    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: activeFocus.pronoun }
+    return null
+  }, [activeFocus])
+
+  const handleFocusChange = useCallback((optionValue: OptionValue | null) => {
+    if (optionValue == null) {
+      setActiveFocus({})
+      return
+    }
+    switch (optionValue.groupKey) {
+      case 'form':
+        setActiveFocus({ form: optionValue.value as VerbForm })
+        break
+      case 'tense':
+        setActiveFocus({ tense: optionValue.value as ExerciseFocus['tense'] })
+        break
+      case 'rootType':
+        setActiveFocus({ rootType: optionValue.value as ExerciseFocus['rootType'] })
+        break
+      case 'pronoun':
+        setActiveFocus({ pronoun: optionValue.value as PronounId })
+        break
+    }
+  }, [])
+
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
-      setExercise(generateExercise(profile, srsStore, sessionRef.current, { form: pinnedForm }))
+      setExercise(generateExercise(profile, srsStore, sessionRef.current, activeFocus))
       setAnsweredIndex(null)
       setSkipped(false)
       clearDimensionChanges()
       setStreakExtendedAlert(false)
     },
-    [generateExercise, srsStore, clearDimensionChanges, pinnedForm],
+    [generateExercise, srsStore, clearDimensionChanges, activeFocus],
   )
 
   const isAnswered = answeredIndex !== null || skipped
@@ -123,20 +208,25 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   return (
     <ExerciseLayout>
       <ExerciseCard>
-        <FocusChip
-          options={formPool(dimensionProfile.forms).map((form) => ({
-            label: t(`exercise.unlock.form.${form}`),
-            ariaLabel: toRoman(form),
-            value: form,
-          }))}
-          value={pinnedForm}
-          onChange={(v) => setPinnedForm(v as VerbForm | null)}
-          onOpenChange={setIsFocusPickerOpen}
-          label={t('exercise.focus.label')}
-          clearLabel={t('exercise.focus.clear')}
-          pickerTitle={t('exercise.focus.selectForm')}
-          hint={t('exercise.focus.mixedHint')}
-        />
+        <ExerciseTopRow>
+          <OptionChip
+            groups={focusGroups}
+            value={focusOptionValue}
+            onChange={handleFocusChange}
+            onOpenChange={setIsFocusPickerOpen}
+            icon="◎"
+            label={t('exercise.focus.label')}
+            clearLabel={t('exercise.focus.clear')}
+            backLabel={t('exercise.focus.back')}
+            pickerTitle={t('exercise.focus.label')}
+            hint={t('exercise.focus.mixedHint')}
+          />
+          <SpeechButton
+            text={exercise.kind === 'rootFormVerb' ? spell(exercise.word).join(' ،') : exercise.word}
+            lang="ar"
+            ariaLabel={t('aria.speak', { text: exercise.word })}
+          />
+        </ExerciseTopRow>
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
@@ -252,6 +342,19 @@ const ExerciseCard = styled('div')`
 
   @media (min-width: 480px) {
     padding: 1rem 1.25rem;
+  }
+`
+
+const ExerciseTopRow = styled('div')`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  > :first-child {
+    flex: 1;
+    min-width: 0;
   }
 `
 

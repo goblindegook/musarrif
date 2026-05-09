@@ -1,3 +1,5 @@
+import type { PronounId } from '../paradigms/pronouns.ts'
+import type { VerbTense } from '../paradigms/tense.ts'
 import type { VerbForm } from '../paradigms/verbs.ts'
 import { verbs } from '../paradigms/verbs.ts'
 import { utcToday } from '../primitives/dates.ts'
@@ -20,6 +22,13 @@ import { verbTenseExercise } from './generators/verb-tense.ts'
 import type { SrsStore } from './srs.ts'
 import { cardSrsWeight, getSrsRootType, parseCardKey, type SrsRootType, weightedRandomSrs } from './srs.ts'
 
+export interface ExerciseFocus {
+  form?: VerbForm | null
+  tense?: VerbTense | null
+  rootType?: SrsRootType | null
+  pronoun?: PronounId | null
+}
+
 const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
   conjugationExercise,
   masdarFormExercise,
@@ -40,10 +49,6 @@ const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
 export interface ExerciseSession {
   reviews: number
   lastNewAt: number
-}
-
-export interface ExerciseFocus {
-  form?: VerbForm | null
 }
 
 export function isCoveredTriple(cardKey: string, srsStore: SrsStore): boolean {
@@ -90,7 +95,7 @@ export function nextExercise(
   const availablePronouns = pronounPool(profile.pronouns)
   const today = utcToday()
 
-  const activeFocusForm = Math.random() < 0.75 ? focus.form : undefined
+  const activeFocus = Math.random() < 0.75 ? focus : {}
 
   const dueKeys = Object.entries(srsStore)
     .filter(([key, { dueDate }]) => {
@@ -101,15 +106,18 @@ export function nextExercise(
       if (form != null && !availableForms.includes(form)) return false
       if (tense != null && !availableTenses.includes(tense)) return false
       if (pronoun != null && !availablePronouns.includes(pronoun)) return false
-      // FIXME: Why filter when we can pass the active form focus in the generator constraints object?
-      if (activeFocusForm != null && form !== activeFocusForm) return false
+      if (activeFocus.form != null && form !== activeFocus.form) return false
+      if (activeFocus.tense != null && tense != null && tense !== activeFocus.tense) return false
+      if (activeFocus.rootType != null && rootType !== activeFocus.rootType) return false
+      if (activeFocus.pronoun != null && pronoun != null && pronoun !== activeFocus.pronoun) return false
       return true
     })
     .map(([key]) => key)
 
-  // FIXME: Why filter when we can pass the active form focus in the generator constraints object?
   const uncovered = uncoveredTriples(profile, srsStore, available).filter(
-    (t) => activeFocusForm == null || t.form === activeFocusForm,
+    (t) =>
+      (activeFocus.form == null || t.form === activeFocus.form) &&
+      (activeFocus.rootType == null || t.rootType === activeFocus.rootType),
   )
   const shouldIntroduceNew = uncovered.length > 0 && (dueKeys.length === 0 || session.reviews - session.lastNewAt >= 3)
 

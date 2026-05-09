@@ -45,7 +45,7 @@ const StyledSelectableButton = styled('button')<{
   letter-spacing: 0.08em;
   min-height: ${({ size }) => (size === 'compact' ? '2.2rem' : '2.4rem')};
   min-width: 0;
-  padding: ${({ size }) => (size === 'compact' ? '0.35rem 0.3rem' : '0.4rem 0.75rem')};
+  padding: ${({ size }) => (size === 'compact' ? '0.35rem 0.5rem' : '0.4rem 0.75rem')};
   text-align: center;
   text-transform: uppercase;
   gap: 0.5rem;
