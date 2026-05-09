@@ -21,6 +21,7 @@ import { useI18n } from '../../hooks/useI18n'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
+import { spell } from '../../paradigms/letters'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbForm } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
@@ -32,7 +33,6 @@ import { OptionChip, type OptionGroup, type OptionValue } from '../molecules/Opt
 import { ShortcutButton } from '../molecules/ShortcutButton'
 import { SpeechButton } from '../molecules/SpeechButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
-import { spell } from '../../paradigms/letters'
 
 type Props = {
   generateExercise?: (
