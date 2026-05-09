@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import { afterEach, expect, test, vi } from 'vitest'
 import { OptionChip } from './OptionChip'
 
@@ -147,4 +147,70 @@ test('shows hint text when picker is open', () => {
 test('icon is rendered from prop', () => {
   render(<OptionChip groups={[groupA]} value={null} onChange={() => {}} {...defaultProps} icon="★" />)
   expect(screen.getByText('★')).toBeInTheDocument()
+})
+
+test('renders glyph after option label when item has glyph', () => {
+  const groupWithGlyph = {
+    ...groupA,
+    options: [
+      { label: 'I', value: 1, glyph: '↓', ariaLabel: 'I, recommended' },
+      { label: 'II', value: 2 },
+      { label: 'III', value: 3 },
+    ],
+  }
+  render(<OptionChip groups={[groupWithGlyph]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  const glyphedButton = screen.getByLabelText('I, recommended')
+  expect(within(glyphedButton).getByText('↓')).toBeInTheDocument()
+  expect(screen.getByText('II', { selector: 'button' })).toBeInTheDocument()
+})
+
+test('uses item ariaLabel for option button when glyph set', () => {
+  const groupWithGlyph = {
+    ...groupA,
+    options: [
+      { label: 'I', value: 1, glyph: '↓', ariaLabel: 'Form I, recommended' },
+      { label: 'II', value: 2 },
+    ],
+  }
+  render(<OptionChip groups={[groupWithGlyph]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(screen.getByLabelText('Form I, recommended')).toBeInTheDocument()
+})
+
+test('renders glyph after group label in group picker when group has glyph', () => {
+  const groupBWithGlyph = { ...groupB, glyph: '↓', ariaLabel: 'Tense, recommended' }
+  render(<OptionChip groups={[groupA, groupBWithGlyph]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  const glyphedGroup = screen.getByLabelText('Tense, recommended')
+  expect(within(glyphedGroup).getByText('↓')).toBeInTheDocument()
+  expect(screen.getByText('Form', { selector: 'button' })).toBeInTheDocument()
+})
+
+test('uses group ariaLabel for group button when provided', () => {
+  const groupBWithGlyph = { ...groupB, glyph: '↓', ariaLabel: 'Tense, recommended' }
+  render(<OptionChip groups={[groupA, groupBWithGlyph]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(screen.getByLabelText('Tense, recommended')).toBeInTheDocument()
+})
+
+test('shows group hint instead of chip hint in item picker when group has hint', () => {
+  const groupWithHint = { ...groupA, hint: '↓ lowest mastery · Mixed in' }
+  render(<OptionChip groups={[groupWithHint]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(screen.getByText('↓ lowest mastery · Mixed in')).toBeInTheDocument()
+  expect(screen.queryByText(/review cards will be mixed in/i)).not.toBeInTheDocument()
+})
+
+test('falls back to chip hint when group has no hint', () => {
+  render(<OptionChip groups={[groupA]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(screen.getByText(/review cards will be mixed in/i)).toBeInTheDocument()
+})
+
+test('shows chip hint in group picker when multiple groups', () => {
+  const groupBWithHint = { ...groupB, hint: '↓ lowest mastery · Mixed in' }
+  render(<OptionChip groups={[groupA, groupBWithHint]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(screen.getByText(/review cards will be mixed in/i)).toBeInTheDocument()
 })

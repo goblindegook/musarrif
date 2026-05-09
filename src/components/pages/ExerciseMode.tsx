@@ -4,6 +4,7 @@ import type { DimensionProfile } from '../../exercises/dimensions'
 import { formPool, pronounPool, rootTypesPool, tensePool } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
+import { computeMastery, findLowestMastery } from '../../exercises/mastery'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats, SerializedDayStats } from '../../exercises/stats'
@@ -83,41 +84,92 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     [setRawStats],
   )
   const focusGroups = useMemo((): readonly OptionGroup[] => {
+    const snapshot = computeMastery(dimensionProfile, srsStore)
+    const recommended = findLowestMastery(snapshot.categories)
+    const recommendedLabel = t('exercise.focus.recommended')
+
+    const withGlyph = (label: string, id: string, ariaLabel?: string) =>
+      recommended.includes(id) ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') } : {}
+
+    const groupMeta = (_key: string, label: string, options: readonly { value: string | number }[]) => {
+      return options.some((o) => recommended.includes(String(o.value)))
+        ? {
+            glyph: '↓' as const,
+            ariaLabel: [label, recommendedLabel].join(', '),
+            hint: `${t('exercise.focus.recommendHint')} · ${t('exercise.focus.mixedHint')}`,
+          }
+        : {}
+    }
+
     const groups: OptionGroup[] = []
+
     const forms = formPool(dimensionProfile.forms)
-    if (forms.length >= 2)
+    if (forms.length >= 2) {
+      const options = forms.map((f) => ({
+        value: f,
+        label: t(`exercise.unlock.form.${f}`),
+        ariaLabel: toRoman(f),
+        ...withGlyph(toRoman(f), String(f), toRoman(f)),
+      }))
       groups.push({
         key: 'form',
         label: t('exercise.focus.form.label'),
-        options: forms.map((f) => ({ value: f, label: t(`exercise.unlock.form.${f}`), ariaLabel: toRoman(f) })),
+        options,
         pickerTitle: t('exercise.focus.selectForm'),
+        ...groupMeta('form', t('exercise.focus.form.label'), options),
       })
+    }
+
     const tenses = tensePool(dimensionProfile.tenses)
-    if (tenses.length >= 2)
+    if (tenses.length >= 2) {
+      const options = tenses.map((tense) => ({
+        value: tense,
+        label: t(`tense.${tense}`),
+        ...withGlyph(t(`tense.${tense}`), tense),
+      }))
       groups.push({
         key: 'tense',
         label: t('exercise.focus.tense.label'),
-        options: tenses.map((tense) => ({ value: tense, label: t(`tense.${tense}`) })),
+        options,
         pickerTitle: t('exercise.focus.tense.pickerTitle'),
+        ...groupMeta('tense', t('exercise.focus.tense.label'), options),
       })
+    }
+
     const rootTypes = rootTypesPool(dimensionProfile.rootTypes)
-    if (rootTypes.length >= 2)
+    if (rootTypes.length >= 2) {
+      const options = rootTypes.map((rt) => ({
+        value: rt,
+        label: t(`exercise.stats.mastery.rootType.${rt}`),
+        ...withGlyph(t(`exercise.stats.mastery.rootType.${rt}`), rt),
+      }))
       groups.push({
         key: 'rootType',
         label: t('exercise.focus.rootType.label'),
-        options: rootTypes.map((rt) => ({ value: rt, label: t(`exercise.stats.mastery.rootType.${rt}`) })),
+        options,
         pickerTitle: t('exercise.focus.rootType.pickerTitle'),
+        ...groupMeta('rootType', t('exercise.focus.rootType.label'), options),
       })
+    }
+
     const pronouns = pronounPool(dimensionProfile.pronouns)
-    if (pronouns.length >= 2)
+    if (pronouns.length >= 2) {
+      const options = pronouns.map((p) => ({
+        value: p,
+        label: t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]),
+        ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]), p),
+      }))
       groups.push({
         key: 'pronoun',
         label: t('exercise.focus.pronoun.label'),
-        options: pronouns.map((p) => ({ value: p, label: t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]) })),
+        options,
         pickerTitle: t('exercise.focus.pronoun.pickerTitle'),
+        ...groupMeta('pronoun', t('exercise.focus.pronoun.label'), options),
       })
+    }
+
     return groups
-  }, [dimensionProfile, t])
+  }, [dimensionProfile, srsStore, t])
 
   const focusOptionValue = useMemo((): OptionValue | null => {
     if (activeFocus.form) return { groupKey: 'form', value: activeFocus.form }

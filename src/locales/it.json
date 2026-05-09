@@ -83,6 +83,8 @@
     "exercise.focus.label": "Focalizza",
     "exercise.focus.pickerTitle": "Esercita per",
     "exercise.focus.mixedHint": "Alcuni esercizi di ripasso saranno inclusi.",
+    "exercise.focus.recommendHint": "↓ padronanza più bassa",
+    "exercise.focus.recommended": "consigliato",
     "exercise.focus.pronoun.label": "Pronome",
     "exercise.focus.pronoun.pickerTitle": "Seleziona pronome",
     "exercise.focus.rootType.label": "Tipo di radice",

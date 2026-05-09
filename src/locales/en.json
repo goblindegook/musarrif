@@ -83,6 +83,8 @@
     "exercise.focus.label": "Focus",
     "exercise.focus.pickerTitle": "Drill by",
     "exercise.focus.mixedHint": "Some review exercises will be mixed in.",
+    "exercise.focus.recommendHint": "↓ lowest mastery",
+    "exercise.focus.recommended": "recommended",
     "exercise.focus.pronoun.label": "Pronoun",
     "exercise.focus.pronoun.pickerTitle": "Select pronoun",
     "exercise.focus.rootType.label": "Root type",

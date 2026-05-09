@@ -250,3 +250,20 @@ function combinationGroupKey(card: SrsCardIdentity): string {
 function buildCategory(id: MasteryCategoryId, items: readonly MasteryItem[]): MasteryCategory {
   return { id, items, score: average(items.map((item) => item.score)), locked: items.every((item) => item.locked) }
 }
+
+// FIXME: filter categories before calling
+export function findLowestMastery(categories: readonly MasteryCategory[], limit = 5): readonly string[] {
+  const unlocked = categories
+    .filter((cat) => ['rootTypes', 'forms', 'tenses', 'pronouns'].includes(cat.id))
+    .flatMap((cat) => cat.items.filter((item) => !item.locked))
+
+  if (unlocked.length === 0) return []
+
+  const sorted = unlocked.toSorted((a, b) => a.score - b.score)
+  const threshold = sorted[Math.min(2, sorted.length - 1)].score
+
+  return sorted
+    .slice(0, limit)
+    .filter((item) => item.score <= threshold)
+    .map((item) => item.id)
+}

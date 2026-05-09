@@ -1,7 +1,25 @@
 import { describe, expect, test } from 'vitest'
 import type { DimensionProfile } from './dimensions'
-import { computeMastery } from './mastery'
+import { computeMastery, findLowestMastery, type MasteryCategory } from './mastery'
 import { buildCardKey, type SrsStore } from './srs'
+
+function testMasteryCategories(items: {
+  rootTypes?: Array<{ id: string; score: number; locked?: boolean }>
+  forms?: Array<{ id: string; score: number; locked?: boolean }>
+  tenses?: Array<{ id: string; score: number; locked?: boolean }>
+  pronouns?: Array<{ id: string; score: number; locked?: boolean }>
+  nominals?: Array<{ id: string; score: number; locked?: boolean }>
+}): readonly MasteryCategory[] {
+  const toItems = (arr: Array<{ id: string; score: number; locked?: boolean }> = []) =>
+    arr.map(({ id, score, locked = false }) => ({ id, score, locked }))
+  return [
+    { id: 'rootTypes', score: 0, locked: false, items: toItems(items.rootTypes) },
+    { id: 'forms', score: 0, locked: false, items: toItems(items.forms) },
+    { id: 'tenses', score: 0, locked: false, items: toItems(items.tenses) },
+    { id: 'pronouns', score: 0, locked: false, items: toItems(items.pronouns) },
+    { id: 'nominals', score: 0, locked: false, items: toItems(items.nominals) },
+  ]
+}
 
 function getCategory(snapshot: ReturnType<typeof computeMastery>, categoryId: string) {
   return snapshot.categories.find((entry) => entry.id === categoryId)!
@@ -123,5 +141,126 @@ describe('buildMasterySnapshot', () => {
     const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const activePast = getItem(getCategory(snapshot, 'tenses'), 'active.past').score
     expect(activePast).toBeLessThan(0.2)
+  })
+})
+
+describe('find lowest mastery', () => {
+  test('returns empty set when no unlocked items', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [{ id: 'sound', score: 0, locked: true }],
+    })
+    expect(findLowestMastery(categories)).toHaveLength(0)
+  })
+
+  test('returns the single lowest-score item when only one unlocked item', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [{ id: 'sound', score: 0.4 }],
+    })
+    expect(findLowestMastery(categories)).toEqual(['sound'])
+  })
+
+  test('returns bottom 3 items by score across all categories', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [
+        { id: 'sound', score: 0.1 },
+        { id: 'doubled', score: 0.5 },
+      ],
+      forms: [
+        { id: '1', score: 0.2 },
+        { id: '2', score: 0.8 },
+      ],
+      tenses: [{ id: 'active.past', score: 0.3 }],
+    })
+    expect(findLowestMastery(categories)).toEqual(['sound', '1', 'active.past'])
+  })
+
+  test('includes ties at rank-3 boundary', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [
+        { id: 'sound', score: 0.1 },
+        { id: 'doubled', score: 0.2 },
+      ],
+      forms: [{ id: '1', score: 0.2 }],
+      tenses: [
+        { id: 'active.past', score: 0.2 },
+        { id: 'active.present.indicative', score: 0.5 },
+      ],
+    })
+    expect(findLowestMastery(categories)).toEqual(['sound', 'doubled', '1', 'active.past'])
+  })
+
+  test('caps result at 5 items even when more ties exist', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [
+        { id: 'sound', score: 0 },
+        { id: 'doubled', score: 0 },
+        { id: 'hamzated', score: 0 },
+        { id: 'assimilated', score: 0 },
+        { id: 'hollow', score: 0 },
+        { id: 'defective', score: 0 },
+      ],
+    })
+    expect(findLowestMastery(categories)).toHaveLength(5)
+  })
+
+  test('cap preserves natural category iteration order (rootTypes → forms → tenses → pronouns)', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [
+        { id: 'sound', score: 0 },
+        { id: 'doubled', score: 0 },
+        { id: 'hamzated', score: 0 },
+      ],
+      forms: [
+        { id: '1', score: 0 },
+        { id: '2', score: 0 },
+        { id: '3', score: 0 },
+      ],
+    })
+
+    expect(findLowestMastery(categories)).toEqual(['sound', 'doubled', 'hamzated', '1', '2'])
+  })
+
+  test('excludes nominals items even when unlocked and low-scored', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [{ id: 'sound', score: 0.5 }],
+      nominals: [
+        { id: 'participles', score: 0 },
+        { id: 'masdar', score: 0 },
+      ],
+    })
+    expect(findLowestMastery(categories)).toEqual(['sound'])
+  })
+
+  test('excludes locked items from recommendation', () => {
+    const categories = testMasteryCategories({
+      rootTypes: [{ id: 'sound', score: 0.8 }],
+      forms: [
+        { id: '1', score: 0, locked: true },
+        { id: '2', score: 0, locked: true },
+      ],
+    })
+    expect(findLowestMastery(categories)).toEqual(['sound'])
+  })
+
+  test('handles all-zero scores by returning first 5 in natural order', () => {
+    const categories = testMasteryCategories({
+      tenses: [
+        { id: 'active.past', score: 0 },
+        { id: 'active.present.indicative', score: 0 },
+        { id: 'active.present.subjunctive', score: 0 },
+      ],
+      pronouns: [
+        { id: '1s', score: 0 },
+        { id: '2ms', score: 0 },
+        { id: '3ms', score: 0 },
+      ],
+    })
+    expect(findLowestMastery(categories)).toEqual([
+      'active.past',
+      'active.present.indicative',
+      'active.present.subjunctive',
+      '1s',
+      '2ms',
+    ])
   })
 })

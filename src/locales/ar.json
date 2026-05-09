@@ -45,6 +45,8 @@
     "exercise.focus.label": "تركيز",
     "exercise.focus.pickerTitle": "تدرّب حسب",
     "exercise.focus.mixedHint": "سيتم تضمين بعض تمارين المراجعة.",
+    "exercise.focus.recommendHint": "↓ أقل إتقاناً",
+    "exercise.focus.recommended": "موصى به",
     "exercise.focus.pronoun.label": "الضمير",
     "exercise.focus.pronoun.pickerTitle": "اختر الضمير",
     "exercise.focus.rootType.label": "نوع الجذر",

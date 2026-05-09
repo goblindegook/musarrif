@@ -9,6 +9,7 @@ export type OptionItem = {
   label: string
   value: string | number
   ariaLabel?: string
+  glyph?: string
 }
 
 export type OptionGroup = {
@@ -16,6 +17,9 @@ export type OptionGroup = {
   label: string
   options: readonly OptionItem[]
   pickerTitle: string
+  glyph?: string
+  ariaLabel?: string
+  hint?: string
 }
 
 export type OptionValue = {
@@ -200,11 +204,13 @@ export function OptionChip({
                 <SelectableButton
                   key={g.key}
                   type="button"
+                  aria-label={g.ariaLabel}
                   active={false}
                   size="compact"
                   onClick={() => handleGroupSelect(g.key)}
                 >
                   {g.label}
+                  {g.glyph != null && <OptionGlyph aria-hidden="true">{g.glyph}</OptionGlyph>}
                 </SelectableButton>
               ))}
             </FormGrid>
@@ -231,10 +237,11 @@ export function OptionChip({
                   onClick={() => handleSelect(pickerGroup.key, opt.value)}
                 >
                   {opt.label}
+                  {opt.glyph != null && <OptionGlyph aria-hidden="true">{opt.glyph}</OptionGlyph>}
                 </SelectableButton>
               ))}
             </FormGrid>
-            <PanelHint>{hint}</PanelHint>
+            <PanelHint>{pickerGroup.hint ?? hint}</PanelHint>
           </>
         ) : null}
       </Popover>
@@ -484,4 +491,10 @@ const ChipLabel = styled('span')`
 const ChipIcon = styled('span')`
   line-height: 1;
   color: var(--color-text-tertiary);
+`
+
+const OptionGlyph = styled('span')`
+  margin-inline-start: 0.1rem;
+  color: var(--color-error-text);
+  font-size: 0.85em;
 `
