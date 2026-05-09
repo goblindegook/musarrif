@@ -8,12 +8,20 @@ interface SelectableButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
   children: ComponentChildren
 
   size?: SelectableButtonSize
+  badge?: string | number
 }
 
-export function SelectableButton({ active = false, children, size = 'normal', ...props }: SelectableButtonProps) {
+export function SelectableButton({
+  active = false,
+  children,
+  size = 'normal',
+  badge,
+  ...props
+}: SelectableButtonProps) {
   return (
     <StyledSelectableButton {...props} active={active} size={size} type="button">
       {children}
+      {badge != null && <Badge>{badge}</Badge>}
     </StyledSelectableButton>
   )
 }
@@ -40,6 +48,7 @@ const StyledSelectableButton = styled('button')<{
   padding: ${({ size }) => (size === 'compact' ? '0.35rem 0.3rem' : '0.4rem 0.75rem')};
   text-align: center;
   text-transform: uppercase;
+  gap: 0.5rem;
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -67,4 +76,11 @@ const StyledSelectableButton = styled('button')<{
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+`
+
+const Badge = styled('span')`
+  background: var(--color-accent);
+  color: var(--color-streak-bg);
+  border-radius: 0.4rem;
+  padding: 0 0.25rem;
 `

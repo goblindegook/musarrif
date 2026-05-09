@@ -119,10 +119,10 @@ test('allows deselecting a form filter back to unfiltered verbs', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-  await user.click(screen.getByRole('button', { name: 'II' }))
-  expect(screen.queryByText('آلَ')).toBeNull()
+  await user.click(screen.getByText('II', { selector: 'button' }))
+  expect(screen.queryByText('آلَ')).not.toBeInTheDocument()
 
-  await user.click(screen.getByRole('button', { name: 'II' }))
+  await user.click(screen.getByText('II', { selector: 'button' }))
   expect(screen.getByText('آلَ')).toBeInTheDocument()
   expect(
     document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
@@ -138,14 +138,14 @@ test('allows deselecting kāna filter back to unfiltered verbs', async () => {
 
   await user.click(screen.getByText('Kāna and her sisters'))
   expect(screen.getByText('اِتَّخَذَ')).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: 'Kāna and her sisters' })).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByText('Kāna and her sisters', { selector: 'button' })).toHaveAttribute('aria-pressed', 'false')
 })
 
 test('allows combining form and kāna filters', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-  await user.click(screen.getByRole('button', { name: 'IV' }))
+  await user.click(screen.getByText('IV', { selector: 'button' }))
   await user.click(screen.getByText('Kāna and her sisters'))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')

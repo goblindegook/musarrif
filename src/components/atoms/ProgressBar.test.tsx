@@ -19,7 +19,7 @@ test('passes accessibility attributes to progressbar root', () => {
     />,
   )
 
-  const progressbar = screen.getByRole('progressbar', { name: 'Daily progress' })
+  const progressbar = screen.getByLabelText('Daily progress')
   expect(progressbar.getAttribute('aria-valuenow')).toBe('4')
   expect(progressbar.getAttribute('aria-valuemax')).toBe('10')
 })

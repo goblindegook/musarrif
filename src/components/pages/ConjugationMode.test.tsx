@@ -46,8 +46,7 @@ test.each([
 
 test('shows translation subtitle for corpus verb with known translation', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
-  const heading = screen.getAllByRole('heading', { level: 2 })[0]
-  const titleGroup = heading.parentElement!
+  const titleGroup = document.querySelector('h2')!.parentElement!
   expect(within(titleGroup).getByText('to write')).toBeInTheDocument()
 })
 

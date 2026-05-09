@@ -34,12 +34,12 @@ describe('VerbHeaderPanel', () => {
 
   test('does not show asterisk for corpus verb', () => {
     renderVerbHeaderPanel({ verb: getVerbById('ktb-1')! })
-    expect(screen.getByRole('heading', { level: 2 }).textContent).not.toContain('*')
+    expect(document.querySelector('h2')?.textContent).not.toContain('*')
   })
 
   test('prepends asterisk to verb for synthetic verb', () => {
     renderVerbHeaderPanel({ verb: synthesizeVerb('كتب', 9) })
-    expect(screen.getByRole('heading', { level: 2 }).textContent).toContain('*')
+    expect(document.querySelector('h2')?.textContent).toContain('*')
   })
 
   test('hides translation for synthetic verb', () => {

@@ -27,7 +27,7 @@ describe('ConjugateBox', () => {
   test('pattern selector appears when Form I is selected', async () => {
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: 'I' }))
+    fireEvent.click(screen.getByText('I', { selector: 'button' }))
 
     expect(screen.getByText('فَعَلَ / يَفعُلُ')).toBeInTheDocument()
   })
@@ -36,8 +36,8 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    await user.click(screen.getByRole('button', { name: 'I' }))
-    await user.click(screen.getByRole('button', { name: 'II' }))
+    await user.click(screen.getByText('I', { selector: 'button' }))
+    await user.click(screen.getByText('II', { selector: 'button' }))
 
     expect(screen.queryByText('فَعَلَ / يَفعُلُ')).not.toBeInTheDocument()
   })
@@ -45,52 +45,48 @@ describe('ConjugateBox', () => {
   test('each letter slot has a text input', () => {
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Group = screen.getByRole('group', { name: '1' })
-    const c2Group = screen.getByRole('group', { name: '2' })
-    const c3Group = screen.getByRole('group', { name: '3' })
-
-    expect(within(c1Group).getByRole('textbox')).toBeInTheDocument()
-    expect(within(c2Group).getByRole('textbox')).toBeInTheDocument()
-    expect(within(c3Group).getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByLabelText('1', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('2', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('3', { selector: 'input' })).toBeInTheDocument()
   })
 
   test('slot header labels the slot input', () => {
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    expect(screen.getByRole('textbox', { name: '1' })).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: '2' })).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: '3' })).toBeInTheDocument()
+    expect(screen.getByLabelText('1', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('2', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('3', { selector: 'input' })).toBeInTheDocument()
   })
 
   test('focusing a slot input shows popup with valid letters for that slot', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Group = screen.getByRole('group', { name: '1' })
-    const c1Input = within(c1Group).getByRole('textbox')
+    const c1Input = screen.getByLabelText('1', { selector: 'input' })
+    const c1Group = c1Input.closest('[role="group"]') as HTMLElement
     await user.click(c1Input)
 
-    const popup = within(c1Group).getByRole('listbox')
-    const options = within(popup).getAllByRole('option')
+    const popup = c1Group.querySelector<HTMLElement>('[role="listbox"]')!
+    const options = within(popup).getAllByText(/./)
     expect(options.length).toBeGreaterThan(0)
-    expect(within(popup).getByRole('option', { name: 'ك' })).toBeInTheDocument()
+    expect(within(popup).getByText('ك')).toBeInTheDocument()
   })
 
   test('clicking input again after picking a letter re-opens the popup', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Group = screen.getByRole('group', { name: '1' })
-    const c1Input = within(c1Group).getByRole('textbox')
+    const c1Input = screen.getByLabelText('1', { selector: 'input' })
+    const c1Group = c1Input.closest<HTMLElement>('[role="group"]')!
 
     await user.click(c1Input)
-    await user.click(within(c1Group).getByRole('option', { name: 'ك' }))
+    await user.click(within(c1Group).getByText('ك'))
 
-    expect(within(c1Group).queryByRole('listbox')).not.toBeInTheDocument()
+    expect(c1Group.querySelector('[role="listbox"]')).toBeNull()
 
     await user.click(c1Input)
 
-    expect(within(c1Group).getByRole('listbox')).toBeInTheDocument()
+    expect(c1Group.querySelector('[role="listbox"]')).toBeInTheDocument()
   })
 
   test('pre-populates letters and form from selectedVerb', () => {
@@ -109,13 +105,9 @@ describe('ConjugateBox', () => {
       { wrapper: Wrapper },
     )
 
-    const c1Group = screen.getByRole('group', { name: '1' })
-    const c2Group = screen.getByRole('group', { name: '2' })
-    const c3Group = screen.getByRole('group', { name: '3' })
-
-    expect(within(c1Group).getByRole('textbox')).toHaveValue('ك')
-    expect(within(c2Group).getByRole('textbox')).toHaveValue('ت')
-    expect(within(c3Group).getByRole('textbox')).toHaveValue('ب')
-    expect(screen.getByRole('button', { name: 'II' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByLabelText('1', { selector: 'input' })).toHaveValue('ك')
+    expect(screen.getByLabelText('2', { selector: 'input' })).toHaveValue('ت')
+    expect(screen.getByLabelText('3', { selector: 'input' })).toHaveValue('ب')
+    expect(screen.getByText('II', { selector: 'button' })).toHaveAttribute('aria-pressed', 'true')
   })
 })

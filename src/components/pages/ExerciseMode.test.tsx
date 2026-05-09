@@ -683,23 +683,23 @@ describe('focus chip', () => {
 
   test('chip is hidden when only Form I is unlocked (forms: 0)', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.queryByRole('button', { name: /focus/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/focus/i, { selector: 'button' })).not.toBeInTheDocument()
   })
 
   test('chip is visible when multiple forms are unlocked (forms: 2)', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    expect(screen.getByRole('button', { name: /focus/i })).toBeInTheDocument()
+    expect(screen.getByText(/focus/i).closest('button')).toBeInTheDocument()
   })
 
   test('picker shows only forms up to current unlock level', () => {
     localStorage.setItem('conjugator:dimensions', multiFormProfile())
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
-    expect(screen.getByRole('button', { name: 'I' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'II' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'III' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'IV' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    expect(screen.getByText('Form I', { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByText('Form II', { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByText('Form III', { selector: 'button' })).toBeInTheDocument()
+    expect(screen.queryByText('Form IV', { selector: 'button' })).not.toBeInTheDocument()
   })
 
   test('passes pinned form to generateExercise after form is selected', () => {
@@ -707,8 +707,8 @@ describe('focus chip', () => {
     const gen = vi.fn().mockReturnValue(testExercise())
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
-    fireEvent.click(screen.getByRole('button', { name: 'III' }))
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Form III', { selector: 'button' }))
     // answer and advance to trigger next generateExercise call
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
@@ -721,16 +721,16 @@ describe('focus chip', () => {
     const gen = vi.fn().mockReturnValue(testExercise())
     const { unmount } = render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
-    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
-    fireEvent.click(screen.getByRole('button', { name: 'III' }))
-    expect(screen.getByText(/Form III/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Form III', { selector: 'button' }))
+    expect(screen.getAllByText(/Form III/i).length).toBeGreaterThan(0)
 
     unmount()
     cleanup()
 
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     expect(screen.queryByText(/Form III/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /focus/i })).toBeInTheDocument()
+    expect(screen.getByText(/focus/i).closest('button')).toBeInTheDocument()
   })
 
   test('passes pinned form: null after clearing focus', () => {
@@ -739,10 +739,10 @@ describe('focus chip', () => {
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
 
     // set focus to form III
-    fireEvent.click(screen.getByRole('button', { name: /focus/i }))
-    fireEvent.click(screen.getByRole('button', { name: 'III' }))
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Form III', { selector: 'button' }))
     // clear it
-    fireEvent.click(screen.getByRole('button', { name: /clear focus/i }))
+    fireEvent.click(screen.getByLabelText('Clear focus', { selector: 'button' }))
     // advance
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))

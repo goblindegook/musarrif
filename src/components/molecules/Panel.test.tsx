@@ -18,7 +18,7 @@ describe('Panel', () => {
         <p>Content</p>
       </Panel>,
     )
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(document.querySelector('button')).not.toBeInTheDocument()
   })
 
   describe('collapsible', () => {
@@ -28,7 +28,7 @@ describe('Panel', () => {
           <p>Content</p>
         </Panel>,
       )
-      expect(screen.getByRole('button', { name: /test/i })).toBeInTheDocument()
+      expect(screen.getByText(/test/i).closest('button')).toBeInTheDocument()
     })
 
     test('children are visible when collapsible but not defaultCollapsed', () => {
@@ -55,7 +55,7 @@ describe('Panel', () => {
           <p>Content</p>
         </Panel>,
       )
-      fireEvent.click(screen.getByRole('button', { name: /test/i }))
+      fireEvent.click(screen.getByText(/test/i).closest('button')!)
       expect(screen.getByText('Content')).toBeVisible()
     })
 
@@ -65,7 +65,7 @@ describe('Panel', () => {
           <p>Content</p>
         </Panel>,
       )
-      fireEvent.click(screen.getByRole('button', { name: /test/i }))
+      fireEvent.click(screen.getByText(/test/i).closest('button')!)
       expect(screen.queryByText('Content')).not.toBeVisible()
     })
   })

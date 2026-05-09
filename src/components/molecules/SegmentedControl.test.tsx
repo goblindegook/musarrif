@@ -22,11 +22,11 @@ it('builds buttons from options and reports selection changes', () => {
     />,
   )
 
-  expect(screen.getByRole('button', { name: 'Easy' })).toHaveAttribute('aria-pressed', 'false')
-  expect(screen.getByRole('button', { name: 'Medium' })).toHaveAttribute('aria-pressed', 'true')
-  expect(screen.getByRole('button', { name: 'Hard' })).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByText('Easy', { selector: 'button' })).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByText('Medium', { selector: 'button' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByText('Hard', { selector: 'button' })).toHaveAttribute('aria-pressed', 'false')
 
-  fireEvent.click(screen.getByRole('button', { name: 'Hard' }))
+  fireEvent.click(screen.getByText('Hard', { selector: 'button' }))
 
   expect(onChange).toHaveBeenCalledWith('hard', 2)
 })
