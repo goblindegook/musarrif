@@ -268,6 +268,22 @@ const ActiveRow = styled('div')`
   border-radius: 999px;
   background: var(--color-bg-accent);
   box-shadow: var(--shadow-interactive-active);
+  animation: chip-activate 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes chip-activate {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 `
 
 const ActiveChip = styled('button')`
@@ -326,6 +342,7 @@ const ClearButton = styled('button')`
 `
 
 const floatPanelClass = css`
+  box-sizing: border-box;
   position: fixed;
   position-anchor: --option-chip;
   top: calc(anchor(bottom) + 7px);
@@ -347,6 +364,24 @@ const floatPanelClass = css`
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
+    animation: panel-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes panel-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:popover-open {
+      animation: none;
+    }
   }
 `
 
@@ -360,6 +395,27 @@ const FormGrid = styled('div')`
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+
+  & > * {
+    animation: option-fade-up 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes option-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    & > * {
+      animation: none;
+    }
+  }
 `
 
 const PanelHint = styled('p')`
