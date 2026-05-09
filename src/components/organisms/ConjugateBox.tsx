@@ -8,6 +8,7 @@ import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import { FORMS, synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { SelectableButton } from '../atoms/SelectableButton'
+import { Subheading } from '../atoms/Subheading'
 
 const LETTERS: readonly string[] = [
   'ء',
@@ -177,7 +178,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
       </RootPicker>
 
       <Section>
-        <SectionLabel>{t('build.formLabel')}</SectionLabel>
+        <Subheading>{t('build.formLabel')}</Subheading>
         <FormGrid>
           {FORMS.map((f) => (
             <SelectableButton
@@ -196,7 +197,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
 
       {form === 1 && (
         <Section>
-          <SectionLabel>{t('build.patternLabel')}</SectionLabel>
+          <Subheading>{t('build.patternLabel')}</Subheading>
           <PatternGrid>
             {FORM_I_PATTERN_OPTIONS.map(([p, l]) => (
               <SelectableButton
@@ -328,14 +329,6 @@ const Section = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-`
-
-const SectionLabel = styled('div')`
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
 `
 
 const FormGrid = styled('div')`

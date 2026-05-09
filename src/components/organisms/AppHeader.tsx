@@ -6,6 +6,7 @@ import { type ThemePreference, useTheme } from '../../hooks/useTheme'
 import { useRouting } from '../../routes'
 import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
+import { Subheading } from '../atoms/Subheading'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
 import { ExerciseIcon } from '../icons/ExerciseIcon'
 import { SettingsIcon } from '../icons/SettingsIcon'
@@ -84,11 +85,11 @@ export const AppHeader = () => {
       <Modal isOpen={isSettingsOpen} title={t('settings.title')} onClose={() => setIsSettingsOpen(false)}>
         <SettingsModalBody>
           <ControlGroup>
-            <ControlLabel>{t('languagePicker.label')}</ControlLabel>
+            <Subheading>{t('languagePicker.label')}</Subheading>
             <LanguagePicker />
           </ControlGroup>
           <ControlGroup>
-            <ControlLabel>{t('diacritics.title')}</ControlLabel>
+            <Subheading>{t('diacritics.title')}</Subheading>
             <SegmentedControl
               fill
               options={DIACRITICS_OPTIONS.map((option) => ({
@@ -102,7 +103,7 @@ export const AppHeader = () => {
             />
           </ControlGroup>
           <ControlGroup>
-            <ControlLabel>{t('theme.title')}</ControlLabel>
+            <Subheading>{t('theme.title')}</Subheading>
             <SegmentedControl
               fill
               options={THEME_OPTIONS.map((option) => ({
@@ -116,7 +117,7 @@ export const AppHeader = () => {
             />
           </ControlGroup>
           <ControlGroup>
-            <ControlLabel>{t('settings.data.title')}</ControlLabel>
+            <Subheading>{t('settings.data.title')}</Subheading>
             <ActionRow>
               <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
               <Button onClick={() => setIsImportWarningOpen(true)}>{t('settings.data.import')}</Button>
@@ -259,15 +260,6 @@ const ControlGroup = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-`
-
-const ControlLabel = styled('span')`
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  padding-inline-start: 0.25rem;
 `
 
 const ActionRow = styled('div')`
