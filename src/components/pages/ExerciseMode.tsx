@@ -209,18 +209,20 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     <ExerciseLayout>
       <ExerciseCard>
         <ExerciseTopRow>
-          <OptionChip
-            groups={focusGroups}
-            value={focusOptionValue}
-            onChange={handleFocusChange}
-            onOpenChange={setIsFocusPickerOpen}
-            icon="◎"
-            label={t('exercise.focus.label')}
-            clearLabel={t('exercise.focus.clear')}
-            backLabel={t('exercise.focus.back')}
-            pickerTitle={t('exercise.focus.label')}
-            hint={t('exercise.focus.mixedHint')}
-          />
+          <FocusChipSlot>
+            <OptionChip
+              groups={focusGroups}
+              value={focusOptionValue}
+              onChange={handleFocusChange}
+              onOpenChange={setIsFocusPickerOpen}
+              icon="◎"
+              label={t('exercise.focus.label')}
+              clearLabel={t('exercise.focus.clear')}
+              backLabel={t('exercise.focus.back')}
+              pickerTitle={t('exercise.focus.label')}
+              hint={t('exercise.focus.mixedHint')}
+            />
+          </FocusChipSlot>
           <SpeechButton
             text={exercise.kind === 'rootFormVerb' ? spell(exercise.word).join(' ،') : exercise.word}
             lang="ar"
@@ -351,11 +353,11 @@ const ExerciseTopRow = styled('div')`
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+`
 
-  > :first-child {
-    flex: 1;
-    min-width: 0;
-  }
+const FocusChipSlot = styled('div')`
+  flex: 1;
+  min-width: 0;
 `
 
 const VerbDisplay = styled('p')`
