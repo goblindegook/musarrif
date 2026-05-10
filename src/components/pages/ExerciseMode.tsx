@@ -23,8 +23,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { useSrsStore } from '../../hooks/useSrsStore'
 import { renderExplanation } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
-import type { VerbForm } from '../../paradigms/verbs'
-import { parseInteger, toRoman } from '../../primitives/numbers'
+import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
@@ -85,15 +84,17 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
   const focusGroups = useMemo((): readonly OptionGroup<MasteryItemId>[] => {
     const snapshot = computeMastery(dimensionProfile, srsStore)
-    const recommended = findLowestMastery(snapshot.categories)
+    const recommended = findLowestMastery(snapshot.categories).map((i) => i.join('.'))
     const recommendedLabel = t('exercise.focus.recommended')
 
-    const withGlyph = (label: string, id: string, ariaLabel?: string) =>
-      recommended.includes(id) ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') } : {}
+    const withGlyph = (label: string, id: MasteryItemId, ariaLabel?: string) =>
+      recommended.includes(id.join('.'))
+        ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') }
+        : {}
 
     const groupOption = (key: string, options: readonly OptionItem<MasteryItemId>[]) => {
       const label = t(`exercise.focus.${key}.label`)
-      const recommendation = options.some((o) => recommended.includes(String(o.value)))
+      const recommendation = options.some((o) => recommended.includes(o.value.join('.')))
         ? {
             glyph: '↓',
             ariaLabel: [label, recommendedLabel].join(', '),
@@ -119,10 +120,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'form',
           forms.map((f) => ({
-            value: String(f),
+            value: ['forms', f],
             label: t(`exercise.unlock.form.${f}`),
             // FIXME: ariaLabel should be "Form {f}"
-            ...withGlyph(toRoman(f), String(f), toRoman(f)),
+            ...withGlyph(toRoman(f), ['forms', f], toRoman(f)),
           })),
         ),
       )
@@ -134,9 +135,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'tense',
           tenses.map((value) => ({
-            value,
+            value: ['tenses', value],
             label: t(`tense.${value}`),
-            ...withGlyph(t(`tense.${value}`), value),
+            ...withGlyph(t(`tense.${value}`), ['tenses', value]),
           })),
         ),
       )
@@ -148,9 +149,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'rootType',
           rootTypes.map((value) => ({
-            value,
+            value: ['rootTypes', value],
             label: t(`exercise.stats.mastery.rootType.${value}`),
-            ...withGlyph(t(`exercise.stats.mastery.rootType.${value}`), value),
+            ...withGlyph(t(`exercise.stats.mastery.rootType.${value}`), ['rootTypes', value]),
           })),
         ),
       )
@@ -162,10 +163,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'pronoun',
           pronouns.map((p) => ({
-            value: p,
-            label: t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]),
+            value: ['pronouns', p],
+            label: t(PRONOUN_ABBREVIATION_LABELS[p]),
             // FIXME: ariaLabel should not be abbreviated
-            ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]), p),
+            ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p]), ['pronouns', p]),
           })),
         ),
       )
@@ -175,10 +176,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   }, [dimensionProfile, srsStore, t])
 
   const focusOptionValue = useMemo((): OptionValue<MasteryItemId> | null => {
-    if (activeFocus.form) return { groupKey: 'form', value: String(activeFocus.form) }
-    if (activeFocus.tense) return { groupKey: 'tense', value: activeFocus.tense }
-    if (activeFocus.rootType) return { groupKey: 'rootType', value: activeFocus.rootType }
-    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: activeFocus.pronoun }
+    if (activeFocus.form) return { groupKey: 'form', value: ['forms', activeFocus.form] }
+    if (activeFocus.tense) return { groupKey: 'tense', value: ['tenses', activeFocus.tense] }
+    if (activeFocus.rootType) return { groupKey: 'rootType', value: ['rootTypes', activeFocus.rootType] }
+    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: ['pronouns', activeFocus.pronoun] }
     return null
   }, [activeFocus])
 
@@ -187,18 +188,19 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       setActiveFocus({})
       return
     }
-    switch (optionValue.groupKey) {
-      case 'form':
-        setActiveFocus({ form: parseInteger(optionValue.value, 0) as VerbForm })
+    const [group, value] = optionValue.value
+    switch (group) {
+      case 'forms':
+        setActiveFocus({ form: value })
         break
-      case 'tense':
-        setActiveFocus({ tense: optionValue.value as ExerciseFocus['tense'] })
+      case 'tenses':
+        setActiveFocus({ tense: value })
         break
-      case 'rootType':
-        setActiveFocus({ rootType: optionValue.value as ExerciseFocus['rootType'] })
+      case 'rootTypes':
+        setActiveFocus({ rootType: value })
         break
-      case 'pronoun':
-        setActiveFocus({ pronoun: optionValue.value as PronounId })
+      case 'pronouns':
+        setActiveFocus({ pronoun: value })
         break
     }
   }, [])

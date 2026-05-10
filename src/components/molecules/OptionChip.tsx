@@ -40,6 +40,10 @@ type Props<T> = {
   hint: string
 }
 
+function isValueEqual<T>(left: T, right: T) {
+  return JSON.stringify(left) === JSON.stringify(right)
+}
+
 export function OptionChip<T>({
   groups,
   value,
@@ -169,7 +173,8 @@ export function OptionChip<T>({
   if (totalOptions <= 1) return null
 
   const activeGroup = value != null ? groups.find((g) => g.key === value.groupKey) : null
-  const activeOption = activeGroup != null ? activeGroup.options.find((o) => o.value === value?.value) : null
+  const activeOption =
+    activeGroup != null ? activeGroup.options.find((o) => value != null && isValueEqual(o.value, value.value)) : null
 
   const currentGroup = selectedGroupKey != null ? groups.find((g) => g.key === selectedGroupKey) : null
   const showGroupPicker = multiGroup && currentGroup == null
@@ -232,7 +237,7 @@ export function OptionChip<T>({
                   key={opt.value}
                   type="button"
                   aria-label={opt.ariaLabel}
-                  active={value?.groupKey === pickerGroup.key && opt.value === value?.value}
+                  active={value?.groupKey === pickerGroup.key && value != null && isValueEqual(opt.value, value.value)}
                   size="compact"
                   onClick={() => handleSelect(pickerGroup.key, opt.value)}
                 >

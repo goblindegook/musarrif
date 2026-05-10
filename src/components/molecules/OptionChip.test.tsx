@@ -125,6 +125,28 @@ test('shows active chip with selected option label only', () => {
   expect(screen.getByText('Active Past')).toBeInTheDocument()
 })
 
+test('shows active chip when selected value is a structurally equal tuple', () => {
+  const tupleGroup = {
+    key: 'focus',
+    label: 'Focus',
+    options: [
+      { label: 'Form II', value: ['forms', 2] as const },
+      { label: 'Form III', value: ['forms', 3] as const },
+    ],
+    pickerTitle: 'Select focus',
+  }
+  render(
+    <OptionChip
+      groups={[tupleGroup]}
+      value={{ groupKey: 'focus', value: ['forms', 3] }}
+      onChange={() => {}}
+      {...defaultProps}
+    />,
+  )
+  expect(screen.getByText('Form III')).toBeInTheDocument()
+  expect(screen.getByLabelText(/clear focus/i)).toBeInTheDocument()
+})
+
 test('calls onChange(null) when clear button is clicked', () => {
   const onChange = vi.fn()
   render(<OptionChip groups={[groupA]} value={{ groupKey: 'form', value: 3 }} onChange={onChange} {...defaultProps} />)

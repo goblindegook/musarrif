@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import type { DimensionProfile } from '../../exercises/dimensions'
-import { computeMastery, type MasterySnapshot } from '../../exercises/mastery'
+import { computeMastery, type MasteryItemId, type MasterySnapshot } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats } from '../../exercises/stats'
 import {
@@ -134,13 +134,9 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
   )
 }
 
-function masteryItemLabel(
-  categoryId: 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals',
-  itemId: string,
-  t: ReturnType<typeof useI18n>['t'],
-): string {
+function masteryItemLabel([categoryId, itemId]: MasteryItemId, t: ReturnType<typeof useI18n>['t']): string {
   if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[itemId as keyof typeof ROOT_TYPE_LABEL_KEYS])
-  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(parseInt(itemId, 10)) })
+  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(itemId) })
   if (categoryId === 'tenses') return t(`tense.${itemId}`)
   if (categoryId === 'pronouns') return t(`pronoun.${itemId}`)
   if (categoryId === 'nominals' && itemId === 'participles') return t('exercise.stats.mastery.nominal.participles')
@@ -191,7 +187,7 @@ function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
                     return (
                       <MasteryItem key={`${category.id}-${item.id}`}>
                         <MasteryItemTop>
-                          <MasteryLabel>{masteryItemLabel(category.id, item.id, t)}</MasteryLabel>
+                          <MasteryLabel>{masteryItemLabel(item.id, t)}</MasteryLabel>
                           {item.locked && (
                             <InlineLock>
                               <LockIcon />
