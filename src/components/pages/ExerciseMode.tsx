@@ -93,17 +93,21 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
     const groupOption = (key: string, options: readonly OptionItem<MasteryItemId>[]) => {
       const label = t(`exercise.focus.${key}.label`)
-      const isRecommended = options.some((o) => recommended.includes(String(o.value)))
+      const recommendation = options.some((o) => recommended.includes(String(o.value)))
+        ? {
+            glyph: '↓',
+            ariaLabel: [label, recommendedLabel].join(', '),
+            hint: [t('exercise.focus.recommendHint'), t('exercise.focus.mixedHint')].join(' · '),
+          }
+        : {}
       return {
         key,
         label,
-        options,
+        ariaLabel: label,
         pickerTitle: t(`exercise.focus.${key}.pickerTitle`),
-        glyph: isRecommended ? '↓' : undefined,
-        ariaLabel: isRecommended ? [label, recommendedLabel].join(', ') : label,
-        hint: isRecommended
-          ? `${t('exercise.focus.recommendHint')} · ${t('exercise.focus.mixedHint')}`
-          : t('exercise.focus.mixedHint'),
+        hint: t('exercise.focus.mixedHint'),
+        options,
+        ...recommendation,
       }
     }
 
@@ -117,6 +121,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           forms.map((f) => ({
             value: String(f),
             label: t(`exercise.unlock.form.${f}`),
+            // FIXME: ariaLabel should be "Form {f}"
             ...withGlyph(toRoman(f), String(f), toRoman(f)),
           })),
         ),
@@ -128,10 +133,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'tense',
-          tenses.map((tense) => ({
-            value: tense,
-            label: t(`tense.${tense}`),
-            ...withGlyph(t(`tense.${tense}`), tense),
+          tenses.map((value) => ({
+            value,
+            label: t(`tense.${value}`),
+            ...withGlyph(t(`tense.${value}`), value),
           })),
         ),
       )
@@ -142,10 +147,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'rootType',
-          rootTypes.map((rt) => ({
-            value: rt,
-            label: t(`exercise.stats.mastery.rootType.${rt}`),
-            ...withGlyph(t(`exercise.stats.mastery.rootType.${rt}`), rt),
+          rootTypes.map((value) => ({
+            value,
+            label: t(`exercise.stats.mastery.rootType.${value}`),
+            ...withGlyph(t(`exercise.stats.mastery.rootType.${value}`), value),
           })),
         ),
       )
@@ -159,6 +164,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           pronouns.map((p) => ({
             value: p,
             label: t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]),
+            // FIXME: ariaLabel should not be abbreviated
             ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p as PronounId]), p),
           })),
         ),
