@@ -60,6 +60,7 @@ export type MasteryItemId =
 
 export interface MasteryItem {
   id: MasteryItemId
+  value: MasteryItemId[1]
   score: number
   locked: boolean
 }
@@ -101,6 +102,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const locked = !unlockedRootTypes.has(rootType)
           return {
             id: ['rootTypes', rootType],
+            value: rootType,
             score: computeScore(
               cards.filter((card) => card.rootType === rootType),
               srsStore,
@@ -117,6 +119,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const locked = !unlockedForms.has(form)
           return {
             id: ['forms', form],
+            value: form,
             score: computeScore(
               cards.filter((card) => card.form === form),
               srsStore,
@@ -133,6 +136,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const locked = !unlockedTenses.has(tense)
           return {
             id: ['tenses', tense],
+            value: tense,
             score: computeScore(
               cards.filter((card) => card.tense === tense && isVerbExercise(card.kind)),
               srsStore,
@@ -149,6 +153,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const locked = !unlockedPronouns.has(pronoun)
           return {
             id: ['pronouns', pronoun],
+            value: pronoun,
             score: computeScore(
               cards.filter((card) => card.pronoun === pronoun && isVerbExercise(card.kind)),
               srsStore,
@@ -165,6 +170,7 @@ export function computeMastery(profile: DimensionProfile, srsStore: SrsStore, to
           const locked = !unlockedNominals.has(nominal)
           return {
             id: ['nominals', nominal],
+            value: nominal,
             score: computeScore(
               cards.filter((card) => isNominalExercise(card.kind)),
               srsStore,

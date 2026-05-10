@@ -8,9 +8,9 @@ const groupA = {
   key: 'form',
   label: 'Form',
   options: [
-    { label: 'I', value: 1 },
-    { label: 'II', value: 2 },
-    { label: 'III', value: 3 },
+    { label: 'I', value: '1' },
+    { label: 'II', value: '2' },
+    { label: 'III', value: '3' },
   ],
   pickerTitle: 'Select form',
 }
@@ -110,7 +110,7 @@ test('calls onChange with groupKey and value for single-group case', () => {
   render(<OptionChip groups={[groupA]} value={null} onChange={onChange} {...defaultProps} />)
   fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
   fireEvent.click(screen.getByText('III', { selector: 'button' }))
-  expect(onChange).toHaveBeenCalledWith({ groupKey: 'form', value: 3 })
+  expect(onChange).toHaveBeenCalledWith({ groupKey: 'form', value: '3' })
 })
 
 test('shows active chip with selected option label only', () => {
@@ -130,15 +130,15 @@ test('shows active chip when selected value is a structurally equal tuple', () =
     key: 'focus',
     label: 'Focus',
     options: [
-      { label: 'Form II', value: ['forms', 2] as const },
-      { label: 'Form III', value: ['forms', 3] as const },
+      { label: 'Form II', value: ['forms', '2'] },
+      { label: 'Form III', value: ['forms', '3'] },
     ],
     pickerTitle: 'Select focus',
   }
   render(
     <OptionChip
       groups={[tupleGroup]}
-      value={{ groupKey: 'focus', value: ['forms', 3] }}
+      value={{ groupKey: 'focus', value: ['forms', '3'] }}
       onChange={() => {}}
       {...defaultProps}
     />,
@@ -149,13 +149,17 @@ test('shows active chip when selected value is a structurally equal tuple', () =
 
 test('calls onChange(null) when clear button is clicked', () => {
   const onChange = vi.fn()
-  render(<OptionChip groups={[groupA]} value={{ groupKey: 'form', value: 3 }} onChange={onChange} {...defaultProps} />)
+  render(
+    <OptionChip groups={[groupA]} value={{ groupKey: 'form', value: '3' }} onChange={onChange} {...defaultProps} />,
+  )
   fireEvent.click(screen.getByLabelText(/clear focus/i))
   expect(onChange).toHaveBeenCalledWith(null)
 })
 
 test('reopens picker when active chip is clicked', () => {
-  render(<OptionChip groups={[groupA]} value={{ groupKey: 'form', value: 3 }} onChange={() => {}} {...defaultProps} />)
+  render(
+    <OptionChip groups={[groupA]} value={{ groupKey: 'form', value: '3' }} onChange={() => {}} {...defaultProps} />,
+  )
   fireEvent.click(screen.getByText('III'))
   expect(screen.getByText('I', { selector: 'button' })).toBeInTheDocument()
 })
@@ -175,9 +179,9 @@ test('renders glyph after option label when item has glyph', () => {
   const groupWithGlyph = {
     ...groupA,
     options: [
-      { label: 'I', value: 1, glyph: '↓', ariaLabel: 'I, recommended' },
-      { label: 'II', value: 2 },
-      { label: 'III', value: 3 },
+      { label: 'I', value: '1', glyph: '↓', ariaLabel: 'I, recommended' },
+      { label: 'II', value: '2' },
+      { label: 'III', value: '3' },
     ],
   }
   render(<OptionChip groups={[groupWithGlyph]} value={null} onChange={() => {}} {...defaultProps} />)
