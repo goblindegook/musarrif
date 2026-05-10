@@ -263,11 +263,8 @@ function buildCategory(id: MasteryCategoryId, items: readonly MasteryItem[]): Ma
   return { id, items, score: average(items.map((item) => item.score)), locked: items.every((item) => item.locked) }
 }
 
-// FIXME: filter categories before calling
 export function findLowestMastery(categories: readonly MasteryCategory[], limit = 5): readonly MasteryItemId[] {
-  const unlocked = categories
-    .filter((cat) => ['rootTypes', 'forms', 'tenses', 'pronouns'].includes(cat.id))
-    .flatMap((cat) => cat.items.filter((item) => !item.locked))
+  const unlocked = categories.flatMap((cat) => cat.items.filter((item) => !item.locked))
 
   if (unlocked.length === 0) return []
 

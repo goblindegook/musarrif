@@ -245,18 +245,7 @@ describe('find lowest mastery', () => {
     ])
   })
 
-  test('excludes nominals items even when unlocked and low-scored', () => {
-    const categories = testMasteryCategories({
-      rootTypes: [{ id: ['rootTypes', 'sound'], value: 'sound', score: 0.5, locked: false }],
-      nominals: [
-        { id: ['nominals', 'participles'], value: 'participles', score: 0, locked: false },
-        { id: ['nominals', 'masdar'], value: 'masdar', score: 0, locked: false },
-      ],
-    })
-    expect(findLowestMastery(categories)).toEqual([['rootTypes', 'sound']])
-  })
-
-  test('excludes locked items from recommendation', () => {
+  test('excludes locked items', () => {
     const categories = testMasteryCategories({
       rootTypes: [{ id: ['rootTypes', 'sound'], value: 'sound', score: 0.8, locked: false }],
       forms: [

@@ -84,7 +84,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
   const focusGroups = useMemo((): readonly OptionGroup<MasteryItemId>[] => {
     const snapshot = computeMastery(dimensionProfile, srsStore)
-    const recommended = findLowestMastery(snapshot.categories).map((i) => i.join('.'))
+    const recommended = findLowestMastery(
+      snapshot.categories.filter((cat) => ['rootTypes', 'forms', 'tenses', 'pronouns'].includes(cat.id)),
+    ).map((i) => i.join('.'))
     const recommendedLabel = t('exercise.focus.recommended')
 
     const withGlyph = (label: string, id: MasteryItemId, ariaLabel?: string) =>
