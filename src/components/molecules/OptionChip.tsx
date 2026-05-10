@@ -5,32 +5,32 @@ import { IconButton } from '../atoms/IconButton'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
 
-export type OptionItem = {
+export type OptionItem<T> = {
   label: string
-  value: string | number
+  value: T
   ariaLabel?: string
   glyph?: string
 }
 
-export type OptionGroup = {
+export type OptionGroup<T> = {
   key: string
   label: string
-  options: readonly OptionItem[]
+  options: readonly OptionItem<T>[]
   pickerTitle: string
   glyph?: string
   ariaLabel?: string
   hint?: string
 }
 
-export type OptionValue = {
+export type OptionValue<T> = {
   groupKey: string
-  value: string | number
+  value: T
 }
 
-type Props = {
-  groups: readonly OptionGroup[]
-  value: OptionValue | null
-  onChange: (value: OptionValue | null) => void
+type Props<T> = {
+  groups: readonly OptionGroup<T>[]
+  value: OptionValue<T> | null
+  onChange: (value: OptionValue<T> | null) => void
   onOpenChange?: (open: boolean) => void
   icon: string
   label: string
@@ -40,7 +40,7 @@ type Props = {
   hint: string
 }
 
-export function OptionChip({
+export function OptionChip<T>({
   groups,
   value,
   onChange,
@@ -51,7 +51,7 @@ export function OptionChip({
   backLabel,
   pickerTitle,
   hint,
-}: Props) {
+}: Props<T>) {
   const [open, setOpen] = useState(false)
   const [selectedGroupKey, setSelectedGroupKey] = useState<string | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -66,7 +66,7 @@ export function OptionChip({
   }, [])
 
   const handleSelect = useCallback(
-    (groupKey: string, v: string | number) => {
+    (groupKey: string, v: T) => {
       onChange({ groupKey, value: v })
       closePanel()
     },

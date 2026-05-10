@@ -52,8 +52,12 @@ const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
 
 export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals'
 
+// FIXME: prefix with MasterCategoryId
+export type MasteryItemId = string
+
 export interface MasteryItem {
-  id: string
+  // FIXME: prefix with MasterCategoryId
+  id: MasteryItemId
   score: number
   locked: boolean
 }
