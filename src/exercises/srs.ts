@@ -76,20 +76,20 @@ export function buildCardKey(
   return tense == null ? `${kind}:${rootType}:${form}` : `${kind}:${rootType}:${form}:${tense}:${pronoun}`
 }
 
-export function isVerbExercise(card: SrsCardIdentity): boolean {
-  return VERB_EXERCISES.has(card.kind)
+export function isVerbCard(card: SrsCardIdentity): boolean {
+  return card.tense != null
 }
 
-export function isParticipleExercise(card: SrsCardIdentity): boolean {
+export function isParticipleCard(card: SrsCardIdentity): boolean {
   return PARTICIPLE_EXERCISES.has(card.kind)
 }
 
-export function isMasdarExercise(card: SrsCardIdentity): boolean {
+export function isMasdarCard(card: SrsCardIdentity): boolean {
   return MASDAR_EXERCISES.has(card.kind)
 }
 
-export function isNominalExercise(card: SrsCardIdentity): boolean {
-  return isParticipleExercise(card) || isMasdarExercise(card)
+export function isNominalCard(card: SrsCardIdentity): boolean {
+  return card.tense == null
 }
 
 export function parseCardKey(key: string): SrsCardIdentity {

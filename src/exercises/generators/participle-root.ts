@@ -1,3 +1,4 @@
+import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
@@ -23,18 +24,22 @@ export const participleRootExercise = defineExercise(
     const passive = derivePassiveParticiple(verb)
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'
     const participle = kind === 'active' ? active : passive
-    const word = exerciseDiacritics(participle, profile.diacritics)
-    const options = buildOptions(verb.root, word, profile)
+    const options = buildOptions(verb.root, exerciseDiacritics(participle, profile.diacritics), profile)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleRoot' : 'exercise.prompt.passiveParticipleRoot',
-      word,
+      word: exerciseDiacritics(participle, profile.diacritics),
       spokenWord: participle,
       options: options.map((option) => Array.from(option).join(' ')),
       answer: options.indexOf(verb.root),
       cardKey: buildCardKey('participleRoot', getSrsRootType(verb.root), verb.form),
+      explanation: resolveNominalExplanationLayers(
+        verb,
+        kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
+        participle,
+      ),
     }
   },
   {

@@ -6,10 +6,10 @@ import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import {
   cardSpace,
-  isMasdarExercise,
-  isNominalExercise,
-  isParticipleExercise,
-  isVerbExercise,
+  isMasdarCard,
+  isNominalCard,
+  isParticipleCard,
+  isVerbCard,
   type SrsCardIdentity,
   type SrsRootType,
   type SrsStore,
@@ -135,7 +135,7 @@ export function computeMastery(
           categoryId: 'tenses',
           value: tense,
           score: computeScore(
-            cardSpace().filter((card) => card.tense === tense && isVerbExercise(card)),
+            cardSpace().filter((card) => card.tense === tense && isVerbCard(card)),
             srsStore,
             today,
             locked,
@@ -153,7 +153,7 @@ export function computeMastery(
           categoryId: 'pronouns',
           value: pronoun,
           score: computeScore(
-            cardSpace().filter((card) => card.pronoun === pronoun && isVerbExercise(card)),
+            cardSpace().filter((card) => card.pronoun === pronoun && isVerbCard(card)),
             srsStore,
             today,
             locked,
@@ -171,7 +171,7 @@ export function computeMastery(
           categoryId: 'nominals',
           value: nominal,
           score: computeScore(
-            cardSpace().filter((card) => isNominalExercise(card)),
+            cardSpace().filter((card) => isNominalCard(card)),
             srsStore,
             today,
             locked,
@@ -206,8 +206,8 @@ function computeScore(cards: readonly SrsCardIdentity[], store: SrsStore, today:
 
 function combinationGroupKey(card: SrsCardIdentity): string {
   if (card.tense != null && card.pronoun != null) return `${card.rootType}:${card.form}:${card.tense}:${card.pronoun}`
-  if (isParticipleExercise(card)) return `${card.rootType}:${card.form}:participles`
-  if (isMasdarExercise(card)) return `${card.rootType}:${card.form}:masdar`
+  if (isParticipleCard(card)) return `${card.rootType}:${card.form}:participles`
+  if (isMasdarCard(card)) return `${card.rootType}:${card.form}:masdar`
   return `${card.rootType}:${card.form}:${card.kind}`
 }
 

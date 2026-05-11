@@ -75,6 +75,12 @@ describe('participleFormExercise', () => {
     ])
   })
 
+  test('attaches nominal explanation layers for the selected participle type', () => {
+    const exercise = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+
+    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+  })
+
   test('prompt type matches the shown participle word in easy difficulty', () => {
     const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
     const exercise = participleFormExercise.generate(easyProfile)

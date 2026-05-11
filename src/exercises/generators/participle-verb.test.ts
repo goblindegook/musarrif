@@ -30,6 +30,12 @@ describe('participleVerbExercise', () => {
     ])
   })
 
+  test('attaches nominal explanation layers for the selected participle type', () => {
+    const exercise = participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
+
+    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+  })
+
   test('medium returns exactly four options', () => {
     expect(participleVerbExercise.generate(mediumProfile).options).toHaveLength(4)
   })

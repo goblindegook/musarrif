@@ -27,6 +27,12 @@ describe('participleRootExercise', () => {
     ])
   })
 
+  test('attaches nominal explanation layers for the selected participle type', () => {
+    const exercise = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+
+    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+  })
+
   test('returns exactly four options', () => {
     expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

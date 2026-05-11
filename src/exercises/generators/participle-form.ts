@@ -1,4 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
+import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
 import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
@@ -42,6 +43,11 @@ export const participleFormExercise = defineExercise(
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer: options.indexOf(verb.form),
       cardKey: buildCardKey('participleForm', getSrsRootType(verb.root), verb.form),
+      explanation: resolveNominalExplanationLayers(
+        verb,
+        kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
+        participle,
+      ),
     }
   },
   {
