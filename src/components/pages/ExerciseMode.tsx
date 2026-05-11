@@ -75,28 +75,30 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   useDocumentTitle([t('mode.exercise'), t('title')].join(' · '))
 
-  const storedStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
+  // TODO: useStats hook
+  const dayStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
+
   const updateStats = useCallback(
     (updater: (current: DayStats[]) => DayStats[]) => {
       setRawStats((raw) => serializeDayStats(updater(deserializeDayStats(raw))))
     },
     [setRawStats],
   )
+
+  const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
+
   const focusGroups = useMemo((): readonly OptionGroup<MasteryItemId>[] => {
-    const snapshot = computeMastery(dimensionProfile, srsStore)
-    const recommended = findLowestMastery(
-      snapshot.categories.filter((cat) => ['rootTypes', 'forms', 'tenses', 'pronouns'].includes(cat.id)),
-    ).map((i) => i.join('.'))
+    const recommended = Object.fromEntries(findLowestMastery(mastery).map((i) => [i.id, i]))
     const recommendedLabel = t('exercise.focus.recommended')
 
     const withGlyph = (label: string, id: MasteryItemId, ariaLabel?: string) =>
-      recommended.includes(id.join('.'))
+      Object.keys(recommended).includes(id)
         ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') }
         : {}
 
     const groupOption = (key: string, options: readonly OptionItem<MasteryItemId>[]) => {
       const label = t(`exercise.focus.${key}.label`)
-      const recommendation = options.some((o) => recommended.includes(o.value.join('.')))
+      const recommendation = options.some((o) => Object.keys(recommended).includes(o.value))
         ? {
             glyph: '↓',
             ariaLabel: [label, recommendedLabel].join(', '),
@@ -122,10 +124,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'form',
           forms.map((f) => ({
-            value: ['forms', f],
+            value: `forms.${f}`,
             label: t(`exercise.unlock.form.${f}`),
             // FIXME: ariaLabel should be "Form {f}"
-            ...withGlyph(toRoman(f), ['forms', f], toRoman(f)),
+            ...withGlyph(toRoman(f), `forms.${f}`, toRoman(f)),
           })),
         ),
       )
@@ -137,9 +139,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'tense',
           tenses.map((value) => ({
-            value: ['tenses', value],
+            value: `tenses.${value}`,
             label: t(`tense.${value}`),
-            ...withGlyph(t(`tense.${value}`), ['tenses', value]),
+            ...withGlyph(t(`tense.${value}`), `tenses.${value}`),
           })),
         ),
       )
@@ -151,9 +153,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'rootType',
           rootTypes.map((value) => ({
-            value: ['rootTypes', value],
+            value: `rootTypes.${value}`,
             label: t(`exercise.stats.mastery.rootType.${value}`),
-            ...withGlyph(t(`exercise.stats.mastery.rootType.${value}`), ['rootTypes', value]),
+            ...withGlyph(t(`exercise.stats.mastery.rootType.${value}`), `rootTypes.${value}`),
           })),
         ),
       )
@@ -165,47 +167,52 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         groupOption(
           'pronoun',
           pronouns.map((p) => ({
-            value: ['pronouns', p],
+            value: `pronouns.${p}`,
             label: t(PRONOUN_ABBREVIATION_LABELS[p]),
             // FIXME: ariaLabel should not be abbreviated
-            ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p]), ['pronouns', p]),
+            ...withGlyph(t(PRONOUN_ABBREVIATION_LABELS[p]), `pronouns.${p}`),
           })),
         ),
       )
     }
 
     return groups
-  }, [dimensionProfile, srsStore, t])
+  }, [mastery, t])
 
   const focusOptionValue = useMemo((): OptionValue<MasteryItemId> | null => {
-    if (activeFocus.form) return { groupKey: 'form', value: ['forms', activeFocus.form] }
-    if (activeFocus.tense) return { groupKey: 'tense', value: ['tenses', activeFocus.tense] }
-    if (activeFocus.rootType) return { groupKey: 'rootType', value: ['rootTypes', activeFocus.rootType] }
-    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: ['pronouns', activeFocus.pronoun] }
+    if (activeFocus.form) return { groupKey: 'form', value: `forms.${activeFocus.form}` }
+    if (activeFocus.tense) return { groupKey: 'tense', value: `tenses.${activeFocus.tense}` }
+    if (activeFocus.rootType) return { groupKey: 'rootType', value: `rootTypes.${activeFocus.rootType}` }
+    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: `pronouns.${activeFocus.pronoun}` }
     return null
   }, [activeFocus])
 
-  const handleFocusChange = useCallback((optionValue: OptionValue<MasteryItemId> | null) => {
-    if (optionValue == null) {
-      setActiveFocus({})
-      return
-    }
-    const [group, value] = optionValue.value
-    switch (group) {
-      case 'forms':
-        setActiveFocus({ form: value })
-        break
-      case 'tenses':
-        setActiveFocus({ tense: value })
-        break
-      case 'rootTypes':
-        setActiveFocus({ rootType: value })
-        break
-      case 'pronouns':
-        setActiveFocus({ pronoun: value })
-        break
-    }
-  }, [])
+  const handleFocusChange = useCallback(
+    (optionValue: OptionValue<MasteryItemId> | null) => {
+      if (optionValue == null) {
+        setActiveFocus({})
+        return
+      }
+      const selected = mastery.flatMap((category) => category.items).find((item) => item.id === optionValue.value)
+      if (selected == null) return
+
+      switch (selected.categoryId) {
+        case 'forms':
+          setActiveFocus({ form: selected.value as ExerciseFocus['form'] })
+          break
+        case 'tenses':
+          setActiveFocus({ tense: selected.value as ExerciseFocus['tense'] })
+          break
+        case 'rootTypes':
+          setActiveFocus({ rootType: selected.value as ExerciseFocus['rootType'] })
+          break
+        case 'pronouns':
+          setActiveFocus({ pronoun: selected.value as ExerciseFocus['pronoun'] })
+          break
+      }
+    },
+    [mastery],
+  )
 
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
@@ -219,7 +226,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
 
   const isAnswered = answeredIndex !== null || skipped
-  const streak = getStreak(storedStats)
+  const streak = getStreak(dayStats)
 
   const explanation = (() => {
     if (answeredIndex == null && !skipped) return []
@@ -239,8 +246,8 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       } else {
         sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
       }
-      const nextStats = addResult(storedStats, isCorrect)
-      const previousStreakGoal = getStreakGoalProgress(storedStats)
+      const nextStats = addResult(dayStats, isCorrect)
+      const previousStreakGoal = getStreakGoalProgress(dayStats)
       const nextStreakGoal = getStreakGoalProgress(nextStats)
       setAnsweredIndex(index)
       updateStats(() => nextStats)
@@ -248,7 +255,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       recordDimensionAnswer(exercise.dimensions, isCorrect)
       setStreakExtendedAlert(isCorrect && previousStreakGoal.remaining > 0 && nextStreakGoal.remaining === 0)
     },
-    [exercise, srsStore, storedStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
+    [exercise, srsStore, dayStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
   )
 
   const handleSkip = useCallback(() => {
@@ -290,8 +297,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           className={PROMPT_CLASS}
           text={t(
             exercise.promptTranslationKey,
-            exercise.promptParams &&
-              Object.fromEntries(Object.entries(exercise.promptParams).map(([k, v]) => [k, t(v)])),
+            Object.fromEntries(Object.entries(exercise.promptParams ?? {}).map(([k, v]) => [k, t(v)])),
           )}
         />
         <AnswerAreaContainer aria-hidden={isFocusPickerOpen}>
@@ -369,7 +375,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         )}
       </ExerciseCard>
 
-      <ExerciseStats stats={storedStats} streak={streak} dimensionProfile={dimensionProfile} srsStore={srsStore} />
+      <ExerciseStats stats={dayStats} streak={streak} dimensionProfile={dimensionProfile} srsStore={srsStore} />
     </ExerciseLayout>
   )
 }

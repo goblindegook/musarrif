@@ -1,8 +1,7 @@
 import type { ExplanationLayers } from '../paradigms/explanation'
 import type { RootAnalysisType } from '../paradigms/roots'
 import { utcToday } from '../primitives/dates'
-import { isNominalExercise, isVerbExercise } from './mastery'
-import { getSrsCards, type SrsCard, type SrsRootType, type SrsStore } from './srs'
+import { getSrsCards, isNominalExercise, isVerbExercise, type SrsCard, type SrsRootType, type SrsStore } from './srs'
 
 interface LayerMastery {
   rootType: number
@@ -49,19 +48,19 @@ function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers,
     tense:
       explanation.category === 'verb'
         ? strongestDeduped(
-            cards.filter((card) => isVerbExercise(card.kind) && card.tense === explanation.tense),
+            cards.filter((card) => isVerbExercise(card) && card.tense === explanation.tense),
             today,
           )
         : 0,
     pronoun:
       explanation.category === 'verb'
         ? strongestDeduped(
-            cards.filter((card) => isVerbExercise(card.kind) && card.pronoun === explanation.pronoun),
+            cards.filter((card) => isVerbExercise(card) && card.pronoun === explanation.pronoun),
             today,
           )
         : 0,
     nominal: strongestDeduped(
-      cards.filter((card) => isNominalExercise(card.kind)),
+      cards.filter((card) => isNominalExercise(card)),
       today,
     ),
   }

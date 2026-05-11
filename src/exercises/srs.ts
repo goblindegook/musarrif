@@ -1,8 +1,10 @@
+import { memoize } from '@pacote/memoize'
 import { isHamzatedLetter, isWeakLetter } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import type { VerbForm } from '../paradigms/verbs'
+import { getAvailableParadigms, type VerbForm, verbs } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
+import { formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
 
 export type AnswerResult = 'correct' | 'wrong' | 'pass'
@@ -35,6 +37,17 @@ export interface SrsCardIdentity {
 
 export type SrsCard = SrsCardIdentity & CardState
 
+const VERB_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
+
+const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
+  'participleForm',
+  'participleRoot',
+  'participleVerb',
+  'verbParticiple',
+])
+
+const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
+
 export function getSrsRootType(root: string): SrsRootType {
   const [c1, c2, c3] = Array.from(root)
   if (isWeakLetter(c3)) return 'defective'
@@ -61,6 +74,22 @@ export function buildCardKey(
   pronoun?: PronounId,
 ): string {
   return tense == null ? `${kind}:${rootType}:${form}` : `${kind}:${rootType}:${form}:${tense}:${pronoun}`
+}
+
+export function isVerbExercise(card: SrsCardIdentity): boolean {
+  return VERB_EXERCISES.has(card.kind)
+}
+
+export function isParticipleExercise(card: SrsCardIdentity): boolean {
+  return PARTICIPLE_EXERCISES.has(card.kind)
+}
+
+export function isMasdarExercise(card: SrsCardIdentity): boolean {
+  return MASDAR_EXERCISES.has(card.kind)
+}
+
+export function isNominalExercise(card: SrsCardIdentity): boolean {
+  return isParticipleExercise(card) || isMasdarExercise(card)
 }
 
 export function parseCardKey(key: string): SrsCardIdentity {
@@ -200,3 +229,47 @@ export function getSrsCards(srsStore: SrsStore): readonly SrsCard[] {
     key,
   }))
 }
+
+function pronounSpace(tense: VerbTense, impersonalPassive: boolean): readonly PronounId[] {
+  const pronouns = pronounPool(3)
+  if (tense === 'active.imperative') {
+    const imperativePool = pronouns.filter((pronoun) => pronoun.startsWith('2'))
+    return imperativePool.length > 0 ? imperativePool : ['2ms']
+  }
+  if (impersonalPassive && tense.startsWith('passive')) return ['3ms']
+  return pronouns
+}
+
+export const cardSpace = memoize(
+  () => 'constant',
+  () => {
+    const allForms = new Set(formPool(9))
+    const allRootTypes = new Set(rootTypesPool(5))
+    const allTenses = tensePool(4)
+    const unique = new Map<string, SrsCardIdentity>()
+
+    for (const verb of verbs) {
+      if (verb.root.length !== 3) continue
+      const rootType = getSrsRootType(verb.root)
+      if (!allForms.has(verb.form) || !allRootTypes.has(rootType)) continue
+      const paradigms = new Set(getAvailableParadigms(verb))
+      const availableVerbTenses = allTenses.filter((tense) => paradigms.has(tense))
+
+      for (const kind of VERB_EXERCISES) {
+        for (const tense of availableVerbTenses) {
+          for (const pronoun of pronounSpace(tense, verb.passiveVoice === 'impersonal')) {
+            const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
+            unique.set(key, { key, kind, rootType, form: verb.form, tense, pronoun })
+          }
+        }
+      }
+
+      for (const kind of [...PARTICIPLE_EXERCISES, ...MASDAR_EXERCISES]) {
+        const key = buildCardKey(kind, rootType, verb.form)
+        unique.set(key, { key, kind, rootType, form: verb.form, tense: undefined, pronoun: undefined })
+      }
+    }
+
+    return [...unique.values()]
+  },
+)

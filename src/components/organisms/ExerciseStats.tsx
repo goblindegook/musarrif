@@ -3,7 +3,11 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 import type { DimensionProfile } from '../../exercises/dimensions'
-import { computeMastery, type MasteryItemId, type MasterySnapshot } from '../../exercises/mastery'
+import {
+  computeMastery,
+  type MasteryCategory as MasteryCategoryData,
+  type MasteryItem as MasteryItemData,
+} from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
 import type { DayStats } from '../../exercises/stats'
 import {
@@ -15,7 +19,7 @@ import {
 } from '../../exercises/stats'
 import { useI18n } from '../../hooks/useI18n'
 import { useTheme } from '../../hooks/useTheme'
-import { toRoman } from '../../primitives/numbers'
+import { parseInteger, toRoman } from '../../primitives/numbers'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { LockIcon } from '../icons/LockIcon'
@@ -27,7 +31,7 @@ const CHART_COLORS = {
   dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060', grid: '#3a342a', text: '#d6dce3' },
 }
 
-type Props = {
+interface Props {
   stats: DayStats[]
   streak: number
   dimensionProfile?: DimensionProfile
@@ -53,66 +57,6 @@ const ROOT_TYPE_LABEL_KEYS = {
   defective: 'exercise.stats.mastery.rootType.defective',
 } as const
 
-function StatsDetailsPanel({
-  stats,
-  streak,
-  mastery,
-}: {
-  stats: DayStats[]
-  streak: number
-  mastery: MasterySnapshot
-}) {
-  const { t, lang } = useI18n()
-  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
-  const allTimeAccuracy = getAccuracyPercent(stats)
-  const record = getStreakRecord(stats)
-  const streakGoal = getStreakGoalProgress(stats)
-  const streakGoalNow = Math.min(streakGoal.correct, STREAK_DAILY_GOAL)
-
-  return (
-    <StatsSummary>
-      <DetailsRow>
-        <Detail label={t('exercise.stats.accuracy.label')} valueLang={lang} valueDir="ltr">
-          <ValueStack>
-            <span>{recentAccuracy}%</span>
-            <SubNote>{t('exercise.stats.accuracy.alltime', { value: String(allTimeAccuracy) })}</SubNote>
-          </ValueStack>
-        </Detail>
-        <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
-          <ValueStack>
-            <span>
-              {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
-            </span>
-            <SubNote>
-              {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
-                days: String(record),
-              })}
-            </SubNote>
-          </ValueStack>
-        </Detail>
-      </DetailsRow>
-      {streakGoal.remaining > 0 && (
-        <StreakGoalSection>
-          <StreakGoalHint>
-            {t('exercise.stats.streak.extendHint', { remaining: String(streakGoal.remaining) })}
-          </StreakGoalHint>
-          <ProgressBar
-            value={streakGoalNow}
-            max={STREAK_DAILY_GOAL}
-            style={{ height: '0.6rem' }}
-            aria-label={t('exercise.stats.streak.progress.label')}
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={STREAK_DAILY_GOAL}
-            aria-valuenow={streakGoalNow}
-          />
-        </StreakGoalSection>
-      )}
-      <MasterySection mastery={mastery} />
-    </StatsSummary>
-  )
-}
-
 export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
   const { t, lang } = useI18n()
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
@@ -134,14 +78,15 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
   )
 }
 
-function masteryItemLabel([categoryId, itemId]: MasteryItemId, t: ReturnType<typeof useI18n>['t']): string {
-  if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[itemId as keyof typeof ROOT_TYPE_LABEL_KEYS])
-  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(itemId) })
-  if (categoryId === 'tenses') return t(`tense.${itemId}`)
-  if (categoryId === 'pronouns') return t(`pronoun.${itemId}`)
-  if (categoryId === 'nominals' && itemId === 'participles') return t('exercise.stats.mastery.nominal.participles')
-  if (categoryId === 'nominals' && itemId === 'masdar') return t('exercise.stats.mastery.nominal.masdar')
-  return itemId
+function masteryItemLabel(item: MasteryItemData, t: ReturnType<typeof useI18n>['t']): string {
+  const { categoryId, value } = item
+  if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS])
+  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(parseInteger(String(value), 0)) })
+  if (categoryId === 'tenses') return t(`tense.${value}`)
+  if (categoryId === 'pronouns') return t(`pronoun.${value}`)
+  if (categoryId === 'nominals' && value === 'participles') return t('exercise.stats.mastery.nominal.participles')
+  if (categoryId === 'nominals' && value === 'masdar') return t('exercise.stats.mastery.nominal.masdar')
+  return ''
 }
 
 function masteryProgressBar(score: number, locked: boolean): { value: number; max: number } {
@@ -150,14 +95,14 @@ function masteryProgressBar(score: number, locked: boolean): { value: number; ma
   return { value: Number(displayedScore.toFixed(6)), max: 1 }
 }
 
-function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
+function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData[] }) {
   const { t } = useI18n()
 
   return (
     <MasteryContainer>
       <Heading as="h3">{t('exercise.stats.mastery.title')}</Heading>
       <MasteryGrid>
-        {mastery.categories.map((category) => {
+        {mastery.map((category) => {
           const categoryProgress = masteryProgressBar(category.score, category.locked)
           return (
             <MasteryCategory key={category.id} name="mastery">
@@ -185,9 +130,9 @@ function MasterySection({ mastery }: { mastery: MasterySnapshot }) {
                   {category.items.map((item) => {
                     const itemProgress = masteryProgressBar(item.score, item.locked)
                     return (
-                      <MasteryItem key={`${category.id}-${item.id}`}>
+                      <MasteryItem key={item.id}>
                         <MasteryItemTop>
-                          <MasteryLabel>{masteryItemLabel(item.id, t)}</MasteryLabel>
+                          <MasteryLabel>{masteryItemLabel(item, t)}</MasteryLabel>
                           {item.locked && (
                             <InlineLock>
                               <LockIcon />
@@ -317,6 +262,64 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
         <div ref={mountRef} />
       </div>
     </ChartContainer>
+  )
+}
+
+interface StatsDetailsPanelProps {
+  stats: DayStats[]
+  streak: number
+  mastery: readonly MasteryCategoryData[]
+}
+
+function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
+  const { t, lang } = useI18n()
+  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
+  const allTimeAccuracy = getAccuracyPercent(stats)
+  const record = getStreakRecord(stats)
+  const streakGoal = getStreakGoalProgress(stats)
+  const streakGoalNow = Math.min(streakGoal.correct, STREAK_DAILY_GOAL)
+
+  return (
+    <StatsSummary>
+      <DetailsRow>
+        <Detail label={t('exercise.stats.accuracy.label')} valueLang={lang} valueDir="ltr">
+          <ValueStack>
+            <span>{recentAccuracy}%</span>
+            <SubNote>{t('exercise.stats.accuracy.alltime', { value: String(allTimeAccuracy) })}</SubNote>
+          </ValueStack>
+        </Detail>
+        <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
+          <ValueStack>
+            <span>
+              {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
+            </span>
+            <SubNote>
+              {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
+                days: String(record),
+              })}
+            </SubNote>
+          </ValueStack>
+        </Detail>
+      </DetailsRow>
+      {streakGoal.remaining > 0 && (
+        <StreakGoalSection>
+          <StreakGoalHint>
+            {t('exercise.stats.streak.extendHint', { remaining: String(streakGoal.remaining) })}
+          </StreakGoalHint>
+          <ProgressBar
+            value={streakGoalNow}
+            max={STREAK_DAILY_GOAL}
+            style={{ height: '0.6rem' }}
+            aria-label={t('exercise.stats.streak.progress.label')}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={STREAK_DAILY_GOAL}
+            aria-valuenow={streakGoalNow}
+          />
+        </StreakGoalSection>
+      )}
+      <MasterySection mastery={mastery} />
+    </StatsSummary>
   )
 }
 
