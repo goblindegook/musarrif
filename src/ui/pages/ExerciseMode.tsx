@@ -343,6 +343,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                       <Text>
                         {t('exercise.demotion.line', {
                           dimension: t(`exercise.unlock.dimension.${change.dimension}`),
+                          items: change.items.map((item) => t(item)).join(', '),
                         })}
                       </Text>
                     </WarningAlert>

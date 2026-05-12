@@ -75,7 +75,7 @@
     "exercise.unlock.form.8": "Form VIII",
     "exercise.unlock.form.9": "Form IX",
     "exercise.unlock.line": "{dimension} unlocked: {items}",
-    "exercise.demotion.line": "Stepping back on {dimension}. Keep practicing and it'll return.",
+    "exercise.demotion.line": "Stepping back on {items}. Keep practicing and it'll return.",
     "exercise.focus.back": "Back",
     "exercise.focus.clear": "Clear focus",
     "exercise.focus.form.label": "Form",

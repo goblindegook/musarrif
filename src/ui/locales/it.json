@@ -75,7 +75,7 @@
     "exercise.unlock.form.8": "Forma VIII",
     "exercise.unlock.form.9": "Forma IX",
     "exercise.unlock.line": "Nuovo sblocco ({dimension}): {items}",
-    "exercise.demotion.line": "Un passo indietro su {dimension}. Continua a esercitarti e tornerà.",
+    "exercise.demotion.line": "Un passo indietro su {items}. Continua a esercitarti e tornerà.",
     "exercise.focus.back": "Indietro",
     "exercise.focus.clear": "Rimuovi",
     "exercise.focus.form.label": "Forma",

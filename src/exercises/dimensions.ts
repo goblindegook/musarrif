@@ -44,7 +44,7 @@ export type DimensionStore = {
 
 export type DimensionChange =
   | { type: 'promotion'; dimension: DimensionKey; items: readonly string[] }
-  | { type: 'demotion'; dimension: DimensionKey }
+  | { type: 'demotion'; dimension: DimensionKey; items: readonly string[] }
 
 export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -369,7 +369,11 @@ export function getDimensionChanges(previous: DimensionProfile, next: DimensionP
       if (items.length) changes.push({ type: 'promotion', dimension, items })
     }
     if (target < current) {
-      changes.push({ type: 'demotion', dimension })
+      const items: string[] = []
+      for (let level = current; level > target; level--) {
+        items.push(...(DIMENSION_UNLOCK_KEYS[dimension][level] ?? []))
+      }
+      if (items.length) changes.push({ type: 'demotion', dimension, items })
     }
   }
   return changes

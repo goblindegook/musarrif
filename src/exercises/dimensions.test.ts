@@ -701,7 +701,7 @@ describe('getDimensionChanges', () => {
   test('returns demotion for level decrease', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([{ type: 'demotion', dimension: 'forms' }])
+    ).toEqual([{ type: 'demotion', dimension: 'forms', items: ['exercise.unlock.form.3'] }])
   })
 
   test('returns both promotion and demotion for simultaneous changes', () => {
@@ -712,7 +712,7 @@ describe('getDimensionChanges', () => {
       ),
     ).toEqual([
       { type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.3'] },
-      { type: 'demotion', dimension: 'rootTypes' },
+      { type: 'demotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hamzated'] },
     ])
   })
 })
