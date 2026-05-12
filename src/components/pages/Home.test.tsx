@@ -179,6 +179,57 @@ test('syncs verb list filters and pagination to hash query params', async () => 
   expect(window.location.hash).toBe('#/verbs?form=2')
 })
 
+test('allows selecting multiple root type filters with intersection semantics', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Hamzated', { selector: 'button' }))
+
+  const initialCount = screen.getByText('Included verbs').closest('section')?.querySelectorAll('a').length
+
+  await user.click(screen.getByText('Defective', { selector: 'button' }))
+
+  const intersectedCount = screen.getByText('Included verbs').closest('section')?.querySelectorAll('a').length
+
+  expect(initialCount).toBeGreaterThan(0)
+  expect(intersectedCount).toBeGreaterThan(0)
+  expect(intersectedCount).toBeLessThanOrEqual(initialCount ?? 0)
+})
+
+test('applies root type filters together with form filters', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Assimilated', { selector: 'button' }))
+  const rootTypeCount = screen.getByText('Included verbs').closest('section')?.querySelectorAll('a').length
+
+  await user.click(screen.getByText('I', { selector: 'button' }))
+  const intersectedCount = screen.getByText('Included verbs').closest('section')?.querySelectorAll('a').length
+
+  expect(rootTypeCount).toBeGreaterThan(0)
+  expect(intersectedCount).toBeGreaterThan(0)
+  expect(intersectedCount).toBeLessThanOrEqual(rootTypeCount ?? 0)
+})
+
+test('treats sound as exclusive with other root type filters', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  const sound = screen.getByText('Sound', { selector: 'button' })
+  const hamzated = screen.getByText('Hamzated', { selector: 'button' })
+
+  await user.click(sound)
+  expect(sound).toHaveAttribute('aria-pressed', 'true')
+
+  await user.click(hamzated)
+  expect(sound).toHaveAttribute('aria-pressed', 'false')
+  expect(hamzated).toHaveAttribute('aria-pressed', 'true')
+
+  await user.click(sound)
+  expect(sound).toHaveAttribute('aria-pressed', 'true')
+  expect(hamzated).toHaveAttribute('aria-pressed', 'false')
+})
+
 describe('Search', () => {
   it('matches verbs when a derived form is typed', async () => {
     renderHome()

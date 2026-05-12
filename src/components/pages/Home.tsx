@@ -4,6 +4,8 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useFavourites } from '../../hooks/useFavourites'
 import { useI18n } from '../../hooks/useI18n'
 import { useRecent } from '../../hooks/useRecent'
+import { tokenize } from '../../paradigms/letters'
+import { analyzeRoot } from '../../paradigms/roots'
 import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs, ZNN_SISTERS_IDS } from '../../paradigms/verbs'
 import { parseInteger, toRoman } from '../../primitives/numbers'
 import { useRouting } from '../../routes'
@@ -25,20 +27,44 @@ const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
 
 type Filters = {
   form: VerbForm | null
+  rootTypes: RootTypeFilter[]
   kana: boolean
   zanna: boolean
 }
 
+type RootTypeFilter = 'sound' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
+
+const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = ['sound', 'assimilated', 'hollow', 'defective', 'hamzated']
+
+function includesAll<T>(selected: readonly T[], required: readonly T[]): boolean {
+  return required.every((item) => selected.includes(item))
+}
+
+function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
+  const analysis = analyzeRoot(tokenize(verb.root))
+  const result: RootTypeFilter[] = []
+  if (analysis.type === 'sound') result.push('sound')
+  if (analysis.weakPositions.includes(0)) result.push('assimilated')
+  if (analysis.weakPositions.includes(1)) result.push('hollow')
+  if (analysis.weakPositions.includes(2)) result.push('defective')
+  if (analysis.hamzaPositions.length > 0) result.push('hamzated')
+  return result
+}
+
 function parseForm(value: string | null): VerbForm | null {
   const parsed = parseInteger(value, 0)
-  if (parsed === 0) return null
   return FORMS.includes(parsed as VerbForm) ? (parsed as VerbForm) : null
+}
+
+function parseRootTypes(values: readonly string[]): RootTypeFilter[] {
+  return values.filter((value): value is RootTypeFilter => ROOT_TYPE_FILTERS.includes(value as RootTypeFilter))
 }
 
 function parseQuery(params: URLSearchParams): { filters: Filters; page: number } {
   return {
     filters: {
       form: parseForm(params.get('form')),
+      rootTypes: parseRootTypes(params.getAll('rootType')),
       kana: Boolean(params.get('kana')),
       zanna: Boolean(params.get('zanna')),
     },
@@ -46,20 +72,18 @@ function parseQuery(params: URLSearchParams): { filters: Filters; page: number }
   }
 }
 
-function setQueryWithVerbFilters(current: URLSearchParams, filters: Filters, page: number): URLSearchParams {
-  const next = new URLSearchParams(current)
+function setQueryWithVerbFilters(filters: Filters, page: number): URLSearchParams {
+  const next = new URLSearchParams()
 
-  if (filters.form != null) next.set('form', String(filters.form))
-  else next.delete('form')
+  if (filters.form) next.set('form', String(filters.form))
+
+  for (const rootType of filters.rootTypes) next.append('rootType', rootType)
 
   if (filters.kana) next.set('kana', '1')
-  else next.delete('kana')
 
   if (filters.zanna) next.set('zanna', '1')
-  else next.delete('zanna')
 
   if (page > 1) next.set('page', String(page))
-  else next.delete('page')
 
   return next
 }
@@ -85,6 +109,9 @@ export function Home() {
   const visibleVerbs = useMemo(() => {
     let filtered = allVerbs
     if (filters.form != null) filtered = filtered.filter((verb) => verb.form === filters.form)
+    if (filters.rootTypes.length > 0) {
+      filtered = filtered.filter((verb) => includesAll(getVerbRootTypes(verb), filters.rootTypes))
+    }
     if (!filters.kana && !filters.zanna) return filtered
     return filtered.filter(
       (verb) => (filters.kana && KWN_SISTERS_IDS.has(verb.id)) || (filters.zanna && ZNN_SISTERS_IDS.has(verb.id)),
@@ -97,7 +124,7 @@ export function Home() {
   useEffect(() => {
     if (route[0] !== 'verbs' || route[1] != null) return
     if (page === currentPage) return
-    setQueryParams((current) => setQueryWithVerbFilters(current, filters, currentPage))
+    setQueryParams(setQueryWithVerbFilters(filters, currentPage))
   }, [currentPage, filters, page, route, setQueryParams])
 
   const paginatedVerbs = useMemo(() => {
@@ -113,7 +140,7 @@ export function Home() {
           ...currentFilters,
           form: currentFilters.form === form ? null : form,
         }
-        return setQueryWithVerbFilters(current, nextFilters, 1)
+        return setQueryWithVerbFilters(nextFilters, 1)
       })
     },
     [setQueryParams],
@@ -122,16 +149,33 @@ export function Home() {
   const toggleKanaSistersFilter = useCallback(() => {
     setQueryParams((current) => {
       const { filters: currentFilters } = parseQuery(current)
-      return setQueryWithVerbFilters(current, { ...currentFilters, kana: !currentFilters.kana }, 1)
+      return setQueryWithVerbFilters({ ...currentFilters, kana: !currentFilters.kana }, 1)
     })
   }, [setQueryParams])
 
   const toggleZannaSistersFilter = useCallback(() => {
     setQueryParams((current) => {
       const { filters: currentFilters } = parseQuery(current)
-      return setQueryWithVerbFilters(current, { ...currentFilters, zanna: !currentFilters.zanna }, 1)
+      return setQueryWithVerbFilters({ ...currentFilters, zanna: !currentFilters.zanna }, 1)
     })
   }, [setQueryParams])
+
+  const toggleRootTypeFilter = useCallback(
+    (rootType: RootTypeFilter) => {
+      setQueryParams((current) => {
+        const { filters: currentFilters } = parseQuery(current)
+        const hasRootType = currentFilters.rootTypes.includes(rootType)
+        const rootTypes: RootTypeFilter[] = hasRootType
+          ? currentFilters.rootTypes.filter((value) => value !== rootType)
+          : rootType === 'sound'
+            ? ['sound']
+            : [...currentFilters.rootTypes.filter((value) => value !== 'sound'), rootType]
+
+        return setQueryWithVerbFilters({ ...currentFilters, rootTypes }, 1)
+      })
+    },
+    [setQueryParams],
+  )
 
   return (
     <Main>
@@ -239,6 +283,25 @@ export function Home() {
 
           <FilterGroup>
             <Subheading dir={dir} lang={lang}>
+              {t('verbsList.filter.rootType.title')}
+            </Subheading>
+            <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
+              {ROOT_TYPE_FILTERS.map((rootType) => (
+                <SelectableButton
+                  key={rootType}
+                  type="button"
+                  aria-pressed={filters.rootTypes.includes(rootType)}
+                  active={filters.rootTypes.includes(rootType)}
+                  onClick={() => toggleRootTypeFilter(rootType)}
+                >
+                  {t(`verbsList.filter.rootType.${rootType}.label`)}
+                </SelectableButton>
+              ))}
+            </FilterBar>
+          </FilterGroup>
+
+          <FilterGroup>
+            <Subheading dir={dir} lang={lang}>
               {t('verbsList.filter.other.title')}
             </Subheading>
             <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
@@ -271,9 +334,7 @@ export function Home() {
               <PaginationBar>
                 <Button
                   disabled={currentPage === 1}
-                  onClick={() =>
-                    setQueryParams((current) => setQueryWithVerbFilters(current, filters, currentPage - 1))
-                  }
+                  onClick={() => setQueryParams(setQueryWithVerbFilters(filters, currentPage - 1))}
                 >
                   {t('pagination.previous')}
                 </Button>
@@ -282,9 +343,7 @@ export function Home() {
                 </PaginationStatus>
                 <Button
                   disabled={currentPage === pageCount}
-                  onClick={() =>
-                    setQueryParams((current) => setQueryWithVerbFilters(current, filters, currentPage + 1))
-                  }
+                  onClick={() => setQueryParams(setQueryWithVerbFilters(filters, currentPage + 1))}
                 >
                   {t('pagination.next')}
                 </Button>
