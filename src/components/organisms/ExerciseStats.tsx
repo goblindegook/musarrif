@@ -6,6 +6,7 @@ import type { DimensionProfile } from '../../exercises/dimensions'
 import {
   computeMastery,
   type MasteryCategory as MasteryCategoryData,
+  type MasteryCategoryId,
   type MasteryItem as MasteryItemData,
 } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
@@ -78,7 +79,10 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
   )
 }
 
-function masteryItemLabel(item: MasteryItemData, t: ReturnType<typeof useI18n>['t']): string {
+function masteryItemLabel<T extends MasteryCategoryId>(
+  item: MasteryItemData<T>,
+  t: (key: string, params?: Record<string, string>) => string,
+): string {
   const { categoryId, value } = item
   if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS])
   if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(parseInteger(String(value), 0)) })
@@ -95,7 +99,7 @@ function masteryProgressBar(score: number, locked: boolean): { value: number; ma
   return { value: Number(displayedScore.toFixed(6)), max: 1 }
 }
 
-function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData[] }) {
+function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<MasteryCategoryId>[] }) {
   const { t } = useI18n()
 
   return (
@@ -268,7 +272,7 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
 interface StatsDetailsPanelProps {
   stats: DayStats[]
   streak: number
-  mastery: readonly MasteryCategoryData[]
+  mastery: readonly MasteryCategoryData<MasteryCategoryId>[]
 }
 
 function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
