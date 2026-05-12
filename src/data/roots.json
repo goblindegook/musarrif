@@ -4529,6 +4529,20 @@
     "form": 4
   },
   {
+    "root": "xyl",
+    "form": 5
+  },
+  {
+    "root": "xyl",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "xyl",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "xyr",
     "form": 8
   },
