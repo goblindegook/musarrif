@@ -49,7 +49,7 @@ const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
 
 export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals'
 
-type MasteryItemValueByCategory = {
+export type MasteryItemIdByCategory = {
   rootTypes: SrsRootType
   forms: VerbForm
   tenses: VerbTense
@@ -58,29 +58,30 @@ type MasteryItemValueByCategory = {
 }
 
 export type MasteryItemId = {
-  [K in MasteryCategoryId]: `${K}.${MasteryItemValueByCategory[K]}`
+  [K in MasteryCategoryId]: `${K}.${MasteryItemIdByCategory[K]}`
 }[MasteryCategoryId]
 
-export interface MasteryItem {
-  id: MasteryItemId
-  categoryId: MasteryCategoryId
-  value: MasteryItemValueByCategory[MasteryCategoryId]
+export interface MasteryItem<K extends MasteryCategoryId> {
+  id: `${K}.${MasteryItemIdByCategory[K]}`
+  categoryId: K
+  value: MasteryItemIdByCategory[K]
   score: number
   locked: boolean
 }
 
-export interface MasteryCategory {
-  id: MasteryCategoryId
+export interface MasteryCategory<K extends MasteryCategoryId> {
+  id: K
   score: number
   locked: boolean
-  items: readonly MasteryItem[]
+  items: readonly MasteryItem<K>[]
 }
 
 export function computeMastery(
   profile: DimensionProfile,
   srsStore: SrsStore,
   today = utcToday(),
-): readonly MasteryCategory[] {
+): readonly MasteryCategory<MasteryCategoryId>[] {
+  const cards = cardSpace()
   const unlockedRootTypes = new Set(rootTypesPool(profile.rootTypes))
   const unlockedForms = new Set(formPool(profile.forms))
   const unlockedTenses = new Set(tensePool(profile.tenses))
@@ -92,14 +93,14 @@ export function computeMastery(
   return [
     buildCategory(
       'rootTypes',
-      ROOT_TYPES_ORDER.map((rootType) => {
-        const locked = !unlockedRootTypes.has(rootType)
+      ROOT_TYPES_ORDER.map((value) => {
+        const locked = !unlockedRootTypes.has(value)
         return {
-          id: `rootTypes.${rootType}`,
+          id: `rootTypes.${value}`,
           categoryId: 'rootTypes',
-          value: rootType,
+          value,
           score: computeScore(
-            cardSpace().filter((card) => card.rootType === rootType),
+            cards.filter((card) => card.rootType === value),
             srsStore,
             today,
             locked,
@@ -110,14 +111,14 @@ export function computeMastery(
     ),
     buildCategory(
       'forms',
-      FORMS.map((form) => {
-        const locked = !unlockedForms.has(form)
+      FORMS.map((value) => {
+        const locked = !unlockedForms.has(value)
         return {
-          id: `forms.${form}`,
+          id: `forms.${value}`,
           categoryId: 'forms',
-          value: form,
+          value,
           score: computeScore(
-            cardSpace().filter((card) => card.form === form),
+            cards.filter((card) => card.form === value),
             srsStore,
             today,
             locked,
@@ -128,14 +129,14 @@ export function computeMastery(
     ),
     buildCategory(
       'tenses',
-      TENSE_ORDER.map((tense) => {
-        const locked = !unlockedTenses.has(tense)
+      TENSE_ORDER.map((value) => {
+        const locked = !unlockedTenses.has(value)
         return {
-          id: `tenses.${tense}`,
+          id: `tenses.${value}`,
           categoryId: 'tenses',
-          value: tense,
+          value,
           score: computeScore(
-            cardSpace().filter((card) => card.tense === tense && isVerbCard(card)),
+            cards.filter((card) => card.tense === value && isVerbCard(card)),
             srsStore,
             today,
             locked,
@@ -146,14 +147,14 @@ export function computeMastery(
     ),
     buildCategory(
       'pronouns',
-      PRONOUN_TABLE_ORDER.map((pronoun) => {
-        const locked = !unlockedPronouns.has(pronoun)
+      PRONOUN_TABLE_ORDER.map((value) => {
+        const locked = !unlockedPronouns.has(value)
         return {
-          id: `pronouns.${pronoun}`,
+          id: `pronouns.${value}`,
           categoryId: 'pronouns',
-          value: pronoun,
+          value,
           score: computeScore(
-            cardSpace().filter((card) => card.pronoun === pronoun && isVerbCard(card)),
+            cards.filter((card) => card.pronoun === value && isVerbCard(card)),
             srsStore,
             today,
             locked,
@@ -164,14 +165,14 @@ export function computeMastery(
     ),
     buildCategory(
       'nominals',
-      NOMINAL_ORDER.map((nominal) => {
-        const locked = !unlockedNominals.has(nominal)
+      NOMINAL_ORDER.map((value) => {
+        const locked = !unlockedNominals.has(value)
         return {
-          id: `nominals.${nominal}`,
+          id: `nominals.${value}`,
           categoryId: 'nominals',
-          value: nominal,
+          value,
           score: computeScore(
-            cardSpace().filter((card) => isNominalCard(card)),
+            cards.filter((card) => isNominalCard(card)),
             srsStore,
             today,
             locked,
@@ -211,12 +212,15 @@ function combinationGroupKey(card: SrsCardIdentity): string {
   return `${card.rootType}:${card.form}:${card.kind}`
 }
 
-function buildCategory(id: MasteryCategoryId, items: readonly MasteryItem[]): MasteryCategory {
+function buildCategory<K extends MasteryCategoryId>(id: K, items: readonly MasteryItem<K>[]): MasteryCategory<K> {
   return { id, items, score: average(items.map((item) => item.score)), locked: items.every((item) => item.locked) }
 }
 
-export function findLowestMastery(categories: readonly MasteryCategory[], limit = 5): readonly MasteryItem[] {
-  const unlocked = categories.flatMap((cat) => cat.items.filter((item) => !item.locked))
+export function findLowestMastery<K extends MasteryCategoryId>(
+  mastery: readonly MasteryCategory<K>[],
+  limit = 5,
+): readonly MasteryItem<K>[] {
+  const unlocked = mastery.flatMap((cat) => cat.items.filter((item) => !item.locked))
   if (unlocked.length === 0) return []
   const sorted = unlocked.toSorted((a, b) => a.score - b.score)
   const threshold = sorted[Math.min(2, sorted.length - 1)].score

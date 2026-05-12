@@ -1,15 +1,22 @@
 import { describe, expect, test } from 'vitest'
 import type { DimensionProfile } from './dimensions'
-import { computeMastery, findLowestMastery, type MasteryCategory, type MasteryItem } from './mastery'
+import {
+  computeMastery,
+  findLowestMastery,
+  type MasteryCategory,
+  type MasteryCategoryId,
+  type MasteryItem,
+  type MasteryItemIdByCategory,
+} from './mastery'
 import { buildCardKey, type SrsStore } from './srs'
 
 function testMasteryCategories(items: {
-  rootTypes?: MasteryItem[]
-  forms?: MasteryItem[]
-  tenses?: MasteryItem[]
-  pronouns?: MasteryItem[]
-  nominals?: MasteryItem[]
-}): readonly MasteryCategory[] {
+  rootTypes?: MasteryItem<'rootTypes'>[]
+  forms?: MasteryItem<'forms'>[]
+  tenses?: MasteryItem<'tenses'>[]
+  pronouns?: MasteryItem<'pronouns'>[]
+  nominals?: MasteryItem<'nominals'>[]
+}): readonly MasteryCategory<MasteryCategoryId>[] {
   return [
     { id: 'rootTypes', score: 0, locked: false, items: items.rootTypes ?? [] },
     { id: 'forms', score: 0, locked: false, items: items.forms ?? [] },
@@ -19,11 +26,11 @@ function testMasteryCategories(items: {
   ]
 }
 
-function getCategory(snapshot: readonly MasteryCategory[], categoryId: string) {
+function getCategory<T extends MasteryCategoryId>(snapshot: readonly MasteryCategory<T>[], categoryId: T) {
   return snapshot.find((entry) => entry.id === categoryId)!
 }
 
-function getItem(category: MasteryCategory, value: string) {
+function getItem<T extends MasteryCategoryId>(category: MasteryCategory<T>, value: MasteryItemIdByCategory[T]) {
   return category.items.find((entry) => entry.value === value)!
 }
 

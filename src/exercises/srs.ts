@@ -266,7 +266,7 @@ export const cardSpace = memoize(
 
       for (const kind of [...PARTICIPLE_EXERCISES, ...MASDAR_EXERCISES]) {
         const key = buildCardKey(kind, rootType, verb.form)
-        unique.set(key, { key, kind, rootType, form: verb.form, tense: undefined, pronoun: undefined })
+        unique.set(key, { key, kind, rootType, form: verb.form })
       }
     }
 

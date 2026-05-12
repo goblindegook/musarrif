@@ -33,9 +33,9 @@ interface UniverseCard {
   kind: ExerciseKind
   rootType: SrsRootType
   form: VerbForm
-  tense: VerbTense | undefined
-  pronoun: PronounId | undefined
-  nominal: NominalGroup | undefined
+  tense?: VerbTense
+  pronoun?: PronounId
+  nominal?: NominalGroup
 }
 
 interface DueDistributionRow {
@@ -316,8 +316,6 @@ function buildUniverse(): readonly UniverseCard[] {
           kind,
           rootType,
           form: verb.form,
-          tense: undefined,
-          pronoun: undefined,
           nominal: nominalGroup(kind),
         })
         continue
