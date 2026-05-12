@@ -13,7 +13,7 @@ export function ProgressBar({ value, max, style, ...props }: ProgressBarProps) {
   const clampedValuePercent = (clampedValue / effectiveMax) * 100
 
   return (
-    <Track {...props} style={style}>
+    <Track role="progressbar" aria-valuemin={0} aria-valuemax={max} aria-valuenow={value} style={style} {...props}>
       <Fill style={{ width: `${clampedValuePercent}%` }} />
     </Track>
   )

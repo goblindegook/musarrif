@@ -18,7 +18,7 @@ import {
   getStreakRecord,
   STREAK_DAILY_GOAL,
 } from '../../exercises/stats'
-import { parseInteger, toRoman } from '../../primitives/numbers'
+import { parseInteger, sum, toRoman } from '../../primitives/numbers'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { useI18n } from '../hooks/useI18n'
@@ -59,21 +59,14 @@ const ROOT_TYPE_LABEL_KEYS = {
 } as const
 
 export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
-  const { t, lang } = useI18n()
+  const { t } = useI18n()
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
 
   if (stats.length === 0) return null
 
   return (
     <Panel title={t('exercise.stats.title')} collapsible defaultCollapsed>
-      <StatsChart
-        stats={stats}
-        dateLabel={t('exercise.stats.date.label')}
-        lang={lang}
-        correctLabel={t('exercise.stats.correct')}
-        incorrectLabel={t('exercise.stats.incorrect')}
-        skippedLabel={t('exercise.stats.skipped')}
-      />
+      <StatsChart stats={stats} />
       <StatsDetailsPanel stats={stats} streak={streak} mastery={mastery} />
     </Panel>
   )
@@ -126,6 +119,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<Mas
                     value={categoryProgress.value}
                     max={categoryProgress.max}
                     style={{ height: '0.45rem' }}
+                    aria-label={t(`exercise.unlock.dimension.${category.id}`)}
                   />
                 </MasteryCategoryRow>
               </MasterySummary>
@@ -149,6 +143,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<Mas
                             value={itemProgress.value}
                             max={itemProgress.max}
                             style={{ height: '0.45rem' }}
+                            aria-label={masteryItemLabel(item, t)}
                           />
                         </MasteryRow>
                       </MasteryItem>
@@ -166,20 +161,44 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<Mas
 
 interface StatsChartProps {
   stats: DayStats[]
-  dateLabel: string
-  lang: string
-  correctLabel: string
-  incorrectLabel: string
-  skippedLabel: string
 }
 
-function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skippedLabel }: StatsChartProps) {
-  const { t } = useI18n()
+function trendDirection(values: readonly number[]): 'up' | 'down' | 'steady' {
+  const first = values[0] ?? 0
+  const last = values[values.length - 1] ?? 0
+  if (last > first) return 'up'
+  if (last < first) return 'down'
+  return 'steady'
+}
+
+function buildChartAriaLabel(
+  days: readonly DayStats[],
+  t: (key: string, params?: Record<string, string>) => string,
+): string {
+  const correctValues = days.map((day) => day.correct)
+  const incorrectValues = days.map((day) => day.incorrect)
+  const skippedValues = days.map((day) => day.passed)
+  return t('exercise.stats.chart.aria.summary', {
+    correctLabel: t('exercise.stats.correct'),
+    correctTotal: String(sum(correctValues)),
+    correctTrend: t(`exercise.stats.chart.trend.${trendDirection(correctValues)}`),
+    incorrectLabel: t('exercise.stats.incorrect'),
+    incorrectTotal: String(sum(incorrectValues)),
+    incorrectTrend: t(`exercise.stats.chart.trend.${trendDirection(incorrectValues)}`),
+    skippedLabel: t('exercise.stats.skipped'),
+    skippedTotal: String(sum(skippedValues)),
+    skippedTrend: t(`exercise.stats.chart.trend.${trendDirection(skippedValues)}`),
+  })
+}
+
+function StatsChart({ stats }: StatsChartProps) {
+  const { t, lang } = useI18n()
   const { themePreference } = useTheme()
   const containerRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
   const days = useMemo(() => buildDayWindow(stats, 7), [stats])
+  const chartAriaLabel = useMemo(() => buildChartAriaLabel(days, t), [days, t])
   const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
 
   useEffect(() => {
@@ -222,25 +241,25 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
         series: [
           {
             show: false,
-            label: dateLabel,
+            label: t('exercise.stats.date.label'),
             value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
           },
           {
-            label: correctLabel,
+            label: t('exercise.stats.correct'),
             stroke: colors.correct,
             width: 2,
             paths: spline,
             value: (_, rawValue) => rawValue ?? '—',
           },
           {
-            label: incorrectLabel,
+            label: t('exercise.stats.incorrect'),
             stroke: colors.incorrect,
             width: 2,
             paths: spline,
             value: (_, rawValue) => rawValue ?? '—',
           },
           {
-            label: skippedLabel,
+            label: t('exercise.stats.skipped'),
             stroke: colors.passed,
             width: 2,
             paths: spline,
@@ -258,11 +277,11 @@ function StatsChart({ stats, dateLabel, lang, correctLabel, incorrectLabel, skip
     )
 
     return () => plot.destroy()
-  }, [width, days, dateLabel, lang, correctLabel, incorrectLabel, skippedLabel, themePreference])
+  }, [width, days, lang, t, themePreference])
 
   return (
     <ChartContainer>
-      <div ref={containerRef} role="img" aria-label={t('exercise.stats.chart.aria')} style={{ width: '100%' }}>
+      <div ref={containerRef} role="img" aria-label={chartAriaLabel} style={{ width: '100%' }}>
         <div ref={mountRef} />
       </div>
     </ChartContainer>
@@ -315,10 +334,6 @@ function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
             max={STREAK_DAILY_GOAL}
             style={{ height: '0.6rem' }}
             aria-label={t('exercise.stats.streak.progress.label')}
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={STREAK_DAILY_GOAL}
-            aria-valuenow={streakGoalNow}
           />
         </StreakGoalSection>
       )}

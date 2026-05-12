@@ -1,6 +1,5 @@
 import { input, select } from '@inquirer/prompts'
 import { transliterateReverse } from '@pacote/buckwalter'
-import en from '../src/ui/locales/en.json' with { type: 'json' }
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
@@ -18,6 +17,7 @@ import { conjugatePassivePast } from '../src/paradigms/passive/past.ts'
 import { conjugatePassivePresentMood } from '../src/paradigms/passive/present.ts'
 import { PRONOUN_IDS } from '../src/paradigms/pronouns.ts'
 import { FORMS, getAvailableParadigms, synthesizeVerb, verbs } from '../src/paradigms/verbs.ts'
+import en from '../src/ui/locales/en.json' with { type: 'json' }
 
 const locale = en
 const t = (key, params) => {

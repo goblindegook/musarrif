@@ -76,7 +76,7 @@ describe('ExerciseStats', () => {
 
   test('is collapsed by default', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
-    expect(screen.getByLabelText(/statistics chart/i)).not.toBeVisible()
+    expect(screen.queryByRole('img')).toBeNull()
   })
 
   test('has a toggle button labelled Progress', () => {
@@ -87,14 +87,14 @@ describe('ExerciseStats', () => {
   test('expands when toggle is clicked', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByLabelText(/statistics chart/i)).toBeVisible()
+    expect(screen.getByRole('img')).toBeVisible()
   })
 
   test('collapses again when toggle is clicked twice', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByLabelText(/statistics chart/i)).not.toBeVisible()
+    expect(screen.queryByRole('img')).toBeNull()
   })
 
   test('accuracy pill shows Accuracy label when expanded', () => {
@@ -190,8 +190,24 @@ describe('ExerciseStats', () => {
     const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
     const { container } = render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByLabelText(/statistics chart/i)).toBeInTheDocument()
+    expect(screen.getByRole('img')).toBeInTheDocument()
     expect(container.querySelector('.uplot')).toBeInTheDocument()
+  })
+
+  test('chart aria-label describes series trends and totals', () => {
+    const sixDaysAgo = new Date(TODAY.getTime() - 6 * 24 * 60 * 60 * 1000)
+    const stats: DayStats[] = [
+      { date: sixDaysAgo, correct: 1, incorrect: 3, passed: 0 },
+      { date: TODAY, correct: 4, incorrect: 1, passed: 2 },
+    ]
+    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText('Progress'))
+
+    const ariaLabel = screen.getByRole('img').getAttribute('aria-label')
+    expect(ariaLabel).toContain('Last 7 days')
+    expect(ariaLabel).toContain('Correct 5 (up)')
+    expect(ariaLabel).toContain('Incorrect 4 (down)')
+    expect(ariaLabel).toContain('Skipped 2 (up)')
   })
 
   test('chart renders Skipped series label when expanded', () => {
@@ -234,6 +250,28 @@ describe('ExerciseStats', () => {
     render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Sound')).toBeInTheDocument()
+  })
+
+  test('exposes accessible semantics for mastery category progress bars', () => {
+    const { container } = render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText('Progress'))
+
+    const categoryProgressbar = container.querySelector('[aria-label="Tenses"]')
+    expect(categoryProgressbar?.getAttribute('role')).toBe('progressbar')
+    expect(categoryProgressbar?.getAttribute('aria-valuemin')).toBe('0')
+    expect(categoryProgressbar?.getAttribute('aria-valuemax')).toBe('1')
+    expect(categoryProgressbar?.getAttribute('aria-valuenow')).not.toBeNull()
+  })
+
+  test('exposes accessible semantics for mastery item progress bars', () => {
+    const { container } = render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText('Progress'))
+
+    const itemProgressbar = container.querySelector('[aria-label="Sound"]')
+    expect(itemProgressbar?.getAttribute('role')).toBe('progressbar')
+    expect(itemProgressbar?.getAttribute('aria-valuemin')).toBe('0')
+    expect(itemProgressbar?.getAttribute('aria-valuemax')).toBe('1')
+    expect(itemProgressbar?.getAttribute('aria-valuenow')).not.toBeNull()
   })
 
   test('keeps today values in the last chart slot when local day differs from UTC', () => {

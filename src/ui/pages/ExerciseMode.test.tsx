@@ -735,6 +735,24 @@ describe('focus chip', () => {
     expect(screen.getByText(/focus/i).closest('button')).toBeInTheDocument()
   })
 
+  test('pronoun options expose non-abbreviated aria labels', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 0, pronouns: 1, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+
+    const pronounOption = screen.getByText('3rd m. s.', { selector: 'button' })
+    expect(pronounOption).toHaveAttribute(
+      'aria-label',
+      expect.stringMatching(/^3rd person masculine singular(, recommended)?$/),
+    )
+  })
+
   test('shows group picker when multiple dimensions have options', () => {
     localStorage.setItem(
       'conjugator:dimensions',
