@@ -8,9 +8,9 @@ const ROOT = join(__dirname, '..')
 
 const ROOTS_PATH = join(ROOT, 'src/data/roots.json')
 const LOCALE_PATHS = {
-  en: join(ROOT, 'src/locales/en.json'),
-  it: join(ROOT, 'src/locales/it.json'),
-  pt: join(ROOT, 'src/locales/pt.json'),
+  en: join(ROOT, 'src/ui/locales/en.json'),
+  it: join(ROOT, 'src/ui/locales/it.json'),
+  pt: join(ROOT, 'src/ui/locales/pt.json'),
 }
 
 const VOWEL_PATTERNS = ['a-a', 'a-i', 'a-u', 'i-a', 'i-i', 'i-u', 'u-a', 'u-i', 'u-u']

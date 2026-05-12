@@ -1,6 +1,6 @@
 import { input, select } from '@inquirer/prompts'
 import { transliterateReverse } from '@pacote/buckwalter'
-import en from '../src/locales/en.json' with { type: 'json' }
+import en from '../src/ui/locales/en.json' with { type: 'json' }
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
