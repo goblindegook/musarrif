@@ -31,3 +31,7 @@ dist-ssr
 /.claude/settings.local.json
 /.superpowers/
 /docs/superpowers/
+
+# MemPalace per-project files
+mempalace.yaml
+entities.json

@@ -4,24 +4,26 @@ Muṣarrif is an interactive Arabic verb conjugator — a PWA that lets users se
 
 ## Version Control
 
-Agents must not commit or push anything. The user retains full control over releases.
+- Agents must not commit or push anything. Committing is at the user's discretion, and the user retains full control over releases.
 
 ## Commands
+
+Always use RTK when working on this project.
 
 Node is managed via Mise. Always prefix `node`/`npm` commands with `mise exec --`.
 
 ```bash
-mise exec -- npm run dev              # Dev server
-mise exec -- npm run build            # tsc + vite build
-mise exec -- npm run preview          # Preview production build
-mise exec -- npm test -- --no-watch   # Run tests once (default is watch mode)
-mise exec -- npm test -- --no-watch src/path/to/file.test.ts  # Single test file
-mise exec -- npm run test:coverage    # Coverage report
-mise exec -- npm run test:mutation    # Stryker mutation testing
-mise exec -- npm run lint             # Biome lint check
-mise exec -- npm run lint:fix         # Auto-fix lint issues
-mise exec -- npm run format           # lint:fix + format
-mise exec -- node script.js           # Node scripts (always with mise exec --)
+rtk mise exec -- npm run dev              # Dev server
+rtk mise exec -- npm run build            # tsc + vite build
+rtk mise exec -- npm run preview          # Preview production build
+rtk mise exec -- npm test -- --no-watch   # Run tests once (default is watch mode)
+rtk mise exec -- npm test -- --no-watch src/path/to/file.test.ts  # Single test file
+rtk mise exec -- npm run test:coverage    # Coverage report
+rtk mise exec -- npm run test:mutation    # Stryker mutation testing
+rtk mise exec -- npm run lint             # Biome lint check
+rtk mise exec -- npm run lint:fix         # Auto-fix lint issues
+rtk mise exec -- npm run format           # lint:fix + format
+rtk mise exec -- node script.js           # Node scripts (always with mise exec --)
 ```
 
 Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer Node over external tools (e.g. Python) for scripting tasks.
@@ -32,9 +34,9 @@ Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer 
 
 **Two-layer separation**:
 - `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for all 13 pronoun forms (`1s`, `2ms`, `2fs`, `2md`, `2fd`, `2mp`, `2fp`, `3ms`, `3fs`, `3md`, `3fd`, `3mp`, `3fp`).
-- `src/components/` — Preact UI components styled with goober.
+- `src/ui/` — Preact UI components styled with goober.
 
-**State management**: Two context providers in `src/hooks/`:
+**State management**: Two context providers in `src/ui/hooks/`:
 - `RoutingProvider` — Hash-based routing, synced with `hashchange`/`popstate`. Canonical paths:
   - `#/verbs`, `#/verbs/:verbId`, `#/verbs/:verbId/:voice/:tense`, `#/verbs/:verbId/:voice/present/:mood`, `#/test`
   - App is deployed using Vite; routing utilities normalize base-path and hash navigation.
@@ -50,9 +52,9 @@ Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer 
 - `src/paradigms/explanation.ts` — Grammatical explanation generation
 - `src/paradigms/letters.ts` — Character/diacritic manipulation constants and utilities
 
-**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers 14 exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/components/pages/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
+**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers 14 exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/ui/pages/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
 
-**Localization**: `src/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under the `strings` object.
+**Localization**: `src/ui/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under the `strings` object.
 
 ### Directory Organization
 
@@ -61,12 +63,23 @@ src/
   app.tsx                   # App shell; switches between conjugation and exercise pages
   main.tsx                  # Entry point; mounts RoutingProvider + I18nProvider + App
   routes.ts                 # Routing configuration and AppRoute type definitions
-  components/
+  ui/
     atoms/                  # Foundational UI primitives (Button, ArabicDisplay, Heading, Text, etc.)
     molecules/              # Composed controls (tabs, segmented control, search, share/copy/speech, Detail, etc.)
     organisms/              # Feature sections (ConjugateBox, ConjugationTable, ConjugationInsights, FormInsights, etc.)
     pages/                  # Top-level page components (Home, ConjugationMode, ExerciseMode)
     icons/                  # SVG icon components
+    hooks/                  # Shared providers/hooks
+      useRouting.tsx        # Routing provider (hash-based)
+      useI18n.tsx           # I18n provider (language, diacritics, RTL/LTR)
+      useDimensionStore.ts  # Exercise dimension state
+      useSrsStore.ts        # SRS state persistence
+      useFavourites.ts      # Favourites management
+      useRecent.ts          # Recent verbs tracking
+      useTheme.ts           # Theme management
+      useDocumentTitle.ts   # Document title updates
+      useLocalStorage.ts    # Local storage abstraction
+    locales/                # i18n JSON files (en, it, pt, ar)
   exercises/
     generators/             # Per-kind exercise generators (conjugation.ts, verb-form.ts, masdar-form.ts, etc.)
     mastery.ts              # Mastery tracking system
@@ -92,17 +105,6 @@ src/
     letters.ts              # Character/diacritic manipulation constants and utilities
     verbs.ts                # Verb search via fuzzy matching
   data/                     # Canonical dataset (`roots.json`)
-  hooks/                    # Shared providers/hooks
-    useRouting.tsx          # Routing provider (hash-based)
-    useI18n.tsx             # I18n provider (language, diacritics, RTL/LTR)
-    useDimensionStore.ts    # Exercise dimension state
-    useSrsStore.ts          # SRS state persistence
-    useFavourites.ts        # Favourites management
-    useRecent.ts            # Recent verbs tracking
-    useTheme.ts             # Theme management
-    useDocumentTitle.ts     # Document title updates
-    useLocalStorage.ts      # Local storage abstraction
-  locales/                  # i18n JSON files (en, it, pt, ar)
   primitives/               # Generic helpers (objects, strings, numbers)
   test/                     # Vitest setup and custom matchers
 ```
@@ -188,7 +190,7 @@ Elegant, minimal, and quietly authoritative. Three words: **precise, warm, schol
 
 ## UI Components
 
-**Always reuse existing UI primitives before building new ones.** Check `src/components/atoms/`, `src/components/molecules/`, `src/components/icons/`, `Modal.tsx`, `Overlay.tsx`, and `Panel.tsx` first. Never roll bespoke styled wrappers for things that already exist — use `IconButton` + an SVG icon (not emoji buttons), use `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
+**Always reuse existing UI primitives before building new ones.** Check `src/ui/atoms/`, `src/ui/molecules/`, `src/ui/icons/`, `Modal.tsx`, `Overlay.tsx`, and `Panel.tsx` first. Never roll bespoke styled wrappers for things that already exist — use `IconButton` + an SVG icon (not emoji buttons), use `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
 
 ### Preact Component Conventions
 

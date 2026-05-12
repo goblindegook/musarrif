@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import en from '../locales/en.json'
+import en from '../ui/locales/en.json'
 import { getClosestVerbs, search } from './selection'
 
 describe('getClosestVerbs', () => {

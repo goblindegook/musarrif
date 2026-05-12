@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import enLocale from '../locales/en.json'
+import enLocale from '../ui/locales/en.json'
 import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'
