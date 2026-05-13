@@ -291,6 +291,15 @@ const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
 const DEMOTION_THRESHOLD = 0.4
 const MIN_DEMOTION_WINDOW = 20
 
+const DEMOTION_PRIORITY: readonly DimensionKey[] = [
+  'diacritics',
+  'nominals',
+  'forms',
+  'rootTypes',
+  'tenses',
+  'pronouns',
+]
+
 export function parseDimensionStore(raw: unknown): DimensionStore {
   return normalizeDimensionStore(v.parse(DimensionStore, raw) as DimensionStore)
 }
@@ -338,14 +347,16 @@ export function recordDimensionAnswer(
 
 export function promoteDimensions(store: DimensionStore, allowPromotion = true): DimensionStore {
   const { profile, windows } = store
-  const nextProfile: DimensionProfile = { ...profile }
+  const nextProfile = { ...profile }
+  const demotionCandidates = new Set<DimensionKey>()
 
   for (const dimension of keys(profile)) {
-    let level = profile[dimension]
+    const level = profile[dimension]
     const w = windows[dimension]
     if (w.length < MIN_DEMOTION_WINDOW) continue
 
     const accuracy = w.filter(Boolean).length / w.length
+    setProfileDimension(nextProfile, dimension, level)
 
     if (
       allowPromotion &&
@@ -353,19 +364,24 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
       accuracy >= PROMOTION_THRESHOLDS[dimension][level] &&
       canPromote(profile, dimension)
     )
-      level += 1
-    else if (accuracy <= DEMOTION_THRESHOLD) level -= 1
-
-    ;(nextProfile as Record<string, number>)[dimension] = clamp(level, 0, MAX_LEVELS[dimension])
+      setProfileDimension(nextProfile, dimension, level + 1)
+    else if (accuracy <= DEMOTION_THRESHOLD && level > 0) demotionCandidates.add(dimension)
   }
 
-  const nextWindows: DimensionWindows = { ...windows }
+  const demotionTarget = DEMOTION_PRIORITY.find((dimension) => demotionCandidates.has(dimension))
+  if (demotionTarget) setProfileDimension(nextProfile, demotionTarget, profile[demotionTarget] - 1)
+
+  const nextWindows = { ...windows }
   const enforced = enforcePrerequisites(nextProfile)
   for (const dimension of keys(profile)) {
     if (enforced[dimension] !== profile[dimension]) nextWindows[dimension] = []
   }
 
   return { profile: enforced, windows: nextWindows }
+}
+
+function setProfileDimension<K extends DimensionKey>(profile: DimensionProfile, dimension: K, value: number): void {
+  profile[dimension] = clamp(value, 0, MAX_LEVELS[dimension]) as DimensionProfile[K]
 }
 
 function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension: T): boolean {

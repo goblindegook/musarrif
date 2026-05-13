@@ -722,6 +722,41 @@ describe('promoteDimensions', () => {
     expect(next.profile).toEqual({ diacritics: 0, forms: 1, nominals: 0, pronouns: 0, rootTypes: 1, tenses: 2 })
   })
 
+  test('demotes only one dimension at a time using reverse unlock order', () => {
+    const next = promoteDimensions({
+      profile: {
+        diacritics: 2,
+        forms: 9,
+        rootTypes: 3,
+        tenses: 4,
+        pronouns: 3,
+        nominals: 2,
+      },
+      windows: {
+        ...INITIAL_DIMENSION_WINDOWS,
+        diacritics: filledWindow(0, 100),
+        forms: filledWindow(0),
+        rootTypes: filledWindow(0),
+      },
+    })
+
+    expect(next).toMatchObject({
+      profile: {
+        diacritics: 1,
+        forms: 9,
+        nominals: 2,
+        pronouns: 3,
+        rootTypes: 3,
+        tenses: 4,
+      },
+      windows: {
+        diacritics: [],
+      },
+    })
+    expect(next.windows.forms).toHaveLength(20)
+    expect(next.windows.rootTypes).toHaveLength(20)
+  })
+
   test('diacritics blocked at level 1 until all other dimensions are at max', () => {
     expect(
       promoteDimensions({
