@@ -1,10 +1,12 @@
 import type { ComponentChildren, VNode } from 'preact'
 import { createContext, toChildArray } from 'preact'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 
 type RouteChildren<TRoute> = ComponentChildren | ((route: TRoute) => ComponentChildren)
 
 type NormalizePath<Path extends string> = Path extends `/${infer Rest}` ? Rest : Path
+
+type RouteSegments = readonly string[]
 
 type SplitPath<Path extends string> =
   NormalizePath<Path> extends `${infer Segment}/${infer Rest}`
@@ -13,13 +15,13 @@ type SplitPath<Path extends string> =
       ? []
       : [NormalizePath<Path>]
 
-type RouteParamsForPath<
-  Route extends readonly (string | undefined)[],
-  Tokens extends readonly string[],
-> = Tokens extends readonly [infer Token extends string, ...infer RestTokens extends string[]]
-  ? Route extends readonly [infer Segment extends string | undefined, ...infer RestRoute extends (string | undefined)[]]
+type RouteParamsForPath<Route extends RouteSegments, Tokens extends RouteSegments> = Tokens extends readonly [
+  infer Token extends string,
+  ...infer RestTokens extends string[],
+]
+  ? Route extends readonly [infer Segment extends string, ...infer RestRoute extends RouteSegments]
     ? Token extends `:${infer Param}`
-      ? { [K in Param]: Exclude<Segment, undefined> } & RouteParamsForPath<RestRoute, RestTokens>
+      ? { [K in Param]: Segment } & RouteParamsForPath<RestRoute, RestTokens>
       : Segment extends Token
         ? RouteParamsForPath<RestRoute, RestTokens>
         : never
@@ -32,7 +34,7 @@ export interface BaseRouteProps<TRoute> {
   children: RouteChildren<TRoute>
 }
 
-export interface PathRouteProps<TRoute extends readonly (string | undefined)[], Path extends string>
+export interface PathRouteProps<TRoute extends RouteSegments, Path extends string>
   extends BaseRouteProps<TRoute extends TRoute ? RouteParamsForPath<TRoute, SplitPath<Path>> : never> {
   path: Path
 }
@@ -42,7 +44,7 @@ export interface RouterProps<TRoute> {
   children: ComponentChildren
 }
 
-export interface RoutingContextValue<TRoute extends readonly (string | undefined)[]> {
+export interface RoutingContextValue<TRoute extends RouteSegments> {
   route: TRoute
   navigateTo: (route: TRoute) => void
   toHref: (route: TRoute) => string
@@ -53,9 +55,9 @@ export interface RoutingContextValue<TRoute extends readonly (string | undefined
   ) => void
 }
 
-type RoutingMode = 'hash' | 'path'
+export type RoutingMode = 'hash' | 'path'
 
-interface RoutingConfig<TRoute extends readonly (string | undefined)[]> {
+export interface RoutingConfig<TRoute extends RouteSegments> {
   parse: (segments: readonly string[]) => TRoute
   mode?: RoutingMode
 }
@@ -68,6 +70,11 @@ const renderRouteChildren = <TRoute,>(route: TRoute, children: RouteChildren<TRo
 }
 
 const normalizePath = (path: string): string => path.replace(/^#?\/?/, '').replace(/\/+$/, '')
+
+function normalizeQuery(query: string): string {
+  const trimmed = query.replace(/^\?/, '')
+  return trimmed.length === 0 ? '' : `?${trimmed}`
+}
 
 function matchPath(routePath: string, pathPattern: string): Record<string, string> | null {
   const routeSegments = normalizePath(routePath).split('/').filter(Boolean)
@@ -124,19 +131,11 @@ function readQuery(mode: RoutingMode): string {
   return window.location.search
 }
 
-function normalizeQuery(query: string): string {
-  const trimmed = query.replace(/^\?/, '')
-  return trimmed.length === 0 ? '' : `?${trimmed}`
+function toHref(route: RouteSegments, mode: RoutingMode): string {
+  return [mode === 'path' ? '' : '#'].concat(route.map(encodeURIComponent)).join('/')
 }
 
-function toQueryParams(query: string): URLSearchParams {
-  return new URLSearchParams(query.replace(/^\?/, ''))
-}
-
-export function createRouting<TRoute extends readonly (string | undefined)[]>({
-  mode = 'hash',
-  parse,
-}: RoutingConfig<TRoute>) {
+export function createRouting<TRoute extends RouteSegments>({ mode = 'hash', parse }: RoutingConfig<TRoute>) {
   const RoutingContext = createContext<RoutingContextValue<TRoute> | undefined>(undefined)
 
   function Route<const TPath extends string>(_props: PathRouteProps<TRoute, TPath>): null
@@ -145,17 +144,8 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
     return null
   }
 
-  const toHref = (route: TRoute): string => {
-    const path = route
-      .filter((segment): segment is string => segment != null)
-      .map((segment) => encodeURIComponent(segment))
-
-    return [mode === 'path' ? '' : '#', ...path].join('/')
-  }
-
-  const Router = ({ route, children }: RouterProps<TRoute>) => {
+  function Router({ route, children }: RouterProps<TRoute>) {
     const routePath = route.filter((segment): segment is string => segment != null).join('/')
-
     for (const candidate of toChildArray(children)) {
       if (!isVNode<BaseRouteProps<TRoute>>(candidate) || candidate.type !== Route) continue
       const routeProps = candidate.props as BaseRouteProps<TRoute> & { path?: string }
@@ -168,19 +158,18 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
 
       return <>{renderRouteChildren(route, routeProps.children)}</>
     }
-
-    return null
   }
 
   const RoutingProvider = ({ children }: { children: ComponentChildren }) => {
     const [route, setRoute] = useState<TRoute>(() => parse(readSegments(mode)))
     const [query, setQuery] = useState(() => normalizeQuery(readQuery(mode)))
+    const previousRouteHref = useRef<string | null>(null)
 
     useEffect(() => {
       const syncRouteFromLocation = () => {
         const routeFromLocation = parse(readSegments(mode))
         const queryFromLocation = normalizeQuery(readQuery(mode))
-        const nextHref = `${toHref(routeFromLocation)}${queryFromLocation}`
+        const nextHref = `${toHref(routeFromLocation, mode)}${queryFromLocation}`
         const currentHref =
           mode === 'hash' ? window.location.hash : `${window.location.pathname}${window.location.search}`
 
@@ -197,23 +186,30 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
       window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
 
       return () => controller.abort()
-    }, [parse, toHref, mode])
+    }, [parse, mode])
+
+    useEffect(() => {
+      const routeHref = toHref(route, mode)
+      if (previousRouteHref.current != null && previousRouteHref.current !== routeHref) window.scrollTo(0, 0)
+      previousRouteHref.current = routeHref
+    }, [route, mode])
 
     const navigateTo = useCallback(
       (nextRoute: TRoute) => {
-        window.history.pushState({}, '', toHref(nextRoute))
+        window.history.pushState({}, '', toHref(nextRoute, mode))
         setRoute(nextRoute)
         setQuery('')
       },
-      [toHref],
+      [mode],
     )
+
+    const queryParams = useMemo(() => new URLSearchParams(query.replace(/^\?/, '')), [query])
 
     const setQueryParams = useCallback(
       (updater: URLSearchParams | ((current: URLSearchParams) => URLSearchParams), options?: { replace?: boolean }) => {
-        const currentParams = toQueryParams(query)
-        const nextInput = typeof updater === 'function' ? updater(currentParams) : updater
+        const nextInput = typeof updater === 'function' ? updater(queryParams) : updater
         const nextQuery = normalizeQuery(nextInput.toString())
-        const nextHref = `${toHref(route)}${nextQuery}`
+        const nextHref = `${toHref(route, mode)}${nextQuery}`
         const currentHref =
           mode === 'hash' ? window.location.hash : `${window.location.pathname}${window.location.search}`
 
@@ -223,14 +219,12 @@ export function createRouting<TRoute extends readonly (string | undefined)[]>({
         else window.history.replaceState({}, '', nextHref)
         setQuery(nextQuery)
       },
-      [mode, query, route, toHref],
+      [mode, queryParams, route],
     )
 
-    const queryParams = useMemo(() => toQueryParams(query), [query])
-
     const value = useMemo<RoutingContextValue<TRoute>>(
-      () => ({ route, navigateTo, toHref, queryParams, setQueryParams }),
-      [route, navigateTo, queryParams, setQueryParams, toHref],
+      () => ({ route, navigateTo, toHref: (route: TRoute) => toHref(route, mode), queryParams, setQueryParams }),
+      [route, navigateTo, queryParams, setQueryParams, mode],
     )
 
     return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>
