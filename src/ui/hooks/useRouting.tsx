@@ -69,12 +69,9 @@ const renderRouteChildren = <TRoute,>(route: TRoute, children: RouteChildren<TRo
   return typeof children === 'function' ? (children as (currentRoute: TRoute) => ComponentChildren)(route) : children
 }
 
-const normalizePath = (path: string): string => path.replace(/^#?\/?/, '').replace(/\/+$/, '')
+const normalizePath = (path: string) => path.replace(/^#?\/?/, '').replace(/\/+$/, '')
 
-function normalizeQuery(query: string): string {
-  const trimmed = query.replace(/^\?/, '')
-  return trimmed.length === 0 ? '' : `?${trimmed}`
-}
+const normalizeQuery = (query: string) => (query !== '' && query !== '?' ? `?${query.replace(/^\?/, '')}` : '')
 
 function matchPath(routePath: string, pathPattern: string): Record<string, string> | null {
   const routeSegments = normalizePath(routePath).split('/').filter(Boolean)
