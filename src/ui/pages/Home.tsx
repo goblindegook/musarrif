@@ -1,9 +1,10 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import * as v from 'valibot'
 import { tokenize } from '../../paradigms/letters'
 import { analyzeRoot } from '../../paradigms/roots'
 import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs, ZNN_SISTERS_IDS } from '../../paradigms/verbs'
-import { parseInteger, toRoman } from '../../primitives/numbers'
+import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
@@ -23,27 +24,60 @@ const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
 
-type Filters = {
-  form: VerbForm | null
-  rootTypes: RootTypeFilter[]
-  favourites: boolean
-  kana: boolean
-  zanna: boolean
-}
-
 type RootTypeFilter = 'sound' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
-type OtherFilterToggle = 'favourites' | 'kana' | 'zanna'
 
 const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = ['sound', 'assimilated', 'hollow', 'defective', 'hamzated']
 
-function includesAll<T>(selected: readonly T[], required: readonly T[]): boolean {
-  return required.every((item) => selected.includes(item))
+type GroupFilter = 'favourites' | 'kana' | 'zanna'
+
+interface Query {
+  filters: {
+    form: VerbForm | null
+    root: RootTypeFilter[]
+    group: GroupFilter | null
+  }
+  page: number
 }
+
+const Query = v.object({
+  filters: v.object({
+    form: v.fallback(v.nullable(v.pipe(v.string(), v.toNumber(), v.picklist(FORMS))), null),
+    root: v.fallback(v.array(v.picklist(ROOT_TYPE_FILTERS)), []),
+    group: v.fallback(v.nullable(v.picklist(['favourites', 'kana', 'zanna'])), null),
+  }),
+  page: v.fallback(v.pipe(v.string(), v.toNumber(), v.toMinValue(1)), 1),
+})
+
+function parseQuery(params: URLSearchParams): Query {
+  return v.parse(Query, {
+    filters: {
+      form: params.get('form'),
+      root: params.getAll('root'),
+      group: params.get('group'),
+    },
+    page: params.get('page'),
+  })
+}
+
+function setQuery(query: Query): URLSearchParams {
+  const next = new URLSearchParams()
+  if (query.filters.form) next.set('form', String(query.filters.form))
+  for (const rootType of query.filters.root) next.append('root', rootType)
+  if (query.filters.group) next.set('group', query.filters.group)
+  if (query.page > 1) next.set('page', String(query.page))
+  return next
+}
+
+const OTHER_FILTERS: readonly { key: GroupFilter; labelKey: string }[] = [
+  { key: 'favourites', labelKey: 'verbsList.filter.favourites.label' },
+  { key: 'kana', labelKey: 'verbsList.filter.kanaSisters.label' },
+  { key: 'zanna', labelKey: 'verbsList.filter.zannaSisters.label' },
+]
 
 function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   const analysis = analyzeRoot(tokenize(verb.root))
   const result: RootTypeFilter[] = []
-  if (analysis.type === 'sound') result.push('sound')
+  if (analysis.weakPositions.length === 0 && analysis.hamzaPositions.length === 0) result.push('sound')
   if (analysis.weakPositions.includes(0)) result.push('assimilated')
   if (analysis.weakPositions.includes(1)) result.push('hollow')
   if (analysis.weakPositions.includes(2)) result.push('defective')
@@ -51,44 +85,32 @@ function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   return result
 }
 
-function parseForm(value: string | null): VerbForm | null {
-  const parsed = parseInteger(value, 0)
-  return FORMS.includes(parsed as VerbForm) ? (parsed as VerbForm) : null
+function withFormFilter(query: Query, option: VerbForm): Query {
+  return { ...query, filters: { ...query.filters, form: query.filters.form === option ? null : option }, page: 1 }
 }
 
-function parseRootTypes(values: readonly string[]): RootTypeFilter[] {
-  return values.filter((value): value is RootTypeFilter => ROOT_TYPE_FILTERS.includes(value as RootTypeFilter))
+function withGroupFilter(query: Query, option: GroupFilter): Query {
+  return { ...query, filters: { ...query.filters, group: query.filters.group === option ? null : option }, page: 1 }
 }
 
-function parseQuery(params: URLSearchParams): { filters: Filters; page: number } {
-  return {
-    filters: {
-      form: parseForm(params.get('form')),
-      rootTypes: parseRootTypes(params.getAll('rootType')),
-      favourites: Boolean(params.get('favourites')),
-      kana: Boolean(params.get('kana')),
-      zanna: Boolean(params.get('zanna')),
-    },
-    page: Math.max(1, parseInteger(params.get('page'), 1)),
-  }
+function withRootTypeFilter(query: Query, option: RootTypeFilter): Query {
+  let root = query.filters.root
+  const exists = root.includes(option)
+  if (exists) root = root.filter((f) => f !== option)
+  if (!exists && option === 'sound') root = ['sound']
+  if (!exists && option !== 'sound') root = [...root.filter((entry) => entry !== 'sound'), option]
+  return { filters: { ...query.filters, root }, page: 1 }
 }
 
-function setQueryWithVerbFilters(filters: Filters, page: number): URLSearchParams {
-  const next = new URLSearchParams()
-
-  if (filters.form) next.set('form', String(filters.form))
-
-  for (const rootType of filters.rootTypes) next.append('rootType', rootType)
-
-  if (filters.favourites) next.set('favourites', '1')
-
-  if (filters.kana) next.set('kana', '1')
-
-  if (filters.zanna) next.set('zanna', '1')
-
-  if (page > 1) next.set('page', String(page))
-
-  return next
+function filterVerbs({ filters }: Query, favouriteVerbIds: ReadonlySet<string>): DisplayVerb[] {
+  let filtered = allVerbs
+  if (filters.form) filtered = filtered.filter((verb) => verb.form === filters.form)
+  if (filters.root.length > 0)
+    filtered = filtered.filter((verb) => filters.root.every((item) => getVerbRootTypes(verb).includes(item)))
+  if (filters.group === 'favourites') filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
+  if (filters.group === 'kana') filtered = filtered.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
+  if (filters.group === 'zanna') filtered = filtered.filter((verb) => ZNN_SISTERS_IDS.has(verb.id))
+  return filtered
 }
 
 export function Home() {
@@ -96,85 +118,49 @@ export function Home() {
   const { navigateTo, queryParams, route, setQueryParams } = useRouting()
   const { favourites } = useFavourites()
   const { recents } = useRecent()
-  const { filters, page } = parseQuery(queryParams)
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
 
   useDocumentTitle(t('title'))
 
-  const handleSelect = useCallback(
-    (verb: DisplayVerb) => {
-      navigateTo(['verbs', verb.id])
-    },
-    [navigateTo],
+  const query = useMemo(() => parseQuery(queryParams), [queryParams])
+  const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
+  const visibleVerbs = useMemo(() => filterVerbs(query, favouriteVerbIds), [favouriteVerbIds, query])
+
+  const handleSelect = useCallback((verb: DisplayVerb) => navigateTo(['verbs', verb.id]), [navigateTo])
+
+  const isFilterDisabled = useCallback(
+    (isActive: boolean, query: Query) => !isActive && filterVerbs(query, favouriteVerbIds).length === 0,
+    [favouriteVerbIds],
   )
 
-  const sortedRecents = useMemo(() => recents, [recents])
-  const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
-  const visibleVerbs = useMemo(() => {
-    let filtered = allVerbs
-    if (filters.form != null) filtered = filtered.filter((verb) => verb.form === filters.form)
-    if (filters.rootTypes.length > 0) {
-      filtered = filtered.filter((verb) => includesAll(getVerbRootTypes(verb), filters.rootTypes))
-    }
-    if (filters.favourites) filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
-    if (filters.kana) filtered = filtered.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
-    if (filters.zanna) filtered = filtered.filter((verb) => ZNN_SISTERS_IDS.has(verb.id))
-    return filtered
-  }, [favouriteVerbIds, filters])
-
   const pageCount = Math.max(1, Math.ceil(visibleVerbs.length / VERBS_PER_PAGE))
-  const currentPage = Math.min(page, pageCount)
+  const currentPage = Math.min(query.page, pageCount)
 
   useEffect(() => {
     if (route[0] !== 'verbs' || route[1] != null) return
-    if (page === currentPage) return
-    setQueryParams(setQueryWithVerbFilters(filters, currentPage))
-  }, [currentPage, filters, page, route, setQueryParams])
+    if (query.page === currentPage) return
+    setQueryParams(setQuery(query))
+  }, [currentPage, query, route, setQueryParams])
 
   const paginatedVerbs = useMemo(() => {
     const start = (currentPage - 1) * VERBS_PER_PAGE
     return visibleVerbs.slice(start, start + VERBS_PER_PAGE)
   }, [currentPage, visibleVerbs])
 
-  const selectFormFilter = useCallback(
-    (form: VerbForm) => {
-      setQueryParams((current) => {
-        const { filters: currentFilters } = parseQuery(current)
-        const nextFilters = {
-          ...currentFilters,
-          form: currentFilters.form === form ? null : form,
-        }
-        return setQueryWithVerbFilters(nextFilters, 1)
-      })
-    },
-    [setQueryParams],
+  const applyFormFilter = useCallback(
+    (form: VerbForm) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), form))),
+    [setQueryParams, query],
   )
 
-  const toggleOtherFilter = useCallback(
-    (filter: OtherFilterToggle) => {
-      setQueryParams((current) => {
-        const { filters: currentFilters } = parseQuery(current)
-        return setQueryWithVerbFilters({ ...currentFilters, [filter]: !currentFilters[filter] }, 1)
-      })
-    },
-    [setQueryParams],
+  const applyGroupFilter = useCallback(
+    (filter: GroupFilter) => setQueryParams((current) => setQuery(withGroupFilter(parseQuery(current), filter))),
+    [setQueryParams, query],
   )
 
-  const toggleRootTypeFilter = useCallback(
-    (rootType: RootTypeFilter) => {
-      setQueryParams((current) => {
-        const { filters: currentFilters } = parseQuery(current)
-        const hasRootType = currentFilters.rootTypes.includes(rootType)
-        const rootTypes: RootTypeFilter[] = hasRootType
-          ? currentFilters.rootTypes.filter((value) => value !== rootType)
-          : rootType === 'sound'
-            ? ['sound']
-            : [...currentFilters.rootTypes.filter((value) => value !== 'sound'), rootType]
-
-        return setQueryWithVerbFilters({ ...currentFilters, rootTypes }, 1)
-      })
-    },
-    [setQueryParams],
+  const applyRootTypeFilter = useCallback(
+    (rootType: RootTypeFilter) =>
+      setQueryParams((current) => setQuery(withRootTypeFilter(parseQuery(current), rootType))),
+    [setQueryParams, query],
   )
 
   return (
@@ -229,10 +215,10 @@ export function Home() {
           )}
         </Panel>
 
-        {sortedRecents.length > 0 && (
+        {recents.length > 0 && (
           <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
             <InlineVerbList>
-              {sortedRecents.map((verb) => (
+              {recents.map((verb) => (
                 <VerbPill key={verb.id} verb={verb} />
               ))}
             </InlineVerbList>
@@ -261,17 +247,18 @@ export function Home() {
               {t('verbsList.filter.form.title')}
             </Subheading>
             <FilterBar role="group" aria-label={t('aria.selectForm')}>
-              {FORMS.map((form) => (
+              {FORMS.map((option) => (
                 <SelectableButton
-                  key={form}
-                  id={`form-tab-${form}`}
+                  key={option}
+                  id={`form-tab-${option}`}
                   type="button"
-                  aria-selected={filters.form === form}
-                  aria-controls={`form-panel-${form}`}
-                  active={filters.form === form}
-                  onClick={() => selectFormFilter(form)}
+                  aria-selected={query.filters.form === option}
+                  aria-controls={`form-panel-${option}`}
+                  active={query.filters.form === option}
+                  disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
+                  onClick={() => applyFormFilter(option)}
                 >
-                  {toRoman(form)}
+                  {toRoman(option)}
                 </SelectableButton>
               ))}
             </FilterBar>
@@ -282,15 +269,16 @@ export function Home() {
               {t('verbsList.filter.rootType.title')}
             </Subheading>
             <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
-              {ROOT_TYPE_FILTERS.map((rootType) => (
+              {ROOT_TYPE_FILTERS.map((option) => (
                 <SelectableButton
-                  key={rootType}
+                  key={option}
                   type="button"
-                  aria-pressed={filters.rootTypes.includes(rootType)}
-                  active={filters.rootTypes.includes(rootType)}
-                  onClick={() => toggleRootTypeFilter(rootType)}
+                  aria-pressed={query.filters.root.includes(option)}
+                  active={query.filters.root.includes(option)}
+                  disabled={isFilterDisabled(query.filters.root.includes(option), withRootTypeFilter(query, option))}
+                  onClick={() => applyRootTypeFilter(option)}
                 >
-                  {t(`verbsList.filter.rootType.${rootType}.label`)}
+                  {t(`verbsList.filter.rootType.${option}.label`)}
                 </SelectableButton>
               ))}
             </FilterBar>
@@ -301,30 +289,18 @@ export function Home() {
               {t('verbsList.filter.other.title')}
             </Subheading>
             <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
-              <SelectableButton
-                type="button"
-                aria-pressed={filters.favourites}
-                active={filters.favourites}
-                onClick={() => toggleOtherFilter('favourites')}
-              >
-                {t('verbsList.filter.favourites.label')}
-              </SelectableButton>
-              <SelectableButton
-                type="button"
-                aria-pressed={filters.kana}
-                active={filters.kana}
-                onClick={() => toggleOtherFilter('kana')}
-              >
-                {t('verbsList.filter.kanaSisters.label')}
-              </SelectableButton>
-              <SelectableButton
-                type="button"
-                aria-pressed={filters.zanna}
-                active={filters.zanna}
-                onClick={() => toggleOtherFilter('zanna')}
-              >
-                {t('verbsList.filter.zannaSisters.label')}
-              </SelectableButton>
+              {OTHER_FILTERS.map((option) => (
+                <SelectableButton
+                  key={option.key}
+                  type="button"
+                  aria-pressed={query.filters.group === option.key}
+                  active={query.filters.group === option.key}
+                  disabled={isFilterDisabled(query.filters.group === option.key, withGroupFilter(query, option.key))}
+                  onClick={() => applyGroupFilter(option.key)}
+                >
+                  {t(option.labelKey)}
+                </SelectableButton>
+              ))}
             </FilterBar>
           </FilterGroup>
 
@@ -338,7 +314,7 @@ export function Home() {
               <PaginationBar>
                 <Button
                   disabled={currentPage === 1}
-                  onClick={() => setQueryParams(setQueryWithVerbFilters(filters, currentPage - 1))}
+                  onClick={() => setQueryParams(setQuery({ ...query, page: currentPage - 1 }))}
                 >
                   {t('pagination.previous')}
                 </Button>
@@ -347,7 +323,7 @@ export function Home() {
                 </PaginationStatus>
                 <Button
                   disabled={currentPage === pageCount}
-                  onClick={() => setQueryParams(setQueryWithVerbFilters(filters, currentPage + 1))}
+                  onClick={() => setQueryParams(setQuery({ ...query, page: currentPage + 1 }))}
                 >
                   {t('pagination.next')}
                 </Button>

@@ -149,24 +149,64 @@ test('allows combining form and kāna filters', async () => {
   expect(scoped.queryByText('آلَ')).toBeNull()
 })
 
-test('applies kāna and ẓanna filters with intersection semantics', async () => {
+test('applies other filters exclusively', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(screen.getByText('Kāna and her sisters'))
-  const kanaCount = screen
-    .getByText('Included verbs')
-    .closest('section')
-    ?.querySelectorAll('a[href^="#/verbs/"]').length
+  const kana = within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' })
+  const zanna = within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' })
+  const favourites = within(otherFilters).getByText('Favourites', { selector: 'button' })
 
-  await user.click(screen.getByText('Ẓanna and her sisters'))
-  const intersectedCount = screen
-    .getByText('Included verbs')
-    .closest('section')
-    ?.querySelectorAll('a[href^="#/verbs/"]').length
+  await user.click(kana)
+  expect(kana).toHaveAttribute('aria-pressed', 'true')
+  expect(zanna).toHaveAttribute('aria-pressed', 'false')
 
-  expect(kanaCount).toBeGreaterThan(0)
-  expect(intersectedCount).toBeLessThanOrEqual(kanaCount ?? 0)
+  await user.click(zanna)
+  expect(kana).toHaveAttribute('aria-pressed', 'false')
+  expect(zanna).toHaveAttribute('aria-pressed', 'true')
+  expect(favourites).toHaveAttribute('aria-pressed', 'false')
+
+  await user.click(favourites)
+  expect(kana).toHaveAttribute('aria-pressed', 'false')
+  expect(zanna).toHaveAttribute('aria-pressed', 'false')
+  expect(favourites).toHaveAttribute('aria-pressed', 'true')
+})
+
+test('disables other-filter options that would yield zero results', async () => {
+  renderHome()
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  expect(within(otherFilters).getByText('Favourites', { selector: 'button' })).toBeDisabled()
+})
+
+test('disables form options that would yield zero results', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+
+  expect(screen.getByText('IX', { selector: 'button' })).toBeDisabled()
+})
+
+test('keeps sound root type selectable when kāna + form I includes a doubled root', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  await user.click(screen.getByText('I', { selector: 'button' }))
+
+  const sound = screen.getByText('Sound', { selector: 'button' })
+  expect(sound).toBeEnabled()
+
+  await user.click(sound)
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(1)
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Zll-1"]')).toBeTruthy()
 })
 
 test('filters included verbs to favourites only', async () => {
@@ -230,10 +270,41 @@ test('syncs favourites filter to hash query params', async () => {
   const otherFilters = screen.getByLabelText('Other filters')
 
   await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs?favourites=1')
+  expect(window.location.hash).toBe('#/verbs?group=favourites')
 
   await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
   expect(window.location.hash).toBe('#/verbs')
+})
+
+test('syncs other filters exclusively to hash query params', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
+  renderHome('/#/verbs')
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  expect(window.location.hash).toBe('#/verbs?group=kana')
+
+  await user.click(within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' }))
+  expect(window.location.hash).toBe('#/verbs?group=zanna')
+
+  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  expect(window.location.hash).toBe('#/verbs?group=favourites')
+})
+
+test('restores group filter from hash query params', () => {
+  renderHome('/#/verbs?group=zanna')
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  expect(within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  expect(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  )
+  expect(window.location.hash).toBe('#/verbs?group=zanna')
 })
 
 test('allows selecting multiple root type filters with intersection semantics', async () => {

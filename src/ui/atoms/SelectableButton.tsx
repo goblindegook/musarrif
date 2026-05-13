@@ -71,6 +71,14 @@ const Button = styled('button')<{
     border-color: var(--color-accent);
   }
 
+  &:disabled {
+    cursor: default;
+    color: var(--color-text-muted);
+    background: var(--color-bg-surface-secondary);
+    border-color: var(--color-border);
+    box-shadow: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
