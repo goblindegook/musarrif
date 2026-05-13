@@ -28,7 +28,6 @@ import { Detail } from '../molecules/Detail'
 import { FavouriteButton } from '../molecules/FavouriteButton'
 import { Modal } from '../molecules/Modal'
 import { Panel } from '../molecules/Panel'
-import { QuickPickList } from '../molecules/QuickPickList'
 import { Search } from '../molecules/SearchBox'
 import { ShareButton } from '../molecules/ShareButton'
 import { SpeechButton } from '../molecules/SpeechButton'
@@ -220,18 +219,17 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
             >
               <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
 
-              <Heading dir={dir} lang={lang}>
-                {derivedForms.length > 1 ? t('selectDerivedForm') : t('quickPicks')}
-              </Heading>
-
-              {derivedForms.length > 1 ? (
-                <VerbList>
-                  {derivedForms.map((verb) => (
-                    <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-                  ))}
-                </VerbList>
-              ) : (
-                <QuickPickList selectedVerb={selectedVerb} />
+              {derivedForms.length > 1 && (
+                <>
+                  <Heading dir={dir} lang={lang}>
+                    {t('selectDerivedForm')}
+                  </Heading>
+                  <VerbList>
+                    {derivedForms.map((verb) => (
+                      <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+                    ))}
+                  </VerbList>
+                </>
               )}
             </TabPanel>
           )}

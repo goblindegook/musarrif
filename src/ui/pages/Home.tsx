@@ -5,7 +5,6 @@ import { analyzeRoot } from '../../paradigms/roots'
 import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs, ZNN_SISTERS_IDS } from '../../paradigms/verbs'
 import { parseInteger, toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
-import { Heading } from '../atoms/Heading'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
 import { Text } from '../atoms/Text'
@@ -14,7 +13,6 @@ import { useFavourites } from '../hooks/useFavourites'
 import { useI18n } from '../hooks/useI18n'
 import { useRecent } from '../hooks/useRecent'
 import { Panel } from '../molecules/Panel'
-import { QuickPickList } from '../molecules/QuickPickList'
 import { Search } from '../molecules/SearchBox'
 import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { VerbPill } from '../molecules/VerbPill'
@@ -214,10 +212,6 @@ export function Home() {
               aria-label={t('tabs.search')}
             >
               <Search id="verb-search-input" onSelect={handleSelect} />
-              <Heading dir={dir} lang={lang}>
-                {t('quickPicks')}
-              </Heading>
-              <QuickPickList />
             </TabPanel>
           )}
 

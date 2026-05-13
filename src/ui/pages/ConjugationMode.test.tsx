@@ -5,8 +5,6 @@ import { I18nProvider } from '../hooks/useI18n'
 import { RoutingProvider } from '../routes'
 import { ConjugationMode } from './ConjugationMode'
 
-const normalizeButtonText = (text: string | null) => text?.replace(/\s+/g, ' ').trim()
-
 interface ConjugationModeRenderProps {
   verbId: string
   voice?: Voice
@@ -211,19 +209,6 @@ test('Show a feedback panel with an issues link', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
   const link = screen.getByText('Report a problem')
   expect(link).toHaveAttribute('href', 'https://github.com/goblindegook/musarrif/issues')
-})
-
-test('Show quick picks related to the selected verb', () => {
-  renderConjugationMode({ verbId: 'krh-1' })
-  const quickPicksHeading = screen.getByText('Quick picks')
-  const buttons = Array.from(quickPicksHeading.nextElementSibling!.children)
-  expect(buttons.map((button) => normalizeButtonText(button.textContent))).toEqual([
-    'بَرهَنَIqto prove',
-    'تَأَوَّهَVto moan',
-    'بَرِحَIto leave',
-    'تَبَرَّعَVto donate',
-    'بارىIIIto compete',
-  ])
 })
 
 test('Order derived form options by form number', () => {

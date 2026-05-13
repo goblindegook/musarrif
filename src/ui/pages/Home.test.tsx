@@ -29,17 +29,6 @@ test('sets the page title ', () => {
   expect(document.title).toBe('Muṣarrif')
 })
 
-test('Show up to five random quick pick suggestions by default', () => {
-  renderHome()
-  expect(screen.getByText('Quick picks').nextElementSibling!.children.length).toBeLessThanOrEqual(5)
-})
-
-test('Shows the main page at the verbs base route', () => {
-  renderHome()
-
-  expect(screen.getByText('Quick picks')).toBeInTheDocument()
-})
-
 test('Shows verbs grouped by form at the verbs base route', () => {
   renderHome()
 
