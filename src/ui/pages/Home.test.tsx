@@ -149,6 +149,61 @@ test('allows combining form and kāna filters', async () => {
   expect(scoped.queryByText('آلَ')).toBeNull()
 })
 
+test('applies kāna and ẓanna filters with intersection semantics', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Kāna and her sisters'))
+  const kanaCount = screen
+    .getByText('Included verbs')
+    .closest('section')
+    ?.querySelectorAll('a[href^="#/verbs/"]').length
+
+  await user.click(screen.getByText('Ẓanna and her sisters'))
+  const intersectedCount = screen
+    .getByText('Included verbs')
+    .closest('section')
+    ?.querySelectorAll('a[href^="#/verbs/"]').length
+
+  expect(kanaCount).toBeGreaterThan(0)
+  expect(intersectedCount).toBeLessThanOrEqual(kanaCount ?? 0)
+})
+
+test('filters included verbs to favourites only', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel).toBeTruthy()
+  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
+
+  expect(links).toHaveLength(2)
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/sfr-1"]')).toBeTruthy()
+})
+
+test('applies favourites filter together with form filters', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['wjd-1', 'SbH-4']))
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(screen.getByText('I', { selector: 'button' }))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel).toBeTruthy()
+  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
+
+  expect(links).toHaveLength(1)
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/wjd-1"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/SbH-4"]')).toBeNull()
+})
+
 test('restores verb list filters and pagination from hash query params', () => {
   renderHome('/#/verbs?form=1&page=2')
 
@@ -166,6 +221,19 @@ test('syncs verb list filters and pagination to hash query params', async () => 
 
   await user.click(document.querySelector('#form-tab-2') as HTMLButtonElement)
   expect(window.location.hash).toBe('#/verbs?form=2')
+})
+
+test('syncs favourites filter to hash query params', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
+  renderHome('/#/verbs')
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  expect(window.location.hash).toBe('#/verbs?favourites=1')
+
+  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  expect(window.location.hash).toBe('#/verbs')
 })
 
 test('allows selecting multiple root type filters with intersection semantics', async () => {

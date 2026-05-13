@@ -386,6 +386,7 @@
     "verbsList.filter.rootType.hollow.label": "Hollow",
     "verbsList.filter.rootType.defective.label": "Defective",
     "verbsList.filter.rootType.hamzated.label": "Hamzated",
+    "verbsList.filter.favourites.label": "Favourites",
     "verbsList.filter.zannaSisters.label": "Ẓanna and her sisters",
     "verbsList.filter.other.title": "Other filters",
     "verbList.title": "Included verbs",

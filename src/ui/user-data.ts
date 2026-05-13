@@ -43,12 +43,12 @@ const ImportUserData = v.pipe(
   })),
 )
 
-const DEFAULT_DIMENSION_STORE = {
-  profile: DEFAULT_DIMENSION_PROFILE,
-  windows: DEFAULT_DIMENSION_WINDOWS,
-}
-
 export function getUserData() {
+  const DEFAULT_DIMENSION_STORE = {
+    profile: DEFAULT_DIMENSION_PROFILE,
+    windows: DEFAULT_DIMENSION_WINDOWS,
+  }
+
   return {
     version: 1,
     settings: {

@@ -26,11 +26,13 @@ const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
 type Filters = {
   form: VerbForm | null
   rootTypes: RootTypeFilter[]
+  favourites: boolean
   kana: boolean
   zanna: boolean
 }
 
 type RootTypeFilter = 'sound' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
+type OtherFilterToggle = 'favourites' | 'kana' | 'zanna'
 
 const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = ['sound', 'assimilated', 'hollow', 'defective', 'hamzated']
 
@@ -63,6 +65,7 @@ function parseQuery(params: URLSearchParams): { filters: Filters; page: number }
     filters: {
       form: parseForm(params.get('form')),
       rootTypes: parseRootTypes(params.getAll('rootType')),
+      favourites: Boolean(params.get('favourites')),
       kana: Boolean(params.get('kana')),
       zanna: Boolean(params.get('zanna')),
     },
@@ -76,6 +79,8 @@ function setQueryWithVerbFilters(filters: Filters, page: number): URLSearchParam
   if (filters.form) next.set('form', String(filters.form))
 
   for (const rootType of filters.rootTypes) next.append('rootType', rootType)
+
+  if (filters.favourites) next.set('favourites', '1')
 
   if (filters.kana) next.set('kana', '1')
 
@@ -104,17 +109,18 @@ export function Home() {
   )
 
   const sortedRecents = useMemo(() => recents, [recents])
+  const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
   const visibleVerbs = useMemo(() => {
     let filtered = allVerbs
     if (filters.form != null) filtered = filtered.filter((verb) => verb.form === filters.form)
     if (filters.rootTypes.length > 0) {
       filtered = filtered.filter((verb) => includesAll(getVerbRootTypes(verb), filters.rootTypes))
     }
-    if (!filters.kana && !filters.zanna) return filtered
-    return filtered.filter(
-      (verb) => (filters.kana && KWN_SISTERS_IDS.has(verb.id)) || (filters.zanna && ZNN_SISTERS_IDS.has(verb.id)),
-    )
-  }, [filters])
+    if (filters.favourites) filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
+    if (filters.kana) filtered = filtered.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
+    if (filters.zanna) filtered = filtered.filter((verb) => ZNN_SISTERS_IDS.has(verb.id))
+    return filtered
+  }, [favouriteVerbIds, filters])
 
   const pageCount = Math.max(1, Math.ceil(visibleVerbs.length / VERBS_PER_PAGE))
   const currentPage = Math.min(page, pageCount)
@@ -144,19 +150,15 @@ export function Home() {
     [setQueryParams],
   )
 
-  const toggleKanaSistersFilter = useCallback(() => {
-    setQueryParams((current) => {
-      const { filters: currentFilters } = parseQuery(current)
-      return setQueryWithVerbFilters({ ...currentFilters, kana: !currentFilters.kana }, 1)
-    })
-  }, [setQueryParams])
-
-  const toggleZannaSistersFilter = useCallback(() => {
-    setQueryParams((current) => {
-      const { filters: currentFilters } = parseQuery(current)
-      return setQueryWithVerbFilters({ ...currentFilters, zanna: !currentFilters.zanna }, 1)
-    })
-  }, [setQueryParams])
+  const toggleOtherFilter = useCallback(
+    (filter: OtherFilterToggle) => {
+      setQueryParams((current) => {
+        const { filters: currentFilters } = parseQuery(current)
+        return setQueryWithVerbFilters({ ...currentFilters, [filter]: !currentFilters[filter] }, 1)
+      })
+    },
+    [setQueryParams],
+  )
 
   const toggleRootTypeFilter = useCallback(
     (rootType: RootTypeFilter) => {
@@ -301,9 +303,17 @@ export function Home() {
             <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
               <SelectableButton
                 type="button"
+                aria-pressed={filters.favourites}
+                active={filters.favourites}
+                onClick={() => toggleOtherFilter('favourites')}
+              >
+                {t('verbsList.filter.favourites.label')}
+              </SelectableButton>
+              <SelectableButton
+                type="button"
                 aria-pressed={filters.kana}
                 active={filters.kana}
-                onClick={toggleKanaSistersFilter}
+                onClick={() => toggleOtherFilter('kana')}
               >
                 {t('verbsList.filter.kanaSisters.label')}
               </SelectableButton>
@@ -311,7 +321,7 @@ export function Home() {
                 type="button"
                 aria-pressed={filters.zanna}
                 active={filters.zanna}
-                onClick={toggleZannaSistersFilter}
+                onClick={() => toggleOtherFilter('zanna')}
               >
                 {t('verbsList.filter.zannaSisters.label')}
               </SelectableButton>
