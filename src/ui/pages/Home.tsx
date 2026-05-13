@@ -148,18 +148,17 @@ export function Home() {
   }, [currentPage, visibleVerbs])
 
   const applyFormFilter = useCallback(
-    (form: VerbForm) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), form))),
-    [setQueryParams, query],
-  )
-
-  const applyGroupFilter = useCallback(
-    (filter: GroupFilter) => setQueryParams((current) => setQuery(withGroupFilter(parseQuery(current), filter))),
+    (option: VerbForm) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
     [setQueryParams, query],
   )
 
   const applyRootTypeFilter = useCallback(
-    (rootType: RootTypeFilter) =>
-      setQueryParams((current) => setQuery(withRootTypeFilter(parseQuery(current), rootType))),
+    (option: RootTypeFilter) => setQueryParams((current) => setQuery(withRootTypeFilter(parseQuery(current), option))),
+    [setQueryParams, query],
+  )
+
+  const applyGroupFilter = useCallback(
+    (option: GroupFilter) => setQueryParams((current) => setQuery(withGroupFilter(parseQuery(current), option))),
     [setQueryParams, query],
   )
 
