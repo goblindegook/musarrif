@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "node -e \"const{writeFileSync}=require('fs');writeFileSync('node_modules/piper-wasm/expressions.js','export class Expressions{faceExpressions=null;constructor(_){}static inferEmotionsFromText(){return Promise.resolve(null)}}')\"",
     "dev": "vite",
     "build": "tsc && vite build",
     "build:desktop": "tauri build",
@@ -25,6 +26,7 @@
     "@pacote/memoize": "^3.0.1",
     "@pacote/shuffle": "^3.0.0",
     "goober": "^2.1.18",
+    "piper-wasm": "^0.1.4",
     "preact": "^10.29.1",
     "uplot": "^1.6.32",
     "valibot": "^1.4.0"

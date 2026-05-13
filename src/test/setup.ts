@@ -1,4 +1,9 @@
 import '@testing-library/jest-dom'
+
+vi.mock('piper-wasm', () => ({
+  piperGenerate: vi.fn(),
+}))
+
 import { setup } from 'goober'
 import { h } from 'preact'
 import { expect, vi } from 'vitest'

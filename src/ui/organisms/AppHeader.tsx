@@ -4,6 +4,7 @@ import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
 import { Subheading } from '../atoms/Subheading'
 import { useI18n } from '../hooks/useI18n'
+import { useSpeech } from '../hooks/useSpeech'
 import { type ThemePreference, useTheme } from '../hooks/useTheme'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
 import { ExerciseIcon } from '../icons/ExerciseIcon'
@@ -17,10 +18,12 @@ import { getUserData, importUserData } from '../user-data'
 
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
+const ENGINE_OPTIONS = ['webSpeech', 'piper'] as const
 
 export const AppHeader = () => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
+  const speech = useSpeech('ar')
   const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportWarningOpen, setIsImportWarningOpen] = useState(false)
@@ -45,6 +48,15 @@ export const AppHeader = () => {
       input.value = ''
     }
   }, [])
+
+  const renderSpeechAction = () => {
+    if (speech.piperTTSStatus === 'installing') return <Button disabled>{t('settings.speech.installing')}</Button>
+    if (speech.piperTTSStatus === 'installed')
+      return <Button onClick={() => void speech.remove()}>{t('settings.speech.remove')}</Button>
+    if (speech.piperTTSStatus === 'failed')
+      return <Button onClick={() => void speech.retryInstall()}>{t('settings.speech.retry')}</Button>
+    return <Button onClick={() => void speech.install()}>{t('settings.speech.install')}</Button>
+  }
 
   return (
     <TopBar>
@@ -114,6 +126,23 @@ export const AppHeader = () => {
               onChange={(option) => setThemePreference(option as ThemePreference)}
               aria-label={t('theme.title')}
             />
+          </ControlGroup>
+          <ControlGroup>
+            <Subheading>{t('settings.speech.title')}</Subheading>
+            {speech.piperTTSStatus === 'installed' && (
+              <SegmentedControl
+                fill
+                options={ENGINE_OPTIONS.map((option) => ({
+                  value: option,
+                  label: t(`settings.speech.engine.${option}`),
+                  title: t(`settings.speech.engine.${option}`),
+                }))}
+                value={speech.engine}
+                onChange={(v) => speech.setEngine(v)}
+                aria-label={t('settings.speech.title')}
+              />
+            )}
+            {renderSpeechAction()}
           </ControlGroup>
           <ControlGroup>
             <Subheading>{t('settings.data.title')}</Subheading>

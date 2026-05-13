@@ -1,51 +1,31 @@
-import { useCallback, useRef, useState } from 'preact/hooks'
+import { useCallback } from 'preact/hooks'
 import { IconButton } from '../atoms/IconButton'
+import { useSpeech } from '../hooks/useSpeech'
 import { SpeakIcon } from '../icons/SpeakIcon'
 
 interface SpeechButtonProps {
   text: string
   lang: string
+  speechRate?: number
   ariaLabel?: string
   size?: 'sm' | 'md'
 }
 
-export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps) {
-  const supported = window?.speechSynthesis && window?.SpeechSynthesisUtterance
-  const [playing, setPlaying] = useState(false)
-  const cleanupRef = useRef<(() => void) | null>(null)
+export function SpeechButton({ text, lang, speechRate, ariaLabel, size }: SpeechButtonProps) {
+  const { supported, speak, speaking } = useSpeech(lang, { speechRate: speechRate ?? 0.65 })
 
-  const speak = useCallback(() => {
+  const handleSpeak = useCallback(() => {
     if (!supported) return
-
-    if (cleanupRef.current) {
-      cleanupRef.current()
-      cleanupRef.current = null
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = lang
-    utterance.rate = 0.97
-    utterance.onend = () => {
-      setPlaying(false)
-      cleanupRef.current = null
-    }
-
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(utterance)
-    setPlaying(true)
-
-    cleanupRef.current = () => {
-      utterance.onend = null
-    }
-  }, [lang, supported, text])
+    void speak(text)
+  }, [speak, supported, text])
 
   return (
     supported && (
       <IconButton
-        onClick={speak}
+        onClick={handleSpeak}
         aria-label={ariaLabel ?? `Play pronunciation for ${text}`}
         size={size}
-        active={playing}
+        active={speaking}
       >
         <SpeakIcon />
       </IconButton>
