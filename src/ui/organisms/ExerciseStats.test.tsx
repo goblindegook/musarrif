@@ -1,14 +1,14 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
-import type { DayStats } from '../../exercises/stats'
+import type { DailyActivity } from '../../exercises/stats'
 import { I18nProvider } from '../hooks/useI18n'
 import { RoutingProvider } from '../routes'
 import { ExerciseStats } from './ExerciseStats'
 
 const NOW = new Date()
 const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate())
-const SAMPLE_STATS: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
+const SAMPLE_STATS: DailyActivity[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
 let lastPlotData: unknown[] | null = null
 
 vi.mock('uplot', () => {
@@ -114,7 +114,7 @@ describe('ExerciseStats', () => {
   test('accuracy pill shows correct percentage', () => {
     const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
-    const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('75%')).toBeInTheDocument()
@@ -125,7 +125,7 @@ describe('ExerciseStats', () => {
     oldDate.setUTCHours(0, 0, 0, 0)
     const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
-    const stats: DayStats[] = [
+    const stats: DailyActivity[] = [
       { date: oldDate, correct: 0, incorrect: 10, passed: 0 },
       { date: recentDate, correct: 4, incorrect: 0, passed: 0 },
     ]
@@ -137,14 +137,14 @@ describe('ExerciseStats', () => {
   test('accuracy pill shows All time sub-note', () => {
     const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
-    const stats: DayStats[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/All time:/)).toBeInTheDocument()
   })
 
   test('streak pill shows Record sub-note', () => {
-    const stats: DayStats[] = [
+    const stats: DailyActivity[] = [
       { date: new Date('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
       { date: new Date('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
     ]
@@ -172,14 +172,14 @@ describe('ExerciseStats', () => {
   })
 
   test('uPlot legend shows Date label when expanded', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/date/i).length).toBeGreaterThan(0)
   })
 
   test('uPlot legend shows Correct and Incorrect labels when expanded', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/correct/i).length).toBeGreaterThan(0)
@@ -187,7 +187,7 @@ describe('ExerciseStats', () => {
   })
 
   test('chart is accessible with aria-label and rendered by uPlot', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
     const { container } = render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByRole('img')).toBeInTheDocument()
@@ -196,7 +196,7 @@ describe('ExerciseStats', () => {
 
   test('chart aria-label describes series trends and totals', () => {
     const sixDaysAgo = new Date(TODAY.getTime() - 6 * 24 * 60 * 60 * 1000)
-    const stats: DayStats[] = [
+    const stats: DailyActivity[] = [
       { date: sixDaysAgo, correct: 1, incorrect: 3, passed: 0 },
       { date: TODAY, correct: 4, incorrect: 1, passed: 2 },
     ]
@@ -211,14 +211,14 @@ describe('ExerciseStats', () => {
   })
 
   test('chart renders Skipped series label when expanded', () => {
-    const stats: DayStats[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/skipped/i).length).toBeGreaterThan(0)
   })
 
   test('shows streak-extension progress and hint when daily goal is not met', () => {
-    const stats: DayStats[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Answer 6 correctly to extend your streak.')).toBeInTheDocument()
@@ -226,7 +226,7 @@ describe('ExerciseStats', () => {
   })
 
   test('hides streak-extension progress when daily goal is met', () => {
-    const stats: DayStats[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
     render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.queryByText(/to extend your streak/i)).not.toBeInTheDocument()
@@ -278,7 +278,7 @@ describe('ExerciseStats', () => {
     vi.useFakeTimers()
     vi.stubEnv('TZ', 'America/Los_Angeles')
     vi.setSystemTime(new Date('2026-03-19T23:30:00-07:00'))
-    const stats: DayStats[] = [{ date: new Date(2026, 2, 19), correct: 4, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date(2026, 2, 19), correct: 4, incorrect: 1, passed: 0 }]
 
     render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
     fireEvent.click(screen.getByText('Progress'))

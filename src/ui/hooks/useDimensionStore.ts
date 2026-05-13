@@ -1,32 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import {
+  DEFAULT_DIMENSION_PROFILE,
+  DEFAULT_DIMENSION_WINDOWS,
   type DimensionChange,
   type DimensionKey,
   type DimensionProfile,
   type DimensionStore,
-  enforcePrerequisites,
   getDimensionChanges,
+  normalizeDimensionStore,
+  parseDimensionStore,
   promoteDimensions,
   recordDimensionAnswer,
-  sanitizeDimensionProfile,
 } from '../../exercises/dimensions'
 import { useLocalStorage } from './useLocalStorage'
 
 type RecordDimensionAnswer = (dimensions: readonly DimensionKey[], isCorrect: boolean) => DimensionProfile
-
-export const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-}
-
-export const INITIAL_DIMENSION_STORE: DimensionStore = {
-  profile: INITIAL_DIMENSION_PROFILE,
-  windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
-}
 
 function isSameProfile(a: DimensionProfile, b: DimensionProfile): boolean {
   return (
@@ -40,21 +28,22 @@ function isSameProfile(a: DimensionProfile, b: DimensionProfile): boolean {
 }
 
 export function useDimensionStore(): [DimensionProfile, readonly DimensionChange[], RecordDimensionAnswer, () => void] {
-  const [rawStore, setRawStore] = useLocalStorage<DimensionStore>('dimensions', INITIAL_DIMENSION_STORE)
+  const [rawStore, setRawStore] = useLocalStorage<DimensionStore>(
+    'dimensions',
+    {
+      profile: DEFAULT_DIMENSION_PROFILE,
+      windows: DEFAULT_DIMENSION_WINDOWS,
+    },
+    parseDimensionStore,
+  )
   const [dimensionChanges, setDimensionChanges] = useState<readonly DimensionChange[]>([])
-  const profile = useMemo(
-    () => enforcePrerequisites(sanitizeDimensionProfile(rawStore.profile, INITIAL_DIMENSION_PROFILE)),
-    [rawStore.profile],
-  )
-  const store = useMemo(
-    () => (isSameProfile(rawStore.profile, profile) ? rawStore : { ...rawStore, profile }),
-    [rawStore, profile],
-  )
+  const store = useMemo(() => normalizeDimensionStore(rawStore), [rawStore])
+  const profile = store.profile
 
   useEffect(() => {
     if (isSameProfile(rawStore.profile, profile)) return
-    setRawStore({ ...rawStore, profile })
-  }, [rawStore, profile, setRawStore])
+    setRawStore(store)
+  }, [profile, rawStore.profile, setRawStore, store])
 
   const recordAnswer = useCallback<RecordDimensionAnswer>(
     (dimensions, isCorrect) => {

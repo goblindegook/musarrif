@@ -2,7 +2,7 @@ import { styled } from 'goober'
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
-import type { DimensionProfile } from '../../exercises/dimensions'
+import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../exercises/dimensions'
 import {
   computeMastery,
   type MasteryCategory as MasteryCategoryData,
@@ -10,7 +10,7 @@ import {
   type MasteryItem as MasteryItemData,
 } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
-import type { DayStats } from '../../exercises/stats'
+import type { DailyActivity } from '../../exercises/stats'
 import {
   getAccuracyPercent,
   getRecentAccuracyPercent,
@@ -33,7 +33,7 @@ const CHART_COLORS = {
 }
 
 interface Props {
-  stats: DayStats[]
+  stats: readonly DailyActivity[]
   streak: number
   dimensionProfile?: DimensionProfile
   srsStore?: SrsStore
@@ -41,14 +41,7 @@ interface Props {
 
 const CHART_H = 240
 const MASTERY_DISPLAY_EXPONENT = 0.6
-const DEFAULT_DIMENSION_PROFILE: DimensionProfile = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-}
+
 const ROOT_TYPE_LABEL_KEYS = {
   sound: 'exercise.stats.mastery.rootType.sound',
   doubled: 'exercise.stats.mastery.rootType.doubled',
@@ -160,7 +153,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<Mas
 }
 
 interface StatsChartProps {
-  stats: DayStats[]
+  stats: readonly DailyActivity[]
 }
 
 function trendDirection(values: readonly number[]): 'up' | 'down' | 'steady' {
@@ -172,7 +165,7 @@ function trendDirection(values: readonly number[]): 'up' | 'down' | 'steady' {
 }
 
 function buildChartAriaLabel(
-  days: readonly DayStats[],
+  days: readonly DailyActivity[],
   t: (key: string, params?: Record<string, string>) => string,
 ): string {
   const correctValues = days.map((day) => day.correct)
@@ -289,7 +282,7 @@ function StatsChart({ stats }: StatsChartProps) {
 }
 
 interface StatsDetailsPanelProps {
-  stats: DayStats[]
+  stats: readonly DailyActivity[]
   streak: number
   mastery: readonly MasteryCategoryData<MasteryCategoryId>[]
 }
@@ -519,9 +512,9 @@ const InlineLock = styled('span')`
   color: var(--color-text-muted);
 `
 
-function buildDayWindow(stats: DayStats[], days: number): DayStats[] {
+function buildDayWindow(stats: readonly DailyActivity[], days: number): readonly DailyActivity[] {
   const map = new Map(stats.map((d) => [localDateKey(d.date), d]))
-  const result: DayStats[] = []
+  const result: DailyActivity[] = []
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   for (let i = days - 1; i >= 0; i--) {

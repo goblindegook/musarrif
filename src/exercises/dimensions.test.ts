@@ -1,9 +1,10 @@
 import { describe, expect, test, vi } from 'vitest'
 import {
   type DimensionStore,
-  enforcePrerequisites,
   exerciseDiacritics,
   getDimensionChanges,
+  normalizeDimensionStore,
+  parseDimensionStore,
   promoteDimensions,
   pronounPool,
   randomNominalVerb,
@@ -162,75 +163,164 @@ describe('recordDimensionAnswer', () => {
   })
 })
 
-describe('enforcePrerequisites', () => {
+describe('parseDimensionStore', () => {
+  test('returns defaults for non-object input', () => {
+    expect(parseDimensionStore('nope')).toEqual({
+      profile: INITIAL_DIMENSION_PROFILE,
+      windows: INITIAL_DIMENSION_WINDOWS,
+    })
+  })
+
+  test('sanitizes invalid windows and clamps profile levels', () => {
+    const sanitized = parseDimensionStore({
+      profile: { tenses: 99, pronouns: 3, diacritics: 2, forms: 9, rootTypes: 5, nominals: 2 },
+      windows: {
+        tenses: [true, false, 'x'],
+        pronouns: [true],
+        diacritics: 'bad',
+        forms: [false],
+        rootTypes: null,
+        nominals: [true, true],
+      },
+    })
+
+    expect(sanitized.profile.tenses).toBe(4)
+    expect(sanitized.windows.tenses).toEqual([])
+    expect(sanitized.windows.pronouns).toEqual([true])
+    expect(sanitized.windows.diacritics).toEqual([])
+  })
+})
+
+describe('parseDimensionStore', () => {
+  test('enforces prerequisites and preserves windows', () => {
+    const imported = parseDimensionStore({
+      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, nominals: 1, forms: 9, pronouns: 0 },
+      windows: { tenses: [true, true] },
+    })
+
+    expect(imported.profile.nominals).toBe(0)
+    expect(imported.windows.tenses).toEqual([true, true])
+  })
+})
+
+describe('normalizeDimensionStore prerequisite enforcement', () => {
   test('no-ops a valid profile', () => {
-    expect(enforcePrerequisites(INITIAL_DIMENSION_PROFILE)).toEqual(INITIAL_DIMENSION_PROFILE)
+    expect(
+      normalizeDimensionStore({ profile: INITIAL_DIMENSION_PROFILE, windows: INITIAL_DIMENSION_WINDOWS }).profile,
+    ).toEqual(INITIAL_DIMENSION_PROFILE)
   })
 
   test('does not roll back unlocked tenses when pronouns < 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 }).tenses).toBe(2)
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.tenses,
+    ).toBe(2)
   })
 
   test('keeps tenses at 2 when pronouns >= 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 }).tenses).toBe(2)
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.tenses,
+    ).toBe(2)
   })
 
   test('rolls back nominals from 1 to 0 when tenses < 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1, pronouns: 2 }).nominals).toBe(0)
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1, pronouns: 2 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.nominals,
+    ).toBe(0)
   })
 
   test('rolls back nominals from 1 to 0 when pronouns < 2', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1 }).nominals).toBe(0)
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.nominals,
+    ).toBe(0)
   })
 
   test('rolls back nominals from 2 to 1 when forms < max', () => {
     expect(
-      enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 2 }).nominals,
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 2 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.nominals,
     ).toBe(1)
   })
 
   test('rolls back diacritics from 2 to 1 when not all dimensions at max', () => {
     expect(
-      enforcePrerequisites({
-        ...INITIAL_DIMENSION_PROFILE,
-        diacritics: 2,
-        tenses: 4,
-        pronouns: 3,
-        forms: 3,
-        rootTypes: 3,
-        nominals: 1,
-      }).diacritics,
+      normalizeDimensionStore({
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 2,
+          tenses: 4,
+          pronouns: 3,
+          forms: 3,
+          rootTypes: 3,
+          nominals: 1,
+        },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.diacritics,
     ).toBe(1)
   })
 
   test('keeps diacritics at 2 when all dimensions at max', () => {
     expect(
-      enforcePrerequisites({
-        ...INITIAL_DIMENSION_PROFILE,
-        diacritics: 2,
-        tenses: 4,
-        pronouns: 3,
-        forms: 9,
-        rootTypes: 5,
-        nominals: 2,
-      }).diacritics,
+      normalizeDimensionStore({
+        profile: {
+          ...INITIAL_DIMENSION_PROFILE,
+          diacritics: 2,
+          tenses: 4,
+          pronouns: 3,
+          forms: 9,
+          rootTypes: 5,
+          nominals: 2,
+        },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.diacritics,
     ).toBe(2)
   })
 
   test('rolls back nominals to 0 when pronouns drop below plural level, even when tenses stay unlocked', () => {
-    const result = enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 })
+    const result = normalizeDimensionStore({
+      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 },
+      windows: INITIAL_DIMENSION_WINDOWS,
+    }).profile
     expect(result.tenses).toBe(2)
     expect(result.nominals).toBe(0)
   })
 
   test('keeps unlocked tenses while still rolling back diacritics when prerequisites are unmet', () => {
-    const result = enforcePrerequisites({ tenses: 2, pronouns: 1, forms: 3, rootTypes: 3, nominals: 2, diacritics: 2 })
+    const result = normalizeDimensionStore({
+      profile: {
+        tenses: 2,
+        pronouns: 1,
+        forms: 3,
+        rootTypes: 3,
+        nominals: 2,
+        diacritics: 2,
+      },
+      windows: INITIAL_DIMENSION_WINDOWS,
+    }).profile
     expect(result.tenses).toBe(2)
     expect(result.diacritics).toBe(1)
   })
 
   test('keeps tenses at 4 even when forms < max', () => {
-    expect(enforcePrerequisites({ ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 8 }).tenses).toBe(4)
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 8 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.tenses,
+    ).toBe(4)
   })
 })
 

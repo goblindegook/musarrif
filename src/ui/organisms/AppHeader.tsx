@@ -4,7 +4,6 @@ import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
 import { Subheading } from '../atoms/Subheading'
 import { useI18n } from '../hooks/useI18n'
-import { getUserData, importUserData } from '../hooks/useLocalStorage'
 import { type ThemePreference, useTheme } from '../hooks/useTheme'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
 import { ExerciseIcon } from '../icons/ExerciseIcon'
@@ -14,6 +13,7 @@ import { Modal } from '../molecules/Modal'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 import { useRouting } from '../routes'
+import { getUserData, importUserData } from '../user-data'
 
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
@@ -28,7 +28,6 @@ export const AppHeader = () => {
 
   const exportUserData = useCallback(() => {
     const payload = getUserData()
-
     const link = document.createElement('a')
     link.href = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(payload, null, 2))}`
     link.download = 'musarrif-data.json'

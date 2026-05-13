@@ -1,19 +1,46 @@
-export type DayStats = { date: Date; correct: number; incorrect: number; passed: number }
-export type SerializedDayStats = { date: string; correct: number; incorrect: number; passed?: number }
-export const STREAK_DAILY_GOAL = 10
+import * as v from 'valibot'
 
-export interface ExerciseResult {
+export interface DailyActivity {
+  date: Date
+  correct: number
+  incorrect: number
+  passed: number
+}
+
+type TrackedExercises = readonly DailyActivity[]
+
+// FIXME: Serialized type for localStorage, use Valibot to handle date parsing and serialization
+export interface SerializedDailyActivity {
   date: string
   correct: number
   incorrect: number
+  passed: number
 }
+
+type SerializedTrackedExercises = readonly SerializedDailyActivity[]
 
 interface StreakGoalProgress {
   correct: number
   remaining: number
 }
 
-export function addResult(stats: DayStats[], correct: boolean, date?: Date): DayStats[] {
+const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
+
+const SerializedDayStats = v.object({
+  date: v.pipe(v.string(), v.isoDate()),
+  correct: NonNegativeNumber,
+  incorrect: NonNegativeNumber,
+  passed: NonNegativeNumber,
+})
+
+export const TrackedExercises = v.pipe(
+  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
+  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
+)
+
+export const STREAK_DAILY_GOAL = 10
+
+export function addResult(stats: TrackedExercises, correct: boolean, date?: Date): TrackedExercises {
   const d = date ?? todayDate()
   const key = dateKey(d)
   const existing = stats.find((s) => dateKey(s.date) === key)
@@ -32,7 +59,7 @@ export function addResult(stats: DayStats[], correct: boolean, date?: Date): Day
   return [...stats, { date: d, correct: correct ? 1 : 0, incorrect: correct ? 0 : 1, passed: 0 }]
 }
 
-export function addPass(stats: DayStats[], date?: Date): DayStats[] {
+export function addPass(stats: TrackedExercises, date?: Date): TrackedExercises {
   const d = date ?? todayDate()
   const key = dateKey(d)
   const existing = stats.find((s) => dateKey(s.date) === key)
@@ -42,7 +69,7 @@ export function addPass(stats: DayStats[], date?: Date): DayStats[] {
   return [...stats, { date: d, correct: 0, incorrect: 0, passed: 1 }]
 }
 
-export function getStreak(stats: DayStats[], today?: Date): number {
+export function getStreak(stats: TrackedExercises, today?: Date): number {
   const todayStr = dateKey(today ?? todayDate())
   const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => dateKey(d.date)))
 
@@ -59,14 +86,14 @@ export function getStreak(stats: DayStats[], today?: Date): number {
   return streak
 }
 
-export function getAccuracyPercent(stats: DayStats[]): number {
+export function getAccuracyPercent(stats: TrackedExercises): number {
   const total = stats.reduce((s, d) => s + d.correct + d.incorrect, 0)
   if (total === 0) return 0
   const correct = stats.reduce((s, d) => s + d.correct, 0)
   return Math.round((correct / total) * 100)
 }
 
-export function getRecentAccuracyPercent(stats: DayStats[], days: number, today?: Date): number {
+export function getRecentAccuracyPercent(stats: TrackedExercises, days: number, today?: Date): number {
   const todayStr = dateKey(today ?? todayDate())
   const windowStart = offsetDate(todayStr, -(days - 1))
   const filtered = stats.filter((s) => {
@@ -76,7 +103,7 @@ export function getRecentAccuracyPercent(stats: DayStats[], days: number, today?
   return getAccuracyPercent(filtered)
 }
 
-export function getStreakRecord(stats: DayStats[]): number {
+export function getStreakRecord(stats: TrackedExercises): number {
   const activeDates = stats
     .filter((d) => d.correct >= STREAK_DAILY_GOAL)
     .map((d) => dateKey(d.date))
@@ -95,7 +122,7 @@ export function getStreakRecord(stats: DayStats[]): number {
   return max
 }
 
-export function getStreakGoalProgress(stats: DayStats[], today?: Date): StreakGoalProgress {
+export function getStreakGoalProgress(stats: TrackedExercises, today?: Date): StreakGoalProgress {
   const key = dateKey(today ?? todayDate())
   const todayStats = stats.find((s) => dateKey(s.date) === key)
   const correct = todayStats?.correct ?? 0
@@ -103,22 +130,22 @@ export function getStreakGoalProgress(stats: DayStats[], today?: Date): StreakGo
   return { correct, remaining }
 }
 
-export function serializeDayStats(stats: DayStats[]): SerializedDayStats[] {
+export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {
   return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
 }
 
-export function deserializeDayStats(raw: SerializedDayStats[]): DayStats[] {
-  return raw.map((d) => {
+export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
+  return parseTrackedExercises(raw).map((d) => {
     const [y, m, day] = d.date.split('-').map(Number)
-    return { ...d, date: new Date(y, m - 1, day), passed: d.passed ?? 0 }
+    return { ...d, date: new Date(y, m - 1, day) }
   })
 }
 
-function dateKey(d: Date): string {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+function dateKey(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
 
 function todayDate(): Date {
@@ -132,15 +159,6 @@ function offsetDate(dateStr: string, days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
-export function sanitizeTrackedExercises(data: unknown): readonly ExerciseResult[] {
-  return Array.isArray(data)
-    ? data.filter(
-        (entry): entry is ExerciseResult =>
-          entry != null &&
-          typeof entry === 'object' &&
-          typeof entry.date === 'string' &&
-          Number.isFinite(entry.correct) &&
-          Number.isFinite(entry.incorrect),
-      )
-    : []
+export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
+  return v.parse(TrackedExercises, data)
 }

@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { getUserData, importUserData } from './useLocalStorage'
+import { getUserData, importUserData } from './user-data'
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
@@ -79,6 +79,22 @@ describe('getUserData', () => {
 })
 
 describe('importUserData', () => {
+  test('rejects invalid JSON payload', () => {
+    expect(importUserData('{')).toBe(false)
+  })
+
+  test('rejects non-object payload', () => {
+    expect(importUserData('"hello"')).toBe(false)
+    expect(importUserData('123')).toBe(false)
+    expect(importUserData('true')).toBe(false)
+    expect(importUserData('null')).toBe(false)
+    expect(importUserData('[]')).toBe(false)
+  })
+
+  test('rejects empty object payload', () => {
+    expect(importUserData('{}')).toBe(false)
+  })
+
   test('imports valid dimension profile', () => {
     const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 1 as const }
     const payload = JSON.stringify({
@@ -123,7 +139,7 @@ describe('importUserData', () => {
     expect(stored.profile.rootTypes).toBe(5)
   })
 
-  test('resets windows to empty on import', () => {
+  test('preserves windows on import', () => {
     const profile = INITIAL_DIMENSION_PROFILE
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
@@ -134,7 +150,7 @@ describe('importUserData', () => {
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.windows.tenses).toEqual([])
+    expect(stored.windows.tenses).toEqual([true, false])
   })
 
   test('clamps oversized imported dimensions while defaulting missing fields', () => {
@@ -152,6 +168,17 @@ describe('importUserData', () => {
       settings: { language: 'en', diacriticsPreference: 'all', exerciseDifficulty: 'hard' },
     })
     expect(importUserData(payload)).toBe(true)
+  })
+
+  test('accepts payload without settings field and applies defaults', () => {
+    const payload = JSON.stringify({
+      favouriteVerbs: ['ktb-1'],
+    })
+
+    expect(importUserData(payload)).toBe(true)
+    expect(localStorage.getItem('conjugator:language')).toBe('"en"')
+    expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe('"some"')
+    expect(localStorage.getItem('conjugator:theme')).toBe('"system"')
   })
 
   test('keeps oversized imported SRS entries untouched', () => {

@@ -4,10 +4,10 @@ import {
   buildCardKey,
   cardSrsWeight,
   getSrsRootType,
+  normalizeSrsStore,
   parseCardKey,
+  parseSrsStore,
   recordAnswer,
-  sanitizeRawSrsStore,
-  sanitizeSrsStore,
   updateCardState,
   weightedRandomSrs,
 } from './srs'
@@ -167,7 +167,7 @@ describe('updateCardState', () => {
   })
 })
 
-describe('sanitizeSrsStore', () => {
+describe('normalizeSrsStore', () => {
   test('returns the same store reference when data is already within bounds', () => {
     const store = {
       'conjugation:sound:1:active.past:3ms': {
@@ -177,16 +177,16 @@ describe('sanitizeSrsStore', () => {
         dueDate: '2026-03-29',
       },
     }
-    expect(sanitizeSrsStore(store)).toBe(store)
+    expect(normalizeSrsStore(store)).toBe(store)
   })
 
   test('returns the same store reference for an empty store', () => {
     const store = {}
-    expect(sanitizeSrsStore(store)).toBe(store)
+    expect(normalizeSrsStore(store)).toBe(store)
   })
 
   test('keeps only valid card entries from unknown input', () => {
-    const result = sanitizeRawSrsStore({
+    const result = parseSrsStore({
       'conjugation:sound:1:active.past:3ms': {
         interval: 6,
         ef: 2.5,
@@ -216,7 +216,7 @@ describe('sanitizeSrsStore', () => {
   })
 
   test('keeps oversized interval and dueDate values untouched', () => {
-    const result = sanitizeRawSrsStore({
+    const result = parseSrsStore({
       'conjugation:sound:1:active.past:3ms': {
         interval: 145313,
         ef: 2.5,
@@ -230,7 +230,7 @@ describe('sanitizeSrsStore', () => {
   })
 
   test('returns empty store for non-object input', () => {
-    expect(sanitizeRawSrsStore('nope')).toEqual({})
+    expect(parseSrsStore('nope')).toEqual({})
   })
 })
 

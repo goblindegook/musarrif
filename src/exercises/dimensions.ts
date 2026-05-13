@@ -1,3 +1,4 @@
+import * as v from 'valibot'
 import { FORM_I_PATTERNS } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
@@ -40,6 +41,24 @@ type DimensionWindows = Record<DimensionKey, boolean[]>
 export type DimensionStore = {
   profile: DimensionProfile
   windows: DimensionWindows
+}
+
+export const DEFAULT_DIMENSION_PROFILE: DimensionProfile = {
+  tenses: 0,
+  pronouns: 0,
+  diacritics: 0,
+  forms: 0,
+  rootTypes: 0,
+  nominals: 0,
+}
+
+export const DEFAULT_DIMENSION_WINDOWS: DimensionWindows = {
+  tenses: [],
+  pronouns: [],
+  diacritics: [],
+  forms: [],
+  rootTypes: [],
+  nominals: [],
 }
 
 export type DimensionChange =
@@ -127,6 +146,51 @@ const NOMINAL_UNLOCK_KEYS = [
   ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
   ['exercise.unlock.nominal.masdar'],
 ] as const
+
+const MAX_LEVELS: Record<DimensionKey, number> = {
+  tenses: TENSE_POOLS.length - 1,
+  pronouns: PRONOUN_POOLS.length - 1,
+  diacritics: DIACRITICS_PREFERENCES.length - 1,
+  forms: FORM_POOLS.length - 1,
+  rootTypes: ROOT_TYPE_POOLS.length - 1,
+  nominals: NOMINAL_UNLOCK_KEYS.length - 1,
+}
+
+const integerBetween = (min: number, max: number) =>
+  v.pipe(v.number(), v.integer(), v.toMinValue(min), v.toMaxValue(max))
+
+const BooleanArray = v.array(v.boolean())
+
+export const DimensionStore = v.fallback(
+  v.object({
+    profile: v.fallback(
+      v.object({
+        tenses: v.fallback(integerBetween(0, MAX_LEVELS.tenses), 0),
+        pronouns: v.fallback(integerBetween(0, MAX_LEVELS.pronouns), 0),
+        diacritics: v.fallback(integerBetween(0, MAX_LEVELS.diacritics), 0),
+        forms: v.fallback(integerBetween(0, MAX_LEVELS.forms), 0),
+        rootTypes: v.fallback(integerBetween(0, MAX_LEVELS.rootTypes), 0),
+        nominals: v.fallback(integerBetween(0, MAX_LEVELS.nominals), 0),
+      }),
+      DEFAULT_DIMENSION_PROFILE,
+    ),
+    windows: v.fallback(
+      v.object({
+        tenses: v.fallback(BooleanArray, []),
+        pronouns: v.fallback(BooleanArray, []),
+        diacritics: v.fallback(BooleanArray, []),
+        forms: v.fallback(BooleanArray, []),
+        rootTypes: v.fallback(BooleanArray, []),
+        nominals: v.fallback(BooleanArray, []),
+      }),
+      DEFAULT_DIMENSION_WINDOWS,
+    ),
+  }),
+  {
+    profile: DEFAULT_DIMENSION_PROFILE,
+    windows: DEFAULT_DIMENSION_WINDOWS,
+  },
+)
 
 const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]> = {
   tenses: [
@@ -227,55 +291,18 @@ const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
 const DEMOTION_THRESHOLD = 0.4
 const MIN_DEMOTION_WINDOW = 20
 
-const MAX_LEVELS: Record<DimensionKey, number> = {
-  tenses: TENSE_POOLS.length - 1,
-  pronouns: PRONOUN_POOLS.length - 1,
-  diacritics: DIACRITICS_PREFERENCES.length - 1,
-  forms: FORM_POOLS.length - 1,
-  rootTypes: ROOT_TYPE_POOLS.length - 1,
-  nominals: NOMINAL_UNLOCK_KEYS.length - 1,
+export function parseDimensionStore(raw: unknown): DimensionStore {
+  return normalizeDimensionStore(v.parse(DimensionStore, raw) as DimensionStore)
 }
 
-function sanitizeDimensionLevel<T extends DimensionKey>(
-  rawProfile: Partial<Record<DimensionKey, unknown>>,
-  dimension: T,
-  fallback: DimensionProfile[T],
-): DimensionProfile[T] {
-  const value = rawProfile[dimension]
-  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) return fallback
-  return clamp(value, 0, MAX_LEVELS[dimension]) as DimensionProfile[T]
-}
-
-export function sanitizeDimensionProfile(raw: unknown, fallback: DimensionProfile): DimensionProfile {
-  if (raw == null || typeof raw !== 'object') return fallback
-  const rawProfile = raw as Partial<Record<DimensionKey, unknown>>
+export function normalizeDimensionStore(store: DimensionStore): DimensionStore {
   return {
-    tenses: sanitizeDimensionLevel(rawProfile, 'tenses', fallback.tenses),
-    pronouns: sanitizeDimensionLevel(rawProfile, 'pronouns', fallback.pronouns),
-    diacritics: sanitizeDimensionLevel(rawProfile, 'diacritics', fallback.diacritics),
-    forms: sanitizeDimensionLevel(rawProfile, 'forms', fallback.forms),
-    rootTypes: sanitizeDimensionLevel(rawProfile, 'rootTypes', fallback.rootTypes),
-    nominals: sanitizeDimensionLevel(rawProfile, 'nominals', fallback.nominals),
+    profile: enforcePrerequisites(store.profile),
+    windows: store.windows,
   }
 }
 
-export function isValidDimensionProfile(raw: unknown): raw is { profile: DimensionProfile } {
-  if (
-    raw == null ||
-    typeof raw !== 'object' ||
-    !('profile' in raw) ||
-    raw.profile == null ||
-    typeof raw.profile !== 'object'
-  )
-    return false
-  const profile = raw.profile as Record<string, unknown>
-  return Object.entries(MAX_LEVELS).every(
-    ([dim, max]) =>
-      typeof profile[dim] === 'number' && Number.isInteger(profile[dim]) && profile[dim] >= 0 && profile[dim] <= max,
-  )
-}
-
-export function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
+function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
   if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
   if (p.nominals >= 2 && p.forms < MAX_LEVELS.forms) p.nominals = 1

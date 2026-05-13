@@ -1,4 +1,5 @@
 import { memoize } from '@pacote/memoize'
+import * as v from 'valibot'
 import { isHamzatedLetter, isWeakLetter } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
@@ -151,6 +152,27 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
 
 const MAX_WEIGHT = 10
 
+const CardState = v.object({
+  interval: v.pipe(v.number(), v.finite(), v.gtValue(0)),
+  ef: v.pipe(v.number(), v.finite(), v.minValue(1.3)),
+  repetitions: v.pipe(v.number(), v.integer(), v.minValue(0)),
+  dueDate: v.pipe(v.string(), v.isoDate()),
+})
+
+export const SrsStore = v.fallback(
+  v.pipe(
+    v.record(v.string(), v.fallback(v.union([CardState, v.null()]), null)),
+    v.transform((store) => {
+      const validCards: SrsStore = {}
+      for (const [key, state] of Object.entries(store)) {
+        if (state != null && v.is(v.string(), key)) validCards[key] = state
+      }
+      return validCards
+    }),
+  ),
+  {},
+)
+
 export function cardSrsWeight(state: CardState | undefined, today: string): number {
   if (state == null) return MAX_WEIGHT
   if (state.dueDate < today) {
@@ -172,44 +194,20 @@ export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T
   return items[items.length - 1]
 }
 
-function sanitizeCardState(state: CardState): CardState {
-  const interval = Math.max(1, Math.round(state.interval))
-  return interval === state.interval ? state : { ...state, interval }
-}
-
-export function sanitizeSrsStore(store: SrsStore): SrsStore {
-  let sanitized = store
+export function normalizeSrsStore(store: SrsStore): SrsStore {
+  let normalized = store
   for (const [key, state] of Object.entries(store)) {
-    const nextState = sanitizeCardState(state)
+    const interval = Math.max(1, Math.round(state.interval))
+    const nextState = interval === state.interval ? state : { ...state, interval }
     if (nextState === state) continue
-    if (sanitized === store) sanitized = { ...store }
-    sanitized[key] = nextState
+    if (normalized === store) normalized = { ...store }
+    normalized[key] = nextState
   }
-  return sanitized
+  return normalized
 }
 
-function isCardState(raw: unknown): raw is CardState {
-  if (raw == null || typeof raw !== 'object') return false
-  const state = raw as Partial<CardState>
-  return (
-    Number.isFinite(state.interval) &&
-    Number(state.interval) > 0 &&
-    Number.isFinite(state.ef) &&
-    Number(state.ef) >= 1.3 &&
-    Number.isInteger(state.repetitions) &&
-    Number(state.repetitions) >= 0 &&
-    /^\d{4}-\d{2}-\d{2}$/.test(String(state.dueDate))
-  )
-}
-
-export function sanitizeRawSrsStore(raw: unknown): SrsStore {
-  if (raw == null || typeof raw !== 'object') return {}
-  const imported: SrsStore = {}
-  for (const [key, value] of Object.entries(raw)) {
-    if (typeof key !== 'string' || key.length === 0 || !isCardState(value)) continue
-    imported[key] = value
-  }
-  return sanitizeSrsStore(imported)
+export function parseSrsStore(raw: unknown): SrsStore {
+  return normalizeSrsStore(v.parse(SrsStore, raw))
 }
 
 export function recordAnswer(

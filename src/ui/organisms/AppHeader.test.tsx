@@ -98,7 +98,7 @@ it('exports user data in JSON format', () => {
     version: 1,
     settings: { language: 'pt', diacriticsPreference: 'none', themePreference: 'system' },
     favouriteVerbs: ['ktb-1', 'sfr-1'],
-    trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1 }],
+    trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1, passed: 0 }],
     srs: {},
     dimensions: {
       profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
@@ -179,7 +179,7 @@ it('imports user data from JSON and updates local storage', async () => {
   expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe(JSON.stringify('all'))
   expect(localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['bdl-1']))
   expect(localStorage.getItem('conjugator:exercise:daily')).toBe(
-    JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3 }]),
+    JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3, passed: 0 }]),
   )
   expect(reloadSpy).toHaveBeenCalledTimes(1)
 })

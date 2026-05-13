@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'preact/hooks'
-import { type AnswerResult, recordAnswer, type SrsStore, sanitizeSrsStore } from '../../exercises/srs'
+import { type AnswerResult, normalizeSrsStore, parseSrsStore, recordAnswer, type SrsStore } from '../../exercises/srs'
 import { useLocalStorage } from './useLocalStorage'
 
 type AnswerRecorder = (cardKey: string, result: AnswerResult) => void
 
 export function useSrsStore(): [SrsStore, AnswerRecorder] {
-  const [srs, setSrs] = useLocalStorage<SrsStore>('srs', {})
-  const store = useMemo(() => sanitizeSrsStore(srs), [srs])
+  const [srs, setSrs] = useLocalStorage<SrsStore>('srs', {}, parseSrsStore)
+  const store = useMemo(() => normalizeSrsStore(srs), [srs])
 
   useEffect(() => {
     if (store === srs) return

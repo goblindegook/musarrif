@@ -7,7 +7,7 @@ import { filterMasteredLayers } from '../../exercises/explanation'
 import { computeMastery, findLowestMastery, type MasteryItemId } from '../../exercises/mastery'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
-import type { DayStats, SerializedDayStats } from '../../exercises/stats'
+import type { DailyActivity, SerializedDailyActivity } from '../../exercises/stats'
 import {
   addPass,
   addResult,
@@ -71,15 +71,15 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
-  const [rawStats, setRawStats] = useLocalStorage<SerializedDayStats[]>('exercise:daily', [])
+  const [rawStats, setRawStats] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
 
   useDocumentTitle([t('mode.exercise'), t('title')].join(' · '))
 
   // TODO: useStats hook
-  const dayStats: DayStats[] = useMemo(() => deserializeDayStats(rawStats), [rawStats])
+  const dayStats = useMemo(() => deserializeDayStats(rawStats), [rawStats])
 
   const updateStats = useCallback(
-    (updater: (current: DayStats[]) => DayStats[]) => {
+    (updater: (current: readonly DailyActivity[]) => readonly DailyActivity[]) => {
       setRawStats((raw) => serializeDayStats(updater(deserializeDayStats(raw))))
     },
     [setRawStats],
