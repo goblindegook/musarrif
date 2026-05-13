@@ -10,7 +10,7 @@ interface SpeechButtonProps {
 }
 
 export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps) {
-  const { speak, playing, supported } = useSpeech(lang, { rate: 0.97 })
+  const { speak, playing, supported } = useSpeech(lang, { rate: 0.7 })
 
   return (
     supported && (
