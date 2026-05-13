@@ -354,9 +354,7 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
     const level = profile[dimension]
     const w = windows[dimension]
     if (w.length < MIN_DEMOTION_WINDOW) continue
-
     const accuracy = w.filter(Boolean).length / w.length
-    setProfileDimension(nextProfile, dimension, level)
 
     if (
       allowPromotion &&
@@ -365,11 +363,12 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
       canPromote(profile, dimension)
     )
       setProfileDimension(nextProfile, dimension, level + 1)
-    else if (accuracy <= DEMOTION_THRESHOLD && level > 0) demotionCandidates.add(dimension)
+
+    if (accuracy <= DEMOTION_THRESHOLD) demotionCandidates.add(dimension)
   }
 
-  const demotionTarget = DEMOTION_PRIORITY.find((dimension) => demotionCandidates.has(dimension))
-  if (demotionTarget) setProfileDimension(nextProfile, demotionTarget, profile[demotionTarget] - 1)
+  const dimensionToDemote = DEMOTION_PRIORITY.find((dimension) => demotionCandidates.has(dimension))
+  if (dimensionToDemote) setProfileDimension(nextProfile, dimensionToDemote, profile[dimensionToDemote] - 1)
 
   const nextWindows = { ...windows }
   const enforced = enforcePrerequisites(nextProfile)
