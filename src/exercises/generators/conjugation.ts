@@ -75,24 +75,25 @@ function mediumCandidates(
   profile: DimensionProfile,
 ): string[] {
   const siblings = buildSiblings(verb)
-  const typeA = tensePool(profile.tenses)
-    .filter((t) => t !== targetTense)
-    .flatMap((t) =>
-      distractorPronouns(t, profile)
-        .filter((p) => p !== targetPronoun)
-        .map((p) => conjugate(verb, t)[p]),
-    )
-  const typeB = siblings.flatMap((sibling) =>
-    distractorPronouns(targetTense, profile)
-      .filter((p) => p !== targetPronoun)
-      .map((p) => conjugate(sibling, targetTense)[p]),
-  )
-  const typeC = siblings.flatMap((sibling) =>
-    tensePool(profile.tenses)
+  return [
+    ...tensePool(profile.tenses)
       .filter((t) => t !== targetTense)
-      .map((t) => conjugate(sibling, t)[targetPronoun]),
-  )
-  return [...typeA, ...typeB, ...typeC]
+      .flatMap((t) =>
+        distractorPronouns(t, profile)
+          .filter((p) => p !== targetPronoun)
+          .map((p) => conjugate(verb, t)[p]),
+      ),
+    ...siblings.flatMap((sibling) =>
+      distractorPronouns(targetTense, profile)
+        .filter((p) => p !== targetPronoun)
+        .map((p) => conjugate(sibling, targetTense)[p]),
+    ),
+    ...siblings.flatMap((sibling) =>
+      tensePool(profile.tenses)
+        .filter((t) => t !== targetTense)
+        .map((t) => conjugate(sibling, t)[targetPronoun]),
+    ),
+  ]
 }
 
 function hardCandidates(
@@ -101,14 +102,15 @@ function hardCandidates(
   targetPronoun: PronounId,
   profile: DimensionProfile,
 ): string[] {
-  const type1 = distractorPronouns(targetTense, profile)
-    .filter((p) => p !== targetPronoun)
-    .map((p) => conjugate(verb, targetTense)[p])
-  const type2 = tensePool(profile.tenses)
-    .filter((t) => t !== targetTense)
-    .map((t) => conjugate(verb, t)[targetPronoun])
-  const type3 = buildSiblings(verb).map((sibling) => conjugate(sibling, targetTense)[targetPronoun])
-  return [...type1, ...type2, ...type3]
+  return [
+    ...distractorPronouns(targetTense, profile)
+      .filter((p) => p !== targetPronoun)
+      .map((p) => conjugate(verb, targetTense)[p]),
+    ...tensePool(profile.tenses)
+      .filter((t) => t !== targetTense)
+      .map((t) => conjugate(verb, t)[targetPronoun]),
+    ...buildSiblings(verb).map((sibling) => conjugate(sibling, targetTense)[targetPronoun]),
+  ]
 }
 
 export const conjugationExercise = defineExercise(

@@ -29,7 +29,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   cardKey: string
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null
-  supportsTyping?: true
+  supportsTyping?: boolean
 }
 
 export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> {
