@@ -4,9 +4,9 @@ import { tokenize } from '../../paradigms/letters.ts'
 import { analyzeRoot } from '../../paradigms/roots.ts'
 import { search } from '../../paradigms/selection.ts'
 import { Heading } from '../atoms/Heading.tsx'
+import { InlineVerbList } from '../atoms/InlineVerbList.tsx'
 import { Text } from '../atoms/Text.tsx'
 import { useI18n } from '../hooks/useI18n.tsx'
-import { SuggestionsList } from '../molecules/QuickPickList.tsx'
 import { VerbPill } from '../molecules/VerbPill'
 
 export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
@@ -46,11 +46,11 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
           <Heading dir={dir} lang={lang}>
             {t('rootInfo.forms')}
           </Heading>
-          <SuggestionsList>
+          <InlineVerbList>
             {derivedForms.map((v) => (
               <VerbPill key={v.id} verb={v} />
             ))}
-          </SuggestionsList>
+          </InlineVerbList>
         </>
       )}
     </>

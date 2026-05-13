@@ -6,9 +6,9 @@ import { applyDiacriticsPreference } from '../../paradigms/letters'
 import { type DisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Heading } from '../atoms/Heading'
+import { InlineVerbList } from '../atoms/InlineVerbList'
 import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
-import { SuggestionsList } from '../molecules/QuickPickList'
 import { VerbPill } from '../molecules/VerbPill'
 
 const getVowelPattern = (verb: DisplayVerb): string => {
@@ -52,11 +52,11 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       <Heading dir={dir} lang={lang}>
         {t('formInfo.examples')}
       </Heading>
-      <SuggestionsList>
+      <InlineVerbList>
         {formInsightExamples.map((example) => (
           <VerbPill key={example.id} verb={example} />
         ))}
-      </SuggestionsList>
+      </InlineVerbList>
     </>
   )
 }
