@@ -47,10 +47,10 @@ export const TAH = createToken('\u0637')
 const ZAH = createToken('\u0638')
 export const SEEN = '\u0633'
 const TATWEEL = createToken('\u0640')
-export const MEEM = '\u0645'
+export const MEEM = createToken('\u0645')
 export const NOON = '\u0646'
 export const WAW = '\u0648'
-export const ALIF_MAQSURA = '\u0649'
+export const ALIF_MAQSURA = createToken('\u0649')
 export const LAM = createToken('\u0644')
 export const YEH = createToken('\u064A')
 export const YEH_TOKEN = createToken('\u064A')
@@ -61,7 +61,7 @@ export const FATHA = '\u064E'
 export const DAMMA = '\u064F'
 export const KASRA = '\u0650'
 export const SHADDA = '\u0651'
-export const SUKOON = '\u0652'
+export const SUKOON = createToken('\u0652')
 
 const COMBINING_MARK = /\p{Mn}/u
 
@@ -76,7 +76,7 @@ export function detokenize(tokens: readonly LetterToken[]): string {
 export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<Token>> = {
-  [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
+  [FATHA]: new Set([ALIF, ALIF_MAQSURA.letter, TEH_MARBUTA]),
   [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH]),
   [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
 }
@@ -133,8 +133,11 @@ export function resolveFormVIIIInfixConsonant(c1: LetterToken): LetterToken {
 
 export function finalize(letters: readonly Token[]): string {
   return detokenize(seatHamzas(tokenize(letters)))
-    .replace(new RegExp(`${ALIF_HAMZA.letter}${FATHA}[${ALIF_HAMZA.letter}${ALIF}]${SUKOON}?`), ALIF_MADDA.letter)
-    .replace(new RegExp(`(.)(?:${SUKOON}\\1)`, 'g'), `$1${SHADDA}`)
+    .replace(
+      new RegExp(`${ALIF_HAMZA.letter}${FATHA}[${ALIF_HAMZA.letter}${ALIF}]${SUKOON.letter}?`),
+      ALIF_MADDA.letter,
+    )
+    .replace(new RegExp(`(.)(?:${SUKOON.letter}\\1)`, 'g'), `$1${SHADDA}`)
     .normalize('NFC')
 }
 

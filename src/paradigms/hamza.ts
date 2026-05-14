@@ -46,7 +46,7 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       // Seat on the line to avoid alif + alif hamza:
       if (before === ALIF && vowel === FATHA) return HAMZA
 
-      if (before === SUKOON) {
+      if (SUKOON.equals(before)) {
         const longVowelAfter = longVowelAt(tokens, index + 1)
         if (tokens[index - 2].equals(YEH)) {
           if (longVowelAfter === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle

@@ -340,8 +340,6 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if ([1, 4].includes(verb.form)) return base
 
-        if (YEH.equals(base.at(-2))) return [...base.slice(0, -2), ALIF]
-
         if (YEH.equals(base.at(-3))) return [...base.slice(0, -3), ALIF]
 
         return base
@@ -616,7 +614,7 @@ function expandGemination(word: readonly Token[], vowel: Vowel): readonly Token[
     word
       .map((t) => (t instanceof LetterToken ? t.letter : t))
       .join('')
-      .replace(new RegExp(`([^\\p{Mn}])${SUKOON}\\1`), `$1${vowel}$1`),
+      .replace(new RegExp(`([^\\p{Mn}])${SUKOON.letter}\\1`), `$1${vowel}$1`),
   )
 }
 
