@@ -96,7 +96,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: 
               autoComplete="off"
               autoCorrect="off"
             />
-            <SubmitButton type="submit" aria-label="Submit" disabled={reveal || !hasTypedAnswer}>
+            <SubmitButton type="submit" aria-label={t('exercise.typing.submit')} disabled={reveal || !hasTypedAnswer}>
               ↵
             </SubmitButton>
           </InputRow>

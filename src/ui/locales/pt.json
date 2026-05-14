@@ -56,6 +56,7 @@
     "exercise.toggle.type": "Escrever resposta",
     "exercise.toggle.options": "Mostrar opções",
     "exercise.typing.placeholder": "Escreva a sua resposta",
+    "exercise.typing.submit": "Enviar",
     "exercise.unlock.diacriticsMode.none": "sem diacríticos",
     "exercise.unlock.diacriticsMode.some": "diacríticos parciais",
     "exercise.unlock.dimension.diacritics": "Modo de diacríticos",

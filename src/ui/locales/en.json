@@ -56,6 +56,7 @@
     "exercise.toggle.type": "Type the answer",
     "exercise.toggle.options": "See options",
     "exercise.typing.placeholder": "Type your answer",
+    "exercise.typing.submit": "Submit",
     "exercise.unlock.diacriticsMode.none": "no diacritics",
     "exercise.unlock.diacriticsMode.some": "partial diacritics",
     "exercise.unlock.dimension.diacritics": "Diacritics mode",
