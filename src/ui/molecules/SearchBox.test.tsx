@@ -80,4 +80,30 @@ describe('Search mobile behavior', () => {
 
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0 })
   })
+
+  test('combobox links to listbox with aria-controls', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const input = container.querySelector('input[type="search"]')
+    expect(input).not.toBeNull()
+    await user.type(input, 'ktb')
+
+    const listbox = container.querySelector('[role="listbox"]')
+    expect(listbox).not.toBeNull()
+    expect(input).toHaveAttribute('aria-controls', listbox?.id)
+  })
+
+  test('search input lang follows typed script', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const input = container.querySelector('input[type="search"]')
+    expect(input).not.toBeNull()
+
+    await user.type(input, 'kataba')
+    expect(input).toHaveAttribute('lang', 'en')
+
+    await user.clear(input)
+    await user.type(input, 'كتب')
+    expect(input).toHaveAttribute('lang', 'ar')
+  })
 })

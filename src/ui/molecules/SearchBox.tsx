@@ -127,7 +127,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           ref={inputRef}
           placeholder={t('placeholder')}
           dir={inputDir}
-          lang="ar"
+          lang={query.length === 0 || inputDir !== 'rtl' ? lang : 'ar'}
           inputMode="text"
           autoCapitalize="none"
           autoComplete="off"
@@ -136,6 +136,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           aria-label={t('verbLabel')}
           role="combobox"
           aria-expanded={suggestionsOpen}
+          aria-controls={suggestionsOpen ? `${id ?? 'verb-search'}-suggestions` : ''}
           aria-autocomplete="list"
           aria-activedescendant={
             highligtedIndex >= 0 && suggested[highligtedIndex]
@@ -145,7 +146,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
         />
 
         {suggestionsOpen && suggested.length > 0 && (
-          <SuggestionMenu role="listbox" aria-label={t('verbLabel')}>
+          <SuggestionMenu id={`${id ?? 'verb-search'}-suggestions`} role="listbox" aria-label={t('verbLabel')}>
             {suggested.map((verb, index) => {
               const isHighlighted = index === highligtedIndex
               const formLabel = formatFormLabel(verb.form, verb.root)
