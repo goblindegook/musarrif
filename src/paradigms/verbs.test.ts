@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
-import { Token, tokenize } from './tokens'
+import { tokenize } from './tokens'
 import {
   buildVerbFromId,
   formatFormLabel,

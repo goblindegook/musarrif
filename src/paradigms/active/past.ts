@@ -18,7 +18,7 @@ import {
   SHADDA,
   SUKOON,
   TEH,
-  Token,
+  type Token,
   WAW,
   YEH,
   ZAY,
