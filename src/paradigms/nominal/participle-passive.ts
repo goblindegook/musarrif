@@ -126,7 +126,7 @@ export function derivePassiveParticiple(verb: Verb): string {
 
         if (c3.isWeak) return [...prefix, c1, SUKOON, infix, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
 
-        if (c2.equals(YEH) || (c2.isWeak && infix !== DAL)) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
+        if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
 
         return [...prefix, c1, SUKOON, infix, FATHA, c2, FATHA, c3]
       }

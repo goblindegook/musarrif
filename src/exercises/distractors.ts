@@ -15,15 +15,9 @@ import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 type DistractorGenerator<T> = () => T
 type DistractorNormaliser<T> = (distractor: T) => T
 
-const WEAK_LETTER_REPLACEMENTS = tokenize([WAW, YEH, ALIF, ALIF_MAQSURA])
+const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA]
 
-const RANDOM_LETTERS = tokenize([
-  ...Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root)))),
-  WAW,
-  YEH,
-  ALIF,
-  ALIF_MAQSURA,
-])
+const RANDOM_LETTERS = [...Array.from(new Set(verbs.flatMap((verb) => verb.rootTokens))), WAW, YEH, ALIF, ALIF_MAQSURA]
 
 export function randomizeOptions<T>(
   answer: T,

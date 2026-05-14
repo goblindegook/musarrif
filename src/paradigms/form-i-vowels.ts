@@ -1,5 +1,5 @@
 import { keys } from '../primitives/objects'
-import { DAMMA, FATHA, KASRA, type Vowel } from './letters'
+import { DAMMA, FATHA, KASRA, type Token } from './letters'
 import type { FormIVerb } from './verbs'
 
 const FORM_I_VOWELS = {
@@ -18,18 +18,18 @@ export type FormIPattern = keyof typeof FORM_I_VOWELS
 
 export const FORM_I_PATTERNS = keys(FORM_I_VOWELS)
 
-export function formIPastVowel(verb: FormIVerb): Vowel {
+export function formIPastVowel(verb: FormIVerb): Token {
   return FORM_I_VOWELS[verb.vowels][0]
 }
 
-export function formIPresentVowel(verb: FormIVerb): Vowel {
+export function formIPresentVowel(verb: FormIVerb): Token {
   return FORM_I_VOWELS[verb.vowels][1]
 }
 
-export function isFormIPastVowel(verb: FormIVerb, vowel: Vowel): boolean {
-  return FORM_I_VOWELS[verb.vowels][0] === vowel
+export function isFormIPastVowel(verb: FormIVerb, vowel: Token): boolean {
+  return vowel.equals(FORM_I_VOWELS[verb.vowels][0])
 }
 
-export function isFormIPresentVowel(verb: FormIVerb, vowel: Vowel): boolean {
-  return FORM_I_VOWELS[verb.vowels][1] === vowel
+export function isFormIPresentVowel(verb: FormIVerb, vowel: Token): boolean {
+  return vowel.equals(FORM_I_VOWELS[verb.vowels][1])
 }

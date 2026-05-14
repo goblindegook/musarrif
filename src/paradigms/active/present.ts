@@ -6,11 +6,11 @@ import {
   ALIF_MAQSURA,
   DAL,
   DAMMA,
+  detokenize,
   FATHA,
   finalize,
   KASRA,
   LAM,
-  LetterToken,
   longVowel,
   NOON,
   resolveFormVIIIInfixConsonant,
@@ -20,7 +20,6 @@ import {
   TEH,
   type Token,
   tokenize,
-  type Vowel,
   WAW,
   YEH,
   ZAY,
@@ -137,7 +136,8 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 
       if (c2.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem), ...suffix]
 
-      if (c2.isWeak && stem.includes(ALIF)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
+      if (c2.isWeak && stem.some((t) => t.equals(ALIF)))
+        return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
       // FIXME: isFormIPastVowel doesn't make sense
       if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
@@ -264,7 +264,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
-      const word = Array.from(indicative)
+      const word = tokenize(indicative)
 
       if (isDual(pronounId)) return dropNoonEnding(word)
 
@@ -281,7 +281,11 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       }
 
       if (pronounId === '2fs' && verb.form === 7)
-        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)).filter((char) => char !== SHADDA), KASRA, YEH]
+        return [
+          ...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)).filter((char) => !char.equals(SHADDA)),
+          KASRA,
+          YEH,
+        ]
 
       if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
 
@@ -302,7 +306,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
   if (letters.length > 3) {
     return mapRecord(
       mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
-        const word = Array.from(indicative)
+        const word = tokenize(indicative)
 
         const [, , c3, c4] = letters
         if (isDual(pronounId)) return dropNoonEnding(word)
@@ -320,7 +324,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
-      const word = Array.from(indicative)
+      const word = tokenize(indicative)
 
       if (verb.form === 1 && c3.isWeak && isFormIPresentVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
@@ -350,7 +354,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (pronounId === '2fs' && verb.form === 7 && c2.equals(c3))
         return dropNoonEnding(word)
           .slice(0, -1)
-          .filter((char) => char !== SHADDA)
+          .filter((char) => !char.equals(SHADDA))
 
       if (pronounId === '2fs') {
         if (verb.form === 7) return [...dropNoonEnding(word).slice(0, -3), KASRA, YEH]
@@ -375,12 +379,12 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 9) return [...dropFinalDiacritic(word), FATHA]
 
       if (c2.isWeak) {
-        if (verb.form === 1 && (word.includes(ALIF.letter) || !isFormIPastVowel(verb, KASRA)))
+        if (verb.form === 1 && (word.some((t) => t.equals(ALIF)) || !isFormIPastVowel(verb, KASRA)))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
         if ([4, 7, 10].includes(verb.form)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
-        if (verb.form === 8 && (c2.equals(YEH) || resolveFormVIIIInfixConsonant(c1) !== DAL))
+        if (verb.form === 8 && (c2.equals(YEH) || !resolveFormVIIIInfixConsonant(c1).equals(DAL)))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
       }
 
@@ -438,7 +442,7 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
 
     if (c2.isHamza) return [...prefix, c1, FATHA, ALIF_MAQSURA]
 
-    if (presentVowel === FATHA) return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
+    if (presentVowel.equals(FATHA)) return [...prefix, c1, SUKOON, c2, FATHA, ALIF_MAQSURA]
 
     return [...prefix, c1, SUKOON, c2, ...longVowel(presentVowel)]
   }
@@ -532,7 +536,8 @@ function derivePresentFormVIII(verb: NonFormIVerb): readonly Token[] {
 
   if (c3.isWeak) return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, YEH]
 
-  if (c2.equals(YEH) || (c2.isWeak && infix !== DAL)) return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
+  if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))
+    return [YEH, FATHA, c1, SUKOON, infix, FATHA, ALIF, c3, DAMMA]
 
   return [YEH, FATHA, assimilatedC1, SUKOON, infix, FATHA, seatedC2, KASRA, seatedC3, DAMMA]
 }
@@ -606,18 +611,13 @@ function derivePresentForms(verb: Verb): readonly Token[] {
 
 function shortenHollowStem(word: readonly Token[]): readonly Token[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
-  const hollowLetterIndex = tokenize(word).findIndex((char, i) => i > 0 && char.isWeak)
-  const nextLetterIndex = tokenize(word).findIndex((char, i) => i > hollowLetterIndex && !char.isCombiningMark)
+  const hollowLetterIndex = word.findIndex((char, i) => i > 0 && char.isWeak)
+  const nextLetterIndex = word.findIndex((char, i) => i > hollowLetterIndex && !char.isCombiningMark)
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
-function expandGemination(word: readonly Token[], vowel: Vowel): readonly Token[] {
-  return Array.from(
-    word
-      .map((t) => (t instanceof LetterToken ? t.letter : t))
-      .join('')
-      .replace(new RegExp(`([^\\p{Mn}])${SUKOON.letter}\\1`), `$1${vowel}$1`),
-  )
+function expandGemination(word: readonly Token[], vowel: Token): readonly Token[] {
+  return tokenize(detokenize(word).replace(new RegExp(`([^\\p{Mn}])${SUKOON.letter}\\1`), `$1${vowel.letter}$1`))
 }
 
 function applyPresentPrefix(prefix: Token, chars: readonly Token[]): readonly Token[] {
@@ -625,7 +625,7 @@ function applyPresentPrefix(prefix: Token, chars: readonly Token[]): readonly To
 }
 
 function dropFinalDiacritic(word: readonly Token[]): readonly Token[] {
-  const lastIndex = tokenize(word).findLastIndex((char) => !char.isCombiningMark)
+  const lastIndex = word.findLastIndex((char) => !char.isCombiningMark)
   const base = word.slice(0, lastIndex + 1)
-  return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
+  return word.slice(lastIndex + 1).some((t) => t.equals(SHADDA)) ? [...base, SHADDA] : base
 }

@@ -249,9 +249,9 @@ export function resolveVerbExplanationLayers(
 function toFormRoot(form: VerbForm, [c1]: readonly LetterToken[]): FormRootInteraction | undefined {
   if (form !== 8) return
   const infixConsonant = resolveFormVIIIInfixConsonant(c1)
-  if (infixConsonant === c1) return 'assimilation-complete'
-  if (infixConsonant === DAL) return 'assimilation-voicing'
-  if (infixConsonant === TAH) return 'assimilation-emphasis'
+  if (infixConsonant.equals(c1)) return 'assimilation-complete'
+  if (infixConsonant.equals(DAL)) return 'assimilation-voicing'
+  if (infixConsonant.equals(TAH)) return 'assimilation-emphasis'
 }
 
 function toTenseRoot(

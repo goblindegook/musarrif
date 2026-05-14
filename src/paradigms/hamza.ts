@@ -24,9 +24,9 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       const vowel = findVowel(tokens, index)
 
       // When at the start, seat hamza on alif:
-      if (index === 0) return vowel === KASRA ? ALIF_HAMZA_BELOW : ALIF_HAMZA
+      if (index === 0) return vowel?.equals(KASRA) ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
-      const before = tokens[index - 1].letter
+      const before = tokens[index - 1]
       const after = tokens[index + 1]
       const longVowelBefore = longVowelAt(tokens, index - 2)
 
@@ -37,16 +37,16 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
         }
 
         // case vowel doesn't govern the seat, only the preceding vowel does:
-        if (before === KASRA) return HAMZA_ON_YEH
-        if (before === DAMMA) return HAMZA_ON_WAW
-        if (before === FATHA) return ALIF_HAMZA
+        if (before.equals(KASRA)) return HAMZA_ON_YEH
+        if (before.equals(DAMMA)) return HAMZA_ON_WAW
+        if (before.equals(FATHA)) return ALIF_HAMZA
         return HAMZA
       }
 
       // Seat on the line to avoid alif + alif hamza:
-      if (ALIF.equals(before) && vowel === FATHA) return HAMZA
+      if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
 
-      if (SUKOON.equals(before)) {
+      if (before.equals(SUKOON)) {
         const longVowelAfter = longVowelAt(tokens, index + 1)
         if (tokens[index - 2].equals(YEH)) {
           if (longVowelAfter === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle
@@ -61,38 +61,38 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
       if (longVowelBefore === 'u') {
-        if (vowel === KASRA) return HAMZA_ON_YEH // FIXME: for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
+        if (vowel?.equals(KASRA)) return HAMZA_ON_YEH // FIXME: for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
         return HAMZA
       }
 
       const dominant = vowelStrength(before) > vowelStrength(vowel) ? before : vowel
-      if (dominant === KASRA) return HAMZA_ON_YEH
-      if (dominant === DAMMA) return HAMZA_ON_WAW
-      if (dominant === FATHA) return ALIF_HAMZA
+      if (dominant?.equals(KASRA)) return HAMZA_ON_YEH
+      if (dominant?.equals(DAMMA)) return HAMZA_ON_WAW
+      if (dominant?.equals(FATHA)) return ALIF_HAMZA
       return HAMZA
     }),
   )
 }
 
-function vowelStrength(token?: string): number {
-  if (token === KASRA) return 3
-  if (token === DAMMA) return 2
-  if (token === FATHA) return 1
+function vowelStrength(token?: LetterToken): number {
+  if (KASRA.equals(token)) return 3
+  if (DAMMA.equals(token)) return 2
+  if (FATHA.equals(token)) return 1
   return 0
 }
 
 function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' | 'u' | undefined {
-  const curr = tokens.at(index)?.letter
-  const next = tokens.at(index + 1)?.letter
+  const curr = tokens.at(index)
+  const next = tokens.at(index + 1)
 
-  if (curr === KASRA && YEH.equals(next)) return 'i'
-  if (curr === FATHA && ALIF.equals(next)) return 'a'
-  if (curr === DAMMA && WAW.equals(next)) return 'u'
+  if (KASRA.equals(curr) && YEH.equals(next)) return 'i'
+  if (FATHA.equals(curr) && ALIF.equals(next)) return 'a'
+  if (DAMMA.equals(curr) && WAW.equals(next)) return 'u'
 }
 
-function findVowel(tokens: readonly LetterToken[], index: number): string | undefined {
-  const candidate = tokens.at(index + 1)?.letter ?? ''
+function findVowel(tokens: readonly LetterToken[], index: number): LetterToken | undefined {
+  const candidate = tokens.at(index + 1)
   // When geminated, the effective vowel is after the shadda:
-  if (candidate === SHADDA) return findVowel(tokens, index + 1)
-  return [KASRA, FATHA, DAMMA].includes(candidate) ? candidate : undefined
+  if (SHADDA.equals(candidate)) return findVowel(tokens, index + 1)
+  return [KASRA, FATHA, DAMMA].some((t) => t.equals(candidate)) ? candidate : undefined
 }

@@ -251,7 +251,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
-  if (c2.equals(YEH) || (c2.isWeak && infix !== DAL))
+  if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))
     return {
       prefix: [ALIF, DAMMA, c1, SUKOON, infix, KASRA, YEH, SUKOON],
       suffix3sd: [c3, FATHA],

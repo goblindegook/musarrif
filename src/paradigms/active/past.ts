@@ -132,7 +132,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
       suffixedBase: [...prefix, pastVowel, c3],
     }
 
-  if (c3.isWeak && pastVowel === KASRA)
+  if (c3.isWeak && pastVowel.equals(KASRA))
     return {
       ...buildForms([...prefix, KASRA, YEH], new LetterToken('')),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA],
@@ -264,7 +264,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, c3],
     }
 
-  if (c2.isWeak && infix !== DAL) return buildForms([...prefix, ALIF, c3], c3)
+  if (c2.isWeak && !infix.equals(DAL)) return buildForms([...prefix, ALIF, c3], c3)
 
   if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH)
 

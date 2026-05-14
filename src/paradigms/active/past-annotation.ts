@@ -2,7 +2,6 @@ import {
   type AnnotatedForm,
   buildMorphemes,
   type DerivationStep,
-  type MorphemeRole,
   PAST_SUFFIX_COUNTS,
   type TaggedChar,
 } from '../annotation'
@@ -16,7 +15,7 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const rootStep: DerivationStep = {
     kind: { type: 'root' },
     arabic: verb.root,
-    morphemes: [...verb.root].map((char) => ({ text: char, role: 'root' as MorphemeRole })),
+    morphemes: [...verb.root].map((char) => ({ text: char, role: 'root' as const })),
   }
 
   const formMorphemes = buildMorphemes(tagPastStemChars(verb, [...past['3ms']]))
@@ -39,7 +38,7 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const stemCount = chars.length - PAST_SUFFIX_COUNTS[pronounId]
   const morphemes = buildMorphemes([
     ...tagPastStemChars(verb, chars.slice(0, stemCount)),
-    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole })),
+    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as const })),
   ])
 
   return {

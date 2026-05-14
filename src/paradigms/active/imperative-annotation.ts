@@ -1,4 +1,4 @@
-import { type AnnotatedForm, buildMorphemes, type MorphemeRole, type TaggedChar } from '../annotation'
+import { type AnnotatedForm, buildMorphemes, type TaggedChar } from '../annotation'
 import { ALIF, ALIF_HAMZA } from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
@@ -32,7 +32,7 @@ export function annotateActiveImperative(verb: Verb, pronounId: PronounId): Anno
   const jussiveAnnotation = annotateActivePresentMood(verb, 'jussive', pronounId)
   const jussiveStep = jussiveAnnotation.steps[jussiveAnnotation.steps.length - 1]
   const morphemes = [
-    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'dropped' as MorphemeRole },
+    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'dropped' as const },
     ...buildMorphemes(
       tagImperativeChars(
         [...arabic],

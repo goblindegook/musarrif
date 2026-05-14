@@ -192,14 +192,14 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (c1.isHamza && pronounId === '1s') return [WAW, c2, FATHA, mood !== 'jussive' ? ALIF_MAQSURA : '']
+  if (c1.isHamza && pronounId === '1s') return [WAW, c2, FATHA, ...(mood !== 'jussive' ? [ALIF_MAQSURA] : [])]
 
   if (c2.isHamza) return [c1, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   if (c3.isWeak) return [c1, SUKOON, c2, FATHA, ...defectiveSuffix(mood, pronounId, c2.equals(c3))]
 
   if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [c1, FATHA, c3, ...moodSuffix]
+    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0))) return [c1, FATHA, c3, ...moodSuffix]
     return [c1, FATHA, ALIF, c3, ...moodSuffix]
   }
 
@@ -265,7 +265,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
       ? [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, NOON, FATHA]
       : [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, ALIF]
 
-  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && infix !== DAL)))
+  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
     return mood === 'jussive'
       ? [c1, SUKOON, infix, FATHA, c3, ...moodSuffix]
       : [c1, SUKOON, infix, FATHA, ALIF, c3, ...moodSuffix]
@@ -275,7 +275,8 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
   if (c3.isWeak) return [c1, SUKOON, infix, FATHA, c2, FATHA, ...defectiveSuffix(mood, pronounId)]
 
   if (c2.isWeak && c3.isHamza) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [c1, SUKOON, infix, FATHA, c3, ...moodSuffix]
+    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)))
+      return [c1, SUKOON, infix, FATHA, c3, ...moodSuffix]
 
     return [c1, SUKOON, infix, FATHA, ALIF, c3, ...moodSuffix]
   }
@@ -296,7 +297,7 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   }
 
   if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0) === SUKOON) return [...prefix, c1, FATHA, c3, ...moodSuffix]
+    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0))) return [...prefix, c1, FATHA, c3, ...moodSuffix]
     return [...prefix, c1, FATHA, ALIF, c3, ...moodSuffix]
   }
 

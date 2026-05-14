@@ -135,7 +135,7 @@ export function buildMorphemes(tagged: TaggedChar[]): Morpheme[] {
   for (let i = 0; i < tagged.length; i++) {
     if (i + 2 < tagged.length && SUKOON.equals(tagged[i + 1].char) && tagged[i].char === tagged[i + 2].char) {
       processed.push(tagged[i])
-      processed.push({ char: SHADDA, role: tagged[i].role })
+      processed.push({ char: SHADDA.letter, role: tagged[i].role })
       i += 2
     } else {
       processed.push(tagged[i])

@@ -35,9 +35,6 @@ export function analyzeRoot(root: readonly LetterToken[]): RootAnalysis {
   })
 
   const [c1, c2, c3] = Array.from(letters)
-  const isInitialWeak = c1.isWeak
-  const isMiddleWeak = c2.isWeak
-  const isFinalWeak = c3.isWeak
   const hasHamza = hamzaPositions.length > 0
 
   const toWeakVariant = (
@@ -47,15 +44,15 @@ export function analyzeRoot(root: readonly LetterToken[]): RootAnalysis {
   ): RootAnalysisType => (letter.equals(WAW) ? wawType : yaaType)
 
   if (hasHamza) {
-    if (isMiddleWeak && isFinalWeak) return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
-    if (isMiddleWeak) {
+    if (c2.isWeak && c3.isWeak) return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
+    if (c2.isWeak) {
       return {
         type: toWeakVariant(c2, 'hamzated-hollow-waw', 'hamzated-hollow-yaa'),
         weakPositions,
         hamzaPositions,
       }
     }
-    if (isFinalWeak) {
+    if (c3.isWeak) {
       return {
         type: toWeakVariant(c3, 'hamzated-defective-waw', 'hamzated-defective-yaa'),
         weakPositions,
@@ -74,9 +71,9 @@ export function analyzeRoot(root: readonly LetterToken[]): RootAnalysis {
       hamzaPositions,
     }
   }
-  if (isInitialWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
-  if (isMiddleWeak) return { type: toWeakVariant(c2, 'hollow-waw', 'hollow-yaa'), weakPositions, hamzaPositions }
-  if (isFinalWeak) return { type: toWeakVariant(c3, 'defective-waw', 'defective-yaa'), weakPositions, hamzaPositions }
+  if (c1.isWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
+  if (c2.isWeak) return { type: toWeakVariant(c2, 'hollow-waw', 'hollow-yaa'), weakPositions, hamzaPositions }
+  if (c3.isWeak) return { type: toWeakVariant(c3, 'defective-waw', 'defective-yaa'), weakPositions, hamzaPositions }
   if (letters[1] === letters[2]) return { type: 'doubled', weakPositions, hamzaPositions }
   return { type: 'sound', weakPositions, hamzaPositions }
 }

@@ -3,8 +3,6 @@ import { seatHamzas } from './hamza'
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
-export type Vowel = typeof FATHA | typeof KASRA | typeof DAMMA
-
 export class LetterToken {
   readonly letter: string
   readonly isHamza: boolean
@@ -58,10 +56,10 @@ export const YEH = createToken('\u064A')
 
 export const TANWEEN_FATHA = createToken('\u064B')
 export const TANWEEN_KASRA = createToken('\u064D')
-export const FATHA = '\u064E'
-export const DAMMA = '\u064F'
-export const KASRA = '\u0650'
-export const SHADDA = '\u0651'
+export const FATHA = createToken('\u064E')
+export const DAMMA = createToken('\u064F')
+export const KASRA = createToken('\u0650')
+export const SHADDA = createToken('\u0651')
 export const SUKOON = createToken('\u0652')
 
 export function tokenize(text: string | readonly Token[]): readonly LetterToken[] {
@@ -72,12 +70,12 @@ export function detokenize(tokens: readonly LetterToken[]): string {
   return tokens.map((token) => (token instanceof LetterToken ? token.letter : token)).join('')
 }
 
-export type Token = string | Vowel | LetterToken
+export type Token = LetterToken
 
-const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<Token>> = {
-  [FATHA]: new Set([ALIF.letter, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
-  [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH.letter]),
-  [DAMMA]: new Set([WAW.letter, HAMZA_ON_WAW.letter]),
+const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
+  [FATHA.letter]: new Set([ALIF.letter, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
+  [KASRA.letter]: new Set([YEH.letter, HAMZA_ON_YEH.letter]),
+  [DAMMA.letter]: new Set([WAW.letter, HAMZA_ON_WAW.letter]),
 }
 
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
@@ -88,10 +86,10 @@ export function applyDiacriticsPreference(input: string, preference: DiacriticsP
 
 function stripObviousDiacritics(input: string): string {
   return detokenize(
-    tokenize(input).reduce<LetterToken[]>((result, current, index, chars) => {
+    tokenize(input).reduce<Token[]>((result, current, index, chars) => {
       if (current.equals(SUKOON)) return result
       const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
-      if (LONG_VOWEL_TARGETS[current.letter as Vowel]?.has(nextBase?.letter ?? '')) return result
+      if (LONG_VOWEL_TARGETS[current.letter]?.has(nextBase?.letter ?? '')) return result
       result.push(current)
       return result
     }, []),
@@ -113,13 +111,13 @@ export function normalizeForComparison(text: string): string {
 }
 
 // ḥurūf al-madd
-export function longVowel(vowel: Vowel): [Vowel, Token] {
-  if (vowel === FATHA) return [FATHA, ALIF]
-  if (vowel === KASRA) return [KASRA, YEH]
+export function longVowel(vowel: Token): [Token, Token] {
+  if (vowel.equals(FATHA)) return [FATHA, ALIF]
+  if (vowel.equals(KASRA)) return [KASRA, YEH]
   return [DAMMA, WAW]
 }
 
-export function resolveFormVIIIInfixConsonant(c1: LetterToken): LetterToken {
+export function resolveFormVIIIInfixConsonant(c1: Token): Token {
   if (c1.equals(ZAY)) return DAL
   if ([SAD, DAD].some((t) => c1.equals(t))) return TAH
   if ([DAL, THEH, THAL, TAH, ZAH].some((t) => c1.equals(t))) return c1
@@ -127,12 +125,12 @@ export function resolveFormVIIIInfixConsonant(c1: LetterToken): LetterToken {
 }
 
 export function finalize(letters: readonly Token[]): string {
-  return detokenize(seatHamzas(tokenize(letters)))
+  return detokenize(seatHamzas(letters))
     .replace(
-      new RegExp(`${ALIF_HAMZA.letter}${FATHA}[${ALIF_HAMZA.letter}${ALIF.letter}]${SUKOON.letter}?`),
+      new RegExp(`${ALIF_HAMZA.letter}${FATHA.letter}[${ALIF_HAMZA.letter}${ALIF.letter}]${SUKOON.letter}?`),
       ALIF_MADDA.letter,
     )
-    .replace(new RegExp(`(.)(?:${SUKOON.letter}\\1)`, 'g'), `$1${SHADDA}`)
+    .replace(new RegExp(`(.)(?:${SUKOON.letter}\\1)`, 'g'), `$1${SHADDA.letter}`)
     .normalize('NFC')
 }
 

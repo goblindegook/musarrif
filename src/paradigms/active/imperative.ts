@@ -12,6 +12,7 @@ import {
   SHADDA,
   SUKOON,
   type Token,
+  tokenize,
   WAW,
   YEH,
 } from '../letters'
@@ -27,7 +28,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      const stem = Array.from(jussive).slice(2)
+      const stem = tokenize(jussive).slice(2)
 
       if (letters.length === 4) return [3, 4].includes(verb.form) ? [ALIF, KASRA, ...stem] : stem
 
@@ -38,7 +39,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
 
           if (c1.isWeak) {
-            if (stem.at(1) === FATHA && c3.isWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
+            if (FATHA.equals(stem.at(1)) && c3.isWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
 
             if (c2.equals(c3) && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
 
@@ -48,7 +49,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           }
 
           if (c1.isHamza) {
-            const initialHamzatedStem = Array.from(jussive).slice(4)
+            const initialHamzatedStem = tokenize(jussive).slice(4)
 
             if (verb.contractedImperative) return initialHamzatedStem
 
@@ -100,7 +101,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
         }
 
         case 5: {
-          const shaddaIndex = stem.lastIndexOf(SHADDA)
+          const shaddaIndex = stem.findLastIndex((t) => t.equals(SHADDA))
           return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
         }
 
@@ -121,7 +122,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 }
 
 function restoreWeakLetterBeforeAlif(stem: readonly Token[]): readonly Token[] {
-  if (YEH.equals(stem.at(-3) ?? '')) return stem
-  if (stem.at(-2) === FATHA) return [...stem.slice(0, -2), KASRA, YEH, FATHA, ALIF]
+  if (YEH.equals(stem.at(-3))) return stem
+  if (FATHA.equals(stem.at(-2))) return [...stem.slice(0, -2), KASRA, YEH, FATHA, ALIF]
   return [...stem.slice(0, -1), YEH, FATHA, ALIF]
 }

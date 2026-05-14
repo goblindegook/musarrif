@@ -173,7 +173,7 @@ function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Token[] {
 
   if (c3.isWeak) return [...prefix, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
 
-  if (c2.isWeak && infix !== DAL) return [...prefix, YEH, FATHA, ALIF, c3]
+  if (c2.isWeak && !infix.equals(DAL)) return [...prefix, YEH, FATHA, ALIF, c3]
 
   return [...prefix, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
 }
