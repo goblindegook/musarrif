@@ -136,7 +136,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
           aria-label={t('verbLabel')}
           role="combobox"
           aria-expanded={suggestionsOpen}
-          aria-controls={suggestionsOpen ? `${id ?? 'verb-search'}-suggestions` : ''}
+          aria-controls={suggestionsOpen && suggested.length > 0 ? `${id ?? 'verb-search'}-suggestions` : ''}
           aria-autocomplete="list"
           aria-activedescendant={
             highligtedIndex >= 0 && suggested[highligtedIndex]
