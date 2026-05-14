@@ -37,7 +37,7 @@ function webSpeechEngine(): Engine {
   return {
     speak: (text: string, lang: string, options: SpeechOptions = {}) => {
       return new Promise<void>((resolve) => {
-        if (!supported) resolve()
+        if (!supported) return resolve()
 
         const utterance = new SpeechSynthesisUtterance(text)
         utterance.lang = lang
