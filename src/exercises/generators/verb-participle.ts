@@ -1,5 +1,4 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
-import { tokenize } from '../../paradigms/letters.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
@@ -56,7 +55,7 @@ function buildOptions(
   const generators = [
     formDistractor(verb, kind, profile),
     rootDistractor(verb, kind, profile),
-    tokenize(verb.root).some((t) => t.isWeak) ? weakRootDistractor(verb, kind, profile) : null,
+    verb.rootTokens.some((t) => t.isWeak) ? weakRootDistractor(verb, kind, profile) : null,
     singleLetterWordDistractor(answer),
     oppositeParticipleDistractor(verb, kind, profile),
   ].filter((generator) => generator != null)

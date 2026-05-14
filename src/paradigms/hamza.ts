@@ -8,15 +8,15 @@ import {
   HAMZA_ON_WAW,
   HAMZA_ON_YEH,
   KASRA,
-  type LetterToken,
   SHADDA,
   SUKOON,
+  type Token,
   tokenize,
   WAW,
   YEH,
 } from './letters'
 
-export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[] {
+export function seatHamzas(word: readonly Token[]): readonly Token[] {
   return tokenize(
     word.map((token, index, tokens) => {
       if (!token.equals(HAMZA)) return token
@@ -74,14 +74,14 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
   )
 }
 
-function vowelStrength(token?: LetterToken): number {
+function vowelStrength(token?: Token): number {
   if (KASRA.equals(token)) return 3
   if (DAMMA.equals(token)) return 2
   if (FATHA.equals(token)) return 1
   return 0
 }
 
-function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' | 'u' | undefined {
+function longVowelAt(tokens: readonly Token[], index: number): 'a' | 'i' | 'u' | undefined {
   const curr = tokens.at(index)
   const next = tokens.at(index + 1)
 
@@ -90,7 +90,7 @@ function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' |
   if (DAMMA.equals(curr) && WAW.equals(next)) return 'u'
 }
 
-function findVowel(tokens: readonly LetterToken[], index: number): LetterToken | undefined {
+function findVowel(tokens: readonly Token[], index: number): Token | undefined {
   const candidate = tokens.at(index + 1)
   // When geminated, the effective vowel is after the shadda:
   if (SHADDA.equals(candidate)) return findVowel(tokens, index + 1)

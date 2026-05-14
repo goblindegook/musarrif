@@ -4,7 +4,7 @@ import {
   ALIF_MAQSURA,
   applyDiacriticsPreference,
   detokenize,
-  type LetterToken,
+  type Token,
   tokenize,
   WAW,
   YEH,
@@ -77,7 +77,7 @@ export function wordSliceDistractor(word: string, size: number): DistractorGener
   return () => cyclicSlice(letters, size, offset++)
 }
 
-function cyclicSlice(pool: readonly LetterToken[], length: number, offset: number): string {
+function cyclicSlice(pool: readonly Token[], length: number, offset: number): string {
   return detokenize(Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]))
 }
 

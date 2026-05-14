@@ -3,29 +3,29 @@ import { seatHamzas } from './hamza'
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
-export class LetterToken {
-  readonly letter: string
+export class Token {
+  readonly raw: string
   readonly isHamza: boolean
   readonly isWeak: boolean
   readonly isVowel: boolean
   readonly isCombiningMark: boolean
 
-  constructor(letter: string) {
-    this.letter = letter
-    this.isHamza = isHamzatedLetter(letter)
-    this.isWeak = isWeakLetter(letter)
-    this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(letter)
-    this.isCombiningMark = /\p{Mn}/u.test(letter)
+  constructor(raw: string) {
+    this.raw = raw
+    this.isHamza = isHamzatedLetter(raw)
+    this.isWeak = isWeakLetter(raw)
+    this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(raw)
+    this.isCombiningMark = /\p{Mn}/u.test(raw)
   }
 
-  equals(other?: string | LetterToken): boolean {
-    return other instanceof LetterToken ? this.letter === other.letter : this.letter === other
+  equals(other?: string | Token): boolean {
+    return other instanceof Token ? this.raw === other.raw : this.raw === other
   }
 }
 
 const createToken = memoize(
   (char) => char,
-  (char: string) => new LetterToken(char),
+  (char: string) => new Token(char),
 )
 
 export const HAMZA = createToken('\u0621')
@@ -62,20 +62,18 @@ export const KASRA = createToken('\u0650')
 export const SHADDA = createToken('\u0651')
 export const SUKOON = createToken('\u0652')
 
-export function tokenize(text: string | readonly Token[]): readonly LetterToken[] {
-  return [...text].map((token) => (token instanceof LetterToken ? token : createToken(token)))
+export function tokenize(text: string | readonly Token[]): readonly Token[] {
+  return [...text].map((token) => (token instanceof Token ? token : createToken(token)))
 }
 
-export function detokenize(tokens: readonly LetterToken[]): string {
-  return tokens.map((token) => (token instanceof LetterToken ? token.letter : token)).join('')
+export function detokenize(tokens: readonly Token[]): string {
+  return tokens.map((token) => (token instanceof Token ? token.raw : token)).join('')
 }
-
-export type Token = LetterToken
 
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
-  [FATHA.letter]: new Set([ALIF.letter, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
-  [KASRA.letter]: new Set([YEH.letter, HAMZA_ON_YEH.letter]),
-  [DAMMA.letter]: new Set([WAW.letter, HAMZA_ON_WAW.letter]),
+  [FATHA.raw]: new Set([ALIF.raw, ALIF_MAQSURA.raw, TEH_MARBUTA.raw]),
+  [KASRA.raw]: new Set([YEH.raw, HAMZA_ON_YEH.raw]),
+  [DAMMA.raw]: new Set([WAW.raw, HAMZA_ON_WAW.raw]),
 }
 
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
@@ -89,7 +87,7 @@ function stripObviousDiacritics(input: string): string {
     tokenize(input).reduce<Token[]>((result, current, index, chars) => {
       if (current.equals(SUKOON)) return result
       const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
-      if (LONG_VOWEL_TARGETS[current.letter]?.has(nextBase?.letter ?? '')) return result
+      if (LONG_VOWEL_TARGETS[current.raw]?.has(nextBase?.raw ?? '')) return result
       result.push(current)
       return result
     }, []),
@@ -104,7 +102,7 @@ function isHamzatedLetter(token = ''): boolean {
   return ['\u0621', '\u0623', '\u0624', '\u0625', '\u0626'].includes(token)
 }
 
-export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.letter)
+export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.raw)
 
 export function normalizeForComparison(text: string): string {
   return normalizeHamza(applyDiacriticsPreference(text.trim(), 'none'))
@@ -126,11 +124,8 @@ export function resolveFormVIIIInfixConsonant(c1: Token): Token {
 
 export function finalize(letters: readonly Token[]): string {
   return detokenize(seatHamzas(letters))
-    .replace(
-      new RegExp(`${ALIF_HAMZA.letter}${FATHA.letter}[${ALIF_HAMZA.letter}${ALIF.letter}]${SUKOON.letter}?`),
-      ALIF_MADDA.letter,
-    )
-    .replace(new RegExp(`(.)(?:${SUKOON.letter}\\1)`, 'g'), `$1${SHADDA.letter}`)
+    .replace(new RegExp(`${ALIF_HAMZA.raw}${FATHA.raw}[${ALIF_HAMZA.raw}${ALIF.raw}]${SUKOON.raw}?`), ALIF_MADDA.raw)
+    .replace(new RegExp(`(.)(?:${SUKOON.raw}\\1)`, 'g'), `$1${SHADDA.raw}`)
     .normalize('NFC')
 }
 

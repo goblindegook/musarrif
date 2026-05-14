@@ -42,8 +42,8 @@ import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 import { useRouting } from '../routes'
 
 const formIVowelPattern = (verb: DisplayVerb<1>) => {
-  const past = formIPastVowel(verb).letter
-  const present = formIPresentVowel(verb).letter
+  const past = formIPastVowel(verb).raw
+  const present = formIPresentVowel(verb).raw
   return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
 

@@ -1,4 +1,4 @@
-import { type LetterToken, WAW } from './letters'
+import { type Token, WAW } from './letters'
 
 export type RootAnalysisType =
   | 'sound'
@@ -24,7 +24,7 @@ export interface RootAnalysis {
   hamzaPositions: number[]
 }
 
-export function analyzeRoot(root: readonly LetterToken[]): RootAnalysis {
+export function analyzeRoot(root: readonly Token[]): RootAnalysis {
   const letters = Array.from(root)
   const weakPositions: number[] = []
   const hamzaPositions: number[] = []
@@ -37,11 +37,8 @@ export function analyzeRoot(root: readonly LetterToken[]): RootAnalysis {
   const [c1, c2, c3] = Array.from(letters)
   const hasHamza = hamzaPositions.length > 0
 
-  const toWeakVariant = (
-    letter: LetterToken,
-    wawType: RootAnalysisType,
-    yaaType: RootAnalysisType,
-  ): RootAnalysisType => (letter.equals(WAW) ? wawType : yaaType)
+  const toWeakVariant = (letter: Token, wawType: RootAnalysisType, yaaType: RootAnalysisType): RootAnalysisType =>
+    letter.equals(WAW) ? wawType : yaaType
 
   if (hasHamza) {
     if (c2.isWeak && c3.isWeak) return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }

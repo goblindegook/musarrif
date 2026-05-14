@@ -10,7 +10,6 @@ import {
   finalize,
   KASRA,
   LAM,
-  LetterToken,
   MEEM,
   NOON,
   resolveFormVIIIInfixConsonant,
@@ -18,7 +17,7 @@ import {
   SHADDA,
   SUKOON,
   TEH,
-  type Token,
+  Token,
   WAW,
   YEH,
   ZAY,
@@ -58,7 +57,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, string> {
   )
 }
 
-function buildForms(stem: readonly Token[], defective?: LetterToken): PastBaseForms {
+function buildForms(stem: readonly Token[], defective?: Token): PastBaseForms {
   if (!defective?.isWeak)
     return {
       base: [...stem, FATHA],
@@ -134,7 +133,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak && pastVowel.equals(KASRA))
     return {
-      ...buildForms([...prefix, KASRA, YEH], new LetterToken('')),
+      ...buildForms([...prefix, KASRA, YEH], new Token('')),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA],
     }
 

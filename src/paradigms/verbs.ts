@@ -3,7 +3,7 @@ import rawVerbs from '../data/roots.json'
 import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { type LetterToken, normalizeHamza, tokenize } from './letters'
+import { normalizeHamza, type Token, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -67,7 +67,7 @@ export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
 
 export type FormIVerb = {
   root: string
-  rootTokens: readonly LetterToken[]
+  rootTokens: readonly Token[]
   form: 1
   vowels: FormIPattern
   presentHollow?: PresentHollowBehaviour
@@ -79,7 +79,7 @@ export type FormIVerb = {
 
 export type NonFormIVerb = {
   root: string
-  rootTokens: readonly LetterToken[]
+  rootTokens: readonly Token[]
   form: Exclude<VerbForm, 1>
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean

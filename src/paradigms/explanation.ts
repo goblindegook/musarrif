@@ -1,7 +1,7 @@
 import { toRoman } from '../primitives/numbers'
 import { annotate, type Morpheme } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
-import { DAL, type LetterToken, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH } from './letters'
+import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './letters'
 import { deriveMasdar } from './nominal/masdar'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
@@ -246,7 +246,7 @@ export function resolveVerbExplanationLayers(
   }
 }
 
-function toFormRoot(form: VerbForm, [c1]: readonly LetterToken[]): FormRootInteraction | undefined {
+function toFormRoot(form: VerbForm, [c1]: readonly Token[]): FormRootInteraction | undefined {
   if (form !== 8) return
   const infixConsonant = resolveFormVIIIInfixConsonant(c1)
   if (infixConsonant.equals(c1)) return 'assimilation-complete'

@@ -34,8 +34,8 @@ function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
 
 function droppedPastPrefix(verb: Verb): string | null {
   if (verb.root.length !== 3) return null
-  if (verb.form === 4) return ALIF_HAMZA.letter + FATHA.letter
-  if (verb.form === 10) return ALIF.letter + KASRA.letter
+  if (verb.form === 4) return ALIF_HAMZA.raw + FATHA.raw
+  if (verb.form === 10) return ALIF.raw + KASRA.raw
   return null
 }
 
@@ -48,9 +48,9 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       tagChars([...moodArabic], suffixCount, (stem) => tagPresentStemChars(stem, verb)),
     )
     const droppedNoonText = isDual(pronounId)
-      ? NOON.letter + KASRA.letter
+      ? NOON.raw + KASRA.raw
       : pronounId === '2fs' || pronounId === '2mp' || pronounId === '3mp'
-        ? NOON.letter + FATHA.letter
+        ? NOON.raw + FATHA.raw
         : null
     const droppedNoon = droppedNoonText ? [{ text: droppedNoonText, role: 'dropped' as MorphemeRole }] : []
     const moodMorphemes = [...baseMorphemes, ...droppedNoon]

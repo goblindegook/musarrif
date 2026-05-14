@@ -617,7 +617,7 @@ function shortenHollowStem(word: readonly Token[]): readonly Token[] {
 }
 
 function expandGemination(word: readonly Token[], vowel: Token): readonly Token[] {
-  return tokenize(detokenize(word).replace(new RegExp(`([^\\p{Mn}])${SUKOON.letter}\\1`), `$1${vowel.letter}$1`))
+  return tokenize(detokenize(word).replace(new RegExp(`([^\\p{Mn}])${SUKOON.raw}\\1`), `$1${vowel.raw}$1`))
 }
 
 function applyPresentPrefix(prefix: Token, chars: readonly Token[]): readonly Token[] {
