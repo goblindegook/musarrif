@@ -18,7 +18,7 @@ const IMPERATIVE_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 10: 4 }
 function tagImperativeChars(chars: string[], suffixCount: number, formInfixChars: number): TaggedChar[] {
   const stemCount = chars.length - suffixCount
   const tenseChars = chars[0] === ALIF ? 2 : 0
-  const formPrefixChars = chars[0] === ALIF_HAMZA ? 2 : 0
+  const formPrefixChars = ALIF_HAMZA.equals(chars[0]) ? 2 : 0
   const formEnd = tenseChars + formPrefixChars + formInfixChars
 
   return chars.map((char, i) => ({

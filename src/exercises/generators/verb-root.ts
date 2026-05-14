@@ -1,6 +1,6 @@
 import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
-import { isWeakLetter } from '../../paradigms/letters.ts'
+import { normalizeHamza, tokenize } from '../../paradigms/letters.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -11,7 +11,6 @@ import {
 } from '../dimensions.ts'
 import {
   mixedWordDistractor,
-  normalizeRootDistractorHamza,
   randomizeOptions,
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
@@ -51,8 +50,8 @@ function buildOptions(answer: string, word: string, profile: DimensionProfile): 
     singleLetterWordDistractor(answer),
     wordSliceDistractor(word, answer.length),
     mixedWordDistractor(word, answer.length),
-    Array.from(answer).some(isWeakLetter) ? weakAlternativeRootDistractor(answer) : null,
+    tokenize(answer).some((t) => t.isWeak) ? weakAlternativeRootDistractor(answer) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(answer, generators, profile, 4, [normalizeRootDistractorHamza])
+  return randomizeOptions(answer, generators, profile, 4, [normalizeHamza])
 }

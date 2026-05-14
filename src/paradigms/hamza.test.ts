@@ -1,15 +1,13 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { expect, test } from 'vitest'
-import {
-  ALIF_HAMZA,
-  ALIF_HAMZA_BELOW,
-  ALIF_MADDA,
-  finalize,
-  HAMZA,
-  HAMZA_ON_WAW,
-  HAMZA_ON_YEH,
-  tokenize,
-} from './letters'
+import { finalize, tokenize } from './letters'
+
+const HAMZA = '\u0621'
+const ALIF_MADDA = '\u0622'
+const ALIF_HAMZA = '\u0623'
+const HAMZA_ON_WAW = '\u0624'
+const ALIF_HAMZA_BELOW = '\u0625'
+const HAMZA_ON_YEH = '\u0626'
 
 test.each<[string, string, string]>([
   // initial
@@ -74,11 +72,11 @@ test.each<[string, string, string]>([
   ["Tayo'aAT", 'on yeh', HAMZA_ON_YEH],
 
   // FIXME: conflicts with l'm-3 passive past 3ms
-  // ["Tuw'iT", 'on the line', HAMZA],
+  // ["Tuw'iT", 'on the line', C_HAMZA],
   ["Tuw'uT", 'on the line', HAMZA],
   ["Tuw'aT", 'on the line', HAMZA],
   // FIXME: conflicts with bw'-1 active jussive 3fs
-  // ["Tuw'iyT", 'on the line', HAMZA],
+  // ["Tuw'iyT", 'on the line', C_HAMZA],
   ["Tuw'uwT", 'on the line', HAMZA],
   ["Tuw'aAT", 'on the line', HAMZA],
 
@@ -86,7 +84,7 @@ test.each<[string, string, string]>([
   ["Tawo'uT", 'on the line', HAMZA],
   ["Tawo'aT", 'on the line', HAMZA],
   // FIXME: conflicts with w'y-1 passive participle
-  // ["Tawo'iyT", 'on the line', HAMZA],
+  // ["Tawo'iyT", 'on the line', C_HAMZA],
   ["Tawo'uwT", 'on the line', HAMZA],
   ["Tawo'aAT", 'on the line', HAMZA],
 
@@ -95,7 +93,7 @@ test.each<[string, string, string]>([
   ["TaA'aT", 'on the line', HAMZA],
   ["TaA'iyT", 'on yeh', HAMZA_ON_YEH],
   // FIXME: conflicts with jy'-1 past 3pm
-  // ["TaA'uwT", 'on the line', HAMZA],
+  // ["TaA'uwT", 'on the line', C_HAMZA],
   ["TaA'aAT", 'on the line', HAMZA],
 ])(`hamza in %s seats %s`, (word, seat, expected) => {
   expect(finalize(tokenize(transliterateReverse(word))), `hamza in ${word} seats ${seat}`).toContain(expected)

@@ -601,7 +601,7 @@ function derivePresentForms(verb: Verb): readonly Token[] {
 
 function shortenHollowStem(word: readonly Token[]): readonly Token[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
-  const hollowLetterIndex = word.findIndex((char, i) => i > 0 && isWeakLetter(char as string))
+  const hollowLetterIndex = word.findIndex((char, i) => i > 0 && isWeakLetter(char as string)) // FIXME: potential bug here
   const nextLetterIndex = word.findIndex((char, i) => i > hollowLetterIndex && !isDiacritic(char))
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
@@ -615,7 +615,7 @@ function expandGemination(word: readonly Token[], vowel: Vowel): readonly Token[
   )
 }
 
-function applyPresentPrefix(prefix: string, chars: readonly Token[]): readonly Token[] {
+function applyPresentPrefix(prefix: Token, chars: readonly Token[]): readonly Token[] {
   return [prefix, ...chars.slice(1)]
 }
 

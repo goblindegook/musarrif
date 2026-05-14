@@ -1,6 +1,5 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import {
@@ -49,7 +48,7 @@ function buildOptions(
   const generators = [
     formDistractor(verb, profile),
     rootDistractor(verb, profile),
-    Array.from(verb.root).some(isWeakLetter) ? weakRootDistractor(verb, profile) : null,
+    Array.from(verb.rootTokens).some((t) => t.isWeak) ? weakRootDistractor(verb, profile) : null,
     singleLetterWordDistractor(answer),
   ].filter((g) => g != null)
 

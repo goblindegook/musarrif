@@ -3,10 +3,9 @@ import {
   ALIF,
   ALIF_MAQSURA,
   applyDiacriticsPreference,
-  HAMZA,
+  detokenize,
   isDiacritic,
-  isWeakLetter,
-  normalizeHamza,
+  tokenize,
   WAW,
   YEH,
 } from '../paradigms/letters'
@@ -48,18 +47,14 @@ export function randomizeOptions<T>(
   return shuffle(Array.from(options))
 }
 
-export function normalizeRootDistractorHamza(candidate: string): string {
-  return normalizeHamza(candidate).replace(/آ/g, HAMZA)
-}
-
 export function weakAlternativeRootDistractor(correct: string): DistractorGenerator<string> {
-  const letters = Array.from(correct)
+  const letters = tokenize(correct)
   const weakAlternatives = letters.flatMap((letter, index) => {
-    if (!isWeakLetter(letter)) return []
-    return WEAK_LETTER_REPLACEMENTS.filter((replacement) => replacement !== letter).map((replacement) => {
+    if (!letter.isWeak) return []
+    return WEAK_LETTER_REPLACEMENTS.filter((replacement) => !letter.equals(replacement)).map((replacement) => {
       const next = [...letters]
-      next[index] = replacement
-      return next.join('')
+      next[index] = tokenize(replacement)[0]
+      return detokenize(next)
     })
   })
 

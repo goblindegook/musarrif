@@ -1,10 +1,9 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import { isWeakLetter } from '../../paradigms/letters.ts'
+import { isWeakLetter, normalizeHamza } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,
-  normalizeRootDistractorHamza,
   randomizeOptions,
   singleLetterWordDistractor,
   weakAlternativeRootDistractor,
@@ -47,5 +46,5 @@ function buildOptions(root: string, word: string, profile: DimensionProfile): re
     Array.from(root).some(isWeakLetter) ? weakAlternativeRootDistractor(root) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(root, generators, profile, 4, [normalizeRootDistractorHamza])
+  return randomizeOptions(root, generators, profile, 4, [normalizeHamza])
 }

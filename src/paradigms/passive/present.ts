@@ -24,7 +24,7 @@ import type { Mood } from '../tense'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
-const PRESENT_PREFIXES: Record<PronounId, string> = {
+const PRESENT_PREFIXES: Record<PronounId, Token> = {
   '1s': ALIF_HAMZA,
   '2ms': TEH,
   '2fs': TEH,

@@ -34,7 +34,7 @@ function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
 
 function droppedPastPrefix(verb: Verb): string | null {
   if (verb.root.length !== 3) return null
-  if (verb.form === 4) return ALIF_HAMZA + FATHA
+  if (verb.form === 4) return ALIF_HAMZA.letter + FATHA
   if (verb.form === 10) return ALIF + KASRA
   return null
 }

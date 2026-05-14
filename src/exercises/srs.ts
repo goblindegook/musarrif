@@ -1,6 +1,6 @@
 import { memoize } from '@pacote/memoize'
 import * as v from 'valibot'
-import { isHamzatedLetter, isWeakLetter } from '../paradigms/letters'
+import { tokenize } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, type VerbForm, verbs } from '../paradigms/verbs'
@@ -50,12 +50,12 @@ const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
 const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
 
 export function getSrsRootType(root: string): SrsRootType {
-  const [c1, c2, c3] = Array.from(root)
-  if (isWeakLetter(c3)) return 'defective'
-  if (isWeakLetter(c2)) return 'hollow'
-  if (isWeakLetter(c1)) return 'assimilated'
-  if ([c1, c2, c3].some(isHamzatedLetter)) return 'hamzated'
-  if (c2 === c3) return 'doubled'
+  const [c1, c2, c3] = tokenize(root)
+  if (c3.isWeak) return 'defective'
+  if (c2.isWeak) return 'hollow'
+  if (c1.isWeak) return 'assimilated'
+  if ([c1, c2, c3].some((t) => t.isHamza)) return 'hamzated'
+  if (c2.equals(c3)) return 'doubled'
   return 'sound'
 }
 
