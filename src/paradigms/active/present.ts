@@ -8,7 +8,6 @@ import {
   DAMMA,
   FATHA,
   finalize,
-  isDiacritic,
   KASRA,
   LAM,
   LetterToken,
@@ -608,7 +607,7 @@ function derivePresentForms(verb: Verb): readonly Token[] {
 function shortenHollowStem(word: readonly Token[]): readonly Token[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
   const hollowLetterIndex = tokenize(word).findIndex((char, i) => i > 0 && char.isWeak)
-  const nextLetterIndex = tokenize(word).findIndex((char, i) => i > hollowLetterIndex && !isDiacritic(char.letter))
+  const nextLetterIndex = tokenize(word).findIndex((char, i) => i > hollowLetterIndex && !char.isCombiningMark)
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 
@@ -626,7 +625,7 @@ function applyPresentPrefix(prefix: Token, chars: readonly Token[]): readonly To
 }
 
 function dropFinalDiacritic(word: readonly Token[]): readonly Token[] {
-  const lastIndex = word.findLastIndex((char) => !isDiacritic(char))
+  const lastIndex = tokenize(word).findLastIndex((char) => !char.isCombiningMark)
   const base = word.slice(0, lastIndex + 1)
   return word.slice(lastIndex + 1).includes(SHADDA) ? [...base, SHADDA] : base
 }

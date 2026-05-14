@@ -4,7 +4,6 @@ import {
   ALIF_MAQSURA,
   applyDiacriticsPreference,
   detokenize,
-  isDiacritic,
   type LetterToken,
   tokenize,
   WAW,
@@ -90,7 +89,7 @@ function cyclicSlice(pool: readonly LetterToken[], length: number, offset: numbe
 
 export function singleLetterWordDistractor(word: string): DistractorGenerator<string> {
   const chars = tokenize(word)
-  const letterIndices = chars.map((_c, i) => i).filter((i) => !isDiacritic(chars[i]))
+  const letterIndices = chars.map((_c, i) => i).filter((i) => !chars[i].isCombiningMark)
 
   return () => {
     const index = letterIndices[Math.floor(Math.random() * letterIndices.length)]

@@ -10,12 +10,14 @@ export class LetterToken {
   readonly isHamza: boolean
   readonly isWeak: boolean
   readonly isVowel: boolean
+  readonly isCombiningMark: boolean
 
   constructor(letter: string) {
     this.letter = letter
     this.isHamza = isHamzatedLetter(letter)
     this.isWeak = isWeakLetter(letter)
     this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(letter)
+    this.isCombiningMark = /\p{Mn}/u.test(letter)
   }
 
   equals(other?: string | LetterToken): boolean {
@@ -61,8 +63,6 @@ export const DAMMA = '\u064F'
 export const KASRA = '\u0650'
 export const SHADDA = '\u0651'
 export const SUKOON = createToken('\u0652')
-
-const COMBINING_MARK = /\p{Mn}/u
 
 export function tokenize(text: string | readonly Token[]): readonly LetterToken[] {
   return [...text].map((token) => (token instanceof LetterToken ? token : createToken(token)))
@@ -110,10 +110,6 @@ export const normalizeHamza = (value: string): string => value.replace(/[آأإ�
 
 export function normalizeForComparison(text: string): string {
   return normalizeHamza(applyDiacriticsPreference(text.trim(), 'none'))
-}
-
-export function isDiacritic(token: Token = ''): boolean {
-  return COMBINING_MARK.test(token instanceof LetterToken ? token.letter : token)
 }
 
 // ḥurūf al-madd
