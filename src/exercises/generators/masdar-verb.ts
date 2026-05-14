@@ -1,6 +1,6 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import { isWeakLetter } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import { isWeakLetter } from '../../paradigms/tokens.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import {
   type DimensionProfile,

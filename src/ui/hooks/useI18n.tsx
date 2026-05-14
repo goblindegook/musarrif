@@ -1,7 +1,7 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/compat'
-import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/letters'
+import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/tokens'
 import en from '../locales/en.json'
 import { useLocalStorage } from './useLocalStorage'
 

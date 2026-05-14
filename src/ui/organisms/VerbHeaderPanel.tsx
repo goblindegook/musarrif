@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useMemo } from 'preact/hooks'
-import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb } from '../../paradigms/verbs'
 import { useI18n } from '../hooks/useI18n'
 import { PanelContainer } from '../molecules/Panel'

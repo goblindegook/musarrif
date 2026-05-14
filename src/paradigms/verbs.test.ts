@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
-import { Token } from './letters'
+import { Token, tokenize } from './tokens'
 import {
   buildVerbFromId,
   formatFormLabel,
@@ -37,7 +37,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',
-      rootTokens: [new Token('ك'), new Token('ت'), new Token('ب')],
+      rootTokens: tokenize('كتب'),
       synthetic: true,
     })
   })
@@ -50,7 +50,7 @@ describe('buildSyntheticVerb', () => {
       label: 'كَتَّبَ',
       root: 'كتب',
       rootId: 'ktb',
-      rootTokens: [new Token('ك'), new Token('ت'), new Token('ب')],
+      rootTokens: tokenize('كتب'),
       synthetic: true,
     })
   })

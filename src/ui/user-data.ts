@@ -12,7 +12,7 @@ import {
   type SerializedDailyActivity,
   TrackedExercises as TrackedExercisesSchema,
 } from '../exercises/stats'
-import type { DiacriticsPreference } from '../paradigms/letters'
+import type { DiacriticsPreference } from '../paradigms/tokens'
 import type { Language } from './hooks/useI18n'
 import type { ThemePreference } from './hooks/useTheme'
 

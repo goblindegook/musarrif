@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useCallback } from 'preact/hooks'
-import { applyDiacriticsPreference } from '../../paradigms/letters'
+import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { useI18n } from '../hooks/useI18n'
 import { useRouting } from '../routes'

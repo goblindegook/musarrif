@@ -1,5 +1,7 @@
 import { mapRecord } from '../../primitives/objects'
 import { formIPresentVowel, isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
+import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../pronouns'
+import type { Mood } from '../tense'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -23,9 +25,7 @@ import {
   WAW,
   YEH,
   ZAY,
-} from '../letters'
-import { isDual, isFemininePlural, isMasculinePlural, type PronounId } from '../pronouns'
-import type { Mood } from '../tense'
+} from '../tokens'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 
 function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Token[] {

@@ -1,5 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPastVowel } from '../form-i-vowels'
+import type { PronounId } from '../pronouns'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -18,8 +19,7 @@ import {
   type Token,
   WAW,
   YEH,
-} from '../letters'
-import type { PronounId } from '../pronouns'
+} from '../tokens'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 

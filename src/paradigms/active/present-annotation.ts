@@ -8,9 +8,9 @@ import {
   type TaggedChar,
   tagChars,
 } from '../annotation'
-import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../letters'
 import { isDual, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
+import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../tokens'
 import type { Verb } from '../verbs'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'

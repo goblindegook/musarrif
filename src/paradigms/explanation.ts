@@ -1,11 +1,11 @@
 import { toRoman } from '../primitives/numbers'
 import { annotate, type Morpheme } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
-import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './letters'
 import { deriveMasdar } from './nominal/masdar'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
+import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
 import type { Verb, VerbForm } from './verbs'
 
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'

@@ -3,8 +3,8 @@ import rawVerbs from '../data/roots.json'
 import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
-import { normalizeHamza, type Token, tokenize } from './letters'
 import { ALL_TENSES, type VerbParadigm } from './tense'
+import { normalizeHamza, type Token, tokenize } from './tokens'
 
 export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 

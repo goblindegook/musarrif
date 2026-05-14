@@ -24,8 +24,8 @@ export class Token {
 }
 
 const createToken = memoize(
-  (char) => char,
-  (char: string) => new Token(char),
+  (raw) => raw,
+  (raw: string) => new Token(raw),
 )
 
 export const HAMZA = createToken('\u0621')
@@ -105,7 +105,7 @@ function isHamzatedLetter(token = ''): boolean {
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.raw)
 
 export function normalizeForComparison(text: string): string {
-  return normalizeHamza(applyDiacriticsPreference(text.trim(), 'none'))
+  return normalizeHamza(applyDiacriticsPreference(text, 'none')).trim().normalize('NFD')
 }
 
 // ḥurūf al-madd

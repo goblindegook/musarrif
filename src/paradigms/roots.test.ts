@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { tokenize } from './letters'
 import { analyzeRoot } from './roots'
+import { tokenize } from './tokens'
 
 describe('analyzeRoot', () => {
   test.each([

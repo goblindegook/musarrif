@@ -22,7 +22,7 @@ import {
   type Token,
   WAW,
   YEH,
-} from '../letters'
+} from '../tokens'
 import type { FormIVerb, MasdarPattern, NonFormIVerb, Verb } from '../verbs'
 
 function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {

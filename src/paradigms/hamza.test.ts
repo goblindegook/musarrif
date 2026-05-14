@@ -1,6 +1,6 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { expect, test } from 'vitest'
-import { finalize, tokenize } from './letters'
+import { finalize, tokenize } from './tokens'
 
 const HAMZA = '\u0621'
 const ALIF_MADDA = '\u0622'

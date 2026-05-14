@@ -14,7 +14,7 @@ import {
   tokenize,
   WAW,
   YEH,
-} from './letters'
+} from './tokens'
 
 export function seatHamzas(word: readonly Token[]): readonly Token[] {
   return tokenize(
@@ -85,9 +85,9 @@ function longVowelAt(tokens: readonly Token[], index: number): 'a' | 'i' | 'u' |
   const curr = tokens.at(index)
   const next = tokens.at(index + 1)
 
-  if (KASRA.equals(curr) && YEH.equals(next)) return 'i'
-  if (FATHA.equals(curr) && ALIF.equals(next)) return 'a'
-  if (DAMMA.equals(curr) && WAW.equals(next)) return 'u'
+  if (curr?.equals(KASRA) && next?.equals(YEH)) return 'i'
+  if (curr?.equals(FATHA) && next?.equals(ALIF)) return 'a'
+  if (curr?.equals(DAMMA) && next?.equals(WAW)) return 'u'
 }
 
 function findVowel(tokens: readonly Token[], index: number): Token | undefined {

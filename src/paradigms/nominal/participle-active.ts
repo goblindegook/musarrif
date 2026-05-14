@@ -19,7 +19,7 @@ import {
   TEH,
   type Token,
   YEH,
-} from '../letters'
+} from '../tokens'
 import type { Verb } from '../verbs'
 
 export function participleStem(verb: Verb): readonly Token[] {

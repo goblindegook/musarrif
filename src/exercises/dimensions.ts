@@ -1,8 +1,8 @@
 import * as v from 'valibot'
 import { FORM_I_PATTERNS } from '../paradigms/form-i-vowels'
-import { applyDiacriticsPreference } from '../paradigms/letters'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
+import { applyDiacriticsPreference } from '../paradigms/tokens'
 import {
   type DisplayVerb,
   FORMS,

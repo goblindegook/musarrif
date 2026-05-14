@@ -1,5 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
+import type { PronounId } from '../pronouns'
 import {
   ALIF,
   DAMMA,
@@ -15,8 +16,7 @@ import {
   tokenize,
   WAW,
   YEH,
-} from '../letters'
-import type { PronounId } from '../pronouns'
+} from '../tokens'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 

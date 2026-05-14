@@ -1,6 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
-import { FATHA, finalize, SEEN, tokenize } from '../letters'
 import type { PronounId } from '../pronouns'
+import { FATHA, finalize, SEEN, tokenize } from '../tokens'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 

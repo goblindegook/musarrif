@@ -1,6 +1,6 @@
 import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
-import { normalizeHamza, tokenize } from '../../paradigms/letters.ts'
+import { normalizeHamza, tokenize } from '../../paradigms/tokens.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,

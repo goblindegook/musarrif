@@ -8,7 +8,7 @@ import {
   tokenize,
   WAW,
   YEH,
-} from '../paradigms/letters'
+} from '../paradigms/tokens'
 import { verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 

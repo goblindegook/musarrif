@@ -17,7 +17,7 @@ import {
   TEH,
   WAW,
   YEH,
-} from '../letters'
+} from '../tokens'
 import type { Verb } from '../verbs'
 import { participleStem } from './participle-active'
 

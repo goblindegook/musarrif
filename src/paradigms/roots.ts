@@ -1,4 +1,4 @@
-import { type Token, WAW } from './letters'
+import { type Token, WAW } from './tokens'
 
 export type RootAnalysisType =
   | 'sound'

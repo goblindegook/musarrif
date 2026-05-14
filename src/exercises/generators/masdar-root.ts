@@ -1,6 +1,6 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import { isWeakLetter, normalizeHamza } from '../../paradigms/letters.ts'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
+import { isWeakLetter, normalizeHamza } from '../../paradigms/tokens.ts'
 import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,

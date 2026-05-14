@@ -1,7 +1,7 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
-import { isWeakLetter, normalizeHamza } from '../../paradigms/letters.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { isWeakLetter, normalizeHamza } from '../../paradigms/tokens.ts'
 import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,

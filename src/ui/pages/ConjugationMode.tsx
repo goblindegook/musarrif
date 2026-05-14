@@ -2,12 +2,12 @@ import { styled } from 'goober'
 import { Fragment } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
-import { applyDiacriticsPreference, spell } from '../../paradigms/letters'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
 import { search } from '../../paradigms/selection'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
+import { applyDiacriticsPreference, spell } from '../../paradigms/tokens'
 import {
   buildVerbFromId,
   type DisplayVerb,

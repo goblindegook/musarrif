@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { applyDiacriticsPreference, type DiacriticsPreference, spell } from './letters'
+import { applyDiacriticsPreference, type DiacriticsPreference, spell } from './tokens'
 
 test.each<[DiacriticsPreference, string, string]>([
   ['some', 'يَقُولُ', 'يَقولُ'],

@@ -1,4 +1,7 @@
 import { mapRecord } from '../../primitives/objects'
+import type { PronounId } from '../pronouns'
+import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
+import type { Mood } from '../tense'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -17,10 +20,7 @@ import {
   type Token,
   WAW,
   YEH,
-} from '../letters'
-import type { PronounId } from '../pronouns'
-import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
-import type { Mood } from '../tense'
+} from '../tokens'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 

@@ -1,5 +1,6 @@
 import { mapRecord } from '../../primitives/objects.ts'
 import { formIPastVowel, isFormIPastVowel } from '../form-i-vowels'
+import type { PronounId } from '../pronouns'
 import {
   ALIF,
   ALIF_HAMZA,
@@ -21,8 +22,7 @@ import {
   WAW,
   YEH,
   ZAY,
-} from '../letters'
-import type { PronounId } from '../pronouns'
+} from '../tokens.ts'
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 
 interface PastBaseForms {
@@ -133,7 +133,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak && pastVowel.equals(KASRA))
     return {
-      ...buildForms([...prefix, KASRA, YEH], new Token('')),
+      ...buildForms([...prefix, KASRA, YEH]),
       thirdPersonMasculinePluralBase: [...prefix, DAMMA],
     }
 

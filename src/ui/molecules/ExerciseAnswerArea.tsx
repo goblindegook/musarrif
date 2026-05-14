@@ -1,7 +1,7 @@
 import { css, styled } from 'goober'
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise } from '../../exercises/exercises'
-import { normalizeForComparison } from '../../paradigms/letters'
+import { normalizeForComparison } from '../../paradigms/tokens'
 import { useI18n } from '../hooks/useI18n'
 import { ShortcutButton } from './ShortcutButton'
 

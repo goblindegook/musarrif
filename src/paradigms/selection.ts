@@ -1,7 +1,7 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { memoize } from '@pacote/memoize'
 import { wordDistance } from '../primitives/strings'
-import { ALIF, HAMZA, normalizeForComparison } from './letters'
+import { ALIF, HAMZA, normalizeForComparison } from './tokens'
 import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
@@ -93,10 +93,8 @@ type SearchOptions = {
 
 const normalizeQuery = (value: string): string =>
   normalizeForComparison(value)
-    .normalize('NFD')
     .replace(/\p{M}|\u0640/gu, '')
     .toLowerCase()
-    .trim()
 
 export function search(query: string, options: SearchOptions = {}): DisplayVerb[] {
   const t = options.translate ?? ((key) => key)

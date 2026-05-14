@@ -1,6 +1,6 @@
 import { type AnnotatedForm, buildMorphemes, type TaggedChar } from '../annotation'
-import { ALIF, ALIF_HAMZA } from '../letters'
 import type { PronounId } from '../pronouns'
+import { ALIF, ALIF_HAMZA } from '../tokens'
 import type { Verb } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { annotateActivePresentMood } from './present-annotation'

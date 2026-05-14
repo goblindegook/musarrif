@@ -1,5 +1,5 @@
 import { keys } from '../primitives/objects'
-import { DAMMA, FATHA, KASRA, type Token } from './letters'
+import { DAMMA, FATHA, KASRA, type Token } from './tokens'
 import type { FormIVerb } from './verbs'
 
 const FORM_I_VOWELS = {

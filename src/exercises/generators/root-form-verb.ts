@@ -1,6 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation.ts'
-import { spell } from '../../paradigms/letters.ts'
+import { spell } from '../../paradigms/tokens.ts'
 import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
