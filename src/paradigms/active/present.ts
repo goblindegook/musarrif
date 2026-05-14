@@ -9,7 +9,6 @@ import {
   FATHA,
   finalize,
   isDiacritic,
-  isWeakLetter,
   KASRA,
   LAM,
   LetterToken,
@@ -21,6 +20,7 @@ import {
   SUKOON,
   TEH,
   type Token,
+  tokenize,
   type Vowel,
   WAW,
   YEH,
@@ -130,10 +130,13 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
   switch (verb.form) {
     case 1:
       if (c2.equals(c3)) return [YEH, FATHA, c1, SUKOON, c2, formIPresentVowel(verb), c3, ...suffix]
+
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
         return c2.isHamza
           ? [YEH, FATHA, c1, FATHA, YEH, ...suffix]
           : [YEH, FATHA, c1, SUKOON, c2, FATHA, YEH, ...suffix]
+
+      if (c2.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem), ...suffix]
 
       if (c2.isWeak && stem.includes(ALIF)) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
@@ -337,7 +340,9 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if ([1, 4].includes(verb.form)) return base
 
-        if (base.at(-3) === YEH) return [...base.slice(0, -3), ALIF]
+        if (YEH.equals(base.at(-2))) return [...base.slice(0, -2), ALIF]
+
+        if (YEH.equals(base.at(-3))) return [...base.slice(0, -3), ALIF]
 
         return base
       }
@@ -601,8 +606,8 @@ function derivePresentForms(verb: Verb): readonly Token[] {
 
 function shortenHollowStem(word: readonly Token[]): readonly Token[] {
   // The hollow stem cannot be a long vowel if the next letter carries a sukoon.
-  const hollowLetterIndex = word.findIndex((char, i) => i > 0 && isWeakLetter(char as string)) // FIXME: potential bug here
-  const nextLetterIndex = word.findIndex((char, i) => i > hollowLetterIndex && !isDiacritic(char))
+  const hollowLetterIndex = tokenize(word).findIndex((char, i) => i > 0 && char.isWeak)
+  const nextLetterIndex = tokenize(word).findIndex((char, i) => i > hollowLetterIndex && !isDiacritic(char.letter))
   return [...word.slice(0, hollowLetterIndex), ...word.slice(nextLetterIndex)]
 }
 

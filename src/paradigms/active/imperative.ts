@@ -1,6 +1,20 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
-import { ALIF, DAMMA, FATHA, finalize, HAMZA, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../letters'
+import {
+  ALIF,
+  DAMMA,
+  FATHA,
+  finalize,
+  HAMZA,
+  KASRA,
+  longVowel,
+  NOON,
+  SHADDA,
+  SUKOON,
+  type Token,
+  WAW,
+  YEH,
+} from '../letters'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
@@ -106,8 +120,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
   )
 }
 
-function restoreWeakLetterBeforeAlif(stem: readonly string[]): readonly string[] {
-  if (stem.at(-3) === YEH) return stem
+function restoreWeakLetterBeforeAlif(stem: readonly Token[]): readonly Token[] {
+  if (YEH.equals(stem.at(-3) ?? '')) return stem
   if (stem.at(-2) === FATHA) return [...stem.slice(0, -2), KASRA, YEH, FATHA, ALIF]
   return [...stem.slice(0, -1), YEH, FATHA, ALIF]
 }

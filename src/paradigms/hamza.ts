@@ -85,7 +85,7 @@ function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' |
   const curr = tokens.at(index)?.letter
   const next = tokens.at(index + 1)?.letter
 
-  if (curr === KASRA && next === YEH) return 'i'
+  if (curr === KASRA && YEH.equals(next ?? '')) return 'i'
   if (curr === FATHA && next === ALIF) return 'a'
   if (curr === DAMMA && next === WAW) return 'u'
 }

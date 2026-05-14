@@ -5,6 +5,7 @@ import {
   applyDiacriticsPreference,
   detokenize,
   isDiacritic,
+  type LetterToken,
   tokenize,
   WAW,
   YEH,
@@ -15,15 +16,15 @@ import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 type DistractorGenerator<T> = () => T
 type DistractorNormaliser<T> = (distractor: T) => T
 
-const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA] as const
+const WEAK_LETTER_REPLACEMENTS = tokenize([WAW, YEH, ALIF, ALIF_MAQSURA])
 
-const RANDOM_LETTERS = [
+const RANDOM_LETTERS = tokenize([
   ...Array.from(new Set(verbs.flatMap((verb) => Array.from(verb.root)))),
   WAW,
   YEH,
   ALIF,
   ALIF_MAQSURA,
-]
+])
 
 export function randomizeOptions<T>(
   answer: T,
@@ -53,7 +54,7 @@ export function weakAlternativeRootDistractor(correct: string): DistractorGenera
     if (!letter.isWeak) return []
     return WEAK_LETTER_REPLACEMENTS.filter((replacement) => !letter.equals(replacement)).map((replacement) => {
       const next = [...letters]
-      next[index] = tokenize(replacement)[0]
+      next[index] = replacement
       return detokenize(next)
     })
   })
@@ -62,7 +63,7 @@ export function weakAlternativeRootDistractor(correct: string): DistractorGenera
 }
 
 export function mixedWordDistractor(word: string, size: number): DistractorGenerator<string> {
-  const letters = Array.from(applyDiacriticsPreference(word, 'none'))
+  const letters = tokenize(applyDiacriticsPreference(word, 'none'))
 
   return () => {
     const sourceOffset = Math.floor(Math.random() * letters.length)
@@ -79,23 +80,23 @@ export function mixedWordDistractor(word: string, size: number): DistractorGener
 
 export function wordSliceDistractor(word: string, size: number): DistractorGenerator<string> {
   let offset = 1
-  const letters = Array.from(applyDiacriticsPreference(word, 'none'))
+  const letters = tokenize(applyDiacriticsPreference(word, 'none'))
   return () => cyclicSlice(letters, size, offset++)
 }
 
-function cyclicSlice(pool: readonly string[], length: number, offset: number): string {
-  return Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]).join('')
+function cyclicSlice(pool: readonly LetterToken[], length: number, offset: number): string {
+  return detokenize(Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]))
 }
 
 export function singleLetterWordDistractor(word: string): DistractorGenerator<string> {
-  const chars = Array.from(word)
+  const chars = tokenize(word)
   const letterIndices = chars.map((_c, i) => i).filter((i) => !isDiacritic(chars[i]))
 
   return () => {
     const index = letterIndices[Math.floor(Math.random() * letterIndices.length)]
-    const replacements = RANDOM_LETTERS.filter((letter) => letter !== chars[index])
+    const replacements = RANDOM_LETTERS.filter((letter) => !letter.equals(chars[index]))
     const candidate = [...chars]
     candidate[index] = random(replacements)
-    return candidate.join('')
+    return detokenize(candidate)
   }
 }

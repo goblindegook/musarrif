@@ -18,7 +18,7 @@ export class LetterToken {
     this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(letter)
   }
 
-  equals(other: string | LetterToken): boolean {
+  equals(other?: string | LetterToken): boolean {
     return other instanceof LetterToken ? this.letter === other.letter : this.letter === other
   }
 }
@@ -52,8 +52,8 @@ export const NOON = '\u0646'
 export const WAW = '\u0648'
 export const ALIF_MAQSURA = '\u0649'
 export const LAM = createToken('\u0644')
-export const YEH = '\u064A'
-export const YEH_TOKEN = createToken(YEH)
+export const YEH = createToken('\u064A')
+export const YEH_TOKEN = createToken('\u064A')
 
 export const TANWEEN_FATHA = createToken('\u064B')
 export const TANWEEN_KASRA = createToken('\u064D')
@@ -77,7 +77,7 @@ export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<Token>> = {
   [FATHA]: new Set([ALIF, ALIF_MAQSURA, TEH_MARBUTA]),
-  [KASRA]: new Set([YEH, HAMZA_ON_YEH]),
+  [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH]),
   [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
 }
 
@@ -88,15 +88,15 @@ export function applyDiacriticsPreference(input: string, preference: DiacriticsP
 }
 
 function stripObviousDiacritics(input: string): string {
-  return Array.from(input)
-    .reduce<string[]>((result, current, index, chars) => {
-      if (current === SUKOON) return result
-      const nextBase = chars.slice(index + 1).find((char) => !TATWEEL.equals(char))
-      if (LONG_VOWEL_TARGETS[current as Vowel]?.has(nextBase ?? '')) return result
+  return detokenize(
+    tokenize(input).reduce<LetterToken[]>((result, current, index, chars) => {
+      if (current.equals(SUKOON)) return result
+      const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
+      if (LONG_VOWEL_TARGETS[current.letter as Vowel]?.has(nextBase?.letter ?? '')) return result
       result.push(current)
       return result
-    }, [])
-    .join('')
+    }, []),
+  )
 }
 
 export function isWeakLetter(value = ''): boolean {
@@ -114,11 +114,11 @@ export function normalizeForComparison(text: string): string {
 }
 
 export function isDiacritic(token: Token = ''): boolean {
-  return !(token instanceof LetterToken) && COMBINING_MARK.test(token)
+  return COMBINING_MARK.test(token instanceof LetterToken ? token.letter : token)
 }
 
 // ḥurūf al-madd
-export function longVowel(vowel: Vowel): [Vowel, string] {
+export function longVowel(vowel: Vowel): [Vowel, Token] {
   if (vowel === FATHA) return [FATHA, ALIF]
   if (vowel === KASRA) return [KASRA, YEH]
   return [DAMMA, WAW]

@@ -40,7 +40,7 @@ const PRESENT_PREFIXES: Record<PronounId, Token> = {
   '3fp': YEH,
 }
 
-const INDICATIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
+const INDICATIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '1s': [DAMMA],
   '2ms': [DAMMA],
   '2fs': [KASRA, YEH, SUKOON, NOON, FATHA],
@@ -56,7 +56,7 @@ const INDICATIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3fp': [SUKOON, NOON, FATHA],
 }
 
-const SUBJUNCTIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
+const SUBJUNCTIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '1s': [FATHA],
   '2ms': [FATHA],
   '2fs': [KASRA, YEH],
@@ -72,7 +72,7 @@ const SUBJUNCTIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3fp': [SUKOON, NOON, FATHA],
 }
 
-const JUSSIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
+const JUSSIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '1s': [SUKOON],
   '2ms': [SUKOON],
   '2fs': [KASRA, YEH],
@@ -88,7 +88,7 @@ const JUSSIVE_SUFFIXES: Record<PronounId, readonly string[]> = {
   '3fp': [SUKOON, NOON, FATHA],
 }
 
-const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly string[]>> = {
+const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly Token[]>> = {
   indicative: INDICATIVE_SUFFIXES,
   subjunctive: SUBJUNCTIVE_SUFFIXES,
   jussive: JUSSIVE_SUFFIXES,
@@ -330,11 +330,11 @@ function derivePassivePresentStemFormIVq(verb: NonFormIVerb, pronounId: PronounI
   return [c1, SUKOON, c2, FATHA, c3, FATHA, c4, SHADDA, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function geminateSuffix(mood: Mood, pronounId: PronounId): readonly string[] {
+function geminateSuffix(mood: Mood, pronounId: PronounId): readonly Token[] {
   return mood === 'jussive' ? SUBJUNCTIVE_SUFFIXES[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
 
-function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly string[] {
+function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly Token[] {
   if (mood === 'indicative') {
     if (pronounId === '2fs') return [YEH, SUKOON, NOON, FATHA]
     if (isDual(pronounId)) return [YEH, FATHA, ALIF, NOON, KASRA]
