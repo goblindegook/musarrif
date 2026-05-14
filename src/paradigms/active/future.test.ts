@@ -1,10 +1,12 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { FATHA, SEEN } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { getAvailableParadigms, getVerb, verbs } from '../verbs'
 import { conjugateFuture } from './future'
 import { conjugatePresentMood } from './present'
+
+const SEEN = '\u0633'
+const FATHA = '\u064E'
 
 describe('active future', () => {
   it('prefixes seen + fatḥa to active present indicative', () => {

@@ -1,10 +1,12 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { FATHA, SEEN } from '../letters'
 import { PRONOUN_IDS } from '../pronouns'
 import { getAvailableParadigms, verbs } from '../verbs'
 import { conjugatePassiveFuture } from './future'
 import { conjugatePassivePresentMood } from './present'
+
+const SEEN = '\u0633'
+const FATHA = '\u064E'
 
 describe('passive future', () => {
   it('impersonal passive only conjugates 3ms in future', () => {

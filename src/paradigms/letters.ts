@@ -35,7 +35,7 @@ export const HAMZA_ON_WAW = createToken('\u0624')
 export const ALIF_HAMZA_BELOW = createToken('\u0625')
 export const HAMZA_ON_YEH = createToken('\u0626')
 export const ALIF = '\u0627'
-export const TEH_MARBUTA = '\u0629'
+export const TEH_MARBUTA = createToken('\u0629')
 export const TEH = createToken('\u062A')
 const THEH = createToken('\u062B')
 export const DAL = createToken('\u062F')
@@ -45,7 +45,7 @@ const SAD = createToken('\u0635')
 const DAD = createToken('\u0636')
 export const TAH = createToken('\u0637')
 const ZAH = createToken('\u0638')
-export const SEEN = '\u0633'
+export const SEEN = createToken('\u0633')
 const TATWEEL = createToken('\u0640')
 export const MEEM = createToken('\u0645')
 export const NOON = '\u0646'
@@ -76,7 +76,7 @@ export function detokenize(tokens: readonly LetterToken[]): string {
 export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<Token>> = {
-  [FATHA]: new Set([ALIF, ALIF_MAQSURA.letter, TEH_MARBUTA]),
+  [FATHA]: new Set([ALIF, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
   [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH]),
   [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
 }
