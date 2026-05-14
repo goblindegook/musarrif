@@ -34,7 +34,7 @@ export const ALIF_HAMZA = createToken('\u0623')
 export const HAMZA_ON_WAW = createToken('\u0624')
 export const ALIF_HAMZA_BELOW = createToken('\u0625')
 export const HAMZA_ON_YEH = createToken('\u0626')
-export const ALIF = '\u0627'
+export const ALIF = createToken('\u0627')
 export const TEH_MARBUTA = createToken('\u0629')
 export const TEH = createToken('\u062A')
 const THEH = createToken('\u062B')
@@ -48,12 +48,11 @@ const ZAH = createToken('\u0638')
 export const SEEN = createToken('\u0633')
 const TATWEEL = createToken('\u0640')
 export const MEEM = createToken('\u0645')
-export const NOON = '\u0646'
-export const WAW = '\u0648'
+export const NOON = createToken('\u0646')
+export const WAW = createToken('\u0648')
 export const ALIF_MAQSURA = createToken('\u0649')
 export const LAM = createToken('\u0644')
 export const YEH = createToken('\u064A')
-export const YEH_TOKEN = createToken('\u064A')
 
 export const TANWEEN_FATHA = createToken('\u064B')
 export const TANWEEN_KASRA = createToken('\u064D')
@@ -76,9 +75,9 @@ export function detokenize(tokens: readonly LetterToken[]): string {
 export type Token = string | Vowel | LetterToken
 
 const LONG_VOWEL_TARGETS: Record<Vowel, ReadonlySet<Token>> = {
-  [FATHA]: new Set([ALIF, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
-  [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH]),
-  [DAMMA]: new Set([WAW, HAMZA_ON_WAW]),
+  [FATHA]: new Set([ALIF.letter, ALIF_MAQSURA.letter, TEH_MARBUTA.letter]),
+  [KASRA]: new Set([YEH.letter, HAMZA_ON_YEH.letter]),
+  [DAMMA]: new Set([WAW.letter, HAMZA_ON_WAW.letter]),
 }
 
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
@@ -134,7 +133,7 @@ export function resolveFormVIIIInfixConsonant(c1: LetterToken): LetterToken {
 export function finalize(letters: readonly Token[]): string {
   return detokenize(seatHamzas(tokenize(letters)))
     .replace(
-      new RegExp(`${ALIF_HAMZA.letter}${FATHA}[${ALIF_HAMZA.letter}${ALIF}]${SUKOON.letter}?`),
+      new RegExp(`${ALIF_HAMZA.letter}${FATHA}[${ALIF_HAMZA.letter}${ALIF.letter}]${SUKOON.letter}?`),
       ALIF_MADDA.letter,
     )
     .replace(new RegExp(`(.)(?:${SUKOON.letter}\\1)`, 'g'), `$1${SHADDA}`)

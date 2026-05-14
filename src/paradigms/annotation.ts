@@ -133,7 +133,7 @@ export function buildMorphemes(tagged: TaggedChar[]): Morpheme[] {
   // 1. Handle gemination: c + SUKOON + c → c + SHADDA (same role)
   const processed: TaggedChar[] = []
   for (let i = 0; i < tagged.length; i++) {
-    if (i + 2 < tagged.length && tagged[i + 1].char === SUKOON && tagged[i].char === tagged[i + 2].char) {
+    if (i + 2 < tagged.length && SUKOON.equals(tagged[i + 1].char) && tagged[i].char === tagged[i + 2].char) {
       processed.push(tagged[i])
       processed.push({ char: SHADDA, role: tagged[i].role })
       i += 2

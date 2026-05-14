@@ -78,7 +78,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           if (c3.equals(WAW) && isPatternU && pronounId === '2d')
             return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
 
-          if (c3.equals(WAW) && stem.at(-1) === ALIF && !isPatternU) return stem
+          if (c3.equals(WAW) && ALIF.equals(stem.at(-1)) && !isPatternU) return stem
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:
           if (SUKOON.equals(stem.at(1))) return [ALIF, isPatternU ? DAMMA : KASRA, ...stem]

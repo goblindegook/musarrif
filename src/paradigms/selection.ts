@@ -51,7 +51,7 @@ function countPositionMatches(first: string, second: string): number {
 
 function addCandidate(acc: Set<string>, value: string): void {
   acc.add(value)
-  acc.add(value.replace(new RegExp(ALIF, 'g'), HAMZA.letter))
+  acc.add(value.replace(new RegExp(ALIF.letter, 'g'), HAMZA.letter))
 }
 
 function extractRootCandidates(query: string): string[] {

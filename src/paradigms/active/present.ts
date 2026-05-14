@@ -254,7 +254,10 @@ function conjugateIndicative(verb: Verb): Record<PronounId, string> {
 }
 
 function dropNoonEnding(word: readonly Token[]): readonly Token[] {
-  return word.slice(0, word.lastIndexOf(NOON))
+  return word.slice(
+    0,
+    word.findLastIndex((t) => NOON.equals(t)),
+  )
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
@@ -336,7 +339,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if (c2.isHamza || c2.isWeak || c3.isHamza) return base
 
-        if (base.at(-3) === WAW) return [...base.slice(0, -3), WAW, SUKOON, ALIF]
+        if (WAW.equals(base.at(-3))) return [...base.slice(0, -3), WAW, SUKOON, ALIF]
 
         if ([1, 4].includes(verb.form)) return base
 
@@ -373,7 +376,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       if (verb.form === 9) return [...dropFinalDiacritic(word), FATHA]
 
       if (c2.isWeak) {
-        if (verb.form === 1 && (word.includes(ALIF) || !isFormIPastVowel(verb, KASRA)))
+        if (verb.form === 1 && (word.includes(ALIF.letter) || !isFormIPastVowel(verb, KASRA)))
           return [...shortenHollowStem(word).slice(0, -1), SUKOON]
 
         if ([4, 7, 10].includes(verb.form)) return [...shortenHollowStem(word).slice(0, -1), SUKOON]

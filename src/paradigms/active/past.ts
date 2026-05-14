@@ -21,7 +21,6 @@ import {
   type Token,
   WAW,
   YEH,
-  YEH_TOKEN,
   ZAY,
 } from '../letters'
 import type { PronounId } from '../pronouns'
@@ -195,9 +194,9 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
   if (c2.equals(c3)) return buildForms([...prefix, FATHA, c2, SUKOON, c3], c3)
 
-  if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH_TOKEN)
+  if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH)
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_TOKEN)
+  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH)
 
   if (c2.isWeak) return buildForms([...prefix, FATHA, ALIF, c3], c3)
 
@@ -220,7 +219,7 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, FATHA, ALIF, c2, FATHA, c3],
     }
 
-  return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3.isWeak ? YEH_TOKEN : c3)
+  return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3.isWeak ? YEH : c3)
 }
 
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
@@ -257,7 +256,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
 
   if (c1.equals(WAW) || c1.isHamza) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3], c3)
 
-  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_TOKEN)
+  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH)
 
   if (c2.equals(YEH))
     return {
@@ -267,7 +266,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
 
   if (c2.isWeak && infix !== DAL) return buildForms([...prefix, ALIF, c3], c3)
 
-  if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH_TOKEN)
+  if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH)
 
   return buildForms([...prefix, c2, FATHA, c3], c3)
 }
@@ -292,7 +291,7 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
       suffixedBase: [...prefix, SUKOON, c2, FATHA, c3],
     }
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH_TOKEN)
+  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH)
 
   if (c2.isWeak)
     return {

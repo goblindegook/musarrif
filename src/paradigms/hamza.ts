@@ -44,7 +44,7 @@ export function seatHamzas(word: readonly LetterToken[]): readonly LetterToken[]
       }
 
       // Seat on the line to avoid alif + alif hamza:
-      if (before === ALIF && vowel === FATHA) return HAMZA
+      if (ALIF.equals(before) && vowel === FATHA) return HAMZA
 
       if (SUKOON.equals(before)) {
         const longVowelAfter = longVowelAt(tokens, index + 1)
@@ -85,9 +85,9 @@ function longVowelAt(tokens: readonly LetterToken[], index: number): 'a' | 'i' |
   const curr = tokens.at(index)?.letter
   const next = tokens.at(index + 1)?.letter
 
-  if (curr === KASRA && YEH.equals(next ?? '')) return 'i'
-  if (curr === FATHA && next === ALIF) return 'a'
-  if (curr === DAMMA && next === WAW) return 'u'
+  if (curr === KASRA && YEH.equals(next)) return 'i'
+  if (curr === FATHA && ALIF.equals(next)) return 'a'
+  if (curr === DAMMA && WAW.equals(next)) return 'u'
 }
 
 function findVowel(tokens: readonly LetterToken[], index: number): string | undefined {
