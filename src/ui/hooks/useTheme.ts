@@ -1,22 +1,28 @@
-import { useCallback, useEffect, useRef } from 'preact/hooks'
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useLocalStorage } from './useLocalStorage'
 
 export type ThemePreference = 'light' | 'dark' | 'system'
 
-function applyTheme(theme: 'light' | 'dark') {
+function apply(theme: 'light' | 'dark') {
   document.documentElement.setAttribute('data-theme', theme)
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1c1a14' : '#f5f4ee')
 }
 
-function resolveTheme(pref: ThemePreference): 'light' | 'dark' {
-  if (pref === 'dark') return 'dark'
-  if (pref === 'light') return 'light'
+function resolve(pref: ThemePreference): 'light' | 'dark' {
+  if (pref !== 'system') return pref
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 export function useTheme() {
   const [themePreference, setStoredTheme] = useLocalStorage<ThemePreference>('theme', 'system')
+  const [theme, setTheme] = useState(resolve(themePreference))
   const cleanupRef = useRef<(() => void) | null>(null)
+
+  const changeTheme = useCallback((pref: ThemePreference) => {
+    setStoredTheme(pref)
+    setTheme(resolve(pref))
+    apply(resolve(pref))
+  }, [])
 
   const setThemePreference = useCallback(
     (next: ThemePreference) => {
@@ -26,14 +32,11 @@ export function useTheme() {
         cleanupRef.current = null
       }
 
-      setStoredTheme(next)
-      applyTheme(resolveTheme(next))
+      changeTheme(next)
 
       if (next === 'system') {
         const mq = window.matchMedia('(prefers-color-scheme: dark)')
-        const handler = () => {
-          applyTheme(mq.matches ? 'dark' : 'light')
-        }
+        const handler = () => changeTheme(next)
         mq.addEventListener('change', handler)
         cleanupRef.current = () => mq.removeEventListener('change', handler)
       }
@@ -43,11 +46,11 @@ export function useTheme() {
 
   // On mount: apply stored theme and register OS listener if system
   useEffect(() => {
-    applyTheme(resolveTheme(themePreference))
+    changeTheme(themePreference)
     if (themePreference === 'system') {
       const mq = window.matchMedia('(prefers-color-scheme: dark)')
       const handler = () => {
-        applyTheme(mq.matches ? 'dark' : 'light')
+        changeTheme(themePreference)
       }
       mq.addEventListener('change', handler)
       cleanupRef.current = () => mq.removeEventListener('change', handler)
@@ -65,5 +68,5 @@ export function useTheme() {
     }
   }, [])
 
-  return { themePreference, setThemePreference }
+  return { theme, themePreference, setThemePreference }
 }

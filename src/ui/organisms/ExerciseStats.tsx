@@ -1,6 +1,5 @@
 import { styled } from 'goober'
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
-import uPlot from 'uplot'
+import { useMemo } from 'preact/hooks'
 import 'uplot/dist/uPlot.min.css'
 import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../exercises/dimensions'
 import {
@@ -25,12 +24,13 @@ import { ProgressBar } from '../atoms/ProgressBar'
 import { useI18n } from '../hooks/useI18n'
 import { useTheme } from '../hooks/useTheme'
 import { LockIcon } from '../icons/LockIcon'
+import { Chart } from '../molecules/Chart'
 import { Detail } from '../molecules/Detail'
 import { Panel } from '../molecules/Panel'
 
 const CHART_COLORS = {
-  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8', grid: '#e2e8f0', text: '#3a342a' },
-  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060', grid: '#3a342a', text: '#d6dce3' },
+  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8' },
+  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060' },
 }
 
 interface Props {
@@ -40,7 +40,6 @@ interface Props {
   srsStore?: SrsStore
 }
 
-const CHART_H = 240
 const MASTERY_DISPLAY_EXPONENT = 0.6
 
 const ROOT_TYPE_LABEL_KEYS = {
@@ -53,8 +52,12 @@ const ROOT_TYPE_LABEL_KEYS = {
 } as const
 
 export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
-  const { t } = useI18n()
+  const { theme } = useTheme()
+  const { t, lang } = useI18n()
+  const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
+  const days = useMemo(() => buildDayWindow(stats, 7), [stats])
+  const chartAriaLabel = useMemo(() => buildChartAriaLabel(days, t), [days, t])
 
   const today = new Date()
   const yesterday = new Date()
@@ -76,7 +79,40 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
       defaultCollapsed
       hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
     >
-      <StatsChart stats={stats} />
+      <Chart
+        ariaLabel={chartAriaLabel}
+        series={[
+          {
+            show: false,
+            label: t('exercise.stats.date.label'),
+            value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
+          },
+          {
+            label: t('exercise.stats.correct'),
+            stroke: CHART_COLORS[theme].correct,
+            width: 2,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
+          {
+            label: t('exercise.stats.incorrect'),
+            stroke: CHART_COLORS[theme].incorrect,
+            width: 2,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
+          {
+            label: t('exercise.stats.skipped'),
+            stroke: CHART_COLORS[theme].passed,
+            width: 2,
+            value: (_, rawValue) => rawValue ?? '—',
+          },
+        ]}
+        data={[
+          days.map((d) => d.date.getTime() / 1000),
+          days.map((d) => d.correct),
+          days.map((d) => d.incorrect),
+          days.map((d) => d.passed),
+        ]}
+      />
       <StatsDetailsPanel stats={stats} streak={streak} mastery={mastery} />
     </Panel>
   )
@@ -169,10 +205,6 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
   )
 }
 
-interface StatsChartProps {
-  stats: readonly DailyActivity[]
-}
-
 function trendDirection(values: readonly number[]): 'up' | 'down' | 'steady' {
   const first = values[0] ?? 0
   const last = values[values.length - 1] ?? 0
@@ -199,103 +231,6 @@ function buildChartAriaLabel(
     skippedTotal: String(sum(skippedValues)),
     skippedTrend: t(`exercise.stats.chart.trend.${trendDirection(skippedValues)}`),
   })
-}
-
-function StatsChart({ stats }: StatsChartProps) {
-  const { t, lang } = useI18n()
-  const { themePreference } = useTheme()
-  const containerRef = useRef<HTMLDivElement>(null)
-  const mountRef = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(0)
-  const days = useMemo(() => buildDayWindow(stats, 7), [stats])
-  const chartAriaLabel = useMemo(() => buildChartAriaLabel(days, t), [days, t])
-  const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const ro = new ResizeObserver((entries) => {
-      const w = Math.floor(entries[0].contentRect.width)
-      if (w > 0) setWidth(w)
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (width === 0 || !mountRef.current) return
-
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-    const colors = isDark ? CHART_COLORS.dark : CHART_COLORS.light
-    const spline = uPlot.paths?.spline?.()
-
-    const plot = new uPlot(
-      {
-        width,
-        height: CHART_H,
-        padding: [8, 4, 8, 4],
-        cursor: { x: false, y: false },
-        scales: {
-          x: { time: true },
-          y: { auto: true },
-        },
-        axes: [
-          {
-            grid: { stroke: colors.grid },
-            stroke: colors.text,
-          },
-          {
-            show: false,
-          },
-        ],
-        series: [
-          {
-            show: false,
-            label: t('exercise.stats.date.label'),
-            value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
-          },
-          {
-            label: t('exercise.stats.correct'),
-            stroke: colors.correct,
-            width: 2,
-            paths: spline,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-          {
-            label: t('exercise.stats.incorrect'),
-            stroke: colors.incorrect,
-            width: 2,
-            paths: spline,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-          {
-            label: t('exercise.stats.skipped'),
-            stroke: colors.passed,
-            width: 2,
-            paths: spline,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-        ],
-      },
-      [
-        days.map((d) => d.date.getTime() / 1000),
-        days.map((d) => d.correct),
-        days.map((d) => d.incorrect),
-        days.map((d) => d.passed),
-      ],
-      mountRef.current,
-    )
-
-    return () => plot.destroy()
-  }, [width, days, lang, t, themePreference])
-
-  return (
-    <ChartContainer>
-      <div ref={containerRef} role="img" aria-label={chartAriaLabel} style={{ width: '100%' }}>
-        <div ref={mountRef} />
-      </div>
-    </ChartContainer>
-  )
 }
 
 interface StatsDetailsPanelProps {
@@ -486,18 +421,6 @@ const ValueStack = styled('span')`
   flex-direction: column;
   align-items: flex-start;
   font-variant-numeric: tabular-nums;
-`
-
-const ChartContainer = styled('div')`
-  width: 100%;
-
-  .u-legend {
-    font-size: 0.75rem;
-  }
-
-  .u-legend tr:first-child {
-    display: none;
-  }
 `
 
 const MasteryContainer = styled('section')`
