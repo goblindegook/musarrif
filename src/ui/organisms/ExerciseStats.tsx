@@ -5,13 +5,14 @@ import 'uplot/dist/uPlot.min.css'
 import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../exercises/dimensions'
 import {
   computeMastery,
-  type MasteryCategory as MasteryCategoryData,
   type MasteryCategoryId,
+  type MasteryCategory as MasteryCategoryType,
   type MasteryItem as MasteryItemData,
 } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import {
+  findStatsForDate,
   getAccuracyPercent,
   getRecentAccuracyPercent,
   getStreakGoalProgress,
@@ -55,10 +56,26 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
   const { t } = useI18n()
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
 
+  const today = new Date()
+  const yesterday = new Date()
+  yesterday.setDate(today.getDate() - 1)
+
+  const [streakHintKey, streakHintParams] = buildStreakHint(
+    getStreakGoalProgress(stats),
+    findStatsForDate(stats, today),
+    findStatsForDate(stats, yesterday),
+    mastery,
+  )
+
   if (stats.length === 0) return null
 
   return (
-    <Panel title={t('exercise.stats.title')} collapsible defaultCollapsed>
+    <Panel
+      title={t('exercise.stats.title')}
+      collapsible
+      defaultCollapsed
+      hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
+    >
       <StatsChart stats={stats} />
       <StatsDetailsPanel stats={stats} streak={streak} mastery={mastery} />
     </Panel>
@@ -85,7 +102,7 @@ function masteryProgressBar(score: number, locked: boolean): { value: number; ma
   return { value: Number(displayedScore.toFixed(6)), max: 1 }
 }
 
-function MasterySection({ mastery }: { mastery: readonly MasteryCategoryData<MasteryCategoryId>[] }) {
+function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<MasteryCategoryId>[] }) {
   const { t } = useI18n()
 
   return (
@@ -284,7 +301,7 @@ function StatsChart({ stats }: StatsChartProps) {
 interface StatsDetailsPanelProps {
   stats: readonly DailyActivity[]
   streak: number
-  mastery: readonly MasteryCategoryData<MasteryCategoryId>[]
+  mastery: readonly MasteryCategoryType<MasteryCategoryId>[]
 }
 
 function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
@@ -333,6 +350,99 @@ function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
       <MasterySection mastery={mastery} />
     </StatsSummary>
   )
+}
+
+function strongestMasteryItem(
+  mastery: readonly MasteryCategoryType<MasteryCategoryId>[],
+): MasteryItemData<MasteryCategoryId> | null {
+  const unlockedItems = mastery.flatMap((category) => category.items.filter((item) => !item.locked))
+  if (unlockedItems.length === 0) return null
+  return unlockedItems.reduce((strongest, item) => (item.score > strongest.score ? item : strongest), unlockedItems[0])
+}
+
+function weakestMasteryItem(
+  mastery: readonly MasteryCategoryType<MasteryCategoryId>[],
+): MasteryItemData<MasteryCategoryId> | null {
+  const unlockedItems = mastery.flatMap((category) => category.items.filter((item) => !item.locked))
+  if (unlockedItems.length === 0) return null
+  return unlockedItems.reduce((weakest, item) => (item.score < weakest.score ? item : weakest), unlockedItems[0])
+}
+
+interface StreakHintParams extends Record<string, string | undefined> {
+  remaining?: string
+  target?: string
+  dimension?: string
+  dimensionLabelKey?: string
+  form?: string
+}
+
+function masteryItemLabelDescriptor(item: MasteryItemData<MasteryCategoryId>): [key: string, form: string] {
+  const { categoryId, value } = item
+  if (categoryId === 'rootTypes') return [ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS], '']
+  if (categoryId === 'forms') return ['exercise.stats.mastery.form', toRoman(parseInteger(String(value), 0))]
+  if (categoryId === 'tenses') return [`tense.${value}`, '']
+  if (categoryId === 'pronouns') return [`pronoun.${value}`, '']
+  if (categoryId === 'nominals' && value === 'participles') return ['exercise.stats.mastery.nominal.participles', '']
+  if (categoryId === 'nominals' && value === 'masdar') return ['exercise.stats.mastery.nominal.masdar', '']
+  return ['', '']
+}
+
+function resolveStreakHintParams(t: ReturnType<typeof useI18n>['t'], streakHintParams: StreakHintParams) {
+  return streakHintParams.dimensionLabelKey == null
+    ? streakHintParams
+    : {
+        ...streakHintParams,
+        dimension:
+          streakHintParams.dimensionLabelKey === 'exercise.stats.mastery.form'
+            ? t(streakHintParams.dimensionLabelKey, { form: streakHintParams.form })
+            : t(streakHintParams.dimensionLabelKey),
+      }
+}
+
+function buildStreakHint(
+  streak: { correct: number; remaining: number },
+  today?: DailyActivity,
+  yesterday?: DailyActivity,
+  mastery: readonly MasteryCategoryType<MasteryCategoryId>[] = [],
+): [string, StreakHintParams] {
+  if (streak.remaining > 1) return ['exercise.stats.progressHint.streak', { remaining: String(streak.remaining) }]
+  if (streak.remaining === 1) return ['exercise.stats.progressHint.streak.almostThere', {}]
+  if (streak.correct === STREAK_DAILY_GOAL) return ['exercise.stats.progressHint.streak.wellDone', {}]
+
+  const correct = today?.correct ?? 0
+  const incorrect = today?.incorrect ?? 0
+  const passed = today?.passed ?? 0
+  const attempted = correct + incorrect
+
+  if (attempted > 0 && incorrect / attempted > 0.5) return ['exercise.stats.progressHint.encourage', {}]
+  if (passed >= Math.max(attempted, 4)) return ['exercise.stats.progressHint.skipping', {}]
+  if (attempted >= 12 && correct / attempted >= 0.9) return ['exercise.stats.progressHint.excellent', {}]
+
+  const strongest = strongestMasteryItem(mastery)
+  const weakest = weakestMasteryItem(mastery)
+  const spread = strongest != null && weakest != null ? strongest.score - weakest.score : 0
+
+  if (strongest != null && strongest.score >= 0.75 && spread >= 0.25) {
+    const [dimensionLabelKey, form] = masteryItemLabelDescriptor(strongest)
+    return ['exercise.stats.progressHint.strongDimension', { dimensionLabelKey, form }]
+  }
+
+  if (weakest != null && weakest.score <= 0.25 && spread >= 0.25) {
+    const [dimensionLabelKey, form] = masteryItemLabelDescriptor(weakest)
+    return ['exercise.stats.progressHint.weakDimension', { dimensionLabelKey, form }]
+  }
+
+  const yesterdayCorrect = yesterday?.correct ?? 0
+
+  if (correct < yesterdayCorrect && yesterdayCorrect - correct <= 5)
+    return ['exercise.stats.progressHint.vsYesterday.almostThere', { target: String(yesterdayCorrect - correct) }]
+  if (correct < yesterdayCorrect)
+    return ['exercise.stats.progressHint.vsYesterday.below', { target: String(yesterdayCorrect) }]
+  if (correct === yesterdayCorrect) return ['exercise.stats.progressHint.vsYesterday.equal', {}]
+  if (correct > yesterdayCorrect && correct - yesterdayCorrect <= 5)
+    return ['exercise.stats.progressHint.vsYesterday.exceeded', {}]
+
+  return ['', {}]
 }
 
 const DetailsRow = styled('div')`

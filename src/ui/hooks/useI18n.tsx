@@ -18,7 +18,7 @@ interface Translation {
 interface I18nContextValue {
   lang: Language
   dir: 'ltr' | 'rtl'
-  t: (key: string, params?: Record<string, string>) => string
+  t: (key: string, params?: Record<string, string | undefined>) => string
   diacriticsPreference: DiacriticsPreference
   setDiacriticsPreference: (next: DiacriticsPreference) => void
   setLang: (lang: string) => void
@@ -149,6 +149,6 @@ function detectBrowserLanguage(): Language {
   )
 }
 
-function format(template: string, params?: Record<string, string>): string {
+function format(template: string, params?: Record<string, string | undefined>): string {
   return params ? template.replace(/\{(\w+)\}/g, (_, key) => params[key] ?? `{${key}}`) : template
 }

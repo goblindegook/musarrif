@@ -122,9 +122,13 @@ export function getStreakRecord(stats: TrackedExercises): number {
   return max
 }
 
+export function findStatsForDate(stats: readonly DailyActivity[], date: Date): DailyActivity | undefined {
+  const key = dateKey(date)
+  return stats.find((s) => dateKey(s.date) === key)
+}
+
 export function getStreakGoalProgress(stats: TrackedExercises, today?: Date): StreakGoalProgress {
-  const key = dateKey(today ?? todayDate())
-  const todayStats = stats.find((s) => dateKey(s.date) === key)
+  const todayStats = findStatsForDate(stats, today ?? todayDate())
   const correct = todayStats?.correct ?? 0
   const remaining = Math.max(0, STREAK_DAILY_GOAL - correct)
   return { correct, remaining }

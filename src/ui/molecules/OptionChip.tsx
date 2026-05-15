@@ -412,7 +412,7 @@ const Popover = styled('div', forwardRef)`
   padding: 0.8rem;
 
   &::backdrop {
-    background: color-mix(in srgb, var(--color-bg-page) 55%, transparent 45%);
+    background: var(--color-overlay);
   }
 
   &:popover-open {

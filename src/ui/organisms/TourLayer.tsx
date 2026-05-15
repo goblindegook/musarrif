@@ -1,5 +1,5 @@
-import { styled } from 'goober'
 import { useEffect } from 'preact/hooks'
+import { Overlay } from '../atoms/Overlay'
 import { type TourStepPlacement, TourTooltip } from '../molecules/TourTooltip'
 
 const TOUR_STEPS: readonly { selector: string | null; placement: TourStepPlacement }[] = [
@@ -70,7 +70,7 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
 
   return (
     <>
-      <Overlay />
+      <Overlay zIndex={101} />
       <TourTooltip
         step={step}
         totalSteps={totalSteps}
@@ -82,22 +82,6 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
     </>
   )
 }
-
-// FIXME: use ::backdrop
-const Overlay = styled('div')`
-  position: fixed;
-  inset: 0;
-  z-index: 101;
-  background: var(--color-overlay);
-  backdrop-filter: blur(2px);
-  pointer-events: none;
-  animation: fadeIn 0.2s ease-in-out;
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-`
 
 function clearTourStyles() {
   Array.from(document.querySelectorAll<HTMLElement>('[data-tour-highlighted="true"]')).forEach((node) => {
