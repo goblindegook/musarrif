@@ -70,10 +70,10 @@ interface FutureConjugationProps extends ConjugationProps {
 
 interface ImperativeConjugationProps extends ConjugationProps {
   tense: 'imperative'
-  mood?: undefined
+  mood?: never
 }
 
-type ConjugationTableProps =
+export type ConjugationTableProps =
   | PastConjugationProps
   | PresentConjugationProps
   | FutureConjugationProps
@@ -100,9 +100,10 @@ export function ConjugationTable({
         ? `${selectedVoice}.present.${mood}`
         : `${selectedVoice}.${tense}`
   const conjugations = conjugate(verb, verbTense)
-  const availableTenses = TENSE_OPTIONS_BY_VOICE[selectedVoice].filter((t) =>
+  const availableTenses = TENSE_OPTIONS[selectedVoice].filter((t) =>
     availableParadigms.some((p) => p === `${selectedVoice}.${t}` || p.startsWith(`${selectedVoice}.${t}.`)),
   )
+  const moodOptions = keys(MOOD_LABELS)
 
   return (
     <TabsContainer>
@@ -121,6 +122,7 @@ export function ConjugationTable({
               tabIndex={option === selectedVoice ? 0 : -1}
               aria-label={t(VOICE_LABELS[option])}
               onClick={() => onVoiceChange(option)}
+              onKeyDown={tabKeyDown(availableVoices, option, 'voice-tab', onVoiceChange)}
               dir={dir}
               lang={lang}
               fluid
@@ -144,6 +146,7 @@ export function ConjugationTable({
                 tabIndex={option === tense ? 0 : -1}
                 aria-label={t(TENSE_LABELS[option])}
                 onClick={() => onTenseChange(option)}
+                onKeyDown={tabKeyDown(availableTenses, option, 'tense-tab', onTenseChange)}
                 dir={dir}
                 lang={lang}
                 fluid
@@ -154,7 +157,7 @@ export function ConjugationTable({
           </SubTabBar>
           {tense === 'present' && (
             <SubTabBar role="tablist" aria-label={t('aria.selectMood')}>
-              {keys(MOOD_OPTIONS).map((option) => (
+              {moodOptions.map((option) => (
                 <TabButton
                   type="button"
                   key={option}
@@ -164,13 +167,14 @@ export function ConjugationTable({
                   aria-selected={option === mood}
                   aria-controls={'conjugation-panel'}
                   tabIndex={option === mood ? 0 : -1}
-                  aria-label={t(MOOD_OPTIONS[option])}
+                  aria-label={t(MOOD_LABELS[option])}
                   size="sm"
                   onClick={() => onMoodChange(option)}
+                  onKeyDown={tabKeyDown(moodOptions, option, 'mood-tab', onMoodChange)}
                   dir={dir}
                   lang={lang}
                 >
-                  {t(MOOD_OPTIONS[option])}
+                  {t(MOOD_LABELS[option])}
                 </TabButton>
               ))}
             </SubTabBar>
@@ -229,6 +233,26 @@ export function ConjugationTable({
   )
 }
 
+function tabKeyDown<T extends string>(
+  options: readonly T[],
+  current: T,
+  idPrefix: string,
+  onChange: (next: T) => void,
+) {
+  return (e: KeyboardEvent) => {
+    const idx = options.indexOf(current)
+    let next: number
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % options.length
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + options.length) % options.length
+    else if (e.key === 'Home') next = 0
+    else if (e.key === 'End') next = options.length - 1
+    else return
+    e.preventDefault()
+    document.getElementById(`${idPrefix}-${options[next]}`)?.focus()
+    onChange(options[next])
+  }
+}
+
 const VOICE_OPTIONS: readonly Voice[] = ['active', 'passive']
 
 const VOICE_LABELS: Readonly<Record<Voice, TranslationKey>> = {
@@ -236,7 +260,7 @@ const VOICE_LABELS: Readonly<Record<Voice, TranslationKey>> = {
   passive: 'voice.passive',
 } as const
 
-const TENSE_OPTIONS_BY_VOICE: Readonly<Record<Voice, readonly Tense[]>> = {
+const TENSE_OPTIONS: Readonly<Record<Voice, readonly Tense[]>> = {
   active: ['past', 'present', 'future', 'imperative'],
   passive: ['past', 'present', 'future'],
 } as const
@@ -248,7 +272,7 @@ const TENSE_LABELS: Readonly<Record<Tense, TranslationKey>> = {
   imperative: 'mood.imperative',
 } as const
 
-const MOOD_OPTIONS: Readonly<Record<Mood, TranslationKey>> = {
+const MOOD_LABELS: Readonly<Record<Mood, TranslationKey>> = {
   indicative: 'mood.indicative',
   subjunctive: 'mood.subjunctive',
   jussive: 'mood.jussive',
