@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useEffect, useRef } from 'preact/hooks'
+import { useEffect } from 'preact/hooks'
 import { type TourStepPlacement, TourTooltip } from '../molecules/TourTooltip'
 
 const TOUR_STEPS: readonly { selector: string | null; placement: TourStepPlacement }[] = [
@@ -19,16 +19,7 @@ interface TourLayerProps {
 }
 
 export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLayerProps) => {
-  const priorFocusedRef = useRef<HTMLElement | null>(null)
   const config = step >= 0 ? (TOUR_STEPS[step] ?? null) : null
-
-  useEffect(() => {
-    if (!isOpen) return
-    priorFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    return () => {
-      priorFocusedRef.current?.focus()
-    }
-  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
@@ -55,13 +46,11 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
     }
 
     target.dataset.tourHighlighted = 'true'
-    target.dataset.tourPrevZ = target.style.zIndex
-    target.style.zIndex = '102'
+    setZIndex(target, 102)
 
     return () => {
-      target.style.zIndex = target.dataset.tourPrevZ ?? ''
       delete target.dataset.tourHighlighted
-      delete target.dataset.tourPrevZ
+      restoreZIndex(target)
     }
   }, [isOpen, config?.selector])
 
@@ -99,44 +88,39 @@ const Overlay = styled('div')`
 `
 
 function clearTourStyles() {
-  const highlighted = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-highlighted="true"]'))
-  highlighted.forEach((node) => {
-    node.style.zIndex = node.dataset.tourPrevZ ?? ''
+  Array.from(document.querySelectorAll<HTMLElement>('[data-tour-highlighted="true"]')).forEach((node) => {
     delete node.dataset.tourHighlighted
-    delete node.dataset.tourPrevZ
+    restoreZIndex(node)
   })
 
-  const raisedHeaders = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-header-raised="true"]'))
-  raisedHeaders.forEach((header) => {
-    header.style.zIndex = header.dataset.tourPrevZ ?? ''
-    delete header.dataset.tourPrevZ
-    delete header.dataset.tourHeaderRaised
-  })
-
-  const raisedTargets = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-target-raised="true"]'))
-  raisedTargets.forEach((target) => {
-    target.style.zIndex = target.dataset.tourPrevZ ?? ''
-    delete target.dataset.tourPrevZ
-    delete target.dataset.tourTargetRaised
+  Array.from(document.querySelectorAll<HTMLElement>('[data-tour-raised="true"]')).forEach((node) => {
+    delete node.dataset.tourRaised
+    restoreZIndex(node)
   })
 }
 
 function raiseHeaderTargetAboveOverlay(header: HTMLElement, target: HTMLElement) {
-  header.dataset.tourHeaderRaised = 'true'
-  header.dataset.tourPrevZ = header.style.zIndex
-  header.style.zIndex = '102'
+  header.dataset.tourRaised = 'true'
+  setZIndex(header, 102)
 
   // FIXME: Should not raise all the header buttons
-  target.dataset.tourTargetRaised = 'true'
-  target.dataset.tourPrevZ = target.style.zIndex
-  target.style.zIndex = '104'
+  target.dataset.tourRaised = 'true'
+  setZIndex(target, 104)
 
   return () => {
-    header.style.zIndex = header.dataset.tourPrevZ ?? ''
-    target.style.zIndex = target.dataset.tourPrevZ ?? ''
-    delete header.dataset.tourHeaderRaised
-    delete header.dataset.tourPrevZ
-    delete target.dataset.tourTargetRaised
-    delete target.dataset.tourPrevZ
+    delete header.dataset.tourRaised
+    delete target.dataset.tourRaised
+    restoreZIndex(header)
+    restoreZIndex(target)
   }
+}
+
+function setZIndex(element: HTMLElement, value: number) {
+  element.dataset.tourPrevZ = element.style.zIndex
+  element.style.zIndex = String(value)
+}
+
+function restoreZIndex(element: HTMLElement) {
+  element.style.zIndex = element.dataset.tourPrevZ ?? ''
+  delete element.dataset.tourPrevZ
 }
