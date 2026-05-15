@@ -198,6 +198,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
               {t('tabs.search')}
             </TabButton>
             <TabButton
+              data-tour-step="2"
               role="tab"
               type="button"
               aria-selected={searchTab === 'build'}

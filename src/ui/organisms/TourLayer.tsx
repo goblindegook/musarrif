@@ -1,8 +1,6 @@
 import { styled } from 'goober'
 import { useEffect, useRef } from 'preact/hooks'
-import { TourTooltip } from '../molecules/TourTooltip'
-
-type TourStepPlacement = 'above' | 'below' | 'center' | 'side'
+import { type TourStepPlacement, TourTooltip } from '../molecules/TourTooltip'
 
 const TOUR_STEPS: readonly { selector: string | null; placement: TourStepPlacement }[] = [
   { selector: '[data-tour-step="0"]', placement: 'below' },

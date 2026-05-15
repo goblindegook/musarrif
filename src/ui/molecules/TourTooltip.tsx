@@ -7,7 +7,7 @@ import { Heading } from '../atoms/Heading'
 import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
 
-type TourStepPlacement = 'above' | 'below' | 'center' | 'side'
+export type TourStepPlacement = 'above' | 'below' | 'center' | 'side'
 
 interface TourTooltipProps {
   step: number
@@ -49,6 +49,7 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
     const rect = target.getBoundingClientRect()
 
     if (placement === 'side' && window.innerWidth >= DESKTOP_BREAKPOINT) {
+      // FIXME: should appear on the left for RTL languages
       setPosition({
         top: Math.max(12, rect.top + 8),
         left: Math.max(12, rect.left - WIDTH - 8),
