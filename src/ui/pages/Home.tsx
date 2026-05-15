@@ -179,6 +179,7 @@ export function Home() {
               {t('tabs.search')}
             </TabButton>
             <TabButton
+              data-tour-step="2"
               role="tab"
               type="button"
               aria-selected={searchTab === 'build'}
@@ -240,96 +241,99 @@ export function Home() {
       </Stack>
 
       <Stack area="verbList">
-        <Panel title={t('verbList.title')} dir={dir} lang={lang}>
-          <FilterGroup>
-            <Subheading dir={dir} lang={lang}>
-              {t('verbsList.filter.form.title')}
-            </Subheading>
-            <FilterBar role="group" aria-label={t('aria.selectForm')}>
-              {FORMS.map((option) => (
-                <SelectableButton
-                  key={option}
-                  id={`form-tab-${option}`}
-                  type="button"
-                  aria-selected={query.filters.form === option}
-                  aria-controls={`form-panel-${option}`}
-                  active={query.filters.form === option}
-                  disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
-                  onClick={() => applyFormFilter(option)}
-                >
-                  {toRoman(option)}
-                </SelectableButton>
-              ))}
-            </FilterBar>
-          </FilterGroup>
+        {/* FIXME: data-tour-step should be on Panel */}
+        <div data-tour-step="1">
+          <Panel title={t('verbList.title')} dir={dir} lang={lang}>
+            <FilterGroup>
+              <Subheading dir={dir} lang={lang}>
+                {t('verbsList.filter.form.title')}
+              </Subheading>
+              <FilterBar role="group" aria-label={t('aria.selectForm')}>
+                {FORMS.map((option) => (
+                  <SelectableButton
+                    key={option}
+                    id={`form-tab-${option}`}
+                    type="button"
+                    aria-selected={query.filters.form === option}
+                    aria-controls={`form-panel-${option}`}
+                    active={query.filters.form === option}
+                    disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
+                    onClick={() => applyFormFilter(option)}
+                  >
+                    {toRoman(option)}
+                  </SelectableButton>
+                ))}
+              </FilterBar>
+            </FilterGroup>
 
-          <FilterGroup>
-            <Subheading dir={dir} lang={lang}>
-              {t('verbsList.filter.rootType.title')}
-            </Subheading>
-            <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
-              {ROOT_TYPE_FILTERS.map((option) => (
-                <SelectableButton
-                  key={option}
-                  type="button"
-                  aria-pressed={query.filters.root.includes(option)}
-                  active={query.filters.root.includes(option)}
-                  disabled={isFilterDisabled(query.filters.root.includes(option), withRootTypeFilter(query, option))}
-                  onClick={() => applyRootTypeFilter(option)}
-                >
-                  {t(`verbsList.filter.rootType.${option}.label`)}
-                </SelectableButton>
-              ))}
-            </FilterBar>
-          </FilterGroup>
+            <FilterGroup>
+              <Subheading dir={dir} lang={lang}>
+                {t('verbsList.filter.rootType.title')}
+              </Subheading>
+              <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
+                {ROOT_TYPE_FILTERS.map((option) => (
+                  <SelectableButton
+                    key={option}
+                    type="button"
+                    aria-pressed={query.filters.root.includes(option)}
+                    active={query.filters.root.includes(option)}
+                    disabled={isFilterDisabled(query.filters.root.includes(option), withRootTypeFilter(query, option))}
+                    onClick={() => applyRootTypeFilter(option)}
+                  >
+                    {t(`verbsList.filter.rootType.${option}.label`)}
+                  </SelectableButton>
+                ))}
+              </FilterBar>
+            </FilterGroup>
 
-          <FilterGroup>
-            <Subheading dir={dir} lang={lang}>
-              {t('verbsList.filter.other.title')}
-            </Subheading>
-            <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
-              {OTHER_FILTERS.map((option) => (
-                <SelectableButton
-                  key={option.key}
-                  type="button"
-                  aria-pressed={query.filters.group === option.key}
-                  active={query.filters.group === option.key}
-                  disabled={isFilterDisabled(query.filters.group === option.key, withGroupFilter(query, option.key))}
-                  onClick={() => applyGroupFilter(option.key)}
-                >
-                  {t(option.labelKey)}
-                </SelectableButton>
-              ))}
-            </FilterBar>
-          </FilterGroup>
+            <FilterGroup>
+              <Subheading dir={dir} lang={lang}>
+                {t('verbsList.filter.other.title')}
+              </Subheading>
+              <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
+                {OTHER_FILTERS.map((option) => (
+                  <SelectableButton
+                    key={option.key}
+                    type="button"
+                    aria-pressed={query.filters.group === option.key}
+                    active={query.filters.group === option.key}
+                    disabled={isFilterDisabled(query.filters.group === option.key, withGroupFilter(query, option.key))}
+                    onClick={() => applyGroupFilter(option.key)}
+                  >
+                    {t(option.labelKey)}
+                  </SelectableButton>
+                ))}
+              </FilterBar>
+            </FilterGroup>
 
-          <VerbResults>
-            <VerbList>
-              {paginatedVerbs.map((verb) => (
-                <VerbPill key={verb.id} verb={verb} block />
-              ))}
-            </VerbList>
-            {pageCount > 1 && (
-              <PaginationBar>
-                <Button
-                  disabled={currentPage === 1}
-                  onClick={() => setQueryParams(setQuery({ ...query, page: currentPage - 1 }))}
-                >
-                  {t('pagination.previous')}
-                </Button>
-                <PaginationStatus dir={dir} lang={lang}>
-                  {t('pagination.page', { current: String(currentPage), total: String(pageCount) })}
-                </PaginationStatus>
-                <Button
-                  disabled={currentPage === pageCount}
-                  onClick={() => setQueryParams(setQuery({ ...query, page: currentPage + 1 }))}
-                >
-                  {t('pagination.next')}
-                </Button>
-              </PaginationBar>
-            )}
-          </VerbResults>
-        </Panel>
+            <VerbResults>
+              <VerbList>
+                {paginatedVerbs.map((verb) => (
+                  <VerbPill key={verb.id} verb={verb} block />
+                ))}
+              </VerbList>
+              {pageCount > 1 && (
+                <PaginationBar>
+                  <Button
+                    disabled={currentPage === 1}
+                    onClick={() => setQueryParams(setQuery({ ...query, page: currentPage - 1 }))}
+                  >
+                    {t('pagination.previous')}
+                  </Button>
+                  <PaginationStatus dir={dir} lang={lang}>
+                    {t('pagination.page', { current: String(currentPage), total: String(pageCount) })}
+                  </PaginationStatus>
+                  <Button
+                    disabled={currentPage === pageCount}
+                    onClick={() => setQueryParams(setQuery({ ...query, page: currentPage + 1 }))}
+                  >
+                    {t('pagination.next')}
+                  </Button>
+                </PaginationBar>
+              )}
+            </VerbResults>
+          </Panel>
+        </div>
       </Stack>
     </Main>
   )

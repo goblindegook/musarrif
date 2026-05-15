@@ -9,9 +9,10 @@ interface PanelProps {
   children?: ComponentChildren
   collapsible?: boolean
   defaultCollapsed?: boolean
+  hint?: string
 }
 
-export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapsed }: PanelProps) => {
+export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapsed, hint }: PanelProps) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed ?? false)
 
   return (
@@ -26,7 +27,10 @@ export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapse
             onClick={() => setCollapsed((c) => !c)}
           >
             <PanelTitle>{title}</PanelTitle>
-            <CollapseArrow collapsed={collapsed}>›</CollapseArrow>
+            <PanelTitleTail>
+              {collapsed && hint ? <Hint>{hint}</Hint> : null}
+              <CollapseArrow collapsed={collapsed}>›</CollapseArrow>
+            </PanelTitleTail>
           </PanelTitleButton>
         ) : (
           <PanelTitleRow dir={dir} lang={lang}>
@@ -126,6 +130,25 @@ const CollapseArrow = styled('span')<{ collapsed: boolean }>`
   transform: ${({ collapsed }) => (collapsed ? 'rotate(90deg)' : 'rotate(-90deg)')};
   display: inline-block;
   user-select: none;
+`
+
+const PanelTitleTail = styled('span')`
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-inline-start: auto;
+  min-width: 0;
+`
+
+const Hint = styled('span')`
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 12rem;
+  min-width: 0;
 `
 
 const PanelBody = styled('div')`

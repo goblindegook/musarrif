@@ -7,6 +7,7 @@ import { useI18n } from '../hooks/useI18n'
 import { type ThemePreference, useTheme } from '../hooks/useTheme'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
 import { ExerciseIcon } from '../icons/ExerciseIcon'
+import { HelpIcon } from '../icons/HelpIcon'
 import { SettingsIcon } from '../icons/SettingsIcon'
 import { LanguagePicker } from '../molecules/LanguagePicker'
 import { Modal } from '../molecules/Modal'
@@ -18,7 +19,11 @@ import { getUserData, importUserData } from '../user-data'
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
 
-export const AppHeader = () => {
+interface AppHeaderProps {
+  onHelp?: () => void
+}
+
+export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
   const { route, navigateTo } = useRouting()
@@ -58,27 +63,31 @@ export const AppHeader = () => {
           </PageTitle>
         </TitleGroup>
         <RightGroup>
-          <ModeToggle
-            activeMode={route[0] === 'test' ? 1 : 0}
-            labels={[t('mode.conjugate'), t('mode.exercise')]}
-            icons={[<ConjugateIcon />, <ExerciseIcon />]}
-            ariaLabel={t('mode.label')}
-            onClick={(index) => {
-              if (index === 0) navigateTo(['verbs'])
-              else navigateTo(['test'])
-            }}
-          />
-          <SettingsButtonWrapper>
-            <IconButton
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              aria-label={t('settings.title')}
-              aria-expanded={isSettingsOpen}
-              title={t('settings.title')}
-              active={isSettingsOpen}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </SettingsButtonWrapper>
+          {/* FIXME: data-tour-step on ModeToggle  */}
+          <span data-tour-step="3">
+            <ModeToggle
+              activeMode={route[0] === 'test' ? 1 : 0}
+              labels={[t('mode.conjugate'), t('mode.exercise')]}
+              icons={[<ConjugateIcon />, <ExerciseIcon />]}
+              ariaLabel={t('mode.label')}
+              onClick={(index) => {
+                if (index === 0) navigateTo(['verbs'])
+                else navigateTo(['test'])
+              }}
+            />
+          </span>
+          <IconButton data-tour-step="4" onClick={onHelp} aria-label={t('tour.open')} title={t('tour.open')}>
+            <HelpIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+            aria-label={t('settings.title')}
+            aria-expanded={isSettingsOpen}
+            title={t('settings.title')}
+            active={isSettingsOpen}
+          >
+            <SettingsIcon />
+          </IconButton>
         </RightGroup>
       </TopBarHeader>
       <Modal isOpen={isSettingsOpen} title={t('settings.title')} onClose={() => setIsSettingsOpen(false)}>
@@ -240,15 +249,11 @@ const SettingsModalBody = styled('div')`
   gap: 1.25rem;
 `
 
-const SettingsButtonWrapper = styled('div')`
-  display: flex;
-  justify-content: flex-end;
-`
-
 const RightGroup = styled('div')`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
   position: relative;
   justify-self: end;

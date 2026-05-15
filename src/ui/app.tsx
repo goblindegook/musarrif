@@ -1,6 +1,8 @@
 import { styled } from 'goober'
 import { useI18n } from './hooks/useI18n'
+import { useTour } from './hooks/useTour'
 import { AppHeader } from './organisms/AppHeader'
+import { TourLayer } from './organisms/TourLayer'
 import { ConjugationMode } from './pages/ConjugationMode'
 import { ExerciseMode } from './pages/ExerciseMode'
 import { Home } from './pages/Home'
@@ -9,10 +11,12 @@ import { Route, Router, useRouting } from './routes'
 export function App() {
   const { lang, dir } = useI18n()
   const { route } = useRouting()
+  const { isOpen, step, totalSteps, openTour, closeTour, nextStep } = useTour()
 
   return (
     <Page dir={dir} lang={lang}>
-      <AppHeader />
+      <AppHeader onHelp={openTour} />
+      <TourLayer isOpen={isOpen} step={step} totalSteps={totalSteps} onNext={nextStep} onSkip={closeTour} />
       <Router route={route}>
         <Route path="/test">
           <ExerciseMode />

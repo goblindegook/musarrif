@@ -7,6 +7,8 @@ export interface OverlayProps {
   readonly zIndex?: number
 }
 
+// TODO: Can we replace this with ::backdrop?
+
 export function Overlay({ onClick, zIndex, ...props }: OverlayProps) {
   useEffect(() => {
     const originalOverflow = document.body.style.overflow

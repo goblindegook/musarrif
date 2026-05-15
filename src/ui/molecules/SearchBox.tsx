@@ -70,6 +70,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
     <>
       {suggestionsOpen && isMobile && <MobileOverlay zIndex={100} onClick={() => setSuggestionsOpen(false)} />}
       <SuggestionContainer
+        data-tour-step="0"
         ref={suggestionWrapperRef}
         isActive={suggestionsOpen}
         onBlur={(event: FocusEvent) => {

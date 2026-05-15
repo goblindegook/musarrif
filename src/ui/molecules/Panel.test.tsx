@@ -68,5 +68,26 @@ describe('Panel', () => {
       fireEvent.click(screen.getByText(/test/i).closest('button')!)
       expect(screen.queryByText('Content')).not.toBeVisible()
     })
+
+    test('shows collapsed hint next to chevron when collapsed', () => {
+      render(
+        <Panel title="Test" collapsible defaultCollapsed hint="Summary hint">
+          <p>Content</p>
+        </Panel>,
+      )
+
+      expect(screen.getByText('Summary hint')).toBeInTheDocument()
+    })
+
+    test('hides collapsed hint when expanded', () => {
+      render(
+        <Panel title="Test" collapsible defaultCollapsed hint="Summary hint">
+          <p>Content</p>
+        </Panel>,
+      )
+
+      fireEvent.click(screen.getByText(/test/i).closest('button')!)
+      expect(screen.queryByText('Summary hint')).not.toBeInTheDocument()
+    })
   })
 })
