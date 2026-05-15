@@ -42,7 +42,19 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
 
     const header = document.querySelector<HTMLElement>('header')
     if (header?.contains(target)) {
-      return raiseHeaderTargetAboveOverlay(header, target)
+      header.dataset.tourRaised = 'true'
+      setZIndex(header, 102)
+
+      // FIXME: Should not raise all the header buttons
+      target.dataset.tourRaised = 'true'
+      setZIndex(target, 104)
+
+      return () => {
+        delete header.dataset.tourRaised
+        delete target.dataset.tourRaised
+        restoreZIndex(header)
+        restoreZIndex(target)
+      }
     }
 
     target.dataset.tourHighlighted = 'true'
@@ -97,22 +109,6 @@ function clearTourStyles() {
     delete node.dataset.tourRaised
     restoreZIndex(node)
   })
-}
-
-function raiseHeaderTargetAboveOverlay(header: HTMLElement, target: HTMLElement) {
-  header.dataset.tourRaised = 'true'
-  setZIndex(header, 102)
-
-  // FIXME: Should not raise all the header buttons
-  target.dataset.tourRaised = 'true'
-  setZIndex(target, 104)
-
-  return () => {
-    delete header.dataset.tourRaised
-    delete target.dataset.tourRaised
-    restoreZIndex(header)
-    restoreZIndex(target)
-  }
 }
 
 function setZIndex(element: HTMLElement, value: number) {
