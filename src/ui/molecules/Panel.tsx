@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
-import { useState } from 'preact/hooks'
+import { useId, useState } from 'preact/hooks'
 
 interface PanelProps {
   title?: ComponentChildren
@@ -14,6 +14,7 @@ interface PanelProps {
 
 export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapsed, hint }: PanelProps) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed ?? false)
+  const bodyId = useId()
 
   return (
     <PanelContainer>
@@ -24,6 +25,7 @@ export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapse
             lang={lang}
             type="button"
             aria-expanded={!collapsed}
+            aria-controls={bodyId}
             onClick={() => setCollapsed((c) => !c)}
           >
             <PanelTitle>{title}</PanelTitle>
@@ -38,7 +40,7 @@ export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapse
           </PanelTitleRow>
         ))}
       {collapsible ? (
-        <PanelBodyAnimated collapsed={collapsed}>
+        <PanelBodyAnimated id={bodyId} collapsed={collapsed}>
           <PanelBodyInner>{children}</PanelBodyInner>
         </PanelBodyAnimated>
       ) : (

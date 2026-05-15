@@ -163,3 +163,19 @@ test('toggle button shows "See options" in typing mode', () => {
   fireEvent.click(screen.getByText(/Type the answer/))
   expect(screen.getByText(/See options/)).toBeInTheDocument()
 })
+
+test('typing input has aria-invalid="true" after wrong answer submitted', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+  expect(screen.getByPlaceholderText('Type your answer')).toHaveAttribute('aria-invalid', 'true')
+})
+
+test('typing input does not have aria-invalid after correct answer submitted', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+  expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('aria-invalid', 'true')
+})

@@ -89,5 +89,15 @@ describe('Panel', () => {
       fireEvent.click(screen.getByText(/test/i).closest('button')!)
       expect(screen.queryByText('Summary hint')).not.toBeInTheDocument()
     })
+
+    test('collapsible button has aria-controls referencing the body element', () => {
+      render(
+        <Panel title="Test" collapsible>
+          <p>Content</p>
+        </Panel>,
+      )
+      const controlsId = document.querySelector('button')?.getAttribute('aria-controls')
+      expect(document.getElementById(controlsId!)).toBeInTheDocument()
+    })
   })
 })

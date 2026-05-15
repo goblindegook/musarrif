@@ -234,6 +234,18 @@ test('falls back to chip hint when group has no hint', () => {
   expect(screen.getByText(/review cards will be mixed in/i)).toBeInTheDocument()
 })
 
+test('focus moves to first option button when single-group popover opens', () => {
+  render(<OptionChip groups={[groupA]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(document.activeElement).toBe(screen.getByText('I', { selector: 'button' }))
+})
+
+test('focus moves to first group button when multi-group popover opens', () => {
+  render(<OptionChip groups={[groupA, groupB]} value={null} onChange={() => {}} {...defaultProps} />)
+  fireEvent.click(screen.getByText(/focus/i).closest('button') as HTMLButtonElement)
+  expect(document.activeElement).toBe(screen.getByText('Form', { selector: 'button' }))
+})
+
 test('shows chip hint in group picker when multiple groups', () => {
   const groupBWithHint = { ...groupB, hint: '↓ lowest mastery · Mixed in' }
   render(<OptionChip groups={[groupA, groupBWithHint]} value={null} onChange={() => {}} {...defaultProps} />)

@@ -167,6 +167,14 @@ export function OptionChip<T>({
   }, [])
 
   useEffect(() => {
+    if (!open) return
+    const panel = panelRef.current
+    if (!panel) return
+    const firstButton = panel.querySelector<HTMLElement>('button, [tabindex="0"]')
+    firstButton?.focus()
+  }, [open])
+
+  useEffect(() => {
     onOpenChange?.(open)
   }, [open, onOpenChange])
 

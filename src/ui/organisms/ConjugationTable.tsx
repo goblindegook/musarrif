@@ -191,9 +191,9 @@ export function ConjugationTable({
         <Table dir="rtl">
           <thead>
             <Row>
-              <TableHeadCell>{t('table.pronoun')}</TableHeadCell>
-              <VerbHeadCell>{t(`tense.${verbTense}`)}</VerbHeadCell>
-              <TableHeadCell></TableHeadCell>
+              <TableHeadCell scope="col">{t('table.pronoun')}</TableHeadCell>
+              <VerbHeadCell scope="col">{t(`tense.${verbTense}`)}</VerbHeadCell>
+              <TableHeadCell scope="col"></TableHeadCell>
             </Row>
           </thead>
           <TableBody>
