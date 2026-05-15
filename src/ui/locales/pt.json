@@ -381,6 +381,7 @@
     "tour.done": "Começar",
     "tour.next": "Próximo",
     "tour.open": "Abrir tour",
+    "tour.progress": "Passo {step} de {total}",
     "tour.skip": "Saltar tour",
     "tour.step.0.body": "Escreva uma raiz, transliteração ou significado — o Muṣarrif encontra o que procura.",
     "tour.step.0.title": "Encontre qualquer verbo",

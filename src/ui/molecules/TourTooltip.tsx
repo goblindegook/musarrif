@@ -122,10 +122,9 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
         {position != null && <Arrow placement={position.arrowPlacement} />}
         <CardHeader>
           <Heading>{t(`tour.step.${step}.title`)}</Heading>
-          {/* FIXME: accessible indicator */}
-          <Dots aria-hidden="true">
+          <Dots role="img" aria-label={t('tour.progress', { step: String(step + 1), total: String(totalSteps) })}>
             {Array.from({ length: totalSteps }).map((_, index) => (
-              <Dot key={String(index)} active={index <= step} />
+              <Dot key={String(index)} active={index <= step} aria-hidden="true" />
             ))}
           </Dots>
         </CardHeader>
