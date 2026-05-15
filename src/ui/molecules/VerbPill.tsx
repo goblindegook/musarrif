@@ -86,6 +86,12 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
     box-shadow: var(--shadow-interactive-hover);
   }
 
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+
   &.active {
     border-color: var(--color-accent);
     background: var(--color-bg-accent);

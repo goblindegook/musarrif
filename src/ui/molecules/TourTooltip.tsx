@@ -159,6 +159,7 @@ const Container = styled('div', forwardRef)`
   padding: 0;
   margin: 0;
   background: transparent;
+  color: var(--color-text-primary);
   overflow: visible;
 `
 
