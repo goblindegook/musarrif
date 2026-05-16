@@ -1,11 +1,11 @@
-export type TrackedExercises = readonly DailyActivity[]
-
 export interface DailyActivity {
   date: Date
   correct: number
   incorrect: number
   passed: number
 }
+
+export type TrackedExercises = readonly DailyActivity[]
 
 export const STREAK_DAILY_GOAL = 10
 

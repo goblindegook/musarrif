@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/preact'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { type DailyActivity, deserializeDayStats, parseTrackedExercises, serializeDayStats, useStats } from './useStats'
+import type { DailyActivity } from '../../exercises/stats'
+import { deserializeDayStats, parseTrackedExercises, serializeDayStats, useStats } from './useStats'
 
 beforeEach(() => {
   localStorage.clear()

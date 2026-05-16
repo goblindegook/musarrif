@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'preact/hooks'
 import * as v from 'valibot'
 import {
   addResult,
+  type DailyActivity,
   findStatsForDate,
   getAccuracyPercent,
   getRecentAccuracyPercent,
@@ -9,41 +10,28 @@ import {
   getStreak,
   getStreakRecord,
   STREAK_DAILY_GOAL,
+  type TrackedExercises,
 } from '../../exercises/stats'
 import { useLocalStorage } from './useLocalStorage'
 
 const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
 
-const SerializedDayStats = v.object({
+const SerializedDailyActivity = v.object({
   date: v.pipe(v.string(), v.isoDate()),
   correct: NonNegativeNumber,
   incorrect: NonNegativeNumber,
   passed: NonNegativeNumber,
 })
 
-export const TrackedExercises = v.pipe(
-  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
+export type SerializedDailyActivity = v.InferOutput<typeof SerializedDailyActivity>
+
+export const SerializedTrackedExercises = v.pipe(
+  v.fallback(v.array(v.fallback(v.union([SerializedDailyActivity, v.null()]), null)), []),
   v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
+  v.readonly(),
 )
 
-// FIXME: Serialized type for localStorage, use Valibot to handle date parsing and serialization
-export interface SerializedDailyActivity {
-  date: string
-  correct: number
-  incorrect: number
-  passed: number
-}
-
-export type TrackedExercises = readonly DailyActivity[]
-
-export interface DailyActivity {
-  date: Date
-  correct: number
-  incorrect: number
-  passed: number
-}
-
-export type SerializedTrackedExercises = readonly SerializedDailyActivity[]
+export type SerializedTrackedExercises = v.InferOutput<typeof SerializedTrackedExercises>
 
 type Result = 'correct' | 'incorrect' | 'passed'
 
@@ -55,7 +43,7 @@ export interface Streak {
   goal: number
 }
 
-export const useStats = () => {
+export function useStats() {
   const [rawStats, setRawStats, refetch] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
 
   const stats = useMemo(() => deserializeDayStats(rawStats), [rawStats])
@@ -83,13 +71,11 @@ export const useStats = () => {
 
   const getDailyWindow = useCallback((sinceDays: number) => getStatsWindow(stats, sinceDays), [stats])
 
-  // FIXME: make lazy
   const accuracy = useMemo(() => {
     return { recent: getRecentAccuracyPercent(stats, 15), allTime: getAccuracyPercent(stats) }
   }, [stats])
 
-  // FIXME: make lazy
-  const streak = useMemo<Streak>(() => {
+  const streak = useMemo((): Streak => {
     const today = findDate(new Date())
     const correct = today?.correct ?? 0
     return {
@@ -116,7 +102,7 @@ export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
 }
 
 export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
-  return v.parse(TrackedExercises, data)
+  return v.parse(SerializedTrackedExercises, data)
 }
 
 function dateKey(date: Date): string {

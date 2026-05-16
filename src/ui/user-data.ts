@@ -9,8 +9,8 @@ import {
 import { parseSrsStore, type SrsStore, SrsStore as SrsStoreSchema } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/tokens'
 import type { Language } from './hooks/useI18n'
+import { parseTrackedExercises, type SerializedDailyActivity, SerializedTrackedExercises } from './hooks/useStats'
 import type { ThemePreference } from './hooks/useTheme'
-import { parseTrackedExercises, TrackedExercises, type SerializedDailyActivity } from './hooks/useStats'
 
 type Deserialize<T> = (raw: unknown, fallback: Readonly<T>) => Readonly<T>
 
@@ -25,7 +25,7 @@ const ImportUserData = v.pipe(
     version: v.optional(v.number()),
     settings: v.optional(Settings),
     favouriteVerbs: v.optional(v.fallback(v.array(v.string()), [])),
-    trackedExercises: v.optional(TrackedExercises),
+    trackedExercises: v.optional(SerializedTrackedExercises),
     srs: v.optional(SrsStoreSchema),
     dimensions: v.optional(DimensionStoreSchema),
   }),
@@ -33,7 +33,7 @@ const ImportUserData = v.pipe(
   v.transform((payload) => ({
     ...payload,
     settings: payload.settings ?? v.parse(Settings, {}),
-    trackedExercises: payload.trackedExercises ?? v.parse(TrackedExercises, undefined),
+    trackedExercises: payload.trackedExercises ?? v.parse(SerializedTrackedExercises, undefined),
     srs: payload.srs ?? v.parse(SrsStoreSchema, undefined),
     dimensions: payload.dimensions ?? v.parse(DimensionStoreSchema, undefined),
   })),
