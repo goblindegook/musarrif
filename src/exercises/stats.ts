@@ -59,6 +59,7 @@ export function addResult(stats: TrackedExercises, correct: boolean, date?: Date
   return [...stats, { date: d, correct: correct ? 1 : 0, incorrect: correct ? 0 : 1, passed: 0 }]
 }
 
+// FIXME: merge with addResult
 export function addPass(stats: TrackedExercises, date?: Date): TrackedExercises {
   const d = date ?? todayDate()
   const key = dateKey(d)
@@ -138,6 +139,7 @@ export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExe
   return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
 }
 
+// TODO: Move to useStats
 export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
   return parseTrackedExercises(raw).map((d) => {
     const [y, m, day] = d.date.split('-').map(Number)

@@ -7,15 +7,6 @@ import { filterMasteredLayers } from '../../exercises/explanation'
 import { computeMastery, findLowestMastery, type MasteryItemId } from '../../exercises/mastery'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
 import type { SrsStore } from '../../exercises/srs'
-import type { DailyActivity, SerializedDailyActivity } from '../../exercises/stats'
-import {
-  addPass,
-  addResult,
-  deserializeDayStats,
-  getStreak,
-  getStreakGoalProgress,
-  serializeDayStats,
-} from '../../exercises/stats'
 import { renderExplanation } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import { toRoman } from '../../primitives/numbers'
@@ -25,8 +16,8 @@ import { Text } from '../atoms/Text'
 import { useDimensionStore } from '../hooks/useDimensionStore'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useI18n } from '../hooks/useI18n'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useSrsStore } from '../hooks/useSrsStore'
+import { useStats } from '../hooks/useStats'
 import { ExerciseAnswerArea } from '../molecules/ExerciseAnswerArea'
 import { OptionChip, type OptionGroup, type OptionItem, type OptionValue } from '../molecules/OptionChip'
 import { ShortcutButton } from '../molecules/ShortcutButton'
@@ -71,19 +62,13 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
   const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
-  const [rawStats, setRawStats] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
+  const { streak, recordResult } = useStats()
+
+  useEffect(() => {
+    if (streak.extended) setStreakExtendedAlert(true)
+  }, [streak.extended])
 
   useDocumentTitle([t('mode.exercise'), t('title')].join(' · '))
-
-  // TODO: useStats hook
-  const dayStats = useMemo(() => deserializeDayStats(rawStats), [rawStats])
-
-  const updateStats = useCallback(
-    (updater: (current: readonly DailyActivity[]) => readonly DailyActivity[]) => {
-      setRawStats((raw) => serializeDayStats(updater(deserializeDayStats(raw))))
-    },
-    [setRawStats],
-  )
 
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
 
@@ -224,7 +209,6 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
 
   const isAnswered = answeredIndex !== null || skipped
-  const streak = getStreak(dayStats)
 
   const explanation = (() => {
     if (answeredIndex == null && !skipped) return []
@@ -244,23 +228,19 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       } else {
         sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
       }
-      const nextStats = addResult(dayStats, isCorrect)
-      const previousStreakGoal = getStreakGoalProgress(dayStats)
-      const nextStreakGoal = getStreakGoalProgress(nextStats)
       setAnsweredIndex(index)
-      updateStats(() => nextStats)
+      recordResult(isCorrect ? 'correct' : 'incorrect')
       recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
       recordDimensionAnswer(exercise.dimensions, isCorrect)
-      setStreakExtendedAlert(isCorrect && previousStreakGoal.remaining > 0 && nextStreakGoal.remaining === 0)
     },
-    [exercise, srsStore, dayStats, updateStats, recordSrsAnswer, recordDimensionAnswer],
+    [exercise, srsStore, recordResult, recordSrsAnswer, recordDimensionAnswer],
   )
 
   const handleSkip = useCallback(() => {
     recordSrsAnswer(exercise.cardKey, 'pass')
-    updateStats((s) => addPass(s))
+    recordResult('passed')
     setSkipped(true)
-  }, [exercise, srsStore, recordSrsAnswer, updateStats])
+  }, [exercise, srsStore, recordSrsAnswer, recordResult])
 
   useEffect(() => {
     if (!isAnswered) return
@@ -374,7 +354,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         )}
       </ExerciseCard>
 
-      <ExerciseStats stats={dayStats} streak={streak} dimensionProfile={dimensionProfile} srsStore={srsStore} />
+      <ExerciseStats dimensionProfile={dimensionProfile} srsStore={srsStore} />
     </ExerciseLayout>
   )
 }

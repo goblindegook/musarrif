@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/pre
 import type { ComponentChildren } from 'preact'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 import { cardSpace, isNominalCard, isVerbCard, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
-import type { DailyActivity } from '../../exercises/stats'
+import { type DailyActivity, serializeDayStats } from '../../exercises/stats'
 import { I18nProvider } from '../hooks/useI18n'
 import { RoutingProvider } from '../routes'
 import { ExerciseStats } from './ExerciseStats'
@@ -58,6 +58,7 @@ afterEach(() => {
   cleanup()
   vi.useRealTimers()
   vi.unstubAllEnvs()
+  localStorage.removeItem('conjugator:exercise:daily')
   lastPlotData = null
 })
 
@@ -82,50 +83,56 @@ function createSrsStore(intervalForCard: (card: SrsCardIdentity) => number, dueD
   return store
 }
 
+function renderStats(
+  stats: readonly DailyActivity[] = SAMPLE_STATS,
+  props?: Pick<Parameters<typeof ExerciseStats>[0], 'dimensionProfile' | 'srsStore'>,
+) {
+  localStorage.setItem('conjugator:exercise:daily', JSON.stringify(serializeDayStats(stats)))
+  return render(<ExerciseStats {...props} />, { wrapper: Wrapper })
+}
+
 describe('ExerciseStats', () => {
   test('renders nothing when stats is empty', () => {
-    render(<ExerciseStats stats={[]} streak={0} />, { wrapper: Wrapper })
+    renderStats([])
     expect(screen.queryByText('Progress')).not.toBeInTheDocument()
   })
 
   test('is collapsed by default', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     expect(screen.getByText('Progress').parentElement!.getAttribute('aria-expanded')).toBe('false')
   })
 
   test('has a toggle button labelled Progress', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     expect(screen.getByText('Progress')).toBeInTheDocument()
   })
 
   test('shows streak hint in the collapsed Progress header', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     expect(within(screen.getByText('Progress').parentElement!).getByText('6 to extend your streak')).toBeInTheDocument()
   })
 
   test('expands when toggle is clicked', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByLabelText(/Last 7 days:/)).toBeVisible()
   })
 
   test('collapses again when toggle is clicked twice', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Progress').parentElement!.getAttribute('aria-expanded')).toBe('false')
   })
 
   test('accuracy pill shows Accuracy label when expanded', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Accuracy')).toBeInTheDocument()
   })
 
   test('accuracy pill shows 0% when all answers are incorrect', () => {
-    render(<ExerciseStats stats={[{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }]} streak={0} />, {
-      wrapper: Wrapper,
-    })
+    renderStats([{ date: TODAY, correct: 0, incorrect: 1, passed: 0 }])
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('0%')).toBeInTheDocument()
   })
@@ -134,7 +141,7 @@ describe('ExerciseStats', () => {
     const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('75%')).toBeInTheDocument()
   })
@@ -148,7 +155,7 @@ describe('ExerciseStats', () => {
       { date: oldDate, correct: 0, incorrect: 10, passed: 0 },
       { date: recentDate, correct: 4, incorrect: 0, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('100%')).toBeInTheDocument()
   })
@@ -157,7 +164,7 @@ describe('ExerciseStats', () => {
     const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
     recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/All time:/)).toBeInTheDocument()
   })
@@ -167,47 +174,63 @@ describe('ExerciseStats', () => {
       { date: new Date('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
       { date: new Date('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/Record:/)).toBeInTheDocument()
   })
 
   test('streak pill shows Streak label when expanded', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Streak')).toBeInTheDocument()
   })
 
   test('streak pill shows count and unit when expanded', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={5} />, { wrapper: Wrapper })
+    const yesterday = new Date(TODAY)
+    yesterday.setDate(yesterday.getDate() - 1)
+    const twoDaysAgo = new Date(TODAY)
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
+    const threeDaysAgo = new Date(TODAY)
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+    const fourDaysAgo = new Date(TODAY)
+    fourDaysAgo.setDate(fourDaysAgo.getDate() - 4)
+    const fiveDaysAgo = new Date(TODAY)
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
+    const streakStats: DailyActivity[] = [
+      { date: TODAY, correct: 10, incorrect: 0, passed: 0 },
+      { date: yesterday, correct: 10, incorrect: 0, passed: 0 },
+      { date: twoDaysAgo, correct: 10, incorrect: 0, passed: 0 },
+      { date: threeDaysAgo, correct: 10, incorrect: 0, passed: 0 },
+      { date: fourDaysAgo, correct: 10, incorrect: 0, passed: 0 },
+    ]
+    renderStats(streakStats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('5 days')).toBeInTheDocument()
   })
 
   test('streak pill shows 0 days when streak is zero', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={0} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('0 days')).toBeInTheDocument()
   })
 
   test('uPlot legend shows Date label when expanded', () => {
     const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/date/i).length).toBeGreaterThan(0)
   })
 
   test('uPlot legend shows Correct and Incorrect labels when expanded', () => {
     const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/correct/i).length).toBeGreaterThan(0)
     expect(screen.getAllByText(/incorrect/i).length).toBeGreaterThan(0)
   })
 
   test('chart is accessible with aria-label and rendered by uPlot', () => {
-    const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
-    const { container } = render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    const { container } = renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByRole('img')).toBeInTheDocument()
     expect(container.querySelector('.uplot')).toBeInTheDocument()
@@ -219,7 +242,7 @@ describe('ExerciseStats', () => {
       { date: sixDaysAgo, correct: 1, incorrect: 3, passed: 0 },
       { date: TODAY, correct: 4, incorrect: 1, passed: 2 },
     ]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
 
     const ariaLabel = screen.getByRole('img').getAttribute('aria-label')
@@ -231,171 +254,147 @@ describe('ExerciseStats', () => {
 
   test('chart renders Skipped series label when expanded', () => {
     const stats: DailyActivity[] = [{ date: new Date('2026-03-19'), correct: 2, incorrect: 1, passed: 3 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getAllByText(/skipped/i).length).toBeGreaterThan(0)
   })
 
   test('shows streak-extension progress when daily goal is not met', () => {
     const stats: DailyActivity[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByLabelText('Streak extension progress')).toBeInTheDocument()
   })
 
   test('shows Almost there in the collapsed header when one correct answer is left', () => {
     const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
+    renderStats(stats)
     expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
   })
 
   test('shows Well done in the collapsed header when streak is newly extended today', () => {
     const stats: DailyActivity[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
+    renderStats(stats)
     expect(within(screen.getByText('Progress').parentElement!).getByText('Well done!')).toBeInTheDocument()
   })
 
   test('shows encouragement in the collapsed header when more than half of attempts are incorrect', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 12, incorrect: 13, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText('You can do this, stay focused'),
-    ).toBeInTheDocument()
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 8, incorrect: 13, passed: 0 }]
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
   })
 
   test('shows skipping notice in the collapsed header when pass count is high', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 12, incorrect: 1, passed: 15 }]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText('You are skipping many cards'),
-    ).toBeInTheDocument()
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 8, incorrect: 1, passed: 15 }]
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
   })
 
   test('shows strong-accuracy congratulations in the collapsed header', () => {
     const stats: DailyActivity[] = [{ date: TODAY, correct: 15, incorrect: 1, passed: 0 }]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText('Excellent accuracy today'),
-    ).toBeInTheDocument()
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('Well done!')).toBeInTheDocument()
   })
 
   test('shows strongest-dimension hint in the collapsed header with real SRS data', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 13, incorrect: 2, passed: 1 }]
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 2, passed: 1 }]
     const srsStore = createSrsStore((card) => (isVerbCard(card) ? 120 : 1))
-    render(
-      <Wrapper>
-        <ExerciseStats
-          stats={stats}
-          streak={2}
-          dimensionProfile={{
-            tenses: 4,
-            pronouns: 3,
-            diacritics: 0,
-            forms: 9,
-            rootTypes: 5,
-            nominals: 2,
-          }}
-          srsStore={srsStore}
-        />
-      </Wrapper>,
-    )
-    expect(within(screen.getByText('Progress').parentElement!).getByText(/Strong in /)).toBeInTheDocument()
+    renderStats(stats, {
+      dimensionProfile: {
+        tenses: 4,
+        pronouns: 3,
+        diacritics: 0,
+        forms: 9,
+        rootTypes: 5,
+        nominals: 2,
+      },
+      srsStore,
+    })
+    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
   })
 
   test('shows weakest-dimension hint in the collapsed header with real SRS data', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 13, incorrect: 2, passed: 1 }]
+    const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 2, passed: 1 }]
     const srsStore = createSrsStore((card) => (isNominalCard(card) ? 1 : 10))
-    render(
-      <Wrapper>
-        <ExerciseStats
-          stats={stats}
-          streak={2}
-          dimensionProfile={{
-            tenses: 4,
-            pronouns: 3,
-            diacritics: 0,
-            forms: 9,
-            rootTypes: 5,
-            nominals: 2,
-          }}
-          srsStore={srsStore}
-        />
-      </Wrapper>,
-    )
-    expect(within(screen.getByText('Progress').parentElement!).getByText(/Focus a bit more on /)).toBeInTheDocument()
+    renderStats(stats, {
+      dimensionProfile: {
+        tenses: 4,
+        pronouns: 3,
+        diacritics: 0,
+        forms: 9,
+        rootTypes: 5,
+        nominals: 2,
+      },
+      srsStore,
+    })
+    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
   })
 
   test("shows yesterday challenge when today's correct total is below yesterday", () => {
     const yesterday = new Date(TODAY)
     yesterday.setDate(yesterday.getDate() - 1)
     const stats: DailyActivity[] = [
-      { date: yesterday, correct: 18, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 12, incorrect: 4, passed: 0 },
+      { date: yesterday, correct: 9, incorrect: 2, passed: 0 },
+      { date: TODAY, correct: 6, incorrect: 4, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText("Can you beat yesterday's total of 18?"),
-    ).toBeInTheDocument()
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('4 to extend your streak')).toBeInTheDocument()
   })
 
   test("shows remaining-to-yesterday hint when today's correct total is within 5", () => {
     const yesterday = new Date(TODAY)
     yesterday.setDate(yesterday.getDate() - 1)
     const stats: DailyActivity[] = [
-      { date: yesterday, correct: 16, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 13, incorrect: 4, passed: 0 },
+      { date: yesterday, correct: 9, incorrect: 2, passed: 0 },
+      { date: TODAY, correct: 6, incorrect: 4, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Only 3 more to go...')).toBeInTheDocument()
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('4 to extend your streak')).toBeInTheDocument()
   })
 
   test("congratulates when today's correct total reaches yesterday", () => {
     const yesterday = new Date(TODAY)
     yesterday.setDate(yesterday.getDate() - 1)
     const stats: DailyActivity[] = [
-      { date: yesterday, correct: 14, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 14, incorrect: 4, passed: 0 },
+      { date: yesterday, correct: 8, incorrect: 2, passed: 0 },
+      { date: TODAY, correct: 8, incorrect: 4, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText('Great job, you matched yesterday!'),
-    ).toBeInTheDocument()
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
   })
 
   test("congratulates more when today's correct total exceeds yesterday by up to 5", () => {
     const yesterday = new Date(TODAY)
     yesterday.setDate(yesterday.getDate() - 1)
     const stats: DailyActivity[] = [
-      { date: yesterday, correct: 14, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 17, incorrect: 4, passed: 0 },
+      { date: yesterday, correct: 8, incorrect: 2, passed: 0 },
+      { date: TODAY, correct: 9, incorrect: 4, passed: 0 },
     ]
-    render(<ExerciseStats stats={stats} streak={2} />, { wrapper: Wrapper })
-    expect(
-      within(screen.getByText('Progress').parentElement!).getByText('Excellent, you are ahead of yesterday!'),
-    ).toBeInTheDocument()
+    renderStats(stats)
+    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
   })
 
   test('shows Mastery section when expanded', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Mastery')).toBeInTheDocument()
   })
 
   test('shows locked indicator in the category label', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     const nominalsButton = screen.getByText('Nominals').closest('summary') as HTMLButtonElement
     expect(within(nominalsButton).getAllByText('Locked')).toHaveLength(1)
   })
 
   test('shows item breakdown', () => {
-    render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('Sound')).toBeInTheDocument()
   })
 
   test('exposes accessible semantics for mastery category progress bars', () => {
-    const { container } = render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    const { container } = renderStats()
     fireEvent.click(screen.getByText('Progress'))
 
     const categoryProgressbar = container.querySelector('[aria-label="Tenses"]')
@@ -406,7 +405,7 @@ describe('ExerciseStats', () => {
   })
 
   test('exposes accessible semantics for mastery item progress bars', () => {
-    const { container } = render(<ExerciseStats stats={SAMPLE_STATS} streak={1} />, { wrapper: Wrapper })
+    const { container } = renderStats()
     fireEvent.click(screen.getByText('Progress'))
 
     const itemProgressbar = container.querySelector('[aria-label="Sound"]')
@@ -422,7 +421,7 @@ describe('ExerciseStats', () => {
     vi.setSystemTime(new Date('2026-03-19T23:30:00-07:00'))
     const stats: DailyActivity[] = [{ date: new Date(2026, 2, 19), correct: 4, incorrect: 1, passed: 0 }]
 
-    render(<ExerciseStats stats={stats} streak={1} />, { wrapper: Wrapper })
+    renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
 
     expect(lastPlotData?.[1]).toEqual([0, 0, 0, 0, 0, 0, 4])

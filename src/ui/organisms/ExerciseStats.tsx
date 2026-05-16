@@ -10,18 +10,11 @@ import {
 } from '../../exercises/mastery'
 import type { SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
-import {
-  findStatsForDate,
-  getAccuracyPercent,
-  getRecentAccuracyPercent,
-  getStreakGoalProgress,
-  getStreakRecord,
-  STREAK_DAILY_GOAL,
-} from '../../exercises/stats'
 import { parseInteger, sum, toRoman } from '../../primitives/numbers'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { useI18n } from '../hooks/useI18n'
+import { type Streak, useStats } from '../hooks/useStats'
 import { useTheme } from '../hooks/useTheme'
 import { LockIcon } from '../icons/LockIcon'
 import { Chart } from '../molecules/Chart'
@@ -34,8 +27,6 @@ const CHART_COLORS = {
 }
 
 interface Props {
-  stats: readonly DailyActivity[]
-  streak: number
   dimensionProfile?: DimensionProfile
   srsStore?: SrsStore
 }
@@ -51,24 +42,20 @@ const ROOT_TYPE_LABEL_KEYS = {
   defective: 'exercise.stats.mastery.rootType.defective',
 } as const
 
-export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
+export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
   const { theme } = useTheme()
   const { t, lang } = useI18n()
+  const { stats, streak, findDate: findStats, getDailyWindow: days } = useStats()
   const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
-  const days = useMemo(() => buildDayWindow(stats, 7), [stats])
-  const chartAriaLabel = useMemo(() => buildChartAriaLabel(days, t), [days, t])
+  const week = useMemo(() => days(7), [days])
+  const chartAriaLabel = useMemo(() => buildChartAriaLabel(week, t), [week, t])
 
   const today = new Date()
   const yesterday = new Date()
   yesterday.setDate(today.getDate() - 1)
 
-  const [streakHintKey, streakHintParams] = buildStreakHint(
-    getStreakGoalProgress(stats),
-    findStatsForDate(stats, today),
-    findStatsForDate(stats, yesterday),
-    mastery,
-  )
+  const [streakHintKey, streakHintParams] = buildStreakHint(streak, findStats(today), findStats(yesterday), mastery)
 
   if (stats.length === 0) return null
 
@@ -107,13 +94,13 @@ export function ExerciseStats({ stats, streak, dimensionProfile = DEFAULT_DIMENS
           },
         ]}
         data={[
-          days.map((d) => d.date.getTime() / 1000),
-          days.map((d) => d.correct),
-          days.map((d) => d.incorrect),
-          days.map((d) => d.passed),
+          week.map((d) => d.date.getTime() / 1000),
+          week.map((d) => d.correct),
+          week.map((d) => d.incorrect),
+          week.map((d) => d.passed),
         ]}
       />
-      <StatsDetailsPanel stats={stats} streak={streak} mastery={mastery} />
+      <StatsDetailsPanel mastery={mastery} />
     </Panel>
   )
 }
@@ -234,49 +221,47 @@ function buildChartAriaLabel(
 }
 
 interface StatsDetailsPanelProps {
-  stats: readonly DailyActivity[]
-  streak: number
   mastery: readonly MasteryCategoryType<MasteryCategoryId>[]
 }
 
-function StatsDetailsPanel({ stats, streak, mastery }: StatsDetailsPanelProps) {
+function StatsDetailsPanel({ mastery }: StatsDetailsPanelProps) {
+  const { streak, accuracy } = useStats()
   const { t, lang } = useI18n()
-  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
-  const allTimeAccuracy = getAccuracyPercent(stats)
-  const record = getStreakRecord(stats)
-  const streakGoal = getStreakGoalProgress(stats)
-  const streakGoalNow = Math.min(streakGoal.correct, STREAK_DAILY_GOAL)
 
   return (
     <StatsSummary>
       <DetailsRow>
         <Detail label={t('exercise.stats.accuracy.label')} valueLang={lang} valueDir="ltr">
           <ValueStack>
-            <span>{recentAccuracy}%</span>
-            <SubNote>{t('exercise.stats.accuracy.alltime', { value: String(allTimeAccuracy) })}</SubNote>
+            <span>{accuracy.recent}%</span>
+            <SubNote>{t('exercise.stats.accuracy.alltime', { value: String(accuracy.allTime) })}</SubNote>
           </ValueStack>
         </Detail>
         <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
           <ValueStack>
             <span>
-              {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
+              {streak.current}{' '}
+              {t(streak.current === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
             </span>
             <SubNote>
-              {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
-                days: String(record),
-              })}
+              {t(
+                streak.record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural',
+                {
+                  days: String(streak.record),
+                },
+              )}
             </SubNote>
           </ValueStack>
         </Detail>
       </DetailsRow>
-      {streakGoal.remaining > 0 && (
+      {streak.remaining > 0 && (
         <StreakGoalSection>
           <StreakGoalHint>
-            {t('exercise.stats.streak.extendHint', { remaining: String(streakGoal.remaining) })}
+            {t('exercise.stats.streak.extendHint', { remaining: String(streak.remaining) })}
           </StreakGoalHint>
           <ProgressBar
-            value={streakGoalNow}
-            max={STREAK_DAILY_GOAL}
+            value={streak.progress}
+            max={streak.goal}
             style={{ height: '0.6rem' }}
             aria-label={t('exercise.stats.streak.progress.label')}
           />
@@ -335,14 +320,14 @@ function resolveStreakHintParams(t: ReturnType<typeof useI18n>['t'], streakHintP
 }
 
 function buildStreakHint(
-  streak: { correct: number; remaining: number },
+  streak: Streak,
   today?: DailyActivity,
   yesterday?: DailyActivity,
   mastery: readonly MasteryCategoryType<MasteryCategoryId>[] = [],
 ): [string, StreakHintParams] {
   if (streak.remaining > 1) return ['exercise.stats.progressHint.streak', { remaining: String(streak.remaining) }]
   if (streak.remaining === 1) return ['exercise.stats.progressHint.streak.almostThere', {}]
-  if (streak.correct === STREAK_DAILY_GOAL) return ['exercise.stats.progressHint.streak.wellDone', {}]
+  if (streak.progress === streak.goal) return ['exercise.stats.progressHint.streak.wellDone', {}]
 
   const correct = today?.correct ?? 0
   const incorrect = today?.incorrect ?? 0
@@ -544,24 +529,3 @@ const InlineLock = styled('span')`
   font-size: 0.7rem;
   color: var(--color-text-muted);
 `
-
-function buildDayWindow(stats: readonly DailyActivity[], days: number): readonly DailyActivity[] {
-  const map = new Map(stats.map((d) => [localDateKey(d.date), d]))
-  const result: DailyActivity[] = []
-  const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today)
-    d.setDate(today.getDate() - i)
-    const key = localDateKey(d)
-    result.push(map.get(key) ?? { date: d, correct: 0, incorrect: 0, passed: 0 })
-  }
-  return result
-}
-
-function localDateKey(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
