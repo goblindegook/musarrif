@@ -379,10 +379,8 @@ function getBuildButton(label: string): HTMLElement {
   return within(getBuildPanel()).getByText(label)
 }
 
-function setBuildLetter(slotHeader: number, letter: string) {
-  const slotInput = getBuildPanel().querySelector(
-    `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[role="combobox"]`,
-  )!
+function setBuildLetter(pos: number, letter: string) {
+  const slotInput = within(getBuildPanel()).getByLabelText(`Root ${pos}`, { selector: 'input' })
   fireEvent.click(slotInput)
   fireEvent.click(within(slotInput.closest(`[role="group"]`)!).getByText(letter, { selector: '[role="option"]' }))
 }

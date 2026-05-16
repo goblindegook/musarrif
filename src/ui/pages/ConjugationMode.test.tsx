@@ -256,9 +256,7 @@ describe('Build tab', () => {
   }
 
   function getLetter(slotHeader: number): HTMLInputElement {
-    return getBuildPanel().querySelector(
-      `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[role="combobox"]`,
-    )!
+    return within(getBuildPanel()).getByLabelText(`Root ${slotHeader}`, { selector: 'input' })
   }
 
   it('pre-populates root and form when switching to Build tab with a selected verb', async () => {

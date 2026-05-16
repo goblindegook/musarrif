@@ -76,57 +76,61 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
-    await user.click(c1Input)
+    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    await user.click(input)
+    await user.keyboard('{ArrowDown}')
 
-    const listbox = document.getElementById('slot-listbox-0')
-    expect(c1Input).toHaveAttribute('role', 'combobox')
-    expect(c1Input).toHaveAttribute('aria-controls', 'slot-listbox-0')
+    const listbox = within(input.closest('[role="group"]')!).getByRole('listbox')
+    const optionIds = within(listbox)
+      .getAllByRole('option')
+      .map((option) => option.id)
+    expect(input).toHaveAttribute('role', 'combobox')
+    expect(input).toHaveAttribute('aria-controls', listbox.id)
     expect(listbox).toHaveAttribute('role', 'listbox')
-    expect(c1Input.getAttribute('aria-activedescendant')).toContain('slot-0-option-')
+    expect(optionIds).toContain(input.getAttribute('aria-activedescendant'))
   })
 
   test('keyboard navigation selects the highlighted letter with Enter', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
-    await user.click(c1Input)
+    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    await user.click(input)
     await user.keyboard('{ArrowDown}{Enter}')
 
-    expect(c1Input).toHaveValue('ب')
-    expect(document.getElementById('slot-listbox-0')).toBeNull()
+    expect(input).toHaveValue('ء')
+    expect(input.closest('[role="group"]')!.querySelector('[role="listbox"]')).toBeNull()
   })
 
   test('escape closes the letter listbox', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
-    await user.click(c1Input)
-    expect(document.getElementById('slot-listbox-0')).toBeInTheDocument()
+    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    await user.click(input)
+    expect(input.closest('[role="group"]')!.querySelector('[role="listbox"]')).toBeInTheDocument()
 
     await user.keyboard('{Escape}')
 
-    expect(document.getElementById('slot-listbox-0')).toBeNull()
+    expect(input.closest('[role="group"]')!.querySelector('[role="listbox"]')).toBeNull()
   })
 
   test('refocusing input after picking a letter re-opens the popup', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
-    const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
-    const c1Group = c1Input.closest<HTMLElement>('[role="group"]')!
+    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const group = input.closest<HTMLElement>('[role="group"]')!
 
-    await user.click(c1Input)
-    await user.click(within(c1Group).getByText('ك'))
+    await user.click(input)
+    await user.click(within(group).getByText('ك'))
 
-    expect(c1Group.querySelector('[role="listbox"]')).toBeNull()
+    expect(group.querySelector('[role="listbox"]')).toBeNull()
 
-    c1Input.blur()
-    await user.click(c1Input)
+    input.blur()
+    await user.click(input)
 
-    expect(document.getElementById('slot-listbox-0')).toBeInTheDocument()
+    expect(group.querySelector('[role="listbox"]')).toBeInTheDocument()
   })
 
   test('pre-populates letters and form from selectedVerb', () => {
