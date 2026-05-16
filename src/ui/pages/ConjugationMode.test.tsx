@@ -257,7 +257,7 @@ describe('Build tab', () => {
 
   function getLetter(slotHeader: number): HTMLInputElement {
     return getBuildPanel().querySelector(
-      `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[type="text"]`,
+      `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[role="combobox"]`,
     )!
   }
 

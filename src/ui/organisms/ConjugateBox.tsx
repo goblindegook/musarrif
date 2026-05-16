@@ -145,29 +145,20 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                 {t('build.rootSlotLabel', { index: String(pos + 1) })}
               </RootSlotLabel>
               <SlotInputWrapper>
-                <SlotInput
+                <LetterInput
                   id={slotInputId}
-                  type="text"
+                  type="button"
                   lang="ar"
                   dir="rtl"
-                  value={selected ?? ''}
-                  placeholder="—"
+                  value={selected ?? '—'}
                   role="combobox"
                   aria-haspopup="listbox"
                   aria-expanded={isOpen}
                   aria-controls={listboxId}
                   aria-activedescendant={activeDescendant}
                   onFocus={() => openSlotPicker(pos, selected)}
-                  onClick={() => openSlotPicker(pos, selected)}
+                  onClick={(event) => event.currentTarget.focus()}
                   onBlur={() => closeSlotPicker(pos)}
-                  onInput={(e) => {
-                    const char = (e as InputEvent).data ?? ''
-                    ;(e.target as HTMLInputElement).value = selected ?? ''
-                    if (LETTERS.includes(char)) {
-                      setter(char)
-                      closeSlotPicker(pos)
-                    }
-                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Backspace' || e.key === 'Delete') {
                       setter(undefined)
@@ -210,9 +201,9 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                   }}
                 />
                 {isOpen && (
-                  <LetterDropdown id={listboxId} role="listbox" dir="rtl">
+                  <LetterPopover id={listboxId} role="listbox" dir="rtl">
                     {LETTERS.map((letter, optionIndex) => (
-                      <LetterChoice
+                      <LetterOption
                         id={`slot-${pos}-option-${optionIndex}`}
                         key={letter}
                         type="button"
@@ -234,9 +225,9 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                         onClick={() => selectLetter(letter)}
                       >
                         {letter}
-                      </LetterChoice>
+                      </LetterOption>
                     ))}
-                  </LetterDropdown>
+                  </LetterPopover>
                 )}
               </SlotInputWrapper>
             </LetterSlot>
@@ -320,11 +311,12 @@ const SlotInputWrapper = styled('div')`
   position: relative;
 `
 
-const SlotInput = styled('input')`
+const LetterInput = styled('input')`
   font-family: inherit;
   font-size: 1.5rem;
   text-align: center;
   width: 100%;
+  height: 3rem;
   box-sizing: border-box;
   padding: 0.35rem 0.25rem;
   border: 1px solid var(--color-border);
@@ -344,7 +336,7 @@ const SlotInput = styled('input')`
   }
 `
 
-const LetterDropdown = styled('div')`
+const LetterPopover = styled('div')`
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
@@ -371,7 +363,7 @@ const LetterDropdown = styled('div')`
   }
 `
 
-const LetterChoice = styled('button')`
+const LetterOption = styled('button')`
   font-family: inherit;
   font-size: 1rem;
   padding: 0.2rem;

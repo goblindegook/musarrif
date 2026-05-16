@@ -375,16 +375,14 @@ function getBuildPanel(): HTMLElement {
   return document.getElementById('panel-content-build')!
 }
 
-function getBuildLetter(slotHeader: number): HTMLInputElement {
-  return getBuildPanel().querySelector(
-    `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[type="text"]`,
-  )!
+function getBuildButton(label: string): HTMLElement {
+  return within(getBuildPanel()).getByText(label)
 }
 
 function setBuildLetter(slotHeader: number, letter: string) {
-  fireEvent.input(getBuildLetter(slotHeader), { data: letter, target: { value: letter } })
-}
-
-function getBuildButton(label: string): HTMLElement {
-  return within(getBuildPanel()).getByText(label)
+  const slotInput = getBuildPanel().querySelector(
+    `[role="group"][aria-labelledby="slot-header-${slotHeader - 1}"] input[role="combobox"]`,
+  )!
+  fireEvent.click(slotInput)
+  fireEvent.click(within(slotInput.closest(`[role="group"]`)!).getByText(letter, { selector: '[role="option"]' }))
 }

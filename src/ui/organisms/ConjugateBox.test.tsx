@@ -111,7 +111,7 @@ describe('ConjugateBox', () => {
     expect(document.getElementById('slot-listbox-0')).toBeNull()
   })
 
-  test('clicking input again after picking a letter re-opens the popup', async () => {
+  test('refocusing input after picking a letter re-opens the popup', async () => {
     const user = userEvent.setup()
     render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
 
@@ -123,9 +123,10 @@ describe('ConjugateBox', () => {
 
     expect(c1Group.querySelector('[role="listbox"]')).toBeNull()
 
+    c1Input.blur()
     await user.click(c1Input)
 
-    expect(c1Group.querySelector('[role="listbox"]')).toBeInTheDocument()
+    expect(document.getElementById('slot-listbox-0')).toBeInTheDocument()
   })
 
   test('pre-populates letters and form from selectedVerb', () => {
