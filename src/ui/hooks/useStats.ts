@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo } from 'preact/hooks'
 import {
   addResult,
   type DailyActivity,
@@ -7,7 +7,6 @@ import {
   getAccuracyPercent,
   getRecentAccuracyPercent,
   getStreak,
-  getStreakGoalProgress,
   getStreakRecord,
   type SerializedDailyActivity,
   STREAK_DAILY_GOAL,
@@ -27,7 +26,6 @@ export interface Streak {
 
 export const useStats = () => {
   const [rawStats, setRawStats, refetch] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
-  const [streakExtended, setStreakExtended] = useState(false)
 
   const stats = useMemo(() => deserializeDayStats(rawStats), [rawStats])
 
@@ -48,7 +46,6 @@ export const useStats = () => {
   const recordResult = useCallback(
     (result: Result) => {
       updateStats((current) => addResult(current, result))
-      if (result === 'correct' && getStreakGoalProgress(stats).remaining === 1) setStreakExtended(true)
     },
     [updateStats],
   )
@@ -75,6 +72,7 @@ export const useStats = () => {
     return { recent: getRecentAccuracyPercent(stats, 15), allTime: getAccuracyPercent(stats) }
   }, [stats])
 
+  // FIXME: lazy
   const streak = useMemo<Streak>(() => {
     const today = findDate(new Date())
     const correct = today?.correct ?? 0
@@ -85,7 +83,7 @@ export const useStats = () => {
       progress: Math.min(correct, STREAK_DAILY_GOAL),
       goal: STREAK_DAILY_GOAL,
     }
-  }, [stats, streakExtended])
+  }, [stats])
 
   return { stats, findDate, getDailyWindow, streak, accuracy, recordResult } as const
 }

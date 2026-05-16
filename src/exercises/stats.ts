@@ -33,11 +33,6 @@ export interface SerializedDailyActivity {
 
 type SerializedTrackedExercises = readonly SerializedDailyActivity[]
 
-interface StreakGoalProgress {
-  correct: number
-  remaining: number
-}
-
 export const STREAK_DAILY_GOAL = 10
 
 type Result = 'correct' | 'incorrect' | 'passed'
@@ -106,13 +101,6 @@ export function getStreakRecord(stats: TrackedExercises): number {
 export function findStatsForDate(stats: readonly DailyActivity[], date: Date): DailyActivity | undefined {
   const key = dateKey(date)
   return stats.find((s) => dateKey(s.date) === key)
-}
-
-export function getStreakGoalProgress(stats: TrackedExercises, today?: Date): StreakGoalProgress {
-  const todayStats = findStatsForDate(stats, today ?? todayDate())
-  const correct = todayStats?.correct ?? 0
-  const remaining = Math.max(0, STREAK_DAILY_GOAL - correct)
-  return { correct, remaining }
 }
 
 export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {

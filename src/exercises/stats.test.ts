@@ -6,7 +6,6 @@ import {
   getAccuracyPercent,
   getRecentAccuracyPercent,
   getStreak,
-  getStreakGoalProgress,
   getStreakRecord,
   parseTrackedExercises,
   serializeDayStats,
@@ -364,20 +363,5 @@ describe('getStreakRecord', () => {
       { date: d('2026-03-13'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(2)
-  })
-})
-
-describe('getStreakGoalProgress', () => {
-  test('reports remaining answers when below goal', () => {
-    const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 4, incorrect: 3, passed: 1 }]
-    expect(getStreakGoalProgress(stats, d('2026-03-19'))).toEqual({ correct: 4, remaining: 6 })
-  })
-
-  test('reports goal met at exactly daily goal', () => {
-    const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 10, incorrect: 0, passed: 0 }]
-    expect(getStreakGoalProgress(stats, d('2026-03-19'))).toEqual({
-      correct: 10,
-      remaining: 0,
-    })
   })
 })
