@@ -38,7 +38,7 @@ export function LetterPicker({ defaultValue, labelText, dir, onChange }: LetterP
       <RootSlotLabel id={`slot-header-${id}`} htmlFor={`slot-input-${id}`} dir={dir}>
         {labelText}
       </RootSlotLabel>
-      <SlotInputWrapper>
+      <SlotInputWrapper data-open={open}>
         <LetterInput
           id={`slot-input-${id}`}
           type="button"
@@ -168,6 +168,23 @@ const RootSlotLabel = styled('label')`
 
 const SlotInputWrapper = styled('div')`
   position: relative;
+
+  @media (max-width: 640px) {
+    &[data-open='true']::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: var(--color-overlay);
+      backdrop-filter: blur(2px);
+      z-index: 199;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  }
 `
 
 const LetterInput = styled('input')`
