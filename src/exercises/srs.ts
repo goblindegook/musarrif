@@ -18,14 +18,30 @@ export interface CardConstraints {
   pronoun?: PronounId
 }
 
-export interface CardState {
-  interval: number
-  ef: number
-  repetitions: number
-  dueDate: string
-}
+const CardState = v.object({
+  interval: v.pipe(v.number(), v.finite(), v.gtValue(0)),
+  ef: v.pipe(v.number(), v.finite(), v.minValue(1.3)),
+  repetitions: v.pipe(v.number(), v.integer(), v.minValue(0)),
+  dueDate: v.pipe(v.string(), v.isoDate()),
+})
 
-export type SrsStore = Record<string, CardState>
+export type CardState = v.InferOutput<typeof CardState>
+
+export const SrsStore = v.fallback(
+  v.pipe(
+    v.record(v.string(), v.fallback(v.union([CardState, v.null()]), null)),
+    v.transform((store) => {
+      const validCards: Record<string, CardState> = {}
+      for (const [key, state] of Object.entries(store)) {
+        if (state != null && v.is(v.string(), key)) validCards[key] = state
+      }
+      return validCards
+    }),
+  ),
+  {},
+)
+
+export type SrsStore = v.InferOutput<typeof SrsStore>
 
 export interface SrsCardIdentity {
   key: string
@@ -151,27 +167,6 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
 }
 
 const MAX_WEIGHT = 10
-
-const CardState = v.object({
-  interval: v.pipe(v.number(), v.finite(), v.gtValue(0)),
-  ef: v.pipe(v.number(), v.finite(), v.minValue(1.3)),
-  repetitions: v.pipe(v.number(), v.integer(), v.minValue(0)),
-  dueDate: v.pipe(v.string(), v.isoDate()),
-})
-
-export const SrsStore = v.fallback(
-  v.pipe(
-    v.record(v.string(), v.fallback(v.union([CardState, v.null()]), null)),
-    v.transform((store) => {
-      const validCards: SrsStore = {}
-      for (const [key, state] of Object.entries(store)) {
-        if (state != null && v.is(v.string(), key)) validCards[key] = state
-      }
-      return validCards
-    }),
-  ),
-  {},
-)
 
 export function cardSrsWeight(state: CardState | undefined, today: string): number {
   if (state == null) return MAX_WEIGHT

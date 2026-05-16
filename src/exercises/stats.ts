@@ -1,13 +1,27 @@
 import * as v from 'valibot'
 
+const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
+
+const SerializedDayStats = v.object({
+  date: v.pipe(v.string(), v.isoDate()),
+  correct: NonNegativeNumber,
+  incorrect: NonNegativeNumber,
+  passed: NonNegativeNumber,
+})
+
+export const TrackedExercises = v.pipe(
+  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
+  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
+)
+
+export type TrackedExercises = readonly DailyActivity[]
+
 export interface DailyActivity {
   date: Date
   correct: number
   incorrect: number
   passed: number
 }
-
-type TrackedExercises = readonly DailyActivity[]
 
 // FIXME: Serialized type for localStorage, use Valibot to handle date parsing and serialization
 export interface SerializedDailyActivity {
@@ -23,20 +37,6 @@ interface StreakGoalProgress {
   correct: number
   remaining: number
 }
-
-const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
-
-const SerializedDayStats = v.object({
-  date: v.pipe(v.string(), v.isoDate()),
-  correct: NonNegativeNumber,
-  incorrect: NonNegativeNumber,
-  passed: NonNegativeNumber,
-})
-
-export const TrackedExercises = v.pipe(
-  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
-  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
-)
 
 export const STREAK_DAILY_GOAL = 10
 

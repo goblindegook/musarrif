@@ -30,15 +30,6 @@ const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = ['sound', 'assimilated', 'h
 
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
 
-interface Query {
-  filters: {
-    form: VerbForm | null
-    root: RootTypeFilter[]
-    group: GroupFilter | null
-  }
-  page: number
-}
-
 const Query = v.object({
   filters: v.object({
     form: v.fallback(v.nullable(v.pipe(v.string(), v.toNumber(), v.picklist(FORMS))), null),
@@ -47,6 +38,8 @@ const Query = v.object({
   }),
   page: v.fallback(v.pipe(v.string(), v.toNumber(), v.toMinValue(1)), 1),
 })
+
+type Query = v.InferOutput<typeof Query>
 
 function parseQuery(params: URLSearchParams): Query {
   return v.parse(Query, {
@@ -68,11 +61,11 @@ function setQuery(query: Query): URLSearchParams {
   return next
 }
 
-const OTHER_FILTERS: readonly { key: GroupFilter; labelKey: string }[] = [
+const OTHER_FILTERS = [
   { key: 'favourites', labelKey: 'verbsList.filter.favourites.label' },
   { key: 'kana', labelKey: 'verbsList.filter.kanaSisters.label' },
   { key: 'zanna', labelKey: 'verbsList.filter.zannaSisters.label' },
-]
+] as const
 
 function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   const analysis = analyzeRoot(tokenize(verb.root))
