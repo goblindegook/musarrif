@@ -1,19 +1,49 @@
 import { useCallback, useEffect, useMemo } from 'preact/hooks'
+import * as v from 'valibot'
 import {
   addResult,
-  type DailyActivity,
-  deserializeDayStats,
   findStatsForDate,
   getAccuracyPercent,
   getRecentAccuracyPercent,
   getStatsWindow,
   getStreak,
   getStreakRecord,
-  type SerializedDailyActivity,
   STREAK_DAILY_GOAL,
-  serializeDayStats,
 } from '../../exercises/stats'
 import { useLocalStorage } from './useLocalStorage'
+
+const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
+
+const SerializedDayStats = v.object({
+  date: v.pipe(v.string(), v.isoDate()),
+  correct: NonNegativeNumber,
+  incorrect: NonNegativeNumber,
+  passed: NonNegativeNumber,
+})
+
+export const TrackedExercises = v.pipe(
+  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
+  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
+)
+
+// FIXME: Serialized type for localStorage, use Valibot to handle date parsing and serialization
+export interface SerializedDailyActivity {
+  date: string
+  correct: number
+  incorrect: number
+  passed: number
+}
+
+export type TrackedExercises = readonly DailyActivity[]
+
+export interface DailyActivity {
+  date: Date
+  correct: number
+  incorrect: number
+  passed: number
+}
+
+export type SerializedTrackedExercises = readonly SerializedDailyActivity[]
 
 type Result = 'correct' | 'incorrect' | 'passed'
 
@@ -72,4 +102,26 @@ export const useStats = () => {
   }, [stats])
 
   return { stats, findDate, getDailyWindow, streak, accuracy, recordResult } as const
+}
+
+export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {
+  return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
+}
+
+export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
+  return parseTrackedExercises(raw).map((d) => {
+    const [y, m, day] = d.date.split('-').map(Number)
+    return { ...d, date: new Date(y, m - 1, day) }
+  })
+}
+
+export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
+  return v.parse(TrackedExercises, data)
+}
+
+function dateKey(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }

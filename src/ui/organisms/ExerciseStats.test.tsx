@@ -2,10 +2,11 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/pre
 import type { ComponentChildren } from 'preact'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 import { cardSpace, isNominalCard, isVerbCard, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
-import { type DailyActivity, serializeDayStats } from '../../exercises/stats'
+import { type DailyActivity } from '../../exercises/stats'
 import { I18nProvider } from '../hooks/useI18n'
 import { RoutingProvider } from '../routes'
 import { ExerciseStats } from './ExerciseStats'
+import { serializeDayStats } from '../hooks/useStats'
 
 const NOW = new Date()
 const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate())

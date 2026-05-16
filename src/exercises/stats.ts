@@ -1,19 +1,3 @@
-import * as v from 'valibot'
-
-const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
-
-const SerializedDayStats = v.object({
-  date: v.pipe(v.string(), v.isoDate()),
-  correct: NonNegativeNumber,
-  incorrect: NonNegativeNumber,
-  passed: NonNegativeNumber,
-})
-
-export const TrackedExercises = v.pipe(
-  v.fallback(v.array(v.fallback(v.union([SerializedDayStats, v.null()]), null)), []),
-  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
-)
-
 export type TrackedExercises = readonly DailyActivity[]
 
 export interface DailyActivity {
@@ -22,16 +6,6 @@ export interface DailyActivity {
   incorrect: number
   passed: number
 }
-
-// FIXME: Serialized type for localStorage, use Valibot to handle date parsing and serialization
-export interface SerializedDailyActivity {
-  date: string
-  correct: number
-  incorrect: number
-  passed: number
-}
-
-type SerializedTrackedExercises = readonly SerializedDailyActivity[]
 
 export const STREAK_DAILY_GOAL = 10
 
@@ -115,19 +89,6 @@ export function getStatsWindow(stats: readonly DailyActivity[], sinceDays: numbe
   return result
 }
 
-// TODO: move to useStats
-export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {
-  return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
-}
-
-// TODO: Move to useStats
-export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
-  return parseTrackedExercises(raw).map((d) => {
-    const [y, m, day] = d.date.split('-').map(Number)
-    return { ...d, date: new Date(y, m - 1, day) }
-  })
-}
-
 function dateKey(date: Date): string {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -144,9 +105,4 @@ function offsetDate(dateStr: string, days: number): string {
   const d = new Date(dateStr)
   d.setUTCDate(d.getUTCDate() + days)
   return d.toISOString().slice(0, 10)
-}
-
-// TODO: move to useStats
-export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
-  return v.parse(TrackedExercises, data)
 }
