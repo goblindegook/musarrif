@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import type { DailyActivity } from './stats'
 import {
-  addPass,
   addResult,
   deserializeDayStats,
   getAccuracyPercent,
@@ -20,30 +19,30 @@ const d = (s: string) => {
 
 describe('addResult', () => {
   test('creates a new entry for today when stats are empty', () => {
-    const result = addResult([], true, d('2026-03-19'))
+    const result = addResult([], 'correct', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 }])
   })
 
   test('records incorrect answer', () => {
-    const result = addResult([], false, d('2026-03-19'))
+    const result = addResult([], 'incorrect', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 0, incorrect: 1, passed: 0 }])
   })
 
   test('increments correct count for existing entry on same day', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
-    const result = addResult(stats, true, d('2026-03-19'))
+    const result = addResult(stats, 'correct', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }])
   })
 
   test('increments incorrect count for existing entry on same day', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 2, incorrect: 1, passed: 0 }]
-    const result = addResult(stats, false, d('2026-03-19'))
+    const result = addResult(stats, 'incorrect', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 2, incorrect: 2, passed: 0 }])
   })
 
   test('appends a new entry for a different day', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-18'), correct: 3, incorrect: 1, passed: 0 }]
-    const result = addResult(stats, true, d('2026-03-19'))
+    const result = addResult(stats, 'correct', d('2026-03-19'))
     expect(result).toEqual([
       { date: d('2026-03-18'), correct: 3, incorrect: 1, passed: 0 },
       { date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 },
@@ -52,7 +51,7 @@ describe('addResult', () => {
 
   test('does not mutate the input array', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 }]
-    addResult(stats, true, d('2026-03-19'))
+    addResult(stats, 'correct', d('2026-03-19'))
     expect(stats[0].correct).toBe(1)
   })
 })
@@ -210,19 +209,19 @@ describe('deserializeDayStats', () => {
 
 describe('addPass', () => {
   test('creates a new entry for today with passed: 1 when stats are empty', () => {
-    const result = addPass([], d('2026-03-19'))
+    const result = addResult([], 'passed', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 0, incorrect: 0, passed: 1 }])
   })
 
   test('increments passed on an existing entry without changing correct or incorrect', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 3, incorrect: 1, passed: 0 }]
-    const result = addPass(stats, d('2026-03-19'))
+    const result = addResult(stats, 'passed', d('2026-03-19'))
     expect(result).toEqual([{ date: d('2026-03-19'), correct: 3, incorrect: 1, passed: 1 }])
   })
 
   test('appends a new entry for a different day', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-18'), correct: 2, incorrect: 0, passed: 0 }]
-    const result = addPass(stats, d('2026-03-19'))
+    const result = addResult(stats, 'passed', d('2026-03-19'))
     expect(result).toEqual([
       { date: d('2026-03-18'), correct: 2, incorrect: 0, passed: 0 },
       { date: d('2026-03-19'), correct: 0, incorrect: 0, passed: 1 },
@@ -231,7 +230,7 @@ describe('addPass', () => {
 
   test('does not mutate the input array', () => {
     const stats: DailyActivity[] = [{ date: d('2026-03-19'), correct: 1, incorrect: 0, passed: 0 }]
-    addPass(stats, d('2026-03-19'))
+    addResult(stats, 'passed', d('2026-03-19'))
     expect(stats[0].passed).toBe(0)
   })
 })

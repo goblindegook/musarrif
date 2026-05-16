@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import {
-  addPass,
   addResult,
   type DailyActivity,
   deserializeDayStats,
@@ -24,7 +23,6 @@ export interface Streak {
   remaining: number
   progress: number
   goal: number
-  extended: boolean
 }
 
 export const useStats = () => {
@@ -49,9 +47,7 @@ export const useStats = () => {
 
   const recordResult = useCallback(
     (result: Result) => {
-      if (result === 'passed') updateStats((current) => addPass(current))
-      else updateStats((current) => addResult(current, result === 'correct'))
-
+      updateStats((current) => addResult(current, result))
       if (result === 'correct' && getStreakGoalProgress(stats).remaining === 1) setStreakExtended(true)
     },
     [updateStats],
@@ -88,7 +84,6 @@ export const useStats = () => {
       remaining: Math.max(0, STREAK_DAILY_GOAL - correct),
       progress: Math.min(correct, STREAK_DAILY_GOAL),
       goal: STREAK_DAILY_GOAL,
-      extended: streakExtended,
     }
   }, [stats, streakExtended])
 

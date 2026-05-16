@@ -40,34 +40,14 @@ interface StreakGoalProgress {
 
 export const STREAK_DAILY_GOAL = 10
 
-export function addResult(stats: TrackedExercises, correct: boolean, date?: Date): TrackedExercises {
-  const d = date ?? todayDate()
-  const key = dateKey(d)
-  const existing = stats.find((s) => dateKey(s.date) === key)
-  if (existing) {
-    return stats.map((s) =>
-      dateKey(s.date) === key
-        ? {
-            ...s,
-            correct: s.correct + (correct ? 1 : 0),
-            incorrect: s.incorrect + (correct ? 0 : 1),
-            passed: s.passed ?? 0,
-          }
-        : s,
-    )
-  }
-  return [...stats, { date: d, correct: correct ? 1 : 0, incorrect: correct ? 0 : 1, passed: 0 }]
-}
+type Result = 'correct' | 'incorrect' | 'passed'
 
-// FIXME: merge with addResult
-export function addPass(stats: TrackedExercises, date?: Date): TrackedExercises {
+export function addResult(stats: TrackedExercises, result: Result, date?: Date): TrackedExercises {
   const d = date ?? todayDate()
   const key = dateKey(d)
   const existing = stats.find((s) => dateKey(s.date) === key)
-  if (existing) {
-    return stats.map((s) => (dateKey(s.date) === key ? { ...s, passed: s.passed + 1 } : s))
-  }
-  return [...stats, { date: d, correct: 0, incorrect: 0, passed: 1 }]
+  if (existing) return stats.map((s) => (dateKey(s.date) === key ? { ...s, [result]: (s[result] ?? 0) + 1 } : s))
+  return [...stats, { date: d, correct: 0, incorrect: 0, passed: 0, [result]: 1 }]
 }
 
 export function getStreak(stats: TrackedExercises, today?: Date): number {
