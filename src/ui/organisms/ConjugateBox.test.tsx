@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within, act } from '@testing-library/preact'
+import { act, fireEvent, render, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import type { ComponentChildren } from 'preact'
 import { describe, expect, test } from 'vitest'
