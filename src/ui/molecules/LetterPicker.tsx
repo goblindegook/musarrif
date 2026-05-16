@@ -14,13 +14,10 @@ export function LetterPicker({ defaultValue, labelText, dir, onChange }: LetterP
   const [value, setValue] = useState(defaultValue)
   const id = useId()
 
-  const openPicker = useCallback(
-    (highlightIndex?: number) => {
-      setOpen(true)
-      setHighlighted(highlightIndex ?? LETTERS.indexOf(value ?? ''))
-    },
-    [value],
-  )
+  const openPicker = useCallback((value?: string, highlightIndex?: number) => {
+    setOpen(true)
+    setHighlighted(highlightIndex ?? LETTERS.indexOf(value ?? ''))
+  }, [])
 
   const closePicker = useCallback(() => {
     setOpen(false)
@@ -53,7 +50,7 @@ export function LetterPicker({ defaultValue, labelText, dir, onChange }: LetterP
           aria-expanded={open}
           aria-controls={`slot-listbox-${id}`}
           aria-activedescendant={open && highlighted >= 0 ? `slot-${id}-option-${highlighted}` : undefined}
-          onFocus={() => openPicker()}
+          onFocus={() => openPicker(value)}
           onClick={(event) => event.currentTarget.focus()}
           onBlur={() => closePicker()}
           onKeyDown={(e) => {
@@ -70,7 +67,7 @@ export function LetterPicker({ defaultValue, labelText, dir, onChange }: LetterP
             }
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
               e.preventDefault()
-              const currentIndex = Math.max(LETTERS.indexOf(value ?? ''), highlighted)
+              const currentIndex = highlighted >= 0 ? highlighted : Math.max(LETTERS.indexOf(value ?? ''), 0)
               const nextIndex =
                 e.key === 'ArrowDown'
                   ? (currentIndex + 1) % LETTERS.length
@@ -80,7 +77,7 @@ export function LetterPicker({ defaultValue, labelText, dir, onChange }: LetterP
                       ? 0
                       : LETTERS.length - 1
               if (!open) {
-                openPicker(nextIndex)
+                openPicker(value, nextIndex)
                 return
               }
               setHighlighted(nextIndex)

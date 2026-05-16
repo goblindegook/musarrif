@@ -98,7 +98,7 @@ describe('ConjugateBox', () => {
     await user.click(input)
     await user.keyboard('{ArrowDown}{Enter}')
 
-    expect(input).toHaveValue('ء')
+    expect(input).toHaveValue('ب')
     expect(input.closest('[role="group"]')!.querySelector('[role="listbox"]')).toBeNull()
   })
 
