@@ -92,7 +92,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: 
               onChange={(e) => setTypedValue((e.target as HTMLInputElement).value)}
               disabled={reveal}
               data-state={typedResult !== 'idle' ? typedResult : undefined}
-              aria-invalid={typedResult === 'wrong'}
+              aria-invalid={typedResult === 'wrong' || undefined}
               autoCapitalize="none"
               autoComplete="off"
               autoCorrect="off"
