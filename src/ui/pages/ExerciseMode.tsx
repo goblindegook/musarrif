@@ -65,8 +65,8 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const { streak, recordResult } = useStats()
 
   useEffect(() => {
-    if (streak.remaining === 0) setStreakExtendedAlert(true)
-  }, [streak.remaining])
+    if (streak.correct === streak.goal) setStreakExtendedAlert(true)
+  }, [streak.correct, streak.goal])
 
   useDocumentTitle([t('mode.exercise'), t('title')].join(' · '))
 

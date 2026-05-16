@@ -266,112 +266,129 @@ describe('ExerciseStats', () => {
     expect(screen.getByLabelText('Streak extension progress')).toBeInTheDocument()
   })
 
-  test('shows Almost there in the collapsed header when one correct answer is left', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 1, passed: 0 }]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
-  })
-
-  test('shows Well done in the collapsed header when streak is newly extended today', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Well done!')).toBeInTheDocument()
-  })
-
-  test('shows encouragement in the collapsed header when more than half of attempts are incorrect', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 8, incorrect: 13, passed: 0 }]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
-  })
-
-  test('shows skipping notice in the collapsed header when pass count is high', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 8, incorrect: 1, passed: 15 }]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
-  })
-
-  test('shows strong-accuracy congratulations in the collapsed header', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 15, incorrect: 1, passed: 0 }]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Well done!')).toBeInTheDocument()
-  })
-
-  test('shows strongest-dimension hint in the collapsed header with real SRS data', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 2, passed: 1 }]
-    const srsStore = createSrsStore((card) => (isVerbCard(card) ? 120 : 1))
-    renderStats(stats, {
-      dimensionProfile: {
-        tenses: 4,
-        pronouns: 3,
-        diacritics: 0,
-        forms: 9,
-        rootTypes: 5,
-        nominals: 2,
-      },
-      srsStore,
+  describe('progress hint', () => {
+    test('shows Almost there in the collapsed header when one correct answer is left', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 1, passed: 0 }]
+      renderStats(stats)
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
     })
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
-  })
 
-  test('shows weakest-dimension hint in the collapsed header with real SRS data', () => {
-    const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 2, passed: 1 }]
-    const srsStore = createSrsStore((card) => (isNominalCard(card) ? 1 : 10))
-    renderStats(stats, {
-      dimensionProfile: {
-        tenses: 4,
-        pronouns: 3,
-        diacritics: 0,
-        forms: 9,
-        rootTypes: 5,
-        nominals: 2,
-      },
-      srsStore,
+    test('shows Well done in the collapsed header when streak is newly extended today', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 10, incorrect: 0, passed: 0 }]
+      renderStats(stats)
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Well done!')).toBeInTheDocument()
     })
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
-  })
 
-  test("shows yesterday challenge when today's correct total is below yesterday", () => {
-    const yesterday = new Date(TODAY)
-    yesterday.setDate(yesterday.getDate() - 1)
-    const stats: DailyActivity[] = [
-      { date: yesterday, correct: 9, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 6, incorrect: 4, passed: 0 },
-    ]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('4 to extend your streak')).toBeInTheDocument()
-  })
+    test('shows encouragement in the collapsed header when more than half of attempts are incorrect', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 23, passed: 0 }]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('You can do this, stay focused'),
+      ).toBeInTheDocument()
+    })
 
-  test("shows remaining-to-yesterday hint when today's correct total is within 5", () => {
-    const yesterday = new Date(TODAY)
-    yesterday.setDate(yesterday.getDate() - 1)
-    const stats: DailyActivity[] = [
-      { date: yesterday, correct: 9, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 6, incorrect: 4, passed: 0 },
-    ]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('4 to extend your streak')).toBeInTheDocument()
-  })
+    test('shows skipping notice in the collapsed header when skip count is high', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 1, passed: 20 }]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('You are skipping many cards'),
+      ).toBeInTheDocument()
+    })
 
-  test("congratulates when today's correct total reaches yesterday", () => {
-    const yesterday = new Date(TODAY)
-    yesterday.setDate(yesterday.getDate() - 1)
-    const stats: DailyActivity[] = [
-      { date: yesterday, correct: 8, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 8, incorrect: 4, passed: 0 },
-    ]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('2 to extend your streak')).toBeInTheDocument()
-  })
+    test('shows strong-accuracy congratulations in the collapsed header', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 15, incorrect: 1, passed: 0 }]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('Excellent accuracy today'),
+      ).toBeInTheDocument()
+    })
 
-  test("congratulates more when today's correct total exceeds yesterday by up to 5", () => {
-    const yesterday = new Date(TODAY)
-    yesterday.setDate(yesterday.getDate() - 1)
-    const stats: DailyActivity[] = [
-      { date: yesterday, correct: 8, incorrect: 2, passed: 0 },
-      { date: TODAY, correct: 9, incorrect: 4, passed: 0 },
-    ]
-    renderStats(stats)
-    expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
+    test('shows strongest-dimension hint in the collapsed header with real SRS data', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 2, passed: 1 }]
+      const srsStore = createSrsStore((card) => (isVerbCard(card) ? 120 : 1))
+      renderStats(stats, {
+        dimensionProfile: {
+          tenses: 4,
+          pronouns: 3,
+          diacritics: 0,
+          forms: 9,
+          rootTypes: 5,
+          nominals: 2,
+        },
+        srsStore,
+      })
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Strong in Active Past')).toBeInTheDocument()
+    })
+
+    test('shows weakest-dimension hint in the collapsed header with real SRS data', () => {
+      const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 2, passed: 1 }]
+      const srsStore = createSrsStore((card) => (isNominalCard(card) ? 1 : 10))
+      renderStats(stats, {
+        dimensionProfile: {
+          tenses: 4,
+          pronouns: 3,
+          diacritics: 0,
+          forms: 9,
+          rootTypes: 5,
+          nominals: 2,
+        },
+        srsStore,
+      })
+
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('Focus a bit more on Participles'),
+      ).toBeInTheDocument()
+    })
+
+    test("shows yesterday challenge when today's correct total is below yesterday", () => {
+      const yesterday = new Date(TODAY)
+      yesterday.setDate(yesterday.getDate() - 1)
+      const stats: DailyActivity[] = [
+        { date: yesterday, correct: 20, incorrect: 2, passed: 0 },
+        { date: TODAY, correct: 11, incorrect: 4, passed: 0 },
+      ]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText("Can you beat yesterday's total of 20?"),
+      ).toBeInTheDocument()
+    })
+
+    test("shows remaining-to-yesterday hint when today's correct total is within 5", () => {
+      const yesterday = new Date(TODAY)
+      yesterday.setDate(yesterday.getDate() - 1)
+      const stats: DailyActivity[] = [
+        { date: yesterday, correct: 20, incorrect: 2, passed: 0 },
+        { date: TODAY, correct: 15, incorrect: 4, passed: 0 },
+      ]
+      renderStats(stats)
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Only 5 more to go...')).toBeInTheDocument()
+    })
+
+    test("congratulates when today's correct total reaches yesterday", () => {
+      const yesterday = new Date(TODAY)
+      yesterday.setDate(yesterday.getDate() - 1)
+      const stats: DailyActivity[] = [
+        { date: yesterday, correct: 20, incorrect: 2, passed: 0 },
+        { date: TODAY, correct: 20, incorrect: 4, passed: 0 },
+      ]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('Great job, you matched yesterday!'),
+      ).toBeInTheDocument()
+    })
+
+    test("congratulates more when today's correct total exceeds yesterday by up to 5", () => {
+      const yesterday = new Date(TODAY)
+      yesterday.setDate(yesterday.getDate() - 1)
+      const stats: DailyActivity[] = [
+        { date: yesterday, correct: 11, incorrect: 2, passed: 0 },
+        { date: TODAY, correct: 12, incorrect: 4, passed: 0 },
+      ]
+      renderStats(stats)
+      expect(
+        within(screen.getByText('Progress').parentElement!).getByText('Excellent, you are ahead of yesterday!'),
+      ).toBeInTheDocument()
+    })
   })
 
   test('shows Mastery section when expanded', () => {

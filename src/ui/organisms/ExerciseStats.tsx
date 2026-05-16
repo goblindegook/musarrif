@@ -49,13 +49,15 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
   const week = useMemo(() => days(7), [days])
-  const chartAriaLabel = useMemo(() => buildChartAriaLabel(week, t), [week, t])
 
   const today = new Date()
   const yesterday = new Date()
   yesterday.setDate(today.getDate() - 1)
 
-  const [streakHintKey, streakHintParams] = buildStreakHint(streak, findStats(today), findStats(yesterday), mastery)
+  const [streakHintKey, streakHintParams] = useMemo(
+    () => buildStreakHint(streak, findStats(today), findStats(yesterday), mastery),
+    [streak, findStats, mastery],
+  )
 
   if (stats.length === 0) return null
 
@@ -67,7 +69,7 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
       hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
     >
       <Chart
-        ariaLabel={chartAriaLabel}
+        ariaLabel={buildChartAriaLabel(week, t)}
         series={[
           {
             show: false,
@@ -260,7 +262,7 @@ function StatsDetailsPanel({ mastery }: StatsDetailsPanelProps) {
             {t('exercise.stats.streak.extendHint', { remaining: String(streak.remaining) })}
           </StreakGoalHint>
           <ProgressBar
-            value={streak.progress}
+            value={Math.min(streak.correct, streak.goal)}
             max={streak.goal}
             style={{ height: '0.6rem' }}
             aria-label={t('exercise.stats.streak.progress.label')}
@@ -327,7 +329,7 @@ function buildStreakHint(
 ): [string, StreakHintParams] {
   if (streak.remaining > 1) return ['exercise.stats.progressHint.streak', { remaining: String(streak.remaining) }]
   if (streak.remaining === 1) return ['exercise.stats.progressHint.streak.almostThere', {}]
-  if (streak.progress === streak.goal) return ['exercise.stats.progressHint.streak.wellDone', {}]
+  if (streak.correct === streak.goal) return ['exercise.stats.progressHint.streak.wellDone', {}]
 
   const correct = today?.correct ?? 0
   const incorrect = today?.incorrect ?? 0

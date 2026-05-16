@@ -20,7 +20,7 @@ export interface Streak {
   current: number
   record: number
   remaining: number
-  progress: number
+  correct: number
   goal: number
 }
 
@@ -79,9 +79,9 @@ export const useStats = () => {
     return {
       current: getStreak(stats),
       record: getStreakRecord(stats),
-      remaining: Math.max(0, STREAK_DAILY_GOAL - correct),
-      progress: Math.min(correct, STREAK_DAILY_GOAL),
       goal: STREAK_DAILY_GOAL,
+      correct,
+      remaining: Math.max(0, STREAK_DAILY_GOAL - correct),
     }
   }, [stats])
 
