@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/preact'
+import { fireEvent, render, screen, within, act } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import type { ComponentChildren } from 'preact'
 import { describe, expect, test } from 'vitest'
@@ -131,6 +131,22 @@ describe('ConjugateBox', () => {
     await user.click(input)
 
     expect(group.querySelector('[role="listbox"]')).toBeInTheDocument()
+  })
+
+  test('clicking the overlay dismisses the letter listbox', async () => {
+    const user = userEvent.setup()
+    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+
+    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const group = input.closest<HTMLElement>('[role="group"]')!
+    await user.click(input)
+    expect(group.querySelector('[role="listbox"]')).toBeInTheDocument()
+
+    act(() => {
+      fireEvent.click(input.parentElement!.firstElementChild!.firstElementChild!)
+    })
+
+    expect(group.querySelector('[role="listbox"]')).toBeNull()
   })
 
   test('pre-populates letters and form from selectedVerb', () => {

@@ -5,9 +5,10 @@ import { useEffect } from 'preact/hooks'
 export interface OverlayProps {
   readonly onClick?: (event: TargetedMouseEvent<HTMLDivElement>) => void
   readonly zIndex?: number
+  readonly hideAbove?: number
 }
 
-export function Overlay({ onClick, zIndex, ...props }: OverlayProps) {
+export function Overlay({ onClick, zIndex, hideAbove, ...props }: OverlayProps) {
   useEffect(() => {
     const originalOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -20,6 +21,7 @@ export function Overlay({ onClick, zIndex, ...props }: OverlayProps) {
   return (
     <OverlayBase
       zIndex={zIndex}
+      hideAbove={hideAbove ? hideAbove + 1 : undefined}
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           // event.stopPropagation()
@@ -31,7 +33,7 @@ export function Overlay({ onClick, zIndex, ...props }: OverlayProps) {
   )
 }
 
-const OverlayBase = styled('div')<{ zIndex?: number }>`
+const OverlayBase = styled('div')<{ hideAbove?: number; zIndex?: number }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -56,4 +58,13 @@ const OverlayBase = styled('div')<{ zIndex?: number }>`
   & > * {
     pointer-events: auto;
   }
+
+  ${({ hideAbove }) =>
+    hideAbove
+      ? `
+      @media (min-width: ${hideAbove}px) {
+        display: none;
+      }`
+      : ``}
+  
 `
