@@ -44,14 +44,13 @@ export const useStats = () => {
   }, [refetch])
 
   const recordResult = useCallback(
-    (result: Result) => {
-      updateStats((current) => addResult(current, result))
-    },
+    (result: Result) => updateStats((current) => addResult(current, result)),
     [updateStats],
   )
 
   const findDate = useCallback((date: Date) => findStatsForDate(stats, date), [stats])
 
+  // FIXME: move to stats.ts
   const getDailyWindow = useCallback(
     (days: number) => {
       const map = new Map(stats.map((d) => [d.date.toDateString(), d]))
@@ -68,11 +67,12 @@ export const useStats = () => {
     [stats],
   )
 
+  // FIXME: make lazy
   const accuracy = useMemo(() => {
     return { recent: getRecentAccuracyPercent(stats, 15), allTime: getAccuracyPercent(stats) }
   }, [stats])
 
-  // FIXME: lazy
+  // FIXME: make lazy
   const streak = useMemo<Streak>(() => {
     const today = findDate(new Date())
     const correct = today?.correct ?? 0

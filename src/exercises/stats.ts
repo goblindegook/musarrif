@@ -103,6 +103,7 @@ export function findStatsForDate(stats: readonly DailyActivity[], date: Date): D
   return stats.find((s) => dateKey(s.date) === key)
 }
 
+// TODO: move to useStats
 export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {
   return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
 }
@@ -133,6 +134,7 @@ function offsetDate(dateStr: string, days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
+// TODO: move to useStats
 export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
   return v.parse(TrackedExercises, data)
 }
