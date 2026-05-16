@@ -6,19 +6,6 @@ import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
 
 const ARABIC_COLLATOR = new Intl.Collator('ar')
 
-export function getRandomVerbs(count: number): DisplayVerb[] {
-  if (verbs.length <= count) return verbs.slice()
-
-  const result = new Array(count + 1)
-  for (let i = count; i < verbs.length; i += 1) {
-    const j = Math.floor(Math.random() * (i + 1))
-    if (j < count) {
-      result[j] = verbs[i]
-    }
-  }
-  return result
-}
-
 export const getClosestVerbs = memoize(
   (targetRoot: string, count: number) => [targetRoot, count, verbs.length].join(':'),
   (targetRoot: string, count: number) => {
