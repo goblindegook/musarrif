@@ -143,7 +143,7 @@ describe('ConjugateBox', () => {
     expect(group.querySelector('[role="listbox"]')).toBeInTheDocument()
 
     act(() => {
-      fireEvent.click(input.parentElement!.firstElementChild!.firstElementChild!)
+      fireEvent.click(input.parentElement!.firstElementChild!)
     })
 
     expect(group.querySelector('[role="listbox"]')).toBeNull()
