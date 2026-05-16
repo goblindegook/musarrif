@@ -13,6 +13,7 @@
     "aria.speak": "تَشْغِيلُ نُطْقِ {text}",
     "build.formLabel": "ٱلْوَزْنُ",
     "build.patternLabel": "نَمَطُ ٱلْحَرَكَاتِ",
+    "build.rootSlotLabel": "ٱلْجَذْرُ {index}",
     "conjugationInfo.title": "مُلَاحَظَاتٌ عَنِ ٱلتَّصْرِيفِ",
     "diacritics.all": "كَامِلَةٌ",
     "diacritics.label": "تَشْكِيلٌ",

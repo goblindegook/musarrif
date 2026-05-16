@@ -168,6 +168,7 @@ export function Home() {
         <Panel>
           <TabBar role="tablist">
             <TabButton
+              id="panel-tab-search"
               role="tab"
               type="button"
               aria-selected={searchTab === 'search'}
@@ -179,6 +180,7 @@ export function Home() {
               {t('tabs.search')}
             </TabButton>
             <TabButton
+              id="panel-tab-build"
               data-tour-step="2"
               role="tab"
               type="button"
@@ -241,14 +243,14 @@ export function Home() {
       </Stack>
 
       <Stack area="verbList">
-        {/* FIXME: data-tour-step should be on Panel */}
+        {/* FIXME: data-tour-step should be on Panel, not on div */}
         <div data-tour-step="1">
           <Panel title={t('verbList.title')} dir={dir} lang={lang}>
             <FilterGroup>
               <Subheading dir={dir} lang={lang}>
                 {t('verbsList.filter.form.title')}
               </Subheading>
-              <FilterBar role="group" aria-label={t('aria.selectForm')}>
+              <FormFilterBar role="group" aria-label={t('aria.selectForm')}>
                 {FORMS.map((option) => (
                   <SelectableButton
                     key={option}
@@ -263,7 +265,7 @@ export function Home() {
                     {toRoman(option)}
                   </SelectableButton>
                 ))}
-              </FilterBar>
+              </FormFilterBar>
             </FilterGroup>
 
             <FilterGroup>
@@ -378,7 +380,9 @@ const FilterBar = styled('div')`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+`
 
+const FormFilterBar = styled(FilterBar)`
   @media (max-width: 640px) {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, auto));

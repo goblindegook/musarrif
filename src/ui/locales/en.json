@@ -13,6 +13,7 @@
     "aria.speak": "Play pronunciation for {text}",
     "build.formLabel": "Form",
     "build.patternLabel": "Vowel pattern",
+    "build.rootSlotLabel": "Root {index}",
     "conjugationInfo.title": "Conjugation insights",
     "diacritics.all": "All",
     "diacritics.label": "Diac.",

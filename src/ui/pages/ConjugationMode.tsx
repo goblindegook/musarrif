@@ -187,6 +187,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         <Panel>
           <TabBar role="tablist">
             <TabButton
+              id="panel-tab-search"
               role="tab"
               type="button"
               aria-selected={searchTab === 'search'}
@@ -198,6 +199,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
               {t('tabs.search')}
             </TabButton>
             <TabButton
+              id="panel-tab-build"
               data-tour-step="2"
               role="tab"
               type="button"

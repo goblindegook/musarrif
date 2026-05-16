@@ -13,6 +13,7 @@
     "aria.speak": "Riproduci la pronuncia di {text}",
     "build.formLabel": "Forma",
     "build.patternLabel": "Schema vocalico",
+    "build.rootSlotLabel": "Radice {index}",
     "conjugationInfo.title": "Approfondimenti sulla coniugazione",
     "diacritics.all": "Tutti",
     "diacritics.label": "Diacr.",

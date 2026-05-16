@@ -17,10 +17,13 @@ export function useSpeech(lang: string, options: SpeechOptions = {}): Speech {
   const speak = useCallback(
     async (text: string) => {
       setPlaying(true)
-      await engine.speak(text, lang, options)
-      setPlaying(false)
+      try {
+        await engine.speak(text, lang, options)
+      } finally {
+        setPlaying(false)
+      }
     },
-    [lang],
+    [engine, lang, options],
   )
 
   return { speak, playing, supported: engine.supported }
@@ -39,13 +42,25 @@ function webSpeechEngine(): Engine {
       return new Promise<void>((resolve) => {
         if (!supported) return resolve()
 
-        const utterance = new SpeechSynthesisUtterance(text)
-        utterance.lang = lang
-        utterance.rate = options.rate ?? 1
-        utterance.onend = () => resolve()
+        let settled = false
+        const finish = () => {
+          if (settled) return
+          settled = true
+          resolve()
+        }
 
-        window.speechSynthesis.cancel()
-        window.speechSynthesis.speak(utterance)
+        try {
+          const utterance = new SpeechSynthesisUtterance(text)
+          utterance.lang = lang
+          utterance.rate = options.rate ?? 1
+          utterance.onend = finish
+          utterance.onerror = finish
+
+          window.speechSynthesis.cancel()
+          window.speechSynthesis.speak(utterance)
+        } catch {
+          finish()
+        }
       })
     },
     supported,

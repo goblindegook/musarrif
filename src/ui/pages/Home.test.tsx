@@ -29,6 +29,25 @@ test('sets the page title ', () => {
   expect(document.title).toBe('Muṣarrif')
 })
 
+test('search and build tabs are correctly linked to their tabpanels', () => {
+  renderHome()
+
+  const searchTab = screen.getByText('Search', { selector: 'button' })
+  const buildTab = screen.getByText('Build', { selector: 'button' })
+  const searchPanel = document.getElementById('panel-content-search')
+
+  expect(searchTab).toHaveAttribute('id', 'panel-tab-search')
+  expect(buildTab).toHaveAttribute('id', 'panel-tab-build')
+  expect(searchTab).toHaveAttribute('aria-controls', 'panel-content-search')
+  expect(buildTab).toHaveAttribute('aria-controls', 'panel-content-build')
+  expect(searchPanel).toHaveAttribute('aria-labelledby', 'panel-tab-search')
+
+  fireEvent.click(buildTab)
+
+  const buildPanel = document.getElementById('panel-content-build')
+  expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
+})
+
 test('Shows verbs grouped by form at the verbs base route', () => {
   renderHome()
 

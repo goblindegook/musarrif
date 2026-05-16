@@ -42,6 +42,25 @@ test.each([
   expect(screen.getAllByText(expectedPast).length).toBeGreaterThan(0)
 })
 
+test('search and build tabs are correctly linked to their tabpanels', () => {
+  renderConjugationMode({ verbId: 'ktb-1' })
+
+  const searchTab = screen.getByText('Search', { selector: 'button' })
+  const buildTab = screen.getByText('Build', { selector: 'button' })
+  const searchPanel = document.getElementById('panel-content-search')
+
+  expect(searchTab).toHaveAttribute('id', 'panel-tab-search')
+  expect(buildTab).toHaveAttribute('id', 'panel-tab-build')
+  expect(searchTab).toHaveAttribute('aria-controls', 'panel-content-search')
+  expect(buildTab).toHaveAttribute('aria-controls', 'panel-content-build')
+  expect(searchPanel).toHaveAttribute('aria-labelledby', 'panel-tab-search')
+
+  fireEvent.click(buildTab)
+
+  const buildPanel = document.getElementById('panel-content-build')
+  expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
+})
+
 test('shows translation subtitle for corpus verb with known translation', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
   const titleGroup = document.querySelector('h2')!.parentElement!
