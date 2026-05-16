@@ -37,16 +37,16 @@ export const STREAK_DAILY_GOAL = 10
 
 type Result = 'correct' | 'incorrect' | 'passed'
 
-export function addResult(stats: TrackedExercises, result: Result, date?: Date): TrackedExercises {
-  const d = date ?? todayDate()
-  const key = dateKey(d)
-  const existing = stats.find((s) => dateKey(s.date) === key)
-  if (existing) return stats.map((s) => (dateKey(s.date) === key ? { ...s, [result]: (s[result] ?? 0) + 1 } : s))
-  return [...stats, { date: d, correct: 0, incorrect: 0, passed: 0, [result]: 1 }]
+export function addResult(stats: TrackedExercises, result: Result, date = todayDate()): TrackedExercises {
+  if (findStatsForDate(stats, date)) {
+    const dateString = date.toDateString()
+    return stats.map((s) => (s.date.toDateString() === dateString ? { ...s, [result]: (s[result] ?? 0) + 1 } : s))
+  }
+  return [...stats, { date: date, correct: 0, incorrect: 0, passed: 0, [result]: 1 }]
 }
 
-export function getStreak(stats: TrackedExercises, today?: Date): number {
-  const todayStr = dateKey(today ?? todayDate())
+export function getStreak(stats: TrackedExercises, today = todayDate()): number {
+  const todayStr = dateKey(today)
   const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => dateKey(d.date)))
 
   // Streak can start from today or yesterday
@@ -69,14 +69,8 @@ export function getAccuracyPercent(stats: TrackedExercises): number {
   return Math.round((correct / total) * 100)
 }
 
-export function getRecentAccuracyPercent(stats: TrackedExercises, days: number, today?: Date): number {
-  const todayStr = dateKey(today ?? todayDate())
-  const windowStart = offsetDate(todayStr, -(days - 1))
-  const filtered = stats.filter((s) => {
-    const key = dateKey(s.date)
-    return key >= windowStart && key <= todayStr
-  })
-  return getAccuracyPercent(filtered)
+export function getRecentAccuracyPercent(stats: TrackedExercises, days: number, date?: Date): number {
+  return getAccuracyPercent(getStatsWindow(stats, days, date))
 }
 
 export function getStreakRecord(stats: TrackedExercises): number {
@@ -99,8 +93,26 @@ export function getStreakRecord(stats: TrackedExercises): number {
 }
 
 export function findStatsForDate(stats: readonly DailyActivity[], date: Date): DailyActivity | undefined {
-  const key = dateKey(date)
-  return stats.find((s) => dateKey(s.date) === key)
+  const dateString = date.toDateString()
+  return stats.find((s) => s.date.toDateString() === dateString)
+}
+
+export function getStatsWindow(stats: readonly DailyActivity[], sinceDays: number, end = todayDate()): DailyActivity[] {
+  const start = new Date(end)
+  start.setDate(end.getDate() - sinceDays + 1)
+  const map = new Map<string, DailyActivity>()
+
+  for (const entry of stats) if (entry.date >= start && entry.date <= end) map.set(entry.date.toDateString(), entry)
+
+  const result: DailyActivity[] = []
+
+  for (let i = 0; i < sinceDays; i++) {
+    const date = new Date(start)
+    date.setDate(start.getDate() + i)
+    result.push(map.get(date.toDateString()) ?? { date, correct: 0, incorrect: 0, passed: 0 })
+  }
+
+  return result
 }
 
 // TODO: move to useStats

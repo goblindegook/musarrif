@@ -6,6 +6,7 @@ import {
   findStatsForDate,
   getAccuracyPercent,
   getRecentAccuracyPercent,
+  getStatsWindow,
   getStreak,
   getStreakRecord,
   type SerializedDailyActivity,
@@ -50,22 +51,7 @@ export const useStats = () => {
 
   const findDate = useCallback((date: Date) => findStatsForDate(stats, date), [stats])
 
-  // FIXME: move to stats.ts
-  const getDailyWindow = useCallback(
-    (days: number) => {
-      const map = new Map(stats.map((d) => [d.date.toDateString(), d]))
-      const result: DailyActivity[] = []
-      const now = new Date()
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-      for (let i = days - 1; i >= 0; i--) {
-        const date = new Date(today)
-        date.setDate(today.getDate() - i)
-        result.push(map.get(date.toDateString()) ?? { date, correct: 0, incorrect: 0, passed: 0 })
-      }
-      return result
-    },
-    [stats],
-  )
+  const getDailyWindow = useCallback((sinceDays: number) => getStatsWindow(stats, sinceDays), [stats])
 
   // FIXME: make lazy
   const accuracy = useMemo(() => {
