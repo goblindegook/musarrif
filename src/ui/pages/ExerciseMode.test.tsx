@@ -98,6 +98,26 @@ describe('ExerciseMode', () => {
     expect(screen.getByText(/next/i, { selector: 'button' })).toHaveFocus()
   })
 
+  test('does not focus next button after selecting a wrong option', () => {
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByLabelText('II'))
+    expect(screen.getByText(/next/i, { selector: 'button' })).not.toHaveFocus()
+  })
+
+  test('does not focus next button after skipping', () => {
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
+    expect(screen.getByText(/next/i, { selector: 'button' })).not.toHaveFocus()
+  })
+
+  test('answer area is labelled by the exercise prompt', () => {
+    render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
+    const group = screen.getByRole('group')
+    const promptId = group.getAttribute('aria-labelledby')
+    expect(promptId).toBeTruthy()
+    expect(document.getElementById(promptId!)).toBeInTheDocument()
+  })
+
   test('option buttons are disabled after answering', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     const options = screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })

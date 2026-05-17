@@ -9,9 +9,10 @@ type Props = {
   exercise: Exercise
   forceReveal?: boolean
   onAnswer: (index: number, isCorrect: boolean) => void
+  promptId?: string
 }
 
-export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: Props) {
+export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, promptId }: Props) {
   const { t } = useI18n()
   const [typingMode, setTypingMode] = useState(false)
   const [selected, setSelected] = useState<number | null>(null)
@@ -38,7 +39,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: 
   }, [typedResult])
 
   return (
-    <Wrapper>
+    <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
       {mode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
@@ -87,6 +88,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer }: 
               dir="rtl"
               lang="ar"
               value={typedValue}
+              aria-labelledby={promptId}
               placeholder={t('exercise.typing.placeholder')}
               onInput={(e) => setTypedValue((e.target as HTMLInputElement).value)}
               onChange={(e) => setTypedValue((e.target as HTMLInputElement).value)}

@@ -160,7 +160,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     }
 
     return groups
-  }, [mastery, t])
+  }, [mastery, dimensionProfile, t])
 
   const focusOptionValue = useMemo((): OptionValue<MasteryItemId> | null => {
     if (activeFocus.form) return { groupKey: 'form', value: `forms.${activeFocus.form}` }
@@ -244,9 +244,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   useEffect(() => {
     if (!isAnswered) return
+    if (answeredIndex !== exercise.answer) return
     const nextButton = document.querySelector('button[autofocus]')
     if (nextButton instanceof HTMLButtonElement) nextButton.focus()
-  }, [isAnswered])
+  }, [isAnswered, answeredIndex, exercise.answer])
 
   return (
     <ExerciseLayout>
@@ -272,6 +273,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           {exercise.word}
         </VerbDisplay>
         <FormattedText
+          id={EXERCISE_PROMPT_ID}
           className={PROMPT_CLASS}
           text={t(
             exercise.promptTranslationKey,
@@ -279,7 +281,12 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           )}
         />
         <AnswerAreaContainer aria-hidden={isFocusPickerOpen}>
-          <ExerciseAnswerArea exercise={exercise} forceReveal={skipped} onAnswer={handleAnswer} />
+          <ExerciseAnswerArea
+            exercise={exercise}
+            forceReveal={skipped}
+            onAnswer={handleAnswer}
+            promptId={EXERCISE_PROMPT_ID}
+          />
         </AnswerAreaContainer>
         <ExplanationWrapper visible={explanation.length > 0}>
           <ExplanationInner>
@@ -409,6 +416,8 @@ const VerbDisplay = styled('p')`
   direction: rtl;
   padding: 2rem 0 1rem;
 `
+
+const EXERCISE_PROMPT_ID = 'exercise-prompt'
 
 const PROMPT_CLASS = css`
   margin: 0;

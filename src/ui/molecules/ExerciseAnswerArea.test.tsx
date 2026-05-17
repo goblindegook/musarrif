@@ -164,6 +164,23 @@ test('toggle button shows "See options" in typing mode', () => {
   expect(screen.getByText(/See options/)).toBeInTheDocument()
 })
 
+test('answer area has role="group" and aria-labelledby when promptId is provided', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} promptId="exercise-prompt" />, {
+    wrapper: Wrapper,
+  })
+  const group = screen.getByRole('group')
+  expect(group).toHaveAttribute('aria-labelledby', 'exercise-prompt')
+})
+
+test('typing mode input has aria-labelledby pointing to the prompt', () => {
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} promptId="exercise-prompt" />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  expect(screen.getByPlaceholderText('Type your answer')).toHaveAttribute('aria-labelledby', 'exercise-prompt')
+})
+
 test('typing input has aria-invalid="true" after wrong answer submitted', () => {
   render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText(/Type the answer/))

@@ -143,7 +143,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                   <span>{t(`exercise.unlock.dimension.${category.id}`)}</span>
                   {category.locked && (
                     <InlineLock>
-                      <LockIcon />
+                      <LockIcon aria-hidden="true" />
                       <span>{t('exercise.stats.mastery.locked')}</span>
                     </InlineLock>
                   )}
@@ -168,7 +168,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                           <MasteryLabel>{masteryItemLabel(item, t)}</MasteryLabel>
                           {item.locked && (
                             <InlineLock>
-                              <LockIcon />
+                              <LockIcon aria-hidden="true" />
                               <span>{t('exercise.stats.mastery.locked')}</span>
                             </InlineLock>
                           )}

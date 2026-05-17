@@ -133,10 +133,10 @@ export function formPool(forms: FormsLevel): readonly VerbForm[] {
 
 const R0: SrsRootType[] = ['sound']
 const R1: SrsRootType[] = [...R0, 'doubled']
-const R2: SrsRootType[] = [...R1, 'hamzated']
-const R3: SrsRootType[] = [...R2, 'assimilated']
-const R4: SrsRootType[] = [...R3, 'hollow']
-const R5: SrsRootType[] = [...R4, 'defective']
+const R2: SrsRootType[] = [...R1, 'assimilated']
+const R3: SrsRootType[] = [...R2, 'hollow']
+const R4: SrsRootType[] = [...R3, 'defective']
+const R5: SrsRootType[] = [...R4, 'hamzated']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
 
 const DIACRITICS_PREFERENCES = ['all', 'some', 'none'] as const
