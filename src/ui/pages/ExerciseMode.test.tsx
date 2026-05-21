@@ -88,19 +88,19 @@ describe('ExerciseMode', () => {
 
   test('shows next button after selecting an option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByLabelText('I'))
+    fireEvent.click(screen.getByText('I', { selector: 'button' }))
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
   })
 
   test('focuses next button after selecting an option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByLabelText('I'))
+    fireEvent.click(screen.getByText('I', { selector: 'button' }))
     expect(screen.getByText(/next/i, { selector: 'button' })).toHaveFocus()
   })
 
   test('does not focus next button after selecting a wrong option', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByLabelText('II'))
+    fireEvent.click(screen.getByText('II', { selector: 'button' }))
     expect(screen.getByText(/next/i, { selector: 'button' })).not.toHaveFocus()
   })
 
@@ -129,7 +129,7 @@ describe('ExerciseMode', () => {
 
   test('clicking next loads a fresh question with enabled options', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByLabelText('I'))
+    fireEvent.click(screen.getByText('I', { selector: 'button' }))
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
     const freshOptions = screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })
     expect(freshOptions).toHaveLength(4)
@@ -148,7 +148,7 @@ describe('ExerciseMode', () => {
     fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
-    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
+    expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
     expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
   })
@@ -168,9 +168,9 @@ describe('ExerciseMode', () => {
 
   test('correct option is marked after selecting any answer', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
-    fireEvent.click(screen.getByLabelText('I'))
-    expect(screen.getByLabelText('I')).toBeInTheDocument()
-    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
+    const answer = screen.getByText('I', { selector: 'button' })
+    fireEvent.click(answer)
+    expect(answer).toHaveAttribute('data-state', 'correct')
   })
 
   describe('profile-based generation', () => {
@@ -362,7 +362,7 @@ describe('SRS recording', () => {
         </RoutingProvider>
       ),
     })
-    fireEvent.click(screen.getByLabelText('correct'))
+    fireEvent.click(screen.getByText('correct', { selector: 'button' }))
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
     expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
   })
@@ -409,7 +409,7 @@ describe('keyboard shortcuts', () => {
     render(<ExerciseMode generateExercise={() => testExercise()} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: '1' })
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
-    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
+    expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
   })
 
   test('pressing 2 answers with the second option', () => {
@@ -441,7 +441,7 @@ describe('keyboard shortcuts', () => {
     render(<ExerciseMode generateExercise={gen} />, { wrapper: Wrapper })
     fireEvent.keyDown(document.body, { key: 's' })
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
-    expect(screen.getByLabelText('I')).toHaveAttribute('data-state', 'correct')
+    expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
     expect(screen.getByText(/Form I is the base pattern/i)).toBeInTheDocument()
   })
 

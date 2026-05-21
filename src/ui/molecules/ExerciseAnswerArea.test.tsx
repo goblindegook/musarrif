@@ -38,15 +38,33 @@ test('MC mode renders four option buttons and no text input', () => {
 test('clicking an option calls onAnswer with its index and correctness', () => {
   const onAnswer = vi.fn()
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={onAnswer} />, { wrapper: Wrapper })
-  fireEvent.click(screen.getByLabelText('يَكتُبُ'))
+  fireEvent.click(screen.getByText('يَكتُبُ', { selector: 'button' }))
   expect(onAnswer).toHaveBeenCalledWith(1, false)
 })
 
 test('clicking the correct option calls onAnswer with isCorrect=true', () => {
   const onAnswer = vi.fn()
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={onAnswer} />, { wrapper: Wrapper })
-  fireEvent.click(screen.getByLabelText('كَتَبَ'))
+  fireEvent.click(screen.getByText('كَتَبَ', { selector: 'button' }))
   expect(onAnswer).toHaveBeenCalledWith(0, true)
+})
+
+test('multiple-choice option buttons with Arabic text set lang and dir attributes', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
+  expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('lang', 'ar')
+  expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('dir', 'rtl')
+})
+
+test('multiple-choice option buttons with localized non-Arabic text do not force Arabic lang or direction', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ options: ['Past', 'Present', 'Future', 'Imperative'] })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  expect(screen.getByText('Past', { selector: 'button' })).not.toHaveAttribute('lang')
+  expect(screen.getByText('Past', { selector: 'button' })).not.toHaveAttribute('dir')
 })
 
 test('option buttons are disabled after answering', () => {
@@ -60,7 +78,7 @@ test('option buttons are disabled after answering', () => {
 test('correct option is marked after answering', () => {
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
   fireEvent.click(screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/)[0])
-  expect(screen.getByLabelText('كَتَبَ')).toHaveAttribute('data-state', 'correct')
+  expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
 })
 
 test('toggle button absent when supportsTyping is not set', () => {
@@ -144,7 +162,7 @@ test('forceReveal shows correct option, disables buttons, hides toggle', () => {
   render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} forceReveal onAnswer={noop} />, {
     wrapper: Wrapper,
   })
-  expect(screen.getByLabelText('كَتَبَ')).toHaveAttribute('data-state', 'correct')
+  expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
   for (const btn of screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/)) {
     expect(btn).toBeDisabled()
   }

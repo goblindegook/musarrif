@@ -43,6 +43,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       {mode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
+            const optionLabel = t(option)
+            const hasArabicScript = /[\u0600-\u06FF]/.test(optionLabel)
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
             const state = reveal ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
@@ -61,9 +63,10 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
                 disabled={reveal}
                 data-state={state}
                 data-testid={isCorrect && reveal ? 'correct-option' : undefined}
-                aria-label={t(option)}
+                lang={hasArabicScript ? 'ar' : undefined}
+                dir={hasArabicScript ? 'rtl' : undefined}
               >
-                {t(option)}
+                {optionLabel}
               </ShortcutButton>
             )
           })}
