@@ -829,6 +829,42 @@ describe('getDimensionChanges', () => {
     ).toEqual([{ type: 'demotion', dimension: 'forms', items: ['exercise.unlock.form.3'] }])
   })
 
+  test('rootTypes promotion from 1 to 2 announces assimilated', () => {
+    expect(
+      getDimensionChanges(
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 1 },
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 2 },
+      ),
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.assimilated'] }])
+  })
+
+  test('rootTypes promotion from 2 to 3 announces hollow', () => {
+    expect(
+      getDimensionChanges(
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 2 },
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 3 },
+      ),
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hollow'] }])
+  })
+
+  test('rootTypes promotion from 3 to 4 announces defective', () => {
+    expect(
+      getDimensionChanges(
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 3 },
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
+      ),
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.defective'] }])
+  })
+
+  test('rootTypes promotion from 4 to 5 announces hamzated', () => {
+    expect(
+      getDimensionChanges(
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
+        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 5 },
+      ),
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hamzated'] }])
+  })
+
   test('returns both promotion and demotion for simultaneous changes', () => {
     expect(
       getDimensionChanges(
@@ -837,7 +873,7 @@ describe('getDimensionChanges', () => {
       ),
     ).toEqual([
       { type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.3'] },
-      { type: 'demotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hamzated'] },
+      { type: 'demotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.assimilated'] },
     ])
   })
 })

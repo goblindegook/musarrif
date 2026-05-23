@@ -222,10 +222,10 @@ const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]
   rootTypes: [
     [],
     ['exercise.unlock.rootType.doubled'],
-    ['exercise.unlock.rootType.hamzated'],
     ['exercise.unlock.rootType.assimilated'],
     ['exercise.unlock.rootType.hollow'],
     ['exercise.unlock.rootType.defective'],
+    ['exercise.unlock.rootType.hamzated'],
   ],
   nominals: [...NOMINAL_UNLOCK_KEYS],
 }
