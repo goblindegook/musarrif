@@ -4,6 +4,7 @@ import {
   computeInsights,
   computeMastery,
   findLowestMastery,
+  type InsightCandidateType,
   type MasteryCategory,
   type MasteryCategoryId,
   type MasteryItem,
@@ -347,10 +348,80 @@ describe('computeInsights', () => {
     expect(result.journey.trend).toBe('insufficient')
   })
 
-  test('one root type unlocked → topRootType set, challenge.weakRootType null', () => {
+  test('strengths and challenge return InsightCandidate arrays with up to 2 items', () => {
     const result = computeInsights(BASE_PROFILE, {}, [])
-    expect(result.strengths.topRootType).toBe('sound')
-    expect(result.challenge.weakRootType).toBeNull()
+    expect(result.strengths.length).toBeGreaterThanOrEqual(0)
+    expect(result.strengths.length).toBeLessThanOrEqual(2)
+    expect(result.challenge.length).toBeGreaterThanOrEqual(0)
+    expect(result.challenge.length).toBeLessThanOrEqual(2)
+  })
+
+  test('candidate types come from rootType, tense, form, and pronounClass', () => {
+    const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
+    const result = computeInsights(profile, {}, [])
+    const allCandidates = [...result.strengths, ...result.challenge]
+    const validTypes: InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
+    for (const c of allCandidates) {
+      expect(validTypes).toContain(c.type)
+    }
+  })
+
+  test('global ranking: strengths.top scores are all >= challenge.weak scores', () => {
+    const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
+    const key = buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')
+    const store: SrsStore = {
+      [key]: { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+    }
+    const result = computeInsights(profile, store, [], '2026-05-23')
+    const minStrength = Math.min(...result.strengths.map((c) => c.score))
+    const maxWeak = Math.max(...result.challenge.map((c) => c.score))
+    expect(minStrength).toBeGreaterThanOrEqual(maxWeak)
+  })
+
+  test('pronounClass candidate appears when pronouns are unlocked (score test)', () => {
+    const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
+    const key3ms = buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')
+    const store: SrsStore = {
+      [key3ms]: { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+    }
+    const result = computeInsights(profile, store, [], '2026-05-23')
+    const allCandidates = [...result.strengths, ...result.challenge]
+    const singular = allCandidates.find((c) => c.type === 'pronounClass' && c.value === 'singular')
+    expect(singular).toBeDefined()
+    expect(singular!.score).toBeGreaterThan(0)
+  })
+
+  test('pronounClass score is average of unlocked member pronoun scores', () => {
+    const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
+    const key3ms = buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')
+    const key1s = buildCardKey('conjugation', 'sound', 1, 'active.past', '1s')
+    const store: SrsStore = {
+      [key3ms]: { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+      [key1s]: { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+    }
+    const mastery = computeMastery(profile, store, '2026-05-23')
+    const pronouns = mastery.find((c) => c.id === 'pronouns')!
+    const score3ms = pronouns.items.find((i) => i.value === '3ms')!.score
+    const score1s = pronouns.items.find((i) => i.value === '1s')!.score
+    const result = computeInsights(profile, store, [], '2026-05-23')
+    const allCandidates = [...result.strengths, ...result.challenge]
+    const singular = allCandidates.find((c) => c.type === 'pronounClass' && c.value === 'singular')
+    expect(singular).toBeDefined()
+    const unlocked = [score3ms, score1s, 0, 0, 0].filter((_, i) => i < 5)
+    const expected = unlocked.reduce((a, b) => a + b, 0) / 5
+    expect(singular!.score).toBeCloseTo(expected)
+  })
+
+  test('dual pronounClass included as candidate when unlocked at level 3', () => {
+    const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 3 }
+    const key = buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')
+    const store: SrsStore = {
+      [key]: { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+    }
+    const result = computeInsights(profile, store, [], '2026-05-23')
+    const allCandidates = [...result.strengths, ...result.challenge]
+    const values = allCandidates.filter((c) => c.type === 'pronounClass').map((c) => c.value)
+    expect(values).toContain('dual')
   })
 
   test('improving trend when recent accuracy exceeds all-time by more than 5', () => {

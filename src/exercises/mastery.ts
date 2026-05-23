@@ -228,6 +228,15 @@ export function findLowestMastery<K extends MasteryCategoryId>(
   return sorted.slice(0, limit).filter((item) => item.score <= threshold)
 }
 
+export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass'
+export type PronounClassId = 'singular' | 'dual' | '2ndPlural' | '3rdPlural'
+
+export interface InsightCandidate {
+  type: InsightCandidateType
+  value: string
+  score: number
+}
+
 export interface InsightData {
   journey: {
     days: number
@@ -235,14 +244,8 @@ export interface InsightData {
     accuracy: number
     trend: 'improving' | 'steady' | 'declining' | 'insufficient'
   }
-  strengths: {
-    topRootType: SrsRootType | null
-    topTense: VerbTense | null
-  }
-  challenge: {
-    weakRootType: SrsRootType | null
-    weakTense: VerbTense | null
-  }
+  strengths: readonly InsightCandidate[]
+  challenge: readonly InsightCandidate[]
   stage: {
     unlockedRootTypes: number
     totalRootTypes: number
@@ -253,6 +256,15 @@ export interface InsightData {
 
 const MASTERY_DIMENSION_KEYS: readonly MasteryCategoryId[] = ['rootTypes', 'forms', 'tenses', 'pronouns', 'nominals']
 
+const PRONOUN_CLASS_MEMBERS: Record<PronounClassId, readonly PronounId[]> = {
+  singular: ['1s', '2ms', '2fs', '3ms', '3fs', '1p'],
+  dual: ['2d', '3md', '3fd'],
+  '2ndPlural': ['2mp', '2fp'],
+  '3rdPlural': ['3mp', '3fp'],
+}
+
+const PRONOUN_CLASS_ORDER: readonly PronounClassId[] = ['singular', 'dual', '2ndPlural', '3rdPlural']
+
 export function computeInsights(
   profile: DimensionProfile,
   srsStore: SrsStore,
@@ -261,51 +273,52 @@ export function computeInsights(
 ): InsightData {
   const mastery = computeMastery(profile, srsStore, today)
 
-  const days = stats.length
-  const answers = stats.reduce((s, d) => s + d.correct + d.incorrect, 0)
   const accuracy = getAccuracyPercent(stats)
   const recentAccuracy = getRecentAccuracyPercent(stats, 15)
   const trend = computeInsightTrend(stats, accuracy, recentAccuracy)
 
-  const rootTypeCategory = mastery.find((c) => c.id === 'rootTypes')
-  const tenseCategory = mastery.find((c) => c.id === 'tenses')
-  const unlockedRootTypeItems = (rootTypeCategory?.items ?? []).filter((i) => !i.locked)
-  const unlockedTenseItems = (tenseCategory?.items ?? []).filter((i) => !i.locked)
+  const candidates: InsightCandidate[] = []
 
-  const topRootType =
-    unlockedRootTypeItems.length >= 1
-      ? (unlockedRootTypeItems.reduce((a, b) => (a.score >= b.score ? a : b)).value as SrsRootType)
-      : null
+  for (const item of (mastery.find((c) => c.id === 'rootTypes')?.items ?? []).filter((i) => !i.locked))
+    candidates.push({ type: 'rootType', value: String(item.value), score: item.score })
 
-  const topTense =
-    unlockedTenseItems.length >= 1
-      ? (unlockedTenseItems.reduce((a, b) => (a.score >= b.score ? a : b)).value as VerbTense)
-      : null
+  for (const item of (mastery.find((c) => c.id === 'tenses')?.items ?? []).filter((i) => !i.locked))
+    candidates.push({ type: 'tense', value: String(item.value), score: item.score })
 
-  const weakRootType =
-    unlockedRootTypeItems.length >= 2
-      ? (unlockedRootTypeItems.reduce((a, b) => (a.score <= b.score ? a : b)).value as SrsRootType)
-      : null
+  for (const item of (mastery.find((c) => c.id === 'forms')?.items ?? []).filter((i) => !i.locked))
+    candidates.push({ type: 'form', value: String(item.value), score: item.score })
 
-  const weakTense =
-    unlockedTenseItems.length >= 2
-      ? (unlockedTenseItems.reduce((a, b) => (a.score <= b.score ? a : b)).value as VerbTense)
-      : null
+  const pronounItems = mastery.find((c) => c.id === 'pronouns')?.items ?? []
+  for (const classId of PRONOUN_CLASS_ORDER) {
+    const unlockedMembers = pronounItems.filter(
+      (item) => PRONOUN_CLASS_MEMBERS[classId].includes(item.value as PronounId) && !item.locked,
+    )
+    if (unlockedMembers.length > 0)
+      candidates.push({ type: 'pronounClass', value: classId, score: average(unlockedMembers.map((i) => i.score)) })
+  }
 
-  const unlockedRootTypes = rootTypesPool(profile.rootTypes).length
+  const sorted = candidates.sort((a, b) => a.score - b.score)
 
-  const candidates = MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
-    (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
-  )
-
-  const nextDimension = candidates[0] ?? null
-  const nextValue = nextDimension != null ? insightNextValue(profile, nextDimension) : null
+  const nextDimension =
+    MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
+      (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
+    )[0] ?? null
 
   return {
-    journey: { days, answers, accuracy, trend },
-    strengths: { topRootType, topTense },
-    challenge: { weakRootType, weakTense },
-    stage: { unlockedRootTypes, totalRootTypes: 6, nextDimension, nextValue },
+    journey: {
+      days: stats.length,
+      answers: stats.reduce((s, d) => s + d.correct + d.incorrect, 0),
+      accuracy,
+      trend,
+    },
+    strengths: sorted.slice(-2).reverse(),
+    challenge: sorted.slice(0, 2),
+    stage: {
+      unlockedRootTypes: rootTypesPool(profile.rootTypes).length,
+      totalRootTypes: 6,
+      nextDimension,
+      nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : null,
+    },
   }
 }
 

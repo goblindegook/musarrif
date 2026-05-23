@@ -1,11 +1,19 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { computeInsights, type InsightData, type MasteryCategoryId } from '../../exercises/mastery'
+import {
+  computeInsights,
+  type InsightCandidate,
+  type InsightCandidateType,
+  type InsightData,
+  type MasteryCategoryId,
+} from '../../exercises/mastery'
 import { parseInteger, toRoman } from '../../primitives/numbers'
 import { useDimensionStore } from '../hooks/useDimensionStore'
 import { useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'
 import { useStats } from '../hooks/useStats'
+
+const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
 
 export function LearningInsights() {
   const [srsStore] = useSrsStore()
@@ -51,13 +59,13 @@ export function LearningInsights() {
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.strengths')}:</SectionLabel>{' '}
-          {buildStrengthsText(t, lang, insights.strengths)}
+          {buildSectionText(t, lang, insights.strengths, 'strengths', 'exercise.insights.strengths.none')}
         </SectionText>
       </Section>
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.challenge')}:</SectionLabel>{' '}
-          {buildChallengeText(t, lang, insights.challenge)}
+          {buildSectionText(t, lang, insights.challenge, 'challenge', 'exercise.insights.challenge.none')}
         </SectionText>
       </Section>
       <Section>
@@ -84,73 +92,49 @@ function resolveNextValueLabel(t: ReturnType<typeof useI18n>['t'], dim: MasteryC
   }
 }
 
-function buildStrengthsText(
+function buildSectionText(
   t: ReturnType<typeof useI18n>['t'],
   lang: ReturnType<typeof useI18n>['lang'],
-  strengths: InsightData['strengths'],
+  candidates: InsightData['strengths'],
+  section: 'strengths' | 'challenge',
+  noneKey: string,
 ): string {
-  const { topRootType, topTense } = strengths
-  if (topRootType != null && topTense != null) {
-    return t('exercise.insights.strengths.both', {
-      rootType: formatInsightRootTypeLabel(t, lang, topRootType),
-      tense: formatInsightTenseLabel(t, lang, topTense),
+  if (candidates.length === 0) return t(noneKey)
+
+  if (candidates.length === 1) {
+    const [a] = candidates
+    return t(`exercise.insights.${section}.single.${a.type}`, {
+      value: formatCandidateValue(t, lang, a),
     })
   }
-  if (topRootType != null) {
-    return t('exercise.insights.strengths.rootTypeOnly', {
-      rootType: formatInsightRootTypeLabel(t, lang, topRootType),
-    })
-  }
-  if (topTense != null) {
-    return t('exercise.insights.strengths.tenseOnly', { tense: formatInsightTenseLabel(t, lang, topTense) })
-  }
-  return t('exercise.insights.strengths.none')
+
+  const [a, b] = candidates
+  const [first, second] = sortPairOrder(a, b)
+  return t(`exercise.insights.${section}.pair.${first.type}.${second.type}`, {
+    value1: formatCandidateValue(t, lang, first),
+    value2: formatCandidateValue(t, lang, second),
+  })
 }
 
-function buildChallengeText(
-  t: ReturnType<typeof useI18n>['t'],
-  lang: ReturnType<typeof useI18n>['lang'],
-  challenge: InsightData['challenge'],
-): string {
-  const { weakRootType, weakTense } = challenge
-  if (weakRootType != null && weakTense != null) {
-    return t('exercise.insights.challenge.both', {
-      rootType: formatInsightRootTypeLabel(t, lang, weakRootType),
-      tense: formatInsightTenseLabel(t, lang, weakTense),
-    })
-  }
-  if (weakRootType != null) {
-    return t('exercise.insights.challenge.rootTypeOnly', {
-      rootType: formatInsightRootTypeLabel(t, lang, weakRootType),
-    })
-  }
-  if (weakTense != null) {
-    return t('exercise.insights.challenge.tenseOnly', { tense: formatInsightTenseLabel(t, lang, weakTense) })
-  }
-  return t('exercise.insights.challenge.none')
+function sortPairOrder(a: InsightCandidate, b: InsightCandidate): [InsightCandidate, InsightCandidate] {
+  return TYPE_ORDER.indexOf(a.type) <= TYPE_ORDER.indexOf(b.type) ? [a, b] : [b, a]
 }
 
-function formatInsightRootTypeLabel(
+function formatCandidateValue(
   t: ReturnType<typeof useI18n>['t'],
   _lang: ReturnType<typeof useI18n>['lang'],
-  rootType: NonNullable<InsightData['strengths']['topRootType']>,
+  candidate: InsightCandidate,
 ): string {
-  return t(`exercise.unlock.rootType.${rootType}`)
-}
-
-function formatInsightTenseLabel(
-  t: ReturnType<typeof useI18n>['t'],
-  _lang: ReturnType<typeof useI18n>['lang'],
-  tense: NonNullable<InsightData['strengths']['topTense']>,
-): string {
-  return t(resolveInsightTenseLabelKey(tense))
-}
-
-function resolveInsightTenseLabelKey(tense: NonNullable<InsightData['strengths']['topTense']>): string {
-  if (tense === 'active.imperative') return 'exercise.conjugation.tense.imperative'
-  if (tense === 'active.present.indicative') return 'exercise.conjugation.tense.active.present'
-  if (tense === 'passive.present.indicative') return 'exercise.conjugation.tense.passive.present'
-  return `exercise.conjugation.tense.${tense}`
+  switch (candidate.type) {
+    case 'rootType':
+      return t(`exercise.unlock.rootType.${candidate.value}`)
+    case 'tense':
+      return t(`exercise.conjugation.tense.${candidate.value}`)
+    case 'form':
+      return toRoman(parseInteger(candidate.value, 0))
+    case 'pronounClass':
+      return t(`exercise.insights.pronounClass.${candidate.value}`)
+  }
 }
 
 const Container = styled('div')`
