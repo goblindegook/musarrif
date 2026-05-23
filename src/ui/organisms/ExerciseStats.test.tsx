@@ -110,7 +110,7 @@ describe('ExerciseStats', () => {
 
   test('shows streak hint in the collapsed Progress header', () => {
     renderStats()
-    expect(within(screen.getByText('Progress').parentElement!).getByText('6 to extend your streak')).toBeInTheDocument()
+    expect(within(screen.getByText('Progress').parentElement!).getByText('6 for streak')).toBeInTheDocument()
   })
 
   test('expands when toggle is clicked', () => {
@@ -283,25 +283,19 @@ describe('ExerciseStats', () => {
     test('shows encouragement in the collapsed header when more than half of attempts are incorrect', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 23, passed: 0 }]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('You can do this, stay focused'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Stay focused')).toBeInTheDocument()
     })
 
     test('shows skipping notice in the collapsed header when skip count is high', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 1, passed: 20 }]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('You are skipping many cards'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Some cards skipped')).toBeInTheDocument()
     })
 
     test('shows strong-accuracy congratulations in the collapsed header', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 15, incorrect: 1, passed: 0 }]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('Excellent accuracy today'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Great accuracy!')).toBeInTheDocument()
     })
 
     test('shows strongest-dimension hint in the collapsed header with real SRS data', () => {
@@ -336,9 +330,7 @@ describe('ExerciseStats', () => {
         srsStore,
       })
 
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('Focus a bit more on Participles'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Work on Participles')).toBeInTheDocument()
     })
 
     test("shows yesterday challenge when today's correct total is below yesterday", () => {
@@ -349,9 +341,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 11, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText("Can you beat yesterday's total of 20?"),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText("Beat yesterday's 20?")).toBeInTheDocument()
     })
 
     test("shows remaining-to-yesterday hint when today's correct total is within 5", () => {
@@ -362,7 +352,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 15, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(within(screen.getByText('Progress').parentElement!).getByText('Only 5 more to go...')).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('5 more to go...')).toBeInTheDocument()
     })
 
     test("congratulates when today's correct total reaches yesterday", () => {
@@ -373,9 +363,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 20, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('Great job, you matched yesterday!'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Matched yesterday!')).toBeInTheDocument()
     })
 
     test("congratulates more when today's correct total exceeds yesterday by up to 5", () => {
@@ -386,9 +374,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 12, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(
-        within(screen.getByText('Progress').parentElement!).getByText('Excellent, you are ahead of yesterday!'),
-      ).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Ahead of yesterday!')).toBeInTheDocument()
     })
   })
 
