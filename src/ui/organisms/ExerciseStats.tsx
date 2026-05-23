@@ -1,5 +1,5 @@
 import { styled } from 'goober'
-import { useMemo } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import 'uplot/dist/uPlot.min.css'
 import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../exercises/dimensions'
 import {
@@ -11,6 +11,7 @@ import {
 import type { SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import { parseInteger, sum, toRoman } from '../../primitives/numbers'
+import { Button } from '../atoms/Button'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { useI18n } from '../hooks/useI18n'
@@ -19,7 +20,9 @@ import { useTheme } from '../hooks/useTheme'
 import { LockIcon } from '../icons/LockIcon'
 import { Chart } from '../molecules/Chart'
 import { Detail } from '../molecules/Detail'
+import { Modal } from '../molecules/Modal'
 import { Panel } from '../molecules/Panel'
+import { LearningInsights } from './LearningInsights'
 
 const CHART_COLORS = {
   light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8' },
@@ -36,10 +39,10 @@ const MASTERY_DISPLAY_EXPONENT = 0.4
 const ROOT_TYPE_LABEL_KEYS = {
   sound: 'exercise.stats.mastery.rootType.sound',
   doubled: 'exercise.stats.mastery.rootType.doubled',
-  hamzated: 'exercise.stats.mastery.rootType.hamzated',
   assimilated: 'exercise.stats.mastery.rootType.assimilated',
   hollow: 'exercise.stats.mastery.rootType.hollow',
   defective: 'exercise.stats.mastery.rootType.defective',
+  hamzated: 'exercise.stats.mastery.rootType.hamzated',
 } as const
 
 export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
@@ -49,6 +52,7 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
   const week = useMemo(() => days(7), [days])
+  const [insightsOpen, setInsightsOpen] = useState(false)
 
   const today = new Date()
   const yesterday = new Date()
@@ -62,48 +66,53 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   if (stats.length === 0) return null
 
   return (
-    <Panel
-      title={t('exercise.stats.title')}
-      collapsible
-      defaultCollapsed
-      hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
-    >
-      <Chart
-        ariaLabel={buildChartAriaLabel(week, t)}
-        series={[
-          {
-            show: false,
-            label: t('exercise.stats.date.label'),
-            value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
-          },
-          {
-            label: t('exercise.stats.correct'),
-            stroke: CHART_COLORS[theme].correct,
-            width: 2,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-          {
-            label: t('exercise.stats.incorrect'),
-            stroke: CHART_COLORS[theme].incorrect,
-            width: 2,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-          {
-            label: t('exercise.stats.skipped'),
-            stroke: CHART_COLORS[theme].passed,
-            width: 2,
-            value: (_, rawValue) => rawValue ?? '—',
-          },
-        ]}
-        data={[
-          week.map((d) => d.date.getTime() / 1000),
-          week.map((d) => d.correct),
-          week.map((d) => d.incorrect),
-          week.map((d) => d.passed),
-        ]}
-      />
-      <StatsDetailsPanel mastery={mastery} />
-    </Panel>
+    <>
+      <Panel
+        title={t('exercise.stats.title')}
+        collapsible
+        defaultCollapsed
+        hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
+      >
+        <Chart
+          ariaLabel={buildChartAriaLabel(week, t)}
+          series={[
+            {
+              show: false,
+              label: t('exercise.stats.date.label'),
+              value: (_, value) => (value == null ? '—' : dateFormatter.format(new Date(value * 1000))),
+            },
+            {
+              label: t('exercise.stats.correct'),
+              stroke: CHART_COLORS[theme].correct,
+              width: 2,
+              value: (_, rawValue) => rawValue ?? '—',
+            },
+            {
+              label: t('exercise.stats.incorrect'),
+              stroke: CHART_COLORS[theme].incorrect,
+              width: 2,
+              value: (_, rawValue) => rawValue ?? '—',
+            },
+            {
+              label: t('exercise.stats.skipped'),
+              stroke: CHART_COLORS[theme].passed,
+              width: 2,
+              value: (_, rawValue) => rawValue ?? '—',
+            },
+          ]}
+          data={[
+            week.map((d) => d.date.getTime() / 1000),
+            week.map((d) => d.correct),
+            week.map((d) => d.incorrect),
+            week.map((d) => d.passed),
+          ]}
+        />
+        <StatsDetailsPanel mastery={mastery} onOpenInsights={() => setInsightsOpen(true)} />
+      </Panel>
+      <Modal isOpen={insightsOpen} title={t('exercise.insights.title')} onClose={() => setInsightsOpen(false)}>
+        <LearningInsights />
+      </Modal>
+    </>
   )
 }
 
@@ -224,9 +233,10 @@ function buildChartAriaLabel(
 
 interface StatsDetailsPanelProps {
   mastery: readonly MasteryCategoryType<MasteryCategoryId>[]
+  onOpenInsights: () => void
 }
 
-function StatsDetailsPanel({ mastery }: StatsDetailsPanelProps) {
+function StatsDetailsPanel({ mastery, onOpenInsights }: StatsDetailsPanelProps) {
   const { streak, accuracy } = useStats()
   const { t, lang } = useI18n()
 
@@ -270,6 +280,7 @@ function StatsDetailsPanel({ mastery }: StatsDetailsPanelProps) {
         </StreakGoalSection>
       )}
       <MasterySection mastery={mastery} />
+      <Button onClick={onOpenInsights}>{t('exercise.insights.button')}</Button>
     </StatsSummary>
   )
 }

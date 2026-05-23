@@ -3,7 +3,7 @@ import type { VerbTense } from '../paradigms/tense'
 import { FORMS, type VerbForm } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
 import { average, clamp } from '../primitives/numbers'
-import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
+import { type DimensionProfile, formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import {
   cardSpace,
   isMasdarCard,
@@ -14,6 +14,7 @@ import {
   type SrsRootType,
   type SrsStore,
 } from './srs'
+import { getAccuracyPercent, getRecentAccuracyPercent, type TrackedExercises } from './stats'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const TENSE_ORDER: readonly VerbTense[] = [
@@ -225,4 +226,122 @@ export function findLowestMastery<K extends MasteryCategoryId>(
   const sorted = unlocked.toSorted((a, b) => a.score - b.score)
   const threshold = sorted[Math.min(2, sorted.length - 1)].score
   return sorted.slice(0, limit).filter((item) => item.score <= threshold)
+}
+
+export interface InsightData {
+  journey: {
+    days: number
+    answers: number
+    accuracy: number
+    trend: 'improving' | 'steady' | 'declining' | 'insufficient'
+  }
+  strengths: {
+    topRootType: SrsRootType | null
+    topTense: VerbTense | null
+  }
+  challenge: {
+    weakRootType: SrsRootType | null
+    weakTense: VerbTense | null
+  }
+  stage: {
+    unlockedRootTypes: number
+    totalRootTypes: number
+    nextDimension: MasteryCategoryId | null
+    nextValue: string | null
+  }
+}
+
+const MASTERY_DIMENSION_KEYS: readonly MasteryCategoryId[] = ['rootTypes', 'forms', 'tenses', 'pronouns', 'nominals']
+
+export function computeInsights(
+  profile: DimensionProfile,
+  srsStore: SrsStore,
+  stats: TrackedExercises,
+  today = utcToday(),
+): InsightData {
+  const mastery = computeMastery(profile, srsStore, today)
+
+  const days = stats.length
+  const answers = stats.reduce((s, d) => s + d.correct + d.incorrect, 0)
+  const accuracy = getAccuracyPercent(stats)
+  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
+  const trend = computeInsightTrend(stats, accuracy, recentAccuracy)
+
+  const rootTypeCategory = mastery.find((c) => c.id === 'rootTypes')
+  const tenseCategory = mastery.find((c) => c.id === 'tenses')
+  const unlockedRootTypeItems = (rootTypeCategory?.items ?? []).filter((i) => !i.locked)
+  const unlockedTenseItems = (tenseCategory?.items ?? []).filter((i) => !i.locked)
+
+  const topRootType =
+    unlockedRootTypeItems.length >= 1
+      ? (unlockedRootTypeItems.reduce((a, b) => (a.score >= b.score ? a : b)).value as SrsRootType)
+      : null
+
+  const topTense =
+    unlockedTenseItems.length >= 1
+      ? (unlockedTenseItems.reduce((a, b) => (a.score >= b.score ? a : b)).value as VerbTense)
+      : null
+
+  const weakRootType =
+    unlockedRootTypeItems.length >= 2
+      ? (unlockedRootTypeItems.reduce((a, b) => (a.score <= b.score ? a : b)).value as SrsRootType)
+      : null
+
+  const weakTense =
+    unlockedTenseItems.length >= 2
+      ? (unlockedTenseItems.reduce((a, b) => (a.score <= b.score ? a : b)).value as VerbTense)
+      : null
+
+  const unlockedRootTypes = rootTypesPool(profile.rootTypes).length
+
+  const candidates = MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
+    (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
+  )
+
+  const nextDimension = candidates[0] ?? null
+  const nextValue = nextDimension != null ? insightNextValue(profile, nextDimension) : null
+
+  return {
+    journey: { days, answers, accuracy, trend },
+    strengths: { topRootType, topTense },
+    challenge: { weakRootType, weakTense },
+    stage: { unlockedRootTypes, totalRootTypes: 6, nextDimension, nextValue },
+  }
+}
+
+function computeInsightTrend(
+  stats: TrackedExercises,
+  allTimeAccuracy: number,
+  recentAccuracy: number,
+): InsightData['journey']['trend'] {
+  if (stats.length < 15) return 'insufficient'
+  if (recentAccuracy > allTimeAccuracy + 5) return 'improving'
+  if (recentAccuracy < allTimeAccuracy - 5) return 'declining'
+  return 'steady'
+}
+
+function insightNextValue(profile: DimensionProfile, dim: MasteryCategoryId): string | null {
+  switch (dim) {
+    case 'rootTypes': {
+      const next = (profile.rootTypes + 1) as typeof profile.rootTypes
+      return rootTypesPool(next).find((v) => !rootTypesPool(profile.rootTypes).includes(v)) ?? null
+    }
+    case 'tenses': {
+      const next = (profile.tenses + 1) as typeof profile.tenses
+      return tensePool(next).find((v) => !tensePool(profile.tenses).includes(v)) ?? null
+    }
+    case 'forms': {
+      const next = (profile.forms + 1) as typeof profile.forms
+      const added = formPool(next).find((v) => !formPool(profile.forms).includes(v))
+      return added != null ? String(added) : null
+    }
+    case 'pronouns': {
+      const next = (profile.pronouns + 1) as typeof profile.pronouns
+      return pronounPool(next).find((v) => !pronounPool(profile.pronouns).includes(v)) ?? null
+    }
+    case 'nominals': {
+      const next = profile.nominals + 1
+      return next === 1 ? 'participles' : next === 2 ? 'masdar' : null
+    }
+  }
 }

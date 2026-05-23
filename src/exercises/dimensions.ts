@@ -147,7 +147,7 @@ const NOMINAL_UNLOCK_KEYS = [
   ['exercise.unlock.nominal.masdar'],
 ] as const
 
-const MAX_LEVELS: Record<DimensionKey, number> = {
+export const MAX_LEVELS: Record<DimensionKey, number> = {
   tenses: TENSE_POOLS.length - 1,
   pronouns: PRONOUN_POOLS.length - 1,
   diacritics: DIACRITICS_PREFERENCES.length - 1,

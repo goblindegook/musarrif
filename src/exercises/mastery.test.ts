@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import type { DimensionProfile } from './dimensions'
 import {
+  computeInsights,
   computeMastery,
   findLowestMastery,
   type MasteryCategory,
@@ -9,6 +10,7 @@ import {
   type MasteryItemIdByCategory,
 } from './mastery'
 import { buildCardKey, type SrsStore } from './srs'
+import type { DailyActivity, TrackedExercises } from './stats'
 
 function testMasteryCategories(items: {
   rootTypes?: MasteryItem<'rootTypes'>[]
@@ -311,5 +313,54 @@ describe('find lowest mastery', () => {
       { id: 'pronouns.1s', categoryId: 'pronouns', value: '1s', score: 0, locked: false },
       { id: 'pronouns.2ms', categoryId: 'pronouns', value: '2ms', score: 0, locked: false },
     ])
+  })
+})
+
+const COMPLETE_PROFILE: DimensionProfile = {
+  tenses: 4,
+  pronouns: 3,
+  diacritics: 2,
+  forms: 9,
+  rootTypes: 5,
+  nominals: 2,
+}
+
+function makeDailyActivity(daysAgo: number, correct: number, incorrect: number): DailyActivity {
+  const d = new Date()
+  d.setDate(d.getDate() - daysAgo)
+  return { date: new Date(d.getFullYear(), d.getMonth(), d.getDate()), correct, incorrect, passed: 0 }
+}
+
+function makeDailyRange(
+  startDaysAgo: number,
+  length: number,
+  correct: number,
+  incorrect: number,
+): readonly DailyActivity[] {
+  return Array.from({ length }, (_, i) => makeDailyActivity(startDaysAgo - i, correct, incorrect))
+}
+
+describe('computeInsights', () => {
+  test('zero days → trend insufficient and journey.days === 0', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [])
+    expect(result.journey.days).toBe(0)
+    expect(result.journey.trend).toBe('insufficient')
+  })
+
+  test('one root type unlocked → topRootType set, challenge.weakRootType null', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [])
+    expect(result.strengths.topRootType).toBe('sound')
+    expect(result.challenge.weakRootType).toBeNull()
+  })
+
+  test('improving trend when recent accuracy exceeds all-time by more than 5', () => {
+    const stats: TrackedExercises = [...makeDailyRange(19, 5, 4, 6), ...makeDailyRange(14, 15, 17, 3)]
+    const result = computeInsights(BASE_PROFILE, {}, stats)
+    expect(result.journey.trend).toBe('improving')
+  })
+
+  test('complete profile → stage.nextDimension null', () => {
+    const result = computeInsights(COMPLETE_PROFILE, {}, [])
+    expect(result.stage.nextDimension).toBeNull()
   })
 })

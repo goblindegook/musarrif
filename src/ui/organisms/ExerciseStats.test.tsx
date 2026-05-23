@@ -384,6 +384,23 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('Mastery')).toBeInTheDocument()
   })
 
+  test('shows insights entry button when expanded', () => {
+    renderStats()
+    fireEvent.click(screen.getByText('Progress'))
+    expect(screen.getByText('See insights')).toBeInTheDocument()
+  })
+
+  test('opens learning insights modal from stats panel', () => {
+    renderStats()
+    fireEvent.click(screen.getByText('Progress'))
+    fireEvent.click(screen.getByText('See insights'))
+    expect(screen.getByText('Learning insights')).toBeInTheDocument()
+    expect(screen.getByText(/^Your journey so far:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Where you shine:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Your current challenge:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Your stage:/)).toBeInTheDocument()
+  })
+
   test('shows locked indicator in the category label', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))
