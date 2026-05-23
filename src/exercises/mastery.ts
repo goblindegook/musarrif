@@ -44,7 +44,7 @@ const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
 ]
 const NOMINAL_ORDER = ['participles', 'masdar'] as const
 
-const MASTERY_THRESHOLD_DAYS = 365
+const MASTERY_THRESHOLD_DAYS = 90
 const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
 
 export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals'

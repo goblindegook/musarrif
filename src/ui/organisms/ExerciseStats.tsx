@@ -31,7 +31,7 @@ interface Props {
   srsStore?: SrsStore
 }
 
-const MASTERY_DISPLAY_EXPONENT = 0.6
+const MASTERY_DISPLAY_EXPONENT = 0.4
 
 const ROOT_TYPE_LABEL_KEYS = {
   sound: 'exercise.stats.mastery.rootType.sound',
