@@ -30,10 +30,10 @@
 
 ```text
 src/
-  app.tsx                   # App shell; switches between conjugation and exercise pages
-  main.tsx                  # Entry point; mounts RoutingProvider + I18nProvider + App
-  routes.ts                 # Routing configuration and AppRoute type definitions
   ui/
+    app.tsx                 # App shell; switches between conjugation and exercise pages
+    main.tsx                # Entry point; mounts RoutingProvider + I18nProvider + App
+    routes.ts               # Routing configuration and AppRoute type definitions
     atoms/                  # Foundational UI primitives (Button, ArabicDisplay, Heading, Text, etc.)
     molecules/              # Composed controls (tabs, segmented control, search, share/copy/speech, Detail, etc.)
     organisms/              # Feature sections (ConjugateBox, ConjugationTable, ConjugationInsights, FormInsights, etc.)
@@ -49,6 +49,9 @@ src/
       useTheme.ts           # Theme management
       useDocumentTitle.ts   # Document title updates
       useLocalStorage.ts    # Local storage abstraction
+      useSpeech.ts          # Speech synthesis support
+      useStats.ts           # Exercise streak and daily stats hook
+      useTour.ts            # Product tour state
     locales/                # i18n JSON files (en, it, pt, ar)
   exercises/
     generators/             # Per-kind exercise generators (conjugation.ts, verb-form.ts, masdar-form.ts, etc.)

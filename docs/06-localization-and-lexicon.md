@@ -1,6 +1,6 @@
 ## Localization
 
-Supports English, Italian, European Portuguese, and Arabic. Translation files in `src/locales/`.
+Supports English, Italian, European Portuguese, and Arabic. Translation files in `src/ui/locales/`.
 
 - All UI strings must appear in all four locale files under `strings`
 - Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly)
