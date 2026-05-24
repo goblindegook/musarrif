@@ -35,7 +35,7 @@ function testExercise(overrides = {}): Exercise {
       category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'كَتَبَ',
       rootType: 'sound',
       vowels: 'a-u',

@@ -42,7 +42,7 @@ function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers,
       today,
     ),
     form: strongestDeduped(
-      cards.filter((card) => card.form === explanation.form),
+      cards.filter((card) => card.form === explanation.paradigmForm),
       today,
     ),
     tense:

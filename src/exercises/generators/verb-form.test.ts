@@ -125,7 +125,7 @@ describe('verbFormExercise with constraints', () => {
     expect(exercise.explanation).toMatchObject({
       paradigmRoots: ['ش', 'ر', 'ب'],
       paradigmForm: 10,
-      form: 10,
+      form: '10',
       arabic: 'اِسْتَشْرَبَ',
       rootType: 'sound',
       tense: 'active.past',

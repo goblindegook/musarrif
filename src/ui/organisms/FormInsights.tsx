@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
-import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
+import { renderExplanation, resolveVerbExplanationLayers, toFormDescriptor } from '../../paradigms/explanation'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { type DisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
@@ -40,7 +40,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   return (
     <>
       <SemanticAnchor dir={dir} lang={lang}>
-        {t(`formInfo.form${verb.form}${verb.root.length > 3 ? 'q' : ''}.semantic`)}
+        {t(`formInfo.form${toFormDescriptor(verb)}.semantic`)}
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
       {formExplanationParagraph && (

@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'vitest'
-import type { ExplanationLayers } from '../paradigms/explanation'
+import type { NominalExplanationLayers, VerbExplanationLayers } from '../paradigms/explanation'
 import { filterMasteredLayers } from './explanation'
 import { buildCardKey, type SrsStore } from './srs'
 
 describe('filterMasteredLayers', () => {
-  const FULL_LAYERS: ExplanationLayers = {
+  const FULL_LAYERS: VerbExplanationLayers = {
     category: 'verb',
     paradigmRoots: ['ك', 'ت', 'ب'],
     paradigmForm: 1,
     arabic: 'كَتَبَ',
     rootType: 'sound',
-    form: 1,
+    form: '1',
     vowels: 'a-u',
     tense: 'active.past',
     pronoun: '3ms',
@@ -21,7 +21,7 @@ describe('filterMasteredLayers', () => {
   test('returns all fields unchanged when store is empty', () => {
     const result = filterMasteredLayers({}, FULL_LAYERS)
     expect(result.rootType).toBe('sound')
-    expect(result.form).toBe(1)
+    expect(result.form).toBe('1')
     expect(result.vowels).toBe('a-u')
     expect(result.tense).toBe('active.past')
     expect(result.pronoun).toBe('3ms')
@@ -38,7 +38,7 @@ describe('filterMasteredLayers', () => {
     }
     const result = filterMasteredLayers(store, FULL_LAYERS)
     expect(result.rootType).toBe('sound')
-    expect(result.form).toBe(1)
+    expect(result.form).toBe('1')
     expect(result.vowels).toBe('a-u')
     expect(result.tense).toBe('active.past')
     expect(result.pronoun).toBe('3ms')
@@ -195,12 +195,12 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides formRoot only when both form and rootType exceed threshold', () => {
-    const layers: ExplanationLayers = {
+    const layers: VerbExplanationLayers = {
       category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 8,
       arabic: 'اِكْتَتَبَ',
-      form: 8,
+      form: '8',
       rootType: 'sound',
       formRoot: 'assimilation-complete',
     }
@@ -237,7 +237,7 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides tenseRoot only when both tense and rootType exceed threshold', () => {
-    const layers: ExplanationLayers = {
+    const layers: VerbExplanationLayers = {
       category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
@@ -279,7 +279,7 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides nominal when nominal mastery reaches threshold using MASDAR_KINDS', () => {
-    const layers: ExplanationLayers = {
+    const layers: NominalExplanationLayers = {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
@@ -294,7 +294,7 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides nominal when nominal mastery reaches threshold using PARTICIPLE_KINDS', () => {
-    const layers: ExplanationLayers = {
+    const layers: NominalExplanationLayers = {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
@@ -309,7 +309,7 @@ describe('filterMasteredLayers', () => {
   })
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {
-    const layers: ExplanationLayers = {
+    const layers: VerbExplanationLayers = {
       category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,

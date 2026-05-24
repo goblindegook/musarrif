@@ -421,7 +421,7 @@ describe('renderExplanation', () => {
       category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
       vowels: 'a-u',
@@ -436,7 +436,7 @@ describe('renderExplanation', () => {
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
-    expect(renderExplanation(testExplanationLayers({ form: 1, rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
+    expect(renderExplanation(testExplanationLayers({ form: '1', rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
       'explanation.root.sound explanation.form.1 explanation.form-i-pattern.a-u',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
       'explanation.pronoun.base-form',
@@ -444,11 +444,11 @@ describe('renderExplanation', () => {
   })
 
   test('includes form description in first paragraph for non-form-I', () => {
-    expect(renderExplanation(testExplanationLayers({ form: 3 }), t)[0]).toContain('explanation.form.3')
+    expect(renderExplanation(testExplanationLayers({ form: '3' }), t)[0]).toContain('explanation.form.3')
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
-    expect(render(testExplanationLayers({ form: 1, vowels: 'a-u', tense: 'active.past' }))).toContain(
+    expect(render(testExplanationLayers({ form: '1', vowels: 'a-u', tense: 'active.past' }))).toContain(
       'explanation.tense.active.past.form-i',
     )
   })
@@ -473,7 +473,7 @@ describe('renderExplanation', () => {
         category: 'verb',
         paradigmRoots: ['ق', 'و', 'ل'],
         paradigmForm: 1,
-        form: 1,
+        form: '1',
         arabic: 'قَالَ',
         rootType: 'hollow-waw',
         vowels: 'a-u',
@@ -491,7 +491,7 @@ describe('renderExplanation', () => {
           category: 'verb',
           paradigmRoots: ['ز', 'و', 'ج'],
           paradigmForm: 8,
-          form: 8,
+          form: '8',
           arabic: 'اِزْدَوَجَ',
           rootType: 'hollow-waw',
           formRoot: 'assimilation-voicing',
@@ -614,7 +614,7 @@ describe('resolveNominalExplanationLayers', () => {
 
   test('returns form number', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.form).toBe(1)
+    expect(layers.form).toBe('1')
   })
 
   test('returns nominal kind', () => {
@@ -682,7 +682,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',
@@ -698,7 +698,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'مَكْتُوب',
       rootType: 'sound',
       nominal: 'passiveParticiple',
@@ -714,7 +714,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'كِتَابَة',
       rootType: 'sound',
       nominal: 'masdar',
@@ -730,7 +730,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['و', 'ع', 'د'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: ['وَعْد', 'مَوْعِد'],
       rootType: 'assimilated',
       nominal: 'masdar',
@@ -748,7 +748,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'كَاتِب',
       rootType: 'sound',
       vowels: 'a-u',
@@ -762,7 +762,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: 1,
+      form: '1',
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',
@@ -812,5 +812,21 @@ describe('renderExplanation with nominal', () => {
     ).join(' ')
 
     expect(rendered).toContain('The Form II masdar follows the pattern تَفْعِيل.')
+  })
+
+  test('BQI masdar explanation uses 1q-bd key distinct from generic Iq', () => {
+    const bqi = getVerbById('zlzl-1')!
+    const [masdar] = deriveMasdar(bqi)
+    const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), localeT).join(' ')
+    expect(rendered).toContain('فَعْلَلَة')
+  })
+
+  test('BQI masdar key in renderExplanation is explanation.nominal.masdar.1q-bd not 1q', () => {
+    const t = (key: string) => key
+    const bqi = getVerbById('zlzl-1')!
+    const [masdar] = deriveMasdar(bqi)
+    const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), t).join(' ')
+    expect(rendered).toContain('explanation.nominal.masdar.1q-bd')
+    expect(rendered).not.toContain('explanation.nominal.masdar.1q ')
   })
 })

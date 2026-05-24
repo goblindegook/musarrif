@@ -50,6 +50,38 @@ describe('FormInsights', () => {
     })
   })
 
+  describe('BQI biliteral doubling', () => {
+    test('BQI verb shows "Biliteral doubling · Repetition" anchor', () => {
+      const verb = buildVerbFromId('zlzl-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText('Biliteral doubling · Repetition')).toBeInTheDocument()
+    })
+
+    test('BQI verb does not show generic "Base meaning" anchor', () => {
+      const verb = buildVerbFromId('zlzl-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.queryByText('Base meaning')).not.toBeInTheDocument()
+    })
+
+    test('generic Iq verb still shows "Base meaning" anchor', () => {
+      const verb = buildVerbFromId('brhn-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText('Base meaning')).toBeInTheDocument()
+    })
+
+    test('BQI verb shows biliteral doubling explanation sentence', () => {
+      const verb = buildVerbFromId('zlzl-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText(/Form Iq biliteral doubling/, { selector: 'p' })).toBeInTheDocument()
+    })
+
+    test('generic Iq verb shows base four-consonant explanation sentence', () => {
+      const verb = buildVerbFromId('brhn-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText(/four-consonant/i, { selector: 'p' })).toBeInTheDocument()
+    })
+  })
+
   describe('Form VIII assimilation sentence', () => {
     test('shows voicing assimilation for ز-initial Form VIII verb', () => {
       const verb = buildVerbFromId('zwj-8')!
