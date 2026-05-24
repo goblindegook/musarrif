@@ -41,6 +41,15 @@ describe('FormInsights', () => {
     })
   })
 
+    describe('quadriliteral vowel pattern', () => {
+    test('Form Iq shows quadriliteral فَعلَلَ / يُفَعلِلُ pattern, not triliteral', () => {
+      const verb = buildVerbFromId('brhn-1')!
+      render(<FormInsights verb={verb} />, { wrapper: Wrapper })
+      expect(screen.getByText('فَعلَلَ / يُفَعلِلُ')).toBeInTheDocument()
+      expect(screen.queryByText('فَعَلَ / يَفعِلُ')).not.toBeInTheDocument()
+    })
+  })
+
   describe('Form VIII assimilation sentence', () => {
     test('shows voicing assimilation for ز-initial Form VIII verb', () => {
       const verb = buildVerbFromId('zwj-8')!
