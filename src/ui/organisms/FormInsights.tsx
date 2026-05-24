@@ -38,7 +38,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   return (
     <>
       <SemanticAnchor dir={dir} lang={lang}>
-        {t(`formInfo.form${verb.form}.semantic`)}
+        {t(`formInfo.form${verb.form}${verb.root.length > 3 ? 'q' : ''}.semantic`)}
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
       {formExplanationParagraph && (
@@ -46,9 +46,11 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
           {formExplanationParagraph}
         </Text>
       )}
-      <Text dir={dir} lang={lang}>
-        {t(`formInfo.form${verb.form}.relationship`)}
-      </Text>
+      {verb.root.length === 3 && (
+        <Text dir={dir} lang={lang}>
+          {t(`formInfo.form${verb.form}.relationship`)}
+        </Text>
+      )}
       <Heading dir={dir} lang={lang}>
         {t('formInfo.examples')}
       </Heading>

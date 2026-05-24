@@ -160,7 +160,11 @@ function renderPronounParagraph(
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
   if (layers?.nominal == null) return ''
-  if (layers.nominal !== 'masdar') return `explanation.nominal.${layers.nominal}`
+  if (layers.nominal !== 'masdar')
+    return layers.paradigmRoots.length > 3
+      ? `explanation.nominal.${layers.nominal}.quad`
+      : `explanation.nominal.${layers.nominal}`
+  if (layers.paradigmRoots.length > 3) return `explanation.nominal.masdar.${layers.form}q`
   if (layers.form === 1)
     return layers.isMasdarMimi ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
   return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : ''
@@ -185,7 +189,7 @@ export function renderExplanation(
   return [
     [
       layers.rootType && t(`explanation.root.${layers.rootType}`, params),
-      layers.form != null && t(`explanation.form.${layers.form}`, params),
+      layers.form != null && t(`explanation.form.${layers.form}${layers.paradigmRoots.length > 3 ? 'q' : ''}`, params),
       layers.vowels && t(`explanation.form-i-pattern.${layers.vowels}`, params),
       layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
     ],
