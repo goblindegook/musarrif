@@ -30,8 +30,10 @@ describe('useSRSStore', () => {
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-      expect(stored[cardKey].interval).toBe(145313)
-      expect(stored[cardKey].dueDate).toBe('2424-01-30')
+      expect(stored[cardKey]).toMatchObject({
+        interval: 145313,
+        dueDate: '2424-01-30',
+      })
     })
   })
 
@@ -46,8 +48,10 @@ describe('useSRSStore', () => {
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-      expect(stored[cardKey].interval).toBe(1)
-      expect(stored[cardKey].repetitions).toBe(1)
+      expect(stored[cardKey]).toMatchObject({
+        interval: 1,
+        repetitions: 1,
+      })
       expect(stored[cardKey].ef).toBeCloseTo(2.5)
     })
   })

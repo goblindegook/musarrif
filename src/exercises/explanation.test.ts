@@ -20,11 +20,13 @@ describe('filterMasteredLayers', () => {
 
   test('returns all fields unchanged when store is empty', () => {
     const result = filterMasteredLayers({}, FULL_LAYERS)
-    expect(result.rootType).toBe('sound')
-    expect(result.form).toBe('1')
-    expect(result.vowels).toBe('a-u')
-    expect(result.tense).toBe('active.past')
-    expect(result.pronoun).toBe('3ms')
+    expect(result).toMatchObject({
+      rootType: 'sound',
+      form: '1',
+      vowels: 'a-u',
+      tense: 'active.past',
+      pronoun: '3ms',
+    })
   })
 
   test('returns all fields unchanged when no mastery exceeds threshold', () => {
@@ -37,11 +39,13 @@ describe('filterMasteredLayers', () => {
       },
     }
     const result = filterMasteredLayers(store, FULL_LAYERS)
-    expect(result.rootType).toBe('sound')
-    expect(result.form).toBe('1')
-    expect(result.vowels).toBe('a-u')
-    expect(result.tense).toBe('active.past')
-    expect(result.pronoun).toBe('3ms')
+    expect(result).toMatchObject({
+      rootType: 'sound',
+      form: '1',
+      vowels: 'a-u',
+      tense: 'active.past',
+      pronoun: '3ms',
+    })
   })
 
   test('hides rootType when rootType mastery reaches threshold', () => {
@@ -152,8 +156,10 @@ describe('filterMasteredLayers', () => {
       },
     }
     const result = filterMasteredLayers(store, FULL_LAYERS)
-    expect(result.form).toBeUndefined()
-    expect(result.vowels).toBeUndefined()
+    expect(result).toMatchObject({
+      form: undefined,
+      vowels: undefined,
+    })
   })
 
   test('hides tense when tense mastery reaches threshold', () => {
@@ -190,8 +196,10 @@ describe('filterMasteredLayers', () => {
       },
     )
 
-    expect(result.pronoun).toBeUndefined()
-    expect(result.prefix).toBeUndefined()
+    expect(result).toMatchObject({
+      pronoun: undefined,
+      prefix: undefined,
+    })
   })
 
   test('hides formRoot only when both form and rootType exceed threshold', () => {
@@ -338,8 +346,10 @@ describe('filterMasteredLayers', () => {
       },
     }
     const result = filterMasteredLayers(store, FULL_LAYERS)
-    expect(result.paradigmRoots).toEqual(['ك', 'ت', 'ب'])
-    expect(result.arabic).toBe('كَتَبَ')
+    expect(result).toMatchObject({
+      paradigmRoots: ['ك', 'ت', 'ب'],
+      arabic: 'كَتَبَ',
+    })
   })
 
   test('uses custom threshold when provided', () => {

@@ -399,8 +399,10 @@ describe('SRS recording', () => {
     )
 
     const stored = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(stored[cardKey].interval).toBe(145313)
-    expect(stored[cardKey].dueDate).toBe('2424-01-30')
+    expect(stored[cardKey]).toMatchObject({
+      interval: 145313,
+      dueDate: '2424-01-30',
+    })
   })
 })
 
@@ -489,8 +491,10 @@ describe('pass SRS recording', () => {
     fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(srs['verbForm:regular:1'].interval).toBe(3)
-    expect(srs['verbForm:regular:1'].repetitions).toBe(2)
+    expect(srs['verbForm:regular:1']).toMatchObject({
+      interval: 3,
+      repetitions: 2,
+    })
     expect(srs['verbForm:regular:1'].ef).toBeCloseTo(2.5)
 
     const daily = JSON.parse(localStorage.getItem('conjugator:exercise:daily') ?? '[]')

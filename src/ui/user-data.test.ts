@@ -68,8 +68,10 @@ describe('getUserData', () => {
     }
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
-    expect(data.dimensions.profile.tenses).toBe(4)
-    expect(data.dimensions.profile.nominals).toBe(2)
+    expect(data.dimensions.profile).toMatchObject({
+      tenses: 4,
+      nominals: 2,
+    })
   })
 
   test('does not include exerciseDifficulty in export', () => {
@@ -196,7 +198,9 @@ describe('importUserData', () => {
 
     expect(importUserData(payload)).toBe(true)
     const stored = JSON.parse(localStorage.getItem('conjugator:srs')!)
-    expect(stored['conjugation:sound:1:active.past:3ms'].interval).toBe(145313)
-    expect(stored['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2424-01-30')
+    expect(stored['conjugation:sound:1:active.past:3ms']).toMatchObject({
+      interval: 145313,
+      dueDate: '2424-01-30',
+    })
   })
 })

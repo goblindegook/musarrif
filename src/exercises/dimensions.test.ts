@@ -185,9 +185,11 @@ describe('parseDimensionStore', () => {
     })
 
     expect(sanitized.profile.tenses).toBe(4)
-    expect(sanitized.windows.tenses).toEqual([])
-    expect(sanitized.windows.pronouns).toEqual([true])
-    expect(sanitized.windows.diacritics).toEqual([])
+    expect(sanitized.windows).toMatchObject({
+      tenses: [],
+      pronouns: [true],
+      diacritics: [],
+    })
   })
 })
 
@@ -294,8 +296,10 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
       profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 },
       windows: INITIAL_DIMENSION_WINDOWS,
     }).profile
-    expect(result.tenses).toBe(2)
-    expect(result.nominals).toBe(0)
+    expect(result).toMatchObject({
+      tenses: 2,
+      nominals: 0,
+    })
   })
 
   test('keeps unlocked tenses while still rolling back diacritics when prerequisites are unmet', () => {
@@ -310,8 +314,10 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
       },
       windows: INITIAL_DIMENSION_WINDOWS,
     }).profile
-    expect(result.tenses).toBe(2)
-    expect(result.diacritics).toBe(1)
+    expect(result).toMatchObject({
+      tenses: 2,
+      diacritics: 1,
+    })
   })
 
   test('keeps tenses at 4 even when forms < max', () => {
@@ -476,8 +482,10 @@ describe('promoteDimensions', () => {
       profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1 },
       windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(8, 40) },
     })
-    expect(next.profile.tenses).toBe(1)
-    expect(next.profile.nominals).toBe(0)
+    expect(next.profile).toMatchObject({
+      tenses: 1,
+      nominals: 0,
+    })
   })
 
   test('does not promote with fewer than 20 answers', () => {
@@ -600,8 +608,10 @@ describe('promoteDimensions', () => {
         tenses: filledWindow(15),
       },
     })
-    expect(next.profile.forms).toBe(1)
-    expect(next.profile.tenses).toBe(0)
+    expect(next.profile).toMatchObject({
+      forms: 1,
+      tenses: 0,
+    })
   })
 
   test('tenses does not promote while pronouns are locked', () => {
@@ -631,8 +641,10 @@ describe('promoteDimensions', () => {
         nominals: filledWindow(20),
       },
     })
-    expect(next.profile.tenses).toBe(2)
-    expect(next.profile.nominals).toBe(1)
+    expect(next.profile).toMatchObject({
+      tenses: 2,
+      nominals: 1,
+    })
   })
 
   test('corrects legacy diacritics: 2 even with no window activity', () => {

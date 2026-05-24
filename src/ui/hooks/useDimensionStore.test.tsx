@@ -49,13 +49,17 @@ describe('useDimensionStore', () => {
 
     const { result } = renderHook(() => useDimensionStore())
 
-    expect(result.current[0].tenses).toBe(4)
-    expect(result.current[0].nominals).toBe(2)
+    expect(result.current[0]).toMatchObject({
+      tenses: 4,
+      nominals: 2,
+    })
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
-      expect(stored.profile.tenses).toBe(4)
-      expect(stored.profile.nominals).toBe(2)
+      expect(stored.profile).toMatchObject({
+        tenses: 4,
+        nominals: 2,
+      })
     })
   })
 
@@ -74,13 +78,17 @@ describe('useDimensionStore', () => {
 
     const { result } = renderHook(() => useDimensionStore())
 
-    expect(result.current[0].tenses).toBe(1)
-    expect(result.current[0].nominals).toBe(0)
+    expect(result.current[0]).toMatchObject({
+      tenses: 1,
+      nominals: 0,
+    })
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
-      expect(stored.profile.tenses).toBe(1)
-      expect(stored.profile.nominals).toBe(0)
+      expect(stored.profile).toMatchObject({
+        tenses: 1,
+        nominals: 0,
+      })
     })
   })
 
@@ -131,9 +139,9 @@ describe('useDimensionStore', () => {
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
-      expect(stored.profile.forms).toBe(0)
+      expect(stored.profile).toMatchObject({ forms: 0 })
       expect(stored.windows.forms).toEqual([false])
-      expect(result.current[0].forms).toBe(0)
+      expect(result.current[0]).toMatchObject({ forms: 0 })
       expect(result.current[1]).toHaveLength(0)
     })
   })

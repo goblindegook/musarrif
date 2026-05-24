@@ -344,8 +344,10 @@ function makeDailyRange(
 describe('computeInsights', () => {
   test('zero days → trend insufficient and journey.days === 0', () => {
     const result = computeInsights(BASE_PROFILE, {}, [])
-    expect(result.journey.days).toBe(0)
-    expect(result.journey.trend).toBe('insufficient')
+    expect(result.journey).toMatchObject({
+      days: 0,
+      trend: 'insufficient',
+    })
   })
 
   test('strengths and challenge return InsightCandidate arrays with up to 2 items', () => {

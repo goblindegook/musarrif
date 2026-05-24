@@ -64,7 +64,9 @@ describe('defineExerciseGenerator', () => {
       tense: 'active.past',
       pronoun: '3ms',
     })
-    expect(exercise.cardKey).toBe('verbForm:regular:2:active.past:3ms')
-    expect(exercise.dimensions).toEqual(['forms', 'rootTypes', 'diacritics'])
+    expect(exercise).toMatchObject({
+      cardKey: 'verbForm:regular:2:active.past:3ms',
+      dimensions: ['forms', 'rootTypes', 'diacritics'],
+    })
   })
 })

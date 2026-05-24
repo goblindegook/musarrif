@@ -10,17 +10,21 @@ afterEach(() => {
 test('opens automatically on first visit when tour is unseen', () => {
   const { result } = renderHook(() => useTour())
 
-  expect(result.current.isOpen).toBe(true)
-  expect(result.current.step).toBe(0)
-  expect(result.current.totalSteps).toBe(5)
+  expect(result.current).toMatchObject({
+    isOpen: true,
+    step: 0,
+    totalSteps: 5,
+  })
 })
 
 test('stays closed when tour has already been seen', () => {
   localStorage.setItem('conjugator:tourSeen', JSON.stringify(true))
   const { result } = renderHook(() => useTour())
 
-  expect(result.current.isOpen).toBe(false)
-  expect(result.current.step).toBe(-1)
+  expect(result.current).toMatchObject({
+    isOpen: false,
+    step: -1,
+  })
 })
 
 test('marks tour as seen when closed', () => {
@@ -31,8 +35,10 @@ test('marks tour as seen when closed', () => {
   })
 
   expect(localStorage.getItem('conjugator:tourSeen')).toBe(JSON.stringify(true))
-  expect(result.current.isOpen).toBe(false)
-  expect(result.current.step).toBe(-1)
+  expect(result.current).toMatchObject({
+    isOpen: false,
+    step: -1,
+  })
 })
 
 test('advances through steps and closes after final step', () => {
@@ -43,13 +49,17 @@ test('advances through steps and closes after final step', () => {
   act(() => result.current.nextStep())
   act(() => result.current.nextStep())
 
-  expect(result.current.step).toBe(4)
-  expect(result.current.isOpen).toBe(true)
+  expect(result.current).toMatchObject({
+    step: 4,
+    isOpen: true,
+  })
 
   act(() => result.current.nextStep())
 
-  expect(result.current.isOpen).toBe(false)
-  expect(result.current.step).toBe(-1)
+  expect(result.current).toMatchObject({
+    isOpen: false,
+    step: -1,
+  })
   expect(localStorage.getItem('conjugator:tourSeen')).toBe(JSON.stringify(true))
 })
 
@@ -61,10 +71,12 @@ test('openTour always resets to the first step', () => {
   act(() => result.current.nextStep())
   act(() => result.current.nextStep())
 
-  expect(result.current.step).toBe(2)
+  expect(result.current).toMatchObject({ step: 2 })
 
   act(() => result.current.openTour())
 
-  expect(result.current.isOpen).toBe(true)
-  expect(result.current.step).toBe(0)
+  expect(result.current).toMatchObject({
+    isOpen: true,
+    step: 0,
+  })
 })

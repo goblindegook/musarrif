@@ -59,14 +59,12 @@ describe('buildSyntheticVerb', () => {
 describe('buildVerbFromId', () => {
   test('falls back to Form I when form segment is missing', () => {
     const verb = buildVerbFromId('ktb-')
-    expect(verb.form).toBe(1)
-    expect(verb.id).toBe('ktb-1')
+    expect(verb).toMatchObject({ form: 1, id: 'ktb-1' })
   })
 
   test('falls back to Form I when form segment is invalid', () => {
     const verb = buildVerbFromId('ktb-foo')
-    expect(verb.form).toBe(1)
-    expect(verb.id).toBe('ktb-1')
+    expect(verb).toMatchObject({ form: 1, id: 'ktb-1' })
   })
 })
 

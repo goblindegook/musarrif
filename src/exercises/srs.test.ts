@@ -90,34 +90,42 @@ describe('parseCardKey', () => {
 describe('updateCardState', () => {
   test('first correct answer sets interval 1, repetitions 1, ef 2.5', () => {
     const result = updateCardState(undefined, 'correct', '2026-03-23')
-    expect(result.interval).toBe(1)
-    expect(result.repetitions).toBe(1)
+    expect(result).toMatchObject({
+      interval: 1,
+      repetitions: 1,
+      dueDate: '2026-03-24',
+    })
     expect(result.ef).toBeCloseTo(2.5)
-    expect(result.dueDate).toBe('2026-03-24')
   })
 
   test('second correct answer sets interval 6, repetitions 2', () => {
     const after1 = updateCardState(undefined, 'correct', '2026-03-23')
     const result = updateCardState(after1, 'correct', '2026-03-23')
-    expect(result.interval).toBe(6)
-    expect(result.repetitions).toBe(2)
-    expect(result.dueDate).toBe('2026-03-29')
+    expect(result).toMatchObject({
+      interval: 6,
+      repetitions: 2,
+      dueDate: '2026-03-29',
+    })
   })
 
   test('third correct answer uses interval × ef', () => {
     const s1 = updateCardState(undefined, 'correct', '2026-03-23')
     const s2 = updateCardState(s1, 'correct', '2026-03-23')
     const result = updateCardState(s2, 'correct', '2026-03-23')
-    expect(result.interval).toBe(Math.round(6 * 2.5))
-    expect(result.repetitions).toBe(3)
+    expect(result).toMatchObject({
+      interval: Math.round(6 * 2.5),
+      repetitions: 3,
+    })
   })
 
   test('incorrect answer resets repetitions and sets interval 1', () => {
     const s1 = updateCardState(undefined, 'correct', '2026-03-23')
     const s2 = updateCardState(s1, 'correct', '2026-03-23')
     const result = updateCardState(s2, 'wrong', '2026-03-23')
-    expect(result.interval).toBe(1)
-    expect(result.repetitions).toBe(0)
+    expect(result).toMatchObject({
+      interval: 1,
+      repetitions: 0,
+    })
     expect(result.ef).toBeCloseTo(2.5 - 0.54)
   })
 
@@ -129,41 +137,51 @@ describe('updateCardState', () => {
 
   test('pass on a new card sets interval 1, preserves repetitions 0, preserves ef', () => {
     const result = updateCardState(undefined, 'pass', '2026-03-23')
-    expect(result.interval).toBe(1)
-    expect(result.repetitions).toBe(0)
+    expect(result).toMatchObject({
+      interval: 1,
+      repetitions: 0,
+      dueDate: '2026-03-24',
+    })
     expect(result.ef).toBeCloseTo(2.5)
-    expect(result.dueDate).toBe('2026-03-24')
   })
 
   test('pass on interval-6 card halves interval to 3, preserves repetitions and ef', () => {
     const state: CardState = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-23' }
     const result = updateCardState(state, 'pass', '2026-03-23')
-    expect(result.interval).toBe(3)
-    expect(result.repetitions).toBe(2)
+    expect(result).toMatchObject({
+      interval: 3,
+      repetitions: 2,
+      dueDate: '2026-03-26',
+    })
     expect(result.ef).toBeCloseTo(2.5)
-    expect(result.dueDate).toBe('2026-03-26')
   })
 
   test('pass on interval-1 card keeps interval at 1 (floor)', () => {
     const state: CardState = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' }
     const result = updateCardState(state, 'pass', '2026-03-23')
-    expect(result.interval).toBe(1)
-    expect(result.repetitions).toBe(1)
-    expect(result.dueDate).toBe('2026-03-24')
+    expect(result).toMatchObject({
+      interval: 1,
+      repetitions: 1,
+      dueDate: '2026-03-24',
+    })
   })
 
   test('correct answer does not cap interval or due date', () => {
     const state: CardState = { interval: 300, ef: 2.5, repetitions: 5, dueDate: '2026-03-23' }
     const result = updateCardState(state, 'correct', '2026-03-23')
-    expect(result.interval).toBe(750)
-    expect(result.dueDate).toBe('2028-04-11')
+    expect(result).toMatchObject({
+      interval: 750,
+      dueDate: '2028-04-11',
+    })
   })
 
   test('pass answer does not cap interval or due date', () => {
     const state: CardState = { interval: 1000, ef: 2.5, repetitions: 5, dueDate: '2424-01-30' }
     const result = updateCardState(state, 'pass', '2026-03-23')
-    expect(result.interval).toBe(500)
-    expect(result.dueDate).toBe('2027-08-05')
+    expect(result).toMatchObject({
+      interval: 500,
+      dueDate: '2027-08-05',
+    })
   })
 })
 
@@ -225,8 +243,10 @@ describe('normalizeSrsStore', () => {
       },
     })
 
-    expect(result['conjugation:sound:1:active.past:3ms'].interval).toBe(145313)
-    expect(result['conjugation:sound:1:active.past:3ms'].dueDate).toBe('2424-01-30')
+    expect(result['conjugation:sound:1:active.past:3ms']).toMatchObject({
+      interval: 145313,
+      dueDate: '2424-01-30',
+    })
   })
 
   test('returns empty store for non-object input', () => {
@@ -287,8 +307,10 @@ describe('weightedRandomSrs', () => {
 describe('recordAnswer', () => {
   test('creates a new entry on first answer', () => {
     const store = recordAnswer({}, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
-    expect(store['conjugation:sound:1:active.past:1s'].repetitions).toBe(1)
-    expect(store['conjugation:sound:1:active.past:1s'].dueDate).toBe('2026-03-24')
+    expect(store['conjugation:sound:1:active.past:1s']).toMatchObject({
+      repetitions: 1,
+      dueDate: '2026-03-24',
+    })
   })
 
   test('updates existing entry on subsequent answer', () => {

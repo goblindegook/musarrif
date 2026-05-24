@@ -370,44 +370,58 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
 
   test('past 3ms has no prefix and no suffix (base form)', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
-    expect(layers.prefix).toBeUndefined()
-    expect(layers.suffix).toBeUndefined()
+    expect(layers).toMatchObject({
+      prefix: undefined,
+      suffix: undefined,
+    })
   })
 
   test('past 1s has suffix only', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
-    expect(layers.prefix).toBeUndefined()
-    expect(layers.suffix).toBe('ْتُ')
+    expect(layers).toMatchObject({
+      prefix: undefined,
+      suffix: 'ْتُ',
+    })
   })
 
   test('present indicative 3ms has fatha prefix and no suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
-    expect(layers.prefix).toBe('يَ')
-    expect(layers.suffix).toBeUndefined()
+    expect(layers).toMatchObject({
+      prefix: 'يَ',
+      suffix: undefined,
+    })
   })
 
   test('future 3ms collapses seen and person prefix, no suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
-    expect(layers.prefix).toBe('سَيَ')
-    expect(layers.suffix).toBeUndefined()
+    expect(layers).toMatchObject({
+      prefix: 'سَيَ',
+      suffix: undefined,
+    })
   })
 
   test('imperative 2ms Form II has no prefix and no suffix', () => {
     const layers = resolveVerbExplanationLayers(katabaF2, 'active.imperative', '2ms', 'كَتِّبْ')
-    expect(layers.prefix).toBeUndefined()
-    expect(layers.suffix).toBeUndefined()
+    expect(layers).toMatchObject({
+      prefix: undefined,
+      suffix: undefined,
+    })
   })
 
   test('imperative 2ms Form I has alif prefix and no suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
-    expect(layers.prefix).toBe('اُ')
-    expect(layers.suffix).toBeUndefined()
+    expect(layers).toMatchObject({
+      prefix: 'اُ',
+      suffix: undefined,
+    })
   })
 
   test('imperative 2fs Form II has suffix only', () => {
     const layers = resolveVerbExplanationLayers(katabaF2, 'active.imperative', '2fs', 'كَتِّبِي')
-    expect(layers.prefix).toBeUndefined()
-    expect(layers.suffix).toBe('ِي')
+    expect(layers).toMatchObject({
+      prefix: undefined,
+      suffix: 'ِي',
+    })
   })
 })
 
