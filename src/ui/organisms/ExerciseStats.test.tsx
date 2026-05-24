@@ -390,6 +390,13 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('See insights')).toBeInTheDocument()
   })
 
+  test('does not render learning insights modal before See insights is clicked', () => {
+    renderStats()
+    fireEvent.click(screen.getByText('Progress'))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Your journey so far:/)).not.toBeInTheDocument()
+  })
+
   test('opens learning insights modal from stats panel', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))

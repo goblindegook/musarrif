@@ -109,9 +109,11 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
         />
         <StatsDetailsPanel mastery={mastery} onOpenInsights={() => setInsightsOpen(true)} />
       </Panel>
-      <Modal isOpen={insightsOpen} title={t('exercise.insights.title')} onClose={() => setInsightsOpen(false)}>
-        <LearningInsights />
-      </Modal>
+      {insightsOpen && (
+        <Modal isOpen={insightsOpen} title={t('exercise.insights.title')} onClose={() => setInsightsOpen(false)}>
+          <LearningInsights />
+        </Modal>
+      )}
     </>
   )
 }
