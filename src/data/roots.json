@@ -2433,6 +2433,24 @@
     "vowels": "a-a"
   },
   {
+    "root": "mlk",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fi3l", "fu3l", "mimi"]
+  },
+  {
+    "root": "mlk",
+    "form": 2
+  },
+  {
+    "root": "mlk",
+    "form": 6
+  },
+  {
+    "root": "mlk",
+    "form": 8
+  },
+  {
     "root": "mnE",
     "form": 1,
     "vowels": "a-a"

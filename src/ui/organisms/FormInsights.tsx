@@ -13,7 +13,8 @@ import { VerbPill } from '../molecules/VerbPill'
 
 const getVowelPattern = (verb: DisplayVerb): string => {
   const templateRoot = verb.root.length > 3 ? 'فعلل' : 'فعل'
-  const synthetic = verb.form === 1 ? synthesizeVerb(templateRoot, 1, verb.vowels) : synthesizeVerb(templateRoot, verb.form)
+  const synthetic =
+    verb.form === 1 ? synthesizeVerb(templateRoot, 1, verb.vowels) : synthesizeVerb(templateRoot, verb.form)
   return [synthetic.label, conjugate(synthetic, 'active.present.indicative')['3ms']].join(' / ')
 }
 

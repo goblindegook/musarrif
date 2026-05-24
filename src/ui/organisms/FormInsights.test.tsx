@@ -41,7 +41,7 @@ describe('FormInsights', () => {
     })
   })
 
-    describe('quadriliteral vowel pattern', () => {
+  describe('quadriliteral vowel pattern', () => {
     test('Form Iq shows quadriliteral فَعلَلَ / يُفَعلِلُ pattern, not triliteral', () => {
       const verb = buildVerbFromId('brhn-1')!
       render(<FormInsights verb={verb} />, { wrapper: Wrapper })
