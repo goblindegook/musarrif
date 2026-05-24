@@ -1197,6 +1197,34 @@
     "form": 3
   },
   {
+    "root": "Sdr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "Sdr",
+    "form": 2
+  },
+  {
+    "root": "Sdr",
+    "form": 3
+  },
+  {
+    "root": "Sdr",
+    "form": 5
+  },
+  {
+    "root": "Sdr",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "Sdr",
+    "form": 10
+  },
+  {
     "root": "Sfr",
     "form": 9,
     "passiveVoice": "none",
