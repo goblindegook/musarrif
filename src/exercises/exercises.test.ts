@@ -1,14 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
+import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
 import { defineExercise } from './exercises'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 describe('defineExerciseGenerator', () => {
   test('injects kind into generated exercise', () => {

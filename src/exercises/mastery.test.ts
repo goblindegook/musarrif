@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { INITIAL_DIMENSION_PROFILE as BASE_PROFILE } from '../test/fixtures'
 import type { DimensionProfile } from './dimensions'
 import {
   computeInsights,
@@ -35,15 +36,6 @@ function getCategory<T extends MasteryCategoryId>(snapshot: readonly MasteryCate
 
 function getItem<T extends MasteryCategoryId>(category: MasteryCategory<T>, value: MasteryItemIdByCategory[T]) {
   return category.items.find((entry) => entry.value === value)!
-}
-
-const BASE_PROFILE: DimensionProfile = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
 }
 
 describe('buildMasterySnapshot', () => {
@@ -326,8 +318,10 @@ const COMPLETE_PROFILE: DimensionProfile = {
   nominals: 2,
 }
 
+const ANCHOR_DATE = '2026-04-15'
+
 function makeDailyActivity(daysAgo: number, correct: number, incorrect: number): DailyActivity {
-  const d = new Date()
+  const d = new Date(2026, 3, 15) // April 15, local time — matches ANCHOR_DATE
   d.setDate(d.getDate() - daysAgo)
   return { date: new Date(d.getFullYear(), d.getMonth(), d.getDate()), correct, incorrect, passed: 0 }
 }
@@ -428,7 +422,7 @@ describe('computeInsights', () => {
 
   test('improving trend when recent accuracy exceeds all-time by more than 5', () => {
     const stats: TrackedExercises = [...makeDailyRange(19, 5, 4, 6), ...makeDailyRange(14, 15, 17, 3)]
-    const result = computeInsights(BASE_PROFILE, {}, stats)
+    const result = computeInsights(BASE_PROFILE, {}, stats, ANCHOR_DATE)
     expect(result.journey.trend).toBe('improving')
   })
 

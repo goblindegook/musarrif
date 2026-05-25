@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
-import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import { cardSpace, isNominalCard, isVerbCard, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import { I18nProvider } from '../hooks/useI18n'
@@ -8,8 +8,7 @@ import { serializeDayStats } from '../hooks/useStats'
 import { RoutingProvider } from '../routes'
 import { ExerciseStats } from './ExerciseStats'
 
-const NOW = new Date()
-const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate())
+const TODAY = new Date('2026-04-15')
 const SAMPLE_STATS: DailyActivity[] = [{ date: TODAY, correct: 4, incorrect: 1, passed: 0 }]
 let lastPlotData: unknown[] | null = null
 
@@ -53,6 +52,11 @@ beforeAll(() => {
 
 afterAll(() => {
   vi.unstubAllGlobals()
+})
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] })
+  vi.setSystemTime(TODAY)
 })
 
 afterEach(() => {
@@ -139,22 +143,16 @@ describe('ExerciseStats', () => {
   })
 
   test('accuracy pill shows correct percentage', () => {
-    const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-    recentDate.setUTCHours(0, 0, 0, 0)
-    const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-04-10'), correct: 3, incorrect: 1, passed: 0 }]
     renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText('75%')).toBeInTheDocument()
   })
 
   test('accuracy pill shows 15-day percentage, not all-time, when they differ', () => {
-    const oldDate = new Date(Date.now() - 20 * 24 * 60 * 60 * 1000)
-    oldDate.setUTCHours(0, 0, 0, 0)
-    const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
-    recentDate.setUTCHours(0, 0, 0, 0)
     const stats: DailyActivity[] = [
-      { date: oldDate, correct: 0, incorrect: 10, passed: 0 },
-      { date: recentDate, correct: 4, incorrect: 0, passed: 0 },
+      { date: new Date('2026-03-26'), correct: 0, incorrect: 10, passed: 0 },
+      { date: new Date('2026-04-12'), correct: 4, incorrect: 0, passed: 0 },
     ]
     renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
@@ -162,9 +160,7 @@ describe('ExerciseStats', () => {
   })
 
   test('accuracy pill shows All time sub-note', () => {
-    const recentDate = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
-    recentDate.setUTCHours(0, 0, 0, 0)
-    const stats: DailyActivity[] = [{ date: recentDate, correct: 3, incorrect: 1, passed: 0 }]
+    const stats: DailyActivity[] = [{ date: new Date('2026-04-12'), correct: 3, incorrect: 1, passed: 0 }]
     renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
     expect(screen.getByText(/All time:/)).toBeInTheDocument()

@@ -274,7 +274,7 @@ export function computeInsights(
   const mastery = computeMastery(profile, srsStore, today)
 
   const accuracy = getAccuracyPercent(stats)
-  const recentAccuracy = getRecentAccuracyPercent(stats, 15)
+  const recentAccuracy = getRecentAccuracyPercent(stats, 15, new Date(`${today}T00:00:00`))
   const trend = computeInsightTrend(stats, accuracy, recentAccuracy)
 
   const candidates: InsightCandidate[] = []

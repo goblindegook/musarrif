@@ -1,15 +1,7 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
 import { getUserData, importUserData } from './user-data'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
