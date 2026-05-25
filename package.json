@@ -24,7 +24,7 @@
     "@pacote/buckwalter": "^0.1.1",
     "@pacote/memoize": "^3.0.1",
     "@pacote/shuffle": "^3.0.0",
-    "goober": "^2.1.18",
+    "goober": "^2.1.19",
     "preact": "^10.29.1",
     "uplot": "^1.6.32",
     "valibot": "^1.4.0"
