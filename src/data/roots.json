@@ -1302,6 +1302,11 @@
     "form": 2
   },
   {
+    "root": "Swt",
+    "form": 2,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "SyH",
     "form": 1,
     "vowels": "a-i",
