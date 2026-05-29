@@ -1,20 +1,12 @@
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/preact'
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { renderWithProviders } from '../test/fixtures'
 import { App } from './app'
-import { I18nProvider } from './hooks/useI18n'
-import { RoutingProvider } from './routes'
 
 const renderApp = (path = '') => {
-  cleanup()
   window.history.replaceState({}, '', path)
-  render(
-    <RoutingProvider>
-      <I18nProvider>
-        <App />
-      </I18nProvider>
-    </RoutingProvider>,
-  )
+  renderWithProviders(<App />)
 }
 
 const navigateTo = (path: string) => {
@@ -65,6 +57,7 @@ describe('Diacritics control', () => {
     fireEvent.click(screen.getByLabelText('Settings'))
     fireEvent.click(screen.getByText('None'))
 
+    cleanup()
     renderApp('/#/verbs/ktb-1')
     fireEvent.click(screen.getByLabelText('Settings'))
     expect(screen.getByText('None')).toHaveAttribute('aria-pressed', 'true')
@@ -85,6 +78,7 @@ describe('Language', () => {
     await user.selectOptions(screen.getByLabelText('Language'), 'pt')
 
     await waitFor(() => expect(document.documentElement.lang).toBe('pt'))
+    cleanup()
     renderApp('/')
     await waitFor(() => expect(document.documentElement.lang).toBe('pt'))
   })
