@@ -1,31 +1,21 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/preact'
+import { act, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
-import type { ComponentChildren } from 'preact'
 import { describe, expect, test } from 'vitest'
 import { tokenize } from '../../paradigms/tokens'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { ConjugateBox } from './ConjugateBox'
-
-function Wrapper({ children }: { children: ComponentChildren }) {
-  return (
-    <RoutingProvider>
-      <I18nProvider>{children}</I18nProvider>
-    </RoutingProvider>
-  )
-}
 
 const noop = () => {}
 
 describe('ConjugateBox', () => {
   test('pattern selector is not shown before Form I is selected', () => {
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     expect(screen.queryByText('فَعَلَ / يَفعُلُ')).not.toBeInTheDocument()
   })
 
   test('pattern selector appears when Form I is selected', async () => {
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     fireEvent.click(screen.getByText('I', { selector: 'button' }))
 
@@ -34,7 +24,7 @@ describe('ConjugateBox', () => {
 
   test('pattern selector is hidden when Form II is selected after Form I', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     await user.click(screen.getByText('I', { selector: 'button' }))
     await user.click(screen.getByText('II', { selector: 'button' }))
@@ -43,7 +33,7 @@ describe('ConjugateBox', () => {
   })
 
   test('each letter slot has a text input', () => {
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
     expect(screen.getByLabelText('Root 2', { selector: 'input' })).toBeInTheDocument()
@@ -51,7 +41,7 @@ describe('ConjugateBox', () => {
   })
 
   test('slot header labels the slot input', () => {
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
     expect(screen.getByLabelText('Root 2', { selector: 'input' })).toBeInTheDocument()
@@ -60,7 +50,7 @@ describe('ConjugateBox', () => {
 
   test('focusing a slot input shows popup with valid letters for that slot', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
     const c1Group = c1Input.closest('[role="group"]') as HTMLElement
@@ -74,7 +64,7 @@ describe('ConjugateBox', () => {
 
   test('slot input links combobox metadata to listbox and active option', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const input = screen.getByLabelText('Root 1', { selector: 'input' })
     await user.click(input)
@@ -92,7 +82,7 @@ describe('ConjugateBox', () => {
 
   test('keyboard navigation selects the highlighted letter with Enter', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const input = screen.getByLabelText('Root 1', { selector: 'input' })
     await user.click(input)
@@ -104,7 +94,7 @@ describe('ConjugateBox', () => {
 
   test('escape closes the letter listbox', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const input = screen.getByLabelText('Root 1', { selector: 'input' })
     await user.click(input)
@@ -117,7 +107,7 @@ describe('ConjugateBox', () => {
 
   test('refocusing input after picking a letter re-opens the popup', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const input = screen.getByLabelText('Root 1', { selector: 'input' })
     const group = input.closest<HTMLElement>('[role="group"]')!
@@ -135,7 +125,7 @@ describe('ConjugateBox', () => {
 
   test('clicking the overlay dismisses the letter listbox', async () => {
     const user = userEvent.setup()
-    render(<ConjugateBox onSelect={noop} />, { wrapper: Wrapper })
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
 
     const input = screen.getByLabelText('Root 1', { selector: 'input' })
     const group = input.closest<HTMLElement>('[role="group"]')!
@@ -150,7 +140,7 @@ describe('ConjugateBox', () => {
   })
 
   test('pre-populates letters and form from selectedVerb', () => {
-    render(
+    renderWithProviders(
       <ConjugateBox
         onSelect={noop}
         selectedVerb={{
@@ -162,7 +152,6 @@ describe('ConjugateBox', () => {
           rootId: 'ktb',
         }}
       />,
-      { wrapper: Wrapper },
     )
 
     expect(screen.getByLabelText('Root 1', { selector: 'input' })).toHaveValue('ك')

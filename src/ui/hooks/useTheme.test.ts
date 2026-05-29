@@ -44,7 +44,7 @@ test('applies light theme to document when preference is light', () => {
   mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('light'))
-  expect(document.documentElement.getAttribute('data-theme')).toBe('light')
+  expect(document.documentElement).toHaveAttribute('data-theme', 'light')
 })
 
 test('applies light theme color meta when preference is light', () => {
@@ -58,7 +58,7 @@ test('applies dark theme to document when preference is dark', () => {
   mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('dark'))
-  expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
+  expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
 })
 
 test('applies dark theme color meta when preference is dark', () => {
@@ -72,14 +72,14 @@ test('follows OS dark preference when system is chosen on dark OS', () => {
   mockMatchMedia(true)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('system'))
-  expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
+  expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
 })
 
 test('follows OS light preference when system is chosen on light OS', () => {
   mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('system'))
-  expect(document.documentElement.getAttribute('data-theme')).toBe('light')
+  expect(document.documentElement).toHaveAttribute('data-theme', 'light')
 })
 
 test('updates theme color meta when OS preference changes in system mode', () => {

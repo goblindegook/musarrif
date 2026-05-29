@@ -1,19 +1,12 @@
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact'
+import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { AppHeader } from './AppHeader'
 
 const renderHeader = (path = '/#/verbs') => {
   window.history.replaceState({}, '', path)
-  render(
-    <RoutingProvider>
-      <I18nProvider>
-        <AppHeader />
-      </I18nProvider>
-    </RoutingProvider>,
-  )
+  renderWithProviders(<AppHeader />)
 }
 
 afterEach(() => {

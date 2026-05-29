@@ -1,11 +1,9 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
-import type { ComponentChildren } from 'preact'
+import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import { cardSpace, isNominalCard, isVerbCard, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
-import { I18nProvider } from '../hooks/useI18n'
+import { renderWithProviders } from '../../test/fixtures'
 import { serializeDayStats } from '../hooks/useStats'
-import { RoutingProvider } from '../routes'
 import { ExerciseStats } from './ExerciseStats'
 
 const TODAY = new Date('2026-04-15')
@@ -67,14 +65,6 @@ afterEach(() => {
   lastPlotData = null
 })
 
-function Wrapper({ children }: { children: ComponentChildren }) {
-  return (
-    <RoutingProvider>
-      <I18nProvider>{children}</I18nProvider>
-    </RoutingProvider>
-  )
-}
-
 function createSrsStore(intervalForCard: (card: SrsCardIdentity) => number, dueDate = '2999-01-01'): SrsStore {
   const store: SrsStore = {}
   for (const card of cardSpace()) {
@@ -93,7 +83,7 @@ function renderStats(
   props?: Pick<Parameters<typeof ExerciseStats>[0], 'dimensionProfile' | 'srsStore'>,
 ) {
   localStorage.setItem('conjugator:exercise:daily', JSON.stringify(serializeDayStats(stats)))
-  return render(<ExerciseStats {...props} />, { wrapper: Wrapper })
+  return renderWithProviders(<ExerciseStats {...props} />)
 }
 
 describe('ExerciseStats', () => {
@@ -104,7 +94,7 @@ describe('ExerciseStats', () => {
 
   test('is collapsed by default', () => {
     renderStats()
-    expect(screen.getByText('Progress').parentElement!.getAttribute('aria-expanded')).toBe('false')
+    expect(screen.getByText('Progress').parentElement).toHaveAttribute('aria-expanded', 'false')
   })
 
   test('has a toggle button labelled Progress', () => {
@@ -127,7 +117,7 @@ describe('ExerciseStats', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByText('Progress').parentElement!.getAttribute('aria-expanded')).toBe('false')
+    expect(screen.getByText('Progress').parentElement).toHaveAttribute('aria-expanded', 'false')
   })
 
   test('accuracy pill shows Accuracy label when expanded', () => {
@@ -422,10 +412,10 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByText('Progress'))
 
     const categoryProgressbar = container.querySelector('[aria-label="Tenses"]')
-    expect(categoryProgressbar?.getAttribute('role')).toBe('progressbar')
-    expect(categoryProgressbar?.getAttribute('aria-valuemin')).toBe('0')
-    expect(categoryProgressbar?.getAttribute('aria-valuemax')).toBe('1')
-    expect(categoryProgressbar?.getAttribute('aria-valuenow')).not.toBeNull()
+    expect(categoryProgressbar).toHaveAttribute('role', 'progressbar')
+    expect(categoryProgressbar).toHaveAttribute('aria-valuemin', '0')
+    expect(categoryProgressbar).toHaveAttribute('aria-valuemax', '1')
+    expect(categoryProgressbar).toHaveAttribute('aria-valuenow')
   })
 
   test('exposes accessible semantics for mastery item progress bars', () => {
@@ -433,10 +423,10 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByText('Progress'))
 
     const itemProgressbar = container.querySelector('[aria-label="Sound"]')
-    expect(itemProgressbar?.getAttribute('role')).toBe('progressbar')
-    expect(itemProgressbar?.getAttribute('aria-valuemin')).toBe('0')
-    expect(itemProgressbar?.getAttribute('aria-valuemax')).toBe('1')
-    expect(itemProgressbar?.getAttribute('aria-valuenow')).not.toBeNull()
+    expect(itemProgressbar).toHaveAttribute('role', 'progressbar')
+    expect(itemProgressbar).toHaveAttribute('aria-valuemin', '0')
+    expect(itemProgressbar).toHaveAttribute('aria-valuemax', '1')
+    expect(itemProgressbar).toHaveAttribute('aria-valuenow')
   })
 
   test('keeps today values in the last chart slot when local day differs from UTC', () => {

@@ -1,19 +1,9 @@
-import { cleanup, render } from '@testing-library/preact'
+import { cleanup } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
-import type { ComponentChildren } from 'preact'
 import { act } from 'preact/test-utils'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { Search } from './SearchBox'
-
-function Wrapper({ children }: { children: ComponentChildren }) {
-  return (
-    <RoutingProvider>
-      <I18nProvider>{children}</I18nProvider>
-    </RoutingProvider>
-  )
-}
 
 const noop = () => {}
 
@@ -33,10 +23,9 @@ describe('Search mobile behavior', () => {
 
   test('does not keep mobile behavior after resizing to desktop', async () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
-    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
     const input = container.querySelector('input[type="search"]')
 
-    expect(input).not.toBeNull()
     await Promise.resolve()
 
     Object.defineProperty(window, 'innerWidth', {
@@ -61,10 +50,9 @@ describe('Search mobile behavior', () => {
       value: 1200,
     })
 
-    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
     const input = container.querySelector('input[type="search"]')
 
-    expect(input).not.toBeNull()
     await Promise.resolve()
 
     Object.defineProperty(window, 'innerWidth', {
@@ -83,18 +71,17 @@ describe('Search mobile behavior', () => {
 
   test('combobox links to listbox with aria-controls', async () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
-    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
     const input = container.querySelector('input[type="search"]')!
     await user.type(input, 'ktb')
 
     const listbox = container.querySelector('[role="listbox"]')
-    expect(listbox).not.toBeNull()
-    expect(input).toHaveAttribute('aria-controls', listbox?.id)
+    expect(input).toHaveAttribute('aria-controls', listbox!.id)
   })
 
   test('search input lang follows typed script', async () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
-    const { container } = render(<Search onSelect={noop} />, { wrapper: Wrapper })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
     const input = container.querySelector('input[type="search"]')!
 
     await user.type(input, 'kataba')

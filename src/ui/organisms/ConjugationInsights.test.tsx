@@ -1,28 +1,15 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
-import type { ComponentChildren } from 'preact'
+import { cleanup, fireEvent, screen } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getVerbById } from '../../paradigms/verbs'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { ConjugationInsights } from './ConjugationInsights'
 
 beforeEach(() => cleanup())
 afterEach(() => cleanup())
 
-function Wrapper({ children }: { children: ComponentChildren }) {
-  return (
-    <RoutingProvider>
-      <I18nProvider>{children}</I18nProvider>
-    </RoutingProvider>
-  )
-}
-
 function renderComponent(pronoun = '3ms', arabic = 'كَتَبَ') {
-  render(
+  renderWithProviders(
     <ConjugationInsights verb={getVerbById('ktb-1')!} verbTense="active.past" pronoun={pronoun} arabic={arabic} />,
-    {
-      wrapper: Wrapper,
-    },
   )
 }
 
@@ -68,9 +55,8 @@ describe('ConjugationInsights', () => {
     })
 
     test('quadriliteral form label includes q suffix', () => {
-      render(
+      renderWithProviders(
         <ConjugationInsights verb={getVerbById('brhn-1')!} verbTense="active.past" pronoun="3ms" arabic="بَرهَنَ" />,
-        { wrapper: Wrapper },
       )
       fireEvent.click(screen.getByLabelText('Show explanation for بَرهَنَ'))
       expect(screen.getByText('Form Iq')).toBeInTheDocument()
@@ -78,11 +64,8 @@ describe('ConjugationInsights', () => {
   })
 
   test('dropped morphemes are rendered with strikethrough', () => {
-    render(
+    renderWithProviders(
       <ConjugationInsights verb={getVerbById('xrj-10')!} verbTense="active.future" pronoun="3ms" arabic="سَيَسْتَخْرِجُ" />,
-      {
-        wrapper: Wrapper,
-      },
     )
     fireEvent.click(screen.getByLabelText('Show explanation for سَيَسْتَخْرِجُ'))
     const dropped = screen.getAllByText('اِ')

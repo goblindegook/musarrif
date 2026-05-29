@@ -29,8 +29,8 @@ describe('FormattedText', () => {
     const safe = screen.getByText('safe').closest('a')!
 
     expect(unsafe.closest('p')!.textContent).toBe('Read carefully unsafe safe')
-    expect(unsafe.closest('a')!.getAttribute('href')).toBeNull()
-    expect(safe.getAttribute('href')).toBe('/docs')
-    expect(safe.getAttribute('data-x')).toBeNull()
+    expect(unsafe.closest('a')).not.toHaveAttribute('href')
+    expect(safe).toHaveAttribute('href', '/docs')
+    expect(safe).not.toHaveAttribute('data-x')
   })
 })

@@ -1,8 +1,7 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
+import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { ConjugationMode } from './ConjugationMode'
 
 interface ConjugationModeRenderProps {
@@ -15,13 +14,7 @@ interface ConjugationModeRenderProps {
 const renderConjugationMode = ({ verbId, voice, tense, mood }: ConjugationModeRenderProps) => {
   cleanup()
   window.history.replaceState({}, '', '/')
-  render(
-    <RoutingProvider>
-      <I18nProvider>
-        <ConjugationMode verbId={verbId} voice={voice} tense={tense} mood={mood} />
-      </I18nProvider>
-    </RoutingProvider>,
-  )
+  renderWithProviders(<ConjugationMode verbId={verbId} voice={voice} tense={tense} mood={mood} />)
 }
 
 afterEach(() => {
@@ -103,8 +96,8 @@ describe('Conjugation table', () => {
     const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
     const activeTab = tabs.find((tab) => tab.textContent === 'Active')
     const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
-    expect(activeTab?.getAttribute('aria-selected')).toBe('true')
-    expect(passiveTab?.getAttribute('aria-selected')).toBe('false')
+    expect(activeTab).toHaveAttribute('aria-selected', 'true')
+    expect(passiveTab).toHaveAttribute('aria-selected', 'false')
   })
 
   it('shows mood tabs for passive present tense', () => {
@@ -123,7 +116,7 @@ describe('Conjugation table', () => {
     const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))
     const activeTab = tabs.find((tab) => tab.textContent === 'Active')
     const passiveTab = tabs.find((tab) => tab.textContent === 'Passive')
-    expect(activeTab?.getAttribute('aria-selected')).toBe('true')
+    expect(activeTab).toHaveAttribute('aria-selected', 'true')
     expect(passiveTab).toBeUndefined()
   })
 

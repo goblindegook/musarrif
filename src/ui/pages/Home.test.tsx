@@ -1,20 +1,13 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/preact'
+import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
-import { I18nProvider } from '../hooks/useI18n'
-import { RoutingProvider } from '../routes'
+import { renderWithProviders } from '../../test/fixtures'
 import { Home } from './Home'
 
 const renderHome = (url = '/#/verbs') => {
   cleanup()
   window.history.replaceState({}, '', url)
-  render(
-    <RoutingProvider>
-      <I18nProvider>
-        <Home />
-      </I18nProvider>
-    </RoutingProvider>,
-  )
+  renderWithProviders(<Home />)
 }
 
 afterEach(() => {
@@ -288,7 +281,7 @@ test('applies favourites filter together with form filters', async () => {
 test('restores verb list filters and pagination from hash query params', () => {
   renderHome('/#/verbs?form=1&page=2')
 
-  expect(document.querySelector('#form-tab-1')?.getAttribute('aria-selected')).toBe('true')
+  expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'true')
   expect(screen.getByText(/Page 2 of \d+/)).toBeInTheDocument()
   expect(window.location.hash).toBe('#/verbs?form=1&page=2')
 })
