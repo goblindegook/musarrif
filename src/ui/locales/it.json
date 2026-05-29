@@ -489,6 +489,7 @@
     "verbsList.filter.kanaSisters.label": "Kāna e sue sorelle",
     "verbsList.filter.rootType.title": "Filtra per tipo di radice",
     "verbsList.filter.rootType.sound.label": "Forte",
+    "verbsList.filter.rootType.doubled.label": "Geminata",
     "verbsList.filter.rootType.assimilated.label": "Assimilata",
     "verbsList.filter.rootType.hollow.label": "Cava",
     "verbsList.filter.rootType.defective.label": "Difettiva",

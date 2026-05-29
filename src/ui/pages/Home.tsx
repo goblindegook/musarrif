@@ -24,9 +24,16 @@ const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
 
-type RootTypeFilter = 'sound' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
+type RootTypeFilter = 'sound' | 'doubled' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
 
-const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = ['sound', 'assimilated', 'hollow', 'defective', 'hamzated']
+const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
+  'sound',
+  'doubled',
+  'assimilated',
+  'hollow',
+  'defective',
+  'hamzated',
+]
 
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
 
@@ -70,7 +77,8 @@ const OTHER_FILTERS = [
 function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   const analysis = analyzeRoot(tokenize(verb.root))
   const result: RootTypeFilter[] = []
-  if (analysis.weakPositions.length === 0 && analysis.hamzaPositions.length === 0) result.push('sound')
+  if (analysis.type === 'sound') result.push('sound')
+  if (analysis.type === 'doubled' || analysis.type === 'hamzated-doubled') result.push('doubled')
   if (analysis.weakPositions.includes(0)) result.push('assimilated')
   if (analysis.weakPositions.includes(1)) result.push('hollow')
   if (analysis.weakPositions.includes(2)) result.push('defective')

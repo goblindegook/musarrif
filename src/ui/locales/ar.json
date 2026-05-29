@@ -478,6 +478,7 @@
     "verbsList.filter.kanaSisters.label": "كَانَ وَأَخَوَاتُهَا",
     "verbsList.filter.rootType.title": "صَفِّ حَسَبَ نَوْعِ ٱلْجَذْرِ",
     "verbsList.filter.rootType.sound.label": "صَحِيح",
+    "verbsList.filter.rootType.doubled.label": "مُضَعَّف",
     "verbsList.filter.rootType.assimilated.label": "مِثَال",
     "verbsList.filter.rootType.hollow.label": "أَجْوَف",
     "verbsList.filter.rootType.defective.label": "نَاقِص",

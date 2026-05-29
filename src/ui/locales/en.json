@@ -489,6 +489,7 @@
     "verbsList.filter.kanaSisters.label": "Kāna and her sisters",
     "verbsList.filter.rootType.title": "Filter by root type",
     "verbsList.filter.rootType.sound.label": "Sound",
+    "verbsList.filter.rootType.doubled.label": "Doubled",
     "verbsList.filter.rootType.assimilated.label": "Assimilated",
     "verbsList.filter.rootType.hollow.label": "Hollow",
     "verbsList.filter.rootType.defective.label": "Defective",

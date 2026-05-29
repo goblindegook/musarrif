@@ -210,7 +210,23 @@ test('disables form options that would yield zero results', async () => {
   expect(screen.getByText('IX', { selector: 'button' })).toBeDisabled()
 })
 
-test('keeps sound root type selectable when kāna + form I includes a doubled root', async () => {
+test('shows a Doubled root type filter button', () => {
+  renderHome()
+  expect(screen.getByText('Doubled', { selector: 'button' })).toBeInTheDocument()
+})
+
+test('filters included verbs to doubled roots', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Doubled', { selector: 'button' }))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Edd-4"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+})
+
+test('disables sound filter when kāna + form I has no sound roots', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const otherFilters = screen.getByLabelText('Other filters')
@@ -218,13 +234,19 @@ test('keeps sound root type selectable when kāna + form I includes a doubled ro
   await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
 
-  const sound = screen.getByText('Sound', { selector: 'button' })
-  expect(sound).toBeEnabled()
+  expect(screen.getByText('Sound', { selector: 'button' })).toBeDisabled()
+})
 
-  await user.click(sound)
+test('doubled filter shows Zll-1 for kāna form I combination', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const otherFilters = screen.getByLabelText('Other filters')
+
+  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  await user.click(screen.getByText('I', { selector: 'button' }))
+  await user.click(screen.getByText('Doubled', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(1)
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Zll-1"]')).toBeTruthy()
 })
 
