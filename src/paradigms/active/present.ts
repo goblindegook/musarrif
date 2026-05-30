@@ -280,11 +280,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       }
 
       if (pronounId === '2fs' && verb.form === 7)
-        return [
-          ...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)).filter((char) => !char.equals(SHADDA)),
-          KASRA,
-          YEH,
-        ]
+        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), KASRA, YEH]
 
       if (pronounId === '2fs') return dropNoonEnding(word)
 
