@@ -106,7 +106,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly Token[] {
 
   if (c3.isWeak || c3.isHamza) return [...prefix, SUKOON, c2, KASRA, c3, FATHA, TEH_MARBUTA]
 
-  return [...prefix, SUKOON, c2, KASRA, YEH, SUKOON, c3]
+  return [...prefix, SUKOON, c2, KASRA, YEH, c3]
 }
 
 function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
