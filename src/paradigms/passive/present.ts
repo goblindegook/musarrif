@@ -43,16 +43,16 @@ const PRESENT_PREFIXES: Record<PronounId, Token> = {
 const INDICATIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '1s': [DAMMA],
   '2ms': [DAMMA],
-  '2fs': [KASRA, YEH, SUKOON, NOON, FATHA],
+  '2fs': [KASRA, YEH, NOON, FATHA],
   '3ms': [DAMMA],
   '3fs': [DAMMA],
   '2d': [FATHA, ALIF, NOON, KASRA],
   '3md': [FATHA, ALIF, NOON, KASRA],
   '3fd': [FATHA, ALIF, NOON, KASRA],
   '1p': [DAMMA],
-  '2mp': [DAMMA, WAW, SUKOON, NOON, FATHA],
+  '2mp': [DAMMA, WAW, NOON, FATHA],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, SUKOON, NOON, FATHA],
+  '3mp': [DAMMA, WAW, NOON, FATHA],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -262,7 +262,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
 
   if (c2.isHamza && c3.isWeak && isMasculinePlural(pronounId))
     return mood === 'indicative'
-      ? [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, NOON, FATHA]
+      ? [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, NOON, FATHA]
       : [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, ALIF]
 
   if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
@@ -337,15 +337,15 @@ function geminateSuffix(mood: Mood, pronounId: PronounId): readonly Token[] {
 
 function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly Token[] {
   if (mood === 'indicative') {
-    if (pronounId === '2fs') return [YEH, SUKOON, NOON, FATHA]
+    if (pronounId === '2fs') return [YEH, NOON, FATHA]
     if (isDual(pronounId)) return [YEH, FATHA, ALIF, NOON, KASRA]
-    if (isMasculinePlural(pronounId)) return [WAW, SUKOON, NOON, FATHA]
+    if (isMasculinePlural(pronounId)) return [WAW, NOON, FATHA]
   }
 
   if (pronounId === '2fs') return [YEH, SUKOON]
   if (isDual(pronounId)) return [YEH, FATHA, ALIF]
   if (isMasculinePlural(pronounId)) return [WAW, ALIF]
-  if (isFemininePlural(pronounId)) return [YEH, SUKOON, NOON, FATHA]
+  if (isFemininePlural(pronounId)) return [YEH, NOON, FATHA]
 
   if (mood === 'jussive') return []
 

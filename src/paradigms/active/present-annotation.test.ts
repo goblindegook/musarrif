@@ -316,11 +316,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '2fs' },
-          arabic: 'تَكْتُبِيْنَ',
+          arabic: 'تَكْتُبِينَ',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ِيْنَ', role: 'suffix' },
+            { text: 'ِينَ', role: 'suffix' },
           ],
         },
         {
@@ -416,11 +416,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '2mp' },
-          arabic: 'تَكْتُبُوْنَ',
+          arabic: 'تَكْتُبُونَ',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُبُ', role: 'root' },
-            { text: 'وْنَ', role: 'suffix' },
+            { text: 'ونَ', role: 'suffix' },
           ],
         },
         {
@@ -466,11 +466,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '2fs' },
-          arabic: 'تَكْتُبِيْنَ',
+          arabic: 'تَكْتُبِينَ',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ِيْنَ', role: 'suffix' },
+            { text: 'ِينَ', role: 'suffix' },
           ],
         },
         {
@@ -516,11 +516,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '2mp' },
-          arabic: 'تَكْتُبُوْنَ',
+          arabic: 'تَكْتُبُونَ',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُبُ', role: 'root' },
-            { text: 'وْنَ', role: 'suffix' },
+            { text: 'ونَ', role: 'suffix' },
           ],
         },
         {
@@ -566,11 +566,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '3mp' },
-          arabic: 'يَكْتُبُوْنَ',
+          arabic: 'يَكْتُبُونَ',
           morphemes: [
             { text: 'يَ', role: 'tense' },
             { text: 'كْتُبُ', role: 'root' },
-            { text: 'وْنَ', role: 'suffix' },
+            { text: 'ونَ', role: 'suffix' },
           ],
         },
         {

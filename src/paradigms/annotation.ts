@@ -33,16 +33,16 @@ export const PAST_SUFFIX_COUNTS: Record<PronounId, number> = {
 export const PRESENT_INDICATIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
   '1s': 1,
   '2ms': 1,
-  '2fs': 5,
+  '2fs': 4,
   '3ms': 1,
   '3fs': 1,
   '2d': 4,
   '3md': 4,
   '3fd': 4,
   '1p': 1,
-  '2mp': 4,
+  '2mp': 3,
   '2fp': 3,
-  '3mp': 4,
+  '3mp': 3,
   '3fp': 3,
 }
 
@@ -71,16 +71,16 @@ export const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>>
 export const FUTURE_SUFFIX_COUNTS: Record<PronounId, number> = {
   '1s': 1,
   '2ms': 1,
-  '2fs': 5,
+  '2fs': 4,
   '3ms': 1,
   '3fs': 1,
   '2d': 4,
   '3md': 4,
   '3fd': 4,
   '1p': 1,
-  '2mp': 4,
+  '2mp': 3,
   '2fp': 3,
-  '3mp': 4,
+  '3mp': 3,
   '3fp': 3,
 }
 

@@ -29,7 +29,7 @@ import {
 import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 
 function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Token[] {
-  const suffix = [KASRA, YEH, SUKOON, NOON, FATHA]
+  const suffix = [KASRA, YEH, NOON, FATHA]
 
   if (verb.root.length > 3) return [...dropFinalDiacritic(stem), ...suffix]
 
@@ -37,7 +37,7 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
 
   switch (verb.form) {
     case 1:
-      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), FATHA, YEH, NOON, FATHA]
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
 
@@ -49,11 +49,11 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
 
     case 5:
     case 6:
-      if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      if (c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, NOON, FATHA]
       return [...stem.slice(0, -1), ...suffix]
 
     case 7:
-      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, SUKOON, NOON, FATHA]
+      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), FATHA, YEH, NOON, FATHA]
       if (c3.isWeak) return [...dropFinalDiacritic(stem.slice(0, -2)), ...suffix]
       return [...stem.slice(0, -1), ...suffix]
 
@@ -66,7 +66,7 @@ function buildFeminineSingular(stem: readonly Token[], verb: Verb): readonly Tok
 }
 
 function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
-  const suffix = [WAW, SUKOON, NOON, FATHA]
+  const suffix = [WAW, NOON, FATHA]
 
   if (verb.root.length > 3) return [...stem, ...suffix]
 
@@ -114,16 +114,17 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 }
 
 function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
-  const suffix = [SUKOON, NOON, FATHA]
+  const strongSuffix = [SUKOON, NOON, FATHA]
 
   if (verb.root.length > 3) {
     const [, , c3, c4] = verb.rootTokens
     return verb.form === 4
-      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...suffix]
-      : [...dropFinalDiacritic(stem), ...suffix]
+      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...strongSuffix]
+      : [...dropFinalDiacritic(stem), ...strongSuffix]
   }
 
   const [c1, c2, c3] = verb.rootTokens
+  const suffix = c3.isWeak ? [NOON, FATHA] : strongSuffix
 
   switch (verb.form) {
     case 1:
@@ -269,14 +270,14 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
       if (isDual(pronounId)) return dropNoonEnding(word)
 
       if (c3.isWeak && verb.form === 1 && isFormIPresentVowel(verb, FATHA)) {
-        if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
         return word
       }
 
       if (c3.isWeak && verb.form === 6) {
-        if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
         return word
       }
 
@@ -287,9 +288,9 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
           YEH,
         ]
 
-      if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
+      if (pronounId === '2fs') return dropNoonEnding(word)
 
-      if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+      if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
 
       if (c3.equals(YEH) && verb.form === 5) return word
 
@@ -310,8 +311,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         const [, , c3, c4] = letters
         if (isDual(pronounId)) return dropNoonEnding(word)
-        if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+        if (pronounId === '2fs') return dropNoonEnding(word)
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
         if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
 
         return verb.form === 4
@@ -327,13 +328,13 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       const word = tokenize(indicative)
 
       if (verb.form === 1 && c3.isWeak && isFormIPresentVowel(verb, FATHA)) {
-        if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
       }
 
       if (verb.form === 5 && c3.isWeak) {
-        if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
+        if (pronounId === '2fs') return [...dropNoonEnding(word), SUKOON]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
         if (isDual(pronounId)) return dropNoonEnding(word)
       }
 
@@ -352,20 +353,18 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       }
 
       if (pronounId === '2fs' && verb.form === 7 && c2.equals(c3))
-        return dropNoonEnding(word)
-          .slice(0, -1)
-          .filter((char) => !char.equals(SHADDA))
+        return dropNoonEnding(word).filter((char) => !char.equals(SHADDA))
 
       if (pronounId === '2fs') {
-        if (verb.form === 7) return [...dropNoonEnding(word).slice(0, -3), KASRA, YEH]
-        return dropNoonEnding(word).slice(0, -1)
+        if (verb.form === 7) return [...dropNoonEnding(word).slice(0, -2), KASRA, YEH]
+        return dropNoonEnding(word)
       }
 
       // if (isMasculinePlural(pronounId) && verb.form === 4 && c2.isHamza && c3.isWeak)
       //   return [...dropNoonEnding(word).slice(0, -1), ALIF]
 
       if (isMasculinePlural(pronounId))
-        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, ALIF]
+        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -1)), DAMMA, WAW, ALIF]
 
       if (isFemininePlural(pronounId)) {
         if (c3.equals(NOON)) return [...word.slice(0, -2), SUKOON, NOON, FATHA]

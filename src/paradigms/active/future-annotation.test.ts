@@ -32,21 +32,21 @@ describe('annotateActiveFuture', () => {
         },
         {
           kind: { type: 'pronoun', pronounId: '3mp' },
-          arabic: 'يَكْتُبُوْنَ',
+          arabic: 'يَكْتُبُونَ',
           morphemes: [
             { text: 'يَ', role: 'tense' },
             { text: 'كْتُبُ', role: 'root' },
-            { text: 'وْنَ', role: 'suffix' },
+            { text: 'ونَ', role: 'suffix' },
           ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.future' },
-          arabic: 'سَيَكْتُبُوْنَ',
+          arabic: 'سَيَكْتُبُونَ',
           morphemes: [
             { text: 'سَ', role: 'tense' },
             { text: 'يَ', role: 'suffix' },
             { text: 'كْتُبُ', role: 'root' },
-            { text: 'وْنَ', role: 'suffix' },
+            { text: 'ونَ', role: 'suffix' },
           ],
         },
       ],
