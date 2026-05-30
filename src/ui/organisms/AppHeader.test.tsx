@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
-import { renderWithProviders } from '../../test/fixtures'
+import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
 import { AppHeader } from './AppHeader'
 
 const renderHeader = (path = '/#/verbs') => {
@@ -175,4 +175,63 @@ it('imports user data from JSON and updates local storage', async () => {
     JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3, passed: 0 }]),
   )
   expect(reloadSpy).toHaveBeenCalledTimes(1)
+})
+
+it('does not show voice picker when zero Arabic voices available', () => {
+  mockSpeechSynthesis([])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  expect(screen.queryByLabelText('Voice')).not.toBeInTheDocument()
+})
+
+it('does not show voice picker when exactly one Arabic voice available', () => {
+  mockSpeechSynthesis([{ name: 'Majed', lang: 'ar-SA' }])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  expect(screen.queryByLabelText('Voice')).not.toBeInTheDocument()
+})
+
+it('shows voice picker when two or more Arabic voices available', () => {
+  mockSpeechSynthesis([
+    { name: 'Majed', lang: 'ar-SA' },
+    { name: 'Tarik', lang: 'ar-SA' },
+  ])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  expect(screen.getByLabelText('Voice')).toBeInTheDocument()
+})
+
+it('voice picker lists all available Arabic voices', () => {
+  mockSpeechSynthesis([
+    { name: 'Majed', lang: 'ar-SA' },
+    { name: 'Tarik', lang: 'ar-SA' },
+  ])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  expect(screen.getByRole('option', { name: 'Majed' })).toBeInTheDocument()
+  expect(screen.getByRole('option', { name: 'Tarik' })).toBeInTheDocument()
+})
+
+it('selecting a voice persists to localStorage', async () => {
+  mockSpeechSynthesis([
+    { name: 'Majed', lang: 'ar-SA' },
+    { name: 'Tarik', lang: 'ar-SA' },
+  ])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  const user = userEvent.setup()
+  await user.selectOptions(screen.getByLabelText('Voice'), 'Tarik')
+  expect(localStorage.getItem('conjugator:arabicVoiceName')).toBe('"Tarik"')
+})
+
+it('voice picker appears before the theme control in the settings modal', () => {
+  mockSpeechSynthesis([
+    { name: 'Majed', lang: 'ar-SA' },
+    { name: 'Tarik', lang: 'ar-SA' },
+  ])
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  const voiceLabel = screen.getByText('Voice')
+  const themeLabel = screen.getByText('Theme')
+  expect(voiceLabel.compareDocumentPosition(themeLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 })

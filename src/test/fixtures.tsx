@@ -1,5 +1,6 @@
 import { render } from '@testing-library/preact'
 import type { ComponentChild, ComponentChildren } from 'preact'
+import { vi } from 'vitest'
 import { I18nProvider } from '../ui/hooks/useI18n'
 import { RoutingProvider } from '../ui/routes'
 
@@ -22,4 +23,17 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 
 export function renderWithProviders(ui: ComponentChild) {
   return render(ui, { wrapper: Wrapper })
+}
+
+export function mockSpeechSynthesis(voices: Array<{ name: string; lang: string }> = []) {
+  const synthesis = {
+    getVoices: vi.fn(() => voices),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    speak: vi.fn((utterance) => utterance.onend?.()),
+    cancel: vi.fn(),
+  }
+  Object.defineProperty(window, 'speechSynthesis', { writable: true, configurable: true, value: synthesis })
+  Object.defineProperty(window, 'SpeechSynthesisUtterance', { writable: true, configurable: true, value: vi.fn() })
+  return synthesis
 }

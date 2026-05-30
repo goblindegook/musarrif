@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'preact/hooks'
+import { useCallback, useRef, useState } from 'preact/hooks'
 
 type Updater<T> = T | ((current: T) => T)
 type Validate<T> = (raw: unknown, fallback: T) => T
@@ -32,14 +32,14 @@ export function useLocalStorage<T>(
   }, [validate, fallback, key])
 
   const [value, setValue] = useState<T>(() => read())
+  const valueRef = useRef<T>(value)
+  valueRef.current = value
 
   const update = useCallback(
     (updater: Updater<T>) => {
-      setValue((current) => {
-        const next = typeof updater === 'function' ? (updater as (current: T) => T)(current) : updater
-        window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(next))
-        return next
-      })
+      const next = typeof updater === 'function' ? (updater as (current: T) => T)(valueRef.current) : updater
+      window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(next))
+      setValue(next)
     },
     [key],
   )

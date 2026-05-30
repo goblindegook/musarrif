@@ -1,8 +1,12 @@
 import { cleanup, fireEvent, screen } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import type { Exercise } from '../../exercises/exercises'
-import { renderWithProviders } from '../../test/fixtures'
+import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
 import { ExerciseMode } from './ExerciseMode'
+
+beforeEach(() => {
+  mockSpeechSynthesis()
+})
 
 afterEach(() => {
   document.title = ''
@@ -38,17 +42,6 @@ function testExercise(overrides = {}): Exercise {
 
 describe('ExerciseMode', () => {
   test('shows a speech button in the exercise header', () => {
-    Object.defineProperty(window, 'speechSynthesis', {
-      configurable: true,
-      writable: true,
-      value: { speak: vi.fn(), cancel: vi.fn() },
-    })
-    Object.defineProperty(window, 'SpeechSynthesisUtterance', {
-      configurable: true,
-      writable: true,
-      value: vi.fn(),
-    })
-
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise({ spokenWord: 'كَتَبَ' })} />)
 
     expect(screen.getByLabelText('Play pronunciation for كَتَبَ')).toBeInTheDocument()

@@ -2,8 +2,10 @@ import { styled } from 'goober'
 import { useCallback, useRef, useState } from 'preact/hooks'
 import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
+import { Select } from '../atoms/Select'
 import { Subheading } from '../atoms/Subheading'
 import { useI18n } from '../hooks/useI18n'
+import { useSpeech } from '../hooks/useSpeech'
 import { type ThemePreference, useTheme } from '../hooks/useTheme'
 import { ConjugateIcon } from '../icons/ConjugateIcon'
 import { ExerciseIcon } from '../icons/ExerciseIcon'
@@ -26,6 +28,7 @@ interface AppHeaderProps {
 export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
+  const { voices, voiceName, setVoiceName } = useSpeech('ar')
   const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportWarningOpen, setIsImportWarningOpen] = useState(false)
@@ -110,6 +113,24 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
               aria-label={t('diacritics.title')}
             />
           </ControlGroup>
+          {voices.length > 1 && (
+            <ControlGroup>
+              <Subheading>{t('settings.voice.title')}</Subheading>
+              <Select
+                value={voiceName ?? ''}
+                onChange={(event) => setVoiceName(event.currentTarget.value)}
+                aria-label={t('settings.voice.title')}
+                title={t('settings.voice.title')}
+                dir={dir}
+              >
+                {voices.map((voice) => (
+                  <option key={voice.name} value={voice.name}>
+                    {voice.name}
+                  </option>
+                ))}
+              </Select>
+            </ControlGroup>
+          )}
           <ControlGroup>
             <Subheading>{t('theme.title')}</Subheading>
             <SegmentedControl
