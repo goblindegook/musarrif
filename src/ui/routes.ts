@@ -1,4 +1,4 @@
-import type { Mood, NonPresentTense, Tense, Voice } from '../paradigms/tense'
+import { isMood, isTense, isVoice, type Mood, type NonPresentTense, type Voice } from '../paradigms/tense'
 import { createRouting } from './hooks/useRouting'
 
 type AppRoute =
@@ -37,22 +37,4 @@ function parse(segments: readonly string[]): AppRoute {
   }
 
   return ['verbs', verbId, voice, tense]
-}
-
-const VOICES = new Set<Voice>(['active', 'passive'])
-
-function isVoice(value: unknown): value is Voice {
-  return VOICES.has(value as Voice)
-}
-
-const TENSES = new Set<Tense>(['past', 'present', 'future', 'imperative'])
-
-function isTense(value: unknown): value is Tense {
-  return TENSES.has(value as Tense)
-}
-
-const MOODS = new Set<Mood>(['indicative', 'subjunctive', 'jussive'])
-
-function isMood(value: unknown): value is Mood {
-  return MOODS.has(value as Mood)
 }
