@@ -347,22 +347,22 @@ describe('annotateActiveImperative', () => {
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.jussive' },
-          arabic: 'تَكْتُبُوْا',
+          arabic: 'تَكْتُبُوا',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ُوْا', role: 'suffix' },
+            { text: 'ُوا', role: 'suffix' },
             { text: 'نَ', role: 'dropped' },
           ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.imperative' },
-          arabic: 'اُكْتُبُوْا',
+          arabic: 'اُكْتُبُوا',
           morphemes: [
             { text: 'تَ', role: 'dropped' },
             { text: 'اُ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ُوْا', role: 'suffix' },
+            { text: 'ُوا', role: 'suffix' },
           ],
         },
       ],

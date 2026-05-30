@@ -63,7 +63,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       prefix: [c1, DAMMA, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [DAMMA, WAW, ALIF],
     }
 
   if (c2.equals(YEH))
@@ -71,7 +71,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       prefix: [c1, KASRA],
       suffix: [c3, SUKOON],
       suffix3sd: [YEH, SUKOON, c3, FATHA],
-      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, ALIF],
     }
 
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
@@ -79,7 +79,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       prefix: [c1, KASRA],
       suffix: [c3, SUKOON],
       suffix3sd: [YEH, SUKOON, c3, FATHA],
-      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, ALIF],
     }
 
   if (c2.equals(c3))
@@ -87,14 +87,14 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       prefix: [c1, DAMMA, c2],
       suffix: [KASRA, c3, SUKOON],
       suffix3sd: [SHADDA, FATHA],
-      suffix3mp: [SHADDA, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [SHADDA, DAMMA, WAW, ALIF],
     }
 
   return {
     prefix: [c1, DAMMA, c2, KASRA, c3],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
-    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [DAMMA, WAW, ALIF],
   }
 }
 
@@ -104,7 +104,7 @@ function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
     prefix: [c1, DAMMA, c2, SHADDA, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -114,7 +114,7 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
     prefix: [c1, DAMMA, WAW, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -134,7 +134,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1, SUKOON, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [DAMMA, WAW, ALIF],
     }
 
   if (c2.isWeak)
@@ -143,7 +143,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       suffix: [c3, SUKOON],
       suffix3ms: [YEH, SUKOON, c3, FATHA],
       suffix3sd: [YEH, SUKOON, c3, FATHA],
-      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, ALIF],
     }
 
   if (c2.equals(c3))
@@ -152,14 +152,14 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       suffix: [SUKOON, c2, KASRA, c3, SUKOON],
       suffix3ms: [KASRA, c2, SHADDA, FATHA],
       suffix3sd: [KASRA, c2, SHADDA, FATHA],
-      suffix3mp: [KASRA, c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [KASRA, c2, SHADDA, DAMMA, WAW, ALIF],
     }
 
   return {
     prefix: [ALIF_HAMZA, DAMMA, c1.isHamza ? WAW : c1, SUKOON, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -185,7 +185,7 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
     prefix: [TEH, DAMMA, c1, DAMMA, WAW, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -197,7 +197,7 @@ function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
-      suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
     }
   }
 
@@ -222,7 +222,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
-      suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
     }
 
   if ((c1.isWeak || c1.isHamza) && c3.isWeak)
@@ -230,7 +230,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [DAMMA, WAW, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
@@ -239,7 +239,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, TEH, SHADDA, DAMMA, c2, KASRA],
       suffix: [c3, SUKOON],
       suffix3sd: [c3, FATHA],
-      suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [c3, DAMMA, WAW, ALIF],
     }
 
   if (c3.isWeak)
@@ -247,7 +247,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA, c2],
       suffix: [KASRA, YEH],
       suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [DAMMA, WAW, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
@@ -261,7 +261,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
     prefix: [ALIF, DAMMA, c1, SUKOON, infix, DAMMA, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -273,7 +273,7 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2],
       suffix: [KASRA, YEH, SUKOON],
       suffix3sd: [KASRA, YEH, FATHA],
-      suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [DAMMA, WAW, ALIF],
       suffix3fp: [KASRA, YEH, SUKOON, NOON, FATHA],
     }
 
@@ -282,7 +282,7 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
       suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
-      suffix3mp: [c2, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
     }
 
   if (c2.isWeak)
@@ -290,14 +290,14 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
       prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, KASRA],
       suffix: [c3, SUKOON],
       suffix3sd: [YEH, SUKOON, c3, FATHA],
-      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, SUKOON, ALIF],
+      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, ALIF],
     }
 
   return {
     prefix: [ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA, c1, SUKOON, c2, KASRA],
     suffix: [c3, SUKOON],
     suffix3sd: [c3, FATHA],
-    suffix3mp: [c3, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, DAMMA, WAW, ALIF],
   }
 }
 
@@ -308,7 +308,7 @@ function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
     prefix: [c1, DAMMA, c2.equals(YEH) ? WAW : c2, SUKOON, c3, KASRA, c4],
     suffix: [SUKOON],
     suffix3sd: [FATHA],
-    suffix3mp: [DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [DAMMA, WAW, ALIF],
   }
 }
 
@@ -338,7 +338,7 @@ function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
     suffix: [c3, SUKOON, c4, KASRA, c4, SUKOON],
     suffix3ms: [c3, KASRA, c4, SHADDA, FATHA],
     suffix3sd: [c3, KASRA, c4, SHADDA, FATHA],
-    suffix3mp: [c3, KASRA, c4, SHADDA, DAMMA, WAW, SUKOON, ALIF],
+    suffix3mp: [c3, KASRA, c4, SHADDA, DAMMA, WAW, ALIF],
   }
 }
 

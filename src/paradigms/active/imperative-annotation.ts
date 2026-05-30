@@ -9,7 +9,7 @@ const IMPERATIVE_SUFFIX_COUNTS: Partial<Record<string, number>> = {
   '2ms': 0,
   '2fs': 2,
   '2d': 2,
-  '2mp': 4,
+  '2mp': 3,
   '2fp': 3,
 }
 

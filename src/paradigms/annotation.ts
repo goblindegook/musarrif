@@ -56,9 +56,9 @@ export const PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
   '3md': 2,
   '3fd': 2,
   '1p': 1,
-  '2mp': 4,
+  '2mp': 3,
   '2fp': 3,
-  '3mp': 4,
+  '3mp': 3,
   '3fp': 3,
 }
 

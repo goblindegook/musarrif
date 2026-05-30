@@ -66,9 +66,9 @@ const SUBJUNCTIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '3md': [FATHA, ALIF],
   '3fd': [FATHA, ALIF],
   '1p': [FATHA],
-  '2mp': [DAMMA, WAW, SUKOON, ALIF],
+  '2mp': [DAMMA, WAW, ALIF],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, SUKOON, ALIF],
+  '3mp': [DAMMA, WAW, ALIF],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -82,9 +82,9 @@ const JUSSIVE_SUFFIXES: Record<PronounId, readonly Token[]> = {
   '3md': [FATHA, ALIF],
   '3fd': [FATHA, ALIF],
   '1p': [SUKOON],
-  '2mp': [DAMMA, WAW, SUKOON, ALIF],
+  '2mp': [DAMMA, WAW, ALIF],
   '2fp': [SUKOON, NOON, FATHA],
-  '3mp': [DAMMA, WAW, SUKOON, ALIF],
+  '3mp': [DAMMA, WAW, ALIF],
   '3fp': [SUKOON, NOON, FATHA],
 }
 
@@ -263,7 +263,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
   if (c2.isHamza && c3.isWeak && isMasculinePlural(pronounId))
     return mood === 'indicative'
       ? [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, NOON, FATHA]
-      : [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, SUKOON, ALIF]
+      : [c1, SUKOON, infix, FATHA, c2, FATHA, WAW, ALIF]
 
   if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
     return mood === 'jussive'
@@ -344,7 +344,7 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
 
   if (pronounId === '2fs') return [YEH, SUKOON]
   if (isDual(pronounId)) return [YEH, FATHA, ALIF]
-  if (isMasculinePlural(pronounId)) return [WAW, SUKOON, ALIF]
+  if (isMasculinePlural(pronounId)) return [WAW, ALIF]
   if (isFemininePlural(pronounId)) return [YEH, SUKOON, NOON, FATHA]
 
   if (mood === 'jussive') return []

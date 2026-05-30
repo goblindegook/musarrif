@@ -33,7 +33,7 @@ describe('buildSyntheticVerb', () => {
       id: 'ktb-1',
       form: 1,
       vowels: 'a-u',
-      masdars: ['fi3aal', 'fa3l', 'fi3aala'],
+      masdars: ['fi3aala', 'fa3l', 'fi3aal'],
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',

@@ -17,6 +17,7 @@
     "lint:fix": "biome check --write --unsafe .",
     "format": "npm run lint:fix && biome format --write .",
     "verb": "node scripts/verb.mjs",
+    "wiktionary": "tsx scripts/wiktionary.ts",
     "explain": "tsx scripts/explain.mjs",
     "srs": "tsx scripts/srs.ts"
   },
@@ -40,6 +41,7 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/preact": "^3.2.3",
     "@testing-library/user-event": "^14.6.1",
+    "@types/jsdom": "^28.0.3",
     "@types/node": "^25.7.0",
     "@vitest/coverage-v8": "^4.1.4",
     "@vitest/ui": "^4.1.5",

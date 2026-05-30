@@ -425,11 +425,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.subjunctive' },
-          arabic: 'تَكْتُبُوْا',
+          arabic: 'تَكْتُبُوا',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ُوْا', role: 'suffix' },
+            { text: 'ُوا', role: 'suffix' },
             { text: 'نَ', role: 'dropped' },
           ],
         },
@@ -525,11 +525,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.jussive' },
-          arabic: 'تَكْتُبُوْا',
+          arabic: 'تَكْتُبُوا',
           morphemes: [
             { text: 'تَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ُوْا', role: 'suffix' },
+            { text: 'ُوا', role: 'suffix' },
             { text: 'نَ', role: 'dropped' },
           ],
         },
@@ -575,11 +575,11 @@ describe('annotateActivePresentMood', () => {
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.jussive' },
-          arabic: 'يَكْتُبُوْا',
+          arabic: 'يَكْتُبُوا',
           morphemes: [
             { text: 'يَ', role: 'tense' },
             { text: 'كْتُب', role: 'root' },
-            { text: 'ُوْا', role: 'suffix' },
+            { text: 'ُوا', role: 'suffix' },
             { text: 'نَ', role: 'dropped' },
           ],
         },

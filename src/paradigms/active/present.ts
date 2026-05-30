@@ -270,13 +270,13 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (c3.isWeak && verb.form === 1 && isFormIPresentVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
         return word
       }
 
       if (c3.isWeak && verb.form === 6) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
         return word
       }
 
@@ -289,7 +289,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
 
       if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
 
-      if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
+      if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
 
       if (c3.equals(YEH) && verb.form === 5) return word
 
@@ -311,7 +311,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         const [, , c3, c4] = letters
         if (isDual(pronounId)) return dropNoonEnding(word)
         if (pronounId === '2fs') return dropNoonEnding(word).slice(0, -1)
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word), ALIF]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
         if (isFemininePlural(pronounId)) return [...word.slice(0, -1), FATHA]
 
         return verb.form === 4
@@ -328,12 +328,12 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
       if (verb.form === 1 && c3.isWeak && isFormIPresentVowel(verb, FATHA)) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
       }
 
       if (verb.form === 5 && c3.isWeak) {
         if (pronounId === '2fs') return [...dropNoonEnding(word).slice(0, -1), SUKOON]
-        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), SUKOON, ALIF]
+        if (isMasculinePlural(pronounId)) return [...dropNoonEnding(word).slice(0, -1), ALIF]
         if (isDual(pronounId)) return dropNoonEnding(word)
       }
 
@@ -342,7 +342,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
 
         if (c2.isHamza || c2.isWeak || c3.isHamza) return base
 
-        if (WAW.equals(base.at(-3))) return [...base.slice(0, -3), WAW, SUKOON, ALIF]
+        if (WAW.equals(base.at(-3))) return [...base.slice(0, -3), WAW, ALIF]
 
         if ([1, 4].includes(verb.form)) return base
 
@@ -365,7 +365,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
       //   return [...dropNoonEnding(word).slice(0, -1), ALIF]
 
       if (isMasculinePlural(pronounId))
-        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, SUKOON, ALIF]
+        return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), DAMMA, WAW, ALIF]
 
       if (isFemininePlural(pronounId)) {
         if (c3.equals(NOON)) return [...word.slice(0, -2), SUKOON, NOON, FATHA]
