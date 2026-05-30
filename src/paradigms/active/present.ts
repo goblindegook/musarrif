@@ -114,17 +114,15 @@ function buildMasculinePlural(stem: readonly Token[], verb: Verb): readonly Toke
 }
 
 function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token[] {
-  const strongSuffix = [SUKOON, NOON, FATHA]
-
   if (verb.root.length > 3) {
     const [, , c3, c4] = verb.rootTokens
     return verb.form === 4
-      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, ...strongSuffix]
-      : [...dropFinalDiacritic(stem), ...strongSuffix]
+      ? [...stem.slice(0, 6), c3, SUKOON, c4, KASRA, c4, SUKOON, NOON, FATHA]
+      : [...dropFinalDiacritic(stem), SUKOON, NOON, FATHA]
   }
 
   const [c1, c2, c3] = verb.rootTokens
-  const suffix = c3.isWeak ? [NOON, FATHA] : strongSuffix
+  const suffix = c3.isWeak ? [NOON, FATHA] : [SUKOON, NOON, FATHA]
 
   switch (verb.form) {
     case 1:
