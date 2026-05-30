@@ -2528,6 +2528,13 @@
   },
   {
     "root": "mrr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool", "fa3aal"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "mrr",
     "form": 10
   },
   {

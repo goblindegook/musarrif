@@ -423,6 +423,7 @@
     "settings.importWarning.message": "سَيَقُومُ ٱلِٱسْتِيرَادُ بِمَسْحِ وَاسْتِبْدَالِ جَمِيعِ بَيَانَاتِكَ ٱلْحَالِيَّةِ. لَا يُمْكِنُ ٱلتَّرَاجُعُ عَنْ هَذَا ٱلْإِجْرَاءِ.",
     "settings.importWarning.title": "تَحْذِيرُ ٱسْتِيرَادِ ٱلْبَيَانَاتِ",
     "settings.title": "ٱلْإِعْدَادَاتُ",
+    "settings.voice.title": "الصوت",
     "table.pronoun": "ٱلضَّمِيرُ",
     "tabs.build": "بِنَاء",
     "tabs.search": "بَحْث",
