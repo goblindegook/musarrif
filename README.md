@@ -126,7 +126,7 @@ Use the interactive wizard to add or edit entries in:
 Run it with:
 
 ```bash
-npm run verb
+npm run add:verb
 ```
 
 The wizard guides you through:
@@ -136,7 +136,7 @@ The wizard guides you through:
 - Passive voice support (`full`, `impersonal`, `none`)
 - Masdar pattern selection
 - Passive participle support
-- Root glosses
+- Root glosses (EN/IT/PT)
 - Verb translations (EN/IT/PT)
 
 It then shows a summary and writes sorted JSON updates.
@@ -153,6 +153,26 @@ Before adding verbs, verify from lexical sources:
 - Passive participle support
 
 Keep locale updates atomic with verb entry changes.
+
+## Wiktionary Test Generator
+
+Generate a paradigm test file from an Arabic Wiktionary conjugation entry:
+
+```bash
+npm run add:tests:wiktionary -- ktb-1
+```
+
+This script:
+
+- Resolves the slug to its conjugated lemma
+- Fetches the corresponding Wiktionary page
+- Parses Arabic conjugation tables and nominals
+- Writes a test file at `src/paradigms/verbs/<slug>.test.ts`
+
+Usage notes:
+
+- Slug format is `<root>-<form>` (example: `ktb-1`)
+- If the slug contains an apostrophe, quote it in the shell (example: `npm run wiktionary -- "qr'-1"`)
 
 ## Reporting Incorrect Conjugations
 
