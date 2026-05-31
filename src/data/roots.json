@@ -2287,8 +2287,8 @@
     "root": "kwn",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"],
-    "lexicalizedMasdars": ["kiyaAn", "kayonuwnap"],
+    "masdars": ["fa3l", "fi3aal"],
+    "lexicalizedMasdars": ["kayonuwnap"],
     "noPassiveParticiple": true
   },
   {
