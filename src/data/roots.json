@@ -3510,7 +3510,8 @@
     "root": "tmm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fi3l", "fu3l", "fa3aal", "fi3aal", "fu3aal", "fa3aala", "fi3aala"],
+    "passiveVoice": "impersonal"
   },
   {
     "root": "tmm",
