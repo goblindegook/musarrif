@@ -70,8 +70,8 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
     return {
       prefix: [c1, KASRA],
       suffix: [c3, SUKOON],
-      suffix3sd: [YEH, SUKOON, c3, FATHA],
-      suffix3mp: [YEH, SUKOON, c3, DAMMA, WAW, ALIF],
+      suffix3sd: [YEH, c3, FATHA],
+      suffix3mp: [YEH, c3, DAMMA, WAW, ALIF],
     }
 
   if (c2.isWeak && !isFormIPastVowel(verb, KASRA))

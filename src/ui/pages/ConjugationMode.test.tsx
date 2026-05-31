@@ -70,6 +70,16 @@ test('shows multiple masdars with a mimi label', () => {
   expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
+test('shows lexicalized masdars after regular masdars with a lexicalized label', () => {
+  localStorage.setItem('conjugator:diacriticsPreference', 'all')
+  renderConjugationMode({ verbId: 'tmm-2' })
+
+  const detail = screen.getByText('Verbal nouns').parentElement!
+  expect(within(detail).getByText('تَتْمِيم')).toBeInTheDocument()
+  expect(within(detail).getByText('تَتِمَّة')).toBeInTheDocument()
+  expect(within(detail).getByText('(lexicalized)')).toBeInTheDocument()
+})
+
 test('loads لَيْسَ without deriving unavailable nominals', () => {
   expect(() => renderConjugationMode({ verbId: 'lys-1' })).not.toThrow()
 

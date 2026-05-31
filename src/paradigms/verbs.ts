@@ -72,6 +72,7 @@ export type FormIVerb = {
   vowels: FormIPattern
   presentHollow?: PresentHollowBehaviour
   masdars?: readonly MasdarPattern[]
+  lexicalizedMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
@@ -81,6 +82,7 @@ export type NonFormIVerb = {
   root: string
   rootTokens: readonly Token[]
   form: Exclude<VerbForm, 1>
+  lexicalizedMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
@@ -150,7 +152,14 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
   )
   const raw: Verb =
     form === 1
-      ? { root, rootTokens: tokenize(root), form, vowels: pattern, masdars: matchingFormI?.masdars }
+      ? {
+          root,
+          rootTokens: tokenize(root),
+          form,
+          vowels: pattern,
+          masdars: matchingFormI?.masdars,
+          lexicalizedMasdars: matchingFormI?.lexicalizedMasdars ?? [],
+        }
       : { root, rootTokens: tokenize(root), form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)

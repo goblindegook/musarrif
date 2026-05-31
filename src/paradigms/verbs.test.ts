@@ -26,7 +26,7 @@ describe('synthesizeVerb', () => {
   })
 })
 
-describe('buildSyntheticVerb', () => {
+describe('synthesizeVerb', () => {
   test('Form I', () => {
     const verb = synthesizeVerb('كتب', 1, 'a-u')
     expect(verb).toEqual({
@@ -34,6 +34,7 @@ describe('buildSyntheticVerb', () => {
       form: 1,
       vowels: 'a-u',
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
+      lexicalizedMasdars: [],
       label: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',

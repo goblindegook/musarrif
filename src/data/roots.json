@@ -1593,7 +1593,8 @@
     "root": "byt",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["mimi"]
+    "masdars": ["mimi", "fa3aal"],
+    "passiveVoice": "impersonal"
   },
   {
     "root": "dEm",
@@ -3512,6 +3513,11 @@
     "vowels": "a-i",
     "masdars": ["fa3l", "fi3l", "fu3l", "fa3aal", "fi3aal", "fu3aal", "fa3aala", "fi3aala"],
     "passiveVoice": "impersonal"
+  },
+  {
+    "root": "tmm",
+    "form": 2,
+    "lexicalizedMasdars": ["tatima~p"]
   },
   {
     "root": "tmm",

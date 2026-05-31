@@ -1,3 +1,4 @@
+import { transliterateReverse } from '@pacote/buckwalter'
 import { isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
@@ -36,7 +37,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
       return [c1, FATHA, c2, FATHA, c3]
 
     case 'fa3aal':
-      return [c1, FATHA, c2.isWeak ? WAW : c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+      return [c1, FATHA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
 
     case 'fu3l':
       return [c1, DAMMA, c2, SUKOON, c3]
@@ -265,5 +266,7 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
 
 export function deriveMasdar(verb: Verb): readonly string[] {
   const patterns = (verb.form === 1 && verb.masdars) || ['mimi']
-  return patterns.map((pattern) => finalize(masdar(verb, pattern)))
+  const derived = patterns.map((pattern) => finalize(masdar(verb, pattern)))
+  const lexicalized = (verb.lexicalizedMasdars ?? []).map(transliterateReverse)
+  return [...derived, ...lexicalized]
 }

@@ -59,6 +59,11 @@ describe('NominalInsights', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />)
       expect(screen.getByText(/pattern مَفْعِل/)).toBeInTheDocument()
     })
+
+    test('shows lexicalized masdar label', () => {
+      renderWithProviders(<NominalInsights verb={getVerbById('tmm-2')!} nominal="masdar" arabic={['تَتْمِيم', 'تَتِمَّة']} />)
+      expect(screen.getByText('(lexicalized)')).toBeInTheDocument()
+    })
   })
 
   test('displays q suffix for quadriliteral form numbers', () => {
