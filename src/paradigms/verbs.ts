@@ -14,14 +14,15 @@ export const KWN_SISTERS_IDS = new Set([
   'brH-1',
   'byt-1',
   'DHy-4',
+  'dwm-1',
   'fkk-7',
   'kwn-1',
   'lys-1',
   'msw-4',
-  'zwl-1',
   'SbH-4',
   'Syr-1',
   'Zll-1',
+  'zwl-1',
   "ft'-1",
 ])
 export const ZNN_SISTERS_IDS = new Set([

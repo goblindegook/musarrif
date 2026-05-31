@@ -1665,6 +1665,7 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "fa3aal"],
+    "lexicalizedMasdars": ["dayomuwmap"],
     "passiveVoice": "impersonal"
   },
   {
