@@ -2287,6 +2287,7 @@
     "root": "kwn",
     "form": 1,
     "vowels": "a-u",
+    "passiveVoice": "none",
     "masdars": ["fa3l", "fi3aal"],
     "lexicalizedMasdars": ["kayonuwnap"],
     "noPassiveParticiple": true
