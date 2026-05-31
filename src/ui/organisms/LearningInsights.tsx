@@ -13,13 +13,14 @@ import { useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'
 import { useStats } from '../hooks/useStats'
 
+const OVERDUE_BACKLOG_THRESHOLD = 20
 const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
 
 export function LearningInsights() {
   const [srsStore] = useSrsStore()
   const [profile] = useDimensionStore()
   const { stats } = useStats()
-  const { t, lang } = useI18n()
+  const { t } = useI18n()
 
   const insights = useMemo(() => computeInsights(profile, srsStore, stats), [profile, srsStore, stats])
 
@@ -58,14 +59,31 @@ export function LearningInsights() {
       </Section>
       <Section>
         <SectionText>
+          <SectionLabel>{t('exercise.insights.heading.momentum')}:</SectionLabel>{' '}
+          {t(
+            `exercise.insights.momentum.${insights.volume.trend}${insights.overdue.count > OVERDUE_BACKLOG_THRESHOLD ? '.backlog' : ''}`,
+          )}
+        </SectionText>
+      </Section>
+      <Section>
+        <SectionText>
           <SectionLabel>{t('exercise.insights.heading.strengths')}:</SectionLabel>{' '}
-          {buildSectionText(t, lang, insights.strengths, 'strengths', 'exercise.insights.strengths.none')}
+          {buildSectionText(t, insights.strengths, 'strengths', 'exercise.insights.strengths.none')}
         </SectionText>
       </Section>
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.challenge')}:</SectionLabel>{' '}
-          {buildSectionText(t, lang, insights.challenge, 'challenge', 'exercise.insights.challenge.none')}
+          {insights.stuck.topDimensions.length > 0
+            ? insights.stuck.topDimensions.length === 1
+              ? t('exercise.insights.difficult.single', {
+                  value: t(candidateKey(insights.stuck.topDimensions[0])),
+                })
+              : t('exercise.insights.difficult.pair', {
+                  value1: t(candidateKey(insights.stuck.topDimensions[0])),
+                  value2: t(candidateKey(insights.stuck.topDimensions[1])),
+                })
+            : buildSectionText(t, insights.challenge, 'challenge', 'exercise.insights.challenge.none')}
         </SectionText>
       </Section>
       <Section>
@@ -94,7 +112,6 @@ function resolveNextValueLabel(t: ReturnType<typeof useI18n>['t'], dim: MasteryC
 
 function buildSectionText(
   t: ReturnType<typeof useI18n>['t'],
-  lang: ReturnType<typeof useI18n>['lang'],
   candidates: InsightData['strengths'],
   section: 'strengths' | 'challenge',
   noneKey: string,
@@ -104,15 +121,15 @@ function buildSectionText(
   if (candidates.length === 1) {
     const [a] = candidates
     return t(`exercise.insights.${section}.single.${a.type}`, {
-      value: formatCandidateValue(t, lang, a),
+      value: t(candidateKey(a)),
     })
   }
 
   const [a, b] = candidates
   const [first, second] = sortPairOrder(a, b)
   return t(`exercise.insights.${section}.pair.${first.type}.${second.type}`, {
-    value1: formatCandidateValue(t, lang, first),
-    value2: formatCandidateValue(t, lang, second),
+    value1: t(candidateKey(first)),
+    value2: t(candidateKey(second)),
   })
 }
 
@@ -120,20 +137,16 @@ function sortPairOrder(a: InsightCandidate, b: InsightCandidate): [InsightCandid
   return TYPE_ORDER.indexOf(a.type) <= TYPE_ORDER.indexOf(b.type) ? [a, b] : [b, a]
 }
 
-function formatCandidateValue(
-  t: ReturnType<typeof useI18n>['t'],
-  _lang: ReturnType<typeof useI18n>['lang'],
-  candidate: InsightCandidate,
-): string {
+function candidateKey(candidate: InsightCandidate): string {
   switch (candidate.type) {
     case 'rootType':
-      return t(`exercise.unlock.rootType.${candidate.value}`)
+      return `exercise.unlock.rootType.${candidate.value}`
     case 'tense':
-      return t(`exercise.conjugation.tense.${candidate.value}`)
+      return `exercise.conjugation.tense.${candidate.value}`
     case 'form':
-      return toRoman(parseInteger(candidate.value, 0))
+      return `exercise.unlock.form.${candidate.value}`
     case 'pronounClass':
-      return t(`exercise.insights.pronounClass.${candidate.value}`)
+      return `exercise.insights.pronounClass.${candidate.value}`
   }
 }
 

@@ -6,6 +6,7 @@ import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import {
   cardSpace,
+  getSrsCards,
   isMasdarCard,
   isNominalCard,
   isParticipleCard,
@@ -14,7 +15,7 @@ import {
   type SrsRootType,
   type SrsStore,
 } from './srs'
-import { getAccuracyPercent, getRecentAccuracyPercent, type TrackedExercises } from './stats'
+import { getAccuracyPercent, getRecentAccuracyPercent, getStatsWindow, type TrackedExercises } from './stats'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const TENSE_ORDER: readonly VerbTense[] = [
@@ -229,7 +230,7 @@ export function findLowestMastery<K extends MasteryCategoryId>(
 }
 
 export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass'
-export type PronounClassId = 'singular' | 'dual' | '2ndPlural' | '3rdPlural'
+export type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
 
 export interface InsightCandidate {
   type: InsightCandidateType
@@ -252,18 +253,88 @@ export interface InsightData {
     nextDimension: MasteryCategoryId | null
     nextValue: string | null
   }
+  volume: {
+    trend: 'ramping' | 'steady' | 'dropping' | 'inactive' | 'insufficient'
+  }
+  overdue: {
+    count: number
+  }
+  stuck: {
+    topDimensions: readonly InsightCandidate[]
+  }
 }
 
 const MASTERY_DIMENSION_KEYS: readonly MasteryCategoryId[] = ['rootTypes', 'forms', 'tenses', 'pronouns', 'nominals']
 
 const PRONOUN_CLASS_MEMBERS: Record<PronounClassId, readonly PronounId[]> = {
-  singular: ['1s', '2ms', '2fs', '3ms', '3fs', '1p'],
+  singular: ['1s', '2ms', '2fs', '3ms', '3fs'],
   dual: ['2d', '3md', '3fd'],
+  '1stPlural': ['1p'],
   '2ndPlural': ['2mp', '2fp'],
   '3rdPlural': ['3mp', '3fp'],
 }
 
-const PRONOUN_CLASS_ORDER: readonly PronounClassId[] = ['singular', 'dual', '2ndPlural', '3rdPlural']
+const PRONOUN_CLASS_ORDER: readonly PronounClassId[] = ['singular', 'dual', '1stPlural', '2ndPlural', '3rdPlural']
+
+const STUCK_EF_THRESHOLD = 1.5
+const STUCK_MIN_REPETITIONS = 3
+
+function getPronounClass(pronoun: PronounId): PronounClassId | null {
+  for (const classId of PRONOUN_CLASS_ORDER) {
+    if (PRONOUN_CLASS_MEMBERS[classId].includes(pronoun)) return classId
+  }
+  return null
+}
+
+function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
+  const stuck = getSrsCards(srsStore).filter(
+    (c) => c.ef <= STUCK_EF_THRESHOLD && c.repetitions >= STUCK_MIN_REPETITIONS,
+  )
+
+  if (stuck.length === 0) return { topDimensions: [] }
+
+  const counts = new Map<string, { type: InsightCandidateType; value: string; count: number }>()
+
+  const bump = (type: InsightCandidateType, value: string) => {
+    const mapKey = `${type}:${value}`
+    const entry = counts.get(mapKey)
+    if (entry != null) entry.count++
+    else counts.set(mapKey, { type, value, count: 1 })
+  }
+
+  for (const card of stuck) {
+    bump('form', String(card.form))
+    if (card.tense != null) bump('tense', card.tense)
+    if (card.pronoun != null) {
+      const pronounClass = getPronounClass(card.pronoun)
+      if (pronounClass != null) bump('pronounClass', pronounClass)
+    }
+  }
+
+  const total = stuck.length
+  const sorted = [...counts.values()].filter(({ count }) => count < total).sort((a, b) => b.count - a.count)
+
+  return {
+    topDimensions: sorted.slice(0, 2).map(({ type, value, count }) => ({
+      type,
+      value,
+      score: count / total,
+    })),
+  }
+}
+
+function computeVolumeTrend(stats: TrackedExercises, today: Date): InsightData['volume'] {
+  const window = getStatsWindow(stats, 14, today)
+  const prior = window.slice(0, 7)
+  const recent = window.slice(7, 14)
+  const avgPrior = average(prior.map((d) => d.correct + d.incorrect))
+  const avgRecent = average(recent.map((d) => d.correct + d.incorrect))
+  if (avgPrior === 0) return { trend: 'insufficient' }
+  if (avgRecent === 0) return { trend: 'inactive' }
+  if (avgRecent > avgPrior * 1.25) return { trend: 'ramping' }
+  if (avgRecent < avgPrior * 0.75) return { trend: 'dropping' }
+  return { trend: 'steady' }
+}
 
 export function computeInsights(
   profile: DimensionProfile,
@@ -273,8 +344,9 @@ export function computeInsights(
 ): InsightData {
   const mastery = computeMastery(profile, srsStore, today)
 
+  const todayDate = new Date(`${today}T00:00:00`)
   const accuracy = getAccuracyPercent(stats)
-  const recentAccuracy = getRecentAccuracyPercent(stats, 15, new Date(`${today}T00:00:00`))
+  const recentAccuracy = getRecentAccuracyPercent(stats, 15, todayDate)
   const trend = computeInsightTrend(stats, accuracy, recentAccuracy)
 
   const candidates: InsightCandidate[] = []
@@ -319,6 +391,9 @@ export function computeInsights(
       nextDimension,
       nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : null,
     },
+    volume: computeVolumeTrend(stats, todayDate),
+    overdue: { count: Object.values(srsStore).filter((s) => s.dueDate <= today).length },
+    stuck: computeStuck(srsStore),
   }
 }
 

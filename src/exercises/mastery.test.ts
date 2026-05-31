@@ -431,3 +431,259 @@ describe('computeInsights', () => {
     expect(result.stage.nextDimension).toBeNull()
   })
 })
+
+describe('computeInsights — volume', () => {
+  test('trend is insufficient when fewer than 7 days of prior history', () => {
+    const stats = makeDailyRange(6, 3, 10, 2)
+    const result = computeInsights(BASE_PROFILE, {}, stats, ANCHOR_DATE)
+    expect(result.volume.trend).toBe('insufficient')
+  })
+
+  test('trend is insufficient when prior 7-day window is all zero', () => {
+    const stats = makeDailyRange(3, 3, 10, 2)
+    const result = computeInsights(BASE_PROFILE, {}, stats, ANCHOR_DATE)
+    expect(result.volume.trend).toBe('insufficient')
+  })
+
+  test('trend is inactive when recent 7 days are all zero but prior history exists', () => {
+    const stats = makeDailyRange(13, 7, 10, 2)
+    const result = computeInsights(BASE_PROFILE, {}, stats, ANCHOR_DATE)
+    expect(result.volume.trend).toBe('inactive')
+  })
+
+  test('trend is ramping when recent average exceeds prior by more than 25%', () => {
+    const prior = makeDailyRange(13, 7, 8, 2)
+    const recent = makeDailyRange(6, 7, 14, 2)
+    const result = computeInsights(BASE_PROFILE, {}, [...prior, ...recent], ANCHOR_DATE)
+    expect(result.volume.trend).toBe('ramping')
+  })
+
+  test('trend is dropping when recent average is more than 25% below prior', () => {
+    const prior = makeDailyRange(13, 7, 20, 2)
+    const recent = makeDailyRange(6, 7, 8, 2)
+    const result = computeInsights(BASE_PROFILE, {}, [...prior, ...recent], ANCHOR_DATE)
+    expect(result.volume.trend).toBe('dropping')
+  })
+
+  test('trend is steady when recent average is within 25% of prior', () => {
+    const prior = makeDailyRange(13, 7, 10, 2)
+    const recent = makeDailyRange(6, 7, 11, 2)
+    const result = computeInsights(BASE_PROFILE, {}, [...prior, ...recent], ANCHOR_DATE)
+    expect(result.volume.trend).toBe('steady')
+  })
+})
+
+describe('computeInsights — overdue', () => {
+  test('count is 0 when store is empty', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
+    expect(result.overdue.count).toBe(0)
+  })
+
+  test('count is 0 when all cards are not yet due', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 2.5,
+        repetitions: 5,
+        interval: 30,
+        dueDate: '2026-04-16',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.overdue.count).toBe(0)
+  })
+
+  test('counts cards where dueDate equals today as overdue', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 2.5,
+        repetitions: 5,
+        interval: 30,
+        dueDate: ANCHOR_DATE,
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.overdue.count).toBe(1)
+  })
+
+  test('counts cards where dueDate is in the past as overdue', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 2.5,
+        repetitions: 5,
+        interval: 30,
+        dueDate: '2026-04-10',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '1s')]: {
+        ef: 2.5,
+        repetitions: 3,
+        interval: 10,
+        dueDate: '2026-03-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.overdue.count).toBe(2)
+  })
+
+  test('does not count future-due cards', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 2.5,
+        repetitions: 5,
+        interval: 30,
+        dueDate: '2026-04-16',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '1s')]: {
+        ef: 2.5,
+        repetitions: 3,
+        interval: 10,
+        dueDate: '2026-04-14',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.overdue.count).toBe(1)
+  })
+})
+
+describe('computeInsights — stuck', () => {
+  test('topDimensions is empty when store is empty', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
+    expect(result.stuck.topDimensions).toEqual([])
+  })
+
+  test('topDimensions is empty when ef is above threshold', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.6,
+        repetitions: 5,
+        interval: 5,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.stuck.topDimensions).toEqual([])
+  })
+
+  test('topDimensions is empty when repetitions are below threshold', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 2,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.stuck.topDimensions).toEqual([])
+  })
+
+  test('topDimensions has at most 2 entries', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.stuck.topDimensions.length).toBeLessThanOrEqual(2)
+  })
+
+  test('topDimensions is empty when there is only one stuck card (no discriminative signal)', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.stuck.topDimensions).toEqual([])
+  })
+
+  test('tense with most stuck cards appears in topDimensions', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '2ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    const dimKeys = result.stuck.topDimensions.map((d) => `${d.type}:${d.value}`)
+    expect(dimKeys).toContain('tense:passive.past')
+  })
+
+  test('dominant tense appears in topDimensions when passive cards outnumber active', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    const dimKeys = result.stuck.topDimensions.map((d) => `${d.type}:${d.value}`)
+    expect(dimKeys).toContain('tense:passive.past')
+  })
+
+  test('scores are proportions of total stuck count', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    const passivePast = result.stuck.topDimensions.find((d) => d.type === 'tense' && d.value === 'passive.past')
+    expect(passivePast).toBeDefined()
+    expect(passivePast!.score).toBeCloseTo(2 / 3)
+  })
+})

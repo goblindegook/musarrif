@@ -1,6 +1,13 @@
 import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
-import { cardSpace, isNominalCard, isVerbCard, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
+import {
+  buildCardKey,
+  cardSpace,
+  isNominalCard,
+  isVerbCard,
+  type SrsCardIdentity,
+  type SrsStore,
+} from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import { renderWithProviders } from '../../test/fixtures'
 import { serializeDayStats } from '../hooks/useStats'
@@ -62,6 +69,7 @@ afterEach(() => {
   vi.useRealTimers()
   vi.unstubAllEnvs()
   localStorage.removeItem('conjugator:exercise:daily')
+  localStorage.removeItem('conjugator:srs')
   lastPlotData = null
 })
 
@@ -364,6 +372,69 @@ describe('ExerciseStats', () => {
     })
   })
 
+  describe('learning insights — new sections', () => {
+    test('shows momentum section with insufficient text when stats are minimal', () => {
+      renderStats(SAMPLE_STATS)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
+      expect(screen.getByText('Not enough history yet to assess your practice rhythm.')).toBeInTheDocument()
+    })
+
+    test('shows backlog hint in momentum when many cards are overdue', () => {
+      const store: SrsStore = {}
+      for (let i = 0; i < 25; i++) {
+        store[`conjugation:sound:1:active.past:3ms:${i}`] = {
+          ef: 2.5,
+          repetitions: 3,
+          interval: 10,
+          dueDate: '2026-04-01',
+        }
+      }
+      localStorage.setItem('conjugator:srs', JSON.stringify(store))
+      renderStats(SAMPLE_STATS)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.getByText(/reviews are piling up/)).toBeInTheDocument()
+    })
+
+    test('shows Difficult section when stuck cards exist', () => {
+      const store: SrsStore = {
+        [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
+          ef: 1.3,
+          repetitions: 5,
+          interval: 1,
+          dueDate: '2099-01-01',
+        },
+        [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
+          ef: 1.3,
+          repetitions: 5,
+          interval: 1,
+          dueDate: '2099-01-01',
+        },
+        [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+          ef: 1.3,
+          repetitions: 5,
+          interval: 1,
+          dueDate: '2099-01-01',
+        },
+      }
+      localStorage.setItem('conjugator:srs', JSON.stringify(store))
+      renderStats(SAMPLE_STATS)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.getByText(/Some paradigms are proving difficult/)).toBeInTheDocument()
+    })
+
+    test('shows Challenge section (not Difficult) when no stuck cards exist', () => {
+      renderStats(SAMPLE_STATS)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.queryByText(/Some paradigms are proving difficult/)).not.toBeInTheDocument()
+      expect(screen.getByText(/^Your current challenge:/)).toBeInTheDocument()
+    })
+  })
+
   test('shows Mastery section when expanded', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))
@@ -389,6 +460,7 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByText('See insights'))
     expect(screen.getByText('Learning insights')).toBeInTheDocument()
     expect(screen.getByText(/^Your journey so far:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
     expect(screen.getByText(/^Where you shine:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your current challenge:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your stage:/)).toBeInTheDocument()
