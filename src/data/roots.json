@@ -1735,6 +1735,18 @@
     "noPassiveParticiple": true
   },
   {
+    "root": "fkk",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "fkk",
+    "form": 7,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
     "root": "fkr",
     "form": 1,
     "vowels": "a-u"
@@ -2813,7 +2825,9 @@
   },
   {
     "root": "qSS",
-    "form": 7
+    "form": 7,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "qTE",

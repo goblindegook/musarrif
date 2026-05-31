@@ -1663,10 +1663,10 @@ describe('imperative', () => {
       test('اِنْقَصَّ conjugation', () => {
         expect(conjugateImperative(getVerb('قصص', 7))).toMatchObjectT({
           '2ms': 'اِنْقَصَّ',
-          '2fs': 'اِنْقَصِي',
+          '2fs': 'اِنْقَصِّي',
           '2d': 'اِنْقَصَّا',
           '2mp': 'اِنْقَصُّوا',
-          '2fp': 'اِنْقَصْنَ',
+          '2fp': 'اِنْقَصِصْنَ',
         })
       })
     })

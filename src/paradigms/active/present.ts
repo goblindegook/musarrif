@@ -165,7 +165,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
       return [...dropFinalDiacritic(c3.isHamza ? stem : expandGemination(stem, FATHA)), ...suffix]
 
     case 7:
-      if (c2.equals(c3)) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, ...suffix]
+      if (c2.equals(c3)) return [YEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, c3, ...suffix]
       if (c3.isWeak) return [...stem.slice(0, -1), YEH, ...suffix]
       if (c2.isWeak) return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
       return [...dropFinalDiacritic(stem), ...suffix]
@@ -259,7 +259,7 @@ function dropNoonEnding(word: readonly Token[]): readonly Token[] {
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
-  const [, , c3] = verb.rootTokens
+  const [c1, c2, c3] = verb.rootTokens
 
   return mapRecord(
     mapRecord(conjugateIndicative(verb), (indicative, pronounId) => {
@@ -279,8 +279,10 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, string> {
         return word
       }
 
-      if (pronounId === '2fs' && verb.form === 7)
+      if (pronounId === '2fs' && verb.form === 7) {
+        if (c2.equals(c3)) return [TEH, FATHA, NOON, SUKOON, c1, FATHA, c2, SUKOON, c3, KASRA, YEH]
         return [...dropFinalDiacritic(dropNoonEnding(word).slice(0, -2)), KASRA, YEH]
+      }
 
       if (pronounId === '2fs') return dropNoonEnding(word)
 
@@ -346,10 +348,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, string> {
         return base
       }
 
-      if (pronounId === '2fs' && verb.form === 7 && c2.equals(c3))
-        return dropNoonEnding(word).filter((char) => !char.equals(SHADDA))
-
       if (pronounId === '2fs') {
+        if (verb.form === 7 && c2.equals(c3)) return [TEH, FATHA, NOON, SUKOON, c1, FATHA, c2, KASRA, SHADDA, YEH]
         if (verb.form === 7) return [...dropNoonEnding(word).slice(0, -2), KASRA, YEH]
         return dropNoonEnding(word)
       }
