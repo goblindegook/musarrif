@@ -67,7 +67,7 @@ describe('renderVerbTestFile', () => {
   test('renders valid string literals for slugs containing apostrophes', () => {
     const file = renderVerbTestFile("qr'-1", PARSED_FIXTURE)
 
-    expect(file).toContain('describe("qr\'-1 (Wiktionary)", () => {')
+    expect(file).toContain('describe("qr\'-1", () => {')
     expect(file).toContain('getVerbById("qr\'-1")!')
   })
 })

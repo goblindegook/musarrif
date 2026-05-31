@@ -126,6 +126,7 @@ export function finalize(letters: readonly Token[]): string {
   return detokenize(seatHamzas(letters))
     .replace(new RegExp(`${ALIF_HAMZA.raw}${FATHA.raw}[${ALIF_HAMZA.raw}${ALIF.raw}]${SUKOON.raw}?`), ALIF_MADDA.raw)
     .replace(new RegExp(`(.)(?:${SUKOON.raw}\\1)`, 'g'), `$1${SHADDA.raw}`)
+    .replace(/([^\p{Mn}])\1$/u, `$1${SHADDA.raw}`)
     .normalize('NFC')
 }
 

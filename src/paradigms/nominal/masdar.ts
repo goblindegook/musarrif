@@ -43,7 +43,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
       return [c1, DAMMA, c2, SUKOON, c3]
 
     case 'fu3ool':
-      return [c1, DAMMA, c2, DAMMA, WAW, SUKOON, c3]
+      return [c1, DAMMA, c2, DAMMA, WAW, c3]
 
     case 'fu3aal':
       return [c1, DAMMA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]

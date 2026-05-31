@@ -122,7 +122,7 @@ export function renderVerbTestFile(slug: string, parsed: ParsedParadigms): strin
 
   return `${imports}
 
-describe(${toDoubleQuotedLiteral(`${slug} (Wiktionary)`)}, () => {
+describe(${toDoubleQuotedLiteral(slug)}, () => {
 ${tests.join('\n\n')}
 })
 `
