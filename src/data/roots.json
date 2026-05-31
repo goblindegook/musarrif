@@ -1170,7 +1170,9 @@
   },
   {
     "root": "SbH",
-    "form": 4
+    "form": 4,
+    "passiveVoice": "none",
+    "noPassiveParticiple": false
   },
   {
     "root": "Sbr",
