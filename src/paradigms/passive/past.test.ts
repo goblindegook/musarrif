@@ -40,7 +40,7 @@ describe('passive past pattern', () => {
     })
 
     describe('hamzated initial hollow roots', () => {
-      test.each<[string, string]>([['ءول', 'إِيْلَ']])('%s pattern', (root, expected) => {
+      test.each<[string, string]>([['ءول', 'إِيلَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
@@ -49,15 +49,15 @@ describe('passive past pattern', () => {
           '1s': 'إِلْتُ',
           '2ms': 'إِلْتَ',
           '2fs': 'إِلْتِ',
-          '3ms': 'إِيْلَ',
-          '3fs': 'إِيْلَتْ',
+          '3ms': 'إِيلَ',
+          '3fs': 'إِيلَتْ',
           '2d': 'إِلْتُمَا',
-          '3md': 'إِيْلَا',
-          '3fd': 'إِيْلَتَا',
+          '3md': 'إِيلَا',
+          '3fd': 'إِيلَتَا',
           '1p': 'إِلْنَا',
           '2mp': 'إِلْتُمْ',
           '2fp': 'إِلْتُنَّ',
-          '3mp': 'إِيْلُوا',
+          '3mp': 'إِيلُوا',
           '3fp': 'إِلْنَ',
         })
       })
@@ -66,16 +66,16 @@ describe('passive past pattern', () => {
     describe('hollow roots', () => {
       test.each<[string, string]>([
         ['زيد', 'زِيدَ'],
-        ['حول', 'حِيْلَ'],
-        ['عوم', 'عِيْمَ'],
-        ['قول', 'قِيْلَ'],
-        ['نوم', 'نِيْمَ'],
-        ['دوم', 'دِيْمَ'],
+        ['حول', 'حِيلَ'],
+        ['عوم', 'عِيمَ'],
+        ['قول', 'قِيلَ'],
+        ['نوم', 'نِيمَ'],
+        ['دوم', 'دِيمَ'],
         ['خور', 'خُوِرَ'],
         ['خيل', 'خِيلَ'],
         ['عوز', 'عُوِزَ'],
-        ['خوف', 'خِيْفَ'],
-        ['شوق', 'شِيْقَ'],
+        ['خوف', 'خِيفَ'],
+        ['شوق', 'شِيقَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -108,7 +108,7 @@ describe('passive past pattern', () => {
     describe('hamzated final hollow roots', () => {
       test.each<[string, string]>([
         ['جيء', 'جِيءَ'],
-        ['نوء', 'نِيْءَ'],
+        ['نوء', 'نِيءَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -453,15 +453,15 @@ describe('passive past pattern', () => {
           '1s': 'لِمْتُ',
           '2ms': 'لِمْتَ',
           '2fs': 'لِمْتِ',
-          '3ms': 'لِيْمَ',
-          '3fs': 'لِيْمَتْ',
+          '3ms': 'لِيمَ',
+          '3fs': 'لِيمَتْ',
           '2d': 'لِمْتُمَا',
-          '3md': 'لِيْمَا',
-          '3fd': 'لِيْمَتَا',
+          '3md': 'لِيمَا',
+          '3fd': 'لِيمَتَا',
           '1p': 'لِمْنَا',
           '2mp': 'لِمْتُمْ',
           '2fp': 'لِمْتُنَّ',
-          '3mp': 'لِيْمُوا',
+          '3mp': 'لِيمُوا',
           '3fp': 'لِمْنَ',
         })
       })
@@ -489,15 +489,15 @@ describe('passive past pattern', () => {
           '1s': 'زِرْتُ',
           '2ms': 'زِرْتَ',
           '2fs': 'زِرْتِ',
-          '3ms': 'زِيْرَ',
-          '3fs': 'زِيْرَتْ',
+          '3ms': 'زِيرَ',
+          '3fs': 'زِيرَتْ',
           '2d': 'زِرْتُمَا',
-          '3md': 'زِيْرَا',
-          '3fd': 'زِيْرَتَا',
+          '3md': 'زِيرَا',
+          '3fd': 'زِيرَتَا',
           '1p': 'زِرْنَا',
           '2mp': 'زِرْتُمْ',
           '2fp': 'زِرْتُنَّ',
-          '3mp': 'زِيْرُوا',
+          '3mp': 'زِيرُوا',
           '3fp': 'زِرْنَ',
         })
       })

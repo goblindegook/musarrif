@@ -10,7 +10,20 @@ export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 export const FORMS: readonly VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-export const KWN_SISTERS_IDS = new Set(['DHy-4', 'SbH-4', 'Syr-1', 'Zll-1', 'byt-1', 'kwn-1', 'lys-1', 'msw-4'])
+export const KWN_SISTERS_IDS = new Set([
+  'brH-1',
+  'byt-1',
+  'DHy-4',
+  'fkk-7',
+  'kwn-1',
+  'lys-1',
+  'msw-4',
+  'zwl-1',
+  'SbH-4',
+  'Syr-1',
+  'Zll-1',
+  "ft'-1",
+])
 export const ZNN_SISTERS_IDS = new Set([
   // verbs of affectivity
   'dry-1',

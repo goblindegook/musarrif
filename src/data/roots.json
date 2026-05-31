@@ -4315,6 +4315,13 @@
     "form": 8
   },
   {
+    "root": "zwl",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3aal"],
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "zwr",
     "form": 1,
     "vowels": "a-u",

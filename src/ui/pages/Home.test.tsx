@@ -219,7 +219,7 @@ test('filters included verbs to doubled roots', async () => {
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
 })
 
-test('disables sound filter when kāna + form I has no sound roots', async () => {
+test('keeps sound filter enabled when kāna + form I includes sound roots', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const otherFilters = screen.getByLabelText('Other filters')
@@ -227,7 +227,7 @@ test('disables sound filter when kāna + form I has no sound roots', async () =>
   await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
 
-  expect(screen.getByText('Sound', { selector: 'button' })).toBeDisabled()
+  expect(screen.getByText('Sound', { selector: 'button' })).toBeEnabled()
 })
 
 test('doubled filter shows Zll-1 for kāna form I combination', async () => {
