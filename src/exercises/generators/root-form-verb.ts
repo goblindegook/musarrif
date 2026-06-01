@@ -8,21 +8,21 @@ import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
-  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
+  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
 
-  const answerDisplay = exerciseDiacritics(verb.label, profile.diacritics)
+  const answerDisplay = exerciseDiacritics(verb.lemma, profile.diacritics)
 
   const distractors = shuffle(
     FORMS.filter((form) => {
       if (form === verb.form) return false
       const candidate = synthesizeVerb(verb.root, form)
-      return exerciseDiacritics(candidate.label, profile.diacritics) !== answerDisplay
+      return exerciseDiacritics(candidate.lemma, profile.diacritics) !== answerDisplay
     }),
   )
     .slice(0, 3)
-    .map((form) => ({ form, label: synthesizeVerb(verb.root, form).label }))
+    .map((form) => ({ form, label: synthesizeVerb(verb.root, form).lemma }))
 
-  const options = shuffle([{ form: verb.form, label: verb.label }, ...distractors])
+  const options = shuffle([{ form: verb.form, label: verb.lemma }, ...distractors])
   const answer = options.findIndex(({ form }) => form === verb.form)
 
   return {

@@ -15,7 +15,7 @@ const getVowelPattern = (verb: DisplayVerb): string => {
   const templateRoot = verb.root.length > 3 ? 'فعلل' : 'فعل'
   const synthetic =
     verb.form === 1 ? synthesizeVerb(templateRoot, 1, verb.vowels) : synthesizeVerb(templateRoot, verb.form)
-  return [synthetic.label, conjugate(synthetic, 'active.present.indicative')['3ms']].join(' / ')
+  return [synthetic.lemma, conjugate(synthetic, 'active.present.indicative')['3ms']].join(' / ')
 }
 
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
@@ -26,7 +26,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       verb,
       'active.past',
       '3ms',
-      verb.label,
+      verb.lemma,
     )
     return renderExplanation({ category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
   }, [verb, t])

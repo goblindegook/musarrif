@@ -56,7 +56,7 @@ describe('rootFormVerbExercise', () => {
         (v) =>
           v.root === root &&
           formatFormLabel(v.form, v.root) === formLabel &&
-          exerciseDiacritics(v.label, easyProfile.diacritics) === exercise.options[exercise.answer],
+          exerciseDiacritics(v.lemma, easyProfile.diacritics) === exercise.options[exercise.answer],
       ),
     ).toBe(true)
   })

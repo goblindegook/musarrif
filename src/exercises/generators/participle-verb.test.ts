@@ -66,9 +66,9 @@ describe('participleVerbExercise', () => {
     const mediumLabel = medium.options[medium.answer]
     const hardLabel = hard.options[hard.answer]
     const mediumMatches = verbs.filter(
-      (verb) => exerciseDiacritics(verb.label, mediumProfile.diacritics) === mediumLabel,
+      (verb) => exerciseDiacritics(verb.lemma, mediumProfile.diacritics) === mediumLabel,
     )
-    const hardMatches = verbs.filter((verb) => exerciseDiacritics(verb.label, hardProfile.diacritics) === hardLabel)
+    const hardMatches = verbs.filter((verb) => exerciseDiacritics(verb.lemma, hardProfile.diacritics) === hardLabel)
 
     const mediumValid =
       medium.promptTranslationKey === 'exercise.prompt.activeParticipleVerb'

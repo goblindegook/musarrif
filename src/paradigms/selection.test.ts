@@ -62,7 +62,7 @@ describe('search', () => {
   test('falls back to lemma-prefix matching for suggestions', () => {
     const matches = search('آم')
 
-    expect(matches.some((verb) => verb.label.startsWith('آم'))).toBe(true)
+    expect(matches.some((verb) => verb.lemma.startsWith('آم'))).toBe(true)
   })
 
   test('returns only exact matches when requested', () => {

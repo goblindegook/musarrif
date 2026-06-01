@@ -38,7 +38,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
       block={block}
       aria-label={[
         verb.synthetic ? '*' : null,
-        formatArabic(verb.label),
+        formatArabic(verb.lemma),
         formLabel,
         t('meta.form'),
         translateVerb(verb),
@@ -49,7 +49,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
       <InlineRow>
         <span dir="rtl" lang="ar">
           {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
-          {formatArabic(verb.label)}
+          {formatArabic(verb.lemma)}
         </span>
         <small>{formLabel}</small>
       </InlineRow>

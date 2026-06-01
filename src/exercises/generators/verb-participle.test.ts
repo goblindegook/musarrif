@@ -59,8 +59,8 @@ describe('verbParticipleExercise', () => {
     const medium = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
     const hard = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
 
-    const mediumVerbs = verbs.filter((verb) => exerciseDiacritics(verb.label, 1) === medium.word)
-    const hardVerbs = verbs.filter((verb) => exerciseDiacritics(verb.label, 2) === hard.word)
+    const mediumVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma, 1) === medium.word)
+    const hardVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma, 2) === hard.word)
 
     const mediumAnswer = medium.options[medium.answer]
     const hardAnswer = hard.options[hard.answer]

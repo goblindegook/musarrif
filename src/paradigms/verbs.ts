@@ -105,7 +105,7 @@ export type Verb = FormIVerb | NonFormIVerb
 
 type VerbBase<T extends Verb> = T & {
   id: string
-  label: string
+  lemma: string
   rootId: string
   synthetic?: true
 }
@@ -116,7 +116,7 @@ export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((raw) => {
   const rootId = raw.root
   const root = transliterateReverse(rootId)
   const verb = { ...raw, root, rootTokens: tokenize(root) }
-  return { ...verb, label: conjugatePast(verb)['3ms'], id: `${rootId}-${raw.form}`, rootId }
+  return { ...verb, lemma: conjugatePast(verb)['3ms'], id: `${rootId}-${raw.form}`, rootId }
 })
 
 const verbsById = new Map<string, DisplayVerb>()
@@ -177,7 +177,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
       : { root, rootTokens: tokenize(root), form }
   const past = conjugatePast(raw)
   const rootId = transliterate(root)
-  return { ...raw, id: `${rootId}-${form}`, label: past['3ms'], rootId, synthetic: true }
+  return { ...raw, id: `${rootId}-${form}`, lemma: past['3ms'], rootId, synthetic: true }
 }
 
 const ALL_PARADIGMS: readonly VerbParadigm[] = [...ALL_TENSES, 'active.participle', 'passive.participle', 'masdar']

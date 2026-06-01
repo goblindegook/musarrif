@@ -80,7 +80,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   )
 
   const documentTitle = useMemo(
-    () => [formatArabic(selectedVerb.label), t('title')].filter(Boolean).join(' · '),
+    () => [formatArabic(selectedVerb.lemma), t('title')].filter(Boolean).join(' · '),
     [formatArabic, selectedVerb, t],
   )
 
@@ -258,13 +258,13 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
             <>
               <ShareButton />
               <CopyButton
-                text={formatArabic(selectedVerb.label)}
-                ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.label) })}
+                text={formatArabic(selectedVerb.lemma)}
+                ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.lemma) })}
               />
               <SpeechButton
-                text={selectedVerb.label}
+                text={selectedVerb.lemma}
                 lang="ar"
-                ariaLabel={t('aria.speak', { text: selectedVerb.label })}
+                ariaLabel={t('aria.speak', { text: selectedVerb.lemma })}
               />
               <FavouriteButton
                 isFavourite={isFavourite(selectedVerb.id)}

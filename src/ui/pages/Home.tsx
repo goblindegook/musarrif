@@ -22,7 +22,7 @@ import { useRouting } from '../routes'
 
 const VERBS_PER_PAGE = 30
 
-const allVerbs = verbs.toSorted((a, b) => a.label.localeCompare(b.label, 'ar'))
+const allVerbs = verbs.toSorted((a, b) => a.lemma.localeCompare(b.lemma, 'ar'))
 
 type RootTypeFilter = 'sound' | 'doubled' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
 

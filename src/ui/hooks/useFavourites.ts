@@ -20,7 +20,7 @@ export function useFavourites() {
       verbIds
         .map((id) => buildVerbFromId(id))
         .filter((verb): verb is DisplayVerb => verb != null)
-        .sort((a, b) => a.label.localeCompare(b.label, 'ar')),
+        .sort((a, b) => a.lemma.localeCompare(b.lemma, 'ar')),
     [verbIds],
   )
 

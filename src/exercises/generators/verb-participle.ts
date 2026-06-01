@@ -30,8 +30,8 @@ export const verbParticipleExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
-      word: exerciseDiacritics(verb.label, profile.diacritics),
-      spokenWord: verb.label,
+      word: exerciseDiacritics(verb.lemma, profile.diacritics),
+      spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
       cardKey: buildCardKey('verbParticiple', getSrsRootType(verb.root), verb.form),

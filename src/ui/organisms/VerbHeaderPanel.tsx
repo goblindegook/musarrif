@@ -32,7 +32,7 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
         <PanelTitleGroup>
           <Verb>
             {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
-            {formatArabic(verb.label)}
+            {formatArabic(verb.lemma)}
           </Verb>
         </PanelTitleGroup>
         {actions}

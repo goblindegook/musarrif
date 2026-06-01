@@ -57,7 +57,7 @@ describe('verbMasdarExercise', () => {
 
     expect(
       verbs
-        .filter((verb) => exerciseDiacritics(verb.label, 1) === medium.word)
+        .filter((verb) => exerciseDiacritics(verb.lemma, 1) === medium.word)
         .some((verb) =>
           deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 1) === medium.options[medium.answer]),
         ),
@@ -65,7 +65,7 @@ describe('verbMasdarExercise', () => {
 
     expect(
       verbs
-        .filter((verb) => exerciseDiacritics(verb.label, 2) === hard.word)
+        .filter((verb) => exerciseDiacritics(verb.lemma, 2) === hard.word)
         .some((verb) =>
           deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 2) === hard.options[hard.answer]),
         ),

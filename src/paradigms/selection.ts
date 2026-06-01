@@ -96,7 +96,7 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
     for (const verb of verbsForRoot) {
       if (distance.has(verb.id)) continue
       matches.push(verb)
-      distance.set(verb.id, wordDistance(normalizedQuery, normalizeQuery(verb.label)))
+      distance.set(verb.id, wordDistance(normalizedQuery, normalizeQuery(verb.lemma)))
     }
   }
 

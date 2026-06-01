@@ -117,7 +117,7 @@ export const conjugationExercise = defineExercise(
   'conjugation',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
-    const word = exerciseDiacritics(verb.label, profile.diacritics)
+    const word = exerciseDiacritics(verb.lemma, profile.diacritics)
     const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const targetPronoun = normalizeExercisePronoun(
       verb,
@@ -153,7 +153,7 @@ export const conjugationExercise = defineExercise(
         pronoun: `pronoun.${targetPronoun}`,
       },
       word,
-      spokenWord: verb.label,
+      spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
       cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),

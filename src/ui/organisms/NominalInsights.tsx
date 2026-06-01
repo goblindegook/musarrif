@@ -57,7 +57,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
         <Detail label={t('meta.form')} valueLang="en" valueDir="rtl">
           <FormNumeral>{formLabel}</FormNumeral>
         </Detail>
-        <Detail label={t('meta.verb')} value={verb.label} valueLang="ar" valueDir="rtl" />
+        <Detail label={t('meta.verb')} value={verb.lemma} valueLang="ar" valueDir="rtl" />
       </VerbContextSection>
       {renderExplanation(resolveNominalExplanationLayers(verb, nominal, arabic), t).map((paragraph, index) => (
         <Text key={`${index}-${paragraph}`}>{paragraph}</Text>

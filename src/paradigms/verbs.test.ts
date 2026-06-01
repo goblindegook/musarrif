@@ -35,7 +35,7 @@ describe('synthesizeVerb', () => {
       vowels: 'a-u',
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
       lexicalizedMasdars: [],
-      label: 'كَتَبَ',
+      lemma: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',
       rootTokens: tokenize('كتب'),
@@ -48,7 +48,7 @@ describe('synthesizeVerb', () => {
     expect(verb).toEqual({
       form: 2,
       id: 'ktb-2',
-      label: 'كَتَّبَ',
+      lemma: 'كَتَّبَ',
       root: 'كتب',
       rootId: 'ktb',
       rootTokens: tokenize('كتب'),

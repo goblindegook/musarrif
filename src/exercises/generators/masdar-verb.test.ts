@@ -62,9 +62,9 @@ describe('masdarVerbExercise', () => {
     const hardLabel = hard.options[hard.answer]
 
     const mediumMatches = verbs.filter(
-      (verb) => exerciseDiacritics(verb.label, mediumProfile.diacritics) === mediumLabel,
+      (verb) => exerciseDiacritics(verb.lemma, mediumProfile.diacritics) === mediumLabel,
     )
-    const hardMatches = verbs.filter((verb) => exerciseDiacritics(verb.label, hardProfile.diacritics) === hardLabel)
+    const hardMatches = verbs.filter((verb) => exerciseDiacritics(verb.lemma, hardProfile.diacritics) === hardLabel)
 
     expect(
       mediumMatches.some((verb) =>

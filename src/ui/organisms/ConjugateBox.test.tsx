@@ -148,7 +148,7 @@ describe('ConjugateBox', () => {
           root: 'كتب',
           rootTokens: tokenize('كتب'),
           form: 2,
-          label: 'كَتَّبَ',
+          lemma: 'كَتَّبَ',
           rootId: 'ktb',
         }}
       />,

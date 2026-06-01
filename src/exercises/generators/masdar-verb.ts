@@ -20,7 +20,7 @@ export const masdarVerbExercise = defineExercise(
     const masdar = random(deriveMasdar(verb))
     const word = exerciseDiacritics(masdar, profile.diacritics)
     const options = buildOptions(verb, profile)
-    const answerLabel = exerciseDiacritics(verb.label, profile.diacritics)
+    const answerLabel = exerciseDiacritics(verb.lemma, profile.diacritics)
     const answer = options.indexOf(answerLabel)
     const explanation = resolveNominalExplanationLayers(verb, 'masdar', word)
 
@@ -42,7 +42,7 @@ export const masdarVerbExercise = defineExercise(
 )
 
 function buildOptions(verb: DisplayVerb, profile: DimensionProfile): readonly string[] {
-  const answer = exerciseDiacritics(verb.label, profile.diacritics)
+  const answer = exerciseDiacritics(verb.lemma, profile.diacritics)
 
   const generators = [
     sameRootDifferentFormDistractor(verb, profile),
@@ -57,7 +57,7 @@ function buildOptions(verb: DisplayVerb, profile: DimensionProfile): readonly st
 function sameRootDifferentFormDistractor(verb: DisplayVerb, profile: DimensionProfile): () => string {
   return () => {
     const candidate = randomGeneratedVerb(verb.root)
-    return exerciseDiacritics(candidate.label, profile.diacritics)
+    return exerciseDiacritics(candidate.lemma, profile.diacritics)
   }
 }
 
@@ -66,7 +66,7 @@ function weakAlternativeDistractor(verb: DisplayVerb, profile: DimensionProfile)
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return exerciseDiacritics(candidate.label, profile.diacritics)
+    return exerciseDiacritics(candidate.lemma, profile.diacritics)
   }
 }
 
@@ -75,7 +75,7 @@ function singleLetterDistractor(verb: DisplayVerb, profile: DimensionProfile): (
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return exerciseDiacritics(candidate.label, profile.diacritics)
+    return exerciseDiacritics(candidate.lemma, profile.diacritics)
   }
 }
 
@@ -84,6 +84,6 @@ function mediumDifferentFormSingleLetterDistractor(verb: DisplayVerb, profile: D
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator())
-    return exerciseDiacritics(candidate.label, profile.diacritics)
+    return exerciseDiacritics(candidate.lemma, profile.diacritics)
   }
 }

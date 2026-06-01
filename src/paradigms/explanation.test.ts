@@ -544,7 +544,7 @@ describe('renderExplanation', () => {
 
   test('active.past form-i base pattern renders faʿila for i-a pattern', () => {
     const verb = getVerbById('Elm-1')! // عَلِمَ, i-a, sound root
-    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.label)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContain('faʿila')
   })

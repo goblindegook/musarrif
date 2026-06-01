@@ -40,7 +40,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
 
   useEffect(() => {
     if (!selectedVerb) return
-    setQuery(selectedVerb.label)
+    setQuery(selectedVerb.lemma)
     setSuggestionsOpen(false)
   }, [selectedVerb])
 
@@ -52,7 +52,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   const handleSelect = useCallback(
     (verb: DisplayVerb) => {
       onSelect(verb)
-      setQuery(verb.label)
+      setQuery(verb.lemma)
       setSuggestionsOpen(false)
       inputRef.current?.blur?.()
     },
@@ -169,7 +169,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                     event.preventDefault()
                     handleSelect(verb)
                   }}
-                  aria-label={[verb.label, t('meta.form.withNumber', { form: formLabel }), lang !== 'ar' && t(verb.id)]
+                  aria-label={[verb.lemma, t('meta.form.withNumber', { form: formLabel }), lang !== 'ar' && t(verb.id)]
                     .filter(Boolean)
                     .join(' ')}
                 >
@@ -180,7 +180,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                   )}
                   <SuggestionItemVerb>
                     <SuggestionItemVerbLabel dir="rtl" lang="ar">
-                      {applyDiacriticsPreference(verb.label, diacriticsPreference)}
+                      {applyDiacriticsPreference(verb.lemma, diacriticsPreference)}
                     </SuggestionItemVerbLabel>
                     <SuggestionItemVerbForm>{formLabel}</SuggestionItemVerbForm>
                   </SuggestionItemVerb>
