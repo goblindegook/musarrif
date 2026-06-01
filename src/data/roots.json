@@ -2112,7 +2112,17 @@
   },
   {
     "root": "jml",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "jml",
     "form": 2
+  },
+  {
+    "root": "jml",
+    "form": 4
   },
   {
     "root": "jr'",
@@ -3191,6 +3201,14 @@
     "root": "rfE",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "rhb",
+    "form": 4
+  },
+  {
+    "root": "rhf",
+    "form": 4
   },
   {
     "root": "rjE",

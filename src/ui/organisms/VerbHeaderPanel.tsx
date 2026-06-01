@@ -28,24 +28,32 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
 
   return (
     <PanelContainer>
-      <PanelTitleRow dir="rtl" lang="ar">
-        <PanelTitleGroup>
-          <Verb>
-            {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
-            {formatArabic(verb.lemma)}
-          </Verb>
-        </PanelTitleGroup>
-        {actions}
-      </PanelTitleRow>
-      {translation && (
-        <Translation dir={dir} lang={lang}>
-          {translation}
-        </Translation>
-      )}
+      <TitleStack>
+        <PanelTitleRow dir="rtl" lang="ar">
+          <PanelTitleGroup>
+            <Verb>
+              {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
+              {formatArabic(verb.lemma)}
+            </Verb>
+          </PanelTitleGroup>
+          {actions}
+        </PanelTitleRow>
+        {translation && (
+          <Translation dir={dir} lang={lang}>
+            {translation}
+          </Translation>
+        )}
+      </TitleStack>
       <PanelBody>{children}</PanelBody>
     </PanelContainer>
   )
 }
+
+const TitleStack = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
 
 const PanelTitleRow = styled('div')`
   display: flex;
