@@ -669,6 +669,13 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "ETs",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fu3aal"],
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "ETy",
     "form": 4
   },
@@ -1024,6 +1031,15 @@
   },
   {
     "root": "Hrb",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": [],
+    "lexicalizedMasdars": ["Harab"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "Hrb",
     "form": 3
   },
   {
@@ -1244,6 +1260,13 @@
   {
     "root": "SlH",
     "form": 4
+  },
+  {
+    "root": "Smd",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool"],
+    "passiveVoice": "impersonal"
   },
   {
     "root": "Smm",
@@ -2783,6 +2806,13 @@
     "root": "nwm",
     "form": 10,
     "passiveVoice": "impersonal"
+  },
+  {
+    "root": "nwy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": [],
+    "lexicalizedMasdars": ["niya~p"]
   },
   {
     "root": "nwy",
@@ -4334,12 +4364,20 @@
   },
   {
     "root": "zwy",
-    "form": 2
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3iil"],
+    "lexicalizedMasdars": ["zay~"]
+  },
+  {
+    "root": "zwy",
+    "form": 2,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "zwy",
     "form": 5,
-    "passiveVoice": "none"
+    "passiveVoice": "impersonal"
   },
   {
     "root": "zwy",
