@@ -34,14 +34,14 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
             {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
             {formatArabic(verb.label)}
           </Verb>
-          {translation && (
-            <Translation dir={dir} lang={lang}>
-              {translation}
-            </Translation>
-          )}
         </PanelTitleGroup>
         {actions}
       </PanelTitleRow>
+      {translation && (
+        <Translation dir={dir} lang={lang}>
+          {translation}
+        </Translation>
+      )}
       <PanelBody>{children}</PanelBody>
     </PanelContainer>
   )
