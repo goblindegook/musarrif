@@ -56,8 +56,8 @@ test('search and build tabs are correctly linked to their tabpanels', () => {
 
 test('shows translation subtitle for corpus verb with known translation', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
-  const titleGroup = document.querySelector('h2')!.parentElement!
-  expect(within(titleGroup).getByText('to write')).toBeInTheDocument()
+  const verbPanel = document.querySelector('h2')!.closest('section')!
+  expect(within(verbPanel).getByText('to write')).toBeInTheDocument()
 })
 
 test('shows multiple masdars with a mimi label', () => {
