@@ -1594,6 +1594,14 @@
     "vowels": "a-a"
   },
   {
+    "root": "bsm",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
     "root": "bvv",
     "form": 7
   },
