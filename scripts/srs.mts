@@ -4,21 +4,14 @@ import { select } from '@inquirer/prompts'
 import {
   type DimensionKey,
   type DimensionProfile,
-  enforcePrerequisites,
   formPool,
+  parseDimensionStore,
   pronounPool,
   rootTypesPool,
-  sanitizeDimensionProfile,
   tensePool,
 } from '../src/exercises/dimensions.ts'
 import type { ExerciseKind } from '../src/exercises/exercises.ts'
-import {
-  buildCardKey,
-  getSrsRootType,
-  type SrsRootType,
-  type SrsStore,
-  sanitizeRawSrsStore,
-} from '../src/exercises/srs.ts'
+import { buildCardKey, getSrsRootType, parseSrsStore, type SrsRootType, type SrsStore } from '../src/exercises/srs.ts'
 import type { PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
 import { getAvailableParadigms, type VerbForm, verbs } from '../src/paradigms/verbs.ts'
@@ -231,7 +224,7 @@ function loadDimensions(raw: unknown): LoadedDimensions {
 
   return {
     found: true,
-    profile: enforcePrerequisites(sanitizeDimensionProfile(rawProfile, INITIAL_DIMENSION_PROFILE)),
+    profile: parseDimensionStore({ profile: rawProfile, windows }).profile,
     windows,
   }
 }
@@ -521,7 +514,7 @@ async function run() {
   let dimensions: LoadedDimensions
   try {
     const raw = JSON.parse(readFileSync(resolve(filePath), 'utf8')) as unknown
-    store = sanitizeRawSrsStore(extractSrsPayload(raw))
+    store = parseSrsStore(extractSrsPayload(raw))
     dimensions = loadDimensions(raw)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)

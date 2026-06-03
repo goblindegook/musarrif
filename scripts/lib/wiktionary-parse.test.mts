@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { parseArabicConjugationTable } from './wiktionary-parse'
+import { parseArabicConjugationTable } from './wiktionary-parse.mts'
 
 const WIKTIONARY_HTML = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>

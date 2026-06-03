@@ -1,4 +1,4 @@
-import type { ParsedParadigms, PronounId, VerbParadigm } from './wiktionary-parse'
+import type { ParsedParadigms, PronounId, VerbParadigm } from './wiktionary-parse.mts'
 
 const PARADIGM_ORDER: VerbParadigm[] = [
   'active past',

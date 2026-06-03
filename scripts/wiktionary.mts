@@ -5,8 +5,8 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { applyDiacriticsPreference } from '../src/paradigms/tokens'
 import { synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
 import { clamp, parseInteger } from '../src/primitives/numbers'
-import { renderVerbTestFile } from './lib/verb-test-render'
-import { parseArabicConjugationTable } from './lib/wiktionary-parse'
+import { renderVerbTestFile } from './lib/verb-test-render.mts'
+import { parseArabicConjugationTable } from './lib/wiktionary-parse.mts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')

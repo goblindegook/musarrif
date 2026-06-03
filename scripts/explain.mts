@@ -5,6 +5,7 @@ import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
 import { conjugatePresentMood } from '../src/paradigms/active/present.ts'
 import {
+  type ExplanationLayers,
   renderExplanation,
   resolveNominalExplanationLayers,
   resolveVerbExplanationLayers,
@@ -15,22 +16,49 @@ import { derivePassiveParticiple } from '../src/paradigms/nominal/participle-pas
 import { conjugatePassiveFuture } from '../src/paradigms/passive/future.ts'
 import { conjugatePassivePast } from '../src/paradigms/passive/past.ts'
 import { conjugatePassivePresentMood } from '../src/paradigms/passive/present.ts'
-import { PRONOUN_IDS } from '../src/paradigms/pronouns.ts'
-import { FORMS, getAvailableParadigms, synthesizeVerb, verbs } from '../src/paradigms/verbs.ts'
+import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
+import type { VerbTense } from '../src/paradigms/tense.ts'
+import {
+  type DisplayVerb,
+  FORMS,
+  getAvailableParadigms,
+  synthesizeVerb,
+  type VerbForm,
+  verbs,
+} from '../src/paradigms/verbs.ts'
 import en from '../src/ui/locales/en.json' with { type: 'json' }
 
 const locale = en
-const t = (key, params) => {
-  const template = locale.strings?.[key] ?? locale.roots?.[key] ?? key
+const localeStrings = locale.strings as Record<string, string>
+const localeRoots = locale.roots as Record<string, string>
+
+type Back = typeof BACK
+type VowelPattern = (typeof VOWEL_PATTERNS)[number]
+type DerivationKind = 'verb' | 'activeParticiple' | 'passiveParticiple' | 'masdar'
+type NextAction = 'again' | 'kind' | 'root' | 'exit'
+type TranslationParams = Record<string, string>
+type ConjugationForms = Partial<Record<PronounId, string>>
+
+interface WizardState {
+  root: string
+  form: VerbForm
+  vowels: VowelPattern
+  kind: DerivationKind
+  tense: VerbTense
+  pronoun: PronounId
+}
+
+const t = (key: string, params?: TranslationParams): string => {
+  const template = localeStrings[key] ?? localeRoots[key] ?? key
   if (params == null) return template
-  return template.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? `{${k}}`)
+  return template.replace(/\{(\w+)\}/g, (_: string, k: string) => params[k] ?? `{${k}}`)
 }
 
 const BACK = Symbol('back')
 
-const PRONOUNS = [...PRONOUN_IDS]
+const PRONOUNS: readonly PronounId[] = [...PRONOUN_IDS]
 
-const VERB_TENSE_CHOICES = [
+const VERB_TENSE_CHOICES: readonly { name: VerbTense; value: VerbTense }[] = [
   { name: 'active.past', value: 'active.past' },
   { name: 'active.present.indicative', value: 'active.present.indicative' },
   { name: 'active.present.subjunctive', value: 'active.present.subjunctive' },
@@ -44,16 +72,16 @@ const VERB_TENSE_CHOICES = [
   { name: 'passive.future', value: 'passive.future' },
 ]
 
-const VOWEL_PATTERNS = ['a-a', 'a-i', 'a-u', 'i-a', 'i-i', 'i-u', 'u-a', 'u-i', 'u-u']
+const VOWEL_PATTERNS = ['a-a', 'a-i', 'a-u', 'i-a', 'i-i', 'i-u', 'u-a', 'u-i', 'u-u'] as const
 
-async function inputWithBack(message, defaultValue = '') {
+async function inputWithBack(message: string, defaultValue = ''): Promise<string | Back> {
   const value = (await input({ message: `${message} (type /back to go back):`, default: defaultValue })).trim()
   if (value === '/back') return BACK
   return value
 }
 
-function toRoman(num) {
-  const table = [
+function toRoman(num: number): string {
+  const table: ReadonlyArray<readonly [number, string]> = [
     [10, 'X'],
     [9, 'IX'],
     [5, 'V'],
@@ -71,7 +99,7 @@ function toRoman(num) {
   return out
 }
 
-function resolveRoot(input) {
+function resolveRoot(input: string): string {
   const exact = verbs.find((verb) => verb.root === input)
   if (exact) return exact.root
   const byId = verbs.find((verb) => verb.rootId === input)
@@ -79,7 +107,7 @@ function resolveRoot(input) {
   return transliterateReverse(input)
 }
 
-function findVerb(rootInput, form, vowels) {
+function findVerb(rootInput: string, form: VerbForm, vowels: VowelPattern): DisplayVerb {
   const root = resolveRoot(rootInput)
   if (form === 1) {
     const existingFormI = verbs.find((verb) => verb.root === root && verb.form === 1 && verb.vowels === vowels)
@@ -89,7 +117,7 @@ function findVerb(rootInput, form, vowels) {
   return verbs.find((verb) => verb.root === root && verb.form === form) ?? synthesizeVerb(root, form)
 }
 
-function formsForTense(verb, tense) {
+function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
   if (tense === 'active.past') return conjugatePast(verb)
   if (tense === 'active.present.indicative') return conjugatePresentMood(verb, 'indicative')
   if (tense === 'active.present.subjunctive') return conjugatePresentMood(verb, 'subjunctive')
@@ -103,14 +131,16 @@ function formsForTense(verb, tense) {
   return conjugatePassiveFuture(verb)
 }
 
-function printRendered(type, verb, derived, layers) {
+function printRendered(type: string, verb: DisplayVerb, derived: string, layers: ExplanationLayers): void {
   const explanation = renderExplanation(layers, t)
+  const rootLetters = (layers as ExplanationLayers & { rootLetters: readonly string[] }).rootLetters
+  const label = (verb as DisplayVerb & { label?: string }).label
   console.log('\n────────────────────────────────────────────')
-  console.log(`Verb: ${verb.label} (${verb.id})`)
+  console.log(`Verb: ${label} (${verb.id})`)
   console.log(`Type: ${type}`)
   console.log(`Derived: ${derived}\n`)
   console.log('Layers:\n')
-  console.table({ ...layers, rootLetters: layers.rootLetters.join(' ') })
+  console.table({ ...layers, rootLetters: rootLetters.join(' ') })
   console.log('\nRendered:\n')
   for (const [index, paragraph] of explanation.entries()) {
     console.log(`  [${index + 1}] ${paragraph}\n`)
@@ -118,18 +148,18 @@ function printRendered(type, verb, derived, layers) {
   console.log('────────────────────────────────────────────\n')
 }
 
-function tenseAllowed(verb, tense) {
+function tenseAllowed(verb: DisplayVerb, tense: VerbTense): boolean {
   return getAvailableParadigms(verb).includes(tense)
 }
 
-function pronounsForTense(verb, tense) {
+function pronounsForTense(verb: DisplayVerb, tense: VerbTense): readonly PronounId[] {
   if (tense === 'active.imperative') return PRONOUNS.filter((pronoun) => pronoun.startsWith('2'))
   if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return ['3ms']
   return PRONOUNS
 }
 
 async function wizard() {
-  const state = {
+  const state: WizardState = {
     root: '',
     form: 1,
     vowels: 'a-a',
@@ -153,7 +183,7 @@ async function wizard() {
     }
 
     if (step === 1) {
-      const form = await select({
+      const form = await select<VerbForm | Back>({
         message: 'Select form:',
         choices: [
           { name: '← Back', value: BACK },
@@ -176,7 +206,7 @@ async function wizard() {
         step += 1
         continue
       }
-      const vowels = await select({
+      const vowels = await select<VowelPattern | Back>({
         message: 'Select vowel pattern:',
         choices: [{ name: '← Back', value: BACK }, ...VOWEL_PATTERNS.map((value) => ({ name: value, value }))],
         default: state.vowels,
@@ -198,7 +228,7 @@ async function wizard() {
     }
 
     if (step === 3) {
-      const kind = await select({
+      const kind = await select<DerivationKind | Back>({
         message: 'What do you want to explain?',
         choices: [
           { name: '← Back', value: BACK },
@@ -225,7 +255,7 @@ async function wizard() {
     }
 
     if (step === 4 && state.kind === 'verb') {
-      const tense = await select({
+      const tense = await select<VerbTense | Back>({
         message: 'Select tense:',
         choices: [
           { name: '← Back', value: BACK },
@@ -248,7 +278,7 @@ async function wizard() {
 
     if (step === 5 && state.kind === 'verb') {
       const availablePronouns = pronounsForTense(verb, state.tense)
-      const pronoun = await select({
+      const pronoun = await select<PronounId | Back>({
         message: 'Select pronoun:',
         choices: [
           { name: '← Back', value: BACK },
@@ -310,7 +340,7 @@ async function wizard() {
       }
     }
 
-    const next = await select({
+    const next = await select<NextAction>({
       message: 'Next:',
       choices: [
         { name: 'Check another explanation', value: 'again' },
@@ -335,7 +365,7 @@ async function wizard() {
 }
 
 console.log('Explanation wizard — Ctrl+C to abort.\n')
-wizard().catch((error) => {
+wizard().catch((error: unknown) => {
   console.error(error)
   process.exit(1)
 })
