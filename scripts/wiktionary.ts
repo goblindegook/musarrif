@@ -16,11 +16,11 @@ function usage(): never {
   throw new Error('Usage: npm run wiktionary <verb-slug> (example: npm run wiktionary ktb-1)')
 }
 
-export function resolveSlugForWiktionary(slug: string): string {
+function resolveSlugForWiktionary(slug: string): string {
   const [rootId, rawForm] = slug.split('-')
   const form = clamp(parseInteger(rawForm, 1), 1, 10) as VerbForm
   const root = transliterateReverse(rootId)
-  return synthesizeVerb(root, form).label
+  return synthesizeVerb(root, form).lemma
 }
 
 async function fetchWiktionaryPage(title: string): Promise<string> {
