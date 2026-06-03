@@ -12,7 +12,7 @@ import {
 } from '../src/exercises/dimensions.ts'
 import type { ExerciseKind } from '../src/exercises/exercises.ts'
 import { buildCardKey, getSrsRootType, parseSrsStore, type SrsRootType, type SrsStore } from '../src/exercises/srs.ts'
-import type { PronounId } from '../src/paradigms/pronouns.ts'
+import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
 import { getAvailableParadigms, type VerbForm, verbs } from '../src/paradigms/verbs.ts'
 import { utcToday } from '../src/primitives/dates.ts'
@@ -80,21 +80,7 @@ const EXERCISE_KINDS: readonly ExerciseKind[] = [
 const ROOT_TYPE_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const FORM_ORDER: readonly VerbForm[] = formPool(9)
 const TENSE_ORDER: readonly VerbTense[] = tensePool(4)
-const PRONOUN_ORDER: readonly PronounId[] = [
-  '1s',
-  '2ms',
-  '2fs',
-  '3ms',
-  '3fs',
-  '2d',
-  '3md',
-  '3fd',
-  '1p',
-  '2mp',
-  '2fp',
-  '3mp',
-  '3fp',
-]
+
 const NOMINAL_ORDER: readonly NominalGroup[] = ['participles', 'masdar']
 const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
   tenses: 0,
@@ -373,7 +359,7 @@ function coverageRows(cards: readonly UniverseCard[], coveredKeys: ReadonlySet<s
     )
 
   if (dimension === 'pronoun')
-    return PRONOUN_ORDER.map((pronoun) =>
+    return PRONOUN_IDS.map((pronoun) =>
       countCoverage(cards, coveredKeys, pronoun, (card) => card.pronoun != null && card.pronoun === pronoun),
     )
 

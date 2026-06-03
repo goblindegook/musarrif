@@ -1,19 +1,7 @@
 import { JSDOM } from 'jsdom'
+import type { PronounId } from '../../src/paradigms/pronouns.ts'
 
-export type PronounId =
-  | '1s'
-  | '1p'
-  | '2ms'
-  | '2fs'
-  | '2d'
-  | '2mp'
-  | '2fp'
-  | '3ms'
-  | '3fs'
-  | '3md'
-  | '3fd'
-  | '3mp'
-  | '3fp'
+export type { PronounId }
 
 export type VerbParadigm =
   | 'active past'

@@ -56,7 +56,6 @@ const t = (key: string, params?: TranslationParams): string => {
 
 const BACK = Symbol('back')
 
-const PRONOUNS: readonly PronounId[] = [...PRONOUN_IDS]
 
 const VERB_TENSE_CHOICES: readonly { name: VerbTense; value: VerbTense }[] = [
   { name: 'active.past', value: 'active.past' },
@@ -153,9 +152,9 @@ function tenseAllowed(verb: DisplayVerb, tense: VerbTense): boolean {
 }
 
 function pronounsForTense(verb: DisplayVerb, tense: VerbTense): readonly PronounId[] {
-  if (tense === 'active.imperative') return PRONOUNS.filter((pronoun) => pronoun.startsWith('2'))
+  if (tense === 'active.imperative') return PRONOUN_IDS.filter((pronoun) => pronoun.startsWith('2'))
   if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return ['3ms']
-  return PRONOUNS
+  return PRONOUN_IDS
 }
 
 async function wizard() {

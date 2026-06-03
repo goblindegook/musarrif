@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, screen } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import type { PronounId } from '../../paradigms/pronouns'
 import { getVerbById } from '../../paradigms/verbs'
 import { renderWithProviders } from '../../test/fixtures'
 import { ConjugationInsights } from './ConjugationInsights'
@@ -7,7 +8,7 @@ import { ConjugationInsights } from './ConjugationInsights'
 beforeEach(() => cleanup())
 afterEach(() => cleanup())
 
-function renderComponent(pronoun = '3ms', arabic = 'كَتَبَ') {
+function renderComponent(pronoun: PronounId = '3ms', arabic = 'كَتَبَ') {
   renderWithProviders(
     <ConjugationInsights verb={getVerbById('ktb-1')!} verbTense="active.past" pronoun={pronoun} arabic={arabic} />,
   )

@@ -1,3 +1,4 @@
+import { PRONOUN_IDS } from '../../src/paradigms/pronouns.ts'
 import type { ParsedParadigms, PronounId, VerbParadigm } from './wiktionary-parse.mts'
 
 const PARADIGM_ORDER: VerbParadigm[] = [
@@ -12,29 +13,12 @@ const PARADIGM_ORDER: VerbParadigm[] = [
   'passive present jussive',
 ]
 
-const PRONOUN_ORDER: PronounId[] = [
-  '1s',
-  '2ms',
-  '2fs',
-  '3ms',
-  '3fs',
-  '2d',
-  '3md',
-  '3fd',
-  '1p',
-  '2mp',
-  '2fp',
-  '3mp',
-  '3fp',
-]
-const FULL_CONJUGATION_SIZE = PRONOUN_ORDER.length
-
 function toDoubleQuotedLiteral(value: string): string {
   return JSON.stringify(value)
 }
 
 function formatObject(values: Partial<Record<PronounId, string>>): string {
-  const lines = PRONOUN_ORDER.filter((pronoun) => values[pronoun]).map(
+  const lines = PRONOUN_IDS.filter((pronoun) => values[pronoun]).map(
     (pronoun) => `      '${pronoun}': '${values[pronoun]}',`,
   )
   return ['{', ...lines, '    }'].join('\n')
@@ -42,26 +26,20 @@ function formatObject(values: Partial<Record<PronounId, string>>): string {
 
 function renderParadigmBody(slug: string, paradigm: VerbParadigm, values: Partial<Record<PronounId, string>>): string {
   const count = Object.keys(values).length
-  const matcher = count === FULL_CONJUGATION_SIZE ? 'toEqualT' : 'toMatchObjectT'
+  const matcher = count === PRONOUN_IDS.length ? 'toEqualT' : 'toMatchObjectT'
 
-  const conjugator =
-    paradigm === 'active past'
-      ? 'conjugatePast(verb)'
-      : paradigm === 'active present indicative'
-        ? "conjugatePresentMood(verb, 'indicative')"
-        : paradigm === 'active present subjunctive'
-          ? "conjugatePresentMood(verb, 'subjunctive')"
-          : paradigm === 'active present jussive'
-            ? "conjugatePresentMood(verb, 'jussive')"
-            : paradigm === 'active imperative'
-              ? 'conjugateImperative(verb)'
-              : paradigm === 'passive past'
-                ? 'conjugatePassivePast(verb)'
-                : paradigm === 'passive present indicative'
-                  ? "conjugatePassivePresentMood(verb, 'indicative')"
-                  : paradigm === 'passive present subjunctive'
-                    ? "conjugatePassivePresentMood(verb, 'subjunctive')"
-                    : "conjugatePassivePresentMood(verb, 'jussive')"
+  const CONJUGATOR: Record<VerbParadigm, string> = {
+    'active past': 'conjugatePast(verb)',
+    'active present indicative': "conjugatePresentMood(verb, 'indicative')",
+    'active present subjunctive': "conjugatePresentMood(verb, 'subjunctive')",
+    'active present jussive': "conjugatePresentMood(verb, 'jussive')",
+    'active imperative': 'conjugateImperative(verb)',
+    'passive past': 'conjugatePassivePast(verb)',
+    'passive present indicative': "conjugatePassivePresentMood(verb, 'indicative')",
+    'passive present subjunctive': "conjugatePassivePresentMood(verb, 'subjunctive')",
+    'passive present jussive': "conjugatePassivePresentMood(verb, 'jussive')",
+  }
+  const conjugator = CONJUGATOR[paradigm]
 
   const inlineVerb = `getVerbById(${toDoubleQuotedLiteral(slug)})!`
   const conjugationCall = conjugator.replace('verb', inlineVerb)

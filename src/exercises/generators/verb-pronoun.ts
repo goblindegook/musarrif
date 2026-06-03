@@ -51,7 +51,7 @@ function buildOptions(
   tense: VerbTense,
   pronoun: PronounId,
   profile: DimensionProfile,
-): [string, readonly string[]] {
+): [string, readonly PronounId[]] {
   const conjugated = conjugate(verb, tense)
   const word = exerciseDiacritics(conjugated[pronoun], profile.diacritics)
 
