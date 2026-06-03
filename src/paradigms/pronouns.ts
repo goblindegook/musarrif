@@ -1,4 +1,18 @@
-export const PRONOUN_IDS = ['1s', '2ms', '2fs', '3ms', '3fs', '2d', '3md', '3fd', '1p', '2mp', '2fp', '3mp', '3fp'] as const
+export const PRONOUN_IDS = [
+  '1s',
+  '2ms',
+  '2fs',
+  '3ms',
+  '3fs',
+  '2d',
+  '3md',
+  '3fd',
+  '1p',
+  '2mp',
+  '2fp',
+  '3mp',
+  '3fp',
+] as const
 
 export type PronounId = (typeof PRONOUN_IDS)[number]
 

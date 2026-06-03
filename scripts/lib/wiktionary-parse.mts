@@ -25,15 +25,13 @@ export type ParsedParadigms = {
   nominals: NominalSet
 }
 
-const ARABIC_DIACRITICS = /[\u064b-\u065f\u0670\u06d6-\u06ed]/g
-
 function normalizeWhitespace(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
 
 function normalizeArabicKey(value: string): string {
   return value
-    .replace(ARABIC_DIACRITICS, '')
+    .replace(/[\u064b-\u065f\u0670\u06d6-\u06ed]/g, '')
     .replace(/[ٱأإآ]/g, 'ا')
     .replace(/ى/g, 'ي')
     .replace(/\s+/g, '')
@@ -74,11 +72,7 @@ function findSectionRoot(startHeading: Element): Element {
 
 function findConjugationTables(arabicSection: Element): HTMLTableElement[] {
   const tables: HTMLTableElement[] = []
-  const headings = Array.from(
-    arabicSection.querySelectorAll(
-      'h3[id^="Conjugation"], h4[id^="Conjugation"], h5[id^="Conjugation"], h6[id^="Conjugation"]',
-    ),
-  )
+  const headings = Array.from(arabicSection.querySelectorAll('[id^="Conjugation"]'))
 
   for (const heading of headings) {
     const cursor = heading.closest('.mw-heading') ?? heading
@@ -197,10 +191,6 @@ function extractParadigms(table: HTMLTableElement): Partial<Record<VerbParadigm,
   return paradigms
 }
 
-function readCaptionText(table: HTMLTableElement): string {
-  return normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')
-}
-
 function readCaptionArabic(table: HTMLTableElement): string[] {
   const caption = table.querySelector('caption')
   return caption ? extractArabicStrings(caption) : []
@@ -225,7 +215,9 @@ export function parseArabicConjugationTable(html: string, lemma: string): Parsed
   const table = matchingTable ?? tables[0]
 
   if (!matchingTable) {
-    throw new Error(`No conjugation table matched lemma "${lemma}". Closest caption: ${readCaptionText(table)}`)
+    throw new Error(
+      `No conjugation table matched lemma "${lemma}". Closest caption: ${normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')}`,
+    )
   }
 
   return {

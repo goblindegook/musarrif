@@ -11,7 +11,14 @@ import {
   tensePool,
 } from '../src/exercises/dimensions.ts'
 import type { ExerciseKind } from '../src/exercises/exercises.ts'
-import { buildCardKey, getSrsRootType, parseSrsStore, type SrsRootType, type SrsStore } from '../src/exercises/srs.ts'
+import {
+  buildCardKey,
+  getSrsRootType,
+  parseSrsStore,
+  type SrsRootType,
+  type SrsStore,
+  utcAddDays,
+} from '../src/exercises/srs.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
 import { getAvailableParadigms, type VerbForm, verbs } from '../src/paradigms/verbs.ts'
@@ -124,12 +131,6 @@ const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
   'verbParticiple',
 ])
 const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
-
-function utcAddDays(date: string, days: number): string {
-  const next = new Date(`${date}T00:00:00.000Z`)
-  next.setUTCDate(next.getUTCDate() + days)
-  return next.toISOString().slice(0, 10)
-}
 
 function toPercent(part: number, total: number): number {
   if (total === 0) return 0

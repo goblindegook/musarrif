@@ -10,6 +10,7 @@ import {
   resolveNominalExplanationLayers,
   resolveVerbExplanationLayers,
 } from '../src/paradigms/explanation.ts'
+import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels.ts'
 import { deriveMasdar } from '../src/paradigms/nominal/masdar.ts'
 import { deriveActiveParticiple } from '../src/paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../src/paradigms/nominal/participle-passive.ts'
@@ -26,6 +27,7 @@ import {
   type VerbForm,
   verbs,
 } from '../src/paradigms/verbs.ts'
+import { toRoman } from '../src/primitives/numbers.ts'
 import en from '../src/ui/locales/en.json' with { type: 'json' }
 
 const locale = en
@@ -33,7 +35,6 @@ const localeStrings = locale.strings as Record<string, string>
 const localeRoots = locale.roots as Record<string, string>
 
 type Back = typeof BACK
-type VowelPattern = (typeof VOWEL_PATTERNS)[number]
 type DerivationKind = 'verb' | 'activeParticiple' | 'passiveParticiple' | 'masdar'
 type NextAction = 'again' | 'kind' | 'root' | 'exit'
 type TranslationParams = Record<string, string>
@@ -42,7 +43,7 @@ type ConjugationForms = Partial<Record<PronounId, string>>
 interface WizardState {
   root: string
   form: VerbForm
-  vowels: VowelPattern
+  vowels: FormIPattern
   kind: DerivationKind
   tense: VerbTense
   pronoun: PronounId
@@ -55,7 +56,6 @@ const t = (key: string, params?: TranslationParams): string => {
 }
 
 const BACK = Symbol('back')
-
 
 const VERB_TENSE_CHOICES: readonly { name: VerbTense; value: VerbTense }[] = [
   { name: 'active.past', value: 'active.past' },
@@ -71,31 +71,10 @@ const VERB_TENSE_CHOICES: readonly { name: VerbTense; value: VerbTense }[] = [
   { name: 'passive.future', value: 'passive.future' },
 ]
 
-const VOWEL_PATTERNS = ['a-a', 'a-i', 'a-u', 'i-a', 'i-i', 'i-u', 'u-a', 'u-i', 'u-u'] as const
-
 async function inputWithBack(message: string, defaultValue = ''): Promise<string | Back> {
   const value = (await input({ message: `${message} (type /back to go back):`, default: defaultValue })).trim()
   if (value === '/back') return BACK
   return value
-}
-
-function toRoman(num: number): string {
-  const table: ReadonlyArray<readonly [number, string]> = [
-    [10, 'X'],
-    [9, 'IX'],
-    [5, 'V'],
-    [4, 'IV'],
-    [1, 'I'],
-  ]
-  let value = num
-  let out = ''
-  for (const [n, sym] of table) {
-    while (value >= n) {
-      out += sym
-      value -= n
-    }
-  }
-  return out
 }
 
 function resolveRoot(input: string): string {
@@ -106,7 +85,7 @@ function resolveRoot(input: string): string {
   return transliterateReverse(input)
 }
 
-function findVerb(rootInput: string, form: VerbForm, vowels: VowelPattern): DisplayVerb {
+function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): DisplayVerb {
   const root = resolveRoot(rootInput)
   if (form === 1) {
     const existingFormI = verbs.find((verb) => verb.root === root && verb.form === 1 && verb.vowels === vowels)
@@ -205,9 +184,9 @@ async function wizard() {
         step += 1
         continue
       }
-      const vowels = await select<VowelPattern | Back>({
+      const vowels = await select<FormIPattern | Back>({
         message: 'Select vowel pattern:',
-        choices: [{ name: '← Back', value: BACK }, ...VOWEL_PATTERNS.map((value) => ({ name: value, value }))],
+        choices: [{ name: '← Back', value: BACK }, ...FORM_I_PATTERNS.map((value) => ({ name: value, value }))],
         default: state.vowels,
       })
       if (vowels === BACK) {

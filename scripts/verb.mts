@@ -3,7 +3,9 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { confirm, input, select } from '@inquirer/prompts'
 import { transliterate } from '@pacote/buckwalter'
+import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels.ts'
 import type { MasdarPattern, PassiveVoice, VerbForm } from '../src/paradigms/verbs.ts'
+import { toRoman } from '../src/primitives/numbers.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -16,8 +18,6 @@ const LOCALE_PATHS = {
 } as const
 
 const LANGUAGE_CODES = ['en', 'it', 'pt'] as const
-
-const VOWEL_PATTERNS = ['a-a', 'a-i', 'a-u', 'i-a', 'i-i', 'i-u', 'u-a', 'u-i', 'u-u'] as const
 
 const MASDAR_PATTERNS: readonly MasdarPattern[] = [
   'fa3l',
@@ -42,13 +42,12 @@ const BACK = Symbol('back')
 
 type Back = typeof BACK
 type LanguageCode = (typeof LANGUAGE_CODES)[number]
-type VowelPattern = (typeof VOWEL_PATTERNS)[number]
 type MasdarPatternChoice = MasdarPattern
 
 interface RootEntry {
   root: string
   form: VerbForm
-  vowels?: VowelPattern
+  vowels?: FormIPattern
   masdars?: readonly MasdarPattern[]
   lexicalizedMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
@@ -70,7 +69,7 @@ interface WizardState {
   existing: RootEntry[]
   editEntry: RootEntry | null
   form: VerbForm | null
-  vowels?: VowelPattern
+  vowels?: FormIPattern
   passiveVoice?: PassiveVoice
   masdars?: MasdarPatternChoice[]
   lexicalizedMasdars?: string[]
@@ -84,25 +83,6 @@ interface WizardState {
 function normalizeArabic(value = ''): string {
   const trimmed = value.trim()
   return /[\u0600-\u06FF]/.test(trimmed) ? transliterate(trimmed) : trimmed
-}
-
-function toRoman(num: number): string {
-  const table: ReadonlyArray<readonly [number, string]> = [
-    [10, 'X'],
-    [9, 'IX'],
-    [5, 'V'],
-    [4, 'IV'],
-    [1, 'I'],
-  ]
-  let value = num
-  let out = ''
-  for (const [n, sym] of table) {
-    while (value >= n) {
-      out += sym
-      value -= n
-    }
-  }
-  return out
 }
 
 function readRoots(): RootEntry[] {
@@ -291,9 +271,9 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
         continue
       }
 
-      const vowels = await select<VowelPattern | Back>({
+      const vowels = await select<FormIPattern | Back>({
         message: 'Select vowel pattern:',
-        choices: [{ name: '← Back', value: BACK }, ...VOWEL_PATTERNS.map((v) => ({ name: v, value: v }))],
+        choices: [{ name: '← Back', value: BACK }, ...FORM_I_PATTERNS.map((v) => ({ name: v, value: v }))],
         default: state.editEntry?.vowels ?? 'a-a',
       })
 
