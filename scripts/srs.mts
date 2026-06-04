@@ -5,10 +5,12 @@ import {
   type DimensionKey,
   type DimensionProfile,
   formPool,
+  MAX_LEVELS,
   parseDimensionStore,
   pronounPool,
   rootTypesPool,
   tensePool,
+  WINDOW_SIZES,
 } from '../src/exercises/dimensions.ts'
 import type { ExerciseKind } from '../src/exercises/exercises.ts'
 import {
@@ -97,31 +99,8 @@ const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
   rootTypes: 0,
   nominals: 0,
 }
-const DIMENSION_LEVELS: Record<DimensionKey, number> = {
-  tenses: 4,
-  pronouns: 3,
-  diacritics: 2,
-  forms: 9,
-  rootTypes: 5,
-  nominals: 2,
-}
-const DIMENSION_LABELS: Record<DimensionKey, string> = {
-  tenses: 'tenses',
-  pronouns: 'pronouns',
-  diacritics: 'diacritics',
-  forms: 'forms',
-  rootTypes: 'root types',
-  nominals: 'nominals',
-}
+
 const DIMENSION_ORDER: readonly DimensionKey[] = ['tenses', 'pronouns', 'diacritics', 'forms', 'rootTypes', 'nominals']
-const WINDOW_SIZES: Record<DimensionKey, number> = {
-  tenses: 20,
-  pronouns: 20,
-  diacritics: 50,
-  forms: 20,
-  rootTypes: 20,
-  nominals: 20,
-}
 
 const TENSE_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
 const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
@@ -443,13 +422,13 @@ function printOverallCoverage(cards: readonly UniverseCard[], store: SrsStore) {
 function canPromote(profile: DimensionProfile, dimension: DimensionKey): boolean {
   if (['tenses', 'forms', 'rootTypes'].includes(dimension) && profile.pronouns < 1) return false
   if (dimension === 'tenses' && profile.tenses === 0 && profile.forms < 4) return false
-  if (dimension === 'tenses' && profile.tenses >= 4 && profile.forms < DIMENSION_LEVELS.forms) return false
+  if (dimension === 'tenses' && profile.tenses >= 4 && profile.forms < MAX_LEVELS.forms) return false
   return true
 }
 
 function nextUnlockProgress(dimensions: LoadedDimensions, dimension: DimensionKey): [string, string] {
   const level = dimensions.profile[dimension]
-  const maxLevel = DIMENSION_LEVELS[dimension]
+  const maxLevel = MAX_LEVELS[dimension]
   const windowSize = WINDOW_SIZES[dimension]
   const window = dimensions.windows[dimension]
   const answers = Math.min(window.length, windowSize)
@@ -463,11 +442,11 @@ function nextUnlockProgress(dimensions: LoadedDimensions, dimension: DimensionKe
 
 function printDimensionUnlocks(dimensions: LoadedDimensions) {
   const rows: DimensionUnlockRow[] = DIMENSION_ORDER.map((dimension) => {
-    const maxLevel = DIMENSION_LEVELS[dimension]
+    const maxLevel = MAX_LEVELS[dimension]
     const level = Math.min(dimensions.profile[dimension], maxLevel)
     const [nextAnswered, nextCorrect] = nextUnlockProgress(dimensions, dimension)
     return {
-      label: DIMENSION_LABELS[dimension],
+      label: dimension,
       unlockedLevels: `${level + 1}/${maxLevel + 1}`,
       remainingPercent: toPercent(maxLevel - level, maxLevel + 1),
       nextAnswered,

@@ -272,7 +272,7 @@ export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): s
   return applyDiacriticsPreference(word, pref)
 }
 
-const WINDOW_SIZES: Record<DimensionKey, number> = {
+export const WINDOW_SIZES: Record<DimensionKey, number> = {
   tenses: 20,
   pronouns: 20,
   diacritics: 100,

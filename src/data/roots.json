@@ -3952,11 +3952,22 @@
     "root": "wld",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3aala"]
+    "masdars": ["fi3aala", "mimi"],
+    "lexicalizedMasdars": ["lidap"]
+  },
+  {
+    "root": "wld",
+    "form": 2
   },
   {
     "root": "wld",
     "form": 4
+  },
+  {
+    "root": "wld",
+    "form": 5,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "wly",
