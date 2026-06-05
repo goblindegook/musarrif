@@ -821,6 +821,13 @@
   },
   {
     "root": "Ewd",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "Ewd",
     "form": 3
   },
   {
@@ -859,6 +866,14 @@
     "presentHollow": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"]
+  },
+  {
+    "root": "Ey$",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fa3la", "mimi"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "Eyn",
@@ -1141,6 +1156,10 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l"]
+  },
+  {
+    "root": "Hwl",
+    "form": 3
   },
   {
     "root": "Hwl",
@@ -1856,6 +1875,13 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "fwz",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "fyd",
     "form": 4
   },
@@ -1910,6 +1936,10 @@
     "root": "glq",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "glq",
+    "form": 4
   },
   {
     "root": "gmD",
@@ -1973,6 +2003,10 @@
     "root": "gyr",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "gyr",
+    "form": 2
   },
   {
     "root": "gyr",
@@ -3195,6 +3229,12 @@
     "masdars": ["fa3l", "fa3iil"]
   },
   {
+    "root": "rbH",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fi3l", "fa3aal"]
+  },
+  {
     "root": "rdd",
     "form": 1,
     "vowels": "a-a"
@@ -3548,6 +3588,13 @@
     "passiveVoice": "none"
   },
   {
+    "root": "sqT",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fu3ool", "mimi"],
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "srr",
     "form": 3
   },
@@ -3570,6 +3617,12 @@
     "vowels": "a-a",
     "masdars": ["fa3lala"],
     "passiveVoice": "impersonal"
+  },
+  {
+    "root": "syr",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "mimi"]
   },
   {
     "root": "tHd",
@@ -3828,6 +3881,11 @@
   {
     "root": "wfq",
     "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "wfq",
+    "form": 8,
     "passiveVoice": "impersonal"
   },
   {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { renderVerbTestFile } from './verb-test-render.mts'
-import type { ParsedParadigms } from './wiktionary-parse.mts'
+import type { ParsedParadigms } from './parse-wiktionary.mts'
+import { renderVerbTestFile } from './render-verb-test.mts'
 
 const PARSED_FIXTURE: ParsedParadigms = {
   paradigms: {
