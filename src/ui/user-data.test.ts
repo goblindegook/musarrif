@@ -40,7 +40,7 @@ describe('registerUserDataFileLaunchHandler', () => {
     }
 
     registerUserDataFileLaunchHandler()
-    await consumer?.({ files: [Object.assign(new FileSystemFileHandle(), { getFile })] })
+    await consumer?.({ files: [{ getFile } as unknown as FileSystemFileHandle] })
 
     expect(getFile).toHaveBeenCalledTimes(1)
   })

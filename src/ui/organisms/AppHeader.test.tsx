@@ -65,7 +65,7 @@ it('shows export and import buttons in the settings panel', () => {
   expect(screen.getByText('Import data')).toBeInTheDocument()
   expect(document.querySelector('input[type="file"]')).toHaveAttribute(
     'accept',
-    'application/json,application/vnd.musarrif.userdata+json,.json,.musarrif',
+    'application/json,application/vnd.musarrif+json,.json,.musarrif',
   )
 })
 
