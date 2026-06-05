@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useMemo, useState } from 'preact/hooks'
 import {
   DEFAULT_DIMENSION_PROFILE,
   DEFAULT_DIMENSION_WINDOWS,
@@ -16,17 +16,6 @@ import { useLocalStorage } from './useLocalStorage'
 
 type RecordDimensionAnswer = (dimensions: readonly DimensionKey[], isCorrect: boolean) => DimensionProfile
 
-function isSameProfile(a: DimensionProfile, b: DimensionProfile): boolean {
-  return (
-    a.tenses === b.tenses &&
-    a.pronouns === b.pronouns &&
-    a.diacritics === b.diacritics &&
-    a.forms === b.forms &&
-    a.rootTypes === b.rootTypes &&
-    a.nominals === b.nominals
-  )
-}
-
 export function useDimensionStore(): [DimensionProfile, readonly DimensionChange[], RecordDimensionAnswer, () => void] {
   const [rawStore, setRawStore] = useLocalStorage<DimensionStore>(
     'dimensions',
@@ -38,12 +27,6 @@ export function useDimensionStore(): [DimensionProfile, readonly DimensionChange
   )
   const [dimensionChanges, setDimensionChanges] = useState<readonly DimensionChange[]>([])
   const store = useMemo(() => normalizeDimensionStore(rawStore), [rawStore])
-  const profile = store.profile
-
-  useEffect(() => {
-    if (isSameProfile(rawStore.profile, profile)) return
-    setRawStore(store)
-  }, [profile, rawStore.profile, setRawStore, store])
 
   const recordAnswer = useCallback<RecordDimensionAnswer>(
     (dimensions, isCorrect) => {
