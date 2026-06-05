@@ -34,6 +34,14 @@ export default defineConfig({
         theme_color: '#f5f4ee',
         lang: 'en',
         dir: 'ltr',
+        file_handlers: [
+          {
+            action: './#/verbs',
+            accept: {
+              'application/vnd.musarrif.userdata+json': ['.musarrif'],
+            },
+          },
+        ],
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
           { src: 'icon.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },

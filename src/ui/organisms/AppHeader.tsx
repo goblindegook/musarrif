@@ -16,7 +16,7 @@ import { Modal } from '../molecules/Modal'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 import { useRouting } from '../routes'
-import { getUserData, importUserData } from '../user-data'
+import { getUserData, importUserData, USER_DATA_MIME_TYPE } from '../user-data'
 
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
@@ -37,8 +37,8 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const exportUserData = useCallback(() => {
     const payload = getUserData()
     const link = document.createElement('a')
-    link.href = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(payload, null, 2))}`
-    link.download = 'musarrif-data.json'
+    link.href = `${`data:${USER_DATA_MIME_TYPE};charset=utf-8,`}${encodeURIComponent(JSON.stringify(payload, null, 2))}`
+    link.download = 'user-data.musarrif'
     link.click()
   }, [])
 
@@ -151,7 +151,13 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
               <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
               <Button onClick={() => setIsImportWarningOpen(true)}>{t('settings.data.import')}</Button>
             </ActionRow>
-            <input ref={importInputRef} type="file" accept="application/json" onChange={importData} hidden />
+            <input
+              ref={importInputRef}
+              type="file"
+              accept={['application/json', USER_DATA_MIME_TYPE, '.json', '.musarrif'].join(',')}
+              onChange={importData}
+              hidden
+            />
           </ControlGroup>
         </SettingsModalBody>
       </Modal>

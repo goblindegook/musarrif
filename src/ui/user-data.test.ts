@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/preact'
-import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
-import { getUserData, importUserData } from './user-data'
+import { getUserData, importUserData, type LaunchConsumer, registerUserDataFileLaunchHandler } from './user-data'
 
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
@@ -13,11 +13,37 @@ const INITIAL_DIMENSION_WINDOWS = {
 }
 
 beforeEach(() => {
+  vi.restoreAllMocks()
   localStorage.clear()
 })
+
 afterEach(() => {
   cleanup()
   localStorage.clear()
+})
+
+describe('registerUserDataFileLaunchHandler', () => {
+  const launchQueueWindow = window as Window & { launchQueue?: { setConsumer: (consumer: LaunchConsumer) => void } }
+  const originalLaunchQueue = launchQueueWindow.launchQueue
+
+  afterEach(() => {
+    launchQueueWindow.launchQueue = originalLaunchQueue
+  })
+
+  test('loads launched musarrif files', async () => {
+    let consumer: LaunchConsumer | undefined
+    const getFile = vi.fn().mockResolvedValue(new File(['{"version":1}'], 'backup.musarrif'))
+    launchQueueWindow.launchQueue = {
+      setConsumer(nextConsumer: LaunchConsumer) {
+        consumer = nextConsumer
+      },
+    }
+
+    registerUserDataFileLaunchHandler()
+    await consumer?.({ files: [Object.assign(new FileSystemFileHandle(), { getFile })] })
+
+    expect(getFile).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('getUserData', () => {

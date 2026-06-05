@@ -63,6 +63,10 @@ it('shows export and import buttons in the settings panel', () => {
 
   expect(screen.getByText('Export data')).toBeInTheDocument()
   expect(screen.getByText('Import data')).toBeInTheDocument()
+  expect(document.querySelector('input[type="file"]')).toHaveAttribute(
+    'accept',
+    'application/json,application/vnd.musarrif.userdata+json,.json,.musarrif',
+  )
 })
 
 it('exports user data in JSON format', () => {
@@ -83,7 +87,7 @@ it('exports user data in JSON format', () => {
   localStorage.setItem('conjugator:language', JSON.stringify('pt'))
   fireEvent.click(screen.getByText('Export data'))
 
-  expect(exportedDownload).toBe('musarrif-data.json')
+  expect(exportedDownload).toBe('user-data.musarrif')
 
   const encodedJson = (exportedHref ?? '').split(',')[1] ?? ''
   const parsed = JSON.parse(decodeURIComponent(encodedJson ?? ''))
@@ -160,7 +164,7 @@ it('imports user data from JSON and updates local storage', async () => {
         trackedExercises: [{ date: '2026-03-20', correct: 2, incorrect: 3 }],
       }),
     ],
-    'musarrif-data.json',
+    'user-data.musarrif',
     { type: 'application/json' },
   )
 

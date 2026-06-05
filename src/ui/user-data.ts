@@ -12,6 +12,25 @@ import type { Language } from './hooks/useI18n'
 import { parseTrackedExercises, type SerializedDailyActivity, SerializedTrackedExercises } from './hooks/useStats'
 import type { ThemePreference } from './hooks/useTheme'
 
+export const USER_DATA_MIME_TYPE = 'application/vnd.musarrif+json'
+
+export type LaunchConsumer = (params: { files: readonly FileSystemFileHandle[] }) => void | Promise<void>
+
+export function registerUserDataFileLaunchHandler() {
+  const launchQueue = (window as Window & { launchQueue?: { setConsumer: (consumer: LaunchConsumer) => void } })
+    .launchQueue
+  if (launchQueue == null) return
+
+  launchQueue.setConsumer(async ({ files }) => {
+    for (const fileHandle of files) {
+      const file = await fileHandle.getFile()
+      if (file.name.endsWith('.musarrif') || file.type === USER_DATA_MIME_TYPE) {
+        if (importUserData(await file.text())) window.location.reload()
+      }
+    }
+  })
+}
+
 type Deserialize<T> = (raw: unknown, fallback: Readonly<T>) => Readonly<T>
 
 const Settings = v.object({
