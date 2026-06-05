@@ -64,7 +64,7 @@ export function nextExercise(
   focus: ExerciseFocus = {},
 ): Exercise<ExerciseKind> {
   const available = EXERCISES.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
-  const availableKinds = new Set(available.map((e) => e.kind))
+  const availableGenerators = new Map(available.map((e) => [e.kind, e]))
   const availableRootTypes = rootTypesPool(profile.rootTypes)
   const availableForms = formPool(profile.forms)
   const availableTenses = tensePool(profile.tenses)
@@ -73,34 +73,45 @@ export function nextExercise(
 
   const activeFocus = Math.random() < 0.75 ? focus : {}
 
-  const dueKeys = Object.entries(srsStore)
-    .filter(([key, { dueDate }]) => {
-      if (dueDate > today) return false
-      const card = parseCardKey(key)
-      if (!availableKinds.has(card.kind)) return false
-      if (card.rootType != null && !availableRootTypes.includes(card.rootType)) return false
-      if (card.form != null && !availableForms.includes(card.form)) return false
-      if (card.tense != null && !availableTenses.includes(card.tense)) return false
-      if (card.pronoun != null && !availablePronouns.includes(card.pronoun)) return false
-      return isInFocus(card, activeFocus)
-    })
-    .map(([key]) => key)
+  const availableEntries = Object.entries(srsStore).filter(([key]) => {
+    const card = parseCardKey(key)
+    if (!availableGenerators.has(card.kind)) return false
+    if (card.rootType != null && !availableRootTypes.includes(card.rootType)) return false
+    if (card.form != null && !availableForms.includes(card.form)) return false
+    if (card.tense != null && !availableTenses.includes(card.tense)) return false
+    if (card.pronoun != null && !availablePronouns.includes(card.pronoun)) return false
+    return true
+  })
 
-  const uncovered = uncoveredTriples(profile, srsStore, available).filter((t) => isInFocus(t, activeFocus))
+  const overdueEntries = availableEntries.filter(([, { dueDate }]) => dueDate <= today)
+  const overdueCount = overdueEntries.length
+  const backlogPolicy = getBacklogPolicy(overdueCount)
+  const focusedDueKeys = overdueEntries.filter(([key]) => isInFocus(parseCardKey(key), activeFocus)).map(([key]) => key)
+  const dueKeys =
+    focusedDueKeys.length > 0 || !backlogPolicy.freezeBreadth ? focusedDueKeys : overdueEntries.map(([key]) => key)
 
-  const shouldIntroduceNew = uncovered.length > 0 && (dueKeys.length === 0 || session.reviews - session.lastNewAt >= 3)
+  const availableCards = availableEntries.map(([key]) => parseCardKey(key))
+  const focusedUncovered = uncoveredTriples(profile, srsStore, available).filter((t) => isInFocus(t, activeFocus))
+  const uncovered = backlogPolicy.freezeBreadth
+    ? filterUncoveredForBacklog(focusedUncovered, availableCards)
+    : focusedUncovered
+
+  const shouldIntroduceNew =
+    backlogPolicy.reviewGap != null &&
+    uncovered.length > 0 &&
+    (dueKeys.length === 0 || session.reviews - session.lastNewAt >= backlogPolicy.reviewGap)
 
   if (shouldIntroduceNew) {
     const { kind, rootType, form } = random(uncovered)
-    const generator = available.find((e) => e.kind === kind)
+    const generator = availableGenerators.get(kind)
     if (generator != null) return generator.generate(profile, { rootType, form })
   }
 
   if (dueKeys.length > 0) {
-    const kindWeight = (key: string): number => available.find((e) => e.kind === parseCardKey(key).kind)?.weight ?? 1
+    const kindWeight = (key: string): number => availableGenerators.get(parseCardKey(key).kind)?.weight ?? 1
     const srsWeight = (key: string): number => cardSrsWeight(srsStore[key], today) * kindWeight(key)
     const { kind, rootType, form, tense, pronoun } = parseCardKey(weightedRandomSrs(dueKeys, srsWeight))
-    const generator = available.find((e) => e.kind === kind)
+    const generator = availableGenerators.get(kind)
     if (generator == null) return weightedRandomSrs(available, exerciseWeight).generate(profile)
     const pool = verbs.filter(
       (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
@@ -112,6 +123,12 @@ export function nextExercise(
 }
 
 const exerciseWeight = (e: ExerciseGenerator) => e.weight ?? 1
+
+function getBacklogPolicy(overdueCount: number): { freezeBreadth: boolean; reviewGap: number | null } {
+  if (overdueCount > 20) return { freezeBreadth: true, reviewGap: null }
+  if (overdueCount > 2) return { freezeBreadth: true, reviewGap: 8 }
+  return { freezeBreadth: false, reviewGap: 3 }
+}
 
 function isInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFocus): boolean {
   if (focus.form != null && card.form !== focus.form) return false
@@ -125,6 +142,14 @@ interface Triple {
   kind: ExerciseKind
   rootType: SrsRootType
   form: VerbForm
+}
+
+function filterUncoveredForBacklog(
+  uncovered: readonly Triple[],
+  coveredCards: readonly SrsCardIdentity[],
+): readonly Triple[] {
+  const coveredTriples = new Set(coveredCards.map(({ kind, rootType, form }) => `${kind}:${rootType}:${form}`))
+  return uncovered.filter(({ kind, rootType, form }) => coveredTriples.has(`${kind}:${rootType}:${form}`))
 }
 
 function uncoveredTriples(

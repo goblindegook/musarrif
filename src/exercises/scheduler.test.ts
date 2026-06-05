@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../paradigms/verbs'
 import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
 import * as dimensions from './dimensions'
@@ -6,8 +6,14 @@ import { isCoveredTriple, nextExercise } from './scheduler'
 import { parseCardKey } from './srs'
 
 describe('nextExercise', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-03-23T12:00:00Z'))
+  })
+
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.useRealTimers()
   })
 
   test('serves a due card when session does not allow new card introduction', () => {
@@ -68,6 +74,98 @@ describe('nextExercise', () => {
     const exercises = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session))
 
     expect(exercises.every((e) => !isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('does not introduce new triples when overdue backlog is high', () => {
+    const store = Object.fromEntries(
+      Array.from({ length: 21 }, (_, index) => [
+        `conjugation:sound:1:active.past:3ms:${index}`,
+        { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      ]),
+    )
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 1 }, store, { reviews: 8, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('does not introduce new triples after only three reviews when backlog is moderate', () => {
+    const store = {
+      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 1 }, store, { reviews: 3, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('serves due cards after eight reviews when moderate backlog only has breadth-expanding triples', () => {
+    const store = {
+      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 1 }, store, { reviews: 8, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('does not allow root-type and form cross-product combinations during breadth freeze', () => {
+    const store = {
+      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbForm:doubled:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 1, rootTypes: 1 }, store, { reviews: 8, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('does not introduce a new exercise kind while backlog remains above near-zero', () => {
+    const store = Object.fromEntries(
+      Array.from({ length: 5 }, (_, index) => [
+        `conjugation:sound:1:active.past:3ms:${index}`,
+        { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      ]),
+    )
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise(INITIAL_DIMENSION_PROFILE, store, { reviews: 8, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
+  })
+
+  test('does not introduce a new form while backlog remains above near-zero', () => {
+    const store = {
+      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbRoot:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbPronoun:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'verbTense:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+
+    const exercises = Array.from({ length: 20 }, () =>
+      nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 1 }, store, { reviews: 8, lastNewAt: 0 }),
+    )
+
+    expect(exercises.every((e) => isCoveredTriple(e.cardKey, store))).toBe(true)
   })
 
   test('serves a new triple when no due cards exist regardless of session ratio', () => {
