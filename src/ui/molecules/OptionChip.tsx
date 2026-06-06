@@ -296,7 +296,7 @@ const chipButton = `
   }
 
   &:enabled:active {
-    transform: scale(0.985);
+    transform: scale(0.96);
   }
 
   &:focus-visible {
@@ -466,6 +466,13 @@ const FormGrid = styled('div')`
   & > * {
     animation: option-fade-up 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
+  & > *:nth-child(2) { animation-delay: 30ms; }
+  & > *:nth-child(3) { animation-delay: 60ms; }
+  & > *:nth-child(4) { animation-delay: 90ms; }
+  & > *:nth-child(5) { animation-delay: 120ms; }
+  & > *:nth-child(6) { animation-delay: 150ms; }
+  & > *:nth-child(n+7) { animation-delay: 180ms; }
 
   @keyframes option-fade-up {
     from {

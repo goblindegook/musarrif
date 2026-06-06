@@ -55,7 +55,7 @@ const Button = styled('button')<{
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:enabled:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
   &:enabled:hover {
