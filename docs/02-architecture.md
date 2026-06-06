@@ -3,28 +3,28 @@
 **Stack**: Preact + TypeScript (strict), Vite, goober (CSS-in-JS), Vitest + @testing-library/preact, Biome.
 
 **Two-layer separation**:
-- `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for all 13 pronoun forms (`1s`, `2ms`, `2fs`, `2md`, `2fd`, `2mp`, `2fp`, `3ms`, `3fs`, `3md`, `3fd`, `3mp`, `3fp`).
+- `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for 13 pronoun forms (`1s`, `2ms`, `2fs`, `2md`, `2fd`, `2mp`, `2fp`, `3ms`, `3fs`, `3md`, `3fd`, `3mp`, `3fp`).
 - `src/ui/` — Preact UI components styled with goober.
 
 **State management**: Two context providers in `src/ui/hooks/`:
 - `RoutingProvider` — Hash-based routing, synced with `hashchange`/`popstate`. Canonical paths:
   - `#/verbs`, `#/verbs/:verbId`, `#/verbs/:verbId/:voice/:tense`, `#/verbs/:verbId/:voice/present/:mood`, `#/test`
-  - App is deployed using Vite; routing utilities normalize base-path and hash navigation.
-- `I18nProvider` — Language (en/it/pt/ar), diacritics preference (`all`/`some`/`none`), RTL/LTR switching.
+  - Deployed via Vite; routing utilities normalize base-path + hash nav.
+- `I18nProvider` — Language (en/it/pt/ar), diacritics (`all`/`some`/`none`), RTL/LTR.
 
-**Verb data**: Raw roots in `src/data/roots.json`. Search via fuzzy matching with transliteration and Levenshtein distance in `src/paradigms/verbs.ts`.
+**Verb data**: Raw roots in `src/data/roots.json`. Fuzzy search w/ transliteration + Levenshtein in `src/paradigms/verbs.ts`.
 
 **Paradigm structure**:
-- `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative (each with annotation files)
-- `src/paradigms/passive/` — past, present, future (each with annotation files)
+- `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative (each w/ annotation files)
+- `src/paradigms/passive/` — past, present, future (each w/ annotation files)
 - `src/paradigms/nominal/` — masdar, active participle, passive participle
-- `src/paradigms/annotation.ts` — Morpheme annotation system for grammatical breakdowns
+- `src/paradigms/annotation.ts` — Morpheme annotation for grammatical breakdowns
 - `src/paradigms/explanation.ts` — Grammatical explanation generation
-- `src/paradigms/letters.ts` — Character/diacritic manipulation constants and utilities
+- `src/paradigms/letters.ts` — Character/diacritic constants + utilities
 
-**Exercise mode**: `src/exercises/` — Pure functions for generating multiple-choice exercises (no DOM/Preact). Covers 14 exercise kinds (see Exercise Mode section for full list). Adaptive difficulty controls tense pool, pronoun selection, and diacritics display. `ExerciseMode` component in `src/ui/pages/` accepts an injectable `generateExercise` function for testability. Keep this layer deterministic under provided inputs and testable in isolation.
+**Exercise mode**: `src/exercises/` — Pure functions for multiple-choice exercises (no DOM/Preact). 14 exercise kinds. Adaptive difficulty controls tense pool, pronoun selection, diacritics display. `ExerciseMode` in `src/ui/pages/` accepts injectable `generateExercise` for testability. Keep deterministic + testable in isolation.
 
-**Localization**: `src/ui/locales/{en,it,pt,ar}.json`. Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under the `strings` object.
+**Localization**: `src/ui/locales/{en,it,pt,ar}.json`. Verb translations in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under `strings` object.
 
 ### Directory Organization
 

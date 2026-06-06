@@ -1,18 +1,18 @@
 # Agent Guidelines — Muṣarrif
 
-Muṣarrif is an interactive Arabic verb conjugator — a PWA that lets users search, browse, and drill Arabic verb conjugation tables, including active/passive voice, all tenses/moods, and nominal derivations (masdar, active/passive participles), with speech synthesis support. It also includes an exercise mode for drilling form identification and root extraction.
+Muṣarrif: PWA Arabic verb conjugator. Search, browse, drill conjugation tables — active/passive voice, all tenses/moods, nominal derivations (masdar, active/passive participles), speech synthesis. Exercise mode for form ID + root extraction.
 
 
 ## Version Control
 
-- Agents must not commit or push anything. Committing is at the user's discretion, and the user retains full control over releases.
+- Agents must not commit or push. User controls all commits + releases.
 
 
 ## Commands
 
-Always use RTK when working on this project.
+Use RTK on this project.
 
-Node is managed via Mise. Always prefix `node`/`npm` commands with `mise exec --`.
+Node via Mise. Prefix `node`/`npm` with `mise exec --`.
 
 ```bash
 rtk mise exec -- npm run dev              # Dev server
@@ -28,4 +28,4 @@ rtk mise exec -- npm run format           # lint:fix + format
 rtk mise exec -- node script.js           # Node scripts (always with mise exec --)
 ```
 
-Vitest runs in watch mode by default; pass `--no-watch` for single runs. Prefer Node over external tools (e.g. Python) for scripting tasks.
+Vitest watch mode by default; `--no-watch` for single runs. Prefer Node over external tools (e.g. Python) for scripts.

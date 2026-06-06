@@ -2,20 +2,20 @@
 
 ### TypeScript Conventions
 
-- Use TypeScript with strict typing enabled
+- Use TypeScript with strict typing
 - Use `type` keyword for type-only imports: `import type { Verb } from './verbs'`
 - Prefer explicit types over inference when it improves readability
-- Use readonly arrays and objects where immutability is desired: `readonly string[]`
-- Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks when testing for absence
-- When a variable is used only once, prefer inlining it unless it compromises readability
+- Use readonly arrays/objects for immutability: `readonly string[]`
+- Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks for absence
+- Inline variables used only once unless it hurts readability
 
 ### Formatting Rules (Biome)
 
 - **Indentation**: 2 spaces
 - **Line width**: 120 characters
-- **Quotes**: Single quotes for strings
-- **Semicolons**: As needed (Biome handles this automatically)
-- **Import order**: External packages first, then internal imports
+- **Quotes**: Single quotes
+- **Semicolons**: As needed (Biome handles automatically)
+- **Import order**: External packages first, then internal
 
 ### Naming Conventions
 
@@ -26,16 +26,17 @@
 
 ### Type Definitions
 
-- Define types and interfaces explicitly; prefer `interface` over `type`
+- Define types/interfaces explicitly; prefer `interface` over `type`
 - Use type aliases for complex types
 - Use union types for limited values: `1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10`
 - Use type guards for narrowing: `function isLanguage(lang: unknown): lang is Language`
 
 ### Comments
 
-- Do not write comments explaining what code does
-- Do write comments to explain non-obvious implementation decisions, workarounds, or grammatical rules
-- Use comments with linter ignores to explain why a rule is being ignored
+- Explain WHY, not what/how
+- No comments explaining what code does
+- Write comments for non-obvious decisions, workarounds, or grammar rules
+- Use comments with linter ignores to explain why rule is ignored
 
 #### Good Comment Example
 
@@ -46,6 +47,6 @@ return `${YEH}${FATHA}${c1}${SUKOON}${c2}${KASRA}${YEH}`
 
 ### Function and Code Organization
 
-- Keep functions small and focused on a single responsibility; prefer pure functions
-- Use `const` for components and module-level constants; use spread operators over mutation
+- Keep functions small, single responsibility; prefer pure functions
+- Use `const` for components and module-level constants; use spread over mutation
 - Imports: external packages first, then internal type imports, then internal component/utility imports
