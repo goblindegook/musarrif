@@ -231,11 +231,7 @@ function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId
 function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c2.equals(c3)) {
-    if (pronounId === '2fs' && mood !== 'indicative') return [NOON, SUKOON, c1, FATHA, c2, KASRA, YEH]
-    if (isFemininePlural(pronounId)) return [NOON, SUKOON, c1, FATHA, c2, ...geminateSuffix(mood, pronounId)]
-    return [NOON, SUKOON, c1, FATHA, c2, SUKOON, c3, ...geminateSuffix(mood, pronounId)]
-  }
+  if (c2.equals(c3)) return [NOON, SUKOON, c1, FATHA, c2, SUKOON, c3, ...geminateSuffix(mood, pronounId)]
 
   if (c2.isWeak && mood === 'jussive') return [NOON, SUKOON, c1, FATHA, c3, SUKOON]
 

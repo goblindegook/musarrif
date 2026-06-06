@@ -195,9 +195,7 @@ function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
   if (c2.equals(c3)) {
     return {
       prefix: [ALIF, DAMMA, NOON, SUKOON, c1, DAMMA],
-      suffix: [c2, KASRA, c3, SUKOON],
       suffix3sd: [c2, SHADDA, FATHA],
-      suffix3mp: [c2, SHADDA, DAMMA, WAW, ALIF],
     }
   }
 
