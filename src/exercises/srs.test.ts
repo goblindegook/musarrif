@@ -4,7 +4,6 @@ import {
   buildCardKey,
   cardSrsWeight,
   getSrsRootType,
-  normalizeSrsStore,
   parseCardKey,
   parseSrsStore,
   recordAnswer,
@@ -185,24 +184,7 @@ describe('updateCardState', () => {
   })
 })
 
-describe('normalizeSrsStore', () => {
-  test('returns the same store reference when data is already within bounds', () => {
-    const store = {
-      'conjugation:sound:1:active.past:3ms': {
-        interval: 6,
-        ef: 2.5,
-        repetitions: 2,
-        dueDate: '2026-03-29',
-      },
-    }
-    expect(normalizeSrsStore(store)).toBe(store)
-  })
-
-  test('returns the same store reference for an empty store', () => {
-    const store = {}
-    expect(normalizeSrsStore(store)).toBe(store)
-  })
-
+describe('parseSrsStore', () => {
   test('keeps only valid card entries from unknown input', () => {
     const result = parseSrsStore({
       'conjugation:sound:1:active.past:3ms': {
@@ -231,6 +213,38 @@ describe('normalizeSrsStore', () => {
     })
 
     expect(Object.keys(result)).toEqual(['conjugation:sound:1:active.past:3ms'])
+  })
+
+  test('drops legacy future cards from parsed stores', () => {
+    const result = parseSrsStore({
+      'conjugation:sound:1:active.past:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+      'conjugation:sound:1:passive.future:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+      'verbTense:sound:1:active.future:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+    })
+
+    expect(result).toEqual({
+      'conjugation:sound:1:active.past:3ms': {
+        interval: 6,
+        ef: 2.5,
+        repetitions: 2,
+        dueDate: '2026-03-29',
+      },
+    })
   })
 
   test('keeps oversized interval and dueDate values untouched', () => {

@@ -189,9 +189,16 @@ export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T
   return items[items.length - 1]
 }
 
-export function normalizeSrsStore(store: SrsStore): SrsStore {
+function normalizeSrsStore(store: SrsStore): SrsStore {
   let normalized = store
   for (const [key, state] of Object.entries(store)) {
+    const tense = parseCardKey(key).tense
+    if (tense === 'active.future' || tense === 'passive.future') {
+      if (normalized === store) normalized = { ...store }
+      delete normalized[key]
+      continue
+    }
+
     const interval = Math.max(1, Math.round(state.interval))
     const nextState = interval === state.interval ? state : { ...state, interval }
     if (nextState === state) continue
