@@ -29,6 +29,7 @@ function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,
     cardKey: 'test:card',
+    inputModes: ['multiple-choice'],
     ...overrides,
   }
 }
@@ -93,35 +94,50 @@ test('toggle button absent when supportsTyping is not set', () => {
 })
 
 test('toggle button visible when supportsTyping is true', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   expect(screen.getByText(/Type the answer/)).toBeInTheDocument()
 })
 
 test('clicking the toggle switches to typing mode', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
   expect(screen.queryByText('كَتَبَ')).not.toBeInTheDocument()
 })
 
 test('clicking the toggle again switches back to option buttons', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.click(screen.getByText(/See options/))
   expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
 })
 
 test('toggle button has T shortcut', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.keyDown(document, { key: 't' })
   expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
 })
 
 test('submitting the typing form calls onAnswer with correct index and true', () => {
   const onAnswer = vi.fn()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={onAnswer} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={onAnswer} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
@@ -129,7 +145,10 @@ test('submitting the typing form calls onAnswer with correct index and true', ()
 })
 
 test('typing the correct answer disables input and shows no reveal', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
@@ -139,9 +158,12 @@ test('typing the correct answer disables input and shows no reveal', () => {
 
 test('typing a wrong answer calls onAnswer with false and reveals correct answer', () => {
   const onAnswer = vi.fn()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={onAnswer} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={onAnswer} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
@@ -151,7 +173,10 @@ test('typing a wrong answer calls onAnswer with false and reveals correct answer
 })
 
 test('empty typing submit does not answer', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.submit(screen.getByPlaceholderText('Type your answer').closest('form') as HTMLFormElement)
   expect(screen.queryByText('كَتَبَ')).not.toBeInTheDocument()
@@ -159,15 +184,25 @@ test('empty typing submit does not answer', () => {
 })
 
 test('toggle button is hidden after answering', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ/)[0])
   expect(screen.queryByText(/Type the answer/)).not.toBeInTheDocument()
 })
 
 test('forceReveal shows correct option, disables buttons, hides toggle', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} forceReveal onAnswer={noop} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })}
+      forceReveal
+      onAnswer={noop}
+    />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
   for (const btn of screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/)) {
     expect(btn).toBeDisabled()
@@ -176,14 +211,20 @@ test('forceReveal shows correct option, disables buttons, hides toggle', () => {
 })
 
 test('toggle button appears last in MC mode with "Type the answer" text', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   const buttons = screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/)
   const toggleButton = screen.getByText(/Type the answer/)
   expect(buttons[buttons.length - 1]).toBe(toggleButton)
 })
 
 test('toggle button shows "See options" in typing mode', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   expect(screen.getByText(/See options/)).toBeInTheDocument()
 })
@@ -198,7 +239,11 @@ test('answer area has role="group" and aria-labelledby when promptId is provided
 
 test('typing mode input has aria-labelledby pointing to the prompt', () => {
   render(
-    <ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} promptId="exercise-prompt" />,
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })}
+      onAnswer={noop}
+      promptId="exercise-prompt"
+    />,
     { wrapper: Wrapper },
   )
   fireEvent.click(screen.getByText(/Type the answer/))
@@ -206,7 +251,10 @@ test('typing mode input has aria-labelledby pointing to the prompt', () => {
 })
 
 test('typing input has aria-invalid="true" after wrong answer submitted', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
@@ -214,7 +262,10 @@ test('typing input has aria-invalid="true" after wrong answer submitted', () => 
 })
 
 test('typing input does not have aria-invalid after correct answer submitted', () => {
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
@@ -230,19 +281,28 @@ test('speech toggle absent when supportsSpeech is not set', () => {
 
 test('speech toggle absent when supportsSpeech is true but browser lacks SpeechRecognition', () => {
   // SpeechRecognition is not in jsdom by default
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
 })
 
 test('speech toggle visible when supportsSpeech is true and browser supports recognition', () => {
   mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   expect(screen.getByText(/Speak the answer/)).toBeInTheDocument()
 })
 
 test('clicking speech toggle enters speech mode: toggle becomes "See options", listening starts', () => {
   mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   expect(screen.getByText(/See options/)).toBeInTheDocument()
   expect(screen.getByText(/Listening/)).toBeInTheDocument()
@@ -250,7 +310,10 @@ test('clicking speech toggle enters speech mode: toggle becomes "See options", l
 
 test('clicking speech toggle again returns to multiple-choice', () => {
   mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/)) // enter speech
   fireEvent.click(screen.getByText(/See options/)) // exit speech
   expect(screen.queryByText(/Listening/)).not.toBeInTheDocument()
@@ -259,7 +322,10 @@ test('clicking speech toggle again returns to multiple-choice', () => {
 
 test('entering speech mode auto-starts recognition and shows listening state', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   expect(mock.instance?.start).toHaveBeenCalledOnce()
   expect(screen.getByText(/Listening/)).toBeInTheDocument()
@@ -267,7 +333,10 @@ test('entering speech mode auto-starts recognition and shows listening state', (
 
 test('recognition result shows transcript and submit and re-record buttons', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
   expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
@@ -278,9 +347,12 @@ test('recognition result shows transcript and submit and re-record buttons', () 
 test('submitting a correct speech answer calls onAnswer with isCorrect=true', () => {
   const onAnswer = vi.fn()
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
   fireEvent.click(screen.getByText(/Submit/))
@@ -290,9 +362,12 @@ test('submitting a correct speech answer calls onAnswer with isCorrect=true', ()
 test('pressing Enter submits spoken answer', () => {
   const onAnswer = vi.fn()
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
   fireEvent.keyDown(document, { key: 'Enter' })
@@ -302,9 +377,12 @@ test('pressing Enter submits spoken answer', () => {
 test('submitting a wrong speech answer calls onAnswer with isCorrect=false and reveals correct answer', () => {
   const onAnswer = vi.fn()
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
-    wrapper: Wrapper,
-  })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
+    {
+      wrapper: Wrapper,
+    },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('يَكتُبُ'))
   fireEvent.click(screen.getByText(/Submit/))
@@ -318,7 +396,10 @@ test('submitting a wrong speech answer calls onAnswer with isCorrect=false and r
 
 test('re-record button starts listening immediately without returning to idle', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
   fireEvent.click(screen.getByText(/Try again/))
@@ -328,7 +409,10 @@ test('re-record button starts listening immediately without returning to idle', 
 
 test('no-speech error shows correct error message and retry button', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.end()) // onend without prior result → no-speech
   expect(screen.getByText(/Didn't catch that/)).toBeInTheDocument()
@@ -337,7 +421,10 @@ test('no-speech error shows correct error message and retry button', () => {
 
 test('generic error shows generic error message', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.error('network'))
   expect(screen.getByText(/Recognition failed/)).toBeInTheDocument()
@@ -345,7 +432,10 @@ test('generic error shows generic error message', () => {
 
 test('speech toggle hidden after answering', () => {
   const mock = mockSpeechRecognition()
-  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
   fireEvent.click(screen.getByText(/Submit/))
@@ -358,7 +448,7 @@ test('speech toggle hidden after answering', () => {
 test('typing mode falls back to MC when new exercise does not support typing', () => {
   const { rerender } = render(
     <I18nProvider>
-      <ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />
+      <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />
     </I18nProvider>,
   )
   fireEvent.click(screen.getByText(/Type the answer/))
@@ -377,7 +467,7 @@ test('speech mode falls back to MC when new exercise does not support speech', (
   mockSpeechRecognition()
   const { rerender } = render(
     <I18nProvider>
-      <ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />
+      <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />
     </I18nProvider>,
   )
   fireEvent.click(screen.getByText(/Speak the answer/))

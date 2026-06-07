@@ -18,6 +18,8 @@ export type ExerciseKind =
   | 'rootFormVerb'
   | 'verbTense'
 
+export type InputMode = 'multiple-choice' | 'keyboard' | 'speech'
+
 export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   kind: T
   word: string
@@ -29,8 +31,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   cardKey: string
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null
-  supportsTyping?: boolean
-  supportsSpeech?: boolean
+  inputModes: readonly InputMode[]
 }
 
 export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> {

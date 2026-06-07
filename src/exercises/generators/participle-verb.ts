@@ -41,8 +41,7 @@ export const participleVerbExercise = defineExercise(
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
         participle,
       ),
-      supportsTyping: true,
-      supportsSpeech: true,
+      inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
   { minNominals: 1 },

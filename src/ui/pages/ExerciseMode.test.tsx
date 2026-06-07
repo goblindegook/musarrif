@@ -25,6 +25,7 @@ function testExercise(overrides = {}): Exercise {
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
     cardKey: 'verbForm:sound:1',
+    inputModes: ['multiple-choice'],
     explanation: {
       category: 'verb',
       paradigmRoots: ['ك', 'ت', 'ب'],
@@ -546,7 +547,7 @@ function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,
     cardKey: 'conjugation:sound:1:active.past:3ms',
-    supportsTyping: true,
+    inputModes: ['multiple-choice', 'keyboard'],
     ...overrides,
   }
 }
@@ -654,8 +655,10 @@ describe('typing mode', () => {
   test('skip in typing mode reveals answer without wrong input state and shows explanation', () => {
     const gen = vi
       .fn()
-      .mockReturnValueOnce(testExercise({ supportsTyping: true }))
-      .mockReturnValueOnce(testExercise({ supportsTyping: true, word: 'دَخَلَ', cardKey: 'verbForm:sound:2' }))
+      .mockReturnValueOnce(testExercise({ inputModes: ['multiple-choice', 'keyboard'] }))
+      .mockReturnValueOnce(
+        testExercise({ inputModes: ['multiple-choice', 'keyboard'], word: 'دَخَلَ', cardKey: 'verbForm:sound:2' }),
+      )
     renderWithProviders(<ExerciseMode generateExercise={gen} />)
     fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
     fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))

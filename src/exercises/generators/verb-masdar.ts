@@ -33,8 +33,7 @@ export const verbMasdarExercise = defineExercise(
       answer: answerIndex,
       cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),
       explanation,
-      supportsTyping: verb.form !== 1,
-      supportsSpeech: verb.form !== 1,
+      inputModes: verb.form !== 1 ? ['multiple-choice', 'keyboard', 'speech'] : ['multiple-choice'],
     }
   },
   { minNominals: 2 },

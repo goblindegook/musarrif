@@ -158,8 +158,7 @@ export const conjugationExercise = defineExercise(
       answer: options.indexOf(answer),
       cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
       explanation,
-      supportsTyping: true,
-      supportsSpeech: true,
+      inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
   { weight: 5 },

@@ -40,8 +40,7 @@ export const verbParticipleExercise = defineExercise(
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
         kind === 'active' ? active : passive,
       ),
-      supportsTyping: true,
-      supportsSpeech: true,
+      inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
   { minNominals: 1 },

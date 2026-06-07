@@ -1,13 +1,11 @@
 import { css, styled } from 'goober'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
-import type { Exercise } from '../../exercises/exercises'
+import type { Exercise, InputMode } from '../../exercises/exercises'
 import { normalizeForComparison } from '../../paradigms/tokens'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
-
-type AnswerMode = 'multiple-choice' | 'typing' | 'speech'
 
 type Props = {
   exercise: Exercise
@@ -18,7 +16,7 @@ type Props = {
 
 export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, promptId }: Props) {
   const { t } = useI18n()
-  const [mode, setMode] = useState<AnswerMode>('multiple-choice')
+  const [mode, setMode] = useState<InputMode>('multiple-choice')
   const [selected, setSelected] = useState<number | null>(null)
   const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
   const [typedValue, setTypedValue] = useState('')
@@ -35,12 +33,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
   const isAnswered = selected !== null || typedResult !== 'idle' || speechResult !== 'idle'
   const reveal = isAnswered || forceReveal
   const hasTypedAnswer = typedValue.trim().length > 0
-  const effectiveMode: AnswerMode =
-    mode === 'typing' && exercise.supportsTyping
-      ? 'typing'
-      : mode === 'speech' && exercise.supportsSpeech && speechSupported
-        ? 'speech'
-        : 'multiple-choice'
+  const effectiveMode: InputMode =
+    exercise.inputModes.includes(mode) && (mode !== 'speech' || speechSupported) ? mode : 'multiple-choice'
   const inputRef = useRef<HTMLInputElement>(null)
 
   useLayoutEffect(() => {
@@ -51,8 +45,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
   }, [exercise, resetSpeech])
 
   useEffect(() => {
-    if (mode === 'typing' && typeof inputRef.current?.focus === 'function') inputRef.current.focus()
-  }, [mode])
+    if (effectiveMode === 'keyboard' && typeof inputRef.current?.focus === 'function') inputRef.current.focus()
+  }, [effectiveMode])
 
   useEffect(() => {
     if (typedResult === 'idle') setTypedValue('')
@@ -105,7 +99,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
             )
           })}
         </OptionsGrid>
-      ) : effectiveMode === 'typing' ? (
+      ) : effectiveMode === 'keyboard' ? (
         <TypingForm
           onSubmit={(e) => {
             e.preventDefault()
@@ -209,18 +203,18 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
         </>
       )}
 
-      {exercise.supportsTyping && !reveal && (
+      {exercise.inputModes.includes('keyboard') && !reveal && (
         <ShortcutButton
           shortcutKey="t"
-          onClick={() => setMode(effectiveMode === 'typing' ? 'multiple-choice' : 'typing')}
+          onClick={() => setMode(effectiveMode === 'keyboard' ? 'multiple-choice' : 'keyboard')}
           variant="secondary"
           style={{ width: '100%' }}
         >
-          {effectiveMode === 'typing' ? t('exercise.toggle.options') : t('exercise.toggle.type')}
+          {effectiveMode === 'keyboard' ? t('exercise.toggle.options') : t('exercise.toggle.type')}
         </ShortcutButton>
       )}
 
-      {exercise.supportsSpeech && speechSupported && !reveal && (
+      {exercise.inputModes.includes('speech') && speechSupported && !reveal && (
         <ShortcutButton
           shortcutKey="v"
           showShortcut

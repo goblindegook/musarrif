@@ -58,8 +58,8 @@ describe('conjugationExercise', () => {
     expect(options[answer].length).toBeGreaterThan(0)
   })
 
-  test('returns supportsSpeech: true', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).supportsSpeech).toBe(true)
+  test('includes speech in inputModes', () => {
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).inputModes).toContain('speech')
   })
 })
 
