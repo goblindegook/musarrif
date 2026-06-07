@@ -58,6 +58,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognition.lang = lang
     recognition.continuous = false
     recognition.interimResults = false
+    recognition.processLocally = true
     recognition.maxAlternatives = 1
 
     // Progressive enhancement: phrase hints improve accuracy for known answer strings

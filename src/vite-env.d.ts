@@ -16,6 +16,7 @@ interface SpeechRecognition {
   interimResults: boolean
   maxAlternatives: number
   hints?: { phrases: SpeechRecognitionPhrase[] }
+  processLocally?: boolean
   onresult: ((event: SpeechRecognitionEvent) => void) | null
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
   onend: (() => void) | null
