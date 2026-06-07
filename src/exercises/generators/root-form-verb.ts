@@ -36,5 +36,6 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
     explanation,
     supportsTyping: true,
+    supportsSpeech: true,
   }
 })

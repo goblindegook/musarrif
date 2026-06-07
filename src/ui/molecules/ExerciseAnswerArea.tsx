@@ -1,9 +1,13 @@
 import { css, styled } from 'goober'
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise } from '../../exercises/exercises'
 import { normalizeForComparison } from '../../paradigms/tokens'
+import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { useI18n } from '../hooks/useI18n'
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
+
+type AnswerMode = 'multiple-choice' | 'typing' | 'speech'
 
 type Props = {
   exercise: Exercise
@@ -14,21 +18,37 @@ type Props = {
 
 export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, promptId }: Props) {
   const { t } = useI18n()
-  const [typingMode, setTypingMode] = useState(false)
+  const [mode, setMode] = useState<AnswerMode>('multiple-choice')
   const [selected, setSelected] = useState<number | null>(null)
   const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
   const [typedValue, setTypedValue] = useState('')
+  const [speechResult, setSpeechResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
+  const {
+    supported: speechSupported,
+    state: speechState,
+    transcript,
+    errorCode,
+    start: startSpeech,
+    reset: resetSpeech,
+  } = useSpeechRecognition()
 
-  const mode = typingMode && exercise.supportsTyping ? 'typing' : 'multiple-choice'
-  const isAnswered = selected !== null || typedResult !== 'idle'
+  const isAnswered = selected !== null || typedResult !== 'idle' || speechResult !== 'idle'
   const reveal = isAnswered || forceReveal
   const hasTypedAnswer = typedValue.trim().length > 0
+  const effectiveMode: AnswerMode =
+    mode === 'typing' && exercise.supportsTyping
+      ? 'typing'
+      : mode === 'speech' && exercise.supportsSpeech && speechSupported
+        ? 'speech'
+        : 'multiple-choice'
   const inputRef = useRef<HTMLInputElement>(null)
 
   useLayoutEffect(() => {
     setSelected(null)
     setTypedResult('idle')
-  }, [exercise])
+    setSpeechResult('idle')
+    resetSpeech()
+  }, [exercise, resetSpeech])
 
   useEffect(() => {
     if (mode === 'typing' && typeof inputRef.current?.focus === 'function') inputRef.current.focus()
@@ -38,13 +58,27 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     if (typedResult === 'idle') setTypedValue('')
   }, [typedResult])
 
+  useEffect(() => {
+    if (effectiveMode === 'speech' && speechState === 'idle' && !reveal) {
+      startSpeech(exercise.options, 'ar-SA')
+    }
+  }, [effectiveMode, speechState, reveal, exercise, startSpeech])
+
+  const handleSpeechSubmit = useCallback(() => {
+    if (isAnswered || !transcript) return
+    const isCorrect = normalizeForComparison(transcript) === normalizeForComparison(exercise.options[exercise.answer])
+    const answeredIndex = isCorrect ? exercise.answer : (exercise.answer + 1) % exercise.options.length
+    setSpeechResult(isCorrect ? 'correct' : 'wrong')
+    onAnswer(answeredIndex, isCorrect)
+  }, [isAnswered, transcript, exercise, onAnswer])
+
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
-      {mode === 'multiple-choice' ? (
+      {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
             const optionLabel = t(option)
-            const hasArabicScript = /[\u0600-\u06FF]/.test(optionLabel)
+            const hasArabicScript = /[؀-ۿ]/.test(optionLabel)
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
             const state = reveal ? (isCorrect ? 'correct' : isSelected ? 'wrong' : 'dim') : 'idle'
@@ -71,7 +105,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
             )
           })}
         </OptionsGrid>
-      ) : (
+      ) : effectiveMode === 'typing' ? (
         <TypingForm
           onSubmit={(e) => {
             e.preventDefault()
@@ -112,21 +146,103 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
             </CorrectReveal>
           )}
         </TypingForm>
+      ) : (
+        <>
+          {speechState === 'listening' && (
+            <ListeningText aria-live="assertive">{t('exercise.toggle.listening')}</ListeningText>
+          )}
+          {speechState === 'result' && (
+            <>
+              {speechResult === 'idle' && <ArabicDisplay>{transcript}</ArabicDisplay>}
+              {speechResult === 'correct' && (
+                <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
+                  {transcript}
+                </CorrectReveal>
+              )}
+              {speechResult === 'wrong' && (
+                <CorrectReveal dir="rtl" lang="ar" data-state="error">
+                  {transcript}
+                </CorrectReveal>
+              )}
+              {speechResult === 'wrong' && (
+                <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
+                  {exercise.options[exercise.answer]}
+                </CorrectReveal>
+              )}
+              {speechResult === 'idle' && (
+                <SpeechButtonRow>
+                  <ShortcutButton
+                    shortcutKey="r"
+                    variant="secondary"
+                    onClick={() => startSpeech(exercise.options, 'ar-SA')}
+                  >
+                    {t('exercise.speech.retry')}
+                  </ShortcutButton>
+                  <ShortcutButton shortcutKey="Enter" variant="primary" onClick={handleSpeechSubmit}>
+                    {t('exercise.speech.submit')}
+                  </ShortcutButton>
+                </SpeechButtonRow>
+              )}
+            </>
+          )}
+          {speechState === 'error' && (
+            <>
+              <CorrectReveal data-state="error">
+                {errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')}
+              </CorrectReveal>
+              {!reveal && (
+                <ShortcutButton
+                  shortcutKey="r"
+                  style={{ width: '100%' }}
+                  onClick={() => startSpeech(exercise.options, 'ar-SA')}
+                >
+                  {t('exercise.speech.retry')}
+                </ShortcutButton>
+              )}
+            </>
+          )}
+          {reveal && speechState === 'idle' && (
+            <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
+              {exercise.options[exercise.answer]}
+            </CorrectReveal>
+          )}
+        </>
       )}
 
       {exercise.supportsTyping && !reveal && (
         <ShortcutButton
           shortcutKey="t"
-          onClick={() => setTypingMode((m) => !m)}
+          onClick={() => setMode(effectiveMode === 'typing' ? 'multiple-choice' : 'typing')}
           variant="secondary"
           style={{ width: '100%' }}
         >
-          {mode === 'multiple-choice' ? t('exercise.toggle.type') : t('exercise.toggle.options')}
+          {effectiveMode === 'typing' ? t('exercise.toggle.options') : t('exercise.toggle.type')}
+        </ShortcutButton>
+      )}
+
+      {exercise.supportsSpeech && speechSupported && !reveal && (
+        <ShortcutButton
+          shortcutKey="v"
+          showShortcut
+          onClick={() => {
+            if (effectiveMode === 'speech') {
+              setMode('multiple-choice')
+              resetSpeech()
+            } else {
+              setMode('speech')
+            }
+          }}
+          variant="secondary"
+          style={{ width: '100%' }}
+        >
+          {effectiveMode === 'speech' ? t('exercise.toggle.options') : t('exercise.toggle.speak')}
         </ShortcutButton>
       )}
     </Wrapper>
   )
 }
+
+// ─── Styled components ────────────────────────────────────────────────────────
 
 const Wrapper = styled('div')`
   width: 100%;
@@ -253,6 +369,7 @@ const SubmitButton = styled('button')`
   }
 `
 
+// Extended with &[data-state='error'] for speech error messages — same visual pattern, error colours
 const CorrectReveal = styled('p')`
   margin: 0;
   padding: 0.625rem 0.75rem;
@@ -263,6 +380,32 @@ const CorrectReveal = styled('p')`
   font-size: 1.2rem;
   text-align: center;
   font-family: 'Noto Sans Arabic', sans-serif;
+
+  &[data-state='error'] {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
+  }
+`
+
+// Bordered accent indicator shown while recognition is active — no existing atom for this
+// padding/font-size match ArabicDisplay so height stays stable on transition to transcript
+const ListeningText = styled('p')`
+  margin: 0;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-accent);
+  background: var(--color-bg-surface-secondary);
+  color: var(--color-text-muted);
+  font-size: 2rem;
+  text-align: center;
+`
+
+// 2-column grid for submit + re-record buttons — no existing layout primitive for this
+const SpeechButtonRow = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
 `
 
 const OPTION_BUTTON_CLASS = css`

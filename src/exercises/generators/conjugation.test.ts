@@ -57,6 +57,10 @@ describe('conjugationExercise', () => {
     const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer].length).toBeGreaterThan(0)
   })
+
+  test('returns supportsSpeech: true', () => {
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).supportsSpeech).toBe(true)
+  })
 })
 
 describe('conjugationExercise difficulty', () => {

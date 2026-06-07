@@ -1,12 +1,18 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, expect, test, vi } from 'vitest'
 import type { Exercise } from '../../exercises/exercises'
+import { mockSpeechRecognition } from '../../test/fixtures'
 import { I18nProvider } from '../hooks/useI18n'
 import { ExerciseAnswerArea } from './ExerciseAnswerArea'
 
 afterEach(() => {
   cleanup()
+  Object.defineProperty(window, 'SpeechRecognition', {
+    writable: true,
+    configurable: true,
+    value: undefined,
+  })
 })
 
 function Wrapper({ children }: { children: ComponentChildren }) {
@@ -213,4 +219,175 @@ test('typing input does not have aria-invalid after correct answer submitted', (
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
   expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('aria-invalid', 'true')
+})
+
+// ─── Speech mode tests ────────────────────────────────────────────────────────
+
+test('speech toggle absent when supportsSpeech is not set', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
+  expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
+})
+
+test('speech toggle absent when supportsSpeech is true but browser lacks SpeechRecognition', () => {
+  // SpeechRecognition is not in jsdom by default
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
+})
+
+test('speech toggle visible when supportsSpeech is true and browser supports recognition', () => {
+  mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  expect(screen.getByText(/Speak the answer/)).toBeInTheDocument()
+})
+
+test('clicking speech toggle enters speech mode: toggle becomes "See options", listening starts', () => {
+  mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  expect(screen.getByText(/See options/)).toBeInTheDocument()
+  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+})
+
+test('clicking speech toggle again returns to multiple-choice', () => {
+  mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/)) // enter speech
+  fireEvent.click(screen.getByText(/See options/)) // exit speech
+  expect(screen.queryByText(/Listening/)).not.toBeInTheDocument()
+  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+})
+
+test('entering speech mode auto-starts recognition and shows listening state', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  expect(mock.instance?.start).toHaveBeenCalledOnce()
+  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+})
+
+test('recognition result shows transcript and submit and re-record buttons', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+  expect(screen.getByText(/Submit/)).toBeInTheDocument()
+  expect(screen.getByText(/Try again/)).toBeInTheDocument()
+})
+
+test('submitting a correct speech answer calls onAnswer with isCorrect=true', () => {
+  const onAnswer = vi.fn()
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
+    wrapper: Wrapper,
+  })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  fireEvent.click(screen.getByText(/Submit/))
+  expect(onAnswer).toHaveBeenCalledWith(0, true)
+})
+
+test('pressing Enter submits spoken answer', () => {
+  const onAnswer = vi.fn()
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
+    wrapper: Wrapper,
+  })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  fireEvent.keyDown(document, { key: 'Enter' })
+  expect(onAnswer).toHaveBeenCalledWith(0, true)
+})
+
+test('submitting a wrong speech answer calls onAnswer with isCorrect=false and reveals correct answer', () => {
+  const onAnswer = vi.fn()
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={onAnswer} />, {
+    wrapper: Wrapper,
+  })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  fireEvent.click(screen.getByText(/Submit/))
+  expect(onAnswer).toHaveBeenCalledWith(1, false)
+  // Wrong transcript shown with error styling
+  const wrongTranscript = screen.getByText('يَكتُبُ')
+  expect(wrongTranscript.closest('[data-state="error"]')).toBeInTheDocument()
+  // Correct answer revealed below
+  expect(screen.getByTestId('correct-answer-reveal')).toBeInTheDocument()
+})
+
+test('re-record button starts listening immediately without returning to idle', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  fireEvent.click(screen.getByText(/Try again/))
+  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+  expect(screen.queryByText(/Submit/)).not.toBeInTheDocument()
+})
+
+test('no-speech error shows correct error message and retry button', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.end()) // onend without prior result → no-speech
+  expect(screen.getByText(/Didn't catch that/)).toBeInTheDocument()
+  expect(screen.getByText(/Try again/)).toBeInTheDocument()
+})
+
+test('generic error shows generic error message', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.error('network'))
+  expect(screen.getByText(/Recognition failed/)).toBeInTheDocument()
+})
+
+test('speech toggle hidden after answering', () => {
+  const mock = mockSpeechRecognition()
+  render(<ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  fireEvent.click(screen.getByText(/Submit/))
+  expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
+})
+
+// ─── Mode reset on exercise change ────────────────────────────────────────────
+
+test('typing mode falls back to MC when new exercise does not support typing', () => {
+  const { rerender } = render(
+    <I18nProvider>
+      <ExerciseAnswerArea exercise={makeExercise({ supportsTyping: true })} onAnswer={noop} />
+    </I18nProvider>,
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
+
+  rerender(
+    <I18nProvider>
+      <ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />
+    </I18nProvider>,
+  )
+  expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
+  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+})
+
+test('speech mode falls back to MC when new exercise does not support speech', () => {
+  mockSpeechRecognition()
+  const { rerender } = render(
+    <I18nProvider>
+      <ExerciseAnswerArea exercise={makeExercise({ supportsSpeech: true })} onAnswer={noop} />
+    </I18nProvider>,
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  expect(screen.getByText(/See options/)).toBeInTheDocument()
+
+  rerender(
+    <I18nProvider>
+      <ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />
+    </I18nProvider>,
+  )
+  expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
+  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
 })

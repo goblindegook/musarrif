@@ -30,6 +30,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null
   supportsTyping?: boolean
+  supportsSpeech?: boolean
 }
 
 export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> {

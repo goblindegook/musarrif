@@ -3,6 +3,10 @@ import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 import { useEffect } from 'preact/hooks'
 import { Button, type ButtonSize, type ButtonVariant } from '../atoms/Button'
 
+const SHORTCUT_LABELS: Record<string, string> = {
+  enter: '↵',
+}
+
 interface ShortcutButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
   children: ComponentChildren
   onClick?: () => void
@@ -47,7 +51,11 @@ export function ShortcutButton({
 
   return (
     <Button {...props} onClick={onClick} disabled={disabled}>
-      {showShortcut && <ShortcutBadge aria-hidden="true">{shortcutKey.toUpperCase()}</ShortcutBadge>}
+      {showShortcut && (
+        <ShortcutBadge aria-hidden="true">
+          {SHORTCUT_LABELS[shortcutKey.toLowerCase()] ?? shortcutKey.toUpperCase()}
+        </ShortcutBadge>
+      )}
       {children}
     </Button>
   )

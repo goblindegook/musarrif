@@ -41,6 +41,7 @@ export const verbParticipleExercise = defineExercise(
         kind === 'active' ? active : passive,
       ),
       supportsTyping: true,
+      supportsSpeech: true,
     }
   },
   { minNominals: 1 },

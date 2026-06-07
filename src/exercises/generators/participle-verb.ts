@@ -42,6 +42,7 @@ export const participleVerbExercise = defineExercise(
         participle,
       ),
       supportsTyping: true,
+      supportsSpeech: true,
     }
   },
   { minNominals: 1 },
