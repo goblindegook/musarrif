@@ -44,7 +44,7 @@ export function mockSpeechRecognition() {
     continuous: boolean
     interimResults: boolean
     maxAlternatives: number
-    hints?: { phrases: { phrase: string; boost: number }[] }
+    phrases?: { phrase: string; boost: number }[]
     onresult: ((event: { results: [[{ transcript: string }]] }) => void) | null
     onerror: ((event: { error: string }) => void) | null
     onend: (() => void) | null

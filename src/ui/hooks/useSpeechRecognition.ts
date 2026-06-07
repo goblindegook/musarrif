@@ -63,7 +63,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
 
     // Progressive enhancement: phrase hints improve accuracy for known answer strings
     if ('SpeechRecognitionPhrase' in window) {
-      recognition.hints = { phrases: phrases.map((p) => new SpeechRecognitionPhrase(p, 10)) }
+      recognition.phrases = phrases.map((p) => new SpeechRecognitionPhrase(p, 10))
     }
 
     const hasSettledRef = { current: false }

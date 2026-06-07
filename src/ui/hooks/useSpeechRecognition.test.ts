@@ -137,5 +137,5 @@ test('SpeechRecognitionPhrase hints are applied when available', () => {
   act(() => result.current.start(phrases, 'ar-SA'))
   expect(PhraseMock).toHaveBeenCalledWith('كَتَبَ', 10)
   expect(PhraseMock).toHaveBeenCalledWith('يَكتُبُ', 10)
-  expect(mock.instance?.hints?.phrases).toHaveLength(2)
+  expect(mock.instance?.phrases).toHaveLength(2)
 })
