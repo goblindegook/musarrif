@@ -203,33 +203,37 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
         </>
       )}
 
-      {exercise.inputModes.includes('keyboard') && !reveal && (
+      {!reveal && exercise.inputModes.includes('keyboard') && effectiveMode !== 'keyboard' && (
         <ShortcutButton
           shortcutKey="t"
-          onClick={() => setMode(effectiveMode === 'keyboard' ? 'multiple-choice' : 'keyboard')}
+          showShortcut
+          onClick={() => {
+            resetSpeech()
+            setMode('keyboard')
+          }}
           variant="secondary"
-          style={{ width: '100%' }}
         >
-          {effectiveMode === 'keyboard' ? t('exercise.toggle.options') : t('exercise.toggle.type')}
+          {t('exercise.toggle.type')}
         </ShortcutButton>
       )}
 
-      {exercise.inputModes.includes('speech') && speechSupported && !reveal && (
+      {!reveal && exercise.inputModes.includes('speech') && speechSupported && effectiveMode !== 'speech' && (
+        <ShortcutButton shortcutKey="v" showShortcut onClick={() => setMode('speech')} variant="secondary">
+          {t('exercise.toggle.speak')}
+        </ShortcutButton>
+      )}
+
+      {!reveal && effectiveMode !== 'multiple-choice' && (
         <ShortcutButton
-          shortcutKey="v"
+          shortcutKey="c"
           showShortcut
           onClick={() => {
-            if (effectiveMode === 'speech') {
-              setMode('multiple-choice')
-              resetSpeech()
-            } else {
-              setMode('speech')
-            }
+            resetSpeech()
+            setMode('multiple-choice')
           }}
           variant="secondary"
-          style={{ width: '100%' }}
         >
-          {effectiveMode === 'speech' ? t('exercise.toggle.options') : t('exercise.toggle.speak')}
+          {t('exercise.toggle.options')}
         </ShortcutButton>
       )}
     </Wrapper>
