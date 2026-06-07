@@ -39,6 +39,7 @@ export const participleRootExercise = defineExercise(
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
         participle,
       ),
+      inputModes: ['multiple-choice'],
     }
   },
   {

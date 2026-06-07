@@ -48,6 +48,7 @@ export const participleFormExercise = defineExercise(
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
         participle,
       ),
+      inputModes: ['multiple-choice'],
     }
   },
   {

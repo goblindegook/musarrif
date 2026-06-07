@@ -31,6 +31,7 @@ export const masdarRootExercise = defineExercise(
       answer,
       cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),
       explanation,
+      inputModes: ['multiple-choice'],
     }
   },
   {

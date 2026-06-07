@@ -50,6 +50,7 @@ export const verbFormExercise = defineExercise(
       answer,
       cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
       explanation,
+      inputModes: ['multiple-choice'],
     }
   },
 )

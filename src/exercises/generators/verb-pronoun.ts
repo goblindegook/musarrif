@@ -41,6 +41,7 @@ export const verbPronounExercise = defineExercise(
       cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
       dimensions: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
       explanation,
+      inputModes: ['multiple-choice'],
     }
   },
   { weight: 2 },

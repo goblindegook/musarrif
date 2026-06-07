@@ -33,6 +33,7 @@ export const masdarFormExercise = defineExercise(
       answer,
       cardKey: buildCardKey('masdarForm', getSrsRootType(verb.root), verb.form),
       explanation,
+      inputModes: ['multiple-choice'],
     }
   },
   {
