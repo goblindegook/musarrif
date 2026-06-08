@@ -132,9 +132,9 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
               autoComplete="off"
               autoCorrect="off"
             />
-            <SubmitButton type="submit" aria-label={t('exercise.typing.submit')} disabled={reveal || !hasTypedAnswer}>
+            <ActionButton type="submit" aria-label={t('exercise.typing.submit')} disabled={reveal || !hasTypedAnswer}>
               ↵
-            </SubmitButton>
+            </ActionButton>
           </InputRow>
           {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
@@ -147,21 +147,24 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           {!reveal && (
             <InputRow>
               {speechState === 'listening' && (
-                <SpeechField aria-live="assertive">{t('exercise.toggle.listening')}</SpeechField>
+                <SpeechField value={t('exercise.toggle.listening')} readOnly tabIndex={-1} aria-live="assertive" />
               )}
               {speechState === 'result' &&
                 speechResult === 'idle' &&
                 !normalizedCompare(transcript, exercise.options[exercise.answer]) && (
-                  <SpeechField data-state="error" dir="rtl" lang="ar">
-                    {transcript}
-                  </SpeechField>
+                  <SpeechField value={transcript} readOnly tabIndex={-1} data-state="error" dir="rtl" lang="ar" />
                 )}
               {speechState === 'error' && (
-                <SpeechField data-state="error">
-                  {errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')}
-                </SpeechField>
+                <SpeechField
+                  value={
+                    errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')
+                  }
+                  readOnly
+                  tabIndex={-1}
+                  data-state="error"
+                />
               )}
-              <SubmitButton
+              <ActionButton
                 data-retry-button
                 type="button"
                 aria-label={t('exercise.speech.retry')}
@@ -169,7 +172,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
                 onClick={startSpeech}
               >
                 ↺
-              </SubmitButton>
+              </ActionButton>
             </InputRow>
           )}
           {speechResult === 'correct' && (
@@ -303,7 +306,7 @@ const ArabicInput = styled('input')`
   }
 `
 
-const SubmitButton = styled('button')`
+const ActionButton = styled('button')`
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -366,20 +369,19 @@ const CorrectReveal = styled('p')`
   font-family: 'Noto Sans Arabic', sans-serif;
 `
 
-const SpeechField = styled('p')`
+const SpeechField = styled('input')`
   flex: 1;
   min-width: 0;
-  box-sizing: border-box;
-  margin: 0;
   padding: 0.9rem 1rem;
   border-radius: 0.9rem;
   border: 1px solid var(--color-accent);
   background: var(--color-bg-surface-secondary);
   color: var(--color-text-muted);
   font-size: 1.2rem;
-  line-height: 1.5;
   font-family: 'Noto Sans Arabic', sans-serif;
   text-align: center;
+  box-sizing: border-box;
+  pointer-events: none;
 
   &[data-state='error'] {
     border-color: var(--color-error-border);

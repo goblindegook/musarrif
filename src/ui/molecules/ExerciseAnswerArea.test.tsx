@@ -305,7 +305,7 @@ test('clicking speech toggle enters speech mode: toggle becomes "See options", l
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   expect(screen.getByText(/See options/)).toBeInTheDocument()
-  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Listening/)).toBeInTheDocument()
 })
 
 test('clicking speech toggle again returns to multiple-choice', () => {
@@ -316,7 +316,7 @@ test('clicking speech toggle again returns to multiple-choice', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/)) // enter speech
   fireEvent.click(screen.getByText(/See options/)) // exit speech
-  expect(screen.queryByText(/Listening/)).not.toBeInTheDocument()
+  expect(screen.queryByDisplayValue(/Listening/)).not.toBeInTheDocument()
   expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
 })
 
@@ -328,7 +328,7 @@ test('entering speech mode auto-starts recognition and shows listening state', (
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   expect(mock.instance?.start).toHaveBeenCalledOnce()
-  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Listening/)).toBeInTheDocument()
 })
 
 test('correct speech result auto-submits and calls onAnswer', () => {
@@ -374,7 +374,7 @@ test('wrong speech result shows transcript in error style', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('يَكتُبُ'))
-  expect(screen.getByText('يَكتُبُ')).toBeInTheDocument()
+  expect(screen.getByDisplayValue('يَكتُبُ')).toBeInTheDocument()
 })
 
 test('retry button is disabled while listening', () => {
@@ -418,7 +418,7 @@ test('retrying after wrong speech result restarts listening', () => {
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('يَكتُبُ'))
   fireEvent.click(screen.getByLabelText('Try again'))
-  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Listening/)).toBeInTheDocument()
 })
 
 test('correct speech result after wrong attempt auto-submits', () => {
@@ -444,7 +444,7 @@ test('re-record button after wrong result starts listening without returning to 
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('يَكتُبُ'))
   fireEvent.click(screen.getByLabelText('Try again'))
-  expect(screen.getByText(/Listening/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Listening/)).toBeInTheDocument()
 })
 
 test('no-speech error shows correct error message and retry button', () => {
@@ -455,7 +455,7 @@ test('no-speech error shows correct error message and retry button', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.end()) // onend without prior result → no-speech
-  expect(screen.getByText(/Didn't catch that/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Didn't catch that/)).toBeInTheDocument()
   expect(screen.getByLabelText('Try again')).toBeInTheDocument()
 })
 
@@ -467,7 +467,7 @@ test('generic error shows generic error message', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.error('network'))
-  expect(screen.getByText(/Recognition failed/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Recognition failed/)).toBeInTheDocument()
 })
 
 test('speech toggle hidden after correct answer auto-submits', () => {

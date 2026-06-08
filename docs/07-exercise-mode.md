@@ -2,6 +2,8 @@
 
 **Interface** (`src/exercises/exercises.ts`):
 ```typescript
+type InputMode = 'multiple-choice' | 'keyboard' | 'speech'
+
 interface Exercise {
   kind: ExerciseKind
   word: string
@@ -13,7 +15,7 @@ interface Exercise {
   cardKey: string
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null
-  supportsTyping?: boolean
+  inputModes: readonly InputMode[]
 }
 ```
 
@@ -36,6 +38,13 @@ interface Exercise {
 - Card identity: `cardKey` (`kind:rootType:form[:tense:pronoun]`)
 - SRS state: `conjugator:srs`; daily stats: `conjugator:exercise:daily`; dimension state: `conjugator:dimensions`
 - Streak goal: 10 correct/day
+
+**Input modes** (`ExerciseAnswerArea`): Each exercise declares which input modes it supports via `inputModes`. The answer area renders the appropriate UI:
+- `multiple-choice` — grid of `ShortcutButton` options (always available)
+- `keyboard` — Arabic text input with inline submit; correct answer revealed on wrong
+- `speech` — Web Speech API recognition via `useSpeechRecognition('ar')`; auto-starts on mode entry; correct spoken answer auto-submits without explicit confirmation; wrong answer shows transcript and retry button; mode only offered when `supported === true`
+
+Keyboard shortcut `t` switches to typing, `v` to speech, `c` back to multiple-choice. Mode persists across exercises until the user switches.
 
 **Component pattern**: `ExerciseMode` accepts `generateExercise` prop (defaults to `nextExercise`) for test injection. Preserve when adding exercise types.
 

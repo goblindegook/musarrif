@@ -50,6 +50,7 @@ src/
       useDocumentTitle.ts   # Document title updates
       useLocalStorage.ts    # Local storage abstraction
       useSpeech.ts          # Speech synthesis support
+      useSpeechRecognition.ts # Speech recognition input (Web Speech API wrapper)
       useStats.ts           # Exercise streak and daily stats hook
       useTour.ts            # Product tour state
     locales/                # i18n JSON files (en, it, pt, ar)
