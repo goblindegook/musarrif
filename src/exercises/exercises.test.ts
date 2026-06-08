@@ -14,6 +14,7 @@ describe('defineExerciseGenerator', () => {
         answer: 0,
         cardKey: 'verbForm:sound:1',
         dimensions: ['forms', 'rootTypes', 'diacritics'],
+        inputModes: ['multiple-choice'],
       }),
       {},
     )
@@ -30,6 +31,7 @@ describe('defineExerciseGenerator', () => {
       answer: 0,
       cardKey: 'verbForm:sound:1',
       dimensions: ['forms', 'rootTypes', 'diacritics'],
+      inputModes: ['multiple-choice'],
     })
   })
 
