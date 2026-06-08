@@ -3,7 +3,7 @@ name = "musarrif"
 version = "0.1.0"
 description = "Muṣarrif desktop app"
 authors = ["you"]
-license = ""
+license = "GPL-3.0-only"
 repository = ""
 edition = "2021"
 
@@ -16,4 +16,3 @@ tauri-plugin-opener = "2"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
-
