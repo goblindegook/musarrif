@@ -54,7 +54,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
 
   useEffect(() => {
     if (effectiveMode === 'speech' && speechState === 'idle' && !reveal) {
-      startSpeech(exercise.options, 'ar-SA')
+      startSpeech('ar')
     }
   }, [effectiveMode, speechState, reveal, exercise, startSpeech])
 
@@ -165,11 +165,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
               )}
               {speechResult === 'idle' && (
                 <SpeechButtonRow>
-                  <ShortcutButton
-                    shortcutKey="r"
-                    variant="secondary"
-                    onClick={() => startSpeech(exercise.options, 'ar-SA')}
-                  >
+                  <ShortcutButton shortcutKey="r" variant="secondary" onClick={() => startSpeech('ar')}>
                     {t('exercise.speech.retry')}
                   </ShortcutButton>
                   <ShortcutButton shortcutKey="Enter" variant="primary" onClick={handleSpeechSubmit}>
@@ -185,11 +181,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
                 {errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')}
               </CorrectReveal>
               {!reveal && (
-                <ShortcutButton
-                  shortcutKey="r"
-                  style={{ width: '100%' }}
-                  onClick={() => startSpeech(exercise.options, 'ar-SA')}
-                >
+                <ShortcutButton shortcutKey="r" style={{ width: '100%' }} onClick={() => startSpeech('ar')}>
                   {t('exercise.speech.retry')}
                 </ShortcutButton>
               )}

@@ -7,7 +7,7 @@ export interface SpeechRecognitionHook {
   state: SpeechRecognitionState
   transcript: string
   errorCode: string | null
-  start: (phrases: readonly string[], lang: string) => void
+  start: (lang: string) => void
   reset: () => void
 }
 
@@ -48,7 +48,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     setErrorCode(null)
   }, [])
 
-  const start = useCallback((phrases: readonly string[], lang: string) => {
+  const start = useCallback((lang: string) => {
     const SpeechRecognitionClass = getSpeechRecognitionClass()
     if (!SpeechRecognitionClass) return
 
@@ -58,13 +58,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognition.lang = lang
     recognition.continuous = false
     recognition.interimResults = false
-    recognition.processLocally = true
     recognition.maxAlternatives = 1
-
-    // Progressive enhancement: phrase hints improve accuracy for known answer strings
-    if ('SpeechRecognitionPhrase' in window) {
-      recognition.phrases = phrases.map((p) => new SpeechRecognitionPhrase(p, 10))
-    }
 
     const hasSettledRef = { current: false }
 
