@@ -7,7 +7,7 @@ export interface SpeechRecognitionHook {
   state: SpeechRecognitionState
   transcript: string
   errorCode: string | null
-  start: (lang: string) => void
+  start: () => void
   reset: () => void
 }
 
@@ -17,12 +17,26 @@ function getSpeechRecognitionClass(): typeof SpeechRecognition | null {
   return null
 }
 
-export function useSpeechRecognition(): SpeechRecognitionHook {
+export function useSpeechRecognition(lang: string): SpeechRecognitionHook {
   const [state, setState] = useState<SpeechRecognitionState>('idle')
   const [transcript, setTranscript] = useState('')
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  const [supported, setSupported] = useState(false)
   const recognitionRef = useRef<SpeechRecognition | null>(null)
-  const supported = getSpeechRecognitionClass() !== null
+
+  useEffect(() => {
+    const SpeechRecognitionClass = getSpeechRecognitionClass()
+    if (!SpeechRecognitionClass) {
+      setSupported(false)
+      return
+    }
+    const available = SpeechRecognitionClass.available?.({ langs: [lang], processLocally: true })
+    if (available) {
+      available.then((result) => setSupported(result === 'available'))
+    } else {
+      setSupported(true)
+    }
+  }, [lang])
 
   useEffect(() => {
     return () => {
@@ -48,7 +62,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     setErrorCode(null)
   }, [])
 
-  const start = useCallback((lang: string) => {
+  const start = useCallback(() => {
     const SpeechRecognitionClass = getSpeechRecognitionClass()
     if (!SpeechRecognitionClass) return
 
@@ -59,6 +73,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognition.continuous = false
     recognition.interimResults = false
     recognition.maxAlternatives = 1
+    recognition.processLocally = true
 
     const hasSettledRef = { current: false }
 
@@ -84,7 +99,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognitionRef.current = recognition
     setState('listening')
     recognition.start()
-  }, [])
+  }, [lang])
 
   return { supported, state, transcript, errorCode, start, reset }
 }

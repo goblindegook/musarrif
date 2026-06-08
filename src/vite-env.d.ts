@@ -27,6 +27,11 @@ interface SpeechRecognition {
 declare var SpeechRecognition: {
   prototype: SpeechRecognition
   new (): SpeechRecognition
+  available?(options: {
+    langs: string[]
+    processLocally?: boolean
+    quality?: string
+  }): Promise<'available' | 'downloadable' | 'downloading' | 'unavailable'>
 }
 
 interface Window {
