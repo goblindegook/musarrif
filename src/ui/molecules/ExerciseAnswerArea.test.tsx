@@ -331,7 +331,19 @@ test('entering speech mode auto-starts recognition and shows listening state', (
   expect(screen.getByText(/Listening/)).toBeInTheDocument()
 })
 
-test('recognition result shows transcript and submit and re-record buttons', () => {
+test('correct speech result auto-submits and calls onAnswer', () => {
+  const onAnswer = vi.fn()
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  expect(onAnswer).toHaveBeenCalledWith(0, true)
+})
+
+test('correct speech result shows no submit or retry buttons', () => {
   const mock = mockSpeechRecognition()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
@@ -339,72 +351,100 @@ test('recognition result shows transcript and submit and re-record buttons', () 
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
-  expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
-  expect(screen.getByText(/Submit/)).toBeInTheDocument()
-  expect(screen.getByText(/Try again/)).toBeInTheDocument()
+  expect(screen.queryByLabelText('Try again')).not.toBeInTheDocument()
 })
 
-test('submitting a correct speech answer calls onAnswer with isCorrect=true', () => {
+test('wrong speech result does not call onAnswer', () => {
   const onAnswer = vi.fn()
   const mock = mockSpeechRecognition()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
-    {
-      wrapper: Wrapper,
-    },
-  )
-  fireEvent.click(screen.getByText(/Speak the answer/))
-  act(() => mock.fire.result('كَتَبَ'))
-  fireEvent.click(screen.getByText(/Submit/))
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
-})
-
-test('pressing Enter submits spoken answer', () => {
-  const onAnswer = vi.fn()
-  const mock = mockSpeechRecognition()
-  render(
-    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
-    {
-      wrapper: Wrapper,
-    },
-  )
-  fireEvent.click(screen.getByText(/Speak the answer/))
-  act(() => mock.fire.result('كَتَبَ'))
-  fireEvent.keyDown(document, { key: 'Enter' })
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
-})
-
-test('submitting a wrong speech answer calls onAnswer with isCorrect=false and reveals correct answer', () => {
-  const onAnswer = vi.fn()
-  const mock = mockSpeechRecognition()
-  render(
-    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
-    {
-      wrapper: Wrapper,
-    },
+    { wrapper: Wrapper },
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('يَكتُبُ'))
-  fireEvent.click(screen.getByText(/Submit/))
-  expect(onAnswer).toHaveBeenCalledWith(1, false)
-  // Wrong transcript shown with error styling
-  const wrongTranscript = screen.getByText('يَكتُبُ')
-  expect(wrongTranscript.closest('[data-state="error"]')).toBeInTheDocument()
-  // Correct answer revealed below
-  expect(screen.getByTestId('correct-answer-reveal')).toBeInTheDocument()
+  expect(onAnswer).not.toHaveBeenCalled()
 })
 
-test('re-record button starts listening immediately without returning to idle', () => {
+test('wrong speech result shows transcript in error style', () => {
   const mock = mockSpeechRecognition()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
     { wrapper: Wrapper },
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
-  act(() => mock.fire.result('كَتَبَ'))
-  fireEvent.click(screen.getByText(/Try again/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  expect(screen.getByText('يَكتُبُ')).toBeInTheDocument()
+})
+
+test('retry button is disabled while listening', () => {
+  mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  expect(screen.getByLabelText('Try again')).toBeDisabled()
+})
+
+test('wrong speech result focuses the retry button', () => {
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  expect(screen.getByLabelText('Try again')).toHaveFocus()
+})
+
+test('wrong speech result enables the retry button', () => {
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  expect(screen.getByLabelText('Try again')).not.toBeDisabled()
+})
+
+test('retrying after wrong speech result restarts listening', () => {
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  fireEvent.click(screen.getByLabelText('Try again'))
   expect(screen.getByText(/Listening/)).toBeInTheDocument()
-  expect(screen.queryByText(/Submit/)).not.toBeInTheDocument()
+})
+
+test('correct speech result after wrong attempt auto-submits', () => {
+  const onAnswer = vi.fn()
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={onAnswer} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  fireEvent.click(screen.getByLabelText('Try again'))
+  act(() => mock.fire.result('كَتَبَ'))
+  expect(onAnswer).toHaveBeenCalledWith(0, true)
+})
+
+test('re-record button after wrong result starts listening without returning to idle', () => {
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('يَكتُبُ'))
+  fireEvent.click(screen.getByLabelText('Try again'))
+  expect(screen.getByText(/Listening/)).toBeInTheDocument()
 })
 
 test('no-speech error shows correct error message and retry button', () => {
@@ -416,7 +456,7 @@ test('no-speech error shows correct error message and retry button', () => {
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.end()) // onend without prior result → no-speech
   expect(screen.getByText(/Didn't catch that/)).toBeInTheDocument()
-  expect(screen.getByText(/Try again/)).toBeInTheDocument()
+  expect(screen.getByLabelText('Try again')).toBeInTheDocument()
 })
 
 test('generic error shows generic error message', () => {
@@ -430,7 +470,7 @@ test('generic error shows generic error message', () => {
   expect(screen.getByText(/Recognition failed/)).toBeInTheDocument()
 })
 
-test('speech toggle hidden after answering', () => {
+test('speech toggle hidden after correct answer auto-submits', () => {
   const mock = mockSpeechRecognition()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
@@ -438,7 +478,6 @@ test('speech toggle hidden after answering', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
-  fireEvent.click(screen.getByText(/Submit/))
   expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
   expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
 })

@@ -1,8 +1,7 @@
 import { css, styled } from 'goober'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise, InputMode } from '../../exercises/exercises'
-import { normalizeForComparison } from '../../paradigms/tokens'
-import { ArabicDisplay } from '../atoms/ArabicDisplay'
+import { normalizedCompare } from '../../paradigms/tokens'
 import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
@@ -58,13 +57,17 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     }
   }, [effectiveMode, speechState, reveal, startSpeech])
 
-  const handleSpeechSubmit = useCallback(() => {
-    if (isAnswered || !transcript) return
-    const isCorrect = normalizeForComparison(transcript) === normalizeForComparison(exercise.options[exercise.answer])
-    const answeredIndex = isCorrect ? exercise.answer : (exercise.answer + 1) % exercise.options.length
-    setSpeechResult(isCorrect ? 'correct' : 'wrong')
-    onAnswer(answeredIndex, isCorrect)
-  }, [isAnswered, transcript, exercise, onAnswer])
+  useEffect(() => {
+    if (effectiveMode !== 'speech') return
+    if (speechState !== 'result' || speechResult !== 'idle') return
+    if (!transcript) return
+    if (normalizedCompare(transcript, exercise.options[exercise.answer])) {
+      setSpeechResult('correct')
+      onAnswer(exercise.answer, true)
+    } else {
+      document.querySelector<HTMLElement>('[data-retry-button]')?.focus()
+    }
+  }, [effectiveMode, speechState, speechResult, transcript, exercise, onAnswer])
 
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
@@ -104,8 +107,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           onSubmit={(e) => {
             e.preventDefault()
             if (!isAnswered && hasTypedAnswer) {
-              const isCorrect =
-                normalizeForComparison(typedValue) === normalizeForComparison(exercise.options[exercise.answer])
+              const isCorrect = normalizedCompare(typedValue, exercise.options[exercise.answer])
               const answeredIndex = isCorrect ? exercise.answer : (exercise.answer + 1) % exercise.options.length
               setTypedResult(isCorrect ? 'correct' : 'wrong')
               onAnswer(answeredIndex, isCorrect)
@@ -142,50 +144,38 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
         </TypingForm>
       ) : (
         <>
-          {speechState === 'listening' && (
-            <ListeningText aria-live="assertive">{t('exercise.toggle.listening')}</ListeningText>
+          {!reveal && (
+            <InputRow>
+              {speechState === 'listening' && (
+                <SpeechField aria-live="assertive">{t('exercise.toggle.listening')}</SpeechField>
+              )}
+              {speechState === 'result' &&
+                speechResult === 'idle' &&
+                !normalizedCompare(transcript, exercise.options[exercise.answer]) && (
+                  <SpeechField data-state="error" dir="rtl" lang="ar">
+                    {transcript}
+                  </SpeechField>
+                )}
+              {speechState === 'error' && (
+                <SpeechField data-state="error">
+                  {errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')}
+                </SpeechField>
+              )}
+              <SubmitButton
+                data-retry-button
+                type="button"
+                aria-label={t('exercise.speech.retry')}
+                disabled={speechState === 'listening'}
+                onClick={startSpeech}
+              >
+                ↺
+              </SubmitButton>
+            </InputRow>
           )}
-          {speechState === 'result' && (
-            <>
-              {speechResult === 'idle' && <ArabicDisplay>{transcript}</ArabicDisplay>}
-              {speechResult === 'correct' && (
-                <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-                  {transcript}
-                </CorrectReveal>
-              )}
-              {speechResult === 'wrong' && (
-                <CorrectReveal dir="rtl" lang="ar" data-state="error">
-                  {transcript}
-                </CorrectReveal>
-              )}
-              {speechResult === 'wrong' && (
-                <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-                  {exercise.options[exercise.answer]}
-                </CorrectReveal>
-              )}
-              {speechResult === 'idle' && (
-                <SpeechButtonRow>
-                  <ShortcutButton shortcutKey="r" variant="secondary" onClick={startSpeech}>
-                    {t('exercise.speech.retry')}
-                  </ShortcutButton>
-                  <ShortcutButton shortcutKey="Enter" variant="primary" onClick={handleSpeechSubmit}>
-                    {t('exercise.speech.submit')}
-                  </ShortcutButton>
-                </SpeechButtonRow>
-              )}
-            </>
-          )}
-          {speechState === 'error' && (
-            <>
-              <CorrectReveal data-state="error">
-                {errorCode === 'no-speech' ? t('exercise.speech.error.noSpeech') : t('exercise.speech.error.generic')}
-              </CorrectReveal>
-              {!reveal && (
-                <ShortcutButton shortcutKey="r" style={{ width: '100%' }} onClick={startSpeech}>
-                  {t('exercise.speech.retry')}
-                </ShortcutButton>
-              )}
-            </>
+          {speechResult === 'correct' && (
+            <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
+              {transcript}
+            </CorrectReveal>
           )}
           {reveal && speechState === 'idle' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
@@ -271,6 +261,7 @@ const ArabicInput = styled('input')`
   background: var(--color-bg-surface-secondary);
   color: var(--color-text-primary);
   font-size: 1.2rem;
+  line-height: 1.5;
   font-family: 'Noto Sans Arabic', sans-serif;
   text-align: center;
   direction: rtl;
@@ -314,11 +305,15 @@ const ArabicInput = styled('input')`
 
 const SubmitButton = styled('button')`
   position: relative;
-  padding: 0.85rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.25rem;
+  padding: 0.85rem 0.75rem;
   border-radius: 0.75rem;
-  border: 2px solid var(--color-border);
-  background: var(--color-bg-surface);
-  color: var(--color-text-tertiary);
+  border: 2px solid var(--color-text-tertiary);
+  background: var(--color-text-tertiary);
+  color: var(--color-bg-surface);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -332,9 +327,9 @@ const SubmitButton = styled('button')`
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:enabled:hover {
-    background: var(--color-bg-accent-hover);
-    border-color: var(--color-accent);
-    color: var(--color-text-primary);
+    background: var(--color-bg-button-primary-hover);
+    border-color: var(--color-bg-button-primary-hover);
+    color: var(--color-bg-surface);
   }
 
   &:enabled:active {
@@ -359,7 +354,6 @@ const SubmitButton = styled('button')`
   }
 `
 
-// Extended with &[data-state='error'] for speech error messages — same visual pattern, error colours
 const CorrectReveal = styled('p')`
   margin: 0;
   padding: 0.625rem 0.75rem;
@@ -370,32 +364,28 @@ const CorrectReveal = styled('p')`
   font-size: 1.2rem;
   text-align: center;
   font-family: 'Noto Sans Arabic', sans-serif;
-
-  &[data-state='error'] {
-    background: var(--color-error-bg);
-    border-color: var(--color-error-border);
-    color: var(--color-error-text);
-  }
 `
 
-// Bordered accent indicator shown while recognition is active — no existing atom for this
-// padding/font-size match ArabicDisplay so height stays stable on transition to transcript
-const ListeningText = styled('p')`
+const SpeechField = styled('p')`
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
   margin: 0;
-  padding: 1rem;
-  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
   border: 1px solid var(--color-accent);
   background: var(--color-bg-surface-secondary);
   color: var(--color-text-muted);
-  font-size: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  font-family: 'Noto Sans Arabic', sans-serif;
   text-align: center;
-`
 
-// 2-column grid for submit + re-record buttons — no existing layout primitive for this
-const SpeechButtonRow = styled('div')`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  &[data-state='error'] {
+    border-color: var(--color-error-border);
+    background: var(--color-error-bg);
+    color: var(--color-error-text);
+  }
 `
 
 const OPTION_BUTTON_CLASS = css`

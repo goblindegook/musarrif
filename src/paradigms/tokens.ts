@@ -108,6 +108,10 @@ export function normalizeForComparison(text: string): string {
   return normalizeHamza(applyDiacriticsPreference(text, 'none')).trim().normalize('NFD')
 }
 
+export function normalizedCompare(a: string, b: string): boolean {
+  return normalizeForComparison(a) === normalizeForComparison(b)
+}
+
 // ḥurūf al-madd
 export function longVowel(vowel: Token): [Token, Token] {
   if (vowel.equals(FATHA)) return [FATHA, ALIF]
