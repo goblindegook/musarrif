@@ -27,6 +27,8 @@
     "@pacote/buckwalter": "^0.1.1",
     "@pacote/memoize": "^3.0.1",
     "@pacote/shuffle": "^3.0.0",
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/plugin-deep-link": "^2.4.9",
     "goober": "^2.1.19",
     "preact": "^10.29.2",
     "uplot": "^1.6.32",

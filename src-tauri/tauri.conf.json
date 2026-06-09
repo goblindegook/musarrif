@@ -1,20 +1,33 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Musarrif",
+  "productName": "Muṣarrif",
   "version": "0.1.0",
-  "identifier": "com.musarrif.app",
+  "identifier": "com.musarrif",
   "build": {
     "beforeDevCommand": "npm run dev -- --host 0.0.0.0 --port 5173",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "http://localhost:5173/#/verbs",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "bundle": {
     "active": true,
-    "copyright": "© 2026 Luis Rodrigues",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "copyright": "© 2026 Luis Rodrigues. Licensed under the GNU General Public License v3.0.",
     "category": "Education",
     "shortDescription": "Arabic verb conjugator",
     "longDescription": "Muṣarrif is an Arabic verb conjugation reference and drill companion.",
+    "fileAssociations": [
+      {
+        "ext": ["musarrif"],
+        "name": "Muṣarrif User Data",
+        "mimeType": "application/vnd.musarrif+json",
+        "role": "Editor",
+        "exportedType": {
+          "identifier": "com.musarrif.document",
+          "conformsTo": ["public.data", "public.json"]
+        }
+      }
+    ],
     "macOS": {
       "minimumSystemVersion": "11.0"
     },
@@ -29,10 +42,13 @@
     "windows": [
       {
         "title": "Muṣarrif",
+        "url": "index.html#/verbs",
         "width": 1200,
         "height": 800,
         "minWidth": 900,
-        "minHeight": 640
+        "minHeight": 640,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
       }
     ],
     "security": {
