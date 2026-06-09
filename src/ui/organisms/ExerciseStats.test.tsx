@@ -379,10 +379,17 @@ describe('ExerciseStats', () => {
       fireEvent.click(screen.getByText('See insights'))
       expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
       expect(screen.getByText('Not enough history yet to assess your practice rhythm.')).toBeInTheDocument()
+      expect(screen.queryByText(/^Your backlog:/)).not.toBeInTheDocument()
     })
 
-    test('shows backlog hint in momentum when many cards are overdue', () => {
+    test('shows a separate backlog section after momentum when many cards are overdue', () => {
       const store: SrsStore = {}
+      const stats = Array.from({ length: 14 }, (_, i) => ({
+        date: new Date(2026, 3, 2 + i),
+        correct: 6,
+        incorrect: 1,
+        passed: 0,
+      }))
       for (let i = 0; i < 25; i++) {
         store[`conjugation:sound:1:active.past:3ms:${i}`] = {
           ef: 2.5,
@@ -392,10 +399,22 @@ describe('ExerciseStats', () => {
         }
       }
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
+      renderStats(stats)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      const momentum = screen.getByText(/^Your momentum:/)
+      const backlog = screen.getByText(/^Your backlog:/)
+      expect(momentum.parentElement?.textContent).toContain("You're maintaining a consistent practice rhythm.")
+      expect(backlog.parentElement?.textContent).toContain('Many reviews are piling up.')
+      expect(momentum.compareDocumentPosition(backlog) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+    })
+
+    test('shows a recommendation section with exactly three items', () => {
       renderStats(SAMPLE_STATS)
       fireEvent.click(screen.getByText('Progress'))
       fireEvent.click(screen.getByText('See insights'))
-      expect(screen.getByText(/reviews are piling up/)).toBeInTheDocument()
+      expect(screen.getByText(/^Recommendation:/)).toBeInTheDocument()
+      expect(screen.getAllByRole('listitem')).toHaveLength(3)
     })
 
     test('shows Difficult section when stuck cards exist', () => {
@@ -461,9 +480,11 @@ describe('ExerciseStats', () => {
     expect(screen.getByText('Learning insights')).toBeInTheDocument()
     expect(screen.getByText(/^Your journey so far:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
+    expect(screen.queryByText(/^Your backlog:/)).not.toBeInTheDocument()
     expect(screen.getByText(/^Where you shine:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your current challenge:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your stage:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Recommendation:/)).toBeInTheDocument()
   })
 
   test('shows locked indicator in the category label', () => {

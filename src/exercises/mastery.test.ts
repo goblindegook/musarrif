@@ -542,6 +542,41 @@ describe('computeInsights — overdue', () => {
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.overdue.count).toBe(1)
   })
+
+  test('backlog state is none when no cards are overdue', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
+    expect(result.backlog).toEqual({ state: 'none' })
+  })
+
+  test('backlog state is few with a rounded eta for small overdue queues', () => {
+    const store: SrsStore = {}
+    for (let i = 0; i < 12; i++) {
+      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
+        ef: 2.5,
+        repetitions: 2,
+        interval: 3,
+        dueDate: '2026-04-14',
+      }
+    }
+    const stats = makeDailyRange(13, 14, 2, 0)
+    const result = computeInsights(BASE_PROFILE, store, stats, ANCHOR_DATE)
+    expect(result.backlog).toEqual({ state: 'few', eta: 'oneWeek' })
+  })
+
+  test('backlog state is many with a rounded eta for large overdue queues', () => {
+    const store: SrsStore = {}
+    for (let i = 0; i < 30; i++) {
+      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
+        ef: 2.5,
+        repetitions: 3,
+        interval: 3,
+        dueDate: '2026-04-14',
+      }
+    }
+    const stats = makeDailyRange(13, 14, 2, 0)
+    const result = computeInsights(BASE_PROFILE, store, stats, ANCHOR_DATE)
+    expect(result.backlog).toEqual({ state: 'many', eta: 'threeWeeks' })
+  })
 })
 
 describe('computeInsights — stuck', () => {
@@ -685,5 +720,58 @@ describe('computeInsights — stuck', () => {
     const passivePast = result.stuck.topDimensions.find((d) => d.type === 'tense' && d.value === 'passive.past')
     expect(passivePast).toBeDefined()
     expect(passivePast!.score).toBeCloseTo(2 / 3)
+  })
+
+  test('recommendations always contain habit, review, and focus actions', () => {
+    const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
+    expect(result.recommendation).toHaveLength(3)
+    expect(result.recommendation[0]).toMatchObject({ kind: 'habit' })
+    expect(result.recommendation[1]).toMatchObject({ kind: 'review' })
+    expect(result.recommendation[2]).toMatchObject({ kind: 'focus' })
+  })
+
+  test('declining accuracy prioritizes protecting accuracy over increasing pace', () => {
+    const store: SrsStore = {}
+    for (let i = 0; i < 25; i++) {
+      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
+        ef: 2.5,
+        repetitions: 3,
+        interval: 3,
+        dueDate: '2026-04-14',
+      }
+    }
+    const prior = makeDailyRange(22, 16, 10, 1)
+    const recent = makeDailyRange(6, 7, 4, 6)
+    const result = computeInsights(BASE_PROFILE, store, [...prior, ...recent], ANCHOR_DATE)
+    expect(result.recommendation[0]).toMatchObject({ kind: 'habit', action: 'protectAccuracy' })
+  })
+
+  test('focus recommendation prefers stuck dimensions when they exist', () => {
+    const store: SrsStore = {
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+      [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
+        ef: 1.3,
+        repetitions: 5,
+        interval: 1,
+        dueDate: '2099-01-01',
+      },
+    }
+    const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
+    expect(result.recommendation[2]).toMatchObject({
+      kind: 'focus',
+      action: 'focusCandidate',
+      candidate: expect.objectContaining({ type: 'tense', value: 'passive.past' }),
+    })
   })
 })

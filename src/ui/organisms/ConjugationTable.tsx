@@ -12,7 +12,7 @@ import { SpeechButton } from '../molecules/SpeechButton'
 import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { ConjugationInsights } from './ConjugationInsights'
 
-type TranslationKey = Parameters<ReturnType<typeof useI18n>['t']>[0]
+type TranslationKey = string
 
 interface PronounSlot {
   id: PronounId

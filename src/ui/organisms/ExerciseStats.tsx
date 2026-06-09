@@ -14,7 +14,7 @@ import { parseInteger, sum, toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
-import { useI18n } from '../hooks/useI18n'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { type Streak, useStats } from '../hooks/useStats'
 import { useTheme } from '../hooks/useTheme'
 import { LockIcon } from '../icons/LockIcon'
@@ -322,7 +322,7 @@ function masteryItemLabelDescriptor(item: MasteryItemData<MasteryCategoryId>): [
   return ['', '']
 }
 
-function resolveStreakHintParams(t: ReturnType<typeof useI18n>['t'], streakHintParams: StreakHintParams) {
+function resolveStreakHintParams(t: Translate, streakHintParams: StreakHintParams) {
   return streakHintParams.dimensionLabelKey == null
     ? streakHintParams
     : {

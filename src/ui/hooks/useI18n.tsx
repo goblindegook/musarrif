@@ -15,10 +15,12 @@ interface Translation {
   roots?: Record<string, string>
 }
 
+export type Translate = (key: string, params?: Record<string, string | undefined>) => string
+
 interface I18nContextValue {
   lang: Language
   dir: 'ltr' | 'rtl'
-  t: (key: string, params?: Record<string, string | undefined>) => string
+  t: Translate
   diacriticsPreference: DiacriticsPreference
   setDiacriticsPreference: (next: DiacriticsPreference) => void
   setLang: (lang: string) => void

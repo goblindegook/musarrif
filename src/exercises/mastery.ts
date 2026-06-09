@@ -14,6 +14,7 @@ import {
   type SrsCardIdentity,
   type SrsRootType,
   type SrsStore,
+  utcAddDays,
 } from './srs'
 import { getAccuracyPercent, getRecentAccuracyPercent, getStatsWindow, type TrackedExercises } from './stats'
 
@@ -238,6 +239,15 @@ export interface InsightCandidate {
   score: number
 }
 
+export type BacklogState = 'none' | 'few' | 'many'
+export type BacklogETA = 'fewDays' | 'oneWeek' | 'twoWeeks' | 'threeWeeks' | 'fourWeeks' | 'oneMonthOrMore'
+
+export type Recommendation =
+  | { kind: 'habit'; action: 'keepSteady' | 'increaseSlightly' | 'rebuildDailyHabit' | 'protectAccuracy' }
+  | { kind: 'review'; action: 'stayCurrent' | 'clearFewBacklog' | 'prioritizeBacklog' }
+  | { kind: 'focus'; action: 'focusCandidate'; candidate: Pick<InsightCandidate, 'type' | 'value'> }
+  | { kind: 'focus'; action: 'keepUnlocking' }
+
 export interface InsightData {
   journey: {
     days: number
@@ -250,8 +260,8 @@ export interface InsightData {
   stage: {
     unlockedRootTypes: number
     totalRootTypes: number
-    nextDimension: MasteryCategoryId | null
-    nextValue: string | null
+    nextDimension?: MasteryCategoryId
+    nextValue?: string
   }
   volume: {
     trend: 'ramping' | 'steady' | 'dropping' | 'inactive' | 'insufficient'
@@ -259,9 +269,14 @@ export interface InsightData {
   overdue: {
     count: number
   }
+  backlog: {
+    state: BacklogState
+    eta?: BacklogETA
+  }
   stuck: {
     topDimensions: readonly InsightCandidate[]
   }
+  recommendation: readonly Recommendation[]
 }
 
 const MASTERY_DIMENSION_KEYS: readonly MasteryCategoryId[] = ['rootTypes', 'forms', 'tenses', 'pronouns', 'nominals']
@@ -276,9 +291,6 @@ const PRONOUN_CLASS_MEMBERS: Record<PronounClassId, readonly PronounId[]> = {
 
 const PRONOUN_CLASS_ORDER: readonly PronounClassId[] = ['singular', 'dual', '1stPlural', '2ndPlural', '3rdPlural']
 
-const STUCK_EF_THRESHOLD = 1.5
-const STUCK_MIN_REPETITIONS = 3
-
 function getPronounClass(pronoun: PronounId): PronounClassId | null {
   for (const classId of PRONOUN_CLASS_ORDER) {
     if (PRONOUN_CLASS_MEMBERS[classId].includes(pronoun)) return classId
@@ -287,9 +299,7 @@ function getPronounClass(pronoun: PronounId): PronounClassId | null {
 }
 
 function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
-  const stuck = getSrsCards(srsStore).filter(
-    (c) => c.ef <= STUCK_EF_THRESHOLD && c.repetitions >= STUCK_MIN_REPETITIONS,
-  )
+  const stuck = getSrsCards(srsStore).filter((c) => c.ef <= 1.5 && c.repetitions >= 3)
 
   if (stuck.length === 0) return { topDimensions: [] }
 
@@ -336,6 +346,82 @@ function computeVolumeTrend(stats: TrackedExercises, today: Date): InsightData['
   return { trend: 'steady' }
 }
 
+function computeBacklogState(overdueCount: number): BacklogState {
+  if (overdueCount === 0) return 'none'
+  if (overdueCount <= 20) return 'few'
+  return 'many'
+}
+
+function estimateBacklogETA(srsStore: SrsStore, stats: TrackedExercises, today: string): BacklogETA | undefined {
+  const todayDate = new Date(`${today}T00:00:00`)
+  const recentWindow = getStatsWindow(stats, 14, todayDate)
+  const dailyPace = average(recentWindow.map((d) => d.correct + d.incorrect + d.passed))
+  if (dailyPace < 1) return
+
+  const overdueCount = Object.values(srsStore).filter((state) => state.dueDate <= today).length
+  if (overdueCount === 0) return
+
+  const futureDue = new Map<string, number>()
+  for (const state of Object.values(srsStore)) {
+    if (state.dueDate <= today) continue
+    futureDue.set(state.dueDate, (futureDue.get(state.dueDate) ?? 0) + 1)
+  }
+
+  let newlyDue = 0
+  for (let day = 1; day <= 60; day++) {
+    const date = utcAddDays(today, day)
+    newlyDue += futureDue.get(date) ?? 0
+    if (dailyPace * day >= overdueCount + newlyDue) return backlogEtaBucket(day)
+  }
+
+  return 'oneMonthOrMore'
+}
+
+function backlogEtaBucket(days: number): BacklogETA {
+  if (days <= 3) return 'fewDays'
+  if (days <= 7) return 'oneWeek'
+  if (days <= 14) return 'twoWeeks'
+  if (days <= 21) return 'threeWeeks'
+  if (days <= 28) return 'fourWeeks'
+  return 'oneMonthOrMore'
+}
+
+function buildRecommendations(
+  journeyTrend: InsightData['journey']['trend'],
+  volumeTrend: InsightData['volume']['trend'],
+  backlogState: BacklogState,
+  stuck: InsightData['stuck'],
+  challenge: readonly InsightCandidate[],
+): readonly Recommendation[] {
+  const habit: Recommendation =
+    journeyTrend === 'declining'
+      ? { kind: 'habit', action: 'protectAccuracy' }
+      : volumeTrend === 'inactive'
+        ? { kind: 'habit', action: 'rebuildDailyHabit' }
+        : backlogState !== 'none'
+          ? { kind: 'habit', action: 'increaseSlightly' }
+          : { kind: 'habit', action: 'keepSteady' }
+
+  const review: Recommendation =
+    backlogState === 'many'
+      ? { kind: 'review', action: 'prioritizeBacklog' }
+      : backlogState === 'few'
+        ? { kind: 'review', action: 'clearFewBacklog' }
+        : { kind: 'review', action: 'stayCurrent' }
+
+  const focusCandidate = stuck.topDimensions[0] ?? challenge[0]
+  const focus: Recommendation =
+    focusCandidate != null
+      ? {
+          kind: 'focus',
+          action: 'focusCandidate',
+          candidate: { type: focusCandidate.type, value: focusCandidate.value },
+        }
+      : { kind: 'focus', action: 'keepUnlocking' }
+
+  return [habit, review, focus]
+}
+
 export function computeInsights(
   profile: DimensionProfile,
   srsStore: SrsStore,
@@ -375,6 +461,14 @@ export function computeInsights(
     MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
       (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
     )[0] ?? null
+  const overdueCount = Object.values(srsStore).filter((s) => s.dueDate <= today).length
+  const backlog = {
+    state: computeBacklogState(overdueCount),
+    eta: estimateBacklogETA(srsStore, stats, today),
+  }
+  const volume = computeVolumeTrend(stats, todayDate)
+  const stuck = computeStuck(srsStore)
+  const challenge = sorted.slice(0, 2)
 
   return {
     journey: {
@@ -384,16 +478,18 @@ export function computeInsights(
       trend,
     },
     strengths: sorted.slice(-2).reverse(),
-    challenge: sorted.slice(0, 2),
+    challenge,
     stage: {
       unlockedRootTypes: rootTypesPool(profile.rootTypes).length,
       totalRootTypes: 6,
       nextDimension,
-      nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : null,
+      nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : undefined,
     },
-    volume: computeVolumeTrend(stats, todayDate),
-    overdue: { count: Object.values(srsStore).filter((s) => s.dueDate <= today).length },
-    stuck: computeStuck(srsStore),
+    volume,
+    overdue: { count: overdueCount },
+    backlog,
+    stuck,
+    recommendation: buildRecommendations(trend, volume.trend, backlog.state, stuck, challenge),
   }
 }
 
@@ -408,28 +504,28 @@ function computeInsightTrend(
   return 'steady'
 }
 
-function insightNextValue(profile: DimensionProfile, dim: MasteryCategoryId): string | null {
+function insightNextValue(profile: DimensionProfile, dim: MasteryCategoryId): string | undefined {
   switch (dim) {
     case 'rootTypes': {
       const next = (profile.rootTypes + 1) as typeof profile.rootTypes
-      return rootTypesPool(next).find((v) => !rootTypesPool(profile.rootTypes).includes(v)) ?? null
+      return rootTypesPool(next).find((v) => !rootTypesPool(profile.rootTypes).includes(v))
     }
     case 'tenses': {
       const next = (profile.tenses + 1) as typeof profile.tenses
-      return tensePool(next).find((v) => !tensePool(profile.tenses).includes(v)) ?? null
+      return tensePool(next).find((v) => !tensePool(profile.tenses).includes(v))
     }
     case 'forms': {
       const next = (profile.forms + 1) as typeof profile.forms
       const added = formPool(next).find((v) => !formPool(profile.forms).includes(v))
-      return added != null ? String(added) : null
+      return added != null ? String(added) : undefined
     }
     case 'pronouns': {
       const next = (profile.pronouns + 1) as typeof profile.pronouns
-      return pronounPool(next).find((v) => !pronounPool(profile.pronouns).includes(v)) ?? null
+      return pronounPool(next).find((v) => !pronounPool(profile.pronouns).includes(v))
     }
     case 'nominals': {
       const next = profile.nominals + 1
-      return next === 1 ? 'participles' : next === 2 ? 'masdar' : null
+      return next === 1 ? 'participles' : next === 2 ? 'masdar' : undefined
     }
   }
 }

@@ -14,7 +14,7 @@ import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { IconButton } from '../atoms/IconButton'
 import { Text } from '../atoms/Text'
-import { useI18n } from '../hooks/useI18n'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Modal } from '../molecules/Modal'
 
@@ -53,7 +53,7 @@ function AnnotatedArabic({ morphemes }: { morphemes: Morpheme[] }) {
   )
 }
 
-function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: ReturnType<typeof useI18n>['t']): string {
+function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: Translate): string {
   switch (kind.type) {
     case 'root':
       return t('meta.root')
@@ -66,15 +66,7 @@ function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: ReturnType<ty
   }
 }
 
-function DerivationSteps({
-  steps,
-  verb,
-  t,
-}: {
-  steps: DerivationStep[]
-  verb: DisplayVerb
-  t: ReturnType<typeof useI18n>['t']
-}) {
+function DerivationSteps({ steps, verb, t }: { steps: DerivationStep[]; verb: DisplayVerb; t: Translate }) {
   return (
     <StepsTable>
       {steps.map((step, i) => (

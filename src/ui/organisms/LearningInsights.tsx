@@ -1,19 +1,21 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import {
+  type BacklogETA,
+  type BacklogState,
   computeInsights,
   type InsightCandidate,
   type InsightCandidateType,
   type InsightData,
   type MasteryCategoryId,
+  type Recommendation,
 } from '../../exercises/mastery'
 import { parseInteger, toRoman } from '../../primitives/numbers'
 import { useDimensionStore } from '../hooks/useDimensionStore'
-import { useI18n } from '../hooks/useI18n'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'
 import { useStats } from '../hooks/useStats'
 
-const OVERDUE_BACKLOG_THRESHOLD = 20
 const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
 
 export function LearningInsights() {
@@ -49,6 +51,7 @@ export function LearningInsights() {
       ? `${journeyText} ${t(`exercise.insights.journey.trend.${insights.journey.trend}`)}`
       : journeyText
   const stageLine = insights.stage.nextDimension == null ? stageNextText : `${stageText} ${stageNextText}`
+  const backlogText = buildBacklogText(t, insights.backlog.state, insights.backlog.eta)
 
   return (
     <Container>
@@ -60,11 +63,16 @@ export function LearningInsights() {
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.momentum')}:</SectionLabel>{' '}
-          {t(
-            `exercise.insights.momentum.${insights.volume.trend}${insights.overdue.count > OVERDUE_BACKLOG_THRESHOLD ? '.backlog' : ''}`,
-          )}
+          {t(`exercise.insights.momentum.${insights.volume.trend}`)}
         </SectionText>
       </Section>
+      {backlogText != null && (
+        <Section>
+          <SectionText>
+            <SectionLabel>{t('exercise.insights.heading.backlog')}:</SectionLabel> {backlogText}
+          </SectionText>
+        </Section>
+      )}
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.strengths')}:</SectionLabel>{' '}
@@ -91,11 +99,27 @@ export function LearningInsights() {
           <SectionLabel>{t('exercise.insights.heading.stage')}:</SectionLabel> {stageLine}
         </SectionText>
       </Section>
+      <Section>
+        <SectionText>
+          <SectionLabel>{t('exercise.insights.heading.recommendation')}:</SectionLabel>
+        </SectionText>
+        <RecommendationList>
+          {insights.recommendation.map((item, index) => (
+            <RecommendationItem key={`${item.kind}-${index}`}>{buildRecommendationText(t, item)}</RecommendationItem>
+          ))}
+        </RecommendationList>
+      </Section>
     </Container>
   )
 }
 
-function resolveNextValueLabel(t: ReturnType<typeof useI18n>['t'], dim: MasteryCategoryId, value: string): string {
+function buildBacklogText(t: Translate, state: BacklogState, eta?: BacklogETA): string | null {
+  if (state === 'none') return null
+  if (eta == null) return t(`exercise.insights.backlog.${state}.noEta`)
+  return t(`exercise.insights.backlog.${state}`, { eta: t(`exercise.insights.backlog.eta.${eta}`) })
+}
+
+function resolveNextValueLabel(t: Translate, dim: MasteryCategoryId, value: string): string {
   switch (dim) {
     case 'rootTypes':
       return t(`exercise.stats.mastery.rootType.${value}`)
@@ -110,8 +134,23 @@ function resolveNextValueLabel(t: ReturnType<typeof useI18n>['t'], dim: MasteryC
   }
 }
 
+function buildRecommendationText(t: Translate, recommendation: Recommendation): string {
+  switch (recommendation.kind) {
+    case 'habit':
+      return t(`exercise.insights.recommendation.habit.${recommendation.action}`)
+    case 'review':
+      return t(`exercise.insights.recommendation.review.${recommendation.action}`)
+    case 'focus':
+      return recommendation.action === 'focusCandidate'
+        ? t('exercise.insights.recommendation.focus.focusCandidate', {
+            value: t(candidateKey({ ...recommendation.candidate, score: 0 })),
+          })
+        : t('exercise.insights.recommendation.focus.keepUnlocking')
+  }
+}
+
 function buildSectionText(
-  t: ReturnType<typeof useI18n>['t'],
+  t: Translate,
   candidates: InsightData['strengths'],
   section: 'strengths' | 'challenge',
   noneKey: string,
@@ -171,4 +210,16 @@ const SectionText = styled('p')`
 
 const SectionLabel = styled('strong')`
   color: var(--color-text-primary);
+`
+
+const RecommendationList = styled('ul')`
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+`
+
+const RecommendationItem = styled('li')`
+  margin: 0;
 `
