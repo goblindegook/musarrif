@@ -101,13 +101,9 @@ export function LearningInsights() {
       </Section>
       <Section>
         <SectionText>
-          <SectionLabel>{t('exercise.insights.heading.recommendation')}:</SectionLabel>
+          <SectionLabel>{t('exercise.insights.heading.recommendation')}:</SectionLabel>{' '}
+          {insights.recommendation.map((item) => buildRecommendationText(t, item)).join(' ')}
         </SectionText>
-        <RecommendationList>
-          {insights.recommendation.map((item, index) => (
-            <RecommendationItem key={`${item.kind}-${index}`}>{buildRecommendationText(t, item)}</RecommendationItem>
-          ))}
-        </RecommendationList>
       </Section>
     </Container>
   )
@@ -138,8 +134,6 @@ function buildRecommendationText(t: Translate, recommendation: Recommendation): 
   switch (recommendation.kind) {
     case 'habit':
       return t(`exercise.insights.recommendation.habit.${recommendation.action}`)
-    case 'review':
-      return t(`exercise.insights.recommendation.review.${recommendation.action}`)
     case 'focus':
       return recommendation.action === 'focusCandidate'
         ? t('exercise.insights.recommendation.focus.focusCandidate', {
@@ -210,16 +204,4 @@ const SectionText = styled('p')`
 
 const SectionLabel = styled('strong')`
   color: var(--color-text-primary);
-`
-
-const RecommendationList = styled('ul')`
-  margin: 0;
-  padding-inline-start: 1.25rem;
-  color: var(--color-text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.55;
-`
-
-const RecommendationItem = styled('li')`
-  margin: 0;
 `

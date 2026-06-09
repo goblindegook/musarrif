@@ -244,7 +244,6 @@ export type BacklogETA = 'fewDays' | 'oneWeek' | 'twoWeeks' | 'threeWeeks' | 'fo
 
 export type Recommendation =
   | { kind: 'habit'; action: 'keepSteady' | 'increaseSlightly' | 'rebuildDailyHabit' | 'protectAccuracy' }
-  | { kind: 'review'; action: 'stayCurrent' | 'clearFewBacklog' | 'prioritizeBacklog' }
   | { kind: 'focus'; action: 'focusCandidate'; candidate: Pick<InsightCandidate, 'type' | 'value'> }
   | { kind: 'focus'; action: 'keepUnlocking' }
 
@@ -393,33 +392,22 @@ function buildRecommendations(
   stuck: InsightData['stuck'],
   challenge: readonly InsightCandidate[],
 ): readonly Recommendation[] {
-  const habit: Recommendation =
-    journeyTrend === 'declining'
-      ? { kind: 'habit', action: 'protectAccuracy' }
-      : volumeTrend === 'inactive'
-        ? { kind: 'habit', action: 'rebuildDailyHabit' }
-        : backlogState !== 'none'
-          ? { kind: 'habit', action: 'increaseSlightly' }
-          : { kind: 'habit', action: 'keepSteady' }
+  const candidate = stuck.topDimensions[0] ?? challenge[0]
 
-  const review: Recommendation =
-    backlogState === 'many'
-      ? { kind: 'review', action: 'prioritizeBacklog' }
-      : backlogState === 'few'
-        ? { kind: 'review', action: 'clearFewBacklog' }
-        : { kind: 'review', action: 'stayCurrent' }
-
-  const focusCandidate = stuck.topDimensions[0] ?? challenge[0]
-  const focus: Recommendation =
-    focusCandidate != null
-      ? {
-          kind: 'focus',
-          action: 'focusCandidate',
-          candidate: { type: focusCandidate.type, value: focusCandidate.value },
-        }
-      : { kind: 'focus', action: 'keepUnlocking' }
-
-  return [habit, review, focus]
+  return [
+    {
+      kind: 'habit',
+      action:
+        journeyTrend === 'declining'
+          ? 'protectAccuracy'
+          : volumeTrend === 'inactive'
+            ? 'rebuildDailyHabit'
+            : backlogState !== 'none'
+              ? 'increaseSlightly'
+              : 'keepSteady',
+    },
+    candidate ? { kind: 'focus', action: 'focusCandidate', candidate } : { kind: 'focus', action: 'keepUnlocking' },
+  ]
 }
 
 export function computeInsights(

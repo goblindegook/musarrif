@@ -722,12 +722,12 @@ describe('computeInsights — stuck', () => {
     expect(passivePast!.score).toBeCloseTo(2 / 3)
   })
 
-  test('recommendations always contain habit, review, and focus actions', () => {
+  test('recommendations always contain habit and focus actions', () => {
     const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
-    expect(result.recommendation).toHaveLength(3)
-    expect(result.recommendation[0]).toMatchObject({ kind: 'habit' })
-    expect(result.recommendation[1]).toMatchObject({ kind: 'review' })
-    expect(result.recommendation[2]).toMatchObject({ kind: 'focus' })
+    expect(result.recommendation).toEqual([
+      { action: 'keepSteady', kind: 'habit' },
+      { action: 'focusCandidate', candidate: { type: 'rootType', value: 'sound' }, kind: 'focus' },
+    ])
   })
 
   test('declining accuracy prioritizes protecting accuracy over increasing pace', () => {
@@ -768,7 +768,7 @@ describe('computeInsights — stuck', () => {
       },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
-    expect(result.recommendation[2]).toMatchObject({
+    expect(result.recommendation[1]).toMatchObject({
       kind: 'focus',
       action: 'focusCandidate',
       candidate: expect.objectContaining({ type: 'tense', value: 'passive.past' }),
