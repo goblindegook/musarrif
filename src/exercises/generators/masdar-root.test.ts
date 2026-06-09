@@ -1,16 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { verbs } from '../../paradigms/verbs.ts'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import { masdarRootExercise } from './masdar-root.ts'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 describe('masdarRootExercise', () => {
   afterEach(() => {

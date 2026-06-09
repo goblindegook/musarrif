@@ -1,16 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../../paradigms/verbs'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import * as dimensions from '../dimensions'
 import { conjugationExercise } from './conjugation'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 describe('conjugationExercise', () => {
   afterEach(() => {

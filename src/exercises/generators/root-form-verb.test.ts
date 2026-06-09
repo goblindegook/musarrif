@@ -1,16 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { formatFormLabel, verbs } from '../../paradigms/verbs.ts'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { rootFormVerbExercise } from './root-form-verb.ts'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 describe('rootFormVerbExercise', () => {
   test('returns kind "rootFormVerb"', () => {

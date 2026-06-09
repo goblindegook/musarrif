@@ -2,17 +2,9 @@ import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
 import { verbs } from '../../paradigms/verbs.ts'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { verbParticipleExercise } from './verb-participle.ts'
-
-const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  diacritics: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
 
 describe('verbParticipleExercise', () => {
   test('returns kind "verbParticiple"', () => {
