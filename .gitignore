@@ -35,3 +35,6 @@ dist-ssr
 # MemPalace per-project files
 mempalace.yaml
 entities.json
+
+# Generated files
+/src-tauri/icons/

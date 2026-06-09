@@ -1,8 +1,8 @@
 [package]
-name = "musarrif"
+name = "Muṣarrif"
 version = "0.1.0"
-description = "Muṣarrif desktop app"
-authors = ["you"]
+description = "Muṣarrif"
+authors = ["Luis Rodrigues"]
 license = "GPL-3.0-only"
 repository = ""
 edition = "2021"
