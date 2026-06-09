@@ -8,7 +8,11 @@ import { ConjugationMode } from './pages/ConjugationMode'
 import { ExerciseMode } from './pages/ExerciseMode'
 import { Home } from './pages/Home'
 import { Route, Router, useRouting } from './routes'
-import { registerUserDataFileLaunchHandler } from './user-data'
+import {
+  registerFileDragDropHandler,
+  registerTauriFileOpenHandler,
+  registerUserDataFileLaunchHandler,
+} from './user-data'
 
 export function App() {
   const { lang, dir } = useI18n()
@@ -16,6 +20,8 @@ export function App() {
   const { isOpen, step, totalSteps, openTour, closeTour, nextStep } = useTour()
 
   useEffect(registerUserDataFileLaunchHandler, [])
+  useEffect(registerFileDragDropHandler, [])
+  useEffect(registerTauriFileOpenHandler, [])
 
   return (
     <Page dir={dir} lang={lang}>

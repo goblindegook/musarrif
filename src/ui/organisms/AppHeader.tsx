@@ -1,5 +1,7 @@
+import { listen } from '@tauri-apps/api/event'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 import { styled } from 'goober'
-import { useCallback, useRef, useState } from 'preact/hooks'
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
 import { Select } from '../atoms/Select'
@@ -31,8 +33,25 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { voices, voiceName, setVoiceName } = useSpeech('ar')
   const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isImportWarningOpen, setIsImportWarningOpen] = useState(false)
+  const [pendingImportContent, setPendingImportContent] = useState<string | null>(null)
   const importInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!('__TAURI_INTERNALS__' in window)) return
+    let unlisten: (() => void) | undefined
+    listen('open-settings', () => setIsSettingsOpen(true)).then((fn) => {
+      unlisten = fn
+    })
+    return () => unlisten?.()
+  }, [])
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setPendingImportContent((e as CustomEvent<string>).detail)
+    }
+    document.addEventListener('musarrif:pending-import', handler)
+    return () => document.removeEventListener('musarrif:pending-import', handler)
+  }, [])
 
   const exportUserData = useCallback(() => {
     const payload = getUserData()
@@ -48,7 +67,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
     if (input == null || file == null) return
 
     try {
-      if (importUserData(await file.text())) window.location.reload()
+      document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: await file.text() }))
     } finally {
       input.value = ''
     }
@@ -57,7 +76,13 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   return (
     <TopBar>
       <TopBarHeader>
-        <TitleGroup dir={dir} lang={lang}>
+        <TitleGroup
+          dir={dir}
+          lang={lang}
+          onMouseDown={(e: MouseEvent) => {
+            if ('__TAURI_INTERNALS__' in window && e.buttons === 1) getCurrentWindow().startDragging()
+          }}
+        >
           <Eyebrow dir={dir} lang={lang}>
             {t('eyebrow')}
           </Eyebrow>
@@ -149,7 +174,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
             <Subheading>{t('settings.data.title')}</Subheading>
             <ActionRow>
               <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
-              <Button onClick={() => setIsImportWarningOpen(true)}>{t('settings.data.import')}</Button>
+              <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
             </ActionRow>
             <input
               ref={importInputRef}
@@ -162,18 +187,19 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
         </SettingsModalBody>
       </Modal>
       <Modal
-        isOpen={isImportWarningOpen}
+        isOpen={pendingImportContent != null}
         title={t('settings.importWarning.title')}
-        onClose={() => setIsImportWarningOpen(false)}
+        onClose={() => setPendingImportContent(null)}
       >
         <SettingsModalBody>
           <p>{t('settings.importWarning.message')}</p>
           <ActionRow>
-            <Button onClick={() => setIsImportWarningOpen(false)}>{t('settings.importWarning.cancel')}</Button>
+            <Button onClick={() => setPendingImportContent(null)}>{t('settings.importWarning.cancel')}</Button>
             <Button
               onClick={() => {
-                setIsImportWarningOpen(false)
-                importInputRef.current?.click()
+                const content = pendingImportContent
+                setPendingImportContent(null)
+                if (content != null && importUserData(content)) window.location.reload()
               }}
             >
               {t('settings.importWarning.confirm')}
@@ -232,6 +258,8 @@ const TitleGroup = styled('div')`
   gap: 0.15rem;
   min-width: 0;
   overflow: hidden;
+  cursor: default;
+  user-select: none;
 `
 
 const Eyebrow = styled('p')`

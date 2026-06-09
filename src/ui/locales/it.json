@@ -491,7 +491,7 @@
     "settings.data.import": "Importa dati",
     "settings.data.title": "Dati",
     "settings.importWarning.cancel": "Torna indietro",
-    "settings.importWarning.confirm": "Scegli file da importare",
+    "settings.importWarning.confirm": "Importa e sovrascrivi",
     "settings.importWarning.message": "L’importazione sovrascriverà tutti i tuoi dati esistenti. Questa azione non può essere annullata.",
     "settings.importWarning.title": "Avviso di importazione dati",
     "settings.title": "Impostazioni",

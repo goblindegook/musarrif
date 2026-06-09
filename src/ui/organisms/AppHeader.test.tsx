@@ -104,44 +104,44 @@ it('exports user data in JSON format', () => {
   })
 })
 
-it('shows a warning modal before importing data', () => {
+it('shows a warning modal when a file is pending import', () => {
   renderHeader('/#/verbs')
-  fireEvent.click(screen.getByLabelText('Settings'))
-  fireEvent.click(screen.getByText('Import data'))
+  act(() => {
+    document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: '{}' }))
+  })
 
   expect(screen.getByText('Import data warning')).toBeInTheDocument()
   expect(
     screen.getByText('Importing will overwrite all your existing data. This action cannot be undone.'),
   ).toBeInTheDocument()
   expect(screen.getByText('Go back')).toBeInTheDocument()
-  expect(screen.getByText('Choose import file')).toBeInTheDocument()
+  expect(screen.getByText('Import and overwrite')).toBeInTheDocument()
 })
 
 it('closes the warning modal when Go back is clicked', () => {
   renderHeader('/#/verbs')
-  fireEvent.click(screen.getByLabelText('Settings'))
-  fireEvent.click(screen.getByText('Import data'))
+  act(() => {
+    document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: '{}' }))
+  })
 
   fireEvent.click(screen.getByText('Go back'))
 
   expect(screen.queryByText('Import data warning')).not.toBeInTheDocument()
 })
 
-it('opens the file picker when Choose import file is clicked in the warning modal', async () => {
+it('opens the file picker when Import data is clicked in settings', async () => {
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))
-  fireEvent.click(screen.getByText('Import data'))
 
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const input = document.querySelector('input[type="file"]') as HTMLInputElement
   const clickSpy = vi.spyOn(input, 'click').mockImplementation(() => {})
 
   await act(async () => {
-    await user.click(screen.getByText('Choose import file'))
+    await user.click(screen.getByText('Import data'))
   })
 
   expect(clickSpy).toHaveBeenCalledTimes(1)
-  expect(screen.queryByText('Import data warning')).not.toBeInTheDocument()
 })
 
 it('imports user data from JSON and updates local storage', async () => {
@@ -170,6 +170,10 @@ it('imports user data from JSON and updates local storage', async () => {
 
   await act(async () => {
     await user.upload(input, file)
+  })
+
+  await act(async () => {
+    await user.click(await screen.findByText('Import and overwrite'))
   })
 
   await waitFor(() => expect(localStorage.getItem('conjugator:language')).toBe(JSON.stringify('it')))

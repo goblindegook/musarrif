@@ -491,7 +491,7 @@
     "settings.data.import": "Import data",
     "settings.data.title": "Data",
     "settings.importWarning.cancel": "Go back",
-    "settings.importWarning.confirm": "Choose import file",
+    "settings.importWarning.confirm": "Import and overwrite",
     "settings.importWarning.message": "Importing will overwrite all your existing data. This action cannot be undone.",
     "settings.importWarning.title": "Import data warning",
     "settings.title": "Settings",

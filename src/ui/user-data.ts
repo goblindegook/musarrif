@@ -16,6 +16,40 @@ export const USER_DATA_MIME_TYPE = 'application/vnd.musarrif+json'
 
 export type LaunchConsumer = (params: { files: readonly FileSystemFileHandle[] }) => void | Promise<void>
 
+export function registerFileDragDropHandler() {
+  const controller = new AbortController()
+  const { signal } = controller
+  document.addEventListener('dragover', (e) => e.preventDefault(), { signal })
+  document.addEventListener(
+    'drop',
+    async (e) => {
+      e.preventDefault()
+      for (const file of Array.from(e.dataTransfer?.files ?? [])) {
+        if (file.name.endsWith('.musarrif') || file.type === USER_DATA_MIME_TYPE) {
+          document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: await file.text() }))
+        }
+      }
+    },
+    { signal },
+  )
+  return () => controller.abort()
+}
+
+export function registerTauriFileOpenHandler() {
+  if (!('__TAURI_INTERNALS__' in window)) return
+  let unlisten: (() => void) | undefined
+  import('@tauri-apps/api/event')
+    .then(({ listen }) =>
+      listen<string>('import-user-data', (event) => {
+        document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: event.payload }))
+      }),
+    )
+    .then((fn) => {
+      unlisten = fn
+    })
+  return () => unlisten?.()
+}
+
 export function registerUserDataFileLaunchHandler() {
   const launchQueue = (window as Window & { launchQueue?: { setConsumer: (consumer: LaunchConsumer) => void } })
     .launchQueue
