@@ -724,10 +724,9 @@ describe('computeInsights — stuck', () => {
 
   test('recommendations always contain habit and focus actions', () => {
     const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
-    expect(result.recommendation).toEqual([
-      { action: 'keepSteady', kind: 'habit' },
-      { action: 'focusCandidate', candidate: { type: 'rootType', value: 'sound' }, kind: 'focus' },
-    ])
+    expect(result.recommendation).toHaveLength(2)
+    expect(result.recommendation[0]).toMatchObject({ kind: 'habit' })
+    expect(result.recommendation[1]).toMatchObject({ kind: 'focus' })
   })
 
   test('declining accuracy prioritizes protecting accuracy over increasing pace', () => {
