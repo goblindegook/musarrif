@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, screen } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import type { DimensionProfile } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
 import { ExerciseMode } from './ExerciseMode'
@@ -151,7 +152,7 @@ describe('ExerciseMode', () => {
   })
 
   describe('profile-based generation', () => {
-    function testProfile(overrides = {}) {
+    function testProfile(overrides = {}): DimensionProfile {
       return {
         tenses: 0,
         pronouns: 0,
@@ -163,18 +164,25 @@ describe('ExerciseMode', () => {
       }
     }
 
-    test('calls the generator with initial dimension profile on mount', () => {
-      const gen = vi.fn().mockReturnValue(testExercise())
-      renderWithProviders(<ExerciseMode generateExercise={gen} />)
-      expect(gen).toHaveBeenCalledWith(
-        { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
-        expect.any(Object),
-        expect.any(Object),
-        {},
-      )
+    function createProfileExerciseGenerator() {
+      let callCount = 0
+
+      return (profile: DimensionProfile) => {
+        callCount += 1
+        return testExercise({
+          cardKey: `verbForm:sound:1:${callCount}`,
+          word: `profile:${profile.tenses}-${profile.pronouns}-${callCount}`,
+          spokenWord: `profile:${profile.tenses}-${profile.pronouns}-${callCount}`,
+        })
+      }
+    }
+
+    test('renders an exercise from the initial dimension profile on mount', () => {
+      renderWithProviders(<ExerciseMode generateExercise={createProfileExerciseGenerator()} />)
+      expect(screen.getByText('profile:0-0-1')).toBeInTheDocument()
     })
 
-    test('calls the generator with stored dimension profile on mount', () => {
+    test('renders an exercise from the stored dimension profile on mount', () => {
       localStorage.setItem(
         'conjugator:dimensions',
         JSON.stringify({
@@ -182,12 +190,11 @@ describe('ExerciseMode', () => {
           windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
         }),
       )
-      const gen = vi.fn().mockReturnValue(testExercise())
-      renderWithProviders(<ExerciseMode generateExercise={gen} />)
-      expect(gen).toHaveBeenCalledWith(testProfile({ tenses: 1 }), expect.any(Object), expect.any(Object), {})
+      renderWithProviders(<ExerciseMode generateExercise={createProfileExerciseGenerator()} />)
+      expect(screen.getByText('profile:1-0-1')).toBeInTheDocument()
     })
 
-    test('calls the generator with the current stored profile when next is clicked', () => {
+    test('keeps using the current stored profile when loading the next exercise', () => {
       localStorage.setItem(
         'conjugator:dimensions',
         JSON.stringify({
@@ -195,17 +202,10 @@ describe('ExerciseMode', () => {
           windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
         }),
       )
-      const gen = vi.fn().mockReturnValue(testExercise())
-      renderWithProviders(<ExerciseMode generateExercise={gen} />)
+      renderWithProviders(<ExerciseMode generateExercise={createProfileExerciseGenerator()} />)
       fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
       fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
-      expect(gen).toHaveBeenNthCalledWith(
-        2,
-        testProfile({ tenses: 2, pronouns: 2 }),
-        expect.any(Object),
-        expect.any(Object),
-        {},
-      )
+      expect(screen.getByText('profile:2-2-2')).toBeInTheDocument()
     })
   })
 

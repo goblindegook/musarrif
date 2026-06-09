@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
 import { defineExercise } from './exercises'
 
@@ -35,17 +35,21 @@ describe('defineExerciseGenerator', () => {
     })
   })
 
-  test('keeps generator config and forwards arguments to build', () => {
-    const build = vi.fn().mockReturnValue({
-      word: 'كَتَبَ',
-      promptTranslationKey: 'exercise.prompt.verbForm',
-      options: ['I', 'II', 'III', 'IV'],
-      answer: 0,
-      cardKey: 'verbForm:regular:2:active.past:3ms',
-      dimensions: ['forms', 'rootTypes', 'diacritics'],
-    })
-
-    const generator = defineExercise('verbForm', build, { minNominals: 1, weight: 2 })
+  test('keeps generator config and shapes generated exercises from profile and constraints', () => {
+    const generator = defineExercise(
+      'verbForm',
+      (profile, constraints) => ({
+        word: `profile:${profile.forms}`,
+        spokenWord: `constraint:${constraints?.form ?? 'none'}`,
+        promptTranslationKey: 'exercise.prompt.verbForm',
+        options: ['I', 'II', 'III', 'IV'],
+        answer: 0,
+        cardKey: `verbForm:regular:${constraints?.form}:${constraints?.tense}:${constraints?.pronoun}`,
+        dimensions: ['forms', 'rootTypes', 'diacritics'],
+        inputModes: ['multiple-choice'],
+      }),
+      { minNominals: 1, weight: 2 },
+    )
     const exercise = generator.generate(INITIAL_DIMENSION_PROFILE, {
       form: 2,
       tense: 'active.past',
@@ -53,12 +57,10 @@ describe('defineExerciseGenerator', () => {
     })
 
     expect(generator).toMatchObject({ kind: 'verbForm', minNominals: 1, weight: 2 })
-    expect(build).toHaveBeenCalledWith(INITIAL_DIMENSION_PROFILE, {
-      form: 2,
-      tense: 'active.past',
-      pronoun: '3ms',
-    })
     expect(exercise).toMatchObject({
+      kind: 'verbForm',
+      word: 'profile:0',
+      spokenWord: 'constraint:2',
       cardKey: 'verbForm:regular:2:active.past:3ms',
       dimensions: ['forms', 'rootTypes', 'diacritics'],
     })
