@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import en from '../ui/locales/en.json'
 import pt from '../ui/locales/pt.json'
-import { search } from './selection'
+import { search } from './search'
 
 describe('search', () => {
   test('matches a verb when only an inflected form is provided', () => {

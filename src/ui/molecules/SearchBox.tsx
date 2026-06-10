@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
-import { search } from '../../paradigms/selection'
+import { search } from '../../paradigms/search'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { Overlay, type OverlayProps } from '../atoms/Overlay'
