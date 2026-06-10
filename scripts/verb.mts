@@ -20,21 +20,23 @@ const LOCALE_PATHS = {
 const LANGUAGE_CODES = ['en', 'it', 'pt'] as const
 
 const MASDAR_PATTERNS: readonly MasdarPattern[] = [
-  'fa3l',
-  'fi3l',
-  'fu3l',
   'fa3aal',
+  'fa3alaan',
   'fa3iil',
-  'fi3aal',
-  'fu3aal',
-  'fu3ool',
-  'fi3aala',
-  'fu3aala',
+  'fa3l',
   'fa3la',
-  'fi3la',
-  'fu3la',
+  'fa3ool',
+  'fi3aal',
+  'fi3aala',
   'fi3al',
+  'fi3l',
+  'fi3la',
+  'fu3aal',
   'fu3il',
+  'fu3l',
+  'fu3la',
+  'fu3laan',
+  'fu3ool',
   'mimi',
 ]
 

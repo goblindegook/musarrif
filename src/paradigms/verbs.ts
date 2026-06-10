@@ -56,22 +56,23 @@ export type MasdarPattern =
   | 'fa3l' // simple action
   | 'fi3l' // mental states, abstract qualities
   | 'fu3l' // inherent states, qualities
+  | 'fa3al' // abstract result
   // Extended vowel
   | 'fa3aal' // extended activity, occupation
-  | 'fa3iil' // sometimes adjective-like (uncommon)
-  // TOOD: 'fa3ool' // intensive state
+  | 'fa3iil' // sometimes adjective-like (rare)
+  | 'fa3ool' // intensive state (rare)
   | 'fi3aal' // ongoing action
   | 'fu3aal' // bodily state, sound, illness (uncommon)
   | 'fu3ool' // movement, transition, repeated action
+  | 'fa3alaan' // ongoing process
+  | 'fu3laan' // state or condition
   // Feminine
-  | 'fa3aala' // profession, craft, continues activity
-  | 'fi3aala' // process, organized activity
-  | 'fu3aala' // abstract quality (rare)
+  | 'fa3aala' // profession, craft, continued activity
   | 'fa3la' // single concrete event
+  | 'fi3aala' // process, organized activity
   | 'fi3la' // single concrete event
   | 'fu3la' // single concrete event
   // Uncommon
-  | 'fa3al' // abstract result
   | 'fi3al' // inherent qualities
   // Mimi
   | 'mimi'

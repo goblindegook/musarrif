@@ -39,6 +39,19 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
     case 'fa3aal':
       return [c1, FATHA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
 
+    case 'fa3aala':
+      if (c2.isWeak) return [c1, DAMMA, WAW, FATHA, ALIF, c3, FATHA, TEH_MARBUTA] // FIXME: Should this not be fu3aala?
+      return [c1, FATHA, c2, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
+
+    case 'fa3alaan':
+      return [c1, FATHA, c2, FATHA, c3, FATHA, ALIF, NOON]
+
+    case 'fa3ool':
+      return []
+
+    case 'fa3iil':
+      return [c1, FATHA, c2, KASRA, YEH, c3]
+
     case 'fu3l':
       return [c1, DAMMA, c2, SUKOON, c3]
 
@@ -50,9 +63,6 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
 
     case 'fu3il':
       return [c1, DAMMA, c2, KASRA, c3, SHADDA]
-
-    case 'fu3aala':
-      return [c1, DAMMA, c2, FATHA, ALIF, c3, TEH_MARBUTA]
 
     case 'fi3aal': {
       if (c3.isWeak) return [c1, KASRA, c2, FATHA, ALIF, HAMZA]
@@ -68,22 +78,17 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
     case 'fu3la':
       return [c1.isHamza ? ALIF_HAMZA : c1, DAMMA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
 
+    case 'fu3laan':
+      return [c1, DAMMA, c2, SUKOON, c3, FATHA, ALIF, NOON]
+
     case 'fi3al':
       return [c1, KASRA, c2, FATHA, c3]
 
     case 'fi3l':
       return [c1, KASRA, c2, SUKOON, c3]
 
-    case 'fa3iil':
-      return [c1, FATHA, c2, KASRA, YEH, c3]
-
-    case 'fa3aala':
-      if (c2.isWeak) return [c1, DAMMA, WAW, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-      return [c1, FATHA, c2, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-
     case 'fi3aala':
       if (c2.isWeak) return [c1, KASRA, c3.isWeak ? WAW : YEH, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
-
       return [c1, KASRA, c2, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
 
     case 'fi3iil':

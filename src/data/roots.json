@@ -1912,7 +1912,9 @@
   {
     "root": "gfr",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fu3laan"],
+    "lexicalizedMasdars": ["magofirap"]
   },
   {
     "root": "gfr",
@@ -2204,7 +2206,7 @@
     "root": "jry",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fa3alaan"]
   },
   {
     "root": "jwE",
