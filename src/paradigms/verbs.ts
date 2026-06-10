@@ -47,31 +47,34 @@ export function formatFormLabel(form: VerbForm, root: string): string {
   return root.length === 4 ? `${toRoman(form)}q` : toRoman(form)
 }
 
-export type MasdarPattern =
+export const MASDAR_PATTERNS = [
   // Basic
-  | 'fa3l' // simple action
-  | 'fi3l' // mental states, abstract qualities
-  | 'fu3l' // inherent states, qualities
-  | 'fa3al' // abstract result
+  'fa3l', // simple action
+  'fi3l', // mental states, abstract qualities
+  'fu3l', // inherent states, qualities
+  'fa3al', // abstract result
   // Extended vowel
-  | 'fa3aal' // extended activity, occupation
-  | 'fa3iil' // sometimes adjective-like (rare)
-  | 'fa3ool' // intensive state (rare)
-  | 'fi3aal' // ongoing action
-  | 'fu3aal' // bodily state, sound, illness (uncommon)
-  | 'fu3ool' // movement, transition, repeated action
-  | 'fa3alaan' // ongoing process
-  | 'fu3laan' // state or condition
+  'fa3aal', // extended activity, occupation
+  'fa3iil', // sometimes adjective-like (rare)
+  'fa3ool', // intensive state (rare)
+  'fi3aal', // ongoing action
+  'fu3aal', // bodily state, sound, illness (uncommon)
+  'fu3ool', // movement, transition, repeated action
+  'fa3alaan', // ongoing process
+  'fu3laan', // state or condition
   // Feminine
-  | 'fa3aala' // profession, craft, continued activity
-  | 'fa3la' // single concrete event
-  | 'fi3aala' // process, organized activity
-  | 'fi3la' // single concrete event
-  | 'fu3la' // single concrete event
+  'fa3aala', // profession, craft, continued activity
+  'fa3la', // single concrete event
+  'fi3aala', // process, organized activity
+  'fi3la', // single concrete event
+  'fu3la', // single concrete event
   // Uncommon
-  | 'fi3al' // inherent qualities
+  'fi3al', // inherent qualities
   // Mimi
-  | 'mimi'
+  'mimi',
+] as const
+
+export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 
 export type PassiveVoice = 'none' | 'impersonal'
 export type PresentHollowBehaviour = 'contracted' | 'uncontracted'

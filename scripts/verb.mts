@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { confirm, input, select } from '@inquirer/prompts'
 import { transliterate } from '@pacote/buckwalter'
 import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels.ts'
-import type { MasdarPattern, PassiveVoice, VerbForm } from '../src/paradigms/verbs.ts'
+import { MASDAR_PATTERNS, type MasdarPattern, type PassiveVoice, type VerbForm } from '../src/paradigms/verbs.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -18,26 +18,6 @@ const LOCALE_PATHS = {
 } as const
 
 const LANGUAGE_CODES = ['en', 'it', 'pt'] as const
-
-const MASDAR_PATTERNS: readonly MasdarPattern[] = [
-  'fa3aal',
-  'fa3alaan',
-  'fa3iil',
-  'fa3l',
-  'fa3la',
-  'fa3ool',
-  'fi3aal',
-  'fi3aala',
-  'fi3al',
-  'fi3l',
-  'fi3la',
-  'fu3aal',
-  'fu3l',
-  'fu3la',
-  'fu3laan',
-  'fu3ool',
-  'mimi',
-]
 
 const BACK = Symbol('back')
 
