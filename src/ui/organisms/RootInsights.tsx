@@ -1,8 +1,8 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { analyzeRoot } from '../../paradigms/roots.ts'
-import { search } from '../../paradigms/selection.ts'
 import { tokenize } from '../../paradigms/tokens.ts'
+import { findVerbsByRoot } from '../../paradigms/verbs.ts'
 import { Heading } from '../atoms/Heading.tsx'
 import { InlineVerbList } from '../atoms/InlineVerbList.tsx'
 import { Text } from '../atoms/Text.tsx'
@@ -13,7 +13,7 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
   const { t, dir, lang } = useI18n()
   const rootAnalysis = analyzeRoot(tokenize(root))
   const semanticMeaning = t(rootId)
-  const derivedForms = useMemo(() => search(root, { exactRoot: true }).sort((a, b) => a.form - b.form), [root])
+  const derivedForms = useMemo(() => findVerbsByRoot(root).toSorted((a, b) => a.form - b.form), [root])
   return (
     <>
       <RootDisplay>

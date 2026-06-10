@@ -29,8 +29,8 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
 
   const matchingVerbs = useMemo<DisplayVerb[]>(() => {
     if (!query.trim()) return []
-    return search(query, { translate: t })
-  }, [query, t])
+    return search(query, { translate: t, language: lang })
+  }, [lang, query, t])
 
   const suggested = useMemo(() => matchingVerbs.slice(0, 20), [matchingVerbs])
 

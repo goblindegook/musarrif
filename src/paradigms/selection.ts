@@ -2,39 +2,7 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { memoize } from '@pacote/memoize'
 import { wordDistance } from '../primitives/strings'
 import { ALIF, HAMZA, normalizeForComparison } from './tokens'
-import { type DisplayVerb, verbs, verbsByRoot } from './verbs'
-
-const ARABIC_COLLATOR = new Intl.Collator('ar')
-
-export const getClosestVerbs = memoize(
-  (targetRoot: string, count: number) => [targetRoot, count, verbs.length].join(':'),
-  (targetRoot: string, count: number) => {
-    return verbs
-      .filter((verb) => verb.root !== targetRoot)
-      .map((verb) => ({
-        verb,
-        matches: countPositionMatches(targetRoot, verb.root),
-        distance: wordDistance(targetRoot, verb.root),
-      }))
-      .sort((a, b) => {
-        if (a.matches !== b.matches) return b.matches - a.matches
-        if (a.distance !== b.distance) return a.distance - b.distance
-        return ARABIC_COLLATOR.compare(a.verb.root, b.verb.root)
-      })
-      .slice(0, count)
-      .map((entry) => entry.verb)
-  },
-  { capacity: 9999 },
-)
-
-function countPositionMatches(first: string, second: string): number {
-  const limit = Math.min(first.length, second.length)
-  let matches = 0
-  for (let index = 0; index < limit; index += 1) {
-    if (first[index] === second[index]) matches += 1
-  }
-  return matches
-}
+import { type DisplayVerb, findVerbsByRoot, findVerbsByRootPrefix, verbs } from './verbs'
 
 function addCandidate(acc: Set<string>, value: string): void {
   acc.add(value)
@@ -60,22 +28,24 @@ function extractRootCandidates(query: string): string[] {
   )
 }
 
-function matchVerbsForCandidate(candidate: string): DisplayVerb[] {
+function matchVerbsForCandidate(candidate: string): readonly DisplayVerb[] {
   const matches: DisplayVerb[] = []
   if (!candidate) return matches
 
-  const exact = verbsByRoot.get(candidate) ?? []
+  const exact = findVerbsByRoot(candidate)
   if (exact.length > 0) return exact
 
-  for (const [root, rootVerbs] of verbsByRoot.entries()) {
-    if (root.startsWith(candidate)) matches.push(...rootVerbs)
-  }
-  return matches
+  return findVerbsByRootPrefix(candidate)
 }
 
 type SearchOptions = {
-  exactRoot?: boolean
-  translate?: (key: string, params?: Record<string, string>) => string
+  language: string
+  translate: (key: string, params?: Record<string, string>) => string | undefined
+}
+
+const DEFAULT_SEARCH_OPTIONS: SearchOptions = {
+  language: '',
+  translate: (key: string) => key,
 }
 
 const normalizeQuery = (value: string): string =>
@@ -83,8 +53,7 @@ const normalizeQuery = (value: string): string =>
     .replace(/\p{M}|\u0640/gu, '')
     .toLowerCase()
 
-export function search(query: string, options: SearchOptions = {}): DisplayVerb[] {
-  const t = options.translate ?? ((key) => key)
+function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): DisplayVerb[] {
   const matches: DisplayVerb[] = []
   const normalizedQuery = normalizeQuery(query)
   if (!normalizedQuery) return matches
@@ -92,7 +61,7 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
   const candidates = extractRootCandidates(normalizedQuery)
   const distance = new Map<string, number>()
 
-  const addMatches = (verbsForRoot: DisplayVerb[]) => {
+  const addMatches = (verbsForRoot: readonly DisplayVerb[]) => {
     for (const verb of verbsForRoot) {
       if (distance.has(verb.id)) continue
       matches.push(verb)
@@ -104,16 +73,14 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
     .filter((char) => /[ء-ي]/.test(char))
     .join('')
 
-  if (options.exactRoot) {
-    addMatches(verbsByRoot.get(normalizedQuery) ?? [])
-    if (buckwalterCandidate) addMatches(verbsByRoot.get(buckwalterCandidate) ?? [])
-  } else {
-    addMatches(candidates.flatMap(matchVerbsForCandidate))
-    if (buckwalterCandidate) addMatches(matchVerbsForCandidate(buckwalterCandidate))
+  addMatches(candidates.flatMap(matchVerbsForCandidate))
+  if (buckwalterCandidate) addMatches(matchVerbsForCandidate(buckwalterCandidate))
+
+  if (options.language) {
     addMatches(
       verbs.filter((v) => {
-        const translated = t(v.id)
-        return translated != null && normalizeQuery(translated).includes(normalizedQuery)
+        const translated = options.translate(v.id)
+        return normalizeQuery(translated ?? '').includes(normalizedQuery)
       }),
     )
   }
@@ -123,8 +90,14 @@ export function search(query: string, options: SearchOptions = {}): DisplayVerb[
     const d2 = distance.get(v2.id) ?? 0
     if (d1 !== d2) return d1 - d2
     if (v1.root !== v2.root) return v1.root.localeCompare(v2.root)
-    const t1 = t(v1.id) ?? v1.id
-    const t2 = t(v2.id) ?? v2.id
+    const t1 = options.translate(v1.id) ?? ''
+    const t2 = options.translate(v2.id) ?? ''
     return normalizeQuery(t1).localeCompare(normalizeQuery(t2))
   })
 }
+
+export const search = memoize(
+  (query: string, options?: SearchOptions) => [normalizeQuery(query), options?.language].join(':'),
+  searchInternal,
+  { capacity: 10000 },
+)

@@ -5,12 +5,12 @@ import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
-import { search } from '../../paradigms/selection'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
 import { applyDiacriticsPreference, spell } from '../../paradigms/tokens'
 import {
   buildVerbFromId,
   type DisplayVerb,
+  findVerbsByRoot,
   formatFormLabel,
   getAvailableParadigms,
   getVerbById,
@@ -101,7 +101,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   }, [selectedVerb])
 
   const derivedForms = useMemo(
-    () => search(selectedVerb.root, { exactRoot: true }).sort((a, b) => a.form - b.form),
+    () => findVerbsByRoot(selectedVerb.root).toSorted((a, b) => a.form - b.form),
     [selectedVerb.root],
   )
 

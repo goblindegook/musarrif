@@ -3,6 +3,8 @@ import { describe, expect, test } from 'vitest'
 import { tokenize } from './tokens'
 import {
   buildVerbFromId,
+  findVerbsByRoot,
+  findVerbsByRootPrefix,
   formatFormLabel,
   getAvailableParadigms,
   getVerb,
@@ -66,6 +68,20 @@ describe('buildVerbFromId', () => {
   test('falls back to Form I when form segment is invalid', () => {
     const verb = buildVerbFromId('ktb-foo')
     expect(verb).toMatchObject({ form: 1, id: 'ktb-1' })
+  })
+})
+
+describe('root lookup helpers', () => {
+  test('findVerbsByRoot returns all derived forms for a root', () => {
+    const matches = findVerbsByRoot('درس')
+
+    expect(matches.map((verb) => verb.form)).toEqual([1, 2, 5, 10])
+  })
+
+  test('findVerbsByRootPrefix returns verbs whose roots start with the prefix', () => {
+    const matches = findVerbsByRootPrefix('كت')
+
+    expect(matches.find((verb) => verb.root === 'كتب')).toBeDefined()
   })
 })
 

@@ -75,7 +75,6 @@ export const MASDAR_PATTERNS = [
 ] as const
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
-
 export type PassiveVoice = 'none' | 'impersonal'
 export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
 
@@ -122,19 +121,12 @@ export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((raw) => {
 const verbsById = new Map<string, DisplayVerb>()
 for (const verb of verbs) verbsById.set(verb.id, verb)
 
-export const verbsByRoot = new Map<string, DisplayVerb[]>()
+export function findVerbsByRoot(query: string): readonly DisplayVerb[] {
+  return verbs.filter((verb) => verb.root === query || normalizeHamza(verb.root) === query)
+}
 
-for (const verb of verbs) {
-  const existing = verbsByRoot.get(verb.root)
-  if (existing) existing.push(verb)
-  else verbsByRoot.set(verb.root, [verb])
-
-  const normalizedRoot = normalizeHamza(verb.root)
-  if (normalizedRoot !== verb.root) {
-    const normalizedExisting = verbsByRoot.get(normalizedRoot)
-    if (normalizedExisting) normalizedExisting.push(verb)
-    else verbsByRoot.set(normalizedRoot, [verb])
-  }
+export function findVerbsByRootPrefix(prefix: string): readonly DisplayVerb[] {
+  return verbs.filter((verb) => verb.root.startsWith(prefix) || normalizeHamza(verb.root).startsWith(prefix))
 }
 
 export function getVerbById(id?: string): DisplayVerb | undefined {

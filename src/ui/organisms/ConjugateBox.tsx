@@ -1,10 +1,11 @@
+import { transliterate } from '@pacote/buckwalter'
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
-import { FORMS, synthesizeVerb, verbsByRoot } from '../../paradigms/verbs'
+import { FORMS, getVerbById, synthesizeVerb } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
@@ -49,7 +50,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
     if (!c1 || !c2 || !c3 || !form) return
     if (form === 1 && !vowelPattern) return
     const root = [c1, c2, c3].join('')
-    const existing = verbsByRoot.get(root)?.find((v) => v.form === form)
+    const existing = getVerbById(`${transliterate(root)}-${form}`)
     const nextVerb =
       existing?.form === 1 && existing.vowels === vowelPattern && (existing.masdars?.length ?? 0) > 0
         ? existing
