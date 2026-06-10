@@ -424,7 +424,8 @@
     "root": "'wy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3iil", "fu3il", "fi3aal"]
+    "masdars": ["fi3aal"],
+    "lexicalizedMasdars": ["<iwiy~", ">uwiy~"]
   },
   {
     "root": "'wy",
@@ -2517,7 +2518,7 @@
     "form": 1,
     "vowels": "a-i",
     "passiveVoice": "impersonal",
-    "masdars": ["fu3il"]
+    "lexicalizedMasdars": ["muDiy~"]
   },
   {
     "root": "mdH",

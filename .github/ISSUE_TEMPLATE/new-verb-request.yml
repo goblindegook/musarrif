@@ -70,18 +70,21 @@ body:
         - label: fa3l
         - label: fi3l
         - label: fu3l
+        - label: fa3al
         - label: fa3aal
         - label: fa3iil
+        - label: fa3ool
         - label: fi3aal
         - label: fu3aal
         - label: fu3ool
-        - label: fi3aala
-        - label: fu3aala
+        - label: fa3alaan
+        - label: fu3laan
+        - label: fa3aala
         - label: fa3la
+        - label: fi3aala
         - label: fi3la
         - label: fu3la
         - label: fi3al
-        - label: fu3il
         - label: mimi
     validations:
       required: false

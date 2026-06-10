@@ -32,7 +32,6 @@ const MASDAR_PATTERNS: readonly MasdarPattern[] = [
   'fi3l',
   'fi3la',
   'fu3aal',
-  'fu3il',
   'fu3l',
   'fu3la',
   'fu3laan',

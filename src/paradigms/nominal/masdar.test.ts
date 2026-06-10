@@ -215,7 +215,7 @@ describe('masdar', () => {
     })
 
     describe('hamzated hollow-defective roots', () => {
-      test.each([['ءوي', ['إِوِيّ', 'أُوِيّ', 'إِوَاء']]])('%s', (root, expected) => {
+      test.each([['ءوي', ['إِوَاء', 'إِوِيّ', 'أُوِيّ']]])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
     })

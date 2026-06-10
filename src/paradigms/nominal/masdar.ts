@@ -61,9 +61,6 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
     case 'fu3aal':
       return [c1, DAMMA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
 
-    case 'fu3il':
-      return [c1, DAMMA, c2, KASRA, c3, SHADDA]
-
     case 'fi3aal': {
       if (c3.isWeak) return [c1, KASRA, c2, FATHA, ALIF, HAMZA]
       return [c1, KASRA, c2.isWeak ? YEH : c2, FATHA, ALIF, c3]
@@ -90,9 +87,6 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
     case 'fi3aala':
       if (c2.isWeak) return [c1, KASRA, c3.isWeak ? WAW : YEH, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
       return [c1, KASRA, c2, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
-
-    case 'fi3iil':
-      return [c1, KASRA, c2, KASRA, c3, SHADDA]
 
     case 'mimi': {
       const vowel = isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA

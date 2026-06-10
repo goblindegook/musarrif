@@ -47,11 +47,7 @@ export function formatFormLabel(form: VerbForm, root: string): string {
   return root.length === 4 ? `${toRoman(form)}q` : toRoman(form)
 }
 
-// Not real, productive masdar patterns:
-type LexicalMasdarPattern = 'fi3iil' | 'fu3il'
-
 export type MasdarPattern =
-  | LexicalMasdarPattern
   // Basic
   | 'fa3l' // simple action
   | 'fi3l' // mental states, abstract qualities
