@@ -37,14 +37,13 @@ function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): Displa
   addMatches(candidates.flatMap(matchVerbsForCandidate))
   if (buckwalterCandidate) addMatches(matchVerbsForCandidate(buckwalterCandidate))
 
-  if (options.language) {
+  if (options.language)
     addMatches(
       verbs.filter((v) => {
         const translated = options.translate(v.id)
         return normalizeQuery(translated ?? '').includes(normalizedQuery)
       }),
     )
-  }
 
   return matches.sort((v1, v2) => {
     const d1 = distance.get(v1.id) ?? 0

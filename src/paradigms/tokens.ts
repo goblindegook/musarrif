@@ -12,10 +12,10 @@ export class Token {
 
   constructor(raw: string) {
     this.raw = raw
-    this.isHamza = isHamzatedLetter(raw)
-    this.isWeak = isWeakLetter(raw)
-    this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(raw)
     this.isCombiningMark = /\p{Mn}/u.test(raw)
+    this.isHamza = ['\u0621', '\u0623', '\u0624', '\u0625', '\u0626'].includes(raw)
+    this.isVowel = ['\u064E', '\u064F', '\u0650'].includes(raw)
+    this.isWeak = isWeakLetter(raw)
   }
 
   equals(other?: string | Token): boolean {
@@ -78,28 +78,21 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
 
 export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
   if (preference === 'all') return input
-  if (preference === 'some') return stripObviousDiacritics(input)
+  if (preference === 'some')
+    return detokenize(
+      tokenize(input).reduce<Token[]>((result, current, index, chars) => {
+        if (current.equals(SUKOON)) return result
+        const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
+        if (LONG_VOWEL_TARGETS[current.raw]?.has(nextBase?.raw ?? '')) return result
+        result.push(current)
+        return result
+      }, []),
+    )
   return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
-}
-
-function stripObviousDiacritics(input: string): string {
-  return detokenize(
-    tokenize(input).reduce<Token[]>((result, current, index, chars) => {
-      if (current.equals(SUKOON)) return result
-      const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
-      if (LONG_VOWEL_TARGETS[current.raw]?.has(nextBase?.raw ?? '')) return result
-      result.push(current)
-      return result
-    }, []),
-  )
 }
 
 export function isWeakLetter(value = ''): boolean {
   return ['\u0627', '\u0648', '\u0649', '\u064A'].includes(value)
-}
-
-function isHamzatedLetter(token = ''): boolean {
-  return ['\u0621', '\u0623', '\u0624', '\u0625', '\u0626'].includes(token)
 }
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.raw)

@@ -25,52 +25,44 @@ export interface RootAnalysis {
 }
 
 export function analyzeRoot(root: readonly Token[]): RootAnalysis {
-  const letters = Array.from(root)
   const weakPositions: number[] = []
   const hamzaPositions: number[] = []
 
-  letters.forEach((letter, index) => {
+  root.forEach((letter, index) => {
     if (letter.isWeak) weakPositions.push(index)
     if (letter.isHamza) hamzaPositions.push(index)
   })
 
-  const [c1, c2, c3] = Array.from(letters)
-  const hasHamza = hamzaPositions.length > 0
+  return { type: analyzeType(root, weakPositions, hamzaPositions), weakPositions, hamzaPositions }
+}
 
-  const toWeakVariant = (letter: Token, wawType: RootAnalysisType, yaaType: RootAnalysisType): RootAnalysisType =>
-    letter.equals(WAW) ? wawType : yaaType
+function analyzeType(
+  root: readonly Token[],
+  weakPositions: readonly number[],
+  hamzaPositions: readonly number[],
+): RootAnalysisType {
+  const [c1, c2, c3] = Array.from(root)
 
-  if (hasHamza) {
-    if (c2.isWeak && c3.isWeak) return { type: 'hamzated-hollow-defective', weakPositions, hamzaPositions }
-    if (c2.isWeak) {
-      return {
-        type: toWeakVariant(c2, 'hamzated-hollow-waw', 'hamzated-hollow-yaa'),
-        weakPositions,
-        hamzaPositions,
-      }
-    }
-    if (c3.isWeak) {
-      return {
-        type: toWeakVariant(c3, 'hamzated-defective-waw', 'hamzated-defective-yaa'),
-        weakPositions,
-        hamzaPositions,
-      }
-    }
-    if (letters[1] === letters[2]) return { type: 'hamzated-doubled', weakPositions, hamzaPositions }
-    return { type: 'hamzated', weakPositions, hamzaPositions }
+  if (hamzaPositions.length > 0) {
+    if (c2.isWeak && c3.isWeak) return 'hamzated-hollow-defective'
+    if (c2.isWeak) return toWeakVariant(c2, 'hamzated-hollow-waw', 'hamzated-hollow-yaa')
+    if (c3.isWeak) return toWeakVariant(c3, 'hamzated-defective-waw', 'hamzated-defective-yaa')
+    if (c2.equals(c3)) return 'hamzated-doubled'
+    return 'hamzated'
   }
 
   if (weakPositions.length >= 2) {
     const dominantIndex = weakPositions.includes(1) ? 1 : 2
-    return {
-      type: toWeakVariant(letters[dominantIndex], 'doubly-weak-waw', 'doubly-weak-yaa'),
-      weakPositions,
-      hamzaPositions,
-    }
+    return toWeakVariant(root[dominantIndex], 'doubly-weak-waw', 'doubly-weak-yaa')
   }
-  if (c1.isWeak) return { type: 'assimilated', weakPositions, hamzaPositions }
-  if (c2.isWeak) return { type: toWeakVariant(c2, 'hollow-waw', 'hollow-yaa'), weakPositions, hamzaPositions }
-  if (c3.isWeak) return { type: toWeakVariant(c3, 'defective-waw', 'defective-yaa'), weakPositions, hamzaPositions }
-  if (letters[1] === letters[2]) return { type: 'doubled', weakPositions, hamzaPositions }
-  return { type: 'sound', weakPositions, hamzaPositions }
+
+  if (c1.isWeak) return 'assimilated'
+  if (c2.isWeak) return toWeakVariant(c2, 'hollow-waw', 'hollow-yaa')
+  if (c3.isWeak) return toWeakVariant(c3, 'defective-waw', 'defective-yaa')
+  if (c2.equals(c3)) return 'doubled'
+  return 'sound'
+}
+
+function toWeakVariant(letter: Token, wawType: RootAnalysisType, yaaType: RootAnalysisType): RootAnalysisType {
+  return letter.equals(WAW) ? wawType : yaaType
 }
