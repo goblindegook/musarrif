@@ -93,11 +93,6 @@ const ImportUserData = v.pipe(
 )
 
 export function getUserData() {
-  const DEFAULT_DIMENSION_STORE = {
-    profile: DEFAULT_DIMENSION_PROFILE,
-    windows: DEFAULT_DIMENSION_WINDOWS,
-  }
-
   return {
     version: 1,
     settings: {
@@ -108,7 +103,11 @@ export function getUserData() {
     favouriteVerbs: load<string[]>('conjugator:favouriteVerbs', []),
     trackedExercises: load<SerializedDailyActivity[]>('conjugator:exercise:daily', [], parseTrackedExercises),
     srs: load<SrsStore>('conjugator:srs', {}, parseSrsStore),
-    dimensions: load<DimensionStore>('conjugator:dimensions', DEFAULT_DIMENSION_STORE, parseDimensionStore),
+    dimensions: load<DimensionStore>(
+      'conjugator:dimensions',
+      { profile: DEFAULT_DIMENSION_PROFILE, windows: DEFAULT_DIMENSION_WINDOWS },
+      parseDimensionStore,
+    ),
   }
 }
 

@@ -30,12 +30,10 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
     <PanelContainer>
       <TitleStack>
         <PanelTitleRow dir="rtl" lang="ar">
-          <PanelTitleGroup>
-            <Verb>
-              {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
-              {formatArabic(verb.lemma)}
-            </Verb>
-          </PanelTitleGroup>
+          <Lemma>
+            {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
+            {formatArabic(verb.lemma)}
+          </Lemma>
           {actions}
         </PanelTitleRow>
         {translation && (
@@ -63,19 +61,12 @@ const PanelTitleRow = styled('div')`
   margin-top: 0;
 `
 
-const PanelTitleGroup = styled('div')`
+const Lemma = styled('h2')`
   display: flex;
-  flex-direction: column;
   flex: 1;
-  min-width: 0;
-  gap: 0.1rem;
-`
-
-const Verb = styled('h2')`
   margin: 0;
   font-size: 2rem;
   font-weight: 600;
-  min-width: 0;
 `
 
 const Translation = styled('p')`
