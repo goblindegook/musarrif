@@ -18,23 +18,21 @@ import {
 
 export function seatHamzas(word: readonly Token[]): readonly Token[] {
   return tokenize(
-    word.map((token, index, tokens) => {
+    word.map((token, index) => {
       if (!token.equals(HAMZA)) return token
 
-      const vowel = findVowel(tokens, index)
+      const vowel = findVowel(word, index)
 
       // When at the start, seat hamza on alif:
       if (index === 0) return vowel?.equals(KASRA) ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
-      const before = tokens[index - 1]
-      const after = tokens[index + 1]
-      const longVowelBefore = longVowelAt(tokens, index - 2)
+      const before = word[index - 1]
+      const after = word[index + 1]
+      const longVowelBefore = longVowelAt(word, index - 2)
 
       // Word-final hamza
-      if (!tokens.at(index + 2)) {
-        if (index < tokens.length - 1 && !after.isVowel) {
-          if (longVowelBefore === 'i') return HAMZA_ON_YEH
-        }
+      if (!word.at(index + 2)) {
+        if (index < word.length - 1 && longVowelBefore === 'i' && !after.isVowel) return HAMZA_ON_YEH
 
         // case vowel doesn't govern the seat, only the preceding vowel does:
         if (before.equals(KASRA)) return HAMZA_ON_YEH
@@ -47,13 +45,12 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
       if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
 
       if (before.equals(SUKOON)) {
-        const longVowelAfter = longVowelAt(tokens, index + 1)
-        if (tokens[index - 2].equals(YEH)) {
-          if (longVowelAfter === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle
+        if (word[index - 2].equals(YEH)) {
+          if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle
           return HAMZA_ON_YEH
         }
-        if (tokens[index - 2].equals(WAW)) {
-          if (longVowelAfter === 'i') return HAMZA_ON_YEH // FIXME: for w'y-1 passive participle
+        if (word[index - 2].equals(WAW)) {
+          if (longVowelAt(word, index + 1) === 'i') return HAMZA_ON_YEH // FIXME: for w'y-1 passive participle
           return HAMZA
         }
       }

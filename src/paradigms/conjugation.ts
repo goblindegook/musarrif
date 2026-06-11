@@ -10,28 +10,19 @@ import type { VerbTense } from './tense'
 import type { Verb } from './verbs'
 
 export function conjugate(verb: Verb, verbTense: VerbTense): Record<PronounId, string> {
-  switch (verbTense) {
-    case 'active.past':
-      return conjugatePast(verb)
-    case 'active.present.indicative':
-      return conjugatePresentMood(verb, 'indicative')
-    case 'active.present.subjunctive':
-      return conjugatePresentMood(verb, 'subjunctive')
-    case 'active.present.jussive':
-      return conjugatePresentMood(verb, 'jussive')
-    case 'active.future':
-      return conjugateFuture(verb)
-    case 'active.imperative':
-      return conjugateImperative(verb)
-    case 'passive.past':
-      return conjugatePassivePast(verb)
-    case 'passive.present.indicative':
-      return conjugatePassivePresentMood(verb, 'indicative')
-    case 'passive.present.subjunctive':
-      return conjugatePassivePresentMood(verb, 'subjunctive')
-    case 'passive.present.jussive':
-      return conjugatePassivePresentMood(verb, 'jussive')
-    case 'passive.future':
-      return conjugatePassiveFuture(verb)
-  }
+  return CONJUGATE[verbTense](verb)
 }
+
+const CONJUGATE = {
+  'active.past': conjugatePast,
+  'active.present.indicative': (verb: Verb) => conjugatePresentMood(verb, 'indicative'),
+  'active.present.subjunctive': (verb: Verb) => conjugatePresentMood(verb, 'subjunctive'),
+  'active.present.jussive': (verb: Verb) => conjugatePresentMood(verb, 'jussive'),
+  'active.future': conjugateFuture,
+  'active.imperative': conjugateImperative,
+  'passive.past': conjugatePassivePast,
+  'passive.present.indicative': (verb: Verb) => conjugatePassivePresentMood(verb, 'indicative'),
+  'passive.present.subjunctive': (verb: Verb) => conjugatePassivePresentMood(verb, 'subjunctive'),
+  'passive.present.jussive': (verb: Verb) => conjugatePassivePresentMood(verb, 'jussive'),
+  'passive.future': conjugatePassiveFuture,
+} as const

@@ -196,7 +196,30 @@ function readCaptionArabic(table: HTMLTableElement): string[] {
   return caption ? extractArabicStrings(caption) : []
 }
 
-export function parseArabicConjugationTable(html: string, lemma: string): ParsedParadigms {
+type RootDeclaration = { el: Element; arabicRoot: string }
+
+function findRootDeclarations(arabicSection: Element): RootDeclaration[] {
+  const declarations: RootDeclaration[] = []
+  const tables = arabicSection.querySelectorAll('table.inflection-table')
+  for (const table of tables) {
+    const header = table.querySelector('th')
+    if (!header?.textContent?.trim().toLowerCase().includes('root')) continue
+    const arabSpan = table.querySelector('.Arab')
+    const arabRoot = arabSpan?.textContent?.replace(/\s+/g, '').trim()
+    if (arabRoot) declarations.push({ el: table, arabicRoot: arabRoot })
+  }
+  return declarations
+}
+
+function nearestRoot(table: HTMLTableElement, declarations: RootDeclaration[]): string | undefined {
+  let result: string | undefined
+  for (const { el, arabicRoot } of declarations) {
+    if (el.compareDocumentPosition(table) & 4 /* DOCUMENT_POSITION_FOLLOWING */) result = arabicRoot
+  }
+  return result
+}
+
+export function parseArabicConjugationTable(html: string, lemma: string, root?: string): ParsedParadigms {
   const dom = new JSDOM(html)
   const doc = dom.window.document
   const arabicHeading = doc.querySelector('h2#Arabic')
@@ -206,13 +229,18 @@ export function parseArabicConjugationTable(html: string, lemma: string): Parsed
   const tables = findConjugationTables(arabicSection)
   if (tables.length === 0) throw new Error('No Arabic conjugation table was found on the page')
 
-  const exactMatch = tables.find((table) => readCaptionArabic(table).includes(lemma))
+  const rootDeclarations = findRootDeclarations(arabicSection)
+  const candidateTables =
+    root && rootDeclarations.length > 0 ? tables.filter((t) => nearestRoot(t, rootDeclarations) === root) : tables
+  const tablesToSearch = candidateTables.length > 0 ? candidateTables : tables
+
   const normalizedLemma = normalizeArabicKey(lemma)
-  const normalizedMatch = tables.find((table) =>
+  const exactMatch = tablesToSearch.find((table) => readCaptionArabic(table).includes(lemma))
+  const normalizedMatch = tablesToSearch.find((table) =>
     readCaptionArabic(table).some((captionWord) => normalizeArabicKey(captionWord) === normalizedLemma),
   )
   const matchingTable = exactMatch ?? normalizedMatch
-  const table = matchingTable ?? tables[0]
+  const table = matchingTable ?? tablesToSearch[0]
 
   if (!matchingTable) {
     throw new Error(

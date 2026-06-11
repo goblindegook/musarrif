@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { transliterateReverse } from '@pacote/buckwalter'
 import { applyDiacriticsPreference } from '../src/paradigms/tokens'
-import { synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
+import { getVerbById, synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
 import { clamp, parseInteger } from '../src/primitives/numbers'
 import { parseArabicConjugationTable } from './lib/parse-wiktionary.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
@@ -16,11 +16,15 @@ function usage(): never {
   throw new Error('Usage: npm run wiktionary <verb-slug> (example: npm run wiktionary ktb-1)')
 }
 
-function resolveSlugForWiktionary(slug: string): string {
+function resolveSlugForWiktionary(slug: string): { lemma: string; root: string | undefined } {
+  const existing = getVerbById(slug)
+  if (existing) {
+    return { lemma: existing.lemma, root: existing.root }
+  }
   const [rootId, rawForm] = slug.split('-')
   const form = clamp(parseInteger(rawForm, 1), 1, 10) as VerbForm
   const root = transliterateReverse(rootId)
-  return synthesizeVerb(root, form).lemma
+  return { lemma: synthesizeVerb(root, form).lemma, root }
 }
 
 async function fetchWiktionaryPage(title: string): Promise<string> {
@@ -34,9 +38,9 @@ async function run() {
   const slug = process.argv[2]?.trim()
   if (!slug) usage()
 
-  const lemma = resolveSlugForWiktionary(slug)
+  const { lemma, root } = resolveSlugForWiktionary(slug)
   const html = await fetchWiktionaryPage(applyDiacriticsPreference(lemma, 'none'))
-  const parsed = parseArabicConjugationTable(html, lemma)
+  const parsed = parseArabicConjugationTable(html, lemma, root)
   const fileText = renderVerbTestFile(slug, parsed)
 
   mkdirSync(OUTPUT_DIR, { recursive: true })

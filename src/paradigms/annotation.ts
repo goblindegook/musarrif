@@ -122,13 +122,6 @@ export interface TaggedChar {
   role: MorphemeRole
 }
 
-/**
- * Build a `Morpheme[]` from a flat tagged-character array.
- *
- * - Collapses `c + SUKOON + c` (same consonant) → `c + SHADDA`, preserving role.
- * - Groups consecutive same-role characters into a single morpheme.
- * - NFC-normalises each morpheme text.
- */
 export function buildMorphemes(tagged: TaggedChar[]): Morpheme[] {
   // 1. Handle gemination: c + SUKOON + c → c + SHADDA (same role)
   const processed: TaggedChar[] = []
