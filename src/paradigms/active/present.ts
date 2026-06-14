@@ -135,11 +135,7 @@ function buildFemininePlural(stem: readonly Token[], verb: Verb): readonly Token
 
       if (c2.isWeak && c3.isWeak) return [...dropFinalDiacritic(stem), ...suffix]
 
-      if (c2.isWeak && stem.some((t) => t.equals(ALIF)))
-        return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
-
-      // FIXME: isFormIPastVowel doesn't make sense
-      if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
+      if (c2.isWeak && verb.presentHollow !== 'uncontracted')
         return [...dropFinalDiacritic(shortenHollowStem(stem)), ...suffix]
 
       return [...dropFinalDiacritic(stem), ...suffix]
@@ -444,7 +440,8 @@ function derivePresentFormI(verb: FormIVerb): readonly Token[] {
 
   if (verb.presentHollow === 'uncontracted') return [...prefix, c1, SUKOON, c2, FATHA, c3, DAMMA]
 
-  // FIXME: dodgy isFormIPastVowel
+  // YEH-hollow with FATHA-class past (a-?) uses long-I regardless of present vowel slot
+  // e.g. زاد (a-a) → يَزِيدُ not يَزَادُ; contrast خَيِلَ (i-a) → يَخَالُ
   if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA)) return [...prefix, c1, ...longVowel(KASRA), c3, DAMMA]
 
   if (c2.isWeak) return [...prefix, c1, ...longVowel(presentVowel), c3, DAMMA]
