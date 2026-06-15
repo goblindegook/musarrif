@@ -62,7 +62,6 @@ describe('masdarRootExercise', () => {
     const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(exercise.explanation).toMatchObject({
       category: 'nominal',
-      form: '1',
       nominal: 'masdar',
       isMasdarMimi: true,
     })

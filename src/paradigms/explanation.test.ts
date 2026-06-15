@@ -435,7 +435,7 @@ describe('renderExplanation', () => {
       category: 'verb',
       paradigmRoots: ['ق', 'و', 'ل'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'قَالَ',
       rootType: 'hollow-waw',
       vowels: 'a-u',
@@ -450,8 +450,8 @@ describe('renderExplanation', () => {
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
-    expect(renderExplanation(testExplanationLayers({ form: '1', rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
-      'explanation.root.sound explanation.form.1 explanation.form-i-pattern.a-u',
+    expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
+      'explanation.root.sound explanation.form.1-action explanation.form-i-pattern.a-u',
       'explanation.tense.active.past explanation.tense.active.past.form-i',
       'explanation.pronoun.base-form',
     ])
@@ -462,7 +462,7 @@ describe('renderExplanation', () => {
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
-    expect(render(testExplanationLayers({ form: '1', vowels: 'a-u', tense: 'active.past' }))).toContain(
+    expect(render(testExplanationLayers({ vowels: 'a-u', tense: 'active.past' }))).toContain(
       'explanation.tense.active.past.form-i',
     )
   })
@@ -487,7 +487,7 @@ describe('renderExplanation', () => {
         category: 'verb',
         paradigmRoots: ['ق', 'و', 'ل'],
         paradigmForm: 1,
-        form: '1',
+        form: '1-action',
         arabic: 'قَالَ',
         rootType: 'hollow-waw',
         vowels: 'a-u',
@@ -628,7 +628,7 @@ describe('resolveNominalExplanationLayers', () => {
 
   test('returns form number', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.form).toBe('1')
+    expect(layers.form).toBe('1-action')
   })
 
   test('returns nominal kind', () => {
@@ -696,13 +696,13 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1',
+      'explanation.root.sound explanation.form.1-action',
       'explanation.nominal.activeParticiple',
     ])
   })
@@ -712,13 +712,13 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'مَكْتُوب',
       rootType: 'sound',
       nominal: 'passiveParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1',
+      'explanation.root.sound explanation.form.1-action',
       'explanation.nominal.passiveParticiple',
     ])
   })
@@ -728,13 +728,13 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'كِتَابَة',
       rootType: 'sound',
       nominal: 'masdar',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1',
+      'explanation.root.sound explanation.form.1-action',
       'explanation.nominal.masdar.form-i',
     ])
   })
@@ -744,7 +744,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['و', 'ع', 'د'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: ['وَعْد', 'مَوْعِد'],
       rootType: 'assimilated',
       nominal: 'masdar',
@@ -752,7 +752,7 @@ describe('renderExplanation with nominal', () => {
       masdarPattern: 'مَفْعِل',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.assimilated explanation.form.1',
+      'explanation.root.assimilated explanation.form.1-action',
       'explanation.nominal.masdar.form-i-mimi',
     ])
   })
@@ -762,7 +762,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'كَاتِب',
       rootType: 'sound',
       vowels: 'a-u',
@@ -776,7 +776,7 @@ describe('renderExplanation with nominal', () => {
       category: 'nominal',
       paradigmRoots: ['ك', 'ت', 'ب'],
       paradigmForm: 1,
-      form: '1',
+      form: '1-action',
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',

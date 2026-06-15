@@ -18,16 +18,28 @@ describe('FormInsights', () => {
   })
 
   describe('semantic anchor', () => {
-    test('Form I shows "Base meaning"', () => {
-      const verb = buildVerbFromId('ktb-1')!
-      renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.getByText('Base meaning')).toBeInTheDocument()
-    })
-
     test('Form II shows "Causative · Intensive"', () => {
       const verb = buildVerbFromId('ktb-2')!
       renderWithProviders(<FormInsights verb={verb} />)
       expect(screen.getByText('Causative · Intensive')).toBeInTheDocument()
+    })
+
+    test('fa\'ala Form I shows "Base meaning · Action"', () => {
+      const verb = buildVerbFromId('ktb-1')!
+      renderWithProviders(<FormInsights verb={verb} />)
+      expect(screen.getByText('Base meaning · Action')).toBeInTheDocument()
+    })
+
+    test('fa\'ila Form I shows "Base meaning · Intermediate"', () => {
+      const verb = buildVerbFromId('Elm-1')!
+      renderWithProviders(<FormInsights verb={verb} />)
+      expect(screen.getByText('Base meaning · Intermediate')).toBeInTheDocument()
+    })
+
+    test('fa\'ula Form I shows "Base meaning · State · Quality"', () => {
+      const verb = buildVerbFromId('Hsn-1')!
+      renderWithProviders(<FormInsights verb={verb} />)
+      expect(screen.getByText('Base meaning · State · Quality')).toBeInTheDocument()
     })
   })
 
@@ -41,10 +53,10 @@ describe('FormInsights', () => {
   })
 
   describe('BQI biliteral doubling', () => {
-    test('BQI verb shows "Biliteral doubling · Repetition" anchor', () => {
+    test('BQI verb shows "Repetitive · Intensive" anchor', () => {
       const verb = buildVerbFromId('zlzl-1')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.getByText('Biliteral doubling · Repetition')).toBeInTheDocument()
+      expect(screen.getByText('Repetitive · Intensive')).toBeInTheDocument()
     })
 
     test('BQI verb does not show generic "Base meaning" anchor', () => {

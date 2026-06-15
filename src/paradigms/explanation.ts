@@ -50,7 +50,9 @@ const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
 }
 
 export type VerbFormDescriptor =
-  | '1'
+  | '1-action'
+  | '1-intermediate'
+  | '1-stative'
   | '2'
   | '3'
   | '4'
@@ -61,16 +63,24 @@ export type VerbFormDescriptor =
   | '9'
   | '10'
   | '1q'
+  | '1q-bd'
   | '2q'
   | '3q'
   | '4q'
-  | '1q-bd'
 
-export function toFormDescriptor(verb: Pick<Verb, 'form' | 'rootTokens'>): VerbFormDescriptor {
+export function toFormDescriptor(
+  verb: Pick<Verb, 'form' | 'rootTokens'> & { vowels?: FormIPattern },
+): VerbFormDescriptor {
   if (verb.rootTokens.length > 3) {
     const [c1, c2, c3, c4] = verb.rootTokens
     if (verb.form === 1 && c1.equals(c3) && c2.equals(c4)) return '1q-bd'
     return `${verb.form}q` as VerbFormDescriptor
+  }
+  if (verb.form === 1 && verb.vowels) {
+    const past = verb.vowels[0]
+    if (past === 'u') return '1-stative'
+    if (past === 'i') return '1-intermediate'
+    return '1-action'
   }
   return String(verb.form) as VerbFormDescriptor
 }

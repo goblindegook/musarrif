@@ -2289,7 +2289,8 @@
   {
     "root": "kbr",
     "form": 1,
-    "vowels": "u-u"
+    "vowels": "u-u",
+    "passiveVoice": "impersonal"
   },
   {
     "root": "kbr",
