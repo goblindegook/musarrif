@@ -167,7 +167,7 @@ describe('Form', () => {
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
-    expect(within(dialog).getByText(/reflexive or passive counterpart to Form II/i)).toBeInTheDocument()
+    expect(within(dialog).getByText(/simultaneously causer and caused/i)).toBeInTheDocument()
     const links = Array.from(dialog.querySelectorAll('a[href]'))
     expect(links.length).toBeGreaterThan(0)
     expect(links.length).toBeLessThanOrEqual(5)
