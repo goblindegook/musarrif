@@ -450,11 +450,13 @@ describe('renderExplanation', () => {
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
-    expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual([
-      'explanation.root.sound explanation.form.1-action explanation.form-i-pattern.a-u',
-      'explanation.tense.active.past explanation.tense.active.past.form-i',
-      'explanation.pronoun.base-form',
-    ])
+    expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual(
+      [
+        'explanation.root.sound explanation.form.1-action explanation.form-i-pattern.a-u',
+        'explanation.tense.active.past explanation.tense.active.past.form-i',
+        'explanation.pronoun.base-form',
+      ],
+    )
   })
 
   test('includes form description in first paragraph for non-form-I', () => {

@@ -10,7 +10,7 @@ describe('filterMasteredLayers', () => {
     paradigmForm: 1,
     arabic: 'كَتَبَ',
     rootType: 'sound',
-    form: '1',
+    form: '1-action',
     vowels: 'a-u',
     tense: 'active.past',
     pronoun: '3ms',
@@ -22,7 +22,7 @@ describe('filterMasteredLayers', () => {
     const result = filterMasteredLayers({}, FULL_LAYERS)
     expect(result).toMatchObject({
       rootType: 'sound',
-      form: '1',
+      form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
       pronoun: '3ms',
@@ -41,7 +41,7 @@ describe('filterMasteredLayers', () => {
     const result = filterMasteredLayers(store, FULL_LAYERS)
     expect(result).toMatchObject({
       rootType: 'sound',
-      form: '1',
+      form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
       pronoun: '3ms',
