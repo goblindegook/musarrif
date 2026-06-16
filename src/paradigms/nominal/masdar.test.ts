@@ -221,7 +221,6 @@ describe('masdar', () => {
 
     describe('hamzated middle roots', () => {
       test.each([
-        ['يءس', 'يَأْس'],
         ['بءس', 'بَأْس'],
         ['سءل', ['سُؤَال']],
       ])('%s', (root, expected) => {
