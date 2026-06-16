@@ -19,9 +19,11 @@
     "lint:fix": "biome check --write --unsafe .",
     "format": "npm run lint:fix && biome format --write .",
     "add:verb": "tsx scripts/verb.mts",
+    "add:tests:elixirfm": "tsx scripts/elixirfm.mts",
     "add:tests:wiktionary": "tsx scripts/wiktionary.mts",
     "debug:explain": "tsx scripts/explain.mts",
-    "debug:srs": "tsx scripts/srs.mts"
+    "debug:srs": "tsx scripts/srs.mts",
+    "debug:elixirfm": "tsx scripts/elixirfm-compare.mts"
   },
   "dependencies": {
     "@pacote/buckwalter": "^0.1.1",

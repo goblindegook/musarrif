@@ -2408,7 +2408,8 @@
   },
   {
     "root": "ktb",
-    "form": 7
+    "form": 7,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "kvr",
