@@ -25,13 +25,12 @@ const TENSE_PREFIX: Record<VerbTense, string | null> = {
   'active.present.indicative': 'VIIA-',
   'active.present.subjunctive': 'VISA-',
   'active.present.jussive': 'VIJA-',
-  // ponytail: future = indicative + سَ prefix; compare against same tag
-  'active.future': 'VIIA-',
+  'active.future': null, // ElixirFM has no future tense
   'active.imperative': 'VCJ---',
   'passive.present.indicative': 'VIIP-',
   'passive.present.subjunctive': 'VISP-',
   'passive.present.jussive': 'VIJP-',
-  'passive.future': 'VIIP-',
+  'passive.future': null, // ElixirFM has no future tense
 }
 
 const FUTURE_TENSES = new Set<VerbTense>(['active.future', 'passive.future'])

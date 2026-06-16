@@ -191,7 +191,15 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
       masculineDualBase: [...prefix, SUKOON, c2, FATHA],
     }
 
-  if (c2.equals(c3)) return buildForms([...prefix, FATHA, c2, SUKOON, c3], c3)
+  if (c2.equals(c3)) {
+    return {
+      base: [...prefix, FATHA, c2, SUKOON, c3, FATHA],
+      suffixedBase: [...prefix, SUKOON, c2, FATHA, c3],
+      feminineSingularDualBase: [...prefix, FATHA, c2, SUKOON, c3],
+      masculineDualBase: [...prefix, FATHA, c2, SUKOON, c3, FATHA],
+      thirdPersonMasculinePluralBase: [...prefix, FATHA, c2, SUKOON, c3, DAMMA],
+    }
+  }
 
   if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH)
 

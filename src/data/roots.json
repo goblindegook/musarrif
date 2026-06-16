@@ -928,7 +928,8 @@
     "root": "Hbb",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fu3l"]
+    "masdars": ["fu3l"],
+    "lexicalizedMasdars": ["maHaba~p"]
   },
   {
     "root": "Hbb",
@@ -936,7 +937,8 @@
   },
   {
     "root": "Hbb",
-    "form": 4
+    "form": 4,
+    "lexicalizedMasdars": ["Hub~", "maHaba~p"]
   },
   {
     "root": "Hbb",

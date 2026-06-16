@@ -1310,6 +1310,24 @@ describe('active past', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
+
+      test('أَمَدَّ conjugation', () => {
+        expect(conjugatePast(getVerb('مدد', 4))).toEqualT({
+          '1s': 'أَمْدَدْتُ',
+          '2ms': 'أَمْدَدْتَ',
+          '2fs': 'أَمْدَدْتِ',
+          '3ms': 'أَمَدَّ',
+          '3fs': 'أَمَدَّتْ',
+          '2d': 'أَمْدَدْتُمَا',
+          '3md': 'أَمَدَّا',
+          '3fd': 'أَمَدَّتَا',
+          '1p': 'أَمْدَدْنَا',
+          '2mp': 'أَمْدَدْتُمْ',
+          '2fp': 'أَمْدَدْتُنَّ',
+          '3mp': 'أَمَدُّوا',
+          '3fp': 'أَمْدَدْنَ',
+        })
+      })
     })
 
     describe('hollow roots', () => {
