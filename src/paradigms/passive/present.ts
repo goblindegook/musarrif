@@ -115,9 +115,10 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly To
 }
 
 function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  const [, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = verb.rootTokens
 
-  if (c2.isHamza) return []
+  // Contract only when c1 is sound (رأى → يُرَى); keep hamza when c1 is weak (وَأَى → يُوءَى)
+  if (!c1.isWeak && c2.isHamza) return []
 
   if (c2.equals(c3)) {
     if (isFemininePlural(pronounId)) return [c2, FATHA]
