@@ -3273,7 +3273,8 @@
   {
     "root": "rdd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
   },
   {
     "root": "rdd",
