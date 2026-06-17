@@ -9,9 +9,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("rdd-1", () => {
+describe('rdd-1', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("rdd-1")!)).toEqualT({
+    expect(conjugatePast(getVerbById('rdd-1')!)).toEqualT({
       '1s': 'رَدَدْتُ',
       '2ms': 'رَدَدْتَ',
       '2fs': 'رَدَدْتِ',
@@ -29,7 +29,7 @@ describe("rdd-1", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("rdd-1")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('rdd-1')!, 'indicative')).toEqualT({
       '1s': 'أَرُدُّ',
       '2ms': 'تَرُدُّ',
       '2fs': 'تَرُدِّينَ',
@@ -47,7 +47,7 @@ describe("rdd-1", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("rdd-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('rdd-1')!, 'subjunctive')).toEqualT({
       '1s': 'أَرُدَّ',
       '2ms': 'تَرُدَّ',
       '2fs': 'تَرُدِّي',
@@ -65,7 +65,7 @@ describe("rdd-1", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("rdd-1")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('rdd-1')!, 'jussive')).toEqualT({
       '1s': 'أَرُدَّ',
       '2ms': 'تَرُدَّ',
       '2fs': 'تَرُدِّي',
@@ -83,7 +83,7 @@ describe("rdd-1", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("rdd-1")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('rdd-1')!)).toMatchObjectT({
       '2ms': 'رُدَّ',
       '2fs': 'رُدِّي',
       '2d': 'رُدَّا',
@@ -93,7 +93,7 @@ describe("rdd-1", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("rdd-1")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('rdd-1')!)).toEqualT({
       '1s': 'رُدِدْتُ',
       '2ms': 'رُدِدْتَ',
       '2fs': 'رُدِدْتِ',
@@ -111,7 +111,7 @@ describe("rdd-1", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("rdd-1")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('rdd-1')!, 'indicative')).toEqualT({
       '1s': 'أُرَدُّ',
       '2ms': 'تُرَدُّ',
       '2fs': 'تُرَدِّينَ',
@@ -129,7 +129,7 @@ describe("rdd-1", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("rdd-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('rdd-1')!, 'subjunctive')).toEqualT({
       '1s': 'أُرَدَّ',
       '2ms': 'تُرَدَّ',
       '2fs': 'تُرَدِّي',
@@ -147,7 +147,7 @@ describe("rdd-1", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("rdd-1")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('rdd-1')!, 'jussive')).toEqualT({
       '1s': 'أُرَدَّ',
       '2ms': 'تُرَدَّ',
       '2fs': 'تُرَدِّي',
@@ -165,14 +165,14 @@ describe("rdd-1", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("rdd-1")!)).toEqualT('رَادّ')
+    expect(deriveActiveParticiple(getVerbById('rdd-1')!)).toEqualT('رَادّ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("rdd-1")!)).toEqualT('مَرْدُود')
+    expect(derivePassiveParticiple(getVerbById('rdd-1')!)).toEqualT('مَرْدُود')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("rdd-1")!)).toEqualT(['رَدّ'])
+    expect(deriveMasdar(getVerbById('rdd-1')!)).toEqualT(['رَدّ'])
   })
 })

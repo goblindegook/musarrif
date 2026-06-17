@@ -3278,7 +3278,16 @@
   },
   {
     "root": "rdd",
+    "form": 2
+  },
+  {
+    "root": "rdd",
     "form": 3
+  },
+  {
+    "root": "rdd",
+    "form": 5,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "rdd",
@@ -3288,6 +3297,10 @@
     "root": "rdd",
     "form": 8,
     "passiveVoice": "impersonal"
+  },
+  {
+    "root": "rdd",
+    "form": 10
   },
   {
     "root": "rdy",
