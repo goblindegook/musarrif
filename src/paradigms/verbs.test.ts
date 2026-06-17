@@ -392,6 +392,7 @@ describe('getAvailableParadigms', () => {
   })
 
   test.each<[string, VerbForm]>([
+    ['Ewm', 1],
     ['جلس', 1],
     ['حبط', 1],
     ['سعد', 1],

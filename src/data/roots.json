@@ -843,7 +843,9 @@
     "root": "Ewm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "Ewn",
