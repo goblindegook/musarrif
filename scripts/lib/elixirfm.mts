@@ -135,32 +135,29 @@ function parseResolvedVerbHtml(html: string): Map<string, [string, string]> {
 }
 
 export async function resolveVerb(lemma: string): Promise<Map<string, [string, string]>> {
-  const html = await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text: lemma })
-  return parseResolvedVerbHtml(html)
+  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text: lemma }))
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {
-  const html = await postElixir({
-    clip: `(${lexemeId},${entryNum})`,
-    mode: 'inflect',
-    submit: 'Inflect',
-    text: 'perfect imperfect active passive imperative',
-  })
-  return parseInflectionRows(html)
+  return parseInflectionRows(
+    await postElixir({
+      clip: `(${lexemeId},${entryNum})`,
+      mode: 'inflect',
+      submit: 'Inflect',
+      text: 'perfect imperfect active passive imperative',
+    }),
+  )
 }
 
 async function deriveVerb(lexemeId: string, entryNum: string): Promise<NominalSet> {
-  const html = await postElixir({
-    clip: `(${lexemeId},${entryNum})`,
-    mode: 'derive',
-    submit: 'Derive',
-    text: 'verb noun adjective',
-  })
-  return parseNominals(html)
-}
-
-function getElixirFormKey(verb: DisplayVerb): string {
-  return formatFormLabel(verb.form, verb.root)
+  return parseNominals(
+    await postElixir({
+      clip: `(${lexemeId},${entryNum})`,
+      mode: 'derive',
+      submit: 'Derive',
+      text: 'verb noun adjective',
+    }),
+  )
 }
 
 function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSet): ParsedParadigms {
@@ -185,7 +182,7 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
 
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
   const entries = await resolveVerb(verb.lemma)
-  const match = entries.get(getElixirFormKey(verb))
+  const match = entries.get(formatFormLabel(verb.form, verb.root))
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
   const [lexemeId, entryNum] = match
 
