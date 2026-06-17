@@ -12,6 +12,7 @@ import {
   STREAK_DAILY_GOAL,
   type TrackedExercises,
 } from '../../exercises/stats'
+import { localDate } from '../../primitives/dates'
 import { useLocalStorage } from './useLocalStorage'
 
 const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
@@ -91,7 +92,7 @@ export function useStats() {
 }
 
 export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {
-  return stats.map((d) => ({ ...d, date: dateKey(d.date) }))
+  return stats.map((d) => ({ ...d, date: localDate(d.date) }))
 }
 
 export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
@@ -103,11 +104,4 @@ export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
 
 export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
   return v.parse(SerializedTrackedExercises, data)
-}
-
-function dateKey(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
 }

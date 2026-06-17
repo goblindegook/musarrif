@@ -68,20 +68,31 @@ export const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>>
   jussive: PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS,
 }
 
-export const FUTURE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 4,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 4,
-  '3md': 4,
-  '3fd': 4,
-  '1p': 1,
-  '2mp': 3,
-  '2fp': 3,
-  '3mp': 3,
-  '3fp': 3,
+const FUTURE_SEEN_CHARS = 2
+const FUTURE_PERSON_PREFIX_CHARS = 2
+
+export function tagFutureChars(
+  chars: string[],
+  suffixCount: number,
+  formInfixChars = 0,
+  nonContiguousFormIndex = -1,
+): TaggedChar[] {
+  const stemCount = chars.length - suffixCount
+  const personPrefixEnd = FUTURE_SEEN_CHARS + FUTURE_PERSON_PREFIX_CHARS
+  const formInfixEnd = personPrefixEnd + formInfixChars
+  return chars.map((char, i) => ({
+    char,
+    role:
+      i < FUTURE_SEEN_CHARS
+        ? 'tense'
+        : i < personPrefixEnd
+          ? 'suffix'
+          : i < formInfixEnd || i === nonContiguousFormIndex
+            ? 'form'
+            : i < stemCount
+              ? 'root'
+              : 'suffix',
+  }))
 }
 
 export function tagChars(

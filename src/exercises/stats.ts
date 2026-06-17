@@ -1,3 +1,5 @@
+import { localDate } from '../primitives/dates'
+
 export interface DailyActivity {
   date: Date
   correct: number
@@ -20,8 +22,8 @@ export function addResult(stats: TrackedExercises, result: Result, date = todayD
 }
 
 export function getStreak(stats: TrackedExercises, today = todayDate()): number {
-  const todayStr = dateKey(today)
-  const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => dateKey(d.date)))
+  const todayStr = localDate(today)
+  const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => localDate(d.date)))
 
   // Streak can start from today or yesterday
   const startDate = extendedDates.has(todayStr) ? todayStr : offsetDate(todayStr, -1)
@@ -50,7 +52,7 @@ export function getRecentAccuracyPercent(stats: TrackedExercises, days: number, 
 export function getStreakRecord(stats: TrackedExercises): number {
   const activeDates = stats
     .filter((d) => d.correct >= STREAK_DAILY_GOAL)
-    .map((d) => dateKey(d.date))
+    .map((d) => localDate(d.date))
     .sort()
 
   let currentRun = 0
@@ -87,13 +89,6 @@ export function getStatsWindow(stats: readonly DailyActivity[], sinceDays: numbe
   }
 
   return result
-}
-
-function dateKey(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
 }
 
 function todayDate(): Date {
