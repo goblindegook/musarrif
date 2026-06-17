@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import type { ParsedParadigms } from './parse-wiktionary.mts'
 import { renderVerbTestFile } from './render-verb-test.mts'
 
-const PARSED_FIXTURE: ParsedParadigms = {
+const PARSED_FIXTURE = {
   paradigms: {
     'active past': {
       '1s': 'كَتَبْتُ',
@@ -47,7 +46,7 @@ const PARSED_FIXTURE: ParsedParadigms = {
     masdar: ['كِتَابَة', 'كَتْب', 'كِتَاب'],
     passiveParticiple: 'مَكْتُوب',
   },
-}
+} satisfies Parameters<typeof renderVerbTestFile>[1]
 
 describe('renderVerbTestFile', () => {
   test('renders test blocks using the project matcher conventions', () => {

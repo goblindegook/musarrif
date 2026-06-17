@@ -1,28 +1,17 @@
 import { JSDOM } from 'jsdom'
-import type { PronounId } from '../../src/paradigms/pronouns.ts'
+import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
-export type { PronounId }
-
-export type VerbParadigm =
-  | 'active past'
-  | 'active present indicative'
-  | 'active present subjunctive'
-  | 'active present jussive'
-  | 'active imperative'
-  | 'passive past'
-  | 'passive present indicative'
-  | 'passive present subjunctive'
-  | 'passive present jussive'
-
-export type NominalSet = {
-  masdar?: string[]
-  activeParticiple?: string
-  passiveParticiple?: string
+const WIKTIONARY_HEADERS = {
+  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'accept-language': 'en',
+  'user-agent': 'musarrif-wiktionary-script/1.0 (+https://github.com/goblindegook/musarrif)',
 }
 
-export type ParsedParadigms = {
-  paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string>>>>
-  nominals: NominalSet
+async function fetchHtml(title: string): Promise<string> {
+  const url = `https://en.wiktionary.org/wiki/${encodeURIComponent(title)}`
+  const response = await fetch(url, { headers: WIKTIONARY_HEADERS })
+  if (response.ok) return response.text()
+  throw new Error(`Failed to fetch Wiktionary page (${response.status}): ${url}`)
 }
 
 function normalizeWhitespace(value: string): string {
@@ -219,7 +208,7 @@ function nearestRoot(table: HTMLTableElement, declarations: RootDeclaration[]): 
   return result
 }
 
-export function parseArabicConjugationTable(html: string, lemma: string, root?: string): ParsedParadigms {
+function parseConjugationTable(html: string, lemma: string, root?: string): ParsedParadigms {
   const dom = new JSDOM(html)
   const doc = dom.window.document
   const arabicHeading = doc.querySelector('h2#Arabic')
@@ -252,4 +241,9 @@ export function parseArabicConjugationTable(html: string, lemma: string, root?: 
     paradigms: extractParadigms(table),
     nominals: extractNominals(table),
   }
+}
+
+export async function fetchParadigms(lemma: string, root?: string): Promise<ParsedParadigms> {
+  const html = await fetchHtml(lemma)
+  return parseConjugationTable(html, lemma, root)
 }

@@ -1,5 +1,5 @@
 import { PRONOUN_IDS } from '../../src/paradigms/pronouns.ts'
-import type { ParsedParadigms, PronounId, VerbParadigm } from './parse-wiktionary.mts'
+import type { ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 const PARADIGM_ORDER: VerbParadigm[] = [
   'active past',

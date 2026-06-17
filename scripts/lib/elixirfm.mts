@@ -1,5 +1,5 @@
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
-import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './parse-wiktionary.mts'
+import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
@@ -38,12 +38,6 @@ const IMPERATIVE_PRONOUN_BY_SUFFIX = new Map<string, PronounId>([
   ['MP', '2mp'],
   ['FP', '2fp'],
 ])
-
-type HtmlLoader = {
-  deriveHtml: (lexemeId: string, entryNum: string) => Promise<string>
-  inflectHtml: (lexemeId: string, entryNum: string) => Promise<string>
-  resolveHtml: (lemma: string) => Promise<string>
-}
 
 function getCell(block: string, klass: string): string | undefined {
   const match = new RegExp(`<td class="${klass}"[^>]*>([^<]+)</td>`).exec(block)
@@ -116,7 +110,7 @@ function mergeParadigmPrefix(
   }
 }
 
-export async function postElixir(params: Record<string, string>): Promise<string> {
+async function postElixir(params: Record<string, string>): Promise<string> {
   const response = await fetch(ELIXIR_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -126,7 +120,7 @@ export async function postElixir(params: Record<string, string>): Promise<string
   return response.text()
 }
 
-export function parseResolvedVerbHtml(html: string): Map<string, [string, string]> {
+function parseResolvedVerbHtml(html: string): Map<string, [string, string]> {
   const entries = new Map<string, [string, string]>()
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
@@ -155,7 +149,7 @@ export async function inflectVerb(lexemeId: string, entryNum: string): Promise<M
   return parseInflectionRows(html)
 }
 
-export async function deriveVerb(lexemeId: string, entryNum: string): Promise<NominalSet> {
+async function deriveVerb(lexemeId: string, entryNum: string): Promise<NominalSet> {
   const html = await postElixir({
     clip: `(${lexemeId},${entryNum})`,
     mode: 'derive',
@@ -165,12 +159,11 @@ export async function deriveVerb(lexemeId: string, entryNum: string): Promise<No
   return parseNominals(html)
 }
 
-export function getElixirFormKey(verb: DisplayVerb): string {
+function getElixirFormKey(verb: DisplayVerb): string {
   return formatFormLabel(verb.form, verb.root)
 }
 
-export function parseInflectedVerbHtml(inflectHtml: string, deriveHtml: string): ParsedParadigms {
-  const rawForms = parseInflectionRows(inflectHtml)
+function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSet): ParsedParadigms {
   const paradigms: ParsedParadigms['paradigms'] = {}
 
   for (const [paradigm, prefix] of Object.entries(PARADIGM_PREFIXES) as [
@@ -187,61 +180,14 @@ export function parseInflectedVerbHtml(inflectHtml: string, deriveHtml: string):
     addConjugation(paradigms, 'active imperative', pronounId, value)
   }
 
-  return { nominals: parseNominals(deriveHtml), paradigms }
+  return { nominals, paradigms }
 }
 
-export async function fetchElixirFmParadigms(
-  verb: DisplayVerb,
-  overrides: Partial<HtmlLoader> = {},
-): Promise<ParsedParadigms> {
-  const loader: HtmlLoader = {
-    deriveHtml:
-      overrides.deriveHtml ??
-      (async (lexemeId, entryNum) => {
-        const nominals = await deriveVerb(lexemeId, entryNum)
-        const rows = [
-          nominals.masdar
-            ?.map((value) => `<tr><td class="xtag">N---------</td><td class="orth">${value}</td></tr>`)
-            .join('') ?? '',
-          nominals.activeParticiple
-            ? `<tr><td class="xtag">A--A------</td><td class="orth">${nominals.activeParticiple}</td></tr>`
-            : '',
-          nominals.passiveParticiple
-            ? `<tr><td class="xtag">A--P------</td><td class="orth">${nominals.passiveParticiple}</td></tr>`
-            : '',
-        ].join('')
-        return `<table>${rows}</table>`
-      }),
-    inflectHtml:
-      overrides.inflectHtml ??
-      (async (lexemeId, entryNum) => {
-        const forms = await inflectVerb(lexemeId, entryNum)
-        const rows = Array.from(forms.entries())
-          .map(([tag, value]) => `<tr><td class="xtag">${tag}</td><td class="orth">${value}</td></tr>`)
-          .join('')
-        return `<table>${rows}</table>`
-      }),
-    resolveHtml:
-      overrides.resolveHtml ??
-      (async (lemma) => {
-        const entries = await resolveVerb(lemma)
-        const rows = Array.from(entries.entries())
-          .map(
-            ([formKey, [lexemeId, entryNum]]) =>
-              `<table class="lexeme"><tr><td class="xtag">V</td><td class="class">${formKey}</td><td><a href="index.fcgi?mode=inflect&amp;clip=(${lexemeId},${entryNum})">Inflect</a></td></tr></table>`,
-          )
-          .join('')
-        return rows
-      }),
-  }
-
-  const entries = parseResolvedVerbHtml(await loader.resolveHtml(verb.lemma))
+export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
+  const entries = await resolveVerb(verb.lemma)
   const match = entries.get(getElixirFormKey(verb))
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
   const [lexemeId, entryNum] = match
 
-  return parseInflectedVerbHtml(
-    await loader.inflectHtml(lexemeId, entryNum),
-    await loader.deriveHtml(lexemeId, entryNum),
-  )
+  return buildParsedParadigms(await inflectVerb(lexemeId, entryNum), await deriveVerb(lexemeId, entryNum))
 }

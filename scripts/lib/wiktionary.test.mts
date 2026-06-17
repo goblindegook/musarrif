@@ -1,5 +1,7 @@
-import { describe, expect, test } from 'vitest'
-import { parseArabicConjugationTable } from './parse-wiktionary.mts'
+import { HttpResponse, http } from 'msw'
+import { setupServer } from 'msw/node'
+import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
+import { fetchParadigms } from './wiktionary.mts'
 
 const WIKTIONARY_HTML = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
@@ -89,9 +91,48 @@ const WIKTIONARY_HTML = `
 <div class="mw-heading mw-heading2"><h2 id="Chadian_Arabic">Chadian Arabic</h2></div>
 `
 
-describe('parseArabicConjugationTable', () => {
-  test('extracts nominals and paradigms for the requested lemma', () => {
-    const parsed = parseArabicConjugationTable(WIKTIONARY_HTML, 'كَتَبَ')
+let requestUrl = ''
+let requestHeaders:
+  | {
+      accept: string | null
+      acceptLanguage: string | null
+      userAgent: string | null
+    }
+  | undefined
+
+const server = setupServer(
+  http.get('https://en.wiktionary.org/wiki/:title', ({ request }) => {
+    requestUrl = request.url
+    requestHeaders = {
+      accept: request.headers.get('accept'),
+      acceptLanguage: request.headers.get('accept-language'),
+      userAgent: request.headers.get('user-agent'),
+    }
+
+    return new HttpResponse(WIKTIONARY_HTML, {
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+      status: 200,
+    })
+  }),
+)
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' })
+})
+
+afterEach(() => {
+  requestUrl = ''
+  requestHeaders = undefined
+  server.resetHandlers()
+})
+
+afterAll(() => {
+  server.close()
+})
+
+describe('fetchParadigms', () => {
+  test('fetches and parses nominals and paradigms for the requested lemma', async () => {
+    const parsed = await fetchParadigms('كتب')
 
     expect(parsed.nominals).toEqual({
       activeParticiple: 'كَاتِب',
@@ -138,15 +179,43 @@ describe('parseArabicConjugationTable', () => {
       '3mp': 'كُتِبُوا',
       '3fp': 'كُتِبْنَ',
     })
+
+    expect(requestUrl).toBe('https://en.wiktionary.org/wiki/%D9%83%D8%AA%D8%A8')
+    expect(requestHeaders).toEqual({
+      accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      acceptLanguage: 'en',
+      userAgent: 'musarrif-wiktionary-script/1.0 (+https://github.com/goblindegook/musarrif)',
+    })
   })
 
-  test('finds conjugation tables when heading level is h4', () => {
+  test('finds conjugation tables when heading level is h4', async () => {
     const htmlWithH4 = WIKTIONARY_HTML.replace(
       '<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>',
       '<div class="mw-heading mw-heading4"><h4 id="Conjugation">Conjugation</h4></div>',
     )
 
-    const parsed = parseArabicConjugationTable(htmlWithH4, 'كَتَبَ')
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(htmlWithH4, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const parsed = await fetchParadigms('كتب')
     expect(parsed.paradigms['active past']?.['3ms']).toBe('كَتَبَ')
+  })
+
+  test('throws the HTTP status when Wiktionary rejects the request', async () => {
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse('too many requests', { status: 429 })
+      }),
+    )
+
+    await expect(fetchParadigms('كتب')).rejects.toThrow(
+      'Failed to fetch Wiktionary page (429): https://en.wiktionary.org/wiki/%D9%83%D8%AA%D8%A8',
+    )
   })
 })

@@ -5,8 +5,8 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { applyDiacriticsPreference } from '../src/paradigms/tokens'
 import { getVerbById, synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
 import { clamp, parseInteger } from '../src/primitives/numbers'
-import { parseArabicConjugationTable } from './lib/parse-wiktionary.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
+import { fetchParadigms } from './lib/wiktionary.mts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -27,20 +27,12 @@ function resolveSlugForWiktionary(slug: string): { lemma: string; root: string |
   return { lemma: synthesizeVerb(root, form).lemma, root }
 }
 
-async function fetchWiktionaryPage(title: string): Promise<string> {
-  const url = `https://en.wiktionary.org/wiki/${encodeURIComponent(title)}`
-  const response = await fetch(url)
-  if (response.ok) return response.text()
-  throw new Error(`Failed to fetch Wiktionary page (${response.status}): ${url}`)
-}
-
 async function run() {
   const slug = process.argv[2]?.trim()
   if (!slug) usage()
 
   const { lemma, root } = resolveSlugForWiktionary(slug)
-  const html = await fetchWiktionaryPage(applyDiacriticsPreference(lemma, 'none'))
-  const parsed = parseArabicConjugationTable(html, lemma, root)
+  const parsed = await fetchParadigms(applyDiacriticsPreference(lemma, 'none'), root)
   const fileText = renderVerbTestFile(slug, parsed)
 
   mkdirSync(OUTPUT_DIR, { recursive: true })

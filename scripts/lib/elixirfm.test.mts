@@ -1,6 +1,10 @@
-import { describe, expect, test } from 'vitest'
+import { HttpResponse, http } from 'msw'
+import { setupServer } from 'msw/node'
+import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { buildVerbFromId } from '../../src/paradigms/verbs'
-import { fetchElixirFmParadigms, getElixirFormKey, parseInflectedVerbHtml, parseResolvedVerbHtml } from './elixirfm.mts'
+import { fetchParadigms } from './elixirfm.mts'
+
+const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
 const RESOLVE_HTML = `
 <table cellspacing="0" class="lexeme">
@@ -16,22 +20,11 @@ const RESOLVE_HTML = `
 </table>
 <table cellspacing="0" class="lexeme">
   <tr>
-    <td class="xtag" title="noun">N</td>
-    <td class="phon" title="citation form">kitaab</td>
-    <td class="orth" title="citation form">كِتَاب</td>
-    <td class="morphs" title="morphs of citation form">FiCāL</td>
-    <td class="class" title="derivational class">I</td>
-    <td class="reflex" title="lexical reference">"book"</td>
-    <td class="button"><a href="index.fcgi?mode=lookup&amp;clip=(222,1)" title="lookup in the lexicon">Lookup</a></td>
-  </tr>
-</table>
-<table cellspacing="0" class="lexeme">
-  <tr>
     <td class="xtag" title="verb">V</td>
     <td class="phon" title="citation form">tadahraj</td>
     <td class="orth" title="citation form">تَدَحْرَجَ</td>
     <td class="morphs" title="morphs of citation form">TaKaRDaS</td>
-    <td class="class" title="derivational class">Vq</td>
+    <td class="class" title="derivational class">IVq</td>
     <td class="reflex" title="lexical reference">"roll"</td>
     <td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(333,4)" title="inflect this lexeme">Inflect</a></td>
   </tr>
@@ -55,27 +48,46 @@ const INFLECT_HTML = `
 
 const DERIVE_HTML = `
 <table cellspacing="0">
-  <tr><td class="xtag" title="verb">V---------</td><td class="class" title="derivational class">I</td><td class="phon" title="derived form">katab</td><td class="orth" title="derived form">كَتَبَ</td><td class="morphs" title="morphs of derived form">FaCaL</td><td class="dtag" title="grammatical parameters">verb</td></tr>
-  <tr><td class="xtag" title="noun">N---------</td><td class="class" title="derivational class">I</td><td class="phon" title="derived form">kitaabat</td><td class="orth" title="derived form">كِتَابَة</td><td class="morphs" title="morphs of derived form">FiCāL-at</td><td class="dtag" title="grammatical parameters">noun</td></tr>
-  <tr><td class="xtag" title="adjective, active voice">A--A------</td><td class="class" title="derivational class">I</td><td class="phon" title="derived form">kaatib</td><td class="orth" title="derived form">كَاتِب</td><td class="morphs" title="morphs of derived form">FāCiL</td><td class="dtag" title="grammatical parameters">adjective, active</td></tr>
-  <tr><td class="xtag" title="adjective, passive voice">A--P------</td><td class="class" title="derivational class">I</td><td class="phon" title="derived form">maktuub</td><td class="orth" title="derived form">مَكْتُوب</td><td class="morphs" title="morphs of derived form">maFCūL</td><td class="dtag" title="grammatical parameters">adjective, passive</td></tr>
+  <tr><td class="xtag" title="noun">N---------</td><td class="orth" title="derived form">كِتَابَة</td></tr>
+  <tr><td class="xtag" title="adjective, active voice">A--A------</td><td class="orth" title="derived form">كَاتِب</td></tr>
+  <tr><td class="xtag" title="adjective, passive voice">A--P------</td><td class="orth" title="derived form">مَكْتُوب</td></tr>
 </table>
 `
 
-describe('parseResolvedVerbHtml', () => {
-  test('extracts verb entries keyed by ElixirFM class labels', () => {
-    expect(parseResolvedVerbHtml(RESOLVE_HTML)).toEqual(
-      new Map([
-        ['I', ['111', '2']],
-        ['Vq', ['333', '4']],
-      ]),
-    )
-  })
+const requests: Array<Record<string, string>> = []
+
+const server = setupServer(
+  http.post(ELIXIR_URL, async ({ request }) => {
+    const params = new URLSearchParams(await request.text())
+    const data = Object.fromEntries(params.entries())
+    requests.push(data)
+
+    if (data.mode === 'resolve') return new HttpResponse(RESOLVE_HTML, { status: 200 })
+    if (data.mode === 'inflect') return new HttpResponse(INFLECT_HTML, { status: 200 })
+    if (data.mode === 'derive') return new HttpResponse(DERIVE_HTML, { status: 200 })
+
+    return new HttpResponse('unexpected request', { status: 500 })
+  }),
+)
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' })
 })
 
-describe('parseInflectedVerbHtml', () => {
-  test('converts ElixirFM inflection and derivation rows to ParsedParadigms', () => {
-    expect(parseInflectedVerbHtml(INFLECT_HTML, DERIVE_HTML)).toEqual({
+afterEach(() => {
+  requests.length = 0
+  server.resetHandlers()
+})
+
+afterAll(() => {
+  server.close()
+})
+
+describe('fetchElixirFmParadigms', () => {
+  test('parses resolved, inflected, and derived forms through the public loader', async () => {
+    const paradigms = await fetchParadigms(buildVerbFromId('ktb-1'))
+
+    expect(paradigms).toEqual({
       paradigms: {
         'active past': {
           '1s': 'كَتَبْتُ',
@@ -102,36 +114,61 @@ describe('parseInflectedVerbHtml', () => {
         passiveParticiple: 'مَكْتُوب',
       },
     })
-  })
-})
 
-describe('getElixirFormKey', () => {
-  test('appends q for quadrilateral forms', () => {
-    expect(getElixirFormKey(buildVerbFromId('dHrj-5'))).toBe('Vq')
+    expect(requests).toEqual([
+      {
+        code: 'Unicode',
+        mode: 'resolve',
+        submit: 'Resolve',
+        text: 'كَتَبَ',
+      },
+      {
+        clip: '(111,2)',
+        mode: 'inflect',
+        submit: 'Inflect',
+        text: 'perfect imperfect active passive imperative',
+      },
+      {
+        clip: '(111,2)',
+        mode: 'derive',
+        submit: 'Derive',
+        text: 'verb noun adjective',
+      },
+    ])
   })
-})
 
-describe('fetchElixirFmParadigms', () => {
-  test('uses the resolved entry matching the verb form key', async () => {
-    const paradigms = await fetchElixirFmParadigms(buildVerbFromId('ktb-1'), {
-      deriveHtml: async (lexemeId, entryNum) => {
-        expect([lexemeId, entryNum]).toEqual(['111', '2'])
-        return DERIVE_HTML
-      },
-      inflectHtml: async (lexemeId, entryNum) => {
-        expect([lexemeId, entryNum]).toEqual(['111', '2'])
-        return INFLECT_HTML
-      },
-      resolveHtml: async (lemma) => {
-        expect(lemma).toBe('كَتَبَ')
-        return RESOLVE_HTML
+  test('selects the entry matching the verb form', async () => {
+    const paradigms = await fetchParadigms(buildVerbFromId('dHrj-4'))
+
+    expect(paradigms).toMatchObject({
+      nominals: { masdar: ['كِتَابَة'] },
+      paradigms: {
+        'active past': {
+          '1s': 'كَتَبْتُ',
+          '3ms': 'كَتَبَ',
+        },
       },
     })
 
-    expect(paradigms.nominals.masdar).toEqual(['كِتَابَة'])
-    expect(paradigms.paradigms['active past']).toMatchObject({
-      '1s': 'كَتَبْتُ',
-      '3ms': 'كَتَبَ',
-    })
+    expect(requests).toEqual([
+      {
+        code: 'Unicode',
+        mode: 'resolve',
+        submit: 'Resolve',
+        text: 'اِدْحَرَجَّ',
+      },
+      {
+        clip: '(333,4)',
+        mode: 'inflect',
+        submit: 'Inflect',
+        text: 'perfect imperfect active passive imperative',
+      },
+      {
+        clip: '(333,4)',
+        mode: 'derive',
+        submit: 'Derive',
+        text: 'verb noun adjective',
+      },
+    ])
   })
 })
