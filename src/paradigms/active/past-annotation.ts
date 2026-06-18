@@ -15,7 +15,7 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const rootStep: DerivationStep = {
     kind: { type: 'root' },
     arabic: verb.root,
-    morphemes: [...verb.root].map((char) => ({ text: char, role: 'root' as const })),
+    morphemes: [...verb.root].map((char) => ({ text: char, role: 'radical' as const })),
   }
 
   const formMorphemes = buildMorphemes(tagPastStemChars(verb, [...past['3ms']]))
@@ -38,7 +38,7 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const stemCount = chars.length - PAST_SUFFIX_COUNTS[pronounId]
   const morphemes = buildMorphemes([
     ...tagPastStemChars(verb, chars.slice(0, stemCount)),
-    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as const })),
+    ...chars.slice(stemCount).map((char) => ({ char, role: 'agreement' as const })),
   ])
 
   return {
@@ -56,25 +56,25 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
 }
 
 function tagPastStemChars(verb: Verb, stemChars: string[]): TaggedChar[] {
-  if (verb.root.length !== 3) return stemChars.map((char) => ({ char, role: 'root' }))
+  if (verb.root.length !== 3) return stemChars.map((char) => ({ char, role: 'radical' }))
 
   switch (verb.form) {
     case 3:
-      return stemChars.map((char, i) => ({ char, role: i === 2 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i === 2 ? 'measure' : 'radical' }))
     case 4:
     case 5:
-      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'measure' : 'radical' }))
     case 6:
-      return stemChars.map((char, i) => ({ char, role: i < 2 || i === 4 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 2 || i === 4 ? 'measure' : 'radical' }))
     case 7:
-      return stemChars.map((char, i) => ({ char, role: i < 4 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 4 ? 'measure' : 'radical' }))
     case 8:
-      return stemChars.map((char, i) => ({ char, role: i < 2 || (i >= 3 && i < 6) ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 2 || (i >= 3 && i < 6) ? 'measure' : 'radical' }))
     case 9:
-      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 2 ? 'measure' : 'radical' }))
     case 10:
-      return stemChars.map((char, i) => ({ char, role: i < 6 ? 'form' : 'root' }))
+      return stemChars.map((char, i) => ({ char, role: i < 6 ? 'measure' : 'radical' }))
     default:
-      return stemChars.map((char) => ({ char, role: 'root' }))
+      return stemChars.map((char) => ({ char, role: 'radical' }))
   }
 }

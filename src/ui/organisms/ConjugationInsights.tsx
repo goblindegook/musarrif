@@ -19,11 +19,11 @@ import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Modal } from '../molecules/Modal'
 
 const MORPHEME_COLOURS: Record<MorphemeRole, string> = {
-  root: 'var(--color-insight-root)',
-  form: 'var(--color-insight-form)',
-  tense: 'var(--color-insight-tense)',
-  suffix: 'var(--color-insight-suffix)',
-  dropped: 'var(--color-insight-dropped)',
+  radical: 'var(--color-insight-root)',
+  measure: 'var(--color-insight-form)',
+  particle: 'var(--color-insight-tense)',
+  agreement: 'var(--color-insight-suffix)',
+  elided: 'var(--color-insight-dropped)',
 }
 
 interface ConjugationInsightsProps {
@@ -38,7 +38,7 @@ function AnnotatedArabic({ morphemes }: { morphemes: Morpheme[] }) {
     <>
       {morphemes.flatMap((m, i) => {
         const morpheme =
-          m.role === 'dropped' ? (
+          m.role === 'elided' ? (
             <DroppedMorpheme key={`m-${i}`}>{m.text}</DroppedMorpheme>
           ) : (
             <span key={`m-${i}`} style={{ color: MORPHEME_COLOURS[m.role] }}>
@@ -97,7 +97,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
           <VerbDisplayArea>
             <ArabicDisplay>
               {finalStep ? (
-                <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'dropped')} />
+                <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'elided')} />
               ) : (
                 arabic
               )}
@@ -159,6 +159,6 @@ const VerbDisplayArea = styled('div')`
 `
 
 const DroppedMorpheme = styled('del')`
-  color: ${MORPHEME_COLOURS.dropped};
+  color: ${MORPHEME_COLOURS.elided};
   text-decoration-thickness: 0.09em;
 `

@@ -23,7 +23,7 @@ function tagImperativeChars(chars: string[], suffixCount: number, formInfixChars
 
   return chars.map((char, i) => ({
     char,
-    role: i < tenseChars ? 'tense' : i < formEnd ? 'form' : i < stemCount ? 'root' : 'suffix',
+    role: i < formEnd ? 'measure' : i < stemCount ? 'radical' : 'agreement',
   }))
 }
 
@@ -32,7 +32,7 @@ export function annotateActiveImperative(verb: Verb, pronounId: PronounId): Anno
   const jussiveAnnotation = annotateActivePresentMood(verb, 'jussive', pronounId)
   const jussiveStep = jussiveAnnotation.steps[jussiveAnnotation.steps.length - 1]
   const morphemes = [
-    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'dropped' as const },
+    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'elided' as const },
     ...buildMorphemes(
       tagImperativeChars(
         [...arabic],

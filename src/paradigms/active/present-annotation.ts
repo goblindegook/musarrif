@@ -28,7 +28,12 @@ function tagPresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
 
   return chars.map((char, i) => ({
     char,
-    role: i < PRESENT_TENSE_PREFIX_CHARS ? 'tense' : i < formInfixEnd || i === nonContiguousFormIndex ? 'form' : 'root',
+    role:
+      i < PRESENT_TENSE_PREFIX_CHARS
+        ? 'agreement'
+        : i < formInfixEnd || i === nonContiguousFormIndex
+          ? 'measure'
+          : 'radical',
   }))
 }
 
@@ -52,7 +57,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       : pronounId === '2fs' || pronounId === '2mp' || pronounId === '3mp'
         ? NOON.raw + FATHA.raw
         : null
-    const droppedNoon = droppedNoonText ? [{ text: droppedNoonText, role: 'dropped' as MorphemeRole }] : []
+    const droppedNoon = droppedNoonText ? [{ text: droppedNoonText, role: 'elided' as MorphemeRole }] : []
     const moodMorphemes = [...baseMorphemes, ...droppedNoon]
     return {
       steps: [
@@ -72,7 +77,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   const stemMorphemes = buildMorphemes(tagPresentStemChars([...indicativeForms['3ms']], verb))
   const dropped = droppedPastPrefix(verb)
   const presentIndicativeMorphemes = dropped
-    ? [{ text: dropped, role: 'dropped' as MorphemeRole }, ...stemMorphemes]
+    ? [{ text: dropped, role: 'elided' as MorphemeRole }, ...stemMorphemes]
     : stemMorphemes
   const presentIndicativeStep: DerivationStep = {
     kind: { type: 'tense', verbTense: 'active.present.indicative' },

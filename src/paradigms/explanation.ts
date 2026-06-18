@@ -245,14 +245,14 @@ export function renderExplanation(
 }
 
 function extractAffixes(morphemes: Morpheme[]): { prefix?: string; suffix?: string } {
-  const stemRoles = ['root', 'form']
+  const stemRoles = ['radical', 'measure']
   const firstStemIdx = morphemes.findIndex((m) => stemRoles.includes(m.role))
   const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.includes(m.role))
 
   if (firstStemIdx === -1) return {}
 
-  const pre = morphemes.slice(0, firstStemIdx).filter((m) => m.role !== 'dropped')
-  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'dropped')
+  const pre = morphemes.slice(0, firstStemIdx).filter((m) => m.role !== 'elided')
+  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'elided')
 
   return {
     prefix: pre.length ? pre.map((m) => m.text).join('') : undefined,

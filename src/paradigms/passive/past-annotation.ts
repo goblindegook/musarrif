@@ -17,7 +17,7 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
 
   const allForms = conjugatePassivePast(verb)
   const thirdMs = allForms['3ms']
-  const passivePastMorphemes = buildMorphemes([...thirdMs].map((char) => ({ char, role: 'root' as MorphemeRole })))
+  const passivePastMorphemes = buildMorphemes([...thirdMs].map((char) => ({ char, role: 'radical' as MorphemeRole })))
 
   const pastThirdMsStep: DerivationStep = {
     kind: { type: 'tense', verbTense: 'passive.past' },
@@ -34,8 +34,8 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
   const suffixCount = PAST_SUFFIX_COUNTS[pronounId]
   const stemCount = finalChars.length - suffixCount
   const morphemes = buildMorphemes([
-    ...finalChars.slice(0, stemCount).map((char) => ({ char, role: 'root' as MorphemeRole })),
-    ...finalChars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole })),
+    ...finalChars.slice(0, stemCount).map((char) => ({ char, role: 'radical' as MorphemeRole })),
+    ...finalChars.slice(stemCount).map((char) => ({ char, role: 'agreement' as MorphemeRole })),
   ])
 
   return {

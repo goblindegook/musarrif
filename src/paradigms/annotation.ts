@@ -12,7 +12,7 @@ import type { Mood, VerbTense } from './tense'
 import { SHADDA, SUKOON } from './tokens'
 import type { Verb, VerbForm } from './verbs'
 
-export type MorphemeRole = 'root' | 'form' | 'tense' | 'suffix' | 'dropped'
+export type MorphemeRole = 'radical' | 'measure' | 'particle' | 'agreement' | 'elided'
 
 export const PAST_SUFFIX_COUNTS: Record<PronounId, number> = {
   '1s': 3,
@@ -84,14 +84,14 @@ export function tagFutureChars(
     char,
     role:
       i < FUTURE_SEEN_CHARS
-        ? 'tense'
+        ? 'particle'
         : i < personPrefixEnd
-          ? 'suffix'
+          ? 'agreement'
           : i < formInfixEnd || i === nonContiguousFormIndex
-            ? 'form'
+            ? 'measure'
             : i < stemCount
-              ? 'root'
-              : 'suffix',
+              ? 'radical'
+              : 'agreement',
   }))
 }
 
@@ -103,7 +103,7 @@ export function tagChars(
   const stemCount = chars.length - suffixCount
   return [
     ...tagStem(chars.slice(0, stemCount)),
-    ...chars.slice(stemCount).map((char) => ({ char, role: 'suffix' as MorphemeRole })),
+    ...chars.slice(stemCount).map((char) => ({ char, role: 'agreement' as MorphemeRole })),
   ]
 }
 

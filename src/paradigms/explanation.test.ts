@@ -408,10 +408,10 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
     })
   })
 
-  test('imperative 2ms Form I has alif prefix and no suffix', () => {
+  test('imperative 2ms Form I has no prefix and no suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
     expect(layers).toMatchObject({
-      prefix: 'اُ',
+      prefix: undefined,
       suffix: undefined,
     })
   })

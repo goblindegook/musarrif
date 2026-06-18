@@ -18,7 +18,7 @@ const PASSIVE_PRESENT_TENSE_PREFIX_CHARS = 2
 function tagPassivePresentStemChars(chars: string[]): TaggedChar[] {
   return chars.map((char, i) => ({
     char,
-    role: i < PASSIVE_PRESENT_TENSE_PREFIX_CHARS ? 'tense' : 'root',
+    role: i < PASSIVE_PRESENT_TENSE_PREFIX_CHARS ? 'agreement' : 'radical',
   }))
 }
 
