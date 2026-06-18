@@ -54,9 +54,9 @@ describe('renderVerbTestFile', () => {
 
     expect(file).not.toContain("const verb = getVerbById('ktb-1')!")
     expect(file).toContain("test('active past', () => {")
-    expect(file).toContain('expect(conjugatePast(getVerbById("ktb-1")!)).strings.toEqualT({')
+    expect(file).toContain('expect(conjugatePast(getVerbById("ktb-1")!)).toEqualT({')
     expect(file).toContain("test('active imperative', () => {")
-    expect(file).toContain('expect(conjugateImperative(getVerbById("ktb-1")!)).strings.toMatchObjectT({')
+    expect(file).toContain('expect(conjugateImperative(getVerbById("ktb-1")!)).toMatchObjectT({')
     expect(file).toContain("test('active participle', () => {")
     expect(file).toContain("test('passive participle', () => {")
     expect(file).toContain("test('masdar', () => {")

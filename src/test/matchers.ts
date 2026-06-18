@@ -5,6 +5,7 @@ import { mapRecord } from '../primitives/objects'
 
 export const matchers = {
   toMatchObjectT(this: MatcherState, received: unknown, expected: unknown) {
+    received = stringifyWords(received)
     const pass = this.equals(received, expected, [this.utils.iterableEquality, this.utils.subsetEquality])
 
     if (pass) {
@@ -25,6 +26,7 @@ export const matchers = {
     }
   },
   toEqualT(this: MatcherState, received: unknown, expected: unknown) {
+    received = stringifyWords(received)
     const pass = this.equals(received, expected, [this.utils.iterableEquality])
 
     if (pass) {
@@ -52,32 +54,10 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 export const stringifyWords = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(stringifyWords)
   if (isRecord(value)) return mapRecord(value, stringifyWords)
+  if (value == null || typeof value !== 'object') return value
   return String(value)
 }
 
-interface AssertionLike {
-  __flags: { object?: unknown }
-}
-
-interface ExpectLike {
-  extend(matchers: Record<string, unknown>): void
-  (received: unknown): object
-}
-
-export function installMatchers(expect: ExpectLike) {
-  expect.extend(matchers)
-  const assertionPrototype = Object.getPrototypeOf(expect(''))
-
-  if (Object.getOwnPropertyDescriptor(assertionPrototype, 'strings')) return
-
-  Object.defineProperty(assertionPrototype, 'strings', {
-    configurable: true,
-    get(this: AssertionLike) {
-      this.__flags.object = stringifyWords(this.__flags.object)
-      return this
-    },
-  })
-}
 
 const transliterateValue = (value: unknown): unknown => {
   if (typeof value === 'string') return transliterate(value)

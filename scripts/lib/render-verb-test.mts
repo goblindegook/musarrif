@@ -26,7 +26,7 @@ function formatObject(values: Partial<Record<PronounId, string>>): string {
 
 function renderParadigmBody(slug: string, paradigm: VerbParadigm, values: Partial<Record<PronounId, string>>): string {
   const count = Object.keys(values).length
-  const matcher = count === PRONOUN_IDS.length ? 'strings.toEqualT' : 'strings.toMatchObjectT'
+  const matcher = count === PRONOUN_IDS.length ? 'toEqualT' : 'toMatchObjectT'
 
   const CONJUGATOR: Record<VerbParadigm, string> = {
     'active past': 'conjugatePast(verb)',

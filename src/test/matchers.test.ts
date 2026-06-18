@@ -38,18 +38,18 @@ describe('toEqualT', () => {
   })
 })
 
-describe('strings', () => {
-  test('stringifies a Word before toEqualT', () => {
-    expect(new Word([measureMorpheme([FATHA])])).strings.toEqualT('َ')
+describe('stringification', () => {
+  test('toEqualT stringifies a Word', () => {
+    expect(new Word([measureMorpheme([FATHA])])).toEqualT('َ')
   })
 
-  test('stringifies nested public values before toMatchObjectT', () => {
+  test('toMatchObjectT stringifies nested values', () => {
     const received = {
       value: new Word([measureMorpheme([FATHA])]),
       values: [new Word([measureMorpheme([FATHA])])],
     }
 
-    expect(received).strings.toMatchObjectT({
+    expect(received).toMatchObjectT({
       value: 'َ',
       values: ['َ'],
     })
