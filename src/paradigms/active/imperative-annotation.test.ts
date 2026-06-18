@@ -20,7 +20,14 @@ describe('annotateActiveImperative', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.indicative' },
@@ -145,7 +152,14 @@ describe('annotateActiveImperative', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.indicative' },
@@ -267,7 +281,14 @@ describe('annotateActiveImperative', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.indicative' },
@@ -325,7 +346,14 @@ describe('annotateActiveImperative', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.indicative' },
@@ -385,7 +413,14 @@ describe('annotateActiveImperative', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.present.indicative' },

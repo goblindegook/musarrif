@@ -3,7 +3,7 @@ import { getVerb } from '../verbs'
 import { annotatePast } from './past-annotation'
 
 describe('annotatePast', () => {
-  test('Form I regular — كتب (1s) matches annotation object', () => {
+  test('Form I regular — كتب (1s) annotation uses word morphemes', () => {
     const result = annotatePast(getVerb('كتب', 1), '1s')
 
     expect(result).toEqual({
@@ -20,19 +20,165 @@ describe('annotatePast', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.past' },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'pronoun', pronounId: '1s' },
           arabic: 'كَتَبْتُ',
           morphemes: [
-            { text: 'كَتَب', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
             { text: 'ْتُ', role: 'agreement' },
+          ],
+        },
+      ],
+    })
+  })
+
+  test('Form I geminate — حبب (3ms) shadda collapses doubled radical', () => {
+    const result = annotatePast(getVerb('حبب', 1), '3ms')
+
+    expect(result).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'حبب',
+          morphemes: [
+            { text: 'ح', role: 'radical' },
+            { text: 'ب', role: 'radical' },
+            { text: 'ب', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'حَبَّ',
+          morphemes: [
+            { text: 'ح', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'حَبَّ',
+          morphemes: [
+            { text: 'ح', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+      ],
+    })
+  })
+
+  test('Form I hollow — كون (3ms) adjacent radicals merge', () => {
+    const result = annotatePast(getVerb('كون', 1), '3ms')
+
+    expect(result).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'كون',
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'و', role: 'radical' },
+            { text: 'ن', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'كَانَ',
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ان', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'كَانَ',
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ان', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+      ],
+    })
+  })
+
+  test('Form I hamzated final — بدء (3md) madda absorbs dual alif into measure', () => {
+    const result = annotatePast(getVerb('بدء', 1), '3md')
+
+    expect(result).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'بدء',
+          morphemes: [
+            { text: 'ب', role: 'radical' },
+            { text: 'د', role: 'radical' },
+            { text: 'ء', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'بَدَأَ',
+          morphemes: [
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'د', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'أ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.past' },
+          arabic: 'بَدَأَ',
+          morphemes: [
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'د', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'أ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'pronoun', pronounId: '3md' },
+          arabic: 'بَدَآ',
+          morphemes: [
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'د', role: 'radical' },
+            { text: 'َآ', role: 'measure' },
           ],
         },
       ],
@@ -211,6 +357,23 @@ describe('annotatePast', () => {
             { text: 'تَبَ', role: 'radical' },
           ],
         },
+      ],
+    })
+  })
+
+  test('Form I hamzated geminate — ءدد (2fs) fatha on initial hamza is measure', () => {
+    const result = annotatePast(getVerb('ءدد', 1), '2fs')
+
+    expect(result.steps.at(-1)).toEqual({
+      kind: { type: 'pronoun', pronounId: '2fs' },
+      arabic: 'أَدَدْتِ',
+      morphemes: [
+        { text: 'أ', role: 'radical' },
+        { text: 'َ', role: 'measure' },
+        { text: 'د', role: 'radical' },
+        { text: 'َ', role: 'measure' },
+        { text: 'د', role: 'radical' },
+        { text: 'ْتِ', role: 'agreement' },
       ],
     })
   })

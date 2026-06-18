@@ -55,7 +55,14 @@ describe('annotatePassivePresentMood', () => {
         {
           kind: { type: 'form', form: 1 },
           arabic: 'كَتَبَ',
-          morphemes: [{ text: 'كَتَبَ', role: 'radical' }],
+          morphemes: [
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
         },
         {
           kind: { type: 'tense', verbTense: 'passive.present.indicative' },

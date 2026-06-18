@@ -7,9 +7,47 @@ import {
 } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
-import { conjugatePast } from './past'
+import type { MorphemeToken } from '../word'
+import { conjugatePast, conjugatePastFormI } from './past'
 
 export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
+  if (verb.form === 1 && verb.root.length === 3) {
+    const words = conjugatePastFormI(verb)
+    const formMorphemes = toMorphemes(words['3ms'].morphemes)
+
+    const rootStep: DerivationStep = {
+      kind: { type: 'root' },
+      arabic: verb.root,
+      morphemes: [...verb.root].map((char) => ({ text: char, role: 'radical' as const })),
+    }
+    const formStep: DerivationStep = {
+      kind: { type: 'form', form: 1 },
+      arabic: words['3ms'].toString(),
+      morphemes: formMorphemes,
+    }
+    const pastStep: DerivationStep = {
+      kind: { type: 'tense', verbTense: 'active.past' },
+      arabic: words['3ms'].toString(),
+      morphemes: formMorphemes,
+    }
+
+    if (pronounId === '3ms') return { steps: [rootStep, formStep, pastStep] }
+
+    const word = words[pronounId]
+    return {
+      steps: [
+        rootStep,
+        formStep,
+        pastStep,
+        {
+          kind: { type: 'pronoun', pronounId },
+          arabic: word.toString(),
+          morphemes: toMorphemes(word.morphemes),
+        },
+      ],
+    }
+  }
+
   const past = conjugatePast(verb)
 
   const rootStep: DerivationStep = {
@@ -53,6 +91,10 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
       },
     ],
   }
+}
+
+function toMorphemes(morphemeTokens: readonly MorphemeToken[]) {
+  return morphemeTokens.map((m) => ({ text: String(m), role: m.role }))
 }
 
 function tagPastStemChars(verb: Verb, stemChars: string[]): TaggedChar[] {
