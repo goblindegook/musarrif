@@ -58,7 +58,6 @@ export const stringifyWords = (value: unknown): unknown => {
   return String(value)
 }
 
-
 const transliterateValue = (value: unknown): unknown => {
   if (typeof value === 'string') return transliterate(value)
   if (Array.isArray(value)) return value.map(transliterateValue)
