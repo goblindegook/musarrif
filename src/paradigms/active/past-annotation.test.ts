@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getVerb } from '../verbs'
+import { getVerb, getVerbById } from '../verbs'
 import { annotatePast } from './past-annotation'
 
 describe('annotatePast', () => {
@@ -204,7 +204,12 @@ describe('annotatePast', () => {
           arabic: 'اِنْكَتَبَ',
           morphemes: [
             { text: 'اِنْ', role: 'measure' },
-            { text: 'كَتَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -212,7 +217,12 @@ describe('annotatePast', () => {
           arabic: 'اِنْكَتَبَ',
           morphemes: [
             { text: 'اِنْ', role: 'measure' },
-            { text: 'كَتَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
       ],
@@ -238,7 +248,12 @@ describe('annotatePast', () => {
           arabic: 'اِخْضَرَّ',
           morphemes: [
             { text: 'اِ', role: 'measure' },
-            { text: 'خْضَرَّ', role: 'radical' },
+            { text: 'خ', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ض', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'رّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -246,7 +261,12 @@ describe('annotatePast', () => {
           arabic: 'اِخْضَرَّ',
           morphemes: [
             { text: 'اِ', role: 'measure' },
-            { text: 'خْضَرَّ', role: 'radical' },
+            { text: 'خ', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ض', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'رّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
       ],
@@ -271,18 +291,24 @@ describe('annotatePast', () => {
           kind: { type: 'form', form: 3 },
           arabic: 'كَاتَبَ',
           morphemes: [
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
           kind: { type: 'tense', verbTense: 'active.past' },
           arabic: 'كَاتَبَ',
           morphemes: [
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
       ],
@@ -308,7 +334,12 @@ describe('annotatePast', () => {
           arabic: 'تَكَتَّبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَتَّبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -316,7 +347,12 @@ describe('annotatePast', () => {
           arabic: 'تَكَتَّبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَتَّبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
       ],
@@ -342,9 +378,12 @@ describe('annotatePast', () => {
           arabic: 'تَكَاتَبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -352,9 +391,12 @@ describe('annotatePast', () => {
           arabic: 'تَكَاتَبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
       ],
@@ -399,7 +441,10 @@ describe('annotatePast', () => {
             { text: 'اِ', role: 'measure' },
             { text: 'ح', role: 'radical' },
             { text: 'ْتَ', role: 'measure' },
-            { text: 'لَمَ', role: 'radical' },
+            { text: 'ل', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'م', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -409,7 +454,10 @@ describe('annotatePast', () => {
             { text: 'اِ', role: 'measure' },
             { text: 'ح', role: 'radical' },
             { text: 'ْتَ', role: 'measure' },
-            { text: 'لَمَ', role: 'radical' },
+            { text: 'ل', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'م', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -419,8 +467,62 @@ describe('annotatePast', () => {
             { text: 'اِ', role: 'measure' },
             { text: 'ح', role: 'radical' },
             { text: 'ْتَ', role: 'measure' },
-            { text: 'لَم', role: 'radical' },
+            { text: 'ل', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'م', role: 'radical' },
             { text: 'ْتُ', role: 'agreement' },
+          ],
+        },
+      ],
+    })
+  })
+
+  test('Form VIII — حلم (1s) matches annotation object', () => {
+    const result = annotatePast(getVerbById("'ty-8")!, '2mp')
+
+    expect(result).toEqual({
+      steps: [
+        {
+          arabic: 'ءتي',
+          kind: { type: 'root' },
+          morphemes: [
+            { role: 'radical', text: 'ء' },
+            { role: 'radical', text: 'ت' },
+            { role: 'radical', text: 'ي' },
+          ],
+        },
+        {
+          arabic: 'اِتَّتَى',
+          kind: { form: 8, type: 'form' },
+          morphemes: [
+            // FIXME: alif is measure, tah is radical, shadda is measure
+            { role: 'measure', text: 'اِتَّ' },
+            { role: 'radical', text: 'ت' },
+            { role: 'measure', text: 'َ' },
+            { role: 'radical', text: 'ى' },
+          ],
+        },
+        {
+          arabic: 'اِتَّتَى',
+          kind: { type: 'tense', verbTense: 'active.past' },
+          morphemes: [
+            // FIXME: alif is measure, tah is radical, shadda is measure
+            { role: 'measure', text: 'اِتَّ' },
+            { role: 'radical', text: 'ت' },
+            { role: 'measure', text: 'َ' },
+            { role: 'radical', text: 'ى' },
+          ],
+        },
+        {
+          arabic: 'اِتَّتَيْتُمْ',
+          kind: { pronounId: '2mp', type: 'pronoun' },
+          morphemes: [
+            // FIXME: alif is measure, tah is radical, shadda is measure
+            { role: 'measure', text: 'اِتَّ' },
+            { role: 'radical', text: 'ت' },
+            { role: 'measure', text: 'َ' },
+            { role: 'radical', text: 'ي' },
+            { role: 'agreement', text: 'ْتُمْ' },
           ],
         },
       ],

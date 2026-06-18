@@ -8,7 +8,7 @@ import { getVerbById } from '../verbs'
 
 describe('qSS-7', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('qSS-7')!)).toEqualT({
+    expect(conjugatePast(getVerbById('qSS-7')!)).strings.toEqualT({
       '1s': 'اِنْقَصَصْتُ',
       '2ms': 'اِنْقَصَصْتَ',
       '2fs': 'اِنْقَصَصْتِ',

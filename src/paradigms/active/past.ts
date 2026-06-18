@@ -8,7 +8,6 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  finalize,
   KASRA,
   LAM,
   MEEM,
@@ -34,40 +33,8 @@ interface PastBaseForms<T extends Token | MorphemeToken> {
   thirdPersonMasculinePluralBase: readonly T[]
 }
 
-export function conjugatePast(verb: Verb): Record<PronounId, string> {
-  return mapRecord(addAgreement(backwardsCompatibleBaseForms(derivePastForms(verb))), (ms) =>
-    finalize(ms.flatMap((m) => m.tokens)),
-  )
-}
-
-function buildForms(stem: readonly Token[], defective?: Token): PastBaseForms<Token> {
-  if (!defective?.isWeak)
-    return {
-      base: [...stem, FATHA],
-      suffixedBase: stem,
-      feminineSingularDualBase: [...stem, FATHA],
-      masculineDualBase: [...stem, FATHA],
-      thirdPersonMasculinePluralBase: [...stem, DAMMA],
-    }
-
-  const normalizedStem = stem.slice(0, -2)
-
-  if (defective.equals(YEH))
-    return {
-      base: [...normalizedStem, FATHA, ALIF_MAQSURA],
-      suffixedBase: [...normalizedStem, FATHA, YEH],
-      feminineSingularDualBase: [...normalizedStem, FATHA],
-      masculineDualBase: [...normalizedStem, FATHA, YEH, FATHA],
-      thirdPersonMasculinePluralBase: [...normalizedStem, FATHA],
-    }
-
-  return {
-    base: [...normalizedStem, FATHA, ALIF],
-    suffixedBase: [...normalizedStem, FATHA, WAW],
-    feminineSingularDualBase: [...normalizedStem, FATHA],
-    masculineDualBase: [...normalizedStem, FATHA, WAW, SUKOON],
-    thirdPersonMasculinePluralBase: [...normalizedStem, FATHA],
-  }
+export function conjugatePast(verb: Verb): Record<PronounId, Word> {
+  return mapRecord(addAgreement(derivePastForms(verb)), (morphemes) => new Word(morphemes))
 }
 
 function buildMorphemeForms(stem: readonly MorphemeToken[], defective?: Token): PastBaseForms<MorphemeToken> {
@@ -168,17 +135,6 @@ function conjugateZala(): PastBaseForms<MorphemeToken> {
   }
 }
 
-function backwardsCompatibleBaseForms(forms: PastBaseForms<Token>): PastBaseForms<MorphemeToken> {
-  // For backwards compatibility, it doesn't matter what the morpheme is.
-  return {
-    base: [measureMorpheme(forms.base)],
-    suffixedBase: [measureMorpheme(forms.suffixedBase)],
-    feminineSingularDualBase: [measureMorpheme(forms.feminineSingularDualBase)],
-    masculineDualBase: [measureMorpheme(forms.masculineDualBase)],
-    thirdPersonMasculinePluralBase: [measureMorpheme(forms.thirdPersonMasculinePluralBase)],
-  }
-}
-
 function addAgreement(forms: PastBaseForms<MorphemeToken>): Record<PronounId, readonly MorphemeToken[]> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } = forms
   return {
@@ -198,203 +154,405 @@ function addAgreement(forms: PastBaseForms<MorphemeToken>): Record<PronounId, re
   }
 }
 
-export function conjugatePastFormI(verb: FormIVerb): Record<PronounId, Word> {
-  return mapRecord(addAgreement(derivePastFormI(verb)), (morphemes) => new Word(morphemes))
-}
-
-function derivePastFormIq(verb: Verb): PastBaseForms<Token> {
+function derivePastFormIq(verb: Verb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
-  const stem = [c1, FATHA, c2, SUKOON, c3, FATHA, c4]
+  const stem = [
+    radicalMorpheme(c1),
+    measureMorpheme([FATHA]),
+    radicalMorpheme(c2),
+    measureMorpheme([SUKOON]),
+    radicalMorpheme(c3),
+    measureMorpheme([FATHA]),
+    radicalMorpheme(c4),
+  ]
 
   return {
-    ...buildForms(stem, c4),
-    thirdPersonMasculinePluralBase: [...stem.slice(0, -1), c4, DAMMA],
+    ...buildMorphemeForms(stem, c4),
+    thirdPersonMasculinePluralBase: [...stem, measureMorpheme([DAMMA])],
   }
 }
 
-function derivePastFormIIq(verb: Verb): PastBaseForms<Token> {
+function derivePastFormIIq(verb: Verb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
-  return buildForms([TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4], c4)
+  return buildMorphemeForms(
+    [
+      measureMorpheme([TEH, FATHA]),
+      radicalMorpheme(c1),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c2),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c3),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+    ],
+    c4,
+  )
 }
 
-function derivePastFormIIIq(verb: Verb): PastBaseForms<Token> {
+function derivePastFormIIIq(verb: Verb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
-  return buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4], c4)
+  return buildMorphemeForms(
+    [
+      measureMorpheme([ALIF, KASRA]),
+      radicalMorpheme(c1),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c2),
+      measureMorpheme([FATHA, NOON, SUKOON]),
+      radicalMorpheme(c3),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+    ],
+    c4,
+  )
 }
 
-function derivePastFormIVq(verb: Verb): PastBaseForms<Token> {
+function derivePastFormIVq(verb: Verb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
-  const prefix = [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3]
+  const prefix = [
+    measureMorpheme([ALIF, KASRA]),
+    radicalMorpheme(c1),
+    measureMorpheme([SUKOON]),
+    radicalMorpheme(c2),
+    measureMorpheme([FATHA]),
+    radicalMorpheme(c3),
+  ]
 
   return {
-    base: [...prefix, FATHA, c4, SUKOON, c4, FATHA],
-    suffixedBase: [...prefix, SUKOON, c4, FATHA, c4],
-    feminineSingularDualBase: [...prefix, FATHA, c4, SUKOON, c4, FATHA],
-    masculineDualBase: [...prefix, FATHA, c4, SUKOON, c4, FATHA],
-    thirdPersonMasculinePluralBase: [...prefix, FATHA, c4, SUKOON, c4, DAMMA],
+    base: [
+      ...prefix,
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c4),
+      measureMorpheme([FATHA]),
+    ],
+    suffixedBase: [
+      ...prefix,
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c4),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+    ],
+    feminineSingularDualBase: [
+      ...prefix,
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c4),
+      measureMorpheme([FATHA]),
+    ],
+    masculineDualBase: [
+      ...prefix,
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c4),
+      measureMorpheme([FATHA]),
+    ],
+    thirdPersonMasculinePluralBase: [
+      ...prefix,
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c4),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c4),
+      measureMorpheme([DAMMA]),
+    ],
   }
 }
 
-function derivePastFormII(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [c1, FATHA, c2, SHADDA, FATHA]
+  const prefix = [
+    radicalMorpheme(c1),
+    measureMorpheme([FATHA]),
+    radicalMorpheme(c2),
+    measureMorpheme([SHADDA]),
+    measureMorpheme([FATHA]),
+  ]
 
   if (c2.equals(YEH) && c3.equals(YEH))
     return {
-      ...buildForms([...prefix, ALIF], c3),
-      base: [...prefix, ALIF],
+      ...buildMorphemeForms([...prefix, radicalMorpheme(ALIF)], c3),
+      base: [...prefix, radicalMorpheme(ALIF)],
     }
 
-  return buildForms([...prefix, c3], c3)
+  return buildMorphemeForms([...prefix, radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIII(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [c1, FATHA, ALIF, c2]
+  const prefix = [radicalMorpheme(c1), measureMorpheme([FATHA, ALIF]), radicalMorpheme(c2)]
 
   if (c2.equals(c3))
     return {
-      ...buildForms([...prefix, SUKOON, c3], c3),
-      suffixedBase: [...prefix, FATHA, c3],
+      ...buildMorphemeForms([...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c3)], c3),
+      suffixedBase: [...prefix, measureMorpheme([FATHA]), radicalMorpheme(c3)],
     }
 
-  return buildForms([...prefix, FATHA, c3], c3)
+  return buildMorphemeForms([...prefix, measureMorpheme([FATHA]), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIV(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormIV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [ALIF_HAMZA, FATHA, c1]
+  const prefix = [measureMorpheme([ALIF_HAMZA, FATHA]), radicalMorpheme(c1)]
 
   if (c2.equals(c3) && c3.isWeak)
     return {
-      ...buildForms([...prefix, SUKOON, c2, FATHA, ALIF], c3),
-      base: [...prefix, SUKOON, c2, FATHA, ALIF],
-      masculineDualBase: [...prefix, SUKOON, c2, FATHA],
+      ...buildMorphemeForms(
+        [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(ALIF)],
+        c3,
+      ),
+      base: [
+        ...prefix,
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(ALIF),
+      ],
+      masculineDualBase: [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA])],
     }
 
   if (c2.equals(c3)) {
     return {
-      base: [...prefix, FATHA, c2, SUKOON, c3, FATHA],
-      suffixedBase: [...prefix, SUKOON, c2, FATHA, c3],
-      feminineSingularDualBase: [...prefix, FATHA, c2, SUKOON, c3, FATHA],
-      masculineDualBase: [...prefix, FATHA, c2, SUKOON, c3, FATHA],
-      thirdPersonMasculinePluralBase: [...prefix, FATHA, c2, SUKOON, c3, DAMMA],
+      base: [
+        ...prefix,
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c2),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c3),
+        measureMorpheme([FATHA]),
+      ],
+      suffixedBase: [
+        ...prefix,
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c3),
+      ],
+      feminineSingularDualBase: [
+        ...prefix,
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c2),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c3),
+        measureMorpheme([FATHA]),
+      ],
+      masculineDualBase: [
+        ...prefix,
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c2),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c3),
+        measureMorpheme([FATHA]),
+      ],
+      thirdPersonMasculinePluralBase: [
+        ...prefix,
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c2),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c3),
+        measureMorpheme([DAMMA]),
+      ],
     }
   }
 
-  if (c2.isHamza && c3.isWeak) return buildForms([...prefix, FATHA, c3], YEH)
+  if (c2.isHamza && c3.isWeak)
+    return buildMorphemeForms([...prefix, measureMorpheme([FATHA]), radicalMorpheme(c3)], YEH)
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH)
+  if (c3.isWeak)
+    return buildMorphemeForms(
+      [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
+      YEH,
+    )
 
-  if (c2.isWeak) return buildForms([...prefix, FATHA, ALIF, c3], c3)
+  if (c2.isWeak)
+    return buildMorphemeForms([...prefix, measureMorpheme([FATHA]), radicalMorpheme(ALIF), radicalMorpheme(c3)], c3)
 
-  return buildForms([...prefix, SUKOON, c2, FATHA, c3], c3)
+  return buildMorphemeForms(
+    [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
+    c3,
+  )
 }
 
-function derivePastFormV(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
 
-  return buildForms([TEH, FATHA, c1, FATHA, c2, SHADDA, FATHA, c3], c3)
+  return buildMorphemeForms(
+    [
+      measureMorpheme([TEH, FATHA]),
+      radicalMorpheme(c1),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c2),
+      measureMorpheme([SHADDA]),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c3),
+    ],
+    c3,
+  )
 }
 
-function derivePastFormVI(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormVI(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [TEH, FATHA, c1]
+  const prefix = [measureMorpheme([TEH, FATHA]), radicalMorpheme(c1)]
 
   if (c2.equals(c3))
     return {
-      ...buildForms([...prefix, FATHA, ALIF, c2, SUKOON, c3], c3),
-      suffixedBase: [...prefix, FATHA, ALIF, c2, FATHA, c3],
+      ...buildMorphemeForms(
+        [
+          ...prefix,
+          measureMorpheme([FATHA, ALIF]),
+          radicalMorpheme(c2),
+          measureMorpheme([SUKOON]),
+          radicalMorpheme(c3),
+        ],
+        c3,
+      ),
+      suffixedBase: [
+        ...prefix,
+        measureMorpheme([FATHA, ALIF]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c3),
+      ],
     }
 
-  return buildForms([...prefix, FATHA, ALIF, c2, FATHA, c3], c3.isWeak ? YEH : c3)
+  return buildMorphemeForms(
+    [...prefix, measureMorpheme([FATHA, ALIF]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
+    c3.isWeak ? YEH : c3,
+  )
 }
 
-function derivePastFormVII(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormVII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [ALIF, KASRA, NOON, SUKOON, c1, FATHA]
+  const prefix = [measureMorpheme([ALIF, KASRA, NOON, SUKOON]), radicalMorpheme(c1), measureMorpheme([FATHA])]
 
   if (c2.equals(c3))
     return {
-      ...buildForms([...prefix, c2, SUKOON, c3], c3),
-      suffixedBase: [...prefix, c2, FATHA, c3],
+      ...buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([SUKOON]), radicalMorpheme(c3)], c3),
+      suffixedBase: [...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
     }
 
   if (c2.isWeak && c3.isWeak)
     return {
-      ...buildForms([...prefix, c2, FATHA, c3], c3),
+      ...buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)], c3),
       thirdPersonMasculinePluralBase: prefix,
     }
 
-  if (c2.isWeak) return buildForms([...prefix, ALIF, c3], c3)
+  if (c2.isWeak) return buildMorphemeForms([...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)], c3)
 
-  return buildForms([...prefix, c2, FATHA, c3], c3)
+  return buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1)
-  const prefix = [ALIF, KASRA, c1, SUKOON, infix, FATHA]
+  const prefix = [measureMorpheme([ALIF, KASRA]), radicalMorpheme(c1), measureMorpheme([SUKOON, infix, FATHA])]
 
   if (c2.equals(c3))
     return {
-      ...buildForms([...prefix, c2, SUKOON, c3], c3),
-      suffixedBase: [...prefix, c2, FATHA, c3],
+      ...buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([SUKOON]), radicalMorpheme(c3)], c3),
+      suffixedBase: [...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
     }
 
-  if (c1.equals(WAW) || c1.isHamza) return buildForms([ALIF, KASRA, infix, SHADDA, FATHA, c2, FATHA, c3], c3)
+  if (c1.equals(WAW) || c1.isHamza)
+    return buildMorphemeForms(
+      [
+        measureMorpheme([ALIF, KASRA, infix, SHADDA, FATHA]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c3),
+      ],
+      c3,
+    )
 
-  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH)
+  if (c2.isWeak && c3.isWeak)
+    return buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)], YEH)
 
   if (c2.equals(YEH))
     return {
-      ...buildForms([...prefix, ALIF, c3], c3),
-      suffixedBase: [...prefix, c3],
+      ...buildMorphemeForms([...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)], c3),
+      suffixedBase: [...prefix, radicalMorpheme(c3)],
     }
 
-  if (c2.isWeak && !infix.equals(DAL)) return buildForms([...prefix, ALIF, c3], c3)
+  if (c2.isWeak && !infix.equals(DAL))
+    return buildMorphemeForms([...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)], c3)
 
-  if (c3.isWeak) return buildForms([...prefix, c2, FATHA, c3], YEH)
+  if (c3.isWeak)
+    return buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)], YEH)
 
-  return buildForms([...prefix, c2, FATHA, c3], c3)
+  return buildMorphemeForms([...prefix, radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIX(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormIX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
   return {
-    ...buildForms([ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, SUKOON, c3], c3),
-    suffixedBase: [ALIF, KASRA, c1, SUKOON, c2, FATHA, c3, FATHA, c3],
+    ...buildMorphemeForms(
+      [
+        measureMorpheme([ALIF, KASRA]),
+        radicalMorpheme(c1),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c3),
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c3),
+      ],
+      c3,
+    ),
+    suffixedBase: [
+      measureMorpheme([ALIF, KASRA]),
+      radicalMorpheme(c1),
+      measureMorpheme([SUKOON]),
+      radicalMorpheme(c2),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c3),
+      measureMorpheme([FATHA]),
+      radicalMorpheme(c3),
+    ],
   }
 }
 
-function derivePastFormX(verb: NonFormIVerb): PastBaseForms<Token> {
+function derivePastFormX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, FATHA, c1]
+  const prefix = [measureMorpheme([ALIF, KASRA, SEEN, SUKOON, TEH, FATHA]), radicalMorpheme(c1)]
 
-  if (c2.isWeak && c3.isWeak) return buildForms([...prefix, FATHA, ALIF], c3)
+  if (c2.isWeak && c3.isWeak)
+    return buildMorphemeForms([...prefix, measureMorpheme([FATHA]), radicalMorpheme(ALIF)], c3)
 
   if (c2.equals(c3))
     return {
-      ...buildForms([...prefix, FATHA, c2, SUKOON, c3], c3),
-      suffixedBase: [...prefix, SUKOON, c2, FATHA, c3],
+      ...buildMorphemeForms(
+        [...prefix, measureMorpheme([FATHA]), radicalMorpheme(c2), measureMorpheme([SUKOON]), radicalMorpheme(c3)],
+        c3,
+      ),
+      suffixedBase: [
+        ...prefix,
+        measureMorpheme([SUKOON]),
+        radicalMorpheme(c2),
+        measureMorpheme([FATHA]),
+        radicalMorpheme(c3),
+      ],
     }
 
-  if (c3.isWeak) return buildForms([...prefix, SUKOON, c2, FATHA, c3], YEH)
+  if (c3.isWeak)
+    return buildMorphemeForms(
+      [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
+      YEH,
+    )
 
   if (c2.isWeak)
     return {
-      ...buildForms([...prefix, FATHA, ALIF, c3], c3),
-      suffixedBase: [...prefix, FATHA, c3],
+      ...buildMorphemeForms([...prefix, measureMorpheme([FATHA]), radicalMorpheme(ALIF), radicalMorpheme(c3)], c3),
+      suffixedBase: [...prefix, measureMorpheme([FATHA]), radicalMorpheme(c3)],
     }
 
-  return buildForms([...prefix, SUKOON, c2, FATHA, c3], c3)
+  return buildMorphemeForms(
+    [...prefix, measureMorpheme([SUKOON]), radicalMorpheme(c2), measureMorpheme([FATHA]), radicalMorpheme(c3)],
+    c3,
+  )
 }
 
-function flattenFormMorphemes(forms: PastBaseForms<MorphemeToken>): PastBaseForms<Token> {
-  return mapRecord(forms, (morphemes) => morphemes.flatMap((morpheme) => morpheme.tokens))
-}
-
-function derivePastForms(verb: Verb): PastBaseForms<Token> {
+function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
   if (verb.root.length === 4) {
     switch (verb.form) {
       case 1:
@@ -418,7 +576,7 @@ function derivePastForms(verb: Verb): PastBaseForms<Token> {
 
   switch (verb.form) {
     case 1:
-      return flattenFormMorphemes(derivePastFormI(verb))
+      return derivePastFormI(verb)
     case 2:
       return derivePastFormII(verb)
     case 3:

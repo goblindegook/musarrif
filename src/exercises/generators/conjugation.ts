@@ -63,7 +63,7 @@ function easyCandidates(
       .flatMap((t) =>
         distractorPronouns(t, { ...profile, tenses: tensesLevel, pronouns: pronounsLevel })
           .filter((p) => p !== targetPronoun)
-          .map((p) => conjugate(v, t)[p]),
+          .map((p) => String(conjugate(v, t)[p])),
       ),
   )
 }
@@ -81,17 +81,17 @@ function mediumCandidates(
       .flatMap((t) =>
         distractorPronouns(t, profile)
           .filter((p) => p !== targetPronoun)
-          .map((p) => conjugate(verb, t)[p]),
+          .map((p) => String(conjugate(verb, t)[p])),
       ),
     ...siblings.flatMap((sibling) =>
       distractorPronouns(targetTense, profile)
         .filter((p) => p !== targetPronoun)
-        .map((p) => conjugate(sibling, targetTense)[p]),
+        .map((p) => String(conjugate(sibling, targetTense)[p])),
     ),
     ...siblings.flatMap((sibling) =>
       tensePool(profile.tenses)
         .filter((t) => t !== targetTense)
-        .map((t) => conjugate(sibling, t)[targetPronoun]),
+        .map((t) => String(conjugate(sibling, t)[targetPronoun])),
     ),
   ]
 }
@@ -105,11 +105,11 @@ function hardCandidates(
   return [
     ...distractorPronouns(targetTense, profile)
       .filter((p) => p !== targetPronoun)
-      .map((p) => conjugate(verb, targetTense)[p]),
+      .map((p) => String(conjugate(verb, targetTense)[p])),
     ...tensePool(profile.tenses)
       .filter((t) => t !== targetTense)
-      .map((t) => conjugate(verb, t)[targetPronoun]),
-    ...buildSiblings(verb).map((sibling) => conjugate(sibling, targetTense)[targetPronoun]),
+      .map((t) => String(conjugate(verb, t)[targetPronoun])),
+    ...buildSiblings(verb).map((sibling) => String(conjugate(sibling, targetTense)[targetPronoun])),
   ]
 }
 
@@ -124,7 +124,7 @@ export const conjugationExercise = defineExercise(
       targetTense,
       constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns),
     )
-    const conjugatedVerb = conjugate(verb, targetTense)[targetPronoun]
+    const conjugatedVerb = String(conjugate(verb, targetTense)[targetPronoun])
     const answer = exerciseDiacritics(conjugatedVerb, profile.diacritics)
     const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, conjugatedVerb)
 

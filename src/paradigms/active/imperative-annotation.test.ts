@@ -89,7 +89,12 @@ describe('annotateActiveImperative', () => {
           arabic: 'اِسْتَخْرَجَ',
           morphemes: [
             { text: 'اِسْتَ', role: 'measure' },
-            { text: 'خْرَجَ', role: 'radical' },
+            { text: 'خ', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ر', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ج', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -221,7 +226,10 @@ describe('annotateActiveImperative', () => {
           arabic: 'أَحَبَّ',
           morphemes: [
             { text: 'أَ', role: 'measure' },
-            { text: 'حَبَّ', role: 'radical' },
+            { text: 'ح', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {

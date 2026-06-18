@@ -68,9 +68,12 @@ describe('annotateActivePresentMood', () => {
           kind: { type: 'form', form: 3 },
           arabic: 'كَاتَبَ',
           morphemes: [
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -106,7 +109,12 @@ describe('annotateActivePresentMood', () => {
           arabic: 'اِنْكَتَبَ',
           morphemes: [
             { text: 'اِنْ', role: 'measure' },
-            { text: 'كَتَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -141,7 +149,12 @@ describe('annotateActivePresentMood', () => {
           arabic: 'تَكَتَّبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَتَّبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -176,9 +189,12 @@ describe('annotateActivePresentMood', () => {
           arabic: 'تَكَاتَبَ',
           morphemes: [
             { text: 'تَ', role: 'measure' },
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {

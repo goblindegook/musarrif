@@ -179,7 +179,8 @@ for (const verb of verbsToTest as DisplayVerb[]) {
         const elixirForm = elixirForms.get(tag)
         if (!elixirForm) continue
 
-        const musNorm = normalize(isFuture ? stripFutureSa(musarrifForm) : musarrifForm)
+        const musarrifStr = musarrifForm.toString()
+        const musNorm = normalize(isFuture ? stripFutureSa(musarrifStr) : musarrifStr)
         const eliNorm = normalize(elixirForm)
 
         if (musNorm === eliNorm) {
@@ -191,7 +192,7 @@ for (const verb of verbsToTest as DisplayVerb[]) {
             form: verb.form,
             tense,
             pronounId,
-            musarrif: musarrifForm,
+            musarrif: musarrifStr,
             elixir: elixirForm,
           })
         }

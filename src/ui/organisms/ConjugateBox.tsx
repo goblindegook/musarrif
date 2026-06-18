@@ -20,8 +20,8 @@ interface ConjugateBoxProps {
 const FORM_I_PATTERN_OPTIONS = FORM_I_PATTERNS.map((pattern) => [
   pattern,
   [
-    conjugate(synthesizeVerb('فعل', 1, pattern), 'active.past')['3ms'],
-    conjugate(synthesizeVerb('فعل', 1, pattern), 'active.present.indicative')['3ms'],
+    String(conjugate(synthesizeVerb('فعل', 1, pattern), 'active.past')['3ms']),
+    String(conjugate(synthesizeVerb('فعل', 1, pattern), 'active.present.indicative')['3ms']),
   ].join(' / '),
 ])
 

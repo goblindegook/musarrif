@@ -79,7 +79,12 @@ describe('annotateActiveFuture', () => {
           arabic: 'اِسْتَخْرَجَ',
           morphemes: [
             { text: 'اِسْتَ', role: 'measure' },
-            { text: 'خْرَجَ', role: 'radical' },
+            { text: 'خ', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ر', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ج', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -124,9 +129,12 @@ describe('annotateActiveFuture', () => {
           kind: { type: 'form', form: 3 },
           arabic: 'كَاتَبَ',
           morphemes: [
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تَبَ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
@@ -173,7 +181,10 @@ describe('annotateActiveFuture', () => {
           arabic: 'أَحَبَّ',
           morphemes: [
             { text: 'أَ', role: 'measure' },
-            { text: 'حَبَّ', role: 'radical' },
+            { text: 'ح', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {

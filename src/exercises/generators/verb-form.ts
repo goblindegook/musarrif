@@ -24,7 +24,7 @@ export const verbFormExercise = defineExercise(
       tense,
       constraints?.pronoun ?? (profile.pronouns === 0 ? '3ms' : randomPronoun(verb, tense, profile.pronouns)),
     )
-    const conjugatedVerb = conjugate(verb, tense)[pronoun]
+    const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
     const word = exerciseDiacritics(conjugatedVerb, profile.diacritics)
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, word)
 
@@ -32,7 +32,9 @@ export const verbFormExercise = defineExercise(
       (f) =>
         f !== verb.form &&
         exerciseDiacritics(
-          conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, f), tense)[pronoun],
+          String(
+            conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, f), tense)[pronoun],
+          ),
           profile.diacritics,
         ) !== word,
     )

@@ -200,7 +200,7 @@ export function ConjugationTable({
             {PRONOUNS.map((slot) => {
               const conjugation = conjugations[slot.id]
               if (!conjugation) return null
-              const displayText = applyDiacriticsPreference(conjugation, diacriticsPreference)
+              const displayText = applyDiacriticsPreference(String(conjugation), diacriticsPreference)
 
               return (
                 <Row key={slot.id}>
@@ -219,8 +219,17 @@ export function ConjugationTable({
                   <ActionCell>
                     <ActionButtons>
                       <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
-                      <SpeechButton text={conjugation} lang="ar" ariaLabel={t('aria.speak', { text: conjugation })} />
-                      <ConjugationInsights verb={verb} verbTense={verbTense} pronoun={slot.id} arabic={conjugation} />
+                      <SpeechButton
+                        text={String(conjugation)}
+                        lang="ar"
+                        ariaLabel={t('aria.speak', { text: String(conjugation) })}
+                      />
+                      <ConjugationInsights
+                        verb={verb}
+                        verbTense={verbTense}
+                        pronoun={slot.id}
+                        arabic={String(conjugation)}
+                      />
                     </ActionButtons>
                   </ActionCell>
                 </Row>

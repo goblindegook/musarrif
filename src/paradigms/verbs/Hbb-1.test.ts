@@ -11,7 +11,7 @@ import { getVerbById } from '../verbs'
 
 describe('Hbb-1', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('Hbb-1')!)).toEqualT({
+    expect(conjugatePast(getVerbById('Hbb-1')!)).strings.toEqualT({
       '1s': 'حَبَبْتُ',
       '2ms': 'حَبَبْتَ',
       '2fs': 'حَبَبْتِ',

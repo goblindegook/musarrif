@@ -28,6 +28,7 @@ import {
   verbs,
 } from '../src/paradigms/verbs.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
+import { mapRecord } from '../src/primitives/objects.ts'
 import en from '../src/ui/locales/en.json' with { type: 'json' }
 
 const locale = en
@@ -96,7 +97,7 @@ function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): Disp
 }
 
 function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
-  if (tense === 'active.past') return conjugatePast(verb)
+  if (tense === 'active.past') return mapRecord(conjugatePast(verb), (w) => w.toString())
   if (tense === 'active.present.indicative') return conjugatePresentMood(verb, 'indicative')
   if (tense === 'active.present.subjunctive') return conjugatePresentMood(verb, 'subjunctive')
   if (tense === 'active.present.jussive') return conjugatePresentMood(verb, 'jussive')

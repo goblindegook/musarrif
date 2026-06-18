@@ -3,11 +3,11 @@ import { setup } from 'goober'
 import { h } from 'preact'
 import { expect, vi } from 'vitest'
 
-import { matchers } from './matchers'
+import { installMatchers } from './matchers'
 
 // Ensure goober uses Preact's h during tests
 setup(h)
-expect.extend(matchers)
+installMatchers(expect)
 
 const localStorageMock = (() => {
   let store: Record<string, string> = {}

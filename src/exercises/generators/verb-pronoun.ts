@@ -27,7 +27,7 @@ export const verbPronounExercise = defineExercise(
       tense,
       constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
     )
-    const conjugatedVerb = conjugate(verb, tense)[pronoun]
+    const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
     const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedVerb)
     const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(pronoun)
@@ -54,14 +54,15 @@ function buildOptions(
   profile: DimensionProfile,
 ): [string, readonly PronounId[]] {
   const conjugated = conjugate(verb, tense)
-  const word = exerciseDiacritics(conjugated[pronoun], profile.diacritics)
+  const word = exerciseDiacritics(String(conjugated[pronoun]), profile.diacritics)
 
   // Exclude dual pronouns unless the user has reached that level
   const pronouns = pronounPool(Math.max(profile.pronouns, 2) as PronounsLevel)
 
   const eligible = pronouns.filter(
     (p) =>
-      word !== exerciseDiacritics(conjugated[p], profile.diacritics) && ARABIC_PRONOUNS[p] !== ARABIC_PRONOUNS[pronoun],
+      word !== exerciseDiacritics(String(conjugated[p]), profile.diacritics) &&
+      ARABIC_PRONOUNS[p] !== ARABIC_PRONOUNS[pronoun],
   )
 
   const distractors = shuffle(eligible).slice(0, 3)

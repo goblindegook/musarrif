@@ -22,7 +22,10 @@ describe('annotatePassivePresentMood', () => {
           arabic: 'اِسْتَحَبَّ',
           morphemes: [
             { text: 'اِسْتَ', role: 'measure' },
-            { text: 'حَبَّ', role: 'radical' },
+            { text: 'ح', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'َ', role: 'measure' },
           ],
         },
         {
