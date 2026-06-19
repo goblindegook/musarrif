@@ -28,6 +28,7 @@ import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme
 
 function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
   const suffix = agreementMorpheme(KASRA, YEH, NOON, FATHA)
+  const defectiveSuffix = agreementMorpheme(FATHA, YEH, NOON, FATHA)
 
   if (verb.root.length > 3) return [...stem, suffix]
 
@@ -35,8 +36,7 @@ function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb):
 
   switch (verb.form) {
     case 1:
-      if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
-        return [...stem.slice(0, -2), agreementMorpheme(FATHA, YEH, NOON, FATHA)]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), defectiveSuffix]
       if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), suffix]
       if (c3.isWeak) return [...stem.slice(0, -1), suffix]
       return [...stem, suffix]
@@ -49,11 +49,11 @@ function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb):
 
     case 5:
     case 6:
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA, YEH, NOON, FATHA)]
+      if (c3.isWeak) return [...stem.slice(0, -2), defectiveSuffix]
       return [...stem, suffix]
 
     case 7:
-      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA, YEH, NOON, FATHA)]
+      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), defectiveSuffix]
       if (c3.isWeak) return [...stem.slice(0, -2), suffix]
       return [...stem, suffix]
 
@@ -315,6 +315,11 @@ function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly MorphemeT
     '3mp': [agreementMorpheme(YEH, vowel), ...masculinePlural],
     '3fp': [agreementMorpheme(YEH, vowel), ...femininePlural],
   }
+}
+
+function presentPrefixVowel(verb: Verb): Token {
+  if (verb.root.length === 4) return verb.form === 1 ? DAMMA : FATHA
+  return [2, 3, 4].includes(verb.form) ? DAMMA : FATHA
 }
 
 function backwardsCompatibleConjugateIndicative(verb: Verb): Record<PronounId, string> {
@@ -763,11 +768,6 @@ function derivePresentFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
     return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
 
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
-}
-
-function presentPrefixVowel(verb: Verb): Token {
-  if (verb.root.length === 4) return verb.form === 1 ? DAMMA : FATHA
-  return [2, 3, 4].includes(verb.form) ? DAMMA : FATHA
 }
 
 function derivePresentStem(verb: Verb): readonly MorphemeToken[] {

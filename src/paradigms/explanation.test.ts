@@ -392,11 +392,11 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
     })
   })
 
-  test('future 3ms collapses seen and person prefix, no suffix', () => {
+  test('future 3ms collapses seen and person prefix and keeps the indicative suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
     expect(layers).toMatchObject({
       prefix: 'سَيَ',
-      suffix: undefined,
+      suffix: 'ُ',
     })
   })
 
@@ -578,9 +578,9 @@ describe('renderExplanation paragraph 3 template selection', () => {
     expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
   })
 
-  test('future 3ms renders prefix-only template', () => {
+  test('future 3ms renders prefix-and-suffix template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-only')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
   })
 
   test('past 1s paragraph 3 contains tatweel-prefixed suffix', () => {

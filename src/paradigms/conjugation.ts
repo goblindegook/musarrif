@@ -25,7 +25,7 @@ const CONJUGATE = {
   'active.present.indicative': (verb: Verb) => conjugatePresentMood(verb, 'indicative'),
   'active.present.subjunctive': (verb: Verb) => conjugatePresentMood(verb, 'subjunctive'),
   'active.present.jussive': (verb: Verb) => conjugatePresentMood(verb, 'jussive'),
-  'active.future': (verb: Verb) => toWord(conjugateFuture(verb)),
+  'active.future': conjugateFuture,
   'active.imperative': (verb: Verb) => toWord(conjugateImperative(verb)),
   'passive.past': (verb: Verb) => toWord(conjugatePassivePast(verb)),
   'passive.present.indicative': (verb: Verb) => toWord(conjugatePassivePresentMood(verb, 'indicative')),

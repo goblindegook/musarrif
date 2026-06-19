@@ -1,33 +1,25 @@
-import { type AnnotatedForm, buildMorphemes, PRESENT_INDICATIVE_SUFFIX_COUNTS, tagFutureChars } from '../annotation'
+import type { AnnotatedForm } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
+import type { MorphemeToken } from '../word'
 import { conjugateFuture } from './future'
 import { annotateActivePresentMood } from './present-annotation'
 
-const FUTURE_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 5: 2, 6: 2, 7: 2, 10: 4 }
-
-const FUTURE_FORM_INFIX_INDEX: Partial<Record<number, number>> = { 3: 6, 6: 8 }
+function toMorphemes(morphemeTokens: readonly MorphemeToken[]) {
+  return morphemeTokens.map((m) => ({ text: String(m), role: m.role }))
+}
 
 export function annotateActiveFuture(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const presentIndicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
-
-  const arabic = conjugateFuture(verb)[pronounId]
-  const morphemes = buildMorphemes(
-    tagFutureChars(
-      [...arabic],
-      pronounId === '3ms' ? 0 : PRESENT_INDICATIVE_SUFFIX_COUNTS[pronounId],
-      verb.root.length === 3 ? (FUTURE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0,
-      verb.root.length === 3 ? (FUTURE_FORM_INFIX_INDEX[verb.form] ?? -1) : -1,
-    ),
-  )
+  const word = conjugateFuture(verb)[pronounId]
 
   return {
     steps: [
       ...presentIndicativeAnnotation.steps,
       {
         kind: { type: 'tense', verbTense: 'active.future' },
-        arabic,
-        morphemes,
+        arabic: String(word),
+        morphemes: toMorphemes(word.morphemes),
       },
     ],
   }
