@@ -53,7 +53,7 @@ describe('getUserData', () => {
   })
 
   test('returns stored dimension profile', () => {
-    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 2 as const, pronouns: 2 as const }
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 }
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
     expect(data.dimensions.profile.tenses).toBe(2)
@@ -62,12 +62,12 @@ describe('getUserData', () => {
   test('rolls back dimension levels that violate prerequisites', () => {
     const profile = {
       ...INITIAL_DIMENSION_PROFILE,
-      diacritics: 2 as const,
-      tenses: 4 as const,
-      pronouns: 3 as const,
-      forms: 3 as const,
-      rootTypes: 3 as const,
-      nominals: 1 as const,
+      diacritics: 2,
+      tenses: 4,
+      pronouns: 3,
+      forms: 3,
+      rootTypes: 3,
+      nominals: 1,
     }
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()

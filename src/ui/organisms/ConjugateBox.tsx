@@ -34,7 +34,7 @@ const FORM_I_PATTERN_OPTIONS = FORM_I_PATTERNS.map((pattern) => [
 export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   const { t, diacriticsPreference, dir } = useI18n()
 
-  const initialLetters = selectedVerb ? Array.from(selectedVerb.root) : ([undefined, undefined, undefined] as const)
+  const initialLetters = selectedVerb ? Array.from(selectedVerb.root) : [undefined, undefined, undefined]
 
   const [c1, setC1] = useState<string | undefined>(initialLetters[0])
   const [c2, setC2] = useState<string | undefined>(initialLetters[1])
@@ -87,7 +87,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   return (
     <Container>
       <RootPicker dir="rtl">
-        {([c1, c2, c3] as const).map((selected, index) => {
+        {[c1, c2, c3].map((selected, index) => {
           const pos = index as 0 | 1 | 2
 
           return (

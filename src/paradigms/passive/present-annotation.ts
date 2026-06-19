@@ -45,7 +45,7 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
       steps: [
         ...indicativeAnnotation.steps,
         {
-          kind: { type: 'tense', verbTense: `passive.present.${mood}` as const },
+          kind: { type: 'tense', verbTense: `passive.present.${mood}` },
           arabic: passivePresentMood[pronounId],
           morphemes: moodMorphemes,
         },

@@ -88,7 +88,7 @@ export function useStats() {
     }
   }, [stats])
 
-  return { stats, findDate, getDailyWindow, streak, accuracy, recordResult } as const
+  return { stats, findDate, getDailyWindow, streak, accuracy, recordResult }
 }
 
 export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {

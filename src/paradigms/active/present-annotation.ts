@@ -28,7 +28,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       steps: [
         ...indicativeAnnotation.steps,
         {
-          kind: { type: 'tense', verbTense: `active.present.${mood}` as const },
+          kind: { type: 'tense', verbTense: `active.present.${mood}` },
           arabic: String(moodConjugation),
           morphemes: [...moodConjugation.toMorphemes(), ...elidedMorpheme],
         },

@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ModeToggle } from './ModeToggle'
 
-const labels = ['Conjugate', 'Exercise'] as const
+const labels = ['Conjugate', 'Exercise']
 const icons = [<span>icon-a</span>, <span>icon-b</span>]
 
 describe('ModeToggle', () => {

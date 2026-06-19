@@ -80,18 +80,16 @@ describe('diacriticsDifficulty', () => {
 })
 
 describe('randomNominalVerb', () => {
-  const NOMINAL_PROFILE = {
-    tenses: 4,
-    pronouns: 3,
-    diacritics: 0,
-    forms: 9,
-    rootTypes: 5,
-    nominals: 2,
-  } as const
-
   test('excludes lys-1 from nominal exercise pools', () => {
     const restore = vi.spyOn(Math, 'random').mockReturnValue(0)
-    const selected = randomNominalVerb(NOMINAL_PROFILE)
+    const selected = randomNominalVerb({
+      tenses: 4,
+      pronouns: 3,
+      diacritics: 0,
+      forms: 9,
+      rootTypes: 5,
+      nominals: 2,
+    })
     restore.mockRestore()
 
     expect(selected.id).not.toBe('lys-1')

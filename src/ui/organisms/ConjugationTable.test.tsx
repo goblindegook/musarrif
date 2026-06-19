@@ -10,8 +10,8 @@ function renderTable(overrides: Partial<ConjugationTableProps>) {
     onTenseChange: vi.fn(),
     onVoiceChange: vi.fn(),
     verb: getVerbById('ktb-1')!,
-    voice: 'active' as const,
-    tense: 'past' as const,
+    voice: 'active',
+    tense: 'past',
     ...overrides,
   }
   render(
