@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
 import { renderExplanation, resolveVerbExplanationLayers, toFormDescriptor } from '../../paradigms/explanation'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
-import { type DisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
+import { type DisplayVerb, isTriliteralFormIDisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Heading } from '../atoms/Heading'
 import { InlineVerbList } from '../atoms/InlineVerbList'
@@ -13,8 +13,9 @@ import { VerbPill } from '../molecules/VerbPill'
 
 const getVowelPattern = (verb: DisplayVerb): string => {
   const templateRoot = verb.root.length > 3 ? 'فعلل' : 'فعل'
-  const synthetic =
-    verb.form === 1 ? synthesizeVerb(templateRoot, 1, verb.vowels) : synthesizeVerb(templateRoot, verb.form)
+  const synthetic = isTriliteralFormIDisplayVerb(verb)
+    ? synthesizeVerb(templateRoot, 1, verb.vowels)
+    : synthesizeVerb(templateRoot, verb.form)
   return [synthetic.lemma, String(conjugate(synthetic, 'active.present.indicative')['3ms'])].join(' / ')
 }
 

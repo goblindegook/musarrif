@@ -23,6 +23,7 @@ import {
   type DisplayVerb,
   FORMS,
   getAvailableParadigms,
+  isTriliteralFormIDisplayVerb,
   synthesizeVerb,
   type VerbForm,
   verbs,
@@ -89,7 +90,9 @@ function resolveRoot(input: string): string {
 function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): DisplayVerb {
   const root = resolveRoot(rootInput)
   if (form === 1) {
-    const existingFormI = verbs.find((verb) => verb.root === root && verb.form === 1 && verb.vowels === vowels)
+    const existingFormI = verbs.find(
+      (verb) => verb.root === root && isTriliteralFormIDisplayVerb(verb) && verb.vowels === vowels,
+    )
     if (existingFormI) return existingFormI
     return synthesizeVerb(root, 1, vowels)
   }

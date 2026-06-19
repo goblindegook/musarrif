@@ -18,17 +18,15 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { Verb } from '../verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
 import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): string {
   if (verb.noPassiveParticiple) return ''
 
   const result = (() => {
-    const letters = verb.rootTokens
-
-    if (letters.length === 4) {
-      const [q1, q2, q3, q4] = letters
+    if (isQuadriliteralVerb(verb)) {
+      const [q1, q2, q3, q4] = verb.rootTokens
       switch (verb.form) {
         case 1:
           return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
@@ -38,17 +36,16 @@ export function derivePassiveParticiple(verb: Verb): string {
           return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, NOON, SUKOON, q3, FATHA, q4]
         case 4:
           return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, q3, FATHA, q4, SHADDA]
-        default:
-          return []
       }
     }
 
-    const [c1, c2, c3] = letters
+    const [c1, c2, c3] = verb.rootTokens
 
     const stem = participleStem(verb)
 
     switch (verb.form) {
       case 1: {
+        if (!isTriliteralFormIVerb(verb)) return []
         const prefix = [MEEM, FATHA, c1]
 
         if (c3.isWeak) return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA]

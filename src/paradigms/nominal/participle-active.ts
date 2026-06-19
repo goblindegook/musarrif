@@ -20,7 +20,7 @@ import {
   type Token,
   YEH,
 } from '../tokens'
-import type { Verb } from '../verbs'
+import { isTriliteralFormIVerb, type Verb } from '../verbs'
 
 export function participleStem(verb: Verb): readonly Token[] {
   const [c1, c2] = verb.rootTokens
@@ -71,6 +71,7 @@ export function deriveActiveParticiple(verb: Verb): string {
 
     switch (verb.form) {
       case 1: {
+        if (!isTriliteralFormIVerb(verb)) return []
         // FIXME: This makes no sense.
         if (verb.passiveVoice === 'impersonal' && isFormIPastVowel(verb, KASRA))
           return [ALIF_HAMZA, FATHA, c1, SUKOON, c2, FATHA, c3]

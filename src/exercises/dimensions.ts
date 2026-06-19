@@ -7,6 +7,7 @@ import {
   type DisplayVerb,
   FORMS,
   getAvailableParadigms,
+  type QuadriliteralForm,
   synthesizeVerb,
   type VerbForm,
   verbs,
@@ -263,6 +264,7 @@ export function randomNominalVerb(profile: DimensionProfile, constraints?: CardC
 }
 
 export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)): DisplayVerb {
+  if (root.length === 4) return synthesizeVerb(root, clamp(form, 1, 4) as QuadriliteralForm)
   if (form === 1) return synthesizeVerb(root, 1, random(FORM_I_PATTERNS))
   return synthesizeVerb(root, form)
 }

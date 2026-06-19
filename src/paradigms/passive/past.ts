@@ -20,7 +20,7 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
+import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 interface PassivePastParams {
@@ -299,7 +299,7 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
+function derivePassivePastFormIq(verb: QuadriliteralVerb): PassivePastParams {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
@@ -310,7 +310,7 @@ function derivePassivePastFormIq(verb: FormIVerb): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
+function derivePassivePastFormIIq(verb: QuadriliteralVerb): PassivePastParams {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
@@ -319,7 +319,7 @@ function derivePassivePastFormIIq(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
+function derivePassivePastFormIIIq(verb: QuadriliteralVerb): PassivePastParams {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
@@ -328,7 +328,7 @@ function derivePassivePastFormIIIq(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
-function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
+function derivePassivePastFormIVq(verb: QuadriliteralVerb): PassivePastParams {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return {
@@ -340,8 +340,13 @@ function derivePassivePastFormIVq(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
+// Reimplemented to avoid circular dependencies
+function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
+  return verb.rootTokens.length === 4
+}
+
 function derivePassivePastForms(verb: Verb): PassivePastParams {
-  if (verb.root.length > 3) {
+  if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
         return derivePassivePastFormIq(verb)
@@ -351,8 +356,6 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
         return derivePassivePastFormIIIq(verb)
       case 4:
         return derivePassivePastFormIVq(verb)
-      default:
-        return { prefix: [] }
     }
   }
 

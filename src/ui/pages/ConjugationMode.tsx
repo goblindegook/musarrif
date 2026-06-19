@@ -14,6 +14,8 @@ import {
   formatFormLabel,
   getAvailableParadigms,
   getVerbById,
+  isTriliteralFormIDisplayVerb,
+  type TriliteralDisplayVerb,
 } from '../../paradigms/verbs'
 import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
@@ -41,7 +43,7 @@ import { RootInsights } from '../organisms/RootInsights'
 import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 import { useRouting } from '../routes'
 
-const formIVowelPattern = (verb: DisplayVerb<1>) => {
+const formIVowelPattern = (verb: TriliteralDisplayVerb<1>) => {
   const past = formIPastVowel(verb).raw
   const present = formIPresentVowel(verb).raw
   return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
@@ -301,7 +303,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
             >
               <FormMetaValue>
                 <FormMetaItem>{selectedVerbFormLabel}</FormMetaItem>
-                {selectedVerb.form === 1 && selectedVerb.vowels != null && (
+                {isTriliteralFormIDisplayVerb(selectedVerb) && (
                   <VowelPattern>{formIVowelPattern(selectedVerb)}</VowelPattern>
                 )}
               </FormMetaValue>
@@ -353,7 +355,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
                       <Fragment key={value}>
                         <MasdarItem>
                           <span>{formatArabic(value)}</span>
-                          {selectedVerb.form === 1 && selectedVerb.masdars?.[index] === 'mimi' && (
+                          {isTriliteralFormIDisplayVerb(selectedVerb) && selectedVerb.masdars?.[index] === 'mimi' && (
                             <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
                           )}
                           {index >= lexicalizedMasdarStartIndex && (

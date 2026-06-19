@@ -21,8 +21,12 @@ import {
   WAW,
   YEH,
 } from '../tokens.ts'
-import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
+import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
+
+function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
+  return verb.rootTokens.length === 4
+}
 
 interface PastBaseForms<T extends Token | MorphemeToken> {
   base: readonly T[]
@@ -134,7 +138,7 @@ function addAgreement(forms: PastBaseForms<MorphemeToken>): Record<PronounId, re
   }
 }
 
-function derivePastFormIq(verb: Verb): PastBaseForms<MorphemeToken> {
+function derivePastFormIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
   const stem = [
     radicalMorpheme(c1),
@@ -152,7 +156,7 @@ function derivePastFormIq(verb: Verb): PastBaseForms<MorphemeToken> {
   }
 }
 
-function derivePastFormIIq(verb: Verb): PastBaseForms<MorphemeToken> {
+function derivePastFormIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms(
     [
@@ -169,7 +173,7 @@ function derivePastFormIIq(verb: Verb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastFormIIIq(verb: Verb): PastBaseForms<MorphemeToken> {
+function derivePastFormIIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms(
     [
@@ -186,7 +190,7 @@ function derivePastFormIIIq(verb: Verb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastFormIVq(verb: Verb): PastBaseForms<MorphemeToken> {
+function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
   const [c1, c2, c3, c4] = verb.rootTokens
   const prefix = [
     measureMorpheme(ALIF, KASRA),
@@ -516,7 +520,7 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
 }
 
 function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
-  if (verb.root.length === 4) {
+  if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
         return derivePastFormIq(verb)
@@ -559,4 +563,6 @@ function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
     case 10:
       return derivePastFormX(verb)
   }
+
+  throw new Error('Unsupported verb')
 }

@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation.ts'
 import { spell } from '../../paradigms/tokens.ts'
-import { FORMS, formatFormLabel, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { formatFormLabel, formsForRoot, synthesizeVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
@@ -13,7 +13,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
   const answerDisplay = exerciseDiacritics(verb.lemma, profile.diacritics)
 
   const distractors = shuffle(
-    FORMS.filter((form) => {
+    formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
       const candidate = synthesizeVerb(verb.root, form)
       return exerciseDiacritics(candidate.lemma, profile.diacritics) !== answerDisplay

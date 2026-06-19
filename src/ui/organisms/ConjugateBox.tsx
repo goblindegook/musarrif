@@ -5,7 +5,13 @@ import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
-import { FORMS, getVerbById, synthesizeVerb } from '../../paradigms/verbs'
+import {
+  FORMS,
+  getVerbById,
+  isTriliteralFormIDisplayVerb,
+  synthesizeVerb,
+  toTriliteralRoot,
+} from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
@@ -34,7 +40,9 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   const [c2, setC2] = useState<string | undefined>(initialLetters[1])
   const [c3, setC3] = useState<string | undefined>(initialLetters[2])
   const [form, setForm] = useState<VerbForm | undefined>(selectedVerb?.form)
-  const [vowelPattern, setVowelPattern] = useState<FormIPattern>(selectedVerb?.form === 1 ? selectedVerb.vowels : 'a-a')
+  const [vowelPattern, setVowelPattern] = useState<FormIPattern>(
+    selectedVerb && isTriliteralFormIDisplayVerb(selectedVerb) ? selectedVerb.vowels : 'a-a',
+  )
   const onSelectRef = useRef(onSelect)
   const selectedVerbRef = useRef(selectedVerb)
 
@@ -52,15 +60,18 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
     const root = [c1, c2, c3].join('')
     const existing = getVerbById(`${transliterate(root)}-${form}`)
     const nextVerb =
-      existing?.form === 1 && existing.vowels === vowelPattern && (existing.masdars?.length ?? 0) > 0
+      existing &&
+      isTriliteralFormIDisplayVerb(existing) &&
+      existing.vowels === vowelPattern &&
+      (existing.masdars?.length ?? 0) > 0
         ? existing
         : form === 1
-          ? synthesizeVerb(root, form, vowelPattern)
+          ? synthesizeVerb(toTriliteralRoot(root), form, vowelPattern)
           : (existing ?? synthesizeVerb(root, form))
 
     const currentSelectedVerb = selectedVerbRef.current
     if (currentSelectedVerb?.id === nextVerb.id) {
-      if (currentSelectedVerb.form !== 1 || nextVerb.form !== 1) return
+      if (!isTriliteralFormIDisplayVerb(currentSelectedVerb) || !isTriliteralFormIDisplayVerb(nextVerb)) return
       if (currentSelectedVerb.vowels !== nextVerb.vowels) {
         onSelectRef.current(nextVerb)
         return

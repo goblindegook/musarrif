@@ -1,7 +1,9 @@
 import { act, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, test } from 'vitest'
+import type { Token } from '../../paradigms/tokens'
 import { tokenize } from '../../paradigms/tokens'
+import { toTriliteralRoot } from '../../paradigms/verbs'
 import { renderWithProviders } from '../../test/fixtures'
 import { ConjugateBox } from './ConjugateBox'
 
@@ -145,8 +147,8 @@ describe('ConjugateBox', () => {
         onSelect={noop}
         selectedVerb={{
           id: 'ktb-2',
-          root: 'كتب',
-          rootTokens: tokenize('كتب'),
+          root: toTriliteralRoot('كتب'),
+          rootTokens: tokenize('كتب') as [Token, Token, Token],
           form: 2,
           lemma: 'كَتَّبَ',
           rootId: 'ktb',

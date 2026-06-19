@@ -17,12 +17,11 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { Verb } from '../verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
-  const letters = verb.rootTokens
-  const [c1, c2, c3] = letters
+  const [c1, c2, c3] = verb.rootTokens
 
   return mapRecord(
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
@@ -30,10 +29,11 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       const stem = tokenize(String(jussive)).slice(2)
 
-      if (letters.length === 4) return [3, 4].includes(verb.form) ? [ALIF, KASRA, ...stem] : stem
+      if (isQuadriliteralVerb(verb)) return [3, 4].includes(verb.form) ? [ALIF, KASRA, ...stem] : stem
 
       switch (verb.form) {
         case 1: {
+          if (!isTriliteralFormIVerb(verb)) return []
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)

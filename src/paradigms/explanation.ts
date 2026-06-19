@@ -6,7 +6,7 @@ import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
-import type { Verb, VerbForm } from './verbs'
+import { isTriliteralFormIVerb, type Verb, type VerbForm } from './verbs'
 import type { Morpheme } from './word'
 
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
@@ -279,7 +279,7 @@ export function resolveVerbExplanationLayers(
     form: toFormDescriptor(verb),
     arabic,
     rootType,
-    vowels: verb.form === 1 ? verb.vowels : undefined,
+    vowels: isTriliteralFormIVerb(verb) ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
@@ -319,7 +319,7 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
 }
 
 function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): boolean {
-  if (verb.form !== 1) return false
+  if (!isTriliteralFormIVerb(verb)) return false
 
   const selectedValues = (Array.isArray(arabic) ? arabic : [arabic]).map(normalizeForComparison)
   const patterns = verb.masdars ?? ['mimi']
@@ -331,13 +331,13 @@ function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): 
 
 function resolveMimiPatternLabel(arabic: string, verb: Verb): string {
   if (arabic.endsWith('ة')) return 'مَفْعَلَة'
-  if (verb.form === 1 && verb.vowels?.endsWith('i')) return 'مَفْعِل'
+  if (isTriliteralFormIVerb(verb) && verb.vowels.endsWith('i')) return 'مَفْعِل'
   return 'مَفْعَل'
 }
 
 function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): string | undefined {
-  if (verb.form === 1) {
-    const selectedMimiMasdar = verb.form === 1 && isMimiMasdarSelection(verb, arabic) ? toArabicText(arabic) : undefined
+  if (isTriliteralFormIVerb(verb)) {
+    const selectedMimiMasdar = isMimiMasdarSelection(verb, arabic) ? toArabicText(arabic) : undefined
     return selectedMimiMasdar ? resolveMimiPatternLabel(selectedMimiMasdar, verb) : undefined
   }
 
@@ -358,7 +358,7 @@ export function resolveNominalExplanationLayers(
     form: toFormDescriptor(verb),
     arabic,
     rootType: analyzeRoot(verb.rootTokens).type,
-    vowels: verb.form === 1 ? verb.vowels : undefined,
+    vowels: isTriliteralFormIVerb(verb) ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
     isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabic),

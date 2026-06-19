@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { transliterateReverse } from '@pacote/buckwalter'
 import { applyDiacriticsPreference } from '../src/paradigms/tokens'
-import { getVerbById, synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
+import { formsForRoot, getVerbById, synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
 import { clamp, parseInteger } from '../src/primitives/numbers'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
 import { fetchParadigms } from './lib/wiktionary.mts'
@@ -22,8 +22,8 @@ function resolveSlugForWiktionary(slug: string): { lemma: string; root: string |
     return { lemma: existing.lemma, root: existing.root }
   }
   const [rootId, rawForm] = slug.split('-')
-  const form = clamp(parseInteger(rawForm, 1), 1, 10) as VerbForm
   const root = transliterateReverse(rootId)
+  const form = clamp(parseInteger(rawForm, 1), 1, formsForRoot(root).at(-1) ?? 1) as VerbForm
   return { lemma: synthesizeVerb(root, form).lemma, root }
 }
 

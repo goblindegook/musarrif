@@ -24,7 +24,8 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { FormIVerb, MasdarPattern, NonFormIVerb, Verb } from '../verbs'
+import type { FormIVerb, MasdarPattern, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb } from '../verbs'
 
 function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {
   const [c1, c2, c3] = verb.rootTokens
@@ -94,6 +95,9 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly To
       if (c2.isWeak) return [MEEM, FATHA, c1, ...longVowel(vowel), c3]
       return [MEEM, FATHA, c1, SUKOON, c2, vowel, c3]
     }
+
+    case 'fa3lala':
+      return []
   }
 }
 
@@ -198,7 +202,7 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly Token[] {
   return [...prefix, c1, SUKOON, c2, FATHA, ALIF, c3]
 }
 
-function deriveMasdarFormIq(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {
+function deriveMasdarFormIq(verb: QuadriliteralVerb, pattern: MasdarPattern): readonly Token[] {
   const [q1, q2, q3, q4] = verb.rootTokens
 
   if (pattern === 'fa3aal') return [q1, FATHA, q2, SUKOON, q3, FATHA, ALIF, q4]
@@ -208,23 +212,23 @@ function deriveMasdarFormIq(verb: FormIVerb, pattern: MasdarPattern): readonly T
   return [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
 }
 
-function deriveMasdarFormIIq(verb: Verb): readonly Token[] {
+function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly Token[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [TEH, FATHA, q1, FATHA, q2, SUKOON, q3, DAMMA, q4]
 }
 
-function deriveMasdarFormIIIq(verb: Verb): readonly Token[] {
+function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly Token[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, NOON, SUKOON, q3, FATHA, ALIF, q4]
 }
 
-function deriveMasdarFormIVq(verb: Verb): readonly Token[] {
+function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly Token[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [ALIF, KASRA, q1, SUKOON, q2, KASRA, q3, SUKOON, q4, FATHA, ALIF, q4]
 }
 
 function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
-  if (verb.root.length > 3) {
+  if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
         return deriveMasdarFormIq(verb, pattern)
@@ -264,7 +268,10 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly string[] {
-  const patterns = (verb.form === 1 && verb.masdars) || ['mimi']
+  const isQuadFormI = isQuadriliteralVerb(verb) && verb.form === 1
+  const patterns: readonly MasdarPattern[] = isQuadFormI
+    ? (verb.masdars ?? ['fa3lala'])
+    : (isTriliteralFormIVerb(verb) && verb.masdars) || ['mimi']
   const derived = patterns.map((pattern) => finalize(masdar(verb, pattern)))
   const lexicalized = (verb.lexicalizedMasdars ?? []).map(transliterateReverse)
   return [...derived, ...lexicalized]

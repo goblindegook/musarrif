@@ -6,9 +6,19 @@ import type { FormIPattern } from './form-i-vowels'
 import { ALL_TENSES, type VerbParadigm } from './tense'
 import { normalizeHamza, type Token, tokenize } from './tokens'
 
-export type VerbForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type TriliteralForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type QuadriliteralForm = 1 | 2 | 3 | 4
+export type VerbForm = TriliteralForm
 
-export const FORMS: readonly VerbForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+export const FORMS: readonly TriliteralForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const QUADRILITERAL_FORMS: readonly QuadriliteralForm[] = [1, 2, 3, 4]
+
+declare const triliteralRootBrand: unique symbol
+declare const quadriliteralRootBrand: unique symbol
+
+export type TriliteralRoot = string & { readonly [triliteralRootBrand]: 'triliteral' }
+export type QuadriliteralRoot = string & { readonly [quadriliteralRootBrand]: 'quadriliteral' }
+export type VerbRoot = TriliteralRoot | QuadriliteralRoot
 
 export const KWN_SISTERS_IDS = new Set([
   'brH-1',
@@ -26,7 +36,6 @@ export const KWN_SISTERS_IDS = new Set([
   "ft'-1",
 ])
 export const ZNN_SISTERS_IDS = new Set([
-  // verbs of affectivity
   'dry-1',
   'Elm-1',
   'Hsb-1',
@@ -35,7 +44,6 @@ export const ZNN_SISTERS_IDS = new Set([
   'xyl-1',
   'Znn-1',
   "r'y-1",
-  // verbs of transformation
   'Edd-1',
   'jEl-1',
   'Syr-2',
@@ -43,9 +51,95 @@ export const ZNN_SISTERS_IDS = new Set([
   "'x*-8",
 ])
 
-export function formatFormLabel(form: VerbForm, root: string): string {
-  return root.length === 4 ? `${toRoman(form)}q` : toRoman(form)
+type RootLength<Value extends string, Acc extends readonly unknown[] = []> = string extends Value
+  ? number
+  : Value extends `${infer _}${infer Rest}`
+    ? RootLength<Rest, [...Acc, unknown]>
+    : Acc['length']
+
+type RootKind<Value extends string> = Value extends TriliteralRoot
+  ? 'triliteral'
+  : Value extends QuadriliteralRoot
+    ? 'quadriliteral'
+    : RootLength<Value> extends 3
+      ? 'triliteral'
+      : RootLength<Value> extends 4
+        ? 'quadriliteral'
+        : 'unknown'
+
+export type AllowedFormForRoot<Value extends string> =
+  RootKind<Value> extends 'quadriliteral'
+    ? QuadriliteralForm
+    : RootKind<Value> extends 'triliteral'
+      ? TriliteralForm
+      : VerbForm
+
+export type TriliteralRootTokens = readonly [Token, Token, Token]
+export type QuadriliteralRootTokens = readonly [Token, Token, Token, Token]
+export type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
+
+export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
+export type PassiveVoice = 'none' | 'impersonal'
+export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
+
+type VerbProps<Root extends VerbRoot, Tokens extends RootTokens, Form extends number> = {
+  root: Root
+  rootTokens: Tokens
+  form: Form
+  masdars?: readonly MasdarPattern[]
+  lexicalizedMasdars?: readonly string[]
+  passiveVoice?: PassiveVoice
+  noPassiveParticiple?: boolean
 }
+
+export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
+  vowels: FormIPattern
+  presentHollow?: PresentHollowBehaviour
+  contractedImperative?: boolean
+}
+
+export type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
+export type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
+
+// FIXME: I TOLD YOU THERE IS NO FORM Iq vs NON FORM Iq!!!!!!!!! ALL QUADRILITERAL FORMS ARE THE SAME
+export type QuadriliteralVerb = VerbProps<QuadriliteralRoot, QuadriliteralRootTokens, QuadriliteralForm>
+
+export type FormIVerb = TriliteralFormIVerb
+export type NonFormIVerb = TriliteralNonFormIVerb
+export type Verb = TriliteralVerb | QuadriliteralVerb
+
+type VerbBase<T extends Verb> = T & {
+  id: string
+  lemma: string
+  rootId: string
+  synthetic?: true
+}
+
+export type DisplayVerb<T extends Verb | VerbForm = Verb> = T extends Verb
+  ? VerbBase<T>
+  : VerbBase<Extract<Verb, { form: T }>>
+
+export type TriliteralDisplayVerb<Form extends TriliteralForm = TriliteralForm> = VerbBase<
+  Extract<TriliteralVerb, { form: Form }>
+>
+export type QuadriliteralDisplayVerb<Form extends QuadriliteralForm = QuadriliteralForm> = VerbBase<
+  Extract<QuadriliteralVerb, { form: Form }>
+>
+
+type VerbForRootAndForm<Root extends string, Form extends AllowedFormForRoot<Root>> =
+  RootKind<Root> extends 'quadriliteral'
+    ? QuadriliteralVerb
+    : RootKind<Root> extends 'triliteral'
+      ? Form extends 1
+        ? TriliteralFormIVerb
+        : TriliteralNonFormIVerb
+      : Form extends 1
+        ? Extract<Verb, { form: 1 }>
+        : Exclude<Verb, { form: 1 }>
+
+type DisplayVerbForRootAndForm<Root extends string, Form extends AllowedFormForRoot<Root>> = VerbBase<
+  VerbForRootAndForm<Root, Form>
+>
 
 export const MASDAR_PATTERNS = [
   // Basic
@@ -72,17 +166,14 @@ export const MASDAR_PATTERNS = [
   'fi3al', // inherent qualities
   // Mimi
   'mimi',
+  // Form Iq
+  'fa3lala',
 ] as const
 
-export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
-export type PassiveVoice = 'none' | 'impersonal'
-export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
-
-export type FormIVerb = {
+type RawVerb = {
   root: string
-  rootTokens: readonly Token[]
-  form: 1
-  vowels: FormIPattern
+  form: VerbForm
+  vowels?: FormIPattern
   presentHollow?: PresentHollowBehaviour
   masdars?: readonly MasdarPattern[]
   lexicalizedMasdars?: readonly string[]
@@ -91,32 +182,116 @@ export type FormIVerb = {
   contractedImperative?: boolean
 }
 
-export type NonFormIVerb = {
-  root: string
-  rootTokens: readonly Token[]
-  form: Exclude<VerbForm, 1>
-  lexicalizedMasdars?: readonly string[]
-  passiveVoice?: PassiveVoice
-  noPassiveParticiple?: boolean
+function tokenizeRoot(root: string): RootTokens {
+  const rootTokens = tokenize(root)
+  if (rootTokens.length === 3) return rootTokens as TriliteralRootTokens
+  if (rootTokens.length === 4) return rootTokens as QuadriliteralRootTokens
+  throw new Error(`Unsupported root length ${rootTokens.length} for ${root}`)
 }
 
-export type Verb = FormIVerb | NonFormIVerb
-
-type VerbBase<T extends Verb> = T & {
-  id: string
-  lemma: string
-  rootId: string
-  synthetic?: true
+function isTriliteralRoot(root: string): root is TriliteralRoot {
+  return root.length === 3
 }
 
-export type DisplayVerb<F extends VerbForm = VerbForm> = F extends 1 ? VerbBase<FormIVerb> : VerbBase<NonFormIVerb>
+function isQuadriliteralRoot(root: string): root is QuadriliteralRoot {
+  return root.length === 4
+}
 
-export const verbs: DisplayVerb[] = (rawVerbs as Verb[]).map((raw) => {
+export function toTriliteralRoot(root: string): TriliteralRoot {
+  if (!isTriliteralRoot(root)) throw new Error(`Expected triliteral root, received ${root}`)
+  return root
+}
+
+function toQuadriliteralRoot(root: string): QuadriliteralRoot {
+  if (!isQuadriliteralRoot(root)) throw new Error(`Expected quadriliteral root, received ${root}`)
+  return root
+}
+
+export function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
+  return verb.rootTokens.length === 4
+}
+
+export function isTriliteralFormIVerb(verb: Verb): verb is TriliteralFormIVerb {
+  return verb.form === 1 && verb.rootTokens.length === 3
+}
+
+export function isTriliteralFormIDisplayVerb(verb: DisplayVerb): verb is TriliteralDisplayVerb<1> {
+  return verb.form === 1 && verb.rootTokens.length === 3
+}
+
+function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T> {
+  const lemma = String(conjugatePast(verb)['3ms'])
+  const rootId = transliterate(verb.root)
+  return synthetic
+    ? { ...verb, id: `${rootId}-${verb.form}`, lemma, rootId, synthetic }
+    : { ...verb, id: `${rootId}-${verb.form}`, lemma, rootId }
+}
+
+function parseRawVerb(raw: RawVerb): DisplayVerb {
   const rootId = raw.root
   const root = transliterateReverse(rootId)
-  const verb = { ...raw, root, rootTokens: tokenize(root) }
-  return { ...verb, lemma: String(conjugatePast(verb)['3ms']), id: `${rootId}-${raw.form}`, rootId }
-})
+  const rootTokens = tokenizeRoot(root)
+
+  if (rootTokens.length === 4) {
+    if (!QUADRILITERAL_FORMS.includes(raw.form as QuadriliteralForm))
+      throw new Error(`Quadriliteral root ${root} cannot use Form ${raw.form}`)
+
+    return buildDisplayVerb(
+      raw.form === 1
+        ? {
+            root: toQuadriliteralRoot(root),
+            rootTokens,
+            form: 1,
+            masdars: raw.masdars,
+            lexicalizedMasdars: raw.lexicalizedMasdars,
+            passiveVoice: raw.passiveVoice,
+            noPassiveParticiple: raw.noPassiveParticiple,
+          }
+        : {
+            root: toQuadriliteralRoot(root),
+            rootTokens,
+            form: raw.form as Exclude<QuadriliteralForm, 1>,
+            lexicalizedMasdars: raw.lexicalizedMasdars,
+            passiveVoice: raw.passiveVoice,
+            noPassiveParticiple: raw.noPassiveParticiple,
+          },
+    )
+  }
+
+  if (raw.form === 1) {
+    return buildDisplayVerb({
+      root: toTriliteralRoot(root),
+      rootTokens,
+      form: 1,
+      vowels: raw.vowels ?? 'a-a',
+      presentHollow: raw.presentHollow,
+      masdars: raw.masdars,
+      lexicalizedMasdars: raw.lexicalizedMasdars,
+      passiveVoice: raw.passiveVoice,
+      noPassiveParticiple: raw.noPassiveParticiple,
+      contractedImperative: raw.contractedImperative,
+    })
+  }
+
+  return buildDisplayVerb({
+    root: toTriliteralRoot(root),
+    rootTokens,
+    form: raw.form as Exclude<TriliteralForm, 1>,
+    lexicalizedMasdars: raw.lexicalizedMasdars,
+    passiveVoice: raw.passiveVoice,
+    noPassiveParticiple: raw.noPassiveParticiple,
+  })
+}
+
+export function formsForRoot<Root extends string>(root: Root): readonly AllowedFormForRoot<Root>[] {
+  return (isQuadriliteralRoot(root) ? QUADRILITERAL_FORMS : FORMS) as readonly AllowedFormForRoot<Root>[]
+}
+
+export function formatFormLabel<Root extends string>(form: AllowedFormForRoot<Root>, root: Root): string {
+  return isQuadriliteralRoot(root) ? `${toRoman(form)}q` : toRoman(form)
+}
+
+export const verbs: DisplayVerb[] = (rawVerbs as RawVerb[]).map(parseRawVerb)
 
 const verbsById = new Map<string, DisplayVerb>()
 for (const verb of verbs) verbsById.set(verb.id, verb)
@@ -133,50 +308,83 @@ export function getVerbById(id?: string): DisplayVerb | undefined {
   return id ? verbsById.get(id) : undefined
 }
 
-export function getVerb(root: string, form: VerbForm): Verb {
-  const verbByRoot = verbs.find((entry) => entry.root === root && entry.form === form)
-  if (verbByRoot) return verbByRoot
+export function getVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
+  root: Root,
+  form: Form,
+): VerbForRootAndForm<Root, Form> {
+  const verbByRoot = verbs.find((entry) => String(entry.root) === String(root) && entry.form === form)
+  if (verbByRoot) return verbByRoot as unknown as VerbForRootAndForm<Root, Form>
   const verbById = getVerbById(`${root}-${form}`)
-  if (verbById) return verbById
+  if (verbById) return verbById as unknown as VerbForRootAndForm<Root, Form>
   throw new Error(`Verb with root ${root} and form ${form} not found`)
 }
 
 export function buildVerbFromId(id = ''): DisplayVerb {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
+
   const [rootId, formText] = id.split('-')
   const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
-  const form = clamp(parseInteger(formText, 1), 1, 10) as VerbForm
-  return form === 1 ? synthesizeVerb(root, 1, 'a-a') : synthesizeVerb(root, form)
+  const maxForm = formsForRoot(root).at(-1) ?? 1
+  const form = clamp(parseInteger(formText, 1), 1, maxForm) as VerbForm
+
+  if (isQuadriliteralRoot(root)) return synthesizeVerb(root, form as QuadriliteralForm)
+  if (form === 1) return synthesizeVerb(root, 1, 'a-a')
+  return synthesizeVerb(root, form as Exclude<TriliteralForm, 1>)
 }
 
-export function synthesizeVerb(root: string, form: 1, pattern?: FormIPattern): DisplayVerb
-export function synthesizeVerb(root: string, form: VerbForm): DisplayVerb
+export function synthesizeVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
+  root: Root,
+  form: Form,
+  pattern?: RootKind<Root> extends 'quadriliteral' ? never : FormIPattern,
+): DisplayVerbForRootAndForm<Root, Form>
 export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'a-a'): DisplayVerb {
+  const rootTokens = tokenizeRoot(root)
+
+  if (rootTokens.length === 4) {
+    if (!QUADRILITERAL_FORMS.includes(form as QuadriliteralForm))
+      throw new Error(`Quadriliteral root ${root} cannot use Form ${form}`)
+
+    return buildDisplayVerb(
+      {
+        root: toQuadriliteralRoot(root),
+        rootTokens,
+        form: form as QuadriliteralForm,
+      },
+      true,
+    )
+  }
+
+  const triliteralRoot = toTriliteralRoot(root)
   const matchingFormI = verbs.find(
-    (entry): entry is DisplayVerb<1> => entry.form === 1 && entry.root === root && entry.vowels === pattern,
+    (entry): entry is TriliteralDisplayVerb<1> =>
+      isTriliteralFormIDisplayVerb(entry) && entry.root === triliteralRoot && entry.vowels === pattern,
   )
-  const raw: Verb =
+
+  return buildDisplayVerb(
     form === 1
       ? {
-          root,
-          rootTokens: tokenize(root),
-          form,
+          root: triliteralRoot,
+          rootTokens,
+          form: 1,
           vowels: pattern,
           masdars: matchingFormI?.masdars,
           lexicalizedMasdars: matchingFormI?.lexicalizedMasdars ?? [],
         }
-      : { root, rootTokens: tokenize(root), form }
-  const past = conjugatePast(raw)
-  const rootId = transliterate(root)
-  return { ...raw, id: `${rootId}-${form}`, lemma: String(past['3ms']), rootId, synthetic: true }
+      : {
+          root: triliteralRoot,
+          rootTokens,
+          form: form as Exclude<TriliteralForm, 1>,
+        },
+    true,
+  )
 }
 
 const ALL_PARADIGMS: readonly VerbParadigm[] = [...ALL_TENSES, 'active.participle', 'passive.participle', 'masdar']
 
 export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
-  if (verb.form === 1 && verb.root === 'ليس') return ['active.past']
-  if (verb.form === 1 && verb.root === 'زيل')
+  if (isTriliteralFormIVerb(verb) && verb.root === 'ليس') return ['active.past']
+  if (isTriliteralFormIVerb(verb) && verb.root === 'زيل')
     return [
       'active.past',
       'active.present.indicative',

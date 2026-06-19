@@ -2,7 +2,7 @@ import { styled } from 'goober'
 import { Fragment } from 'preact'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
-import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
@@ -31,7 +31,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
               <Fragment key={value}>
                 <MasdarItem>
                   <span>{value}</span>
-                  {verb.form === 1 && verb.masdars?.[index] === 'mimi' && (
+                  {isTriliteralFormIDisplayVerb(verb) && verb.masdars?.[index] === 'mimi' && (
                     <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
                   )}
                   {index >= lexicalizedMasdarStartIndex && (

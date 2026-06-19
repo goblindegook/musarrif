@@ -2,7 +2,7 @@ import { shuffle } from '@pacote/shuffle'
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
-import { FORMS, formatFormLabel, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { formatFormLabel, formsForRoot, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
@@ -20,7 +20,7 @@ export const participleFormExercise = defineExercise(
     const participle = kind === 'active' ? active : passive
     const word = exerciseDiacritics(participle, profile.diacritics)
 
-    const eligibleForms = FORMS.filter((form) => {
+    const eligibleForms = formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
       const alternative = synthesizeVerb(verb.root, form)
       const available = getAvailableParadigms(alternative)

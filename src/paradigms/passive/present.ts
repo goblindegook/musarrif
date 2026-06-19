@@ -21,7 +21,14 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
+import {
+  type FormIVerb,
+  isQuadriliteralVerb,
+  isTriliteralFormIVerb,
+  type NonFormIVerb,
+  type QuadriliteralVerb,
+  type Verb,
+} from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 const PRESENT_PREFIXES: Record<PronounId, Token> = {
@@ -301,22 +308,22 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   return [...prefix, c1, SUKOON, c2, FATHA, c3, ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIq(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
+function derivePassivePresentStemFormIq(verb: QuadriliteralVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function derivePassivePresentStemFormIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
+function derivePassivePresentStemFormIIq(verb: QuadriliteralVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [TEH, FATHA, c1, FATHA, c2, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function derivePassivePresentStemFormIIIq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
+function derivePassivePresentStemFormIIIq(verb: QuadriliteralVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [c1, SUKOON, c2, FATHA, NOON, SUKOON, c3, FATHA, c4, ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
-function derivePassivePresentStemFormIVq(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
+function derivePassivePresentStemFormIVq(verb: QuadriliteralVerb, pronounId: PronounId, mood: Mood): readonly Token[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   const useLongForm =
@@ -352,7 +359,7 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
 }
 
 function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly Token[] {
-  if (verb.root.length > 3) {
+  if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
         return derivePassivePresentStemFormIq(verb, pronounId, mood)
@@ -362,14 +369,13 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
         return derivePassivePresentStemFormIIIq(verb, pronounId, mood)
       case 4:
         return derivePassivePresentStemFormIVq(verb, pronounId, mood)
-      default:
-        return []
     }
   }
 
   switch (verb.form) {
     case 1:
-      return derivePassivePresentStemFormI(verb, pronounId, mood)
+      if (isTriliteralFormIVerb(verb)) return derivePassivePresentStemFormI(verb, pronounId, mood)
+      break
     case 2:
       return derivePassivePresentStemFormII(verb, pronounId, mood)
     case 3:
@@ -389,6 +395,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
     case 10:
       return derivePassivePresentStemFormX(verb, pronounId, mood)
   }
+
+  return []
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, string> {

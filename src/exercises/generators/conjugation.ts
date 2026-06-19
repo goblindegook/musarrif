@@ -3,7 +3,7 @@ import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
-import { type DisplayVerb, FORMS, synthesizeVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, formsForRoot, synthesizeVerb } from '../../paradigms/verbs'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -43,9 +43,9 @@ function distractorPronouns(tense: VerbTense, profile: DimensionProfile): Pronou
 }
 
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
-  return FORMS.filter((f) => f !== verb.form).flatMap((form) => [
-    form === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, form),
-  ])
+  return formsForRoot(verb.root)
+    .filter((f) => f !== verb.form)
+    .flatMap((form) => [form === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, form)])
 }
 
 function easyCandidates(
