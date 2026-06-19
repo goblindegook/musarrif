@@ -20,7 +20,7 @@ import {
   type Token,
   YEH,
 } from '../tokens'
-import { isTriliteralFormIVerb, type Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 
 export function participleStem(verb: Verb): readonly Token[] {
   const [c1, c2] = verb.rootTokens
@@ -46,10 +46,8 @@ export function participleStem(verb: Verb): readonly Token[] {
 
 export function deriveActiveParticiple(verb: Verb): string {
   const result = (() => {
-    const letters = verb.rootTokens
-
-    if (letters.length === 4) {
-      const [q1, q2, q3, q4] = letters
+    if (isQuadriliteralVerb(verb)) {
+      const [q1, q2, q3, q4] = verb.rootTokens
 
       switch (verb.form) {
         case 1:
@@ -65,13 +63,12 @@ export function deriveActiveParticiple(verb: Verb): string {
       }
     }
 
-    const [c1, c2, c3] = letters
+    const [c1, c2, c3] = verb.rootTokens
 
     const stem = participleStem(verb)
 
     switch (verb.form) {
       case 1: {
-        if (!isTriliteralFormIVerb(verb)) return []
         // FIXME: This makes no sense.
         if (verb.passiveVoice === 'impersonal' && isFormIPastVowel(verb, KASRA))
           return [ALIF_HAMZA, FATHA, c1, SUKOON, c2, FATHA, c3]

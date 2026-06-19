@@ -17,7 +17,7 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { conjugatePresentMood } from './present'
 
 export function conjugateImperative(verb: Verb): Record<PronounId, string> {
@@ -33,7 +33,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
 
       switch (verb.form) {
         case 1: {
-          if (!isTriliteralFormIVerb(verb)) return []
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
