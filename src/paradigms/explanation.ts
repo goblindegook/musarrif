@@ -253,7 +253,7 @@ function extractAffixes(morphemes: readonly Morpheme[]): { prefix?: string; suff
   if (firstStemIdx === -1) return {}
 
   const pre = morphemes.slice(0, firstStemIdx).filter((m) => m.role !== 'elided')
-  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'elided')
+  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'elided' && m.text !== 'ْ')
 
   return {
     prefix: pre.length ? pre.map((m) => m.text).join('') : undefined,

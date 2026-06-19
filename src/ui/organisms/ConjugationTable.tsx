@@ -199,7 +199,7 @@ export function ConjugationTable({
           <TableBody>
             {PRONOUNS.map((slot) => {
               const conjugation = conjugations[slot.id]
-              if (!conjugation) return null
+              if (!String(conjugation)) return null
               const displayText = applyDiacriticsPreference(String(conjugation), diacriticsPreference)
 
               return (

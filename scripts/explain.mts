@@ -105,7 +105,7 @@ function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
   if (tense === 'active.present.subjunctive') return mapRecord(conjugatePresentMood(verb, 'subjunctive'), String)
   if (tense === 'active.present.jussive') return mapRecord(conjugatePresentMood(verb, 'jussive'), String)
   if (tense === 'active.future') return mapRecord(conjugateFuture(verb), String)
-  if (tense === 'active.imperative') return conjugateImperative(verb)
+  if (tense === 'active.imperative') return mapRecord(conjugateImperative(verb), String)
   if (tense === 'passive.past') return conjugatePassivePast(verb)
   if (tense === 'passive.present.indicative') return conjugatePassivePresentMood(verb, 'indicative')
   if (tense === 'passive.present.subjunctive') return conjugatePassivePresentMood(verb, 'subjunctive')

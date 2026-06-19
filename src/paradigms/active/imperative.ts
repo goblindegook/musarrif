@@ -1,127 +1,143 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
-import {
-  ALIF,
-  DAMMA,
-  FATHA,
-  finalize,
-  HAMZA,
-  KASRA,
-  longVowel,
-  NOON,
-  SHADDA,
-  SUKOON,
-  type Token,
-  tokenize,
-  WAW,
-  YEH,
-} from '../tokens'
-import { isQuadriliteralVerb, type Verb } from '../verbs'
+import { ALIF, DAMMA, FATHA, HAMZA, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../tokens'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
+import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { conjugatePresentMood } from './present'
 
-export function conjugateImperative(verb: Verb): Record<PronounId, string> {
+export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
   const [c1, c2, c3] = verb.rootTokens
 
   return mapRecord(
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      const stem = tokenize(String(jussive)).slice(2)
+      const stem = jussive.morphemes.slice(1)
 
-      if (isQuadriliteralVerb(verb)) return [3, 4].includes(verb.form) ? [ALIF, KASRA, ...stem] : stem
+      if (isQuadriliteralVerb(verb)) return [3, 4].includes(verb.form) ? [measureMorpheme(ALIF, KASRA), ...stem] : stem
 
       switch (verb.form) {
         case 1: {
+          if (!isTriliteralFormIVerb(verb)) return []
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
 
           if (c1.isWeak) {
-            if (FATHA.equals(stem.at(1)) && c3.isWeak) return [...stem.slice(0, 1), KASRA, YEH, ...stem.slice(1)]
+            if (stem.at(1)?.tokens.at(0)?.equals(FATHA) && c3.isWeak)
+              return [...stem.slice(0, 1), measureMorpheme(KASRA, YEH), ...stem.slice(1)]
 
-            if (c2.equals(c3) && pronounId === '2fp') return [ALIF, KASRA, YEH, ...stem.slice(1)]
+            if (c2.equals(c3) && pronounId === '2fp') return [measureMorpheme(ALIF, KASRA, YEH), ...stem.slice(1)]
 
-            if (c1.equals(YEH) && c2.isHamza) return [ALIF, ...patternLongVowel, ...stem.slice(2)]
+            if (c1.equals(YEH) && c2.isHamza) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
 
-            if (c1.equals(YEH)) return [ALIF, ...patternLongVowel, ...stem.slice(1)]
+            if (c1.equals(YEH)) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(1)]
 
-            if (c2.isHamza) return [HAMZA, ...stem.slice(1)]
+            if (c2.isHamza) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
           }
 
           if (c1.isHamza) {
-            const initialHamzatedStem = tokenize(String(jussive)).slice(4)
+            const initialHamzatedStem = jussive.morphemes.slice(3)
 
             if (verb.contractedImperative) return initialHamzatedStem
 
             if (c3.isWeak) {
               const glide = c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
-              return [ALIF, KASRA, c1, SUKOON, c2, glide, ...initialHamzatedStem.slice(2)]
+              const suffixTokens = initialHamzatedStem
+                .slice(1)
+                .flatMap((m) => [...m.tokens])
+                .slice(1)
+              const suffix = suffixTokens.length > 0 ? [agreementMorpheme(...suffixTokens)] : []
+              return [
+                measureMorpheme(ALIF, KASRA),
+                radicalMorpheme(c1),
+                measureMorpheme(SUKOON),
+                radicalMorpheme(c2),
+                measureMorpheme(glide),
+                ...suffix,
+              ]
             }
 
             if (c2.equals(c3)) {
-              const prefix = [HAMZA, isPatternI ? KASRA : DAMMA, c2, SUKOON, c3]
-              if (pronounId === '2ms') return [...prefix, FATHA]
-              if (pronounId === '2fs') return [...prefix, KASRA, YEH]
-              if (pronounId === '2d') return [...prefix, FATHA, ALIF]
-              if (pronounId === '2mp') return [...prefix, DAMMA, WAW, ALIF]
-              return [ALIF, ...patternLongVowel, ...initialHamzatedStem]
+              const prefix = [
+                radicalMorpheme(HAMZA),
+                measureMorpheme(isPatternI ? KASRA : DAMMA),
+                radicalMorpheme(c2),
+                measureMorpheme(SUKOON),
+                radicalMorpheme(c3),
+              ]
+              if (pronounId === '2ms') return [...prefix, measureMorpheme(FATHA)]
+              if (pronounId === '2fs') return [...prefix, agreementMorpheme(KASRA, YEH)]
+              if (pronounId === '2d') return [...prefix, agreementMorpheme(FATHA, ALIF)]
+              if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
+              return [measureMorpheme(ALIF, ...patternLongVowel), ...initialHamzatedStem]
             }
 
-            if (c2.isWeak) return [HAMZA, DAMMA, ...initialHamzatedStem]
+            if (c2.isWeak) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
 
-            if (isPatternU) return [ALIF, DAMMA, c1, SUKOON, ...initialHamzatedStem]
+            if (isPatternU)
+              return [
+                measureMorpheme(ALIF, DAMMA),
+                radicalMorpheme(c1),
+                measureMorpheme(SUKOON),
+                ...initialHamzatedStem,
+              ]
 
-            return [ALIF, KASRA, YEH, SUKOON, ...initialHamzatedStem]
+            return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...initialHamzatedStem]
           }
 
           if (c3.equals(WAW) && isPatternU && pronounId === '2d')
-            return [ALIF, DAMMA, ...stem.slice(0, -2), FATHA, ALIF]
+            return [measureMorpheme(ALIF, DAMMA), ...stem.slice(0, -2), measureMorpheme(FATHA, ALIF)]
 
-          if (c3.equals(WAW) && ALIF.equals(stem.at(-1)) && !isPatternU) return stem
+          if (c3.equals(WAW) && stem.at(-1)?.contains(ALIF) && !isPatternU) return stem
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:
-          if (SUKOON.equals(stem.at(1))) return [ALIF, isPatternU ? DAMMA : KASRA, ...stem]
+          if (stem.at(1)?.tokens.at(0)?.equals(SUKOON))
+            return [measureMorpheme(ALIF, isPatternU ? DAMMA : KASRA), ...stem]
 
           return stem
         }
 
         case 2:
         case 3: {
-          if (c1.isHamza) return [HAMZA, ...stem.slice(1)]
+          if (c1.isHamza) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
           if (c3.isWeak && pronounId === '2d') return restoreWeakLetterBeforeAlif(stem)
           return stem
         }
 
         case 4: {
-          if (c1.isHamza) return [HAMZA, FATHA, ALIF, ...stem.slice(2)]
-          if (c3.isWeak && pronounId === '2d') return [HAMZA, FATHA, ...restoreWeakLetterBeforeAlif(stem)]
-          return [HAMZA, FATHA, ...stem]
+          if (c1.isHamza) return [radicalMorpheme(HAMZA), measureMorpheme(FATHA, ALIF), ...stem.slice(2)]
+          if (c3.isWeak && pronounId === '2d')
+            return [radicalMorpheme(HAMZA), measureMorpheme(FATHA), ...restoreWeakLetterBeforeAlif(stem)]
+          return [radicalMorpheme(HAMZA), measureMorpheme(FATHA), ...stem]
         }
 
         case 5: {
-          const shaddaIndex = stem.findLastIndex((t) => t.equals(SHADDA))
-          return [...stem.slice(0, shaddaIndex - 1), FATHA, ...stem.slice(shaddaIndex)]
+          const shaddaIndex = stem.findLastIndex((m) => m.contains(SHADDA))
+          return [...stem.slice(0, shaddaIndex - 1), measureMorpheme(FATHA), ...stem.slice(shaddaIndex)]
         }
 
         case 7:
         case 8:
         case 9:
         case 10: {
-          if (c1.isHamza && c2.equals(c3)) return [ALIF, KASRA, c1, SUKOON, ...stem.slice(2)]
-          if (c3.isWeak && pronounId === '2d') return [ALIF, KASRA, ...restoreWeakLetterBeforeAlif(stem)]
-          return [ALIF, KASRA, ...stem]
+          if (c1.isHamza && c2.equals(c3)) return [measureMorpheme(ALIF, KASRA), radicalMorpheme(c1), ...stem.slice(1)]
+          if (c3.isWeak && pronounId === '2d')
+            return [measureMorpheme(ALIF, KASRA), ...restoreWeakLetterBeforeAlif(stem)]
+          return [measureMorpheme(ALIF, KASRA), ...stem]
         }
       }
 
       return stem
     }),
-    finalize,
+    (m) => new Word(m),
   )
 }
 
-function restoreWeakLetterBeforeAlif(stem: readonly Token[]): readonly Token[] {
-  if (YEH.equals(stem.at(-3))) return stem
-  if (FATHA.equals(stem.at(-2))) return [...stem.slice(0, -2), KASRA, YEH, FATHA, ALIF]
-  return [...stem.slice(0, -1), YEH, FATHA, ALIF]
+function restoreWeakLetterBeforeAlif(stem: readonly MorphemeToken[]): readonly MorphemeToken[] {
+  if (stem.at(-2)?.contains(YEH)) return stem
+  const last = stem.at(-1)
+  if (last?.tokens.at(0)?.equals(FATHA)) return [...stem.slice(0, -1), agreementMorpheme(KASRA, YEH, FATHA, ALIF)]
+  return [...stem.slice(0, -1), agreementMorpheme(YEH, FATHA, ALIF)]
 }

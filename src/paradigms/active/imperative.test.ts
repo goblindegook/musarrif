@@ -1281,7 +1281,7 @@ describe('imperative', () => {
           arbitraryVerb.filter(({ form, root }) => root.length === 3 && form === 4),
           arbitraryPronoun,
           (verb, pronounId) => {
-            expect(['\u0622', '\u0623'].includes(conjugateImperative(verb)[pronounId][0])).toEqualT(true)
+            expect(['\u0622', '\u0623'].includes(String(conjugateImperative(verb)[pronounId])[0])).toEqualT(true)
           },
         ),
       )
@@ -2070,7 +2070,7 @@ describe('imperative', () => {
       fc.property(arbitraryVerb, arbitraryPronoun, (verb, pronounId) => {
         const jussive = conjugatePresentMood(verb, 'jussive')
         const imperative = conjugateImperative(verb)
-        expect(imperative[pronounId]).toContain(String(jussive[pronounId]).slice(-1))
+        expect(String(imperative[pronounId])).toContain(String(jussive[pronounId]).slice(-1))
       }),
     )
   })

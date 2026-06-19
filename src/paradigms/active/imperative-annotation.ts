@@ -1,54 +1,22 @@
-import { type AnnotatedForm, buildMorphemes, type TaggedChar } from '../annotation'
+import type { AnnotatedForm } from '../annotation'
 import type { PronounId } from '../pronouns'
-import { ALIF, ALIF_HAMZA } from '../tokens'
 import type { Verb } from '../verbs'
 import { conjugateImperative } from './imperative'
 import { annotateActivePresentMood } from './present-annotation'
 
-const IMPERATIVE_SUFFIX_COUNTS: Partial<Record<string, number>> = {
-  '2ms': 0,
-  '2fs': 2,
-  '2d': 2,
-  '2mp': 3,
-  '2fp': 3,
-}
-
-const IMPERATIVE_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 10: 4 }
-
-function tagImperativeChars(chars: string[], suffixCount: number, formInfixChars: number): TaggedChar[] {
-  const stemCount = chars.length - suffixCount
-  const tenseChars = ALIF.equals(chars[0]) ? 2 : 0
-  const formPrefixChars = ALIF_HAMZA.equals(chars[0]) ? 2 : 0
-  const formEnd = tenseChars + formPrefixChars + formInfixChars
-
-  return chars.map((char, i) => ({
-    char,
-    role: i < formEnd ? 'measure' : i < stemCount ? 'radical' : 'agreement',
-  }))
-}
-
 export function annotateActiveImperative(verb: Verb, pronounId: PronounId): AnnotatedForm {
-  const arabic = conjugateImperative(verb)[pronounId]
+  const word = conjugateImperative(verb)[pronounId]
   const jussiveAnnotation = annotateActivePresentMood(verb, 'jussive', pronounId)
   const jussiveStep = jussiveAnnotation.steps[jussiveAnnotation.steps.length - 1]
-  const morphemes = [
-    { text: [...jussiveStep.arabic].slice(0, 2).join(''), role: 'elided' as const },
-    ...buildMorphemes(
-      tagImperativeChars(
-        [...arabic],
-        IMPERATIVE_SUFFIX_COUNTS[pronounId] ?? 0,
-        verb.root.length === 3 ? (IMPERATIVE_FORM_INFIX_CHARS[verb.form] ?? 0) : 0,
-      ),
-    ),
-  ]
+  const elidedPrefix = { text: jussiveStep.morphemes[0].text, role: 'elided' as const }
 
   return {
     steps: [
       ...jussiveAnnotation.steps,
       {
         kind: { type: 'tense', verbTense: 'active.imperative' },
-        arabic,
-        morphemes,
+        arabic: String(word),
+        morphemes: [elidedPrefix, ...word.toMorphemes()],
       },
     ],
   }
