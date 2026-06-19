@@ -2,7 +2,6 @@ import {
   type AnnotatedForm,
   buildMorphemes,
   type DerivationStep,
-  type MorphemeRole,
   PRESENT_MOOD_SUFFIX_COUNTS,
   type TaggedChar,
   tagChars,
@@ -11,7 +10,7 @@ import { isDual, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../tokens'
 import type { Verb } from '../verbs'
-import type { MorphemeToken } from '../word'
+import type { MorphemeRole } from '../word'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'
 
@@ -44,10 +43,6 @@ function droppedPastPrefix(verb: Verb): string | null {
   return null
 }
 
-function toMorphemes(morphemeTokens: readonly MorphemeToken[]) {
-  return morphemeTokens.map((m) => ({ text: String(m).normalize('NFC'), role: m.role }))
-}
-
 export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
@@ -78,7 +73,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   const pastAnnotation = annotatePast(verb, '3ms')
 
   const indicativeForms = conjugatePresentMood(verb, 'indicative')
-  const stemMorphemes = toMorphemes(indicativeForms['3ms'].morphemes)
+  const stemMorphemes = indicativeForms['3ms'].toMorphemes()
   const dropped = droppedPastPrefix(verb)
   const presentIndicativeMorphemes = dropped
     ? [{ text: dropped, role: 'elided' as MorphemeRole }, ...stemMorphemes]
@@ -105,7 +100,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       {
         kind: { type: 'pronoun', pronounId },
         arabic: String(word),
-        morphemes: toMorphemes(word.morphemes),
+        morphemes: word.toMorphemes(),
       },
     ],
   }

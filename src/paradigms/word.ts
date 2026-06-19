@@ -13,8 +13,16 @@ export class MorphemeToken {
   }
 
   toString(): string {
-    return this.tokens.map((t) => t.raw).join('')
+    return this.tokens
+      .map((t) => t.raw)
+      .join('')
+      .normalize('NFC')
   }
+}
+
+export interface Morpheme {
+  readonly text: string
+  readonly role: MorphemeRole
 }
 
 export class Word {
@@ -26,6 +34,10 @@ export class Word {
 
   toString(): string {
     return this.morphemes.map(String).join('').normalize('NFC')
+  }
+
+  toMorphemes(): readonly Morpheme[] {
+    return this.morphemes.map((m) => ({ text: String(m), role: m.role }))
   }
 }
 

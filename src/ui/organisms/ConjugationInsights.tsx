@@ -1,16 +1,11 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import {
-  annotate,
-  type DerivationStep,
-  type DerivationStepKind,
-  type Morpheme,
-  type MorphemeRole,
-} from '../../paradigms/annotation'
+import { annotate, type DerivationStep, type DerivationStepKind } from '../../paradigms/annotation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import type { Morpheme, MorphemeRole } from '../../paradigms/word'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { IconButton } from '../atoms/IconButton'
 import { Text } from '../atoms/Text'
@@ -33,7 +28,7 @@ interface ConjugationInsightsProps {
   arabic: string
 }
 
-function AnnotatedArabic({ morphemes }: { morphemes: Morpheme[] }) {
+function AnnotatedArabic({ morphemes }: { morphemes: readonly Morpheme[] }) {
   return (
     <>
       {morphemes.flatMap((m, i) => {
@@ -66,7 +61,7 @@ function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: Translate): s
   }
 }
 
-function DerivationSteps({ steps, verb, t }: { steps: DerivationStep[]; verb: DisplayVerb; t: Translate }) {
+function DerivationSteps({ steps, verb, t }: { steps: readonly DerivationStep[]; verb: DisplayVerb; t: Translate }) {
   return (
     <StepsTable>
       {steps.map((step, i) => (

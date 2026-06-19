@@ -1,5 +1,5 @@
 import { toRoman } from '../primitives/numbers'
-import { annotate, type Morpheme } from './annotation'
+import { annotate } from './annotation'
 import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import type { PronounId } from './pronouns'
@@ -7,6 +7,7 @@ import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
 import type { Verb, VerbForm } from './verbs'
+import type { Morpheme } from './word'
 
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
 
@@ -244,7 +245,7 @@ export function renderExplanation(
     .filter(Boolean)
 }
 
-function extractAffixes(morphemes: Morpheme[]): { prefix?: string; suffix?: string } {
+function extractAffixes(morphemes: readonly Morpheme[]): { prefix?: string; suffix?: string } {
   const stemRoles = ['radical', 'measure']
   const firstStemIdx = morphemes.findIndex((m) => stemRoles.includes(m.role))
   const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.includes(m.role))

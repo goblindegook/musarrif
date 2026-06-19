@@ -1,12 +1,11 @@
 import type { AnnotatedForm, DerivationStep } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
-import type { MorphemeToken } from '../word'
 import { conjugatePast } from './past'
 
 export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const past = conjugatePast(verb)
-  const formMorphemes = toMorphemes(past['3ms'].morphemes)
+  const formMorphemes = past['3ms'].toMorphemes()
 
   const rootStep: DerivationStep = {
     kind: { type: 'root' },
@@ -37,12 +36,8 @@ export function annotatePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
       {
         kind: { type: 'pronoun', pronounId },
         arabic: String(word),
-        morphemes: toMorphemes(word.morphemes),
+        morphemes: word.toMorphemes(),
       },
     ],
   }
-}
-
-function toMorphemes(morphemeTokens: readonly MorphemeToken[]) {
-  return morphemeTokens.map((m) => ({ text: String(m).normalize('NFC'), role: m.role }))
 }

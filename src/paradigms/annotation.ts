@@ -11,8 +11,7 @@ import type { PronounId } from './pronouns'
 import type { Mood, VerbTense } from './tense'
 import { SHADDA, SUKOON } from './tokens'
 import type { Verb, VerbForm } from './verbs'
-
-export type MorphemeRole = 'radical' | 'measure' | 'particle' | 'agreement' | 'elided'
+import type { Morpheme, MorphemeRole } from './word'
 
 export const PAST_SUFFIX_COUNTS: Record<PronounId, number> = {
   '1s': 3,
@@ -107,11 +106,6 @@ export function tagChars(
   ]
 }
 
-export interface Morpheme {
-  text: string
-  role: MorphemeRole
-}
-
 export type DerivationStepKind =
   | { type: 'root' }
   | { type: 'form'; form: VerbForm }
@@ -121,11 +115,11 @@ export type DerivationStepKind =
 export interface DerivationStep {
   kind: DerivationStepKind
   arabic: string
-  morphemes: Morpheme[]
+  morphemes: readonly Morpheme[]
 }
 
 export interface AnnotatedForm {
-  steps: DerivationStep[]
+  steps: readonly DerivationStep[]
 }
 
 export interface TaggedChar {
@@ -133,7 +127,7 @@ export interface TaggedChar {
   role: MorphemeRole
 }
 
-export function buildMorphemes(tagged: TaggedChar[]): Morpheme[] {
+export function buildMorphemes(tagged: TaggedChar[]): readonly Morpheme[] {
   // 1. Handle gemination: c + SUKOON + c → c + SHADDA (same role)
   const processed: TaggedChar[] = []
   for (let i = 0; i < tagged.length; i++) {

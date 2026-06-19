@@ -1,13 +1,8 @@
 import { annotatePast } from '../active/past-annotation'
-import {
-  type AnnotatedForm,
-  buildMorphemes,
-  type DerivationStep,
-  type MorphemeRole,
-  PAST_SUFFIX_COUNTS,
-} from '../annotation'
+import { type AnnotatedForm, buildMorphemes, type DerivationStep, PAST_SUFFIX_COUNTS } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
+import type { MorphemeRole } from '../word'
 import { conjugatePassivePast } from './past'
 
 export function annotatePassivePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
