@@ -6,17 +6,21 @@ import { annotateActivePresentMood } from './present-annotation'
 
 export function annotateActiveImperative(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const word = conjugateImperative(verb)[pronounId]
-  const jussiveAnnotation = annotateActivePresentMood(verb, 'jussive', pronounId)
-  const jussiveStep = jussiveAnnotation.steps[jussiveAnnotation.steps.length - 1]
-  const elidedPrefix = { text: jussiveStep.morphemes[0].text, role: 'elided' as const }
+  const jussive = annotateActivePresentMood(verb, 'jussive', pronounId)
 
   return {
     steps: [
-      ...jussiveAnnotation.steps,
+      ...jussive.steps,
       {
         kind: { type: 'tense', verbTense: 'active.imperative' },
         arabic: String(word),
-        morphemes: [elidedPrefix, ...word.toMorphemes()],
+        morphemes: [
+          {
+            text: jussive.steps.at(-1)?.morphemes[0].text ?? '',
+            role: 'elided',
+          },
+          ...word.toMorphemes(),
+        ],
       },
     ],
   }

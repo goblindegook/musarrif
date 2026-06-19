@@ -2,7 +2,7 @@ import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import { ALIF, DAMMA, FATHA, HAMZA, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../tokens'
-import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { conjugatePresentMood } from './present'
 
@@ -19,7 +19,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
       switch (verb.form) {
         case 1: {
-          if (!isTriliteralFormIVerb(verb)) return []
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
@@ -27,13 +26,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
           if (c1.isWeak) {
             if (stem.at(1)?.tokens.at(0)?.equals(FATHA) && c3.isWeak)
               return [...stem.slice(0, 1), measureMorpheme(KASRA, YEH), ...stem.slice(1)]
-
             if (c2.equals(c3) && pronounId === '2fp') return [measureMorpheme(ALIF, KASRA, YEH), ...stem.slice(1)]
-
             if (c1.equals(YEH) && c2.isHamza) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
-
             if (c1.equals(YEH)) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(1)]
-
             if (c2.isHamza) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
           }
 
@@ -44,18 +39,17 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
             if (c3.isWeak) {
               const glide = c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
-              const suffixTokens = initialHamzatedStem
-                .slice(1)
+              const suffixTokens = jussive.morphemes
+                .slice(4)
                 .flatMap((m) => [...m.tokens])
                 .slice(1)
-              const suffix = suffixTokens.length > 0 ? [agreementMorpheme(...suffixTokens)] : []
               return [
                 measureMorpheme(ALIF, KASRA),
                 radicalMorpheme(c1),
                 measureMorpheme(SUKOON),
                 radicalMorpheme(c2),
                 measureMorpheme(glide),
-                ...suffix,
+                agreementMorpheme(...suffixTokens),
               ]
             }
 
@@ -137,7 +131,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
 function restoreWeakLetterBeforeAlif(stem: readonly MorphemeToken[]): readonly MorphemeToken[] {
   if (stem.at(-2)?.contains(YEH)) return stem
-  const last = stem.at(-1)
-  if (last?.tokens.at(0)?.equals(FATHA)) return [...stem.slice(0, -1), agreementMorpheme(KASRA, YEH, FATHA, ALIF)]
-  return [...stem.slice(0, -1), agreementMorpheme(YEH, FATHA, ALIF)]
+  const final = stem.at(-1)
+  if (final?.tokens.at(0)?.equals(FATHA)) return stem.with(-1, agreementMorpheme(KASRA, YEH, FATHA, ALIF))
+  return stem.with(-1, agreementMorpheme(YEH, FATHA, ALIF))
 }
