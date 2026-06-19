@@ -27,95 +27,92 @@ import type { FormIVerb, NonFormIVerb, Verb } from '../verbs'
 import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 
 function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
-  const suffix = agreementMorpheme(KASRA, YEH, NOON, FATHA)
-  const defectiveSuffix = agreementMorpheme(FATHA, YEH, NOON, FATHA)
+  const kasra = agreementMorpheme(KASRA)
+  const fatha = agreementMorpheme(FATHA)
 
-  if (verb.root.length > 3) return [...stem, suffix]
+  if (verb.root.length > 3) return [...stem, kasra]
 
   const [c1, c2, c3] = verb.rootTokens
 
   switch (verb.form) {
     case 1:
-      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), defectiveSuffix]
-      if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), suffix]
-      if (c3.isWeak) return [...stem.slice(0, -1), suffix]
-      return [...stem, suffix]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), fatha]
+      if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), kasra]
+      if (c3.isWeak) return [...stem.slice(0, -1), kasra]
+      return [...stem, kasra]
 
     case 2:
     case 3:
     case 4:
-      if (c3.isWeak) return [...stem.slice(0, -2), suffix]
-      return [...stem, suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), kasra]
+      return [...stem, kasra]
 
     case 5:
     case 6:
-      if (c3.isWeak) return [...stem.slice(0, -2), defectiveSuffix]
-      return [...stem, suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), fatha]
+      return [...stem, kasra]
 
     case 7:
-      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), defectiveSuffix]
-      if (c3.isWeak) return [...stem.slice(0, -2), suffix]
-      return [...stem, suffix]
+      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), fatha]
+      if (c3.isWeak) return [...stem.slice(0, -2), kasra]
+      return [...stem, kasra]
 
     case 8:
     case 9:
     case 10:
-      if (c3.isWeak) return [...stem.slice(0, -2), suffix]
-      return [...stem, suffix]
+      if (c3.isWeak) return [...stem.slice(0, -2), kasra]
+      return [...stem, kasra]
   }
 }
 
 function deriveMasculinePluralStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
-  if (verb.root.length > 3) return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+  const fatha = agreementMorpheme(FATHA)
+  const damma = agreementMorpheme(DAMMA)
+
+  if (verb.root.length > 3) return [...stem, agreementMorpheme(DAMMA)]
 
   const [c1, c2, c3] = verb.rootTokens
 
   switch (verb.form) {
     case 1:
-      if (c3.isWeak && isFormIPresentVowel(verb, FATHA) && c2.isHamza)
-        return [radicalMorpheme(c1), agreementMorpheme(FATHA, WAW, NOON, FATHA)]
+      if (c3.isWeak && isFormIPresentVowel(verb, FATHA) && c2.isHamza) return [radicalMorpheme(c1), fatha]
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          radicalMorpheme(c2),
-          agreementMorpheme(FATHA, WAW, NOON, FATHA),
-        ]
-      if (c2.isHamza && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      if (c1.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(WAW, NOON, FATHA)]
-      if (c3.equals(WAW)) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      if (c3.isWeak) return [...stem.slice(0, -1), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+        return [radicalMorpheme(c1), measureMorpheme(SUKOON), radicalMorpheme(c2), fatha]
+      if (c2.isHamza && c3.isWeak) return [...stem.slice(0, -2), damma]
+      if (c1.isWeak && c3.isWeak) return stem.slice(0, -2)
+      if (c3.equals(WAW)) return [...stem.slice(0, -2), damma]
+      if (c3.isWeak) return [...stem.slice(0, -1), damma]
+      return [...stem, damma]
 
     case 2:
     case 3:
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c3.isWeak) return [...stem.slice(0, -2), damma]
+      return [...stem, damma]
 
     case 4:
-      if (c1.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(WAW, NOON, FATHA)]
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c1.isWeak && c3.isWeak) return stem.slice(0, -2)
+      if (c3.isWeak) return [...stem.slice(0, -2), damma]
+      return [...stem, damma]
 
     case 5:
     case 6:
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c3.isWeak) return [...stem.slice(0, -2), fatha]
+      return [...stem, damma]
 
     case 7:
-      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      if (c3.isWeak) return [...stem, agreementMorpheme(WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), damma]
+      if (c3.isWeak) return stem
+      return [...stem, damma]
 
     case 8:
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c3.isWeak) return [...stem.slice(0, -2), damma]
+      return [...stem, damma]
 
     case 9:
     case 10:
-      if (c1.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(WAW, NOON, FATHA)]
-      if (c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
-      return [...stem, agreementMorpheme(DAMMA, WAW, NOON, FATHA)]
+      if (c1.isWeak && c3.isWeak) return stem.slice(0, -2)
+      if (c3.isWeak) return [...stem.slice(0, -2), damma]
+      return [...stem, damma]
   }
 }
 
@@ -130,24 +127,23 @@ function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): r
         radicalMorpheme(c4),
         measureMorpheme(KASRA),
         radicalMorpheme(c4),
-        agreementMorpheme(SUKOON, NOON, FATHA),
+        agreementMorpheme(SUKOON),
       ]
     }
-    return [...stem, agreementMorpheme(SUKOON, NOON, FATHA)]
+    return [...stem, agreementMorpheme(SUKOON)]
   }
 
   const [c1, c2, c3] = verb.rootTokens
-  const suffix = c3.isWeak ? agreementMorpheme(NOON, FATHA) : agreementMorpheme(SUKOON, NOON, FATHA)
+  const suffix = c3.isWeak ? agreementMorpheme() : agreementMorpheme(SUKOON)
 
   switch (verb.form) {
     case 1: {
-      const pv = formIPresentVowel(verb)
       if (c2.equals(c3))
         return [
           radicalMorpheme(c1),
           measureMorpheme(SUKOON),
           radicalMorpheme(c2),
-          measureMorpheme(pv),
+          measureMorpheme(formIPresentVowel(verb)),
           radicalMorpheme(c3),
           suffix,
         ]
@@ -298,22 +294,26 @@ function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly MorphemeT
   const masculinePlural = deriveMasculinePluralStem(stem, verb)
   const femininePlural = deriveFemininePluralStem(stem, verb)
   const vowel = presentPrefixVowel(verb)
-  const needsDamma = verb.root.length === 4 || !c3.isWeak || (verb.form === 10 && c1.isWeak && c3.isWeak)
+  const suffix = dammaSuffix(verb.root.length === 4 || !c3.isWeak || (verb.form === 10 && c1.isWeak && c3.isWeak))
 
   return {
-    '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...dammaSuffix(needsDamma)],
-    '2ms': [agreementMorpheme(TEH, vowel), ...stem, ...dammaSuffix(needsDamma)],
-    '2fs': [agreementMorpheme(TEH, vowel), ...deriveFeminineSingularStem(stem, verb)],
-    '3ms': [agreementMorpheme(YEH, vowel), ...stem, ...dammaSuffix(needsDamma)],
-    '3fs': [agreementMorpheme(TEH, vowel), ...stem, ...dammaSuffix(needsDamma)],
+    '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...suffix],
+    '2ms': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
+    '2fs': [
+      agreementMorpheme(TEH, vowel),
+      ...deriveFeminineSingularStem(stem, verb),
+      agreementMorpheme(YEH, NOON, FATHA),
+    ],
+    '3ms': [agreementMorpheme(YEH, vowel), ...stem, ...suffix],
+    '3fs': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
     '2d': [agreementMorpheme(TEH, vowel), ...dual],
     '3md': [agreementMorpheme(YEH, vowel), ...dual],
     '3fd': [agreementMorpheme(TEH, vowel), ...dual],
-    '1p': [agreementMorpheme(NOON, vowel), ...stem, ...dammaSuffix(needsDamma)],
-    '2mp': [agreementMorpheme(TEH, vowel), ...masculinePlural],
-    '2fp': [agreementMorpheme(TEH, vowel), ...femininePlural],
-    '3mp': [agreementMorpheme(YEH, vowel), ...masculinePlural],
-    '3fp': [agreementMorpheme(YEH, vowel), ...femininePlural],
+    '1p': [agreementMorpheme(NOON, vowel), ...stem, ...suffix],
+    '2mp': [agreementMorpheme(TEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
+    '2fp': [agreementMorpheme(TEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
+    '3mp': [agreementMorpheme(YEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
+    '3fp': [agreementMorpheme(YEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
   }
 }
 
@@ -469,7 +469,7 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
   return conjugateIndicative(verb)
 }
 
-function derivePresentFormIq(verb: Verb): readonly MorphemeToken[] {
+function deriveFormIq(verb: Verb): readonly MorphemeToken[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -483,7 +483,7 @@ function derivePresentFormIq(verb: Verb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormIIq(verb: Verb): readonly MorphemeToken[] {
+function deriveFormIIq(verb: Verb): readonly MorphemeToken[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -498,7 +498,7 @@ function derivePresentFormIIq(verb: Verb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormIIIq(verb: Verb): readonly MorphemeToken[] {
+function deriveFormIIIq(verb: Verb): readonly MorphemeToken[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -512,7 +512,7 @@ function derivePresentFormIIIq(verb: Verb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormIVq(verb: Verb): readonly MorphemeToken[] {
+function deriveFormIVq(verb: Verb): readonly MorphemeToken[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -528,7 +528,7 @@ function derivePresentFormIVq(verb: Verb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormI(verb: FormIVerb): readonly MorphemeToken[] {
+function deriveFormI(verb: FormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const presentVowel = formIPresentVowel(verb)
 
@@ -597,7 +597,7 @@ function derivePresentFormI(verb: FormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
@@ -622,7 +622,7 @@ function derivePresentFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
@@ -633,7 +633,7 @@ function derivePresentFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function derivePresentFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [radicalMorpheme(c1)]
 
@@ -650,7 +650,7 @@ function derivePresentFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function derivePresentFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.equals(YEH))
@@ -677,7 +677,7 @@ function derivePresentFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
@@ -688,7 +688,7 @@ function derivePresentFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
 }
 
-function derivePresentFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
@@ -701,7 +701,7 @@ function derivePresentFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function derivePresentFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
@@ -738,7 +738,7 @@ function derivePresentFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
 
   return [
@@ -752,7 +752,7 @@ function derivePresentFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function derivePresentFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
@@ -778,13 +778,13 @@ function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
   if (letters.length === 4) {
     switch (verb.form) {
       case 1:
-        return derivePresentFormIq(verb)
+        return deriveFormIq(verb)
       case 2:
-        return derivePresentFormIIq(verb)
+        return deriveFormIIq(verb)
       case 3:
-        return derivePresentFormIIIq(verb)
+        return deriveFormIIIq(verb)
       case 4:
-        return derivePresentFormIVq(verb)
+        return deriveFormIVq(verb)
       default:
         return []
     }
@@ -792,25 +792,25 @@ function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
 
   switch (verb.form) {
     case 1:
-      return derivePresentFormI(verb)
+      return deriveFormI(verb)
     case 2:
-      return derivePresentFormII(verb)
+      return deriveFormII(verb)
     case 3:
-      return derivePresentFormIII(verb)
+      return deriveFormIII(verb)
     case 4:
-      return derivePresentFormIV(verb)
+      return deriveFormIV(verb)
     case 5:
-      return derivePresentFormV(verb)
+      return deriveFormV(verb)
     case 6:
-      return derivePresentFormVI(verb)
+      return deriveFormVI(verb)
     case 7:
-      return derivePresentFormVII(verb)
+      return deriveFormVII(verb)
     case 8:
-      return derivePresentFormVIII(verb)
+      return deriveFormVIII(verb)
     case 9:
-      return derivePresentFormIX(verb)
+      return deriveFormIX(verb)
     case 10:
-      return derivePresentFormX(verb)
+      return deriveFormX(verb)
   }
 }
 
