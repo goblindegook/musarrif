@@ -61,9 +61,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
             }
 
             if (c2.equals(c3)) {
-              const seatedC1 = isPatternI ? [HAMZA, KASRA] : [HAMZA, DAMMA]
-              const prefix = [...seatedC1, c2, SUKOON, c3]
-
+              const prefix = [HAMZA, isPatternI ? KASRA : DAMMA, c2, SUKOON, c3]
               if (pronounId === '2ms') return [...prefix, FATHA]
               if (pronounId === '2fs') return [...prefix, KASRA, YEH]
               if (pronounId === '2d') return [...prefix, FATHA, ALIF]

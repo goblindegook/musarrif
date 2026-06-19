@@ -18,6 +18,10 @@ export class MorphemeToken {
       .join('')
       .normalize('NFC')
   }
+
+  contains(token: Token): boolean {
+    return this.tokens.some((t) => t.equals(token))
+  }
 }
 
 export interface Morpheme {

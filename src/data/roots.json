@@ -2859,7 +2859,8 @@
   {
     "root": "nmw",
     "form": 6,
-    "passiveVoice": "none"
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "nqS",
