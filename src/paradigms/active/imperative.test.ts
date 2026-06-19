@@ -2070,7 +2070,7 @@ describe('imperative', () => {
       fc.property(arbitraryVerb, arbitraryPronoun, (verb, pronounId) => {
         const jussive = conjugatePresentMood(verb, 'jussive')
         const imperative = conjugateImperative(verb)
-        expect(imperative[pronounId]).toContain(jussive[pronounId].slice(-1))
+        expect(imperative[pronounId]).toContain(String(jussive[pronounId]).slice(-1))
       }),
     )
   })

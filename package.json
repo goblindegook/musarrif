@@ -23,7 +23,8 @@
     "add:tests:wiktionary": "tsx scripts/wiktionary.mts",
     "debug:explain": "tsx scripts/explain.mts",
     "debug:srs": "tsx scripts/srs.mts",
-    "debug:elixirfm": "tsx scripts/elixirfm-compare.mts"
+    "debug:elixirfm": "tsx scripts/elixirfm-compare.mts",
+    "report:srs": "tsx scripts/report-srs.mts"
   },
   "dependencies": {
     "@pacote/buckwalter": "^0.1.1",

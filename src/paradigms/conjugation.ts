@@ -17,14 +17,14 @@ export function conjugate(verb: Verb, verbTense: VerbTense): Record<PronounId, W
 }
 
 function toWord(words: Record<PronounId, string>): Record<PronounId, Word> {
-  return mapRecord(words, (word) => new Word([measureMorpheme(tokenize(word))]))
+  return mapRecord(words, (word) => new Word([measureMorpheme(...tokenize(word))]))
 }
 
 const CONJUGATE = {
   'active.past': conjugatePast,
-  'active.present.indicative': (verb: Verb) => toWord(conjugatePresentMood(verb, 'indicative')),
-  'active.present.subjunctive': (verb: Verb) => toWord(conjugatePresentMood(verb, 'subjunctive')),
-  'active.present.jussive': (verb: Verb) => toWord(conjugatePresentMood(verb, 'jussive')),
+  'active.present.indicative': (verb: Verb) => conjugatePresentMood(verb, 'indicative'),
+  'active.present.subjunctive': (verb: Verb) => conjugatePresentMood(verb, 'subjunctive'),
+  'active.present.jussive': (verb: Verb) => conjugatePresentMood(verb, 'jussive'),
   'active.future': (verb: Verb) => toWord(conjugateFuture(verb)),
   'active.imperative': (verb: Verb) => toWord(conjugateImperative(verb)),
   'passive.past': (verb: Verb) => toWord(conjugatePassivePast(verb)),

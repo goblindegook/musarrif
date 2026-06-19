@@ -40,13 +40,13 @@ describe('toEqualT', () => {
 
 describe('stringification', () => {
   test('toEqualT stringifies a Word', () => {
-    expect(new Word([measureMorpheme([FATHA])])).toEqualT('َ')
+    expect(new Word([measureMorpheme(FATHA)])).toEqualT('َ')
   })
 
   test('toMatchObjectT stringifies nested values', () => {
     const received = {
-      value: new Word([measureMorpheme([FATHA])]),
-      values: [new Word([measureMorpheme([FATHA])])],
+      value: new Word([measureMorpheme(FATHA)]),
+      values: [new Word([measureMorpheme(FATHA)])],
     }
 
     expect(received).toMatchObjectT({

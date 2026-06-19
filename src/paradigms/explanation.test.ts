@@ -384,11 +384,11 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
     })
   })
 
-  test('present indicative 3ms has fatha prefix and no suffix', () => {
+  test('present indicative 3ms has fatha prefix and damma suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
     expect(layers).toMatchObject({
       prefix: 'يَ',
-      suffix: undefined,
+      suffix: 'ُ',
     })
   })
 
@@ -573,9 +573,9 @@ describe('renderExplanation paragraph 3 template selection', () => {
     expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
   })
 
-  test('present indicative 3ms renders prefix-only template', () => {
+  test('present indicative 3ms renders prefix-and-suffix template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-only')
+    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
   })
 
   test('future 3ms renders prefix-only template', () => {

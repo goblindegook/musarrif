@@ -28,7 +28,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      const stem = tokenize(jussive).slice(2)
+      const stem = tokenize(String(jussive)).slice(2)
 
       if (letters.length === 4) return [3, 4].includes(verb.form) ? [ALIF, KASRA, ...stem] : stem
 
@@ -51,7 +51,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, string> {
           }
 
           if (c1.isHamza) {
-            const initialHamzatedStem = tokenize(jussive).slice(4)
+            const initialHamzatedStem = tokenize(String(jussive)).slice(4)
 
             if (verb.contractedImperative) return initialHamzatedStem
 

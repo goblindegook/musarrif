@@ -31,13 +31,13 @@ export class Word {
 
 export const radicalMorpheme = (token: Token): MorphemeToken => new MorphemeToken([token], 'radical')
 
-export const measureMorpheme = (tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'measure')
+export const measureMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'measure')
 
-export const particleMorpheme = (tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'particle')
+export const particleMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'particle')
 
-export const agreementMorpheme = (tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'agreement')
+export const agreementMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'agreement')
 
-export const elidedMorpheme = (tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'elided')
+export const elidedMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'elided')
 
 function hamzaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
   const flatTokens = morphemes.flatMap((m) => [...m.tokens])
@@ -65,7 +65,7 @@ function maddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[
       t0.equals(ALIF_HAMZA) &&
       i + 2 < slots.length &&
       slots[i + 1].token.equals(FATHA) &&
-      (slots[i + 2].token.isHamza || slots[i + 2].token.equals(ALIF))
+      (slots[i + 2].token.equals(ALIF_HAMZA) || slots[i + 2].token.equals(ALIF))
     ) {
       const skip = i + 3 < slots.length && slots[i + 3].token.equals(SUKOON) ? 4 : 3
       result.push(new MorphemeToken([ALIF_MADDA], 'measure'))

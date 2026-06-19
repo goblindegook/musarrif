@@ -34,7 +34,12 @@ describe('annotateActiveFuture', () => {
           arabic: 'يَكْتُبُ',
           morphemes: [
             { text: 'يَ', role: 'agreement' },
-            { text: 'كْتُبُ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'ُ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
           ],
         },
         {
@@ -42,8 +47,12 @@ describe('annotateActiveFuture', () => {
           arabic: 'يَكْتُبُونَ',
           morphemes: [
             { text: 'يَ', role: 'agreement' },
-            { text: 'كْتُبُ', role: 'radical' },
-            { text: 'ونَ', role: 'agreement' },
+            { text: 'ك', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'ُ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'ُونَ', role: 'agreement' },
           ],
         },
         {
@@ -94,7 +103,12 @@ describe('annotateActiveFuture', () => {
             { text: 'اِ', role: 'elided' },
             { text: 'يَ', role: 'agreement' },
             { text: 'سْتَ', role: 'measure' },
-            { text: 'خْرِجُ', role: 'radical' },
+            { text: 'خ', role: 'radical' },
+            { text: 'ْ', role: 'measure' },
+            { text: 'ر', role: 'radical' },
+            { text: 'ِ', role: 'measure' },
+            { text: 'ج', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
           ],
         },
         {
@@ -142,9 +156,12 @@ describe('annotateActiveFuture', () => {
           arabic: 'يُكَاتِبُ',
           morphemes: [
             { text: 'يُ', role: 'agreement' },
-            { text: 'كَ', role: 'radical' },
-            { text: 'ا', role: 'measure' },
-            { text: 'تِبُ', role: 'radical' },
+            { text: 'ك', role: 'radical' },
+            { text: 'َا', role: 'measure' },
+            { text: 'ت', role: 'radical' },
+            { text: 'ِ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
           ],
         },
         {
@@ -193,7 +210,10 @@ describe('annotateActiveFuture', () => {
           morphemes: [
             { text: 'أَ', role: 'elided' },
             { text: 'يُ', role: 'agreement' },
-            { text: 'حِبُّ', role: 'radical' },
+            { text: 'ح', role: 'radical' },
+            { text: 'ِ', role: 'measure' },
+            { text: 'بّ', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
           ],
         },
         {

@@ -3,7 +3,6 @@ import {
   buildMorphemes,
   type DerivationStep,
   type MorphemeRole,
-  PRESENT_INDICATIVE_SUFFIX_COUNTS,
   PRESENT_MOOD_SUFFIX_COUNTS,
   type TaggedChar,
   tagChars,
@@ -12,6 +11,7 @@ import { isDual, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../tokens'
 import type { Verb } from '../verbs'
+import type { MorphemeToken } from '../word'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'
 
@@ -44,10 +44,14 @@ function droppedPastPrefix(verb: Verb): string | null {
   return null
 }
 
+function toMorphemes(morphemeTokens: readonly MorphemeToken[]) {
+  return morphemeTokens.map((m) => ({ text: String(m).normalize('NFC'), role: m.role }))
+}
+
 export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
-    const moodArabic = conjugatePresentMood(verb, mood)[pronounId]
+    const moodArabic = String(conjugatePresentMood(verb, mood)[pronounId])
     const suffixCount = PRESENT_MOOD_SUFFIX_COUNTS[mood][pronounId]
     const baseMorphemes = buildMorphemes(
       tagChars([...moodArabic], suffixCount, (stem) => tagPresentStemChars(stem, verb)),
@@ -74,14 +78,14 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   const pastAnnotation = annotatePast(verb, '3ms')
 
   const indicativeForms = conjugatePresentMood(verb, 'indicative')
-  const stemMorphemes = buildMorphemes(tagPresentStemChars([...indicativeForms['3ms']], verb))
+  const stemMorphemes = toMorphemes(indicativeForms['3ms'].morphemes)
   const dropped = droppedPastPrefix(verb)
   const presentIndicativeMorphemes = dropped
     ? [{ text: dropped, role: 'elided' as MorphemeRole }, ...stemMorphemes]
     : stemMorphemes
   const presentIndicativeStep: DerivationStep = {
     kind: { type: 'tense', verbTense: 'active.present.indicative' },
-    arabic: indicativeForms['3ms'],
+    arabic: String(indicativeForms['3ms']),
     morphemes: presentIndicativeMorphemes,
   }
 
@@ -91,10 +95,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     }
   }
 
-  const arabic = indicativeForms[pronounId]
-  const morphemes = buildMorphemes(
-    tagChars([...arabic], PRESENT_INDICATIVE_SUFFIX_COUNTS[pronounId], (stem) => tagPresentStemChars(stem, verb)),
-  )
+  const word = indicativeForms[pronounId]
 
   return {
     steps: [
@@ -103,8 +104,8 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       presentIndicativeStep,
       {
         kind: { type: 'pronoun', pronounId },
-        arabic,
-        morphemes,
+        arabic: String(word),
+        morphemes: toMorphemes(word.morphemes),
       },
     ],
   }

@@ -16,7 +16,7 @@ describe('MorphemeToken', () => {
 
 describe('Word', () => {
   test('toString concatenates all morpheme strings', () => {
-    const w = new Word([measureMorpheme([FATHA]), measureMorpheme([KASRA])])
+    const w = new Word([measureMorpheme(FATHA), measureMorpheme(KASRA)])
     expect(w.toString()).toBe('َِ')
   })
 })
@@ -29,7 +29,7 @@ describe('functional constructors', () => {
   })
 
   test('agreementMorpheme wraps token array as agreement', () => {
-    const m = agreementMorpheme([SUKOON, SHADDA])
+    const m = agreementMorpheme(SUKOON, SHADDA)
     expect(m.role).toBe('agreement')
     expect(m.tokens).toEqual([SUKOON, SHADDA])
   })
@@ -37,7 +37,7 @@ describe('functional constructors', () => {
 
 describe('finalizeWord — hamza seating', () => {
   test('bare hamza at word start gets a seat', () => {
-    const w = new Word([radicalMorpheme(HAMZA), measureMorpheme([FATHA])])
+    const w = new Word([radicalMorpheme(HAMZA), measureMorpheme(FATHA)])
     expect(w.toString()).toBe('أَ')
   })
 })
@@ -46,12 +46,12 @@ describe('finalizeWord — madda pass', () => {
   test('ALIF_HAMZA + FATHA + ALIF collapses to ALIF_MADDA', () => {
     const w = new Word([
       radicalMorpheme(BA),
-      measureMorpheme([FATHA]),
+      measureMorpheme(FATHA),
       radicalMorpheme(DAL),
-      measureMorpheme([FATHA]),
+      measureMorpheme(FATHA),
       radicalMorpheme(HAMZA),
-      measureMorpheme([FATHA]),
-      agreementMorpheme([ALIF]),
+      measureMorpheme(FATHA),
+      agreementMorpheme(ALIF),
     ])
     expect(w.toString()).toBe('بَدَآ')
   })
@@ -61,11 +61,11 @@ describe('finalizeWord — shadda/gemination pass', () => {
   test('consonant + SUKOON + same-consonant collapses to consonant + SHADDA', () => {
     const w = new Word([
       radicalMorpheme(HAH),
-      measureMorpheme([FATHA]),
+      measureMorpheme(FATHA),
       radicalMorpheme(BA),
-      measureMorpheme([SUKOON]),
+      measureMorpheme(SUKOON),
       radicalMorpheme(BA),
-      measureMorpheme([FATHA]),
+      measureMorpheme(FATHA),
     ])
     expect(w.toString()).toBe('حَبَّ')
     expect(w.morphemes.map((m) => ({ text: m.toString(), role: m.role }))).toEqual([
@@ -77,7 +77,7 @@ describe('finalizeWord — shadda/gemination pass', () => {
   })
 
   test('gemination across morpheme role boundary uses role of first consonant', () => {
-    const w = new Word([radicalMorpheme(BA), agreementMorpheme([SUKOON, BA])])
+    const w = new Word([radicalMorpheme(BA), agreementMorpheme(SUKOON, BA)])
     expect(w.toString()).toBe('بّ')
     expect(w.morphemes.map((m) => ({ text: m.toString(), role: m.role }))).toEqual([{ text: 'بّ', role: 'radical' }])
   })

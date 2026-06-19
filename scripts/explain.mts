@@ -97,10 +97,10 @@ function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): Disp
 }
 
 function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
-  if (tense === 'active.past') return mapRecord(conjugatePast(verb), (w) => w.toString())
-  if (tense === 'active.present.indicative') return conjugatePresentMood(verb, 'indicative')
-  if (tense === 'active.present.subjunctive') return conjugatePresentMood(verb, 'subjunctive')
-  if (tense === 'active.present.jussive') return conjugatePresentMood(verb, 'jussive')
+  if (tense === 'active.past') return mapRecord(conjugatePast(verb), String)
+  if (tense === 'active.present.indicative') return mapRecord(conjugatePresentMood(verb, 'indicative'), String)
+  if (tense === 'active.present.subjunctive') return mapRecord(conjugatePresentMood(verb, 'subjunctive'), String)
+  if (tense === 'active.present.jussive') return mapRecord(conjugatePresentMood(verb, 'jussive'), String)
   if (tense === 'active.future') return conjugateFuture(verb)
   if (tense === 'active.imperative') return conjugateImperative(verb)
   if (tense === 'passive.past') return conjugatePassivePast(verb)
