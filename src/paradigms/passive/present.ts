@@ -21,14 +21,7 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import {
-  type FormIVerb,
-  isQuadriliteralVerb,
-  isTriliteralFormIVerb,
-  type NonFormIVerb,
-  type QuadriliteralVerb,
-  type Verb,
-} from '../verbs'
+import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
 import { constrainPassiveConjugation } from './support'
 
 const PRESENT_PREFIXES: Record<PronounId, Token> = {
@@ -374,8 +367,7 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 
   switch (verb.form) {
     case 1:
-      if (isTriliteralFormIVerb(verb)) return derivePassivePresentStemFormI(verb, pronounId, mood)
-      break
+      return derivePassivePresentStemFormI(verb, pronounId, mood)
     case 2:
       return derivePassivePresentStemFormII(verb, pronounId, mood)
     case 3:

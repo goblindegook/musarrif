@@ -35,13 +35,12 @@ function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb):
   const kasra = agreementMorpheme(KASRA)
   const fatha = agreementMorpheme(FATHA)
 
-  if (verb.root.length > 3) return [...stem, kasra]
+  if (isQuadriliteralVerb(verb)) return [...stem, kasra]
 
   const [c1, c2, c3] = verb.rootTokens
 
   switch (verb.form) {
     case 1:
-      if (!isTriliteralFormIVerb(verb)) return []
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), fatha]
       if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), kasra]
       if (c3.isWeak) return [...stem.with(-1, kasra)]
@@ -75,13 +74,12 @@ function deriveMasculinePluralStem(stem: readonly MorphemeToken[], verb: Verb): 
   const fatha = agreementMorpheme(FATHA)
   const damma = agreementMorpheme(DAMMA)
 
-  if (verb.root.length > 3) return [...stem, agreementMorpheme(DAMMA)]
+  if (isQuadriliteralVerb(verb)) return [...stem, agreementMorpheme(DAMMA)]
 
   const [c1, c2, c3] = verb.rootTokens
 
   switch (verb.form) {
     case 1:
-      if (!isTriliteralFormIVerb(verb)) return []
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA) && c2.isHamza) return [radicalMorpheme(c1), fatha]
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
         return [radicalMorpheme(c1), measureMorpheme(SUKOON), radicalMorpheme(c2), fatha]
@@ -124,7 +122,7 @@ function deriveMasculinePluralStem(stem: readonly MorphemeToken[], verb: Verb): 
 }
 
 function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
-  if (verb.rootTokens.length === 4) {
+  if (isQuadriliteralVerb(verb)) {
     const [, , c3, c4] = verb.rootTokens
     if (verb.form === 4) {
       return [
@@ -145,7 +143,6 @@ function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): r
 
   switch (verb.form) {
     case 1: {
-      if (!isTriliteralFormIVerb(verb)) return []
       if (c2.equals(c3))
         return [
           radicalMorpheme(c1),
@@ -257,13 +254,12 @@ function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): r
 function deriveDualStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
   const suffix = agreementMorpheme(FATHA, ALIF, NOON, KASRA)
 
-  if (verb.root.length > 3) return [...stem, suffix]
+  if (isQuadriliteralVerb(verb)) return [...stem, suffix]
 
   const [c1, c2, c3] = verb.rootTokens
 
   switch (verb.form) {
     case 1:
-      if (!isTriliteralFormIVerb(verb)) return []
       if (c3.isWeak && c2.isHamza) return [...stem.with(-1, radicalMorpheme(YEH)), suffix]
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA))
         return [...stem.slice(0, -2), agreementMorpheme(FATHA, YEH), suffix]
@@ -303,7 +299,7 @@ function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly MorphemeT
   const masculinePlural = deriveMasculinePluralStem(stem, verb)
   const femininePlural = deriveFemininePluralStem(stem, verb)
   const vowel = presentPrefixVowel(verb)
-  const suffix = dammaSuffix(verb.root.length === 4 || !c3.isWeak || (verb.form === 10 && c1.isWeak && c3.isWeak))
+  const suffix = dammaSuffix(isQuadriliteralVerb(verb) || !c3.isWeak || (verb.form === 10 && c1.isWeak && c3.isWeak))
 
   return {
     '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...suffix],
@@ -327,7 +323,7 @@ function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly MorphemeT
 }
 
 function presentPrefixVowel(verb: Verb): Token {
-  if (verb.root.length === 4) return verb.form === 1 ? DAMMA : FATHA
+  if (isQuadriliteralVerb(verb)) return verb.form === 1 ? DAMMA : FATHA
   return [2, 3, 4].includes(verb.form) ? DAMMA : FATHA
 }
 
@@ -426,7 +422,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly MorphemeToken[
     }
 
     if (finalToken?.equals(DAMMA)) {
-      if (verb.root.length === 4 && stem.at(-1)?.tokens[0].equals(stem.at(-3)?.tokens[0]))
+      if (isQuadriliteralVerb(verb) && stem.at(-1)?.tokens[0].equals(stem.at(-3)?.tokens[0]))
         return [
           ...stem.slice(0, -4),
           measureMorpheme(SUKOON),

@@ -6,7 +6,7 @@ import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
-import { isTriliteralFormIVerb, type Verb, type VerbForm } from './verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb, type VerbForm } from './verbs'
 import type { Morpheme } from './word'
 
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
@@ -341,7 +341,7 @@ function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): s
     return selectedMimiMasdar ? resolveMimiPatternLabel(selectedMimiMasdar, verb) : undefined
   }
 
-  return verb.root.length > 3
+  return isQuadriliteralVerb(verb)
     ? (QUADRILITERAL_MASDAR_PATTERNS[verb.form] ?? '')
     : (NON_FORM_I_MASDAR_PATTERNS[verb.form] ?? '')
 }
