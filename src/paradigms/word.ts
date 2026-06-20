@@ -13,10 +13,7 @@ export class Morpheme {
   }
 
   toString(): string {
-    return this.tokens
-      .map((t) => t.raw)
-      .join('')
-      .normalize('NFC')
+    return this.tokens.map(String).join('').normalize('NFC')
   }
 
   contains(token: Token): boolean {

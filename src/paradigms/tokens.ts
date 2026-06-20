@@ -4,7 +4,7 @@ import type { Word } from './word'
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
 export class Token {
-  readonly raw: string
+  private readonly raw: string
   readonly isHamza: boolean
   readonly isWeak: boolean
   readonly isVowel: boolean
@@ -87,9 +87,9 @@ export function detokenize(tokens: readonly Token[]): string {
 }
 
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
-  [FATHA.raw]: new Set([ALIF.raw, ALIF_MAQSURA.raw, TEH_MARBUTA.raw]),
-  [KASRA.raw]: new Set([YEH.raw, HAMZA_ON_YEH.raw]),
-  [DAMMA.raw]: new Set([WAW.raw, HAMZA_ON_WAW.raw]),
+  [String(FATHA)]: new Set([String(ALIF), String(ALIF_MAQSURA), String(TEH_MARBUTA)]),
+  [String(KASRA)]: new Set([String(YEH), String(HAMZA_ON_YEH)]),
+  [String(DAMMA)]: new Set([String(WAW), String(HAMZA_ON_WAW)]),
 }
 
 export function applyDiacriticsPreference(input: string | Word, preference: DiacriticsPreference): string {
@@ -99,7 +99,7 @@ export function applyDiacriticsPreference(input: string | Word, preference: Diac
       tokenize(String(input)).reduce<Token[]>((result, current, index, chars) => {
         if (current.equals(SUKOON)) return result
         const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
-        if (LONG_VOWEL_TARGETS[current.raw]?.has(nextBase?.raw ?? '')) return result
+        if (LONG_VOWEL_TARGETS[String(current)]?.has(String(nextBase))) return result
         result.push(current)
         return result
       }, []),
@@ -107,7 +107,7 @@ export function applyDiacriticsPreference(input: string | Word, preference: Diac
   return String(input).replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
 }
 
-export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.raw)
+export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, String(HAMZA))
 
 export function normalizeForComparison(text: string | Word): string {
   return normalizeHamza(applyDiacriticsPreference(String(text), 'none'))

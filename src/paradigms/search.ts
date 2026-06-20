@@ -64,7 +64,7 @@ export const search = memoize(
 
 function addCandidate(acc: Set<string>, value: string): void {
   acc.add(value)
-  acc.add(value.replace(new RegExp(ALIF.raw, 'g'), HAMZA.raw))
+  acc.add(value.replace(new RegExp(String(ALIF), 'g'), String(HAMZA)))
 }
 
 function extractRootCandidates(query: string): string[] {

@@ -44,9 +44,9 @@ import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 import { useRouting } from '../routes'
 
 const formIVowelPattern = (verb: TriliteralDisplayVerb<1>) => {
-  const past = formIPastVowel(verb).raw
-  const present = formIPresentVowel(verb).raw
-  return past === present ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
+  const past = formIPastVowel(verb)
+  const present = formIPresentVowel(verb)
+  return past.equals(present) ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
 
 interface ConjugationModeProps {
