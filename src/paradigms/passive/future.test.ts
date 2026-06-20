@@ -19,7 +19,7 @@ describe('passive future', () => {
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
         (verb, pronounId) => {
-          expect(conjugatePassiveFuture(verb)[pronounId]).toBe('')
+          expect(conjugatePassiveFuture(verb)[pronounId]).toEqualT('')
         },
       ),
     )

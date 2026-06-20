@@ -1,4 +1,3 @@
-import { mapRecord } from '../primitives/objects'
 import { conjugateFuture } from './active/future'
 import { conjugateImperative } from './active/imperative'
 import { conjugatePast } from './active/past'
@@ -8,16 +7,12 @@ import { conjugatePassivePast } from './passive/past'
 import { conjugatePassivePresentMood } from './passive/present'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
-import { tokenize } from './tokens'
+
 import type { Verb } from './verbs'
-import { measureMorpheme, Word } from './word'
+import type { Word } from './word'
 
 export function conjugate(verb: Verb, verbTense: VerbTense): Record<PronounId, Word> {
   return CONJUGATE[verbTense](verb)
-}
-
-function toWord(words: Record<PronounId, string>): Record<PronounId, Word> {
-  return mapRecord(words, (word) => new Word([measureMorpheme(...tokenize(word))]))
 }
 
 const CONJUGATE = {
@@ -28,8 +23,8 @@ const CONJUGATE = {
   'active.future': conjugateFuture,
   'active.imperative': conjugateImperative,
   'passive.past': conjugatePassivePast,
-  'passive.present.indicative': (verb: Verb) => toWord(conjugatePassivePresentMood(verb, 'indicative')),
-  'passive.present.subjunctive': (verb: Verb) => toWord(conjugatePassivePresentMood(verb, 'subjunctive')),
-  'passive.present.jussive': (verb: Verb) => toWord(conjugatePassivePresentMood(verb, 'jussive')),
-  'passive.future': (verb: Verb) => toWord(conjugatePassiveFuture(verb)),
+  'passive.present.indicative': (verb: Verb) => conjugatePassivePresentMood(verb, 'indicative'),
+  'passive.present.subjunctive': (verb: Verb) => conjugatePassivePresentMood(verb, 'subjunctive'),
+  'passive.present.jussive': (verb: Verb) => conjugatePassivePresentMood(verb, 'jussive'),
+  'passive.future': conjugatePassiveFuture,
 } as const

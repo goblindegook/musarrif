@@ -16,7 +16,7 @@ describe('passive present jussive', () => {
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
         (verb, pronounId) => {
-          expect(conjugatePassivePresentMood(verb, 'jussive')[pronounId]).toBe('')
+          expect(conjugatePassivePresentMood(verb, 'jussive')[pronounId]).toEqualT('')
         },
       ),
     )

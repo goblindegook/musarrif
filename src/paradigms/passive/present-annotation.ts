@@ -1,87 +1,49 @@
-import {
-  type AnnotatedForm,
-  buildMorphemes,
-  type DerivationStep,
-  PRESENT_INDICATIVE_SUFFIX_COUNTS,
-  PRESENT_MOOD_SUFFIX_COUNTS,
-  type TaggedChar,
-  tagChars,
-} from '../annotation'
+import { annotatePast } from '../active/past-annotation'
+import type { AnnotatedForm, DerivationStep } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import type { Verb } from '../verbs'
-import { annotatePassivePast } from './past-annotation'
 import { conjugatePassivePresentMood } from './present'
 
-const PASSIVE_PRESENT_TENSE_PREFIX_CHARS = 2
-const PASSIVE_PRESENT_FORM_INFIX_CHARS: Partial<Record<number, number>> = { 5: 2, 6: 2, 7: 2, 10: 4 }
-const PASSIVE_PRESENT_FORM_INFIX_INDEX: Partial<Record<number, number>> = { 3: 4, 6: 6 }
-
-function tagPassivePresentStemChars(chars: string[], verb: Verb): TaggedChar[] {
-  const formInfixChars = verb.root.length === 3 ? (PASSIVE_PRESENT_FORM_INFIX_CHARS[verb.form] ?? 0) : 0
-  const formInfixEnd = PASSIVE_PRESENT_TENSE_PREFIX_CHARS + formInfixChars
-  const nonContiguousFormIndex = verb.root.length === 3 ? (PASSIVE_PRESENT_FORM_INFIX_INDEX[verb.form] ?? -1) : -1
-  return chars.map((char, i) => ({
-    char,
-    role:
-      i < PASSIVE_PRESENT_TENSE_PREFIX_CHARS
-        ? 'agreement'
-        : i < formInfixEnd || i === nonContiguousFormIndex
-          ? 'measure'
-          : 'radical',
-  }))
-}
-
 export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
-  const passivePresentMood = conjugatePassivePresentMood(verb, mood)
+  const allForms = conjugatePassivePresentMood(verb, mood)
 
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotatePassivePresentMood(verb, 'indicative', pronounId)
-    const suffixCount = PRESENT_MOOD_SUFFIX_COUNTS[mood][pronounId]
-    const moodMorphemes = buildMorphemes(
-      tagChars([...passivePresentMood[pronounId]], suffixCount, (stem) => tagPassivePresentStemChars(stem, verb)),
-    )
     return {
       steps: [
         ...indicativeAnnotation.steps,
         {
           kind: { type: 'tense', verbTense: `passive.present.${mood}` },
-          arabic: passivePresentMood[pronounId],
-          morphemes: moodMorphemes,
+          arabic: String(allForms[pronounId]),
+          morphemes: allForms[pronounId].toMorphemes(),
         },
       ],
     }
   }
 
-  const pastAnnotation = annotatePassivePast(verb, '3ms')
-  const rootStep = pastAnnotation.steps[0]
-  const formStep = pastAnnotation.steps[1]
+  const pastAnnotation = annotatePast(verb, '3ms')
+  const indicativeForms = conjugatePassivePresentMood(verb, 'indicative')
 
-  const stemMorphemes = buildMorphemes(tagPassivePresentStemChars([...passivePresentMood['3ms']], verb))
-  const presentIndicativeStep: DerivationStep = {
-    kind: { type: 'tense', verbTense: 'passive.present.indicative' },
-    arabic: passivePresentMood['3ms'],
-    morphemes: stemMorphemes,
-  }
+  const steps: readonly DerivationStep[] = [
+    pastAnnotation.steps[0],
+    pastAnnotation.steps[1],
+    {
+      kind: { type: 'tense', verbTense: 'passive.present.indicative' },
+      arabic: String(indicativeForms['3ms']),
+      morphemes: indicativeForms['3ms'].toMorphemes(),
+    },
+  ]
 
-  if (pronounId === '3ms') {
-    return { steps: [rootStep, formStep, presentIndicativeStep] }
-  }
+  if (pronounId === '3ms') return { steps }
 
-  const pronounMorphemes = buildMorphemes(
-    tagChars([...passivePresentMood[pronounId]], PRESENT_INDICATIVE_SUFFIX_COUNTS[pronounId], (stem) =>
-      tagPassivePresentStemChars(stem, verb),
-    ),
-  )
   return {
     steps: [
-      rootStep,
-      formStep,
-      presentIndicativeStep,
+      ...steps,
       {
         kind: { type: 'pronoun', pronounId },
-        arabic: passivePresentMood[pronounId],
-        morphemes: pronounMorphemes,
+        arabic: String(indicativeForms[pronounId]),
+        morphemes: indicativeForms[pronounId].toMorphemes(),
       },
     ],
   }

@@ -28,6 +28,7 @@ import {
   type VerbForm,
   verbs,
 } from '../src/paradigms/verbs.ts'
+import type { Word } from '../src/paradigms/word.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 import { mapRecord } from '../src/primitives/objects.ts'
 import en from '../src/ui/locales/en.json' with { type: 'json' }
@@ -40,7 +41,7 @@ type Back = typeof BACK
 type DerivationKind = 'verb' | 'activeParticiple' | 'passiveParticiple' | 'masdar'
 type NextAction = 'again' | 'kind' | 'root' | 'exit'
 type TranslationParams = Record<string, string>
-type ConjugationForms = Partial<Record<PronounId, string>>
+type ConjugationForms = Record<PronounId, Word>
 
 interface WizardState {
   root: string
@@ -100,12 +101,12 @@ function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): Disp
 }
 
 function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
-  if (tense === 'active.past') return mapRecord(conjugatePast(verb), String)
-  if (tense === 'active.present.indicative') return mapRecord(conjugatePresentMood(verb, 'indicative'), String)
-  if (tense === 'active.present.subjunctive') return mapRecord(conjugatePresentMood(verb, 'subjunctive'), String)
-  if (tense === 'active.present.jussive') return mapRecord(conjugatePresentMood(verb, 'jussive'), String)
-  if (tense === 'active.future') return mapRecord(conjugateFuture(verb), String)
-  if (tense === 'active.imperative') return mapRecord(conjugateImperative(verb), String)
+  if (tense === 'active.past') return conjugatePast(verb)
+  if (tense === 'active.present.indicative') return conjugatePresentMood(verb, 'indicative')
+  if (tense === 'active.present.subjunctive') return conjugatePresentMood(verb, 'subjunctive')
+  if (tense === 'active.present.jussive') return conjugatePresentMood(verb, 'jussive')
+  if (tense === 'active.future') return conjugateFuture(verb)
+  if (tense === 'active.imperative') return conjugateImperative(verb)
   if (tense === 'passive.past') return conjugatePassivePast(verb)
   if (tense === 'passive.present.indicative') return conjugatePassivePresentMood(verb, 'indicative')
   if (tense === 'passive.present.subjunctive') return conjugatePassivePresentMood(verb, 'subjunctive')
@@ -278,7 +279,7 @@ async function wizard() {
     }
 
     if (state.kind === 'verb') {
-      const forms = formsForTense(verb, state.tense)
+      const forms = mapRecord(formsForTense(verb, state.tense), String)
       const derived = forms[state.pronoun]
       if (!derived?.length) {
         console.log(`No form produced for ${state.tense} / ${state.pronoun}.`)
