@@ -1,5 +1,3 @@
-// src/paradigms/annotation.ts
-
 import { annotateActiveFuture } from './active/future-annotation'
 import { annotateActiveImperative } from './active/imperative-annotation'
 import { annotatePast } from './active/past-annotation'
@@ -8,103 +6,9 @@ import { annotatePassiveFuture } from './passive/future-annotation'
 import { annotatePassivePast } from './passive/past-annotation'
 import { annotatePassivePresentMood } from './passive/present-annotation'
 import type { PronounId } from './pronouns'
-import type { Mood, VerbTense } from './tense'
-import { SHADDA, SUKOON } from './tokens'
+import type { VerbTense } from './tense'
 import type { Verb, VerbForm } from './verbs'
-import type { Morpheme, MorphemeRole } from './word'
-
-export const PAST_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 3,
-  '2ms': 3,
-  '2fs': 3,
-  '3ms': 0,
-  '3fs': 3,
-  '2d': 6,
-  '3md': 1,
-  '3fd': 4,
-  '1p': 4,
-  '2mp': 5,
-  '2fp': 6,
-  '3mp': 4,
-  '3fp': 3,
-}
-
-export const PRESENT_INDICATIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 4,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 4,
-  '3md': 4,
-  '3fd': 4,
-  '1p': 1,
-  '2mp': 3,
-  '2fp': 3,
-  '3mp': 3,
-  '3fp': 3,
-}
-
-export const PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS: Record<PronounId, number> = {
-  '1s': 1,
-  '2ms': 1,
-  '2fs': 2,
-  '3ms': 1,
-  '3fs': 1,
-  '2d': 2,
-  '3md': 2,
-  '3fd': 2,
-  '1p': 1,
-  '2mp': 3,
-  '2fp': 3,
-  '3mp': 3,
-  '3fp': 3,
-}
-
-export const PRESENT_MOOD_SUFFIX_COUNTS: Record<Mood, Record<PronounId, number>> = {
-  indicative: PRESENT_INDICATIVE_SUFFIX_COUNTS,
-  subjunctive: PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS,
-  jussive: PRESENT_SUBJUNCTIVE_SUFFIX_COUNTS,
-}
-
-const FUTURE_SEEN_CHARS = 2
-const FUTURE_PERSON_PREFIX_CHARS = 2
-
-export function tagFutureChars(
-  chars: string[],
-  suffixCount: number,
-  formInfixChars = 0,
-  nonContiguousFormIndex = -1,
-): TaggedChar[] {
-  const stemCount = chars.length - suffixCount
-  const personPrefixEnd = FUTURE_SEEN_CHARS + FUTURE_PERSON_PREFIX_CHARS
-  const formInfixEnd = personPrefixEnd + formInfixChars
-  return chars.map((char, i) => ({
-    char,
-    role:
-      i < FUTURE_SEEN_CHARS
-        ? 'particle'
-        : i < personPrefixEnd
-          ? 'agreement'
-          : i < formInfixEnd || i === nonContiguousFormIndex
-            ? 'measure'
-            : i < stemCount
-              ? 'radical'
-              : 'agreement',
-  }))
-}
-
-export function tagChars(
-  chars: string[],
-  suffixCount: number,
-  tagStem: (stem: string[]) => TaggedChar[],
-): TaggedChar[] {
-  const stemCount = chars.length - suffixCount
-  return [
-    ...tagStem(chars.slice(0, stemCount)),
-    ...chars.slice(stemCount).map((char) => ({ char, role: 'agreement' as MorphemeRole })),
-  ]
-}
+import type { Morpheme } from './word'
 
 export type DerivationStepKind =
   | { type: 'root' }
@@ -120,40 +24,6 @@ export interface DerivationStep {
 
 export interface AnnotatedForm {
   steps: readonly DerivationStep[]
-}
-
-export interface TaggedChar {
-  char: string
-  role: MorphemeRole
-}
-
-export function buildMorphemes(tagged: TaggedChar[]): readonly Morpheme[] {
-  // 1. Handle gemination: c + SUKOON + c → c + SHADDA (same role)
-  const processed: TaggedChar[] = []
-  for (let i = 0; i < tagged.length; i++) {
-    if (i + 2 < tagged.length && SUKOON.equals(tagged[i + 1].char) && tagged[i].char === tagged[i + 2].char) {
-      processed.push(tagged[i])
-      processed.push({ char: SHADDA.raw, role: tagged[i].role })
-      i += 2
-    } else {
-      processed.push(tagged[i])
-    }
-  }
-
-  // 2. Group consecutive same-role characters
-  const morphemes: Morpheme[] = []
-  let current: { text: string; role: MorphemeRole } | null = null
-  for (const { char, role } of processed) {
-    if (current && current.role === role) {
-      current.text += char
-    } else {
-      if (current) morphemes.push(current)
-      current = { text: char, role }
-    }
-  }
-  if (current) morphemes.push(current)
-
-  return morphemes.filter((m) => m.text.length > 0).map((m) => ({ text: m.text.normalize('NFC'), role: m.role }))
 }
 
 export function annotate(verb: Verb, verbTense: VerbTense, pronounId: PronounId): AnnotatedForm | null {

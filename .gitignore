@@ -38,3 +38,12 @@ entities.json
 
 # Generated files
 /src-tauri/icons/
+
+/.claude
+/docs/superpowers
+/docs/specs
+/docs/plans
+/public/piper
+/public/voices
+.impeccable.md
+*.musarrif
