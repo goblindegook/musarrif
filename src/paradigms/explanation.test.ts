@@ -460,7 +460,7 @@ describe('renderExplanation elision prose', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
     const rendered = renderExplanation(layers, localeT).join(' ')
     expect(rendered).toContain('prefix')
-    expect(rendered).toContain('dropped')
+    expect(rendered).toContain('dropping')
   })
 
   test('jussive 3md explanation mentions the dropped nūn ending', () => {
