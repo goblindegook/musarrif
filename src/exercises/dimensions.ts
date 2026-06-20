@@ -12,6 +12,7 @@ import {
   type VerbForm,
   verbs,
 } from '../paradigms/verbs'
+import type { Word } from '../paradigms/word'
 import { clamp } from '../primitives/numbers'
 import { keys } from '../primitives/objects'
 import type { CardConstraints } from './srs'
@@ -269,9 +270,8 @@ export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)
   return synthesizeVerb(root, form)
 }
 
-export function exerciseDiacritics(word: string, diacritics: DiacriticsLevel): string {
-  const pref = DIACRITICS_PREFERENCES[diacritics]
-  return applyDiacriticsPreference(word, pref)
+export function exerciseDiacritics(word: string | Word, diacritics: DiacriticsLevel): string {
+  return applyDiacriticsPreference(word, DIACRITICS_PREFERENCES[diacritics])
 }
 
 export const WINDOW_SIZES: Record<DimensionKey, number> = {

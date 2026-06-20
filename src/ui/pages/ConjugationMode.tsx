@@ -144,16 +144,16 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
   const availableParadigms = useMemo(() => getAvailableParadigms(selectedVerb), [selectedVerb])
   const masdar = useMemo(
-    () => (availableParadigms.includes('masdar') ? deriveMasdar(selectedVerb) : []),
+    () => (availableParadigms.includes('masdar') ? deriveMasdar(selectedVerb).map(String) : []),
     [selectedVerb, availableParadigms],
   )
   const lexicalizedMasdarStartIndex = masdar.length - (selectedVerb.lexicalizedMasdars?.length ?? 0)
   const activeParticiple = useMemo(
-    () => (availableParadigms.includes('active.participle') ? deriveActiveParticiple(selectedVerb) : null),
+    () => (availableParadigms.includes('active.participle') ? String(deriveActiveParticiple(selectedVerb)) : null),
     [selectedVerb, availableParadigms],
   )
   const passiveParticiple = useMemo(
-    () => (availableParadigms.includes('passive.participle') ? derivePassiveParticiple(selectedVerb) : null),
+    () => (availableParadigms.includes('passive.participle') ? String(derivePassiveParticiple(selectedVerb)) : null),
     [selectedVerb, availableParadigms],
   )
   const recentsAndFavouritesPanels = (

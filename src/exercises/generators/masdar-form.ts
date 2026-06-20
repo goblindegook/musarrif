@@ -10,7 +10,7 @@ export const masdarFormExercise = defineExercise(
   'masdarForm',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const masdar = random(deriveMasdar(verb))
+    const masdar = String(random(deriveMasdar(verb)))
     const word = exerciseDiacritics(masdar, profile.diacritics)
 
     const eligibleForms = formsForRoot(verb.root).filter((form) => {

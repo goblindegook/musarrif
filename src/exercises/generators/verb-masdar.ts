@@ -65,7 +65,7 @@ function buildOptions(
 function formDistractor(verb: DisplayVerb, profile: DimensionProfile): () => string {
   return () => {
     const candidate = randomGeneratedVerb(verb.root)
-    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
+    return exerciseDiacritics(String(random(deriveMasdar(candidate))), profile.diacritics)
   }
 }
 
@@ -74,7 +74,7 @@ function rootDistractor(verb: DisplayVerb, profile: DimensionProfile): () => str
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
+    return exerciseDiacritics(String(random(deriveMasdar(candidate))), profile.diacritics)
   }
 }
 
@@ -83,6 +83,6 @@ function weakRootDistractor(verb: DisplayVerb, profile: DimensionProfile): () =>
 
   return () => {
     const candidate = randomGeneratedVerb(rootGenerator(), verb.form)
-    return exerciseDiacritics(random(deriveMasdar(candidate)), profile.diacritics)
+    return exerciseDiacritics(String(random(deriveMasdar(candidate))), profile.diacritics)
   }
 }

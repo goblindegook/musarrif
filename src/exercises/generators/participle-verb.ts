@@ -20,8 +20,8 @@ export const participleVerbExercise = defineExercise(
   'participleVerb',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const active = deriveActiveParticiple(verb)
-    const passive = derivePassiveParticiple(verb)
+    const active = String(deriveActiveParticiple(verb))
+    const passive = String(derivePassiveParticiple(verb))
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'
     const participle = kind === 'active' ? active : passive
     const options = buildOptions(verb, profile)

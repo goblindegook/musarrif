@@ -7,7 +7,6 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  finalize,
   HAMZA,
   KASRA,
   longVowel,
@@ -20,206 +19,491 @@ import {
   TANWEEN_KASRA,
   TEH,
   TEH_MARBUTA,
-  type Token,
+  tokenize,
   WAW,
   YEH,
 } from '../tokens'
 import type { FormIVerb, MasdarPattern, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { isQuadriliteralVerb, isTriliteralFormIVerb } from '../verbs'
+import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 
-function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Token[] {
+function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
 
   switch (pattern) {
     case 'fa3l':
-      return [c1, FATHA, c2, SUKOON, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+      ]
 
     case 'fa3al':
-      return [c1, FATHA, c2, FATHA, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c3),
+      ]
 
     case 'fa3aal':
-      return [c1, FATHA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA, ALIF),
+        radicalMorpheme(c3.isWeak ? HAMZA : c3),
+      ]
 
     case 'fa3aala':
-      if (c2.isWeak) return [c1, DAMMA, WAW, FATHA, ALIF, c3, FATHA, TEH_MARBUTA] // FIXME: Should this not be fu3aala?
-      return [c1, FATHA, c2, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
+      if (c2.isWeak)
+        return [
+          radicalMorpheme(c1),
+          measureMorpheme(DAMMA, WAW, FATHA, ALIF),
+          radicalMorpheme(c3),
+          measureMorpheme(FATHA, TEH_MARBUTA),
+        ]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA, ALIF),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
 
     case 'fa3alaan':
-      return [c1, FATHA, c2, FATHA, c3, FATHA, ALIF, NOON]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, ALIF, NOON),
+      ]
 
     case 'fa3ool':
       return []
 
     case 'fa3iil':
-      return [c1, FATHA, c2, KASRA, YEH, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(KASRA, YEH),
+        radicalMorpheme(c3),
+      ]
 
     case 'fu3l':
-      return [c1, DAMMA, c2, SUKOON, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(DAMMA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+      ]
 
     case 'fu3ool':
-      return [c1, DAMMA, c2, DAMMA, WAW, c3]
+      if (c3.isWeak)
+        return [
+          radicalMorpheme(c1),
+          measureMorpheme(DAMMA),
+          radicalMorpheme(c2),
+          measureMorpheme(DAMMA, WAW, SUKOON),
+          radicalMorpheme(c3),
+        ]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(DAMMA),
+        radicalMorpheme(c2),
+        measureMorpheme(DAMMA, WAW),
+        radicalMorpheme(c3),
+      ]
 
     case 'fu3aal':
-      return [c1, DAMMA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(DAMMA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA, ALIF),
+        radicalMorpheme(c3.isWeak ? HAMZA : c3),
+      ]
 
     case 'fi3aal': {
-      if (c3.isWeak) return [c1, KASRA, c2, FATHA, ALIF, HAMZA]
-      return [c1, KASRA, c2.isWeak ? YEH : c2, FATHA, ALIF, c3]
+      if (c3.isWeak)
+        return [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c2.isWeak ? YEH : c2),
+        measureMorpheme(FATHA, ALIF),
+        radicalMorpheme(c3),
+      ]
     }
 
     case 'fa3la':
-      return [c1, FATHA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
 
     case 'fi3la':
-      return [c1, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
 
     case 'fu3la':
-      return [c1.isHamza ? ALIF_HAMZA : c1, DAMMA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+      return [
+        radicalMorpheme(c1.isHamza ? ALIF_HAMZA : c1),
+        measureMorpheme(DAMMA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
 
     case 'fu3laan':
-      return [c1, DAMMA, c2, SUKOON, c3, FATHA, ALIF, NOON]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(DAMMA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, ALIF, NOON),
+      ]
 
     case 'fi3al':
-      return [c1, KASRA, c2, FATHA, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c3),
+      ]
 
     case 'fi3l':
-      return [c1, KASRA, c2, SUKOON, c3]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c2),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c3),
+      ]
 
     case 'fi3aala':
-      if (c2.isWeak) return [c1, KASRA, c3.isWeak ? WAW : YEH, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
-      return [c1, KASRA, c2, FATHA, ALIF, c3.isWeak ? YEH : c3, FATHA, TEH_MARBUTA]
+      if (c2.isWeak)
+        return [
+          radicalMorpheme(c1),
+          measureMorpheme(KASRA),
+          radicalMorpheme(c3.isWeak ? WAW : YEH),
+          measureMorpheme(FATHA, ALIF),
+          radicalMorpheme(c3.isWeak ? YEH : c3),
+          measureMorpheme(FATHA, TEH_MARBUTA),
+        ]
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA, ALIF),
+        radicalMorpheme(c3.isWeak ? YEH : c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
 
     case 'mimi': {
       const vowel = isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA
-      if (c3.isHamza) return [MEEM, FATHA, c1, ...longVowel(KASRA), c3]
-      if (c2.isWeak) return [MEEM, FATHA, c1, ...longVowel(vowel), c3]
-      return [MEEM, FATHA, c1, SUKOON, c2, vowel, c3]
+      if (c3.isHamza)
+        return [
+          measureMorpheme(MEEM, FATHA),
+          radicalMorpheme(c1),
+          measureMorpheme(...longVowel(KASRA)),
+          radicalMorpheme(c3),
+        ]
+      if (c2.isWeak)
+        return [
+          measureMorpheme(MEEM, FATHA),
+          radicalMorpheme(c1),
+          measureMorpheme(...longVowel(vowel)),
+          radicalMorpheme(c3),
+        ]
+      return [
+        measureMorpheme(MEEM, FATHA),
+        radicalMorpheme(c1),
+        measureMorpheme(SUKOON),
+        radicalMorpheme(c2),
+        measureMorpheme(vowel),
+        radicalMorpheme(c3),
+      ]
     }
   }
 }
 
-function deriveMasdarFormII(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
-  const prefix = [TEH, FATHA, c1]
+  if (c2.equals(YEH) && c3.equals(YEH))
+    return [
+      ...prefix,
+      measureMorpheme(KASRA),
+      radicalMorpheme(c2),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA, TEH_MARBUTA),
+    ]
 
-  if (c2.equals(YEH) && c3.equals(YEH)) return [...prefix, KASRA, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+  if (c3.isWeak || c3.isHamza)
+    return [
+      ...prefix,
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c2),
+      measureMorpheme(KASRA),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA, TEH_MARBUTA),
+    ]
 
-  if (c3.isWeak || c3.isHamza) return [...prefix, SUKOON, c2, KASRA, c3, FATHA, TEH_MARBUTA]
-
-  return [...prefix, SUKOON, c2, KASRA, YEH, c3]
+  return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA, YEH), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormIII(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [MEEM, DAMMA, c1, FATHA, ALIF]
+  const prefix = [measureMorpheme(MEEM, DAMMA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
-  if (c2.equals(c3)) return [...prefix, c2, SUKOON, c3, FATHA, TEH_MARBUTA]
+  if (c2.equals(c3))
+    return [
+      ...prefix,
+      radicalMorpheme(c2),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA, TEH_MARBUTA),
+    ]
 
-  if (c3.equals(YEH)) return [...prefix, c2, FATHA, ALIF, TEH_MARBUTA]
+  if (c3.equals(YEH)) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, TEH_MARBUTA)]
 
-  return [...prefix, c2, FATHA, c3, FATHA, TEH_MARBUTA]
+  return [
+    ...prefix,
+    radicalMorpheme(c2),
+    measureMorpheme(FATHA),
+    radicalMorpheme(c3),
+    measureMorpheme(FATHA, TEH_MARBUTA),
+  ]
 }
 
-function deriveMasdarFormIV(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(ALIF_HAMZA_BELOW, KASRA), radicalMorpheme(c1.isWeak || c1.isHamza ? YEH : c1)]
 
-  const prefix = [ALIF_HAMZA_BELOW, KASRA, c1.isWeak || c1.isHamza ? YEH : c1]
+  if (c2.isHamza)
+    return [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA, TEH_MARBUTA)]
 
-  if (c2.isHamza) return [...prefix, FATHA, ALIF, c2, FATHA, TEH_MARBUTA]
+  if (c3.isWeak) return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
 
-  if (c3.isWeak) return [...prefix, SUKOON, c2, FATHA, ALIF, HAMZA]
+  if (c2.isWeak)
+    return [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3), measureMorpheme(FATHA, TEH_MARBUTA)]
 
-  if (c2.isWeak) return [...prefix, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-
-  return [...prefix, SUKOON, c2, FATHA, ALIF, c3]
+  return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormV(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [
+    measureMorpheme(TEH, FATHA),
+    radicalMorpheme(c1),
+    measureMorpheme(FATHA),
+    radicalMorpheme(c2),
+    measureMorpheme(SHADDA),
+  ]
 
-  const prefix = [TEH, FATHA, c1, FATHA, c2, SHADDA]
+  if (c3.isWeak) return [...prefix, measureMorpheme(TANWEEN_KASRA)]
 
-  if (c3.isWeak) return [...prefix, TANWEEN_KASRA]
-
-  return [...prefix, DAMMA, c3]
+  return [...prefix, measureMorpheme(DAMMA), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormVI(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c3.isWeak) return [TEH, FATHA, c1, FATHA, ALIF, c2, TANWEEN_KASRA]
+  if (c3.isWeak)
+    return [
+      measureMorpheme(TEH, FATHA),
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c2),
+      measureMorpheme(TANWEEN_KASRA),
+    ]
 
-  return [TEH, FATHA, c1, FATHA, ALIF, c2, DAMMA, c3]
+  return [
+    measureMorpheme(TEH, FATHA),
+    radicalMorpheme(c1),
+    measureMorpheme(FATHA, ALIF),
+    radicalMorpheme(c2),
+    measureMorpheme(DAMMA),
+    radicalMorpheme(c3),
+  ]
 }
 
-function deriveMasdarFormVII(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(KASRA)]
 
-  const prefix = [ALIF, KASRA, NOON, SUKOON, c1, KASRA]
+  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
 
-  if (c3.isWeak) return [...prefix, c2, FATHA, ALIF, HAMZA]
+  if (c2.isWeak) return [...prefix, measureMorpheme(YEH, FATHA, ALIF), radicalMorpheme(c3)]
 
-  if (c2.isWeak) return [...prefix, YEH, FATHA, ALIF, c3]
-
-  return [...prefix, c2, FATHA, ALIF, c3]
+  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1)
-  const prefix = [ALIF, KASRA, c1.isWeak || c1.isHamza ? infix : c1, SUKOON, infix, KASRA]
+  const prefix = [
+    measureMorpheme(ALIF, KASRA),
+    radicalMorpheme(c1.isWeak || c1.isHamza ? infix : c1),
+    measureMorpheme(SUKOON, infix, KASRA),
+  ]
 
-  if (c2.equals(c3)) return [ALIF, KASRA, c1, SUKOON, infix, KASRA, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+  if (c2.equals(c3))
+    return [
+      measureMorpheme(ALIF, KASRA),
+      radicalMorpheme(c1),
+      measureMorpheme(SUKOON, infix, KASRA),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c3.isWeak ? HAMZA : c3),
+    ]
 
-  if (c3.isWeak) return [...prefix, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+  if (c3.isWeak)
+    return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3.isWeak ? HAMZA : c3)]
 
-  if (c2.isWeak && !infix.equals(DAL)) return [...prefix, YEH, FATHA, ALIF, c3]
+  if (c2.isWeak && !infix.equals(DAL)) return [...prefix, measureMorpheme(YEH, FATHA, ALIF), radicalMorpheme(c3)]
 
-  return [...prefix, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3.isWeak ? HAMZA : c3)]
 }
 
-function deriveMasdarFormIX(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
-
-  return [ALIF, KASRA, c1, SUKOON, c2, KASRA, c3, FATHA, ALIF, c3]
+  return [
+    measureMorpheme(ALIF, KASRA),
+    radicalMorpheme(c1),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(c2),
+    measureMorpheme(KASRA),
+    radicalMorpheme(c3),
+    measureMorpheme(FATHA, ALIF),
+    radicalMorpheme(c3),
+  ]
 }
 
-function deriveMasdarFormX(verb: NonFormIVerb): readonly Token[] {
+function deriveMasdarFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, KASRA)]
 
-  const prefix = [ALIF, KASRA, SEEN, SUKOON, TEH, KASRA]
+  if (c1.isWeak)
+    return [
+      ...prefix,
+      measureMorpheme(YEH),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c3.isWeak ? HAMZA : c3),
+    ]
 
-  if (c1.isWeak) return [...prefix, YEH, c2, FATHA, ALIF, c3.isWeak ? HAMZA : c3]
+  if (c3.isWeak)
+    return [
+      ...prefix,
+      radicalMorpheme(c1),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA, ALIF, HAMZA),
+    ]
 
-  if (c3.isWeak) return [...prefix, c1, SUKOON, c2, FATHA, ALIF, HAMZA]
+  if (c2.isWeak)
+    return [
+      ...prefix,
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA, TEH_MARBUTA),
+    ]
 
-  if (c2.isWeak) return [...prefix, c1, FATHA, ALIF, c3, FATHA, TEH_MARBUTA]
-
-  return [...prefix, c1, SUKOON, c2, FATHA, ALIF, c3]
+  return [
+    ...prefix,
+    radicalMorpheme(c1),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(c2),
+    measureMorpheme(FATHA, ALIF),
+    radicalMorpheme(c3),
+  ]
 }
 
-function deriveMasdarFormIq(verb: QuadriliteralVerb): readonly Token[] {
+function deriveMasdarFormIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   const [q1, q2, q3, q4] = verb.rootTokens
-  return [q1, FATHA, q2, SUKOON, q3, FATHA, q4, FATHA, TEH_MARBUTA]
+  return [
+    radicalMorpheme(q1),
+    measureMorpheme(FATHA),
+    radicalMorpheme(q2),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(q3),
+    measureMorpheme(FATHA),
+    radicalMorpheme(q4),
+    measureMorpheme(FATHA, TEH_MARBUTA),
+  ]
 }
 
-function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly Token[] {
+function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   const [q1, q2, q3, q4] = verb.rootTokens
-  return [TEH, FATHA, q1, FATHA, q2, SUKOON, q3, DAMMA, q4]
+  return [
+    measureMorpheme(TEH, FATHA),
+    radicalMorpheme(q1),
+    measureMorpheme(FATHA),
+    radicalMorpheme(q2),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(q3),
+    measureMorpheme(DAMMA),
+    radicalMorpheme(q4),
+  ]
 }
 
-function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly Token[] {
+function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   const [q1, q2, q3, q4] = verb.rootTokens
-  return [ALIF, KASRA, q1, SUKOON, q2, KASRA, NOON, SUKOON, q3, FATHA, ALIF, q4]
+  return [
+    measureMorpheme(ALIF, KASRA),
+    radicalMorpheme(q1),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(q2),
+    measureMorpheme(KASRA, NOON, SUKOON),
+    radicalMorpheme(q3),
+    measureMorpheme(FATHA, ALIF),
+    radicalMorpheme(q4),
+  ]
 }
 
-function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly Token[] {
+function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   const [q1, q2, q3, q4] = verb.rootTokens
-  return [ALIF, KASRA, q1, SUKOON, q2, KASRA, q3, SUKOON, q4, FATHA, ALIF, q4]
+  return [
+    measureMorpheme(ALIF, KASRA),
+    radicalMorpheme(q1),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(q2),
+    measureMorpheme(KASRA),
+    radicalMorpheme(q3),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(q4),
+    measureMorpheme(FATHA, ALIF),
+    radicalMorpheme(q4),
+  ]
 }
 
-function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
+function masdar(verb: Verb, pattern: MasdarPattern): readonly MorphemeToken[] {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
@@ -259,9 +543,12 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Token[] {
   }
 }
 
-export function deriveMasdar(verb: Verb): readonly string[] {
+export function deriveMasdar(verb: Verb): readonly Word[] {
   const patterns: readonly MasdarPattern[] = (isTriliteralFormIVerb(verb) && verb.masdars) || ['mimi']
-  const derived = patterns.map((pattern) => finalize(masdar(verb, pattern)))
-  const lexicalized = (verb.lexicalizedMasdars ?? []).map(transliterateReverse)
+  const derived = patterns.map((pattern) => new Word(masdar(verb, pattern)))
+  const lexicalized = (verb.lexicalizedMasdars ?? [])
+    .map(transliterateReverse)
+    .map(tokenize)
+    .map((tokens) => new Word([measureMorpheme(...tokens)]))
   return [...derived, ...lexicalized]
 }

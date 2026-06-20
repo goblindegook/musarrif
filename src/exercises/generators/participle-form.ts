@@ -14,8 +14,8 @@ export const participleFormExercise = defineExercise(
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
     const paradigms = getAvailableParadigms(verb)
-    const active = deriveActiveParticiple(verb)
-    const passive = paradigms.includes('passive.participle') ? derivePassiveParticiple(verb) : ''
+    const active = String(deriveActiveParticiple(verb))
+    const passive = paradigms.includes('passive.participle') ? String(derivePassiveParticiple(verb)) : ''
     const kind: Participle = paradigms.includes('passive.participle') ? random(['active', 'passive']) : 'active'
     const participle = kind === 'active' ? active : passive
     const word = exerciseDiacritics(participle, profile.diacritics)

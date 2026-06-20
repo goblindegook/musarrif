@@ -292,14 +292,15 @@ async function wizard() {
         )
       }
     } else if (state.kind === 'activeParticiple') {
+      const derived = String(deriveActiveParticiple(verb))
       printRendered(
         'active participle',
         verb,
-        deriveActiveParticiple(verb),
-        resolveNominalExplanationLayers(verb, 'activeParticiple', deriveActiveParticiple(verb)),
+        derived,
+        resolveNominalExplanationLayers(verb, 'activeParticiple', derived),
       )
     } else if (state.kind === 'passiveParticiple') {
-      const derived = derivePassiveParticiple(verb)
+      const derived = String(derivePassiveParticiple(verb))
       if (!derived) console.log('No passive participle is produced for this verb.')
       else {
         printRendered(
@@ -310,7 +311,7 @@ async function wizard() {
         )
       }
     } else {
-      const masdars = deriveMasdar(verb)
+      const masdars = deriveMasdar(verb).map(String)
       const masdar = masdars.at(0)
       if (!masdar) console.log('No masdar was produced for this verb.')
       else {

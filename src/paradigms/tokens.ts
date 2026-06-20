@@ -1,5 +1,6 @@
 import { memoize } from '@pacote/memoize'
 import { seatHamzas } from './hamza'
+import type { Word } from './word'
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
 
@@ -88,11 +89,11 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [DAMMA.raw]: new Set([WAW.raw, HAMZA_ON_WAW.raw]),
 }
 
-export function applyDiacriticsPreference(input: string, preference: DiacriticsPreference): string {
-  if (preference === 'all') return input
+export function applyDiacriticsPreference(input: string | Word, preference: DiacriticsPreference): string {
+  if (preference === 'all') return String(input)
   if (preference === 'some')
     return detokenize(
-      tokenize(input).reduce<Token[]>((result, current, index, chars) => {
+      tokenize(String(input)).reduce<Token[]>((result, current, index, chars) => {
         if (current.equals(SUKOON)) return result
         const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
         if (LONG_VOWEL_TARGETS[current.raw]?.has(nextBase?.raw ?? '')) return result
@@ -100,7 +101,7 @@ export function applyDiacriticsPreference(input: string, preference: DiacriticsP
         return result
       }, []),
     )
-  return input.replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
+  return String(input).replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
 }
 
 export function isWeakLetter(value = ''): boolean {
@@ -109,8 +110,10 @@ export function isWeakLetter(value = ''): boolean {
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, HAMZA.raw)
 
-export function normalizeForComparison(text: string): string {
-  return normalizeHamza(applyDiacriticsPreference(text, 'none')).trim().normalize('NFD')
+export function normalizeForComparison(text: string | Word): string {
+  return normalizeHamza(applyDiacriticsPreference(String(text), 'none'))
+    .trim()
+    .normalize('NFD')
 }
 
 export function normalizedCompare(a: string, b: string): boolean {

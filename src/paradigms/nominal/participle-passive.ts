@@ -4,7 +4,6 @@ import {
   DAL,
   DAMMA,
   FATHA,
-  finalize,
   HAMZA,
   KASRA,
   longVowel,
@@ -19,113 +18,187 @@ import {
   YEH,
 } from '../tokens'
 import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
+import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { participleStem } from './participle-active'
 
-export function derivePassiveParticiple(verb: Verb): string {
-  if (verb.noPassiveParticiple) return ''
+export function derivePassiveParticiple(verb: Verb): Word {
+  if (verb.noPassiveParticiple) return new Word([])
 
-  const result = (() => {
+  const morphemes = (() => {
     if (isQuadriliteralVerb(verb)) {
       const [q1, q2, q3, q4] = verb.rootTokens
       switch (verb.form) {
         case 1:
-          return [MEEM, DAMMA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
+          return [
+            measureMorpheme(MEEM, DAMMA),
+            radicalMorpheme(q1),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q2),
+            measureMorpheme(SUKOON),
+            radicalMorpheme(q3),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q4),
+          ]
         case 2:
-          return [MEEM, DAMMA, TEH, FATHA, q1, FATHA, q2, SUKOON, q3, FATHA, q4]
+          return [
+            measureMorpheme(MEEM, DAMMA, TEH, FATHA),
+            radicalMorpheme(q1),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q2),
+            measureMorpheme(SUKOON),
+            radicalMorpheme(q3),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q4),
+          ]
         case 3:
-          return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, NOON, SUKOON, q3, FATHA, q4]
+          return [
+            measureMorpheme(MEEM, DAMMA),
+            radicalMorpheme(q1),
+            measureMorpheme(SUKOON),
+            radicalMorpheme(q2),
+            measureMorpheme(FATHA, NOON, SUKOON),
+            radicalMorpheme(q3),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q4),
+          ]
         case 4:
-          return [MEEM, DAMMA, q1, SUKOON, q2, FATHA, q3, FATHA, q4, SHADDA]
+          return [
+            measureMorpheme(MEEM, DAMMA),
+            radicalMorpheme(q1),
+            measureMorpheme(SUKOON),
+            radicalMorpheme(q2),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q3),
+            measureMorpheme(FATHA),
+            radicalMorpheme(q4),
+            measureMorpheme(SHADDA),
+          ]
       }
     }
 
     const [c1, c2, c3] = verb.rootTokens
-
     const stem = participleStem(verb)
 
     switch (verb.form) {
       case 1: {
         if (!isTriliteralFormIVerb(verb)) return []
-        const prefix = [MEEM, FATHA, c1]
+        const prefix: readonly MorphemeToken[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
 
-        if (c3.isWeak) return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA]
+        if (c3.isWeak)
+          return [
+            ...prefix,
+            measureMorpheme(SUKOON),
+            radicalMorpheme(c2),
+            measureMorpheme(...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA),
+          ]
 
         if (c2.equals(WAW))
           return verb.presentHollow === 'uncontracted'
-            ? [...prefix, SUKOON, c2, ...longVowel(DAMMA), c3]
-            : [...prefix, ...longVowel(DAMMA), c3]
+            ? [
+                ...prefix,
+                measureMorpheme(SUKOON),
+                radicalMorpheme(c2),
+                measureMorpheme(...longVowel(DAMMA)),
+                radicalMorpheme(c3),
+              ]
+            : [...prefix, measureMorpheme(...longVowel(DAMMA)), radicalMorpheme(c3)]
 
-        if (c2.equals(YEH)) return [...prefix, ...longVowel(KASRA), c3]
+        if (c2.equals(YEH)) return [...prefix, measureMorpheme(...longVowel(KASRA)), radicalMorpheme(c3)]
 
-        return [...prefix, SUKOON, c2, ...longVowel(c3.equals(YEH) ? KASRA : DAMMA), c3]
+        return [
+          ...prefix,
+          measureMorpheme(SUKOON),
+          radicalMorpheme(c2),
+          measureMorpheme(...longVowel(c3.equals(YEH) ? KASRA : DAMMA)),
+          radicalMorpheme(c3),
+        ]
       }
 
       case 2: {
-        if (c3.isWeak) return [...stem, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        return [...stem, FATHA, c3]
+        if (c3.isWeak) return [...stem, measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        return [...stem, measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
 
       case 3: {
-        if (c3.isWeak) return [...stem, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c2.equals(c3)) return [...stem, c2, SHADDA]
-
-        return [...stem, c2, FATHA, c3]
+        if (c3.isWeak) return [...stem, radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        if (c2.equals(c3)) return [...stem, radicalMorpheme(c2), measureMorpheme(SHADDA)]
+        return [...stem, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
 
       case 4: {
-        if (c2.isHamza) return [...stem, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c3.isWeak) return [...stem, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c2.isWeak) return [...stem, FATHA, ALIF, c3]
-
-        if (c2.equals(c3)) return [...stem, FATHA, c2, SHADDA]
-
-        return [...stem, SUKOON, c2, FATHA, c3]
+        if (c2.isHamza) return [...stem, measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        if (c3.isWeak)
+          return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        if (c2.isWeak) return [...stem, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
+        if (c2.equals(c3)) return [...stem, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
+        return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
 
       case 5: {
-        if (c3.isWeak) return [...stem, c2, TANWEEN_FATHA, SHADDA, ALIF_MAQSURA]
-
-        return [...stem, c2, SHADDA, FATHA, c3]
+        if (c3.isWeak) return [...stem, radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, SHADDA, ALIF_MAQSURA)]
+        return [...stem, radicalMorpheme(c2), measureMorpheme(SHADDA, FATHA), radicalMorpheme(c3)]
       }
 
       case 6: {
-        if (c2.equals(c3)) return [...stem, c2, SHADDA]
-
-        if (c3.isWeak) return [...stem, c2.isHamza ? HAMZA : c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        return [...stem, c2.isHamza ? HAMZA : c2, FATHA, c3]
+        if (c2.equals(c3)) return [...stem, radicalMorpheme(c2), measureMorpheme(SHADDA)]
+        if (c3.isWeak)
+          return [...stem, radicalMorpheme(c2.isHamza ? HAMZA : c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        return [...stem, radicalMorpheme(c2.isHamza ? HAMZA : c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
 
       case 7: {
-        if (c2.equals(c3)) return [...stem, c2, SHADDA]
-
-        if (c3.isWeak) return [...stem, c2, FATHA, ALIF_MAQSURA]
-
-        if (c2.isWeak) return [...stem, ALIF, c3]
-
-        return [...stem, c2, FATHA, c3]
+        if (c2.equals(c3)) return [...stem, radicalMorpheme(c2), measureMorpheme(SHADDA)]
+        if (c3.isWeak) return [...stem, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF_MAQSURA)]
+        if (c2.isWeak) return [...stem, measureMorpheme(ALIF), radicalMorpheme(c3)]
+        return [...stem, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
 
       case 8: {
         const infix = resolveFormVIIIInfixConsonant(c1)
         const isInitialWeakOrHamza = c1.isWeak || c1.isHamza
-        const prefix = [MEEM, DAMMA]
+        const prefix: readonly MorphemeToken[] = [measureMorpheme(MEEM, DAMMA)]
 
-        if (c2.equals(c3)) return [...prefix, c1, SUKOON, infix, FATHA, c2, SHADDA]
-
-        if (isInitialWeakOrHamza && c3.isWeak) return [...prefix, infix, SHADDA, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (isInitialWeakOrHamza) return [...prefix, infix, SHADDA, FATHA, c2, FATHA, c3]
-
-        if (c3.isWeak) return [...prefix, c1, SUKOON, infix, FATHA, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))) return [...prefix, c1, SUKOON, infix, FATHA, ALIF, c3]
-
-        return [...prefix, c1, SUKOON, infix, FATHA, c2, FATHA, c3]
+        if (c2.equals(c3))
+          return [
+            ...prefix,
+            radicalMorpheme(c1),
+            measureMorpheme(SUKOON, infix, FATHA),
+            radicalMorpheme(c2),
+            measureMorpheme(SHADDA),
+          ]
+        if (isInitialWeakOrHamza && c3.isWeak)
+          return [
+            ...prefix,
+            measureMorpheme(infix, SHADDA, FATHA),
+            radicalMorpheme(c2),
+            measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA),
+          ]
+        if (isInitialWeakOrHamza)
+          return [
+            ...prefix,
+            measureMorpheme(infix, SHADDA, FATHA),
+            radicalMorpheme(c2),
+            measureMorpheme(FATHA),
+            radicalMorpheme(c3),
+          ]
+        if (c3.isWeak)
+          return [
+            ...prefix,
+            radicalMorpheme(c1),
+            measureMorpheme(SUKOON, infix, FATHA),
+            radicalMorpheme(c2),
+            measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA),
+          ]
+        if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))
+          return [...prefix, radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA, ALIF), radicalMorpheme(c3)]
+        return [
+          ...prefix,
+          radicalMorpheme(c1),
+          measureMorpheme(SUKOON, infix, FATHA),
+          radicalMorpheme(c2),
+          measureMorpheme(FATHA),
+          radicalMorpheme(c3),
+        ]
       }
 
       case 9: {
@@ -133,16 +206,14 @@ export function derivePassiveParticiple(verb: Verb): string {
       }
 
       case 10: {
-        if (c3.isWeak) return [...stem, SUKOON, c2, TANWEEN_FATHA, ALIF_MAQSURA]
-
-        if (c2.isWeak) return [...stem, FATHA, ALIF, c3]
-
-        if (c2.equals(c3)) return [...stem, FATHA, c2, SHADDA]
-
-        return [...stem, SUKOON, c2, FATHA, c3]
+        if (c3.isWeak)
+          return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
+        if (c2.isWeak) return [...stem, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
+        if (c2.equals(c3)) return [...stem, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
+        return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
     }
   })()
 
-  return finalize(result)
+  return new Word(morphemes)
 }

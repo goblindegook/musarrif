@@ -8,6 +8,7 @@ import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
 import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb, type VerbForm } from './verbs'
 import type { Morpheme } from './word'
+import { Word } from './word'
 
 type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
 
@@ -115,7 +116,7 @@ export interface NominalExplanationLayers extends BaseExplanationLayers {
 export type ExplanationLayers = VerbExplanationLayers | NominalExplanationLayers
 
 function toArabicText(arabic: string | readonly string[]): string {
-  return Array.isArray(arabic) ? arabic.join('، ') : (arabic as string)
+  return Array.isArray(arabic) ? arabic.join('، ') : String(arabic)
 }
 
 function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): TenseRootInteraction {
@@ -321,7 +322,7 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
 function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): boolean {
   if (!isTriliteralFormIVerb(verb)) return false
 
-  const selectedValues = (Array.isArray(arabic) ? arabic : [arabic]).map(normalizeForComparison)
+  const selectedValues = (Array.isArray(arabic) ? arabic : [arabic]).map((a) => normalizeForComparison(a))
   const patterns = verb.masdars ?? ['mimi']
 
   return deriveMasdar(verb).some(
@@ -349,19 +350,20 @@ function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): s
 export function resolveNominalExplanationLayers(
   verb: Verb,
   nominal: NominalKind,
-  arabic: string | readonly string[],
+  arabic: string | Word | readonly string[],
 ): NominalExplanationLayers {
+  const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
   return {
     category: 'nominal',
     paradigmRoots: Array.from(verb.root),
     paradigmForm: verb.form,
     form: toFormDescriptor(verb),
-    arabic,
+    arabic: arabicString,
     rootType: analyzeRoot(verb.rootTokens).type,
     vowels: isTriliteralFormIVerb(verb) ? verb.vowels : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
-    isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabic),
-    masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabic) : undefined,
+    isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabicString),
+    masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabicString) : undefined,
   }
 }

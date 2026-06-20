@@ -26,7 +26,7 @@ export const masdarRootExercise = defineExercise(
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
       promptTranslationKey: 'exercise.prompt.masdarRoot',
       word,
-      spokenWord: masdar,
+      spokenWord: String(masdar),
       options: options.map((option) => Array.from(option).join(' ')),
       answer,
       cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),
