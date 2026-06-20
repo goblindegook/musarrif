@@ -123,7 +123,7 @@ function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): Ten
   const isWaw = rootType.includes('waw')
   switch (tenseContext) {
     case 'active.past':
-      return isWaw ? 'middle-lengthens-aa' : 'middle-lengthens-ii'
+      return 'middle-lengthens-aa'
     case 'active.present.indicative':
     case 'active.present.subjunctive':
     case 'active.future':

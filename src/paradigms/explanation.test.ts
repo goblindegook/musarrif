@@ -121,8 +121,8 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
     expect(resolveVerbExplanationLayers(qawl, 'active.past', '3ms', 'قَالَ').tenseRoot).toBe('middle-lengthens-aa')
   })
 
-  test('hollow-yaa + active.past → middle-lengthens-ii', () => {
-    expect(resolveVerbExplanationLayers(bay3, 'active.past', '3ms', 'بَاعَ').tenseRoot).toBe('middle-lengthens-ii')
+  test('hollow-yaa + active.past → middle-lengthens-aa', () => {
+    expect(resolveVerbExplanationLayers(bay3, 'active.past', '3ms', 'بَاعَ').tenseRoot).toBe('middle-lengthens-aa')
   })
 
   test('hollow-waw + active.present.indicative → middle-lengthens-uu', () => {
