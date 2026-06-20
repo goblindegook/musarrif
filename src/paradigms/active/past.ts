@@ -530,14 +530,6 @@ function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
         return derivePastFormIIIq(verb)
       case 4:
         return derivePastFormIVq(verb)
-      default:
-        return {
-          base: [],
-          suffixedBase: [],
-          feminineSingularDualBase: [],
-          masculineDualBase: [],
-          thirdPersonMasculinePluralBase: [],
-        }
     }
   }
 
@@ -563,6 +555,4 @@ function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
     case 10:
       return derivePastFormX(verb)
   }
-
-  throw new Error('Unsupported verb')
 }

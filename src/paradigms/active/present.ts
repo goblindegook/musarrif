@@ -769,8 +769,6 @@ function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
         return deriveFormIIIq(verb)
       case 4:
         return deriveFormIVq(verb)
-      default:
-        return []
     }
   }
 
