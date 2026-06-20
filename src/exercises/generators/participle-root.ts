@@ -1,7 +1,8 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
-import { isWeakLetter, normalizeHamza } from '../../paradigms/tokens.ts'
+import { normalizeHamza } from '../../paradigms/tokens.ts'
+import type { Verb } from '../../paradigms/verbs.ts'
 import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,
@@ -23,7 +24,7 @@ export const participleRootExercise = defineExercise(
     const passive = String(derivePassiveParticiple(verb))
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'
     const participle = kind === 'active' ? active : passive
-    const options = buildOptions(verb.root, exerciseDiacritics(participle, profile.diacritics), profile)
+    const options = buildOptions(verb, exerciseDiacritics(participle, profile.diacritics), profile)
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
@@ -47,13 +48,13 @@ export const participleRootExercise = defineExercise(
   },
 )
 
-function buildOptions(root: string, word: string, profile: DimensionProfile): readonly string[] {
+function buildOptions(verb: Verb, word: string, profile: DimensionProfile): readonly string[] {
   const generators = [
-    singleLetterWordDistractor(root),
-    wordSliceDistractor(word, root.length),
-    mixedWordDistractor(word, root.length),
-    Array.from(root).some(isWeakLetter) ? weakAlternativeRootDistractor(root) : null,
+    singleLetterWordDistractor(verb.root),
+    wordSliceDistractor(word, verb.root.length),
+    mixedWordDistractor(word, verb.root.length),
+    verb.rootTokens.some((t) => t.isWeak) ? weakAlternativeRootDistractor(verb.root) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(root, generators, profile, 4, [normalizeHamza])
+  return randomizeOptions(verb.root, generators, profile, 4, [normalizeHamza])
 }

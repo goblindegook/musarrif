@@ -351,7 +351,7 @@ function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInte
 function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): boolean {
   if (!isTriliteralFormIVerb(verb)) return false
 
-  const selectedValues = (Array.isArray(arabic) ? arabic : [arabic]).map((a) => normalizeForComparison(a))
+  const selectedValues = (Array.isArray(arabic) ? arabic : [arabic]).map(normalizeForComparison)
   const patterns = verb.masdars ?? ['mimi']
 
   return deriveMasdar(verb).some(

@@ -1,7 +1,6 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
-import { isWeakLetter } from '../../paradigms/tokens.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import {
   type DimensionProfile,
@@ -53,7 +52,7 @@ function buildOptions(verb: DisplayVerb, profile: DimensionProfile): readonly st
   const generators = [
     sameRootDifferentFormDistractor(verb, profile),
     singleLetterDistractor(verb, profile),
-    Array.from(verb.root).some(isWeakLetter) ? weakAlternativeDistractor(verb, profile) : null,
+    verb.rootTokens.some((t) => t.isWeak) ? weakAlternativeDistractor(verb, profile) : null,
     profile.diacritics >= 1 ? mediumDifferentFormSingleLetterDistractor(verb, profile) : null,
   ].filter((generator) => generator != null)
 

@@ -1,7 +1,7 @@
 import { css, styled } from 'goober'
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise, InputMode } from '../../exercises/exercises'
-import { normalizedCompare } from '../../paradigms/tokens'
+import { normalizeForComparison } from '../../paradigms/tokens'
 import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
@@ -223,6 +223,10 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       )}
     </Wrapper>
   )
+}
+
+function normalizedCompare(a: string, b: string): boolean {
+  return normalizeForComparison(a) === normalizeForComparison(b)
 }
 
 // ─── Styled components ────────────────────────────────────────────────────────

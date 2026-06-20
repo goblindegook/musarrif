@@ -1,6 +1,7 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { expect, test } from 'vitest'
-import { finalize, tokenize } from './tokens'
+import { tokenize } from './tokens'
+import { measureMorpheme, Word } from './word'
 
 const HAMZA = '\u0621'
 const ALIF_MADDA = '\u0622'
@@ -96,5 +97,6 @@ test.each<[string, string, string]>([
   // ["TaA'uwT", 'on the line', C_HAMZA],
   ["TaA'aAT", 'on the line', HAMZA],
 ])(`hamza in %s seats %s`, (word, seat, expected) => {
-  expect(finalize(tokenize(transliterateReverse(word))), `hamza in ${word} seats ${seat}`).toContain(expected)
+  const x = new Word([measureMorpheme(...tokenize(transliterateReverse(word)))])
+  expect(String(x), `hamza in ${word} seats ${seat}`).toContain(expected)
 })
