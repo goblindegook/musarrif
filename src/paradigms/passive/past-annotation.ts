@@ -1,44 +1,33 @@
 import { annotatePast } from '../active/past-annotation'
-import { type AnnotatedForm, buildMorphemes, type DerivationStep, PAST_SUFFIX_COUNTS } from '../annotation'
+import type { AnnotatedForm, DerivationStep } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
-import type { MorphemeRole } from '../word'
 import { conjugatePassivePast } from './past'
 
 export function annotatePassivePast(verb: Verb, pronounId: PronounId): AnnotatedForm {
   const activePastAnnotation = annotatePast(verb, '3ms')
-  const rootStep = activePastAnnotation.steps[0]
-  const formStep = activePastAnnotation.steps[1]
-
   const allForms = conjugatePassivePast(verb)
-  const thirdMs = allForms['3ms']
-  const passivePastMorphemes = buildMorphemes([...thirdMs].map((char) => ({ char, role: 'radical' as MorphemeRole })))
 
-  const pastThirdMsStep: DerivationStep = {
-    kind: { type: 'tense', verbTense: 'passive.past' },
-    arabic: thirdMs,
-    morphemes: passivePastMorphemes,
-  }
+  const steps: readonly DerivationStep[] = [
+    activePastAnnotation.steps[0],
+    activePastAnnotation.steps[1],
+    {
+      kind: { type: 'tense', verbTense: 'passive.past' },
+      arabic: String(allForms['3ms']),
+      morphemes: allForms['3ms'].toMorphemes(),
+    },
+  ]
 
-  if (pronounId === '3ms') {
-    return { steps: [rootStep, formStep, pastThirdMsStep] }
-  }
-
-  const finalArabic = allForms[pronounId]
-  const finalChars = [...finalArabic]
-  const suffixCount = PAST_SUFFIX_COUNTS[pronounId]
-  const stemCount = finalChars.length - suffixCount
-  const morphemes = buildMorphemes([
-    ...finalChars.slice(0, stemCount).map((char) => ({ char, role: 'radical' as MorphemeRole })),
-    ...finalChars.slice(stemCount).map((char) => ({ char, role: 'agreement' as MorphemeRole })),
-  ])
+  if (pronounId === '3ms') return { steps }
 
   return {
     steps: [
-      rootStep,
-      formStep,
-      pastThirdMsStep,
-      { kind: { type: 'pronoun', pronounId }, arabic: finalArabic, morphemes },
+      ...steps,
+      {
+        kind: { type: 'pronoun', pronounId },
+        arabic: String(allForms[pronounId]),
+        morphemes: allForms[pronounId].toMorphemes(),
+      },
     ],
   }
 }

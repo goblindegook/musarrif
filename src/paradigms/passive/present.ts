@@ -397,5 +397,6 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
     mapRecord(PRESENT_PREFIXES, (prefix, pronounId) =>
       finalize([prefix, DAMMA, ...derivePassivePresentStem(verb, pronounId, mood)]),
     ),
+    '',
   )
 }

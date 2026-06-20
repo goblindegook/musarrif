@@ -9,5 +9,6 @@ export function conjugatePassiveFuture(verb: Verb): Record<PronounId, string> {
   return constrainPassiveConjugation(
     verb,
     mapRecord(conjugatePassivePresentMood(verb, 'indicative'), (value) => finalize([SEEN, FATHA, ...tokenize(value)])),
+    '',
   )
 }
