@@ -101,10 +101,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 4: {
-          if (c1.isHamza) return [radicalMorpheme(HAMZA), measureMorpheme(FATHA, ALIF), ...stem.slice(2)]
+          if (c1.isHamza) return [measureMorpheme(HAMZA, FATHA, ALIF), ...stem.slice(2)]
           if (c3.isWeak && pronounId === '2d')
-            return [radicalMorpheme(HAMZA), measureMorpheme(FATHA), ...restoreWeakLetterBeforeAlif(stem)]
-          return [radicalMorpheme(HAMZA), measureMorpheme(FATHA), ...stem]
+            return [measureMorpheme(HAMZA, FATHA), ...restoreWeakLetterBeforeAlif(stem)]
+          return [measureMorpheme(HAMZA, FATHA), ...stem]
         }
 
         case 5: {

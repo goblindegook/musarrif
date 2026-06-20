@@ -5,7 +5,7 @@ import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
-import type { Morpheme, MorphemeRole } from '../../paradigms/word'
+import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { IconButton } from '../atoms/IconButton'
 import { Text } from '../atoms/Text'
@@ -13,35 +13,11 @@ import { type Translate, useI18n } from '../hooks/useI18n'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Modal } from '../molecules/Modal'
 
-const MORPHEME_COLOURS: Record<MorphemeRole, string> = {
-  radical: 'var(--color-insight-root)',
-  measure: 'var(--color-insight-form)',
-  particle: 'var(--color-insight-tense)',
-  agreement: 'var(--color-insight-suffix)',
-  elided: 'var(--color-insight-dropped)',
-}
-
 interface ConjugationInsightsProps {
   verb: DisplayVerb
   verbTense: VerbTense
   pronoun: PronounId
   arabic: string
-}
-
-function AnnotatedArabic({ morphemes }: { morphemes: readonly Morpheme[] }) {
-  return (
-    <>
-      {morphemes.flatMap((m, i) => {
-        return m.role === 'elided' ? (
-          <DroppedMorpheme key={`m-${i}`}>{m.text}</DroppedMorpheme>
-        ) : (
-          <span key={`m-${i}`} style={{ color: MORPHEME_COLOURS[m.role] }}>
-            {m.text}
-          </span>
-        )
-      })}
-    </>
-  )
 }
 
 function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: Translate): string {
@@ -147,9 +123,4 @@ const VerbDisplayArea = styled('div')`
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1rem;
-`
-
-const DroppedMorpheme = styled('del')`
-  color: ${MORPHEME_COLOURS.elided};
-  text-decoration-thickness: 0.09em;
 `

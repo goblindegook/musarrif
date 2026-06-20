@@ -310,7 +310,13 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   if (c3.isWeak) return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
 
   if (c2.isWeak)
-    return [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3), measureMorpheme(FATHA, TEH_MARBUTA)]
+    return [
+      ...prefix,
+      measureMorpheme(FATHA),
+      radicalMorpheme(ALIF),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA, TEH_MARBUTA),
+    ]
 
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
@@ -430,7 +436,8 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
     return [
       ...prefix,
       radicalMorpheme(c1),
-      measureMorpheme(FATHA, ALIF),
+      measureMorpheme(FATHA),
+      radicalMorpheme(ALIF),
       radicalMorpheme(c3),
       measureMorpheme(FATHA, TEH_MARBUTA),
     ]

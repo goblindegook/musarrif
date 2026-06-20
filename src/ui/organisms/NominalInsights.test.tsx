@@ -15,14 +15,14 @@ describe('NominalInsights', () => {
 
     test('displays the Arabic form', () => {
       renderComponent()
-      expect(screen.getAllByText('كَاتِب').length).toBeGreaterThan(0)
+      expect(document.body).toHaveTextContent('كَاتِب')
     })
 
     test('displays root letters', () => {
       renderComponent()
-      expect(screen.getByText('ك')).toBeInTheDocument()
-      expect(screen.getByText('ت')).toBeInTheDocument()
-      expect(screen.getByText('ب')).toBeInTheDocument()
+      expect(screen.getAllByText('ك').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('ت').length).toBeGreaterThan(0)
+      expect(screen.getAllByText('ب').length).toBeGreaterThan(0)
     })
 
     test('displays form number', () => {
@@ -39,20 +39,20 @@ describe('NominalInsights', () => {
   describe('passive participle', () => {
     test('displays the Arabic form', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('ktb-1')!} nominal="passiveParticiple" arabic="مَكْتُوب" />)
-      expect(screen.getAllByText('مَكْتُوب').length).toBeGreaterThan(0)
+      expect(document.body).toHaveTextContent('مَكْتُوب')
     })
   })
 
   describe('masdar', () => {
     test('displays the Arabic form', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('ktb-1')!} nominal="masdar" arabic="كِتَابَة" />)
-      expect(screen.getAllByText('كِتَابَة').length).toBeGreaterThan(0)
+      expect(document.body).toHaveTextContent('كِتَابَة')
     })
 
     test('displays all masdars comma-separated', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />)
-      expect(screen.getByText('وَعْد')).toBeInTheDocument()
-      expect(screen.getByText('مَوْعِد')).toBeInTheDocument()
+      expect(document.body).toHaveTextContent('وَعْد')
+      expect(document.body).toHaveTextContent('مَوْعِد')
     })
 
     test('adds mimi-masdar explanation when one masdar is mimi', () => {

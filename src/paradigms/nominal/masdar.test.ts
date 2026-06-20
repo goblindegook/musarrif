@@ -547,6 +547,16 @@ describe('masdar', () => {
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
+
+      test('جوب morphemes mark transformed waw as radical', () => {
+        expect(deriveMasdar(getVerb('جوب', 4))[0].toMorphemes()).toEqual([
+          { text: 'إِ', role: 'measure' },
+          { text: 'ج', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'اب', role: 'radical' },
+          { text: 'َة', role: 'measure' },
+        ])
+      })
     })
 
     describe('defective roots', () => {
@@ -1063,6 +1073,16 @@ describe('masdar', () => {
         ['حول', 'اِسْتِحَالَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 10))).toEqualT([expected].flat())
+      })
+
+      test('جوب morphemes mark transformed waw as radical', () => {
+        expect(deriveMasdar(getVerb('جوب', 10))[0].toMorphemes()).toEqual([
+          { text: 'اِسْتِ', role: 'measure' },
+          { text: 'ج', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'اب', role: 'radical' },
+          { text: 'َة', role: 'measure' },
+        ])
       })
     })
 

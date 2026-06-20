@@ -21,6 +21,10 @@ export class Token {
   equals(other?: string | Token): boolean {
     return other instanceof Token ? this.raw === other.raw : this.raw === other
   }
+
+  toString(): string {
+    return this.raw
+  }
 }
 
 const createToken = memoize(
@@ -79,7 +83,7 @@ export function tokenize(text: string | readonly Token[]): readonly Token[] {
 }
 
 export function detokenize(tokens: readonly Token[]): string {
-  return tokens.map((token) => (token instanceof Token ? token.raw : token)).join('')
+  return tokens.map(String).join('')
 }
 
 const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {

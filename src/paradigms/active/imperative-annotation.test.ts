@@ -323,8 +323,7 @@ describe('annotateActiveImperative', () => {
           arabic: 'أَحِبَّ',
           morphemes: [
             { text: 'تُ', role: 'elided' },
-            { text: 'أ', role: 'radical' },
-            { text: 'َ', role: 'measure' },
+            { text: 'أَ', role: 'measure' },
             { text: 'ح', role: 'radical' },
             { text: 'ِ', role: 'measure' },
             { text: 'بّ', role: 'radical' },

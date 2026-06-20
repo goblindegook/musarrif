@@ -207,7 +207,8 @@ export function deriveActiveParticiple(verb: Verb): Word {
         case 4: {
           if (c2.isHamza) return [...stem, measureMorpheme(TANWEEN_KASRA)]
           if (c3.isWeak) return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_KASRA)]
-          if (c2.isWeak) return [...stem, measureMorpheme(KASRA, YEH, SUKOON), radicalMorpheme(c3)]
+          if (c2.isWeak)
+            return [...stem, measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(SUKOON), radicalMorpheme(c3)]
           if (c2.equals(c3))
             return [...stem, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
           return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
@@ -271,7 +272,7 @@ export function deriveActiveParticiple(verb: Verb): Word {
 
         case 10: {
           if (c3.isWeak) return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_KASRA)]
-          if (c2.isWeak) return [...stem, measureMorpheme(KASRA, YEH), radicalMorpheme(c3)]
+          if (c2.isWeak) return [...stem, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
           if (c2.equals(c3)) return [...stem, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
           return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
         }

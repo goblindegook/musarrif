@@ -504,6 +504,17 @@ describe('active participle', () => {
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
+
+      test('جوب morphemes mark transformed waw as radical', () => {
+        expect(deriveActiveParticiple(getVerb('جوب', 4)).toMorphemes()).toEqual([
+          { text: 'مُ', role: 'measure' },
+          { text: 'ج', role: 'radical' },
+          { text: 'ِ', role: 'measure' },
+          { text: 'ي', role: 'radical' },
+          { text: 'ْ', role: 'measure' },
+          { text: 'ب', role: 'radical' },
+        ])
+      })
     })
 
     describe('defective roots', () => {
@@ -1016,6 +1027,15 @@ describe('active participle', () => {
         ['حول', 'مُسْتَحِيل'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 10))).toEqualT(expected)
+      })
+
+      test('جوب morphemes mark transformed waw as radical', () => {
+        expect(deriveActiveParticiple(getVerb('جوب', 10)).toMorphemes()).toEqual([
+          { text: 'مُسْتَ', role: 'measure' },
+          { text: 'ج', role: 'radical' },
+          { text: 'ِ', role: 'measure' },
+          { text: 'يب', role: 'radical' },
+        ])
       })
     })
 

@@ -120,12 +120,12 @@ function shaddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken
 
 function mergeAdjacent(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
   const result: MorphemeToken[] = []
-  for (const m of morphemes) {
-    const last = result[result.length - 1]
-    if (last && last.role === m.role) {
-      result[result.length - 1] = new MorphemeToken([...last.tokens, ...m.tokens], last.role)
+  for (const morpheme of morphemes) {
+    const last = result.at(-1)
+    if (last?.role === morpheme.role) {
+      result[result.length - 1] = new MorphemeToken([...last.tokens, ...morpheme.tokens], last.role)
     } else {
-      result.push(m)
+      result.push(morpheme)
     }
   }
   return result

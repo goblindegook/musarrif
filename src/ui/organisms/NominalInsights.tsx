@@ -2,7 +2,11 @@ import { styled } from 'goober'
 import { Fragment } from 'preact'
 import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
+import { deriveMasdar } from '../../paradigms/nominal/masdar'
+import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active'
+import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
 import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
+import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
@@ -20,17 +24,18 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
   const masdarValues = Array.isArray(arabic) ? arabic : [arabic]
   const lexicalizedMasdarStartIndex =
     masdarValues.length - (nominal === 'masdar' ? (verb.lexicalizedMasdars?.length ?? 0) : 0)
-  const arabicValue = masdarValues.join('، ')
 
   return (
     <>
       <ArabicDisplay>
         {nominal === 'masdar' ? (
           <MasdarList>
-            {masdarValues.map((value, index) => (
-              <Fragment key={value}>
+            {deriveMasdar(verb).map((masdar, index) => (
+              <Fragment key={masdar}>
                 <MasdarItem>
-                  <span>{value}</span>
+                  <span>
+                    <AnnotatedArabic morphemes={masdar.toMorphemes()} />
+                  </span>
                   {isTriliteralFormIDisplayVerb(verb) && verb.masdars?.[index] === 'mimi' && (
                     <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
                   )}
@@ -42,9 +47,11 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
               </Fragment>
             ))}
           </MasdarList>
-        ) : (
-          arabicValue
-        )}
+        ) : nominal === 'activeParticiple' ? (
+          <AnnotatedArabic morphemes={deriveActiveParticiple(verb).toMorphemes()} />
+        ) : nominal === 'passiveParticiple' ? (
+          <AnnotatedArabic morphemes={derivePassiveParticiple(verb).toMorphemes()} />
+        ) : null}
       </ArabicDisplay>
       <VerbContextSection>
         <Detail label={t('meta.root')} valueDir="rtl" valueLang="ar">

@@ -129,7 +129,7 @@ export function derivePassiveParticiple(verb: Verb): Word {
         if (c2.isHamza) return [...stem, measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
         if (c3.isWeak)
           return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
-        if (c2.isWeak) return [...stem, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
+        if (c2.isWeak) return [...stem, measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)]
         if (c2.equals(c3)) return [...stem, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
         return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
@@ -208,7 +208,7 @@ export function derivePassiveParticiple(verb: Verb): Word {
       case 10: {
         if (c3.isWeak)
           return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)]
-        if (c2.isWeak) return [...stem, measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
+        if (c2.isWeak) return [...stem, measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)]
         if (c2.equals(c3)) return [...stem, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
         return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
       }
