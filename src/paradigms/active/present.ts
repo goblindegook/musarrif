@@ -759,8 +759,6 @@ function deriveFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
 }
 
 function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
-  if (verb.rootTokens.length < 3) throw new Error('Root must have at least 3 letters.')
-
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
@@ -798,8 +796,6 @@ function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
     case 10:
       return deriveFormX(verb)
   }
-
-  throw new Error('Unsupported verb')
 }
 
 function shortenHollowStemMorphemes(stem: readonly MorphemeToken[]): readonly MorphemeToken[] {
