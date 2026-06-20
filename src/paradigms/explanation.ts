@@ -307,7 +307,9 @@ function toTenseRoot(
   if (rootType.includes('hollow')) return resolveHollow(rootType, tenseContext)
   if (rootType.includes('defective')) return resolveDefective(rootType, tenseContext, pronoun)
   if (rootType === 'assimilated')
-    return tenseContext.startsWith('active.present') && form === 1 ? 'initial-drops' : undefined
+    return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
+      ? 'initial-drops'
+      : undefined
   if (rootType === 'doubled' || rootType === 'hamzated-doubled') return resolveGeminate(tenseContext, form)
   if (rootType === 'hamzated') return 'hamza-seat'
 }

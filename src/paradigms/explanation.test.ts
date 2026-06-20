@@ -266,6 +266,10 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
     expect(resolveVerbExplanationLayers(waSala, 'active.present.jussive', '3ms', 'يَصِلْ').tenseRoot).toBe('initial-drops')
   })
 
+  test('assimilated + Form I + active.future → initial-drops', () => {
+    expect(resolveVerbExplanationLayers(waSala, 'active.future', '3ms', 'سَيَصِلُ').tenseRoot).toBe('initial-drops')
+  })
+
   test('assimilated + Form I + active.past → undefined', () => {
     expect(resolveVerbExplanationLayers(waSala, 'active.past', '3ms', 'وَصَلَ').tenseRoot).toBeUndefined()
   })
