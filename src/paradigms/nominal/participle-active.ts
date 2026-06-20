@@ -19,9 +19,9 @@ import {
   YEH,
 } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
-import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
-export function participleStem(verb: Verb): readonly MorphemeToken[] {
+export function participleStem(verb: Verb): readonly Morpheme[] {
   const [c1, c2] = verb.rootTokens
   switch (verb.form) {
     case 2:

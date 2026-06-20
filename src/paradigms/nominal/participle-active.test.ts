@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { tokenize } from '../tokens'
 import { getVerb } from '../verbs'
 import { deriveActiveParticiple } from './participle-active'
 
@@ -506,13 +507,13 @@ describe('active participle', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(deriveActiveParticiple(getVerb('جوب', 4)).toMorphemes()).toEqual([
-          { text: 'مُ', role: 'measure' },
-          { text: 'ج', role: 'radical' },
-          { text: 'ِ', role: 'measure' },
-          { text: 'ي', role: 'radical' },
-          { text: 'ْ', role: 'measure' },
-          { text: 'ب', role: 'radical' },
+        expect(deriveActiveParticiple(getVerb('جوب', 4)).morphemes).toEqual([
+          { tokens: tokenize('مُ'), role: 'measure' },
+          { tokens: tokenize('ج'), role: 'radical' },
+          { tokens: tokenize('ِ'), role: 'measure' },
+          { tokens: tokenize('ي'), role: 'radical' },
+          { tokens: tokenize('ْ'), role: 'measure' },
+          { tokens: tokenize('ب'), role: 'radical' },
         ])
       })
     })
@@ -1030,7 +1031,9 @@ describe('active participle', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(deriveActiveParticiple(getVerb('جوب', 10)).toMorphemes()).toEqual([
+        expect(
+          deriveActiveParticiple(getVerb('جوب', 10)).morphemes.map((m) => ({ text: String(m), role: m.role })),
+        ).toEqual([
           { text: 'مُسْتَ', role: 'measure' },
           { text: 'ج', role: 'radical' },
           { text: 'ِ', role: 'measure' },

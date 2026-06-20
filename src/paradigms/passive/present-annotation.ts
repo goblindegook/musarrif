@@ -16,7 +16,7 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
         {
           kind: { type: 'tense', verbTense: `passive.present.${mood}` },
           arabic: String(allForms[pronounId]),
-          morphemes: allForms[pronounId].toMorphemes(),
+          morphemes: allForms[pronounId].morphemes,
         },
       ],
     }
@@ -31,7 +31,7 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
     {
       kind: { type: 'tense', verbTense: 'passive.present.indicative' },
       arabic: String(indicativeForms['3ms']),
-      morphemes: indicativeForms['3ms'].toMorphemes(),
+      morphemes: indicativeForms['3ms'].morphemes,
     },
   ]
 
@@ -43,7 +43,7 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
       {
         kind: { type: 'pronoun', pronounId },
         arabic: String(indicativeForms[pronounId]),
-        morphemes: indicativeForms[pronounId].toMorphemes(),
+        morphemes: indicativeForms[pronounId].morphemes,
       },
     ],
   }

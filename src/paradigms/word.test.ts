@@ -1,15 +1,15 @@
 import { describe, expect, test } from 'vitest'
 import { ALIF, BA, DAL, FATHA, HAH, HAMZA, KASRA, SHADDA, SUKOON } from './tokens'
-import { agreementMorpheme, MorphemeToken, measureMorpheme, radicalMorpheme, Word } from './word'
+import { agreementMorpheme, Morpheme, measureMorpheme, radicalMorpheme, Word } from './word'
 
 describe('MorphemeToken', () => {
   test('toString joins raw token strings', () => {
-    const m = new MorphemeToken([FATHA, KASRA], 'measure')
+    const m = new Morpheme([FATHA, KASRA], 'measure')
     expect(m.toString()).toBe('َِ')
   })
 
   test('stores role', () => {
-    const m = new MorphemeToken([FATHA], 'agreement')
+    const m = new Morpheme([FATHA], 'agreement')
     expect(m.role).toBe('agreement')
   })
 })

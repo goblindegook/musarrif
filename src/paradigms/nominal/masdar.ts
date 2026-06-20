@@ -25,9 +25,9 @@ import {
 } from '../tokens'
 import type { FormIVerb, MasdarPattern, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { isQuadriliteralVerb, isTriliteralFormIVerb } from '../verbs'
-import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
-function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly MorphemeToken[] {
+function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   switch (pattern) {
@@ -249,7 +249,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
   }
 }
 
-function deriveMasdarFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
@@ -276,7 +276,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA, YEH), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(MEEM, DAMMA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
@@ -300,7 +300,7 @@ function deriveMasdarFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveMasdarFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF_HAMZA_BELOW, KASRA), radicalMorpheme(c1.isWeak || c1.isHamza ? YEH : c1)]
 
@@ -321,7 +321,7 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [
     measureMorpheme(TEH, FATHA),
@@ -336,7 +336,7 @@ function deriveMasdarFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(DAMMA), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormVI(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
@@ -358,7 +358,7 @@ function deriveMasdarFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveMasdarFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormVII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(KASRA)]
 
@@ -369,7 +369,7 @@ function deriveMasdarFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
 
-function deriveMasdarFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [
@@ -396,7 +396,7 @@ function deriveMasdarFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3.isWeak ? HAMZA : c3)]
 }
 
-function deriveMasdarFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIX(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   return [
     measureMorpheme(ALIF, KASRA),
@@ -410,7 +410,7 @@ function deriveMasdarFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveMasdarFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveMasdarFormX(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, KASRA)]
 
@@ -452,7 +452,7 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveMasdarFormIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [
     radicalMorpheme(q1),
@@ -466,7 +466,7 @@ function deriveMasdarFormIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [
     measureMorpheme(TEH, FATHA),
@@ -480,7 +480,7 @@ function deriveMasdarFormIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] 
   ]
 }
 
-function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [
     measureMorpheme(ALIF, KASRA),
@@ -494,7 +494,7 @@ function deriveMasdarFormIIIq(verb: QuadriliteralVerb): readonly MorphemeToken[]
   ]
 }
 
-function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [q1, q2, q3, q4] = verb.rootTokens
   return [
     measureMorpheme(ALIF, KASRA),
@@ -510,7 +510,7 @@ function deriveMasdarFormIVq(verb: QuadriliteralVerb): readonly MorphemeToken[] 
   ]
 }
 
-function masdar(verb: Verb, pattern: MasdarPattern): readonly MorphemeToken[] {
+function masdar(verb: Verb, pattern: MasdarPattern): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:

@@ -20,10 +20,10 @@ import {
   YEH,
 } from '../tokens'
 import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
-import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { constrainPassiveConjugation } from './support'
 
-const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly MorphemeToken[]>> = {
+const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly Morpheme[]>> = {
   indicative: {
     '1s': [agreementMorpheme(DAMMA)],
     '2ms': [agreementMorpheme(DAMMA)],
@@ -71,7 +71,7 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly MorphemeToken[]>> =
   },
 }
 
-function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly MorphemeToken[] {
+function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
@@ -92,7 +92,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
   return [radicalMorpheme(c1), measureMorpheme(SUKOON)]
 }
 
-function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly MorphemeToken[] {
+function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   // Contract only when c1 is sound (رأى → يُرَى); keep hamza when c1 is weak (وَأَى → يُوءَى)
@@ -116,7 +116,7 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
   return []
 }
 
-function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly MorphemeToken[] {
+function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Morpheme[] {
   const [, c2, c3] = verb.rootTokens
   if (c3.isWeak) return []
   if (isFemininePlural(pronounId)) return [radicalMorpheme(c3)]
@@ -124,14 +124,14 @@ function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
   return [radicalMorpheme(c3)]
 }
 
-function buildSuffixFormI(verb: FormIVerb, mood: Mood, pronounId: PronounId): readonly MorphemeToken[] {
+function buildSuffixFormI(verb: FormIVerb, mood: Mood, pronounId: PronounId): readonly Morpheme[] {
   const [, c2, c3] = verb.rootTokens
   if (c2.equals(c3)) return geminateSuffix(mood, pronounId)
   if (c3.isWeak) return [measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
   return MOOD_SUFFIXES[mood][pronounId]
 }
 
-function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly MorphemeToken[] {
+function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   return [
     ...buildC1SegmentFormI(verb, pronounId),
     ...buildC2SegmentFormI(verb, pronounId, mood),
@@ -140,11 +140,7 @@ function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mo
   ]
 }
 
-function derivePassivePresentStemFormII(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
@@ -158,11 +154,7 @@ function derivePassivePresentStemFormII(
   return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIII(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
@@ -178,11 +170,7 @@ function derivePassivePresentStemFormIII(
   return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
 }
 
-function derivePassivePresentStemFormIV(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
@@ -241,7 +229,7 @@ function derivePassivePresentStemFormIV(
   ]
 }
 
-function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly MorphemeToken[] {
+function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
@@ -266,11 +254,7 @@ function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId,
   ]
 }
 
-function derivePassivePresentStemFormVI(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
@@ -294,11 +278,7 @@ function derivePassivePresentStemFormVI(
   ]
 }
 
-function derivePassivePresentStemFormVII(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3))
@@ -351,11 +331,7 @@ function derivePassivePresentStemFormVII(
   ]
 }
 
-function derivePassivePresentStemFormVIII(
-  verb: NonFormIVerb,
-  pronounId: PronounId,
-  mood: Mood,
-): readonly MorphemeToken[] {
+function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
@@ -484,7 +460,7 @@ function derivePassivePresentStemFormVIII(
   ]
 }
 
-function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly MorphemeToken[] {
+function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
@@ -541,7 +517,7 @@ function derivePassivePresentStemFormIq(
   verb: QuadriliteralVerb,
   pronounId: PronounId,
   mood: Mood,
-): readonly MorphemeToken[] {
+): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [
     radicalMorpheme(c1),
@@ -559,7 +535,7 @@ function derivePassivePresentStemFormIIq(
   verb: QuadriliteralVerb,
   pronounId: PronounId,
   mood: Mood,
-): readonly MorphemeToken[] {
+): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [
     measureMorpheme(TEH, FATHA),
@@ -578,7 +554,7 @@ function derivePassivePresentStemFormIIIq(
   verb: QuadriliteralVerb,
   pronounId: PronounId,
   mood: Mood,
-): readonly MorphemeToken[] {
+): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
   return [
     radicalMorpheme(c1),
@@ -596,7 +572,7 @@ function derivePassivePresentStemFormIVq(
   verb: QuadriliteralVerb,
   pronounId: PronounId,
   mood: Mood,
-): readonly MorphemeToken[] {
+): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   const useLongForm =
@@ -630,11 +606,11 @@ function derivePassivePresentStemFormIVq(
   ]
 }
 
-function geminateSuffix(mood: Mood, pronounId: PronounId): readonly MorphemeToken[] {
+function geminateSuffix(mood: Mood, pronounId: PronounId): readonly Morpheme[] {
   return mood === 'jussive' ? MOOD_SUFFIXES.subjunctive[pronounId] : MOOD_SUFFIXES[mood][pronounId]
 }
 
-function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly MorphemeToken[] {
+function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly Morpheme[] {
   if (mood === 'indicative') {
     if (pronounId === '2fs') return [agreementMorpheme(YEH, NOON, FATHA)]
     if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF, NOON, KASRA)]
@@ -653,7 +629,7 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
   return [measureMorpheme(ALIF_MAQSURA)]
 }
 
-function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly MorphemeToken[] {
+function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:

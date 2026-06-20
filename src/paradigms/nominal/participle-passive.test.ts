@@ -1,5 +1,6 @@
 import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
+import { tokenize } from '../tokens'
 import { getVerb, verbs } from '../verbs'
 import { derivePassiveParticiple } from './participle-passive'
 
@@ -479,11 +480,11 @@ describe('passive participle', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(derivePassiveParticiple(getVerb('جوب', 4)).toMorphemes()).toEqual([
-          { text: 'مُ', role: 'measure' },
-          { text: 'ج', role: 'radical' },
-          { text: 'َ', role: 'measure' },
-          { text: 'اب', role: 'radical' },
+        expect(derivePassiveParticiple(getVerb('جوب', 4)).morphemes).toEqual([
+          { tokens: tokenize('مُ'), role: 'measure' },
+          { tokens: tokenize('ج'), role: 'radical' },
+          { tokens: tokenize('َ'), role: 'measure' },
+          { tokens: tokenize('اب'), role: 'radical' },
         ])
       })
     })
@@ -970,11 +971,11 @@ describe('passive participle', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(derivePassiveParticiple(getVerb('جوب', 10)).toMorphemes()).toEqual([
-          { text: 'مُسْتَ', role: 'measure' },
-          { text: 'ج', role: 'radical' },
-          { text: 'َ', role: 'measure' },
-          { text: 'اب', role: 'radical' },
+        expect(derivePassiveParticiple(getVerb('جوب', 10)).morphemes).toEqual([
+          { tokens: tokenize('مُسْتَ'), role: 'measure' },
+          { tokens: tokenize('ج'), role: 'radical' },
+          { tokens: tokenize('َ'), role: 'measure' },
+          { tokens: tokenize('اب'), role: 'radical' },
         ])
       })
     })

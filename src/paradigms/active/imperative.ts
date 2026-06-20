@@ -3,7 +3,7 @@ import { isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import { ALIF, DAMMA, FATHA, HAMZA, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
-import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { conjugatePresentMood } from './present'
 
 export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
@@ -129,7 +129,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
   )
 }
 
-function restoreWeakLetterBeforeAlif(stem: readonly MorphemeToken[]): readonly MorphemeToken[] {
+function restoreWeakLetterBeforeAlif(stem: readonly Morpheme[]): readonly Morpheme[] {
   if (stem.at(-2)?.contains(YEH)) return stem
   const final = stem.at(-1)
   if (final?.tokens.at(0)?.equals(FATHA)) return stem.with(-1, agreementMorpheme(KASRA, YEH, FATHA, ALIF))

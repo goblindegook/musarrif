@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { detokenizeAnnotation } from '../../test/transformers'
 import { getVerb, getVerbById } from '../verbs'
 import { annotatePast } from './past-annotation'
 
@@ -6,7 +7,7 @@ describe('annotatePast', () => {
   test('Form I regular — كتب (1s) annotation uses word morphemes', () => {
     const result = annotatePast(getVerb('كتب', 1), '1s')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -60,7 +61,7 @@ describe('annotatePast', () => {
   test('Form I geminate — حبب (3ms) shadda collapses doubled radical', () => {
     const result = annotatePast(getVerb('حبب', 1), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -98,7 +99,7 @@ describe('annotatePast', () => {
   test('Form I hollow — كون (3ms) adjacent radicals merge', () => {
     const result = annotatePast(getVerb('كون', 1), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -136,7 +137,7 @@ describe('annotatePast', () => {
   test('Form I hamzated final — بدء (3md) madda absorbs dual alif into measure', () => {
     const result = annotatePast(getVerb('بدء', 1), '3md')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -188,7 +189,7 @@ describe('annotatePast', () => {
   test('Form VII — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 7), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -232,7 +233,7 @@ describe('annotatePast', () => {
   test('Form IX — خضر (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('خضر', 9), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -276,7 +277,7 @@ describe('annotatePast', () => {
   test('Form III — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 3), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -318,7 +319,7 @@ describe('annotatePast', () => {
   test('Form V — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 5), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -362,7 +363,7 @@ describe('annotatePast', () => {
   test('Form VI — كتب (3ms) matches annotation object', () => {
     const result = annotatePast(getVerb('كتب', 6), '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -404,7 +405,7 @@ describe('annotatePast', () => {
   })
 
   test('Form I hamzated geminate — ءدد (2fs) fatha on initial hamza is measure', () => {
-    const result = annotatePast(getVerb('ءدد', 1), '2fs')
+    const result = detokenizeAnnotation(annotatePast(getVerb('ءدد', 1), '2fs'))
 
     expect(result.steps.at(-1)).toEqual({
       kind: { type: 'pronoun', pronounId: '2fs' },
@@ -423,7 +424,7 @@ describe('annotatePast', () => {
   test('Form VIII — حلم (1s) matches annotation object', () => {
     const result = annotatePast(getVerb('حلم', 8), '1s')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -480,7 +481,7 @@ describe('annotatePast', () => {
   test('Form VIII — حلم (1s) matches annotation object', () => {
     const result = annotatePast(getVerbById("'ty-8")!, '2mp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           arabic: 'ءتي',

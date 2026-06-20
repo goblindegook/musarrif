@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { tokenize } from '../tokens'
 import { getVerb } from '../verbs'
 import { deriveMasdar } from './masdar'
 
@@ -549,12 +550,12 @@ describe('masdar', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(deriveMasdar(getVerb('جوب', 4))[0].toMorphemes()).toEqual([
-          { text: 'إِ', role: 'measure' },
-          { text: 'ج', role: 'radical' },
-          { text: 'َ', role: 'measure' },
-          { text: 'اب', role: 'radical' },
-          { text: 'َة', role: 'measure' },
+        expect(deriveMasdar(getVerb('جوب', 4))[0].morphemes).toEqual([
+          { tokens: tokenize('إِ'), role: 'measure' },
+          { tokens: tokenize('ج'), role: 'radical' },
+          { tokens: tokenize('َ'), role: 'measure' },
+          { tokens: tokenize('اب'), role: 'radical' },
+          { tokens: tokenize('َة'), role: 'measure' },
         ])
       })
     })
@@ -1076,7 +1077,7 @@ describe('masdar', () => {
       })
 
       test('جوب morphemes mark transformed waw as radical', () => {
-        expect(deriveMasdar(getVerb('جوب', 10))[0].toMorphemes()).toEqual([
+        expect(deriveMasdar(getVerb('جوب', 10))[0].morphemes.map((m) => ({ text: String(m), role: m.role }))).toEqual([
           { text: 'اِسْتِ', role: 'measure' },
           { text: 'ج', role: 'radical' },
           { text: 'َ', role: 'measure' },

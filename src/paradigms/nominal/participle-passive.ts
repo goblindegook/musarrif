@@ -18,7 +18,7 @@ import {
   YEH,
 } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
-import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { participleStem } from './participle-active'
 
 export function derivePassiveParticiple(verb: Verb): Word {
@@ -81,7 +81,7 @@ export function derivePassiveParticiple(verb: Verb): Word {
 
     switch (verb.form) {
       case 1: {
-        const prefix: readonly MorphemeToken[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
+        const prefix: readonly Morpheme[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
 
         if (c3.isWeak)
           return [
@@ -155,7 +155,7 @@ export function derivePassiveParticiple(verb: Verb): Word {
       case 8: {
         const infix = resolveFormVIIIInfixConsonant(c1)
         const isInitialWeakOrHamza = c1.isWeak || c1.isHamza
-        const prefix: readonly MorphemeToken[] = [measureMorpheme(MEEM, DAMMA)]
+        const prefix: readonly Morpheme[] = [measureMorpheme(MEEM, DAMMA)]
 
         if (c2.equals(c3))
           return [

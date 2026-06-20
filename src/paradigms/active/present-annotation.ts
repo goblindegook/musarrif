@@ -1,36 +1,29 @@
 import type { AnnotatedForm, DerivationStep } from '../annotation'
 import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
-import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON } from '../tokens'
+import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON, type Token } from '../tokens'
 import type { Verb } from '../verbs'
-import type { MorphemeRole } from '../word'
+import { elidedMorpheme } from '../word'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'
-
-function elidedPastPrefix(verb: Verb): string | null {
-  if (verb.root.length !== 3) return null
-  if (verb.form === 4) return ALIF_HAMZA.raw + FATHA.raw
-  if (verb.form === 10) return ALIF.raw + KASRA.raw
-  return null
-}
 
 export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
     const moodConjugation = conjugatePresentMood(verb, mood)[pronounId]
     const elidedNoon = isDual(pronounId)
-      ? NOON.raw + KASRA.raw
+      ? [NOON, KASRA]
       : pronounId === '2fs' || isMasculinePlural(pronounId)
-        ? NOON.raw + FATHA.raw
+        ? [NOON, FATHA]
         : null
-    const elidedMorpheme = elidedNoon ? [{ text: elidedNoon, role: 'elided' as MorphemeRole }] : []
+    const elision = elidedNoon ? [elidedMorpheme(...elidedNoon)] : []
     return {
       steps: [
         ...indicativeAnnotation.steps,
         {
           kind: { type: 'tense', verbTense: `active.present.${mood}` },
           arabic: String(moodConjugation),
-          morphemes: [...moodConjugation.toMorphemes(), ...elidedMorpheme],
+          morphemes: [...moodConjugation.morphemes, ...elision],
         },
       ],
     }
@@ -47,9 +40,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     {
       kind: { type: 'tense', verbTense: 'active.present.indicative' },
       arabic: String(indicative['3ms']),
-      morphemes: dropped
-        ? [{ text: dropped, role: 'elided' as MorphemeRole }, ...indicative['3ms'].toMorphemes()]
-        : indicative['3ms'].toMorphemes(),
+      morphemes: dropped ? [elidedMorpheme(...dropped), ...indicative['3ms'].morphemes] : indicative['3ms'].morphemes,
     },
   ]
 
@@ -61,8 +52,15 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
       {
         kind: { type: 'pronoun', pronounId },
         arabic: String(indicative[pronounId]),
-        morphemes: indicative[pronounId].toMorphemes(),
+        morphemes: indicative[pronounId].morphemes,
       },
     ],
   }
+}
+
+function elidedPastPrefix(verb: Verb): readonly Token[] | null {
+  if (verb.root.length !== 3) return null
+  if (verb.form === 4) return [ALIF_HAMZA, FATHA]
+  if (verb.form === 10) return [ALIF, KASRA]
+  return null
 }

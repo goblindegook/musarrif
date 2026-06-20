@@ -20,17 +20,17 @@ import {
   YEH,
 } from '../tokens'
 import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
-import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { constrainPassiveConjugation } from './support'
 
 interface PassivePastParams {
-  prefix: readonly MorphemeToken[]
-  suffix?: readonly MorphemeToken[]
+  prefix: readonly Morpheme[]
+  suffix?: readonly Morpheme[]
   agreementPrefix?: readonly Token[]
   agreementPrefix3fp?: readonly Token[]
-  suffix3ms?: readonly MorphemeToken[]
-  suffix3sd?: readonly MorphemeToken[]
-  suffix3mp?: readonly MorphemeToken[]
+  suffix3ms?: readonly Morpheme[]
+  suffix3sd?: readonly Morpheme[]
+  suffix3mp?: readonly Morpheme[]
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, Word> {

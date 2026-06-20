@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { detokenizeAnnotation } from '../../test/transformers'
 import { getVerb } from '../verbs'
 import { annotateActiveImperative } from './imperative-annotation'
 
@@ -6,7 +7,7 @@ describe('annotateActiveImperative', () => {
   test('Form I — كتب (2fs) matches annotation object', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2fs')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -90,7 +91,7 @@ describe('annotateActiveImperative', () => {
   test('Form X — خرج (2ms) matches annotation object', () => {
     const result = annotateActiveImperative(getVerb('خرج', 10), '2ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -178,7 +179,7 @@ describe('annotateActiveImperative', () => {
   test('Form I — كتب (2d) dropped person prefix annotated', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2d')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -262,7 +263,7 @@ describe('annotateActiveImperative', () => {
   test('Form IV — حبب (2ms) matches annotation object', () => {
     const result = annotateActiveImperative(getVerb('حبب', 4), '2ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -337,7 +338,7 @@ describe('annotateActiveImperative', () => {
   test('Form I — كتب (2ms) dropped person prefix annotated', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -420,7 +421,7 @@ describe('annotateActiveImperative', () => {
   test('Form I — كتب (2mp) dropped person prefix annotated', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2mp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -504,7 +505,7 @@ describe('annotateActiveImperative', () => {
   test('Form I — كتب (2fp) dropped person prefix annotated', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2fp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },

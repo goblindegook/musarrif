@@ -22,13 +22,13 @@ import {
   YEH,
 } from '../tokens.ts'
 import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
-import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
+import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
 
 function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
   return verb.rootTokens.length === 4
 }
 
-interface PastBaseForms<T extends Token | MorphemeToken> {
+interface PastBaseForms<T extends Token | Morpheme> {
   base: readonly T[]
   suffixedBase: readonly T[]
   feminineSingularDualBase: readonly T[]
@@ -40,7 +40,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, Word> {
   return mapRecord(addAgreement(derivePastForms(verb)), (morphemes) => new Word(morphemes))
 }
 
-function buildForms(stem: readonly MorphemeToken[], defective?: Token): PastBaseForms<MorphemeToken> {
+function buildForms(stem: readonly Morpheme[], defective?: Token): PastBaseForms<Morpheme> {
   if (!defective?.isWeak)
     return {
       base: [...stem, measureMorpheme(FATHA)],
@@ -70,7 +70,7 @@ function buildForms(stem: readonly MorphemeToken[], defective?: Token): PastBase
   }
 }
 
-function derivePastFormI(verb: FormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormI(verb: FormIVerb): PastBaseForms<Morpheme> {
   if (verb.root === 'ليس') return conjugateLaysa()
 
   const [c1, c2, c3] = verb.rootTokens
@@ -106,7 +106,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms<MorphemeToken> {
   return buildForms([...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)], c3)
 }
 
-function conjugateLaysa(): PastBaseForms<MorphemeToken> {
+function conjugateLaysa(): PastBaseForms<Morpheme> {
   return {
     ...buildForms([
       radicalMorpheme(LAM),
@@ -119,7 +119,7 @@ function conjugateLaysa(): PastBaseForms<MorphemeToken> {
   }
 }
 
-function addAgreement(forms: PastBaseForms<MorphemeToken>): Record<PronounId, readonly MorphemeToken[]> {
+function addAgreement(forms: PastBaseForms<Morpheme>): Record<PronounId, readonly Morpheme[]> {
   const { base, suffixedBase, feminineSingularDualBase, masculineDualBase, thirdPersonMasculinePluralBase } = forms
   return {
     '3ms': base,
@@ -138,7 +138,7 @@ function addAgreement(forms: PastBaseForms<MorphemeToken>): Record<PronounId, re
   }
 }
 
-function derivePastFormIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIq(verb: QuadriliteralVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3, c4] = verb.rootTokens
   const stem = [
     radicalMorpheme(c1),
@@ -156,7 +156,7 @@ function derivePastFormIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken>
   }
 }
 
-function derivePastFormIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIIq(verb: QuadriliteralVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms(
     [
@@ -173,7 +173,7 @@ function derivePastFormIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken
   )
 }
 
-function derivePastFormIIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIIIq(verb: QuadriliteralVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3, c4] = verb.rootTokens
   return buildForms(
     [
@@ -190,7 +190,7 @@ function derivePastFormIIIq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToke
   )
 }
 
-function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3, c4] = verb.rootTokens
   const prefix = [
     measureMorpheme(ALIF, KASRA),
@@ -244,7 +244,7 @@ function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms<MorphemeToken
   }
 }
 
-function derivePastFormII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormII(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [
     radicalMorpheme(c1),
@@ -263,7 +263,7 @@ function derivePastFormII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   return buildForms([...prefix, radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIII(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
@@ -276,7 +276,7 @@ function derivePastFormIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   return buildForms([...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIV(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF_HAMZA, FATHA), radicalMorpheme(c1)]
 
@@ -350,7 +350,7 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastFormV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormV(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
 
   return buildForms(
@@ -367,7 +367,7 @@ function derivePastFormV(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastFormVI(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormVI(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
@@ -392,7 +392,7 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastFormVII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormVII(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
@@ -413,7 +413,7 @@ function derivePastFormVII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   return buildForms([...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [measureMorpheme(ALIF, KASRA), radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA)]
@@ -451,7 +451,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   return buildForms([...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)], c3)
 }
 
-function derivePastFormIX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormIX(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   return {
     ...buildForms(
@@ -480,7 +480,7 @@ function derivePastFormIX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   }
 }
 
-function derivePastFormX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
+function derivePastFormX(verb: NonFormIVerb): PastBaseForms<Morpheme> {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
@@ -519,7 +519,7 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms<MorphemeToken> {
   )
 }
 
-function derivePastForms(verb: Verb): PastBaseForms<MorphemeToken> {
+function derivePastForms(verb: Verb): PastBaseForms<Morpheme> {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:

@@ -14,7 +14,7 @@ export function annotateActiveFuture(verb: Verb, pronounId: PronounId): Annotate
       {
         kind: { type: 'tense', verbTense: 'active.future' },
         arabic: String(word),
-        morphemes: word.toMorphemes(),
+        morphemes: word.morphemes,
       },
     ],
   }

@@ -3,7 +3,7 @@ import { ALIF, ALIF_HAMZA, ALIF_MADDA, FATHA, SHADDA, SUKOON, type Token } from 
 
 export type MorphemeRole = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'
 
-export class MorphemeToken {
+export class Morpheme {
   readonly tokens: readonly Token[]
   readonly role: MorphemeRole
 
@@ -24,36 +24,29 @@ export class MorphemeToken {
   }
 }
 
-export interface Morpheme {
-  readonly text: string
-  readonly role: MorphemeRole
-}
-
 export class Word {
-  readonly morphemes: readonly MorphemeToken[]
+  readonly morphemes: readonly Morpheme[]
 
-  constructor(raw: readonly MorphemeToken[]) {
+  constructor(raw: readonly Morpheme[]) {
     this.morphemes = shaddaPass(maddaPass(hamzaPass(raw)))
   }
 
   toString(): string {
     return this.morphemes.map(String).join('').normalize('NFC')
   }
-
-  toMorphemes(): readonly Morpheme[] {
-    return this.morphemes.map((m) => ({ text: String(m), role: m.role }))
-  }
 }
 
-export const radicalMorpheme = (token: Token): MorphemeToken => new MorphemeToken([token], 'radical')
+export const radicalMorpheme = (token: Token): Morpheme => new Morpheme([token], 'radical')
 
-export const measureMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'measure')
+export const measureMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'measure')
 
-export const particleMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'particle')
+export const particleMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'particle')
 
-export const agreementMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'agreement')
+export const agreementMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'agreement')
 
-function hamzaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
+export const elidedMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'elided')
+
+function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const seatedTokens = seatHamzas(morphemes.flatMap((m) => [...m.tokens]))
   let offset = 0
   return mergeAdjacent(
@@ -61,16 +54,16 @@ function hamzaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[
       const count = m.tokens.length
       const slice = seatedTokens.slice(offset, offset + count)
       offset += count
-      return new MorphemeToken(slice, m.role)
+      return new Morpheme(slice, m.role)
     }),
   )
 }
 
-function maddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
+function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   type Slot = { token: Token; morphemeIndex: number }
   const slots: Slot[] = morphemes.flatMap((m, mi) => m.tokens.map((t) => ({ token: t, morphemeIndex: mi })))
 
-  const result: MorphemeToken[] = []
+  const result: Morpheme[] = []
   let i = 0
   while (i < slots.length) {
     const { token: t0 } = slots[i]
@@ -81,22 +74,22 @@ function maddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[
       (slots[i + 2].token.equals(ALIF_HAMZA) || slots[i + 2].token.equals(ALIF))
     ) {
       const skip = i + 3 < slots.length && slots[i + 3].token.equals(SUKOON) ? 4 : 3
-      result.push(new MorphemeToken([ALIF_MADDA], 'measure'))
+      result.push(new Morpheme([ALIF_MADDA], 'measure'))
       i += skip
     } else {
       const origMorpheme = morphemes[slots[i].morphemeIndex]
-      result.push(new MorphemeToken([t0], origMorpheme.role))
+      result.push(new Morpheme([t0], origMorpheme.role))
       i++
     }
   }
   return mergeAdjacent(result)
 }
 
-function shaddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
+function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   type Slot = { token: Token; role: MorphemeRole }
   const slots: Slot[] = morphemes.flatMap((m) => m.tokens.map((t) => ({ token: t, role: m.role })))
 
-  const result: MorphemeToken[] = []
+  const result: Morpheme[] = []
   let i = 0
   while (i < slots.length) {
     if (
@@ -105,22 +98,22 @@ function shaddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken
       slots[i + 1].token.equals(SUKOON) &&
       slots[i].token.equals(slots[i + 2].token)
     ) {
-      result.push(new MorphemeToken([slots[i].token, SHADDA], slots[i].role))
+      result.push(new Morpheme([slots[i].token, SHADDA], slots[i].role))
       i += 3
     } else {
-      result.push(new MorphemeToken([slots[i].token], slots[i].role))
+      result.push(new Morpheme([slots[i].token], slots[i].role))
       i++
     }
   }
   return mergeAdjacent(result)
 }
 
-function mergeAdjacent(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
-  const result: MorphemeToken[] = []
+function mergeAdjacent(morphemes: readonly Morpheme[]): readonly Morpheme[] {
+  const result: Morpheme[] = []
   for (const morpheme of morphemes) {
     const previous = result.at(-1)
     if (previous?.role === morpheme.role) {
-      result[result.length - 1] = new MorphemeToken([...previous.tokens, ...morpheme.tokens], previous.role)
+      result[result.length - 1] = new Morpheme([...previous.tokens, ...morpheme.tokens], previous.role)
     } else {
       result.push(morpheme)
     }

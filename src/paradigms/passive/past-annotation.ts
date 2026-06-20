@@ -14,7 +14,7 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
     {
       kind: { type: 'tense', verbTense: 'passive.past' },
       arabic: String(allForms['3ms']),
-      morphemes: allForms['3ms'].toMorphemes(),
+      morphemes: allForms['3ms'].morphemes,
     },
   ]
 
@@ -26,7 +26,7 @@ export function annotatePassivePast(verb: Verb, pronounId: PronounId): Annotated
       {
         kind: { type: 'pronoun', pronounId },
         arabic: String(allForms[pronounId]),
-        morphemes: allForms[pronounId].toMorphemes(),
+        morphemes: allForms[pronounId].morphemes,
       },
     ],
   }

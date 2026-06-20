@@ -9,12 +9,12 @@ export interface AnnotatedArabicProps {
 export function AnnotatedArabic({ morphemes = [], word }: AnnotatedArabicProps) {
   return (
     <>
-      {(word?.toMorphemes() ?? morphemes).map((morpheme, i) =>
+      {(word?.morphemes ?? morphemes).map((morpheme, i) =>
         morpheme.role === 'elided' ? (
-          <DroppedMorpheme key={`m-${i}`}>{morpheme.text}</DroppedMorpheme>
+          <DroppedMorpheme key={`m-${i}`}>{String(morpheme)}</DroppedMorpheme>
         ) : (
           <span key={`m-${i}`} style={{ color: COLOURS[morpheme.role] }}>
-            {morpheme.text}
+            {String(morpheme)}
           </span>
         ),
       )}

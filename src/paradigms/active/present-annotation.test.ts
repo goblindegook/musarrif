@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { detokenizeAnnotation } from '../../test/transformers'
 import { getVerb } from '../verbs'
 import { annotateActivePresentMood } from './present-annotation'
 
@@ -6,7 +7,7 @@ describe('annotateActivePresentMood', () => {
   test('indicative Form I — كتب (1s) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'indicative', '1s')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -62,7 +63,7 @@ describe('annotateActivePresentMood', () => {
   test('indicative Form III — كتب (3ms) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 3), 'indicative', '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -105,7 +106,7 @@ describe('annotateActivePresentMood', () => {
   test('indicative Form VII — كتب (3ms) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 7), 'indicative', '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -150,7 +151,7 @@ describe('annotateActivePresentMood', () => {
   test('indicative Form V — كتب (3ms) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 5), 'indicative', '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -195,7 +196,7 @@ describe('annotateActivePresentMood', () => {
   test('indicative Form VI — كتب (3ms) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 6), 'indicative', '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -240,7 +241,7 @@ describe('annotateActivePresentMood', () => {
   test('subjunctive Form I — كتب (1s) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '1s')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -309,7 +310,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (2ms) matches annotation object', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -378,7 +379,7 @@ describe('annotateActivePresentMood', () => {
   test('subjunctive Form I — كتب (2fs) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2fs')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -448,7 +449,7 @@ describe('annotateActivePresentMood', () => {
   test('subjunctive Form I — كتب (2d) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2d')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -518,7 +519,7 @@ describe('annotateActivePresentMood', () => {
   test('subjunctive Form I — كتب (2mp) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2mp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -588,7 +589,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (2fs) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2fs')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -658,7 +659,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (2mp) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2mp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -728,7 +729,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (3mp) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '3mp')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -798,7 +799,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (2d) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2d')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -868,7 +869,7 @@ describe('annotateActivePresentMood', () => {
   test('jussive Form I — كتب (3md) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '3md')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },

@@ -13,7 +13,7 @@ export function annotatePassiveFuture(verb: Verb, pronounId: PronounId): Annotat
       {
         kind: { type: 'tense', verbTense: 'passive.future' },
         arabic: String(word),
-        morphemes: word.toMorphemes(),
+        morphemes: word.morphemes,
       },
     ],
   }

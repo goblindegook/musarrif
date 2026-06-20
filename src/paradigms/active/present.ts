@@ -29,9 +29,9 @@ import {
   type QuadriliteralVerb,
   type Verb,
 } from '../verbs'
-import { agreementMorpheme, type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
-function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
+function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const kasra = agreementMorpheme(KASRA)
   const fatha = agreementMorpheme(FATHA)
 
@@ -70,7 +70,7 @@ function deriveFeminineSingularStem(stem: readonly MorphemeToken[], verb: Verb):
   }
 }
 
-function deriveMasculinePluralStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
+function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const fatha = agreementMorpheme(FATHA)
   const damma = agreementMorpheme(DAMMA)
 
@@ -121,7 +121,7 @@ function deriveMasculinePluralStem(stem: readonly MorphemeToken[], verb: Verb): 
   }
 }
 
-function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
+function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
     const [, , c3, c4] = verb.rootTokens
     if (verb.form === 4) {
@@ -251,7 +251,7 @@ function deriveFemininePluralStem(stem: readonly MorphemeToken[], verb: Verb): r
   }
 }
 
-function deriveDualStem(stem: readonly MorphemeToken[], verb: Verb): readonly MorphemeToken[] {
+function deriveDualStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const suffix = agreementMorpheme(FATHA, ALIF, NOON, KASRA)
 
   if (isQuadriliteralVerb(verb)) return [...stem, suffix]
@@ -292,7 +292,7 @@ function deriveDualStem(stem: readonly MorphemeToken[], verb: Verb): readonly Mo
 
 const dammaSuffix = (s: boolean) => (s ? [agreementMorpheme(DAMMA)] : [])
 
-function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly MorphemeToken[]> {
+function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const [c1, , c3] = verb.rootTokens
   const stem = derivePresentStem(verb)
   const dual = deriveDualStem(stem, verb)
@@ -327,7 +327,7 @@ function presentPrefixVowel(verb: Verb): Token {
   return [2, 3, 4].includes(verb.form) ? DAMMA : FATHA
 }
 
-function dropTrailingNoon(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
+function dropTrailingNoon(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const last = morphemes.at(-1)
   const keptTokens =
     last?.tokens.slice(
@@ -337,7 +337,7 @@ function dropTrailingNoon(morphemes: readonly MorphemeToken[]): readonly Morphem
   return [...morphemes.with(-1, agreementMorpheme(...keptTokens))]
 }
 
-function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly MorphemeToken[]> {
+function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const [, c2, c3] = verb.rootTokens
   const indicative = deriveIndicativeForms(verb)
 
@@ -368,7 +368,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly MorphemeTo
   }
 }
 
-const defaultSubjunctiveForm = (morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] => {
+const defaultSubjunctiveForm = (morphemes: readonly Morpheme[]): readonly Morpheme[] => {
   const finalMorpheme = morphemes.at(-1)?.tokens
   const finalToken = finalMorpheme?.at(-1)
 
@@ -380,7 +380,7 @@ const defaultSubjunctiveForm = (morphemes: readonly MorphemeToken[]): readonly M
   return [...morphemes, agreementMorpheme(FATHA)]
 }
 
-function conjugateJussive(verb: Verb): Record<PronounId, readonly MorphemeToken[]> {
+function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const [, c2, c3] = verb.rootTokens
   const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 7, 8, 10].includes(verb.form))
   const fathaDefective =
@@ -459,7 +459,7 @@ export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, 
   return mapRecord(deriveIndicativeForms(verb), (morphemes) => new Word(morphemes))
 }
 
-function deriveFormIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveFormIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -473,7 +473,7 @@ function deriveFormIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveFormIIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -488,7 +488,7 @@ function deriveFormIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormIIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveFormIIIq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -502,7 +502,7 @@ function deriveFormIIIq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormIVq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
+function deriveFormIVq(verb: QuadriliteralVerb): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
 
   return [
@@ -518,7 +518,7 @@ function deriveFormIVq(verb: QuadriliteralVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormI(verb: FormIVerb): readonly MorphemeToken[] {
+function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const presentVowel = formIPresentVowel(verb)
 
@@ -587,7 +587,7 @@ function deriveFormI(verb: FormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.isWeak)
@@ -612,7 +612,7 @@ function deriveFormII(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
@@ -623,7 +623,7 @@ function deriveFormIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function deriveFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [radicalMorpheme(c1)]
 
@@ -640,7 +640,7 @@ function deriveFormIV(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function deriveFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   if (c3.equals(YEH))
@@ -667,7 +667,7 @@ function deriveFormV(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVI(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
@@ -678,7 +678,7 @@ function deriveFormVI(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
 }
 
-function deriveFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
@@ -691,7 +691,7 @@ function deriveFormVII(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function deriveFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
@@ -726,7 +726,7 @@ function deriveFormVIII(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormIX(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
   return [
@@ -740,7 +740,7 @@ function deriveFormIX(verb: NonFormIVerb): readonly MorphemeToken[] {
   ]
 }
 
-function deriveFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
+function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
@@ -758,7 +758,7 @@ function deriveFormX(verb: NonFormIVerb): readonly MorphemeToken[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
+function derivePresentStem(verb: Verb): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
@@ -796,7 +796,7 @@ function derivePresentStem(verb: Verb): readonly MorphemeToken[] {
   }
 }
 
-function shortenHollowStemMorphemes(stem: readonly MorphemeToken[]): readonly MorphemeToken[] {
+function shortenHollowStemMorphemes(stem: readonly Morpheme[]): readonly Morpheme[] {
   for (let i = 1; i < stem.length; i++) {
     const weakIdx = stem[i].tokens.findIndex((t) => t.isWeak)
     if (weakIdx >= 0) {
@@ -807,7 +807,7 @@ function shortenHollowStemMorphemes(stem: readonly MorphemeToken[]): readonly Mo
   return stem
 }
 
-function expandGeminationMorphemes(stem: readonly MorphemeToken[], vowel: Token): readonly MorphemeToken[] {
+function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): readonly Morpheme[] {
   for (let i = 1; i < stem.length - 1; i++) {
     if (SUKOON.equals(stem[i].tokens[0]) && stem[i - 1].tokens[0].equals(stem[i + 1].tokens[0])) {
       return [...stem.slice(0, i), measureMorpheme(vowel), ...stem.slice(i + 1)]

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { detokenizeAnnotation } from '../../test/transformers'
 import { getVerb } from '../verbs'
 import { annotatePassivePresentMood } from './present-annotation'
 
@@ -6,7 +7,7 @@ describe('annotatePassivePresentMood', () => {
   test('indicative Form X — حبب (3ms) matches annotation object', () => {
     const result = annotatePassivePresentMood(getVerb('حبب', 10), 'indicative', '3ms')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },
@@ -48,7 +49,7 @@ describe('annotatePassivePresentMood', () => {
   test('indicative Form I — كتب (1s) matches annotation object', () => {
     const result = annotatePassivePresentMood(getVerb('كتب', 1), 'indicative', '1s')
 
-    expect(result).toEqual({
+    expect(detokenizeAnnotation(result)).toEqual({
       steps: [
         {
           kind: { type: 'root' },

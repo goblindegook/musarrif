@@ -272,7 +272,7 @@ function extractAffixes(morphemes: readonly Morpheme[] = []): {
   if (firstStemIdx === -1) return {}
 
   const preAll = morphemes.slice(0, firstStemIdx)
-  const postAll = morphemes.slice(lastStemIdx + 1).filter((m) => m.text !== 'ْ')
+  const postAll = morphemes.slice(lastStemIdx + 1).filter((m) => String(m) !== 'ْ')
 
   const pre = preAll.filter((m) => m.role !== 'elided')
   const post = postAll.filter((m) => m.role !== 'elided')
@@ -280,10 +280,10 @@ function extractAffixes(morphemes: readonly Morpheme[] = []): {
   const postElided = postAll.filter((m) => m.role === 'elided')
 
   return {
-    prefix: pre.length ? pre.map((m) => m.text).join('') : undefined,
-    suffix: post.length ? post.map((m) => m.text).join('') : undefined,
-    elidedPrefix: preElided.length ? preElided.map((m) => m.text).join('') : undefined,
-    elidedSuffix: postElided.length ? postElided.map((m) => m.text).join('') : undefined,
+    prefix: pre.length ? pre.map(String).join('') : undefined,
+    suffix: post.length ? post.map(String).join('') : undefined,
+    elidedPrefix: preElided.length ? preElided.map(String).join('') : undefined,
+    elidedSuffix: postElided.length ? postElided.map(String).join('') : undefined,
   }
 }
 
