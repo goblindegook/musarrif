@@ -32,17 +32,13 @@ function AnnotatedArabic({ morphemes }: { morphemes: readonly Morpheme[] }) {
   return (
     <>
       {morphemes.flatMap((m, i) => {
-        const morpheme =
-          m.role === 'elided' ? (
-            <DroppedMorpheme key={`m-${i}`}>{m.text}</DroppedMorpheme>
-          ) : (
-            <span key={`m-${i}`} style={{ color: MORPHEME_COLOURS[m.role] }}>
-              {m.text}
-            </span>
-          )
-        const next = morphemes[i + 1]
-        if (!next || next.text.match(/^\p{M}+$/u)) return [morpheme]
-        return morpheme
+        return m.role === 'elided' ? (
+          <DroppedMorpheme key={`m-${i}`}>{m.text}</DroppedMorpheme>
+        ) : (
+          <span key={`m-${i}`} style={{ color: MORPHEME_COLOURS[m.role] }}>
+            {m.text}
+          </span>
+        )
       })}
     </>
   )

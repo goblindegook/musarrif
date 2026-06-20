@@ -333,7 +333,7 @@
     "explanation.nominal.passiveParticiple": "The passive participle (اسم المفعول) names what receives the action. In Forms II–X it starts with مُـ. In Form I, the usual pattern is مَفْعُول.",
     "explanation.nominal.passiveParticiple.quad": "The passive participle (اسم المفعول) of quadriliteral verbs always starts with مُـ. In Form Iq, the usual pattern is مُفَعْلَل.",
     "explanation.pronoun.base-form": "{arabic} is the base form.",
-    "explanation.pronoun.dropped-prefix": "The prefix {elidedPrefix} is dropped for the imperative.",
+    "explanation.pronoun.dropped-prefix": "The prefix {elidedPrefix} is elided in this form.",
     "explanation.pronoun.dropped-suffix": "The {elidedSuffix} nūn ending drops in the jussive and subjunctive.",
     "explanation.pronoun.prefix-and-suffix": "The {pronounLabel} uses {prefix} as prefix and {suffix} as suffix, giving {arabic}.",
     "explanation.pronoun.prefix-only": "The {pronounLabel} prefix is {prefix}, giving {arabic}.",

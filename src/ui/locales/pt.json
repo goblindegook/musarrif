@@ -333,7 +333,7 @@
     "explanation.nominal.passiveParticiple": "O particípio passivo (اسم المفعول) indica quem ou o que recebe a acção. Nas Formas II–X começa com مُـ. Na Forma I, o padrão mais comum é مَفْعُول.",
     "explanation.nominal.passiveParticiple.quad": "O particípio passivo (اسم المفعول) dos verbos quadriliterais começa sempre com مُـ. Na forma Iq, o padrão mais comum é مُفَعْلَل.",
     "explanation.pronoun.base-form": "{arabic} é a forma base.",
-    "explanation.pronoun.dropped-prefix": "O prefixo {elidedPrefix} é eliminado no imperativo.",
+    "explanation.pronoun.dropped-prefix": "O prefixo {elidedPrefix} é elidido nesta forma.",
     "explanation.pronoun.dropped-suffix": "A terminação nūn {elidedSuffix} cai no iussivo e no conjuntivo.",
     "explanation.pronoun.prefix-and-suffix": "A {pronounLabel} usa {prefix} como prefixo e {suffix} como sufixo, dando {arabic}.",
     "explanation.pronoun.prefix-only": "O prefixo da {pronounLabel} é {prefix}, dando {arabic}.",
