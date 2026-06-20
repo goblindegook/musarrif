@@ -429,6 +429,48 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
   })
 })
 
+// ── elided prefix / suffix extraction ─────────────────────────────────────
+
+describe('resolveVerbExplanationLayers elided extraction', () => {
+  const kataba = getVerb('كتب', 1)
+
+  test('imperative 2ms surfaces the dropped jussive prefix تَ, no suffix', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')).toMatchObject({
+      elidedPrefix: 'تَ',
+    })
+  })
+
+  test('jussive 3md surfaces the dropped dual noon نِ, no prefix', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'active.present.jussive', '3md', 'يَكْتُبَا')).toMatchObject({
+      elidedSuffix: 'نِ',
+    })
+  })
+
+  test('subjunctive 2fs surfaces the dropped noon نَ', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'active.present.subjunctive', '2fs', 'تَكْتُبِي')).toMatchObject({
+      elidedSuffix: 'نَ',
+    })
+  })
+})
+
+describe('renderExplanation elision prose', () => {
+  const kataba = getVerb('كتب', 1)
+
+  test('imperative 2ms explanation mentions the dropped prefix', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
+    const rendered = renderExplanation(layers, localeT).join(' ')
+    expect(rendered).toContain('prefix')
+    expect(rendered).toContain('dropped')
+  })
+
+  test('jussive 3md explanation mentions the dropped nūn ending', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.present.jussive', '3md', 'يَكْتُبَا')
+    const rendered = renderExplanation(layers, localeT).join(' ')
+    expect(rendered).toContain('nūn')
+    expect(rendered).toContain('drops')
+  })
+})
+
 describe('renderExplanation', () => {
   // Stub t() that echoes the key so we can assert key structure without locale files
   const t = (key: string) => key

@@ -104,6 +104,8 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   pronoun?: PronounId
   prefix?: string
   suffix?: string
+  elidedPrefix?: string
+  elidedSuffix?: string
 }
 
 export interface NominalExplanationLayers extends BaseExplanationLayers {
@@ -190,10 +192,21 @@ function renderPronounParagraph(
   const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
   const suffix = layers.suffix ? `ـ${layers.suffix}` : undefined
 
-  if (prefix && suffix) return t('explanation.pronoun.prefix-and-suffix', { ...params, prefix, suffix })
-  if (suffix) return t('explanation.pronoun.suffix-only', { ...params, suffix })
-  if (prefix) return t('explanation.pronoun.prefix-only', { ...params, prefix })
-  return t('explanation.pronoun.base-form', params)
+  const extra = [
+    layers.elidedPrefix &&
+      t('explanation.pronoun.dropped-prefix', { ...params, elidedPrefix: `${layers.elidedPrefix}ـ` }),
+    layers.elidedSuffix &&
+      t('explanation.pronoun.dropped-suffix', { ...params, elidedSuffix: `ـ${layers.elidedSuffix}` }),
+  ].filter(Boolean)
+
+  if (prefix && suffix)
+    return [t('explanation.pronoun.prefix-and-suffix', { ...params, prefix, suffix }), ...extra].join(' ')
+
+  if (prefix) return [t('explanation.pronoun.prefix-only', { ...params, prefix }), ...extra].join(' ')
+
+  if (suffix) return [t('explanation.pronoun.suffix-only', { ...params, suffix }), ...extra].join(' ')
+
+  return [t('explanation.pronoun.base-form', params), ...extra].join(' ')
 }
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
@@ -246,19 +259,31 @@ export function renderExplanation(
     .filter(Boolean)
 }
 
-function extractAffixes(morphemes: readonly Morpheme[]): { prefix?: string; suffix?: string } {
+function extractAffixes(morphemes: readonly Morpheme[]): {
+  prefix?: string
+  suffix?: string
+  elidedPrefix?: string
+  elidedSuffix?: string
+} {
   const stemRoles = ['radical', 'measure']
   const firstStemIdx = morphemes.findIndex((m) => stemRoles.includes(m.role))
   const lastStemIdx = morphemes.findLastIndex((m) => stemRoles.includes(m.role))
 
   if (firstStemIdx === -1) return {}
 
-  const pre = morphemes.slice(0, firstStemIdx).filter((m) => m.role !== 'elided')
-  const post = morphemes.slice(lastStemIdx + 1).filter((m) => m.role !== 'elided' && m.text !== 'ْ')
+  const preAll = morphemes.slice(0, firstStemIdx)
+  const postAll = morphemes.slice(lastStemIdx + 1).filter((m) => m.text !== 'ْ')
+
+  const pre = preAll.filter((m) => m.role !== 'elided')
+  const post = postAll.filter((m) => m.role !== 'elided')
+  const preElided = preAll.filter((m) => m.role === 'elided')
+  const postElided = postAll.filter((m) => m.role === 'elided')
 
   return {
     prefix: pre.length ? pre.map((m) => m.text).join('') : undefined,
     suffix: post.length ? post.map((m) => m.text).join('') : undefined,
+    elidedPrefix: preElided.length ? preElided.map((m) => m.text).join('') : undefined,
+    elidedSuffix: postElided.length ? postElided.map((m) => m.text).join('') : undefined,
   }
 }
 
@@ -272,7 +297,7 @@ export function resolveVerbExplanationLayers(
   const tense = verbTense
   const annotatedForm = annotate(verb, verbTense, pronoun)
   const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
-  const { prefix, suffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
+  const { prefix, suffix, elidedPrefix, elidedSuffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
   return {
     category: 'verb',
     paradigmRoots: Array.from(verb.root),
@@ -287,6 +312,8 @@ export function resolveVerbExplanationLayers(
     pronoun,
     prefix,
     suffix,
+    elidedPrefix,
+    elidedSuffix,
   }
 }
 

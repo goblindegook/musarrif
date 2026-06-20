@@ -333,6 +333,8 @@
     "explanation.nominal.passiveParticiple": "Il participio passivo (اسم المفعول) indica ciò che subisce l’azione. Nelle Forme II–X inizia con مُـ. Nella Forma I, il modello più comune è مَفْعُول.",
     "explanation.nominal.passiveParticiple.quad": "Il participio passivo (اسم المفعول) dei verbi quadriletterali inizia sempre con مُـ. Nella forma Iq, il modello più comune è مُفَعْلَل.",
     "explanation.pronoun.base-form": "{arabic} è la forma base.",
+    "explanation.pronoun.dropped-prefix": "Il prefisso {elidedPrefix} viene eliminato nell'imperativo.",
+    "explanation.pronoun.dropped-suffix": "La desinenza nūn {elidedSuffix} cade nel iussivo e nel congiuntivo.",
     "explanation.pronoun.prefix-and-suffix": "La {pronounLabel} usa {prefix} come prefisso e {suffix} come suffisso, dando {arabic}.",
     "explanation.pronoun.prefix-only": "Il prefisso della {pronounLabel} è {prefix}, dando {arabic}.",
     "explanation.pronoun.suffix-only": "Il suffisso della {pronounLabel} è {suffix}, dando {arabic}.",

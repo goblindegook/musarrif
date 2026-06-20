@@ -284,6 +284,8 @@
     "explanation.nominal.masdar.non-form-i": "مَصْدَرُ ٱلْبَابِ {form} عَلَى وَزْنِ {pattern}.",
     "explanation.nominal.passiveParticiple": "ٱسْمُ ٱلْمَفْعُولِ يَدُلُّ عَلَى مَا وَقَعَ عَلَيْهِ ٱلْفِعْلُ. فِي ٱلْأَبْوَابِ II–X يَبْدَأُ بِـ مُـ. أَمَّا فِي ٱلْبَابِ ٱلْأَوَّلِ فَٱلْوَزْنُ ٱلْأَشْهَرُ هُوَ مَفْعُول.",
     "explanation.pronoun.base-form": "{arabic} هُوَ ٱلشَّكْلُ ٱلْأَصْلِيُّ.",
+    "explanation.pronoun.dropped-prefix": "يُحذف المقطع {elidedPrefix} في صيغة الأمر.",
+    "explanation.pronoun.dropped-suffix": "تُحذف نون {elidedSuffix} في المجزوم والمنصوب.",
     "explanation.pronoun.prefix-and-suffix": "{pronounLabel}: ٱلْبَادِئَةُ {prefix} وَٱللَّاحِقَةُ {suffix}، فَيَنْتُجُ {arabic}.",
     "explanation.pronoun.prefix-only": "{pronounLabel}: ٱلْبَادِئَةُ {prefix}، فَيَنْتُجُ {arabic}.",
     "explanation.pronoun.suffix-only": "{pronounLabel}: ٱللَّاحِقَةُ {suffix}، فَيَنْتُجُ {arabic}.",
