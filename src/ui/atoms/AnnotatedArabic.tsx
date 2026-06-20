@@ -1,10 +1,15 @@
 import { styled } from 'goober'
-import type { Morpheme, MorphemeRole } from '../../paradigms/word'
+import type { Morpheme, MorphemeRole, Word } from '../../paradigms/word'
 
-export function AnnotatedArabic({ morphemes }: { morphemes: readonly Morpheme[] }) {
+export interface AnnotatedArabicProps {
+  morphemes?: readonly Morpheme[]
+  word?: Word
+}
+
+export function AnnotatedArabic({ morphemes = [], word }: AnnotatedArabicProps) {
   return (
     <>
-      {morphemes.map((morpheme, i) =>
+      {(word?.toMorphemes() ?? morphemes).map((morpheme, i) =>
         morpheme.role === 'elided' ? (
           <DroppedMorpheme key={`m-${i}`}>{morpheme.text}</DroppedMorpheme>
         ) : (

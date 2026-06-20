@@ -34,7 +34,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
               <Fragment key={masdar}>
                 <MasdarItem>
                   <span>
-                    <AnnotatedArabic morphemes={masdar.toMorphemes()} />
+                    <AnnotatedArabic word={masdar} />
                   </span>
                   {isTriliteralFormIDisplayVerb(verb) && verb.masdars?.[index] === 'mimi' && (
                     <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
@@ -48,9 +48,9 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
             ))}
           </MasdarList>
         ) : nominal === 'activeParticiple' ? (
-          <AnnotatedArabic morphemes={deriveActiveParticiple(verb).toMorphemes()} />
+          <AnnotatedArabic word={deriveActiveParticiple(verb)} />
         ) : nominal === 'passiveParticiple' ? (
-          <AnnotatedArabic morphemes={derivePassiveParticiple(verb).toMorphemes()} />
+          <AnnotatedArabic word={derivePassiveParticiple(verb)} />
         ) : null}
       </ArabicDisplay>
       <VerbContextSection>
