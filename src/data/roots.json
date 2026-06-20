@@ -812,8 +812,7 @@
   },
   {
     "root": "Erql",
-    "form": 1,
-    "masdars": ["fa3lala"]
+    "form": 1
   },
   {
     "root": "Erql",
@@ -1618,8 +1617,7 @@
   },
   {
     "root": "brhn",
-    "form": 1,
-    "masdars": ["fa3lala"]
+    "form": 1
   },
   {
     "root": "bry",
@@ -2354,8 +2352,7 @@
   },
   {
     "root": "klwr",
-    "form": 1,
-    "masdars": ["fa3lala"]
+    "form": 1
   },
   {
     "root": "kml",
@@ -2438,7 +2435,6 @@
   {
     "root": "l'l'",
     "form": 1,
-    "masdars": ["fa3lala"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -3658,7 +3654,6 @@
   {
     "root": "syTr",
     "form": 1,
-    "masdars": ["fa3lala"],
     "passiveVoice": "impersonal"
   },
   {
@@ -3730,8 +3725,7 @@
   },
   {
     "root": "trjm",
-    "form": 1,
-    "masdars": ["fa3lala"]
+    "form": 1
   },
   {
     "root": "trk",
@@ -4169,7 +4163,7 @@
   {
     "root": "wsws",
     "form": 1,
-    "masdars": ["fa3lala", "fa3aal", "fi3aal"],
+    "lexicalizedMasdars": ["wasowaAs", "wisowaAs"],
     "passiveVoice": "impersonal"
   },
   {

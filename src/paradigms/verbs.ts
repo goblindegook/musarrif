@@ -166,8 +166,6 @@ export const MASDAR_PATTERNS = [
   'fi3al', // inherent qualities
   // Mimi
   'mimi',
-  // Form Iq
-  'fa3lala',
 ] as const
 
 type RawVerb = {
