@@ -259,7 +259,7 @@ export function renderExplanation(
     .filter(Boolean)
 }
 
-function extractAffixes(morphemes: readonly Morpheme[]): {
+function extractAffixes(morphemes: readonly Morpheme[] = []): {
   prefix?: string
   suffix?: string
   elidedPrefix?: string
@@ -289,15 +289,12 @@ function extractAffixes(morphemes: readonly Morpheme[]): {
 
 export function resolveVerbExplanationLayers(
   verb: Verb,
-  verbTense: VerbTense,
+  tense: VerbTense,
   pronoun: PronounId,
   arabic: string,
 ): VerbExplanationLayers {
   const rootType = analyzeRoot(verb.rootTokens).type
-  const tense = verbTense
-  const annotatedForm = annotate(verb, verbTense, pronoun)
-  const finalStep = annotatedForm?.steps[annotatedForm.steps.length - 1]
-  const { prefix, suffix, elidedPrefix, elidedSuffix } = finalStep ? extractAffixes(finalStep.morphemes) : {}
+
   return {
     category: 'verb',
     paradigmRoots: Array.from(verb.root),
@@ -310,10 +307,7 @@ export function resolveVerbExplanationLayers(
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
-    prefix,
-    suffix,
-    elidedPrefix,
-    elidedSuffix,
+    ...extractAffixes(annotate(verb, tense, pronoun)?.steps.at(-1)?.morphemes),
   }
 }
 

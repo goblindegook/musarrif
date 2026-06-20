@@ -53,16 +53,13 @@ export const particleMorpheme = (...tokens: readonly Token[]): MorphemeToken => 
 
 export const agreementMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'agreement')
 
-export const elidedMorpheme = (...tokens: readonly Token[]): MorphemeToken => new MorphemeToken(tokens, 'elided')
-
 function hamzaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
-  const flatTokens = morphemes.flatMap((m) => [...m.tokens])
-  const seated = seatHamzas(flatTokens)
+  const seatedTokens = seatHamzas(morphemes.flatMap((m) => [...m.tokens]))
   let offset = 0
   return mergeAdjacent(
     morphemes.map((m) => {
       const count = m.tokens.length
-      const slice = seated.slice(offset, offset + count)
+      const slice = seatedTokens.slice(offset, offset + count)
       offset += count
       return new MorphemeToken(slice, m.role)
     }),
@@ -121,9 +118,9 @@ function shaddaPass(morphemes: readonly MorphemeToken[]): readonly MorphemeToken
 function mergeAdjacent(morphemes: readonly MorphemeToken[]): readonly MorphemeToken[] {
   const result: MorphemeToken[] = []
   for (const morpheme of morphemes) {
-    const last = result.at(-1)
-    if (last?.role === morpheme.role) {
-      result[result.length - 1] = new MorphemeToken([...last.tokens, ...morpheme.tokens], last.role)
+    const previous = result.at(-1)
+    if (previous?.role === morpheme.role) {
+      result[result.length - 1] = new MorphemeToken([...previous.tokens, ...morpheme.tokens], previous.role)
     } else {
       result.push(morpheme)
     }

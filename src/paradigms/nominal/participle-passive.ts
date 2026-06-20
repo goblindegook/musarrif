@@ -17,7 +17,7 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { type MorphemeToken, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { participleStem } from './participle-active'
 
@@ -81,7 +81,6 @@ export function derivePassiveParticiple(verb: Verb): Word {
 
     switch (verb.form) {
       case 1: {
-        if (!isTriliteralFormIVerb(verb)) return []
         const prefix: readonly MorphemeToken[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
 
         if (c3.isWeak)
