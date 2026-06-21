@@ -95,7 +95,8 @@ function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
       slots[i + 1].token.equals(SUKOON) &&
       slots[i].token.equals(slots[i + 2].token)
     ) {
-      result.push(new Morpheme([slots[i].token, SHADDA], slots[i].role))
+      result.push(new Morpheme([slots[i].token], slots[i].role))
+      result.push(new Morpheme([SHADDA], 'measure'))
       i += 3
     } else {
       result.push(new Morpheme([slots[i].token], slots[i].role))

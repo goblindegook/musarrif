@@ -58,7 +58,7 @@ describe('finalizeWord — madda pass', () => {
 })
 
 describe('finalizeWord — shadda/gemination pass', () => {
-  test('consonant + SUKOON + same-consonant collapses to consonant + SHADDA', () => {
+  test('consonant + SUKOON + same-consonant collapses to consonant + SHADDA in measure', () => {
     const w = new Word([
       radicalMorpheme(HAH),
       measureMorpheme(FATHA),
@@ -71,14 +71,17 @@ describe('finalizeWord — shadda/gemination pass', () => {
     expect(w.morphemes.map((m) => ({ text: m.toString(), role: m.role }))).toEqual([
       { text: 'ح', role: 'radical' },
       { text: 'َ', role: 'measure' },
-      { text: 'بّ', role: 'radical' },
-      { text: 'َ', role: 'measure' },
+      { text: 'ب', role: 'radical' },
+      { text: 'َّ', role: 'measure' },
     ])
   })
 
-  test('gemination across morpheme role boundary uses role of first consonant', () => {
+  test('SHADDA always placed in a measure morpheme regardless of adjacent roles', () => {
     const w = new Word([radicalMorpheme(BA), agreementMorpheme(SUKOON, BA)])
     expect(w.toString()).toBe('بّ')
-    expect(w.morphemes.map((m) => ({ text: m.toString(), role: m.role }))).toEqual([{ text: 'بّ', role: 'radical' }])
+    expect(w.morphemes.map((m) => ({ text: m.toString(), role: m.role }))).toEqual([
+      { text: 'ب', role: 'radical' },
+      { text: 'ّ', role: 'measure' },
+    ])
   })
 })

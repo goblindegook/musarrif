@@ -25,8 +25,8 @@ describe('annotatePassivePresentMood', () => {
             { text: 'اِسْتَ', role: 'measure' },
             { text: 'ح', role: 'radical' },
             { text: 'َ', role: 'measure' },
-            { text: 'بّ', role: 'radical' },
-            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
           ],
         },
         {

@@ -53,6 +53,9 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
       return [...stem, kasra]
 
     case 5:
+      if (c3.isWeak) return stem.slice(0, -1)
+      return [...stem, kasra]
+
     case 6:
       if (c3.isWeak) return [...stem.slice(0, -2), fatha]
       return [...stem, kasra]
@@ -100,6 +103,9 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
       return [...stem, damma]
 
     case 5:
+      if (c3.isWeak) return stem.slice(0, -1)
+      return [...stem, damma]
+
     case 6:
       if (c3.isWeak) return [...stem.slice(0, -2), fatha]
       return [...stem, damma]
@@ -434,6 +440,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
 
       if (
         c2.isWeak &&
+        verb.form !== 5 &&
         stem.some(
           (m, i) =>
             (m.role === 'measure' && m.tokens.some((t) => t.isWeak && (!ALIF.equals(t) || verb.form === 1))) ||
@@ -649,9 +656,7 @@ function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
       radicalMorpheme(c1),
       measureMorpheme(FATHA),
       radicalMorpheme(c2),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
+      measureMorpheme(SUKOON, c2, FATHA),
       radicalMorpheme(ALIF_MAQSURA),
     ]
 
@@ -660,9 +665,7 @@ function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
     radicalMorpheme(c1),
     measureMorpheme(FATHA),
     radicalMorpheme(c2),
-    measureMorpheme(SUKOON),
-    radicalMorpheme(c2),
-    measureMorpheme(FATHA),
+    measureMorpheme(SUKOON, c2, FATHA),
     radicalMorpheme(c3),
   ]
 }

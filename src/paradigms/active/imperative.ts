@@ -109,7 +109,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
         case 5: {
           const shaddaIndex = stem.findLastIndex((m) => m.contains(SHADDA))
-          return [...stem.slice(0, shaddaIndex - 1), measureMorpheme(FATHA), ...stem.slice(shaddaIndex)]
+          return [...stem.slice(0, shaddaIndex - 2), measureMorpheme(FATHA), ...stem.slice(shaddaIndex - 1)]
         }
 
         case 7:

@@ -78,8 +78,8 @@ describe('annotatePassivePast', () => {
           morphemes: [
             { text: 'ج', role: 'radical' },
             { text: 'َ', role: 'measure' },
-            { text: 'بّ', role: 'radical' },
-            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
           ],
         },
         {
@@ -88,8 +88,8 @@ describe('annotatePassivePast', () => {
           morphemes: [
             { text: 'ج', role: 'radical' },
             { text: 'ُ', role: 'measure' },
-            { text: 'بّ', role: 'radical' },
-            { text: 'َ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
           ],
         },
       ],
