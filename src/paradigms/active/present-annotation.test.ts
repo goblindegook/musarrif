@@ -866,6 +866,62 @@ describe('annotateActivePresentMood', () => {
     })
   })
 
+  test('jussive Form V defective — بقي (3ms) elided defective radical annotated', () => {
+    const result = annotateActivePresentMood(getVerb('بقي', 5), 'jussive', '3ms')
+
+    expect(detokenizeAnnotation(result)).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'بقي',
+          morphemes: [
+            { text: 'ب', role: 'radical' },
+            { text: 'ق', role: 'radical' },
+            { text: 'ي', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 5 },
+          arabic: 'تَبَقَّى',
+          morphemes: [
+            { text: 'تَ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ق', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ى', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.present.indicative' },
+          arabic: 'يَتَبَقَّى',
+          morphemes: [
+            { text: 'يَ', role: 'agreement' },
+            { text: 'تَ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ق', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ى', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.present.jussive' },
+          arabic: 'يَتَبَقَّ',
+          morphemes: [
+            { text: 'يَ', role: 'agreement' },
+            { text: 'تَ', role: 'measure' },
+            { text: 'ب', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ق', role: 'radical' },
+            { text: 'َّ', role: 'measure' },
+            { text: 'ى', role: 'elided' },
+          ],
+        },
+      ],
+    })
+  })
+
   test('jussive Form I — كتب (3md) dropped noon annotated', () => {
     const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '3md')
 

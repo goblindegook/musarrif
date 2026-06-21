@@ -11,12 +11,16 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
     const moodConjugation = conjugatePresentMood(verb, mood)[pronounId]
-    const elidedNoon = isDual(pronounId)
-      ? [NOON, KASRA]
-      : pronounId === '2fs' || isMasculinePlural(pronounId)
-        ? [NOON, FATHA]
-        : null
-    const elision = elidedNoon ? [elidedMorpheme(...elidedNoon)] : []
+    const elision = []
+
+    if (isDual(pronounId)) elision.push(elidedMorpheme(NOON, KASRA))
+
+    if (pronounId === '2fs' || isMasculinePlural(pronounId)) elision.push(elidedMorpheme(NOON, FATHA))
+
+    const finalIndicativeMorpheme = indicativeAnnotation.steps.at(-1)?.morphemes.at(-1)
+    if (mood === 'jussive' && finalIndicativeMorpheme?.role === 'radical' && finalIndicativeMorpheme.tokens[0].isWeak)
+      elision.push(elidedMorpheme(...finalIndicativeMorpheme.tokens))
+
     return {
       steps: [
         ...indicativeAnnotation.steps,
