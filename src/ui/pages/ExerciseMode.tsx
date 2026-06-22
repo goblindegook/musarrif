@@ -240,7 +240,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     recordSrsAnswer(exercise.cardKey, 'pass')
     recordResult('passed')
     setSkipped(true)
-  }, [exercise, srsStore, recordSrsAnswer, recordResult])
+  }, [exercise.cardKey, recordSrsAnswer, recordResult, setSkipped])
 
   useEffect(() => {
     if (!isAnswered) return
@@ -305,13 +305,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
               <Alerts>
                 {dimensionChanges.map((change, index) =>
                   change.type === 'promotion' ? (
-                    <SuccessAlert
-                      key={`${exercise.cardKey}-change-${index}`}
-                      role="status"
-                      aria-live="polite"
-                      lang={lang}
-                      dir={dir}
-                    >
+                    <SuccessAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.unlock.line', {
                           dimension: t(`exercise.unlock.dimension.${change.dimension}`),
@@ -320,13 +314,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                       </Text>
                     </SuccessAlert>
                   ) : (
-                    <WarningAlert
-                      key={`${exercise.cardKey}-change-${index}`}
-                      role="status"
-                      aria-live="polite"
-                      lang={lang}
-                      dir={dir}
-                    >
+                    <WarningAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.demotion.line', {
                           dimension: t(`exercise.unlock.dimension.${change.dimension}`),
@@ -337,13 +325,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                   ),
                 )}
                 {streakExtendedAlert && (
-                  <StreakAlert
-                    key={`${exercise.cardKey}-streak`}
-                    role="status"
-                    aria-live="polite"
-                    lang={lang}
-                    dir={dir}
-                  >
+                  <StreakAlert key={`${exercise.cardKey}-streak`} lang={lang} dir={dir}>
                     <Text>{t('exercise.streak.extended')}</Text>
                   </StreakAlert>
                 )}
@@ -466,7 +448,7 @@ const Alerts = styled('div')`
   gap: 0.5rem;
 `
 
-const SuccessAlert = styled('aside')`
+const SuccessAlert = styled('output')`
   background: var(--color-success-bg);
   border: 2px solid var(--color-success-border);
   color: var(--color-success-text);
@@ -479,7 +461,7 @@ const SuccessAlert = styled('aside')`
   }
 `
 
-const WarningAlert = styled('aside')`
+const WarningAlert = styled('output')`
   background: var(--color-warning-bg);
   border: 2px solid var(--color-warning-border);
   color: var(--color-warning-text);
@@ -492,7 +474,7 @@ const WarningAlert = styled('aside')`
   }
 `
 
-const StreakAlert = styled('aside')`
+const StreakAlert = styled('output')`
   background: var(--color-streak-bg);
   border: 2px solid var(--color-accent);
   color: var(--color-streak-text);
