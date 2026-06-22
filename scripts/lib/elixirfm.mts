@@ -1,8 +1,6 @@
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
-const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
-
 const PARADIGM_PREFIXES: Record<Exclude<VerbParadigm, 'active imperative'>, string> = {
   'active past': 'VP-A-',
   'active present indicative': 'VIIA-',
@@ -111,7 +109,7 @@ function mergeParadigmPrefix(
 }
 
 async function postElixir(params: Record<string, string>): Promise<string> {
-  const response = await fetch(ELIXIR_URL, {
+  const response = await fetch('https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(params).toString(),

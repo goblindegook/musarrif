@@ -184,7 +184,8 @@ describe('fetchParadigms', () => {
     expect(requestHeaders).toEqual({
       accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       acceptLanguage: 'en',
-      userAgent: 'musarrif-wiktionary-script/1.0 (+https://github.com/goblindegook/musarrif)',
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
     })
   })
 

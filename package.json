@@ -20,10 +20,11 @@
     "format": "npm run lint:fix && biome format --write .",
     "add:verb": "tsx scripts/verb.mts",
     "add:tests:elixirfm": "tsx scripts/elixirfm.mts",
+    "add:tests:reverso": "tsx scripts/reverso.mts",
     "add:tests:wiktionary": "tsx scripts/wiktionary.mts",
+    "debug:elixirfm": "tsx scripts/debug-elixirfm.mts",
     "debug:explain": "tsx scripts/debug-explain.mts",
     "debug:srs": "tsx scripts/debug-srs.mts",
-    "debug:elixirfm": "tsx scripts/debug-elixirfm.mts",
     "report:srs": "tsx scripts/report-srs.mts"
   },
   "dependencies": {

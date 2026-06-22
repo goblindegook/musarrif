@@ -1,15 +1,16 @@
 import { JSDOM } from 'jsdom'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
-const WIKTIONARY_HEADERS = {
-  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'accept-language': 'en',
-  'user-agent': 'musarrif-wiktionary-script/1.0 (+https://github.com/goblindegook/musarrif)',
-}
-
 async function fetchHtml(title: string): Promise<string> {
   const url = `https://en.wiktionary.org/wiki/${encodeURIComponent(title)}`
-  const response = await fetch(url, { headers: WIKTIONARY_HEADERS })
+  const response = await fetch(url, {
+    headers: {
+      accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'accept-language': 'en',
+      'user-agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
+    },
+  })
   if (response.ok) return response.text()
   throw new Error(`Failed to fetch Wiktionary page (${response.status}): ${url}`)
 }
