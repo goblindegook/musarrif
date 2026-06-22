@@ -472,7 +472,7 @@ function printDimensionUnlocks(dimensions: LoadedDimensions) {
 async function run() {
   const filePath = process.argv[2]
   if (filePath == null) {
-    console.error('Usage: npm run srs -- <file>')
+    console.error('Usage: npm run debug:srs -- <path/to/user-data.musarrif>')
     process.exit(1)
   }
 
