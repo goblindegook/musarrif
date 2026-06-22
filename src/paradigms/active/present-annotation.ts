@@ -2,7 +2,7 @@ import type { AnnotatedForm, DerivationStep } from '../annotation'
 import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON, type Token } from '../tokens'
-import type { Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { elidedMorpheme } from '../word'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'
@@ -18,8 +18,12 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     if (pronounId === '2fs' || isMasculinePlural(pronounId)) elision.push(elidedMorpheme(NOON, FATHA))
 
     const finalIndicativeMorpheme = indicativeAnnotation.steps.at(-1)?.morphemes.at(-1)
-    if (mood === 'jussive' && finalIndicativeMorpheme?.role === 'radical' && finalIndicativeMorpheme.tokens[0].isWeak)
-      elision.push(elidedMorpheme(...finalIndicativeMorpheme.tokens))
+    if (
+      mood === 'jussive' &&
+      finalIndicativeMorpheme?.role === 'radical' &&
+      finalIndicativeMorpheme.contains((t) => t.isWeak)
+    )
+      elision.push(finalIndicativeMorpheme.toElided())
 
     return {
       steps: [
@@ -63,7 +67,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
 }
 
 function elidedPastPrefix(verb: Verb): readonly Token[] | null {
-  if (verb.root.length !== 3) return null
+  if (isQuadriliteralVerb(verb)) return null
   if (verb.form === 4) return [ALIF_HAMZA, FATHA]
   if (verb.form === 10) return [ALIF, KASRA]
   return null

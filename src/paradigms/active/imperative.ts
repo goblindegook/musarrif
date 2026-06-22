@@ -84,7 +84,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
           if (c3.equals(WAW) && isPatternU && pronounId === '2d')
             return [measureMorpheme(ALIF, DAMMA), ...stem.slice(0, -2), measureMorpheme(FATHA, ALIF)]
 
-          if (c3.equals(WAW) && stem.at(-1)?.contains(ALIF) && !isPatternU) return stem
+          if (c3.equals(WAW) && stem.at(-1)?.containsToken(ALIF) && !isPatternU) return stem
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:
           if (stem.at(1)?.tokens.at(0)?.equals(SUKOON))
@@ -108,7 +108,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 5: {
-          const shaddaIndex = stem.findLastIndex((m) => m.contains(SHADDA))
+          const shaddaIndex = stem.findLastIndex((m) => m.containsToken(SHADDA))
           return [...stem.slice(0, shaddaIndex - 2), measureMorpheme(FATHA), ...stem.slice(shaddaIndex - 1)]
         }
 
@@ -130,7 +130,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 }
 
 function restoreWeakLetterBeforeAlif(stem: readonly Morpheme[]): readonly Morpheme[] {
-  if (stem.at(-2)?.contains(YEH)) return stem
+  if (stem.at(-2)?.containsToken(YEH)) return stem
   const final = stem.at(-1)
   if (final?.tokens.at(0)?.equals(FATHA)) return stem.with(-1, agreementMorpheme(KASRA, YEH, FATHA, ALIF))
   return stem.with(-1, agreementMorpheme(YEH, FATHA, ALIF))

@@ -16,8 +16,20 @@ export class Morpheme {
     return this.tokens.map(String).join('').normalize('NFC')
   }
 
-  contains(token: Token): boolean {
-    return this.tokens.some((t) => t.equals(token))
+  containsToken(token: Token): boolean {
+    return this.contains((t) => t.equals(token))
+  }
+
+  contains(predicate: (t: Token) => boolean): boolean {
+    return this.tokens.some(predicate)
+  }
+
+  with(index: number, value: Token): Morpheme {
+    return new Morpheme(this.tokens.with(index, value), this.role)
+  }
+
+  toElided(): Morpheme {
+    return new Morpheme(this.tokens, 'elided')
   }
 }
 

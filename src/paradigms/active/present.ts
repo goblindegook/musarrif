@@ -43,7 +43,7 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
     case 1:
       if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), fatha]
       if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), kasra]
-      if (c3.isWeak) return [...stem.with(-1, kasra)]
+      if (c3.isWeak) return stem.with(-1, kasra)
       return [...stem, kasra]
 
     case 2:
@@ -89,7 +89,7 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
       if (c2.isHamza && c3.isWeak) return [...stem.slice(0, -2), damma]
       if (c1.isWeak && c3.isWeak) return stem.slice(0, -2)
       if (c3.equals(WAW)) return [...stem.slice(0, -2), damma]
-      if (c3.isWeak) return [...stem.with(-1, damma)]
+      if (c3.isWeak) return stem.with(-1, damma)
       return [...stem, damma]
 
     case 2:
@@ -340,7 +340,7 @@ function dropTrailingNoon(morphemes: readonly Morpheme[]): readonly Morpheme[] {
       0,
       last.tokens.findLastIndex((t) => t.equals(NOON)),
     ) ?? []
-  return [...morphemes.with(-1, agreementMorpheme(...keptTokens))]
+  return morphemes.with(-1, agreementMorpheme(...keptTokens))
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
@@ -353,37 +353,34 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]
     '2fs':
       verb.form === 7 && c2.isWeak && c3.isWeak
         ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH)]
-        : [
-            ...indicative['2fs'].with(
-              -1,
-              c3.isWeak && ((isTriliteralFormIVerb(verb) && isFormIPresentVowel(verb, FATHA)) || verb.form === 6)
-                ? agreementMorpheme(YEH, SUKOON)
-                : agreementMorpheme(YEH),
-            ),
-          ],
+        : indicative['2fs'].with(
+            -1,
+            c3.isWeak && ((isTriliteralFormIVerb(verb) && isFormIPresentVowel(verb, FATHA)) || verb.form === 6)
+              ? agreementMorpheme(YEH, SUKOON)
+              : agreementMorpheme(YEH),
+          ),
     '3ms': defaultSubjunctiveForm(indicative['3ms']),
     '3fs': defaultSubjunctiveForm(indicative['3fs']),
-    '2d': [...indicative['2d'].with(-1, agreementMorpheme(FATHA, ALIF))],
-    '3md': [...indicative['3md'].with(-1, agreementMorpheme(FATHA, ALIF))],
-    '3fd': [...indicative['3fd'].with(-1, agreementMorpheme(FATHA, ALIF))],
+    '2d': indicative['2d'].with(-1, agreementMorpheme(FATHA, ALIF)),
+    '3md': indicative['3md'].with(-1, agreementMorpheme(FATHA, ALIF)),
+    '3fd': indicative['3fd'].with(-1, agreementMorpheme(FATHA, ALIF)),
     '1p': defaultSubjunctiveForm(indicative['1p']),
-    '2mp': [...indicative['2mp'].with(-1, agreementMorpheme(WAW, ALIF))],
+    '2mp': indicative['2mp'].with(-1, agreementMorpheme(WAW, ALIF)),
     '2fp': indicative['2fp'],
-    '3mp': [...indicative['3mp'].with(-1, agreementMorpheme(WAW, ALIF))],
+    '3mp': indicative['3mp'].with(-1, agreementMorpheme(WAW, ALIF)),
     '3fp': indicative['3fp'],
   }
 }
 
-const defaultSubjunctiveForm = (morphemes: readonly Morpheme[]): readonly Morpheme[] => {
-  const finalMorpheme = morphemes.at(-1)?.tokens
-  const finalToken = finalMorpheme?.at(-1)
+const defaultSubjunctiveForm = (stem: readonly Morpheme[]): readonly Morpheme[] => {
+  const finalMorpheme = stem.at(-1)
+  const finalToken = finalMorpheme?.tokens.at(-1)
 
-  if (finalToken?.equals(DAMMA))
-    return [...morphemes.with(-1, agreementMorpheme(...(finalMorpheme?.with(-1, FATHA) ?? [])))]
+  if (finalMorpheme && finalToken?.equals(DAMMA)) return stem.with(-1, finalMorpheme.with(-1, FATHA))
 
-  if (finalToken?.equals(ALIF_MAQSURA)) return morphemes
+  if (finalToken?.equals(ALIF_MAQSURA)) return stem
 
-  return [...morphemes, agreementMorpheme(FATHA)]
+  return [...stem, agreementMorpheme(FATHA)]
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
@@ -393,19 +390,19 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     c3.isWeak && ((isTriliteralFormIVerb(verb) && isFormIPresentVowel(verb, FATHA)) || verb.form === 5)
 
   return mapRecord(deriveIndicativeForms(verb), (morphemes, pronounId) => {
-    const finalizedIndicative = new Word(morphemes).morphemes
+    const indicativeStem = new Word(morphemes).morphemes
     const stem = morphemes.slice(0, -1)
     const final = morphemes.at(-1)
     const finalToken = final?.tokens.at(-1)
 
     if (isDual(pronounId)) {
-      const base = dropTrailingNoon(finalizedIndicative)
+      const base = dropTrailingNoon(indicativeStem)
 
       if (verb.form === 5 && c3.isWeak) return base
       if (c2.isHamza || c2.isWeak || c3.isHamza) return base
-      if (base.at(-2)?.contains(WAW)) return base.with(-1, agreementMorpheme(ALIF))
+      if (base.at(-2)?.containsToken(WAW)) return base.with(-1, agreementMorpheme(ALIF))
       if ([1, 4].includes(verb.form)) return base
-      if (base.at(-2)?.contains(YEH)) return [...base.slice(0, -2), agreementMorpheme(ALIF)]
+      if (base.at(-2)?.containsToken(YEH)) return [...base.slice(0, -2), agreementMorpheme(ALIF)]
 
       return [...stem, c3.equals(WAW) ? agreementMorpheme(ALIF) : agreementMorpheme(FATHA, ALIF)]
     }
@@ -415,15 +412,15 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
         (isTriliteralFormIVerb(verb) && c3.isWeak && isFormIPresentVowel(verb, FATHA)) ||
         (verb.form === 5 && c3.isWeak)
       ) {
-        const base = dropTrailingNoon(finalizedIndicative)
+        const base = dropTrailingNoon(indicativeStem)
         return base.with(-1, agreementMorpheme(...(base.at(-1)?.tokens ?? []), ALIF))
       }
 
-      return [...finalizedIndicative.with(-1, agreementMorpheme(DAMMA, WAW, ALIF))]
+      return indicativeStem.with(-1, agreementMorpheme(DAMMA, WAW, ALIF))
     }
 
     if (pronounId === '2fs') {
-      if (verb.form === 7 && c3.isWeak) return [...stem.with(-1, agreementMorpheme(KASRA, YEH))]
+      if (verb.form === 7 && c3.isWeak) return stem.with(-1, agreementMorpheme(KASRA, YEH))
       return fathaDefective ? [...stem, agreementMorpheme(YEH, SUKOON)] : [...stem, agreementMorpheme(YEH)]
     }
 
@@ -449,14 +446,16 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
       )
         return [...shortenHollowStemMorphemes(stem), agreementMorpheme(SUKOON)]
 
-      if (c3.isWeak && stem.at(-1)?.tokens.some((t) => t.isWeak)) return stem.slice(0, -1)
+      if (c3.isWeak && stem.at(-1)?.contains((t) => t.isWeak)) return stem.slice(0, -1)
 
-      return [...stem, agreementMorpheme(...(final?.tokens.with(-1, geminateJussiveFatha ? FATHA : SUKOON) ?? []))]
+      if (final) return [...stem, final.with(-1, geminateJussiveFatha ? FATHA : SUKOON)]
+
+      return stem
     }
 
-    const last = finalizedIndicative.at(-1)
-    if (!last?.tokens.at(-1)?.isWeak) return finalizedIndicative
-    return finalizedIndicative.with(-1, agreementMorpheme(...last.tokens.slice(0, -1)))
+    const last = indicativeStem.at(-1)
+    if (!last?.tokens.at(-1)?.isWeak) return indicativeStem
+    return indicativeStem.with(-1, agreementMorpheme(...last.tokens.slice(0, -1)))
   })
 }
 
