@@ -42,7 +42,7 @@ const REVERSO_HTML = `
 </div>
 <div class="blue-box-wrap" mobile-title="Verbal noun ">
   <ul class="wrap-verbs-listing">
-    <li><div><i h="1"><i class="verbtxt-term">كِتَابَة/كَتْب/كِتَاب</i></i></div></li>
+    <li><div><i h="1"><i class="verbtxt-term">كِتَابَة<span class="variants">/كَتْب/كِتَاب</span></i></i></div></li>
   </ul>
 </div>
 `
@@ -130,10 +130,10 @@ describe('fetchParadigms', () => {
     })
   })
 
-  test('picks the first slash-separated alternative within a conjugation cell', async () => {
+  test('ignores variants span in conjugation cells', async () => {
     const htmlWithAlternatives = REVERSO_HTML.replace(
       '<i class="verbtxt-term">كَتَبْتُ</i>',
-      '<i class="verbtxt-term">كَتَبْتُ/كَتَبْتُ alt</i>',
+      '<i class="verbtxt-term">كَتَبْتُ<span class="variants">/alt1/alt2</span></i>',
     )
 
     server.use(
