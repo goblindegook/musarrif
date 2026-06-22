@@ -21,9 +21,9 @@
     "add:verb": "tsx scripts/verb.mts",
     "add:tests:elixirfm": "tsx scripts/elixirfm.mts",
     "add:tests:wiktionary": "tsx scripts/wiktionary.mts",
-    "debug:explain": "tsx scripts/explain.mts",
-    "debug:srs": "tsx scripts/srs.mts",
-    "debug:elixirfm": "tsx scripts/elixirfm-compare.mts",
+    "debug:explain": "tsx scripts/debug-explain.mts",
+    "debug:srs": "tsx scripts/debug-srs.mts",
+    "debug:elixirfm": "tsx scripts/debug-elixirfm.mts",
     "report:srs": "tsx scripts/report-srs.mts"
   },
   "dependencies": {
