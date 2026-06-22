@@ -338,6 +338,53 @@ describe('nextExercise', () => {
       expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
     })
 
+    test('freezes overdue reviews to cards with the focused tense when backlog is present', () => {
+      const randomSpy = vi.spyOn(Math, 'random')
+      randomSpy.mockReturnValueOnce(0.5)
+      randomSpy.mockReturnValueOnce(0.999)
+
+      const store = {
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'conjugation:sound:1:active.present.indicative:3ms': {
+          interval: 1,
+          ef: 2.5,
+          repetitions: 1,
+          dueDate: '2026-03-23',
+        },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      }
+
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { tense: 'active.past' },
+      )
+
+      expect(exercise.cardKey).toBe('conjugation:sound:1:active.past:3ms')
+    })
+
+    test('freezes overdue reviews to cards with the focused pronoun when backlog is present', () => {
+      const randomSpy = vi.spyOn(Math, 'random')
+      randomSpy.mockReturnValueOnce(0.5)
+      randomSpy.mockReturnValueOnce(0.999)
+
+      const store = {
+        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      }
+
+      const exercise = nextExercise(
+        { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+        store,
+        { reviews: 0, lastNewAt: 0 },
+        { pronoun: '1s' },
+      )
+
+      expect(exercise.cardKey).toBe('conjugation:sound:1:active.past:1s')
+    })
+
     test('routes to pinned root type when random < 0.75 and pinned due cards exist', () => {
       vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
       const store = {

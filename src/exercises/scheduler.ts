@@ -86,7 +86,9 @@ export function nextExercise(
   const overdueEntries = availableEntries.filter(([, { dueDate }]) => dueDate <= today)
   const overdueCount = overdueEntries.length
   const backlogPolicy = getBacklogPolicy(overdueCount)
-  const focusedDueKeys = overdueEntries.filter(([key]) => isInFocus(parseCardKey(key), activeFocus)).map(([key]) => key)
+  const focusedDueKeys = overdueEntries
+    .filter(([key]) => isDueCardInFocus(parseCardKey(key), activeFocus, backlogPolicy.freezeBreadth))
+    .map(([key]) => key)
   const dueKeys =
     focusedDueKeys.length > 0 || !backlogPolicy.freezeBreadth ? focusedDueKeys : overdueEntries.map(([key]) => key)
 
@@ -135,6 +137,14 @@ function isInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFocus): bo
   if (focus.tense != null && card.tense != null && card.tense !== focus.tense) return false
   if (focus.rootType != null && card.rootType !== focus.rootType) return false
   if (focus.pronoun != null && card.pronoun != null && card.pronoun !== focus.pronoun) return false
+  return true
+}
+
+function isDueCardInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFocus, freezeBreadth: boolean): boolean {
+  if (!isInFocus(card, focus)) return false
+  if (!freezeBreadth) return true
+  if (focus.tense && card.tense == null) return false
+  if (focus.pronoun && card.pronoun == null) return false
   return true
 }
 

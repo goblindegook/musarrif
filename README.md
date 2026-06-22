@@ -154,25 +154,24 @@ Before adding verbs, verify from lexical sources:
 
 Keep locale updates atomic with verb entry changes.
 
-## Wiktionary Test Generator
+## Test Generators
 
-Generate a paradigm test file from an Arabic Wiktionary conjugation entry:
+Generate a paradigm test file at `src/paradigms/verbs/<slug>.test.ts`:
 
 ```bash
+npm run add:tests:elixirfm -- ktb-1
+npm run add:tests:reverso -- ktb-1
 npm run add:tests:wiktionary -- ktb-1
 ```
 
-This script:
-
-- Resolves the slug to its conjugated lemma
-- Fetches the corresponding Wiktionary page
-- Parses Arabic conjugation tables and nominals
-- Writes a test file at `src/paradigms/verbs/<slug>.test.ts`
+- `add:tests:elixirfm`: Resolves the slug to a verb/form and fetches paradigms from ElixirFM.
+- `add:tests:reverso`: Resolves the slug to a lemma and fetches paradigms from Reverso.
+- `add:tests:wiktionary`: Resolves the slug to a lemma/root and fetches paradigms from Wiktionary.
 
 Usage notes:
 
 - Slug format is `<root>-<form>` (example: `ktb-1`)
-- If the slug contains an apostrophe, quote it in the shell (example: `npm run wiktionary -- "qr'-1"`)
+- If the slug contains an apostrophe, quote it in the shell (example: `npm run add:tests:wiktionary -- "qr'-1"`)
 
 ## Reporting Incorrect Conjugations
 
