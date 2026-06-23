@@ -2002,6 +2002,25 @@
     "form": 10
   },
   {
+    "root": "grb",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "grb",
+    "form": 2
+  },
+  {
+    "root": "grb",
+    "form": 8
+  },
+  {
+    "root": "grb",
+    "form": 10
+  },
+  {
     "root": "grq",
     "form": 10
   },
