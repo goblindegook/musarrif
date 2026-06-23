@@ -10,7 +10,7 @@ import {
   type Recommendation,
 } from '../src/exercises/mastery.ts'
 import type { SrsCard, SrsStore } from '../src/exercises/srs.ts'
-import { getSrsCards, parseSrsStore } from '../src/exercises/srs.ts'
+import { getSrsCards, parseSrsStore, utcAddDays } from '../src/exercises/srs.ts'
 import { isDual, isFemininePlural, isMasculinePlural } from '../src/paradigms/pronouns.ts'
 import { utcToday } from '../src/primitives/dates.ts'
 import { parseInteger, toRoman } from '../src/primitives/numbers.ts'
@@ -69,6 +69,23 @@ function countByEf(cs: readonly SrsCard[]): Record<string, number> {
 }
 const allEfBuckets = countByEf(cards)
 const overdueEfBuckets = countByEf(overdueCards)
+
+type DueBucket = 'overdue' | 'today' | 'tomorrow' | 'next7' | 'next30' | 'next365' | 'future'
+
+function dueBucket(today: string, dueDate: string): DueBucket {
+  if (dueDate < today) return 'overdue'
+  if (dueDate === today) return 'today'
+  if (dueDate === utcAddDays(today, 1)) return 'tomorrow'
+  if (dueDate <= utcAddDays(today, 7)) return 'next7'
+  if (dueDate <= utcAddDays(today, 30)) return 'next30'
+  if (dueDate <= utcAddDays(today, 365)) return 'next365'
+  return 'future'
+}
+
+const dueBucketCounts: Record<DueBucket, number> = {
+  overdue: 0, today: 0, tomorrow: 0, next7: 0, next30: 0, next365: 0, future: 0,
+}
+for (const card of cards) dueBucketCounts[dueBucket(today, card.dueDate)] += 1
 
 const sortedOverdue = [...overdueCards].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
 const oldestDaysAgo = sortedOverdue[0] ? daysDiff(sortedOverdue[0].dueDate, today) : 0
@@ -499,6 +516,15 @@ ${barRow('ef 1.3 — struggling', allEfBuckets['1.3'], cards.length, 'var(--red)
     })
     .join('\n  ')}
 </div>
+
+<h2>Due date distribution — all ${cards.length} cards</h2>
+${barRow('overdue', dueBucketCounts.overdue, cards.length, 'var(--red)')}
+${barRow('today', dueBucketCounts.today, cards.length, 'var(--amber)')}
+${barRow('tomorrow', dueBucketCounts.tomorrow, cards.length, 'var(--blue)')}
+${barRow('next 7 days', dueBucketCounts.next7, cards.length, 'var(--blue)')}
+${barRow('next 30 days', dueBucketCounts.next30, cards.length, 'var(--green)')}
+${barRow('next 365 days', dueBucketCounts.next365, cards.length, 'var(--green)')}
+${barRow('future (1y+)', dueBucketCounts.future, cards.length, 'var(--muted)')}
 
 <h2>Overdue backlog</h2>
 <div class="metric-grid-3">

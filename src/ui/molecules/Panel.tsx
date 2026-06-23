@@ -151,6 +151,7 @@ const Hint = styled('span')`
   text-overflow: ellipsis;
   flex: 0 1 12rem;
   min-width: 0;
+  max-width: 12rem;
 `
 
 const PanelBody = styled('div')`
