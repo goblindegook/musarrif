@@ -83,7 +83,13 @@ function dueBucket(today: string, dueDate: string): DueBucket {
 }
 
 const dueBucketCounts: Record<DueBucket, number> = {
-  overdue: 0, today: 0, tomorrow: 0, next7: 0, next30: 0, next365: 0, future: 0,
+  overdue: 0,
+  today: 0,
+  tomorrow: 0,
+  next7: 0,
+  next30: 0,
+  next365: 0,
+  future: 0,
 }
 for (const card of cards) dueBucketCounts[dueBucket(today, card.dueDate)] += 1
 
