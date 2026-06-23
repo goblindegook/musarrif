@@ -159,14 +159,32 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       )
     }
 
+    if (dimensionProfile.nominals >= 2)
+      groups.push(
+        groupOption('nominal', [
+          {
+            value: 'nominals.participles' as MasteryItemId,
+            label: t('exercise.stats.mastery.nominal.participles'),
+            ...itemOption(t('exercise.stats.mastery.nominal.participles'), 'nominals.participles'),
+          },
+          {
+            value: 'nominals.masdar' as MasteryItemId,
+            label: t('exercise.stats.mastery.nominal.masdar'),
+            ...itemOption(t('exercise.stats.mastery.nominal.masdar'), 'nominals.masdar'),
+          },
+        ]),
+      )
+
     return groups
   }, [mastery, dimensionProfile, t])
 
   const focusOptionValue = useMemo((): OptionValue<MasteryItemId> | null => {
-    if (activeFocus.form) return { groupKey: 'form', value: `forms.${activeFocus.form}` }
-    if (activeFocus.tense) return { groupKey: 'tense', value: `tenses.${activeFocus.tense}` }
-    if (activeFocus.rootType) return { groupKey: 'rootType', value: `rootTypes.${activeFocus.rootType}` }
-    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: `pronouns.${activeFocus.pronoun}` }
+    if (activeFocus.form) return { groupKey: 'form', value: `forms.${activeFocus.form}` as MasteryItemId }
+    if (activeFocus.tense) return { groupKey: 'tense', value: `tenses.${activeFocus.tense}` as MasteryItemId }
+    if (activeFocus.rootType)
+      return { groupKey: 'rootType', value: `rootTypes.${activeFocus.rootType}` as MasteryItemId }
+    if (activeFocus.pronoun) return { groupKey: 'pronoun', value: `pronouns.${activeFocus.pronoun}` as MasteryItemId }
+    if (activeFocus.nominal) return { groupKey: 'nominal', value: `nominals.${activeFocus.nominal}` as MasteryItemId }
     return null
   }, [activeFocus])
 
@@ -191,6 +209,9 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           break
         case 'pronouns':
           setActiveFocus({ pronoun: selected.value as ExerciseFocus['pronoun'] })
+          break
+        case 'nominals':
+          setActiveFocus({ nominal: selected.value as ExerciseFocus['nominal'] })
           break
       }
     },

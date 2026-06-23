@@ -831,4 +831,42 @@ describe('focus chip', () => {
 
     expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), {})
   })
+
+  function nominals2Profile() {
+    // nominals: 2 requires tenses >= 2, pronouns >= 2, forms = MAX (9)
+    return JSON.stringify({
+      profile: { tenses: 2, pronouns: 2, diacritics: 0, forms: 9, rootTypes: 0, nominals: 2 },
+      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+    })
+  }
+
+  test('Nominal group appears in picker when nominals: 2 with valid prerequisites', () => {
+    localStorage.setItem('conjugator:dimensions', nominals2Profile())
+    renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    expect(screen.getByText('Nominal', { selector: 'button' })).toBeInTheDocument()
+  })
+
+  test('picker shows participles and masdar options after selecting Nominal group', () => {
+    localStorage.setItem('conjugator:dimensions', nominals2Profile())
+    renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Nominal', { selector: 'button' }))
+    expect(screen.getByText('Participles', { selector: 'button' })).toBeInTheDocument()
+    expect(screen.getByText('Verbal nouns', { selector: 'button' })).toBeInTheDocument()
+  })
+
+  test('passes nominal focus to generateExercise after selecting masdar', () => {
+    localStorage.setItem('conjugator:dimensions', nominals2Profile())
+    const gen = vi.fn().mockReturnValue(testExercise())
+    renderWithProviders(<ExerciseMode generateExercise={gen} />)
+
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Nominal', { selector: 'button' }))
+    fireEvent.click(screen.getByText('Verbal nouns', { selector: 'button' }))
+    fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
+    fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
+
+    expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { nominal: 'masdar' })
+  })
 })

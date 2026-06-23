@@ -106,6 +106,8 @@
     "exercise.focus.rootType.pickerTitle": "Select root type",
     "exercise.focus.tense.label": "Tense",
     "exercise.focus.tense.pickerTitle": "Select tense",
+    "exercise.focus.nominal.label": "Nominal",
+    "exercise.focus.nominal.pickerTitle": "Select nominal",
     "exercise.unlock.nominal.activeParticiple": "active participles",
     "exercise.unlock.nominal.masdar": "verbal nouns",
     "exercise.unlock.nominal.passiveParticiple": "passive participles",

@@ -106,6 +106,8 @@
     "exercise.focus.rootType.pickerTitle": "Seleccionar tipo de raiz",
     "exercise.focus.tense.label": "Tempo",
     "exercise.focus.tense.pickerTitle": "Seleccionar tempo",
+    "exercise.focus.nominal.label": "Nominal",
+    "exercise.focus.nominal.pickerTitle": "Seleccionar nominal",
     "exercise.unlock.nominal.activeParticiple": "particípios activos",
     "exercise.unlock.nominal.masdar": "substantivos verbais",
     "exercise.unlock.nominal.passiveParticiple": "particípios passivos",

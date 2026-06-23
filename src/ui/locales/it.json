@@ -106,6 +106,8 @@
     "exercise.focus.form.pickerTitle": "Seleziona forma",
     "exercise.focus.tense.label": "Tempo",
     "exercise.focus.tense.pickerTitle": "Seleziona tempo",
+    "exercise.focus.nominal.label": "Nominale",
+    "exercise.focus.nominal.pickerTitle": "Seleziona nominale",
     "exercise.unlock.nominal.activeParticiple": "participi attivi",
     "exercise.unlock.nominal.masdar": "sostantivi verbali",
     "exercise.unlock.nominal.passiveParticiple": "participi passivi",

@@ -20,13 +20,22 @@ import { verbPronounExercise } from './generators/verb-pronoun.ts'
 import { verbRootExercise } from './generators/verb-root.ts'
 import { verbTenseExercise } from './generators/verb-tense.ts'
 import type { SrsCardIdentity, SrsStore } from './srs.ts'
-import { cardSrsWeight, getSrsRootType, parseCardKey, type SrsRootType, weightedRandomSrs } from './srs.ts'
+import {
+  cardSrsWeight,
+  getSrsRootType,
+  isMasdarCard,
+  isParticipleCard,
+  parseCardKey,
+  type SrsRootType,
+  weightedRandomSrs,
+} from './srs.ts'
 
 export interface ExerciseFocus {
   form?: VerbForm | null
   tense?: VerbTense | null
   rootType?: SrsRootType | null
   pronoun?: PronounId | null
+  nominal?: 'participles' | 'masdar' | null
 }
 
 const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
@@ -137,6 +146,8 @@ function isInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFocus): bo
   if (focus.tense != null && card.tense != null && card.tense !== focus.tense) return false
   if (focus.rootType != null && card.rootType !== focus.rootType) return false
   if (focus.pronoun != null && card.pronoun != null && card.pronoun !== focus.pronoun) return false
+  if (focus.nominal === 'participles' && !isParticipleCard({ key: '', ...card })) return false
+  if (focus.nominal === 'masdar' && !isMasdarCard({ key: '', ...card })) return false
   return true
 }
 
