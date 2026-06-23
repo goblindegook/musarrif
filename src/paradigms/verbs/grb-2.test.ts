@@ -9,9 +9,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("grb-2", () => {
+describe('grb-2', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("grb-2")!)).toEqualT({
+    expect(conjugatePast(getVerbById('grb-2')!)).toEqualT({
       '1s': 'غَرَّبْتُ',
       '2ms': 'غَرَّبْتَ',
       '2fs': 'غَرَّبْتِ',
@@ -29,7 +29,7 @@ describe("grb-2", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("grb-2")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('grb-2')!, 'indicative')).toEqualT({
       '1s': 'أُغَرِّبُ',
       '2ms': 'تُغَرِّبُ',
       '2fs': 'تُغَرِّبِينَ',
@@ -47,7 +47,7 @@ describe("grb-2", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("grb-2")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('grb-2')!, 'subjunctive')).toEqualT({
       '1s': 'أُغَرِّبَ',
       '2ms': 'تُغَرِّبَ',
       '2fs': 'تُغَرِّبِي',
@@ -65,7 +65,7 @@ describe("grb-2", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("grb-2")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('grb-2')!, 'jussive')).toEqualT({
       '1s': 'أُغَرِّبْ',
       '2ms': 'تُغَرِّبْ',
       '2fs': 'تُغَرِّبِي',
@@ -83,7 +83,7 @@ describe("grb-2", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("grb-2")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('grb-2')!)).toMatchObjectT({
       '2ms': 'غَرِّبْ',
       '2fs': 'غَرِّبِي',
       '2d': 'غَرِّبَا',
@@ -93,7 +93,7 @@ describe("grb-2", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("grb-2")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('grb-2')!)).toEqualT({
       '1s': 'غُرِّبْتُ',
       '2ms': 'غُرِّبْتَ',
       '2fs': 'غُرِّبْتِ',
@@ -111,7 +111,7 @@ describe("grb-2", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("grb-2")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('grb-2')!, 'indicative')).toEqualT({
       '1s': 'أُغَرَّبُ',
       '2ms': 'تُغَرَّبُ',
       '2fs': 'تُغَرَّبِينَ',
@@ -129,7 +129,7 @@ describe("grb-2", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("grb-2")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('grb-2')!, 'subjunctive')).toEqualT({
       '1s': 'أُغَرَّبَ',
       '2ms': 'تُغَرَّبَ',
       '2fs': 'تُغَرَّبِي',
@@ -147,7 +147,7 @@ describe("grb-2", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("grb-2")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('grb-2')!, 'jussive')).toEqualT({
       '1s': 'أُغَرَّبْ',
       '2ms': 'تُغَرَّبْ',
       '2fs': 'تُغَرَّبِي',
@@ -165,14 +165,14 @@ describe("grb-2", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("grb-2")!)).toEqualT('مُغَرِّب')
+    expect(deriveActiveParticiple(getVerbById('grb-2')!)).toEqualT('مُغَرِّب')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("grb-2")!)).toEqualT('مُغَرَّب')
+    expect(derivePassiveParticiple(getVerbById('grb-2')!)).toEqualT('مُغَرَّب')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("grb-2")!)).toEqualT(['تَغْرِيب'])
+    expect(deriveMasdar(getVerbById('grb-2')!)).toEqualT(['تَغْرِيب'])
   })
 })

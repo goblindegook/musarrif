@@ -12,36 +12,33 @@ import {
 import { verbs } from '../paradigms/verbs'
 import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
 
-type DistractorGenerator<T> = () => T
-type DistractorNormaliser<T> = (distractor: T) => T
+type DistractorGenerator = () => string
+type DistractorNormaliser = (distractor: string) => string
 
 const WEAK_LETTER_REPLACEMENTS = [WAW, YEH, ALIF, ALIF_MAQSURA]
 
 const RANDOM_LETTERS = [...Array.from(new Set(verbs.flatMap((verb) => verb.rootTokens))), WAW, YEH, ALIF, ALIF_MAQSURA]
 
-export function randomizeOptions<T>(
-  answer: T,
-  generators: readonly DistractorGenerator<T>[],
+export function randomizeOptions(
+  answer: string,
+  generators: readonly DistractorGenerator[],
   profile: DimensionProfile,
   size = 4,
-  normalizers: DistractorNormaliser<T>[] = [],
-): T[] {
-  const options = new Set<T>([answer])
+  normalizers: readonly DistractorNormaliser[] = [],
+): string[] {
+  const options = new Set([answer])
 
-  const allNormalizers = [
-    ...normalizers,
-    (c: T) => (typeof c === 'string' ? (exerciseDiacritics(c, profile.diacritics) as T) : c),
-  ]
+  const allNormalizers = [...normalizers, (c: string) => exerciseDiacritics(c, profile.diacritics)]
 
   while (options.size < size) {
-    const candidate = random(generators)()
-    options.add(allNormalizers.reduce((candidate, normalizer) => normalizer(candidate), candidate))
+    const generateCandidate = random(generators)
+    options.add(allNormalizers.reduce((c, normalizer) => normalizer(c), generateCandidate()))
   }
 
   return shuffle(Array.from(options))
 }
 
-export function weakAlternativeRootDistractor(correct: string): DistractorGenerator<string> {
+export function weakAlternativeRootDistractor(correct: string): DistractorGenerator {
   const letters = tokenize(correct)
   const weakAlternatives = letters.flatMap((letter, index) => {
     if (!letter.isWeak) return []
@@ -55,7 +52,7 @@ export function weakAlternativeRootDistractor(correct: string): DistractorGenera
   return () => random(weakAlternatives)
 }
 
-export function mixedWordDistractor(word: string, size: number): DistractorGenerator<string> {
+export function mixedWordDistractor(word: string, size: number): DistractorGenerator {
   const letters = tokenize(applyDiacriticsPreference(word, 'none'))
 
   return () => {
@@ -71,7 +68,7 @@ export function mixedWordDistractor(word: string, size: number): DistractorGener
   }
 }
 
-export function wordSliceDistractor(word: string, size: number): DistractorGenerator<string> {
+export function wordSliceDistractor(word: string, size: number): DistractorGenerator {
   let offset = 1
   const letters = tokenize(applyDiacriticsPreference(word, 'none'))
   return () => cyclicSlice(letters, size, offset++)
@@ -81,7 +78,7 @@ function cyclicSlice(pool: readonly Token[], length: number, offset: number): st
   return detokenize(Array.from({ length }, (_, index) => pool[(index + offset) % pool.length]))
 }
 
-export function singleLetterWordDistractor(word: string): DistractorGenerator<string> {
+export function singleLetterWordDistractor(word: string): DistractorGenerator {
   const chars = tokenize(word)
   const letterIndices = chars.map((_c, i) => i).filter((i) => !chars[i].isCombiningMark)
 

@@ -4,7 +4,7 @@ import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { ALL_TENSES, type VerbParadigm } from './tense'
-import { normalizeHamza, type Token, tokenize } from './tokens'
+import { type Token, tokenize } from './tokens'
 
 export type TriliteralForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 export type QuadriliteralForm = 1 | 2 | 3 | 4
@@ -295,11 +295,11 @@ const verbsById = new Map<string, DisplayVerb>()
 for (const verb of verbs) verbsById.set(verb.id, verb)
 
 export function findVerbsByRoot(query: string): readonly DisplayVerb[] {
-  return verbs.filter((verb) => verb.root === query || normalizeHamza(verb.root) === query)
+  return verbs.filter((verb) => verb.root === query)
 }
 
 export function findVerbsByRootPrefix(prefix: string): readonly DisplayVerb[] {
-  return verbs.filter((verb) => verb.root.startsWith(prefix) || normalizeHamza(verb.root).startsWith(prefix))
+  return verbs.filter((verb) => verb.root.startsWith(prefix))
 }
 
 export function getVerbById(id?: string): DisplayVerb | undefined {
