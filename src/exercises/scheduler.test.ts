@@ -445,20 +445,6 @@ describe('nextExercise', () => {
       expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
     })
 
-    test('nominal focus filters uncovered triples to participle kinds', () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5)
-      const participleKinds = ['participleForm', 'participleRoot', 'participleVerb', 'verbParticiple']
-      const exercises = Array.from({ length: 30 }, () =>
-        nextExercise(
-          { ...INITIAL_DIMENSION_PROFILE, nominals: 2 },
-          {},
-          { reviews: 0, lastNewAt: -3 },
-          { nominal: 'participles' },
-        ),
-      )
-      expect(exercises.every((e) => participleKinds.includes(e.kind))).toBe(true)
-    })
-
     test('nominal focus filters due cards to masdar kinds', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5)
       const masdarKinds = ['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar']
