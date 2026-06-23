@@ -13,7 +13,9 @@ describe('FormInsights', () => {
     const verb = buildVerbFromId('ktb-2')!
     renderWithProviders(<FormInsights verb={verb} />)
     expect(
-      screen.getByText('Form II geminates the middle radical and often intensifies or causativizes the base action.'),
+      screen.getByText(
+        'Notice the doubled middle consonant — that gemination is the Form II marker, typically adding intensity or a causative sense.',
+      ),
     ).toBeInTheDocument()
   })
 
@@ -74,7 +76,7 @@ describe('FormInsights', () => {
     test('BQI verb shows biliteral doubling explanation sentence', () => {
       const verb = buildVerbFromId('zlzl-1')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.getByText(/Form Iq biliteral doubling/, { selector: 'p' })).toBeInTheDocument()
+      expect(screen.getByText(/biliteral root repeated twice/i, { selector: 'p' })).toBeInTheDocument()
     })
 
     test('generic Iq verb shows base four-consonant explanation sentence', () => {
@@ -89,10 +91,10 @@ describe('FormInsights', () => {
       const verb = buildVerbFromId('zwj-8')!
       renderWithProviders(<FormInsights verb={verb} />)
       expect(
-        screen.getByText(
-          'Form VIII voicing assimilation: with first radical ز, the default infix تَ changes to voiced دَ (e.g., اِزْدَوَجَ).',
-          { selector: 'p', exact: false },
-        ),
+        screen.getByText('first radical is ز, expect the تَ infix to change to voiced دَ', {
+          selector: 'p',
+          exact: false,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -100,10 +102,10 @@ describe('FormInsights', () => {
       const verb = buildVerbFromId('dxl-8')!
       renderWithProviders(<FormInsights verb={verb} />)
       expect(
-        screen.getByText(
-          'Form VIII complete assimilation: when the first radical is د، ذ، ث، ط, or ظ, the default infix تَ assimilates to that same consonant, producing a doubled consonant.',
-          { selector: 'p', exact: false },
-        ),
+        screen.getByText('first radical is د، ذ، ث، ط, or ظ, expect the تَ infix to assimilate completely', {
+          selector: 'p',
+          exact: false,
+        }),
       ).toBeInTheDocument()
     })
 
@@ -111,10 +113,10 @@ describe('FormInsights', () => {
       const verb = buildVerbFromId('Sbr-8')!
       renderWithProviders(<FormInsights verb={verb} />)
       expect(
-        screen.getByText(
-          'Form VIII emphasis assimilation: with first radical ص or ض, the default infix تَ shifts to emphatic طَ.',
-          { selector: 'p', exact: false },
-        ),
+        screen.getByText('first radical is ص or ض, expect the تَ infix to shift to emphatic طَ', {
+          selector: 'p',
+          exact: false,
+        }),
       ).toBeInTheDocument()
     })
   })

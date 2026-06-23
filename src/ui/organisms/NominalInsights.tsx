@@ -78,7 +78,9 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
         <Text key={pi}>
           {paragraph.map((sentence, si) => (
             <span key={si}>
-              <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
+              {(si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
+                <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
+              )}
               {sentence.text}{' '}
             </span>
           ))}

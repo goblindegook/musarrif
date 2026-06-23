@@ -127,7 +127,7 @@ describe('ExerciseMode', () => {
 
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
     expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
   })
 
@@ -425,7 +425,7 @@ describe('keyboard shortcuts', () => {
     fireEvent.keyDown(document.body, { key: 's' })
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
   })
 
   test('pressing S after answering does nothing', () => {
@@ -498,7 +498,7 @@ describe('Explanation in ExerciseMode', () => {
   test('explanation paragraphs appear after selecting a wrong answer', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
   })
 })
 
@@ -515,7 +515,7 @@ describe('mastery filtering in ExerciseMode', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
     expect(screen.queryByText(/Sound root/i)).not.toBeInTheDocument()
   })
 
@@ -531,8 +531,8 @@ describe('mastery filtering in ExerciseMode', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
 
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
-    expect(screen.getByText(/Sound root/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
+    expect(screen.getByText(/apply the pattern directly/i)).toBeInTheDocument()
   })
 })
 
@@ -666,7 +666,7 @@ describe('typing mode', () => {
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'p' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('data-state', 'wrong')
-    expect(screen.getByText(/Form I perfect fa'ala pattern/i)).toBeInTheDocument()
+    expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
   })
 })
 

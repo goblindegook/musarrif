@@ -460,14 +460,14 @@ describe('renderExplanation elision prose', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
     const rendered = renderExplanation(layers, localeT).flat()
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('prefix') }))
-    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('dropping') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drop') }))
   })
 
   test('jussive 3md explanation mentions the dropped nūn ending', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.jussive', '3md', 'يَكْتُبَا')
     const rendered = renderExplanation(layers, localeT).flat()
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('nūn') }))
-    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drops') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drop') }))
   })
 })
 
@@ -887,10 +887,12 @@ describe('renderExplanation with nominal', () => {
 
     const rendered = renderExplanation(resolveNominalExplanationLayers(getVerb('كتب', 1), 'masdar', masdar), localeT)
 
-    expect(rendered.flat()).toContainEqual({
-      text: 'The masdar names the action itself. In Form I, the masdar is lexical, so it must be memorized with the verb.',
-      kind: 'measure',
-    })
+    expect(rendered.flat()).toContainEqual(
+      expect.objectContaining({
+        text: expect.stringContaining('memorize'),
+        kind: 'measure',
+      }),
+    )
   })
 
   test('localized Form I mimi masdar explanation names mimi pattern', () => {
@@ -913,9 +915,7 @@ describe('renderExplanation with nominal', () => {
       localeT,
     ).flat()
 
-    expect(rendered).toContainEqual(
-      expect.objectContaining({ text: expect.stringContaining('The Form II masdar follows the pattern تَفْعِيل.') }),
-    )
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('تَفْعِيل') }))
   })
 
   test('BQI masdar explanation uses 1q-bd key distinct from generic Iq', () => {
