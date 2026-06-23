@@ -183,30 +183,44 @@ const FORM_I_BASE_PATTERNS: Record<
   'u-u': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
 }
 
-function renderPronounParagraph(
+export type ExplanationKind = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'
+
+export interface ExplanationSentence {
+  text: string
+  kind: ExplanationKind
+}
+
+function renderPronounSentences(
   layers: VerbExplanationLayers | undefined,
   t: (key: string, params?: Record<string, string>) => string,
-): string {
-  if (layers?.tense == null || layers.pronoun == null) return ''
-  const params = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) }
+): ExplanationSentence[] {
+  if (layers?.pronoun == null) return []
+  const pronounParams = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) }
   const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
   const suffix = layers.suffix ? `ـ${layers.suffix}` : undefined
 
-  const extra = [
-    layers.elidedPrefix &&
-      t('explanation.pronoun.dropped-prefix', { ...params, elidedPrefix: `${layers.elidedPrefix}ـ` }),
-    layers.elidedSuffix &&
-      t('explanation.pronoun.dropped-suffix', { ...params, elidedSuffix: `ـ${layers.elidedSuffix}` }),
-  ].filter(Boolean)
+  const mainText =
+    prefix && suffix
+      ? t('explanation.pronoun.prefix-and-suffix', { ...pronounParams, prefix, suffix })
+      : prefix
+        ? t('explanation.pronoun.prefix-only', { ...pronounParams, prefix })
+        : suffix
+          ? t('explanation.pronoun.suffix-only', { ...pronounParams, suffix })
+          : t('explanation.pronoun.base-form', pronounParams)
 
-  if (prefix && suffix)
-    return [t('explanation.pronoun.prefix-and-suffix', { ...params, prefix, suffix }), ...extra].join(' ')
+  const sentences = [
+    mainText && { text: mainText, kind: 'agreement' },
+    layers.elidedPrefix && {
+      text: t('explanation.pronoun.dropped-prefix', { ...pronounParams, elidedPrefix: `${layers.elidedPrefix}ـ` }),
+      kind: 'elided',
+    },
+    layers.elidedSuffix && {
+      text: t('explanation.pronoun.dropped-suffix', { ...pronounParams, elidedSuffix: `ـ${layers.elidedSuffix}` }),
+      kind: 'elided',
+    },
+  ]
 
-  if (prefix) return [t('explanation.pronoun.prefix-only', { ...params, prefix }), ...extra].join(' ')
-
-  if (suffix) return [t('explanation.pronoun.suffix-only', { ...params, suffix }), ...extra].join(' ')
-
-  return [t('explanation.pronoun.base-form', params), ...extra].join(' ')
+  return sentences.filter((s): s is ExplanationSentence => Boolean(s))
 }
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
@@ -221,10 +235,17 @@ function resolveNominalKey(layers?: NominalExplanationLayers): string {
   return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : ''
 }
 
+const tenseKind = (tense: VerbTense): ExplanationKind =>
+  tense === 'active.future'
+    ? 'particle'
+    : tense === 'active.past' || tense.startsWith('passive')
+      ? 'measure'
+      : 'agreement'
+
 export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
-): string[] {
+): ExplanationSentence[][] {
   const nominalLayers = layers.category === 'nominal' ? layers : undefined
   const verbLayers = layers.category === 'verb' ? layers : undefined
   const params = {
@@ -235,28 +256,36 @@ export function renderExplanation(
     pattern: nominalLayers?.masdarPattern ?? '',
   }
 
-  const tenseRootSentence = verbLayers?.tenseRoot ? t(`explanation.tense-root.${verbLayers.tenseRoot}`, params) : ''
+  const nominalKey = resolveNominalKey(nominalLayers)
 
   return [
     [
-      layers.rootType && t(`explanation.root.${layers.rootType}`, params),
-      layers.form != null && t(`explanation.form.${layers.form}`, params),
-      layers.vowels && t(`explanation.form-i-pattern.${layers.vowels}`, params),
-      layers.formRoot && t(`explanation.form-root.${layers.formRoot}`, params),
+      layers.rootType && { text: t(`explanation.root.${layers.rootType}`, params), kind: 'radical' },
+      layers.form && { text: t(`explanation.form.${layers.form}`, params), kind: 'measure' },
+      layers.vowels != null && { text: t(`explanation.form-i-pattern.${layers.vowels}`, params), kind: 'measure' },
+      layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
-    [t(resolveNominalKey(nominalLayers), params)],
+    [nominalKey && { text: t(nominalKey, params), kind: 'measure' }],
     [
-      verbLayers?.tense?.startsWith('passive') ? t(`explanation.voice.${verbLayers.tense}`, params) : '',
-      verbLayers?.tense && t(`explanation.tense.${verbLayers.tense}`, params),
-      layers.paradigmForm === 1 && verbLayers?.tense === 'active.past'
-        ? t('explanation.tense.active.past.form-i', params)
-        : '',
-      tenseRootSentence,
+      verbLayers?.tense?.startsWith('passive') && {
+        text: t(`explanation.voice.${verbLayers?.tense}`, params),
+        kind: 'measure',
+      },
+      verbLayers?.tense && {
+        text: t(`explanation.tense.${verbLayers?.tense}`, params),
+        kind: tenseKind(verbLayers?.tense),
+      },
+      layers.paradigmForm === 1 &&
+        verbLayers?.tense === 'active.past' && {
+          text: t('explanation.tense.active.past.form-i', params),
+          kind: 'measure',
+        },
+      verbLayers?.tenseRoot && { text: t(`explanation.tense-root.${verbLayers.tenseRoot}`, params), kind: 'radical' },
     ],
-    [renderPronounParagraph(verbLayers, t)],
+    renderPronounSentences(verbLayers, t),
   ]
-    .map((paragraph) => paragraph.filter(Boolean).join(' '))
-    .filter(Boolean)
+    .map((paragraph) => paragraph.filter((s): s is ExplanationSentence => Boolean(s)))
+    .filter((para) => para.length > 0)
 }
 
 function extractAffixes(morphemes: readonly Morpheme[] = []): {

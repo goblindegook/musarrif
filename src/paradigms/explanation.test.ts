@@ -306,7 +306,7 @@ describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
     const verb = synthesizeVerb('زوج', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِزْدَوَجَ')
     const rendered = renderExplanation(layers, (key) => key)
-    expect(rendered[0]).toContain('explanation.form-root.assimilation-voicing')
+    expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-voicing', kind: 'radical' })
   })
 
   test('Form VIII with default infix keeps no extra first-radical assimilation sentence', () => {
@@ -458,23 +458,23 @@ describe('renderExplanation elision prose', () => {
 
   test('imperative 2ms explanation mentions the dropped prefix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2ms', 'اُكْتُبْ')
-    const rendered = renderExplanation(layers, localeT).join(' ')
-    expect(rendered).toContain('prefix')
-    expect(rendered).toContain('dropping')
+    const rendered = renderExplanation(layers, localeT).flat()
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('prefix') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('dropping') }))
   })
 
   test('jussive 3md explanation mentions the dropped nūn ending', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.jussive', '3md', 'يَكْتُبَا')
-    const rendered = renderExplanation(layers, localeT).join(' ')
-    expect(rendered).toContain('nūn')
-    expect(rendered).toContain('drops')
+    const rendered = renderExplanation(layers, localeT).flat()
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('nūn') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drops') }))
   })
 })
 
 describe('renderExplanation', () => {
   // Stub t() that echoes the key so we can assert key structure without locale files
   const t = (key: string) => key
-  const render = (layers: ExplanationLayers) => renderExplanation(layers, t).join(' ')
+  const sentences = (layers: ExplanationLayers) => renderExplanation(layers, t).flat()
 
   function testExplanationLayers(overrides?: Partial<VerbExplanationLayers>): VerbExplanationLayers {
     return {
@@ -492,27 +492,41 @@ describe('renderExplanation', () => {
   }
 
   test('includes root sentence', () => {
-    expect(render(testExplanationLayers({ rootType: 'sound' }))).toContain('explanation.root.sound')
+    expect(sentences(testExplanationLayers({ rootType: 'sound' }))).toContainEqual({
+      text: 'explanation.root.sound',
+      kind: 'radical',
+    })
   })
 
   test('groups root, form description, and formIPattern in first paragraph', () => {
     expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual(
       [
-        'explanation.root.sound explanation.form.1-action explanation.form-i-pattern.a-u',
-        'explanation.tense.active.past explanation.tense.active.past.form-i',
-        'explanation.pronoun.base-form',
+        [
+          { text: 'explanation.root.sound', kind: 'radical' },
+          { text: 'explanation.form.1-action', kind: 'measure' },
+          { text: 'explanation.form-i-pattern.a-u', kind: 'measure' },
+        ],
+        [
+          { text: 'explanation.tense.active.past', kind: 'measure' },
+          { text: 'explanation.tense.active.past.form-i', kind: 'measure' },
+        ],
+        [{ text: 'explanation.pronoun.base-form', kind: 'agreement' }],
       ],
     )
   })
 
   test('includes form description in first paragraph for non-form-I', () => {
-    expect(renderExplanation(testExplanationLayers({ form: '3' }), t)[0]).toContain('explanation.form.3')
+    expect(renderExplanation(testExplanationLayers({ form: '3' }), t)[0]).toContainEqual({
+      text: 'explanation.form.3',
+      kind: 'measure',
+    })
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
-    expect(render(testExplanationLayers({ vowels: 'a-u', tense: 'active.past' }))).toContain(
-      'explanation.tense.active.past.form-i',
-    )
+    expect(sentences(testExplanationLayers({ vowels: 'a-u', tense: 'active.past' }))).toContainEqual({
+      text: 'explanation.tense.active.past.form-i',
+      kind: 'measure',
+    })
   })
 
   test.each<VerbTense>([
@@ -522,16 +536,15 @@ describe('renderExplanation', () => {
     'passive.present.jussive',
     'passive.future',
   ])('includes %s tense sentence', (tense) => {
-    expect(render(testExplanationLayers({ tense }))).toContain(`explanation.voice.${tense}`)
-  })
-
-  test('omits voice sentence for active tenses', () => {
-    expect(render(testExplanationLayers({ tense: 'active.past' }))).not.toContain('explanation.voice')
+    expect(sentences(testExplanationLayers({ tense }))).toContainEqual({
+      text: `explanation.voice.${tense}`,
+      kind: 'measure',
+    })
   })
 
   test('includes tenseRoot sentence when non-null', () => {
     expect(
-      render({
+      sentences({
         category: 'verb',
         paradigmRoots: ['ق', 'و', 'ل'],
         paradigmForm: 1,
@@ -543,7 +556,7 @@ describe('renderExplanation', () => {
         tenseRoot: 'middle-lengthens-aa',
         pronoun: '3ms',
       }),
-    ).toContain('explanation.tense-root.middle-lengthens-aa')
+    ).toContainEqual({ text: 'explanation.tense-root.middle-lengthens-aa', kind: 'radical' })
   })
 
   test('groups root and formRoot in first paragraph', () => {
@@ -563,9 +576,13 @@ describe('renderExplanation', () => {
         t,
       ),
     ).toEqual([
-      'explanation.root.hollow-waw explanation.form.8 explanation.form-root.assimilation-voicing',
-      'explanation.tense.active.past',
-      'explanation.pronoun.base-form',
+      [
+        { text: 'explanation.root.hollow-waw', kind: 'radical' },
+        { text: 'explanation.form.8', kind: 'measure' },
+        { text: 'explanation.form-root.assimilation-voicing', kind: 'radical' },
+      ],
+      [{ text: 'explanation.tense.active.past', kind: 'measure' }],
+      [{ text: 'explanation.pronoun.base-form', kind: 'agreement' }],
     ])
   })
 
@@ -573,28 +590,28 @@ describe('renderExplanation', () => {
     const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContain('faʿula')
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿula') }))
   })
 
   test('active.past form-i base pattern renders ḍamma for u-u pattern', () => {
     const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContain('ḍamma')
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ḍamma') }))
   })
 
   test('active.past form-i base pattern renders faʿala for a-u pattern', () => {
     const verb = getVerb('كتب', 1) // كَتَبَ, a-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContain('faʿala')
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿala') }))
   })
 
   test('active.past form-i base pattern renders faʿila for i-a pattern', () => {
     const verb = getVerbById('Elm-1')! // عَلِمَ, i-a, sound root
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContain('faʿila')
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿila') }))
   })
 })
 
@@ -606,61 +623,71 @@ describe('renderExplanation paragraph 3 template selection', () => {
 
   test('past 3ms renders base-form template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.base-form')
+    expect(renderExplanation(layers, t)[2]).toContainEqual({ text: 'explanation.pronoun.base-form', kind: 'agreement' })
   })
 
   test('past 1s renders suffix-only template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.suffix-only')
+    expect(renderExplanation(layers, t)[2]).toContainEqual({
+      text: 'explanation.pronoun.suffix-only',
+      kind: 'agreement',
+    })
   })
 
   test('present indicative 1s renders prefix-and-suffix template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '1s', 'أَكْتُبُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
+    expect(renderExplanation(layers, t)[2]).toContainEqual({
+      text: 'explanation.pronoun.prefix-and-suffix',
+      kind: 'agreement',
+    })
   })
 
   test('present indicative 3ms renders prefix-and-suffix template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '3ms', 'يَكْتُبُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
+    expect(renderExplanation(layers, t)[2]).toContainEqual({
+      text: 'explanation.pronoun.prefix-and-suffix',
+      kind: 'agreement',
+    })
   })
 
   test('future 3ms renders prefix-and-suffix template', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
-    expect(renderExplanation(layers, t)[2]).toBe('explanation.pronoun.prefix-and-suffix')
+    expect(renderExplanation(layers, t)[2]).toContainEqual({
+      text: 'explanation.pronoun.prefix-and-suffix',
+      kind: 'agreement',
+    })
   })
 
   test('past 1s paragraph 3 contains tatweel-prefixed suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('ـْتُ')
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ـْتُ') }))
   })
 
   test('present indicative 1s paragraph 3 contains tatweel-suffixed prefix and tatweel-prefixed suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '1s', 'أَكْتُبُ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('أَـ')
-    expect(result[2]).toContain('ـُ')
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('أَـ') }))
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ـُ') }))
   })
 
   test('future 3ms paragraph 3 contains collapsed tatweel-suffixed prefix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.future', '3ms', 'سَيَكْتُبُ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('سَيَـ')
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('سَيَـ') }))
   })
 
   test('Form III active present indicative 2fp contains damma prefix', () => {
     const verb = getVerb('كتب', 3)
     const layers = resolveVerbExplanationLayers(verb, 'active.present.indicative', '2fp', 'تُكَاتِبْنَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('تُـ')
-    expect(result[2]).not.toContain('تَـ')
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('تُـ') }))
   })
 
   test('Form I active present indicative 2fp contains fatha prefix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.present.indicative', '2fp', 'تَكْتُبْنَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContain('تَـ')
-    expect(result[2]).not.toContain('تُـ')
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('تَـ') }))
   })
 })
 
@@ -750,8 +777,11 @@ describe('renderExplanation with nominal', () => {
       nominal: 'activeParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1-action',
-      'explanation.nominal.activeParticiple',
+      [
+        { text: 'explanation.root.sound', kind: 'radical' },
+        { text: 'explanation.form.1-action', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.activeParticiple', kind: 'measure' }],
     ])
   })
 
@@ -766,8 +796,11 @@ describe('renderExplanation with nominal', () => {
       nominal: 'passiveParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1-action',
-      'explanation.nominal.passiveParticiple',
+      [
+        { text: 'explanation.root.sound', kind: 'radical' },
+        { text: 'explanation.form.1-action', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.passiveParticiple', kind: 'measure' }],
     ])
   })
 
@@ -782,8 +815,11 @@ describe('renderExplanation with nominal', () => {
       nominal: 'masdar',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.sound explanation.form.1-action',
-      'explanation.nominal.masdar.form-i',
+      [
+        { text: 'explanation.root.sound', kind: 'radical' },
+        { text: 'explanation.form.1-action', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.masdar.form-i', kind: 'measure' }],
     ])
   })
 
@@ -800,8 +836,11 @@ describe('renderExplanation with nominal', () => {
       masdarPattern: 'مَفْعِل',
     }
     expect(renderExplanation(layers, t)).toEqual([
-      'explanation.root.assimilated explanation.form.1-action',
-      'explanation.nominal.masdar.form-i-mimi',
+      [
+        { text: 'explanation.root.assimilated', kind: 'radical' },
+        { text: 'explanation.form.1-action', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.masdar.form-i-mimi', kind: 'measure' }],
     ])
   })
 
@@ -816,7 +855,7 @@ describe('renderExplanation with nominal', () => {
       vowels: 'a-u',
       nominal: 'activeParticiple',
     }
-    expect(renderExplanation(layers, t)[0]).toContain('explanation.form-i-pattern.a-u')
+    expect(renderExplanation(layers, t)[0]).toContainEqual({ text: 'explanation.form-i-pattern.a-u', kind: 'measure' })
   })
 
   test('nominal does not produce a pronoun paragraph', () => {
@@ -838,9 +877,9 @@ describe('renderExplanation with nominal', () => {
     const rendered = renderExplanation(
       resolveNominalExplanationLayers(getVerb('كتب', 2), 'masdar', masdar),
       localeT,
-    ).join(' ')
+    ).flat()
 
-    expect(rendered).toContain('تَفْعِيل')
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('تَفْعِيل') }))
   })
 
   test('localized Form I lexical masdar explanation says it must be memorized', () => {
@@ -848,9 +887,10 @@ describe('renderExplanation with nominal', () => {
 
     const rendered = renderExplanation(resolveNominalExplanationLayers(getVerb('كتب', 1), 'masdar', masdar), localeT)
 
-    expect(rendered).toContain(
-      'The masdar names the action itself. In Form I, the masdar is lexical, so it must be memorized with the verb.',
-    )
+    expect(rendered.flat()).toContainEqual({
+      text: 'The masdar names the action itself. In Form I, the masdar is lexical, so it must be memorized with the verb.',
+      kind: 'measure',
+    })
   })
 
   test('localized Form I mimi masdar explanation names mimi pattern', () => {
@@ -859,10 +899,10 @@ describe('renderExplanation with nominal', () => {
     const rendered = renderExplanation(
       resolveNominalExplanationLayers(getVerb('وعد', 1), 'masdar', mimiMasdar),
       localeT,
-    ).join(' ')
+    ).flat()
 
-    expect(rendered).toContain('مَفْعِل')
-    expect(rendered).toContain('mīmī')
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('مَفْعِل') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('mīmī') }))
   })
 
   test('localized non-Form I masdar explanation says it must be memorized without naming pattern', () => {
@@ -871,24 +911,27 @@ describe('renderExplanation with nominal', () => {
     const rendered = renderExplanation(
       resolveNominalExplanationLayers(getVerb('كتب', 2), 'masdar', masdar),
       localeT,
-    ).join(' ')
+    ).flat()
 
-    expect(rendered).toContain('The Form II masdar follows the pattern تَفْعِيل.')
+    expect(rendered).toContainEqual(
+      expect.objectContaining({ text: expect.stringContaining('The Form II masdar follows the pattern تَفْعِيل.') }),
+    )
   })
 
   test('BQI masdar explanation uses 1q-bd key distinct from generic Iq', () => {
     const bqi = getVerbById('zlzl-1')!
     const [masdar] = deriveMasdar(bqi)
-    const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), localeT).join(' ')
-    expect(rendered).toContain('فَعْلَلَة')
+    const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), localeT).flat()
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('فَعْلَلَة') }))
   })
 
   test('BQI masdar key in renderExplanation is explanation.nominal.masdar.1q-bd not 1q', () => {
     const t = (key: string) => key
     const bqi = getVerbById('zlzl-1')!
     const [masdar] = deriveMasdar(bqi)
-    const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), t).join(' ')
-    expect(rendered).toContain('explanation.nominal.masdar.1q-bd')
-    expect(rendered).not.toContain('explanation.nominal.masdar.1q ')
+    expect(renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), t).flat()).toContainEqual({
+      text: 'explanation.nominal.masdar.1q-bd',
+      kind: 'measure',
+    })
   })
 })

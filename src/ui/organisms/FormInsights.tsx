@@ -29,7 +29,11 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       '3ms',
       verb.lemma,
     )
-    return renderExplanation({ category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
+    return (
+      renderExplanation({ category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
+        ?.map((s) => s.text)
+        .join(' ') ?? ''
+    )
   }, [verb, t])
 
   const formInsightExamples = useMemo<DisplayVerb[]>(() => {

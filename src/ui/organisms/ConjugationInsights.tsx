@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
 import { annotate, type DerivationStep, type DerivationStepKind } from '../../paradigms/annotation'
+import type { ExplanationKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
@@ -12,6 +13,14 @@ import { Text } from '../atoms/Text'
 import { type Translate, useI18n } from '../hooks/useI18n'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
 import { Modal } from '../molecules/Modal'
+
+const KIND_COLORS: Record<ExplanationKind, string> = {
+  radical: 'var(--color-insight-root)',
+  measure: 'var(--color-insight-form)',
+  agreement: 'var(--color-insight-suffix)',
+  particle: 'var(--color-insight-tense)',
+  elided: 'var(--color-insight-dropped)',
+}
 
 interface ConjugationInsightsProps {
   verb: DisplayVerb
@@ -71,11 +80,16 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
             </ArabicDisplay>
             {annotation && <DerivationSteps steps={annotation.steps} verb={verb} t={t} />}
           </VerbDisplayArea>
-          {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map(
-            (paragraph, index) => (
-              <Text key={`${index}-${paragraph}`}>{paragraph}</Text>
-            ),
-          )}
+          {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map((paragraph, pi) => (
+            <Text key={pi}>
+              {paragraph.map((sentence, si) => (
+                <span key={si}>
+                  <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
+                  {sentence.text}{' '}
+                </span>
+              ))}
+            </Text>
+          ))}
         </Modal>
       )}
     </>
