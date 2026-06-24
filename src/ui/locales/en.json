@@ -352,7 +352,7 @@
     "explanation.root.hamzated-hollow-defective": "Three irregularities combine: initial hamza, a hollow middle, and a defective final — each requires separate attention.",
     "explanation.root.hamzated-hollow-waw": "One consonant is hamza and the middle radical is و — expect both hamza seat changes and hollow verb behavior.",
     "explanation.root.hamzated-hollow-yaa": "One consonant is hamza and the middle radical is ي — expect both hamza seat changes and hollow verb behavior.",
-    "explanation.root.hamzated": "One consonant is hamza (ء) — its written form (the seat) changes with surrounding vowels, so check the orthography in each form.",
+    "explanation.root.hamzated": "One consonant is hamza (ء) — its written form changes with surrounding vowels, so check the orthography in each form.",
     "explanation.root.hollow-waw": "Watch the middle و — it surfaces as a long vowel but shortens before consonant-initial suffixes; the stem looks different in past vs. present.",
     "explanation.root.hollow-yaa": "Watch the middle ي — it surfaces as a long vowel but shortens before consonant-initial suffixes; the stem looks different in past vs. present.",
     "explanation.root.sound": "All consonants in {root} are stable — apply the pattern directly, no irregular changes.",
