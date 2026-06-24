@@ -422,6 +422,23 @@ describe('annotateActiveImperative', () => {
     })
   })
 
+  test('Form I initial hamzated — ءكل (2ms) elides both prefix and hamza', () => {
+    const result = annotateActiveImperative(getVerb('ءكل', 1), '2ms')
+
+    expect(detokenizeAnnotation(result).steps.at(-1)).toEqual({
+      kind: { type: 'tense', verbTense: 'active.imperative' },
+      arabic: 'كُلْ',
+      morphemes: [
+        { text: 'تَ', role: 'elided' },
+        { text: 'أ', role: 'elided' },
+        { text: 'ك', role: 'radical' },
+        { text: 'ُ', role: 'measure' },
+        { text: 'ل', role: 'radical' },
+        { text: 'ْ', role: 'agreement' },
+      ],
+    })
+  })
+
   test('Form I — كتب (2mp) dropped person prefix annotated', () => {
     const result = annotateActiveImperative(getVerb('كتب', 1), '2mp')
 

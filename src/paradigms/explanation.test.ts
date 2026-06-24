@@ -469,6 +469,31 @@ describe('renderExplanation elision prose', () => {
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('nūn') }))
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drop') }))
   })
+
+  test('imperative 2mp explanation does not repeat dropped-prefix prose', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.imperative', '2mp', 'اُكْتُبُوا')
+    const rendered = renderExplanation(layers, (key) => key).flat()
+    expect(rendered).toContainEqual({ text: 'explanation.pronoun.suffix-only', kind: 'agreement' })
+    expect(rendered).not.toContainEqual({ text: 'explanation.pronoun.dropped-prefix', kind: 'elided' })
+  })
+
+  test('imperative explanation mentions alif al-wasl', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('شكر', 1), 'active.imperative', '2ms', 'اُشْكُرْ')
+    const rendered = renderExplanation(layers, localeT).flat()
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
+  })
+
+  test('initial-hamza imperative explanation omits alif al-wasl', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('ءجر', 1), 'active.imperative', '2ms', 'اُؤْجُرْ')
+    const rendered = renderExplanation(layers, localeT).flat()
+    expect(rendered).not.toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
+  })
+
+  test('form IV imperative explanation omits alif al-wasl', () => {
+    const layers = resolveVerbExplanationLayers(getVerbById('bqy-4')!, 'active.imperative', '2ms', 'أَبْقِ')
+    const rendered = renderExplanation(layers, localeT).flat()
+    expect(rendered).not.toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
+  })
 })
 
 describe('renderExplanation', () => {
@@ -526,6 +551,44 @@ describe('renderExplanation', () => {
     expect(sentences(testExplanationLayers({ vowels: 'a-u', tense: 'active.past' }))).toContainEqual({
       text: 'explanation.tense.active.past.form-i',
       kind: 'measure',
+    })
+  })
+
+  test('tags imperative elision sentence as elided', () => {
+    expect(sentences(testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }))).toContainEqual({
+      text: 'explanation.tense.active.imperative.elision',
+      kind: 'elided',
+    })
+  })
+
+  test('tags imperative support-vowel sentence as agreement', () => {
+    expect(sentences(testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }))).toContainEqual({
+      text: 'explanation.tense.active.imperative.support',
+      kind: 'agreement',
+    })
+  })
+
+  test('omits imperative support sentence for initial-hamza roots', () => {
+    expect(
+      sentences({
+        ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
+        paradigmRoots: ['ء', 'ج', 'ر'],
+      }),
+    ).not.toContainEqual({
+      text: 'explanation.tense.active.imperative.support',
+      kind: 'agreement',
+    })
+  })
+
+  test('omits imperative support sentence for form IV', () => {
+    expect(
+      sentences({
+        ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
+        paradigmForm: 4,
+      }),
+    ).not.toContainEqual({
+      text: 'explanation.tense.active.imperative.support',
+      kind: 'agreement',
     })
   })
 

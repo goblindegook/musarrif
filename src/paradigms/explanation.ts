@@ -210,10 +210,11 @@ function renderPronounSentences(
 
   const sentences = [
     mainText && { text: mainText, kind: 'agreement' },
-    layers.elidedPrefix && {
-      text: t('explanation.pronoun.dropped-prefix', { ...pronounParams, elidedPrefix: `${layers.elidedPrefix}ـ` }),
-      kind: 'elided',
-    },
+    layers.elidedPrefix &&
+      layers.tense !== 'active.imperative' && {
+        text: t('explanation.pronoun.dropped-prefix', { ...pronounParams, elidedPrefix: `${layers.elidedPrefix}ـ` }),
+        kind: 'elided',
+      },
     layers.elidedSuffix && {
       text: t('explanation.pronoun.dropped-suffix', { ...pronounParams, elidedSuffix: `ـ${layers.elidedSuffix}` }),
       kind: 'elided',
@@ -271,10 +272,21 @@ export function renderExplanation(
         text: t(`explanation.voice.${verbLayers?.tense}`, params),
         kind: 'measure',
       },
-      verbLayers?.tense && {
-        text: t(`explanation.tense.${verbLayers?.tense}`, params),
-        kind: tenseKind(verbLayers?.tense),
+      verbLayers?.tense === 'active.imperative' && {
+        text: t('explanation.tense.active.imperative.elision', params),
+        kind: 'elided',
       },
+      verbLayers?.tense === 'active.imperative' &&
+        layers.paradigmRoots[0] !== 'ء' &&
+        layers.paradigmForm !== 4 && {
+          text: t('explanation.tense.active.imperative.support', params),
+          kind: 'agreement',
+        },
+      verbLayers?.tense &&
+        verbLayers.tense !== 'active.imperative' && {
+          text: t(`explanation.tense.${verbLayers?.tense}`, params),
+          kind: tenseKind(verbLayers?.tense),
+        },
       layers.paradigmForm === 1 &&
         verbLayers?.tense === 'active.past' && {
           text: t('explanation.tense.active.past.form-i', params),
