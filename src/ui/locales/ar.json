@@ -287,7 +287,7 @@
     "explanation.nominal.passiveParticiple": "للتعرف على اسم المفعول: في الأبواب II–X ابحث عن بادئة مُـ؛ أما في الباب الأول فتوقع وزن مَفْعُول.",
     "explanation.pronoun.base-form": "{arabic} هُوَ ٱلشَّكْلُ ٱلْأَصْلِيُّ.",
     "explanation.pronoun.dropped-prefix": "في هذه الصيغة، احذف البادئة {elidedPrefix}.",
-    "explanation.pronoun.dropped-suffix": "في المجزوم والمنصوب، احذف نون {elidedSuffix}.",
+    "explanation.pronoun.dropped-suffix": "في المجزوم والمنصوب، احذف نون {elidedSuffix} التي تظهر في المرفوع.",
     "explanation.pronoun.prefix-and-suffix": "{pronounLabel}: ٱلْبَادِئَةُ {prefix} وَٱللَّاحِقَةُ {suffix}، فَيَنْتُجُ {arabic}.",
     "explanation.pronoun.prefix-only": "{pronounLabel}: ٱلْبَادِئَةُ {prefix}، فَيَنْتُجُ {arabic}.",
     "explanation.pronoun.suffix-only": "{pronounLabel}: ٱللَّاحِقَةُ {suffix}، فَيَنْتُجُ {arabic}.",

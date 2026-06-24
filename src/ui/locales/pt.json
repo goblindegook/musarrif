@@ -336,7 +336,7 @@
     "explanation.nominal.passiveParticiple.quad": "Para identificar o particípio passivo (اسم المفعول) de um verbo quadriliteral, procure o prefixo مُـ — sempre presente. Na forma Iq, o padrão é مُفَعْلَل.",
     "explanation.pronoun.base-form": "{arabic} é a forma base.",
     "explanation.pronoun.dropped-prefix": "Nesta forma, elimine o prefixo {elidedPrefix}.",
-    "explanation.pronoun.dropped-suffix": "No iussivo e no conjuntivo, elimine a terminação nūn {elidedSuffix}.",
+    "explanation.pronoun.dropped-suffix": "No iussivo e no conjuntivo, elimine a terminação nūn {elidedSuffix} que normalmente apareceria no indicativo.",
     "explanation.pronoun.prefix-and-suffix": "Para conjugar para {pronounLabel}: acrescente {prefix} antes do tema e {suffix} depois → {arabic}.",
     "explanation.pronoun.prefix-only": "Para conjugar para {pronounLabel}: acrescente {prefix} antes do tema → {arabic}.",
     "explanation.pronoun.suffix-only": "Para conjugar para {pronounLabel}: acrescente {suffix} depois do tema → {arabic}.",

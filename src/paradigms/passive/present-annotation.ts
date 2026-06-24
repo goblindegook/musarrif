@@ -1,8 +1,10 @@
 import { annotatePast } from '../active/past-annotation'
 import type { AnnotatedForm, DerivationStep } from '../annotation'
-import type { PronounId } from '../pronouns'
+import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
+import { FATHA, KASRA, NOON } from '../tokens'
 import type { Verb } from '../verbs'
+import { elidedMorpheme } from '../word'
 import { conjugatePassivePresentMood } from './present'
 
 export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
@@ -10,13 +12,16 @@ export function annotatePassivePresentMood(verb: Verb, mood: Mood, pronounId: Pr
 
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotatePassivePresentMood(verb, 'indicative', pronounId)
+    const elision = []
+    if (isDual(pronounId)) elision.push(elidedMorpheme(NOON, KASRA))
+    if (pronounId === '2fs' || isMasculinePlural(pronounId)) elision.push(elidedMorpheme(NOON, FATHA))
     return {
       steps: [
         ...indicativeAnnotation.steps,
         {
           kind: { type: 'tense', verbTense: `passive.present.${mood}` },
           arabic: String(allForms[pronounId]),
-          morphemes: allForms[pronounId].morphemes,
+          morphemes: [...allForms[pronounId].morphemes, ...elision],
         },
       ],
     }

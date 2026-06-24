@@ -451,6 +451,30 @@ describe('resolveVerbExplanationLayers elided extraction', () => {
       elidedSuffix: 'نَ',
     })
   })
+
+  test('jussive 3mp surfaces the dropped plural noon نَ', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'active.present.jussive', '3mp', 'يَكْتُبُوا')).toMatchObject({
+      elidedSuffix: 'نَ',
+    })
+  })
+
+  test('subjunctive 2mp surfaces the dropped plural noon نَ', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'active.present.subjunctive', '2mp', 'تَكْتُبُوا')).toMatchObject({
+      elidedSuffix: 'نَ',
+    })
+  })
+
+  test('passive jussive 3mp surfaces the dropped plural noon نَ', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'passive.present.jussive', '3mp', 'يُكْتَبُوا')).toMatchObject({
+      elidedSuffix: 'نَ',
+    })
+  })
+
+  test('passive subjunctive 3md surfaces the dropped dual noon نِ', () => {
+    expect(resolveVerbExplanationLayers(kataba, 'passive.present.subjunctive', '3md', 'يُكْتَبَا')).toMatchObject({
+      elidedSuffix: 'نِ',
+    })
+  })
 })
 
 describe('renderExplanation elision prose', () => {

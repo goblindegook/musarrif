@@ -336,7 +336,7 @@
     "explanation.nominal.passiveParticiple.quad": "To identify the passive participle (اسم المفعول) of a quadriliteral verb, look for the مُـ prefix — always present. In Form Iq, the pattern is مُفَعْلَل.",
     "explanation.pronoun.base-form": "{arabic} is the base form.",
     "explanation.pronoun.dropped-prefix": "In this form, drop the prefix {elidedPrefix}.",
-    "explanation.pronoun.dropped-suffix": "In the jussive and subjunctive, drop the nūn {elidedSuffix} ending.",
+    "explanation.pronoun.dropped-suffix": "In the jussive and subjunctive, drop the nūn {elidedSuffix} ending that would normally appear in the indicative.",
     "explanation.pronoun.prefix-and-suffix": "To conjugate for {pronounLabel}: attach {prefix} before the stem and {suffix} after it → {arabic}.",
     "explanation.pronoun.prefix-only": "To conjugate for {pronounLabel}: attach {prefix} before the stem → {arabic}.",
     "explanation.pronoun.suffix-only": "To conjugate for {pronounLabel}: attach {suffix} after the stem → {arabic}.",
