@@ -436,7 +436,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
           <NominalInsights verb={selectedVerb} nominal="passiveParticiple" arabic={passiveParticiple} />
         </Modal>
       )}
-      {masdar?.length && (
+      {masdar.length > 0 && (
         <Modal isOpen={openModal === 'masdar'} onClose={() => setOpenModal(null)} title={t('nominalInfo.title.masdar')}>
           <NominalInsights verb={selectedVerb} nominal="masdar" arabic={masdar} />
         </Modal>
