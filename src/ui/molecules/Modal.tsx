@@ -55,16 +55,18 @@ export const Modal = ({ isOpen, title, onClose, children }: ModalProps) => {
 
 const Dialog = styled('dialog')`
   position: fixed;
+  display: flex;
+  flex-direction: column;
   z-index: 200;
   margin: auto;
   background: var(--color-bg-surface);
   color: var(--color-text-primary);
   border-radius: 1.25rem;
-  padding: 1.5rem;
+  padding: 0;
   max-width: 520px;
   width: min(100%, 520px);
   max-height: calc(100vh - 2rem);
-  overflow-y: auto;
+  overflow: hidden;
   box-shadow: var(--shadow-elevated);
   border: 1px solid var(--color-border);
 
@@ -89,6 +91,8 @@ const Header = styled('div')`
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.75rem;
+  flex: 0 0 auto;
+  padding: 1.5rem 1.5rem 1rem;
 `
 
 const ModalTitle = styled('h2')`
@@ -100,10 +104,13 @@ const ModalTitle = styled('h2')`
 `
 
 const Content = styled('div')`
-  margin-top: 1rem;
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 0.75rem;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 1.5rem 1.5rem;
 `
 
 function isBackdropClick(dialog: HTMLDialogElement, clientX: number, clientY: number): boolean {
