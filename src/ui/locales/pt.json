@@ -375,7 +375,7 @@
     "explanation.tense.active.future": "Para formar o futuro: acrescente o prefixo سَـ ou سَوْفَ ao indicativo presente — nenhuma outra alteração.",
     "explanation.tense.active.imperative.elision": "Para formar o imperativo: parta do iussivo, remova o prefixo de 2ª pessoa.",
     "explanation.tense.active.imperative.support": "Se duas consoantes ficariam em contacto, acrescente o alif al-wasl (ا) no início.",
-    "explanation.tense.active.past.form-i": "A terceira pessoa masculina do singular (forma de citação) é {basePattern}: sem prefixo, com {pastVowel} na segunda consoante.",
+    "explanation.tense.active.past.form-i": "A 3ª pessoa masculina do singular (forma de citação) é {basePattern}: sem prefixo, com {pastVowel} na segunda consoante.",
     "explanation.tense.active.past": "Use o passado activo para acções concluídas.",
     "explanation.tense.active.present.indicative": "Use o indicativo presente activo para acções em curso ou habituais.",
     "explanation.tense.active.present.jussive": "Após لَمْ ou em construções condicionais, use o iussivo em vez do indicativo. Construa-o a partir do indicativo presente.",

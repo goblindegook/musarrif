@@ -106,6 +106,7 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   suffix?: string
   elidedPrefix?: string
   elidedSuffix?: string
+  contractedImperative?: boolean
 }
 
 export interface NominalExplanationLayers extends BaseExplanationLayers {
@@ -277,10 +278,10 @@ export function renderExplanation(
         kind: 'elided',
       },
       verbLayers?.tense === 'active.imperative' &&
-        layers.paradigmRoots[0] !== 'ء' &&
-        layers.paradigmForm !== 4 && {
+        layers.paradigmForm !== 4 &&
+        !verbLayers.contractedImperative && {
           text: t('explanation.tense.active.imperative.support', params),
-          kind: 'agreement',
+          kind: 'measure',
         },
       verbLayers?.tense &&
         verbLayers.tense !== 'active.imperative' && {
@@ -348,6 +349,8 @@ export function resolveVerbExplanationLayers(
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
+    contractedImperative:
+      tense === 'active.imperative' && isTriliteralFormIVerb(verb) ? verb.contractedImperative : undefined,
     ...extractAffixes(annotate(verb, tense, pronoun)?.steps.at(-1)?.morphemes),
   }
 }

@@ -375,7 +375,7 @@
     "explanation.tense.active.future": "To form the future: prefix سَـ or سَوْفَ to the present indicative — no other change needed.",
     "explanation.tense.active.imperative.elision": "To form the imperative: start from the jussive, drop the 2nd-person prefix.",
     "explanation.tense.active.imperative.support": "If two consonants would collide, add alif al-wasl (ا) at the front.",
-    "explanation.tense.active.past.form-i": "The third person masculine singular (your citation form) is {basePattern}: no prefix, with {pastVowel} on the second consonant.",
+    "explanation.tense.active.past.form-i": "The 3rd person masculine singular (your citation form) is {basePattern}: no prefix, with {pastVowel} on the second consonant.",
     "explanation.tense.active.past": "Use the active past for completed actions.",
     "explanation.tense.active.present.indicative": "Use the active present indicative for ongoing or habitual actions.",
     "explanation.tense.active.present.jussive": "After لَمْ or in conditional structures, use the jussive instead of the indicative. Build it from the present indicative.",

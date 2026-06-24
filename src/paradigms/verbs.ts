@@ -101,7 +101,6 @@ export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens
 export type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
 export type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
 
-// FIXME: I TOLD YOU THERE IS NO FORM Iq vs NON FORM Iq!!!!!!!!! ALL QUADRILITERAL FORMS ARE THE SAME
 export type QuadriliteralVerb = VerbProps<QuadriliteralRoot, QuadriliteralRootTokens, QuadriliteralForm>
 
 export type FormIVerb = TriliteralFormIVerb

@@ -483,10 +483,10 @@ describe('renderExplanation elision prose', () => {
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
   })
 
-  test('initial-hamza imperative explanation omits alif al-wasl', () => {
+  test('initial-hamza imperative explanation includes alif al-wasl', () => {
     const layers = resolveVerbExplanationLayers(getVerb('ءجر', 1), 'active.imperative', '2ms', 'اُؤْجُرْ')
     const rendered = renderExplanation(layers, localeT).flat()
-    expect(rendered).not.toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
+    expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('alif al-wasl') }))
   })
 
   test('form IV imperative explanation omits alif al-wasl', () => {
@@ -561,23 +561,32 @@ describe('renderExplanation', () => {
     })
   })
 
-  test('tags imperative support-vowel sentence as agreement', () => {
+  test('tags imperative support-vowel sentence as measure', () => {
     expect(sentences(testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }))).toContainEqual({
       text: 'explanation.tense.active.imperative.support',
-      kind: 'agreement',
+      kind: 'measure',
     })
   })
 
-  test('omits imperative support sentence for initial-hamza roots', () => {
+  test('includes imperative support sentence for initial-hamza Form I roots', () => {
     expect(
       sentences({
         ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
         paradigmRoots: ['ء', 'ج', 'ر'],
       }),
-    ).not.toContainEqual({
+    ).toContainEqual({
       text: 'explanation.tense.active.imperative.support',
-      kind: 'agreement',
+      kind: 'measure',
     })
+  })
+
+  test('contracted imperative tense paragraph contains only elision', () => {
+    const layers = {
+      ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
+      contractedImperative: true,
+    }
+    const [, tenseParagraph] = renderExplanation(layers, t)
+    expect(tenseParagraph).toEqual([{ text: 'explanation.tense.active.imperative.elision', kind: 'elided' }])
   })
 
   test('omits imperative support sentence for form IV', () => {
