@@ -455,7 +455,7 @@ test('no-speech error shows correct error message and retry button', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.end()) // onend without prior result → no-speech
-  expect(screen.getByDisplayValue(/Didn't catch that/)).toBeInTheDocument()
+  expect(screen.getByDisplayValue(/Didn’t catch that/)).toBeInTheDocument()
   expect(screen.getByLabelText('Try again')).toBeInTheDocument()
 })
 

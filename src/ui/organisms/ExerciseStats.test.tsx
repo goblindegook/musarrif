@@ -335,7 +335,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 11, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(within(screen.getByText('Progress').parentElement!).getByText("Beat yesterday's 20?")).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Beat yesterday’s 20?')).toBeInTheDocument()
     })
 
     test("shows remaining-to-yesterday hint when today's correct total is within 5", () => {
@@ -404,7 +404,7 @@ describe('ExerciseStats', () => {
       fireEvent.click(screen.getByText('See insights'))
       const momentum = screen.getByText(/^Your momentum:/)
       const backlog = screen.getByText(/^Your backlog:/)
-      expect(momentum.parentElement?.textContent).toContain("You're maintaining a consistent practice rhythm.")
+      expect(momentum.parentElement?.textContent).toContain('You’re maintaining a consistent practice rhythm.')
       expect(backlog.parentElement?.textContent).toContain('Many reviews are piling up.')
       expect(momentum.compareDocumentPosition(backlog) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
     })
