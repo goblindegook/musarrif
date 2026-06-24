@@ -625,6 +625,27 @@ describe('renderExplanation', () => {
     })
   })
 
+  test.each([
+    [2 as const, '2' as const],
+    [3 as const, '3' as const],
+    [5 as const, '5' as const],
+    [6 as const, '6' as const],
+  ])('imperative tense paragraph for form %d contains only elision', (paradigmForm, form) => {
+    const [, tenseParagraph] = renderExplanation(
+      { ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }), paradigmForm, form },
+      t,
+    )
+    expect(tenseParagraph).toEqual([{ text: 'explanation.tense.active.imperative.elision', kind: 'elided' }])
+  })
+
+  test('imperative tense paragraph for form 7 includes support sentence', () => {
+    const [, tenseParagraph] = renderExplanation(
+      { ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }), paradigmForm: 7, form: '7' },
+      t,
+    )
+    expect(tenseParagraph).toContainEqual({ text: 'explanation.tense.active.imperative.support', kind: 'measure' })
+  })
+
   test.each<VerbTense>([
     'passive.past',
     'passive.present.indicative',
@@ -636,6 +657,11 @@ describe('renderExplanation', () => {
       text: `explanation.voice.${tense}`,
       kind: 'measure',
     })
+  })
+
+  test('passive.past tense paragraph contains only the voice sentence', () => {
+    const [, tenseParagraph] = renderExplanation(testExplanationLayers({ tense: 'passive.past', pronoun: '3ms' }), t)
+    expect(tenseParagraph).toEqual([{ text: 'explanation.voice.passive.past', kind: 'measure' }])
   })
 
   test('includes tenseRoot sentence when non-null', () => {

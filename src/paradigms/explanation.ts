@@ -278,13 +278,15 @@ export function renderExplanation(
         kind: 'elided',
       },
       verbLayers?.tense === 'active.imperative' &&
-        layers.paradigmForm !== 4 &&
+        (layers.paradigmForm === 1 || layers.paradigmForm >= 7) &&
+        !layers.form?.endsWith('q') &&
         !verbLayers.contractedImperative && {
           text: t('explanation.tense.active.imperative.support', params),
           kind: 'measure',
         },
       verbLayers?.tense &&
-        verbLayers.tense !== 'active.imperative' && {
+        verbLayers.tense !== 'active.imperative' &&
+        verbLayers.tense !== 'passive.past' && {
           text: t(`explanation.tense.${verbLayers?.tense}`, params),
           kind: tenseKind(verbLayers?.tense),
         },
