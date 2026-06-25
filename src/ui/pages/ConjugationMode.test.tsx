@@ -60,14 +60,13 @@ test('shows translation subtitle for corpus verb with known translation', () => 
   expect(within(verbPanel).getByText('to write')).toBeInTheDocument()
 })
 
-test('shows multiple masdars with a mimi label', () => {
+test('shows multiple masdars', () => {
   localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderConjugationMode({ verbId: 'wEd-1' })
 
   const detail = screen.getByText('Verbal nouns').parentElement!
   expect(within(detail).getByText('وَعْد')).toBeInTheDocument()
   expect(within(detail).getByText('مَوْعِد')).toBeInTheDocument()
-  expect(within(detail).getByText('(mimi)')).toBeInTheDocument()
 })
 
 test('shows lexicalized masdars after regular masdars with a lexicalized label', () => {

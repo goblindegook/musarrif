@@ -5,7 +5,7 @@ import { renderExplanation, resolveNominalExplanationLayers } from '../../paradi
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active'
 import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive'
-import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
 import { Text } from '../atoms/Text'
@@ -44,9 +44,6 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
                   <span>
                     <AnnotatedArabic word={masdar} />
                   </span>
-                  {isTriliteralFormIDisplayVerb(verb) && verb.masdars?.[index] === 'mimi' && (
-                    <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
-                  )}
                   {index >= lexicalizedMasdarStartIndex && (
                     <MasdarNote>({t('meta.verbalNoun.lexicalized')})</MasdarNote>
                   )}

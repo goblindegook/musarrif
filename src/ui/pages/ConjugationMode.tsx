@@ -355,9 +355,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
                       <Fragment key={value}>
                         <MasdarItem>
                           <span>{formatArabic(value)}</span>
-                          {isTriliteralFormIDisplayVerb(selectedVerb) && selectedVerb.masdars?.[index] === 'mimi' && (
-                            <MasdarNote>({t('meta.verbalNoun.mimi')})</MasdarNote>
-                          )}
                           {index >= lexicalizedMasdarStartIndex && (
                             <MasdarNote>({t('meta.verbalNoun.lexicalized')})</MasdarNote>
                           )}
