@@ -377,7 +377,7 @@ function toTenseRoot(
   form: VerbForm,
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
-  if (rootType.includes('hollow')) return resolveHollow(rootType, tenseContext)
+  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(rootType, tenseContext)
   if (rootType.includes('defective')) return resolveDefective(rootType, tenseContext, pronoun)
   if (rootType === 'assimilated')
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1

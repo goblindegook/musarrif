@@ -187,6 +187,21 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
   test('hollow + active.imperative → middle-shortens', () => {
     expect(resolveVerbExplanationLayers(qawl, 'active.imperative', '2ms', 'قُلْ').tenseRoot).toBe('middle-shortens')
   })
+
+  test('hollow-waw Form II + active.past → undefined (gemination suppresses hollow)', () => {
+    const shawq = getVerb('شوق', 2)
+    expect(resolveVerbExplanationLayers(shawq, 'active.past', '3ms', 'شَوَّقَ').tenseRoot).toBeUndefined()
+  })
+
+  test('hollow-waw Form II + active.present.indicative → undefined (gemination suppresses hollow)', () => {
+    const shawq = getVerb('شوق', 2)
+    expect(resolveVerbExplanationLayers(shawq, 'active.present.indicative', '3ms', 'يُشَوِّقُ').tenseRoot).toBeUndefined()
+  })
+
+  test('hollow-waw Form V + active.past → undefined (gemination suppresses hollow)', () => {
+    const shawq = getVerb('شوق', 5)
+    expect(resolveVerbExplanationLayers(shawq, 'active.past', '3ms', 'تَشَوَّقَ').tenseRoot).toBeUndefined()
+  })
 })
 
 // ── tenseRoot: defective ─────────────────────────────────────────────────────
