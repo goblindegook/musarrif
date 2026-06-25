@@ -128,7 +128,7 @@ describe('ExerciseMode', () => {
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
     expect(screen.getByText(/transitive or intransitive action/i)).toBeInTheDocument()
-    expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('كَتَبَ')
   })
 
   test('clicking next after pass loads a fresh question', () => {

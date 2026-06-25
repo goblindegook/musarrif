@@ -49,9 +49,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
       {formExplanationParagraph && (
-        <Text dir={dir} lang={lang}>
-          {formExplanationParagraph}
-        </Text>
+        <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: formExplanationParagraph }} />
       )}
       {verb.root.length === 3 && (
         <Text dir={dir} lang={lang}>

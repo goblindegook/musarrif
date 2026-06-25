@@ -90,34 +90,21 @@ describe('FormInsights', () => {
     test('shows voicing assimilation for ز-initial Form VIII verb', () => {
       const verb = buildVerbFromId('zwj-8')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(
-        screen.getByText('first radical is ز, expect the تَ infix to change to voiced دَ', {
-          selector: 'p',
-          exact: false,
-        }),
-      ).toBeInTheDocument()
+      expect(document.body).toHaveTextContent('first radical is ز, expect the تَ infix to change to voiced دَ')
     })
 
     test('shows complete assimilation for د-initial Form VIII verb', () => {
       const verb = buildVerbFromId('dxl-8')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(
-        screen.getByText('first radical is د، ذ، ث، ط, or ظ, expect the تَ infix to assimilate completely', {
-          selector: 'p',
-          exact: false,
-        }),
-      ).toBeInTheDocument()
+      expect(document.body).toHaveTextContent(
+        'first radical is د، ذ، ث، ط, or ظ, expect the تَ infix to assimilate completely',
+      )
     })
 
     test('shows emphasis assimilation for ص-initial Form VIII verb', () => {
       const verb = buildVerbFromId('Sbr-8')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(
-        screen.getByText('first radical is ص or ض, expect the تَ infix to shift to emphatic طَ', {
-          selector: 'p',
-          exact: false,
-        }),
-      ).toBeInTheDocument()
+      expect(document.body).toHaveTextContent('first radical is ص or ض, expect the تَ infix to shift to emphatic طَ')
     })
   })
 })

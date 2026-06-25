@@ -741,11 +741,11 @@ describe('renderExplanation', () => {
     ])
   })
 
-  test('active.past form-i base pattern renders faʿula for u-u pattern', () => {
+  test('active.past form-i base pattern renders past form for u-u pattern', () => {
     const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَبُرَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿula') }))
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('كَبُرَ') }))
   })
 
   test('active.past form-i base pattern renders ḍamma for u-u pattern', () => {
@@ -755,18 +755,18 @@ describe('renderExplanation', () => {
     expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ḍamma') }))
   })
 
-  test('active.past form-i base pattern renders faʿala for a-u pattern', () => {
+  test('active.past form-i base pattern renders past form for a-u pattern', () => {
     const verb = getVerb('كتب', 1) // كَتَبَ, a-u
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿala') }))
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('كَتَبَ') }))
   })
 
-  test('active.past form-i base pattern renders faʿila for i-a pattern', () => {
+  test('active.past form-i base pattern renders past form for i-a pattern', () => {
     const verb = getVerbById('Elm-1')! // عَلِمَ, i-a, sound root
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
     const result = renderExplanation(layers, localeT)
-    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('faʿila') }))
+    expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('عَلِمَ') }))
   })
 })
 

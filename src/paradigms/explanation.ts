@@ -172,19 +172,16 @@ function resolveDefective(
   }
 }
 
-const FORM_I_BASE_PATTERNS: Record<
-  FormIPattern,
-  { basePattern: string; pastVowel: string; arabicForm: string; arabicVowel: string }
-> = {
-  'a-a': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'a-i': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'a-u': { basePattern: 'faʿala (فَعَلَ)', pastVowel: 'fatḥa', arabicForm: 'فَعَلَ', arabicVowel: 'فتحة' },
-  'i-a': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'i-i': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'i-u': { basePattern: 'faʿila (فَعِلَ)', pastVowel: 'kasra', arabicForm: 'فَعِلَ', arabicVowel: 'كسرة' },
-  'u-a': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
-  'u-i': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
-  'u-u': { basePattern: 'faʿula (فَعُلَ)', pastVowel: 'ḍamma', arabicForm: 'فَعُلَ', arabicVowel: 'ضمة' },
+const FORM_I_BASE_PATTERNS: Record<FormIPattern, { pastVowel: string; arabicVowel: string }> = {
+  'a-a': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
+  'a-i': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
+  'a-u': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
+  'i-a': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
+  'i-i': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
+  'i-u': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
+  'u-a': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
+  'u-i': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
+  'u-u': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
 }
 
 export type ExplanationKind = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'

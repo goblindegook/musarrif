@@ -326,7 +326,7 @@
     "explanation.tense.active.future": "لتكوين المستقبل: أضف السين أو سَوْفَ قبل المضارع المرفوع — لا تغيير آخر.",
     "explanation.tense.active.imperative.elision": "لتكوين الأمر: انطلق من المجزوم واحذف حرف المضارعة.",
     "explanation.tense.active.imperative.support": "إذا أفضى ذلك إلى تلاقي ساكنين فأضف ألف الوصل (ا) في البداية.",
-    "explanation.tense.active.past.form-i": "ٱلْقَالَبُ ٱلْأَسَاسِيُّ لِلْغَائِبِ ٱلْمُفْرَدِ ٱلْمُذَكَّرِ هُوَ {arabicForm} — بِلَا حَرْفِ مُضَارَعَةٍ، مَعَ {arabicVowel} عَلَى ٱلْحَرْفِ ٱلثَّانِي.",
+    "explanation.tense.active.past.form-i": "ٱلْقَالَبُ ٱلْأَسَاسِيُّ لِلْغَائِبِ ٱلْمُفْرَدِ ٱلْمُذَكَّرِ هُوَ {pastForm} — بِلَا حَرْفِ مُضَارَعَةٍ، مَعَ {arabicVowel} عَلَى ٱلْحَرْفِ ٱلثَّانِي.",
     "explanation.tense.active.past": "استخدم الماضي المعلوم للأحداث المكتملة.",
     "explanation.tense.active.present.indicative": "استخدم المضارع المرفوع للأحداث الجارية أو المعتادة.",
     "explanation.tense.active.present.jussive": "بعد لَمْ وفي أساليب الشرط: استخدم المجزوم بدلًا من المرفوع — اشتقه من المضارع المرفوع.",

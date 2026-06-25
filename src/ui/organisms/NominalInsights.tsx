@@ -81,7 +81,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
               {(si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
                 <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
               )}
-              {sentence.text}{' '}
+              <span dangerouslySetInnerHTML={{ __html: sentence.text }} />{' '}
             </span>
           ))}
         </Text>
