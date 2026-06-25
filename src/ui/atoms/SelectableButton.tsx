@@ -38,9 +38,9 @@ const Button = styled('button')<{
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
   cursor: pointer;
   display: inline-flex;
-  font-family: inherit;
   font-size: ${({ size }) => (size === 'compact' ? '0.78rem' : '0.8rem')};
   font-weight: 500;
+  line-height: 1;
   justify-content: center;
   min-height: ${({ size }) => (size === 'compact' ? '2.2rem' : '2.4rem')};
   min-width: 0;

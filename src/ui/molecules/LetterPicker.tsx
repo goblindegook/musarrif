@@ -173,8 +173,8 @@ const SlotInputWrapper = styled('div')`
 `
 
 const LetterInput = styled('input')`
-  font-family: inherit;
   font-size: 1.5rem;
+  line-height: 1;
   text-align: center;
   width: 100%;
   height: 3rem;
@@ -225,8 +225,8 @@ const LetterPopover = styled('div')`
 `
 
 const LetterOption = styled('button')`
-  font-family: inherit;
   font-size: 1rem;
+  line-height: 1;
   padding: 0.2rem;
   min-width: 22px;
   min-height: 22px;
