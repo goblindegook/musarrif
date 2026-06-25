@@ -199,20 +199,20 @@ describe('resolveVerbExplanationLayers tenseRoot defective', () => {
     expect(resolveVerbExplanationLayers(da3a, 'active.past', '3ms', 'دَعَا').tenseRoot).toBe('final-isolated')
   })
 
-  test('defective + active.past + 3fs → final-isolated', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3fs', 'دَعَتْ').tenseRoot).toBe('final-isolated')
+  test('defective + active.past + 3fs → final-elides', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3fs', 'دَعَتْ').tenseRoot).toBe('final-elides')
   })
 
-  test('defective + active.past + 3mp → final-isolated', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3mp', 'دَعَوْا').tenseRoot).toBe('final-isolated')
+  test('defective + active.past + 3mp → final-resurfaces', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3mp', 'دَعَوْا').tenseRoot).toBe('final-resurfaces')
   })
 
-  test('defective + active.past + 3md → final-isolated', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3md', 'دَعَوَا').tenseRoot).toBe('final-isolated')
+  test('defective + active.past + 3md → final-resurfaces', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3md', 'دَعَوَا').tenseRoot).toBe('final-resurfaces')
   })
 
-  test('defective + active.past + 3fd → final-isolated', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3fd', 'دَعَتَا').tenseRoot).toBe('final-isolated')
+  test('defective + active.past + 3fd → final-elides', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'active.past', '3fd', 'دَعَتَا').tenseRoot).toBe('final-elides')
   })
 
   test('defective + active.past + 1s → final-resurfaces', () => {
@@ -267,14 +267,12 @@ describe('resolveVerbExplanationLayers tenseRoot defective', () => {
     expect(resolveVerbExplanationLayers(da3a, 'active.imperative', '2ms', 'اُدْعُ').tenseRoot).toBe('final-drops')
   })
 
-  test('defective + passive.past → final-passive', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '3ms', 'دُعِيَ').tenseRoot).toBe('final-passive')
+  test('defective + passive.past → no tenseRoot', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '3ms', 'دُعِيَ').tenseRoot).toBeUndefined()
   })
 
-  test('defective + passive.present.indicative → final-passive', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'passive.present.indicative', '3ms', 'يُدْعَى').tenseRoot).toBe(
-      'final-passive',
-    )
+  test('defective + passive.present.indicative → no tenseRoot', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.present.indicative', '3ms', 'يُدْعَى').tenseRoot).toBeUndefined()
   })
 })
 

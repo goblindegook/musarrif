@@ -15,10 +15,10 @@ type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'a
 
 type TenseRootInteraction =
   | 'final-drops'
+  | 'final-elides'
   | 'final-isolated'
   | 'final-lengthens-ii'
   | 'final-lengthens-uu'
-  | 'final-passive'
   | 'final-resurfaces'
   | 'geminate-contracts'
   | 'geminate-jussive'
@@ -151,11 +151,13 @@ function resolveDefective(
   rootType: RootAnalysisType,
   tenseContext: VerbTense,
   pronoun: PronounId,
-): TenseRootInteraction {
+): TenseRootInteraction | undefined {
   const isWaw = rootType.includes('waw')
   switch (tenseContext) {
     case 'active.past':
-      return ['3ms', '3fs', '3mp', '3md', '3fd'].includes(pronoun) ? 'final-isolated' : 'final-resurfaces'
+      if (pronoun === '3ms') return 'final-isolated'
+      if (['3fs', '3fd'].includes(pronoun)) return 'final-elides'
+      return 'final-resurfaces'
     case 'active.present.indicative':
     case 'active.present.subjunctive':
     case 'active.future':
@@ -168,7 +170,7 @@ function resolveDefective(
     case 'passive.present.subjunctive':
     case 'passive.present.jussive':
     case 'passive.future':
-      return 'final-passive'
+      return undefined
   }
 }
 
