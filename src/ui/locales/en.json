@@ -305,7 +305,7 @@
     "explanation.form-root.assimilation-complete": "In Form VIII: if the first radical is <span lang=\"ar\">د، ذ، ث، ط</span>, or <span lang=\"ar\">ظ</span>, expect the <span lang=\"ar\">تَ</span> infix to assimilate completely — a doubled consonant appears in place of <span lang=\"ar\">تَ</span>.",
     "explanation.form-root.assimilation-emphasis": "In Form VIII: if the first radical is <span lang=\"ar\">ص</span> or <span lang=\"ar\">ض</span>, expect the <span lang=\"ar\">تَ</span> infix to shift to emphatic <span lang=\"ar\">طَ</span>.",
     "explanation.form-root.assimilation-voicing": "In Form VIII: if the first radical is <span lang=\"ar\">ز</span>, expect the <span lang=\"ar\">تَ</span> infix to change to voiced <span lang=\"ar\">دَ</span> (e.g., <span lang=\"ar\">اِزْدَوَجَ</span>).",
-    "explanation.form.1-action": "When the past vowel is fatḥa you can usually expect transitive or intransitive action.",
+    "explanation.form.1-action": "When the past vowel is fatḥa, expect physical or external action directed at an object or space — the broadest Form I class. The specific present-stem vowel still needs to be memorized with each verb.",
     "explanation.form.1-intermediate": "When the past vowel is kasra, expect cognitive or emotional meaning — halfway between action and state.",
     "explanation.form.1-stative": "When the past vowel is ḍamma, expect an inherent quality or state — imperative forms are rarely meaningful here.",
     "explanation.form.10": "Notice the <span lang=\"ar\">اِسْتَـ</span> prefix (<span lang=\"ar\">اِسْتَفْعَلَ</span>) — it typically means to seek, consider, or request the base Form I action.",
