@@ -73,6 +73,39 @@ describe('resolveVerbExplanationLayers formIPattern', () => {
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَّبَ')
     expect(layers.vowels).toBeUndefined()
   })
+
+  test('Form I verb → pastForm is 3ms active past citation form', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
+    expect(layers.pastForm).toBe('كَتَبَ')
+  })
+
+  test('Form I verb → presentForm is 3ms active present indicative citation form', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
+    expect(layers.presentForm).toBe('يَكْتُبُ')
+  })
+
+  test('Form II verb → pastForm and presentForm are undefined', () => {
+    const verb = getVerb('كتب', 2)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَّبَ')
+    expect(layers.pastForm).toBeUndefined()
+    expect(layers.presentForm).toBeUndefined()
+  })
+
+  test('form-i-pattern sentence contains actual past form of the verb', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[0]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('كَتَبَ') }))
+  })
+
+  test('form-i-pattern sentence contains actual present form of the verb', () => {
+    const verb = getVerb('كتب', 1)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
+    const result = renderExplanation(layers, localeT)
+    expect(result[0]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('يَكْتُبُ') }))
+  })
 })
 
 // ── tenseContext ─────────────────────────────────────────────────────────────

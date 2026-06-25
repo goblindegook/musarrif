@@ -73,11 +73,11 @@ test.each<[string, string, string]>([
   ["Tayo'aAT", 'on yeh', HAMZA_ON_YEH],
 
   // FIXME: conflicts with l'm-3 passive past 3ms
-  // ["Tuw'iT", 'on the line', C_HAMZA],
+  // ["Tuw'iT", 'on the line', HAMZA],
   ["Tuw'uT", 'on the line', HAMZA],
   ["Tuw'aT", 'on the line', HAMZA],
   // FIXME: conflicts with bw'-1 active jussive 3fs
-  // ["Tuw'iyT", 'on the line', C_HAMZA],
+  // ["Tuw'iyT", 'on the line', HAMZA],
   ["Tuw'uwT", 'on the line', HAMZA],
   ["Tuw'aAT", 'on the line', HAMZA],
 
@@ -85,7 +85,7 @@ test.each<[string, string, string]>([
   ["Tawo'uT", 'on the line', HAMZA],
   ["Tawo'aT", 'on the line', HAMZA],
   // FIXME: conflicts with w'y-1 passive participle
-  // ["Tawo'iyT", 'on the line', C_HAMZA],
+  // ["Tawo'iyT", 'on the line', HAMZA],
   ["Tawo'uwT", 'on the line', HAMZA],
   ["Tawo'aAT", 'on the line', HAMZA],
 
@@ -94,7 +94,7 @@ test.each<[string, string, string]>([
   ["TaA'aT", 'on the line', HAMZA],
   ["TaA'iyT", 'on yeh', HAMZA_ON_YEH],
   // FIXME: conflicts with jy'-1 past 3pm
-  // ["TaA'uwT", 'on the line', C_HAMZA],
+  // ["TaA'uwT", 'on the line', HAMZA],
   ["TaA'aAT", 'on the line', HAMZA],
 ])(`hamza in %s seats %s`, (word, seat, expected) => {
   const x = new Word([measureMorpheme(...tokenize(transliterateReverse(word)))])

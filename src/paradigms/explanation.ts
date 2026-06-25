@@ -1,5 +1,6 @@
 import { toRoman } from '../primitives/numbers'
 import { annotate } from './annotation'
+import { conjugate } from './conjugation'
 import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import type { PronounId } from './pronouns'
@@ -95,6 +96,8 @@ interface BaseExplanationLayers {
   form?: VerbFormDescriptor
   vowels?: FormIPattern
   formRoot?: FormRootInteraction
+  pastForm?: string
+  presentForm?: string
 }
 
 export interface VerbExplanationLayers extends BaseExplanationLayers {
@@ -256,6 +259,8 @@ export function renderExplanation(
     root: layers.paradigmRoots.join('-'),
     form: toRoman(layers.paradigmForm),
     pattern: nominalLayers?.masdarPattern ?? '',
+    pastForm: layers.pastForm ?? '',
+    presentForm: layers.presentForm ?? '',
   }
 
   const nominalKey = resolveNominalKey(nominalLayers)
@@ -338,6 +343,7 @@ export function resolveVerbExplanationLayers(
   arabic: string,
 ): VerbExplanationLayers {
   const rootType = analyzeRoot(verb.rootTokens).type
+  const isFormI = isTriliteralFormIVerb(verb)
 
   return {
     category: 'verb',
@@ -346,13 +352,14 @@ export function resolveVerbExplanationLayers(
     form: toFormDescriptor(verb),
     arabic,
     rootType,
-    vowels: isTriliteralFormIVerb(verb) ? verb.vowels : undefined,
+    vowels: isFormI ? verb.vowels : undefined,
+    pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
+    presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
-    contractedImperative:
-      tense === 'active.imperative' && isTriliteralFormIVerb(verb) ? verb.contractedImperative : undefined,
+    contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
     ...extractAffixes(annotate(verb, tense, pronoun)?.steps.at(-1)?.morphemes),
   }
 }
@@ -422,6 +429,7 @@ export function resolveNominalExplanationLayers(
   arabic: string | Word | readonly string[],
 ): NominalExplanationLayers {
   const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
+  const isFormI = isTriliteralFormIVerb(verb)
   return {
     category: 'nominal',
     paradigmRoots: Array.from(verb.root),
@@ -429,7 +437,9 @@ export function resolveNominalExplanationLayers(
     form: toFormDescriptor(verb),
     arabic: arabicString,
     rootType: analyzeRoot(verb.rootTokens).type,
-    vowels: isTriliteralFormIVerb(verb) ? verb.vowels : undefined,
+    vowels: isFormI ? verb.vowels : undefined,
+    pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
+    presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     nominal,
     isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabicString),
