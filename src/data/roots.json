@@ -2290,6 +2290,12 @@
     "masdars": ["mimi", "fa3l"]
   },
   {
+    "root": "jzr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
     "root": "k$f",
     "form": 8
   },
