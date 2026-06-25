@@ -261,7 +261,8 @@ const Input = styled('input')`
   border: 1px solid var(--color-border-input);
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
-  font-family: inherit;
+  line-height: 1;
+  font-family: 'Noto Sans Arabic', system-ui, sans-serif;
   color: var(--color-text-primary);
   background: var(--color-bg-surface-secondary);
   width: 100%;
