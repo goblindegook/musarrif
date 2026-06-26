@@ -108,8 +108,11 @@ describe('Conjugation', () => {
   it('navigates when selecting a verb from search', async () => {
     renderApp('/#/verbs')
     const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const input = screen.getByLabelText('Verb')
 
-    await user.type(screen.getByLabelText('Verb'), 'كتب{enter}')
+    await user.type(input, 'كتب')
+    expect(await screen.findByText('to dictate')).toBeInTheDocument()
+    await user.keyboard('{Enter}')
 
     expect(window.location.hash).toBe('#/verbs/ktb-2')
   })

@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import enLocale from '../ui/locales/en.json'
+import enStrings from '../ui/locales/en.strings.json'
+import enLexicon from '../ui/locales/en.verbs.json'
 import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'
@@ -7,8 +8,9 @@ import type { VerbTense } from './tense'
 import { getVerb, getVerbById, synthesizeVerb } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
-  const locale = enLocale as { strings: Record<string, string>; roots?: Record<string, string> }
-  const template = locale.strings[key] ?? locale.roots?.[key] ?? key
+  const strings = enStrings as Record<string, string>
+  const roots = (enLexicon as { roots?: Record<string, string> }).roots
+  const template = strings[key] ?? roots?.[key] ?? key
   if (!params) return template
   return template.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? `{${k}}`)
 }

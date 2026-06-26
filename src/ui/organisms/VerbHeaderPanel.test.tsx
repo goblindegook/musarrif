@@ -17,7 +17,7 @@ const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps
 }
 
 describe('VerbHeaderPanel', () => {
-  test('renders verb, translation, actions, and content', () => {
+  test('renders verb, translation, actions, and content', async () => {
     renderVerbHeaderPanel({
       verb: getVerbById('ktb-1')!,
       actions: <button type="button">Share</button>,
@@ -25,7 +25,7 @@ describe('VerbHeaderPanel', () => {
     })
 
     expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
-    const subtitle = screen.getByText('to write')
+    const subtitle = await screen.findByText('to write')
     expect(subtitle).toHaveAttribute('dir', 'ltr')
     expect(subtitle).toHaveAttribute('lang', 'en')
     expect(screen.getByText('Share')).toBeInTheDocument()

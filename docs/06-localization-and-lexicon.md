@@ -2,8 +2,8 @@
 
 Supports English, Italian, European Portuguese, Arabic. Translation files in `src/ui/locales/`.
 
-- All UI strings appear in all four locale files under `strings`
-- Verb translations go in `en.json`, `it.json`, `pt.json` only (Arabic does not need translation)
+- All UI strings live in flat `*.strings.json` files for all four languages
+- Verb translations and root glosses live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (Arabic does not need translation)
 - Portuguese locale must be `pt_PT`, use pre-AO90 orthography (e.g., `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`)
 - Add entries to `verbs` + `roots` in three non-Arabic locale files
 - Translate primary meaning; add secondary only when diverges significantly (e.g. `"to love, to like"`)
@@ -28,6 +28,6 @@ When adding/correcting verb/root entries, follow every step. Do not skip.
 
 3. **Required `roots.json` fields gate**: Set `vowels`, `masdars`, `passiveVoice`, `noPassiveParticiple` where applicable. If field unknown, stop and report uncertainty.
 
-4. **Atomic locale update**: Same change — add/update verb translation keys + root gloss keys in `en.json`, `it.json`, `pt.json`.
+4. **Atomic locale update**: Same change — add/update verb translation keys + root gloss keys in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json`.
 
 5. **Final verification**: Re-open changed entries, verify field-by-field against source data. Validate JSON parsing for all modified files. Confirm no orphan/incorrect keys.

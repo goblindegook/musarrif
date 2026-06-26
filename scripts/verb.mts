@@ -12,9 +12,9 @@ const ROOT = join(__dirname, '..')
 
 const ROOTS_PATH = join(ROOT, 'src/data/roots.json')
 const LOCALE_PATHS = {
-  en: join(ROOT, 'src/ui/locales/en.json'),
-  it: join(ROOT, 'src/ui/locales/it.json'),
-  pt: join(ROOT, 'src/ui/locales/pt.json'),
+  en: join(ROOT, 'src/ui/locales/en.verbs.json'),
+  it: join(ROOT, 'src/ui/locales/it.verbs.json'),
+  pt: join(ROOT, 'src/ui/locales/pt.verbs.json'),
 } as const
 
 const LANGUAGE_CODES = ['en', 'it', 'pt'] as const

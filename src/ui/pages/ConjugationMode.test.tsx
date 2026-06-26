@@ -54,10 +54,10 @@ test('search and build tabs are correctly linked to their tabpanels', () => {
   expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
 })
 
-test('shows translation subtitle for corpus verb with known translation', () => {
+test('shows translation subtitle for corpus verb with known translation', async () => {
   renderConjugationMode({ verbId: 'ktb-1' })
   const verbPanel = document.querySelector('h2')!.closest('section')!
-  expect(within(verbPanel).getByText('to write')).toBeInTheDocument()
+  expect(await within(verbPanel).findByText('to write')).toBeInTheDocument()
 })
 
 test('shows multiple masdars', () => {
@@ -248,7 +248,7 @@ describe('Root insights', () => {
     fireEvent.click(screen.getByLabelText(/View root insights/i))
 
     const dialog = screen.getByText('Root insights').closest<HTMLElement>('[role="dialog"]')!
-    expect(within(dialog).getByText('writing')).toBeInTheDocument()
+    expect(await within(dialog).findByText('writing')).toBeInTheDocument()
   })
 })
 

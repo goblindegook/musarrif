@@ -24,7 +24,7 @@
 
 **Exercise mode**: `src/exercises/` — Pure functions for multiple-choice exercises (no DOM/Preact). 14 exercise kinds. Adaptive difficulty controls tense pool, pronoun selection, diacritics display. `ExerciseMode` in `src/ui/pages/` accepts injectable `generateExercise` for testability. Keep deterministic + testable in isolation.
 
-**Localization**: `src/ui/locales/{en,it,pt,ar}.json`. Verb translations in `en.json`, `it.json`, `pt.json` only (Arabic uses labels directly). UI strings must appear in all four locales under `strings` object.
+**Localization**: `src/ui/locales/{lang}.strings.json` contains flat UI strings for all four languages. `src/ui/locales/{en,it,pt}.verbs.json` contains `verbs` + `roots` dictionaries; Arabic has no lexicon file because it does not translate verbs. `en.strings.json` is eager, every other locale file is lazy-loaded.
 
 ### Directory Organization
 

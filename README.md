@@ -119,9 +119,9 @@ Contributions are welcome, especially for:
 Use the interactive wizard to add or edit entries in:
 
 - `src/data/roots.json`
-- `src/locales/en.json`
-- `src/locales/it.json`
-- `src/locales/pt.json`
+- `src/ui/locales/en.verbs.json`
+- `src/ui/locales/it.verbs.json`
+- `src/ui/locales/pt.verbs.json`
 
 Run it with:
 

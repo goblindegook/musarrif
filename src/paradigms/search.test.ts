@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import en from '../ui/locales/en.json'
-import pt from '../ui/locales/pt.json'
+import en from '../ui/locales/en.verbs.json'
+import pt from '../ui/locales/pt.verbs.json'
 import { search } from './search'
 
 describe('search', () => {
@@ -77,5 +77,14 @@ describe('search', () => {
     const portugueseMatches = search('translate', { translate: (key) => portuguese[key], language: 'pt' })
 
     expect(englishMatches.length).toBeGreaterThan(portugueseMatches.length)
+  })
+
+  test('uses a different cache entry once translated search is enabled', () => {
+    const untranslated = search('كتب')
+    const english = (en as { verbs?: Record<string, string> }).verbs ?? {}
+    const translated = search('كتب', { translate: (key) => english[key], language: 'en' })
+
+    expect(untranslated[0]?.id).toBe('ktb-1')
+    expect(translated[0]?.id).toBe('ktb-2')
   })
 })

@@ -15,7 +15,7 @@ import { isDual, isFemininePlural, isMasculinePlural } from '../src/paradigms/pr
 import { utcToday } from '../src/primitives/dates.ts'
 import { parseInteger, toRoman } from '../src/primitives/numbers.ts'
 import { parseTrackedExercises } from '../src/ui/hooks/useStats.ts'
-import en from '../src/ui/locales/en.json' with { type: 'json' }
+import en from '../src/ui/locales/en.strings.json' with { type: 'json' }
 
 const filePath = process.argv[2]
 if (!filePath) {
@@ -224,7 +224,7 @@ function describeCard(card: SrsCard): string {
 // --- Insights text (mirrors LearningInsights.tsx) ---
 
 function t(key: string, params?: Record<string, string>): string {
-  let str = (en.strings as Record<string, string>)[key] ?? key
+  let str = (en as Record<string, string>)[key] ?? key
   if (params) for (const [k, v] of Object.entries(params)) str = str.replaceAll(`{${k}}`, v)
   return str
 }

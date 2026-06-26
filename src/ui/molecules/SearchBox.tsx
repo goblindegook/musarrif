@@ -13,7 +13,7 @@ interface SearchProps {
 }
 
 export function Search({ id, onSelect, selectedVerb }: SearchProps) {
-  const { t, lang, dir, diacriticsPreference } = useI18n()
+  const { t, lang, dir, hasLexicon, diacriticsPreference } = useI18n()
   const [query, setQuery] = useState('')
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [highligtedIndex, setHighlightedIndex] = useState(-1)
@@ -29,8 +29,8 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
 
   const matchingVerbs = useMemo<DisplayVerb[]>(() => {
     if (!query.trim()) return []
-    return search(query, { translate: t, language: lang })
-  }, [lang, query, t])
+    return search(query, { translate: t, language: hasLexicon ? lang : 'none' })
+  }, [hasLexicon, lang, query, t])
 
   const suggested = useMemo(() => matchingVerbs.slice(0, 20), [matchingVerbs])
 

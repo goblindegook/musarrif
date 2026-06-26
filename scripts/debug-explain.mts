@@ -30,11 +30,9 @@ import {
 import type { Word } from '../src/paradigms/word.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 import { mapRecord } from '../src/primitives/objects.ts'
-import en from '../src/ui/locales/en.json' with { type: 'json' }
+import en from '../src/ui/locales/en.strings.json' with { type: 'json' }
 
-const locale = en
-const localeStrings = locale.strings as Record<string, string>
-const localeRoots = locale.roots as Record<string, string>
+const locale = en as Record<string, string>
 
 type TranslationParams = Record<string, string>
 type ConjugationForms = Record<PronounId, Word>
@@ -42,7 +40,7 @@ type ConjugationForms = Record<PronounId, Word>
 const ALL_PARADIGMS: readonly VerbParadigm[] = [...ALL_TENSES, 'active.participle', 'passive.participle', 'masdar']
 
 const t = (key: string, params?: TranslationParams): string => {
-  const template = localeStrings[key] ?? localeRoots[key] ?? key
+  const template = locale[key] ?? key
   if (params == null) return template
   return template.replace(/\{(\w+)\}/g, (_: string, k: string) => params[k] ?? `{${k}}`)
 }

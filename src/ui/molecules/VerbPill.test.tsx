@@ -10,10 +10,10 @@ afterEach(() => {
 
 describe('VerbPill', () => {
   describe('translation', () => {
-    test('shows translation when corpus verb has one', () => {
+    test('shows translation when corpus verb has one', async () => {
       const verb = getVerbById('ktb-1')!
       renderWithProviders(<VerbPill verb={verb} />)
-      expect(screen.getByText('to write')).toBeInTheDocument()
+      expect(await screen.findByText('to write')).toBeInTheDocument()
     })
 
     test('shows dash for synthetic verb even when translation key exists', () => {
