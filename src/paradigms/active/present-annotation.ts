@@ -1,4 +1,4 @@
-import type { AnnotatedForm, DerivationStep } from '../annotation'
+import type { DerivationStep } from '../annotation'
 import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON, type Token } from '../tokens'
@@ -7,7 +7,7 @@ import { elidedMorpheme } from '../word'
 import { annotatePast } from './past-annotation'
 import { conjugatePresentMood } from './present'
 
-export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): AnnotatedForm {
+export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): readonly DerivationStep[] {
   if (mood !== 'indicative') {
     const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
     const moodConjugation = conjugatePresentMood(verb, mood)[pronounId]
@@ -17,7 +17,7 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
 
     if (pronounId === '2fs' || isMasculinePlural(pronounId)) elision.push(elidedMorpheme(NOON, FATHA))
 
-    const finalIndicativeMorpheme = indicativeAnnotation.steps.at(-1)?.morphemes.at(-1)
+    const finalIndicativeMorpheme = indicativeAnnotation.at(-1)?.morphemes.at(-1)
     if (
       mood === 'jussive' &&
       finalIndicativeMorpheme?.role === 'radical' &&
@@ -25,16 +25,14 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     )
       elision.push(finalIndicativeMorpheme.toElided())
 
-    return {
-      steps: [
-        ...indicativeAnnotation.steps,
-        {
-          kind: { type: 'tense', verbTense: `active.present.${mood}` },
-          arabic: String(moodConjugation),
-          morphemes: [...moodConjugation.morphemes, ...elision],
-        },
-      ],
-    }
+    return [
+      ...indicativeAnnotation,
+      {
+        type: 'tense',
+        verbTense: `active.present.${mood}` as const,
+        morphemes: [...moodConjugation.morphemes, ...elision],
+      },
+    ]
   }
 
   const pastAnnotation = annotatePast(verb, '3ms')
@@ -43,27 +41,25 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
   const dropped = elidedPastPrefix(verb)
 
   const steps: readonly DerivationStep[] = [
-    pastAnnotation.steps[0],
-    pastAnnotation.steps[1],
+    pastAnnotation[0],
+    pastAnnotation[1],
     {
-      kind: { type: 'tense', verbTense: 'active.present.indicative' },
-      arabic: String(indicative['3ms']),
+      type: 'tense',
+      verbTense: 'active.present.indicative',
       morphemes: dropped ? [elidedMorpheme(...dropped), ...indicative['3ms'].morphemes] : indicative['3ms'].morphemes,
     },
   ]
 
-  if (pronounId === '3ms') return { steps }
+  if (pronounId === '3ms') return steps
 
-  return {
-    steps: [
-      ...steps,
-      {
-        kind: { type: 'pronoun', pronounId },
-        arabic: String(indicative[pronounId]),
-        morphemes: indicative[pronounId].morphemes,
-      },
-    ],
-  }
+  return [
+    ...steps,
+    {
+      type: 'pronoun',
+      pronounId,
+      morphemes: indicative[pronounId].morphemes,
+    },
+  ]
 }
 
 function elidedPastPrefix(verb: Verb): readonly Token[] | null {

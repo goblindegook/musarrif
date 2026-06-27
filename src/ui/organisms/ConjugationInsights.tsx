@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import { annotate, type DerivationStep, type DerivationStepKind } from '../../paradigms/annotation'
+import { annotate, type DerivationStep } from '../../paradigms/annotation'
 import type { ExplanationKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
@@ -29,16 +29,16 @@ interface ConjugationInsightsProps {
   arabic: string
 }
 
-function stepLabel(kind: DerivationStepKind, verb: DisplayVerb, t: Translate): string {
-  switch (kind.type) {
+function stepLabel(step: DerivationStep, verb: DisplayVerb, t: Translate): string {
+  switch (step.type) {
     case 'root':
       return t('meta.root')
     case 'form':
-      return t('meta.form.withNumber', { form: formatFormLabel(kind.form, verb.root) })
+      return t('meta.form.withNumber', { form: formatFormLabel(step.form, verb.root) })
     case 'pronoun':
-      return t(`pronoun.${kind.pronounId}`)
+      return t(`pronoun.${step.pronounId}`)
     case 'tense':
-      return t(`tense.${kind.verbTense}`)
+      return t(`tense.${step.verbTense}`)
   }
 }
 
@@ -47,7 +47,7 @@ function DerivationSteps({ steps, verb, t }: { steps: readonly DerivationStep[];
     <StepsTable>
       {steps.map((step, i) => (
         <StepRow key={i} isFinal={i === steps.length - 1}>
-          <StepLabel>{stepLabel(step.kind, verb, t)}</StepLabel>
+          <StepLabel>{stepLabel(step, verb, t)}</StepLabel>
           <StepArabic dir="rtl" lang="ar">
             <AnnotatedArabic morphemes={step.morphemes} />
           </StepArabic>
@@ -61,7 +61,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const annotation = annotate(verb, verbTense, pronoun)
-  const finalStep = annotation?.steps[annotation.steps.length - 1]
+  const finalStep = annotation.at(-1)
 
   return (
     <>
@@ -78,7 +78,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
                 arabic
               )}
             </ArabicDisplay>
-            {annotation && <DerivationSteps steps={annotation.steps} verb={verb} t={t} />}
+            <DerivationSteps steps={annotation} verb={verb} t={t} />
           </VerbDisplayArea>
           {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map((paragraph, pi) => (
             <Text key={pi}>

@@ -501,7 +501,14 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   if (c2.isWeak) {
     if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.tokens.at(0)))
       return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-    return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
+    return [
+      ...prefix,
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA),
+      radicalMorpheme(ALIF),
+      radicalMorpheme(c3),
+      ...moodSuffix,
+    ]
   }
 
   return [

@@ -359,7 +359,7 @@ export function resolveVerbExplanationLayers(
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
     contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
-    ...extractAffixes(annotate(verb, tense, pronoun)?.steps.at(-1)?.morphemes),
+    ...extractAffixes(annotate(verb, tense, pronoun).at(-1)?.morphemes),
   }
 }
 

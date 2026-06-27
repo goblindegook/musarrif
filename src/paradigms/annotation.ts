@@ -10,23 +10,13 @@ import type { VerbTense } from './tense'
 import type { Verb, VerbForm } from './verbs'
 import type { Morpheme } from './word'
 
-export type DerivationStepKind =
-  | { type: 'root' }
-  | { type: 'form'; form: VerbForm }
-  | { type: 'tense'; verbTense: VerbTense }
-  | { type: 'pronoun'; pronounId: PronounId }
+export type DerivationStep =
+  | { type: 'root'; morphemes: readonly Morpheme[] }
+  | { type: 'form'; form: VerbForm; morphemes: readonly Morpheme[] }
+  | { type: 'tense'; verbTense: VerbTense; morphemes: readonly Morpheme[] }
+  | { type: 'pronoun'; pronounId: PronounId; morphemes: readonly Morpheme[] }
 
-export interface DerivationStep {
-  kind: DerivationStepKind
-  arabic: string
-  morphemes: readonly Morpheme[]
-}
-
-export interface AnnotatedForm {
-  steps: readonly DerivationStep[]
-}
-
-export function annotate(verb: Verb, verbTense: VerbTense, pronounId: PronounId): AnnotatedForm | null {
+export function annotate(verb: Verb, verbTense: VerbTense, pronounId: PronounId): readonly DerivationStep[] {
   switch (verbTense) {
     case 'active.past':
       return annotatePast(verb, pronounId)
@@ -51,6 +41,6 @@ export function annotate(verb: Verb, verbTense: VerbTense, pronounId: PronounId)
     case 'passive.future':
       return annotatePassiveFuture(verb, pronounId)
     default:
-      return null
+      return []
   }
 }
