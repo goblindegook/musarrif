@@ -30,7 +30,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -83,7 +83,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -124,7 +124,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'نْ', role: 'measure' },
@@ -166,7 +166,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'تَ', role: 'measure' },
@@ -208,7 +208,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'تَ', role: 'measure' },
@@ -249,7 +249,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -275,7 +275,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.subjunctive',
+        tense: 'active.present.subjunctive',
         morphemes: [
           { text: 'أَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -315,7 +315,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -341,7 +341,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -381,7 +381,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -407,7 +407,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.subjunctive',
+        tense: 'active.present.subjunctive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -448,7 +448,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -474,7 +474,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.subjunctive',
+        tense: 'active.present.subjunctive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -515,7 +515,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -541,7 +541,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.subjunctive',
+        tense: 'active.present.subjunctive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -582,7 +582,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -608,7 +608,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -649,7 +649,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -675,7 +675,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -716,7 +716,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -742,7 +742,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -783,7 +783,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -809,7 +809,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -850,7 +850,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'تَ', role: 'measure' },
@@ -863,7 +863,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'تَ', role: 'measure' },
@@ -903,7 +903,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -929,7 +929,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -966,7 +966,7 @@ describe('annotateActivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ؤ', role: 'radical' },

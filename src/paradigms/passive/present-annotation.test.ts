@@ -29,7 +29,7 @@ describe('annotatePassivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.present.indicative',
+        tense: 'passive.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'سْتَ', role: 'measure' },
@@ -69,7 +69,7 @@ describe('annotatePassivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.present.indicative',
+        tense: 'passive.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -120,7 +120,7 @@ describe('annotatePassivePresentMood', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.present.indicative',
+        tense: 'passive.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'ق', role: 'radical' },

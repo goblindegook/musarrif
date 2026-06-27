@@ -30,7 +30,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -56,7 +56,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.future',
+        tense: 'active.future',
         morphemes: [
           { text: 'سَ', role: 'particle' },
           { text: 'يَ', role: 'agreement' },
@@ -98,7 +98,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'اِ', role: 'elided' },
           { text: 'يَ', role: 'agreement' },
@@ -113,7 +113,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.future',
+        tense: 'active.future',
         morphemes: [
           { text: 'سَ', role: 'particle' },
           { text: 'يَ', role: 'agreement' },
@@ -155,7 +155,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -168,7 +168,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.future',
+        tense: 'active.future',
         morphemes: [
           { text: 'سَ', role: 'particle' },
           { text: 'يُ', role: 'agreement' },
@@ -208,7 +208,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'أَ', role: 'elided' },
           { text: 'يُ', role: 'agreement' },
@@ -221,7 +221,7 @@ describe('annotateActiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.future',
+        tense: 'active.future',
         morphemes: [
           { text: 'سَ', role: 'particle' },
           { text: 'يُ', role: 'agreement' },

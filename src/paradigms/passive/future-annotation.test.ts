@@ -30,7 +30,7 @@ describe('annotatePassiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.present.indicative',
+        tense: 'passive.present.indicative',
         morphemes: [
           { text: 'يُ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -56,7 +56,7 @@ describe('annotatePassiveFuture', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.future',
+        tense: 'passive.future',
         morphemes: [
           { text: 'سَ', role: 'particle' },
           { text: 'أُ', role: 'agreement' },

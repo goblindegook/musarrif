@@ -20,7 +20,7 @@ export function activePastDerivationSteps(verb: Verb, pronounId: PronounId): Der
     },
     {
       type: 'tense',
-      verbTense: 'active.past',
+      tense: 'active.past',
       morphemes,
     },
   ]

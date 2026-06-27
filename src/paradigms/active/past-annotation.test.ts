@@ -30,7 +30,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'ك', role: 'radical' },
           { text: 'َ', role: 'measure' },
@@ -79,7 +79,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'ح', role: 'radical' },
           { text: 'َ', role: 'measure' },
@@ -114,7 +114,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'ك', role: 'radical' },
           { text: 'َ', role: 'measure' },
@@ -151,7 +151,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'ب', role: 'radical' },
           { text: 'َ', role: 'measure' },
@@ -201,7 +201,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'اِنْ', role: 'measure' },
           { text: 'ك', role: 'radical' },
@@ -242,7 +242,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'اِ', role: 'measure' },
           { text: 'خ', role: 'radical' },
@@ -282,7 +282,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'ك', role: 'radical' },
           { text: 'َا', role: 'measure' },
@@ -322,7 +322,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'تَ', role: 'measure' },
           { text: 'ك', role: 'radical' },
@@ -363,7 +363,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'تَ', role: 'measure' },
           { text: 'ك', role: 'radical' },
@@ -421,7 +421,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { text: 'اِ', role: 'measure' },
           { text: 'ح', role: 'radical' },
@@ -472,7 +472,7 @@ describe('annotatePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.past',
+        tense: 'active.past',
         morphemes: [
           { role: 'measure', text: 'اِتَّ' },
           { role: 'radical', text: 'ت' },

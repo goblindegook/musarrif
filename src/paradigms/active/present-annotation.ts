@@ -29,7 +29,7 @@ export function activePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronoun
       ...indicativeAnnotation,
       {
         type: 'tense',
-        verbTense: `active.present.${mood}` as const,
+        tense: `active.present.${mood}` as const,
         morphemes: [...moodConjugation.morphemes, ...elision],
       },
     ]
@@ -45,7 +45,7 @@ export function activePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronoun
     pastAnnotation[1],
     {
       type: 'tense',
-      verbTense: 'active.present.indicative',
+      tense: 'active.present.indicative',
       morphemes: dropped ? [elidedMorpheme(...dropped), ...indicative['3ms'].morphemes] : indicative['3ms'].morphemes,
     },
   ]

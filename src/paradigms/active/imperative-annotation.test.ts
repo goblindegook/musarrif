@@ -30,7 +30,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -56,7 +56,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -70,7 +70,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اُ', role: 'measure' },
@@ -112,7 +112,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'اِ', role: 'elided' },
           { text: 'يَ', role: 'agreement' },
@@ -141,7 +141,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'سْتَ', role: 'measure' },
@@ -155,7 +155,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اِسْتَ', role: 'measure' },
@@ -196,7 +196,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -222,7 +222,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -236,7 +236,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اُ', role: 'measure' },
@@ -276,7 +276,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'أَ', role: 'elided' },
           { text: 'يُ', role: 'agreement' },
@@ -301,7 +301,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تُ', role: 'agreement' },
           { text: 'ح', role: 'radical' },
@@ -313,7 +313,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تُ', role: 'elided' },
           { text: 'أَ', role: 'measure' },
@@ -353,7 +353,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -379,7 +379,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -392,7 +392,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اُ', role: 'measure' },
@@ -412,7 +412,7 @@ describe('annotateActiveImperative', () => {
 
     expect(detokenizeDerivationSteps(steps).at(-1)).toEqual({
       type: 'tense',
-      verbTense: 'active.imperative',
+      tense: 'active.imperative',
       morphemes: [
         { text: 'تَ', role: 'elided' },
         { text: 'أ', role: 'elided' },
@@ -450,7 +450,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -476,7 +476,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -490,7 +490,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اُ', role: 'measure' },
@@ -531,7 +531,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.indicative',
+        tense: 'active.present.indicative',
         morphemes: [
           { text: 'يَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -557,7 +557,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.present.jussive',
+        tense: 'active.present.jussive',
         morphemes: [
           { text: 'تَ', role: 'agreement' },
           { text: 'ك', role: 'radical' },
@@ -570,7 +570,7 @@ describe('annotateActiveImperative', () => {
       },
       {
         type: 'tense',
-        verbTense: 'active.imperative',
+        tense: 'active.imperative',
         morphemes: [
           { text: 'تَ', role: 'elided' },
           { text: 'اُ', role: 'measure' },

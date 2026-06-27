@@ -11,7 +11,7 @@ export function activeFutureDerivationSteps(verb: Verb, pronounId: PronounId): D
     ...activePresentMoodDerivationSteps(verb, 'indicative', pronounId),
     {
       type: 'tense',
-      verbTense: 'active.future',
+      tense: 'active.future',
       morphemes: word.morphemes,
     },
   ]

@@ -13,7 +13,7 @@ export function passivePastDerivationSteps(verb: Verb, pronounId: PronounId): re
     activePastAnnotation[1],
     {
       type: 'tense',
-      verbTense: 'passive.past',
+      tense: 'passive.past',
       morphemes: allForms['3ms'].morphemes,
     },
   ]

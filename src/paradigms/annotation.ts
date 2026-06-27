@@ -13,7 +13,7 @@ import type { Morpheme } from './word'
 export type DerivationStep =
   | { type: 'root'; morphemes: readonly Morpheme[] }
   | { type: 'form'; form: VerbForm; morphemes: readonly Morpheme[] }
-  | { type: 'tense'; verbTense: VerbTense; morphemes: readonly Morpheme[] }
+  | { type: 'tense'; tense: VerbTense; morphemes: readonly Morpheme[] }
   | { type: 'pronoun'; pronounId: PronounId; morphemes: readonly Morpheme[] }
 
 export type DerivationSteps = readonly DerivationStep[]

@@ -30,7 +30,7 @@ describe('annotatePassivePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.past',
+        tense: 'passive.past',
         morphemes: [
           { text: 'ك', role: 'radical' },
           { text: 'ُ', role: 'measure' },
@@ -79,7 +79,7 @@ describe('annotatePassivePast', () => {
       },
       {
         type: 'tense',
-        verbTense: 'passive.past',
+        tense: 'passive.past',
         morphemes: [
           { text: 'ج', role: 'radical' },
           { text: 'ُ', role: 'measure' },

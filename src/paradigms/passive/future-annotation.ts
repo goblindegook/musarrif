@@ -5,14 +5,12 @@ import { conjugatePassiveFuture } from './future'
 import { passivePresentMoodDerivationSteps } from './present-annotation'
 
 export function passiveFutureDerivationSteps(verb: Verb, pronounId: PronounId): readonly DerivationStep[] {
-  const word = conjugatePassiveFuture(verb)[pronounId]
-
   return [
     ...passivePresentMoodDerivationSteps(verb, 'indicative', pronounId),
     {
       type: 'tense',
-      verbTense: 'passive.future',
-      morphemes: word.morphemes,
+      tense: 'passive.future',
+      morphemes: conjugatePassiveFuture(verb)[pronounId].morphemes,
     },
   ]
 }

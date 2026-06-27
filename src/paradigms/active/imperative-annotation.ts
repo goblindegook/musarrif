@@ -16,7 +16,7 @@ export function imperativeDerivationSteps(verb: Verb, pronounId: PronounId): Der
     ...jussive,
     {
       type: 'tense',
-      verbTense: 'active.imperative',
+      tense: 'active.imperative',
       morphemes: [...dropped, ...word.morphemes],
     },
   ]

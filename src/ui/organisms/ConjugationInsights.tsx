@@ -38,7 +38,7 @@ function stepLabel(step: DerivationStep, verb: DisplayVerb, t: Translate): strin
     case 'pronoun':
       return t(`pronoun.${step.pronounId}`)
     case 'tense':
-      return t(`tense.${step.verbTense}`)
+      return t(`tense.${step.tense}`)
   }
 }
 

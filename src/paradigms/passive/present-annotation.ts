@@ -19,7 +19,7 @@ export function passivePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronou
       ...indicativeAnnotation,
       {
         type: 'tense',
-        verbTense: `passive.present.${mood}` as const,
+        tense: `passive.present.${mood}` as const,
         morphemes: [...allForms[pronounId].morphemes, ...elision],
       },
     ]
@@ -33,7 +33,7 @@ export function passivePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronou
     pastAnnotation[1],
     {
       type: 'tense',
-      verbTense: 'passive.present.indicative',
+      tense: 'passive.present.indicative',
       morphemes: indicativeForms['3ms'].morphemes,
     },
   ]
