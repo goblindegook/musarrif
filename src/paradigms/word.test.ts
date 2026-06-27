@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ALIF, BA, DAL, FATHA, HAH, HAMZA, KASRA, SHADDA, SUKOON } from './tokens'
+import { ALIF, ALIF_HAMZA, BA, DAL, FATHA, HAH, HAMZA, KASRA, LAM, SHADDA, SUKOON } from './tokens'
 import { agreementMorpheme, Morpheme, measureMorpheme, radicalMorpheme, Word } from './word'
 
 describe('MorphemeToken', () => {
@@ -54,6 +54,33 @@ describe('finalizeWord — madda pass', () => {
       agreementMorpheme(ALIF),
     ])
     expect(w.toString()).toBe('بَدَآ')
+  })
+
+  test('radical hamza + fatha + radical alif merges to radical madda (hollow root like آل)', () => {
+    // ء(radical) + fatha(measure) + ا(radical transformed waw) + ل(radical) → آل
+    // The madda occupies both radical positions so it must be annotated radical
+    const w = new Word([
+      radicalMorpheme(ALIF_HAMZA),
+      measureMorpheme(FATHA),
+      radicalMorpheme(ALIF),
+      radicalMorpheme(LAM),
+      measureMorpheme(FATHA),
+    ])
+    expect(w.toString()).toBe('آلَ')
+    expect(w.morphemes[0].role).toBe('radical')
+  })
+
+  test('measure hamza + fatha + radical alif-hamza + sukoon merges to measure madda (Form IV prefix)', () => {
+    // أَءْلَ → آلَ — the measure أَ prefix triggers madda; the SUKOON is consumed too (4-slot skip)
+    const w = new Word([
+      measureMorpheme(ALIF_HAMZA, FATHA),
+      radicalMorpheme(ALIF_HAMZA),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(LAM),
+      measureMorpheme(FATHA),
+    ])
+    expect(w.toString()).toBe('آلَ')
+    expect(w.morphemes[0].role).toBe('measure')
   })
 })
 

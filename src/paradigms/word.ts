@@ -83,7 +83,9 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
       (slots[i + 2].token.equals(ALIF_HAMZA) || slots[i + 2].token.equals(ALIF))
     ) {
       const skip = i + 3 < slots.length && slots[i + 3].token.equals(SUKOON) ? 4 : 3
-      result.push(new Morpheme([ALIF_MADDA], 'measure'))
+      const role0 = morphemes[slots[i].morphemeIndex].role
+      const role2 = morphemes[slots[i + 2].morphemeIndex].role
+      result.push(new Morpheme([ALIF_MADDA], role0 === 'radical' && role2 === 'radical' ? 'radical' : 'measure'))
       i += skip
     } else {
       const origMorpheme = morphemes[slots[i].morphemeIndex]

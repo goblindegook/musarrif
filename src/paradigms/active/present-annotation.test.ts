@@ -991,4 +991,41 @@ describe('annotateActivePresentMood', () => {
       ],
     })
   })
+
+  test('indicative Form I — ءول (3ms) hollow root: waw (C2) annotated as radical', () => {
+    const result = annotateActivePresentMood(getVerb('ءول', 1), 'indicative', '3ms')
+
+    expect(detokenizeAnnotation(result)).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'ءول',
+          morphemes: [
+            { text: 'ء', role: 'radical' },
+            { text: 'و', role: 'radical' },
+            { text: 'ل', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'آلَ',
+          morphemes: [
+            { text: 'آل', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'active.present.indicative' },
+          arabic: 'يَؤُولُ',
+          morphemes: [
+            { text: 'يَ', role: 'agreement' },
+            { text: 'ؤ', role: 'radical' },
+            { text: 'ُ', role: 'measure' },
+            { text: 'ول', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
+          ],
+        },
+      ],
+    })
+  })
 })

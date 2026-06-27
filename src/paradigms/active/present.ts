@@ -580,9 +580,12 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
     ]
 
   if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA))
-    return [radicalMorpheme(c1), measureMorpheme(...longVowel(KASRA)), radicalMorpheme(c3)]
+    return [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
-  if (c2.isWeak) return [radicalMorpheme(c1), measureMorpheme(...longVowel(presentVowel)), radicalMorpheme(c3)]
+  if (c2.isWeak) {
+    const [shortVowel, longLetter] = longVowel(presentVowel)
+    return [radicalMorpheme(c1), measureMorpheme(shortVowel), radicalMorpheme(longLetter), radicalMorpheme(c3)]
+  }
 
   return [
     radicalMorpheme(c1),
