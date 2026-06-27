@@ -1,15 +1,15 @@
-import type { DerivationStep } from '../annotation'
+import type { DerivationSteps } from '../annotation'
 import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON, type Token } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { elidedMorpheme } from '../word'
-import { annotatePast } from './past-annotation'
+import { activePastDerivationSteps } from './past-annotation'
 import { conjugatePresentMood } from './present'
 
-export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: PronounId): readonly DerivationStep[] {
+export function activePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronounId: PronounId): DerivationSteps {
   if (mood !== 'indicative') {
-    const indicativeAnnotation = annotateActivePresentMood(verb, 'indicative', pronounId)
+    const indicativeAnnotation = activePresentMoodDerivationSteps(verb, 'indicative', pronounId)
     const moodConjugation = conjugatePresentMood(verb, mood)[pronounId]
     const elision = []
 
@@ -35,12 +35,12 @@ export function annotateActivePresentMood(verb: Verb, mood: Mood, pronounId: Pro
     ]
   }
 
-  const pastAnnotation = annotatePast(verb, '3ms')
+  const pastAnnotation = activePastDerivationSteps(verb, '3ms')
 
   const indicative = conjugatePresentMood(verb, 'indicative')
   const dropped = elidedPastPrefix(verb)
 
-  const steps: readonly DerivationStep[] = [
+  const steps: DerivationSteps = [
     pastAnnotation[0],
     pastAnnotation[1],
     {

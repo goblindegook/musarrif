@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { detokenizeAnnotation } from '../../test/transformers'
+import { detokenizeDerivationSteps } from '../../test/transformers'
 import { getVerb } from '../verbs'
-import { annotatePassivePresentMood } from './present-annotation'
+import { passivePresentMoodDerivationSteps as passivePresentDerivationSteps } from './present-annotation'
 
 describe('annotatePassivePresentMood', () => {
   test('indicative Form X — حبب (3ms) matches annotation object', () => {
-    const result = annotatePassivePresentMood(getVerb('حبب', 10), 'indicative', '3ms')
+    const result = passivePresentDerivationSteps(getVerb('حبب', 10), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -44,9 +44,9 @@ describe('annotatePassivePresentMood', () => {
   })
 
   test('indicative Form I — كتب (1s) matches annotation object', () => {
-    const result = annotatePassivePresentMood(getVerb('كتب', 1), 'indicative', '1s')
+    const result = passivePresentDerivationSteps(getVerb('كتب', 1), 'indicative', '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -97,9 +97,9 @@ describe('annotatePassivePresentMood', () => {
   })
 
   test('indicative Form I — قول (3ms) hollow passive: alif (C2) annotated as radical', () => {
-    const result = annotatePassivePresentMood(getVerb('قول', 1), 'indicative', '3ms')
+    const result = passivePresentDerivationSteps(getVerb('قول', 1), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [

@@ -1,11 +1,11 @@
-import { annotatePast } from '../active/past-annotation'
+import { activePastDerivationSteps } from '../active/past-annotation'
 import type { DerivationStep } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePassivePast } from './past'
 
-export function annotatePassivePast(verb: Verb, pronounId: PronounId): readonly DerivationStep[] {
-  const activePastAnnotation = annotatePast(verb, '3ms')
+export function passivePastDerivationSteps(verb: Verb, pronounId: PronounId): readonly DerivationStep[] {
+  const activePastAnnotation = activePastDerivationSteps(verb, '3ms')
   const allForms = conjugatePassivePast(verb)
 
   const steps: readonly DerivationStep[] = [

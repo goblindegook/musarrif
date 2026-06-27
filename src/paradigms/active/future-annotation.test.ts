@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { detokenizeAnnotation } from '../../test/transformers'
+import { detokenizeDerivationSteps } from '../../test/transformers'
 import { getVerb } from '../verbs'
-import { annotateActiveFuture } from './future-annotation'
+import { activeFutureDerivationSteps } from './future-annotation'
 
 describe('annotateActiveFuture', () => {
   test('Form I — كتب (3mp) matches annotation object', () => {
-    const result = annotateActiveFuture(getVerb('كتب', 1), '3mp')
+    const result = activeFutureDerivationSteps(getVerb('كتب', 1), '3mp')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -72,9 +72,9 @@ describe('annotateActiveFuture', () => {
   })
 
   test('Form X — خرج (3ms) matches annotation object', () => {
-    const result = annotateActiveFuture(getVerb('خرج', 10), '3ms')
+    const result = activeFutureDerivationSteps(getVerb('خرج', 10), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -130,9 +130,9 @@ describe('annotateActiveFuture', () => {
   })
 
   test('Form III — كتب (3ms) matches annotation object', () => {
-    const result = annotateActiveFuture(getVerb('كتب', 3), '3ms')
+    const result = activeFutureDerivationSteps(getVerb('كتب', 3), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -184,9 +184,9 @@ describe('annotateActiveFuture', () => {
   })
 
   test('Form IV — حبب (3ms) matches annotation object', () => {
-    const result = annotateActiveFuture(getVerb('حبب', 4), '3ms')
+    const result = activeFutureDerivationSteps(getVerb('حبب', 4), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [

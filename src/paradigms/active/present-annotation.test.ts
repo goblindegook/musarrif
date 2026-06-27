@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { detokenizeAnnotation } from '../../test/transformers'
+import { detokenizeDerivationSteps } from '../../test/transformers'
 import { getVerb } from '../verbs'
-import { annotateActivePresentMood } from './present-annotation'
+import { activePresentMoodDerivationSteps } from './present-annotation'
 
 describe('annotateActivePresentMood', () => {
   test('indicative Form I — كتب (1s) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'indicative', '1s')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'indicative', '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -58,9 +58,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('indicative Form III — كتب (3ms) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 3), 'indicative', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 3), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -98,9 +98,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('indicative Form VII — كتب (3ms) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 7), 'indicative', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 7), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -140,9 +140,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('indicative Form V — كتب (3ms) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 5), 'indicative', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 5), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -182,9 +182,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('indicative Form VI — كتب (3ms) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 6), 'indicative', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 6), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -224,9 +224,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('subjunctive Form I — كتب (1s) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '1s')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'subjunctive', '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -290,9 +290,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (2ms) matches annotation object', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2ms')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '2ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -356,9 +356,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('subjunctive Form I — كتب (2fs) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2fs')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'subjunctive', '2fs')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -423,9 +423,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('subjunctive Form I — كتب (2d) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2d')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'subjunctive', '2d')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -490,9 +490,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('subjunctive Form I — كتب (2mp) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'subjunctive', '2mp')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'subjunctive', '2mp')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -557,9 +557,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (2fs) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2fs')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '2fs')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -624,9 +624,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (2mp) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2mp')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '2mp')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -691,9 +691,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (3mp) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '3mp')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '3mp')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -758,9 +758,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (2d) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '2d')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '2d')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -825,9 +825,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form V defective — بقي (3ms) elided defective radical annotated', () => {
-    const result = annotateActivePresentMood(getVerb('بقي', 5), 'jussive', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('بقي', 5), 'jussive', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -878,9 +878,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('jussive Form I — كتب (3md) dropped noon annotated', () => {
-    const result = annotateActivePresentMood(getVerb('كتب', 1), 'jussive', '3md')
+    const result = activePresentMoodDerivationSteps(getVerb('كتب', 1), 'jussive', '3md')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -945,9 +945,9 @@ describe('annotateActivePresentMood', () => {
   })
 
   test('indicative Form I — ءول (3ms) hollow root: waw (C2) annotated as radical', () => {
-    const result = annotateActivePresentMood(getVerb('ءول', 1), 'indicative', '3ms')
+    const result = activePresentMoodDerivationSteps(getVerb('ءول', 1), 'indicative', '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [

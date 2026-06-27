@@ -1,5 +1,5 @@
 import { toRoman } from '../primitives/numbers'
-import { annotate } from './annotation'
+import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
 import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
@@ -359,7 +359,7 @@ export function resolveVerbExplanationLayers(
     tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
     pronoun,
     contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
-    ...extractAffixes(annotate(verb, tense, pronoun).at(-1)?.morphemes),
+    ...extractAffixes(derivationSteps(verb, tense, pronoun).at(-1)?.morphemes),
   }
 }
 

@@ -1,10 +1,10 @@
-import { annotateActiveFuture } from './active/future-annotation'
-import { annotateActiveImperative } from './active/imperative-annotation'
-import { annotatePast } from './active/past-annotation'
-import { annotateActivePresentMood } from './active/present-annotation'
-import { annotatePassiveFuture } from './passive/future-annotation'
-import { annotatePassivePast } from './passive/past-annotation'
-import { annotatePassivePresentMood } from './passive/present-annotation'
+import { activeFutureDerivationSteps } from './active/future-annotation'
+import { imperativeDerivationSteps } from './active/imperative-annotation'
+import { activePastDerivationSteps } from './active/past-annotation'
+import { activePresentMoodDerivationSteps } from './active/present-annotation'
+import { passiveFutureDerivationSteps } from './passive/future-annotation'
+import { passivePastDerivationSteps } from './passive/past-annotation'
+import { passivePresentMoodDerivationSteps } from './passive/present-annotation'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
 import type { Verb, VerbForm } from './verbs'
@@ -16,30 +16,32 @@ export type DerivationStep =
   | { type: 'tense'; verbTense: VerbTense; morphemes: readonly Morpheme[] }
   | { type: 'pronoun'; pronounId: PronounId; morphemes: readonly Morpheme[] }
 
-export function annotate(verb: Verb, verbTense: VerbTense, pronounId: PronounId): readonly DerivationStep[] {
+export type DerivationSteps = readonly DerivationStep[]
+
+export function derivationSteps(verb: Verb, verbTense: VerbTense, pronounId: PronounId): DerivationSteps {
   switch (verbTense) {
     case 'active.past':
-      return annotatePast(verb, pronounId)
+      return activePastDerivationSteps(verb, pronounId)
     case 'active.present.indicative':
-      return annotateActivePresentMood(verb, 'indicative', pronounId)
+      return activePresentMoodDerivationSteps(verb, 'indicative', pronounId)
     case 'active.present.subjunctive':
-      return annotateActivePresentMood(verb, 'subjunctive', pronounId)
+      return activePresentMoodDerivationSteps(verb, 'subjunctive', pronounId)
     case 'active.present.jussive':
-      return annotateActivePresentMood(verb, 'jussive', pronounId)
+      return activePresentMoodDerivationSteps(verb, 'jussive', pronounId)
     case 'active.future':
-      return annotateActiveFuture(verb, pronounId)
+      return activeFutureDerivationSteps(verb, pronounId)
     case 'active.imperative':
-      return annotateActiveImperative(verb, pronounId)
+      return imperativeDerivationSteps(verb, pronounId)
     case 'passive.past':
-      return annotatePassivePast(verb, pronounId)
+      return passivePastDerivationSteps(verb, pronounId)
     case 'passive.present.indicative':
-      return annotatePassivePresentMood(verb, 'indicative', pronounId)
+      return passivePresentMoodDerivationSteps(verb, 'indicative', pronounId)
     case 'passive.present.subjunctive':
-      return annotatePassivePresentMood(verb, 'subjunctive', pronounId)
+      return passivePresentMoodDerivationSteps(verb, 'subjunctive', pronounId)
     case 'passive.present.jussive':
-      return annotatePassivePresentMood(verb, 'jussive', pronounId)
+      return passivePresentMoodDerivationSteps(verb, 'jussive', pronounId)
     case 'passive.future':
-      return annotatePassiveFuture(verb, pronounId)
+      return passiveFutureDerivationSteps(verb, pronounId)
     default:
       return []
   }

@@ -1,12 +1,12 @@
-import type { DerivationStep } from '../annotation'
+import type { DerivationSteps } from '../annotation'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugateImperative } from './imperative'
-import { annotateActivePresentMood } from './present-annotation'
+import { activePresentMoodDerivationSteps } from './present-annotation'
 
-export function annotateActiveImperative(verb: Verb, pronounId: PronounId): readonly DerivationStep[] {
+export function imperativeDerivationSteps(verb: Verb, pronounId: PronounId): DerivationSteps {
   const word = conjugateImperative(verb)[pronounId]
-  const jussive = annotateActivePresentMood(verb, 'jussive', pronounId)
+  const jussive = activePresentMoodDerivationSteps(verb, 'jussive', pronounId)
   const jussiveStep = jussive[jussive.length - 1]
   const dropped = [jussiveStep.morphemes[0].toElided()]
 

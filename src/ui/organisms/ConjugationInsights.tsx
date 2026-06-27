@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import { annotate, type DerivationStep } from '../../paradigms/annotation'
+import { type DerivationStep, derivationSteps } from '../../paradigms/annotation'
 import type { ExplanationKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
@@ -60,8 +60,8 @@ function DerivationSteps({ steps, verb, t }: { steps: readonly DerivationStep[];
 export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: ConjugationInsightsProps) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  const annotation = annotate(verb, verbTense, pronoun)
-  const finalStep = annotation.at(-1)
+  const steps = derivationSteps(verb, verbTense, pronoun)
+  const finalStep = steps.at(-1)
 
   return (
     <>
@@ -78,7 +78,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
                 arabic
               )}
             </ArabicDisplay>
-            <DerivationSteps steps={annotation} verb={verb} t={t} />
+            <DerivationSteps steps={steps} verb={verb} t={t} />
           </VerbDisplayArea>
           {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map((paragraph, pi) => (
             <Text key={pi}>

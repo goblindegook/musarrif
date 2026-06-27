@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { detokenizeAnnotation } from '../../test/transformers'
+import { detokenizeDerivationSteps } from '../../test/transformers'
 import { getVerb } from '../verbs'
-import { annotatePassiveFuture } from './future-annotation'
+import { passiveFutureDerivationSteps } from './future-annotation'
 
 describe('annotatePassiveFuture', () => {
   test('Form I — كتب (1s) matches annotation object', () => {
-    const result = annotatePassiveFuture(getVerb('كتب', 1), '1s')
+    const result = passiveFutureDerivationSteps(getVerb('كتب', 1), '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(result)).toEqual([
       {
         type: 'root',
         morphemes: [

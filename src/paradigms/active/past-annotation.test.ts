@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { detokenizeAnnotation } from '../../test/transformers'
+import { detokenizeDerivationSteps } from '../../test/transformers'
 import { getVerb, getVerbById } from '../verbs'
-import { annotatePast } from './past-annotation'
+import { activePastDerivationSteps } from './past-annotation'
 
 describe('annotatePast', () => {
   test('Form I regular — كتب (1s) annotation uses word morphemes', () => {
-    const result = annotatePast(getVerb('كتب', 1), '1s')
+    const steps = activePastDerivationSteps(getVerb('كتب', 1), '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -56,9 +56,9 @@ describe('annotatePast', () => {
   })
 
   test('Form I geminate — حبب (3ms) shadda collapses doubled radical', () => {
-    const result = annotatePast(getVerb('حبب', 1), '3ms')
+    const steps = activePastDerivationSteps(getVerb('حبب', 1), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -91,9 +91,9 @@ describe('annotatePast', () => {
   })
 
   test('Form I hollow — كون (3ms) adjacent radicals merge', () => {
-    const result = annotatePast(getVerb('كون', 1), '3ms')
+    const steps = activePastDerivationSteps(getVerb('كون', 1), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -126,9 +126,9 @@ describe('annotatePast', () => {
   })
 
   test('Form I hamzated final — بدء (3md) madda absorbs dual alif into measure', () => {
-    const result = annotatePast(getVerb('بدء', 1), '3md')
+    const steps = activePastDerivationSteps(getVerb('بدء', 1), '3md')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -175,9 +175,9 @@ describe('annotatePast', () => {
   })
 
   test('Form VII — كتب (3ms) matches annotation object', () => {
-    const result = annotatePast(getVerb('كتب', 7), '3ms')
+    const steps = activePastDerivationSteps(getVerb('كتب', 7), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -216,9 +216,9 @@ describe('annotatePast', () => {
   })
 
   test('Form IX — خضر (3ms) matches annotation object', () => {
-    const result = annotatePast(getVerb('خضر', 9), '3ms')
+    const steps = activePastDerivationSteps(getVerb('خضر', 9), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -257,9 +257,9 @@ describe('annotatePast', () => {
   })
 
   test('Form III — كتب (3ms) matches annotation object', () => {
-    const result = annotatePast(getVerb('كتب', 3), '3ms')
+    const steps = activePastDerivationSteps(getVerb('كتب', 3), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -296,9 +296,9 @@ describe('annotatePast', () => {
   })
 
   test('Form V — كتب (3ms) matches annotation object', () => {
-    const result = annotatePast(getVerb('كتب', 5), '3ms')
+    const steps = activePastDerivationSteps(getVerb('كتب', 5), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -337,9 +337,9 @@ describe('annotatePast', () => {
   })
 
   test('Form VI — كتب (3ms) matches annotation object', () => {
-    const result = annotatePast(getVerb('كتب', 6), '3ms')
+    const steps = activePastDerivationSteps(getVerb('كتب', 6), '3ms')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -378,9 +378,9 @@ describe('annotatePast', () => {
   })
 
   test('Form I hamzated geminate — ءدد (2fs) fatha on initial hamza is measure', () => {
-    const result = detokenizeAnnotation(annotatePast(getVerb('ءدد', 1), '2fs'))
+    const steps = detokenizeDerivationSteps(activePastDerivationSteps(getVerb('ءدد', 1), '2fs'))
 
-    expect(result.at(-1)).toEqual({
+    expect(steps.at(-1)).toEqual({
       type: 'pronoun',
       pronounId: '2fs',
       morphemes: [
@@ -395,9 +395,9 @@ describe('annotatePast', () => {
   })
 
   test('Form VIII — حلم (1s) matches annotation object', () => {
-    const result = annotatePast(getVerb('حلم', 8), '1s')
+    const steps = activePastDerivationSteps(getVerb('حلم', 8), '1s')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
@@ -449,9 +449,9 @@ describe('annotatePast', () => {
   })
 
   test('Form VIII — حلم (1s) matches annotation object', () => {
-    const result = annotatePast(getVerbById("'ty-8")!, '2mp')
+    const steps = activePastDerivationSteps(getVerbById("'ty-8")!, '2mp')
 
-    expect(detokenizeAnnotation(result)).toEqual([
+    expect(detokenizeDerivationSteps(steps)).toEqual([
       {
         type: 'root',
         morphemes: [
