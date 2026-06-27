@@ -111,7 +111,7 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
   if (isFemininePlural(pronounId)) return []
 
   if (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
-    return [measureMorpheme(ALIF)]
+    return [radicalMorpheme(ALIF)]
 
   return []
 }
@@ -196,7 +196,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   if (c2.isWeak) {
     if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.tokens.at(0)))
       return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-    return [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3), ...moodSuffix]
+    return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
   if (c2.equals(c3)) {
@@ -305,7 +305,8 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
     return [
       measureMorpheme(NOON, SUKOON),
       radicalMorpheme(c1),
-      measureMorpheme(FATHA, ALIF),
+      measureMorpheme(FATHA),
+      radicalMorpheme(ALIF),
       radicalMorpheme(c3),
       ...MOOD_SUFFIXES[mood][pronounId],
     ]
@@ -406,7 +407,8 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
       : [
           radicalMorpheme(c1),
           measureMorpheme(SUKOON),
-          measureMorpheme(infix, FATHA, ALIF),
+          measureMorpheme(infix, FATHA),
+          radicalMorpheme(ALIF),
           radicalMorpheme(c3),
           ...moodSuffix,
         ]
@@ -499,7 +501,7 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   if (c2.isWeak) {
     if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.tokens.at(0)))
       return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-    return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3), ...moodSuffix]
+    return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
   return [

@@ -101,4 +101,43 @@ describe('annotatePassivePresentMood', () => {
       ],
     })
   })
+
+  test('indicative Form I — قول (3ms) hollow passive: alif (C2) annotated as radical', () => {
+    const result = annotatePassivePresentMood(getVerb('قول', 1), 'indicative', '3ms')
+
+    expect(detokenizeAnnotation(result)).toEqual({
+      steps: [
+        {
+          kind: { type: 'root' },
+          arabic: 'قول',
+          morphemes: [
+            { text: 'ق', role: 'radical' },
+            { text: 'و', role: 'radical' },
+            { text: 'ل', role: 'radical' },
+          ],
+        },
+        {
+          kind: { type: 'form', form: 1 },
+          arabic: 'قَالَ',
+          morphemes: [
+            { text: 'ق', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ال', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+          ],
+        },
+        {
+          kind: { type: 'tense', verbTense: 'passive.present.indicative' },
+          arabic: 'يُقَالُ',
+          morphemes: [
+            { text: 'يُ', role: 'agreement' },
+            { text: 'ق', role: 'radical' },
+            { text: 'َ', role: 'measure' },
+            { text: 'ال', role: 'radical' },
+            { text: 'ُ', role: 'agreement' },
+          ],
+        },
+      ],
+    })
+  })
 })
