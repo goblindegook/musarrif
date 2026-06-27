@@ -2,7 +2,6 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { isFormIPresentVowel } from '../form-i-vowels'
 import {
   ALIF,
-  ALIF_HAMZA,
   ALIF_HAMZA_BELOW,
   DAL,
   DAMMA,
@@ -62,7 +61,9 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       if (c2.isWeak)
         return [
           radicalMorpheme(c1),
-          measureMorpheme(DAMMA, WAW, FATHA, ALIF),
+          measureMorpheme(DAMMA),
+          radicalMorpheme(WAW),
+          measureMorpheme(FATHA, ALIF),
           radicalMorpheme(c3),
           measureMorpheme(FATHA, TEH_MARBUTA),
         ]
@@ -127,20 +128,18 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       return [
         radicalMorpheme(c1),
         measureMorpheme(DAMMA),
-        radicalMorpheme(c2),
+        radicalMorpheme(c2.isWeak && !c3.isWeak ? WAW : c2),
         measureMorpheme(FATHA, ALIF),
         radicalMorpheme(c3.isWeak ? HAMZA : c3),
       ]
 
     case 'fi3aal': {
-      if (c3.isWeak)
-        return [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
       return [
         radicalMorpheme(c1),
         measureMorpheme(KASRA),
-        radicalMorpheme(c2.isWeak ? YEH : c2),
+        radicalMorpheme(c2.isWeak && !c3.isWeak ? YEH : c2),
         measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c3),
+        radicalMorpheme(c3.isWeak ? HAMZA : c3),
       ]
     }
 
@@ -166,7 +165,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
 
     case 'fu3la':
       return [
-        radicalMorpheme(c1.isHamza ? ALIF_HAMZA : c1),
+        radicalMorpheme(c1),
         measureMorpheme(DAMMA),
         radicalMorpheme(c2),
         measureMorpheme(SUKOON),
@@ -203,33 +202,17 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       ]
 
     case 'fi3aala':
-      if (c2.isWeak)
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(KASRA),
-          radicalMorpheme(c3.isWeak ? WAW : YEH),
-          measureMorpheme(FATHA, ALIF),
-          radicalMorpheme(c3.isWeak ? YEH : c3),
-          measureMorpheme(FATHA, TEH_MARBUTA),
-        ]
       return [
         radicalMorpheme(c1),
         measureMorpheme(KASRA),
-        radicalMorpheme(c2),
+        radicalMorpheme(c2.isWeak && !c3.isWeak ? YEH : c2),
         measureMorpheme(FATHA, ALIF),
         radicalMorpheme(c3.isWeak ? YEH : c3),
         measureMorpheme(FATHA, TEH_MARBUTA),
       ]
 
     case 'mimi': {
-      const vowel = isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA
-      if (c3.isHamza)
-        return [
-          measureMorpheme(MEEM, FATHA),
-          radicalMorpheme(c1),
-          measureMorpheme(...longVowel(KASRA)),
-          radicalMorpheme(c3),
-        ]
+      const vowel = c3.isHamza || isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA
       if (c2.isWeak)
         return [
           measureMorpheme(MEEM, FATHA),
