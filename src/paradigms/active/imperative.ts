@@ -37,21 +37,20 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
             if (verb.contractedImperative) return initialHamzatedStem
 
-            if (c3.isWeak) {
-              const glide = c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA
-              const suffixTokens = jussive.morphemes
-                .slice(4)
-                .flatMap((m) => [...m.tokens])
-                .slice(1)
+            if (c3.isWeak)
               return [
                 measureMorpheme(ALIF, KASRA),
                 radicalMorpheme(c1),
                 measureMorpheme(SUKOON),
                 radicalMorpheme(c2),
-                measureMorpheme(glide),
-                agreementMorpheme(...suffixTokens),
+                measureMorpheme(c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA),
+                agreementMorpheme(
+                  ...jussive.morphemes
+                    .slice(4)
+                    .flatMap((m) => m.tokens)
+                    .slice(1),
+                ),
               ]
-            }
 
             if (c2.equals(c3)) {
               const prefix = [

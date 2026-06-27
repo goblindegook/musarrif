@@ -435,15 +435,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
           agreementMorpheme(SUKOON),
         ]
 
-      if (
-        c2.isWeak &&
-        verb.form !== 5 &&
-        stem.some(
-          (m, i) =>
-            (m.role === 'measure' && m.tokens.some((t) => t.isWeak && (!ALIF.equals(t) || verb.form === 1))) ||
-            (m.role === 'radical' && stem[i + 1]?.role === 'radical'),
-        )
-      )
+      if (c2.isWeak && stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
         return [...shortenHollowStemMorphemes(stem), agreementMorpheme(SUKOON)]
 
       if (c3.isWeak && stem.at(-1)?.contains((t) => t.isWeak)) return stem.slice(0, -1)

@@ -108,19 +108,11 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       ]
 
     case 'fu3ool':
-      if (c3.isWeak)
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(DAMMA),
-          radicalMorpheme(c2),
-          measureMorpheme(DAMMA, WAW, SUKOON),
-          radicalMorpheme(c3),
-        ]
       return [
         radicalMorpheme(c1),
         measureMorpheme(DAMMA),
         radicalMorpheme(c2),
-        measureMorpheme(DAMMA, WAW),
+        measureMorpheme(DAMMA, WAW, c3.equals(WAW) ? SUKOON : null),
         radicalMorpheme(c3),
       ]
 
@@ -128,7 +120,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       return [
         radicalMorpheme(c1),
         measureMorpheme(DAMMA),
-        radicalMorpheme(c2.isWeak && !c3.isWeak ? WAW : c2),
+        radicalMorpheme(c2),
         measureMorpheme(FATHA, ALIF),
         radicalMorpheme(c3.isWeak ? HAMZA : c3),
       ]

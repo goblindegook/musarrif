@@ -3,12 +3,14 @@ import { ALIF, ALIF_HAMZA, ALIF_MADDA, FATHA, SHADDA, SUKOON, type Token } from 
 
 export type MorphemeRole = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'
 
+export type NullableToken = Token | null | undefined
+
 export class Morpheme {
   readonly tokens: readonly Token[]
   readonly role: MorphemeRole
 
-  constructor(tokens: readonly Token[], role: MorphemeRole) {
-    this.tokens = tokens
+  constructor(tokens: readonly NullableToken[], role: MorphemeRole) {
+    this.tokens = tokens.filter((t): t is Token => t != null)
     this.role = role
   }
 
@@ -47,13 +49,13 @@ export class Word {
 
 export const radicalMorpheme = (token: Token): Morpheme => new Morpheme([token], 'radical')
 
-export const measureMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'measure')
+export const measureMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'measure')
 
-export const particleMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'particle')
+export const particleMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'particle')
 
-export const agreementMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'agreement')
+export const agreementMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'agreement')
 
-export const elidedMorpheme = (...tokens: readonly Token[]): Morpheme => new Morpheme(tokens, 'elided')
+export const elidedMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'elided')
 
 function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const seatedTokens = seatHamzas(morphemes.flatMap((m) => [...m.tokens]))
