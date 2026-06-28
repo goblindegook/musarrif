@@ -166,7 +166,8 @@ export function deriveParticiple(verb: Verb, vowel: Token): readonly Morpheme[] 
       ]
       const weakPrefix: readonly Morpheme[] = [
         measureMorpheme(MEEM, DAMMA),
-        measureMorpheme(infix, SUKOON, infix, FATHA),
+        radicalMorpheme(infix),
+        measureMorpheme(SUKOON, infix, FATHA),
       ]
 
       if (c2.equals(c3)) return [...prefix, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]

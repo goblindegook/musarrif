@@ -1,6 +1,6 @@
 import { FATHA, longVowelI, longVowelU, MEEM, SHADDA, SUKOON, WAW, YEH } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
-import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { measureMorpheme, radicalMorpheme, Word } from '../word'
 import { deriveParticiple } from './participle'
 
 export function derivePassiveParticiple(verb: Verb): Word {
@@ -8,7 +8,7 @@ export function derivePassiveParticiple(verb: Verb): Word {
 
   if (!isQuadriliteralVerb(verb) && verb.form === 1) {
     const [c1, c2, c3] = verb.rootTokens
-    const prefix: readonly Morpheme[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
+    const prefix = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
     const defectiveLongVowel = c3.equals(YEH) ? longVowelI : longVowelU
 
     if (c3.isWeak)
@@ -20,17 +20,12 @@ export function derivePassiveParticiple(verb: Verb): Word {
       ])
 
     if (c2.equals(WAW))
-      return new Word(
-        verb.presentHollow === 'uncontracted'
-          ? [
-              ...prefix,
-              measureMorpheme(SUKOON),
-              radicalMorpheme(c2),
-              measureMorpheme(...longVowelU),
-              radicalMorpheme(c3),
-            ]
-          : [...prefix, measureMorpheme(...longVowelU), radicalMorpheme(c3)],
-      )
+      return new Word([
+        ...prefix,
+        ...(verb.presentHollow === 'uncontracted' ? [measureMorpheme(SUKOON), radicalMorpheme(c2)] : []),
+        measureMorpheme(...longVowelU),
+        radicalMorpheme(c3),
+      ])
 
     if (c2.equals(YEH)) return new Word([...prefix, measureMorpheme(...longVowelI), radicalMorpheme(c3)])
 
