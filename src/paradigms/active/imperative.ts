@@ -1,7 +1,21 @@
 import { mapRecord } from '../../primitives/objects'
 import { isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
-import { ALIF, DAMMA, FATHA, HAMZA, KASRA, longVowel, NOON, SHADDA, SUKOON, WAW, YEH } from '../tokens'
+import {
+  ALIF,
+  DAMMA,
+  FATHA,
+  HAMZA,
+  KASRA,
+  longVowelA,
+  longVowelI,
+  longVowelU,
+  NOON,
+  SHADDA,
+  SUKOON,
+  WAW,
+  YEH,
+} from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { conjugatePresentMood } from './present'
@@ -21,14 +35,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         case 1: {
           const isPatternI = isFormIPresentVowel(verb, KASRA)
           const isPatternU = isFormIPresentVowel(verb, DAMMA)
-          const patternLongVowel = longVowel(isPatternU ? DAMMA : KASRA)
+          const patternLongVowel = isPatternU ? longVowelU : longVowelI
 
           if (c1.isWeak) {
             if (stem.at(1)?.tokens.at(0)?.equals(FATHA) && c3.isWeak)
-              return [...stem.slice(0, 1), measureMorpheme(KASRA, YEH), ...stem.slice(1)]
-            if (c2.equals(c3) && pronounId === '2fp') return [measureMorpheme(ALIF, KASRA, YEH), ...stem.slice(1)]
-            if (c1.equals(YEH) && c2.isHamza) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
-            if (c1.equals(YEH)) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(1)]
+              return [...stem.slice(0, 1), measureMorpheme(...patternLongVowel), ...stem.slice(1)]
+            if (c2.equals(c3) && pronounId === '2fp')
+              return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(1)]
+            if (c1.equals(YEH)) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(c2.isHamza ? 2 : 1)]
             if (c2.isHamza) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
           }
 
@@ -61,9 +75,9 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 radicalMorpheme(c3),
               ]
               if (pronounId === '2ms') return [...prefix, measureMorpheme(FATHA)]
-              if (pronounId === '2fs') return [...prefix, agreementMorpheme(KASRA, YEH)]
-              if (pronounId === '2d') return [...prefix, agreementMorpheme(FATHA, ALIF)]
-              if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
+              if (pronounId === '2fs') return [...prefix, agreementMorpheme(...longVowelI)]
+              if (pronounId === '2d') return [...prefix, agreementMorpheme(...longVowelA)]
+              if (pronounId === '2mp') return [...prefix, agreementMorpheme(...longVowelU, ALIF)]
               return [measureMorpheme(ALIF, ...patternLongVowel), ...initialHamzatedStem]
             }
 
@@ -100,7 +114,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 4: {
-          if (c1.isHamza) return [measureMorpheme(HAMZA, FATHA, ALIF), ...stem.slice(2)]
+          if (c1.isHamza) return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
           if (c3.isWeak && pronounId === '2d')
             return [measureMorpheme(HAMZA, FATHA), ...restoreWeakLetterBeforeAlif(stem)]
           return [measureMorpheme(HAMZA, FATHA), ...stem]

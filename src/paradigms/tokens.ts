@@ -122,6 +122,10 @@ export function longVowel(vowel: Token): [Token, Token] {
   return [DAMMA, WAW]
 }
 
+export const longVowelI = [KASRA, YEH] as const
+export const longVowelA = [FATHA, ALIF] as const
+export const longVowelU = [DAMMA, WAW] as const
+
 export function resolveFormVIIIInfixConsonant(c1: Token): Token {
   if (c1.equals(ZAY)) return DAL
   if ([SAD, DAD].some((t) => c1.equals(t))) return TAH

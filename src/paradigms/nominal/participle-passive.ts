@@ -5,8 +5,8 @@ import {
   DAMMA,
   FATHA,
   HAMZA,
-  KASRA,
-  longVowel,
+  longVowelI,
+  longVowelU,
   MEEM,
   NOON,
   resolveFormVIIIInfixConsonant,
@@ -83,13 +83,14 @@ export function derivePassiveParticiple(verb: Verb): Word {
       switch (verb.form) {
         case 1: {
           const prefix: readonly Morpheme[] = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
+          const defectiveLongVowel = c3.equals(YEH) ? longVowelI : longVowelU
 
           if (c3.isWeak)
             return [
               ...prefix,
               measureMorpheme(SUKOON),
               radicalMorpheme(c2),
-              measureMorpheme(...longVowel(c3.equals(YEH) ? KASRA : DAMMA), SHADDA),
+              measureMorpheme(...defectiveLongVowel, SHADDA),
             ]
 
           if (c2.equals(WAW))
@@ -98,18 +99,18 @@ export function derivePassiveParticiple(verb: Verb): Word {
                   ...prefix,
                   measureMorpheme(SUKOON),
                   radicalMorpheme(c2),
-                  measureMorpheme(...longVowel(DAMMA)),
+                  measureMorpheme(...longVowelU),
                   radicalMorpheme(c3),
                 ]
-              : [...prefix, measureMorpheme(...longVowel(DAMMA)), radicalMorpheme(c3)]
+              : [...prefix, measureMorpheme(...longVowelU), radicalMorpheme(c3)]
 
-          if (c2.equals(YEH)) return [...prefix, measureMorpheme(...longVowel(KASRA)), radicalMorpheme(c3)]
+          if (c2.equals(YEH)) return [...prefix, measureMorpheme(...longVowelI), radicalMorpheme(c3)]
 
           return [
             ...prefix,
             measureMorpheme(SUKOON),
             radicalMorpheme(c2),
-            measureMorpheme(...longVowel(c3.equals(YEH) ? KASRA : DAMMA)),
+            measureMorpheme(...defectiveLongVowel),
             radicalMorpheme(c3),
           ]
         }
