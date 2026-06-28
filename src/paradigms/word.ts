@@ -18,6 +18,10 @@ export class Morpheme {
     return this.tokens.map(String).join('').normalize('NFC')
   }
 
+  at(index: number): Token | undefined {
+    return this.tokens.at(index)
+  }
+
   containsToken(token: Token): boolean {
     return this.contains((t) => t.equals(token))
   }

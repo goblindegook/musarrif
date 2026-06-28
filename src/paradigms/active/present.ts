@@ -374,7 +374,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]
 
 const defaultSubjunctiveForm = (stem: readonly Morpheme[]): readonly Morpheme[] => {
   const finalMorpheme = stem.at(-1)
-  const finalToken = finalMorpheme?.tokens.at(-1)
+  const finalToken = finalMorpheme?.at(-1)
 
   if (finalMorpheme && finalToken?.equals(DAMMA)) return stem.with(-1, finalMorpheme.with(-1, FATHA))
 
@@ -393,7 +393,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     const indicativeStem = new Word(morphemes).morphemes
     const stem = morphemes.slice(0, -1)
     const final = morphemes.at(-1)
-    const finalToken = final?.tokens.at(-1)
+    const finalToken = final?.at(-1)
 
     if (isDual(pronounId)) {
       const base = dropTrailingNoon(indicativeStem)
@@ -425,7 +425,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     }
 
     if (finalToken?.equals(DAMMA)) {
-      if (isQuadriliteralVerb(verb) && stem.at(-1)?.tokens[0].equals(stem.at(-3)?.tokens[0]))
+      if (isQuadriliteralVerb(verb) && stem.at(-1)?.at(0)?.equals(stem.at(-3)?.at(0)))
         return [
           ...stem.slice(0, -4),
           measureMorpheme(SUKOON),
@@ -446,7 +446,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     }
 
     const last = indicativeStem.at(-1)
-    if (!last?.tokens.at(-1)?.isWeak) return indicativeStem
+    if (!last?.at(-1)?.isWeak) return indicativeStem
     return indicativeStem.with(-1, agreementMorpheme(...last.tokens.slice(0, -1)))
   })
 }
@@ -806,7 +806,7 @@ function shortenHollowStemMorphemes(stem: readonly Morpheme[]): readonly Morphem
 
 function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): readonly Morpheme[] {
   for (let i = 1; i < stem.length - 1; i++) {
-    if (SUKOON.equals(stem[i].tokens[0]) && stem[i - 1].tokens[0].equals(stem[i + 1].tokens[0])) {
+    if (SUKOON.equals(stem[i].at(0)) && stem[i - 1].at(0)?.equals(stem[i + 1].at(0))) {
       return [...stem.slice(0, i), measureMorpheme(vowel), ...stem.slice(i + 1)]
     }
   }
