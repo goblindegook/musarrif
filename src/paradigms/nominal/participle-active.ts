@@ -1,16 +1,5 @@
 import { isFormIPastVowel } from '../form-i-vowels'
-import {
-  ALIF,
-  ALIF_HAMZA,
-  DAMMA,
-  FATHA,
-  HAMZA,
-  HAMZA_ON_YEH,
-  KASRA,
-  SUKOON,
-  TANWEEN_KASRA,
-  YEH,
-} from '../tokens'
+import { ALIF, ALIF_HAMZA, DAMMA, FATHA, HAMZA, HAMZA_ON_YEH, KASRA, SUKOON, TANWEEN_KASRA, YEH } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { measureMorpheme, radicalMorpheme, Word } from '../word'
 import { deriveParticiple } from './participle'
