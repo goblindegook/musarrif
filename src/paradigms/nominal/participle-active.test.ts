@@ -493,15 +493,15 @@ describe('active participle', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['ضيف', 'مُضِيْف'],
-        ['عون', 'مُعِيْن'],
-        ['قود', 'مُقِيْد'],
-        ['شور', 'مُشِيْر'],
-        ['نوم', 'مُنِيْم'],
-        ['رود', 'مُرِيْد'],
-        ['تيح', 'مُتِيْح'],
-        ['فيد', 'مُفِيْد'],
-        ['عود', 'مُعِيْد'],
+        ['ضيف', 'مُضِيف'],
+        ['عون', 'مُعِين'],
+        ['قود', 'مُقِيد'],
+        ['شور', 'مُشِير'],
+        ['نوم', 'مُنِيم'],
+        ['رود', 'مُرِيد'],
+        ['تيح', 'مُتِيح'],
+        ['فيد', 'مُفِيد'],
+        ['عود', 'مُعِيد'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
@@ -511,9 +511,7 @@ describe('active participle', () => {
           { tokens: tokenize('مُ'), role: 'measure' },
           { tokens: tokenize('ج'), role: 'radical' },
           { tokens: tokenize('ِ'), role: 'measure' },
-          { tokens: tokenize('ي'), role: 'radical' },
-          { tokens: tokenize('ْ'), role: 'measure' },
-          { tokens: tokenize('ب'), role: 'radical' },
+          { tokens: tokenize('يب'), role: 'radical' },
         ])
       })
     })
@@ -580,7 +578,7 @@ describe('active participle', () => {
       test.each([
         ['نشء', 'مُنْشِئ'],
         ['نبء', 'مُنْبِئ'],
-        ['ضوء', 'مُضِيْء'],
+        ['ضوء', 'مُضِيء'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
