@@ -408,10 +408,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     }
 
     if (isMasculinePlural(pronounId)) {
-      if (
-        (isTriliteralFormIVerb(verb) && c3.isWeak && isFormIPresentVowel(verb, FATHA)) ||
-        (verb.form === 5 && c3.isWeak)
-      ) {
+      if (fathaDefective) {
         const base = dropTrailingNoon(indicativeStem)
         return base.with(-1, agreementMorpheme(...(base.at(-1)?.tokens ?? []), ALIF))
       }
@@ -591,17 +588,6 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
 function deriveFormII(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c3.isWeak)
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(KASRA),
-      radicalMorpheme(c3),
-    ]
-
   return [
     radicalMorpheme(c1),
     measureMorpheme(FATHA),
@@ -618,8 +604,6 @@ function deriveFormIII(verb: NonFormIVerb): readonly Morpheme[] {
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
   if (c2.equals(c3)) return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3)]
-
-  if (c3.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 
   return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
