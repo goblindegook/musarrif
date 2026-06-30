@@ -3,7 +3,7 @@ import { conjugateImperative } from '../active/imperative'
 import { conjugatePast } from '../active/past'
 import { conjugatePresentMood } from '../active/present'
 import { deriveMasdar } from '../nominal/masdar'
-import { deriveActiveParticiple } from '../nominal/participle-active'
+import { deriveActiveParticiple } from '../nominal/participle'
 import { getVerbById } from '../verbs'
 
 describe('qSS-7', () => {

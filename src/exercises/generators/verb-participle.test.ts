@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
-import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import { exerciseDiacritics } from '../dimensions.ts'

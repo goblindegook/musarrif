@@ -1,7 +1,6 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
-import { deriveActiveParticiple } from '../../paradigms/nominal/participle-active.ts'
-import { derivePassiveParticiple } from '../../paradigms/nominal/participle-passive.ts'
+import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { formatFormLabel, formsForRoot, getAvailableParadigms, synthesizeVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'

@@ -2,7 +2,7 @@ import fc from 'fast-check'
 import { describe, expect, it, test } from 'vitest'
 import { tokenize } from '../tokens'
 import { getVerb, verbs } from '../verbs'
-import { derivePassiveParticiple } from './participle-passive'
+import { derivePassiveParticiple } from './participle'
 
 describe('passive participle', () => {
   describe('Form I', () => {

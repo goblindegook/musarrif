@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { tokenize } from '../tokens'
 import { getVerb } from '../verbs'
-import { deriveActiveParticiple } from './participle-active'
+import { deriveActiveParticiple } from './participle'
 
 describe('active participle', () => {
   describe('Form I', () => {
