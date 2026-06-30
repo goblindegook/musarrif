@@ -146,7 +146,6 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
 
   switch (verb.form) {
     case 1: {
-      if (isActive) return []
       const prefix = [measureMorpheme(MEEM, FATHA), radicalMorpheme(c1)]
       if (c3.isWeak) {
         const defectiveLongVowel = c3.equals(YEH) ? longVowelI : longVowelU
