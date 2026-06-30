@@ -91,5 +91,5 @@ export function deriveActiveParticiple(verb: Verb): Word {
     ])
   }
 
-  return new Word(deriveParticiple(verb, KASRA))
+  return new Word(deriveParticiple(verb, true))
 }

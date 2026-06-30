@@ -755,7 +755,7 @@ function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
   return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
 
-function derivePresentStem(verb: Verb): readonly Morpheme[] {
+export function derivePresentStem(verb: Verb): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
     switch (verb.form) {
       case 1:
