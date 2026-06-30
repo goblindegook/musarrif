@@ -298,7 +298,7 @@ function deriveDualStem(stem: readonly Morpheme[], verb: Verb): readonly Morphem
 
 const dammaSuffix = (s: boolean) => (s ? [agreementMorpheme(DAMMA)] : [])
 
-function deriveIndicativeForms(verb: Verb): Record<PronounId, readonly Morpheme[]> {
+function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const [c1, , c3] = verb.rootTokens
   const stem = derivePresentStem(verb)
   const dual = deriveDualStem(stem, verb)
@@ -345,7 +345,7 @@ function dropTrailingNoon(morphemes: readonly Morpheme[]): readonly Morpheme[] {
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const [, c2, c3] = verb.rootTokens
-  const indicative = deriveIndicativeForms(verb)
+  const indicative = conjugateIndicative(verb)
 
   return {
     '1s': defaultSubjunctiveForm(indicative['1s']),
@@ -389,7 +389,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
   const fathaDefective =
     c3.isWeak && ((isTriliteralFormIVerb(verb) && isFormIPresentVowel(verb, FATHA)) || verb.form === 5)
 
-  return mapRecord(deriveIndicativeForms(verb), (morphemes, pronounId) => {
+  return mapRecord(conjugateIndicative(verb), (morphemes, pronounId) => {
     const indicativeStem = new Word(morphemes).morphemes
     const stem = morphemes.slice(0, -1)
     const final = morphemes.at(-1)
@@ -454,7 +454,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
 export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, Word> {
   if (mood === 'subjunctive') return mapRecord(conjugateSubjunctive(verb), (m) => new Word(m))
   if (mood === 'jussive') return mapRecord(conjugateJussive(verb), (m) => new Word(m))
-  return mapRecord(deriveIndicativeForms(verb), (morphemes) => new Word(morphemes))
+  return mapRecord(conjugateIndicative(verb), (morphemes) => new Word(morphemes))
 }
 
 function deriveFormIq(verb: QuadriliteralVerb): readonly Morpheme[] {
