@@ -22,6 +22,16 @@ export class Morpheme {
     return this.tokens.at(index)
   }
 
+  startsWith(tokens: readonly Token[]): boolean {
+    const text = tokens.map(String).join('').normalize('NFC')
+    return String(this).startsWith(text)
+  }
+
+  endsWith(tokens: readonly Token[]): boolean {
+    const text = tokens.map(String).join('').normalize('NFC')
+    return String(this).endsWith(text)
+  }
+
   containsToken(token: Token): boolean {
     return this.contains((t) => t.equals(token))
   }

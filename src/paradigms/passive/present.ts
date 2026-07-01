@@ -194,7 +194,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
     ]
 
   if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.at(0)))
+    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.startsWith([SUKOON]))
       return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
     return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
@@ -433,7 +433,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
     ]
 
   if (c2.isWeak && c3.isHamza) {
-    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.at(0)))
+    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.startsWith([SUKOON]))
       return [
         radicalMorpheme(c1),
         measureMorpheme(SUKOON),
@@ -499,7 +499,7 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   }
 
   if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || SUKOON.equals(moodSuffix.at(0)?.at(0)))
+    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.startsWith([SUKOON]))
       return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
     return [
       ...prefix,

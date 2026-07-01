@@ -19,7 +19,7 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
+import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
 import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { constrainPassiveConjugation } from './support'
 
@@ -503,10 +503,6 @@ function derivePassivePastFormIVq(verb: QuadriliteralVerb): PassivePastParams {
       measureMorpheme(DAMMA),
     ],
   }
-}
-
-function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
-  return verb.rootTokens.length === 4
 }
 
 function derivePassivePastForms(verb: Verb): PassivePastParams {
