@@ -1078,6 +1078,24 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "Hrk",
+    "form": 1,
+    "vowels": "u-u",
+    "masdars": ["fa3l"],
+    "lexicalizedMasdars": ["Harakap"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "Hrk",
+    "form": 2
+  },
+  {
+    "root": "Hrk",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "Hrm",
     "form": 8
   },
