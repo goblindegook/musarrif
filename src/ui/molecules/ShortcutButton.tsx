@@ -12,6 +12,7 @@ interface ShortcutButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
   onClick?: () => void
   shortcutKey: string
   showShortcut?: boolean
+  badgeLabel?: string
   variant?: ButtonVariant
   size?: ButtonSize
 }
@@ -20,6 +21,7 @@ export function ShortcutButton({
   children,
   shortcutKey,
   showShortcut = true,
+  badgeLabel,
   onClick,
   disabled,
   ...props
@@ -57,6 +59,7 @@ export function ShortcutButton({
         </ShortcutBadge>
       )}
       {children}
+      {badgeLabel && <InfoBadge>{badgeLabel}</InfoBadge>}
     </Button>
   )
 }
@@ -79,4 +82,25 @@ const ShortcutBadge = styled('span')`
   padding: 0.2rem 0.35rem;
   pointer-events: none;
   font-family: ui-monospace, monospace;
+`
+
+const InfoBadge = styled('span')`
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 0.85rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 999px;
+  padding: 0.3rem 0.5rem;
+  pointer-events: none;
 `

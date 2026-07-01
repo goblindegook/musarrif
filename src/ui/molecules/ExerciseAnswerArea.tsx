@@ -203,7 +203,13 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       )}
 
       {!reveal && exercise.inputModes.includes('speech') && speechSupported && effectiveMode !== 'speech' && (
-        <ShortcutButton shortcutKey="v" showShortcut onClick={() => setMode('speech')} variant="secondary">
+        <ShortcutButton
+          shortcutKey="v"
+          showShortcut
+          badgeLabel={t('badge.beta')}
+          onClick={() => setMode('speech')}
+          variant="secondary"
+        >
           {t('exercise.toggle.speak')}
         </ShortcutButton>
       )}

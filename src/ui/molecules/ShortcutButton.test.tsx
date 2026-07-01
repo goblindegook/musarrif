@@ -16,6 +16,16 @@ test('renders shortcut badge', () => {
   expect(screen.getByText('1')).toBeInTheDocument()
 })
 
+test('renders an optional badge label', () => {
+  render(
+    <ShortcutButton shortcutKey="v" badgeLabel="Beta" onClick={() => {}}>
+      Speak the answer
+    </ShortcutButton>,
+  )
+
+  expect(screen.getByText('Beta')).toBeInTheDocument()
+})
+
 test('activates on keyboard shortcut', () => {
   const onClick = vi.fn()
 
