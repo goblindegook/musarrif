@@ -2,7 +2,6 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { transliterateReverse } from '@pacote/buckwalter'
-import { applyDiacriticsPreference } from '../src/paradigms/tokens'
 import { formsForRoot, getVerbById, synthesizeVerb, type VerbForm } from '../src/paradigms/verbs'
 import { clamp, parseInteger } from '../src/primitives/numbers'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
@@ -32,7 +31,7 @@ async function run() {
   if (!slug) usage()
 
   const { lemma, root } = resolveSlugForWiktionary(slug)
-  const parsed = await fetchParadigms(applyDiacriticsPreference(lemma, 'none'), root)
+  const parsed = await fetchParadigms(lemma, root)
   const fileText = renderVerbTestFile(slug, parsed)
 
   mkdirSync(OUTPUT_DIR, { recursive: true })

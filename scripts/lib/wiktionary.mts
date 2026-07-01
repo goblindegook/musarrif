@@ -1,4 +1,5 @@
 import { JSDOM } from 'jsdom'
+import { applyDiacriticsPreference } from '../../src/paradigms/tokens'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 async function fetchHtml(title: string): Promise<string> {
@@ -245,6 +246,6 @@ function parseConjugationTable(html: string, lemma: string, root?: string): Pars
 }
 
 export async function fetchParadigms(lemma: string, root?: string): Promise<ParsedParadigms> {
-  const html = await fetchHtml(lemma)
+  const html = await fetchHtml(applyDiacriticsPreference(lemma, 'none'))
   return parseConjugationTable(html, lemma, root)
 }
