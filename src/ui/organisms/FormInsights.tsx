@@ -5,6 +5,7 @@ import { renderExplanation, resolveVerbExplanationLayers, toFormDescriptor } fro
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { type DisplayVerb, isTriliteralFormIDisplayVerb, synthesizeVerb, verbs } from '../../paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
+import { FormattedText } from '../atoms/FormattedText'
 import { Heading } from '../atoms/Heading'
 import { InlineVerbList } from '../atoms/InlineVerbList'
 import { Text } from '../atoms/Text'
@@ -48,9 +49,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
         {t(`formInfo.form${toFormDescriptor(verb)}.semantic`)}
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
-      {formExplanationParagraph && (
-        <Text dir={dir} lang={lang} dangerouslySetInnerHTML={{ __html: formExplanationParagraph }} />
-      )}
+      {formExplanationParagraph && <FormattedText dir={dir} lang={lang} text={formExplanationParagraph} />}
       {verb.root.length === 3 && (
         <Text dir={dir} lang={lang}>
           {t(`formInfo.form${verb.form}.relationship`)}

@@ -314,7 +314,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
             {explanation.length > 0 && (
               <Explanation lang={lang} dir={dir}>
                 {explanation.map((paragraph, index) => (
-                  <Text key={index} dangerouslySetInnerHTML={{ __html: paragraph.map((s) => s.text).join(' ') }} />
+                  <FormattedText key={index} text={paragraph.map((s) => s.text).join(' ')} />
                 ))}
               </Explanation>
             )}

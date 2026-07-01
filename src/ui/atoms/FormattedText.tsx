@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'preact'
 interface FormattedTextProps
   extends Omit<HTMLAttributes<HTMLParagraphElement>, 'children' | 'dangerouslySetInnerHTML'> {
   text: string
+  as?: 'p' | 'span'
 }
 
 const Root = styled('p')`
@@ -22,14 +23,14 @@ function sanitizeHtml(raw: string): string {
 
   Array.from(doc.body.querySelectorAll('*')).forEach((element) => {
     const tag = element.tagName.toLowerCase()
-    if (!['strong', 'b', 'em', 'i', 'u', 'br', 'a'].includes(tag)) {
+    if (!['strong', 'b', 'em', 'i', 'u', 'br', 'a', 'span'].includes(tag)) {
       element.replaceWith(...element.childNodes)
       return
     }
 
     Array.from(element.attributes).forEach((attribute) => {
       const name = attribute.name.toLowerCase()
-      if (!['href'].includes(name)) {
+      if (!['href', 'lang'].includes(name)) {
         element.removeAttribute(attribute.name)
         return
       }

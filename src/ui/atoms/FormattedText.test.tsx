@@ -19,7 +19,7 @@ describe('FormattedText', () => {
     render(
       <FormattedText
         text={
-          'Read <span>carefully</span> <a href="javascript:alert(1)" data-x="1">unsafe</a> ' +
+          'Read <em class="x">carefully</em> <a href="javascript:alert(1)" data-x="1">unsafe</a> ' +
           '<a href="/docs" data-x="2">safe</a>'
         }
       />,
@@ -32,5 +32,21 @@ describe('FormattedText', () => {
     expect(unsafe.closest('a')).not.toHaveAttribute('href')
     expect(safe).toHaveAttribute('href', '/docs')
     expect(safe).not.toHaveAttribute('data-x')
+  })
+
+  test('renders span with a lang attribute and strips other attributes from it', () => {
+    render(<FormattedText text={'See <span lang="ar" data-x="1">كتب</span> above'} />)
+
+    const span = screen.getByText('كتب')
+
+    expect(span.tagName).toBe('SPAN')
+    expect(span).toHaveAttribute('lang', 'ar')
+    expect(span).not.toHaveAttribute('data-x')
+  })
+
+  test('renders as a span for inline usage', () => {
+    render(<FormattedText as="span" text="inline text" />)
+
+    expect(screen.getByText('inline text').tagName).toBe('SPAN')
   })
 })

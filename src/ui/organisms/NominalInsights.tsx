@@ -7,6 +7,7 @@ import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
+import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
 import { Detail } from '../molecules/Detail'
@@ -77,7 +78,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
               {(si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
                 <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
               )}
-              <span dangerouslySetInnerHTML={{ __html: sentence.text }} />{' '}
+              <FormattedText as="span" text={sentence.text} />{' '}
             </span>
           ))}
         </Text>
