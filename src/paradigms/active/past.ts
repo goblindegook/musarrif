@@ -445,16 +445,14 @@ function insertSukoonInMasculinePluralMarkerAfterWeakRadical(morphemes: readonly
   return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF), ...morphemes.slice(index + 1)]
 }
 
-const DEFECTIVE_CONTRACTION_RULES = [
-  contractDefectiveRadicalAtWordEnd,
-  elideDefectiveRadicalBeforeFeminineMarker,
-  elideDefectiveRadicalBeforeMasculinePluralMarker,
-  insertLinkingVowelBeforeMasculineDualMarker,
-  insertSukoonInMasculinePluralMarkerAfterWeakRadical,
-]
-
 function contractActivePastDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return DEFECTIVE_CONTRACTION_RULES.reduce((result, rule) => rule(result), morphemes)
+  return insertSukoonInMasculinePluralMarkerAfterWeakRadical(
+    insertLinkingVowelBeforeMasculineDualMarker(
+      elideDefectiveRadicalBeforeMasculinePluralMarker(
+        elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
+      ),
+    ),
+  )
 }
 
 // Standard-shape past forms (I, III, VI, VII, VIII, IX) always build their geminate stem
@@ -515,8 +513,6 @@ function elideHollowRadicalBeforeConsonantSuffix(morphemes: readonly Morpheme[])
   return [...morphemes.slice(0, index - 1), measureMorpheme(vowel), ...morphemes.slice(index + 1)]
 }
 
-const HOLLOW_CONTRACTION_RULES = [contractHollowRadicalBeforeVowelSuffix, elideHollowRadicalBeforeConsonantSuffix]
-
 function contractActivePastHollowRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return HOLLOW_CONTRACTION_RULES.reduce((result, rule) => rule(result), morphemes)
+  return contractHollowRadicalBeforeVowelSuffix(elideHollowRadicalBeforeConsonantSuffix(morphemes))
 }
