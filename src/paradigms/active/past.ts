@@ -24,6 +24,7 @@ import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
 import { contractActivePastDefectiveRoot } from './past-defective'
 import { contractActivePastGeminateRoot } from './past-geminate'
+import { contractActivePastHollowRoot } from './past-hollow'
 
 function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
   return verb.rootTokens.length === 4
@@ -34,52 +35,13 @@ type PastBaseForms = [vowelStem: readonly Morpheme[], consonantStem?: readonly M
 export function conjugatePast(verb: Verb): Record<PronounId, Word> {
   const isQuadriliteral = isQuadriliteralVerb(verb)
   return mapRecord(addAgreement(derivePastForms(verb)), (morphemes) => {
-    // Gemination contraction only applies to triliterals.
+    // Gemination and hollow contraction only apply to triliterals.
     return new Word(
       isQuadriliteral
         ? contractActivePastDefectiveRoot(morphemes)
-        : contractActivePastGeminateRoot(contractActivePastDefectiveRoot(morphemes)),
+        : contractActivePastHollowRoot(contractActivePastGeminateRoot(contractActivePastDefectiveRoot(morphemes))),
     )
   })
-}
-
-function derivePastFormI(verb: FormIVerb): PastBaseForms {
-  if (verb.root === 'ليس') return conjugateLaysa()
-
-  const [c1, c2, c3] = verb.rootTokens
-  const pastVowel = formIPastVowel(verb)
-  const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
-
-  if (c3.isWeak && pastVowel.equals(KASRA)) return [[...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH)]]
-
-  if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
-
-  if (c2.equals(YEH))
-    return [
-      [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)],
-      [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(c3)],
-    ]
-
-  if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
-    return [
-      [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)],
-      [radicalMorpheme(c1), measureMorpheme(DAMMA), radicalMorpheme(c3)],
-    ]
-
-  return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
-}
-
-function conjugateLaysa(): PastBaseForms {
-  return [
-    [
-      radicalMorpheme(LAM),
-      measureMorpheme(FATHA),
-      radicalMorpheme(YEH),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(SEEN),
-    ],
-    [radicalMorpheme(LAM), measureMorpheme(FATHA), radicalMorpheme(SEEN)],
-  ]
 }
 
 function addAgreement(forms: PastBaseForms): Record<PronounId, readonly Morpheme[]> {
@@ -163,6 +125,35 @@ function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms {
     [...prefix, measureMorpheme(FATHA), radicalMorpheme(c4), measureMorpheme(SUKOON), radicalMorpheme(c4)],
     [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c4), measureMorpheme(FATHA), radicalMorpheme(c4)],
   ]
+}
+
+function conjugateLaysa(): PastBaseForms {
+  return [
+    [
+      radicalMorpheme(LAM),
+      measureMorpheme(FATHA),
+      radicalMorpheme(YEH),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(SEEN),
+    ],
+    [radicalMorpheme(LAM), measureMorpheme(FATHA), radicalMorpheme(SEEN)],
+  ]
+}
+
+function derivePastFormI(verb: FormIVerb): PastBaseForms {
+  if (verb.root === 'ليس') return conjugateLaysa()
+
+  const [c1, c2, c3] = verb.rootTokens
+  const pastVowel = formIPastVowel(verb)
+  const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
+
+  if (c3.isWeak && pastVowel.equals(KASRA)) return [[...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH)]]
+
+  if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
+
+  if (c2.equals(YEH) || (c2.isWeak && !isFormIPastVowel(verb, KASRA))) return [[...prefix, radicalMorpheme(c3)]]
+
+  return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 }
 
 function derivePastFormII(verb: NonFormIVerb): PastBaseForms {

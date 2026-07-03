@@ -7,9 +7,8 @@ import { type Morpheme, measureMorpheme } from '../word'
 // merge the identical radicals into a shadda (مَدَّ) — mirroring how a real speaker only contracts
 // when a vowel follows. Forms IV and X are excluded: their linking vowel migrates between the
 // C1-C2 and C2-C3 slots across contexts rather than just appearing/disappearing between C2-C3, so
-// they keep their own inline two-variant logic (spec's accepted partial-adoption outcome — see
-// docs/specs/2026-06-28-derivation-pipeline-refactor.md Open Risks). Weak radicals are excluded too:
-// a doubled weak letter (e.g. حَيِيَ) doesn't contract the same way strong gemination does.
+// they keep their own inline two-variant logic. Weak radicals are excluded too:  a doubled weak
+// letter (e.g. حَيِيَ) doesn't contract the same way strong gemination does.
 export function contractActivePastGeminateRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
     (m, i) =>
