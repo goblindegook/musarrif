@@ -15,7 +15,11 @@ export class Morpheme {
   }
 
   toString(): string {
-    return this.tokens.map(String).join('').normalize('NFC')
+    return stringify(this.tokens)
+  }
+
+  get length(): number {
+    return this.tokens.length
   }
 
   at(index: number): Token | undefined {
@@ -23,13 +27,15 @@ export class Morpheme {
   }
 
   startsWith(tokens: readonly Token[]): boolean {
-    const text = tokens.map(String).join('').normalize('NFC')
-    return String(this).startsWith(text)
+    return String(this).startsWith(stringify(tokens))
   }
 
   endsWith(tokens: readonly Token[]): boolean {
-    const text = tokens.map(String).join('').normalize('NFC')
-    return String(this).endsWith(text)
+    return String(this).endsWith(stringify(tokens))
+  }
+
+  equals(tokens: Morpheme | readonly Token[]): boolean {
+    return tokens instanceof Morpheme ? String(this) === String(tokens) : String(this) === stringify(tokens)
   }
 
   containsToken(token: Token): boolean {
@@ -57,7 +63,7 @@ export class Word {
   }
 
   toString(): string {
-    return this.morphemes.map(String).join('').normalize('NFC')
+    return stringify(this.morphemes)
   }
 }
 
@@ -70,6 +76,10 @@ export const particleMorpheme = (...tokens: readonly NullableToken[]): Morpheme 
 export const agreementMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'agreement')
 
 export const elidedMorpheme = (...tokens: readonly NullableToken[]): Morpheme => new Morpheme(tokens, 'elided')
+
+function stringify(tokens: readonly unknown[]): string {
+  return tokens.map(String).join('').normalize('NFC')
+}
 
 function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const seatedTokens = seatHamzas(morphemes.flatMap((m) => [...m.tokens]))
