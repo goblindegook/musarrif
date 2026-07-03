@@ -13,6 +13,7 @@ function findPrecedingRadical(morphemes: readonly Morpheme[], index: number): Mo
 
 function contractDefectiveRadicalAtWordEnd(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findDefectiveRadicalIndex(morphemes)
+  if (index === -1) return morphemes
 
   if (
     // Form I's fi3ila-vowel-class exception (قَوِيَ, بَقِيَ — pastVowel is KASRA) keeps the radical fully
@@ -37,6 +38,7 @@ function contractDefectiveRadicalAtWordEnd(morphemes: readonly Morpheme[]): read
 
 function elideDefectiveRadicalBeforeFeminineMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findDefectiveRadicalIndex(morphemes)
+  if (index === -1) return morphemes
 
   if (
     // Same fi3ila-vowel-class exception as contractDefectiveRadicalAtWordEnd.
@@ -52,19 +54,21 @@ function elideDefectiveRadicalBeforeFeminineMarker(morphemes: readonly Morpheme[
 
 function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findDefectiveRadicalIndex(morphemes)
+  if (index === -1) return morphemes
 
   if (!morphemes[index + 1].startsWith([DAMMA])) return morphemes
 
   // Form I's fi3ila-vowel-class exception (قَوِيَ → بَقُوا) drops its class-defining KASRA along with
   // the radical, but — unlike the regular case, which drops the auto-appended DAMMA too — keeps it,
   // since it's what carries ق's vowel once the radical is gone.
-  if (morphemes[index - 1].equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
+  if (morphemes[index - 1]?.equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
 
   return [...morphemes.slice(0, index), ...morphemes.slice(index + 2)]
 }
 
 function insertLinkingVowelBeforeMasculineDualMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findDefectiveRadicalIndex(morphemes)
+  if (index === -1) return morphemes
 
   if (morphemes[index + 2]?.length !== 1 || !morphemes[index + 2].equals([ALIF])) return morphemes
 

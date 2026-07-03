@@ -23,6 +23,7 @@ import {
 import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
 import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
 import { contractActivePastDefectiveRoot } from './past-defective'
+import { contractActivePastGeminateRoot } from './past-geminate'
 
 function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
   return verb.rootTokens.length === 4
@@ -31,10 +32,15 @@ function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
 type PastBaseForms = [vowelStem: readonly Morpheme[], consonantStem?: readonly Morpheme[]]
 
 export function conjugatePast(verb: Verb): Record<PronounId, Word> {
-  return mapRecord(
-    addAgreement(derivePastForms(verb)),
-    (morphemes) => new Word(contractActivePastDefectiveRoot(morphemes)),
-  )
+  const isQuadriliteral = isQuadriliteralVerb(verb)
+  return mapRecord(addAgreement(derivePastForms(verb)), (morphemes) => {
+    // Gemination contraction only applies to triliterals.
+    return new Word(
+      isQuadriliteral
+        ? contractActivePastDefectiveRoot(morphemes)
+        : contractActivePastGeminateRoot(contractActivePastDefectiveRoot(morphemes)),
+    )
+  })
 }
 
 function derivePastFormI(verb: FormIVerb): PastBaseForms {
@@ -43,12 +49,6 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
   const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
-
-  if (c2.equals(c3))
-    return [
-      [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3)],
-      [...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)],
-    ]
 
   if (c3.isWeak && pastVowel.equals(KASRA)) return [[...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH)]]
 
@@ -103,17 +103,17 @@ function addAgreement(forms: PastBaseForms): Record<PronounId, readonly Morpheme
 
 function derivePastFormIq(verb: QuadriliteralVerb): PastBaseForms {
   const [c1, c2, c3, c4] = verb.rootTokens
-  const stem = [
-    radicalMorpheme(c1),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c2),
-    measureMorpheme(SUKOON),
-    radicalMorpheme(c3),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c4),
+  return [
+    [
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c2),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c3),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c4),
+    ],
   ]
-
-  return [stem]
 }
 
 function derivePastFormIIq(verb: QuadriliteralVerb): PastBaseForms {
@@ -167,7 +167,6 @@ function derivePastFormIVq(verb: QuadriliteralVerb): PastBaseForms {
 
 function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
-
   return [
     [
       radicalMorpheme(c1),
@@ -182,15 +181,15 @@ function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastFormIII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
-  const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
-
-  if (c2.equals(c3))
-    return [
-      [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3)],
-      [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)],
-    ]
-
-  return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)]]
+  return [
+    [
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c3),
+    ],
+  ]
 }
 
 function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
@@ -218,7 +217,6 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastFormV(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
-
   return [
     [
       measureMorpheme(TEH, FATHA),
@@ -236,12 +234,6 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
-  if (c2.equals(c3))
-    return [
-      [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
-      [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
-    ]
-
   return [
     c3.isWeak
       ? [...prefix, measureMorpheme(...longVowelA), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(YEH)]
@@ -252,12 +244,6 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
-
-  if (c2.equals(c3))
-    return [
-      [...prefix, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
-      [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
-    ]
 
   if (c2.isWeak && c3.isWeak) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
@@ -271,11 +257,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
   const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [measureMorpheme(ALIF, KASRA), radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA)]
 
-  if (c2.equals(c3))
-    return [
-      [...prefix, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
-      [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
-    ]
+  if (c2.equals(c3)) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
   if (c1.equals(WAW) || c1.isHamza)
     return [
@@ -305,16 +287,6 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
 function derivePastFormIX(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = verb.rootTokens
   return [
-    [
-      measureMorpheme(ALIF, KASRA),
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c3),
-    ],
     [
       measureMorpheme(ALIF, KASRA),
       radicalMorpheme(c1),
