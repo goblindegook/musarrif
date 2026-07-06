@@ -977,4 +977,52 @@ describe('annotateActivePresentMood', () => {
       },
     ])
   })
+
+  test('indicative Form I — بيت (2fp) hollow root: elided yaa (C2) annotated as elided', () => {
+    const result = activePresentMoodDerivationSteps(getVerb('بيت', 1), 'indicative', '2fp')
+
+    expect(detokenizeDerivationSteps(result)).toEqual([
+      {
+        type: 'root',
+        morphemes: [
+          { text: 'ب', role: 'radical' },
+          { text: 'ي', role: 'radical' },
+          { text: 'ت', role: 'radical' },
+        ],
+      },
+      {
+        type: 'form',
+        form: 1,
+        morphemes: [
+          { text: 'ب', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'ات', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+        ],
+      },
+      {
+        type: 'tense',
+        tense: 'active.present.indicative',
+        morphemes: [
+          { text: 'يَ', role: 'agreement' },
+          { text: 'ب', role: 'radical' },
+          { text: 'ِ', role: 'measure' },
+          { text: 'يت', role: 'radical' },
+          { text: 'ُ', role: 'agreement' },
+        ],
+      },
+      {
+        type: 'pronoun',
+        pronounId: '2fp',
+        morphemes: [
+          { text: 'تَ', role: 'agreement' },
+          { text: 'ب', role: 'radical' },
+          { text: 'ِ', role: 'measure' },
+          { text: 'ي', role: 'elided' },
+          { text: 'ت', role: 'radical' },
+          { text: 'ْنَ', role: 'agreement' },
+        ],
+      },
+    ])
+  })
 })

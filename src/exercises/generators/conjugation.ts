@@ -36,8 +36,8 @@ function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
   return `exercise.conjugation.tense.${voice}.${slug}`
 }
 
-function distractorPronouns(tense: VerbTense, profile: DimensionProfile): PronounId[] {
-  const pool = [...pronounPool(profile.pronouns)]
+function distractorPronouns(tense: VerbTense, profile: DimensionProfile): readonly PronounId[] {
+  const pool = pronounPool(profile.pronouns)
   if (tense === 'active.imperative') return pool.filter((p) => p.startsWith('2'))
   return pool
 }

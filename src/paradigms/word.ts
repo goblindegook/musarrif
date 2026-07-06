@@ -82,10 +82,11 @@ function stringify(tokens: readonly unknown[]): string {
 }
 
 function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const seatedTokens = seatHamzas(morphemes.flatMap((m) => [...m.tokens]))
+  const seatedTokens = seatHamzas(morphemes.filter((m) => m.role !== 'elided').flatMap((m) => m.tokens))
   let offset = 0
   return mergeAdjacent(
     morphemes.map((m) => {
+      if (m.role === 'elided') return m
       const count = m.tokens.length
       const slice = seatedTokens.slice(offset, offset + count)
       offset += count

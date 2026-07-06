@@ -797,8 +797,15 @@ function shortenHollowStemMorphemes(stem: readonly Morpheme[]): readonly Morphem
   for (let i = 1; i < stem.length; i++) {
     const weakIdx = stem[i].tokens.findIndex((t) => t.isWeak)
     if (weakIdx >= 0) {
-      const shortened = stem[i].tokens.filter((_, j) => j !== weakIdx)
-      return [...stem.slice(0, i), measureMorpheme(...shortened), ...stem.slice(i + 1)]
+      return [
+        ...stem.slice(0, i),
+        new Morpheme(
+          stem[i].tokens.filter((_, j) => j !== weakIdx),
+          stem[i].role,
+        ),
+        elidedMorpheme(stem[i].tokens[weakIdx]),
+        ...stem.slice(i + 1),
+      ]
     }
   }
   return stem

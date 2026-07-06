@@ -75,7 +75,7 @@ function readLocale(lang: LanguageCode): LocaleData {
 }
 
 function writeRoots(roots: readonly RootEntry[]): void {
-  const sorted = [...roots].sort((a, b) => (a.root < b.root ? -1 : a.root > b.root ? 1 : a.form - b.form))
+  const sorted = roots.toSorted((a, b) => (a.root < b.root ? -1 : a.root > b.root ? 1 : a.form - b.form))
   writeFileSync(ROOTS_PATH, `${JSON.stringify(sorted, null, 2)}\n`)
 }
 

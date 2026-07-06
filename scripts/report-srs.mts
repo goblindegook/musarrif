@@ -93,7 +93,7 @@ const dueBucketCounts: Record<DueBucket, number> = {
 }
 for (const card of cards) dueBucketCounts[dueBucket(today, card.dueDate)] += 1
 
-const sortedOverdue = [...overdueCards].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+const sortedOverdue = overdueCards.sort((a, b) => a.dueDate.localeCompare(b.dueDate))
 const oldestDaysAgo = sortedOverdue[0] ? daysDiff(sortedOverdue[0].dueDate, today) : 0
 const oldestDate = sortedOverdue[0]?.dueDate ?? '-'
 
