@@ -169,8 +169,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
               radicalMorpheme(YEH),
               suffix,
             ]
-      if (c2.isWeak && c3.isWeak) return [...stem, suffix]
-      if (c2.isWeak && verb.presentHollow !== 'uncontracted') return [...shortenHollowStemMorphemes(stem), suffix]
       return [...stem, suffix]
     }
 
@@ -199,7 +197,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
           radicalMorpheme(c3),
           suffix,
         ]
-      if (c2.isWeak) return [...shortenHollowStemMorphemes(stem), suffix]
       return [...stem, suffix]
 
     case 5:
@@ -222,7 +219,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
           suffix,
         ]
       if (c3.isWeak) return [...stem.with(-1, radicalMorpheme(YEH)), suffix]
-      if (c2.isWeak) return [...shortenHollowStemMorphemes(stem), suffix]
       return [...stem, suffix]
 
     case 8:
@@ -235,7 +231,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
           radicalMorpheme(c3),
           suffix,
         ]
-      if (c2.equals(YEH)) return [...shortenHollowStemMorphemes(stem), suffix]
       return [...stem, suffix]
 
     case 9:
@@ -252,7 +247,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
           radicalMorpheme(c3),
           suffix,
         ]
-      if (c2.isWeak) return [...shortenHollowStemMorphemes(stem), suffix]
       return [...stem, suffix]
   }
 }
@@ -307,25 +301,28 @@ function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]>
   const vowel = presentPrefixVowel(verb)
   const suffix = dammaSuffix(isQuadriliteralVerb(verb) || !c3.isWeak || (verb.form === 10 && c1.isWeak && c3.isWeak))
 
-  return {
-    '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...suffix],
-    '2ms': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
-    '2fs': [
-      agreementMorpheme(TEH, vowel),
-      ...deriveFeminineSingularStem(stem, verb),
-      agreementMorpheme(YEH, NOON, FATHA),
-    ],
-    '3ms': [agreementMorpheme(YEH, vowel), ...stem, ...suffix],
-    '3fs': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
-    '2d': [agreementMorpheme(TEH, vowel), ...dual],
-    '3md': [agreementMorpheme(YEH, vowel), ...dual],
-    '3fd': [agreementMorpheme(TEH, vowel), ...dual],
-    '1p': [agreementMorpheme(NOON, vowel), ...stem, ...suffix],
-    '2mp': [agreementMorpheme(TEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
-    '2fp': [agreementMorpheme(TEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
-    '3mp': [agreementMorpheme(YEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
-    '3fp': [agreementMorpheme(YEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
-  }
+  return mapRecord(
+    {
+      '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...suffix],
+      '2ms': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
+      '2fs': [
+        agreementMorpheme(TEH, vowel),
+        ...deriveFeminineSingularStem(stem, verb),
+        agreementMorpheme(YEH, NOON, FATHA),
+      ],
+      '3ms': [agreementMorpheme(YEH, vowel), ...stem, ...suffix],
+      '3fs': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
+      '2d': [agreementMorpheme(TEH, vowel), ...dual],
+      '3md': [agreementMorpheme(YEH, vowel), ...dual],
+      '3fd': [agreementMorpheme(TEH, vowel), ...dual],
+      '1p': [agreementMorpheme(NOON, vowel), ...stem, ...suffix],
+      '2mp': [agreementMorpheme(TEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
+      '2fp': [agreementMorpheme(TEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
+      '3mp': [agreementMorpheme(YEH, vowel), ...masculinePlural, agreementMorpheme(WAW, NOON, FATHA)],
+      '3fp': [agreementMorpheme(YEH, vowel), ...femininePlural, agreementMorpheme(NOON, FATHA)],
+    },
+    contractActivePresentHollowRoot,
+  )
 }
 
 function presentPrefixVowel(verb: Verb): Token {
@@ -430,8 +427,8 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
           agreementMorpheme(SUKOON),
         ]
 
-      if (c2.isWeak && stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
-        return [...shortenHollowStemMorphemes(stem), agreementMorpheme(SUKOON)]
+      if (stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
+        return contractActivePresentHollowRoot([...stem, agreementMorpheme(SUKOON)])
 
       if (c3.isWeak && stem.at(-1)?.contains((t) => t.isWeak)) {
         const weakRadical = stem.at(-1)
@@ -793,22 +790,22 @@ export function derivePresentStem(verb: Verb): readonly Morpheme[] {
   }
 }
 
-function shortenHollowStemMorphemes(stem: readonly Morpheme[]): readonly Morpheme[] {
-  for (let i = 1; i < stem.length; i++) {
-    const weakIdx = stem[i].tokens.findIndex((t) => t.isWeak)
-    if (weakIdx >= 0) {
-      return [
-        ...stem.slice(0, i),
-        new Morpheme(
-          stem[i].tokens.filter((_, j) => j !== weakIdx),
-          stem[i].role,
-        ),
-        elidedMorpheme(stem[i].tokens[weakIdx]),
-        ...stem.slice(i + 1),
-      ]
-    }
-  }
-  return stem
+function contractActivePresentHollowRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
+  const index = morphemes.findIndex((m, i) => m.role === 'radical' && morphemes[i + 1]?.role === 'radical')
+  if (index === -1 || !morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
+
+  const weakIdx = morphemes[index].tokens.findIndex((t) => t.isWeak)
+  if (weakIdx === -1) return morphemes
+
+  return [
+    ...morphemes.slice(0, index),
+    new Morpheme(
+      morphemes[index].tokens.filter((_, j) => j !== weakIdx),
+      morphemes[index].role,
+    ),
+    elidedMorpheme(morphemes[index].tokens[weakIdx]),
+    ...morphemes.slice(index + 1),
+  ]
 }
 
 function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): readonly Morpheme[] {
