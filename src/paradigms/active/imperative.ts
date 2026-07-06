@@ -30,7 +30,11 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
       const jussiveMorphemes = jussive.morphemes.filter((m) => m.role !== 'elided')
       const stem = jussiveMorphemes.slice(1)
 
-      if (isQuadriliteralVerb(verb)) return [3, 4].includes(verb.form) ? [measureMorpheme(ALIF, KASRA), ...stem] : stem
+      if (isQuadriliteralVerb(verb))
+        return stem.at(1)?.startsWith([SUKOON])
+          ? // Words cannot start with two consecutive consonants, add alif al-wasl:
+            [measureMorpheme(ALIF, KASRA), ...stem]
+          : stem
 
       switch (verb.form) {
         case 1: {
@@ -94,8 +98,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
             return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...initialHamzatedStem]
           }
-
-          if (c3.equals(WAW) && stem.at(-1)?.containsToken(ALIF) && !isPatternU) return stem
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:
           if (stem.at(1)?.startsWith([SUKOON])) return [measureMorpheme(ALIF, isPatternU ? DAMMA : KASRA), ...stem]
