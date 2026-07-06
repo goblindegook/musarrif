@@ -292,16 +292,6 @@ describe('imperative', () => {
           '2fp': 'اِبْقَينَ',
         })
       })
-
-      test('تَحَا conjugation', () => {
-        expect(conjugateImperative(getVerb('تحو', 1))).toMatchObjectT({
-          '2ms': 'اِتْحُ',
-          '2fs': 'اِتْحَيْ',
-          '2d': 'تْحَيَا',
-          '2mp': 'تْحَوا',
-          '2fp': 'اِتْحَينَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {

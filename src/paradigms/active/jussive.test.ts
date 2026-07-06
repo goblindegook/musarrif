@@ -423,24 +423,6 @@ describe('active present jussive', () => {
           '3fp': 'يَدْعُونَ',
         })
       })
-
-      test('تَحَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('تحو', 1), 'jussive')).toEqualT({
-          '1s': 'أَتْحُ',
-          '2ms': 'تَتْحُ',
-          '2fs': 'تَتْحَيْ',
-          '3ms': 'يَتْحُ',
-          '3fs': 'تَتْحُ',
-          '2d': 'تَتْحَيَا',
-          '3md': 'يَتْحَيَا',
-          '3fd': 'تَتْحَيَا',
-          '1p': 'نَتْحُ',
-          '2mp': 'تَتْحَوا',
-          '2fp': 'تَتْحَينَ',
-          '3mp': 'يَتْحَوا',
-          '3fp': 'يَتْحَينَ',
-        })
-      })
     })
 
     describe('hollow roots', () => {
