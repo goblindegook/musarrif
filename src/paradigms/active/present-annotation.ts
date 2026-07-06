@@ -1,7 +1,7 @@
 import type { DerivationSteps } from '../annotation'
-import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
+import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
-import { ALIF, ALIF_HAMZA, FATHA, KASRA, NOON, type Token } from '../tokens'
+import { ALIF, ALIF_HAMZA, FATHA, KASRA, type Token } from '../tokens'
 import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { elidedMorpheme } from '../word'
 import { activePastDerivationSteps } from './past-annotation'
@@ -11,26 +11,13 @@ export function activePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronoun
   if (mood !== 'indicative') {
     const indicativeAnnotation = activePresentMoodDerivationSteps(verb, 'indicative', pronounId)
     const moodConjugation = conjugatePresentMood(verb, mood)[pronounId]
-    const elision = []
-
-    if (isDual(pronounId)) elision.push(elidedMorpheme(NOON, KASRA))
-
-    if (pronounId === '2fs' || isMasculinePlural(pronounId)) elision.push(elidedMorpheme(NOON, FATHA))
-
-    const finalIndicativeMorpheme = indicativeAnnotation.at(-1)?.morphemes.at(-1)
-    if (
-      mood === 'jussive' &&
-      finalIndicativeMorpheme?.role === 'radical' &&
-      finalIndicativeMorpheme.contains((t) => t.isWeak)
-    )
-      elision.push(finalIndicativeMorpheme.toElided())
 
     return [
       ...indicativeAnnotation,
       {
         type: 'tense',
         tense: `active.present.${mood}` as const,
-        morphemes: [...moodConjugation.morphemes, ...elision],
+        morphemes: moodConjugation.morphemes,
       },
     ]
   }

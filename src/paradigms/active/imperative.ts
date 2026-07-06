@@ -27,7 +27,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
     mapRecord(conjugatePresentMood(verb, 'jussive'), (jussive, pronounId) => {
       if (!pronounId.startsWith('2')) return []
 
-      const stem = jussive.morphemes.slice(1)
+      const jussiveMorphemes = jussive.morphemes.filter((m) => m.role !== 'elided')
+      const stem = jussiveMorphemes.slice(1)
 
       if (isQuadriliteralVerb(verb)) return [3, 4].includes(verb.form) ? [measureMorpheme(ALIF, KASRA), ...stem] : stem
 
@@ -47,7 +48,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
           }
 
           if (c1.isHamza) {
-            const initialHamzatedStem = jussive.morphemes.slice(3)
+            const initialHamzatedStem = jussiveMorphemes.slice(3)
 
             if (verb.contractedImperative) return initialHamzatedStem
 
@@ -59,7 +60,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 radicalMorpheme(c2),
                 measureMorpheme(c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA),
                 agreementMorpheme(
-                  ...jussive.morphemes
+                  ...jussiveMorphemes
                     .slice(4)
                     .flatMap((m) => m.tokens)
                     .slice(1),

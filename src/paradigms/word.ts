@@ -63,7 +63,7 @@ export class Word {
   }
 
   toString(): string {
-    return stringify(this.morphemes)
+    return stringify(this.morphemes.filter((m) => m.role !== 'elided'))
   }
 }
 

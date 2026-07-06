@@ -20,7 +20,7 @@ import {
   YEH,
 } from '../tokens'
 import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
-import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
+import { agreementMorpheme, elidedMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 import { constrainPassiveConjugation } from './support'
 
 const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly Morpheme[]>> = {
@@ -42,31 +42,31 @@ const MOOD_SUFFIXES: Record<Mood, Record<PronounId, readonly Morpheme[]>> = {
   subjunctive: {
     '1s': [agreementMorpheme(FATHA)],
     '2ms': [agreementMorpheme(FATHA)],
-    '2fs': [agreementMorpheme(KASRA, YEH)],
+    '2fs': [agreementMorpheme(KASRA, YEH), elidedMorpheme(NOON, FATHA)],
     '3ms': [agreementMorpheme(FATHA)],
     '3fs': [agreementMorpheme(FATHA)],
-    '2d': [agreementMorpheme(FATHA, ALIF)],
-    '3md': [agreementMorpheme(FATHA, ALIF)],
-    '3fd': [agreementMorpheme(FATHA, ALIF)],
+    '2d': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
+    '3md': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
+    '3fd': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
     '1p': [agreementMorpheme(FATHA)],
-    '2mp': [agreementMorpheme(DAMMA, WAW, ALIF)],
+    '2mp': [agreementMorpheme(DAMMA, WAW, ALIF), elidedMorpheme(NOON, FATHA)],
     '2fp': [agreementMorpheme(SUKOON, NOON, FATHA)],
-    '3mp': [agreementMorpheme(DAMMA, WAW, ALIF)],
+    '3mp': [agreementMorpheme(DAMMA, WAW, ALIF), elidedMorpheme(NOON, FATHA)],
     '3fp': [agreementMorpheme(SUKOON, NOON, FATHA)],
   },
   jussive: {
     '1s': [agreementMorpheme(SUKOON)],
     '2ms': [agreementMorpheme(SUKOON)],
-    '2fs': [agreementMorpheme(KASRA, YEH)],
+    '2fs': [agreementMorpheme(KASRA, YEH), elidedMorpheme(NOON, FATHA)],
     '3ms': [agreementMorpheme(SUKOON)],
     '3fs': [agreementMorpheme(SUKOON)],
-    '2d': [agreementMorpheme(FATHA, ALIF)],
-    '3md': [agreementMorpheme(FATHA, ALIF)],
-    '3fd': [agreementMorpheme(FATHA, ALIF)],
+    '2d': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
+    '3md': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
+    '3fd': [agreementMorpheme(FATHA, ALIF), elidedMorpheme(NOON, KASRA)],
     '1p': [agreementMorpheme(SUKOON)],
-    '2mp': [agreementMorpheme(DAMMA, WAW, ALIF)],
+    '2mp': [agreementMorpheme(DAMMA, WAW, ALIF), elidedMorpheme(NOON, FATHA)],
     '2fp': [agreementMorpheme(SUKOON, NOON, FATHA)],
-    '3mp': [agreementMorpheme(DAMMA, WAW, ALIF)],
+    '3mp': [agreementMorpheme(DAMMA, WAW, ALIF), elidedMorpheme(NOON, FATHA)],
     '3fp': [agreementMorpheme(SUKOON, NOON, FATHA)],
   },
 }
@@ -626,9 +626,9 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
     if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, NOON, FATHA)]
   }
 
-  if (pronounId === '2fs') return [agreementMorpheme(YEH, SUKOON)]
-  if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF)]
-  if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, ALIF)]
+  if (pronounId === '2fs') return [agreementMorpheme(YEH, SUKOON), elidedMorpheme(NOON, FATHA)]
+  if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF), elidedMorpheme(NOON, KASRA)]
+  if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, ALIF), elidedMorpheme(NOON, FATHA)]
   if (isFemininePlural(pronounId)) return [agreementMorpheme(YEH, NOON, FATHA)]
 
   if (mood === 'jussive') return []
