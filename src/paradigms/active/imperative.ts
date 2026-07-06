@@ -35,7 +35,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
       switch (verb.form) {
         case 1: {
           const isPatternI = isFormIPresentVowel(verb, KASRA)
-          const isPatternU = isFormIPresentVowel(verb, DAMMA)
+          const isPatternU = isFormIPresentVowel(verb, DAMMA) || c3.equals(WAW)
           const patternLongVowel = isPatternU ? longVowelU : longVowelI
 
           if (c1.isWeak) {
@@ -94,9 +94,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
             return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...initialHamzatedStem]
           }
-
-          if (c3.equals(WAW) && isPatternU && pronounId === '2d')
-            return [measureMorpheme(ALIF, DAMMA), ...stem.slice(0, -2), measureMorpheme(FATHA, ALIF)]
 
           if (c3.equals(WAW) && stem.at(-1)?.containsToken(ALIF) && !isPatternU) return stem
 

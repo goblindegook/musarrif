@@ -229,7 +229,7 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb('دعو', 1))).toMatchObjectT({
           '2ms': 'اُدْعُ',
           '2fs': 'اُدْعِي',
-          '2d': 'اُدْعَُا',
+          '2d': 'اُدْعُوَا',
           '2mp': 'اُدْعُوا',
           '2fp': 'اُدْعُونَ',
         })
@@ -277,7 +277,7 @@ describe('imperative', () => {
         ['لهو', 'اُلْهُ'],
         ['شفي', 'اِشْفِ'],
         ['جري', 'اِجْرِ'],
-        ['غدو', 'اِغْدُ'],
+        ['غدو', 'اُغْدُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })

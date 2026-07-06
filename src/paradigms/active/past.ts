@@ -408,6 +408,10 @@ function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Mo
 
   if (!morphemes[index + 1].startsWith([DAMMA])) return morphemes
 
+  if (morphemes[index].equals([WAW])) {
+    return [...morphemes.slice(0, index + 1), measureMorpheme(SUKOON), agreementMorpheme(ALIF)]
+  }
+
   // Form I's fi3ila-vowel-class exception (قَوِيَ → بَقُوا) drops its class-defining KASRA along with
   // the radical, but — unlike the regular case, which drops the auto-appended DAMMA too — keeps it,
   // since it's what carries ق's vowel once the radical is gone.
@@ -420,13 +424,10 @@ function insertLinkingVowelBeforeMasculineDualMarker(morphemes: readonly Morphem
   const index = findDefectiveRadicalIndex(morphemes)
   if (index === -1) return morphemes
 
+  if (!morphemes[index + 1]?.startsWith([FATHA])) return morphemes
   if (morphemes[index + 2]?.length !== 1 || !morphemes[index + 2].equals([ALIF])) return morphemes
 
-  return [
-    ...morphemes.slice(0, index + 1),
-    measureMorpheme(morphemes[index].equals([WAW]) ? SUKOON : FATHA),
-    ...morphemes.slice(index + 2),
-  ]
+  return [...morphemes.slice(0, index + 1), measureMorpheme(FATHA), ...morphemes.slice(index + 2)]
 }
 
 // Disambiguates two adjacent weak letters: when a masculine-plural WAW+ALIF marker is immediately
