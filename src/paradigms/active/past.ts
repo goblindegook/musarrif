@@ -145,8 +145,6 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
 
-  if (c3.isWeak && pastVowel.equals(KASRA)) return [[...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH)]]
-
   if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 
   if (c2.equals(YEH) || (c2.isWeak && !isFormIPastVowel(verb, KASRA))) return [[...prefix, radicalMorpheme(c3)]]
@@ -420,16 +418,6 @@ function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Mo
   return [...morphemes.slice(0, index), ...morphemes.slice(index + 2)]
 }
 
-function insertLinkingVowelBeforeMasculineDualMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const index = findDefectiveRadicalIndex(morphemes)
-  if (index === -1) return morphemes
-
-  if (!morphemes[index + 1]?.startsWith([FATHA])) return morphemes
-  if (morphemes[index + 2]?.length !== 1 || !morphemes[index + 2].equals([ALIF])) return morphemes
-
-  return [...morphemes.slice(0, index + 1), measureMorpheme(FATHA), ...morphemes.slice(index + 2)]
-}
-
 // Disambiguates two adjacent weak letters: when a masculine-plural WAW+ALIF marker is immediately
 // preceded (skipping measure-role material like a pattern vowel or gemination mark) by a radical
 // that is itself WAW or YEH, the marker's WAW needs an explicit SUKOON — otherwise the two weak
@@ -448,10 +436,8 @@ function insertSukoonInMasculinePluralMarkerAfterWeakRadical(morphemes: readonly
 
 function contractActivePastDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   return insertSukoonInMasculinePluralMarkerAfterWeakRadical(
-    insertLinkingVowelBeforeMasculineDualMarker(
-      elideDefectiveRadicalBeforeMasculinePluralMarker(
-        elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
-      ),
+    elideDefectiveRadicalBeforeMasculinePluralMarker(
+      elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
     ),
   )
 }
@@ -466,8 +452,7 @@ function contractActivePastDefectiveRoot(morphemes: readonly Morpheme[]): readon
 // letter (e.g. حَيِيَ) doesn't contract the same way strong gemination does.
 function contractActivePastGeminateRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) =>
-      m.role === 'measure' &&
+    (_, i) =>
       morphemes[i - 1]?.role === 'radical' &&
       !morphemes[i - 1].contains((t) => t.isWeak) &&
       morphemes[i + 1]?.role === 'radical' &&
@@ -481,13 +466,7 @@ function contractActivePastGeminateRoot(morphemes: readonly Morpheme[]): readonl
 }
 
 function findHollowRadicalIndex(morphemes: readonly Morpheme[]): number {
-  return morphemes.findIndex(
-    (m, i) =>
-      m.role === 'radical' &&
-      (m.equals([WAW]) || m.equals([YEH])) &&
-      morphemes[i - 1]?.equals([FATHA]) &&
-      morphemes[i + 1]?.role === 'radical',
-  )
+  return morphemes.findIndex((_, i) => morphemes[i - 1]?.equals([FATHA]) && morphemes[i + 1]?.role === 'radical')
 }
 
 // Form I hollow roots (قَالَ، بَاعَ) build their bare stem as C1 + FATHA + weak-C2 + C3, keeping the
@@ -497,7 +476,7 @@ function findHollowRadicalIndex(morphemes: readonly Morpheme[]): number {
 // the contracted ALIF directly, since only Form I past has a hollow alternation at all.
 function contractHollowRadicalBeforeVowelSuffix(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findHollowRadicalIndex(morphemes)
-  if (index === -1 || morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
+  if (index === -1 || morphemes[index + 2]?.equals([SUKOON])) return morphemes
 
   return [...morphemes.slice(0, index), radicalMorpheme(ALIF), ...morphemes.slice(index + 1)]
 }

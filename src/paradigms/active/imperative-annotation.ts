@@ -10,7 +10,7 @@ export function imperativeDerivationSteps(verb: Verb, pronounId: PronounId): Der
   const jussiveStep = jussive[jussive.length - 1]
   const dropped = [jussiveStep.morphemes[0].toElided()]
 
-  if (verb.form === 1 && jussiveStep.morphemes[1].at(0)?.isHamza) dropped.push(jussiveStep.morphemes[1].toElided())
+  if (jussiveStep.morphemes[1].at(0)?.isHamza) dropped.push(jussiveStep.morphemes[1].toElided())
 
   return [
     ...jussive,

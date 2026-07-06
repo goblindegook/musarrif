@@ -49,9 +49,6 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
     case 2:
     case 3:
     case 4:
-      if (c3.isWeak) return [...stem.slice(0, -2), kasra]
-      return [...stem, kasra]
-
     case 5:
       if (c3.isWeak) return stem.slice(0, -1)
       return [...stem, kasra]
@@ -222,17 +219,6 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
       return [...stem, suffix]
 
     case 8:
-      if (c2.equals(c3))
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON, resolveFormVIIIInfixConsonant(c1), FATHA),
-          radicalMorpheme(c2),
-          measureMorpheme(KASRA),
-          radicalMorpheme(c3),
-          suffix,
-        ]
-      return [...stem, suffix]
-
     case 9:
       return [...expandGeminationMorphemes(stem, KASRA), suffix]
 
@@ -390,9 +376,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
       if ([5, 6].includes(verb.form) && c3.isWeak) return base
       if ([1, 4].includes(verb.form)) return base
       if (c2.isHamza || c2.isWeak || c3.isHamza) return base
-      if (base.at(-3)?.startsWith([WAW]))
-        return base.with(-2, c3.equals(WAW) ? agreementMorpheme(FATHA, ALIF) : agreementMorpheme(ALIF))
-      if (base.at(-3)?.startsWith([YEH])) return [...base.slice(0, -3), agreementMorpheme(ALIF), elided]
+      if (base.at(-3)?.equals([YEH])) return [...base.slice(0, -3), agreementMorpheme(ALIF), elided]
 
       return [
         ...stem,
@@ -803,20 +787,12 @@ export function derivePresentStem(verb: Verb): readonly Morpheme[] {
 
 function contractActivePresentHollowRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex((m, i) => m.role === 'radical' && morphemes[i + 1]?.role === 'radical')
-  if (index === -1 || !morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
+  if (index === -1 || !morphemes[index + 2]?.equals([SUKOON])) return morphemes
 
   const weakIdx = morphemes[index].tokens.findIndex((t) => t.isWeak)
   if (weakIdx === -1) return morphemes
 
-  return [
-    ...morphemes.slice(0, index),
-    new Morpheme(
-      morphemes[index].tokens.filter((_, j) => j !== weakIdx),
-      morphemes[index].role,
-    ),
-    elidedMorpheme(morphemes[index].tokens[weakIdx]),
-    ...morphemes.slice(index + 1),
-  ]
+  return [...morphemes.slice(0, index), elidedMorpheme(morphemes[index].tokens[weakIdx]), ...morphemes.slice(index + 1)]
 }
 
 function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): readonly Morpheme[] {

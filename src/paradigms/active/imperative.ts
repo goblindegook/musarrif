@@ -140,7 +140,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 }
 
 function restoreWeakLetterBeforeAlif(stem: readonly Morpheme[]): readonly Morpheme[] {
-  if (stem.at(-2)?.startsWith([YEH])) return stem
+  if (stem.at(-2)?.equals([YEH])) return stem
   if (stem.at(-1)?.startsWith([FATHA])) return stem.with(-1, agreementMorpheme(KASRA, YEH, FATHA, ALIF))
   return stem.with(-1, agreementMorpheme(YEH, FATHA, ALIF))
 }
