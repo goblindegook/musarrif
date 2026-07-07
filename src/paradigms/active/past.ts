@@ -406,39 +406,17 @@ function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Mo
 
   if (!morphemes[index + 1].startsWith([DAMMA])) return morphemes
 
-  if (morphemes[index].equals([WAW])) {
-    return [...morphemes.slice(0, index + 1), measureMorpheme(SUKOON), agreementMorpheme(ALIF)]
-  }
-
   // Form I's fi3ila-vowel-class exception (قَوِيَ → بَقُوا) drops its class-defining KASRA along with
   // the radical, but — unlike the regular case, which drops the auto-appended DAMMA too — keeps it,
   // since it's what carries ق's vowel once the radical is gone.
-  if (morphemes[index - 1]?.equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
+  if (morphemes[index - 1].equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
 
   return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
 }
 
-// Disambiguates two adjacent weak letters: when a masculine-plural WAW+ALIF marker is immediately
-// preceded (skipping measure-role material like a pattern vowel or gemination mark) by a radical
-// that is itself WAW or YEH, the marker's WAW needs an explicit SUKOON — otherwise the two weak
-// letters in a row are ambiguous. Does not fire for the common case (marker preceded by a strong
-// radical), confirmed against both defective (دَعَوا, no mark needed) and sound-root (حَبُّوا, no
-// mark needed) 3mp forms.
-function insertSukoonInMasculinePluralMarkerAfterWeakRadical(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const index = morphemes.findLastIndex((m) => m.equals([WAW, ALIF]))
-  if (index === -1) return morphemes
-
-  const precedingToken = findPrecedingRadical(morphemes, index)
-  if (!precedingToken?.equals([WAW]) && !precedingToken?.equals([YEH])) return morphemes
-
-  return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF), ...morphemes.slice(index + 1)]
-}
-
 function contractActivePastDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return insertSukoonInMasculinePluralMarkerAfterWeakRadical(
-    elideDefectiveRadicalBeforeMasculinePluralMarker(
-      elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
-    ),
+  return elideDefectiveRadicalBeforeMasculinePluralMarker(
+    elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
   )
 }
 
