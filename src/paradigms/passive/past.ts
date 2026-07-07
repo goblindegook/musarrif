@@ -118,6 +118,14 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
 
 function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = verb.rootTokens
+  if (c3.isWeak)
+    return {
+      prefix: [radicalMorpheme(c1), measureMorpheme(DAMMA), radicalMorpheme(c2), measureMorpheme(SHADDA)],
+      suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
+      suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
+      suffix3mp: [measureMorpheme(DAMMA)],
+    }
+
   return {
     prefix: [radicalMorpheme(c1), measureMorpheme(DAMMA), radicalMorpheme(c2), measureMorpheme(SHADDA, KASRA)],
     suffix: [radicalMorpheme(c3)],
@@ -129,6 +137,14 @@ function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = verb.rootTokens
+  if (c3.isWeak)
+    return {
+      prefix: [radicalMorpheme(c1), measureMorpheme(DAMMA, WAW), radicalMorpheme(c2)],
+      suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
+      suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
+      suffix3mp: [measureMorpheme(DAMMA)],
+    }
+
   return {
     prefix: [radicalMorpheme(c1), measureMorpheme(DAMMA, WAW), radicalMorpheme(c2), measureMorpheme(KASRA)],
     suffix: [radicalMorpheme(c3)],
@@ -154,7 +170,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       prefix: [
         measureMorpheme(ALIF_HAMZA, DAMMA),
         radicalMorpheme(c1.isHamza ? WAW : c1),
-        measureMorpheme(SUKOON),
+        ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
         radicalMorpheme(c2),
       ],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
@@ -361,12 +377,10 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
       prefix: [
         measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA),
         radicalMorpheme(c1),
-        measureMorpheme(SUKOON),
+        ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
         radicalMorpheme(c2),
       ],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
-      agreementPrefix: [SUKOON],
-      agreementPrefix3fp: [SUKOON],
       suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
       suffix3mp: [measureMorpheme(DAMMA)],
     }

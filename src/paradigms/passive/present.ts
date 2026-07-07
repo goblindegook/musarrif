@@ -187,7 +187,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   if (c3.isWeak)
     return [
       radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
+      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
       ...defectiveSuffix(mood, pronounId, c2.equals(c3)),
@@ -621,15 +621,15 @@ function geminateSuffix(mood: Mood, pronounId: PronounId): readonly Morpheme[] {
 
 function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly Morpheme[] {
   if (mood === 'indicative') {
-    if (pronounId === '2fs') return [agreementMorpheme(YEH, NOON, FATHA)]
+    if (pronounId === '2fs') return [agreementMorpheme(YEH, SUKOON, NOON, FATHA)]
     if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF, NOON, KASRA)]
-    if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, NOON, FATHA)]
+    if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, SUKOON, NOON, FATHA)]
   }
 
   if (pronounId === '2fs') return [agreementMorpheme(YEH, SUKOON), elidedMorpheme(NOON, FATHA)]
   if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF), elidedMorpheme(NOON, KASRA)]
-  if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, ALIF), elidedMorpheme(NOON, FATHA)]
-  if (isFemininePlural(pronounId)) return [agreementMorpheme(YEH, NOON, FATHA)]
+  if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, SUKOON, ALIF), elidedMorpheme(NOON, FATHA)]
+  if (isFemininePlural(pronounId)) return [agreementMorpheme(YEH, SUKOON, NOON, FATHA)]
 
   if (mood === 'jussive') return []
 

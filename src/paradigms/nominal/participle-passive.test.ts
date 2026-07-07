@@ -514,11 +514,11 @@ describe('passive participle', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وصي', 'مُوْصًى'],
-        ['وحي', 'مُوْحًى'],
-        ['وفي', 'مُوْفًى'],
+        ['وصي', 'مُوصًى'],
+        ['وحي', 'مُوحًى'],
+        ['وفي', 'مُوفًى'],
         ['رءي', 'مُرًى'],
-        ['ودي', 'مُوْدًى'],
+        ['ودي', 'مُودًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })

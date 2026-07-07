@@ -415,7 +415,7 @@ function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Mo
   // since it's what carries ق's vowel once the radical is gone.
   if (morphemes[index - 1]?.equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
 
-  return [...morphemes.slice(0, index), ...morphemes.slice(index + 2)]
+  return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
 }
 
 // Disambiguates two adjacent weak letters: when a masculine-plural WAW+ALIF marker is immediately

@@ -2269,7 +2269,7 @@
     "root": "jry",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l", "fa3alaan"]
+    "masdars": ["fa3l"]
   },
   {
     "root": "jwE",
@@ -3982,12 +3982,6 @@
     "vowels": "a-i",
     "passiveVoice": "none",
     "masdars": ["fa3aal"]
-  },
-  {
-    "root": "wfy",
-    "form": 1,
-    "vowels": "a-a",
-    "passiveVoice": "none"
   },
   {
     "root": "wfy",

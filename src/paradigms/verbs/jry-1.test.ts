@@ -22,7 +22,7 @@ describe('jry-1', () => {
       '1p': 'جَرَيْنَا',
       '2mp': 'جَرَيْتُمْ',
       '2fp': 'جَرَيْتُنَّ',
-      '3mp': 'جَرَوا',
+      '3mp': 'جَرَوْا',
       '3fp': 'جَرَيْنَ',
     })
   })
@@ -124,6 +124,6 @@ describe('jry-1', () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('jry-1')!)).toEqualT(['جَرْي', 'جَرَيَان'])
+    expect(deriveMasdar(getVerbById('jry-1')!)).toEqualT(['جَرْي'])
   })
 })
