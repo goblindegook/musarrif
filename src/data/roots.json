@@ -2963,6 +2963,16 @@
     "form": 8
   },
   {
+    "root": "nxb",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "nxb",
+    "form": 8
+  },
+  {
     "root": "nzE",
     "form": 1,
     "vowels": "a-a"
