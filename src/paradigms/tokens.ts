@@ -22,6 +22,11 @@ export class Token {
     return other instanceof Token ? this.raw === other.raw : this.raw === other
   }
 
+  oneOf(...others: readonly (string | Token)[]) {
+    const normalized = others.map((o) => (o instanceof Token ? o.raw : o))
+    return normalized.includes(this.raw)
+  }
+
   toString(): string {
     return this.raw
   }

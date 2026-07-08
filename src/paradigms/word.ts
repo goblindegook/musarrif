@@ -38,16 +38,16 @@ export class Morpheme {
     return tokens instanceof Morpheme ? String(this) === String(tokens) : String(this) === stringify(tokens)
   }
 
-  containsToken(token: Token): boolean {
-    return this.contains((t) => t.equals(token))
-  }
-
-  contains(predicate: (t: Token) => boolean): boolean {
-    return this.tokens.some(predicate)
+  includes(token: Token): boolean {
+    return this.some((t) => t.equals(token))
   }
 
   slice(start?: number, end?: number) {
     return new Morpheme(this.tokens.slice(start, end), this.role)
+  }
+
+  some(predicate: (t: Token) => boolean): boolean {
+    return this.tokens.some(predicate)
   }
 
   with(index: number, value: Token): Morpheme {
@@ -88,43 +88,39 @@ function stringify(tokens: readonly unknown[]): string {
 function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const seatedTokens = seatHamzas(morphemes.filter((m) => m.role !== 'elided').flatMap((m) => m.tokens))
   let offset = 0
-  return mergeAdjacent(
-    morphemes.map((m) => {
-      if (m.role === 'elided') return m
-      const count = m.tokens.length
-      const slice = seatedTokens.slice(offset, offset + count)
-      offset += count
-      return new Morpheme(slice, m.role)
-    }),
-  )
+  return morphemes.map((m) => {
+    if (m.role === 'elided') return m
+    const count = m.tokens.length
+    const slice = seatedTokens.slice(offset, offset + count)
+    offset += count
+    return new Morpheme(slice, m.role)
+  })
 }
 
 function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  type Slot = { token: Token; morphemeIndex: number }
-  const slots: Slot[] = morphemes.flatMap((m, mi) => m.tokens.map((t) => ({ token: t, morphemeIndex: mi })))
+  type Slot = { token: Token; index: number }
+  const slots: Slot[] = morphemes.flatMap((m, i) => m.tokens.map((t) => ({ token: t, index: i })))
 
   const result: Morpheme[] = []
   let i = 0
   while (i < slots.length) {
-    const { token: t0 } = slots[i]
+    const token = slots[i].token
     // A second hamza only merges into madda when its own vowel matches (fatha/sukoon); a
     // differing vowel means the two hamzas stay distinct letters.
-    const secondHamzaVowel = slots[i + 3]?.token
     if (
-      t0.equals(ALIF_HAMZA) &&
-      i + 2 < slots.length &&
-      slots[i + 1].token.equals(FATHA) &&
-      (slots[i + 2].token.equals(ALIF) ||
-        (slots[i + 2].token.equals(ALIF_HAMZA) && !secondHamzaVowel?.equals(KASRA) && !secondHamzaVowel?.equals(DAMMA)))
+      token.equals(ALIF_HAMZA) &&
+      slots.at(i + 1)?.token.equals(FATHA) &&
+      (slots.at(i + 2)?.token.equals(ALIF) ||
+        (slots.at(i + 2)?.token.equals(ALIF_HAMZA) && !slots.at(i + 3)?.token?.oneOf(KASRA, DAMMA)))
     ) {
-      const skip = i + 3 < slots.length && slots[i + 3].token.equals(SUKOON) ? 4 : 3
-      const role0 = morphemes[slots[i].morphemeIndex].role
-      const role2 = morphemes[slots[i + 2].morphemeIndex].role
+      const skip = slots.at(i + 3)?.token.equals(SUKOON) ? 4 : 3
+      const role0 = morphemes[slots[i].index].role
+      const role2 = morphemes[slots[i + 2].index].role
       result.push(new Morpheme([ALIF_MADDA], role0 === 'radical' && role2 === 'radical' ? 'radical' : 'measure'))
       i += skip
     } else {
-      const origMorpheme = morphemes[slots[i].morphemeIndex]
-      result.push(new Morpheme([t0], origMorpheme.role))
+      const origMorpheme = morphemes[slots[i].index]
+      result.push(new Morpheme([token], origMorpheme.role))
       i++
     }
   }
@@ -145,14 +141,14 @@ export function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] 
       slots[i].token.equals(slots[i + 2].token)
     ) {
       result.push(new Morpheme([slots[i].token], slots[i].role))
-      result.push(new Morpheme([SHADDA], 'measure'))
+      result.push(measureMorpheme(SHADDA))
       i += 3
     } else {
       result.push(new Morpheme([slots[i].token], slots[i].role))
       i++
     }
   }
-  return mergeAdjacent(result)
+  return result
 }
 
 function mergeAdjacent(morphemes: readonly Morpheme[]): readonly Morpheme[] {

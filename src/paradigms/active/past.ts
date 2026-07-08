@@ -436,7 +436,7 @@ function contractActivePastGeminateRoot(morphemes: readonly Morpheme[]): readonl
   const index = morphemes.findIndex(
     (_, i) =>
       morphemes[i - 1]?.role === 'radical' &&
-      !morphemes[i - 1].contains((t) => t.isWeak) &&
+      !morphemes[i - 1].some((t) => t.isWeak) &&
       morphemes[i + 1]?.role === 'radical' &&
       morphemes[i + 1].equals(morphemes[i - 1]),
   )

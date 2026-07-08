@@ -173,7 +173,7 @@ const dammaSuffix = (s: boolean) => (s ? [agreementMorpheme(DAMMA)] : [])
 
 function hasFathaDefectiveEnding(morphemes: readonly Morpheme[]): boolean {
   if (morphemes.at(-1)?.equals([FATHA])) return true
-  return morphemes.at(-2)?.contains((t) => t.isWeak) === true && morphemes.at(-3)?.equals([FATHA]) === true
+  return morphemes.at(-2)?.some((t) => t.isWeak) === true && morphemes.at(-3)?.equals([FATHA]) === true
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]> {
@@ -318,12 +318,10 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
 
   if (!c2.isHamza) return truncated
 
-  if (c1.isWeak || shaddaPass(truncated).some((m) => m.containsToken(SHADDA))) return truncated
+  if (c1.isWeak || shaddaPass(truncated).some((m) => m.includes(SHADDA))) return truncated
 
   // FIXME: Avoid seating hamzas here.
-  return truncated.map((m) =>
-    m.role === 'radical' && m.contains((t) => t.isHamza) ? radicalMorpheme(HAMZA_ON_YEH) : m,
-  )
+  return truncated.map((m) => (m.role === 'radical' && m.some((t) => t.isHamza) ? radicalMorpheme(HAMZA_ON_YEH) : m))
 }
 
 function jussiveMasculinePlural(indicative: readonly Morpheme[]): readonly Morpheme[] {
@@ -697,8 +695,7 @@ function substituteWeakRadicalWithYehBeforeDualMarker(morphemes: readonly Morphe
 
 function stripFemininePluralSuffixAfterDefectiveTail(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) =>
-      m.contains((t) => t.isWeak) && morphemes[i + 1]?.role === 'agreement' && morphemes[i + 1]?.equals([SUKOON]),
+    (m, i) => m.some((t) => t.isWeak) && morphemes[i + 1]?.role === 'agreement' && morphemes[i + 1]?.equals([SUKOON]),
   )
   if (index === -1) return morphemes
 
@@ -716,8 +713,7 @@ function elideWeakRadicalReusingPrecedingVowelBeforeFeminineSingularSuffix(
   morphemes: readonly Morpheme[],
 ): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) =>
-      m.contains((t) => t.isWeak) && morphemes[i + 1]?.role === 'agreement' && morphemes[i + 1]?.equals([KASRA]),
+    (m, i) => m.some((t) => t.isWeak) && morphemes[i + 1]?.role === 'agreement' && morphemes[i + 1]?.equals([KASRA]),
   )
   if (index < 1) return morphemes
 
@@ -731,7 +727,7 @@ function elideWeakRadicalReusingPrecedingVowelBeforeFeminineSingularSuffix(
 
 function elideWeakRadicalBeforeMasculinePluralDamma(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) => m.role === 'radical' && m.contains((t) => t.isWeak) && morphemes[i + 1]?.equals([DAMMA]),
+    (m, i) => m.role === 'radical' && m.some((t) => t.isWeak) && morphemes[i + 1]?.equals([DAMMA]),
   )
   if (index < 1) return morphemes
 
@@ -741,7 +737,7 @@ function elideWeakRadicalBeforeMasculinePluralDamma(morphemes: readonly Morpheme
 
 function replaceFusedDefectiveMeasureBeforeMasculinePluralDamma(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) => m.length === 2 && m.contains((t) => t.isWeak) && morphemes[i + 1]?.equals([DAMMA]),
+    (m, i) => m.length === 2 && m.some((t) => t.isWeak) && morphemes[i + 1]?.equals([DAMMA]),
   )
   if (index === -1) return morphemes
   return [...morphemes.slice(0, index), agreementMorpheme(DAMMA), ...morphemes.slice(index + 2)]
