@@ -93,45 +93,15 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
   const suffix = agreementMorpheme(SUKOON)
 
   switch (verb.form) {
-    case 1: {
-      if (c2.equals(c3))
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          radicalMorpheme(c2),
-          measureMorpheme(formIPresentVowel(verb)),
-          radicalMorpheme(c3),
-          suffix,
-        ]
-      return [...stem, suffix]
-    }
+    case 1:
+    case 4:
+      return [...migrateGeminateLinkingVowel(stem), suffix]
 
     case 2:
       return [...stem, suffix]
 
     case 3:
-      if (c2.equals(c3))
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(FATHA, ALIF),
-          radicalMorpheme(c2),
-          measureMorpheme(KASRA),
-          radicalMorpheme(c2),
-          suffix,
-        ]
-      return [...stem, suffix]
-
-    case 4:
-      if (c2.equals(c3))
-        return [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          radicalMorpheme(c2),
-          measureMorpheme(KASRA),
-          radicalMorpheme(c3),
-          suffix,
-        ]
-      return [...stem, suffix]
+      return [...expandGeminationMorphemes(stem, KASRA), suffix]
 
     case 5:
     case 6:
@@ -155,17 +125,7 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
       return [...expandGeminationMorphemes(stem, KASRA), suffix]
 
     case 10:
-      if (c2.equals(c3))
-        return [
-          measureMorpheme(SEEN, SUKOON, TEH, FATHA),
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          radicalMorpheme(c2),
-          measureMorpheme(KASRA),
-          radicalMorpheme(c3),
-          suffix,
-        ]
-      return [...stem, suffix]
+      return [...migrateGeminateLinkingVowel(stem), suffix]
   }
 }
 
@@ -299,14 +259,7 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
 
   if (finalToken?.equals(DAMMA)) {
     if (isQuadriliteralVerb(verb) && stem.at(-1)?.at(0)?.equals(stem.at(-3)?.at(0)))
-      return [
-        ...stem.slice(0, -4),
-        measureMorpheme(SUKOON),
-        stem[stem.length - 3],
-        measureMorpheme(KASRA),
-        stem[stem.length - 1],
-        agreementMorpheme(SUKOON),
-      ]
+      return [...migrateGeminateLinkingVowel(stem), agreementMorpheme(SUKOON)]
 
     if (stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
       return contractHollowRoot([...stem, agreementMorpheme(SUKOON)])
@@ -757,6 +710,18 @@ function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): rea
   for (let i = 1; i < stem.length - 1; i++) {
     if (SUKOON.equals(stem[i].at(0)) && stem[i - 1].at(0)?.equals(stem[i + 1].at(0))) {
       return [...stem.slice(0, i), measureMorpheme(vowel), ...stem.slice(i + 1)]
+    }
+  }
+  return stem
+}
+
+// Forms I/IV/X have only one linking vowel between C1 and the geminate C2-C3 pair; feminine
+// plural's consonant-initial suffix needs that vowel between C2 and C3 instead, so it migrates
+// rather than being replaced in place (contrast expandGeminationMorphemes above).
+function migrateGeminateLinkingVowel(stem: readonly Morpheme[]): readonly Morpheme[] {
+  for (let i = 2; i < stem.length - 1; i++) {
+    if (SUKOON.equals(stem[i].at(0)) && stem[i - 1].at(0)?.equals(stem[i + 1].at(0))) {
+      return [...stem.slice(0, i - 2), stem[i], stem[i - 1], stem[i - 2], ...stem.slice(i + 1)]
     }
   }
   return stem
