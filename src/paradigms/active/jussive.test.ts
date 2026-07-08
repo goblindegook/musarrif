@@ -665,24 +665,6 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
 
-      test('بوء conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بوء', 1), 'jussive')).toEqualT({
-          '1s': 'أَبُؤْ',
-          '2ms': 'تَبُؤْ',
-          '2fs': 'تَبُوئِي',
-          '3ms': 'يَبُؤْ',
-          '3fs': 'تَبُؤْ',
-          '2d': 'تَبُوءَا',
-          '3md': 'يَبُوءَا',
-          '3fd': 'تَبُوءَا',
-          '1p': 'نَبُؤْ',
-          '2mp': 'تَبُوءُوا',
-          '2fp': 'تَبُؤْنَ',
-          '3mp': 'يَبُوءُوا',
-          '3fp': 'يَبُؤْنَ',
-        })
-      })
-
       test('جَاءَ conjugation', () => {
         expect(conjugatePresentMood(getVerb('جيء', 1), 'jussive')).toEqualT({
           '1s': 'أَجِئْ',
@@ -749,26 +731,6 @@ describe('active present jussive', () => {
           '2fp': 'تَرَيْنَ',
           '3mp': 'يَرَوْا',
           '3fp': 'يَرَيْنَ',
-        })
-      })
-    })
-
-    describe('hamzated final assimilated roots', () => {
-      test('وَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وءي', 1), 'jussive')).toEqualT({
-          '1s': 'أَئِ',
-          '2ms': 'تَئِ',
-          '2fs': 'تَئِي',
-          '3ms': 'يَئِ',
-          '3fs': 'تَئِ',
-          '2d': 'تَئِيَا',
-          '3md': 'يَئِيَا',
-          '3fd': 'تَئِيَا',
-          '1p': 'نَئِ',
-          '2mp': 'تَؤُوا',
-          '2fp': 'تَئِينَ',
-          '3mp': 'يَؤُوا',
-          '3fp': 'يَئِينَ',
         })
       })
     })

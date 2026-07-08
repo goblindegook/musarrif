@@ -41,6 +41,9 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
         return HAMZA
       }
 
+      // Hamza directly after alif, followed by another waw, avoids waw-on-waw; seat on yeh instead:
+      if (before.equals(ALIF) && vowel?.equals(DAMMA) && word[index + 2]?.equals(WAW)) return HAMZA_ON_YEH
+
       // Seat on the line to avoid alif + alif hamza:
       if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
 

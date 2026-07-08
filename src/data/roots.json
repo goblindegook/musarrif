@@ -3475,7 +3475,8 @@
     "root": "s'l",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fu3aal"]
+    "masdars": ["fu3aal"],
+    "lexicalizedMasdars": ["maso>alap", "taso|l"]
   },
   {
     "root": "s'l",

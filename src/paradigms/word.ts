@@ -1,5 +1,5 @@
 import { seatHamzas } from './hamza'
-import { ALIF, ALIF_HAMZA, ALIF_MADDA, FATHA, SHADDA, SUKOON, type Token } from './tokens'
+import { ALIF, ALIF_HAMZA, ALIF_MADDA, DAMMA, FATHA, KASRA, SHADDA, SUKOON, type Token } from './tokens'
 
 export type MorphemeRole = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'
 
@@ -59,7 +59,7 @@ export class Word {
   readonly morphemes: readonly Morpheme[]
 
   constructor(raw: readonly Morpheme[]) {
-    this.morphemes = shaddaPass(maddaPass(hamzaPass(raw)))
+    this.morphemes = maddaPass(hamzaPass(shaddaPass(raw)))
   }
 
   toString(): string {
@@ -103,11 +103,15 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   let i = 0
   while (i < slots.length) {
     const { token: t0 } = slots[i]
+    // A second hamza only merges into madda when its own vowel matches (fatha/sukoon); a
+    // differing vowel means the two hamzas stay distinct letters.
+    const secondHamzaVowel = slots[i + 3]?.token
     if (
       t0.equals(ALIF_HAMZA) &&
       i + 2 < slots.length &&
       slots[i + 1].token.equals(FATHA) &&
-      (slots[i + 2].token.equals(ALIF_HAMZA) || slots[i + 2].token.equals(ALIF))
+      (slots[i + 2].token.equals(ALIF) ||
+        (slots[i + 2].token.equals(ALIF_HAMZA) && !secondHamzaVowel?.equals(KASRA) && !secondHamzaVowel?.equals(DAMMA)))
     ) {
       const skip = i + 3 < slots.length && slots[i + 3].token.equals(SUKOON) ? 4 : 3
       const role0 = morphemes[slots[i].morphemeIndex].role

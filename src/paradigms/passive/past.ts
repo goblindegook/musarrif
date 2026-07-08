@@ -178,15 +178,17 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       suffix3mp: [measureMorpheme(DAMMA)],
     }
 
-  if (c2.isWeak)
+  if (c2.isWeak) {
+    const longVowelTail = c3.isHamza ? [] : [measureMorpheme(SUKOON)]
     return {
       prefix: [measureMorpheme(ALIF_HAMZA, DAMMA), radicalMorpheme(c1.isHamza ? WAW : c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
       agreementPrefix: [SUKOON],
-      suffix3ms: [radicalMorpheme(YEH), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
-      suffix3sd: [radicalMorpheme(YEH), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
-      suffix3mp: [radicalMorpheme(YEH), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(DAMMA)],
+      suffix3ms: [radicalMorpheme(YEH), ...longVowelTail, radicalMorpheme(c3), measureMorpheme(FATHA)],
+      suffix3sd: [radicalMorpheme(YEH), ...longVowelTail, radicalMorpheme(c3), measureMorpheme(FATHA)],
+      suffix3mp: [radicalMorpheme(YEH), ...longVowelTail, radicalMorpheme(c3), measureMorpheme(DAMMA)],
     }
+  }
 
   if (c2.equals(c3))
     return {

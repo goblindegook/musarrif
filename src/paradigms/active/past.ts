@@ -197,7 +197,11 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
   if (c3.isWeak)
     return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(YEH)]]
 
-  if (c2.isWeak) return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)]]
+  if (c2.isWeak)
+    return [
+      [...prefix, measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)],
+      [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)],
+    ]
 
   return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 }

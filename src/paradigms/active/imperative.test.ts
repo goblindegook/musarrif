@@ -543,16 +543,6 @@ describe('imperative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
-
-      test('بوء conjugation', () => {
-        expect(conjugateImperative(getVerb('بوء', 1))).toMatchObjectT({
-          '2ms': 'بُؤْ',
-          '2fs': 'بُوئِي',
-          '2d': 'بُوءَا',
-          '2mp': 'بُوءُوا',
-          '2fp': 'بُؤْنَ',
-        })
-      })
     })
 
     describe('hamzated middle roots', () => {

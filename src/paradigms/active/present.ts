@@ -9,6 +9,7 @@ import {
   DAL,
   DAMMA,
   FATHA,
+  HAMZA_ON_YEH,
   KASRA,
   longVowel,
   NOON,
@@ -58,6 +59,10 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
 
   // Form VII: content-identical to Form IV's elide+damma case, stays inline.
   if (verb.form === 7 && !c2.isWeak && c3.isWeak) return stem
+
+  // Hollow root ending in hamza (بَاءَ-type): the masculine plural -ū suffix would otherwise
+  // sandwich a hamza-on-waw between two waws (تَبُوءُونَ), which is avoided in favour of yeh:
+  if (verb.form === 1 && c2.isWeak && c3.isHamza) return [...stem.slice(0, -1), radicalMorpheme(HAMZA_ON_YEH), damma]
 
   return [...stem, damma]
 }
@@ -251,7 +256,7 @@ const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = verb.rootTokens
   const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 7, 8, 10].includes(verb.form))
 
   return mapRecord(conjugateIndicative(verb), (morphemes, pronounId) => {
@@ -297,11 +302,21 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
 
     const last = indicativeStem.at(-1)
     if (!last?.at(-1)?.isWeak) return indicativeStem
-    return [
+    const truncated = [
       ...indicativeStem.slice(0, -1),
       new Morpheme(last.tokens.slice(0, -1), last.role),
       elidedMorpheme(last.tokens.at(-1)),
     ]
+
+    // Assimilated root with hamza as 2nd radical (وَأَى-type): the indicative stem seats the hamza
+    // for its own defective ending (يَئِي), but apocopating that ending leaves the hamza word-final
+    // instead, which reseats on alif (أَأِ) rather than keeping the stale medial seat:
+    if (c1.isWeak && c2.isHamza)
+      return truncated.map((m) =>
+        m.role === 'radical' && m.contains((t) => t.isHamza) ? radicalMorpheme(ALIF_HAMZA) : m,
+      )
+
+    return truncated
   })
 }
 

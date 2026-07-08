@@ -87,7 +87,9 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
 
   if (c1.equals(YEH)) return [radicalMorpheme(WAW)]
 
-  if (c1.isWeak || c2.isHamza) return [radicalMorpheme(c1)]
+  // c1 takes no sukoon only when c2's hamza itself contracts away (defective roots, رأى → يُرَى);
+  // a sound c3 keeps the hamza (سَأَلَ → تُسْأَلُ), so c1 still needs its own sukoon here.
+  if (c1.isWeak || (c2.isHamza && c3.isWeak)) return [radicalMorpheme(c1)]
 
   return [radicalMorpheme(c1), measureMorpheme(SUKOON)]
 }
@@ -95,12 +97,13 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
 function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  // Contract only when c1 is sound (رأى → يُرَى); keep hamza when c1 is weak (وَأَى → يُوءَى)
-  if (!c1.isWeak && c2.isHamza) return []
+  // Contract only for defective roots with c1 sound (رأى → يُرَى); keep hamza when c1 is weak
+  // (وَأَى → يُوءَى) or c3 is sound (سَأَلَ → تُسْأَلُ — no vowel-blending to elide here):
+  if (!c1.isWeak && c2.isHamza && c3.isWeak) return []
 
   if (c2.equals(c3)) {
     if (isFemininePlural(pronounId)) return [radicalMorpheme(c2), measureMorpheme(FATHA)]
-    return [radicalMorpheme(c2), measureMorpheme(SHADDA)]
+    return [radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
   }
 
   if (c3.isWeak) return [radicalMorpheme(c2)]

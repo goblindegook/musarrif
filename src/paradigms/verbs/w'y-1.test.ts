@@ -9,7 +9,7 @@ import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
 describe("w'y-1", () => {
-  test.skip('active past', () => {
+  test('active past', () => {
     expect(conjugatePast(getVerbById("w'y-1")!)).toEqualT({
       '1s': 'وَأَيْتُ',
       '2ms': 'وَأَيْتَ',
@@ -63,7 +63,7 @@ describe("w'y-1", () => {
     })
   })
 
-  test.skip('active present jussive', () => {
+  test('active present jussive', () => {
     expect(conjugatePresentMood(getVerbById("w'y-1")!, 'jussive')).toEqualT({
       '1s': 'أَأِ',
       '2ms': 'تَأِ',
@@ -109,7 +109,7 @@ describe("w'y-1", () => {
     })
   })
 
-  test.skip('passive present indicative', () => {
+  test('passive present indicative', () => {
     expect(conjugatePassivePresentMood(getVerbById("w'y-1")!, 'indicative')).toEqualT({
       '1s': 'أُوءَى',
       '2ms': 'تُوءَى',
@@ -127,7 +127,7 @@ describe("w'y-1", () => {
     })
   })
 
-  test.skip('passive present subjunctive', () => {
+  test('passive present subjunctive', () => {
     expect(conjugatePassivePresentMood(getVerbById("w'y-1")!, 'subjunctive')).toEqualT({
       '1s': 'أُوءَى',
       '2ms': 'تُوءَى',
@@ -145,7 +145,7 @@ describe("w'y-1", () => {
     })
   })
 
-  test.skip('passive present jussive', () => {
+  test('passive present jussive', () => {
     expect(conjugatePassivePresentMood(getVerbById("w'y-1")!, 'jussive')).toEqualT({
       '1s': 'أُوءَ',
       '2ms': 'تُوءَ',
