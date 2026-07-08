@@ -27,7 +27,7 @@ interface PassivePastParams {
   prefix: readonly Morpheme[]
   suffix?: readonly Morpheme[]
   suffix3sd?: readonly Morpheme[]
-  agreementPrefix3fp?: readonly Token[]
+  agreement3fp?: readonly Token[]
 }
 
 function deriveMasculinePluralSuffix(suffix3sd: readonly Morpheme[]): readonly Morpheme[] {
@@ -36,32 +36,29 @@ function deriveMasculinePluralSuffix(suffix3sd: readonly Morpheme[]): readonly M
   return [...suffix3sd.slice(0, -1), measureMorpheme(DAMMA)]
 }
 
-function deriveAgreementPrefix(stem: readonly Morpheme[]): readonly Token[] {
-  const last = stem.at(-1)
-  if (last?.role !== 'radical' || last.some((t) => t.isWeak)) return []
-  return [SUKOON]
+function hasAgreement(last?: Morpheme): boolean {
+  return last?.role === 'radical' && last.some((t) => !t.isWeak)
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, Word> {
-  const { prefix, suffix = [], suffix3sd = [] } = params
-  const agreementPrefix = deriveAgreementPrefix([...prefix, ...suffix])
-  const agreementPrefix3fp = params.agreementPrefix3fp ?? agreementPrefix
+  const { prefix, suffix = [], suffix3sd = [], agreement3fp } = params
+  const agreement = hasAgreement([...prefix, ...suffix].at(-1)) ? [SUKOON] : []
 
   return mapRecord(
     {
-      '1s': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, DAMMA)],
-      '2ms': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, FATHA)],
-      '2fs': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, KASRA)],
+      '1s': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA)],
+      '2ms': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, FATHA)],
+      '2fs': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, KASRA)],
       '3ms': [...prefix, ...suffix3sd],
       '3fs': [...prefix, ...suffix3sd, agreementMorpheme(TEH, SUKOON)],
-      '2d': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, DAMMA, MEEM, FATHA, ALIF)],
+      '2d': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, FATHA, ALIF)],
       '3md': [...prefix, ...suffix3sd, agreementMorpheme(ALIF)],
       '3fd': [...prefix, ...suffix3sd, agreementMorpheme(TEH, FATHA, ALIF)],
-      '1p': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, NOON, FATHA, ALIF)],
-      '2mp': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, DAMMA, MEEM, SUKOON)],
-      '2fp': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix, TEH, DAMMA, NOON, SHADDA, FATHA)],
+      '1p': [...prefix, ...suffix, agreementMorpheme(...agreement, NOON, FATHA, ALIF)],
+      '2mp': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, SUKOON)],
+      '2fp': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, NOON, SHADDA, FATHA)],
       '3mp': [...prefix, ...deriveMasculinePluralSuffix(suffix3sd), agreementMorpheme(WAW, ALIF)],
-      '3fp': [...prefix, ...suffix, agreementMorpheme(...agreementPrefix3fp, NOON, FATHA)],
+      '3fp': [...prefix, ...suffix, agreementMorpheme(...(agreement3fp ?? agreement), NOON, FATHA)],
     },
     (morphemes) => new Word(morphemes),
   )
@@ -278,7 +275,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
     return {
       prefix: [measureMorpheme(ALIF, DAMMA, TEH, SHADDA, DAMMA), radicalMorpheme(c2)],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
-      agreementPrefix3fp: [SUKOON],
+      agreement3fp: [SUKOON],
       suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
     }
 
@@ -298,7 +295,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
         radicalMorpheme(c2),
       ],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
-      agreementPrefix3fp: [SUKOON],
+      agreement3fp: [SUKOON],
       suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
     }
 
