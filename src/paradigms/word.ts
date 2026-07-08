@@ -46,6 +46,10 @@ export class Morpheme {
     return this.tokens.some(predicate)
   }
 
+  slice(start?: number, end?: number) {
+    return new Morpheme(this.tokens.slice(start, end), this.role)
+  }
+
   with(index: number, value: Token): Morpheme {
     return new Morpheme(this.tokens.with(index, value), this.role)
   }
@@ -127,7 +131,7 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   return mergeAdjacent(result)
 }
 
-function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
+export function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   type Slot = { token: Token; role: MorphemeRole }
   const slots: Slot[] = morphemes.flatMap((m) => m.tokens.map((t) => ({ token: t, role: m.role })))
 

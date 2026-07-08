@@ -50,9 +50,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
           }
 
           if (c1.isHamza) {
-            const initialHamzatedStem = jussiveMorphemes.slice(3)
-
-            if (verb.contractedImperative) return initialHamzatedStem
+            if (verb.contractedImperative) return jussiveMorphemes.slice(3)
 
             if (c3.isWeak)
               return [
@@ -81,7 +79,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
               if (pronounId === '2fs') return [...prefix, agreementMorpheme(...longVowelI)]
               if (pronounId === '2d') return [...prefix, agreementMorpheme(...longVowelA)]
               if (pronounId === '2mp') return [...prefix, agreementMorpheme(...longVowelU, ALIF)]
-              return [measureMorpheme(ALIF, ...patternLongVowel), ...initialHamzatedStem]
+              return [measureMorpheme(ALIF, ...patternLongVowel), ...jussiveMorphemes.slice(3)]
             }
 
             if (c2.isWeak) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
@@ -91,10 +89,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 measureMorpheme(ALIF, DAMMA),
                 radicalMorpheme(c1),
                 measureMorpheme(SUKOON),
-                ...initialHamzatedStem,
+                ...jussiveMorphemes.slice(3),
               ]
 
-            return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...initialHamzatedStem]
+            return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...jussiveMorphemes.slice(3)]
           }
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:

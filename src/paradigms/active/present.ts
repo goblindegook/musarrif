@@ -1,6 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import { formIPresentVowel, isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
-import { isDual, isMasculinePlural, type PronounId } from '../pronouns'
+import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import {
   ALIF,
@@ -23,7 +23,15 @@ import {
   YEH,
 } from '../tokens'
 import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
-import { agreementMorpheme, elidedMorpheme, Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
+import {
+  agreementMorpheme,
+  elidedMorpheme,
+  type Morpheme,
+  measureMorpheme,
+  radicalMorpheme,
+  shaddaPass,
+  Word,
+} from '../word'
 
 function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const kasra = agreementMorpheme(KASRA)
@@ -48,9 +56,6 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 
 function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const damma = agreementMorpheme(DAMMA)
-
-  if (isQuadriliteralVerb(verb)) return [...stem, damma]
-
   const [, c2, c3] = verb.rootTokens
 
   // Form V: a defective root's masculine plural here takes no agreement vowel at all and only
@@ -60,8 +65,8 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
   // Form VII: content-identical to Form IV's elide+damma case, stays inline.
   if (verb.form === 7 && !c2.isWeak && c3.isWeak) return stem
 
-  // Hollow root ending in hamza (بَاءَ-type): the masculine plural -ū suffix would otherwise
-  // sandwich a hamza-on-waw between two waws (تَبُوءُونَ), which is avoided in favour of yeh:
+  // Hollow root ending in hamza: the masculine plural -ū suffix would otherwise
+  // sandwich a hamza-on-waw between two waws, which is avoided in favour of yeh:
   if (verb.form === 1 && c2.isWeak && c3.isHamza) return [...stem.slice(0, -1), radicalMorpheme(HAMZA_ON_YEH), damma]
 
   return [...stem, damma]
@@ -256,68 +261,74 @@ const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
+  const [, c2, c3] = verb.rootTokens
+  const indicative = conjugateIndicative(verb)
+
+  return {
+    '1s': jussiveStem(indicative['1s'], verb),
+    '2ms': jussiveStem(indicative['2ms'], verb),
+    '2fs':
+      c2.isWeak && c3.isWeak
+        ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH), elidedMorpheme(NOON, FATHA)]
+        : [
+            ...indicative['2fs'].slice(0, -1),
+            indicative['2fs'].at(-2)?.at(-1)?.equals(FATHA) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
+            elidedMorpheme(NOON, FATHA),
+          ],
+    '3ms': jussiveStem(indicative['3ms'], verb),
+    '3fs': jussiveStem(indicative['3fs'], verb),
+    '2d': dropTrailingNoon(indicative['2d']),
+    '3md': dropTrailingNoon(indicative['3md']),
+    '3fd': dropTrailingNoon(indicative['3fd']),
+    '1p': jussiveStem(indicative['1p'], verb),
+    '2mp': jussiveMasculinePlural(indicative['2mp']),
+    '2fp': indicative['2fp'],
+    '3mp': jussiveMasculinePlural(indicative['3mp']),
+    '3fp': indicative['3fp'],
+  }
+}
+
+function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
+  const final = indicative.at(-1)
+  if (!final) return indicative
+
   const [c1, c2, c3] = verb.rootTokens
   const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 7, 8, 10].includes(verb.form))
+  const stem = indicative.slice(0, -1)
+  const finalToken = final.at(-1)
 
-  return mapRecord(conjugateIndicative(verb), (morphemes, pronounId) => {
-    const indicativeStem = new Word(morphemes).morphemes
-    const stem = morphemes.slice(0, -1)
-    const final = morphemes.at(-1)
-    const finalToken = final?.at(-1)
-
-    if (isDual(pronounId)) return dropTrailingNoon(indicativeStem)
-
-    if (isMasculinePlural(pronounId)) {
-      const base = dropTrailingNoon(indicativeStem)
-      return base.with(-2, agreementMorpheme(...(base.at(-2)?.tokens ?? []), ALIF))
-    }
-
-    if (pronounId === '2fs') {
-      if (c2.isWeak && c3.isWeak) return [...stem.with(-1, agreementMorpheme(KASRA, YEH)), elidedMorpheme(NOON, FATHA)]
+  if (finalToken?.equals(DAMMA)) {
+    if (isQuadriliteralVerb(verb) && stem.at(-1)?.at(0)?.equals(stem.at(-3)?.at(0)))
       return [
-        ...stem,
-        stem.at(-1)?.at(-1)?.equals(FATHA) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
-        elidedMorpheme(NOON, FATHA),
+        ...stem.slice(0, -4),
+        measureMorpheme(SUKOON),
+        stem[stem.length - 3],
+        measureMorpheme(KASRA),
+        stem[stem.length - 1],
+        agreementMorpheme(SUKOON),
       ]
-    }
 
-    if (finalToken?.equals(DAMMA)) {
-      if (isQuadriliteralVerb(verb) && stem.at(-1)?.at(0)?.equals(stem.at(-3)?.at(0)))
-        return [
-          ...stem.slice(0, -4),
-          measureMorpheme(SUKOON),
-          stem[stem.length - 3],
-          measureMorpheme(KASRA),
-          stem[stem.length - 1],
-          agreementMorpheme(SUKOON),
-        ]
+    if (stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
+      return contractHollowRoot([...stem, agreementMorpheme(SUKOON)])
 
-      if (stem.some((m, i) => m.role === 'radical' && stem[i + 1]?.role === 'radical'))
-        return contractHollowRoot([...stem, agreementMorpheme(SUKOON)])
+    return [...stem, final.with(-1, geminateJussiveFatha ? FATHA : SUKOON)]
+  }
 
-      if (final) return [...stem, final.with(-1, geminateJussiveFatha ? FATHA : SUKOON)]
+  const truncated = [...indicative.slice(0, -1), final.slice(0, -1), elidedMorpheme(final.tokens.at(-1))]
 
-      return stem
-    }
+  if (!c2.isHamza) return truncated
 
-    const last = indicativeStem.at(-1)
-    if (!last?.at(-1)?.isWeak) return indicativeStem
-    const truncated = [
-      ...indicativeStem.slice(0, -1),
-      new Morpheme(last.tokens.slice(0, -1), last.role),
-      elidedMorpheme(last.tokens.at(-1)),
-    ]
+  if (c1.isWeak || shaddaPass(truncated).some((m) => m.containsToken(SHADDA))) return truncated
 
-    // Assimilated root with hamza as 2nd radical (وَأَى-type): the indicative stem seats the hamza
-    // for its own defective ending (يَئِي), but apocopating that ending leaves the hamza word-final
-    // instead, which reseats on alif (أَأِ) rather than keeping the stale medial seat:
-    if (c1.isWeak && c2.isHamza)
-      return truncated.map((m) =>
-        m.role === 'radical' && m.contains((t) => t.isHamza) ? radicalMorpheme(ALIF_HAMZA) : m,
-      )
+  // FIXME: Avoid seating hamzas here.
+  return truncated.map((m) =>
+    m.role === 'radical' && m.contains((t) => t.isHamza) ? radicalMorpheme(HAMZA_ON_YEH) : m,
+  )
+}
 
-    return truncated
-  })
+function jussiveMasculinePlural(indicative: readonly Morpheme[]): readonly Morpheme[] {
+  const base = dropTrailingNoon(indicative)
+  return base.with(-2, agreementMorpheme(...(base.at(-2)?.tokens ?? []), ALIF))
 }
 
 function dropTrailingNoon(stem: readonly Morpheme[]): readonly Morpheme[] {
