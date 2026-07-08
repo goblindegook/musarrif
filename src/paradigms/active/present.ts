@@ -74,18 +74,7 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
 
 function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   if (isQuadriliteralVerb(verb)) {
-    const [, , c3, c4] = verb.rootTokens
-    if (verb.form === 4) {
-      return [
-        ...stem.slice(0, 4),
-        radicalMorpheme(c3),
-        measureMorpheme(SUKOON),
-        radicalMorpheme(c4),
-        measureMorpheme(KASRA),
-        radicalMorpheme(c4),
-        agreementMorpheme(SUKOON),
-      ]
-    }
+    if (verb.form === 4) return [...migrateGeminateLinkingVowel(stem), agreementMorpheme(SUKOON)]
     return [...stem, agreementMorpheme(SUKOON)]
   }
 
