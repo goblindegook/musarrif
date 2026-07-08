@@ -1656,7 +1656,8 @@
   },
   {
     "root": "bvv",
-    "form": 7
+    "form": 7,
+    "passiveVoice": "none"
   },
   {
     "root": "bw'",
@@ -1741,7 +1742,8 @@
   },
   {
     "root": "dss",
-    "form": 7
+    "form": 7,
+    "passiveVoice": "none"
   },
   {
     "root": "dwm",

@@ -275,7 +275,8 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     rootTokens,
     form: raw.form as Exclude<TriliteralForm, 1>,
     lexicalizedMasdars: raw.lexicalizedMasdars,
-    passiveVoice: raw.passiveVoice,
+    // Form VII supports at most an impersonal passive.
+    passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
     noPassiveParticiple: raw.noPassiveParticiple,
   })
 }
@@ -372,6 +373,8 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
           root: triliteralRoot,
           rootTokens,
           form: form as Exclude<TriliteralForm, 1>,
+          // Form VII supports at most an impersonal passive.
+          passiveVoice: form === 7 ? 'impersonal' : undefined,
         },
     true,
   )
