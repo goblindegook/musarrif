@@ -301,14 +301,9 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))
     return {
-      prefix: [
-        measureMorpheme(ALIF, DAMMA),
-        radicalMorpheme(c1),
-        measureMorpheme(SUKOON, infix, KASRA),
-        radicalMorpheme(YEH),
-        measureMorpheme(SUKOON),
-      ],
-      suffix3sd: [radicalMorpheme(c3), measureMorpheme(FATHA)],
+      prefix: [measureMorpheme(ALIF, DAMMA), radicalMorpheme(c1), measureMorpheme(SUKOON, infix, KASRA)],
+      suffix: [radicalMorpheme(c3)],
+      suffix3sd: [radicalMorpheme(YEH), radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
 
   return {

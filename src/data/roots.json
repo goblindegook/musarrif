@@ -4454,7 +4454,8 @@
   },
   {
     "root": "xyr",
-    "form": 8
+    "form": 8,
+    "lexicalizedMasdars": ["xiyrap", "xiyaAr"]
   },
   {
     "root": "y's",

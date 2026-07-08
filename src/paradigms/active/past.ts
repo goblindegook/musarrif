@@ -268,7 +268,11 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
       [...prefix, radicalMorpheme(c3)],
     ]
 
-  if (c2.isWeak && !infix.equals(DAL)) return [[...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)]]
+  if (c2.isWeak && !infix.equals(DAL))
+    return [
+      [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)],
+      [...prefix, radicalMorpheme(c3)],
+    ]
 
   if (c3.isWeak) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(YEH)]]
 

@@ -398,16 +398,10 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
           measureMorpheme(WAW, ALIF),
         ]
 
-  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
-    return mood === 'jussive'
+  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))) {
+    return !isFemininePlural(pronounId) &&
+      (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
       ? [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          measureMorpheme(infix, FATHA),
-          radicalMorpheme(c3),
-          ...moodSuffix,
-        ]
-      : [
           radicalMorpheme(c1),
           measureMorpheme(SUKOON),
           measureMorpheme(infix, FATHA),
@@ -415,6 +409,14 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
           radicalMorpheme(c3),
           ...moodSuffix,
         ]
+      : [
+          radicalMorpheme(c1),
+          measureMorpheme(SUKOON),
+          measureMorpheme(infix, FATHA),
+          radicalMorpheme(c3),
+          ...moodSuffix,
+        ]
+  }
 
   if (c3.isWeak && isMasculinePlural(pronounId))
     return [
