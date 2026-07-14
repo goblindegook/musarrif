@@ -41,14 +41,12 @@ describe('search', () => {
     expect(matches.some((verb) => verb.lemma.startsWith('آم'))).toBe(true)
   })
 
-  test('prioritizes closer roots over lower form numbers', () => {
-    const matches = search('امن ب')
-    const [first, second] = matches
-
-    expect(first?.root).toEqualT('ءمن')
-    expect(first?.form).toBe(1)
-    expect(second?.root).toEqualT('ءمن')
-    expect(second?.form).toBe(4)
+  test('keeps exact-root matches ahead of more distant roots', () => {
+    expect(
+      search('امن ب')
+        .map((verb) => verb.id)
+        .slice(0, 5),
+    ).toEqual(["'mn-1", "'mn-2", "'mn-4", 'bvv-7', 'mdd-8'])
   })
 
   test.each([

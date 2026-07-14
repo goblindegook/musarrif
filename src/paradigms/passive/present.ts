@@ -384,26 +384,18 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
       (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
       ? [
           radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          measureMorpheme(infix, FATHA),
+          measureMorpheme(SUKOON, infix, FATHA),
           radicalMorpheme(ALIF),
           radicalMorpheme(c3),
           ...moodSuffix,
         ]
-      : [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON),
-          measureMorpheme(infix, FATHA),
-          radicalMorpheme(c3),
-          ...moodSuffix,
-        ]
+      : [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA), radicalMorpheme(c3), ...moodSuffix]
   }
 
   if (c3.isWeak)
     return [
       radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      measureMorpheme(infix, FATHA),
+      measureMorpheme(SUKOON, infix, FATHA),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
       ...defectiveSuffix(mood, pronounId),
@@ -411,27 +403,14 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
 
   if (c2.isWeak && c3.isHamza) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0)?.equals([SUKOON]))
-      return [
-        radicalMorpheme(c1),
-        measureMorpheme(SUKOON),
-        measureMorpheme(infix, FATHA),
-        radicalMorpheme(c3),
-        ...moodSuffix,
-      ]
+      return [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA), radicalMorpheme(c3), ...moodSuffix]
 
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      measureMorpheme(infix, FATHA, ALIF),
-      radicalMorpheme(c3),
-      ...moodSuffix,
-    ]
+    return [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA, ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
   return [
     radicalMorpheme(c1),
-    measureMorpheme(SUKOON),
-    measureMorpheme(infix, FATHA),
+    measureMorpheme(SUKOON, infix, FATHA),
     radicalMorpheme(c2),
     measureMorpheme(FATHA),
     radicalMorpheme(c3),

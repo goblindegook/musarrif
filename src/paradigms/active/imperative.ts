@@ -92,7 +92,12 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 ...jussiveMorphemes.slice(3),
               ]
 
-            return [measureMorpheme(ALIF, KASRA, YEH), measureMorpheme(SUKOON), ...jussiveMorphemes.slice(3)]
+            return [
+              measureMorpheme(ALIF, KASRA),
+              radicalMorpheme(c1),
+              measureMorpheme(SUKOON),
+              ...jussiveMorphemes.slice(3),
+            ]
           }
 
           // Words cannot start with two consecutive consonants, add alif al-wasl:
@@ -107,7 +112,10 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 4: {
-          if (c1.isHamza) return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
+          if (c1.isHamza)
+            return c3.isWeak
+              ? [measureMorpheme(HAMZA, ...longVowelA), radicalMorpheme(c2), ...stem.slice(1)]
+              : [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
           if (c1.isWeak && c3.isWeak) {
             const prefix = [
               measureMorpheme(HAMZA, FATHA),

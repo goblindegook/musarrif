@@ -305,8 +305,11 @@
     "root": "'mn",
     "form": 1,
     "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fa3aal"]
+  },
+  {
+    "root": "'mn",
+    "form": 2
   },
   {
     "root": "'mn",

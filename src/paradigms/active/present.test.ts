@@ -1515,50 +1515,50 @@ describe('active present indicative', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['علي', 'يُعْلِي'],
-        ['بقي', 'يُبْقِي'],
-        ['سمي', 'يُسْمِي'],
-        ['عطي', 'يُعْطِي'],
-        ['لقي', 'يُلْقِي'],
-        ['ضحي', 'يُضْحِي'],
-        ['لفو', 'يُلْفِي'],
+        ['علي', 'يُعلِي'],
+        ['بقي', 'يُبقِي'],
+        ['سمي', 'يُسمِي'],
+        ['عطي', 'يُعطِي'],
+        ['لقي', 'يُلقِي'],
+        ['ضحي', 'يُضحِي'],
+        ['لفو', 'يُلفِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
 
       test('أَمْسَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('مسو', 4), 'indicative')).toEqualT({
-          '1s': 'أُمْسِي',
-          '2ms': 'تُمْسِي',
-          '2fs': 'تُمْسِينَ',
-          '3ms': 'يُمْسِي',
-          '3fs': 'تُمْسِي',
-          '2d': 'تُمْسِيَانِ',
-          '3md': 'يُمْسِيَانِ',
-          '3fd': 'تُمْسِيَانِ',
-          '1p': 'نُمْسِي',
-          '2mp': 'تُمْسُونَ',
-          '2fp': 'تُمْسِينَ',
-          '3mp': 'يُمْسُونَ',
-          '3fp': 'يُمْسِينَ',
+          '1s': 'أُمسِي',
+          '2ms': 'تُمسِي',
+          '2fs': 'تُمسِينَ',
+          '3ms': 'يُمسِي',
+          '3fs': 'تُمسِي',
+          '2d': 'تُمسِيَانِ',
+          '3md': 'يُمسِيَانِ',
+          '3fd': 'تُمسِيَانِ',
+          '1p': 'نُمسِي',
+          '2mp': 'تُمسُونَ',
+          '2fp': 'تُمسِينَ',
+          '3mp': 'يُمسُونَ',
+          '3fp': 'يُمسِينَ',
         })
       })
 
       test('أَحْيَا conjugation', () => {
         expect(conjugatePresentMood(getVerb('حيي', 4), 'indicative')).toEqualT({
-          '1s': 'أُحْيِي',
-          '2ms': 'تُحْيِي',
-          '2fs': 'تُحْيِينَ',
-          '3ms': 'يُحْيِي',
-          '3fs': 'تُحْيِي',
-          '2d': 'تُحْيِيَانِ',
-          '3md': 'يُحْيِيَانِ',
-          '3fd': 'تُحْيِيَانِ',
-          '1p': 'نُحْيِي',
-          '2mp': 'تُحْيُونَ',
-          '2fp': 'تُحْيِينَ',
-          '3mp': 'يُحْيُونَ',
-          '3fp': 'يُحْيِينَ',
+          '1s': 'أُحيِي',
+          '2ms': 'تُحيِي',
+          '2fs': 'تُحيِينَ',
+          '3ms': 'يُحيِي',
+          '3fs': 'تُحيِي',
+          '2d': 'تُحيِيَانِ',
+          '3md': 'يُحيِيَانِ',
+          '3fd': 'تُحيِيَانِ',
+          '1p': 'نُحيِي',
+          '2mp': 'تُحيُونَ',
+          '2fp': 'تُحيِينَ',
+          '3mp': 'يُحيُونَ',
+          '3fp': 'يُحيِينَ',
         })
       })
     })
@@ -1646,7 +1646,7 @@ describe('active present indicative', () => {
         ['ءمن', 'يُؤْمِنُ'],
         ['ءلم', 'يُؤْلِمُ'],
         ['ءجر', 'يُؤْجِرُ'],
-        ['ءتي', 'يُؤْتِي'],
+        ['ءتي', 'يُؤتِي'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
@@ -1662,7 +1662,7 @@ describe('active present indicative', () => {
     })
 
     describe('hamzated hollow-defective roots', () => {
-      test.each([['ءوي', 'يُؤْوِي']])('%s pattern', (root, expected) => {
+      test.each([['ءوي', 'يُؤوِي']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
     })

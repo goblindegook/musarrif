@@ -239,7 +239,9 @@ function parseConjugationTable(html: string, lemma: string, root?: string, form?
   const lemmaMatches = exactMatches.length > 0 ? exactMatches : normalizedMatches
 
   const expectedForm = form != null ? toRoman(form) : undefined
-  const formMatches = expectedForm ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm) : lemmaMatches
+  const formMatches = expectedForm
+    ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm)
+    : lemmaMatches
   const matchingTable = formMatches[0]
   const table = matchingTable ?? tablesToSearch[0]
 

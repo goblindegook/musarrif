@@ -3,10 +3,10 @@ import { isFormIPastVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import {
   ALIF,
-  ALIF_HAMZA,
   DAL,
   DAMMA,
   FATHA,
+  HAMZA,
   KASRA,
   MEEM,
   NOON,
@@ -158,21 +158,15 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.isHamza)
     return {
-      stem: [
-        measureMorpheme(ALIF_HAMZA, DAMMA),
-        radicalMorpheme(c1.isHamza ? WAW : c1),
-        measureMorpheme(KASRA),
-        radicalMorpheme(c3),
-      ],
+      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
   if (c3.isWeak)
     return {
       stem: [
-        measureMorpheme(ALIF_HAMZA, DAMMA),
+        measureMorpheme(HAMZA, DAMMA),
         radicalMorpheme(c1.isHamza ? WAW : c1),
-        ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
         radicalMorpheme(c2),
         measureMorpheme(KASRA),
         radicalMorpheme(YEH),
@@ -183,7 +177,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   if (c2.isWeak) {
     const longVowelTail = c3.isHamza ? [] : [measureMorpheme(SUKOON)]
     return {
-      stem: [measureMorpheme(ALIF_HAMZA, DAMMA), radicalMorpheme(c1.isHamza ? WAW : c1), measureMorpheme(KASRA)],
+      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
       suffix3sd: [radicalMorpheme(YEH), ...longVowelTail, radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
@@ -191,7 +185,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.equals(c3))
     return {
-      stem: [measureMorpheme(ALIF_HAMZA, DAMMA), radicalMorpheme(c1.isHamza ? WAW : c1)],
+      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1.isHamza ? WAW : c1)],
       suffix: [measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [
         measureMorpheme(KASRA),
@@ -204,7 +198,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
 
   return {
     stem: [
-      measureMorpheme(ALIF_HAMZA, DAMMA),
+      measureMorpheme(HAMZA, DAMMA),
       radicalMorpheme(c1.isHamza ? WAW : c1),
       measureMorpheme(SUKOON),
       radicalMorpheme(c2),

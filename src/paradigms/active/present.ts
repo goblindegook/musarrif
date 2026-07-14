@@ -4,11 +4,11 @@ import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import {
   ALIF,
-  ALIF_HAMZA,
   ALIF_MAQSURA,
   DAL,
   DAMMA,
   FATHA,
+  HAMZA,
   HAMZA_ON_YEH,
   KASRA,
   longVowel,
@@ -113,7 +113,7 @@ function hasFathaDefectiveEnding(morphemes: readonly Morpheme[]): boolean {
 }
 
 function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, , c3] = verb.rootTokens
+  const [c1, , c3] = verb.rootTokens
   const stem = derivePresentStem(verb)
   const vowel = presentPrefixVowel(verb)
   const suffix = dammaSuffix(isQuadriliteralVerb(verb) || !c3.isWeak)
@@ -129,7 +129,15 @@ function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]>
 
   return mapRecord(
     {
-      '1s': [agreementMorpheme(ALIF_HAMZA, vowel), ...stem, ...suffix],
+      '1s':
+        verb.form === 4 && c1.isHamza
+          ? [
+              agreementMorpheme(HAMZA, vowel),
+              radicalMorpheme(WAW),
+              ...stem.slice(stem.at(1)?.equals([SUKOON]) ? 2 : 1),
+              ...suffix,
+            ]
+          : [agreementMorpheme(HAMZA, vowel), ...stem, ...suffix],
       '2ms': [agreementMorpheme(TEH, vowel), ...stem, ...suffix],
       '2fs': [agreementMorpheme(TEH, vowel), ...feminineSingularStem, feminineSingularSuffix],
       '3ms': [agreementMorpheme(YEH, vowel), ...stem, ...suffix],
@@ -428,14 +436,7 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 
   if (c2.isHamza) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 
-  if (c3.isWeak)
-    return [
-      ...prefix,
-      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
-      radicalMorpheme(c2),
-      measureMorpheme(KASRA),
-      radicalMorpheme(YEH),
-    ]
+  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(YEH)]
 
   if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 

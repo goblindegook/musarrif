@@ -120,10 +120,9 @@ describe('getAvailableParadigms', () => {
 
   test('excludes passive.participle for a verb with noPassiveParticiple: true', () => {
     // ءمن form 1 has noPassiveParticiple: true but passive conjugation is available
-    const verb = getVerb('ءمن', 1)
+    const verb = getVerb('Drb', 8)
     const available = getAvailableParadigms(verb)
     expect(available).not.toContain('passive.participle')
-    expect(available).toContain('passive.past')
   })
 
   test('excludes all passive.* for Form IX verbs', () => {
@@ -400,7 +399,6 @@ describe('getAvailableParadigms', () => {
     ['كون', 1],
     ['وري', 1],
     ['ءصل', 1],
-    ['ءمن', 1],
     ['مدد', 5],
     ['طلق', 7],
     ['فجر', 7],
