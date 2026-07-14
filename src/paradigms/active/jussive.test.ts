@@ -1808,15 +1808,15 @@ describe('active present jussive', () => {
 
       test('اِرْتَأَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('رءي', 8), 'jussive')).toEqualT({
-          '1s': 'أَرْتَئِ',
-          '2ms': 'تَرْتَئِ',
+          '1s': 'أَرْتَأِ',
+          '2ms': 'تَرْتَأِ',
           '2fs': 'تَرْتَئِي',
-          '3ms': 'يَرْتَئِ',
-          '3fs': 'تَرْتَئِ',
+          '3ms': 'يَرْتَأِ',
+          '3fs': 'تَرْتَأِ',
           '2d': 'تَرْتَئِيَا',
           '3md': 'يَرْتَئِيَا',
           '3fd': 'تَرْتَئِيَا',
-          '1p': 'نَرْتَئِ',
+          '1p': 'نَرْتَأِ',
           '2mp': 'تَرْتَؤُوا',
           '2fp': 'تَرْتَئِينَ',
           '3mp': 'يَرْتَؤُوا',
@@ -2021,7 +2021,7 @@ describe('active present jussive', () => {
         ['بلي', 'يُبَالِ'],
         ['قضي', 'يُقَاضِ'],
         ['بري', 'يُبَارِ'],
-        ['رءي', 'يُرَائِ'],
+        ['رءي', 'يُرَاءِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })

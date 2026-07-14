@@ -23,15 +23,7 @@ import {
   YEH,
 } from '../tokens'
 import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
-import {
-  agreementMorpheme,
-  elidedMorpheme,
-  type Morpheme,
-  measureMorpheme,
-  radicalMorpheme,
-  shaddaPass,
-  Word,
-} from '../word'
+import { agreementMorpheme, elidedMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
 function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
   const kasra = agreementMorpheme(KASRA)
@@ -236,7 +228,7 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
   const final = indicative.at(-1)
   if (!final) return indicative
 
-  const [c1, c2, c3] = verb.rootTokens
+  const [, c2, c3] = verb.rootTokens
   const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 7, 8, 10].includes(verb.form))
   const stem = indicative.slice(0, -1)
   const finalToken = final.at(-1)
@@ -251,14 +243,7 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
     return [...stem, final.with(-1, geminateJussiveFatha ? FATHA : SUKOON)]
   }
 
-  const truncated = [...indicative.slice(0, -1), final.slice(0, -1), elidedMorpheme(final.tokens.at(-1))]
-
-  if (!c2.isHamza) return truncated
-
-  if (c1.isWeak || shaddaPass(truncated).some((m) => m.includes(SHADDA))) return truncated
-
-  // FIXME: Avoid seating hamzas here.
-  return truncated.map((m) => (m.role === 'radical' && m.some((t) => t.isHamza) ? radicalMorpheme(HAMZA_ON_YEH) : m))
+  return [...indicative.slice(0, -1), final.slice(0, -1), elidedMorpheme(final.tokens.at(-1))]
 }
 
 function jussiveMasculinePlural(indicative: readonly Morpheme[]): readonly Morpheme[] {
