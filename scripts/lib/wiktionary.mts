@@ -1,5 +1,6 @@
 import { JSDOM } from 'jsdom'
 import { applyDiacriticsPreference } from '../../src/paradigms/tokens'
+import { toRoman } from '../../src/primitives/numbers'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 async function fetchHtml(title: string): Promise<string> {
@@ -187,6 +188,11 @@ function readCaptionArabic(table: HTMLTableElement): string[] {
   return caption ? extractArabicStrings(caption) : []
 }
 
+function readCaptionForm(table: HTMLTableElement): string | undefined {
+  const caption = normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')
+  return caption.match(/\(([IVX]+),/)?.[1]
+}
+
 type RootDeclaration = { el: Element; arabicRoot: string }
 
 function findRootDeclarations(arabicSection: Element): RootDeclaration[] {
@@ -210,7 +216,7 @@ function nearestRoot(table: HTMLTableElement, declarations: RootDeclaration[]): 
   return result
 }
 
-function parseConjugationTable(html: string, lemma: string, root?: string): ParsedParadigms {
+function parseConjugationTable(html: string, lemma: string, root?: string, form?: number): ParsedParadigms {
   const dom = new JSDOM(html)
   const doc = dom.window.document
   const arabicHeading = doc.querySelector('h2#Arabic')
@@ -226,16 +232,20 @@ function parseConjugationTable(html: string, lemma: string, root?: string): Pars
   const tablesToSearch = candidateTables.length > 0 ? candidateTables : tables
 
   const normalizedLemma = normalizeArabicKey(lemma)
-  const exactMatch = tablesToSearch.find((table) => readCaptionArabic(table).includes(lemma))
-  const normalizedMatch = tablesToSearch.find((table) =>
+  const exactMatches = tablesToSearch.filter((table) => readCaptionArabic(table).includes(lemma))
+  const normalizedMatches = tablesToSearch.filter((table) =>
     readCaptionArabic(table).some((captionWord) => normalizeArabicKey(captionWord) === normalizedLemma),
   )
-  const matchingTable = exactMatch ?? normalizedMatch
+  const lemmaMatches = exactMatches.length > 0 ? exactMatches : normalizedMatches
+
+  const expectedForm = form != null ? toRoman(form) : undefined
+  const formMatches = expectedForm ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm) : lemmaMatches
+  const matchingTable = formMatches[0]
   const table = matchingTable ?? tablesToSearch[0]
 
   if (!matchingTable) {
     throw new Error(
-      `No conjugation table matched lemma "${lemma}". Closest caption: ${normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')}`,
+      `No conjugation table matched lemma "${lemma}"${expectedForm ? ` (form ${expectedForm})` : ''}. Closest caption: ${normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')}`,
     )
   }
 
@@ -245,7 +255,7 @@ function parseConjugationTable(html: string, lemma: string, root?: string): Pars
   }
 }
 
-export async function fetchParadigms(lemma: string, root?: string): Promise<ParsedParadigms> {
+export async function fetchParadigms(lemma: string, root?: string, form?: number): Promise<ParsedParadigms> {
   const html = await fetchHtml(applyDiacriticsPreference(lemma, 'none'))
-  return parseConjugationTable(html, lemma, root)
+  return parseConjugationTable(html, lemma, root, form)
 }

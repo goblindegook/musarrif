@@ -15,23 +15,23 @@ function usage(): never {
   throw new Error('Usage: npm run wiktionary <verb-slug> (example: npm run wiktionary ktb-1)')
 }
 
-function resolveSlugForWiktionary(slug: string): { lemma: string; root: string | undefined } {
+function resolveSlugForWiktionary(slug: string): { lemma: string; root: string | undefined; form: VerbForm } {
   const existing = getVerbById(slug)
   if (existing) {
-    return { lemma: existing.lemma, root: existing.root }
+    return { lemma: existing.lemma, root: existing.root, form: existing.form }
   }
   const [rootId, rawForm] = slug.split('-')
   const root = transliterateReverse(rootId)
   const form = clamp(parseInteger(rawForm, 1), 1, formsForRoot(root).at(-1) ?? 1) as VerbForm
-  return { lemma: synthesizeVerb(root, form).lemma, root }
+  return { lemma: synthesizeVerb(root, form).lemma, root, form }
 }
 
 async function run() {
   const slug = process.argv[2]?.trim()
   if (!slug) usage()
 
-  const { lemma, root } = resolveSlugForWiktionary(slug)
-  const parsed = await fetchParadigms(lemma, root)
+  const { lemma, root, form } = resolveSlugForWiktionary(slug)
+  const parsed = await fetchParadigms(lemma, root, form)
   const fileText = renderVerbTestFile(slug, parsed)
 
   mkdirSync(OUTPUT_DIR, { recursive: true })

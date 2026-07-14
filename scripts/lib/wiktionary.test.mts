@@ -208,6 +208,64 @@ describe('fetchParadigms', () => {
     expect(parsed.paradigms['active past']?.['3ms']).toBe('كَتَبَ')
   })
 
+  test('picks the table matching the requested form when a page has multiple conjugation tables for the same lemma', async () => {
+    const formIIICaption =
+      '<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>آتَى</strong></i> (III, final-weak)</caption>'
+    const formIVCaption =
+      '<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>آتَى</strong></i> (IV, final-weak)</caption>'
+
+    const twoTableHtml = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+${formIIICaption}
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">past (perfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">آتَيْتُ (III)</span></td>
+<td><span class="Arab">آتَيْتَ</span></td>
+<td><span class="Arab">آتَى</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation_2">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+${formIVCaption}
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">past (perfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">آتَيْتُ (IV)</span></td>
+<td><span class="Arab">آتَيْتَ</span></td>
+<td><span class="Arab">آتَى</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(twoTableHtml, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const formIII = await fetchParadigms('آتَى', undefined, 3)
+    expect(formIII.paradigms['active past']?.['1s']).toBe('آتَيْتُ (III)')
+
+    const formIV = await fetchParadigms('آتَى', undefined, 4)
+    expect(formIV.paradigms['active past']?.['1s']).toBe('آتَيْتُ (IV)')
+  })
+
   test('throws the HTTP status when Wiktionary rejects the request', async () => {
     server.use(
       http.get('https://en.wiktionary.org/wiki/:title', () => {
