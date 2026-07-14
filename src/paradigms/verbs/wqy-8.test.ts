@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("wqy-8", () => {
+describe('wqy-8', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("wqy-8")!)).toEqualT({
+    expect(conjugatePast(getVerbById('wqy-8')!)).toEqualT({
       '1s': 'اِتَّقَيْتُ',
       '2ms': 'اِتَّقَيْتَ',
       '2fs': 'اِتَّقَيْتِ',
@@ -28,7 +28,7 @@ describe("wqy-8", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("wqy-8")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wqy-8')!, 'indicative')).toEqualT({
       '1s': 'أَتَّقِي',
       '2ms': 'تَتَّقِي',
       '2fs': 'تَتَّقِينَ',
@@ -46,7 +46,7 @@ describe("wqy-8", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("wqy-8")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wqy-8')!, 'subjunctive')).toEqualT({
       '1s': 'أَتَّقِيَ',
       '2ms': 'تَتَّقِيَ',
       '2fs': 'تَتَّقِي',
@@ -64,7 +64,7 @@ describe("wqy-8", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("wqy-8")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wqy-8')!, 'jussive')).toEqualT({
       '1s': 'أَتَّقِ',
       '2ms': 'تَتَّقِ',
       '2fs': 'تَتَّقِي',
@@ -82,7 +82,7 @@ describe("wqy-8", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("wqy-8")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('wqy-8')!)).toMatchObjectT({
       '2ms': 'اِتَّقِ',
       '2fs': 'اِتَّقِي',
       '2d': 'اِتَّقِيَا',
@@ -92,7 +92,7 @@ describe("wqy-8", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("wqy-8")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('wqy-8')!)).toEqualT({
       '1s': 'اُتُّقِيتُ',
       '2ms': 'اُتُّقِيتَ',
       '2fs': 'اُتُّقِيتِ',
@@ -110,7 +110,7 @@ describe("wqy-8", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("wqy-8")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('wqy-8')!, 'indicative')).toEqualT({
       '1s': 'أُتَّقَى',
       '2ms': 'تُتَّقَى',
       '2fs': 'تُتَّقَيْنَ',
@@ -128,7 +128,7 @@ describe("wqy-8", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("wqy-8")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('wqy-8')!, 'subjunctive')).toEqualT({
       '1s': 'أُتَّقَى',
       '2ms': 'تُتَّقَى',
       '2fs': 'تُتَّقَيْ',
@@ -146,7 +146,7 @@ describe("wqy-8", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("wqy-8")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('wqy-8')!, 'jussive')).toEqualT({
       '1s': 'أُتَّقَ',
       '2ms': 'تُتَّقَ',
       '2fs': 'تُتَّقَيْ',
@@ -164,14 +164,14 @@ describe("wqy-8", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("wqy-8")!)).toEqualT('مُتَّقٍ')
+    expect(deriveActiveParticiple(getVerbById('wqy-8')!)).toEqualT('مُتَّقٍ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("wqy-8")!)).toEqualT('مُتَّقًى')
+    expect(derivePassiveParticiple(getVerbById('wqy-8')!)).toEqualT('مُتَّقًى')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("wqy-8")!)).toEqualT(['اِتِّقَاء', 'تُقَاة', 'تُقْيَة'])
+    expect(deriveMasdar(getVerbById('wqy-8')!)).toEqualT(['اِتِّقَاء', 'تُقَاة', 'تُقْيَة'])
   })
 })

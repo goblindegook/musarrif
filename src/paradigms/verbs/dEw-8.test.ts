@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("dEw-8", () => {
+describe('dEw-8', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("dEw-8")!)).toEqualT({
+    expect(conjugatePast(getVerbById('dEw-8')!)).toEqualT({
       '1s': 'اِدَّعَيْتُ',
       '2ms': 'اِدَّعَيْتَ',
       '2fs': 'اِدَّعَيْتِ',
@@ -28,7 +28,7 @@ describe("dEw-8", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("dEw-8")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('dEw-8')!, 'indicative')).toEqualT({
       '1s': 'أَدَّعِي',
       '2ms': 'تَدَّعِي',
       '2fs': 'تَدَّعِينَ',
@@ -46,7 +46,7 @@ describe("dEw-8", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("dEw-8")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('dEw-8')!, 'subjunctive')).toEqualT({
       '1s': 'أَدَّعِيَ',
       '2ms': 'تَدَّعِيَ',
       '2fs': 'تَدَّعِي',
@@ -64,7 +64,7 @@ describe("dEw-8", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("dEw-8")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('dEw-8')!, 'jussive')).toEqualT({
       '1s': 'أَدَّعِ',
       '2ms': 'تَدَّعِ',
       '2fs': 'تَدَّعِي',
@@ -82,7 +82,7 @@ describe("dEw-8", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("dEw-8")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('dEw-8')!)).toMatchObjectT({
       '2ms': 'اِدَّعِ',
       '2fs': 'اِدَّعِي',
       '2d': 'اِدَّعِيَا',
@@ -92,7 +92,7 @@ describe("dEw-8", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("dEw-8")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('dEw-8')!)).toEqualT({
       '1s': 'اُدُّعِيتُ',
       '2ms': 'اُدُّعِيتَ',
       '2fs': 'اُدُّعِيتِ',
@@ -110,7 +110,7 @@ describe("dEw-8", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("dEw-8")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('dEw-8')!, 'indicative')).toEqualT({
       '1s': 'أُدَّعَى',
       '2ms': 'تُدَّعَى',
       '2fs': 'تُدَّعَيْنَ',
@@ -128,7 +128,7 @@ describe("dEw-8", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("dEw-8")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('dEw-8')!, 'subjunctive')).toEqualT({
       '1s': 'أُدَّعَى',
       '2ms': 'تُدَّعَى',
       '2fs': 'تُدَّعَيْ',
@@ -146,7 +146,7 @@ describe("dEw-8", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("dEw-8")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('dEw-8')!, 'jussive')).toEqualT({
       '1s': 'أُدَّعَ',
       '2ms': 'تُدَّعَ',
       '2fs': 'تُدَّعَيْ',
@@ -164,14 +164,14 @@ describe("dEw-8", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("dEw-8")!)).toEqualT('مُدَّعٍ')
+    expect(deriveActiveParticiple(getVerbById('dEw-8')!)).toEqualT('مُدَّعٍ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("dEw-8")!)).toEqualT('مُدَّعًى')
+    expect(derivePassiveParticiple(getVerbById('dEw-8')!)).toEqualT('مُدَّعًى')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("dEw-8")!)).toEqualT(['اِدِّعَاء', 'دَعْوَى'])
+    expect(deriveMasdar(getVerbById('dEw-8')!)).toEqualT(['اِدِّعَاء', 'دَعْوَى'])
   })
 })

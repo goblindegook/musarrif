@@ -1697,7 +1697,8 @@
   },
   {
     "root": "dEw",
-    "form": 8
+    "form": 8,
+    "lexicalizedMasdars": ["daEowaY"]
   },
   {
     "root": "dEw",
@@ -4174,7 +4175,8 @@
   },
   {
     "root": "wqy",
-    "form": 8
+    "form": 8,
+    "lexicalizedMasdars": ["tuqaAp", "tuqoyap"]
   },
   {
     "root": "wrd",
