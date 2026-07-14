@@ -62,6 +62,10 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
 
       if (longVowelBefore === 'u') {
         if (vowel?.equals(KASRA)) return HAMZA_ON_YEH // FIXME: for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
+
+        // Hamza directly after waw, followed by another waw + the masculine-plural alif, avoids waw-on-waw; seat on yeh instead:
+        if (vowel?.equals(DAMMA) && word[index + 2]?.equals(WAW) && word[index + 3]?.equals(ALIF)) return HAMZA_ON_YEH
+
         return HAMZA
       }
 

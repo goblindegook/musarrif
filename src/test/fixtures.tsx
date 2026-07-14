@@ -1,4 +1,4 @@
-import { render } from '@testing-library/preact'
+import { type RenderResult, render } from '@testing-library/preact'
 import type { ComponentChild, ComponentChildren } from 'preact'
 import { vi } from 'vitest'
 import { I18nProvider } from '../ui/hooks/useI18n'
@@ -21,7 +21,7 @@ function Wrapper({ children }: { children: ComponentChildren }) {
   )
 }
 
-export function renderWithProviders(ui: ComponentChild) {
+export function renderWithProviders(ui: ComponentChild): RenderResult {
   return render(ui, { wrapper: Wrapper })
 }
 

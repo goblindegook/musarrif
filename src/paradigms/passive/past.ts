@@ -229,8 +229,15 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
 
   if (c3.isWeak)
     return {
-      stem: [measureMorpheme(TEH, DAMMA), radicalMorpheme(c1), measureMorpheme(DAMMA, WAW), radicalMorpheme(c2)],
-      suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
+      stem: [
+        measureMorpheme(TEH, DAMMA),
+        radicalMorpheme(c1),
+        measureMorpheme(DAMMA, WAW),
+        radicalMorpheme(c2),
+        measureMorpheme(KASRA),
+        radicalMorpheme(YEH),
+      ],
+      suffix3sd: [measureMorpheme(FATHA)],
     }
 
   return {
@@ -293,17 +300,6 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
       ],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
-    }
-
-  if ((c1.isWeak || c1.isHamza) && c3.isWeak)
-    return {
-      stem: [
-        measureMorpheme(ALIF, DAMMA, TEH, SHADDA, DAMMA),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA),
-        radicalMorpheme(YEH),
-      ],
-      suffix3sd: [measureMorpheme(FATHA)],
     }
 
   if (c1.isWeak || c1.isHamza)
