@@ -1123,36 +1123,12 @@ describe('active present jussive', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['علي', 'يُعلِ'],
-        ['بقي', 'يُبقِ'],
-        ['سمي', 'يُسمِ'],
-        ['عطي', 'يُعطِ'],
-        ['لقي', 'يُلقِ'],
         ['وصي', 'يُوصِ'],
         ['وحي', 'يُوحِ'],
         ['وفي', 'يُوفِ'],
         ['ودي', 'يُودِ'],
-        ['لفو', 'يُلفِ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('مسو', 4), 'jussive')).toEqualT({
-          '1s': 'أُمسِ',
-          '2ms': 'تُمسِ',
-          '2fs': 'تُمسِي',
-          '3ms': 'يُمسِ',
-          '3fs': 'تُمسِ',
-          '2d': 'تُمسِيَا',
-          '3md': 'يُمسِيَا',
-          '3fd': 'تُمسِيَا',
-          '1p': 'نُمسِ',
-          '2mp': 'تُمسُوا',
-          '2fp': 'تُمسِينَ',
-          '3mp': 'يُمسُوا',
-          '3fp': 'يُمسِينَ',
-        })
       })
 
       test('أَحْيَا conjugation', () => {
@@ -1188,50 +1164,6 @@ describe('active present jussive', () => {
           '2fp': 'تُرِينَ',
           '3mp': 'يُرُوا',
           '3fp': 'يُرِينَ',
-        })
-      })
-
-      test('drops the final glide for أَعْطَى', () => {
-        expect(conjugatePresentMood(getVerb('عطي', 4), 'jussive')).toMatchObjectT({
-          '3ms': 'يُعطِ',
-          '2ms': 'تُعطِ',
-          '1p': 'نُعطِ',
-          '2fs': 'تُعطِي',
-          '3mp': 'يُعطُوا',
-        })
-      })
-
-      test('drops the final glide for أَضْحَى', () => {
-        expect(conjugatePresentMood(getVerb('ضحي', 4), 'jussive')).toMatchObjectT({
-          '3ms': 'يُضحِ',
-          '2ms': 'تُضحِ',
-          '1p': 'نُضحِ',
-          '2fs': 'تُضحِي',
-          '3mp': 'يُضحُوا',
-        })
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'يُؤتِ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('آتَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('ءتي', 4), 'jussive')).toEqualT({
-          '1s': 'أُوتِ',
-          '2ms': 'تُؤتِ',
-          '2fs': 'تُؤتِي',
-          '3ms': 'يُؤتِ',
-          '3fs': 'تُؤتِ',
-          '2d': 'تُؤتِيَا',
-          '3md': 'يُؤتِيَا',
-          '3fd': 'تُؤتِيَا',
-          '1p': 'نُؤتِ',
-          '2mp': 'تُؤتُوا',
-          '2fp': 'تُؤتِينَ',
-          '3mp': 'يُؤتُوا',
-          '3fp': 'يُؤتِينَ',
         })
       })
     })

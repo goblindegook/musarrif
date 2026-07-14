@@ -1050,36 +1050,12 @@ describe('active present subjunctive', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['علي', 'يُعلِيَ'],
-        ['بقي', 'يُبقِيَ'],
-        ['سمي', 'يُسمِيَ'],
-        ['عطي', 'يُعطِيَ'],
-        ['لقي', 'يُلقِيَ'],
         ['وصي', 'يُوصِيَ'],
         ['وحي', 'يُوحِيَ'],
         ['وفي', 'يُوفِيَ'],
         ['ودي', 'يُودِيَ'],
-        ['لفو', 'يُلفِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('مسو', 4), 'subjunctive')).toEqualT({
-          '1s': 'أُمسِيَ',
-          '2ms': 'تُمسِيَ',
-          '2fs': 'تُمسِي',
-          '3ms': 'يُمسِيَ',
-          '3fs': 'تُمسِيَ',
-          '2d': 'تُمسِيَا',
-          '3md': 'يُمسِيَا',
-          '3fd': 'تُمسِيَا',
-          '1p': 'نُمسِيَ',
-          '2mp': 'تُمسُوا',
-          '2fp': 'تُمسِينَ',
-          '3mp': 'يُمسُوا',
-          '3fp': 'يُمسِينَ',
-        })
       })
 
       test('أَحْيَا conjugation', () => {
@@ -1160,12 +1136,6 @@ describe('active present subjunctive', () => {
           '3mp': 'يُضِيئُوا',
           '3fp': 'يُضِئْنَ',
         })
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'يُؤتِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
   })

@@ -436,7 +436,14 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 
   if (c2.isHamza) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 
-  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(YEH)]
+  if (c3.isWeak)
+    return [
+      ...prefix,
+      ...(c1.isWeak || c2.isWeak ? [] : [measureMorpheme(SUKOON)]),
+      radicalMorpheme(c2),
+      measureMorpheme(KASRA),
+      radicalMorpheme(YEH),
+    ]
 
   if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 

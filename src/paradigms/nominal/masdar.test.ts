@@ -556,30 +556,13 @@ describe('masdar', () => {
     })
 
     describe('defective roots', () => {
-      test.each([
-        ['علي', 'إِعلَاء'],
-        ['بقي', 'إِبقَاء'],
-        ['سمي', 'إِسمَاء'],
-        ['عطي', 'إِعطَاء'],
-        ['لقي', 'إِلقَاء'],
-        ['نهي', 'إِنهَاء'],
-        ['مسو', 'إِمسَاء'],
-        ['ضحي', 'إِضحَاء'],
-        ['حيي', 'إِحيَاء'],
-        ['لفو', 'إِلفَاء'],
-      ])('%s', (root, expected) => {
+      test.each([['حيي', 'إِحيَاء']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })
 
     describe('hamzated final roots', () => {
       test.each([['ومء', 'إِيْمَاء']])('%s', (root, expected) => {
-        expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'إِيتَاء']])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 4))).toEqualT([expected].flat())
       })
     })

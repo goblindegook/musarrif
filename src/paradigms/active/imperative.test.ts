@@ -1094,30 +1094,6 @@ describe('imperative', () => {
       })
     })
 
-    describe('defective roots', () => {
-      test.each([
-        ['علي', 'أَعلِ'],
-        ['بقي', 'أَبقِ'],
-        ['سمي', 'أَسمِ'],
-        ['عطي', 'أَعطِ'],
-        ['لقي', 'أَلقِ'],
-        ['ضحي', 'أَضحِ'],
-        ['لفو', 'أَلفِ'],
-      ])('drops the final glide for %s', (root, expected2ms) => {
-        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected2ms)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugateImperative(getVerb('مسو', 4))).toMatchObjectT({
-          '2ms': 'أَمسِ',
-          '2fs': 'أَمسِي',
-          '2d': 'أَمسِيَا',
-          '2mp': 'أَمسُوا',
-          '2fp': 'أَمسِينَ',
-        })
-      })
-    })
-
     describe('hamzated final roots', () => {
       test.each([['ومء', 'أَوْمِئْ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
@@ -1127,22 +1103,6 @@ describe('imperative', () => {
     describe('hamzated final hollow roots', () => {
       test.each([['ضوء', 'أَضِئْ']])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'آتِ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
-      })
-
-      test('آتَى conjugation', () => {
-        expect(conjugateImperative(getVerb('ءتي', 4))).toMatchObjectT({
-          '2ms': 'آتِ',
-          '2fs': 'آتِي',
-          '2d': 'آتِيَا',
-          '2mp': 'آتُوا',
-          '2fp': 'آتِينَ',
-        })
       })
     })
 

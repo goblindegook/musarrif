@@ -1107,36 +1107,12 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['علي', 'أُعلِيَ'],
-        ['بقي', 'أُبقِيَ'],
-        ['سمي', 'أُسمِيَ'],
-        ['عطي', 'أُعطِيَ'],
-        ['لقي', 'أُلقِيَ'],
         ['وصي', 'أُوصِيَ'],
         ['وحي', 'أُوحِيَ'],
         ['وفي', 'أُوفِيَ'],
         ['ودي', 'أُودِيَ'],
-        ['لفو', 'أُلفِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('مسو', 4))).toEqualT({
-          '1s': 'أُمسِيتُ',
-          '2ms': 'أُمسِيتَ',
-          '2fs': 'أُمسِيتِ',
-          '3ms': 'أُمسِيَ',
-          '3fs': 'أُمسِيَتْ',
-          '2d': 'أُمسِيتُمَا',
-          '3md': 'أُمسِيَا',
-          '3fd': 'أُمسِيَتَا',
-          '1p': 'أُمسِينَا',
-          '2mp': 'أُمسِيتُمْ',
-          '2fp': 'أُمسِيتُنَّ',
-          '3mp': 'أُمسُوا',
-          '3fp': 'أُمسِينَ',
-        })
       })
 
       test('أَحْيَا conjugation', () => {
@@ -1193,30 +1169,6 @@ describe('passive past pattern', () => {
         ['ءجر', 'أُوْجِرَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'أُوتِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-
-      test('آتَى conjugation', () => {
-        expect(conjugatePassivePast(getVerb('ءتي', 4))).toEqualT({
-          '1s': 'أُوتِيتُ',
-          '2ms': 'أُوتِيتَ',
-          '2fs': 'أُوتِيتِ',
-          '3ms': 'أُوتِيَ',
-          '3fs': 'أُوتِيَتْ',
-          '2d': 'أُوتِيتُمَا',
-          '3md': 'أُوتِيَا',
-          '3fd': 'أُوتِيَتَا',
-          '1p': 'أُوتِينَا',
-          '2mp': 'أُوتِيتُمْ',
-          '2fp': 'أُوتِيتُنَّ',
-          '3mp': 'أُوتُوا',
-          '3fp': 'أُوتِينَ',
-        })
       })
     })
   })

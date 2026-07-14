@@ -112,10 +112,17 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 4: {
-          if (c1.isHamza)
-            return c3.isWeak
-              ? [measureMorpheme(HAMZA, ...longVowelA), radicalMorpheme(c2), ...stem.slice(1)]
-              : [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
+          if (c1.isHamza) {
+            if (c3.isWeak) {
+              const prefix = [measureMorpheme(HAMZA, ...longVowelA), radicalMorpheme(c2)]
+              if (pronounId === '2ms') return [...prefix, measureMorpheme(KASRA)]
+              if (pronounId === '2fs') return [...prefix, agreementMorpheme(KASRA, YEH)]
+              if (pronounId === '2d') return [...prefix, agreementMorpheme(KASRA, YEH, FATHA, ALIF)]
+              if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
+              return [...prefix, agreementMorpheme(KASRA, YEH, NOON, FATHA)]
+            }
+            return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
+          }
           if (c1.isWeak && c3.isWeak) {
             const prefix = [
               measureMorpheme(HAMZA, FATHA),

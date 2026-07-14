@@ -282,7 +282,13 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   if (c2.isHamza)
     return [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA, TEH_MARBUTA)]
 
-  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
+  if (c3.isWeak)
+    return [
+      ...prefix,
+      ...(c1.isWeak || c1.isHamza || c2.isWeak ? [] : [measureMorpheme(SUKOON)]),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA, ALIF, HAMZA),
+    ]
 
   if (c2.isWeak)
     return [
