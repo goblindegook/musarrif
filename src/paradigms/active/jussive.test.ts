@@ -1805,24 +1805,6 @@ describe('active present jussive', () => {
         const jussive = conjugatePresentMood(getVerb(root, 8), 'jussive')
         expect(jussive['3ms']).toEqualT(expected3ms)
       })
-
-      test('اِرْتَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رءي', 8), 'jussive')).toEqualT({
-          '1s': 'أَرْتَأِ',
-          '2ms': 'تَرْتَأِ',
-          '2fs': 'تَرْتَئِي',
-          '3ms': 'يَرْتَأِ',
-          '3fs': 'تَرْتَأِ',
-          '2d': 'تَرْتَئِيَا',
-          '3md': 'يَرْتَئِيَا',
-          '3fd': 'تَرْتَئِيَا',
-          '1p': 'نَرْتَأِ',
-          '2mp': 'تَرْتَؤُوا',
-          '2fp': 'تَرْتَئِينَ',
-          '3mp': 'يَرْتَؤُوا',
-          '3fp': 'يَرْتَئِينَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {

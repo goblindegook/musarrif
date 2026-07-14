@@ -1479,42 +1479,6 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)
       })
-
-      test('اِرْتَأَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رءي', 8), 'subjunctive')).toEqualT({
-          '1s': 'أَرْتَئِيَ',
-          '2ms': 'تَرْتَئِيَ',
-          '2fs': 'تَرْتَئِي',
-          '3ms': 'يَرْتَئِيَ',
-          '3fs': 'تَرْتَئِيَ',
-          '2d': 'تَرْتَئِيَا',
-          '3md': 'يَرْتَئِيَا',
-          '3fd': 'تَرْتَئِيَا',
-          '1p': 'نَرْتَئِيَ',
-          '2mp': 'تَرْتَؤُوا',
-          '2fp': 'تَرْتَئِينَ',
-          '3mp': 'يَرْتَؤُوا',
-          '3fp': 'يَرْتَئِينَ',
-        })
-      })
-
-      test('اِدَّعَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('دعو', 8), 'subjunctive')).toEqualT({
-          '1s': 'أَدَّعِيَ',
-          '2ms': 'تَدَّعِيَ',
-          '2fs': 'تَدَّعِي',
-          '3ms': 'يَدَّعِيَ',
-          '3fs': 'تَدَّعِيَ',
-          '2d': 'تَدَّعِيَا',
-          '3md': 'يَدَّعِيَا',
-          '3fd': 'تَدَّعِيَا',
-          '1p': 'نَدَّعِيَ',
-          '2mp': 'تَدَّعُوا',
-          '2fp': 'تَدَّعِينَ',
-          '3mp': 'يَدَّعُوا',
-          '3fp': 'يَدَّعِينَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {

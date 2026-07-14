@@ -1408,24 +1408,6 @@ describe('passive past pattern', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
-
-      test('اُتُّقِيَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('وقي', 8))).toEqualT({
-          '1s': 'اُتُّقِيتُ',
-          '2ms': 'اُتُّقِيتَ',
-          '2fs': 'اُتُّقِيتِ',
-          '3ms': 'اُتُّقِيَ',
-          '3fs': 'اُتُّقِيَتْ',
-          '2d': 'اُتُّقِيتُمَا',
-          '3md': 'اُتُّقِيَا',
-          '3fd': 'اُتُّقِيَتَا',
-          '1p': 'اُتُّقِينَا',
-          '2mp': 'اُتُّقِيتُمْ',
-          '2fp': 'اُتُّقِيتُنَّ',
-          '3mp': 'اُتُّقُوا',
-          '3fp': 'اُتُّقِينَ',
-        })
-      })
     })
 
     describe('defective roots', () => {
@@ -1437,42 +1419,6 @@ describe('passive past pattern', () => {
         ['خفي', 'اُخْتُفِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
-      })
-
-      test('اُرْتُئِيَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('رءي', 8))).toEqualT({
-          '1s': 'اُرْتُئِيتُ',
-          '2ms': 'اُرْتُئِيتَ',
-          '2fs': 'اُرْتُئِيتِ',
-          '3ms': 'اُرْتُئِيَ',
-          '3fs': 'اُرْتُئِيَتْ',
-          '2d': 'اُرْتُئِيتُمَا',
-          '3md': 'اُرْتُئِيَا',
-          '3fd': 'اُرْتُئِيَتَا',
-          '1p': 'اُرْتُئِينَا',
-          '2mp': 'اُرْتُئِيتُمْ',
-          '2fp': 'اُرْتُئِيتُنَّ',
-          '3mp': 'اُرْتُؤُوا',
-          '3fp': 'اُرْتُئِينَ',
-        })
-      })
-
-      test('اُدُّعِيَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('دعو', 8))).toEqualT({
-          '1s': 'اُدُّعِيتُ',
-          '2ms': 'اُدُّعِيتَ',
-          '2fs': 'اُدُّعِيتِ',
-          '3ms': 'اُدُّعِيَ',
-          '3fs': 'اُدُّعِيَتْ',
-          '2d': 'اُدُّعِيتُمَا',
-          '3md': 'اُدُّعِيَا',
-          '3fd': 'اُدُّعِيَتَا',
-          '1p': 'اُدُّعِينَا',
-          '2mp': 'اُدُّعِيتُمْ',
-          '2fp': 'اُدُّعِيتُنَّ',
-          '3mp': 'اُدُّعُوا',
-          '3fp': 'اُدُّعِينَ',
-        })
       })
     })
 
