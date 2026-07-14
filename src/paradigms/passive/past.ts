@@ -15,7 +15,6 @@ import {
   SHADDA,
   SUKOON,
   TEH,
-  type Token,
   WAW,
   YEH,
 } from '../tokens'
@@ -27,7 +26,6 @@ interface PassivePastParams {
   prefix: readonly Morpheme[]
   suffix?: readonly Morpheme[]
   suffix3sd?: readonly Morpheme[]
-  agreement3fp?: readonly Token[]
 }
 
 function deriveMasculinePluralSuffix(suffix3sd: readonly Morpheme[]): readonly Morpheme[] {
@@ -41,7 +39,7 @@ function hasAgreement(last?: Morpheme): boolean {
 }
 
 function toConjugation(params: PassivePastParams): Record<PronounId, Word> {
-  const { prefix, suffix = [], suffix3sd = [], agreement3fp } = params
+  const { prefix, suffix = [], suffix3sd = [] } = params
   const agreement = hasAgreement([...prefix, ...suffix].at(-1)) ? [SUKOON] : []
 
   return mapRecord(
@@ -58,7 +56,7 @@ function toConjugation(params: PassivePastParams): Record<PronounId, Word> {
       '2mp': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, SUKOON)],
       '2fp': [...prefix, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, NOON, SHADDA, FATHA)],
       '3mp': [...prefix, ...deriveMasculinePluralSuffix(suffix3sd), agreementMorpheme(WAW, ALIF)],
-      '3fp': [...prefix, ...suffix, agreementMorpheme(...(agreement3fp ?? agreement), NOON, FATHA)],
+      '3fp': [...prefix, ...suffix, agreementMorpheme(...agreement, NOON, FATHA)],
     },
     (morphemes) => new Word(morphemes),
   )
@@ -275,7 +273,6 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
     return {
       prefix: [measureMorpheme(ALIF, DAMMA, TEH, SHADDA, DAMMA), radicalMorpheme(c2)],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
-      agreement3fp: [SUKOON],
       suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
     }
 
@@ -295,7 +292,6 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
         radicalMorpheme(c2),
       ],
       suffix: [measureMorpheme(KASRA), radicalMorpheme(YEH)],
-      agreement3fp: [SUKOON],
       suffix3sd: [measureMorpheme(KASRA), radicalMorpheme(YEH), measureMorpheme(FATHA)],
     }
 
