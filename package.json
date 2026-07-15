@@ -39,7 +39,7 @@
     "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.3",
+    "@biomejs/biome": "^2.5.4",
     "@inquirer/prompts": "^8.5.2",
     "@preact/preset-vite": "^2.10.5",
     "@stryker-mutator/core": "^9.6.1",
