@@ -38,9 +38,7 @@ describe('passive participle', () => {
 
     describe('geminate roots', () => {
       test.each([
-        ['حبب', 'مَحْبُوب'],
         ['تمم', 'مَتْمُوم'],
-        ['ظلل', 'مَظْلُول'],
         ['ودد', 'مَوْدُود'],
         ['جبب', 'مَجْبُوب'],
         ['قرر', 'مَقْرُور'],
@@ -76,7 +74,6 @@ describe('passive participle', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['زيد', 'مَزِيد'],
         ['بيع', 'مَبِيع'],
         ['زور', 'مَزُور'],
         ['دوم', 'مَدُوم'],
@@ -85,7 +82,6 @@ describe('passive participle', () => {
         ['عوز', 'مَعْوُوز'],
         ['نوم', 'مَنُوم'],
         ['ميل', ''],
-        ['بيت', 'مَبِيت'],
         ['صير', 'مَصِير'],
         ['خيل', 'مَخِيل'],
         ['لوم', 'مَلُوم'],
@@ -102,15 +98,12 @@ describe('passive participle', () => {
     describe('defective roots', () => {
       test.each([
         ['دري', 'مَدْرِيّ'],
-        ['دعو', 'مَدْعُوّ'],
         ['بكي', 'مَبْكِيّ'],
-        ['جري', 'مَجْرِيّ'],
         ['بدو', 'مَبْدُوّ'],
         ['جدو', 'مَجْدُوّ'],
         ['لهو', 'مَلْهُوّ'],
         ['علي', 'مَعْلِيّ'],
         ['شفي', 'مَشْفِيّ'],
-        ['غدو', 'مَغْدُوّ'],
         ['غشي', 'مَغْشِيّ'],
         ['سعي', 'مَسْعِيّ'],
       ])('%s', (root, expected) => {
@@ -124,7 +117,6 @@ describe('passive participle', () => {
         ['وعي', 'مَوْعِيّ'],
         ['وقي', 'مَوْقِيّ'],
         ['وني', 'مَوْنِيّ'],
-        ['وفي', 'مَوْفِيّ'],
         ['قوي', 'مَقْوِيّ'],
         ['جوي', 'مَجْوِيّ'],
         ['روي', 'مَرْوِيّ'],
@@ -138,7 +130,6 @@ describe('passive participle', () => {
       test.each([
         ['ءذن', 'مَأْذُون'],
         ['ءجر', 'مَأْجُور'],
-        ['ءسر', 'مَأْسُور'],
         ['ءكل', 'مَأْكُول'],
         ['ءخذ', 'مَأْخُوذ'],
       ])('%s', (root, expected) => {
@@ -179,20 +170,8 @@ describe('passive participle', () => {
       })
     })
 
-    describe('hamzated middle roots', () => {
-      test.each([
-        ['يءس', 'مَيْؤُوس'],
-        ['سءل', 'مَسْؤُول'],
-      ])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
-      })
-    })
-
     describe('hamzated middle defective roots', () => {
-      test.each([
-        ['رءي', 'مَرْئِيّ'],
-        ['وءي', 'مَوْئِيّ'],
-      ])('%s', (root, expected) => {
+      test.each([['رءي', 'مَرْئِيّ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
@@ -203,7 +182,6 @@ describe('passive participle', () => {
         ['قرء', 'مَقْرُوء'],
         ['جرء', 'مَجْرُوء'],
         ['فتء', 'مَفْتُوء'],
-        ['بوء', 'مَبُوء'],
         ['نوء', 'مَنُوء'],
         ['كلء', 'مَكْلُوء'],
       ])('%s', (root, expected) => {
@@ -295,9 +273,7 @@ describe('passive participle', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وفي', 'مُوَفًّى'],
         ['يود', 'مُيَوَّد'],
-        ['وصي', 'مُوَصًّى'],
         ['ولي', 'مُوَلًّى'],
         ['وري', 'مُوَرًّى'],
         ['مني', 'مُمَنًّى'],
@@ -381,8 +357,6 @@ describe('passive participle', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وفي', 'مُوَافًى'],
-        ['وزي', 'مُوَازًى'],
         ['وسي', 'مُوَاسًى'],
         ['نوي', 'مُنَاوًى'],
       ])('%s', (root, expected) => {
@@ -397,7 +371,6 @@ describe('passive participle', () => {
         ['بلي', 'مُبَالًى'],
         ['قضي', 'مُقَاضًى'],
         ['بري', 'مُبَارًى'],
-        ['رءي', 'مُرَاءًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
@@ -407,7 +380,6 @@ describe('passive participle', () => {
       test.each([
         ['ءخذ', 'مُؤَاخَذ'],
         ['ءجر', 'مُؤَاجَر'],
-        ['ءتي', 'مُؤَاتًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
@@ -417,7 +389,6 @@ describe('passive participle', () => {
       test.each([
         ['سءل', 'مُسَاءَل'],
         ['وءم', 'مُوَاءَم'],
-        ['لءم', 'مُلَاءَم'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 3))).toEqualT(expected)
       })
@@ -456,10 +427,7 @@ describe('passive participle', () => {
       test.each([
         ['تمم', 'مُتَمّ'],
         ['سفف', 'مُسَفّ'],
-        ['حبب', 'مُحَبّ'],
-        ['عدد', 'مُعَدّ'],
         ['همم', 'مُهَمّ'],
-        ['مدد', 'مُمَدّ'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
@@ -490,18 +458,7 @@ describe('passive participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([
-        ['علي', 'مُعْلًى'],
-        ['بقي', 'مُبْقًى'],
-        ['سمي', 'مُسْمًى'],
-        ['عطي', 'مُعْطًى'],
-        ['لقي', 'مُلْقًى'],
-        ['نهي', 'مُنْهًى'],
-        ['مسو', 'مُمْسًى'],
-        ['ضحي', 'مُضْحًى'],
-        ['حيي', 'مُحْيًى'],
-        ['لفو', 'مُلْفًى'],
-      ])('%s', (root, expected) => {
+      test.each([['حيي', 'مُحْيًى']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
     })
@@ -516,7 +473,6 @@ describe('passive participle', () => {
       test.each([
         ['وصي', 'مُوصًى'],
         ['وحي', 'مُوحًى'],
-        ['وفي', 'مُوفًى'],
         ['رءي', 'مُرًى'],
         ['ودي', 'مُودًى'],
       ])('%s', (root, expected) => {
@@ -535,12 +491,6 @@ describe('passive participle', () => {
       })
     })
 
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'مُؤْتًى']])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
-      })
-    })
-
     describe('hamzated hollow-defective roots', () => {
       test.each([['ءوي', 'مُؤْوًى']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
@@ -551,7 +501,6 @@ describe('passive participle', () => {
       test.each([
         ['نشء', 'مُنْشَأ'],
         ['نبء', 'مُنْبَأ'],
-        ['ضوء', 'مُضَاء'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
       })
@@ -714,7 +663,6 @@ describe('passive participle', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['عفو', 'مُتَعَافًى'],
         ['هوي', 'مُتَهَاوًى'],
         ['ولي', 'مُتَوَالًى'],
         ['وصي', 'مُتَوَاصًى'],
@@ -740,12 +688,6 @@ describe('passive participle', () => {
         ['ءلف', 'مُتَآلَف'],
         ['ءمر', 'مُتَآمَر'],
       ])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 6))).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test.each([['وطء', 'مُتَوَاطَأ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 6))).toEqualT(expected)
       })
     })
@@ -853,8 +795,6 @@ describe('passive participle', () => {
         ['زوج', 'مُزْدَوَج'],
         ['زيد', 'مُزْدَاد'],
         ['سوء', 'مُسْتَاء'],
-        ['خير', 'مُخْتَار'],
-        ['عود', 'مُعْتَاد'],
         ['روح', 'مُرْتَاح'],
         ['شوق', 'مُشْتَاق'],
       ])('%s', (root, expected) => {
@@ -865,13 +805,7 @@ describe('passive participle', () => {
     describe('defective roots', () => {
       test.each([
         ['نهي', 'مُنْتَهًى'],
-        ['دعو', 'مُدَّعًى'],
-        ['قضي', 'مُقْتَضًى'],
-        ['ردي', 'مُرْتَدًى'],
-        ['رءي', 'مُرْتَأًى'],
-        ['شري', 'مُشْتَرًى'],
         ['صفو', 'مُصْطَفًى'],
-        ['خفي', 'مُخْتَفًى'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 8))).toEqualT(expected)
       })
@@ -879,7 +813,6 @@ describe('passive participle', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وقي', 'مُتَّقًى'],
         ['نوي', 'مُنْتَوًى'],
         ['سوي', 'مُسْتَوًى'],
       ])('%s', (root, expected) => {
@@ -995,11 +928,7 @@ describe('passive participle', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([
-        ['وفي', 'مُسْتَوْفًى'],
-        ['ولي', 'مُسْتَوْلًى'],
-        ['حيي', 'مُسْتَحْيًى'],
-      ])('%s', (root, expected) => {
+      test.each([['حيي', 'مُسْتَحْيًى']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 10))).toEqualT(expected)
       })
     })

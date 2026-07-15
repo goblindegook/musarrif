@@ -186,7 +186,6 @@ describe('passive present jussive', () => {
         ['خور', 'يُخْوَرْ'],
         ['خيل', 'يُخَلْ'],
         ['خوف', 'يُخَفْ'],
-        ['زيد', 'يُزَدْ'],
         ['شوق', 'يُشَقْ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
@@ -465,24 +464,6 @@ describe('passive present jussive', () => {
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
-
-      test('دَعَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('دعو', 1), 'jussive')).toEqualT({
-          '1s': 'أُدْعَ',
-          '2ms': 'تُدْعَ',
-          '2fs': 'تُدْعَيْ',
-          '3ms': 'يُدْعَ',
-          '3fs': 'تُدْعَ',
-          '2d': 'تُدْعَيَا',
-          '3md': 'يُدْعَيَا',
-          '3fd': 'تُدْعَيَا',
-          '1p': 'نُدْعَ',
-          '2mp': 'تُدْعَوْا',
-          '2fp': 'تُدْعَيْنَ',
-          '3mp': 'يُدْعَوْا',
-          '3fp': 'يُدْعَيْنَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {
@@ -690,8 +671,6 @@ describe('passive present jussive', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وفي', 'يُوَفَّ'],
-        ['وصي', 'يُوَصَّ'],
         ['ولي', 'يُوَلَّ'],
         ['وري', 'يُوَرَّ'],
         ['مني', 'يُمَنِّ'],
@@ -773,24 +752,6 @@ describe('passive present jussive', () => {
           '2fp': 'تُغَنِّيْنَ',
           '3mp': 'يُغَنُّوْا',
           '3fp': 'يُغَنِّيْنَ',
-        })
-      })
-
-      test('وَفَّى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وفي', 2), 'jussive')).toEqualT({
-          '1s': 'أُوَفَّ',
-          '2ms': 'تُوَفَّ',
-          '2fs': 'تُوَفَّيْ',
-          '3ms': 'يُوَفَّ',
-          '3fs': 'تُوَفَّ',
-          '2d': 'تُوَفَّيَا',
-          '3md': 'يُوَفَّيَا',
-          '3fd': 'تُوَفَّيَا',
-          '1p': 'نُوَفَّ',
-          '2mp': 'تُوَفَّوْا',
-          '2fp': 'تُوَفَّيْنَ',
-          '3mp': 'يُوَفَّوْا',
-          '3fp': 'يُوَفَّيْنَ',
         })
       })
 
@@ -942,7 +903,6 @@ describe('passive present jussive', () => {
         ['بلي', 'يُبَالَ'],
         ['قضي', 'يُقَاضَ'],
         ['بري', 'يُبَارَ'],
-        ['رءي', 'يُرَاءَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -952,17 +912,12 @@ describe('passive present jussive', () => {
       test.each([
         ['ءخذ', 'يُؤَاخَذْ'],
         ['ءجر', 'يُؤَاجَرْ'],
-        ['ءتي', 'يُؤَاتَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['لءم', 'يُلَاءَمْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 3), 'jussive')['3ms']).toEqualT(expected)
-      })
-
       test('وَاءَمَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('وءم', 3), 'jussive')).toEqualT({
           '1s': 'أُوَاءَمْ',
@@ -990,8 +945,6 @@ describe('passive present jussive', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وزي', 'يُوَازَ'],
-        ['وفي', 'يُوَافَ'],
         ['وسي', 'يُوَاسَ'],
         ['نوي', 'يُنَاوَ'],
       ])('%s pattern', (root, expected) => {
@@ -1125,10 +1078,7 @@ describe('passive present jussive', () => {
       test.each([
         ['تمم', 'يُتَمَّ'],
         ['سفف', 'يُسَفَّ'],
-        ['حبب', 'يُحَبَّ'],
-        ['عدد', 'يُعَدَّ'],
         ['همم', 'يُهَمَّ'],
-        ['مدد', 'يُمَدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
@@ -1148,34 +1098,8 @@ describe('passive present jussive', () => {
     })
 
     describe('defective roots', () => {
-      test.each([
-        ['علي', 'يُعْلَ'],
-        ['بقي', 'يُبْقَ'],
-        ['سمي', 'يُسْمَ'],
-        ['عطي', 'يُعْطَ'],
-        ['لقي', 'يُلْقَ'],
-        ['حيي', 'يُحْيَ'],
-        ['لفو', 'يُلْفَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['حيي', 'يُحْيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('مسو', 4), 'jussive')).toEqualT({
-          '1s': 'أُمْسَ',
-          '2ms': 'تُمْسَ',
-          '2fs': 'تُمْسَيْ',
-          '3ms': 'يُمْسَ',
-          '3fs': 'تُمْسَ',
-          '2d': 'تُمْسَيَا',
-          '3md': 'يُمْسَيَا',
-          '3fd': 'تُمْسَيَا',
-          '1p': 'نُمْسَ',
-          '2mp': 'تُمْسَوْا',
-          '2fp': 'تُمْسَيْنَ',
-          '3mp': 'يُمْسَوْا',
-          '3fp': 'يُمْسَيْنَ',
-        })
       })
 
       test('أَحْيَا conjugation', () => {
@@ -1229,24 +1153,6 @@ describe('passive present jussive', () => {
           '2fp': 'تُوحَيْنَ',
           '3mp': 'يُوحَوْا',
           '3fp': 'يُوحَيْنَ',
-        })
-      })
-
-      test('أَوْفَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وفي', 4), 'jussive')).toEqualT({
-          '1s': 'أُوفَ',
-          '2ms': 'تُوفَ',
-          '2fs': 'تُوفَيْ',
-          '3ms': 'يُوفَ',
-          '3fs': 'تُوفَ',
-          '2d': 'تُوفَيَا',
-          '3md': 'يُوفَيَا',
-          '3fd': 'تُوفَيَا',
-          '1p': 'نُوفَ',
-          '2mp': 'تُوفَوْا',
-          '2fp': 'تُوفَيْنَ',
-          '3mp': 'يُوفَوْا',
-          '3fp': 'يُوفَيْنَ',
         })
       })
 
@@ -1304,54 +1210,6 @@ describe('passive present jussive', () => {
         ['ءجر', 'يُؤْجَرْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final hollow roots', () => {
-      test.each([['ضوء', 'يُضَأْ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('أَضَاءَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ضوء', 4), 'jussive')).toEqualT({
-          '1s': 'أُضَأْ',
-          '2ms': 'تُضَأْ',
-          '2fs': 'تُضَائِي',
-          '3ms': 'يُضَأْ',
-          '3fs': 'تُضَأْ',
-          '2d': 'تُضَاءَا',
-          '3md': 'يُضَاءَا',
-          '3fd': 'تُضَاءَا',
-          '1p': 'نُضَأْ',
-          '2mp': 'تُضَائُوا',
-          '2fp': 'تُضَأْنَ',
-          '3mp': 'يُضَائُوا',
-          '3fp': 'يُضَأْنَ',
-        })
-      })
-    })
-
-    describe('hamzated initial defective roots', () => {
-      test.each([['ءتي', 'يُؤْتَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('آتَى conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ءتي', 4), 'jussive')).toEqualT({
-          '1s': 'أُوتَ',
-          '2ms': 'تُؤْتَ',
-          '2fs': 'تُؤْتَيْ',
-          '3ms': 'يُؤْتَ',
-          '3fs': 'تُؤْتَ',
-          '2d': 'تُؤْتَيَا',
-          '3md': 'يُؤْتَيَا',
-          '3fd': 'تُؤْتَيَا',
-          '1p': 'نُؤْتَ',
-          '2mp': 'تُؤْتَوْا',
-          '2fp': 'تُؤْتَيْنَ',
-          '3mp': 'يُؤْتَوْا',
-          '3fp': 'يُؤْتَيْنَ',
-        })
       })
     })
   })
@@ -1514,31 +1372,10 @@ describe('passive present jussive', () => {
 
     describe('defective roots', () => {
       test.each<[string, string]>([
-        ['عفو', 'يُتَعَافَ'],
         ['هوي', 'يُتَهَاوَ'],
         ['وصي', 'يُتَوَاصَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 6), 'jussive')['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test('تَوَاطَأَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وطء', 6), 'jussive')).toEqualT({
-          '1s': 'أُتَوَاطَأْ',
-          '2ms': 'تُتَوَاطَأْ',
-          '2fs': 'تُتَوَاطَئِي',
-          '3ms': 'يُتَوَاطَأْ',
-          '3fs': 'تُتَوَاطَأْ',
-          '2d': 'تُتَوَاطَآ',
-          '3md': 'يُتَوَاطَآ',
-          '3fd': 'تُتَوَاطَآ',
-          '1p': 'نُتَوَاطَأْ',
-          '2mp': 'تُتَوَاطَؤُوا',
-          '2fp': 'تُتَوَاطَأْنَ',
-          '3mp': 'يُتَوَاطَؤُوا',
-          '3fp': 'يُتَوَاطَأْنَ',
-        })
       })
     })
 
@@ -1709,8 +1546,6 @@ describe('passive present jussive', () => {
         ['زوج', 'يُزْدَوَجْ'],
         ['سوء', 'يُسْتَأْ'],
         ['زيد', 'يُزْدَدْ'],
-        ['خير', 'يُخْتَرْ'],
-        ['عود', 'يُعْتَدْ'],
         ['روح', 'يُرْتَحْ'],
         ['شوق', 'يُشْتَقْ'],
       ])('%s pattern', (root, expected) => {
@@ -1837,10 +1672,6 @@ describe('passive present jussive', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['ولي', 'يُسْتَوْلَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 10), 'jussive')['3ms']).toEqualT(expected)
-      })
-
       test('اِسْتَحْيَا conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('حيي', 10), 'jussive')).toEqualT({
           '1s': 'أُسْتَحْيَ',

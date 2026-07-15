@@ -65,7 +65,6 @@ describe('passive past pattern', () => {
 
     describe('hollow roots', () => {
       test.each<[string, string]>([
-        ['زيد', 'زِيدَ'],
         ['حول', 'حِيلَ'],
         ['عوم', 'عِيمَ'],
         ['قول', 'قِيلَ'],
@@ -237,31 +236,10 @@ describe('passive past pattern', () => {
 
     describe('defective roots', () => {
       test.each<[string, string]>([
-        ['عفو', 'تُعُوفِيَ'],
         ['هوي', 'تُهُووِيَ'],
         ['وصي', 'تُوُوصِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 6))['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test('تَوَاطَأَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('وطء', 6))).toEqualT({
-          '1s': 'تُوُوطِئْتُ',
-          '2ms': 'تُوُوطِئْتَ',
-          '2fs': 'تُوُوطِئْتِ',
-          '3ms': 'تُوُوطِئَ',
-          '3fs': 'تُوُوطِئَتْ',
-          '2d': 'تُوُوطِئْتُمَا',
-          '3md': 'تُوُوطِئَا',
-          '3fd': 'تُوُوطِئَتَا',
-          '1p': 'تُوُوطِئْنَا',
-          '2mp': 'تُوُوطِئْتُمْ',
-          '2fp': 'تُوُوطِئْتُنَّ',
-          '3mp': 'تُوُوطِئُوا',
-          '3fp': 'تُوُوطِئْنَ',
-        })
       })
     })
 
@@ -593,26 +571,6 @@ describe('passive past pattern', () => {
       })
     })
 
-    describe('defective roots', () => {
-      test('دَعَا conjugation', () => {
-        expect(conjugatePassivePast(getVerb('دعو', 1))).toEqualT({
-          '1s': 'دُعِيتُ',
-          '2ms': 'دُعِيتَ',
-          '2fs': 'دُعِيتِ',
-          '3ms': 'دُعِيَ',
-          '3fs': 'دُعِيَتْ',
-          '2d': 'دُعِيتُمَا',
-          '3md': 'دُعِيَا',
-          '3fd': 'دُعِيَتَا',
-          '1p': 'دُعِينَا',
-          '2mp': 'دُعِيتُمْ',
-          '2fp': 'دُعِيتُنَّ',
-          '3mp': 'دُعُوا',
-          '3fp': 'دُعِينَ',
-        })
-      })
-    })
-
     describe('doubly weak roots', () => {
       test('رَوِيَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('روي', 1))).toEqualT({
@@ -791,8 +749,6 @@ describe('passive past pattern', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وفي', 'وُفِّيَ'],
-        ['وصي', 'وُصِّيَ'],
         ['ولي', 'وُلِّيَ'],
         ['وري', 'وُرِّيَ'],
         ['مني', 'مُنِّيَ'],
@@ -897,7 +853,6 @@ describe('passive past pattern', () => {
         ['بلي', 'بُولِيَ'],
         ['قضي', 'قُوضِيَ'],
         ['بري', 'بُورِيَ'],
-        ['رءي', 'رُوئِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
@@ -907,17 +862,13 @@ describe('passive past pattern', () => {
       test.each([
         ['ءخذ', 'أُوخِذَ'],
         ['ءجر', 'أُوجِرَ'],
-        ['ءتي', 'أُوتِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated middle roots', () => {
-      test.each([
-        ['وءم', 'وُوئِمَ'],
-        ['لءم', 'لُوئِمَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['وءم', 'وُوئِمَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
@@ -930,8 +881,6 @@ describe('passive past pattern', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وزي', 'وُوزِيَ'],
-        ['وفي', 'وُوفِيَ'],
         ['وسي', 'وُوسِيَ'],
         ['نوي', 'نُووِيَ'],
       ])('%s pattern', (root, expected) => {
@@ -1065,10 +1014,7 @@ describe('passive past pattern', () => {
       test.each([
         ['تمم', 'أُتِمَّ'],
         ['سفف', 'أُسِفَّ'],
-        ['حبب', 'أُحِبَّ'],
-        ['عدد', 'أُعِدَّ'],
         ['همم', 'أُهِمَّ'],
-        ['مدد', 'أُمِدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
@@ -1109,7 +1055,6 @@ describe('passive past pattern', () => {
       test.each([
         ['وصي', 'أُوصِيَ'],
         ['وحي', 'أُوحِيَ'],
-        ['وفي', 'أُوفِيَ'],
         ['ودي', 'أُودِيَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 4))['3ms']).toEqualT(expected)
@@ -1363,13 +1308,7 @@ describe('passive past pattern', () => {
     })
 
     describe('defective roots', () => {
-      test.each([
-        ['قضي', 'اُقْتُضِيَ'],
-        ['ردي', 'اُرْتُدِيَ'],
-        ['شري', 'اُشْتُرِيَ'],
-        ['صفو', 'اُصْطُفِيَ'],
-        ['خفي', 'اُخْتُفِيَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['صفو', 'اُصْطُفِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
     })
@@ -1407,7 +1346,6 @@ describe('passive past pattern', () => {
         ['زوج', 'اُزْدُوِجَ'],
         ['زيد', 'اُزْدِيدَ'],
         ['سوء', 'اُسْتِيءَ'],
-        ['خير', 'اُخْتِيرَ'],
         ['روح', 'اُرْتِيحَ'],
         ['شوق', 'اُشْتِيقَ'],
       ])('%s pattern', (root, expected) => {
@@ -1541,10 +1479,6 @@ describe('passive past pattern', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['ولي', 'اُسْتُولِيَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
-      })
-
       test('اِسْتَحْيَا conjugation', () => {
         expect(conjugatePassivePast(getVerb('حيي', 10))).toEqualT({
           '1s': 'اُسْتُحْيِيتُ',

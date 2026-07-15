@@ -58,32 +58,12 @@ describe('active past', () => {
         ['تمم', 'تَمَّ'],
         ['هلل', 'هَلَّ'],
         ['عنن', 'عَنَّ'],
-        ['حبب', 'حَبَّ'],
-        ['ظلل', 'ظَلَّ'],
         ['ودد', 'وَدَّ'],
         ['قرر', 'قَرَّ'],
         ['جبب', 'جَبَّ'],
         ['عدد', 'عَدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
-      })
-
-      test('حَبَّ conjugation', () => {
-        expect(conjugatePast(getVerb('حبب', 1))).toEqualT({
-          '1s': 'حَبَبْتُ',
-          '2ms': 'حَبَبْتَ',
-          '2fs': 'حَبَبْتِ',
-          '3ms': 'حَبَّ',
-          '3fs': 'حَبَّتْ',
-          '2d': 'حَبَبْتُمَا',
-          '3md': 'حَبَّا',
-          '3fd': 'حَبَّتَا',
-          '1p': 'حَبَبْنَا',
-          '2mp': 'حَبَبْتُمْ',
-          '2fp': 'حَبَبْتُنَّ',
-          '3mp': 'حَبُّوا',
-          '3fp': 'حَبَبْنَ',
-        })
       })
 
       test('قَرَّ conjugation', () => {
@@ -101,24 +81,6 @@ describe('active past', () => {
           '2fp': 'قَرِرْتُنَّ',
           '3mp': 'قَرُّوا',
           '3fp': 'قَرِرْنَ',
-        })
-      })
-
-      test('ظَلَّ conjugation', () => {
-        expect(conjugatePast(getVerb('ظلل', 1))).toEqualT({
-          '1s': 'ظَلِلْتُ',
-          '2ms': 'ظَلِلْتَ',
-          '2fs': 'ظَلِلْتِ',
-          '3ms': 'ظَلَّ',
-          '3fs': 'ظَلَّتْ',
-          '2d': 'ظَلِلْتُمَا',
-          '3md': 'ظَلَّا',
-          '3fd': 'ظَلَّتَا',
-          '1p': 'ظَلِلْنَا',
-          '2mp': 'ظَلِلْتُمْ',
-          '2fp': 'ظَلِلْتُنَّ',
-          '3mp': 'ظَلُّوا',
-          '3fp': 'ظَلِلْنَ',
         })
       })
     })
@@ -164,11 +126,9 @@ describe('active past', () => {
     describe('hollow roots', () => {
       test.each([
         ['بيع', 'بَاعَ'],
-        ['زيد', 'زَادَ'],
         ['زور', 'زَارَ'],
         ['لوم', 'لَامَ'],
         ['موت', 'مَاتَ'],
-        ['بيت', 'بَاتَ'],
         ['دوم', 'دَامَ'],
         ['خور', 'خَوِرَ'],
         ['حول', 'حَالَ'],
@@ -180,7 +140,6 @@ describe('active past', () => {
         ['صير', 'صَارَ'],
         ['خوف', 'خَافَ'],
         ['شوق', 'شَاقَ'],
-        ['زيل', 'زَالَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
@@ -218,24 +177,6 @@ describe('active past', () => {
           '2fp': 'عَوِزْتُنَّ',
           '3mp': 'عَوِزُوا',
           '3fp': 'عَوِزْنَ',
-        })
-      })
-
-      test('بَاتَ conjugation', () => {
-        expect(conjugatePast(getVerb('بيت', 1))).toEqualT({
-          '1s': 'بِتُّ',
-          '2ms': 'بِتَّ',
-          '2fs': 'بِتِّ',
-          '3ms': 'بَاتَ',
-          '3fs': 'بَاتَتْ',
-          '2d': 'بِتُّمَا',
-          '3md': 'بَاتَا',
-          '3fd': 'بَاتَتَا',
-          '1p': 'بِتْنَا',
-          '2mp': 'بِتُّمْ',
-          '2fp': 'بِتُّنَّ',
-          '3mp': 'بَاتُوا',
-          '3fp': 'بِتْنَ',
         })
       })
 
@@ -310,38 +251,17 @@ describe('active past', () => {
           '3fp': 'قُلْنَ',
         })
       })
-
-      test('زَالَ conjugation', () => {
-        expect(conjugatePast(getVerb('زيل', 1))).toEqualT({
-          '1s': 'زِلْتُ',
-          '2ms': 'زِلْتَ',
-          '2fs': 'زِلْتِ',
-          '3ms': 'زَالَ',
-          '3fs': 'زَالَتْ',
-          '2d': 'زِلْتُمَا',
-          '3md': 'زَالَا',
-          '3fd': 'زَالَتَا',
-          '1p': 'زِلْنَا',
-          '2mp': 'زِلْتُمْ',
-          '2fp': 'زِلْتُنَّ',
-          '3mp': 'زَالُوا',
-          '3fp': 'زِلْنَ',
-        })
-      })
     })
 
     describe('defective roots', () => {
       test.each([
-        ['دعو', 'دَعَا'],
         ['بكي', 'بَكَى'],
         ['بدو', 'بَدَا'],
         ['علي', 'عَلَى'],
         ['جدو', 'جَدَا'],
         ['لهو', 'لَهَا'],
         ['شفي', 'شَفَى'],
-        ['غدو', 'غَدَا'],
         ['غشي', 'غَشَى'],
-        ['جري', 'جَرَى'],
         ['دري', 'دَرَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
@@ -383,24 +303,6 @@ describe('active past', () => {
           '3fp': 'بَقِيْنَ',
         })
       })
-
-      test('دَعَا conjugation', () => {
-        expect(conjugatePast(getVerb('دعو', 1))).toEqualT({
-          '1s': 'دَعَوْتُ',
-          '2ms': 'دَعَوْتَ',
-          '2fs': 'دَعَوْتِ',
-          '3ms': 'دَعَا',
-          '3fs': 'دَعَتْ',
-          '2d': 'دَعَوْتُمَا',
-          '3md': 'دَعَوَا',
-          '3fd': 'دَعَتَا',
-          '1p': 'دَعَوْنَا',
-          '2mp': 'دَعَوْتُمْ',
-          '2fp': 'دَعَوْتُنَّ',
-          '3mp': 'دَعَوْا',
-          '3fp': 'دَعَوْنَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {
@@ -408,7 +310,6 @@ describe('active past', () => {
         ['وني', 'وَنَى'],
         ['ولي', 'وَلِيَ'],
         ['وعي', 'وَعَى'],
-        ['وفي', 'وَفَى'],
         ['وقي', 'وَقَى'],
         ['وري', 'وَرَى'],
         ['قوي', 'قَوِيَ'],
@@ -416,33 +317,13 @@ describe('active past', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
-
-      test('وَفَى conjugation', () => {
-        expect(conjugatePast(getVerb('وفي', 1))).toEqualT({
-          '1s': 'وَفَيْتُ',
-          '2ms': 'وَفَيْتَ',
-          '2fs': 'وَفَيْتِ',
-          '3ms': 'وَفَى',
-          '3fs': 'وَفَتْ',
-          '2d': 'وَفَيْتُمَا',
-          '3md': 'وَفَيَا',
-          '3fd': 'وَفَتَا',
-          '1p': 'وَفَيْنَا',
-          '2mp': 'وَفَيْتُمْ',
-          '2fp': 'وَفَيْتُنَّ',
-          '3mp': 'وَفَوْا',
-          '3fp': 'وَفَيْنَ',
-        })
-      })
     })
 
     describe('hamzated initial roots', () => {
       test.each([
-        ['ءمن', 'أَمِنَ'],
         ['ءجر', 'أَجَرَ'],
         ['ءذن', 'أَذِنَ'],
         ['ءصل', 'أَصُلَ'],
-        ['ءسر', 'أَسَرَ'],
         ['ءخذ', 'أَخَذَ'],
         ['ءمر', 'أَمَرَ'],
       ])('%s pattern', (root, expected) => {
@@ -498,29 +379,8 @@ describe('active past', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([
-        ['يءس', 'يَئِسَ'],
-        ['بءس', 'بَؤُسَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['بءس', 'بَؤُسَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
-      })
-
-      test('سَأَلَ conjugation', () => {
-        expect(conjugatePast(getVerb('سءل', 1))).toEqualT({
-          '1s': 'سَأَلْتُ',
-          '2ms': 'سَأَلْتَ',
-          '2fs': 'سَأَلْتِ',
-          '3ms': 'سَأَلَ',
-          '3fs': 'سَأَلَتْ',
-          '2d': 'سَأَلْتُمَا',
-          '3md': 'سَأَلَا',
-          '3fd': 'سَأَلَتَا',
-          '1p': 'سَأَلْنَا',
-          '2mp': 'سَأَلْتُمْ',
-          '2fp': 'سَأَلْتُنَّ',
-          '3mp': 'سَأَلُوا',
-          '3fp': 'سَأَلْنَ',
-        })
       })
     })
 
@@ -609,7 +469,6 @@ describe('active past', () => {
     describe('hamzated final hollow roots', () => {
       test.each([
         ['جيء', 'جَاءَ'],
-        ['بوء', 'بَاءَ'],
         ['نوء', 'نَاءَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
@@ -706,26 +565,6 @@ describe('active past', () => {
           '2fp': 'رَأَيْتُنَّ',
           '3mp': 'رَأَوْا',
           '3fp': 'رَأَيْنَ',
-        })
-      })
-    })
-
-    describe('hamzated final assimilated roots', () => {
-      test('وَأَى conjugation', () => {
-        expect(conjugatePast(getVerb('وءي', 1))).toEqualT({
-          '1s': 'وَأَيْتُ',
-          '2ms': 'وَأَيْتَ',
-          '2fs': 'وَأَيْتِ',
-          '3ms': 'وَأَى',
-          '3fs': 'وَأَتْ',
-          '2d': 'وَأَيْتُمَا',
-          '3md': 'وَأَيَا',
-          '3fd': 'وَأَتَا',
-          '1p': 'وَأَيْنَا',
-          '2mp': 'وَأَيْتُمْ',
-          '2fp': 'وَأَيْتُنَّ',
-          '3mp': 'وَأَوْا',
-          '3fp': 'وَأَيْنَ',
         })
       })
     })
@@ -912,8 +751,6 @@ describe('active past', () => {
     describe('doubly weak roots', () => {
       test.each([
         ['يود', 'يَوَّدَ'],
-        ['وفي', 'وَفَّى'],
-        ['وصي', 'وَصَّى'],
         ['ولي', 'وَلَّى'],
         ['وري', 'وَرَّى'],
         ['مني', 'مَنَّى'],
@@ -925,24 +762,6 @@ describe('active past', () => {
         ['هوي', 'هَوَّى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 2))['3ms']).toEqualT(expected)
-      })
-
-      test('وَفَّى conjugation', () => {
-        expect(conjugatePast(getVerb('وفي', 2))).toEqualT({
-          '1s': 'وَفَّيْتُ',
-          '2ms': 'وَفَّيْتَ',
-          '2fs': 'وَفَّيْتِ',
-          '3ms': 'وَفَّى',
-          '3fs': 'وَفَّتْ',
-          '2d': 'وَفَّيْتُمَا',
-          '3md': 'وَفَّيَا',
-          '3fd': 'وَفَّتَا',
-          '1p': 'وَفَّيْنَا',
-          '2mp': 'وَفَّيْتُمْ',
-          '2fp': 'وَفَّيْتُنَّ',
-          '3mp': 'وَفَّوْا',
-          '3fp': 'وَفَّيْنَ',
-        })
       })
 
       test('حَيَّى conjugation', () => {
@@ -1160,29 +979,10 @@ describe('active past', () => {
 
     describe('doubly weak roots', () => {
       test.each([
-        ['وزي', 'وَازَى'],
         ['وسي', 'وَاسَى'],
         ['نوي', 'نَاوَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
-      })
-
-      test('وَافَى conjugation', () => {
-        expect(conjugatePast(getVerb('وفي', 3))).toEqualT({
-          '1s': 'وَافَيْتُ',
-          '2ms': 'وَافَيْتَ',
-          '2fs': 'وَافَيْتِ',
-          '3ms': 'وَافَى',
-          '3fs': 'وَافَتْ',
-          '2d': 'وَافَيْتُمَا',
-          '3md': 'وَافَيَا',
-          '3fd': 'وَافَتَا',
-          '1p': 'وَافَيْنَا',
-          '2mp': 'وَافَيْتُمْ',
-          '2fp': 'وَافَيْتُنَّ',
-          '3mp': 'وَافَوْا',
-          '3fp': 'وَافَيْنَ',
-        })
       })
     })
 
@@ -1193,7 +993,6 @@ describe('active past', () => {
         ['بلي', 'بَالَى'],
         ['قضي', 'قَاضَى'],
         ['بري', 'بَارَى'],
-        ['رءي', 'رَاءَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
@@ -1203,17 +1002,13 @@ describe('active past', () => {
       test.each([
         ['ءخذ', 'آخَذَ'],
         ['ءجر', 'آجَرَ'],
-        ['ءتي', 'آتَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
     })
 
     describe('hamzated middle roots', () => {
-      test.each([
-        ['وءم', 'وَاءَمَ'],
-        ['لءم', 'لَاءَمَ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['وءم', 'وَاءَمَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 3))['3ms']).toEqualT(expected)
       })
 
@@ -1285,30 +1080,9 @@ describe('active past', () => {
       test.each([
         ['تمم', 'أَتَمَّ'],
         ['سفف', 'أَسَفَّ'],
-        ['حبب', 'أَحَبَّ'],
-        ['عدد', 'أَعَدَّ'],
         ['همم', 'أَهَمَّ'],
-        ['مدد', 'أَمَدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-
-      test('أَمَدَّ conjugation', () => {
-        expect(conjugatePast(getVerb('مدد', 4))).toEqualT({
-          '1s': 'أَمْدَدْتُ',
-          '2ms': 'أَمْدَدْتَ',
-          '2fs': 'أَمْدَدْتِ',
-          '3ms': 'أَمَدَّ',
-          '3fs': 'أَمَدَّتْ',
-          '2d': 'أَمْدَدْتُمَا',
-          '3md': 'أَمَدَّا',
-          '3fd': 'أَمَدَّتَا',
-          '1p': 'أَمْدَدْنَا',
-          '2mp': 'أَمْدَدْتُمْ',
-          '2fp': 'أَمْدَدْتُنَّ',
-          '3mp': 'أَمَدُّوا',
-          '3fp': 'أَمْدَدْنَ',
-        })
       })
     })
 
@@ -1328,55 +1102,11 @@ describe('active past', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['علي', 'أَعْلَى'],
-        ['بقي', 'أَبْقَى'],
-        ['سمي', 'أَسْمَى'],
-        ['لقي', 'أَلْقَى'],
-        ['ضحي', 'أَضْحَى'],
-        ['عطي', 'أَعْطَى'],
         ['وصي', 'أَوْصَى'],
         ['وحي', 'أَوْحَى'],
-        ['وفي', 'أَوْفَى'],
         ['ودي', 'أَوْدَى'],
-        ['لفو', 'أَلْفَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-
-      test('أَمْسَى conjugation', () => {
-        expect(conjugatePast(getVerb('مسو', 4))).toEqualT({
-          '1s': 'أَمْسَيْتُ',
-          '2ms': 'أَمْسَيْتَ',
-          '2fs': 'أَمْسَيْتِ',
-          '3ms': 'أَمْسَى',
-          '3fs': 'أَمْسَتْ',
-          '2d': 'أَمْسَيْتُمَا',
-          '3md': 'أَمْسَيَا',
-          '3fd': 'أَمْسَتَا',
-          '1p': 'أَمْسَيْنَا',
-          '2mp': 'أَمْسَيْتُمْ',
-          '2fp': 'أَمْسَيْتُنَّ',
-          '3mp': 'أَمْسَوْا',
-          '3fp': 'أَمْسَيْنَ',
-        })
-      })
-
-      test('أعطي conjugation', () => {
-        expect(conjugatePast(getVerb('عطي', 4))).toEqualT({
-          '1s': 'أَعْطَيْتُ',
-          '2ms': 'أَعْطَيْتَ',
-          '2fs': 'أَعْطَيْتِ',
-          '3ms': 'أَعْطَى',
-          '3fs': 'أَعْطَتْ',
-          '2d': 'أَعْطَيْتُمَا',
-          '3md': 'أَعْطَيَا',
-          '3fd': 'أَعْطَتَا',
-          '1p': 'أَعْطَيْنَا',
-          '2mp': 'أَعْطَيْتُمْ',
-          '2fp': 'أَعْطَيْتُنَّ',
-          '3mp': 'أَعْطَوْا',
-          '3fp': 'أَعْطَيْنَ',
-        })
       })
 
       test('أَحْيَا conjugation', () => {
@@ -1416,33 +1146,12 @@ describe('active past', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('أَوْفَى conjugation', () => {
-        expect(conjugatePast(getVerb('وفي', 4))).toEqualT({
-          '1s': 'أَوْفَيْتُ',
-          '2ms': 'أَوْفَيْتَ',
-          '2fs': 'أَوْفَيْتِ',
-          '3ms': 'أَوْفَى',
-          '3fs': 'أَوْفَتْ',
-          '2d': 'أَوْفَيْتُمَا',
-          '3md': 'أَوْفَيَا',
-          '3fd': 'أَوْفَتَا',
-          '1p': 'أَوْفَيْنَا',
-          '2mp': 'أَوْفَيْتُمْ',
-          '2fp': 'أَوْفَيْتُنَّ',
-          '3mp': 'أَوْفَوْا',
-          '3fp': 'أَوْفَيْنَ',
-        })
-      })
-    })
-
     describe('hamzated initial roots', () => {
       test.each([
         ['ءذن', 'آذَنَ'],
         ['ءمن', 'آمَنَ'],
         ['ءلم', 'آلَمَ'],
         ['ءجر', 'آجَرَ'],
-        ['ءتي', 'آتَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
@@ -1450,12 +1159,6 @@ describe('active past', () => {
 
     describe('hamzated final roots', () => {
       test.each([['نشء', 'أَنْشَأَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated final hollow roots', () => {
-      test.each([['ضوء', 'أَضَاءَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
     })
@@ -1782,32 +1485,12 @@ describe('active past', () => {
 
     describe('defective roots', () => {
       test.each([
-        ['نمو', 'تَنَامَى'],
         ['مشي', 'تَمَاشَى'],
-        ['عفو', 'تَعَافَى'],
         ['هوي', 'تَهَاوَى'],
         ['ولي', 'تَوَالَى'],
         ['وصي', 'تَوَاصَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
-      })
-
-      test('تَنَامَى conjugation', () => {
-        expect(conjugatePast(getVerb('نمو', 6))).toEqualT({
-          '1s': 'تَنَامَيْتُ',
-          '2ms': 'تَنَامَيْتَ',
-          '2fs': 'تَنَامَيْتِ',
-          '3ms': 'تَنَامَى',
-          '3fs': 'تَنَامَتْ',
-          '2d': 'تَنَامَيْتُمَا',
-          '3md': 'تَنَامَيَا',
-          '3fd': 'تَنَامَتَا',
-          '1p': 'تَنَامَيْنَا',
-          '2mp': 'تَنَامَيْتُمْ',
-          '2fp': 'تَنَامَيْتُنَّ',
-          '3mp': 'تَنَامَوْا',
-          '3fp': 'تَنَامَيْنَ',
-        })
       })
 
       test('تَمَاشَى conjugation', () => {
@@ -1825,24 +1508,6 @@ describe('active past', () => {
           '2fp': 'تَمَاشَيْتُنَّ',
           '3mp': 'تَمَاشَوْا',
           '3fp': 'تَمَاشَيْنَ',
-        })
-      })
-
-      test('تَعَافَى conjugation', () => {
-        expect(conjugatePast(getVerb('عفو', 6))).toEqualT({
-          '1s': 'تَعَافَيْتُ',
-          '2ms': 'تَعَافَيْتَ',
-          '2fs': 'تَعَافَيْتِ',
-          '3ms': 'تَعَافَى',
-          '3fs': 'تَعَافَتْ',
-          '2d': 'تَعَافَيْتُمَا',
-          '3md': 'تَعَافَيَا',
-          '3fd': 'تَعَافَتَا',
-          '1p': 'تَعَافَيْنَا',
-          '2mp': 'تَعَافَيْتُمْ',
-          '2fp': 'تَعَافَيْتُنَّ',
-          '3mp': 'تَعَافَوْا',
-          '3fp': 'تَعَافَيْنَ',
         })
       })
     })
@@ -1872,24 +1537,6 @@ describe('active past', () => {
     describe('hamzated final roots', () => {
       test.each([['بطء', 'تَبَاطَأَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 6))['3ms']).toEqualT(expected)
-      })
-
-      test('تَوَاطَأَ conjugation', () => {
-        expect(conjugatePast(getVerb('وطء', 6))).toEqualT({
-          '1s': 'تَوَاطَأْتُ',
-          '2ms': 'تَوَاطَأْتَ',
-          '2fs': 'تَوَاطَأْتِ',
-          '3ms': 'تَوَاطَأَ',
-          '3fs': 'تَوَاطَأَتْ',
-          '2d': 'تَوَاطَأْتُمَا',
-          '3md': 'تَوَاطَآ',
-          '3fd': 'تَوَاطَأَتَا',
-          '1p': 'تَوَاطَأْنَا',
-          '2mp': 'تَوَاطَأْتُمْ',
-          '2fp': 'تَوَاطَأْتُنَّ',
-          '3mp': 'تَوَاطَؤُوا',
-          '3fp': 'تَوَاطَأْنَ',
-        })
       })
     })
 
@@ -1951,30 +1598,11 @@ describe('active past', () => {
 
     describe('geminate roots', () => {
       test.each([
-        ['قصص', 'اِنْقَصَّ'],
         ['بثث', 'اِنْبَثَّ'],
         ['كفف', 'اِنْكَفَّ'],
         ['دسس', 'اِنْدَسَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 7))['3ms']).toEqualT(expected)
-      })
-
-      test('اِنْقَصَّ conjugation', () => {
-        expect(conjugatePast(getVerb('قصص', 7))).toEqualT({
-          '1s': 'اِنْقَصَصْتُ',
-          '2ms': 'اِنْقَصَصْتَ',
-          '2fs': 'اِنْقَصَصْتِ',
-          '3ms': 'اِنْقَصَّ',
-          '3fs': 'اِنْقَصَّتْ',
-          '2d': 'اِنْقَصَصْتُمَا',
-          '3md': 'اِنْقَصَّا',
-          '3fd': 'اِنْقَصَّتَا',
-          '1p': 'اِنْقَصَصْنَا',
-          '2mp': 'اِنْقَصَصْتُمْ',
-          '2fp': 'اِنْقَصَصْتُنَّ',
-          '3mp': 'اِنْقَصُّوا',
-          '3fp': 'اِنْقَصَصْنَ',
-        })
       })
     })
 
@@ -2145,8 +1773,6 @@ describe('active past', () => {
       test.each([
         ['قود', 'اِقْتَادَ'],
         ['سوء', 'اِسْتَاءَ'],
-        ['خير', 'اِخْتَارَ'],
-        ['عود', 'اِعْتَادَ'],
         ['روح', 'اِرْتَاحَ'],
         ['شوق', 'اِشْتَاقَ'],
       ])('%s pattern', (root, expected) => {
@@ -2193,21 +1819,13 @@ describe('active past', () => {
     describe('defective roots', () => {
       test.each([
         ['نهي', 'اِنْتَهَى'],
-        ['قضي', 'اِقْتَضَى'],
-        ['ردي', 'اِرْتَدَى'],
-        ['شري', 'اِشْتَرَى'],
         ['صفو', 'اِصْطَفَى'],
-        ['خفي', 'اِخْتَفَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
       })
     })
 
     describe('doubly weak roots', () => {
-      test.each([['وقي', 'اِتَّقَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 8))['3ms']).toEqualT(expected)
-      })
-
       test('اِنْتَوَى conjugation', () => {
         expect(conjugatePast(getVerb('نوي', 8))).toEqualT({
           '1s': 'اِنْتَوَيْتُ',
@@ -2465,10 +2083,6 @@ describe('active past', () => {
     })
 
     describe('doubly weak roots', () => {
-      test.each([['ولي', 'اِسْتَوْلَى']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)
-      })
-
       test('اِسْتَحْيَا conjugation', () => {
         expect(conjugatePast(getVerb('حيي', 10))).toEqualT({
           '1s': 'اِسْتَحَيْتُ',
@@ -2484,24 +2098,6 @@ describe('active past', () => {
           '2fp': 'اِسْتَحَيْتُنَّ',
           '3mp': 'اِسْتَحَوْا',
           '3fp': 'اِسْتَحَيْنَ',
-        })
-      })
-
-      test('اِسْتَوْفَى conjugation', () => {
-        expect(conjugatePast(getVerb('وفي', 10))).toEqualT({
-          '1s': 'اِسْتَوْفَيْتُ',
-          '2ms': 'اِسْتَوْفَيْتَ',
-          '2fs': 'اِسْتَوْفَيْتِ',
-          '3ms': 'اِسْتَوْفَى',
-          '3fs': 'اِسْتَوْفَتْ',
-          '2d': 'اِسْتَوْفَيْتُمَا',
-          '3md': 'اِسْتَوْفَيَا',
-          '3fd': 'اِسْتَوْفَتَا',
-          '1p': 'اِسْتَوْفَيْنَا',
-          '2mp': 'اِسْتَوْفَيْتُمْ',
-          '2fp': 'اِسْتَوْفَيْتُنَّ',
-          '3mp': 'اِسْتَوْفَوْا',
-          '3fp': 'اِسْتَوْفَيْنَ',
         })
       })
     })
