@@ -34,7 +34,7 @@
     "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/plugin-deep-link": "^2.4.9",
     "goober": "^2.1.19",
-    "preact": "^10.29.6",
+    "preact": "^10.29.7",
     "uplot": "^1.6.32",
     "valibot": "^1.4.2"
   },
