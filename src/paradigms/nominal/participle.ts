@@ -190,7 +190,13 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
         return [...stem, measureMorpheme(vowel), radicalMorpheme(isActive ? YEH : ALIF), radicalMorpheme(c3)]
       if (c2.equals(c3))
         return [...stem, measureMorpheme(vowel), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
-      return [...stem, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(vowel), radicalMorpheme(c3)]
+      return [
+        ...stem,
+        ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
+        radicalMorpheme(c2),
+        measureMorpheme(vowel),
+        radicalMorpheme(c3),
+      ]
     }
 
     case 5: {

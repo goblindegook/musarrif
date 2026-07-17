@@ -450,7 +450,13 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   if (c2.equals(c3))
     return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
 
-  return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
+  return [
+    ...prefix,
+    ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
+    radicalMorpheme(c2),
+    measureMorpheme(KASRA),
+    radicalMorpheme(c3),
+  ]
 }
 
 function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {

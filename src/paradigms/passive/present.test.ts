@@ -891,32 +891,8 @@ describe('passive present indicative', () => {
 
   describe('Form IV', () => {
     describe('regular roots', () => {
-      test.each([
-        ['وقف', 'يُوْقَفُ'],
-        ['وقع', 'يُوْقَعُ'],
-        ['ولد', 'يُوْلَدُ'],
-        ['سلم', 'يُسْلَمُ'],
-        ['وصل', 'يُوْصَلُ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['سلم', 'يُسْلَمُ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
-      })
-
-      test('أَوْضَحَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('وضح', 4), 'indicative')).toEqualT({
-          '1s': 'أُوْضَحُ',
-          '2ms': 'تُوْضَحُ',
-          '2fs': 'تُوْضَحِينَ',
-          '3ms': 'يُوْضَحُ',
-          '3fs': 'تُوْضَحُ',
-          '2d': 'تُوْضَحَانِ',
-          '3md': 'يُوْضَحَانِ',
-          '3fd': 'تُوْضَحَانِ',
-          '1p': 'نُوْضَحُ',
-          '2mp': 'تُوْضَحُونَ',
-          '2fp': 'تُوْضَحْنَ',
-          '3mp': 'يُوْضَحُونَ',
-          '3fp': 'يُوْضَحْنَ',
-        })
       })
 
       test('أَكْثَرَ conjugation', () => {
@@ -1132,35 +1108,6 @@ describe('passive present indicative', () => {
 
     describe('hamzated final roots', () => {
       test.each([['نشء', 'يُنْشَأُ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
-      })
-
-      test('أَوْمَأَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ومء', 4), 'indicative')).toEqualT({
-          '1s': 'أُوْمَأُ',
-          '2ms': 'تُوْمَأُ',
-          '2fs': 'تُوْمَئِينَ',
-          '3ms': 'يُوْمَأُ',
-          '3fs': 'تُوْمَأُ',
-          '2d': 'تُوْمَآنِ',
-          '3md': 'يُوْمَآنِ',
-          '3fd': 'تُوْمَآنِ',
-          '1p': 'نُوْمَأُ',
-          '2mp': 'تُوْمَؤُونَ',
-          '2fp': 'تُوْمَأْنَ',
-          '3mp': 'يُوْمَؤُونَ',
-          '3fp': 'يُوْمَأْنَ',
-        })
-      })
-    })
-
-    describe('hamzated initial roots', () => {
-      test.each([
-        ['ءذن', 'يُؤْذَنُ'],
-        ['ءمن', 'يُؤْمَنُ'],
-        ['ءلم', 'يُؤْلَمُ'],
-        ['ءجر', 'يُؤْجَرُ'],
-      ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
     })

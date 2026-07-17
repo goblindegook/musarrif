@@ -177,13 +177,17 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (c1.isHamza && pronounId === '1s')
-    return [
-      radicalMorpheme(WAW),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...(mood !== 'jussive' ? [measureMorpheme(ALIF_MAQSURA)] : []),
-    ]
+  if (c1.isHamza && pronounId === '1s' && !c2.isWeak && !c2.equals(c3)) {
+    if (c3.isWeak)
+      return [
+        radicalMorpheme(WAW),
+        radicalMorpheme(c2),
+        measureMorpheme(FATHA),
+        ...(mood !== 'jussive' ? [measureMorpheme(ALIF_MAQSURA)] : []),
+      ]
+
+    return [radicalMorpheme(WAW), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
+  }
 
   if (c2.isHamza) return [radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
@@ -224,7 +228,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
 
   return [
     radicalMorpheme(c1),
-    measureMorpheme(SUKOON),
+    ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
     radicalMorpheme(c2),
     measureMorpheme(FATHA),
     radicalMorpheme(c3),
@@ -633,6 +637,8 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, Word> {
+  const [c1] = verb.rootTokens
+
   return constrainPassiveConjugation(
     verb,
     mapRecord(
@@ -651,7 +657,14 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
         '3mp': agreementMorpheme(YEH, DAMMA),
         '3fp': agreementMorpheme(YEH, DAMMA),
       },
-      (prefix, pronounId) => new Word([prefix, ...derivePassivePresentStem(verb, pronounId, mood)]),
+      (prefix, pronounId) => {
+        const stem = derivePassivePresentStem(verb, pronounId, mood)
+
+        if (pronounId === '1s' && verb.form === 4 && c1.isHamza)
+          return new Word([prefix, radicalMorpheme(WAW), ...stem.slice(stem.at(1)?.equals([SUKOON]) ? 2 : 1)])
+
+        return new Word([prefix, ...stem])
+      },
     ),
     new Word([]),
   )

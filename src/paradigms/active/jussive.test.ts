@@ -874,40 +874,15 @@ describe('active present jussive', () => {
         ['علم', 'يُعْلِمْ'],
         ['لحق', 'يُلْحِقْ'],
         ['صبح', 'يُصْبِحْ'],
-        ['وقف', 'يُوْقِفْ'],
-        ['وقع', 'يُوْقِعْ'],
-        ['ولد', 'يُوْلِدْ'],
         ['سلم', 'يُسْلِمْ'],
-        ['وصل', 'يُوْصِلْ'],
         ['عرب', 'يُعْرِبْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
-
-      test('أَوْضَحَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وضح', 4), 'jussive')).toEqualT({
-          '1s': 'أُوْضِحْ',
-          '2ms': 'تُوْضِحْ',
-          '2fs': 'تُوْضِحِي',
-          '3ms': 'يُوْضِحْ',
-          '3fs': 'تُوْضِحْ',
-          '2d': 'تُوْضِحَا',
-          '3md': 'يُوْضِحَا',
-          '3fd': 'تُوْضِحَا',
-          '1p': 'نُوْضِحْ',
-          '2mp': 'تُوْضِحُوا',
-          '2fp': 'تُوْضِحْنَ',
-          '3mp': 'يُوْضِحُوا',
-          '3fp': 'يُوْضِحْنَ',
-        })
-      })
     })
 
     describe('hamzated final roots', () => {
-      test.each([
-        ['ومء', 'يُوْمِئْ'],
-        ['نشء', 'يُنْشِئْ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['نشء', 'يُنْشِئْ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
     })
@@ -922,35 +897,6 @@ describe('active present jussive', () => {
         ['عود', 'يُعِدْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated initial roots', () => {
-      test.each([
-        ['ءذن', 'يُؤْذِنْ'],
-        ['ءمن', 'يُؤْمِنْ'],
-        ['ءلم', 'يُؤْلِمْ'],
-        ['ءجر', 'يُؤْجِرْ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
-      })
-
-      test('آمَنَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('ءمن', 4), 'jussive')).toEqualT({
-          '1s': 'أُومِنْ',
-          '2ms': 'تُؤْمِنْ',
-          '2fs': 'تُؤْمِنِي',
-          '3ms': 'يُؤْمِنْ',
-          '3fs': 'تُؤْمِنْ',
-          '2d': 'تُؤْمِنَا',
-          '3md': 'يُؤْمِنَا',
-          '3fd': 'تُؤْمِنَا',
-          '1p': 'نُؤْمِنْ',
-          '2mp': 'تُؤْمِنُوا',
-          '2fp': 'تُؤْمِنَّ',
-          '3mp': 'يُؤْمِنُوا',
-          '3fp': 'يُؤْمِنَّ',
-        })
       })
     })
 

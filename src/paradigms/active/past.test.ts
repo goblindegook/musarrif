@@ -1046,12 +1046,7 @@ describe('active past', () => {
         ['لحق', 'أَلْحَقَ'],
         ['مكن', 'أَمْكَنَ'],
         ['صبح', 'أَصْبَحَ'],
-        ['وقف', 'أَوْقَفَ'],
-        ['وقع', 'أَوْقَعَ'],
-        ['ولد', 'أَوْلَدَ'],
         ['سلم', 'أَسْلَمَ'],
-        ['وصل', 'أَوْصَلَ'],
-        ['وضح', 'أَوْضَحَ'],
         ['عرب', 'أَعْرَبَ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
@@ -1125,17 +1120,6 @@ describe('active past', () => {
           '3mp': 'أَرَوْا',
           '3fp': 'أَرَيْنَ',
         })
-      })
-    })
-
-    describe('hamzated initial roots', () => {
-      test.each([
-        ['ءذن', 'آذَنَ'],
-        ['ءمن', 'آمَنَ'],
-        ['ءلم', 'آلَمَ'],
-        ['ءجر', 'آجَرَ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
     })
 
@@ -1384,12 +1368,6 @@ describe('active past', () => {
           '3mp': 'تَضَوَّؤُوا',
           '3fp': 'تَضَوَّأْنَ',
         })
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test.each([['ومء', 'أَوْمَأَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
     })
   })

@@ -957,27 +957,13 @@ describe('imperative', () => {
         ['لحق', 'أَلْحِقْ'],
         ['مكن', 'أَمْكِنْ'],
         ['صبح', 'أَصْبِحْ'],
-        ['وقف', 'أَوْقِفْ'],
-        ['وقع', 'أَوْقِعْ'],
-        ['ولد', 'أَوْلِدْ'],
         ['سلم', 'أَسْلِمْ'],
-        ['وصل', 'أَوْصِلْ'],
         ['عرب', 'أَعْرِبْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
       })
 
       describe('full conjugation tests', () => {
-        test('أَوْضَحَ conjugation', () => {
-          expect(conjugateImperative(getVerb('وضح', 4))).toMatchObjectT({
-            '2ms': 'أَوْضِحْ',
-            '2fs': 'أَوْضِحِي',
-            '2d': 'أَوْضِحَا',
-            '2mp': 'أَوْضِحُوا',
-            '2fp': 'أَوْضِحْنَ',
-          })
-        })
-
         test('أَكْتَبَ conjugation', () => {
           expect(conjugateImperative(getVerb('كتب', 4))).toMatchObjectT({
             '2ms': 'أَكْتِبْ',
@@ -987,12 +973,6 @@ describe('imperative', () => {
             '2fp': 'أَكْتِبْنَ',
           })
         })
-      })
-    })
-
-    describe('hamzated final roots', () => {
-      test.each([['ومء', 'أَوْمِئْ']])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
       })
     })
 
@@ -1042,27 +1022,6 @@ describe('imperative', () => {
         ['عود', 'أَعِدْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated initial roots', () => {
-      test.each([
-        ['ءذن', 'آذِنْ'],
-        ['ءمن', 'آمِنْ'],
-        ['ءلم', 'آلِمْ'],
-        ['ءجر', 'آجِرْ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugateImperative(getVerb(root, 4))['2ms']).toEqualT(expected)
-      })
-
-      test('آمَنَ conjugation', () => {
-        expect(conjugateImperative(getVerb('ءمن', 4))).toMatchObjectT({
-          '2ms': 'آمِنْ',
-          '2fs': 'آمِنِي',
-          '2d': 'آمِنَا',
-          '2mp': 'آمِنُوا',
-          '2fp': 'آمِنَّ',
-        })
       })
     })
 

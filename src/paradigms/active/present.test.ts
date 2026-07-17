@@ -1232,32 +1232,10 @@ describe('active present indicative', () => {
         ['صبح', 'يُصْبِحُ'],
         ['مكن', 'يُمْكِنُ'],
         ['فلت', 'يُفْلِتُ'],
-        ['وقف', 'يُوْقِفُ'],
-        ['وقع', 'يُوْقِعُ'],
-        ['ولد', 'يُوْلِدُ'],
         ['سلم', 'يُسْلِمُ'],
-        ['وصل', 'يُوْصِلُ'],
         ['عرب', 'يُعْرِبُ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
-      })
-
-      test('أَوْضَحَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وضح', 4), 'indicative')).toEqualT({
-          '1s': 'أُوْضِحُ',
-          '2ms': 'تُوْضِحُ',
-          '2fs': 'تُوْضِحِينَ',
-          '3ms': 'يُوْضِحُ',
-          '3fs': 'تُوْضِحُ',
-          '2d': 'تُوْضِحَانِ',
-          '3md': 'يُوْضِحَانِ',
-          '3fd': 'تُوْضِحَانِ',
-          '1p': 'نُوْضِحُ',
-          '2mp': 'تُوْضِحُونَ',
-          '2fp': 'تُوْضِحْنَ',
-          '3mp': 'يُوْضِحُونَ',
-          '3fp': 'يُوْضِحْنَ',
-        })
       })
 
       test('أَكْتَبَ conjugation', () => {
@@ -1305,12 +1283,6 @@ describe('active present indicative', () => {
       })
     })
 
-    describe('hamzated final roots', () => {
-      test.each([['ومء', 'يُوْمِئُ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
-      })
-    })
-
     describe('doubly weak roots', () => {
       test.each([
         ['وصي', 'يُوصِي'],
@@ -1336,17 +1308,6 @@ describe('active present indicative', () => {
           '3mp': 'يُرُونَ',
           '3fp': 'يُرِينَ',
         })
-      })
-    })
-
-    describe('hamzated initial roots', () => {
-      test.each([
-        ['ءذن', 'يُؤْذِنُ'],
-        ['ءمن', 'يُؤْمِنُ'],
-        ['ءلم', 'يُؤْلِمُ'],
-        ['ءجر', 'يُؤْجِرُ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
     })
 

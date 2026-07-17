@@ -113,14 +113,6 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
         case 4: {
           if (c1.isHamza) {
-            if (c3.isWeak) {
-              const prefix = [measureMorpheme(HAMZA, ...longVowelA), radicalMorpheme(c2)]
-              if (pronounId === '2ms') return [...prefix, measureMorpheme(KASRA)]
-              if (pronounId === '2fs') return [...prefix, agreementMorpheme(KASRA, YEH)]
-              if (pronounId === '2d') return [...prefix, agreementMorpheme(KASRA, YEH, FATHA, ALIF)]
-              if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
-              return [...prefix, agreementMorpheme(KASRA, YEH, NOON, FATHA)]
-            }
             return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
           }
           if (c1.isWeak && c3.isWeak) {
@@ -135,6 +127,21 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
             if (pronounId === '2d') return [...prefix, agreementMorpheme(KASRA, YEH, FATHA, ALIF)]
             if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
             return [...prefix, agreementMorpheme(KASRA, YEH, NOON, FATHA)]
+          }
+          if (c1.isWeak && !c2.equals(c3)) {
+            const prefix = [
+              measureMorpheme(HAMZA, FATHA),
+              radicalMorpheme(c1),
+              measureMorpheme(SUKOON),
+              radicalMorpheme(c2),
+              measureMorpheme(KASRA),
+              radicalMorpheme(c3),
+            ]
+            if (pronounId === '2ms') return [...prefix, agreementMorpheme(SUKOON)]
+            if (pronounId === '2fs') return [...prefix, agreementMorpheme(KASRA, YEH)]
+            if (pronounId === '2d') return [...prefix, agreementMorpheme(FATHA, ALIF)]
+            if (pronounId === '2mp') return [...prefix, agreementMorpheme(DAMMA, WAW, ALIF)]
+            return [...prefix, agreementMorpheme(SUKOON, NOON, FATHA)]
           }
           return [measureMorpheme(HAMZA, FATHA), ...stem]
         }

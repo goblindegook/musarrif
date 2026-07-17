@@ -201,7 +201,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
     stem: [
       measureMorpheme(HAMZA, DAMMA),
       radicalMorpheme(c1.isHamza ? WAW : c1),
-      measureMorpheme(SUKOON),
+      ...(c1.isWeak || c1.isHamza ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(KASRA),
       radicalMorpheme(c3),
