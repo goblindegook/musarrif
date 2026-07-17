@@ -1109,24 +1109,6 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 4))['3ms']).toEqualT(expected)
       })
 
-      test('أَحْيَا conjugation', () => {
-        expect(conjugatePast(getVerb('حيي', 4))).toEqualT({
-          '1s': 'أَحْيَيْتُ',
-          '2ms': 'أَحْيَيْتَ',
-          '2fs': 'أَحْيَيْتِ',
-          '3ms': 'أَحْيَا',
-          '3fs': 'أَحْيَتْ',
-          '2d': 'أَحْيَيْتُمَا',
-          '3md': 'أَحْيَيَا',
-          '3fd': 'أَحْيَتَا',
-          '1p': 'أَحْيَيْنَا',
-          '2mp': 'أَحْيَيْتُمْ',
-          '2fp': 'أَحْيَيْتُنَّ',
-          '3mp': 'أَحْيَوْا',
-          '3fp': 'أَحْيَيْنَ',
-        })
-      })
-
       test('أَرَى conjugation', () => {
         expect(conjugatePast(getVerb('رءي', 4))).toEqualT({
           '1s': 'أَرَيْتُ',

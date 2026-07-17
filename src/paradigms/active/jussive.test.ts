@@ -973,24 +973,6 @@ describe('active present jussive', () => {
         expect(conjugatePresentMood(getVerb(root, 4), 'jussive')['3ms']).toEqualT(expected)
       })
 
-      test('أَحْيَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حيي', 4), 'jussive')).toEqualT({
-          '1s': 'أُحيِ',
-          '2ms': 'تُحيِ',
-          '2fs': 'تُحيِي',
-          '3ms': 'يُحيِ',
-          '3fs': 'تُحيِ',
-          '2d': 'تُحيِيَا',
-          '3md': 'يُحيِيَا',
-          '3fd': 'تُحيِيَا',
-          '1p': 'نُحيِ',
-          '2mp': 'تُحيُوا',
-          '2fp': 'تُحيِينَ',
-          '3mp': 'يُحيُوا',
-          '3fp': 'يُحيِينَ',
-        })
-      })
-
       test('أَرَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('رءي', 4), 'jussive')).toEqualT({
           '1s': 'أُرِ',

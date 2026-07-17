@@ -439,7 +439,7 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   if (c3.isWeak)
     return [
       ...prefix,
-      ...(c1.isWeak || c2.isWeak ? [] : [measureMorpheme(SUKOON)]),
+      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(KASRA),
       radicalMorpheme(YEH),

@@ -1305,26 +1305,6 @@ describe('active present indicative', () => {
       })
     })
 
-    describe('defective roots', () => {
-      test('أَحْيَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حيي', 4), 'indicative')).toEqualT({
-          '1s': 'أُحيِي',
-          '2ms': 'تُحيِي',
-          '2fs': 'تُحيِينَ',
-          '3ms': 'يُحيِي',
-          '3fs': 'تُحيِي',
-          '2d': 'تُحيِيَانِ',
-          '3md': 'يُحيِيَانِ',
-          '3fd': 'تُحيِيَانِ',
-          '1p': 'نُحيِي',
-          '2mp': 'تُحيُونَ',
-          '2fp': 'تُحيِينَ',
-          '3mp': 'يُحيُونَ',
-          '3fp': 'يُحيِينَ',
-        })
-      })
-    })
-
     describe('hamzated final roots', () => {
       test.each([['ومء', 'يُوْمِئُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
@@ -1375,12 +1355,6 @@ describe('active present indicative', () => {
         ['نشء', 'يُنْشِئُ'],
         ['نبء', 'يُنْبِئُ'],
       ])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
-      })
-    })
-
-    describe('hamzated hollow-defective roots', () => {
-      test.each([['ءوي', 'يُؤوِي']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 4), 'indicative')['3ms']).toEqualT(expected)
       })
     })

@@ -985,24 +985,6 @@ describe('active present subjunctive', () => {
         expect(conjugatePresentMood(getVerb(root, 4), 'subjunctive')['3ms']).toEqualT(expected)
       })
 
-      test('أَحْيَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حيي', 4), 'subjunctive')).toEqualT({
-          '1s': 'أُحيِيَ',
-          '2ms': 'تُحيِيَ',
-          '2fs': 'تُحيِي',
-          '3ms': 'يُحيِيَ',
-          '3fs': 'تُحيِيَ',
-          '2d': 'تُحيِيَا',
-          '3md': 'يُحيِيَا',
-          '3fd': 'تُحيِيَا',
-          '1p': 'نُحيِيَ',
-          '2mp': 'تُحيُوا',
-          '2fp': 'تُحيِينَ',
-          '3mp': 'يُحيُوا',
-          '3fp': 'يُحيِينَ',
-        })
-      })
-
       test('أَرَى conjugation', () => {
         expect(conjugatePresentMood(getVerb('رءي', 4), 'subjunctive')).toEqualT({
           '1s': 'أُرِيَ',

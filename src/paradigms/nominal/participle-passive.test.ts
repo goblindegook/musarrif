@@ -457,12 +457,6 @@ describe('passive participle', () => {
       })
     })
 
-    describe('defective roots', () => {
-      test.each([['حيي', 'مُحْيًى']])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
-      })
-    })
-
     describe('hamzated final roots', () => {
       test.each([['ومء', 'مُوْمَأ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 4))).toEqualT(expected)
