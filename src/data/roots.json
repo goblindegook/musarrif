@@ -2312,7 +2312,8 @@
     "root": "jy'",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["mimi", "fa3l"]
+    "masdars": ["mimi", "fa3l"],
+    "lexicalizedMasdars": ["jayo}ap", "jiy}ap"]
   },
   {
     "root": "jzr",
@@ -3268,7 +3269,8 @@
     "root": "r'y",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l"]
+    "masdars": [],
+    "lexicalizedMasdars": ["ru&oyap"]
   },
   {
     "root": "r'y",
