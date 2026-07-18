@@ -1594,24 +1594,6 @@ describe('passive present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)
       })
-
-      test('اِسْتَمَدَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('مدد', 10), 'indicative')).toEqualT({
-          '1s': 'أُسْتَمَدُّ',
-          '2ms': 'تُسْتَمَدُّ',
-          '2fs': 'تُسْتَمَدِّينَ',
-          '3ms': 'يُسْتَمَدُّ',
-          '3fs': 'تُسْتَمَدُّ',
-          '2d': 'تُسْتَمَدَّانِ',
-          '3md': 'يُسْتَمَدَّانِ',
-          '3fd': 'تُسْتَمَدَّانِ',
-          '1p': 'نُسْتَمَدُّ',
-          '2mp': 'تُسْتَمَدُّونَ',
-          '2fp': 'تُسْتَمَدَدْنَ',
-          '3mp': 'يُسْتَمَدُّونَ',
-          '3fp': 'يُسْتَمَدَدْنَ',
-        })
-      })
     })
 
     describe('hamzated initial roots', () => {

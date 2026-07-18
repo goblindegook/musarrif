@@ -9,7 +9,8 @@
   {
     "root": "$bb",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3aal", "fa3iil"]
   },
   {
     "root": "$dd",

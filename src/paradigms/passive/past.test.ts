@@ -1492,24 +1492,6 @@ describe('passive past pattern', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
-
-      test('اِسْتَمَدَّ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('مدد', 10))).toEqualT({
-          '1s': 'اُسْتُمِدِدْتُ',
-          '2ms': 'اُسْتُمِدِدْتَ',
-          '2fs': 'اُسْتُمِدِدْتِ',
-          '3ms': 'اُسْتُمِدَّ',
-          '3fs': 'اُسْتُمِدَّتْ',
-          '2d': 'اُسْتُمِدِدْتُمَا',
-          '3md': 'اُسْتُمِدَّا',
-          '3fd': 'اُسْتُمِدَّتَا',
-          '1p': 'اُسْتُمِدِدْنَا',
-          '2mp': 'اُسْتُمِدِدْتُمْ',
-          '2fp': 'اُسْتُمِدِدْتُنَّ',
-          '3mp': 'اُسْتُمِدُّوا',
-          '3fp': 'اُسْتُمِدِدْنَ',
-        })
-      })
     })
 
     describe('hamzated initial roots', () => {

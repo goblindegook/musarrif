@@ -442,7 +442,7 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
       return [
         ...prefix,
         radicalMorpheme(c1),
-        measureMorpheme(FATHA),
+        measureMorpheme(SUKOON),
         radicalMorpheme(c2),
         measureMorpheme(FATHA),
         radicalMorpheme(c3),
