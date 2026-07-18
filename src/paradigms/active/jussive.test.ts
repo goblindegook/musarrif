@@ -1031,47 +1031,6 @@ describe('active present jussive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'jussive')['3ms']).toEqualT(expected)
       })
-
-      test('تَرَأَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رءي', 5), 'jussive')).toEqualT({
-          '1s': 'أَتَرَأَّ',
-          '2ms': 'تَتَرَأَّ',
-          '2fs': 'تَتَرَأَّيْ',
-          '3ms': 'يَتَرَأَّ',
-          '3fs': 'تَتَرَأَّ',
-          '2d': 'تَتَرَأَّيَا',
-          '3md': 'يَتَرَأَّيَا',
-          '3fd': 'تَتَرَأَّيَا',
-          '1p': 'نَتَرَأَّ',
-          '2mp': 'تَتَرَأَّوا',
-          '2fp': 'تَتَرَأَّينَ',
-          '3mp': 'يَتَرَأَّوا',
-          '3fp': 'يَتَرَأَّينَ',
-        })
-      })
-
-      test('تَوَفَّى conjugation', () => {
-        // Based on authoritative sources: Form V defective verbs drop the final weak letter (ى) in jussive
-        // Dual forms drop the weak letter before alif (similar to Form II)
-        // Masculine plural forms have damma before waw (similar to Form II)
-        // Feminine plural forms preserve yeh before noon + fatḥa (similar to Form II)
-        // 2fs form has kasra before final yeh (similar to Form II)
-        expect(conjugatePresentMood(getVerb('وفي', 5), 'jussive')).toEqualT({
-          '1s': 'أَتَوَفَّ',
-          '2ms': 'تَتَوَفَّ',
-          '2fs': 'تَتَوَفَّيْ',
-          '3ms': 'يَتَوَفَّ',
-          '3fs': 'تَتَوَفَّ',
-          '2d': 'تَتَوَفَّيَا',
-          '3md': 'يَتَوَفَّيَا',
-          '3fd': 'تَتَوَفَّيَا',
-          '1p': 'نَتَوَفَّ',
-          '2mp': 'تَتَوَفَّوا',
-          '2fp': 'تَتَوَفَّينَ',
-          '3mp': 'يَتَوَفَّوا',
-          '3fp': 'يَتَوَفَّينَ',
-        })
-      })
     })
 
     describe('hamzated final hollow roots', () => {

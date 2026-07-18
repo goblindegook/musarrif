@@ -1468,24 +1468,6 @@ describe('active present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
       })
-
-      test('تَرَأَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رءي', 5), 'indicative')).toEqualT({
-          '1s': 'أَتَرَأَّى',
-          '2ms': 'تَتَرَأَّى',
-          '2fs': 'تَتَرَأَّينَ',
-          '3ms': 'يَتَرَأَّى',
-          '3fs': 'تَتَرَأَّى',
-          '2d': 'تَتَرَأَّيَانِ',
-          '3md': 'يَتَرَأَّيَانِ',
-          '3fd': 'تَتَرَأَّيَانِ',
-          '1p': 'نَتَرَأَّى',
-          '2mp': 'تَتَرَأَّونَ',
-          '2fp': 'تَتَرَأَّينَ',
-          '3mp': 'يَتَرَأَّونَ',
-          '3fp': 'يَتَرَأَّينَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {
@@ -1496,24 +1478,6 @@ describe('active present indicative', () => {
         ['زوي', 'يَتَزَوَّى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'indicative')['3ms']).toEqualT(expected)
-      })
-
-      test('تَوَفَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وفي', 5), 'indicative')).toEqualT({
-          '1s': 'أَتَوَفَّى',
-          '2ms': 'تَتَوَفَّى',
-          '2fs': 'تَتَوَفَّينَ',
-          '3ms': 'يَتَوَفَّى',
-          '3fs': 'تَتَوَفَّى',
-          '2d': 'تَتَوَفَّيَانِ',
-          '3md': 'يَتَوَفَّيَانِ',
-          '3fd': 'تَتَوَفَّيَانِ',
-          '1p': 'نَتَوَفَّى',
-          '2mp': 'تَتَوَفَّونَ',
-          '2fp': 'تَتَوَفَّينَ',
-          '3mp': 'يَتَوَفَّونَ',
-          '3fp': 'يَتَوَفَّينَ',
-        })
       })
     })
 

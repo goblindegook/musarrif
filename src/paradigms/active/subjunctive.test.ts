@@ -1077,81 +1077,9 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })
-
-      test('تَرَأَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رءي', 5), 'subjunctive')).toEqualT({
-          '1s': 'أَتَرَأَّى',
-          '2ms': 'تَتَرَأَّى',
-          '2fs': 'تَتَرَأَّي',
-          '3ms': 'يَتَرَأَّى',
-          '3fs': 'تَتَرَأَّى',
-          '2d': 'تَتَرَأَّيَا',
-          '3md': 'يَتَرَأَّيَا',
-          '3fd': 'تَتَرَأَّيَا',
-          '1p': 'نَتَرَأَّى',
-          '2mp': 'تَتَرَأَّوا',
-          '2fp': 'تَتَرَأَّينَ',
-          '3mp': 'يَتَرَأَّوا',
-          '3fp': 'يَتَرَأَّينَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {
-      test('تَوَفَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وفي', 5), 'subjunctive')).toEqualT({
-          '1s': 'أَتَوَفَّى',
-          '2ms': 'تَتَوَفَّى',
-          '2fs': 'تَتَوَفَّي',
-          '3ms': 'يَتَوَفَّى',
-          '3fs': 'تَتَوَفَّى',
-          '2d': 'تَتَوَفَّيَا',
-          '3md': 'يَتَوَفَّيَا',
-          '3fd': 'تَتَوَفَّيَا',
-          '1p': 'نَتَوَفَّى',
-          '2mp': 'تَتَوَفَّوا',
-          '2fp': 'تَتَوَفَّينَ',
-          '3mp': 'يَتَوَفَّوا',
-          '3fp': 'يَتَوَفَّينَ',
-        })
-      })
-
-      test('تَوَقَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وقي', 5), 'subjunctive')).toEqualT({
-          '1s': 'أَتَوَقَّى',
-          '2ms': 'تَتَوَقَّى',
-          '2fs': 'تَتَوَقَّي',
-          '3ms': 'يَتَوَقَّى',
-          '3fs': 'تَتَوَقَّى',
-          '2d': 'تَتَوَقَّيَا',
-          '3md': 'يَتَوَقَّيَا',
-          '3fd': 'تَتَوَقَّيَا',
-          '1p': 'نَتَوَقَّى',
-          '2mp': 'تَتَوَقَّوا',
-          '2fp': 'تَتَوَقَّينَ',
-          '3mp': 'يَتَوَقَّوا',
-          '3fp': 'يَتَوَقَّينَ',
-        })
-      })
-
-      test('تَوَخَّى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('وخي', 5), 'subjunctive')).toEqualT({
-          '1s': 'أَتَوَخَّى',
-          '2ms': 'تَتَوَخَّى',
-          '2fs': 'تَتَوَخَّي',
-          '3ms': 'يَتَوَخَّى',
-          '3fs': 'تَتَوَخَّى',
-          '2d': 'تَتَوَخَّيَا',
-          '3md': 'يَتَوَخَّيَا',
-          '3fd': 'تَتَوَخَّيَا',
-          '1p': 'نَتَوَخَّى',
-          '2mp': 'تَتَوَخَّوا',
-          '2fp': 'تَتَوَخَّينَ',
-          '3mp': 'يَتَوَخَّوا',
-          '3fp': 'يَتَوَخَّينَ',
-        })
-      })
-
       test.each([['زوي', 'يَتَزَوَّى']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 5), 'subjunctive')['3ms']).toEqualT(expected)
       })

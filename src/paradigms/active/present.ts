@@ -108,7 +108,7 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
 const dammaSuffix = (s: boolean) => (s ? [agreementMorpheme(DAMMA)] : [])
 
 function hasFathaDefectiveEnding(morphemes: readonly Morpheme[]): boolean {
-  if (morphemes.at(-1)?.equals([FATHA])) return true
+  if (morphemes.at(-1)?.endsWith([FATHA])) return true
   return morphemes.at(-2)?.some((t) => t.isWeak) === true && morphemes.at(-3)?.equals([FATHA]) === true
 }
 
@@ -172,7 +172,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]
         ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH)]
         : indicative['2fs'].with(
             -1,
-            indicative['2fs'].at(-2)?.equals([FATHA]) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
+            indicative['2fs'].at(-2)?.endsWith([FATHA]) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
           )),
       elidedMorpheme(NOON, FATHA),
     ],
@@ -638,7 +638,7 @@ function stripFemininePluralSuffixAfterDefectiveTail(morphemes: readonly Morphem
   const target = morphemes[index]
   const replacement =
     target.role === 'radical' && !target.equals([WAW])
-      ? morphemes[index - 1]?.equals([FATHA])
+      ? morphemes[index - 1]?.endsWith([FATHA])
         ? agreementMorpheme(YEH, SUKOON)
         : radicalMorpheme(YEH)
       : target
