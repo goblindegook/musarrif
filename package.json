@@ -23,6 +23,7 @@
     "debug:explain": "tsx scripts/debug-explain.mts",
     "debug:srs": "tsx scripts/debug-srs.mts",
     "report:srs": "tsx scripts/report-srs.mts",
+    "add:tests:all": "tsx scripts/generate-verb-tests.mts",
     "add:tests:elixirfm": "tsx scripts/test-elixirfm.mts",
     "add:tests:reverso": "tsx scripts/test-reverso.mts",
     "add:tests:wiktionary": "tsx scripts/test-wiktionary.mts"
