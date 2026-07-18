@@ -80,7 +80,7 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
       return [...expandGeminationMorphemes(stem, KASRA), suffix]
 
     case 5:
-      return [...(c3.isHamza || c2.equals(c3) ? stem : expandGeminationMorphemes(stem, FATHA)), suffix]
+      return [...stem, suffix]
 
     case 6:
       return [...(c3.isHamza ? stem : expandGeminationMorphemes(stem, FATHA)), suffix]
