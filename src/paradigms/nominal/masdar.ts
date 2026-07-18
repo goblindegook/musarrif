@@ -335,6 +335,16 @@ function deriveMasdarFormVI(verb: NonFormIVerb): readonly Morpheme[] {
       measureMorpheme(TANWEEN_KASRA),
     ]
 
+  if (c2.equals(c3))
+    return [
+      measureMorpheme(TEH, FATHA),
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c2),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c3),
+    ]
+
   return [
     measureMorpheme(TEH, FATHA),
     radicalMorpheme(c1),

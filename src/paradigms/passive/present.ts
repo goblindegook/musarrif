@@ -274,6 +274,15 @@ function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId
       ...defectiveSuffix(mood, pronounId),
     ]
 
+  if (c2.equals(c3)) {
+    const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
+
+    if (isFemininePlural(pronounId))
+      return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
+
+    return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3), ...geminateSuffix(mood, pronounId)]
+  }
+
   return [
     measureMorpheme(TEH, FATHA),
     radicalMorpheme(c1),

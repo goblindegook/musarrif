@@ -80,6 +80,8 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
       return [...expandGeminationMorphemes(stem, KASRA), suffix]
 
     case 5:
+      return [...(c3.isHamza || c2.equals(c3) ? stem : expandGeminationMorphemes(stem, FATHA)), suffix]
+
     case 6:
       return [...(c3.isHamza ? stem : expandGeminationMorphemes(stem, FATHA)), suffix]
 
@@ -237,7 +239,7 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
   if (!final) return indicative
 
   const [, c2, c3] = verb.rootTokens
-  const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 7, 8, 10].includes(verb.form))
+  const geminateJussiveFatha = verb.form === 9 || (c2.equals(c3) && [1, 3, 4, 6, 7, 8, 10].includes(verb.form))
   const stem = indicative.slice(0, -1)
   const finalToken = final.at(-1)
 

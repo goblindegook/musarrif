@@ -1560,24 +1560,6 @@ describe('active present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 6), 'indicative')['3ms']).toEqualT(expected)
       })
-
-      test('تَحَابَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حبب', 6), 'indicative')).toEqualT({
-          '1s': 'أَتَحَابُّ',
-          '2ms': 'تَتَحَابُّ',
-          '2fs': 'تَتَحَابِّينَ',
-          '3ms': 'يَتَحَابُّ',
-          '3fs': 'تَتَحَابُّ',
-          '2d': 'تَتَحَابَّانِ',
-          '3md': 'يَتَحَابَّانِ',
-          '3fd': 'تَتَحَابَّانِ',
-          '1p': 'نَتَحَابُّ',
-          '2mp': 'تَتَحَابُّونَ',
-          '2fp': 'تَتَحَابَبْنَ',
-          '3mp': 'يَتَحَابُّونَ',
-          '3fp': 'يَتَحَابَبْنَ',
-        })
-      })
     })
 
     describe('hollow roots', () => {

@@ -222,6 +222,13 @@ function derivePassivePastFormV(verb: NonFormIVerb): PassivePastParams {
 function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = verb.rootTokens
 
+  if (c2.equals(c3))
+    return {
+      stem: [measureMorpheme(TEH, DAMMA), radicalMorpheme(c1), measureMorpheme(DAMMA, WAW), radicalMorpheme(c2)],
+      suffix: [measureMorpheme(KASRA), radicalMorpheme(c3)],
+      suffix3sd: [measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
+    }
+
   if (c3.isWeak)
     return {
       stem: [
