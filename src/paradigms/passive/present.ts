@@ -177,18 +177,6 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   const [c1, c2, c3] = verb.rootTokens
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (c1.isHamza && pronounId === '1s' && !c2.isWeak && !c2.equals(c3)) {
-    if (c3.isWeak)
-      return [
-        radicalMorpheme(WAW),
-        radicalMorpheme(c2),
-        measureMorpheme(FATHA),
-        ...(mood !== 'jussive' ? [measureMorpheme(ALIF_MAQSURA)] : []),
-      ]
-
-    return [radicalMorpheme(WAW), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-  }
-
   if (c2.isHamza) return [radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
   if (c3.isWeak)
