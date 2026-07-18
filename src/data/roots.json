@@ -3233,7 +3233,8 @@
     "root": "qwl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "mimi"],
+    "lexicalizedMasdars": ["maqaAlap"]
   },
   {
     "root": "qwl",
@@ -4269,7 +4270,7 @@
   {
     "root": "xTT",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
