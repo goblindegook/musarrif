@@ -2,7 +2,9 @@
   {
     "root": "$Er",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "passiveVoice": "impersonal",
+    "masdars": ["fu3ool"]
   },
   {
     "root": "$bb",

@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
-import { formatFormLabel, getAvailableParadigms, verbs } from '../../paradigms/verbs.ts'
+import { formatFormLabel, getAvailableParadigms, getVerbById, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import * as dimensions from '../dimensions.ts'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { masdarFormExercise } from './masdar-form.ts'
 
@@ -86,7 +87,7 @@ describe('masdarFormExercise', () => {
   })
 
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
-    vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
+    vi.spyOn(dimensions, 'randomNominalVerb').mockReturnValue(getVerbById('jwy-1')!)
     const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(exercise.explanation).toMatchObject({
       category: 'nominal',

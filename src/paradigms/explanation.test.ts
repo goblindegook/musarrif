@@ -925,8 +925,8 @@ describe('resolveNominalExplanationLayers', () => {
   })
 
   test('nominalMimiMasdar is true for default Form I mimi masdar when no explicit masdars are stored', () => {
-    const defaultMimi = getVerbById('$Er-1')!
-    const layers = resolveNominalExplanationLayers(defaultMimi, 'masdar', 'مَشْعَر')
+    const defaultMimi = getVerbById('jwy-1')!
+    const layers = resolveNominalExplanationLayers(defaultMimi, 'masdar', 'مَجاي')
     expect(layers.isMasdarMimi).toBe(true)
   })
 })

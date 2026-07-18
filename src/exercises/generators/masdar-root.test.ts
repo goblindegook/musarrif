@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
-import { verbs } from '../../paradigms/verbs.ts'
+import { getVerbById, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import * as dimensions from '../dimensions.ts'
 import { masdarRootExercise } from './masdar-root.ts'
 
 describe('masdarRootExercise', () => {
@@ -58,7 +59,7 @@ describe('masdarRootExercise', () => {
   })
 
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
-    vi.spyOn(Math, 'random').mockImplementationOnce(() => 0)
+    vi.spyOn(dimensions, 'randomNominalVerb').mockReturnValue(getVerbById('jwy-1')!)
     const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(exercise.explanation).toMatchObject({
       category: 'nominal',
