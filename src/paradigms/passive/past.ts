@@ -141,6 +141,13 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
+  if (c2.equals(c3))
+    return {
+      stem: [radicalMorpheme(c1), measureMorpheme(DAMMA, WAW), radicalMorpheme(c2)],
+      suffix: [measureMorpheme(KASRA), radicalMorpheme(c3)],
+      suffix3sd: [measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
+    }
+
   return {
     stem: [
       radicalMorpheme(c1),

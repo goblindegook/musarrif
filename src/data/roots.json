@@ -2617,7 +2617,8 @@
   },
   {
     "root": "mdd",
-    "form": 3
+    "form": 3,
+    "lexicalizedMasdars": ["midaAd"]
   },
   {
     "root": "mdd",
@@ -3703,7 +3704,8 @@
   },
   {
     "root": "srr",
-    "form": 3
+    "form": 3,
+    "lexicalizedMasdars": ["siraAr"]
   },
   {
     "root": "sw'",
