@@ -2346,6 +2346,8 @@
     "root": "kbr",
     "form": 1,
     "vowels": "u-u",
+    "masdars": ["fi3al", "fu3l"],
+    "lexicalizedMasdars": ["kabaArap", "kubaArap"],
     "passiveVoice": "impersonal"
   },
   {
@@ -2390,7 +2392,8 @@
   },
   {
     "root": "klm",
-    "form": 2
+    "form": 2,
+    "lexicalizedMasdars": ["kalaAm"]
   },
   {
     "root": "klm",
