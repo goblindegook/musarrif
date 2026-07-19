@@ -69,6 +69,7 @@ export function deriveActiveParticiple(verb: Verb): Word {
         radicalMorpheme(c3),
       ])
 
+    // FIXME: We may need a lexical active participle to deal with stative/inherent active participles (usually fa3iil, but there are exceptions like zrq-1).
     if (isFormIPastVowel(verb, DAMMA) && verb.masdars?.some((pattern) => ['fi3al', 'fa3aala'].includes(pattern)))
       return new Word([
         radicalMorpheme(c1),
@@ -78,20 +79,21 @@ export function deriveActiveParticiple(verb: Verb): Word {
         radicalMorpheme(c3),
       ])
 
-    if (c1.isWeak || isFormIPastVowel(verb, FATHA))
+    // FIXME: We may need a lexical active participle to deal with stative/inherent active participles (usually fa3iil, but there are exceptions like zrq-1).
+    if (!c1.isWeak && !isFormIPastVowel(verb, FATHA))
       return new Word([
         radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
+        measureMorpheme(FATHA),
         radicalMorpheme(c2),
-        measureMorpheme(KASRA),
+        measureMorpheme(KASRA, YEH),
         radicalMorpheme(c3),
       ])
 
     return new Word([
       radicalMorpheme(c1),
-      measureMorpheme(FATHA),
+      measureMorpheme(FATHA, ALIF),
       radicalMorpheme(c2),
-      measureMorpheme(KASRA, YEH),
+      measureMorpheme(KASRA),
       radicalMorpheme(c3),
     ])
   }
