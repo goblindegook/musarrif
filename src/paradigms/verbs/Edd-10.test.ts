@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("Edd-10", () => {
+describe('Edd-10', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("Edd-10")!)).toEqualT({
+    expect(conjugatePast(getVerbById('Edd-10')!)).toEqualT({
       '1s': 'اِسْتَعْدَدْتُ',
       '2ms': 'اِسْتَعْدَدْتَ',
       '2fs': 'اِسْتَعْدَدْتِ',
@@ -28,7 +28,7 @@ describe("Edd-10", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("Edd-10")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Edd-10')!, 'indicative')).toEqualT({
       '1s': 'أَسْتَعِدُّ',
       '2ms': 'تَسْتَعِدُّ',
       '2fs': 'تَسْتَعِدِّينَ',
@@ -46,7 +46,7 @@ describe("Edd-10", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("Edd-10")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Edd-10')!, 'subjunctive')).toEqualT({
       '1s': 'أَسْتَعِدَّ',
       '2ms': 'تَسْتَعِدَّ',
       '2fs': 'تَسْتَعِدِّي',
@@ -64,7 +64,7 @@ describe("Edd-10", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("Edd-10")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Edd-10')!, 'jussive')).toEqualT({
       '1s': 'أَسْتَعِدَّ',
       '2ms': 'تَسْتَعِدَّ',
       '2fs': 'تَسْتَعِدِّي',
@@ -82,7 +82,7 @@ describe("Edd-10", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("Edd-10")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('Edd-10')!)).toMatchObjectT({
       '2ms': 'اِسْتَعِدَّ',
       '2fs': 'اِسْتَعِدِّي',
       '2d': 'اِسْتَعِدَّا',
@@ -92,7 +92,7 @@ describe("Edd-10", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("Edd-10")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('Edd-10')!)).toEqualT({
       '1s': 'اُسْتُعْدِدْتُ',
       '2ms': 'اُسْتُعْدِدْتَ',
       '2fs': 'اُسْتُعْدِدْتِ',
@@ -110,7 +110,7 @@ describe("Edd-10", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("Edd-10")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Edd-10')!, 'indicative')).toEqualT({
       '1s': 'أُسْتَعَدُّ',
       '2ms': 'تُسْتَعَدُّ',
       '2fs': 'تُسْتَعَدِّينَ',
@@ -128,7 +128,7 @@ describe("Edd-10", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("Edd-10")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Edd-10')!, 'subjunctive')).toEqualT({
       '1s': 'أُسْتَعَدَّ',
       '2ms': 'تُسْتَعَدَّ',
       '2fs': 'تُسْتَعَدِّي',
@@ -146,7 +146,7 @@ describe("Edd-10", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("Edd-10")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Edd-10')!, 'jussive')).toEqualT({
       '1s': 'أُسْتَعَدَّ',
       '2ms': 'تُسْتَعَدَّ',
       '2fs': 'تُسْتَعَدِّي',
@@ -164,14 +164,14 @@ describe("Edd-10", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("Edd-10")!)).toEqualT('مُسْتَعِدّ')
+    expect(deriveActiveParticiple(getVerbById('Edd-10')!)).toEqualT('مُسْتَعِدّ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("Edd-10")!)).toEqualT('مُسْتَعَدّ')
+    expect(derivePassiveParticiple(getVerbById('Edd-10')!)).toEqualT('مُسْتَعَدّ')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("Edd-10")!)).toEqualT(['اِسْتِعْدَاد'])
+    expect(deriveMasdar(getVerbById('Edd-10')!)).toEqualT(['اِسْتِعْدَاد'])
   })
 })
