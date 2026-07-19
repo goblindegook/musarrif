@@ -4302,12 +4302,14 @@
   {
     "root": "xbz",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
   },
   {
     "root": "xdm",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": ["fa3la", "fi3la"]
   },
   {
     "root": "xdm",
@@ -4316,7 +4318,8 @@
   {
     "root": "xfD",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
   },
   {
     "root": "xfD",
