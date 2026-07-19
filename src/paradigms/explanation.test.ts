@@ -936,9 +936,9 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.activeParticipleKind).toBe('lexical')
   })
 
-  test('activeParticipleKind is "derived" for a regularly derived verb', () => {
+  test('activeParticipleKind is "faa3il" for a regularly derived verb', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.activeParticipleKind).toBe('derived')
+    expect(layers.activeParticipleKind).toBe('faa3il')
   })
 
   test('activeParticipleKind is "fa3iil" for a lexical active participle following the فَعِيل pattern', () => {

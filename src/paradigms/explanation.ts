@@ -113,7 +113,7 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   contractedImperative?: boolean
 }
 
-export type ActiveParticipleKind = 'derived' | 'lexical' | 'fa3iil'
+export type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
 
 export interface NominalExplanationLayers extends BaseExplanationLayers {
   category: 'nominal'
@@ -431,7 +431,7 @@ function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): s
 function resolveActiveParticipleKind(verb: Verb, nominal: NominalKind): ActiveParticipleKind | undefined {
   if (nominal !== 'activeParticiple') return undefined
   if (isFa3iilActiveParticiple(verb)) return 'fa3iil'
-  return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'derived'
+  return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'faa3il'
 }
 
 export function resolveNominalExplanationLayers(
