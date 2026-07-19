@@ -697,7 +697,9 @@
   {
     "root": "Ebd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": ["fi3aala"],
+    "lexicalizedMasdars": ["Eubuwdap", "Eubuwdiya~p"]
   },
   {
     "root": "Ebr",
