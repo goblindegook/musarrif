@@ -183,11 +183,10 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
     }
 
   if (c2.isWeak) {
-    const longVowelTail = c3.isHamza ? [] : [measureMorpheme(SUKOON)]
     return {
       stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
-      suffix3sd: [radicalMorpheme(YEH), ...longVowelTail, radicalMorpheme(c3), measureMorpheme(FATHA)],
+      suffix3sd: [radicalMorpheme(YEH), radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
   }
 

@@ -829,12 +829,13 @@
     "root": "Ewd",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l", "mimi"],
+    "masdars": ["fa3l", "fa3la", "mimi"],
     "passiveVoice": "impersonal"
   },
   {
     "root": "Ewd",
-    "form": 3
+    "form": 3,
+    "lexicalizedMasdars": ["EiwaAd"]
   },
   {
     "root": "Ewd",
@@ -1795,8 +1796,7 @@
   },
   {
     "root": "dxl",
-    "form": 4,
-    "lexicalizedMasdars": ["to incorporate", "incorporare", "incorporar"]
+    "form": 4
   },
   {
     "root": "dxl",
@@ -1865,7 +1865,8 @@
   {
     "root": "fkr",
     "form": 1,
-    "vowels": "a-u"
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
   },
   {
     "root": "fkr",
@@ -2055,7 +2056,7 @@
     "root": "gsl",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fu3l", "fa3iil"]
   },
   {
     "root": "gyb",
