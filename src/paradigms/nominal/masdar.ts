@@ -95,9 +95,6 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
         measureMorpheme(FATHA, ALIF, NOON),
       ]
 
-    case 'fa3ool':
-      return []
-
     case 'fa3iil':
       return [
         radicalMorpheme(c1),

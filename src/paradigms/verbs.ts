@@ -151,7 +151,6 @@ export const MASDAR_PATTERNS = [
   // Extended vowel
   'fa3aal', // extended activity, occupation
   'fa3iil', // sometimes adjective-like (rare)
-  'fa3ool', // intensive state (rare)
   'fi3aal', // ongoing action
   'fu3aal', // bodily state, sound, illness (uncommon)
   'fu3ool', // movement, transition, repeated action
