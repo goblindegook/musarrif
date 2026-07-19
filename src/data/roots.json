@@ -593,7 +593,8 @@
   {
     "root": "Dll",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fa3aal", "fa3aala"]
   },
   {
     "root": "Dmm",
