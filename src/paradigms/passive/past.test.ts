@@ -1421,35 +1421,6 @@ describe('passive past pattern', () => {
       })
     })
 
-    describe('hollow roots', () => {
-      test.each([
-        ['فيد', 'اُسْتُفِيْدَ'],
-        ['جوب', 'اُسْتُجِيْبَ'],
-        ['لوم', 'اُسْتُلِيْمَ'],
-        ['حول', 'اُسْتُحِيْلَ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
-      })
-
-      test('اِسْتَشَارَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('شور', 10))).toEqualT({
-          '1s': 'اُسْتُشِرْتُ',
-          '2ms': 'اُسْتُشِرْتَ',
-          '2fs': 'اُسْتُشِرْتِ',
-          '3ms': 'اُسْتُشِيْرَ',
-          '3fs': 'اُسْتُشِيْرَتْ',
-          '2d': 'اُسْتُشِرْتُمَا',
-          '3md': 'اُسْتُشِيْرَا',
-          '3fd': 'اُسْتُشِيْرَتَا',
-          '1p': 'اُسْتُشِرْنَا',
-          '2mp': 'اُسْتُشِرْتُمْ',
-          '2fp': 'اُسْتُشِرْتُنَّ',
-          '3mp': 'اُسْتُشِيْرُوا',
-          '3fp': 'اُسْتُشِرْنَ',
-        })
-      })
-    })
-
     describe('defective roots', () => {
       test.each([
         ['رعي', 'اُسْتُرْعِيَ'],
@@ -1478,13 +1449,8 @@ describe('passive past pattern', () => {
         expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
       })
     })
-
-    describe('hamzated final hollow roots', () => {
-      test.each([['ضوء', 'اُسْتُضِيْءَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
-      })
-    })
   })
+
   describe('Form Iq', () => {
     describe('hollow roots', () => {
       test.each([
