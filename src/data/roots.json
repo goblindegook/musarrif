@@ -1171,10 +1171,6 @@
   },
   {
     "root": "Hsn",
-    "form": 5
-  },
-  {
-    "root": "Hsn",
     "form": 6
   },
   {
@@ -3512,10 +3508,6 @@
     "form": 4
   },
   {
-    "root": "rwd",
-    "form": 4
-  },
-  {
     "root": "rwy",
     "form": 1,
     "vowels": "a-i",
@@ -4052,10 +4044,6 @@
   {
     "root": "wfy",
     "form": 4
-  },
-  {
-    "root": "wfy",
-    "form": 5
   },
   {
     "root": "wfy",
