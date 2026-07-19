@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import type { NominalExplanationLayers, VerbExplanationLayers } from '../paradigms/explanation'
+import type { VerbExplanationLayers } from '../paradigms/explanation'
 import { filterMasteredLayers } from './explanation'
 import { buildCardKey, type SrsStore } from './srs'
 
@@ -287,34 +287,36 @@ describe('filterMasteredLayers', () => {
   })
 
   test('hides nominal when nominal mastery reaches threshold using MASDAR_KINDS', () => {
-    const layers: NominalExplanationLayers = {
-      category: 'nominal',
-      paradigmRoots: ['ك', 'ت', 'ب'],
-      paradigmForm: 1,
-      arabic: 'كِتَابَة',
-      nominal: 'masdar',
-      isMasdarMimi: false,
-    }
-    const store: SrsStore = {
-      [buildCardKey('masdarForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
-    }
-    const result = filterMasteredLayers(store, layers)
+    const result = filterMasteredLayers(
+      {
+        [buildCardKey('masdarForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+      },
+      {
+        category: 'nominal',
+        paradigmRoots: ['ك', 'ت', 'ب'],
+        paradigmForm: 1,
+        arabic: 'كِتَابَة',
+        nominal: 'masdar',
+        isMasdarMimi: false,
+      },
+    )
     expect(result.nominal).toBeUndefined()
   })
 
   test('hides nominal when nominal mastery reaches threshold using PARTICIPLE_KINDS', () => {
-    const layers: NominalExplanationLayers = {
-      category: 'nominal',
-      paradigmRoots: ['ك', 'ت', 'ب'],
-      paradigmForm: 1,
-      arabic: 'كَاتِب',
-      nominal: 'activeParticiple',
-      activeParticipleKind: 'faa3il',
-    }
-    const store: SrsStore = {
-      [buildCardKey('participleForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
-    }
-    const result = filterMasteredLayers(store, layers)
+    const result = filterMasteredLayers(
+      {
+        [buildCardKey('participleForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+      },
+      {
+        category: 'nominal',
+        paradigmRoots: ['ك', 'ت', 'ب'],
+        paradigmForm: 1,
+        arabic: 'كَاتِب',
+        nominal: 'activeParticiple',
+        activeParticipleKind: 'faa3il',
+      },
+    )
     expect(result.nominal).toBeUndefined()
   })
 

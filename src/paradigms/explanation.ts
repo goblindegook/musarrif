@@ -133,12 +133,10 @@ interface MasdarExplanationLayers extends BaseExplanationLayers {
   masdarPattern?: string
 }
 
-export type NominalExplanationLayers =
-  | ActiveParticipleExplanationLayers
-  | PassiveParticipleExplanationLayers
-  | MasdarExplanationLayers
-
-type NominalExplanationLayersFor<T extends NominalKind> = Extract<NominalExplanationLayers, { nominal: T }>
+type NominalExplanationLayers<T extends NominalKind = NominalKind> = Extract<
+  ActiveParticipleExplanationLayers | PassiveParticipleExplanationLayers | MasdarExplanationLayers,
+  { nominal: T }
+>
 
 export type ExplanationLayers = VerbExplanationLayers | NominalExplanationLayers
 
@@ -456,7 +454,7 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
   verb: Verb,
   nominal: T,
   arabic: string | Word | readonly string[],
-): NominalExplanationLayersFor<T> {
+): NominalExplanationLayers<T> {
   const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
   const isFormI = isTriliteralFormIVerb(verb)
 
@@ -479,9 +477,9 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
         nominal,
         category: 'nominal',
         activeParticipleKind: resolveActiveParticipleKind(verb),
-      } as NominalExplanationLayersFor<T>
+      } as NominalExplanationLayers<T>
     case 'passiveParticiple':
-      return { ...base, nominal, category: 'nominal' } as NominalExplanationLayersFor<T>
+      return { ...base, nominal, category: 'nominal' } as NominalExplanationLayers<T>
     case 'masdar':
       return {
         ...base,
@@ -489,6 +487,6 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
         category: 'nominal',
         isMasdarMimi: isMimiMasdarSelection(verb, arabicString),
         masdarPattern: resolveMasdarPattern(verb, arabicString),
-      } as NominalExplanationLayersFor<T>
+      } as NominalExplanationLayers<T>
   }
 }
