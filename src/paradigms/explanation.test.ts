@@ -946,11 +946,6 @@ describe('resolveNominalExplanationLayers', () => {
     const layers = resolveNominalExplanationLayers(sEd, 'activeParticiple', 'سَعِيد')
     expect(layers.activeParticipleKind).toBe('fa3iil')
   })
-
-  test('activeParticipleKind is undefined for a non-participle nominal', () => {
-    const layers = resolveNominalExplanationLayers(verb, 'masdar', 'كِتَابَة')
-    expect(layers.activeParticipleKind).toBeUndefined()
-  })
 })
 
 // ── renderExplanation: nominal ────────────────────────────────────────────────
@@ -967,6 +962,7 @@ describe('renderExplanation with nominal', () => {
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',
+      activeParticipleKind: 'faa3il',
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
@@ -1045,6 +1041,7 @@ describe('renderExplanation with nominal', () => {
       arabic: 'كِتَابَة',
       rootType: 'sound',
       nominal: 'masdar',
+      isMasdarMimi: false,
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
@@ -1086,6 +1083,7 @@ describe('renderExplanation with nominal', () => {
       rootType: 'sound',
       vowels: 'a-u',
       nominal: 'activeParticiple',
+      activeParticipleKind: 'faa3il',
     }
     expect(renderExplanation(layers, t)[0]).toContainEqual({ text: 'explanation.form-i-pattern.a-u', kind: 'measure' })
   })
@@ -1099,6 +1097,7 @@ describe('renderExplanation with nominal', () => {
       arabic: 'كَاتِب',
       rootType: 'sound',
       nominal: 'activeParticiple',
+      activeParticipleKind: 'faa3il',
     }
     expect(renderExplanation(layers, t)).toHaveLength(2)
   })

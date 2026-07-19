@@ -83,6 +83,18 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
   if (layers.category === 'nominal') {
     const showNominal = mastery.nominal < threshold
 
+    if (layers.nominal === 'masdar')
+      return {
+        ...layers,
+        rootType: on(showRootType, layers.rootType),
+        form: on(showForm, layers.form),
+        vowels: on(showForm, layers.vowels),
+        formRoot: on(showForm || showRootType, layers.formRoot),
+        nominal: on(showNominal, layers.nominal),
+        isMasdarMimi: on(showNominal, layers.isMasdarMimi),
+        masdarPattern: on(showNominal, layers.masdarPattern),
+      }
+
     return {
       ...layers,
       rootType: on(showRootType, layers.rootType),
@@ -90,8 +102,6 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
       vowels: on(showForm, layers.vowels),
       formRoot: on(showForm || showRootType, layers.formRoot),
       nominal: on(showNominal, layers.nominal),
-      isMasdarMimi: on(showNominal, layers.isMasdarMimi),
-      masdarPattern: on(showNominal, layers.masdarPattern),
     }
   }
 

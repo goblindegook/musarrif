@@ -293,6 +293,7 @@ describe('filterMasteredLayers', () => {
       paradigmForm: 1,
       arabic: 'كِتَابَة',
       nominal: 'masdar',
+      isMasdarMimi: false,
     }
     const store: SrsStore = {
       [buildCardKey('masdarForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
@@ -308,6 +309,7 @@ describe('filterMasteredLayers', () => {
       paradigmForm: 1,
       arabic: 'كَاتِب',
       nominal: 'activeParticiple',
+      activeParticipleKind: 'faa3il',
     }
     const store: SrsStore = {
       [buildCardKey('participleForm', 'sound', 1)]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },

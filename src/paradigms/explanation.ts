@@ -115,13 +115,30 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
 
 export type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
 
-export interface NominalExplanationLayers extends BaseExplanationLayers {
+interface ActiveParticipleExplanationLayers extends BaseExplanationLayers {
   category: 'nominal'
-  nominal?: NominalKind
-  isMasdarMimi?: boolean
-  masdarPattern?: string
-  activeParticipleKind?: ActiveParticipleKind
+  nominal: 'activeParticiple'
+  activeParticipleKind: ActiveParticipleKind
 }
+
+interface PassiveParticipleExplanationLayers extends BaseExplanationLayers {
+  category: 'nominal'
+  nominal: 'passiveParticiple'
+}
+
+interface MasdarExplanationLayers extends BaseExplanationLayers {
+  category: 'nominal'
+  nominal: 'masdar'
+  isMasdarMimi: boolean
+  masdarPattern?: string
+}
+
+export type NominalExplanationLayers =
+  | ActiveParticipleExplanationLayers
+  | PassiveParticipleExplanationLayers
+  | MasdarExplanationLayers
+
+type NominalExplanationLayersFor<T extends NominalKind> = Extract<NominalExplanationLayers, { nominal: T }>
 
 export type ExplanationLayers = VerbExplanationLayers | NominalExplanationLayers
 
@@ -233,8 +250,10 @@ function renderPronounSentences(
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
   if (layers?.nominal == null) return ''
-  if (layers.activeParticipleKind === 'fa3iil') return 'explanation.nominal.activeParticiple.form-i-fa3iil'
-  if (layers.activeParticipleKind === 'lexical') return 'explanation.nominal.activeParticiple.form-i-lexical'
+  if (layers.nominal === 'activeParticiple') {
+    if (layers.activeParticipleKind === 'fa3iil') return 'explanation.nominal.activeParticiple.form-i-fa3iil'
+    if (layers.activeParticipleKind === 'lexical') return 'explanation.nominal.activeParticiple.form-i-lexical'
+  }
   if (layers.nominal !== 'masdar')
     return layers.paradigmRoots.length > 3
       ? `explanation.nominal.${layers.nominal}.quad`
@@ -263,7 +282,7 @@ export function renderExplanation(
     arabic: toArabicText(layers.arabic),
     root: layers.paradigmRoots.join('-'),
     form: toRoman(layers.paradigmForm),
-    pattern: nominalLayers?.masdarPattern ?? '',
+    pattern: (nominalLayers?.nominal === 'masdar' ? nominalLayers?.masdarPattern : undefined) ?? '',
     pastForm: layers.pastForm ?? '',
     presentForm: layers.presentForm ?? '',
   }
@@ -428,21 +447,20 @@ function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): s
     : (NON_FORM_I_MASDAR_PATTERNS[verb.form] ?? '')
 }
 
-function resolveActiveParticipleKind(verb: Verb, nominal: NominalKind): ActiveParticipleKind | undefined {
-  if (nominal !== 'activeParticiple') return undefined
+function resolveActiveParticipleKind(verb: Verb): ActiveParticipleKind {
   if (isFa3iilActiveParticiple(verb)) return 'fa3iil'
   return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'faa3il'
 }
 
-export function resolveNominalExplanationLayers(
+export function resolveNominalExplanationLayers<T extends NominalKind>(
   verb: Verb,
-  nominal: NominalKind,
+  nominal: T,
   arabic: string | Word | readonly string[],
-): NominalExplanationLayers {
+): NominalExplanationLayersFor<T> {
   const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
   const isFormI = isTriliteralFormIVerb(verb)
-  return {
-    category: 'nominal',
+
+  const base = {
     paradigmRoots: Array.from(verb.root),
     paradigmForm: verb.form,
     form: toFormDescriptor(verb),
@@ -452,9 +470,25 @@ export function resolveNominalExplanationLayers(
     pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
-    nominal,
-    isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabicString),
-    masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabicString) : undefined,
-    activeParticipleKind: resolveActiveParticipleKind(verb, nominal),
+  }
+
+  switch (nominal) {
+    case 'activeParticiple':
+      return {
+        ...base,
+        nominal,
+        category: 'nominal',
+        activeParticipleKind: resolveActiveParticipleKind(verb),
+      } as NominalExplanationLayersFor<T>
+    case 'passiveParticiple':
+      return { ...base, nominal, category: 'nominal' } as NominalExplanationLayersFor<T>
+    case 'masdar':
+      return {
+        ...base,
+        nominal,
+        category: 'nominal',
+        isMasdarMimi: isMimiMasdarSelection(verb, arabicString),
+        masdarPattern: resolveMasdarPattern(verb, arabicString),
+      } as NominalExplanationLayersFor<T>
   }
 }
