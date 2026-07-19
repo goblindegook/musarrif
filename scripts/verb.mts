@@ -30,7 +30,7 @@ interface RootEntry {
   form: VerbForm
   vowels?: FormIPattern
   masdars?: readonly MasdarPattern[]
-  lexicalizedMasdars?: readonly string[]
+  lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
@@ -53,7 +53,7 @@ interface WizardState {
   vowels?: FormIPattern
   passiveVoice?: PassiveVoice
   masdars?: MasdarPatternChoice[]
-  lexicalizedMasdars?: string[]
+  lexicalMasdars?: string[]
   noPassiveParticiple?: true
   isNewRoot: boolean
   rootGloss: Translations
@@ -134,12 +134,12 @@ async function pickMasdars(existing: readonly MasdarPatternChoice[] = []): Promi
   return chosen
 }
 
-async function pickLexicalizedMasdars(existing: readonly string[] = []): Promise<string[] | Back> {
+async function pickLexicalMasdars(existing: readonly string[] = []): Promise<string[] | Back> {
   const chosen = [...existing]
 
   while (true) {
     if (chosen.length > 0) console.log(`  Selected so far: ${chosen.join(', ')}`)
-    const value = await inputWithBack('Add a lexicalized masdar (Arabic or transliterated, blank when done):')
+    const value = await inputWithBack('Add a lexical masdar (Arabic or transliterated, blank when done):')
     if (value === BACK) return BACK
     const normalized = normalizeArabic(value)
     if (!normalized) break
@@ -162,7 +162,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     vowels: undefined,
     passiveVoice: undefined,
     masdars: undefined,
-    lexicalizedMasdars: undefined,
+    lexicalMasdars: undefined,
     noPassiveParticiple: undefined,
     isNewRoot: false,
     rootGloss: { en: '', it: '', pt: '' },
@@ -189,7 +189,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.vowels = undefined
       state.passiveVoice = undefined
       state.masdars = undefined
-      state.lexicalizedMasdars = undefined
+      state.lexicalMasdars = undefined
       state.noPassiveParticiple = undefined
       state.isNewRoot = !locales.en.roots[rootStr]
       state.vid = ''
@@ -205,7 +205,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
           const parts = [`Form ${toRoman(e.form)}`]
           if (e.vowels) parts.push(`vowels: ${e.vowels}`)
           if (e.masdars?.length) parts.push(`masdars: [${e.masdars.join(', ')}]`)
-          if (e.lexicalizedMasdars?.length) parts.push(`lexicalizedMasdars: [${e.lexicalizedMasdars.join(', ')}]`)
+          if (e.lexicalMasdars?.length) parts.push(`lexicalMasdars: [${e.lexicalMasdars.join(', ')}]`)
           if (e.passiveVoice) parts.push(`passive: ${e.passiveVoice}`)
           if (e.noPassiveParticiple) parts.push('no passive participle')
           console.log(`  ${e.root}-${e.form}: ${parts.join(', ')}`)
@@ -239,7 +239,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.vowels = undefined
       state.passiveVoice = undefined
       state.masdars = undefined
-      state.lexicalizedMasdars = undefined
+      state.lexicalMasdars = undefined
       state.noPassiveParticiple = undefined
       step += 1
       continue
@@ -317,13 +317,13 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
 
     if (step === 5) {
       console.log()
-      const lexicalizedMasdars = await pickLexicalizedMasdars(state.editEntry?.lexicalizedMasdars ?? [])
-      if (lexicalizedMasdars === BACK) {
+      const lexicalMasdars = await pickLexicalMasdars(state.editEntry?.lexicalMasdars ?? [])
+      if (lexicalMasdars === BACK) {
         step -= 1
         continue
       }
 
-      state.lexicalizedMasdars = lexicalizedMasdars.length === 0 ? undefined : lexicalizedMasdars
+      state.lexicalMasdars = lexicalMasdars.length === 0 ? undefined : lexicalMasdars
       step += 1
       continue
     }
@@ -419,8 +419,8 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       if (state.vowels != null) entry.vowels = state.vowels
       if (state.masdars != null) entry.masdars = state.masdars
 
-      const lexicalizedMasdars = [...new Set((state.lexicalizedMasdars ?? []).map((value) => normalizeArabic(value)))]
-      if (lexicalizedMasdars.length > 0) entry.lexicalizedMasdars = lexicalizedMasdars
+      const lexicalMasdars = [...new Set((state.lexicalMasdars ?? []).map((value) => normalizeArabic(value)))]
+      if (lexicalMasdars.length > 0) entry.lexicalMasdars = lexicalMasdars
 
       if (state.passiveVoice != null) entry.passiveVoice = state.passiveVoice
       if (state.noPassiveParticiple) entry.noPassiveParticiple = true

@@ -431,7 +431,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fi3aal"],
-    "lexicalizedMasdars": ["<iwiy~", ">uwiy~"]
+    "lexicalMasdars": ["<iwiy~", ">uwiy~"]
   },
   {
     "root": "'wy",
@@ -686,7 +686,7 @@
   {
     "root": "ETy",
     "form": 4,
-    "lexicalizedMasdars": ["EaTaA'"]
+    "lexicalMasdars": ["EaTaA'"]
   },
   {
     "root": "EZm",
@@ -699,7 +699,7 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fi3aala"],
-    "lexicalizedMasdars": ["Eubuwdap", "Eubuwdiya~p"]
+    "lexicalMasdars": ["Eubuwdap", "Eubuwdiya~p"]
   },
   {
     "root": "Ebd",
@@ -843,7 +843,7 @@
   {
     "root": "Ewd",
     "form": 3,
-    "lexicalizedMasdars": ["EiwaAd"]
+    "lexicalMasdars": ["EiwaAd"]
   },
   {
     "root": "Ewd",
@@ -944,7 +944,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fu3l"],
-    "lexicalizedMasdars": ["maHaba~p"]
+    "lexicalMasdars": ["maHaba~p"]
   },
   {
     "root": "Hbb",
@@ -953,7 +953,7 @@
   {
     "root": "Hbb",
     "form": 4,
-    "lexicalizedMasdars": ["Hub~", "maHaba~p"]
+    "lexicalMasdars": ["Hub~", "maHaba~p"]
   },
   {
     "root": "Hbb",
@@ -1074,7 +1074,7 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": [],
-    "lexicalizedMasdars": ["Harab"],
+    "lexicalMasdars": ["Harab"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -1097,7 +1097,7 @@
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3l"],
-    "lexicalizedMasdars": ["Harakap"],
+    "lexicalMasdars": ["Harakap"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
@@ -1714,7 +1714,7 @@
   {
     "root": "dEw",
     "form": 8,
-    "lexicalizedMasdars": ["daEowaY"]
+    "lexicalMasdars": ["daEowaY"]
   },
   {
     "root": "dEw",
@@ -1767,7 +1767,7 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "fa3aal"],
-    "lexicalizedMasdars": ["dayomuwmap"],
+    "lexicalMasdars": ["dayomuwmap"],
     "passiveVoice": "impersonal"
   },
   {
@@ -1801,7 +1801,7 @@
   {
     "root": "dxl",
     "form": 3,
-    "lexicalizedMasdars": ["dixaAl"]
+    "lexicalMasdars": ["dixaAl"]
   },
   {
     "root": "dxl",
@@ -1977,7 +1977,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l", "fu3laan"],
-    "lexicalizedMasdars": ["magofirap"]
+    "lexicalMasdars": ["magofirap"]
   },
   {
     "root": "gfr",
@@ -2301,7 +2301,7 @@
   {
     "root": "jwb",
     "form": 4,
-    "lexicalizedMasdars": ["<ijaAbap"]
+    "lexicalMasdars": ["<ijaAbap"]
   },
   {
     "root": "jwb",
@@ -2325,7 +2325,7 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": ["mimi", "fa3l"],
-    "lexicalizedMasdars": ["jayo}ap", "jiy}ap"]
+    "lexicalMasdars": ["jayo}ap", "jiy}ap"]
   },
   {
     "root": "jzr",
@@ -2356,7 +2356,7 @@
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fi3al", "fu3l"],
-    "lexicalizedMasdars": ["kabaArap", "kubaArap"],
+    "lexicalMasdars": ["kabaArap", "kubaArap"],
     "passiveVoice": "impersonal"
   },
   {
@@ -2402,7 +2402,7 @@
   {
     "root": "klm",
     "form": 2,
-    "lexicalizedMasdars": ["kalaAm"]
+    "lexicalMasdars": ["kalaAm"]
   },
   {
     "root": "klm",
@@ -2487,7 +2487,7 @@
     "vowels": "a-u",
     "passiveVoice": "none",
     "masdars": ["fa3l", "fi3aal"],
-    "lexicalizedMasdars": ["kayonuwnap"],
+    "lexicalMasdars": ["kayonuwnap"],
     "noPassiveParticiple": true
   },
   {
@@ -2607,7 +2607,7 @@
     "form": 1,
     "vowels": "a-i",
     "passiveVoice": "impersonal",
-    "lexicalizedMasdars": ["muDiy~"]
+    "lexicalMasdars": ["muDiy~"]
   },
   {
     "root": "mdH",
@@ -2627,7 +2627,7 @@
   {
     "root": "mdd",
     "form": 3,
-    "lexicalizedMasdars": ["midaAd"]
+    "lexicalMasdars": ["midaAd"]
   },
   {
     "root": "mdd",
@@ -2974,7 +2974,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": [],
-    "lexicalizedMasdars": ["niya~p"]
+    "lexicalMasdars": ["niya~p"]
   },
   {
     "root": "nwy",
@@ -3244,7 +3244,7 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "mimi"],
-    "lexicalizedMasdars": ["maqaAlap"]
+    "lexicalMasdars": ["maqaAlap"]
   },
   {
     "root": "qwl",
@@ -3287,12 +3287,12 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": [],
-    "lexicalizedMasdars": ["ru&oyap"]
+    "lexicalMasdars": ["ru&oyap"]
   },
   {
     "root": "r'y",
     "form": 3,
-    "lexicalizedMasdars": ["ri}aA'", "riyaA'"]
+    "lexicalMasdars": ["ri}aA'", "riyaA'"]
   },
   {
     "root": "r'y",
@@ -3509,7 +3509,7 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": ["fu3aal"],
-    "lexicalizedMasdars": ["maso>alap", "taso|l"]
+    "lexicalMasdars": ["maso>alap", "taso|l"]
   },
   {
     "root": "s'l",
@@ -3714,7 +3714,7 @@
   {
     "root": "srr",
     "form": 3,
-    "lexicalizedMasdars": ["siraAr"]
+    "lexicalMasdars": ["siraAr"]
   },
   {
     "root": "sw'",
@@ -3780,7 +3780,7 @@
   {
     "root": "tmm",
     "form": 2,
-    "lexicalizedMasdars": ["tatima~p"]
+    "lexicalMasdars": ["tatima~p"]
   },
   {
     "root": "tmm",
@@ -4113,7 +4113,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fi3aala", "mimi"],
-    "lexicalizedMasdars": ["lidap"]
+    "lexicalMasdars": ["lidap"]
   },
   {
     "root": "wld",
@@ -4196,7 +4196,7 @@
   {
     "root": "wqy",
     "form": 8,
-    "lexicalizedMasdars": ["tuqaAp", "tuqoyap"]
+    "lexicalMasdars": ["tuqaAp", "tuqoyap"]
   },
   {
     "root": "wrd",
@@ -4230,7 +4230,7 @@
   {
     "root": "wsws",
     "form": 1,
-    "lexicalizedMasdars": ["wasowaAs", "wisowaAs"],
+    "lexicalMasdars": ["wasowaAs", "wisowaAs"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4339,7 +4339,7 @@
     "root": "xlS",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fu3ool", "fa3aal"],
+    "masdars": ["fu3ool"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4455,7 +4455,7 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3l", "fa3alaan", "fa3la"],
-    "lexicalizedMasdars": ["xayoluwlap", "maxiylap", "maxaAlap"],
+    "lexicalMasdars": ["xayoluwlap", "maxiylap", "maxaAlap"],
     "passiveVoice": "impersonal"
   },
   {
@@ -4483,7 +4483,7 @@
   {
     "root": "xyr",
     "form": 8,
-    "lexicalizedMasdars": ["xiyrap", "xiyaAr"]
+    "lexicalMasdars": ["xiyrap", "xiyaAr"]
   },
   {
     "root": "y's",
@@ -4593,7 +4593,7 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3iil"],
-    "lexicalizedMasdars": ["zay~"]
+    "lexicalMasdars": ["zay~"]
   },
   {
     "root": "zwy",

@@ -559,9 +559,9 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Morpheme[] {
 export function deriveMasdar(verb: Verb): readonly Word[] {
   const patterns: readonly MasdarPattern[] = (isTriliteralFormIVerb(verb) && verb.masdars) || ['mimi']
   const derived = patterns.map((pattern) => new Word(masdar(verb, pattern)))
-  const lexicalized = (verb.lexicalizedMasdars ?? [])
+  const lexical = (verb.lexicalMasdars ?? [])
     .map(transliterateReverse)
     .map(tokenize)
     .map((tokens) => new Word([measureMorpheme(...tokens)]))
-  return [...derived, ...lexicalized]
+  return [...derived, ...lexical]
 }

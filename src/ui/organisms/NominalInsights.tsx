@@ -30,8 +30,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
   const { t } = useI18n()
   const formLabel = formatFormLabel(verb.form, verb.root)
   const masdarValues = Array.isArray(arabic) ? arabic : [arabic]
-  const lexicalizedMasdarStartIndex =
-    masdarValues.length - (nominal === 'masdar' ? (verb.lexicalizedMasdars?.length ?? 0) : 0)
+  const lexicalMasdarStartIndex = masdarValues.length - (nominal === 'masdar' ? (verb.lexicalMasdars?.length ?? 0) : 0)
 
   return (
     <>
@@ -44,9 +43,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
                   <span>
                     <AnnotatedArabic word={masdar} />
                   </span>
-                  {index >= lexicalizedMasdarStartIndex && (
-                    <MasdarNote>({t('meta.verbalNoun.lexicalized')})</MasdarNote>
-                  )}
+                  {index >= lexicalMasdarStartIndex && <MasdarNote>({t('meta.verbalNoun.lexical')})</MasdarNote>}
                 </MasdarItem>
                 {index < masdarValues.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
               </Fragment>

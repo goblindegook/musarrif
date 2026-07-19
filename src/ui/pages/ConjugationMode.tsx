@@ -146,7 +146,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     () => (availableParadigms.includes('masdar') ? deriveMasdar(selectedVerb).map(String) : []),
     [selectedVerb, availableParadigms],
   )
-  const lexicalizedMasdarStartIndex = masdar.length - (selectedVerb.lexicalizedMasdars?.length ?? 0)
+  const lexicalMasdarStartIndex = masdar.length - (selectedVerb.lexicalMasdars?.length ?? 0)
   const activeParticiple = useMemo(
     () => (availableParadigms.includes('active.participle') ? String(deriveActiveParticiple(selectedVerb)) : null),
     [selectedVerb, availableParadigms],
@@ -354,8 +354,8 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
                       <Fragment key={value}>
                         <MasdarItem>
                           <span>{formatArabic(value)}</span>
-                          {index >= lexicalizedMasdarStartIndex && (
-                            <MasdarNote>({t('meta.verbalNoun.lexicalized')})</MasdarNote>
+                          {index >= lexicalMasdarStartIndex && (
+                            <MasdarNote>({t('meta.verbalNoun.lexical')})</MasdarNote>
                           )}
                         </MasdarItem>
                         {index < masdar.length - 1 && <MasdarSeparator>،</MasdarSeparator>}

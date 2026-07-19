@@ -36,7 +36,7 @@ describe('synthesizeVerb', () => {
       form: 1,
       vowels: 'a-u',
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
-      lexicalizedMasdars: [],
+      lexicalMasdars: [],
       lemma: 'كَتَبَ',
       root: 'كتب',
       rootId: 'ktb',

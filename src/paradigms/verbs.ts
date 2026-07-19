@@ -87,7 +87,7 @@ type VerbProps<Root extends VerbRoot, Tokens extends RootTokens, Form extends nu
   rootTokens: Tokens
   form: Form
   masdars?: readonly MasdarPattern[]
-  lexicalizedMasdars?: readonly string[]
+  lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
 }
@@ -174,7 +174,7 @@ type RawVerb = {
   vowels?: FormIPattern
   presentHollow?: PresentHollowBehaviour
   masdars?: readonly MasdarPattern[]
-  lexicalizedMasdars?: readonly string[]
+  lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
@@ -241,7 +241,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             rootTokens,
             form: 1,
             masdars: raw.masdars,
-            lexicalizedMasdars: raw.lexicalizedMasdars,
+            lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
             noPassiveParticiple: raw.noPassiveParticiple,
           }
@@ -249,7 +249,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             root: toQuadriliteralRoot(root),
             rootTokens,
             form: raw.form as Exclude<QuadriliteralForm, 1>,
-            lexicalizedMasdars: raw.lexicalizedMasdars,
+            lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
             noPassiveParticiple: raw.noPassiveParticiple,
           },
@@ -264,7 +264,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       vowels: raw.vowels ?? 'a-a',
       presentHollow: raw.presentHollow,
       masdars: raw.masdars,
-      lexicalizedMasdars: raw.lexicalizedMasdars,
+      lexicalMasdars: raw.lexicalMasdars,
       passiveVoice: raw.passiveVoice,
       noPassiveParticiple: raw.noPassiveParticiple,
       contractedImperative: raw.contractedImperative,
@@ -275,7 +275,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     root: toTriliteralRoot(root),
     rootTokens,
     form: raw.form as Exclude<TriliteralForm, 1>,
-    lexicalizedMasdars: raw.lexicalizedMasdars,
+    lexicalMasdars: raw.lexicalMasdars,
     // Form VII supports at most an impersonal passive.
     passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
     noPassiveParticiple: raw.noPassiveParticiple,
@@ -368,7 +368,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
           form: 1,
           vowels: pattern,
           masdars: matchingFormI?.masdars,
-          lexicalizedMasdars: matchingFormI?.lexicalizedMasdars ?? [],
+          lexicalMasdars: matchingFormI?.lexicalMasdars ?? [],
         }
       : {
           root: triliteralRoot,

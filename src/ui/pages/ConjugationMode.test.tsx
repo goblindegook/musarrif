@@ -69,14 +69,14 @@ test('shows multiple masdars', () => {
   expect(within(detail).getByText('مَوْعِد')).toBeInTheDocument()
 })
 
-test('shows lexicalized masdars after regular masdars with a lexicalized label', () => {
+test('shows lexical masdars after regular masdars with a lexical label', () => {
   localStorage.setItem('conjugator:diacriticsPreference', 'all')
   renderConjugationMode({ verbId: 'tmm-2' })
 
   const detail = screen.getByText('Verbal nouns').parentElement!
   expect(within(detail).getByText('تَتْمِيم')).toBeInTheDocument()
   expect(within(detail).getByText('تَتِمَّة')).toBeInTheDocument()
-  expect(within(detail).getByText('(lexicalized)')).toBeInTheDocument()
+  expect(within(detail).getByText('(lexical)')).toBeInTheDocument()
 })
 
 test('loads لَيْسَ without deriving unavailable nominals', () => {

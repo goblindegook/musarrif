@@ -60,9 +60,9 @@ describe('NominalInsights', () => {
       expect(document.body).toHaveTextContent(/pattern مَفْعِل/)
     })
 
-    test('shows lexicalized masdar label', () => {
+    test('shows lexical masdar label', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('tmm-2')!} nominal="masdar" arabic={['تَتْمِيم', 'تَتِمَّة']} />)
-      expect(screen.getByText('(lexicalized)')).toBeInTheDocument()
+      expect(screen.getByText('(lexical)')).toBeInTheDocument()
     })
   })
 
