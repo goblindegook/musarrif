@@ -928,8 +928,7 @@
     "root": "HbT",
     "form": 1,
     "vowels": "i-a",
-    "noPassiveParticiple": true,
-    "masdars": ["fu3ool"]
+    "masdars": ["fa3al"]
   },
   {
     "root": "Hbb",
@@ -1728,7 +1727,7 @@
     "root": "drs",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fi3aal", "fi3aala"]
   },
   {
     "root": "drs",
