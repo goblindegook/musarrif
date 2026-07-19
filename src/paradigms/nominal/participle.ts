@@ -69,25 +69,7 @@ export function deriveActiveParticiple(verb: Verb): Word {
         radicalMorpheme(c3),
       ])
 
-    if (c3.isHamza && isFormIPastVowel(verb, DAMMA))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA, YEH, SUKOON),
-        radicalMorpheme(c3),
-      ])
-
-    if (c1.isHamza && isFormIPastVowel(verb, DAMMA))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA, YEH, SUKOON),
-        radicalMorpheme(c3),
-      ])
-
-    if (isFormIPastVowel(verb, DAMMA) && verb.masdars?.every((pattern) => ['fi3al', 'fa3aala'].includes(pattern)))
+    if (isFormIPastVowel(verb, DAMMA) && verb.masdars?.some((pattern) => ['fi3al', 'fa3aala'].includes(pattern)))
       return new Word([
         radicalMorpheme(c1),
         measureMorpheme(FATHA),

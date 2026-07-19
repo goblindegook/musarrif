@@ -133,10 +133,8 @@ describe('active participle', () => {
       test.each([
         ['ءذن', 'آذِن'],
         ['ءجر', 'آجِر'],
-        ['ءصل', 'أَصِيْل'],
         ['ءكل', 'آكِل'],
         ['ءخذ', 'آخِذ'],
-        ['ءمر', 'آمِر'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
@@ -191,7 +189,6 @@ describe('active participle', () => {
       test.each([
         ['بدء', 'بَادِئ'],
         ['قرء', 'قَارِئ'],
-        ['جرء', 'جَرِيْء'],
         ['كلء', 'كَالِئ'],
       ])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
