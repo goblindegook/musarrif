@@ -48,6 +48,15 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
         radicalMorpheme(c3),
       ]
 
+    case 'fa3il':
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(FATHA),
+        radicalMorpheme(c2),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c3),
+      ]
+
     case 'fa3aal':
       return [
         radicalMorpheme(c1),

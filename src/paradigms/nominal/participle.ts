@@ -60,7 +60,7 @@ export function deriveActiveParticiple(verb: Verb): Word {
         radicalMorpheme(c3),
       ])
 
-    if (verb.masdars?.some((pattern) => ['fa3al', 'fa3aal'].includes(pattern)))
+    if (verb.masdars?.some((pattern) => ['fa3al', 'fa3aal', 'fi3l'].includes(pattern)))
       return new Word([
         radicalMorpheme(c1),
         measureMorpheme(FATHA, ALIF),

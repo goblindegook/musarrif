@@ -146,6 +146,7 @@ export const MASDAR_PATTERNS = [
   'fi3l', // mental states, abstract qualities
   'fu3l', // inherent states, qualities
   'fa3al', // abstract result
+  'fa3il', // action (uncommon)
   // Extended vowel
   'fa3aal', // extended activity, occupation
   'fa3iil', // sometimes adjective-like (rare)
