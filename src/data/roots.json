@@ -690,7 +690,8 @@
   {
     "root": "EZm",
     "form": 1,
-    "vowels": "u-u"
+    "vowels": "u-u",
+    "masdars": ["fi3al", "fa3aala"]
   },
   {
     "root": "Ebd",
@@ -1313,7 +1314,8 @@
   {
     "root": "Sgr",
     "form": 1,
-    "vowels": "u-u"
+    "vowels": "u-u",
+    "masdars": ["fi3al", "fa3aala", "fa3aal"]
   },
   {
     "root": "SlH",
@@ -4045,9 +4047,8 @@
   {
     "root": "whn",
     "form": 1,
-    "vowels": "u-u",
-    "masdars": ["fa3l"],
-    "passiveVoice": "none"
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fa3al"]
   },
   {
     "root": "wjb",
@@ -4088,7 +4089,7 @@
     "root": "wjz",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3aala"]
   },
   {
     "root": "wk'",

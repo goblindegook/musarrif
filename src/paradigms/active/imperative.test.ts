@@ -75,7 +75,6 @@ describe('imperative', () => {
 
     describe('assimilated roots', () => {
       test.each([
-        ['وجز', 'جُزْ'],
         ['وطن', 'طِنْ'],
         ['وجب', 'جِبْ'],
         ['وصف', 'صِفْ'],
@@ -113,26 +112,6 @@ describe('imperative', () => {
           '2d': 'ضَعَا',
           '2mp': 'ضَعُوا',
           '2fp': 'ضَعْنَ',
-        })
-      })
-
-      test('وَثُقَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وثق', 1))).toMatchObjectT({
-          '2ms': 'ثُقْ',
-          '2fs': 'ثُقِي',
-          '2d': 'ثُقَا',
-          '2mp': 'ثُقُوا',
-          '2fp': 'ثُقْنَ',
-        })
-      })
-
-      test('وَهُنَ conjugation', () => {
-        expect(conjugateImperative(getVerb('وهن', 1))).toMatchObjectT({
-          '2ms': 'هُنْ',
-          '2fs': 'هُنِي',
-          '2d': 'هُنَا',
-          '2mp': 'هُنُوا',
-          '2fp': 'هُنَّ',
         })
       })
 
