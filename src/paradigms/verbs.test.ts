@@ -301,6 +301,7 @@ describe('getAvailableParadigms', () => {
       ['نوم', 2],
       ['نوم', 4],
       ['نوم', 10],
+      ['بعد', 1],
     ])('%s (Form %d)', (root, form) => {
       expect(getAvailableParadigms(getVerb(root, form))).toContain('passive.past')
     })
@@ -316,7 +317,6 @@ describe('getAvailableParadigms', () => {
       ['ميل', 1],
       ['موت', 1],
       ['قرر', 1],
-      ['بعد', 1],
       ['بدو', 1],
       ['جرء', 1],
       ['ءذن', 1],

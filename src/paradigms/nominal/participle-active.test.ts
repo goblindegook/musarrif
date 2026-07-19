@@ -11,7 +11,7 @@ describe('active participle', () => {
         ['جمع', 'جَامِع'],
         ['دعم', 'دَاعِم'],
         ['كلم', 'كَالِم'],
-        ['بعد', 'بَعِيْد'],
+        ['بعد', 'بَاعِد'],
         ['ذكر', 'ذَاكِر'],
         ['حضر', 'حَاضِر'],
         ['حدث', 'حَادِث'],
@@ -21,14 +21,13 @@ describe('active participle', () => {
         ['حسب', 'حَاسِب'],
         ['دحرج', 'مُدَحْرِج'],
         ['مثل', 'مَاثِل'],
-        ['سعد', 'سَعِيْد'],
+        ['سعد', 'سَعِيد'],
         ['صعد', 'صَاعِد'],
         ['صغر', 'صَاغِر'],
         ['نظر', 'نَاظِر'],
         ['صبح', 'صَابِح'],
         ['سلم', 'سَالِم'],
         ['سكن', 'سَاكِن'],
-        ['زرق', 'أَزْرَق'],
         ['زعم', 'زَاعِم'],
         ['نفس', 'نَافِس'],
         ['مكن', 'مَكِين'],
@@ -88,7 +87,6 @@ describe('active participle', () => {
         ['ميل', 'مَايِل'],
         ['كون', 'كَائِن'],
         ['صير', 'صَائِر'],
-        ['خيل', 'أَخْيَل'],
         ['لوم', 'لَائِم'],
         ['شيد', 'شَائِد'],
         ['قول', 'قَائِل'],
@@ -178,7 +176,7 @@ describe('active participle', () => {
     })
 
     describe('hamzated middle roots', () => {
-      test.each([['بءس', 'بَائِس']])('%s', (root, expected) => {
+      test.each([['بءس', 'بَئِيس']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
@@ -212,16 +210,6 @@ describe('active participle', () => {
     describe('hamzated final assimilated roots', () => {
       test.each([['وطء', 'وَاطِئ']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
-      })
-    })
-
-    describe('rules', () => {
-      test('use faa3il when the masdar is fu3ool', () => {
-        expect(deriveActiveParticiple(getVerb('حبط', 1))).toEqualT('حَابِط')
-      })
-
-      test('use fa3eel when the masdar is not fu3ool', () => {
-        expect(deriveActiveParticiple(getVerb('سعد', 1))).toEqualT('سَعِيْد')
       })
     })
   })

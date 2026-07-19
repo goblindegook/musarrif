@@ -1514,8 +1514,8 @@
     "root": "bEd",
     "form": 1,
     "vowels": "i-a",
-    "passiveVoice": "none",
-    "masdars": ["fu3l"]
+    "passiveVoice": "impersonal",
+    "masdars": ["fa3al"]
   },
   {
     "root": "bHr",
@@ -4442,7 +4442,8 @@
     "root": "xyl",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3l", "fa3la", "mimi"],
+    "masdars": ["fa3l", "fa3alaan", "fa3la"],
+    "lexicalizedMasdars": ["xayoluwlap", "maxiylap", "maxaAlap"],
     "passiveVoice": "impersonal"
   },
   {
