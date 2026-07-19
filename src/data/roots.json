@@ -67,7 +67,8 @@
     "root": "$rb",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fu3l", "mimi"]
+    "masdars": ["fu3l", "mimi"],
+    "lexicalActiveParticiple": "$ariyb"
   },
   {
     "root": "$rb",
@@ -183,7 +184,8 @@
     "vowels": "u-u",
     "masdars": ["fa3aala"],
     "passiveVoice": "none",
-    "noPassiveParticiple": true
+    "noPassiveParticiple": true,
+    "lexicalActiveParticiple": ">aSiyl"
   },
   {
     "root": "'Sl",
@@ -692,7 +694,8 @@
     "root": "EZm",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fi3al", "fa3aala"]
+    "masdars": ["fi3al", "fa3aala"],
+    "lexicalActiveParticiple": "EaZiym"
   },
   {
     "root": "Ebd",
@@ -1004,7 +1007,8 @@
   {
     "root": "HfZ",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "HafiyZ"
   },
   {
     "root": "Hfl",
@@ -1076,7 +1080,8 @@
     "masdars": [],
     "lexicalMasdars": ["Harab"],
     "passiveVoice": "none",
-    "noPassiveParticiple": true
+    "noPassiveParticiple": true,
+    "lexicalActiveParticiple": "Hariyb"
   },
   {
     "root": "Hrb",
@@ -1099,7 +1104,8 @@
     "masdars": ["fa3l"],
     "lexicalMasdars": ["Harakap"],
     "passiveVoice": "none",
-    "noPassiveParticiple": true
+    "noPassiveParticiple": true,
+    "lexicalActiveParticiple": "Hariyk"
   },
   {
     "root": "Hrk",
@@ -1227,7 +1233,8 @@
   {
     "root": "Hzn",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "Haziyn"
   },
   {
     "root": "SEd",
@@ -1420,7 +1427,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3l"],
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "lexicalActiveParticiple": "TaEiym"
   },
   {
     "root": "TEm",
@@ -1510,7 +1518,8 @@
     "root": "b's",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "lexicalActiveParticiple": "ba}iys"
   },
   {
     "root": "b's",
@@ -1848,7 +1857,8 @@
   {
     "root": "fhm",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "fahiym"
   },
   {
     "root": "fj'",
@@ -1905,7 +1915,8 @@
   {
     "root": "frH",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "fariyH"
   },
   {
     "root": "frqE",
@@ -1924,7 +1935,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3l"],
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "lexicalActiveParticiple": "fatiy'"
   },
   {
     "root": "ftH",
@@ -2190,7 +2202,8 @@
     "root": "jhl",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "lexicalActiveParticiple": "jahiyl"
   },
   {
     "root": "jhl",
@@ -2266,7 +2279,8 @@
     "form": 1,
     "vowels": "u-u",
     "passiveVoice": "none",
-    "masdars": ["fu3la"]
+    "masdars": ["fu3la"],
+    "lexicalActiveParticiple": "jariy'"
   },
   {
     "root": "jrH",
@@ -2357,7 +2371,8 @@
     "vowels": "u-u",
     "masdars": ["fi3al", "fu3l"],
     "lexicalMasdars": ["kabaArap", "kubaArap"],
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "lexicalActiveParticiple": "kabiyr"
   },
   {
     "root": "kbr",
@@ -2433,7 +2448,8 @@
   {
     "root": "krh",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "kariyh"
   },
   {
     "root": "ksb",
@@ -2512,7 +2528,8 @@
     "root": "lEb",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fu3l"]
+    "masdars": ["fu3l"],
+    "lexicalActiveParticiple": "laEiyb"
   },
   {
     "root": "lHq",
@@ -2525,7 +2542,8 @@
   {
     "root": "lbs",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "labiys"
   },
   {
     "root": "lfw",
@@ -2652,7 +2670,8 @@
     "root": "mkn",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3aala"]
+    "masdars": ["fa3aala"],
+    "lexicalActiveParticiple": "makiyn"
   },
   {
     "root": "mkn",
@@ -3082,7 +3101,8 @@
     "root": "qdm",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fi3al"]
+    "masdars": ["fi3al"],
+    "lexicalActiveParticiple": "qadiym"
   },
   {
     "root": "qdm",
@@ -3403,7 +3423,8 @@
   {
     "root": "rkb",
     "form": 1,
-    "vowels": "i-a"
+    "vowels": "i-a",
+    "lexicalActiveParticiple": "rakiyb"
   },
   {
     "root": "rkl",
@@ -3525,7 +3546,8 @@
     "vowels": "i-a",
     "noPassiveParticiple": true,
     "masdars": ["fa3l", "fa3aala"],
-    "passiveVoice": "none"
+    "passiveVoice": "none",
+    "lexicalActiveParticiple": "saEiyd"
   },
   {
     "root": "sEd",
@@ -3575,7 +3597,8 @@
     "root": "sfh",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3aala"]
+    "masdars": ["fa3aala"],
+    "lexicalActiveParticiple": "safiyh"
   },
   {
     "root": "sfr",
@@ -4096,7 +4119,8 @@
     "root": "wjz",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3aala"]
+    "masdars": ["fa3aala"],
+    "lexicalActiveParticiple": "wajiyz"
   },
   {
     "root": "wk'",
@@ -4246,7 +4270,8 @@
     "root": "wvq",
     "form": 1,
     "vowels": "u-u",
-    "masdars": ["fa3aala"]
+    "masdars": ["fa3aala"],
+    "lexicalActiveParticiple": "waviyq"
   },
   {
     "root": "wvq",
@@ -4547,7 +4572,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3al"],
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "lexicalActiveParticiple": ">azoraq"
   },
   {
     "root": "zrq",

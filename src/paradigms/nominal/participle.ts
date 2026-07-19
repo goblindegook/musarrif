@@ -1,3 +1,4 @@
+import { transliterateReverse } from '@pacote/buckwalter'
 import { derivePresentStem } from '../active/present'
 import { isFormIPastVowel } from '../form-i-vowels'
 import {
@@ -16,6 +17,7 @@ import {
   SUKOON,
   TANWEEN_FATHA,
   TANWEEN_KASRA,
+  tokenize,
   WAW,
   YEH,
 } from '../tokens'
@@ -24,6 +26,9 @@ import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
 export function deriveActiveParticiple(verb: Verb): Word {
   if (!isQuadriliteralVerb(verb) && verb.form === 1) {
+    if (verb.lexicalActiveParticiple)
+      return new Word([measureMorpheme(...tokenize(transliterateReverse(verb.lexicalActiveParticiple)))])
+
     const [c1, c2, c3] = verb.rootTokens
 
     if (c2.equals(c3))
@@ -57,35 +62,6 @@ export function deriveActiveParticiple(verb: Verb): Word {
         measureMorpheme(FATHA, ALIF),
         radicalMorpheme(isFormIPastVowel(verb, KASRA) ? c2 : HAMZA_ON_YEH),
         measureMorpheme(KASRA),
-        radicalMorpheme(c3),
-      ])
-
-    if (verb.masdars?.some((pattern) => ['fa3al', 'fa3aal', 'fi3l', 'fu3ool'].includes(pattern)))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA),
-        radicalMorpheme(c3),
-      ])
-
-    // FIXME: We may need a lexical active participle to deal with stative/inherent active participles (usually fa3iil, but there are exceptions like zrq-1).
-    if (isFormIPastVowel(verb, DAMMA) && verb.masdars?.some((pattern) => ['fi3al', 'fa3aala'].includes(pattern)))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA, YEH),
-        radicalMorpheme(c3),
-      ])
-
-    // FIXME: We may need a lexical active participle to deal with stative/inherent active participles (usually fa3iil, but there are exceptions like zrq-1).
-    if (!c1.isWeak && !isFormIPastVowel(verb, FATHA))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA, YEH),
         radicalMorpheme(c3),
       ])
 

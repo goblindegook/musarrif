@@ -96,6 +96,7 @@ export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens
   vowels: FormIPattern
   presentHollow?: PresentHollowBehaviour
   contractedImperative?: boolean
+  lexicalActiveParticiple?: string
 }
 
 export type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
@@ -175,6 +176,7 @@ type RawVerb = {
   presentHollow?: PresentHollowBehaviour
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
+  lexicalActiveParticiple?: string
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
@@ -268,6 +270,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       passiveVoice: raw.passiveVoice,
       noPassiveParticiple: raw.noPassiveParticiple,
       contractedImperative: raw.contractedImperative,
+      lexicalActiveParticiple: raw.lexicalActiveParticiple,
     })
   }
 
@@ -369,6 +372,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
           vowels: pattern,
           masdars: matchingFormI?.masdars,
           lexicalMasdars: matchingFormI?.lexicalMasdars ?? [],
+          lexicalActiveParticiple: matchingFormI?.lexicalActiveParticiple,
         }
       : {
           root: triliteralRoot,

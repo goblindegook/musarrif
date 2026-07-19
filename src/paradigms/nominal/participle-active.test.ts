@@ -209,6 +209,12 @@ describe('active participle', () => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
       })
     })
+
+    describe('lexical (stative) active participles', () => {
+      test.each([['زرق', 'أَزْرَق']])('%s', (root, expected) => {
+        expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
+      })
+    })
   })
 
   describe('Form II', () => {

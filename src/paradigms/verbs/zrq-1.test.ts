@@ -116,7 +116,7 @@ describe('zrq-1', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('zrq-1')!)).toEqualT('زَارِق')
+    expect(deriveActiveParticiple(getVerbById('zrq-1')!)).toEqualT('أَزْرَق')
   })
 
   test('passive participle', () => {
