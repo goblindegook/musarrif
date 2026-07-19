@@ -43,7 +43,7 @@ describe('i18n', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('translation-output').textContent).toBe(
-        'صرف هذا الفعل في <strong>X</strong> للضمير <strong>Y</strong>.',
+        'صرف هذا ٱلفعل في <strong>X</strong> للضمير <strong>Y</strong>.',
       )
     })
   })
