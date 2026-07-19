@@ -21,11 +21,17 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import { isQuadriliteralVerb, type Verb } from '../verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type TriliteralFormIVerb, type Verb } from '../verbs'
 import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
+
+export function isFa3iilActiveParticiple(verb: Verb): boolean {
+  if (!isTriliteralFormIVerb(verb) || !verb.lexicalActiveParticiple) return false
+  return String(deriveFa3iilActiveParticiple(verb)) === transliterateReverse(verb.lexicalActiveParticiple)
+}
 
 export function deriveActiveParticiple(verb: Verb): Word {
   if (!isQuadriliteralVerb(verb) && verb.form === 1) {
+    if (isFa3iilActiveParticiple(verb)) return deriveFa3iilActiveParticiple(verb)
     if (verb.lexicalActiveParticiple)
       return new Word([measureMorpheme(...tokenize(transliterateReverse(verb.lexicalActiveParticiple)))])
 
@@ -79,6 +85,17 @@ export function deriveActiveParticiple(verb: Verb): Word {
 
 export function derivePassiveParticiple(verb: Verb): Word {
   return new Word(verb.noPassiveParticiple ? [] : deriveParticiple(verb, false))
+}
+
+function deriveFa3iilActiveParticiple(verb: TriliteralFormIVerb): Word {
+  const [c1, c2, c3] = verb.rootTokens
+  return new Word([
+    radicalMorpheme(c1),
+    measureMorpheme(FATHA),
+    radicalMorpheme(c2),
+    measureMorpheme(KASRA, YEH),
+    radicalMorpheme(c3),
+  ])
 }
 
 function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {

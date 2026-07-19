@@ -3,6 +3,7 @@ import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
 import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
+import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
@@ -112,11 +113,14 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   contractedImperative?: boolean
 }
 
+export type ActiveParticipleKind = 'derived' | 'lexical' | 'fa3iil'
+
 export interface NominalExplanationLayers extends BaseExplanationLayers {
   category: 'nominal'
   nominal?: NominalKind
   isMasdarMimi?: boolean
   masdarPattern?: string
+  activeParticipleKind?: ActiveParticipleKind
 }
 
 export type ExplanationLayers = VerbExplanationLayers | NominalExplanationLayers
@@ -229,6 +233,8 @@ function renderPronounSentences(
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
   if (layers?.nominal == null) return ''
+  if (layers.activeParticipleKind === 'fa3iil') return 'explanation.nominal.activeParticiple.form-i-fa3iil'
+  if (layers.activeParticipleKind === 'lexical') return 'explanation.nominal.activeParticiple.form-i-lexical'
   if (layers.nominal !== 'masdar')
     return layers.paradigmRoots.length > 3
       ? `explanation.nominal.${layers.nominal}.quad`
@@ -422,6 +428,12 @@ function resolveMasdarPattern(verb: Verb, arabic: string | readonly string[]): s
     : (NON_FORM_I_MASDAR_PATTERNS[verb.form] ?? '')
 }
 
+function resolveActiveParticipleKind(verb: Verb, nominal: NominalKind): ActiveParticipleKind | undefined {
+  if (nominal !== 'activeParticiple') return undefined
+  if (isFa3iilActiveParticiple(verb)) return 'fa3iil'
+  return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'derived'
+}
+
 export function resolveNominalExplanationLayers(
   verb: Verb,
   nominal: NominalKind,
@@ -443,5 +455,6 @@ export function resolveNominalExplanationLayers(
     nominal,
     isMasdarMimi: nominal === 'masdar' && isMimiMasdarSelection(verb, arabicString),
     masdarPattern: nominal === 'masdar' ? resolveMasdarPattern(verb, arabicString) : undefined,
+    activeParticipleKind: resolveActiveParticipleKind(verb, nominal),
   }
 }

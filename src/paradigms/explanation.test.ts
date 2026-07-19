@@ -929,6 +929,28 @@ describe('resolveNominalExplanationLayers', () => {
     const layers = resolveNominalExplanationLayers(defaultMimi, 'masdar', 'مَجاي')
     expect(layers.isMasdarMimi).toBe(true)
   })
+
+  test('activeParticipleKind is "lexical" for a lexical active participle in a non-فَعِيل pattern', () => {
+    const zrq = getVerbById('zrq-1')!
+    const layers = resolveNominalExplanationLayers(zrq, 'activeParticiple', 'أَزْرَق')
+    expect(layers.activeParticipleKind).toBe('lexical')
+  })
+
+  test('activeParticipleKind is "derived" for a regularly derived verb', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
+    expect(layers.activeParticipleKind).toBe('derived')
+  })
+
+  test('activeParticipleKind is "fa3iil" for a lexical active participle following the فَعِيل pattern', () => {
+    const sEd = getVerbById('sEd-1')!
+    const layers = resolveNominalExplanationLayers(sEd, 'activeParticiple', 'سَعِيد')
+    expect(layers.activeParticipleKind).toBe('fa3iil')
+  })
+
+  test('activeParticipleKind is undefined for a non-participle nominal', () => {
+    const layers = resolveNominalExplanationLayers(verb, 'masdar', 'كِتَابَة')
+    expect(layers.activeParticipleKind).toBeUndefined()
+  })
 })
 
 // ── renderExplanation: nominal ────────────────────────────────────────────────
@@ -952,6 +974,46 @@ describe('renderExplanation with nominal', () => {
         { text: 'explanation.form.1-action', kind: 'measure' },
       ],
       [{ text: 'explanation.nominal.activeParticiple', kind: 'measure' }],
+    ])
+  })
+
+  test('lexical active participle explanation appears when activeParticipleKind is "lexical"', () => {
+    const layers: ExplanationLayers = {
+      category: 'nominal',
+      paradigmRoots: ['ز', 'ر', 'ق'],
+      paradigmForm: 1,
+      form: '1-intermediate',
+      arabic: 'أَزْرَق',
+      rootType: 'sound',
+      nominal: 'activeParticiple',
+      activeParticipleKind: 'lexical',
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      [
+        { text: 'explanation.root.sound', kind: 'radical' },
+        { text: 'explanation.form.1-intermediate', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.activeParticiple.form-i-lexical', kind: 'measure' }],
+    ])
+  })
+
+  test('fa3iil active participle explanation appears when activeParticipleKind is "fa3iil"', () => {
+    const layers: ExplanationLayers = {
+      category: 'nominal',
+      paradigmRoots: ['س', 'ع', 'د'],
+      paradigmForm: 1,
+      form: '1-intermediate',
+      arabic: 'سَعِيد',
+      rootType: 'sound',
+      nominal: 'activeParticiple',
+      activeParticipleKind: 'fa3iil',
+    }
+    expect(renderExplanation(layers, t)).toEqual([
+      [
+        { text: 'explanation.root.sound', kind: 'radical' },
+        { text: 'explanation.form.1-intermediate', kind: 'measure' },
+      ],
+      [{ text: 'explanation.nominal.activeParticiple.form-i-fa3iil', kind: 'measure' }],
     ])
   })
 

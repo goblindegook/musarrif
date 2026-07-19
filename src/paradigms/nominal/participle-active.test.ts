@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { tokenize } from '../tokens'
-import { getVerb } from '../verbs'
+import { FATHA, KASRA, tokenize, YEH } from '../tokens'
+import { getVerb, getVerbById } from '../verbs'
 import { deriveActiveParticiple } from './participle'
 
 describe('active participle', () => {
@@ -213,6 +213,16 @@ describe('active participle', () => {
     describe('lexical (stative) active participles', () => {
       test.each([['زرق', 'أَزْرَق']])('%s', (root, expected) => {
         expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
+      })
+
+      test('فَعِيل lexical active participles still mark root radicals and pattern vowels separately', () => {
+        expect(deriveActiveParticiple(getVerbById('sEd-1')!).morphemes).toEqual([
+          { tokens: tokenize('س'), role: 'radical' },
+          { tokens: [FATHA], role: 'measure' },
+          { tokens: tokenize('ع'), role: 'radical' },
+          { tokens: [KASRA, YEH], role: 'measure' },
+          { tokens: tokenize('د'), role: 'radical' },
+        ])
       })
     })
   })
