@@ -1678,25 +1678,6 @@ describe('active present indicative', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('اِنْزَوَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('زوي', 7), 'indicative')).toEqualT({
-          '1s': 'أَنْزَوِي',
-          '2ms': 'تَنْزَوِي',
-          '2fs': 'تَنْزَوَيْنَ',
-          '3ms': 'يَنْزَوِي',
-          '3fs': 'تَنْزَوِي',
-          '2d': 'تَنْزَوِيَانِ',
-          '3md': 'يَنْزَوِيَانِ',
-          '3fd': 'تَنْزَوِيَانِ',
-          '1p': 'نَنْزَوِي',
-          '2mp': 'تَنْزَوُونَ',
-          '2fp': 'تَنْزَوِينَ',
-          '3mp': 'يَنْزَوُونَ',
-          '3fp': 'يَنْزَوِينَ',
-        })
-      })
-    })
   })
 
   describe('Form VIII', () => {

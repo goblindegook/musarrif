@@ -41,7 +41,7 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 
   if ([2, 3, 4, 5].includes(verb.form) && c3.isWeak) return stem.slice(0, -1)
 
-  if (verb.form === 7 && c2.isWeak && c3.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA)]
+  if (verb.form === 7 && c2.equals(c3) && c2.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA)]
 
   return [...stem, kasra]
 }
