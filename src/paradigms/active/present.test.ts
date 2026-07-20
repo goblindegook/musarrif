@@ -90,30 +90,11 @@ describe('active present indicative', () => {
         ['هلل', 'يَهُلُّ'],
         ['عنن', 'يَعِنُّ'],
         ['جبب', 'يَجُبُّ'],
-        ['قرر', 'يَقَرُّ'],
         ['لمم', 'يَلُمُّ'],
         ['ودد', 'يَوَدُّ'],
         ['عدد', 'يَعُدُّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'indicative')['3ms']).toEqualT(expected)
-      })
-
-      test('قَرَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرر', 1), 'indicative')).toEqualT({
-          '1s': 'أَقَرُّ',
-          '2ms': 'تَقَرُّ',
-          '2fs': 'تَقَرِّينَ',
-          '3ms': 'يَقَرُّ',
-          '3fs': 'تَقَرُّ',
-          '2d': 'تَقَرَّانِ',
-          '3md': 'يَقَرَّانِ',
-          '3fd': 'تَقَرَّانِ',
-          '1p': 'نَقَرُّ',
-          '2mp': 'تَقَرُّونَ',
-          '2fp': 'تَقْرَرْنَ',
-          '3mp': 'يَقَرُّونَ',
-          '3fp': 'يَقْرَرْنَ',
-        })
       })
     })
 

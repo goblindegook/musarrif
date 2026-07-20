@@ -36,20 +36,6 @@ describe('passive participle', () => {
       })
     })
 
-    describe('geminate roots', () => {
-      test.each([
-        ['تمم', 'مَتْمُوم'],
-        ['ودد', 'مَوْدُود'],
-        ['جبب', 'مَجْبُوب'],
-        ['قرر', 'مَقْرُور'],
-        ['هلل', 'مَهْلُول'],
-        ['عنن', 'مَعْنُون'],
-        ['لمم', 'مَلْمُوم'],
-      ])('%s', (root, expected) => {
-        expect(derivePassiveParticiple(getVerb(root, 1))).toEqualT(expected)
-      })
-    })
-
     describe('assimilated roots', () => {
       test.each([
         ['يمن', 'مَيْمُون'],

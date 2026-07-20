@@ -3133,7 +3133,8 @@
     "root": "qr'",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fi3aala"]
+    "masdars": ["fi3aala"],
+    "lexicalMasdars": ["quro|n"]
   },
   {
     "root": "qr'",
@@ -3160,9 +3161,11 @@
   {
     "root": "qrr",
     "form": 1,
-    "vowels": "i-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"],
-    "passiveVoice": "none"
+    "lexicalMasdars": ["qura~p", "quruwr", "qara~p"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "qrr",

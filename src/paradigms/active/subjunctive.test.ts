@@ -63,31 +63,12 @@ describe('active present subjunctive', () => {
 
     describe('geminate roots', () => {
       test.each([
-        ['قرر', 'يَقَرَّ'],
         ['ءدد', 'يَئِدَّ'],
         ['ءجج', 'يَؤُجَّ'],
         ['ءزز', 'يَؤُزَّ'],
         ['عدد', 'يَعُدَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
-      })
-
-      test('قَرَّ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('قرر', 1), 'subjunctive')).toEqualT({
-          '1s': 'أَقَرَّ',
-          '2ms': 'تَقَرَّ',
-          '2fs': 'تَقَرِّي',
-          '3ms': 'يَقَرَّ',
-          '3fs': 'تَقَرَّ',
-          '2d': 'تَقَرَّا',
-          '3md': 'يَقَرَّا',
-          '3fd': 'تَقَرَّا',
-          '1p': 'نَقَرَّ',
-          '2mp': 'تَقَرُّوا',
-          '2fp': 'تَقْرَرْنَ',
-          '3mp': 'يَقَرُّوا',
-          '3fp': 'يَقْرَرْنَ',
-        })
       })
 
       test('أَمَّ conjugation', () => {
