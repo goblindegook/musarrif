@@ -3227,7 +3227,9 @@
   {
     "root": "qwd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fi3aala"],
+    "lexicalMasdars": ["maqaAdap", "qayoduwdap", "taqowaAd"]
   },
   {
     "root": "qwd",
