@@ -45,19 +45,19 @@ export function conjugatePast(verb: Verb): Record<PronounId, Word> {
 function addAgreement(forms: PastBaseForms): Record<PronounId, readonly Morpheme[]> {
   const [vowelStem, consonantStem = vowelStem] = forms
   return {
-    '1s': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, DAMMA)],
-    '2ms': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, FATHA)],
-    '2fs': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, KASRA)],
+    '1s': [...consonantStem, agreementMorpheme(SUKOON, TEH, DAMMA)],
+    '2ms': [...consonantStem, agreementMorpheme(SUKOON, TEH, FATHA)],
+    '2fs': [...consonantStem, agreementMorpheme(SUKOON, TEH, KASRA)],
     '3ms': [...vowelStem, measureMorpheme(FATHA)],
-    '3fs': [...vowelStem, measureMorpheme(FATHA), agreementMorpheme(TEH, SUKOON)],
-    '2d': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, DAMMA, MEEM, FATHA, ALIF)],
-    '3md': [...vowelStem, measureMorpheme(FATHA), agreementMorpheme(ALIF)],
-    '3fd': [...vowelStem, measureMorpheme(FATHA), agreementMorpheme(TEH, FATHA, ALIF)],
-    '1p': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(NOON, FATHA, ALIF)],
-    '2mp': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, DAMMA, MEEM, SUKOON)],
-    '2fp': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(TEH, DAMMA, NOON, SHADDA, FATHA)],
-    '3mp': [...vowelStem, measureMorpheme(DAMMA), agreementMorpheme(WAW, ALIF)],
-    '3fp': [...consonantStem, measureMorpheme(SUKOON), agreementMorpheme(NOON, FATHA)],
+    '3fs': [...vowelStem, agreementMorpheme(FATHA, TEH, SUKOON)],
+    '2d': [...consonantStem, agreementMorpheme(SUKOON, TEH, DAMMA, MEEM, FATHA, ALIF)],
+    '3md': [...vowelStem, agreementMorpheme(FATHA, ALIF)],
+    '3fd': [...vowelStem, agreementMorpheme(FATHA, TEH, FATHA, ALIF)],
+    '1p': [...consonantStem, agreementMorpheme(SUKOON, NOON, FATHA, ALIF)],
+    '2mp': [...consonantStem, agreementMorpheme(SUKOON, TEH, DAMMA, MEEM, SUKOON)],
+    '2fp': [...consonantStem, agreementMorpheme(SUKOON, TEH, DAMMA, NOON, SHADDA, FATHA)],
+    '3mp': [...vowelStem, agreementMorpheme(DAMMA, WAW, ALIF)],
+    '3fp': [...consonantStem, agreementMorpheme(SUKOON, NOON, FATHA)],
   }
 }
 
@@ -358,7 +358,11 @@ function derivePastForms(verb: Verb): PastBaseForms {
 }
 
 function findDefectiveRadicalIndex(morphemes: readonly Morpheme[]): number {
-  return morphemes.findLastIndex((m) => m.role === 'radical' && (m.equals([WAW]) || m.equals([YEH])))
+  const index = morphemes.findLastIndex((m) => m.role === 'radical' && m.at(0)?.isWeak)
+  // A weak radical only contracts as defective when it's the word's final radical; a medial one
+  // (hollow root) is followed by another radical and is handled by the hollow contraction instead.
+  if (index === -1 || morphemes.slice(index + 1).some((m) => m.role === 'radical')) return -1
+  return index
 }
 
 function findPrecedingRadical(morphemes: readonly Morpheme[], index: number): Morpheme | undefined {
@@ -371,32 +375,32 @@ function contractDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morphem
   const index = findDefectiveRadicalIndex(morphemes)
   if (index < 1) return morphemes
 
-  const before = morphemes[index - 1].tokens[0]
-  const c3 = morphemes[index].tokens[0]
-  const after = morphemes[index + 1].tokens[0]
-  const suffix = morphemes[index + 2]
+  const before = morphemes[index - 1]
+  const c3 = morphemes[index]
+  const agreement = morphemes[index + 1]
 
-  // Elide kasra + c3:
-  if (before.equals(KASRA) && after.equals(DAMMA)) return morphemes.toSpliced(index - 1, 2)
+  if (before.equals([KASRA])) {
+    // Elide kasra + c3 before a damma-initial agreement suffix (3mp):
+    if (agreement.startsWith([DAMMA])) return morphemes.toSpliced(index - 1, 2)
 
-  // Elide sukoon after kasra + c3:
-  if (before.equals(KASRA) && after.equals(SUKOON)) return morphemes.toSpliced(index + 1, 1)
+    // Elide the sukoon linking c3 to a consonant-initial agreement suffix:
+    if (agreement.startsWith([SUKOON])) return morphemes.with(-1, agreement.slice(1))
 
-  if (before.equals(KASRA)) return morphemes
-
-  // 3ms elides c3 and replaces it with alif or alif maqsura:
-  if (after.equals(FATHA) && suffix == null) {
-    return [
-      ...morphemes.slice(0, index),
-      radicalMorpheme(c3.equals(WAW) || findPrecedingRadical(morphemes, index)?.equals([c3]) ? ALIF : ALIF_MAQSURA),
-    ]
+    return morphemes
   }
 
-  // 3fs and 3fd elide defective root with fatha:
-  if (after.equals(FATHA) && suffix.startsWith([TEH])) return morphemes.toSpliced(index, 2)
+  // Bare 3ms elides c3 and replaces it with alif or alif maqsura:
+  if (agreement.equals([FATHA]))
+    return [
+      ...morphemes.slice(0, index),
+      radicalMorpheme(c3.equals([WAW]) || findPrecedingRadical(morphemes, index)?.equals(c3) ? ALIF : ALIF_MAQSURA),
+    ]
+
+  // 3fs and 3fd elide defective root and its fatha, keeping the teh-initial suffix:
+  if (agreement.startsWith([FATHA, TEH])) return [...morphemes.slice(0, index), agreement.slice(1)]
 
   // 3mp elides defective root and suffix long vowel (i.e. damma + waw + alif) gains a sukoon:
-  if (after.equals(DAMMA)) return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
+  if (agreement.startsWith([DAMMA])) return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
 
   return morphemes
 }
