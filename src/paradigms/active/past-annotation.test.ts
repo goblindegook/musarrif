@@ -49,7 +49,8 @@ describe('annotatePast', () => {
           { text: 'ت', role: 'radical' },
           { text: 'َ', role: 'measure' },
           { text: 'ب', role: 'radical' },
-          { text: 'ْتُ', role: 'agreement' },
+          { text: 'ْ', role: 'measure' },
+          { text: 'تُ', role: 'agreement' },
         ],
       },
     ])
@@ -389,7 +390,8 @@ describe('annotatePast', () => {
         { text: 'د', role: 'radical' },
         { text: 'َ', role: 'measure' },
         { text: 'د', role: 'radical' },
-        { text: 'ْتِ', role: 'agreement' },
+        { text: 'ْ', role: 'measure' },
+        { text: 'تِ', role: 'agreement' },
       ],
     })
   })
@@ -442,7 +444,8 @@ describe('annotatePast', () => {
           { text: 'ل', role: 'radical' },
           { text: 'َ', role: 'measure' },
           { text: 'م', role: 'radical' },
-          { text: 'ْتُ', role: 'agreement' },
+          { text: 'ْ', role: 'measure' },
+          { text: 'تُ', role: 'agreement' },
         ],
       },
     ])
@@ -488,7 +491,8 @@ describe('annotatePast', () => {
           { role: 'radical', text: 'ت' },
           { role: 'measure', text: 'َ' },
           { role: 'radical', text: 'ي' },
-          { role: 'agreement', text: 'ْتُمْ' },
+          { role: 'measure', text: 'ْ' },
+          { role: 'agreement', text: 'تُمْ' },
         ],
       },
     ])

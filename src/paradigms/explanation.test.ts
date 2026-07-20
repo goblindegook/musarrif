@@ -432,7 +432,7 @@ describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
     expect(layers).toMatchObject({
       prefix: undefined,
-      suffix: 'ْتُ',
+      suffix: 'تُ',
     })
   })
 
@@ -831,7 +831,7 @@ describe('renderExplanation paragraph 3 template selection', () => {
   test('past 1s paragraph 3 contains tatweel-prefixed suffix', () => {
     const layers = resolveVerbExplanationLayers(kataba, 'active.past', '1s', 'كَتَبْتُ')
     const result = renderExplanation(layers, localeT)
-    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ـْتُ') }))
+    expect(result[2]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ـتُ') }))
   })
 
   test('present indicative 1s paragraph 3 contains tatweel-suffixed prefix and tatweel-prefixed suffix', () => {
