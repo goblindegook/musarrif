@@ -218,6 +218,15 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
           measureMorpheme(...longVowel(vowel)),
           radicalMorpheme(c3),
         ]
+      if (c2.equals(c3))
+        return [
+          measureMorpheme(MEEM, FATHA),
+          radicalMorpheme(c1),
+          measureMorpheme(FATHA),
+          radicalMorpheme(c2),
+          measureMorpheme(SUKOON),
+          radicalMorpheme(c3),
+        ]
       return [
         measureMorpheme(MEEM, FATHA),
         radicalMorpheme(c1),
