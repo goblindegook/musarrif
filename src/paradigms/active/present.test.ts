@@ -1677,7 +1677,6 @@ describe('active present indicative', () => {
         })
       })
     })
-
   })
 
   describe('Form VIII', () => {
