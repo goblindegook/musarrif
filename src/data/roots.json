@@ -2780,7 +2780,8 @@
   },
   {
     "root": "mvl",
-    "form": 2
+    "form": 2,
+    "lexicalMasdars": ["tamovaAl"]
   },
   {
     "root": "mvl",
