@@ -3187,7 +3187,7 @@
     "root": "qsm",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3la"]
+    "masdars": ["fa3l"]
   },
   {
     "root": "qsm",
@@ -3206,7 +3206,8 @@
   },
   {
     "root": "qtl",
-    "form": 3
+    "form": 3,
+    "lexicalMasdars": ["qitaAl"]
   },
   {
     "root": "qtl",
@@ -3283,7 +3284,8 @@
     "root": "qwm",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l", "fi3aal", "mimi"]
+    "masdars": ["fa3l", "fi3aal", "mimi"],
+    "lexicalMasdars": ["qaAmap"]
   },
   {
     "root": "qwm",
@@ -3297,7 +3299,8 @@
     "root": "qwy",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fu3la"]
+    "masdars": [],
+    "lexicalMasdars": ["quwa~p"]
   },
   {
     "root": "qwy",
