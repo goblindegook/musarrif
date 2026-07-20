@@ -3638,7 +3638,7 @@
     "root": "skn",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fu3ool", "fa3al"]
+    "masdars": ["fu3ool"]
   },
   {
     "root": "skn",
@@ -3648,7 +3648,7 @@
     "root": "slm",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3aala", "fa3al"]
+    "masdars": ["fa3aala", "fa3aal"]
   },
   {
     "root": "slm",
@@ -3656,7 +3656,8 @@
   },
   {
     "root": "slm",
-    "form": 3
+    "form": 3,
+    "lexicalMasdars": ["silaAm"]
   },
   {
     "root": "slm",
