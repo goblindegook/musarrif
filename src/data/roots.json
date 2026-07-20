@@ -3121,7 +3121,9 @@
   {
     "root": "qll",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": [],
+    "lexicalMasdars": ["qil~p"]
   },
   {
     "root": "qlql",
