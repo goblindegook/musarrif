@@ -367,65 +367,35 @@ function findPrecedingRadical(morphemes: readonly Morpheme[], index: number): Mo
   return morphemes.at(i)
 }
 
-function contractDefectiveRadicalAtWordEnd(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const index = findDefectiveRadicalIndex(morphemes)
-  if (index === -1) return morphemes
-
-  if (
-    // Form I's fi3ila-vowel-class exception (قَوِيَ, بَقِيَ — pastVowel is KASRA) keeps the radical fully
-    // spelled with its own trailing FATHA rather than contracting. Content-detectable: the radical
-    // is immediately preceded by KASRA, never true for regular defective/doubled-weak roots.
-    morphemes[index - 1]?.equals([KASRA]) ||
-    !morphemes[index + 1].startsWith([FATHA]) ||
-    morphemes[index + 2] != null
-  )
-    return morphemes
-
-  // A weak radical immediately preceded by an identical weak radical (skipping measure material,
-  // e.g. a geminated ي or a doubled-weak root's C2=C3) always contracts to plain ALIF, regardless
-  // of WAW/YEH identity — confirmed against حَيَّى and أَحْيَا (both C2=C3=ي, lemma ends in ا not ى).
-  const c3 = morphemes[index]
-
-  return [
-    ...morphemes.slice(0, index),
-    radicalMorpheme(findPrecedingRadical(morphemes, index)?.equals(c3) || c3.equals([WAW]) ? ALIF : ALIF_MAQSURA),
-  ]
-}
-
-function elideDefectiveRadicalBeforeFeminineMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const index = findDefectiveRadicalIndex(morphemes)
-  if (index === -1) return morphemes
-
-  if (
-    // Same fi3ila-vowel-class exception as contractDefectiveRadicalAtWordEnd.
-    // بَقِيَتْ keeps the radical before the feminine marker, it does not elide to بَقِتْ.
-    morphemes[index - 1]?.equals([KASRA]) ||
-    !morphemes[index + 1].startsWith([FATHA]) ||
-    !morphemes[index + 2].startsWith([TEH])
-  )
-    return morphemes
-
-  return [...morphemes.slice(0, index), ...morphemes.slice(index + 2)]
-}
-
-function elideDefectiveRadicalBeforeMasculinePluralMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  const index = findDefectiveRadicalIndex(morphemes)
-  if (index === -1) return morphemes
-
-  if (!morphemes[index + 1].startsWith([DAMMA])) return morphemes
-
-  // Form I's fi3ila-vowel-class exception (قَوِيَ → بَقُوا) drops its class-defining KASRA along with
-  // the radical, but — unlike the regular case, which drops the auto-appended DAMMA too — keeps it,
-  // since it's what carries ق's vowel once the radical is gone.
-  if (morphemes[index - 1].equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
-
-  return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
-}
-
 function contractActivePastDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return elideDefectiveRadicalBeforeMasculinePluralMarker(
-    elideDefectiveRadicalBeforeFeminineMarker(contractDefectiveRadicalAtWordEnd(morphemes)),
-  )
+  const index = findDefectiveRadicalIndex(morphemes)
+  if (index < 1) return morphemes
+
+  const before = morphemes[index - 1]
+  const c3 = morphemes[index]
+  const after = morphemes[index + 1]
+  const suffix = morphemes[index + 2]
+
+  if (!before.equals([KASRA]) && after.startsWith([FATHA])) {
+    if (suffix == null && c3.equals([WAW])) return [...morphemes.slice(0, index), radicalMorpheme(ALIF)]
+
+    if (suffix == null && findPrecedingRadical(morphemes, index)?.equals(c3))
+      return [...morphemes.slice(0, index), radicalMorpheme(ALIF)]
+
+    if (suffix == null) return [...morphemes.slice(0, index), radicalMorpheme(ALIF_MAQSURA)]
+
+    if (suffix.startsWith([TEH])) return [...morphemes.slice(0, index), suffix]
+  }
+
+  if (after.startsWith([DAMMA])) {
+    if (before.equals([KASRA])) return [...morphemes.slice(0, index - 1), ...morphemes.slice(index + 1)]
+    return [...morphemes.slice(0, index), agreementMorpheme(WAW, SUKOON, ALIF)]
+  }
+
+  if (before.equals([KASRA]) && after.startsWith([SUKOON]))
+    return [...morphemes.slice(0, index + 1), after.slice(1), ...morphemes.slice(index + 2)]
+
+  return morphemes
 }
 
 // Standard-shape past forms (I, III, VI, VII, VIII, IX) always build their geminate stem

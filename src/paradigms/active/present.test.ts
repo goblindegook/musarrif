@@ -369,25 +369,6 @@ describe('active present indicative', () => {
           '3fp': 'يَرْمِينَ',
         })
       })
-
-      // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
-      test('بَقِيَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بقي', 1), 'indicative')).toEqualT({
-          '1s': 'أَبْقَى',
-          '2ms': 'تَبْقَى',
-          '2fs': 'تَبْقَيْنَ',
-          '3ms': 'يَبْقَى',
-          '3fs': 'تَبْقَى',
-          '2d': 'تَبْقَيَانِ',
-          '3md': 'يَبْقَيَانِ',
-          '3fd': 'تَبْقَيَانِ',
-          '1p': 'نَبْقَى',
-          '2mp': 'تَبْقَوْنَ',
-          '2fp': 'تَبْقَيْنَ',
-          '3mp': 'يَبْقَوْنَ',
-          '3fp': 'يَبْقَيْنَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {

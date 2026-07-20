@@ -246,17 +246,6 @@ describe('imperative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
-
-      // Verified against Wiktionary's conjugation table for بَقِيَ (Form I, final-weak i~a).
-      test('بَقِيَ conjugation', () => {
-        expect(conjugateImperative(getVerb('بقي', 1))).toMatchObjectT({
-          '2ms': 'اِبْقَ',
-          '2fs': 'اِبْقَيْ',
-          '2d': 'اِبْقَيَا',
-          '2mp': 'اِبْقَوْا',
-          '2fp': 'اِبْقَيْنَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {

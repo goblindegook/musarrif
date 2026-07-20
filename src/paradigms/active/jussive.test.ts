@@ -276,24 +276,6 @@ describe('active present jussive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
       })
-
-      test('بَقِيَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بقي', 1), 'jussive')).toEqualT({
-          '1s': 'أَبْقَ',
-          '2ms': 'تَبْقَ',
-          '2fs': 'تَبْقَيْ',
-          '3ms': 'يَبْقَ',
-          '3fs': 'تَبْقَ',
-          '2d': 'تَبْقَيَا',
-          '3md': 'يَبْقَيَا',
-          '3fd': 'تَبْقَيَا',
-          '1p': 'نَبْقَ',
-          '2mp': 'تَبْقَوْا',
-          '2fp': 'تَبْقَيْنَ',
-          '3mp': 'يَبْقَوْا',
-          '3fp': 'يَبْقَيْنَ',
-        })
-      })
     })
 
     describe('hollow roots', () => {

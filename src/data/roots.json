@@ -3300,7 +3300,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": [],
-    "lexicalMasdars": ["quwa~p"]
+    "lexicalMasdars": ["quwa~p"],
+    "lexicalActiveParticiple": "qawiy~"
   },
   {
     "root": "qwy",

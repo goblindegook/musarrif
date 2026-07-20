@@ -214,7 +214,7 @@ function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
     '1s': jussiveStem(indicative['1s'], verb),
     '2ms': jussiveStem(indicative['2ms'], verb),
     '2fs':
-      c2.isWeak && c3.isWeak
+      verb.form === 7 && c2.isWeak && c3.isWeak
         ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH), elidedMorpheme(NOON, FATHA)]
         : [
             ...indicative['2fs'].slice(0, -1),

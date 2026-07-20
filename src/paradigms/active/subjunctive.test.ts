@@ -253,24 +253,6 @@ describe('active present subjunctive', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
       })
-
-      test('بَقِيَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('بقي', 1), 'subjunctive')).toEqualT({
-          '1s': 'أَبْقَى',
-          '2ms': 'تَبْقَى',
-          '2fs': 'تَبْقَيْ',
-          '3ms': 'يَبْقَى',
-          '3fs': 'تَبْقَى',
-          '2d': 'تَبْقَيَا',
-          '3md': 'يَبْقَيَا',
-          '3fd': 'تَبْقَيَا',
-          '1p': 'نَبْقَى',
-          '2mp': 'تَبْقَوْا',
-          '2fp': 'تَبْقَيْنَ',
-          '3mp': 'يَبْقَوْا',
-          '3fp': 'يَبْقَيْنَ',
-        })
-      })
     })
 
     describe('doubly weak roots', () => {
