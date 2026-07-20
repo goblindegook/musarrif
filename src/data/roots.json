@@ -2799,11 +2799,10 @@
   {
     "root": "myl",
     "form": 1,
-    "vowels": "i-a",
-    "presentHollow": "uncontracted",
-    "masdars": ["fa3al"],
-    "noPassiveParticiple": true,
-    "passiveVoice": "none"
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fa3alaan"],
+    "lexicalMasdars": ["mayoluwlap", "tamoyaAl", "mamaAl", "mamiyl"],
+    "passiveVoice": "impersonal"
   },
   {
     "root": "myl",
@@ -2863,7 +2862,8 @@
     "root": "nZr",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al", "mimi"],
+    "lexicalMasdars": ["manoZarap"]
   },
   {
     "root": "nZr",
