@@ -3876,7 +3876,8 @@
   {
     "root": "w'd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
   },
   {
     "root": "w'd",
@@ -4468,7 +4469,8 @@
   {
     "root": "xrj",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
+    "passiveVoice": "impersonal",
     "masdars": ["fu3ool"]
   },
   {
@@ -4478,8 +4480,8 @@
   {
     "root": "xsr",
     "form": 1,
-    "vowels": "a-a",
-    "masdars": ["fu3l"]
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3laan"]
   },
   {
     "root": "xwf",
