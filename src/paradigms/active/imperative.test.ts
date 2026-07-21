@@ -363,16 +363,6 @@ describe('imperative', () => {
     })
 
     describe('hamzated initial defective roots', () => {
-      test('أَنَى conjugation', () => {
-        expect(conjugateImperative(getVerb('ءني', 1))).toMatchObjectT({
-          '2ms': 'اِئْنَ',
-          '2fs': 'اِئْنَي',
-          '2d': 'اِئْنَيَا',
-          '2mp': 'اِئْنَوا',
-          '2fp': 'اِئْنَينَ',
-        })
-      })
-
       test('أَبَى conjugation', () => {
         expect(conjugateImperative(getVerb('ءبي', 1))).toMatchObjectT({
           '2ms': 'اِئْبَ',

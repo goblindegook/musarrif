@@ -59,7 +59,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 radicalMorpheme(c1),
                 measureMorpheme(SUKOON),
                 radicalMorpheme(c2),
-                measureMorpheme(c2.equals(NOON) || !isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA),
+                measureMorpheme(!isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA),
                 agreementMorpheme(
                   ...jussiveMorphemes
                     .slice(4)
