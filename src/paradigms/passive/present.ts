@@ -148,11 +148,7 @@ function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
 
-  if (c3.isWeak) {
-    const glide = mood !== 'jussive' || c1.isWeak || c2.isWeak ? FATHA : isMasculinePlural(pronounId) ? DAMMA : KASRA
-
-    return [...prefix, measureMorpheme(glide), ...defectiveSuffix(mood, pronounId, c2.equals(c3))]
-  }
+  if (c3.isWeak) return [...prefix, measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId, c2.equals(c3))]
 
   return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
 }

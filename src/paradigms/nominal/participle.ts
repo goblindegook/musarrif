@@ -195,12 +195,7 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
     case 7: {
       const stem = [prefix, ...presentStem.slice(0, 3)]
       if (c2.equals(c3)) return [...stem, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
-      if (c3.isWeak)
-        return [
-          ...stem,
-          radicalMorpheme(c2),
-          isActive ? measureMorpheme(TANWEEN_KASRA) : measureMorpheme(FATHA, ALIF_MAQSURA),
-        ]
+      if (c3.isWeak) return [...stem, radicalMorpheme(c2), defectiveSuffix]
       if (c2.isWeak) return [...stem, measureMorpheme(ALIF), radicalMorpheme(c3)]
       return [...stem, radicalMorpheme(c2), measureMorpheme(vowel), radicalMorpheme(c3)]
     }

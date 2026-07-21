@@ -54,9 +54,6 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): reado
   // the weak radical itself is dropped (the preceding vowel measure survives):
   if (verb.form === 5 && c3.isWeak) return stem.slice(0, -1)
 
-  // Form VII: content-identical to Form IV's elide+damma case, stays inline.
-  if (verb.form === 7 && !c2.isWeak && c3.isWeak) return stem
-
   // Hollow root ending in hamza: the masculine plural -ū suffix would otherwise
   // sandwich a hamza-on-waw between two waws, which is avoided in favour of yeh:
   if (verb.form === 1 && c2.isWeak && c3.isHamza) return [...stem.slice(0, -1), radicalMorpheme(HAMZA_ON_YEH), damma]

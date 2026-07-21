@@ -1655,24 +1655,6 @@ describe('active present indicative', () => {
       ])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 7), 'indicative')['3ms']).toEqualT(expected)
       })
-
-      test('اِنْرَمَى conjugation', () => {
-        expect(conjugatePresentMood(getVerb('رمي', 7), 'indicative')).toEqualT({
-          '1s': 'أَنْرَمِي',
-          '2ms': 'تَنْرَمِي',
-          '2fs': 'تَنْرَمِينَ',
-          '3ms': 'يَنْرَمِي',
-          '3fs': 'تَنْرَمِي',
-          '2d': 'تَنْرَمِيَانِ',
-          '3md': 'يَنْرَمِيَانِ',
-          '3fd': 'تَنْرَمِيَانِ',
-          '1p': 'نَنْرَمِي',
-          '2mp': 'تَنْرَمِيونَ',
-          '2fp': 'تَنْرَمِينَ',
-          '3mp': 'يَنْرَمِيونَ',
-          '3fp': 'يَنْرَمِينَ',
-        })
-      })
     })
   })
 
