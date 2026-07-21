@@ -385,8 +385,8 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   return {
     stem: [
       measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA),
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
+      radicalMorpheme(c1.isWeak ? WAW : c1),
+      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(KASRA),
       radicalMorpheme(c3),

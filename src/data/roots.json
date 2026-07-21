@@ -4006,8 +4006,7 @@
     "root": "wDE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l", "mimi"],
-    "lexicalMasdars": ["mawoDiE"]
+    "masdars": ["fa3l", "mimi"]
   },
   {
     "root": "wDH",

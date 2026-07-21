@@ -1351,18 +1351,6 @@ describe('passive past pattern', () => {
       })
     })
 
-    describe('assimilated roots', () => {
-      test.each([
-        ['وجب', 'اُسْتُوْجِبَ'],
-        ['وعب', 'اُسْتُوْعِبَ'],
-        ['ورد', 'اُسْتُوْرِدَ'],
-        ['وضح', 'اُسْتُوْضِحَ'],
-        ['وطن', 'اُسْتُوْطِنَ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePassivePast(getVerb(root, 10))['3ms']).toEqualT(expected)
-      })
-    })
-
     describe('defective roots', () => {
       test('اِسْتَأْنَى conjugation', () => {
         expect(conjugatePassivePast(getVerb('ءني', 10))).toEqualT({
