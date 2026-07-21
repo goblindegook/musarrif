@@ -2604,12 +2604,14 @@
   {
     "root": "m$T",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": ["fa3l"]
   },
   {
     "root": "m$y",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": ["fa3l"]
   },
   {
     "root": "m$y",
@@ -2621,12 +2623,14 @@
     "form": 1,
     "vowels": "a-i",
     "passiveVoice": "impersonal",
+    "masdars": [],
     "lexicalMasdars": ["muDiy~"]
   },
   {
     "root": "mdH",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": ["fa3l", "fi3la"]
   },
   {
     "root": "mdd",
@@ -2705,12 +2709,14 @@
   {
     "root": "mnE",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": ["fa3l"]
   },
   {
     "root": "mnH",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-a",
+    "masdars": ["fa3l"]
   },
   {
     "root": "mny",
@@ -2794,7 +2800,7 @@
     "root": "mwt",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"],
+    "masdars": ["fa3l", "mimi"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },
