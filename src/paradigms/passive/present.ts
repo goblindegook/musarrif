@@ -657,7 +657,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
       (prefix, pronounId) => {
         const stem = derivePassivePresentStem(verb, pronounId, mood)
 
-        if (pronounId === '1s' && verb.form === 4 && c1.isHamza)
+        if (pronounId === '1s' && [4, 8].includes(verb.form) && c1.isHamza)
           return new Word([prefix, radicalMorpheme(WAW), ...stem.slice(stem.at(1)?.equals([SUKOON]) ? 2 : 1)])
 
         return new Word([prefix, ...stem])

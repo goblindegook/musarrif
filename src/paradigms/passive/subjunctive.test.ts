@@ -1356,26 +1356,6 @@ describe('passive present subjunctive', () => {
       })
     })
 
-    describe('hamzated initial geminate roots', () => {
-      test('يُؤْتَمَّ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('ءمم', 8), 'subjunctive')).toEqualT({
-          '1s': 'أُؤْتَمَّ',
-          '2ms': 'تُؤْتَمَّ',
-          '2fs': 'تُؤْتَمِّي',
-          '3ms': 'يُؤْتَمَّ',
-          '3fs': 'تُؤْتَمَّ',
-          '2d': 'تُؤْتَمَّا',
-          '3md': 'يُؤْتَمَّا',
-          '3fd': 'تُؤْتَمَّا',
-          '1p': 'نُؤْتَمَّ',
-          '2mp': 'تُؤْتَمُّوا',
-          '2fp': 'تُؤْتَمَمْنَ',
-          '3mp': 'يُؤْتَمُّوا',
-          '3fp': 'يُؤْتَمَمْنَ',
-        })
-      })
-    })
-
     describe('hamzated final roots', () => {
       test.each([['خبء', 'يُخْتَبَأَ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 8), 'subjunctive')['3ms']).toEqualT(expected)

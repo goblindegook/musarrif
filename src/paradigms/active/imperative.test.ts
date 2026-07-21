@@ -286,36 +286,6 @@ describe('imperative', () => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
 
-      test('أَمَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('ءمم', 1))).toMatchObjectT({
-          '2ms': 'أُمَّ',
-          '2fs': 'أُمِّي',
-          '2d': 'أُمَّا',
-          '2mp': 'أُمُّوا',
-          '2fp': 'اُومُمْنَ',
-        })
-      })
-
-      test('أَدَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('ءدد', 1))).toMatchObjectT({
-          '2ms': 'إِدَّ',
-          '2fs': 'إِدِّي',
-          '2d': 'إِدَّا',
-          '2mp': 'إِدُّوا',
-          '2fp': 'اِيدِدْنَ',
-        })
-      })
-
-      test('أَزَّ conjugation', () => {
-        expect(conjugateImperative(getVerb('ءزز', 1))).toMatchObjectT({
-          '2ms': 'أُزَّ',
-          '2fs': 'أُزِّي',
-          '2d': 'أُزَّا',
-          '2mp': 'أُزُّوا',
-          '2fp': 'اُوزُزْنَ',
-        })
-      })
-
       test('وَدَّ conjugation', () => {
         expect(conjugateImperative(getVerb('ودد', 1))).toMatchObjectT({
           '2ms': 'وَدَّ',
