@@ -32,7 +32,7 @@ async function run() {
 
   const { lemma, root, form } = resolveSlugForWiktionary(slug)
   const parsed = await fetchParadigms(lemma, root, form)
-  const fileText = renderVerbTestFile(slug, parsed)
+  const fileText = renderVerbTestFile(slug, parsed, 'wiktionary')
 
   mkdirSync(OUTPUT_DIR, { recursive: true })
   const outputPath = join(OUTPUT_DIR, `${slug}.test.ts`)

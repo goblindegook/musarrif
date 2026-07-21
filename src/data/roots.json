@@ -665,13 +665,13 @@
   },
   {
     "root": "E*b",
-    "form": 1,
-    "vowels": "a-a"
+    "form": 2
   },
   {
     "root": "E*r",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fu3l"]
   },
   {
     "root": "ESy",
@@ -804,12 +804,13 @@
     "root": "Enn",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l", "fa3al"]
   },
   {
     "root": "Eqd",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
   },
   {
     "root": "ErD",
@@ -822,7 +823,9 @@
   {
     "root": "Erf",
     "form": 1,
-    "vowels": "a-i"
+    "vowels": "a-i",
+    "masdars": [],
+    "lexicalMasdars": ["maEorifap", "EirofaAn"]
   },
   {
     "root": "Erf",
@@ -891,7 +894,8 @@
     "root": "Ey$",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l", "fa3la", "mimi"],
+    "masdars": ["fa3l", "mimi"],
+    "lexicalMasdars": ["Eiy$ap", "maEiy$ap", "maEaA$", "Eayo$uw$ap"],
     "passiveVoice": "none",
     "noPassiveParticiple": true
   },

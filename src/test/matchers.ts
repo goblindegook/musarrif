@@ -53,6 +53,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 export const stringifyWords = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(stringifyWords)
+  if (value instanceof Set) return new Set([...value].map(stringifyWords))
   if (isRecord(value)) return mapRecord(value, stringifyWords)
   if (value == null || typeof value !== 'object') return value
   return String(value)

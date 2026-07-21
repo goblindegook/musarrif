@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getVerbById, verbs } from '../src/paradigms/verbs'
 import { fetchParadigms as fetchElixirfmParadigms } from './lib/elixirfm.mts'
-import { generateVerbTests } from './lib/generate-verb-tests.mts'
+import { type GenerationTool, generateVerbTests } from './lib/generate-verb-tests.mts'
 import type { ParsedParadigms } from './lib/paradigms.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
 import { fetchParadigms as fetchReversoParadigms } from './lib/reverso.mts'
@@ -23,9 +23,9 @@ function hasParsedContent(parsed: ParsedParadigms): boolean {
   )
 }
 
-function writeVerbTest(slug: string, parsed: ParsedParadigms): void {
+function writeVerbTest(slug: string, parsed: ParsedParadigms, source: GenerationTool): void {
   mkdirSync(OUTPUT_DIR, { recursive: true })
-  writeFileSync(join(OUTPUT_DIR, `${slug}.test.ts`), renderVerbTestFile(slug, parsed))
+  writeFileSync(join(OUTPUT_DIR, `${slug}.test.ts`), renderVerbTestFile(slug, parsed, source))
 }
 
 function errorMessage(error: unknown): string {
@@ -57,7 +57,7 @@ async function generateFromWiktionary(slug: string): Promise<boolean> {
   try {
     const parsed = await fetchWiktionaryParadigms(verb.lemma, verb.root, verb.form)
     if (!hasParsedContent(parsed)) return false
-    writeVerbTest(slug, parsed)
+    writeVerbTest(slug, parsed, 'wiktionary')
     return true
   } catch (error: unknown) {
     if (isWiktionaryNotFound(error)) return false
@@ -72,7 +72,7 @@ async function generateFromReverso(slug: string): Promise<boolean> {
   try {
     const parsed = await fetchReversoParadigms(verb.lemma)
     if (!hasParsedContent(parsed)) return false
-    writeVerbTest(slug, parsed)
+    writeVerbTest(slug, parsed, 'reverso')
     return true
   } catch (error: unknown) {
     if (isReversoNotFound(error)) return false
@@ -87,7 +87,7 @@ async function generateFromElixirfm(slug: string): Promise<boolean> {
   try {
     const parsed = await fetchElixirfmParadigms(verb)
     if (!hasParsedContent(parsed)) return false
-    writeVerbTest(slug, parsed)
+    writeVerbTest(slug, parsed, 'elixirfm')
     return true
   } catch (error: unknown) {
     if (isElixirfmNotFound(error)) return false

@@ -22,7 +22,7 @@ async function run() {
   const outputPath = join(OUTPUT_DIR, `${verb.id}.test.ts`)
 
   mkdirSync(OUTPUT_DIR, { recursive: true })
-  writeFileSync(outputPath, renderVerbTestFile(verb.id, parsed))
+  writeFileSync(outputPath, renderVerbTestFile(verb.id, parsed, 'elixirfm'))
 
   console.log(`Wrote ${outputPath}`)
 }

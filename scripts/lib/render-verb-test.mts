@@ -1,5 +1,12 @@
 import { PRONOUN_IDS } from '../../src/paradigms/pronouns.ts'
+import type { GenerationTool } from './generate-verb-tests.mts'
 import type { ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
+
+const SOURCE_LABEL: Record<GenerationTool, string> = {
+  wiktionary: 'Wiktionary',
+  reverso: 'Reverso',
+  elixirfm: 'ElixirFM',
+}
 
 const PARADIGM_ORDER: VerbParadigm[] = [
   'active past',
@@ -51,7 +58,7 @@ function renderParadigmBody(
   return `  test('${paradigm}', () => {\n    expect(${conjugationCall}).${matcher}(${formatObject(values)})\n  })`
 }
 
-export function renderVerbTestFile(slug: string, parsed: ParsedParadigms): string {
+export function renderVerbTestFile(slug: string, parsed: ParsedParadigms, source: GenerationTool): string {
   const needsActivePresent =
     parsed.paradigms['active present indicative'] ||
     parsed.paradigms['active present subjunctive'] ||
@@ -98,13 +105,13 @@ export function renderVerbTestFile(slug: string, parsed: ParsedParadigms): strin
   if (parsed.nominals.masdar?.length) {
     const masdarList = parsed.nominals.masdar.map((value) => `'${value}'`).join(', ')
     tests.push(
-      `  test('masdar', () => {\n    expect(deriveMasdar(getVerbById(${toDoubleQuotedLiteral(slug)})!)).toEqualT([${masdarList}])\n  })`,
+      `  test('masdar', () => {\n    expect(new Set(deriveMasdar(getVerbById(${toDoubleQuotedLiteral(slug)})!))).toEqualT(new Set([${masdarList}]))\n  })`,
     )
   }
 
   return `${imports}
 
-describe(${toDoubleQuotedLiteral(slug)}, () => {
+describe(${toDoubleQuotedLiteral(`${slug} (${SOURCE_LABEL[source]})`)}, () => {
 ${tests.join('\n\n')}
 })
 `

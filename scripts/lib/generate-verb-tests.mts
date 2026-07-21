@@ -1,13 +1,13 @@
-export type GenerationSource = 'existing' | 'wiktionary' | 'reverso' | 'elixirfm' | 'missing'
-export type FallbackGenerationSource = Exclude<GenerationSource, 'existing' | 'missing'>
+export type GenerationTool = 'wiktionary' | 'reverso' | 'elixirfm'
+export type GenerationStatus = GenerationTool | 'existing' | 'missing'
 
 export interface VerbTestGenerationResult {
   slug: string
-  source: GenerationSource
+  source: GenerationStatus
 }
 
 export interface VerbTestGenerator {
-  source: FallbackGenerationSource
+  source: GenerationTool
   generate: (slug: string) => boolean | Promise<boolean>
 }
 
@@ -37,7 +37,7 @@ export function renderVerbTestsReport(results: readonly VerbTestGenerationResult
 async function generateSource(
   slug: string,
   generators: readonly VerbTestGenerator[],
-): Promise<FallbackGenerationSource | 'missing'> {
+): Promise<GenerationTool | 'missing'> {
   for (const generator of generators) {
     if (await generator.generate(slug)) return generator.source
   }
