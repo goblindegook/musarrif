@@ -30,7 +30,7 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 
   if (isQuadriliteralVerb(verb)) return [...stem, kasra]
 
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, , c3] = verb.rootTokens
 
   // Form I defective shapes collide structurally with each other. Every other case is handled generically — see contractActivePresentDefectiveRoot.
   if (verb.form === 1) {
@@ -40,8 +40,6 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
   }
 
   if ([2, 3, 4, 5].includes(verb.form) && c3.isWeak) return stem.slice(0, -1)
-
-  if (verb.form === 7 && c2.equals(c3) && c2.isWeak) return [...stem.slice(0, -2), agreementMorpheme(FATHA)]
 
   return [...stem, kasra]
 }
@@ -160,19 +158,17 @@ function presentPrefixVowel(verb: Verb): Token {
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, c2, c3] = verb.rootTokens
+  const [, _c2, _c3] = verb.rootTokens
   const indicative = conjugateIndicative(verb)
 
   return {
     '1s': subjunctiveStem(indicative['1s']),
     '2ms': subjunctiveStem(indicative['2ms']),
     '2fs': [
-      ...(verb.form === 7 && c2.isWeak && c3.isWeak
-        ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH)]
-        : indicative['2fs'].with(
-            -1,
-            indicative['2fs'].at(-2)?.endsWith([FATHA]) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
-          )),
+      ...indicative['2fs'].with(
+        -1,
+        indicative['2fs'].at(-2)?.endsWith([FATHA]) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
+      ),
       elidedMorpheme(NOON, FATHA),
     ],
     '3ms': subjunctiveStem(indicative['3ms']),
@@ -204,20 +200,17 @@ const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, c2, c3] = verb.rootTokens
+  const [, _c2, _c3] = verb.rootTokens
   const indicative = conjugateIndicative(verb)
 
   return {
     '1s': jussiveStem(indicative['1s'], verb),
     '2ms': jussiveStem(indicative['2ms'], verb),
-    '2fs':
-      verb.form === 7 && c2.isWeak && c3.isWeak
-        ? [...indicative['2fs'].slice(0, -2), agreementMorpheme(KASRA, YEH), elidedMorpheme(NOON, FATHA)]
-        : [
-            ...indicative['2fs'].slice(0, -1),
-            indicative['2fs'].at(-2)?.at(-1)?.equals(FATHA) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
-            elidedMorpheme(NOON, FATHA),
-          ],
+    '2fs': [
+      ...indicative['2fs'].slice(0, -1),
+      indicative['2fs'].at(-2)?.at(-1)?.equals(FATHA) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
+      elidedMorpheme(NOON, FATHA),
+    ],
     '3ms': jussiveStem(indicative['3ms'], verb),
     '3fs': jussiveStem(indicative['3fs'], verb),
     '2d': dropTrailingNoon(indicative['2d']),
