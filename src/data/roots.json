@@ -942,7 +942,7 @@
   {
     "root": "HSd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l", "fa3aal", "fi3aal"]
   },
   {
@@ -1152,13 +1152,13 @@
   {
     "root": "Hrs",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fi3aala", "fa3l"]
   },
   {
     "root": "Hsb",
     "form": 1,
-    "vowels": "i-u",
+    "vowels": "i-a",
     "masdars": [],
     "lexicalMasdars": ["HisobaAn", "maHosabap", "maHosibap"],
     "lexicalActiveParticiple": ">aHosab"
@@ -2305,7 +2305,6 @@
     "root": "jls",
     "form": 1,
     "vowels": "a-i",
-    "noPassiveParticiple": true,
     "masdars": ["fu3ool"]
   },
   {
@@ -2648,7 +2647,7 @@
   {
     "root": "lms",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3515,7 +3514,7 @@
   {
     "root": "rfD",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3559,7 +3558,7 @@
   {
     "root": "rkz",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3569,7 +3568,7 @@
   {
     "root": "rm$",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
