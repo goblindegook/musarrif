@@ -3,9 +3,7 @@ import { conjugateImperative } from '../active/imperative'
 import { conjugatePast } from '../active/past'
 import { conjugatePresentMood } from '../active/present'
 import { deriveMasdar } from '../nominal/masdar'
-import { deriveActiveParticiple, derivePassiveParticiple } from '../nominal/participle'
-import { conjugatePassivePast } from '../passive/past'
-import { conjugatePassivePresentMood } from '../passive/present'
+import { deriveActiveParticiple } from '../nominal/participle'
 import { getVerbById } from '../verbs'
 
 describe('xDl-9 (Wiktionary)', () => {
