@@ -73,6 +73,22 @@ describe('renderVerbTestFile', () => {
     expect(file).toContain('getVerbById("qr\'-1")!')
   })
 
+  test('renders valid getVerbById calls for slugs containing dollar-apostrophe replacement patterns', () => {
+    const file = renderVerbTestFile(
+      "n$'-4",
+      {
+        ...PARSED_FIXTURE,
+        paradigms: {
+          ...PARSED_FIXTURE.paradigms,
+          'active present indicative': PARSED_FIXTURE.paradigms['active past'],
+        },
+      },
+      'wiktionary',
+    )
+
+    expect(file).toContain("expect(conjugatePresentMood(getVerbById(\"n$'-4\")!, 'indicative')).toEqualT({")
+  })
+
   test('labels the describe block with the ElixirFM source', () => {
     const file = renderVerbTestFile('ktb-1', PARSED_FIXTURE, 'elixirfm')
 

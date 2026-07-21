@@ -54,7 +54,7 @@ function renderParadigmBody(
     'passive present jussive': "conjugatePassivePresentMood(verb, 'jussive')",
   }
 
-  const conjugationCall = CONJUGATOR[paradigm].replace('verb', `getVerbById(${toDoubleQuotedLiteral(slug)})!`)
+  const conjugationCall = CONJUGATOR[paradigm].replace('verb', () => `getVerbById(${toDoubleQuotedLiteral(slug)})!`)
   return `  test('${paradigm}', () => {\n    expect(${conjugationCall}).${matcher}(${formatObject(values)})\n  })`
 }
 
