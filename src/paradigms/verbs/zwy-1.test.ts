@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("zwy-1 (Wiktionary)", () => {
+describe('zwy-1 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("zwy-1")!)).toEqualT({
+    expect(conjugatePast(getVerbById('zwy-1')!)).toEqualT({
       '1s': 'زَوَيْتُ',
       '2ms': 'زَوَيْتَ',
       '2fs': 'زَوَيْتِ',
@@ -28,7 +28,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("zwy-1")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zwy-1')!, 'indicative')).toEqualT({
       '1s': 'أَزْوِي',
       '2ms': 'تَزْوِي',
       '2fs': 'تَزْوِينَ',
@@ -46,7 +46,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("zwy-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zwy-1')!, 'subjunctive')).toEqualT({
       '1s': 'أَزْوِيَ',
       '2ms': 'تَزْوِيَ',
       '2fs': 'تَزْوِي',
@@ -64,7 +64,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("zwy-1")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zwy-1')!, 'jussive')).toEqualT({
       '1s': 'أَزْوِ',
       '2ms': 'تَزْوِ',
       '2fs': 'تَزْوِي',
@@ -82,7 +82,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("zwy-1")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('zwy-1')!)).toMatchObjectT({
       '2ms': 'اِزْوِ',
       '2fs': 'اِزْوِي',
       '2d': 'اِزْوِيَا',
@@ -92,7 +92,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("zwy-1")!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('zwy-1')!)).toEqualT({
       '1s': 'زُوِيتُ',
       '2ms': 'زُوِيتَ',
       '2fs': 'زُوِيتِ',
@@ -110,7 +110,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("zwy-1")!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('zwy-1')!, 'indicative')).toEqualT({
       '1s': 'أُزْوَى',
       '2ms': 'تُزْوَى',
       '2fs': 'تُزْوَيْنَ',
@@ -128,7 +128,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("zwy-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('zwy-1')!, 'subjunctive')).toEqualT({
       '1s': 'أُزْوَى',
       '2ms': 'تُزْوَى',
       '2fs': 'تُزْوَيْ',
@@ -146,7 +146,7 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("zwy-1")!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('zwy-1')!, 'jussive')).toEqualT({
       '1s': 'أُزْوَ',
       '2ms': 'تُزْوَ',
       '2fs': 'تُزْوَيْ',
@@ -164,14 +164,14 @@ describe("zwy-1 (Wiktionary)", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("zwy-1")!)).toEqualT('زَاوٍ')
+    expect(deriveActiveParticiple(getVerbById('zwy-1')!)).toEqualT('زَاوٍ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("zwy-1")!)).toEqualT('مَزْوِيّ')
+    expect(derivePassiveParticiple(getVerbById('zwy-1')!)).toEqualT('مَزْوِيّ')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById("zwy-1")!))).toEqualT(new Set(['زَيّ', 'زَوِيّ']))
+    expect(new Set(deriveMasdar(getVerbById('zwy-1')!))).toEqualT(new Set(['زَيّ', 'زَوِيّ']))
   })
 })
