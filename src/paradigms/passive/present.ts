@@ -363,7 +363,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
     ]
   }
 
-  if (c1.isWeak && c3.isWeak)
+  if ((c1.isWeak || c1.isHamza) && c3.isWeak)
     return [
       measureMorpheme(TEH, SHADDA, FATHA),
       radicalMorpheme(c2),
@@ -371,7 +371,7 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
       ...defectiveSuffix(mood, pronounId),
     ]
 
-  if (c1.isWeak)
+  if (c1.isWeak || c1.isHamza)
     return [
       measureMorpheme(TEH, SHADDA, FATHA),
       radicalMorpheme(c2),
@@ -634,8 +634,6 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
 }
 
 export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<PronounId, Word> {
-  const [c1] = verb.rootTokens
-
   return constrainPassiveConjugation(
     verb,
     mapRecord(
@@ -657,7 +655,7 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
       (prefix, pronounId) => {
         const stem = derivePassivePresentStem(verb, pronounId, mood)
 
-        if (pronounId === '1s' && [4, 8].includes(verb.form) && c1.isHamza)
+        if (pronounId === '1s' && [4, 8].includes(verb.form) && stem.at(0)?.at(0)?.isHamza)
           return new Word([prefix, radicalMorpheme(WAW), ...stem.slice(stem.at(1)?.equals([SUKOON]) ? 2 : 1)])
 
         return new Word([prefix, ...stem])
