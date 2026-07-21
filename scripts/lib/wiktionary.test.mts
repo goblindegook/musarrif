@@ -141,43 +141,43 @@ describe('fetchParadigms', () => {
     })
 
     expect(parsed.paradigms['active past']).toEqual({
-      '1s': 'كَتَبْتُ',
-      '1p': 'كَتَبْنَا',
-      '2ms': 'كَتَبْتَ',
-      '2fs': 'كَتَبْتِ',
-      '2d': 'كَتَبْتُمَا',
-      '2mp': 'كَتَبْتُمْ',
-      '2fp': 'كَتَبْتُنَّ',
-      '3ms': 'كَتَبَ',
-      '3fs': 'كَتَبَتْ',
-      '3md': 'كَتَبَا',
-      '3fd': 'كَتَبَتَا',
-      '3mp': 'كَتَبُوا',
-      '3fp': 'كَتَبْنَ',
+      '1s': ['كَتَبْتُ'],
+      '1p': ['كَتَبْنَا'],
+      '2ms': ['كَتَبْتَ'],
+      '2fs': ['كَتَبْتِ'],
+      '2d': ['كَتَبْتُمَا'],
+      '2mp': ['كَتَبْتُمْ'],
+      '2fp': ['كَتَبْتُنَّ'],
+      '3ms': ['كَتَبَ'],
+      '3fs': ['كَتَبَتْ'],
+      '3md': ['كَتَبَا'],
+      '3fd': ['كَتَبَتَا'],
+      '3mp': ['كَتَبُوا'],
+      '3fp': ['كَتَبْنَ'],
     })
 
     expect(parsed.paradigms['active imperative']).toEqual({
-      '2ms': 'اُكْتُبْ',
-      '2fs': 'اُكْتُبِي',
-      '2d': 'اُكْتُبَا',
-      '2mp': 'اُكْتُبُوا',
-      '2fp': 'اُكْتُبْنَ',
+      '2ms': ['اُكْتُبْ'],
+      '2fs': ['اُكْتُبِي'],
+      '2d': ['اُكْتُبَا'],
+      '2mp': ['اُكْتُبُوا'],
+      '2fp': ['اُكْتُبْنَ'],
     })
 
     expect(parsed.paradigms['passive past']).toEqual({
-      '1s': 'كُتِبْتُ',
-      '1p': 'كُتِبْنَا',
-      '2ms': 'كُتِبْتَ',
-      '2fs': 'كُتِبْتِ',
-      '2d': 'كُتِبْتُمَا',
-      '2mp': 'كُتِبْتُمْ',
-      '2fp': 'كُتِبْتُنَّ',
-      '3ms': 'كُتِبَ',
-      '3fs': 'كُتِبَتْ',
-      '3md': 'كُتِبَا',
-      '3fd': 'كُتِبَتَا',
-      '3mp': 'كُتِبُوا',
-      '3fp': 'كُتِبْنَ',
+      '1s': ['كُتِبْتُ'],
+      '1p': ['كُتِبْنَا'],
+      '2ms': ['كُتِبْتَ'],
+      '2fs': ['كُتِبْتِ'],
+      '2d': ['كُتِبْتُمَا'],
+      '2mp': ['كُتِبْتُمْ'],
+      '2fp': ['كُتِبْتُنَّ'],
+      '3ms': ['كُتِبَ'],
+      '3fs': ['كُتِبَتْ'],
+      '3md': ['كُتِبَا'],
+      '3fd': ['كُتِبَتَا'],
+      '3mp': ['كُتِبُوا'],
+      '3fp': ['كُتِبْنَ'],
     })
 
     expect(requestUrl).toBe('https://en.wiktionary.org/wiki/%D9%83%D8%AA%D8%A8')
@@ -205,7 +205,7 @@ describe('fetchParadigms', () => {
     )
 
     const parsed = await fetchParadigms('كتب')
-    expect(parsed.paradigms['active past']?.['3ms']).toBe('كَتَبَ')
+    expect(parsed.paradigms['active past']?.['3ms']).toEqual(['كَتَبَ'])
   })
 
   test('picks the table matching the requested form when a page has multiple conjugation tables for the same lemma', async () => {
@@ -260,10 +260,46 @@ ${formIVCaption}
     )
 
     const formIII = await fetchParadigms('آتَى', undefined, 3)
-    expect(formIII.paradigms['active past']?.['1s']).toBe('آتَيْتُ (III)')
+    expect(formIII.paradigms['active past']?.['1s']).toEqual(['آتَيْتُ (III)'])
 
     const formIV = await fetchParadigms('آتَى', undefined, 4)
-    expect(formIV.paradigms['active past']?.['1s']).toBe('آتَيْتُ (IV)')
+    expect(formIV.paradigms['active past']?.['1s']).toEqual(['آتَيْتُ (IV)'])
+  })
+
+  test('captures multiple alternative forms in a single cell as an array', async () => {
+    const html = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>كَتَبَ</strong></i> (I, sound)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">jussive</th>
+<th class="secondary">m</th>
+<td rowspan="2"></td>
+<td><span class="Arab">تَكْتُبْ</span></td>
+<td><span class="Arab">يَكْتُبْ</span>, <span class="Arab">يَكْتُبِ</span>, <span class="Arab">يَكْتُبِي</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(html, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const parsed = await fetchParadigms('كتب')
+
+    expect(parsed.paradigms['active present jussive']?.['3ms']).toEqual(['يَكْتُبْ', 'يَكْتُبِ', 'يَكْتُبِي'])
+    expect(parsed.paradigms['active present jussive']?.['2ms']).toEqual(['تَكْتُبْ'])
   })
 
   test('throws the HTTP status when Wiktionary rejects the request', async () => {

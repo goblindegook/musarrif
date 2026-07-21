@@ -17,14 +17,21 @@ function toDoubleQuotedLiteral(value: string): string {
   return JSON.stringify(value)
 }
 
-function formatObject(values: Partial<Record<PronounId, string>>): string {
-  const lines = PRONOUN_IDS.filter((pronoun) => values[pronoun]).map(
-    (pronoun) => `      '${pronoun}': '${values[pronoun]}',`,
-  )
+function formatObject(values: Partial<Record<PronounId, string[]>>): string {
+  const lines = PRONOUN_IDS.filter((pronoun) => values[pronoun]?.length).map((pronoun) => {
+    const options = values[pronoun] as string[]
+    const rendered =
+      options.length > 1 ? `expect.toBeOneOf([${options.map((value) => `'${value}'`).join(', ')}])` : `'${options[0]}'`
+    return `      '${pronoun}': ${rendered},`
+  })
   return ['{', ...lines, '    }'].join('\n')
 }
 
-function renderParadigmBody(slug: string, paradigm: VerbParadigm, values: Partial<Record<PronounId, string>>): string {
+function renderParadigmBody(
+  slug: string,
+  paradigm: VerbParadigm,
+  values: Partial<Record<PronounId, string[]>>,
+): string {
   const count = Object.keys(values).length
   const matcher = count === PRONOUN_IDS.length ? 'toEqualT' : 'toMatchObjectT'
 

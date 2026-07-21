@@ -90,22 +90,22 @@ describe('fetchElixirFmParadigms', () => {
     expect(paradigms).toEqual({
       paradigms: {
         'active past': {
-          '1s': 'كَتَبْتُ',
-          '2ms': 'كَتَبْتَ',
-          '3ms': 'كَتَبَ',
+          '1s': ['كَتَبْتُ'],
+          '2ms': ['كَتَبْتَ'],
+          '3ms': ['كَتَبَ'],
         },
         'active present indicative': {
-          '1s': 'أَكْتُبُ',
-          '2ms': 'تَكْتُبُ',
-          '3ms': 'يَكْتُبُ',
+          '1s': ['أَكْتُبُ'],
+          '2ms': ['تَكْتُبُ'],
+          '3ms': ['يَكْتُبُ'],
         },
         'active imperative': {
-          '2ms': 'اُكْتُبْ',
-          '2fs': 'اُكْتُبِي',
-          '2d': 'اُكْتُبَا',
+          '2ms': ['اُكْتُبْ'],
+          '2fs': ['اُكْتُبِي'],
+          '2d': ['اُكْتُبَا'],
         },
         'passive past': {
-          '3ms': 'كُتِبَ',
+          '3ms': ['كُتِبَ'],
         },
       },
       nominals: {
@@ -144,8 +144,8 @@ describe('fetchElixirFmParadigms', () => {
       nominals: { masdar: ['كِتَابَة'] },
       paradigms: {
         'active past': {
-          '1s': 'كَتَبْتُ',
-          '3ms': 'كَتَبَ',
+          '1s': ['كَتَبْتُ'],
+          '3ms': ['كَتَبَ'],
         },
       },
     })

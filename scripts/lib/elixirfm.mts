@@ -49,7 +49,7 @@ function addConjugation(
   value: string,
 ): void {
   const bucket = paradigms[paradigm] ?? {}
-  if (!(pronounId in bucket)) bucket[pronounId] = value
+  if (!(pronounId in bucket)) bucket[pronounId] = [value]
   paradigms[paradigm] = bucket
 }
 

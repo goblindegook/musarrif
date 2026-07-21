@@ -48,12 +48,12 @@ function readAllForms(box: Element): string[] {
   return term.textContent.split('/').map(normalizeArabic).filter(Boolean)
 }
 
-function parseConjugation(box: Element, pronounOrder: readonly PronounId[]): Partial<Record<PronounId, string>> {
-  const result: Partial<Record<PronounId, string>> = {}
+function parseConjugation(box: Element, pronounOrder: readonly PronounId[]): Partial<Record<PronounId, string[]>> {
+  const result: Partial<Record<PronounId, string[]>> = {}
   const items = box.querySelectorAll('li')
   for (let i = 0; i < items.length && i < pronounOrder.length; i++) {
     const form = readMainForm(items[i])
-    if (form) result[pronounOrder[i]] = form
+    if (form) result[pronounOrder[i]] = [form]
   }
   return result
 }

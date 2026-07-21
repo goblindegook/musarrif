@@ -58,9 +58,17 @@ export const stringifyWords = (value: unknown): unknown => {
   return String(value)
 }
 
+const isAsymmetricMatcher = (value: unknown): value is { sample: unknown } =>
+  value != null && typeof (value as { asymmetricMatch?: unknown }).asymmetricMatch === 'function'
+
 const transliterateValue = (value: unknown): unknown => {
   if (typeof value === 'string') return transliterate(value)
   if (Array.isArray(value)) return value.map(transliterateValue)
+  if (isAsymmetricMatcher(value))
+    return Object.assign(Object.create(Object.getPrototypeOf(value)), value, {
+      sample: transliterateValue(value.sample),
+    })
+
   if (isRecord(value)) return mapRecord(value, transliterateValue)
   return value
 }

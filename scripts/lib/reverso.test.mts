@@ -96,27 +96,27 @@ describe('fetchParadigms', () => {
     })
 
     expect(parsed.paradigms['active past']).toEqual({
-      '1s': 'كَتَبْتُ',
-      '2ms': 'كَتَبْتَ',
-      '2fs': 'كَتَبْتِ',
-      '3ms': 'كَتَبَ',
-      '3fs': 'كَتَبَتْ',
-      '2d': 'كَتَبْتُمَا',
-      '3md': 'كَتَبَا',
-      '3fd': 'كَتَبَتَا',
-      '1p': 'كَتَبْنَا',
-      '2mp': 'كَتَبْتُمْ',
-      '2fp': 'كَتَبْتُنَّ',
-      '3mp': 'كَتَبُوا',
-      '3fp': 'كَتَبْنَ',
+      '1s': ['كَتَبْتُ'],
+      '2ms': ['كَتَبْتَ'],
+      '2fs': ['كَتَبْتِ'],
+      '3ms': ['كَتَبَ'],
+      '3fs': ['كَتَبَتْ'],
+      '2d': ['كَتَبْتُمَا'],
+      '3md': ['كَتَبَا'],
+      '3fd': ['كَتَبَتَا'],
+      '1p': ['كَتَبْنَا'],
+      '2mp': ['كَتَبْتُمْ'],
+      '2fp': ['كَتَبْتُنَّ'],
+      '3mp': ['كَتَبُوا'],
+      '3fp': ['كَتَبْنَ'],
     })
 
     expect(parsed.paradigms['active imperative']).toEqual({
-      '2ms': 'اُكْتُبْ',
-      '2fs': 'اُكْتُبِي',
-      '2d': 'اُكْتُبَا',
-      '2mp': 'اُكْتُبُوا',
-      '2fp': 'اُكْتُبْنَ',
+      '2ms': ['اُكْتُبْ'],
+      '2fs': ['اُكْتُبِي'],
+      '2d': ['اُكْتُبَا'],
+      '2mp': ['اُكْتُبُوا'],
+      '2fp': ['اُكْتُبْنَ'],
     })
 
     expect(requestUrl).toBe(
@@ -146,7 +146,7 @@ describe('fetchParadigms', () => {
     )
 
     const parsed = await fetchParadigms('كَتَبَ')
-    expect(parsed.paradigms['active past']?.['1s']).toBe('كَتَبْتُ')
+    expect(parsed.paradigms['active past']?.['1s']).toEqual(['كَتَبْتُ'])
   })
 
   test('normalizes diacritics ordering in extracted forms', async () => {
@@ -164,7 +164,7 @@ describe('fetchParadigms', () => {
     )
 
     const parsed = await fetchParadigms('كَتَبَ')
-    expect(parsed.paradigms['active past']?.['1s']).toBe(unnormalized.trim().normalize('NFC'))
+    expect(parsed.paradigms['active past']?.['1s']).toEqual([unnormalized.trim().normalize('NFC')])
   })
 
   test('throws the HTTP status when Reverso rejects the request', async () => {

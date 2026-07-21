@@ -116,16 +116,14 @@ function extractNominals(table: HTMLTableElement): NominalSet {
   return nominals
 }
 
-function addConjugationCell(
-  bucket: Partial<Record<PronounId, string>>,
-  value: string | undefined,
-  pronoun: PronounId,
-): void {
-  if (value) bucket[pronoun] = value
+function addConjugationCell(bucket: Partial<Record<PronounId, string[]>>, values: string[], pronoun: PronounId): void {
+  if (values.length > 0) bucket[pronoun] = values
 }
 
-function extractParadigms(table: HTMLTableElement): Partial<Record<VerbParadigm, Partial<Record<PronounId, string>>>> {
-  const paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string>>>> = {}
+function extractParadigms(
+  table: HTMLTableElement,
+): Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>> {
+  const paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>> = {}
   let voice: 'active' | 'passive' | undefined
   const rows = Array.from(table.querySelectorAll('tr'))
 
@@ -147,15 +145,15 @@ function extractParadigms(table: HTMLTableElement): Partial<Record<VerbParadigm,
     const bucket = paradigms[paradigm] ?? {}
     paradigms[paradigm] = bucket
 
-    const masculineCells = Array.from(row.querySelectorAll('td')).map((cell) => extractArabicStrings(cell)[0] ?? '')
-    addConjugationCell(bucket, masculineCells[0], '1s')
-    addConjugationCell(bucket, masculineCells[1], '2ms')
-    addConjugationCell(bucket, masculineCells[2], '3ms')
-    addConjugationCell(bucket, masculineCells[3], '2d')
-    addConjugationCell(bucket, masculineCells[4], '3md')
-    addConjugationCell(bucket, masculineCells[5], '1p')
-    addConjugationCell(bucket, masculineCells[6], '2mp')
-    addConjugationCell(bucket, masculineCells[7], '3mp')
+    const masculineCells = Array.from(row.querySelectorAll('td')).map((cell) => extractArabicStrings(cell))
+    addConjugationCell(bucket, masculineCells[0] ?? [], '1s')
+    addConjugationCell(bucket, masculineCells[1] ?? [], '2ms')
+    addConjugationCell(bucket, masculineCells[2] ?? [], '3ms')
+    addConjugationCell(bucket, masculineCells[3] ?? [], '2d')
+    addConjugationCell(bucket, masculineCells[4] ?? [], '3md')
+    addConjugationCell(bucket, masculineCells[5] ?? [], '1p')
+    addConjugationCell(bucket, masculineCells[6] ?? [], '2mp')
+    addConjugationCell(bucket, masculineCells[7] ?? [], '3mp')
 
     const feminineRow = rows[index + 1]
     if (!feminineRow) continue
@@ -164,20 +162,18 @@ function extractParadigms(table: HTMLTableElement): Partial<Record<VerbParadigm,
     ).toLowerCase()
     if (feminineMarker !== 'f') continue
 
-    const feminineCells = Array.from(feminineRow.querySelectorAll('td')).map(
-      (cell) => extractArabicStrings(cell)[0] ?? '',
-    )
+    const feminineCells = Array.from(feminineRow.querySelectorAll('td')).map((cell) => extractArabicStrings(cell))
     if (paradigm === 'active imperative') {
-      addConjugationCell(bucket, feminineCells[0], '2fs')
-      addConjugationCell(bucket, feminineCells[1], '2fp')
+      addConjugationCell(bucket, feminineCells[0] ?? [], '2fs')
+      addConjugationCell(bucket, feminineCells[1] ?? [], '2fp')
       continue
     }
 
-    addConjugationCell(bucket, feminineCells[0], '2fs')
-    addConjugationCell(bucket, feminineCells[1], '3fs')
-    addConjugationCell(bucket, feminineCells[2], '3fd')
-    addConjugationCell(bucket, feminineCells[3], '2fp')
-    addConjugationCell(bucket, feminineCells[4], '3fp')
+    addConjugationCell(bucket, feminineCells[0] ?? [], '2fs')
+    addConjugationCell(bucket, feminineCells[1] ?? [], '3fs')
+    addConjugationCell(bucket, feminineCells[2] ?? [], '3fd')
+    addConjugationCell(bucket, feminineCells[3] ?? [], '2fp')
+    addConjugationCell(bucket, feminineCells[4] ?? [], '3fp')
   }
 
   return paradigms

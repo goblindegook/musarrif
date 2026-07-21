@@ -20,6 +20,6 @@ export type NominalSet = {
 }
 
 export type ParsedParadigms = {
-  paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string>>>>
+  paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>>
   nominals: NominalSet
 }

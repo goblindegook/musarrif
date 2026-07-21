@@ -36,6 +36,14 @@ describe('toEqualT', () => {
     expect(run).toThrow(/kataba/)
     expect(run).toThrow(/kutiba/)
   })
+
+  test('transliterates the options inside a nested expect.toBeOneOf', () => {
+    const run = () => expect({ value: 'كُتِبَ' }).toEqualT({ value: expect.toBeOneOf(['كَتَبَ', 'كَتَبَتْ']) })
+
+    expect(run).toThrow(/Transliterated diff/)
+    expect(run).toThrow(/kataba/)
+    expect(run).toThrow(/kutiba/)
+  })
 })
 
 describe('stringification', () => {
