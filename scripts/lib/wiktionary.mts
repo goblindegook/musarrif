@@ -186,7 +186,7 @@ function readCaptionArabic(table: HTMLTableElement): string[] {
 
 function readCaptionForm(table: HTMLTableElement): string | undefined {
   const caption = normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')
-  return caption.match(/\(([IVX]+),/)?.[1]
+  return caption.match(/\(([IVX]+q?),/)?.[1]
 }
 
 type RootDeclaration = { el: Element; arabicRoot: string }
@@ -234,7 +234,7 @@ function parseConjugationTable(html: string, lemma: string, root?: string, form?
   )
   const lemmaMatches = exactMatches.length > 0 ? exactMatches : normalizedMatches
 
-  const expectedForm = form != null ? toRoman(form) : undefined
+  const expectedForm = form != null ? `${toRoman(form)}${root?.length === 4 ? 'q' : ''}` : undefined
   const formMatches = expectedForm
     ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm)
     : lemmaMatches

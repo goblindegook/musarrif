@@ -80,7 +80,7 @@ export type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 export type PassiveVoice = 'none' | 'impersonal'
-export type PresentHollowBehaviour = 'contracted' | 'uncontracted'
+export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends VerbRoot, Tokens extends RootTokens, Form extends number> = {
   root: Root
@@ -94,7 +94,7 @@ type VerbProps<Root extends VerbRoot, Tokens extends RootTokens, Form extends nu
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
   vowels: FormIPattern
-  presentHollow?: PresentHollowBehaviour
+  hollowContraction?: HollowContractionBehaviour
   contractedImperative?: boolean
   lexicalActiveParticiple?: string
 }
@@ -172,7 +172,7 @@ type RawVerb = {
   root: string
   form: VerbForm
   vowels?: FormIPattern
-  presentHollow?: PresentHollowBehaviour
+  hollowContraction?: HollowContractionBehaviour
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   lexicalActiveParticiple?: string
@@ -263,7 +263,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       rootTokens,
       form: 1,
       vowels: raw.vowels ?? 'a-a',
-      presentHollow: raw.presentHollow,
+      hollowContraction: raw.hollowContraction,
       masdars: raw.masdars,
       lexicalMasdars: raw.lexicalMasdars,
       passiveVoice: raw.passiveVoice,

@@ -1,5 +1,4 @@
 import { mapRecord } from '../../primitives/objects'
-import { isFormIPastVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import {
   ALIF,
@@ -78,14 +77,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
-  if (c2.equals(YEH))
-    return {
-      stem: [radicalMorpheme(c1), measureMorpheme(KASRA)],
-      suffix: [radicalMorpheme(c3)],
-      suffix3sd: [radicalMorpheme(YEH), radicalMorpheme(c3), measureMorpheme(FATHA)],
-    }
-
-  if (c2.isWeak && !isFormIPastVowel(verb, KASRA))
+  if (c2.isWeak && verb.hollowContraction !== 'uncontracted')
     return {
       stem: [radicalMorpheme(c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],

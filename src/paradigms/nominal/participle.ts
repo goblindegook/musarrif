@@ -134,7 +134,7 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
       if (c2.equals(WAW))
         return [
           ...prefix,
-          ...(verb.presentHollow === 'uncontracted' ? [measureMorpheme(SUKOON), radicalMorpheme(c2)] : []),
+          ...(verb.hollowContraction === 'uncontracted' ? [measureMorpheme(SUKOON), radicalMorpheme(c2)] : []),
           measureMorpheme(...longVowelU),
           radicalMorpheme(c3),
         ]

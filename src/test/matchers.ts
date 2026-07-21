@@ -65,6 +65,7 @@ const isAsymmetricMatcher = (value: unknown): value is { sample: unknown } =>
 const transliterateValue = (value: unknown): unknown => {
   if (typeof value === 'string') return transliterate(value)
   if (Array.isArray(value)) return value.map(transliterateValue)
+  if (value instanceof Set) return new Set([...value].map(transliterateValue))
   if (isAsymmetricMatcher(value))
     return Object.assign(Object.create(Object.getPrototypeOf(value)), value, {
       sample: transliterateValue(value.sample),

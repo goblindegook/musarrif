@@ -100,7 +100,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
         radicalMorpheme(c1),
         measureMorpheme(FATHA),
         radicalMorpheme(c2),
-        measureMorpheme(KASRA, YEH),
+        measureMorpheme(KASRA, YEH, c3.equals(YEH) ? SUKOON : null),
         radicalMorpheme(c3),
       ]
 

@@ -384,7 +384,7 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
   if (c1.equals(WAW) && !presentVowel.equals(DAMMA))
     return [radicalMorpheme(c2), measureMorpheme(presentVowel), radicalMorpheme(c3)]
 
-  if (verb.presentHollow === 'uncontracted')
+  if (verb.hollowContraction === 'uncontracted')
     return [
       radicalMorpheme(c1),
       measureMorpheme(SUKOON),

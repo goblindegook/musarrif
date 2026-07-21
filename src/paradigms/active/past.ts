@@ -28,6 +28,10 @@ function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {
   return verb.rootTokens.length === 4
 }
 
+function isFormIVerb(verb: Verb): verb is FormIVerb {
+  return verb.form === 1 && verb.rootTokens.length === 3
+}
+
 type PastBaseForms = [vowelStem: readonly Morpheme[], consonantStem?: readonly Morpheme[]]
 
 export function conjugatePast(verb: Verb): Record<PronounId, Word> {
@@ -37,7 +41,7 @@ export function conjugatePast(verb: Verb): Record<PronounId, Word> {
     return new Word(
       isQuadriliteral
         ? contractDefectiveRoot(morphemes)
-        : contractActivePastHollowRoot(contractActivePastGeminateRoot(contractDefectiveRoot(morphemes))),
+        : contractActivePastHollowRoot(verb, contractActivePastGeminateRoot(contractDefectiveRoot(morphemes))),
     )
   })
 }
@@ -147,7 +151,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
 
   if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 
-  if (c2.equals(YEH) || (c2.isWeak && !isFormIPastVowel(verb, KASRA))) return [[...prefix, radicalMorpheme(c3)]]
+  if (c2.isWeak && verb.hollowContraction !== 'uncontracted') return [[...prefix, radicalMorpheme(c3)]]
 
   return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 }
@@ -449,17 +453,16 @@ function contractHollowRadicalBeforeVowelSuffix(morphemes: readonly Morpheme[]):
 }
 
 // Before a consonant-initial suffix the weak radical is dropped entirely and C1's FATHA shifts to
-// the vowel the radical's own identity implies — KASRA for a يّ-medial root (بِعْتُ), DAMMA otherwise
-// (قُلْتُ) — regardless of the verb's own pastVowel, matching what the original two-variant branches
-// always produced.
-function elideHollowRadicalBeforeConsonantSuffix(morphemes: readonly Morpheme[]): readonly Morpheme[] {
+// the vowel the radical's own past-tense class implies — KASRA for a يّ-medial root (بِعْتُ) or for
+// a وّ-medial root whose declared past vowel is itself KASRA (نَامَ → نِمْتُ), DAMMA otherwise (قُلْتُ).
+function elideHollowRadicalBeforeConsonantSuffix(verb: Verb, morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = findHollowRadicalIndex(morphemes)
   if (index === -1 || !morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
 
-  const vowel = morphemes[index].equals([YEH]) ? KASRA : DAMMA
+  const vowel = morphemes[index].equals([YEH]) || (isFormIVerb(verb) && isFormIPastVowel(verb, KASRA)) ? KASRA : DAMMA
   return [...morphemes.slice(0, index - 1), measureMorpheme(vowel), ...morphemes.slice(index + 1)]
 }
 
-function contractActivePastHollowRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return contractHollowRadicalBeforeVowelSuffix(elideHollowRadicalBeforeConsonantSuffix(morphemes))
+function contractActivePastHollowRoot(verb: Verb, morphemes: readonly Morpheme[]): readonly Morpheme[] {
+  return contractHollowRadicalBeforeVowelSuffix(elideHollowRadicalBeforeConsonantSuffix(verb, morphemes))
 }

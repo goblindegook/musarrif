@@ -80,7 +80,7 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
     return [radicalMorpheme(c1), measureMorpheme(FATHA)]
   }
 
-  if (c2.isWeak && !c3.isWeak && verb.presentHollow !== 'uncontracted')
+  if (c2.isWeak && !c3.isWeak && verb.hollowContraction !== 'uncontracted')
     return [radicalMorpheme(c1), measureMorpheme(FATHA)]
 
   if (c1.isHamza && pronounId === '1s') return [radicalMorpheme(WAW)]
@@ -108,7 +108,7 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 
   if (c3.isWeak) return [radicalMorpheme(c2)]
 
-  if (!c2.isWeak || c3.isWeak || verb.presentHollow === 'uncontracted')
+  if (!c2.isWeak || c3.isWeak || verb.hollowContraction === 'uncontracted')
     return [radicalMorpheme(c2), measureMorpheme(FATHA)]
 
   if (isFemininePlural(pronounId)) return []
