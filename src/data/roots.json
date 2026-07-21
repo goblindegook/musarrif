@@ -1872,7 +1872,7 @@
   {
     "root": "f$l",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fa3al"]
   },
   {
@@ -1898,7 +1898,7 @@
   {
     "root": "fSl",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -1914,8 +1914,7 @@
   },
   {
     "root": "fjr",
-    "form": 7,
-    "noPassiveParticiple": true
+    "form": 7
   },
   {
     "root": "fkk",
@@ -1958,7 +1957,7 @@
   {
     "root": "fqd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l", "fu3laan"],
     "lexicalMasdars": ["fiqodaAn"]
   },
@@ -2051,7 +2050,7 @@
   {
     "root": "glb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3al", "fa3l", "mimi"],
     "lexicalMasdars": ["galabap", "magolabap", "galaAbiyap", "guluba~Y", "giliba~Y", "guluba~p", "galuba~p"]
   },

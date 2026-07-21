@@ -150,7 +150,7 @@ describe('Form', () => {
   it.each([
     ['ktb-1', '◌َ / ◌ُ'],
     ['qwl-1', '◌َ / ◌ُ'],
-    ['bdl-1', '◌َ / ◌ِ'],
+    ['glb-1', '◌َ / ◌ِ'],
   ])('detail for verb %s indicates vowels %s', (id, expected) => {
     renderConjugationMode({ verbId: id })
 
@@ -179,7 +179,7 @@ describe('Form', () => {
   })
 
   it('shows the selected Form I past/present pattern in form insights', () => {
-    renderConjugationMode({ verbId: 'bdl-1' })
+    renderConjugationMode({ verbId: 'glb-1' })
     fireEvent.click(screen.getByLabelText('View form insights for Form I'))
     const dialog = screen.getByText('Form I insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
