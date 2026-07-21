@@ -903,7 +903,8 @@
     "form": 1,
     "hollowContraction": "uncontracted",
     "vowels": "i-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "EaAwiz"
   },
   {
     "root": "Ey$",
@@ -1488,7 +1489,7 @@
   {
     "root": "Tbx",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -2353,7 +2354,7 @@
   {
     "root": "jrb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": ">ajorab"
   },
@@ -2428,7 +2429,7 @@
   {
     "root": "k*b",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3il", "fi3l", "fi3la"]
   },
   {
@@ -2471,7 +2472,7 @@
   {
     "root": "kl'",
     "form": 1,
-    "vowels": "a-u",
+    "vowels": "a-a",
     "masdars": ["fa3l", "fi3aala", "fi3aal"]
   },
   {
@@ -2504,7 +2505,7 @@
   {
     "root": "kml",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3aal", "fu3ool"]
   },
   {
@@ -2523,7 +2524,7 @@
   {
     "root": "ksb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -2629,7 +2630,7 @@
   {
     "root": "lkm",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -2903,13 +2904,13 @@
   {
     "root": "n$r",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
     "root": "nDj",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fu3l", "fa3l", "fa3al", "fu3ool"],
     "lexicalMasdars": ["niDAj"]
   },
@@ -2975,7 +2976,7 @@
   {
     "root": "nf*",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3aal", "fu3ool"]
   },
   {
@@ -2998,7 +2999,7 @@
   {
     "root": "nfx",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3038,7 +3039,7 @@
   {
     "root": "nqS",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l", "fu3laan"]
   },
   {
@@ -3115,7 +3116,7 @@
   {
     "root": "nzE",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -3162,7 +3163,7 @@
   {
     "root": "qbD",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -3459,7 +3460,7 @@
   {
     "root": "rHb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "raHib"
   },
@@ -3534,13 +3535,13 @@
   {
     "root": "rjE",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fu3ool"]
   },
   {
     "root": "rkD",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3552,7 +3553,7 @@
   {
     "root": "rkl",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3588,19 +3589,19 @@
   {
     "root": "rqS",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
     "root": "rqd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l", "fu3ool", "fu3aal"]
   },
   {
     "root": "rsb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fu3ool"]
   },
   {
@@ -3614,13 +3615,13 @@
   {
     "root": "rsm",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
     "root": "rtb",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fu3ool", "fa3aala", "fa3l"]
   },
   {
@@ -3747,7 +3748,7 @@
   {
     "root": "sjd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fu3ool"]
   },
   {
@@ -3757,7 +3758,7 @@
   {
     "root": "sjn",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -3908,7 +3909,7 @@
   {
     "root": "tbE",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fa3al", "fa3aala"]
   },
   {
@@ -3959,7 +3960,7 @@
   {
     "root": "trk",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -4606,7 +4607,7 @@
   {
     "root": "xwf",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "i-a",
     "masdars": ["fa3l"],
     "lexicalMasdars": ["maxaAfap", "xiyfap"]
   },

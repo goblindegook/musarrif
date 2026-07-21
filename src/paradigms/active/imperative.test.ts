@@ -435,7 +435,7 @@ describe('imperative', () => {
       test.each([
         ['فتء', 'اِفْتَأْ'],
         ['جرء', 'اُجْرُؤْ'],
-        ['كلء', 'اُكْلُؤْ'],
+        ['كلء', 'اِكْلَأْ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugateImperative(getVerb(root, 1))['2ms']).toEqualT(expected)
       })
@@ -462,11 +462,11 @@ describe('imperative', () => {
 
       test('كَلَأَ conjugation', () => {
         expect(conjugateImperative(getVerb('كلء', 1))).toMatchObjectT({
-          '2ms': 'اُكْلُؤْ',
-          '2fs': 'اُكْلُئِي',
-          '2d': 'اُكْلُؤَا',
-          '2mp': 'اُكْلُؤُوا',
-          '2fp': 'اُكْلُؤْنَ',
+          '2ms': 'اِكْلَأْ',
+          '2fs': 'اِكْلَئِي',
+          '2d': 'اِكْلَآ',
+          '2mp': 'اِكْلَؤُوا',
+          '2fp': 'اِكْلَأْنَ',
         })
       })
 

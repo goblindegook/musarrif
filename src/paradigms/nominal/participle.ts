@@ -1,6 +1,5 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { derivePresentStem } from '../active/present'
-import { isFormIPastVowel } from '../form-i-vowels'
 import {
   ALIF,
   ALIF_MAQSURA,
@@ -66,7 +65,7 @@ export function deriveActiveParticiple(verb: Verb): Word {
       return new Word([
         radicalMorpheme(c1),
         measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(isFormIPastVowel(verb, KASRA) ? c2 : HAMZA_ON_YEH),
+        radicalMorpheme(HAMZA_ON_YEH),
         measureMorpheme(KASRA),
         radicalMorpheme(c3),
       ])
