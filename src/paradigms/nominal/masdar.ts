@@ -210,14 +210,14 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       ]
 
     case 'mimi': {
-      const vowel = c3.isHamza || isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA
       if (c2.isWeak)
         return [
           measureMorpheme(MEEM, FATHA),
           radicalMorpheme(c1),
-          measureMorpheme(...longVowel(vowel)),
+          measureMorpheme(...longVowel(c3.isHamza || isFormIPresentVowel(verb, KASRA) ? KASRA : FATHA)),
           radicalMorpheme(c3),
         ]
+
       if (c2.equals(c3))
         return [
           measureMorpheme(MEEM, FATHA),
@@ -227,12 +227,13 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
           measureMorpheme(SUKOON),
           radicalMorpheme(c3),
         ]
+
       return [
         measureMorpheme(MEEM, FATHA),
         radicalMorpheme(c1),
         measureMorpheme(SUKOON),
         radicalMorpheme(c2),
-        measureMorpheme(vowel),
+        measureMorpheme(c1.equals(WAW) && !c3.isWeak ? KASRA : FATHA),
         radicalMorpheme(c3),
       ]
     }
