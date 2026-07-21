@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("nwm-1 (Wiktionary)", () => {
+describe('nwm-1 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("nwm-1")!)).toEqualT({
+    expect(conjugatePast(getVerbById('nwm-1')!)).toEqualT({
       '1s': 'نِمْتُ',
       '2ms': 'نِمْتَ',
       '2fs': 'نِمْتِ',
@@ -28,7 +28,7 @@ describe("nwm-1 (Wiktionary)", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("nwm-1")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('nwm-1')!, 'indicative')).toEqualT({
       '1s': 'أَنَامُ',
       '2ms': 'تَنَامُ',
       '2fs': 'تَنَامِينَ',
@@ -46,7 +46,7 @@ describe("nwm-1 (Wiktionary)", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("nwm-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('nwm-1')!, 'subjunctive')).toEqualT({
       '1s': 'أَنَامَ',
       '2ms': 'تَنَامَ',
       '2fs': 'تَنَامِي',
@@ -64,7 +64,7 @@ describe("nwm-1 (Wiktionary)", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("nwm-1")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('nwm-1')!, 'jussive')).toEqualT({
       '1s': 'أَنَمْ',
       '2ms': 'تَنَمْ',
       '2fs': 'تَنَامِي',
@@ -82,7 +82,7 @@ describe("nwm-1 (Wiktionary)", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("nwm-1")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('nwm-1')!)).toMatchObjectT({
       '2ms': 'نَمْ',
       '2fs': 'نَامِي',
       '2d': 'نَامَا',
@@ -92,38 +92,38 @@ describe("nwm-1 (Wiktionary)", () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById("nwm-1")!)).toMatchObjectT({
+    expect(conjugatePassivePast(getVerbById('nwm-1')!)).toMatchObjectT({
       '3ms': 'نِيمَ',
     })
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById("nwm-1")!, 'indicative')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('nwm-1')!, 'indicative')).toMatchObjectT({
       '3ms': 'يُنَامُ',
     })
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("nwm-1")!, 'subjunctive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('nwm-1')!, 'subjunctive')).toMatchObjectT({
       '3ms': 'يُنَامَ',
     })
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById("nwm-1")!, 'jussive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('nwm-1')!, 'jussive')).toMatchObjectT({
       '3ms': 'يُنَمْ',
     })
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("nwm-1")!)).toEqualT('نَائِم')
+    expect(deriveActiveParticiple(getVerbById('nwm-1')!)).toEqualT('نَائِم')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById("nwm-1")!)).toEqualT('مَنُوم')
+    expect(derivePassiveParticiple(getVerbById('nwm-1')!)).toEqualT('مَنُوم')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById("nwm-1")!))).toEqualT(new Set(['نَوْم', 'مَنَام']))
+    expect(new Set(deriveMasdar(getVerbById('nwm-1')!))).toEqualT(new Set(['نَوْم', 'مَنَام']))
   })
 })
