@@ -2604,13 +2604,13 @@
   {
     "root": "m$T",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
     "root": "m$y",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -2727,7 +2727,8 @@
     "form": 1,
     "vowels": "i-a",
     "noPassiveParticiple": true,
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "mariyD"
   },
   {
     "root": "mrD",
