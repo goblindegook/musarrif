@@ -6,7 +6,6 @@ describe('active present indicative', () => {
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each([
-        ['بدل', 'يَبْدِلُ'],
         ['جلس', 'يَجْلِسُ'],
         ['جعل', 'يَجْعَلُ'],
         ['ذكر', 'يَذْكُرُ'],

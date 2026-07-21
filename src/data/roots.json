@@ -39,7 +39,7 @@
   {
     "root": "$kk",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -100,7 +100,7 @@
   {
     "root": "$rd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-u",
     "masdars": ["fa3l", "fu3ool", "fi3aal"]
   },
   {
@@ -1604,7 +1604,7 @@
   {
     "root": "bdl",
     "form": 1,
-    "vowels": "a-i",
+    "vowels": "a-u",
     "masdars": ["fa3l"]
   },
   {
@@ -1667,7 +1667,7 @@
   {
     "root": "bny",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l", "fi3aal", "fu3laan", "fi3la", "fi3aala"]
   },
   {
