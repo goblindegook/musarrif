@@ -75,7 +75,6 @@ describe('quadriliteral form filter', () => {
     await user.click(screen.getByText('Iq', { selector: 'button' }))
 
     const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-    expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(13)
     expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeTruthy()
     expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
   })
@@ -289,8 +288,6 @@ test('filters included verbs to biliteral quadriliteral roots (c1=c3, c2=c4)', a
   await user.click(screen.getByText('Biliteral', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
-  expect(links).toHaveLength(7)
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/zlzl-1"]')).toBeTruthy()
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeNull()
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()

@@ -210,6 +210,10 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "'frq",
+    "form": 1
+  },
+  {
     "root": "'jj",
     "form": 1,
     "vowels": "a-u",
@@ -271,6 +275,11 @@
     "form": 6,
     "passiveVoice": "none",
     "noPassiveParticiple": true
+  },
+  {
+    "root": "'ksd",
+    "form": 1,
+    "vowels": "a-a"
   },
   {
     "root": "'lf",
@@ -1577,6 +1586,10 @@
     "vowels": "i-a",
     "passiveVoice": "impersonal",
     "masdars": ["fa3al"]
+  },
+  {
+    "root": "bHbH",
+    "form": 1
   },
   {
     "root": "bHr",
@@ -4606,6 +4619,12 @@
   {
     "root": "xrj",
     "form": 10
+  },
+  {
+    "root": "xrmS",
+    "form": 4,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "xsr",
