@@ -1759,6 +1759,16 @@
   },
   {
     "root": "byD",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["mimi", "fa3l"]
+  },
+  {
+    "root": "byD",
+    "form": 2
+  },
+  {
+    "root": "byD",
     "form": 9,
     "passiveVoice": "none"
   },

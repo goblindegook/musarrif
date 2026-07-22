@@ -45,8 +45,6 @@ const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
 
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
 
-const FORM_FILTER_VALUES = [...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const
-
 function formFilterLabel(option: string): string {
   return option.endsWith('q') ? `${toRoman(Number(option.slice(0, -1)))}q` : toRoman(Number(option))
 }
@@ -58,7 +56,10 @@ function matchesFormFilter(verb: DisplayVerb, option: string): boolean {
 
 const Query = v.object({
   filters: v.object({
-    form: v.fallback(v.nullable(v.picklist(FORM_FILTER_VALUES)), null),
+    form: v.fallback(
+      v.nullable(v.picklist([...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const)),
+      null,
+    ),
     root: v.fallback(v.array(v.picklist(ROOT_TYPE_FILTERS)), []),
     group: v.fallback(v.nullable(v.picklist(['favourites', 'kana', 'zanna'])), null),
   }),
@@ -276,7 +277,7 @@ export function Home() {
                 {t('verbsList.filter.form.title')}
               </Subheading>
               <FormFilterBar role="group" aria-label={t('aria.selectForm')}>
-                {FORM_FILTER_VALUES.map((option) => (
+                {([...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const).map((option) => (
                   <SelectableButton
                     key={option}
                     id={`form-tab-${option}`}
