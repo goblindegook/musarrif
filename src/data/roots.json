@@ -369,6 +369,10 @@
     "form": 10
   },
   {
+    "root": "'r$f",
+    "form": 1
+  },
+  {
     "root": "'sr",
     "form": 1,
     "vowels": "a-i",
@@ -3441,6 +3445,10 @@
   {
     "root": "qwy",
     "form": 2
+  },
+  {
+    "root": "r$f",
+    "form": 4
   },
   {
     "root": "r'y",
