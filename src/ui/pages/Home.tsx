@@ -3,7 +3,14 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import * as v from 'valibot'
 import { analyzeRoot } from '../../paradigms/roots'
 import { tokenize } from '../../paradigms/tokens'
-import { type DisplayVerb, FORMS, KWN_SISTERS_IDS, type VerbForm, verbs, ZNN_SISTERS_IDS } from '../../paradigms/verbs'
+import {
+  type DisplayVerb,
+  FORMS,
+  KWN_SISTERS_IDS,
+  QUADRILITERAL_FORMS,
+  verbs,
+  ZNN_SISTERS_IDS,
+} from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
 import { SelectableButton } from '../atoms/SelectableButton'
@@ -24,7 +31,7 @@ const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.lemma.localeCompare(b.lemma, 'ar'))
 
-type RootTypeFilter = 'sound' | 'doubled' | 'assimilated' | 'hollow' | 'defective' | 'hamzated'
+type RootTypeFilter = 'sound' | 'doubled' | 'assimilated' | 'hollow' | 'defective' | 'hamzated' | 'biliteral'
 
 const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
   'sound',
@@ -33,13 +40,26 @@ const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
   'hollow',
   'defective',
   'hamzated',
+  'biliteral',
 ]
 
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
 
+const FORM_FILTER_VALUES = [...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const
+type FormFilterValue = (typeof FORM_FILTER_VALUES)[number]
+
+function formFilterLabel(option: FormFilterValue): string {
+  return option.endsWith('q') ? `${toRoman(Number(option.slice(0, -1)))}q` : toRoman(Number(option))
+}
+
+function matchesFormFilter(verb: DisplayVerb, option: FormFilterValue): boolean {
+  const quad = option.endsWith('q')
+  return verb.root.length === (quad ? 4 : 3) && verb.form === Number(quad ? option.slice(0, -1) : option)
+}
+
 const Query = v.object({
   filters: v.object({
-    form: v.fallback(v.nullable(v.pipe(v.string(), v.toNumber(), v.picklist(FORMS))), null),
+    form: v.fallback(v.nullable(v.picklist(FORM_FILTER_VALUES)), null),
     root: v.fallback(v.array(v.picklist(ROOT_TYPE_FILTERS)), []),
     group: v.fallback(v.nullable(v.picklist(['favourites', 'kana', 'zanna'])), null),
   }),
@@ -61,7 +81,7 @@ function parseQuery(params: URLSearchParams): Query {
 
 function setQuery(query: Query): URLSearchParams {
   const next = new URLSearchParams()
-  if (query.filters.form) next.set('form', String(query.filters.form))
+  if (query.filters.form) next.set('form', query.filters.form)
   for (const rootType of query.filters.root) next.append('root', rootType)
   if (query.filters.group) next.set('group', query.filters.group)
   if (query.page > 1) next.set('page', String(query.page))
@@ -83,10 +103,14 @@ function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   if (analysis.weakPositions.includes(1)) result.push('hollow')
   if (analysis.weakPositions.includes(2)) result.push('defective')
   if (analysis.hamzaPositions.length > 0) result.push('hamzated')
+  if (verb.rootTokens.length > 3) {
+    const [c1, c2, c3, c4] = verb.rootTokens
+    if (c1.equals(c3) && c2.equals(c4)) result.push('biliteral')
+  }
   return result
 }
 
-function withFormFilter(query: Query, option: VerbForm): Query {
+function withFormFilter(query: Query, option: FormFilterValue): Query {
   return { ...query, filters: { ...query.filters, form: query.filters.form === option ? null : option }, page: 1 }
 }
 
@@ -105,7 +129,8 @@ function withRootTypeFilter(query: Query, option: RootTypeFilter): Query {
 
 function filterVerbs({ filters }: Query, favouriteVerbIds: ReadonlySet<string>): DisplayVerb[] {
   let filtered = allVerbs
-  if (filters.form) filtered = filtered.filter((verb) => verb.form === filters.form)
+  const { form } = filters
+  if (form) filtered = filtered.filter((verb) => matchesFormFilter(verb, form))
   if (filters.root.length > 0)
     filtered = filtered.filter((verb) => filters.root.every((item) => getVerbRootTypes(verb).includes(item)))
   if (filters.group === 'favourites') filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
@@ -149,7 +174,7 @@ export function Home() {
   }, [currentPage, visibleVerbs])
 
   const applyFormFilter = useCallback(
-    (option: VerbForm) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
+    (option: FormFilterValue) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
     [setQueryParams, query],
   )
 
@@ -252,7 +277,7 @@ export function Home() {
                 {t('verbsList.filter.form.title')}
               </Subheading>
               <FormFilterBar role="group" aria-label={t('aria.selectForm')}>
-                {FORMS.map((option) => (
+                {FORM_FILTER_VALUES.map((option) => (
                   <SelectableButton
                     key={option}
                     id={`form-tab-${option}`}
@@ -263,7 +288,7 @@ export function Home() {
                     disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
                     onClick={() => applyFormFilter(option)}
                   >
-                    {toRoman(option)}
+                    {formFilterLabel(option)}
                   </SelectableButton>
                 ))}
               </FormFilterBar>

@@ -11,7 +11,7 @@ export type QuadriliteralForm = 1 | 2 | 3 | 4
 export type VerbForm = TriliteralForm
 
 export const FORMS: readonly TriliteralForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-const QUADRILITERAL_FORMS: readonly QuadriliteralForm[] = [1, 2, 3, 4]
+export const QUADRILITERAL_FORMS: readonly QuadriliteralForm[] = [1, 2, 3, 4]
 
 declare const triliteralRootBrand: unique symbol
 declare const quadriliteralRootBrand: unique symbol

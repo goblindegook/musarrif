@@ -41,14 +41,72 @@ test('search and build tabs are correctly linked to their tabpanels', () => {
   expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
 })
 
-test('Shows verbs grouped by form at the verbs base route', () => {
+test('Shows verbs grouped by form at the verbs base route, including quadriliteral forms', () => {
   renderHome()
 
-  expect(document.querySelectorAll('[role="group"][aria-label="Select form"] button')).toHaveLength(10)
+  const buttons = [...document.querySelectorAll('[role="group"][aria-label="Select form"] button')]
+  expect(buttons.map((button) => button.textContent)).toEqual([
+    'I',
+    'II',
+    'III',
+    'IV',
+    'V',
+    'VI',
+    'VII',
+    'VIII',
+    'IX',
+    'X',
+    'Iq',
+    'IIq',
+    'IIIq',
+    'IVq',
+  ])
 
   expect(
     document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
   ).toHaveLength(0)
+})
+
+describe('quadriliteral form filter', () => {
+  test('filters to only quadriliteral verbs of the selected form', async () => {
+    renderHome()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Iq', { selector: 'button' }))
+
+    const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+    expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(13)
+    expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeTruthy()
+    expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+  })
+
+  test('selecting a quadriliteral form clears an active triliteral form filter, and vice versa', async () => {
+    renderHome()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('I', { selector: 'button' }))
+    await user.click(screen.getByText('Iq', { selector: 'button' }))
+    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'false')
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'true')
+
+    await user.click(screen.getByText('I', { selector: 'button' }))
+    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'true')
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'false')
+  })
+
+  test('restores the quadriliteral form filter from hash query params', () => {
+    renderHome('/#/verbs?form=1q')
+
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'true')
+  })
+
+  test('syncs the quadriliteral form filter to hash query params', async () => {
+    renderHome('/#/verbs')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Iq', { selector: 'button' }))
+    expect(window.location.hash).toBe('#/verbs?form=1q')
+  })
 })
 
 test('Shows alphabetized verbs for the selected form', async () => {
@@ -216,6 +274,25 @@ test('filters included verbs to doubled roots', async () => {
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Edd-4"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+})
+
+test('shows a Biliteral root type filter button', () => {
+  renderHome()
+  expect(screen.getByText('Biliteral', { selector: 'button' })).toBeInTheDocument()
+})
+
+test('filters included verbs to biliteral quadriliteral roots (c1=c3, c2=c4)', async () => {
+  renderHome()
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+  await user.click(screen.getByText('Biliteral', { selector: 'button' }))
+
+  const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
+  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
+  expect(links).toHaveLength(7)
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/zlzl-1"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeNull()
   expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
 })
 
