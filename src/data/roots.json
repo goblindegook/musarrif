@@ -2447,6 +2447,11 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "k'k'",
+    "form": 2,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "k*b",
     "form": 1,
     "vowels": "a-i",
