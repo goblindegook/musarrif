@@ -374,6 +374,10 @@
     "form": 2
   },
   {
+    "root": "'tmt",
+    "form": 1
+  },
+  {
     "root": "'ty",
     "form": 1,
     "vowels": "a-i",
@@ -2467,6 +2471,12 @@
   {
     "root": "kff",
     "form": 7
+  },
+  {
+    "root": "kfhr",
+    "form": 4,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "kl'",
