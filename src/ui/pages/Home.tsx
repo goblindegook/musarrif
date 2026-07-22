@@ -46,13 +46,12 @@ const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
 
 const FORM_FILTER_VALUES = [...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const
-type FormFilterValue = (typeof FORM_FILTER_VALUES)[number]
 
-function formFilterLabel(option: FormFilterValue): string {
+function formFilterLabel(option: string): string {
   return option.endsWith('q') ? `${toRoman(Number(option.slice(0, -1)))}q` : toRoman(Number(option))
 }
 
-function matchesFormFilter(verb: DisplayVerb, option: FormFilterValue): boolean {
+function matchesFormFilter(verb: DisplayVerb, option: string): boolean {
   const quad = option.endsWith('q')
   return verb.root.length === (quad ? 4 : 3) && verb.form === Number(quad ? option.slice(0, -1) : option)
 }
@@ -110,7 +109,7 @@ function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
   return result
 }
 
-function withFormFilter(query: Query, option: FormFilterValue): Query {
+function withFormFilter(query: Query, option: string): Query {
   return { ...query, filters: { ...query.filters, form: query.filters.form === option ? null : option }, page: 1 }
 }
 
@@ -174,7 +173,7 @@ export function Home() {
   }, [currentPage, visibleVerbs])
 
   const applyFormFilter = useCallback(
-    (option: FormFilterValue) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
+    (option: string) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
     [setQueryParams, query],
   )
 
