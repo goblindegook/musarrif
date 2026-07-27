@@ -231,7 +231,7 @@ export function findLowestMastery<K extends MasteryCategoryId>(
 }
 
 export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass'
-export type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
+type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
 
 export interface InsightCandidate {
   type: InsightCandidateType

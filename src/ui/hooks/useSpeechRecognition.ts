@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 
-export type SpeechRecognitionState = 'idle' | 'listening' | 'result' | 'error'
+type SpeechRecognitionState = 'idle' | 'listening' | 'result' | 'error'
 
 export interface SpeechRecognitionHook {
   supported: boolean

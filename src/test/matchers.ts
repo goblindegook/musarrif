@@ -51,7 +51,7 @@ export const matchers = {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   value != null && typeof value === 'object' && value.constructor === Object
 
-export const stringifyWords = (value: unknown): unknown => {
+const stringifyWords = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(stringifyWords)
   if (value instanceof Set) return new Set([...value].map(stringifyWords))
   if (isRecord(value)) return mapRecord(value, stringifyWords)

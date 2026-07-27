@@ -16,9 +16,8 @@ export const QUADRILITERAL_FORMS: readonly QuadriliteralForm[] = [1, 2, 3, 4]
 declare const triliteralRootBrand: unique symbol
 declare const quadriliteralRootBrand: unique symbol
 
-export type TriliteralRoot = string & { readonly [triliteralRootBrand]: 'triliteral' }
-export type QuadriliteralRoot = string & { readonly [quadriliteralRootBrand]: 'quadriliteral' }
-export type VerbRoot = TriliteralRoot | QuadriliteralRoot
+type TriliteralRoot = string & { readonly [triliteralRootBrand]: 'triliteral' }
+type QuadriliteralRoot = string & { readonly [quadriliteralRootBrand]: 'quadriliteral' }
 
 export const KWN_SISTERS_IDS = new Set([
   'brH-1',
@@ -74,15 +73,15 @@ export type AllowedFormForRoot<Value extends string> =
       ? TriliteralForm
       : VerbForm
 
-export type TriliteralRootTokens = readonly [Token, Token, Token]
-export type QuadriliteralRootTokens = readonly [Token, Token, Token, Token]
-export type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
+type TriliteralRootTokens = readonly [Token, Token, Token]
+type QuadriliteralRootTokens = readonly [Token, Token, Token, Token]
+type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 export type PassiveVoice = 'none' | 'impersonal'
-export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
+type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
-type VerbProps<Root extends VerbRoot, Tokens extends RootTokens, Form extends number> = {
+type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
   root: Root
   rootTokens: Tokens
   form: Form
@@ -99,8 +98,8 @@ export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens
   lexicalActiveParticiple?: string
 }
 
-export type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
-export type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
+type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
+type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
 
 export type QuadriliteralVerb = VerbProps<QuadriliteralRoot, QuadriliteralRootTokens, QuadriliteralForm>
 
@@ -121,9 +120,6 @@ export type DisplayVerb<T extends Verb | VerbForm = Verb> = T extends Verb
 
 export type TriliteralDisplayVerb<Form extends TriliteralForm = TriliteralForm> = VerbBase<
   Extract<TriliteralVerb, { form: Form }>
->
-export type QuadriliteralDisplayVerb<Form extends QuadriliteralForm = QuadriliteralForm> = VerbBase<
-  Extract<QuadriliteralVerb, { form: Form }>
 >
 
 type VerbForRootAndForm<Root extends string, Form extends AllowedFormForRoot<Root>> =

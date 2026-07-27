@@ -113,7 +113,7 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   contractedImperative?: boolean
 }
 
-export type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
+type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
 
 interface ActiveParticipleExplanationLayers extends BaseExplanationLayers {
   category: 'nominal'

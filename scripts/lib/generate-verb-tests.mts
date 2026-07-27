@@ -1,12 +1,12 @@
 export type GenerationTool = 'wiktionary' | 'reverso' | 'elixirfm'
-export type GenerationStatus = GenerationTool | 'existing' | 'missing'
+type GenerationStatus = GenerationTool | 'existing' | 'missing'
 
 export interface VerbTestGenerationResult {
   slug: string
   source: GenerationStatus
 }
 
-export interface VerbTestGenerator {
+interface VerbTestGenerator {
   source: GenerationTool
   generate: (slug: string) => boolean | Promise<boolean>
 }
@@ -29,7 +29,7 @@ function escapeCsv(value: string): string {
   return `"${value.replaceAll('"', '""')}"`
 }
 
-export function renderVerbTestsReport(results: readonly VerbTestGenerationResult[]): string {
+function renderVerbTestsReport(results: readonly VerbTestGenerationResult[]): string {
   const rows = results.map(({ slug, source }) => `${escapeCsv(slug)},${escapeCsv(source)}`)
   return ['slug,source', ...rows, ''].join('\n')
 }

@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChild, HTMLAttributes } from 'preact'
 
-export interface SegmentedControlOption<T extends string = string> {
+interface SegmentedControlOption<T extends string = string> {
   readonly value: T
   readonly label: string
   readonly content?: ComponentChild

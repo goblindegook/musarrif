@@ -127,7 +127,7 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   return mergeAdjacent(result)
 }
 
-export function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
+function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   type Slot = { token: Token; role: MorphemeRole }
   const slots: Slot[] = morphemes.flatMap((m) => m.tokens.map((t) => ({ token: t, role: m.role })))
 
