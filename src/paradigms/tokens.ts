@@ -73,8 +73,8 @@ export const KASRA = createToken('\u0650')
 export const SHADDA = createToken('\u0651')
 export const SUKOON = createToken('\u0652')
 
-export function tokenize(text: string | readonly Token[]): readonly Token[] {
-  return [...text].map((token) => (token instanceof Token ? token : createToken(token)))
+export function tokenize(text: string): readonly Token[] {
+  return [...text].map((token) => createToken(token))
 }
 
 export function detokenize(tokens: readonly Token[]): string {
@@ -87,19 +87,19 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [String(DAMMA)]: new Set([String(WAW), String(HAMZA_ON_WAW)]),
 }
 
-export function applyDiacriticsPreference(input: string | Word, preference: DiacriticsPreference): string {
-  if (preference === 'all') return String(input)
-  if (preference === 'some')
-    return detokenize(
-      tokenize(String(input)).reduce<Token[]>((result, current, index, chars) => {
-        if (current.equals(SUKOON)) return result
-        const nextBase = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
-        if (LONG_VOWEL_TARGETS[String(current)]?.has(String(nextBase))) return result
-        result.push(current)
-        return result
-      }, []),
-    )
-  return String(input).replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
+export function applyDiacriticsPreference(text: string | Word, preference: DiacriticsPreference): string {
+  if (preference === 'all') return String(text)
+  if (preference === 'none')
+    return String(text).replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
+  return detokenize(
+    tokenize(String(text)).reduce<Token[]>((output, token, index, chars) => {
+      if (token.equals(SUKOON)) return output
+      const next = chars.slice(index + 1).find((char) => !char.equals(TATWEEL))
+      if (LONG_VOWEL_TARGETS[String(token)]?.has(String(next))) return output
+      output.push(token)
+      return output
+    }, []),
+  )
 }
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, String(HAMZA))
