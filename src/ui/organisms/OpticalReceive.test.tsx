@@ -12,15 +12,17 @@ const scanner = vi.hoisted(() => ({
   // between decodeFromConstraints being called and its promise settling. Defaults to an
   // already-resolved gate so every other test keeps its original, immediate-resolution timing.
   startGate: null as Promise<void> | null,
+  receivedVideo: null as unknown,
 }))
 
 vi.mock('@zxing/browser', () => ({
   BrowserQRCodeReader: class {
     decodeFromConstraints(
       _constraints: unknown,
-      _video: unknown,
+      video: unknown,
       callback: (result?: { getText: () => string }) => void,
     ) {
+      scanner.receivedVideo = video
       if (scanner.shouldFail) return Promise.reject(new Error('NotAllowedError'))
       scanner.callback = callback
       return (scanner.startGate ?? Promise.resolve()).then(() => ({ stop: scanner.stop }))
@@ -41,7 +43,16 @@ afterEach(() => {
   scanner.callback = null
   scanner.shouldFail = false
   scanner.startGate = null
+  scanner.receivedVideo = null
   vi.clearAllMocks()
+})
+
+it('passes a real video element to the decoder, not a styled-component wrapper', async () => {
+  renderWithProviders(<OpticalReceive onComplete={vi.fn()} />)
+
+  await waitFor(() => expect(scanner.receivedVideo).not.toBeNull())
+
+  expect(scanner.receivedVideo).toBeInstanceOf(HTMLVideoElement)
 })
 
 it('emits the payload once every frame has been scanned', async () => {

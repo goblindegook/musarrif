@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { forwardRef } from 'preact/compat'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { Text } from '../atoms/Text'
@@ -93,7 +94,7 @@ const Body = styled('div')`
   gap: 1rem;
 `
 
-const Preview = styled('video')`
+const Preview = styled('video', forwardRef)`
   width: 100%;
   max-height: 60vh;
   border-radius: 0.75rem;
