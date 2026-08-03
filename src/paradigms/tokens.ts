@@ -74,7 +74,7 @@ export const SHADDA = createToken('\u0651')
 export const SUKOON = createToken('\u0652')
 
 export function tokenize(text: string): readonly Token[] {
-  return [...text].map((token) => createToken(token))
+  return Array.from(text).map(createToken)
 }
 
 export function detokenize(tokens: readonly Token[]): string {
