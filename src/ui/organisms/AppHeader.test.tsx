@@ -4,6 +4,19 @@ import { afterEach, expect, it, vi } from 'vitest'
 import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
 import { AppHeader } from './AppHeader'
 
+// Stands in for a completed camera scan without driving a real camera or the zxing decoder — the
+// point of this test is AppHeader's own wiring (does its onComplete reach the confirmation modal?),
+// which OpticalReceive's own test suite already covers independently. Calling the real onComplete
+// prop passed down from AppHeader is what lets a regression there (e.g. importing data directly
+// instead of dispatching musarrif:pending-import) actually fail this test.
+vi.mock('./OpticalReceive', () => ({
+  OpticalReceive: ({ onComplete }: { onComplete: (json: string) => void }) => (
+    <button type="button" onClick={() => onComplete(JSON.stringify({ version: 1, favouriteVerbs: ['scanned-1'] }))}>
+      Finish mock scan
+    </button>
+  ),
+}))
+
 const renderHeader = (path = '/#/verbs') => {
   window.history.replaceState({}, '', path)
   renderWithProviders(<AppHeader />)
@@ -242,4 +255,60 @@ it('voice picker appears before the theme control in the settings modal', () => 
   const voiceLabel = screen.getByText('Voice')
   const themeLabel = screen.getByText('Theme')
   expect(voiceLabel.compareDocumentPosition(themeLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+})
+
+it('offers camera transfer alongside file export when the device has a camera', () => {
+  Object.defineProperty(navigator, 'mediaDevices', {
+    writable: true,
+    configurable: true,
+    value: { getUserMedia: vi.fn() },
+  })
+  renderHeader('/#/verbs')
+
+  fireEvent.click(screen.getByLabelText('Settings'))
+
+  expect(screen.getByText('Send to device')).toBeInTheDocument()
+  expect(screen.getByText('Receive from device')).toBeInTheDocument()
+  expect(screen.getByText('Export data')).toBeInTheDocument()
+  expect(screen.getByText('Import data')).toBeInTheDocument()
+})
+
+it('opens the sender overlay from the settings panel', async () => {
+  Object.defineProperty(navigator, 'mediaDevices', {
+    writable: true,
+    configurable: true,
+    value: { getUserMedia: vi.fn() },
+  })
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+
+  fireEvent.click(screen.getByText('Send to device'))
+
+  expect(
+    await screen.findByText(
+      'On your other device, open Muṣarrif and choose Receive from device, then point its camera at this screen. Keep this screen visible until the other device says it is done.',
+    ),
+  ).toBeInTheDocument()
+})
+
+it('routes a completed camera transfer through the confirmation modal rather than straight into storage', async () => {
+  Object.defineProperty(navigator, 'mediaDevices', {
+    writable: true,
+    configurable: true,
+    value: { getUserMedia: vi.fn() },
+  })
+  const reloadSpy = vi.spyOn(Location.prototype, 'reload').mockImplementation(() => {})
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+  fireEvent.click(screen.getByText('Receive from device'))
+
+  fireEvent.click(await screen.findByText('Finish mock scan'))
+
+  expect(await screen.findByText('Import data warning')).toBeInTheDocument()
+  expect(localStorage.getItem('conjugator:favouriteVerbs')).toBeNull()
+
+  fireEvent.click(screen.getByText('Import and overwrite'))
+
+  await waitFor(() => expect(localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['scanned-1'])))
+  expect(reloadSpy).toHaveBeenCalledTimes(1)
 })

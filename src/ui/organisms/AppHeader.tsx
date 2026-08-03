@@ -17,8 +17,11 @@ import { LanguagePicker } from '../molecules/LanguagePicker'
 import { Modal } from '../molecules/Modal'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
+import { isOpticalTransferSupported } from '../optical-transfer'
 import { useRouting } from '../routes'
 import { getUserData, importUserData, USER_DATA_MIME_TYPE } from '../user-data'
+import { OpticalReceive } from './OpticalReceive'
+import { OpticalSend } from './OpticalSend'
 
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
@@ -34,6 +37,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { route, navigateTo } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [pendingImportContent, setPendingImportContent] = useState<string | null>(null)
+  const [opticalMode, setOpticalMode] = useState<'send' | 'receive' | null>(null)
   const importInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -176,6 +180,12 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
               <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
               <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
             </ActionRow>
+            {isOpticalTransferSupported() && (
+              <ActionRow>
+                <Button onClick={() => setOpticalMode('send')}>{t('settings.data.send')}</Button>
+                <Button onClick={() => setOpticalMode('receive')}>{t('settings.data.receive')}</Button>
+              </ActionRow>
+            )}
             <input
               ref={importInputRef}
               type="file"
@@ -207,6 +217,22 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
           </ActionRow>
         </SettingsModalBody>
       </Modal>
+      {opticalMode === 'send' && (
+        <Modal isOpen title={t('settings.opticalSend.title')} onClose={() => setOpticalMode(null)}>
+          <OpticalSend payload={JSON.stringify(getUserData())} />
+        </Modal>
+      )}
+      {opticalMode === 'receive' && (
+        <Modal isOpen title={t('settings.opticalReceive.title')} onClose={() => setOpticalMode(null)}>
+          <OpticalReceive
+            onComplete={(json) => {
+              setOpticalMode(null)
+              setIsSettingsOpen(false)
+              document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: json }))
+            }}
+          />
+        </Modal>
+      )}
     </TopBar>
   )
 }
