@@ -1714,6 +1714,10 @@
     "form": 5
   },
   {
+    "root": "bny",
+    "form": 8
+  },
+  {
     "root": "bqy",
     "form": 1,
     "vowels": "i-a",
@@ -4665,6 +4669,15 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "xlxl",
+    "form": 1
+  },
+  {
+    "root": "xlxl",
+    "form": 2,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "xrTm",
     "form": 3,
     "passiveVoice": "impersonal"
@@ -4701,7 +4714,16 @@
   },
   {
     "root": "xwf",
+    "form": 2
+  },
+  {
+    "root": "xwf",
     "form": 4
+  },
+  {
+    "root": "xwf",
+    "form": 5,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "xwr",
