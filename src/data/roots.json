@@ -2527,15 +2527,15 @@
   },
   {
     "root": "kbr",
+    "form": 4
+  },
+  {
+    "root": "kbr",
     "form": 5
   },
   {
     "root": "kbr",
     "form": 6
-  },
-  {
-    "root": "kbr",
-    "form": 8
   },
   {
     "root": "kbr",
@@ -4520,6 +4520,22 @@
   {
     "root": "wzy",
     "form": 3
+  },
+  {
+    "root": "xDl",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3al"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "xDl",
+    "form": 2
+  },
+  {
+    "root": "xDl",
+    "form": 4
   },
   {
     "root": "xDl",
