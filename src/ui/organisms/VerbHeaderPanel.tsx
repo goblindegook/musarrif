@@ -26,6 +26,15 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
     return result !== verb.id ? result : '—'
   }, [verb, lang, t])
 
+  const valency = useMemo(
+    () =>
+      verb.valency
+        .toSorted((a, b) => a - b)
+        .map((value) => t(`valency.${value}`))
+        .join(' · '),
+    [verb, t],
+  )
+
   return (
     <PanelContainer>
       <TitleStack>
@@ -36,10 +45,19 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
           </Lemma>
           {actions}
         </PanelTitleRow>
-        {translation && (
-          <Translation dir={dir} lang={lang}>
-            {translation}
-          </Translation>
+        {(valency || translation) && (
+          <MetaRow>
+            {valency && (
+              <ValencyLabel dir={dir} lang={lang}>
+                {valency}
+              </ValencyLabel>
+            )}
+            {translation && (
+              <Translation dir={dir} lang={lang}>
+                {translation}
+              </Translation>
+            )}
+          </MetaRow>
         )}
       </TitleStack>
       <PanelBody>{children}</PanelBody>
@@ -69,12 +87,26 @@ const Lemma = styled('h2')`
   font-weight: 600;
 `
 
+const MetaRow = styled('div')`
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+`
+
+const ValencyLabel = styled('span')`
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-style: italic;
+  text-transform: lowercase;
+  color: var(--color-text-secondary);
+`
+
 const Translation = styled('p')`
   margin: 0;
+  margin-inline-start: auto;
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--color-text-secondary);
-  text-align: right;
 `
 
 const PanelBody = styled('div')`

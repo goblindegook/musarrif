@@ -259,7 +259,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "mimi"],
-    "contractedImperative": true
+    "contractedImperative": true,
+    "valency": [1, 2]
   },
   {
     "root": "'kl",
@@ -2613,13 +2614,15 @@
     "root": "ksr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "valency": [2]
   },
   {
     "root": "ktb",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fi3aala", "fa3l", "fi3aal"]
+    "masdars": ["fi3aala", "fa3l", "fi3aal"],
+    "valency": [2, 3]
   },
   {
     "root": "ktb",

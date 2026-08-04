@@ -42,6 +42,7 @@ describe('synthesizeVerb', () => {
       rootId: 'ktb',
       rootTokens: tokenize('كتب'),
       synthetic: true,
+      valency: [2, 3],
     })
   })
 
@@ -55,6 +56,7 @@ describe('synthesizeVerb', () => {
       rootId: 'ktb',
       rootTokens: tokenize('كتب'),
       synthetic: true,
+      valency: [],
     })
   })
 })

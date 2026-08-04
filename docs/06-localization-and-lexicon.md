@@ -31,3 +31,5 @@ When adding/correcting verb/root entries, follow every step. Do not skip.
 4. **Atomic locale update**: Same change — add/update verb translation keys + root gloss keys in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json`.
 
 5. **Final verification**: Re-open changed entries, verify field-by-field against source data. Validate JSON parsing for all modified files. Confirm no orphan/incorrect keys.
+
+`valency` is optional and exempt from the source-verification gate above — set it only when annotating a verb on demand. It counts arguments including the subject: `0` = impersonal (no arguments), `1` = intransitive (subject only), `2` = transitive (subject + one object), `3` = ditransitive (subject + two objects/a recipient). Labile verbs (multiple valid readings) get multiple values, e.g. أَكَلَ → `[1, 2]`. An omitted-but-implied object (e.g. كَتَبَ used without stating what was written) does not count as an intransitive reading — only include `1` for verbs that are genuinely usable with no object at all.

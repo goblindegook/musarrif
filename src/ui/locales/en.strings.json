@@ -434,6 +434,7 @@
   "meta.passiveParticiple": "Passive participle",
   "meta.root": "Root",
   "meta.translation": "Translation",
+  "meta.valency": "Valency",
   "meta.verb": "Verb",
   "meta.verbalNoun.lexical": "lexical",
   "meta.verbalNoun.mimi": "mimi",
@@ -551,6 +552,10 @@
   "verbsList.filter.zannaSisters.label": "Ẓanna and her sisters",
   "verbsList.filter.other.title": "Other filters",
   "verbList.title": "Included verbs",
+  "valency.0": "Impersonal",
+  "valency.1": "Intransitive",
+  "valency.2": "Transitive",
+  "valency.3": "Ditransitive",
   "voice.active": "Active",
   "voice.passive": "Passive"
 }

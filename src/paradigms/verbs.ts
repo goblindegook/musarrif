@@ -79,6 +79,7 @@ type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 export type PassiveVoice = 'none' | 'impersonal'
+export type Valency = 0 | 1 | 2 | 3
 type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
@@ -89,6 +90,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
+  valency: readonly Valency[]
 }
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
@@ -175,6 +177,7 @@ type RawVerb = {
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
   contractedImperative?: boolean
+  valency?: readonly Valency[]
 }
 
 function tokenizeRoot(root: string): RootTokens {
@@ -241,6 +244,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
             noPassiveParticiple: raw.noPassiveParticiple,
+            valency: raw.valency ?? [],
           }
         : {
             root: toQuadriliteralRoot(root),
@@ -249,6 +253,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
             noPassiveParticiple: raw.noPassiveParticiple,
+            valency: raw.valency ?? [],
           },
     )
   }
@@ -266,6 +271,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       noPassiveParticiple: raw.noPassiveParticiple,
       contractedImperative: raw.contractedImperative,
       lexicalActiveParticiple: raw.lexicalActiveParticiple,
+      valency: raw.valency ?? [],
     })
   }
 
@@ -277,6 +283,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     // Form VII supports at most an impersonal passive.
     passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
     noPassiveParticiple: raw.noPassiveParticiple,
+    valency: raw.valency ?? [],
   })
 }
 
@@ -339,14 +346,15 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
   const rootTokens = tokenizeRoot(root)
 
   if (rootTokens.length === 4) {
-    if (!QUADRILITERAL_FORMS.includes(form as QuadriliteralForm))
-      throw new Error(`Quadriliteral root ${root} cannot use Form ${form}`)
+    const quadriliteralRoot = toQuadriliteralRoot(root)
+    const matchingQuadriliteral = verbs.find((entry) => isQuadriliteralVerb(entry) && entry.root === quadriliteralRoot)
 
     return buildDisplayVerb(
       {
-        root: toQuadriliteralRoot(root),
+        root: quadriliteralRoot,
         rootTokens,
-        form: form as QuadriliteralForm,
+        form: clamp(form, 1, 4) as QuadriliteralForm,
+        valency: matchingQuadriliteral?.valency ?? [],
       },
       true,
     )
@@ -356,6 +364,10 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
   const matchingFormI = verbs.find(
     (entry): entry is TriliteralDisplayVerb<1> =>
       isTriliteralFormIDisplayVerb(entry) && entry.root === triliteralRoot && entry.vowels === pattern,
+  )
+  const matchingNonFormI = verbs.find(
+    (entry): entry is TriliteralDisplayVerb<Exclude<TriliteralForm, 1>> =>
+      !isTriliteralFormIDisplayVerb(entry) && entry.root === triliteralRoot,
   )
 
   return buildDisplayVerb(
@@ -368,6 +380,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
           masdars: matchingFormI?.masdars,
           lexicalMasdars: matchingFormI?.lexicalMasdars ?? [],
           lexicalActiveParticiple: matchingFormI?.lexicalActiveParticiple,
+          valency: matchingFormI?.valency ?? [],
         }
       : {
           root: triliteralRoot,
@@ -375,6 +388,7 @@ export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPatte
           form: form as Exclude<TriliteralForm, 1>,
           // Form VII supports at most an impersonal passive.
           passiveVoice: form === 7 ? 'impersonal' : undefined,
+          valency: matchingNonFormI?.valency ?? [],
         },
     true,
   )

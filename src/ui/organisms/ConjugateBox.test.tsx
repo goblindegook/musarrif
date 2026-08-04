@@ -152,6 +152,7 @@ describe('ConjugateBox', () => {
           form: 2,
           lemma: 'كَتَّبَ',
           rootId: 'ktb',
+          valency: [],
         }}
       />,
     )

@@ -46,4 +46,24 @@ describe('VerbHeaderPanel', () => {
     renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'a-u') })
     expect(screen.queryByText('to do')).not.toBeInTheDocument()
   })
+
+  test('shows a single valency value', () => {
+    renderVerbHeaderPanel({ verb: getVerbById('ksr-1')! })
+    expect(screen.getByText('Transitive')).toBeInTheDocument()
+  })
+
+  test('shows a labile verb valency as sorted, joined values', () => {
+    renderVerbHeaderPanel({ verb: getVerbById("'kl-1")! })
+    expect(screen.getByText('Intransitive · Transitive')).toBeInTheDocument()
+  })
+
+  test('shows both readings for a verb labile between transitive and ditransitive', () => {
+    renderVerbHeaderPanel({ verb: getVerbById('ktb-1')! })
+    expect(screen.getByText('Transitive · Ditransitive')).toBeInTheDocument()
+  })
+
+  test('hides the valency indicator when unset', () => {
+    renderVerbHeaderPanel({ verb: getVerbById('sfr-1')! })
+    expect(screen.queryByText('Intransitive')).not.toBeInTheDocument()
+  })
 })
