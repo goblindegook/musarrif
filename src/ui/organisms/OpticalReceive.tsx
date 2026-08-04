@@ -29,7 +29,10 @@ export function OpticalReceive({ onComplete }: OpticalReceiveProps) {
 
     import('@zxing/browser')
       .then(({ BrowserQRCodeReader }) =>
-        new BrowserQRCodeReader().decodeFromConstraints({ video: { facingMode: 'environment' } }, video, (result) => {
+        new BrowserQRCodeReader(undefined, {
+          delayBetweenScanAttempts: 0,
+          delayBetweenScanSuccess: 0,
+        }).decodeFromConstraints({ video: { facingMode: 'environment' } }, video, (result) => {
           // The scanner is a third party's async loop; its stop() call isn't guaranteed to suppress
           // an in-flight callback, so correctness of "no updates after cleanup" must live here too.
           if (!cancelled && result != null) setCollector((current) => collectFrame(current, result.getText()))
