@@ -41,6 +41,11 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
       <Text dir={dir} lang={lang}>
         {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.sound.description')}
       </Text>
+      {rootAnalysis.isBiliteral && (
+        <Text dir={dir} lang={lang}>
+          {t('rootInfo.biliteral.description')}
+        </Text>
+      )}
       {derivedForms.length > 0 && (
         <>
           <Heading dir={dir} lang={lang}>

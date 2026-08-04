@@ -290,7 +290,10 @@ export function renderExplanation(
   return [
     [
       layers.rootType && { text: t(`explanation.root.${layers.rootType}`, params), kind: 'radical' },
-      layers.form && { text: t(`explanation.form.${layers.form}`, params), kind: 'measure' },
+      layers.form && {
+        text: t(`explanation.form.${layers.form === '1q-bd' ? '1q' : layers.form}`, params),
+        kind: 'measure',
+      },
       layers.vowels != null && { text: t(`explanation.form-i-pattern.${layers.vowels}`, params), kind: 'measure' },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],

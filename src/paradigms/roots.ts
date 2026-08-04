@@ -22,6 +22,7 @@ export interface RootAnalysis {
   type: RootAnalysisType
   weakPositions: number[]
   hamzaPositions: number[]
+  isBiliteral: boolean
 }
 
 export function analyzeRoot(root: readonly Token[]): RootAnalysis {
@@ -33,7 +34,17 @@ export function analyzeRoot(root: readonly Token[]): RootAnalysis {
     if (letter.isHamza) hamzaPositions.push(index)
   })
 
-  return { type: analyzeType(root, weakPositions, hamzaPositions), weakPositions, hamzaPositions }
+  return {
+    type: analyzeType(root, weakPositions, hamzaPositions),
+    weakPositions,
+    hamzaPositions,
+    isBiliteral: isBiliteralRoot(root),
+  }
+}
+
+function isBiliteralRoot(root: readonly Token[]): boolean {
+  const [c1, c2, c3, c4] = Array.from(root)
+  return root.length === 4 && c1.equals(c3) && c2.equals(c4)
 }
 
 function analyzeType(

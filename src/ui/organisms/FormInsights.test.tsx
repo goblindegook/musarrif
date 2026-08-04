@@ -73,10 +73,10 @@ describe('FormInsights', () => {
       expect(screen.getByText('Base meaning')).toBeInTheDocument()
     })
 
-    test('BQI verb shows biliteral doubling explanation sentence', () => {
+    test('BQI verb shows the same base four-consonant explanation sentence as generic Iq', () => {
       const verb = buildVerbFromId('zlzl-1')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.getByText(/biliteral root repeated twice/i, { selector: 'p' })).toBeInTheDocument()
+      expect(screen.getByText(/four-consonant/i, { selector: 'p' })).toBeInTheDocument()
     })
 
     test('generic Iq verb shows base four-consonant explanation sentence', () => {
