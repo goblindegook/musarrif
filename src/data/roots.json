@@ -1237,6 +1237,24 @@
     "form": 10
   },
   {
+    "root": "Hss",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "Hss",
+    "form": 2
+  },
+  {
+    "root": "Hss",
+    "form": 4
+  },
+  {
+    "root": "Hss",
+    "form": 5
+  },
+  {
     "root": "Hwj",
     "form": 8
   },
