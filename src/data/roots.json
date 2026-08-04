@@ -1870,7 +1870,26 @@
   },
   {
     "root": "dwr",
-    "form": 10
+    "form": 2
+  },
+  {
+    "root": "dwr",
+    "form": 3,
+    "lexicalMasdars": ["diwaAr"]
+  },
+  {
+    "root": "dwr",
+    "form": 4
+  },
+  {
+    "root": "dwr",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "dwr",
+    "form": 10,
+    "passiveVoice": "impersonal"
   },
   {
     "root": "dxl",
