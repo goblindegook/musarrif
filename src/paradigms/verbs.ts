@@ -79,7 +79,7 @@ type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 export type PassiveVoice = 'none' | 'impersonal'
-export type Valency = 0 | 1 | 2 | 3
+export type Valency = 1 | 2 | 3
 type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
