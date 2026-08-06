@@ -2097,6 +2097,24 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "fxr",
+    "form": 1,
+    "vowels": "a-a",
+    "masdars": ["fa3l", "fa3aal"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "fxr",
+    "form": 6,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "fxr",
+    "form": 8,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
     "root": "fyd",
     "form": 4
   },
