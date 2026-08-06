@@ -412,11 +412,13 @@
   {
     "root": "'ty",
     "form": 5,
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "valency": [1]
   },
   {
     "root": "'ty",
-    "form": 10
+    "form": 10,
+    "valency": [2]
   },
   {
     "root": "'vr",
@@ -4791,7 +4793,8 @@
   {
     "root": "xyr",
     "form": 8,
-    "lexicalMasdars": ["xiyrap", "xiyaAr"]
+    "lexicalMasdars": ["xiyrap", "xiyaAr"],
+    "valency": [2]
   },
   {
     "root": "y's",

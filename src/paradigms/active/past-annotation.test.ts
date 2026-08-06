@@ -449,47 +449,49 @@ describe('annotatePast', () => {
   })
 
   test('Form VIII — حلم (1s) matches annotation object', () => {
-    const steps = activePastDerivationSteps(getVerbById("'ty-8")!, '2mp')
+    const steps = activePastDerivationSteps(getVerbById('xyr-8')!, '2mp')
 
     expect(detokenizeDerivationSteps(steps)).toEqual([
       {
-        type: 'root',
         morphemes: [
-          { role: 'radical', text: 'ء' },
-          { role: 'radical', text: 'ت' },
+          { role: 'radical', text: 'خ' },
           { role: 'radical', text: 'ي' },
+          { role: 'radical', text: 'ر' },
         ],
+        type: 'root',
       },
       {
-        type: 'form',
         form: 8,
         morphemes: [
-          { role: 'measure', text: 'اِتَّ' },
-          { role: 'radical', text: 'ت' },
+          { role: 'measure', text: 'اِ' },
+          { role: 'radical', text: 'خ' },
+          { role: 'measure', text: 'ْتَ' },
+          { role: 'radical', text: 'ار' },
           { role: 'measure', text: 'َ' },
-          { role: 'radical', text: 'ى' },
         ],
+        type: 'form',
       },
       {
-        type: 'tense',
+        morphemes: [
+          { role: 'measure', text: 'اِ' },
+          { role: 'radical', text: 'خ' },
+          { role: 'measure', text: 'ْتَ' },
+          { role: 'radical', text: 'ار' },
+          { role: 'measure', text: 'َ' },
+        ],
         tense: 'active.past',
-        morphemes: [
-          { role: 'measure', text: 'اِتَّ' },
-          { role: 'radical', text: 'ت' },
-          { role: 'measure', text: 'َ' },
-          { role: 'radical', text: 'ى' },
-        ],
+        type: 'tense',
       },
       {
-        type: 'pronoun',
-        pronounId: '2mp',
         morphemes: [
-          { role: 'measure', text: 'اِتَّ' },
-          { role: 'radical', text: 'ت' },
-          { role: 'measure', text: 'َ' },
-          { role: 'radical', text: 'ي' },
+          { role: 'measure', text: 'اِ' },
+          { role: 'radical', text: 'خ' },
+          { role: 'measure', text: 'ْتَ' },
+          { role: 'radical', text: 'ر' },
           { role: 'agreement', text: 'ْتُمْ' },
         ],
+        pronounId: '2mp',
+        type: 'pronoun',
       },
     ])
   })
