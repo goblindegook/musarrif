@@ -1399,6 +1399,17 @@
   },
   {
     "root": "Sfw",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool"],
+    "lexicalMasdars": ["SafaA'"]
+  },
+  {
+    "root": "Sfw",
+    "form": 2
+  },
+  {
+    "root": "Sfw",
     "form": 8
   },
   {
