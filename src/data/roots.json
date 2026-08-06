@@ -396,15 +396,18 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l"],
-    "lexicalMasdars": ["<itoyaAn", "ma>otaAp", "ma>otFY"]
+    "lexicalMasdars": ["<itoyaAn", "ma>otaAp", "ma>otFY"],
+    "valency": [1, 2]
   },
   {
     "root": "'ty",
-    "form": 3
+    "form": 3,
+    "valency": [2]
   },
   {
     "root": "'ty",
-    "form": 4
+    "form": 4,
+    "valency": [3]
   },
   {
     "root": "'ty",
@@ -413,7 +416,7 @@
   },
   {
     "root": "'ty",
-    "form": 8
+    "form": 10
   },
   {
     "root": "'vr",
@@ -3412,7 +3415,8 @@
   {
     "root": "qtl",
     "form": 8,
-    "passiveVoice": "impersonal"
+    "passiveVoice": "impersonal",
+    "valency": [1]
   },
   {
     "root": "qtl",
