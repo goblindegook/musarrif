@@ -37,7 +37,7 @@
     "@zxing/browser": "^0.2.1",
     "@zxing/library": "^0.23.0",
     "goober": "^2.1.19",
-    "preact": "^10.29.7",
+    "preact": "^10.29.8",
     "qrcode": "^1.5.4",
     "uplot": "^1.6.32",
     "valibot": "^1.4.2"
