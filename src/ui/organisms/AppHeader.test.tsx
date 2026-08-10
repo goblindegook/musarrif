@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/preac
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
 import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
+import { USER_DATA_MIME_TYPE } from '../user-data'
 import { AppHeader } from './AppHeader'
 
 // Stands in for a completed camera scan without driving a real camera or the zxing decoder — the
@@ -25,6 +26,7 @@ const renderHeader = (path = '/#/verbs') => {
 afterEach(() => {
   cleanup()
   localStorage.clear()
+  delete (window as Window & { showSaveFilePicker?: unknown }).showSaveFilePicker
   vi.restoreAllMocks()
 })
 
@@ -82,7 +84,7 @@ it('shows export and import buttons in the settings panel', () => {
   )
 })
 
-it('exports user data in JSON format', () => {
+it('exports user data in JSON format', async () => {
   localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
   localStorage.setItem('conjugator:exercise:daily', JSON.stringify([{ date: '2026-03-21', correct: 4, incorrect: 1 }]))
@@ -91,10 +93,15 @@ it('exports user data in JSON format', () => {
   fireEvent.click(screen.getByLabelText('Settings'))
 
   let exportedDownload: string | null = null
-  let exportedHref: string | null = null
+  let exportedBlob: Blob | null = null
+  vi.spyOn(URL, 'createObjectURL').mockImplementation((blob) => {
+    if (!(blob instanceof Blob)) throw new TypeError('expected Blob export')
+    exportedBlob = blob
+    return 'blob:musarrif-export'
+  })
+  vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
     exportedDownload = this.download
-    exportedHref = this.href
   })
 
   localStorage.setItem('conjugator:language', JSON.stringify('pt'))
@@ -102,8 +109,7 @@ it('exports user data in JSON format', () => {
 
   expect(exportedDownload).toBe('user-data.musarrif')
 
-  const encodedJson = (exportedHref ?? '').split(',')[1] ?? ''
-  const parsed = JSON.parse(decodeURIComponent(encodedJson ?? ''))
+  const parsed = JSON.parse(await exportedBlob!.text())
   expect(parsed).toEqual({
     version: 1,
     settings: { language: 'pt', diacriticsPreference: 'none', themePreference: 'system' },
@@ -114,6 +120,45 @@ it('exports user data in JSON format', () => {
       profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
       windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
     },
+  })
+})
+
+it('exports user data through the file picker when available', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
+  renderHeader('/#/verbs')
+  fireEvent.click(screen.getByLabelText('Settings'))
+
+  let written: Blob | undefined
+  const close = vi.fn()
+  const createWritable = vi.fn().mockResolvedValue({
+    write: vi.fn(async (data: Blob) => {
+      written = data
+    }),
+    close,
+  })
+  const savePickerWindow = window as Window & {
+    showSaveFilePicker?: (options: unknown) => Promise<{ createWritable: typeof createWritable }>
+  }
+  savePickerWindow.showSaveFilePicker = vi.fn().mockResolvedValue({ createWritable })
+
+  fireEvent.click(screen.getByText('Export data'))
+
+  await waitFor(() => expect(savePickerWindow.showSaveFilePicker).toHaveBeenCalledTimes(1))
+  expect(savePickerWindow.showSaveFilePicker).toHaveBeenCalledWith({
+    suggestedName: 'user-data.musarrif',
+    types: [
+      {
+        description: 'Muṣarrif data',
+        accept: { [USER_DATA_MIME_TYPE]: ['.musarrif'] },
+      },
+    ],
+  })
+  expect(createWritable).toHaveBeenCalledTimes(1)
+  expect(close).toHaveBeenCalledTimes(1)
+
+  expect(JSON.parse(await written!.text())).toMatchObject({
+    version: 1,
+    favouriteVerbs: ['ktb-1'],
   })
 })
 

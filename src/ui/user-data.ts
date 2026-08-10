@@ -13,6 +13,15 @@ import { parseTrackedExercises, type SerializedDailyActivity, SerializedTrackedE
 import type { ThemePreference } from './hooks/useTheme'
 
 export const USER_DATA_MIME_TYPE = 'application/vnd.musarrif+json'
+export const USER_DATA_FILENAME = 'user-data.musarrif'
+
+type SaveFilePicker = (options: {
+  suggestedName: string
+  types: Array<{
+    description: string
+    accept: Record<string, string[]>
+  }>
+}) => Promise<FileSystemFileHandle>
 
 export type LaunchConsumer = (params: { files: readonly FileSystemFileHandle[] }) => void | Promise<void>
 
@@ -109,6 +118,45 @@ export function getUserData() {
       parseDimensionStore,
     ),
   }
+}
+
+export async function exportUserDataFile() {
+  const blob = new Blob([JSON.stringify(getUserData(), null, 2)], {
+    type: `${USER_DATA_MIME_TYPE};charset=utf-8`,
+  })
+  const showSaveFilePicker = (window as Window & { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker
+
+  if (showSaveFilePicker != null) {
+    try {
+      const fileHandle = await showSaveFilePicker({
+        suggestedName: USER_DATA_FILENAME,
+        types: [
+          {
+            description: 'Muṣarrif data',
+            accept: { [USER_DATA_MIME_TYPE]: ['.musarrif'] },
+          },
+        ],
+      })
+      const writable = await fileHandle.createWritable()
+      try {
+        await writable.write(blob)
+      } finally {
+        await writable.close()
+      }
+      return
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return
+    }
+  }
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = USER_DATA_FILENAME
+  document.body.append(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
 }
 
 export function importUserData(raw: string): boolean {

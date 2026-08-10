@@ -19,7 +19,7 @@ import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 import { isOpticalTransferSupported } from '../optical-transfer'
 import { useRouting } from '../routes'
-import { getUserData, importUserData, USER_DATA_MIME_TYPE } from '../user-data'
+import { exportUserDataFile, getUserData, importUserData, USER_DATA_MIME_TYPE } from '../user-data'
 import { OpticalReceive } from './OpticalReceive'
 import { OpticalSend } from './OpticalSend'
 
@@ -55,14 +55,6 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
     }
     document.addEventListener('musarrif:pending-import', handler)
     return () => document.removeEventListener('musarrif:pending-import', handler)
-  }, [])
-
-  const exportUserData = useCallback(() => {
-    const payload = getUserData()
-    const link = document.createElement('a')
-    link.href = `${`data:${USER_DATA_MIME_TYPE};charset=utf-8,`}${encodeURIComponent(JSON.stringify(payload, null, 2))}`
-    link.download = 'user-data.musarrif'
-    link.click()
   }, [])
 
   const importData = useCallback(async (event: Event) => {
@@ -177,7 +169,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
           <ControlGroup>
             <Subheading>{t('settings.data.title')}</Subheading>
             <ActionRow>
-              <Button onClick={exportUserData}>{t('settings.data.export')}</Button>
+              <Button onClick={exportUserDataFile}>{t('settings.data.export')}</Button>
               <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
             </ActionRow>
             {isOpticalTransferSupported() && (

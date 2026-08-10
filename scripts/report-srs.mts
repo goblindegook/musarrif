@@ -50,6 +50,7 @@ for (const ex of exercises) {
   monthMap.set(ym, { correct: cur.correct + ex.correct, incorrect: cur.incorrect + ex.incorrect, days: cur.days + 1 })
 }
 const months = [...monthMap.entries()].sort(([a], [b]) => a.localeCompare(b))
+const recentMonths = months.slice(-4)
 
 // --- SRS stats ---
 
@@ -474,7 +475,7 @@ tbody tr:last-child td { border-bottom: none; }
 
 <h2>Monthly breakdown</h2>
 <div class="month-grid">
-  ${months
+  ${recentMonths
     .map(([ym, m]) => {
       const pct = (m.correct / (m.correct + m.incorrect)) * 100
       const col = accColor(pct)
