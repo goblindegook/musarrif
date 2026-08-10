@@ -2,7 +2,6 @@ import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/preac
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
 import { mockSpeechSynthesis, renderWithProviders } from '../../test/fixtures'
-import { USER_DATA_MIME_TYPE } from '../user-data'
 import { AppHeader } from './AppHeader'
 
 // Stands in for a completed camera scan without driving a real camera or the zxing decoder — the
@@ -149,7 +148,7 @@ it('exports user data through the file picker when available', async () => {
     types: [
       {
         description: 'Muṣarrif data',
-        accept: { [USER_DATA_MIME_TYPE]: ['.musarrif'] },
+        accept: { 'application/vnd.musarrif+json': ['.musarrif'] },
       },
     ],
   })

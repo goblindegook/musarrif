@@ -12,8 +12,8 @@ import type { Language } from './hooks/useI18n'
 import { parseTrackedExercises, type SerializedDailyActivity, SerializedTrackedExercises } from './hooks/useStats'
 import type { ThemePreference } from './hooks/useTheme'
 
-export const USER_DATA_MIME_TYPE = 'application/vnd.musarrif+json'
-export const USER_DATA_FILENAME = 'user-data.musarrif'
+const MUSARRIF_MIME_TYPE = 'application/vnd.musarrif+json'
+export const ACCEPTED_TYPES = ['application/json', MUSARRIF_MIME_TYPE, '.json', '.musarrif']
 
 type SaveFilePicker = (options: {
   suggestedName: string
@@ -34,7 +34,7 @@ export function registerFileDragDropHandler() {
     async (e) => {
       e.preventDefault()
       for (const file of Array.from(e.dataTransfer?.files ?? [])) {
-        if (file.name.endsWith('.musarrif') || file.type === USER_DATA_MIME_TYPE) {
+        if (file.name.endsWith('.musarrif') || ACCEPTED_TYPES.includes(file.type)) {
           document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: await file.text() }))
         }
       }
@@ -67,7 +67,7 @@ export function registerUserDataFileLaunchHandler() {
   launchQueue.setConsumer(async ({ files }) => {
     for (const fileHandle of files) {
       const file = await fileHandle.getFile()
-      if (file.name.endsWith('.musarrif') || file.type === USER_DATA_MIME_TYPE) {
+      if (file.name.endsWith('.musarrif') || ACCEPTED_TYPES.includes(file.type)) {
         if (importUserData(await file.text())) window.location.reload()
       }
     }
@@ -120,20 +120,20 @@ export function getUserData() {
   }
 }
 
-export async function exportUserDataFile() {
+export async function saveDataFile(filename: string) {
   const blob = new Blob([JSON.stringify(getUserData(), null, 2)], {
-    type: `${USER_DATA_MIME_TYPE};charset=utf-8`,
+    type: `${MUSARRIF_MIME_TYPE};charset=utf-8`,
   })
   const showSaveFilePicker = (window as Window & { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker
 
   if (showSaveFilePicker != null) {
     try {
       const fileHandle = await showSaveFilePicker({
-        suggestedName: USER_DATA_FILENAME,
+        suggestedName: filename,
         types: [
           {
             description: 'Muṣarrif data',
-            accept: { [USER_DATA_MIME_TYPE]: ['.musarrif'] },
+            accept: { [MUSARRIF_MIME_TYPE]: ['.musarrif'] },
           },
         ],
       })
@@ -152,7 +152,7 @@ export async function exportUserDataFile() {
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = USER_DATA_FILENAME
+  link.download = filename
   document.body.append(link)
   link.click()
   link.remove()

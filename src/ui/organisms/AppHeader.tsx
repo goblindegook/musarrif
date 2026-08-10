@@ -19,7 +19,7 @@ import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 import { isOpticalTransferSupported } from '../optical-transfer'
 import { useRouting } from '../routes'
-import { exportUserDataFile, getUserData, importUserData, USER_DATA_MIME_TYPE } from '../user-data'
+import { ACCEPTED_TYPES, getUserData, importUserData, saveDataFile } from '../user-data'
 import { OpticalReceive } from './OpticalReceive'
 import { OpticalSend } from './OpticalSend'
 
@@ -169,7 +169,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
           <ControlGroup>
             <Subheading>{t('settings.data.title')}</Subheading>
             <ActionRow>
-              <Button onClick={exportUserDataFile}>{t('settings.data.export')}</Button>
+              <Button onClick={() => saveDataFile('user-data.musarrif')}>{t('settings.data.export')}</Button>
               <Button onClick={() => importInputRef.current?.click()}>{t('settings.data.import')}</Button>
             </ActionRow>
             {isOpticalTransferSupported() && (
@@ -178,13 +178,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
                 <Button onClick={() => setOpticalMode('receive')}>{t('settings.data.receive')}</Button>
               </ActionRow>
             )}
-            <input
-              ref={importInputRef}
-              type="file"
-              accept={['application/json', USER_DATA_MIME_TYPE, '.json', '.musarrif'].join(',')}
-              onChange={importData}
-              hidden
-            />
+            <input ref={importInputRef} type="file" accept={ACCEPTED_TYPES.join(',')} onChange={importData} hidden />
           </ControlGroup>
         </SettingsModalBody>
       </Modal>
