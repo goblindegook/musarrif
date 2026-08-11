@@ -976,6 +976,27 @@
     "passiveVoice": "impersonal"
   },
   {
+    "root": "HSn",
+    "form": 1,
+    "vowels": "u-u",
+    "masdars": ["fa3l", "fu3l", "fi3l", "fa3aala"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
+  },
+  {
+    "root": "HSn",
+    "form": 2
+  },
+  {
+    "root": "HSn",
+    "form": 4
+  },
+  {
+    "root": "HSn",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "HZr",
     "form": 1,
     "vowels": "a-u",
