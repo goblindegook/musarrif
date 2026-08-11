@@ -3396,6 +3396,11 @@
   },
   {
     "root": "qr'",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "qr'",
     "form": 7,
     "passiveVoice": "none",
     "noPassiveParticiple": true
