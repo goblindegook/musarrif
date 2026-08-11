@@ -271,7 +271,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   }, [isAnswered, answeredIndex, exercise.answer])
 
   return (
-    <ExerciseLayout>
+    <ExerciseLayout id="main-content" tabIndex={-1}>
       <ExerciseCard>
         <ExerciseTopRow>
           <FocusChipSlot>
@@ -369,13 +369,17 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   )
 }
 
-const ExerciseLayout = styled('div')`
+const ExerciseLayout = styled('main')`
   width: 100%;
   max-width: 480px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 const ExerciseCard = styled('div')`

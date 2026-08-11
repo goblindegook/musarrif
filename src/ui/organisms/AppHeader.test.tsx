@@ -25,7 +25,7 @@ const renderHeader = (path = '/#/verbs') => {
 afterEach(() => {
   cleanup()
   localStorage.clear()
-  delete (window as Window & { showSaveFilePicker?: unknown }).showSaveFilePicker
+  delete window.showSaveFilePicker
   vi.restoreAllMocks()
 })
 
@@ -135,15 +135,12 @@ it('exports user data through the file picker when available', async () => {
     }),
     close,
   })
-  const savePickerWindow = window as Window & {
-    showSaveFilePicker?: (options: unknown) => Promise<{ createWritable: typeof createWritable }>
-  }
-  savePickerWindow.showSaveFilePicker = vi.fn().mockResolvedValue({ createWritable })
+  window.showSaveFilePicker = vi.fn().mockResolvedValue({ createWritable }) as typeof window.showSaveFilePicker
 
   fireEvent.click(screen.getByText('Export data'))
 
-  await waitFor(() => expect(savePickerWindow.showSaveFilePicker).toHaveBeenCalledTimes(1))
-  expect(savePickerWindow.showSaveFilePicker).toHaveBeenCalledWith({
+  await waitFor(() => expect(window.showSaveFilePicker).toHaveBeenCalledTimes(1))
+  expect(window.showSaveFilePicker).toHaveBeenCalledWith({
     suggestedName: 'user-data.musarrif',
     types: [
       {

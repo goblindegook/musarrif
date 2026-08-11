@@ -1,5 +1,8 @@
 import { styled } from 'goober'
-import { useEffect } from 'preact/hooks'
+import type { ComponentType } from 'preact'
+import { useEffect, useState } from 'preact/hooks'
+import { LinkButton } from './atoms/LinkButton'
+import { ScreenReaderOnly } from './atoms/ScreenReaderOnly'
 import { useI18n } from './hooks/useI18n'
 import { useTour } from './hooks/useTour'
 import { AppHeader } from './organisms/AppHeader'
@@ -15,7 +18,7 @@ import {
 } from './user-data'
 
 export function App() {
-  const { lang, dir } = useI18n()
+  const { lang, dir, t } = useI18n()
   const { route } = useRouting()
   const { isOpen, step, totalSteps, openTour, closeTour, nextStep } = useTour()
 
@@ -25,8 +28,20 @@ export function App() {
 
   return (
     <Page dir={dir} lang={lang}>
+      <ScreenReaderOnly focusable>
+        <LinkButton
+          href="#main-content"
+          onClick={(event: MouseEvent) => {
+            event.preventDefault()
+            document.getElementById('main-content')?.focus()
+          }}
+        >
+          {t('aria.skipToContent')}
+        </LinkButton>
+      </ScreenReaderOnly>
       <AppHeader onHelp={openTour} />
       <TourLayer isOpen={isOpen} step={step} totalSteps={totalSteps} onNext={nextStep} onSkip={closeTour} />
+      <PWAUpdateGate />
       <Router route={route}>
         <Route path="/test">
           <ExerciseMode />
@@ -49,6 +64,23 @@ export function App() {
       </Router>
     </Page>
   )
+}
+
+function PWAUpdateGate() {
+  const [Prompt, setPrompt] = useState<ComponentType | null>(null)
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    let cancelled = false
+    import('./organisms/PWAUpdatePrompt').then((mod) => {
+      if (!cancelled) setPrompt(() => mod.PWAUpdatePrompt)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return Prompt ? <Prompt /> : null
 }
 
 const Page = styled('div')`

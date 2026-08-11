@@ -1,6 +1,7 @@
 import { setup } from 'goober'
 import { h, render } from 'preact'
 import './index.css'
+import { ErrorBoundary } from './organisms/ErrorBoundary'
 
 setup(h)
 
@@ -23,7 +24,9 @@ const mountApp = () => {
     render(
       <RoutingProvider>
         <I18nProvider>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </I18nProvider>
       </RoutingProvider>,
       appRoot,

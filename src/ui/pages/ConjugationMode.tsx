@@ -184,7 +184,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   )
 
   return (
-    <Main>
+    <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
         <Panel>
           <TabBar role="tablist">
@@ -469,6 +469,10 @@ const Main = styled('main')`
     gap: 0;
     grid-template-columns: 1fr;
     grid-template-areas: 'verb';
+  }
+
+  &:focus {
+    outline: none;
   }
 `
 

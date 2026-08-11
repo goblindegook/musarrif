@@ -46,6 +46,10 @@ const OverlayBase = styled('div')<{ hideAbove?: number; zIndex?: number }>`
   pointer-events: auto;
   animation: fadeIn 0.2s ease-in-out;
 
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;

@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference types="vite-plugin-pwa/preact" />
 
 interface SpeechRecognitionPhrase {
   readonly phrase: string
@@ -37,4 +38,11 @@ declare var SpeechRecognition: {
 interface Window {
   SpeechRecognition: typeof SpeechRecognition | undefined
   webkitSpeechRecognition: typeof SpeechRecognition | undefined
+  showSaveFilePicker?: (options: {
+    suggestedName: string
+    types: Array<{
+      description: string
+      accept: Record<string, string[]>
+    }>
+  }) => Promise<FileSystemFileHandle>
 }

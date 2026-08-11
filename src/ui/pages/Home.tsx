@@ -189,7 +189,7 @@ export function Home() {
   )
 
   return (
-    <Main>
+    <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
         <Panel>
           <TabBar role="tablist">
@@ -385,6 +385,10 @@ const Main = styled('main')`
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
       'search verbList';
+  }
+
+  &:focus {
+    outline: none;
   }
 `
 

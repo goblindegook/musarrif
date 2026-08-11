@@ -74,6 +74,10 @@ const Dialog = styled('dialog')`
     background: var(--color-overlay);
     backdrop-filter: blur(2px);
     animation: fadeIn 0.2s ease-in-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   @keyframes fadeIn {

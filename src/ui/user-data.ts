@@ -15,14 +15,6 @@ import type { ThemePreference } from './hooks/useTheme'
 const MUSARRIF_MIME_TYPE = 'application/vnd.musarrif+json'
 export const ACCEPTED_TYPES = ['application/json', MUSARRIF_MIME_TYPE, '.json', '.musarrif']
 
-type SaveFilePicker = (options: {
-  suggestedName: string
-  types: Array<{
-    description: string
-    accept: Record<string, string[]>
-  }>
-}) => Promise<FileSystemFileHandle>
-
 export type LaunchConsumer = (params: { files: readonly FileSystemFileHandle[] }) => void | Promise<void>
 
 export function registerFileDragDropHandler() {
@@ -124,11 +116,9 @@ export async function saveDataFile(filename: string) {
   const blob = new Blob([JSON.stringify(getUserData(), null, 2)], {
     type: `${MUSARRIF_MIME_TYPE};charset=utf-8`,
   })
-  const showSaveFilePicker = (window as Window & { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker
-
-  if (showSaveFilePicker != null) {
+  if (window.showSaveFilePicker != null) {
     try {
-      const fileHandle = await showSaveFilePicker({
+      const fileHandle = await window.showSaveFilePicker({
         suggestedName: filename,
         types: [
           {

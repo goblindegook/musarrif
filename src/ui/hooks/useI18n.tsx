@@ -17,7 +17,7 @@ interface Translation {
 
 export type Translate = (key: string, params?: Record<string, string | undefined>) => string
 
-interface I18nContextValue {
+export interface I18nContextValue {
   lang: Language
   dir: 'ltr' | 'rtl'
   t: Translate
@@ -27,7 +27,7 @@ interface I18nContextValue {
   setLang: (lang: string) => void
 }
 
-const I18nContext = createContext<I18nContextValue | undefined>(undefined)
+export const I18nContext = createContext<I18nContextValue | undefined>(undefined)
 
 const EN_STRINGS = enStrings as Record<string, string>
 const EN_TRANSLATION: Translation = { strings: EN_STRINGS }
