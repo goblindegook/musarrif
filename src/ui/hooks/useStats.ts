@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useMemo } from 'preact/hooks'
+import { useCallback, useMemo } from 'preact/hooks'
 import * as v from 'valibot'
 import {
   addResult,
-  type DailyActivity,
   findStatsForDate,
   getAccuracyPercent,
   getRecentAccuracyPercent,
@@ -45,27 +44,13 @@ export interface Streak {
 }
 
 export function useStats() {
-  const [rawStats, setRawStats, refetch] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
+  const [rawStats, setRawStats] = useLocalStorage<readonly SerializedDailyActivity[]>('exercise:daily', [])
 
   const stats = useMemo(() => deserializeDayStats(rawStats), [rawStats])
 
-  const updateStats = useCallback(
-    (updater: (current: readonly DailyActivity[]) => readonly DailyActivity[]) => {
-      setRawStats((raw) => serializeDayStats(updater(deserializeDayStats(raw))))
-      window.dispatchEvent(new CustomEvent('statschanged'))
-    },
-    [setRawStats],
-  )
-
-  useEffect(() => {
-    const controller = new AbortController()
-    window.addEventListener('statschanged', () => refetch(), { signal: controller.signal })
-    return () => controller.abort()
-  }, [refetch])
-
   const recordResult = useCallback(
-    (result: Result) => updateStats((current) => addResult(current, result)),
-    [updateStats],
+    (result: Result) => setRawStats((raw) => serializeDayStats(addResult(deserializeDayStats(raw), result))),
+    [setRawStats],
   )
 
   const findDate = useCallback((date: Date) => findStatsForDate(stats, date), [stats])
@@ -88,7 +73,7 @@ export function useStats() {
     }
   }, [stats])
 
-  return { stats, findDate, getDailyWindow, streak, accuracy, recordResult }
+  return { accuracy, stats, streak, findDate, getDailyWindow, recordResult }
 }
 
 export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExercises {

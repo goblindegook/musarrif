@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'preact/hooks'
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 
 type Updater<T> = T | ((current: T) => T)
 type Validate<T> = (raw: unknown, fallback: T) => T
@@ -40,6 +40,7 @@ export function useLocalStorage<T>(
       const next = typeof updater === 'function' ? (updater as (current: T) => T)(valueRef.current) : updater
       window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(next))
       setValue(next)
+      window.dispatchEvent(new Event(`musarrif:storagechange:${key}`))
     },
     [key],
   )
@@ -49,6 +50,12 @@ export function useLocalStorage<T>(
     setValue(next)
     return next
   }, [read])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    window.addEventListener(`musarrif:storagechange:${key}`, refetch, { signal: controller.signal })
+    return () => controller.abort()
+  }, [key, refetch])
 
   return [value, update, refetch]
 }
