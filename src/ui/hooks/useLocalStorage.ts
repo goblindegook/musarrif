@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 type Updater<T> = T | ((current: T) => T)
 type Validate<T> = (raw: unknown, fallback: T) => T
 
-function parse<T>(raw: string | null, defaultValue: T): T {
+function deserialize<T>(raw: string | null, defaultValue: T): T {
   try {
     return JSON.parse(raw ?? '')
   } catch {
@@ -20,15 +20,15 @@ export function useLocalStorage<T>(
     const raw = window?.localStorage?.getItem?.(`conjugator:${key}`) ?? null
     if (raw == null) return fallback
 
-    const parsed = parse<unknown>(raw, raw)
-    if (validate == null) return (parsed ?? fallback) as T
+    const deserialized = deserialize<unknown>(raw, raw)
+    if (validate == null) return (deserialized ?? fallback) as T
 
-    const validated = validate(parsed, fallback)
+    const parsed = validate(deserialized, fallback)
 
-    if (JSON.stringify(validated) !== JSON.stringify(parsed))
-      window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(validated))
+    if (JSON.stringify(parsed) !== JSON.stringify(deserialized))
+      window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(parsed))
 
-    return validated
+    return parsed
   }, [validate, fallback, key])
 
   const [value, setValue] = useState<T>(() => read())
