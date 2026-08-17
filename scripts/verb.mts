@@ -246,7 +246,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     }
 
     if (step === 2) {
-      if (state.form !== 1) {
+      if (state.form !== 1 || state.rootStr.length !== 3) {
         state.vowels = undefined
         step += 1
         continue
@@ -297,7 +297,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     }
 
     if (step === 4) {
-      if (state.form !== 1) {
+      if (state.form !== 1 || state.rootStr.length !== 3) {
         state.masdars = undefined
         step += 1
         continue
