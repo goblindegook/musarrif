@@ -672,6 +672,12 @@
   },
   {
     "root": "Drr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3l", "fa3al"]
+  },
+  {
+    "root": "Drr",
     "form": 8
   },
   {
