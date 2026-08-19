@@ -90,6 +90,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
   noPassiveParticiple?: boolean
+  lexicalPassiveParticiple?: string
   valency: readonly Valency[]
 }
 
@@ -171,12 +172,13 @@ type RawVerb = {
   form: VerbForm
   vowels?: FormIPattern
   hollowContraction?: HollowContractionBehaviour
+  contractedImperative?: boolean
+  passiveVoice?: PassiveVoice
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   lexicalActiveParticiple?: string
-  passiveVoice?: PassiveVoice
+  lexicalPassiveParticiple?: string
   noPassiveParticiple?: boolean
-  contractedImperative?: boolean
   valency?: readonly Valency[]
 }
 
@@ -279,10 +281,12 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     root: toTriliteralRoot(root),
     rootTokens,
     form: raw.form as Exclude<TriliteralForm, 1>,
+    lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
+    masdars: raw.masdars,
+    noPassiveParticiple: raw.noPassiveParticiple,
     lexicalMasdars: raw.lexicalMasdars,
     // Form VII supports at most an impersonal passive.
     passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
-    noPassiveParticiple: raw.noPassiveParticiple,
     valency: raw.valency ?? [],
   })
 }

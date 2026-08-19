@@ -8,7 +8,7 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('Hbb-4', () => {
+describe('Hbb-4 (Wiktionary)', () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById('Hbb-4')!)).toEqualT({
       '1s': 'أَحْبَبْتُ',
@@ -65,15 +65,15 @@ describe('Hbb-4', () => {
 
   test('active present jussive', () => {
     expect(conjugatePresentMood(getVerbById('Hbb-4')!, 'jussive')).toEqualT({
-      '1s': 'أُحِبَّ',
-      '2ms': 'تُحِبَّ',
+      '1s': expect.toBeOneOf(['أُحِبَّ', 'أُحِبِّ', 'أُحْبِبْ']),
+      '2ms': expect.toBeOneOf(['تُحِبَّ', 'تُحِبِّ', 'تُحْبِبْ']),
       '2fs': 'تُحِبِّي',
-      '3ms': 'يُحِبَّ',
-      '3fs': 'تُحِبَّ',
+      '3ms': expect.toBeOneOf(['يُحِبَّ', 'يُحِبِّ', 'يُحْبِبْ']),
+      '3fs': expect.toBeOneOf(['تُحِبَّ', 'تُحِبِّ', 'تُحْبِبْ']),
       '2d': 'تُحِبَّا',
       '3md': 'يُحِبَّا',
       '3fd': 'تُحِبَّا',
-      '1p': 'نُحِبَّ',
+      '1p': expect.toBeOneOf(['نُحِبَّ', 'نُحِبِّ', 'نُحْبِبْ']),
       '2mp': 'تُحِبُّوا',
       '2fp': 'تُحْبِبْنَ',
       '3mp': 'يُحِبُّوا',
@@ -83,7 +83,7 @@ describe('Hbb-4', () => {
 
   test('active imperative', () => {
     expect(conjugateImperative(getVerbById('Hbb-4')!)).toMatchObjectT({
-      '2ms': 'أَحِبَّ',
+      '2ms': expect.toBeOneOf(['أَحِبَّ', 'أَحِبِّ', 'أَحْبِبْ']),
       '2fs': 'أَحِبِّي',
       '2d': 'أَحِبَّا',
       '2mp': 'أَحِبُّوا',
@@ -147,15 +147,15 @@ describe('Hbb-4', () => {
 
   test('passive present jussive', () => {
     expect(conjugatePassivePresentMood(getVerbById('Hbb-4')!, 'jussive')).toEqualT({
-      '1s': 'أُحَبَّ',
-      '2ms': 'تُحَبَّ',
+      '1s': expect.toBeOneOf(['أُحَبَّ', 'أُحَبِّ', 'أُحْبَبْ']),
+      '2ms': expect.toBeOneOf(['تُحَبَّ', 'تُحَبِّ', 'تُحْبَبْ']),
       '2fs': 'تُحَبِّي',
-      '3ms': 'يُحَبَّ',
-      '3fs': 'تُحَبَّ',
+      '3ms': expect.toBeOneOf(['يُحَبَّ', 'يُحَبِّ', 'يُحْبَبْ']),
+      '3fs': expect.toBeOneOf(['تُحَبَّ', 'تُحَبِّ', 'تُحْبَبْ']),
       '2d': 'تُحَبَّا',
       '3md': 'يُحَبَّا',
       '3fd': 'تُحَبَّا',
-      '1p': 'نُحَبَّ',
+      '1p': expect.toBeOneOf(['نُحَبَّ', 'نُحَبِّ', 'نُحْبَبْ']),
       '2mp': 'تُحَبُّوا',
       '2fp': 'تُحْبَبْنَ',
       '3mp': 'يُحَبُّوا',
@@ -168,10 +168,10 @@ describe('Hbb-4', () => {
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('Hbb-4')!)).toEqualT('مُحَبّ')
+    expect(derivePassiveParticiple(getVerbById('Hbb-4')!)).toEqualT('مَحْبُوب')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('Hbb-4')!)).toEqualT(['إِحْبَاب', 'حُبّ', 'مَحَبَّة'])
+    expect(new Set(deriveMasdar(getVerbById('Hbb-4')!))).toEqualT(new Set(['حُبّ', 'مَحَبَّة']))
   })
 })

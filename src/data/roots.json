@@ -1035,7 +1035,9 @@
   {
     "root": "Hbb",
     "form": 4,
-    "lexicalMasdars": ["Hub~", "maHaba~p"]
+    "masdars": [],
+    "lexicalMasdars": ["Hub~", "maHaba~p"],
+    "lexicalPassiveParticiple": "maHobuwb"
   },
   {
     "root": "Hbb",

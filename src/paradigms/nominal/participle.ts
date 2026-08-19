@@ -83,7 +83,10 @@ export function deriveActiveParticiple(verb: Verb): Word {
 }
 
 export function derivePassiveParticiple(verb: Verb): Word {
-  return new Word(verb.noPassiveParticiple ? [] : deriveParticiple(verb, false))
+  if (verb.noPassiveParticiple) return new Word([])
+  if (verb.lexicalPassiveParticiple)
+    return new Word([measureMorpheme(...tokenize(transliterateReverse(verb.lexicalPassiveParticiple)))])
+  return new Word(deriveParticiple(verb, false))
 }
 
 function deriveFa3iilActiveParticiple(verb: TriliteralFormIVerb): Word {

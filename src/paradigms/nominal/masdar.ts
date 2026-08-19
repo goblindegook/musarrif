@@ -24,7 +24,7 @@ import {
   YEH,
 } from '../tokens'
 import type { FormIVerb, MasdarPattern, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
-import { isQuadriliteralVerb, isTriliteralFormIVerb } from '../verbs'
+import { isQuadriliteralVerb } from '../verbs'
 import { type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
 function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Morpheme[] {
@@ -565,7 +565,7 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Morpheme[] {
 }
 
 export function deriveMasdar(verb: Verb): readonly Word[] {
-  const patterns: readonly MasdarPattern[] = (isTriliteralFormIVerb(verb) && verb.masdars) || ['mimi']
+  const patterns: readonly MasdarPattern[] = verb.masdars || ['mimi']
   const derived = patterns.map((pattern) => new Word(masdar(verb, pattern)))
   const lexical = (verb.lexicalMasdars ?? [])
     .map(transliterateReverse)
