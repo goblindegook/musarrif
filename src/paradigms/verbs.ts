@@ -412,7 +412,7 @@ export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
     ]
 
   return ALL_PARADIGMS.filter((paradigm) => {
-    if (paradigm.startsWith('passive') && (verb.form === 9 || verb.passiveVoice === 'none')) return false
+    if (paradigm.startsWith('passive') && verb.passiveVoice === 'none') return false
     if (paradigm === 'passive.participle' && verb.noPassiveParticiple) return false
     return true
   })

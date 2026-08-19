@@ -415,6 +415,33 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
   ]
 }
 
+function derivePassivePresentStemFormIX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
+  const [c1, c2, c3] = verb.rootTokens
+
+  if (isFemininePlural(pronounId))
+    return [
+      radicalMorpheme(c1),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c3),
+      measureMorpheme(KASRA),
+      radicalMorpheme(c3),
+      ...MOOD_SUFFIXES[mood][pronounId],
+    ]
+
+  return [
+    radicalMorpheme(c1),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(c2),
+    measureMorpheme(FATHA),
+    radicalMorpheme(c3),
+    measureMorpheme(SUKOON),
+    radicalMorpheme(c3),
+    ...geminateSuffix(mood, pronounId),
+  ]
+}
+
 function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
@@ -623,7 +650,7 @@ function derivePassivePresentStem(verb: Verb, pronounId: PronounId, mood: Mood):
     case 8:
       return derivePassivePresentStemFormVIII(verb, pronounId, mood)
     case 9:
-      return []
+      return derivePassivePresentStemFormIX(verb, pronounId, mood)
     case 10:
       return derivePassivePresentStemFormX(verb, pronounId, mood)
   }

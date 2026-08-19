@@ -212,10 +212,8 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
       return [...stem, radicalMorpheme(c2), measureMorpheme(vowel), radicalMorpheme(c3)]
     }
 
-    case 9: {
-      if (!isActive) return []
+    case 9:
       return [prefix, ...presentStem]
-    }
 
     case 10: {
       const stem = [prefix, ...presentStem.slice(0, 2)]

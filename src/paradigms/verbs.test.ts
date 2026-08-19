@@ -1,4 +1,3 @@
-import fc from 'fast-check'
 import { describe, expect, test } from 'vitest'
 import { tokenize } from './tokens'
 import {
@@ -11,7 +10,6 @@ import {
   getVerbById,
   synthesizeVerb,
   type VerbForm,
-  verbs,
 } from './verbs'
 
 describe('synthesizeVerb', () => {
@@ -305,6 +303,7 @@ describe('getAvailableParadigms', () => {
       ['نوم', 4],
       ['نوم', 10],
       ['بعد', 1],
+      ['خضل', 9],
     ])('%s (Form %d)', (root, form) => {
       expect(getAvailableParadigms(getVerb(root, form))).toContain('passive.past')
     })
@@ -373,7 +372,6 @@ describe('getAvailableParadigms', () => {
       ['خضر', 9],
       ['زرق', 9],
       ['صفر', 9],
-      ['خضل', 9],
       ['جلفع', 3],
       ['جرمز', 4],
       ['جلعد', 4],
@@ -381,14 +379,6 @@ describe('getAvailableParadigms', () => {
     ])('%s (Form %d)', (root, form) => {
       expect(getAvailableParadigms(getVerb(root, form))).not.toContain('passive.past')
     })
-  })
-
-  test('never allows passive for any Form IX verb in the corpus', () => {
-    fc.assert(
-      fc.property(fc.constantFrom(...verbs.filter((v) => v.form === 9)), (verb) => {
-        expect(getAvailableParadigms(verb)).not.toContain('passive.past')
-      }),
-    )
   })
 
   test.each<[string, VerbForm]>([

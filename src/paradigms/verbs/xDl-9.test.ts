@@ -3,7 +3,9 @@ import { conjugateImperative } from '../active/imperative'
 import { conjugatePast } from '../active/past'
 import { conjugatePresentMood } from '../active/present'
 import { deriveMasdar } from '../nominal/masdar'
-import { deriveActiveParticiple } from '../nominal/participle'
+import { deriveActiveParticiple, derivePassiveParticiple } from '../nominal/participle'
+import { conjugatePassivePast } from '../passive/past'
+import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
 describe('xDl-9 (Wiktionary)', () => {
@@ -89,8 +91,36 @@ describe('xDl-9 (Wiktionary)', () => {
     })
   })
 
+  test('passive past', () => {
+    expect(conjugatePassivePast(getVerbById('xDl-9')!)).toMatchObjectT({
+      '3ms': 'اُخْضُلَّ',
+    })
+  })
+
+  test('passive present indicative', () => {
+    expect(conjugatePassivePresentMood(getVerbById('xDl-9')!, 'indicative')).toMatchObjectT({
+      '3ms': 'يُخْضَلُّ',
+    })
+  })
+
+  test('passive present subjunctive', () => {
+    expect(conjugatePassivePresentMood(getVerbById('xDl-9')!, 'subjunctive')).toMatchObjectT({
+      '3ms': 'يُخْضَلَّ',
+    })
+  })
+
+  test('passive present jussive', () => {
+    expect(conjugatePassivePresentMood(getVerbById('xDl-9')!, 'jussive')).toMatchObjectT({
+      '3ms': expect.toBeOneOf(['يُخْضَلَّ', 'يُخْضَلِّ', 'يُخْضَلَلْ']),
+    })
+  })
+
   test('active participle', () => {
     expect(deriveActiveParticiple(getVerbById('xDl-9')!)).toEqualT('مُخْضَلّ')
+  })
+
+  test('passive participle', () => {
+    expect(derivePassiveParticiple(getVerbById('xDl-9')!)).toEqualT('مُخْضَلّ')
   })
 
   test('masdar', () => {

@@ -347,6 +347,22 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
   }
 }
 
+function derivePassivePastFormIX(verb: NonFormIVerb): PassivePastParams {
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
+
+  return {
+    stem: [
+      measureMorpheme(ALIF, DAMMA),
+      radicalMorpheme(c1),
+      measureMorpheme(SUKOON),
+      radicalMorpheme(c2),
+      measureMorpheme(DAMMA),
+    ],
+    suffix: [radicalMorpheme(c3), measureMorpheme(FATHA), radicalMorpheme(c3)],
+    suffix3sd: [radicalMorpheme(c3), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
+  }
+}
+
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
@@ -504,7 +520,7 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
     case 8:
       return derivePassivePastFormVIII(verb)
     case 9:
-      return { stem: [] }
+      return derivePassivePastFormIX(verb)
     case 10:
       return derivePassivePastFormX(verb)
   }

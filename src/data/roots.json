@@ -1150,7 +1150,9 @@
   },
   {
     "root": "Hmr",
-    "form": 9
+    "form": 9,
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "Hny",
@@ -1866,7 +1868,8 @@
   {
     "root": "byD",
     "form": 9,
-    "passiveVoice": "none"
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "byE",
@@ -4642,8 +4645,7 @@
   {
     "root": "xDl",
     "form": 9,
-    "passiveVoice": "none",
-    "noPassiveParticiple": true
+    "passiveVoice": "impersonal"
   },
   {
     "root": "xDr",
