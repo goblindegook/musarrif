@@ -2330,13 +2330,21 @@
   {
     "root": "gyr",
     "form": 1,
-    "vowels": "a-u",
+    "vowels": "i-a",
     "masdars": ["fa3la"],
     "lexicalActiveParticiple": "gayoraAn"
   },
   {
     "root": "gyr",
     "form": 2
+  },
+  {
+    "root": "gyr",
+    "form": 3
+  },
+  {
+    "root": "gyr",
+    "form": 4
   },
   {
     "root": "gyr",
