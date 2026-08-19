@@ -558,9 +558,6 @@ function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
 
   if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
-  if (!c1.isWeak && c3.isWeak)
-    return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(YEH)]
-
   if (c2.equals(c3))
     return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
 

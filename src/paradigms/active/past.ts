@@ -283,8 +283,6 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
       [...prefix, radicalMorpheme(c3)],
     ]
 
-  if (c3.isWeak) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
   return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 }
 
@@ -315,9 +313,6 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
       [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
     ]
-
-  if (c3.isWeak)
-    return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
   if (c2.isWeak)
     return [
