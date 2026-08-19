@@ -5,8 +5,7 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 ## Always Read First
 
 - Do not commit or push.
-- Always use RTK commands.
-- Always run Node/NPM as `rtk mise exec -- ...`.
+- Use RTK for all commands — e.g. `rtk mise exec -- npm test`. RTK has a documented failure mode of silently not firing; if `rtk gain` shows no savings, the invocation is wrong, not the tool.
 
 ## Topic Index
 
@@ -20,16 +19,12 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 
 ## Contribution Checklist
 
-- [ ] Tests were written **before** production code (TDD — non-negotiable)
-- [ ] All tests pass
-- [ ] No comments unless explaining WHY
-- [ ] Biome formatting rules followed
-- [ ] Types properly defined
-- [ ] Linter passes without undocumented ignores
-- [ ] All four locale files updated if UI text changed
+Before finishing, run the `check` skill (`.claude/skills/check/`) — it covers TDD compliance, lint, tests, build, comments, and locale files as a runnable pre-submission gate. Two things it doesn't check, so still worth a manual pass:
+
+- [ ] Linter passes without undocumented ignores (`check` confirms lint passes, not that every ignore is explained)
 - [ ] Existing UI primitives reused (no bespoke wrappers)
 
-**If you cannot check the first item, you have violated TDD and must start over.**
+**If TDD was violated (tests written after production code), `check` will flag it — but the fix isn't automatic, you must start over.**
 
 ## Notes
 

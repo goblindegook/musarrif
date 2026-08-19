@@ -1466,11 +1466,16 @@
   {
     "root": "Smm",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-u",
+    "masdars": ["fa3al", "fa3aal", "fa3l", "fu3l"]
   },
   {
     "root": "Smm",
     "form": 2
+  },
+  {
+    "root": "Smm",
+    "form": 4
   },
   {
     "root": "SnE",

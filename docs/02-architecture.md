@@ -3,7 +3,7 @@
 **Stack**: Preact + TypeScript (strict), Vite, goober (CSS-in-JS), Vitest + @testing-library/preact, Biome.
 
 **Two-layer separation**:
-- `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for 13 pronoun forms (`1s`, `2ms`, `2fs`, `2md`, `2fd`, `2mp`, `2fp`, `3ms`, `3fs`, `3md`, `3fd`, `3mp`, `3fp`).
+- `src/paradigms/` — Pure grammar functions (no DOM, no Preact). Returns `Record<PronounId, string>` for 13 pronoun forms (`1s`, `2ms`, `2fs`, `3ms`, `3fs`, `2d`, `3md`, `3fd`, `1p`, `2mp`, `2fp`, `3mp`, `3fp`).
 - `src/ui/` — Preact UI components styled with goober.
 
 **State management**: Two context providers in `src/ui/hooks/`:

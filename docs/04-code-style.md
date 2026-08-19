@@ -11,11 +11,7 @@
 
 ### Formatting Rules (Biome)
 
-- **Indentation**: 2 spaces
-- **Line width**: 120 characters
-- **Quotes**: Single quotes
-- **Semicolons**: As needed (Biome handles automatically)
-- **Import order**: External packages first, then internal
+Formatting is set in `biome.json` and enforced by CI (`npm run lint`). Run `npm run format` rather than hand-matching a style.
 
 ### Naming Conventions
 
