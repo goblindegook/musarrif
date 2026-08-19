@@ -418,18 +418,6 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
 function derivePassivePresentStemFormIX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (isFemininePlural(pronounId))
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-      measureMorpheme(KASRA),
-      radicalMorpheme(c3),
-      ...MOOD_SUFFIXES[mood][pronounId],
-    ]
-
   return [
     radicalMorpheme(c1),
     measureMorpheme(SUKOON),
