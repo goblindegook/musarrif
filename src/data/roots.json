@@ -974,7 +974,9 @@
   {
     "root": "Ezm",
     "form": 1,
-    "vowels": "a-a"
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fu3l", "fu3laan", "fa3iil", "mimi"],
+    "lexicalMasdars": ["Eaziymap", "maEozim"]
   },
   {
     "root": "Ezz",
