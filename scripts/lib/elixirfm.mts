@@ -1,3 +1,4 @@
+import { applyDiacriticsPreference, DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
@@ -118,22 +119,61 @@ async function postElixir(params: Record<string, string>): Promise<string> {
   return response.text()
 }
 
-function parseResolvedVerbHtml(html: string): Map<string, [string, string]> {
-  const entries = new Map<string, [string, string]>()
+// [lexemeId, entryNum, citation form]
+export type ResolvedLexeme = [string, string, string]
+
+function parseResolvedVerbHtml(html: string): Map<string, ResolvedLexeme> {
+  const entries = new Map<string, ResolvedLexeme>()
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
     const pos = getCell(block, 'xtag')
     const formKey = getCell(block, 'class')
+    const citation = getCell(block, 'orth')
     const clipMatch = /clip=\((\d+),(\d+)\)/.exec(block)
-    if (pos !== 'V' || !formKey || !clipMatch || entries.has(formKey)) continue
-    entries.set(formKey, [clipMatch[1], clipMatch[2]])
+    if (pos !== 'V' || !formKey || !citation || !clipMatch || entries.has(formKey)) continue
+    entries.set(formKey, [clipMatch[1], clipMatch[2], citation])
   }
 
   return entries
 }
 
-export async function resolveVerb(lemma: string): Promise<Map<string, [string, string]>> {
-  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text: lemma }))
+// ElixirFM writes shadda and short vowels but never sukūn, and its combining-mark order differs
+// from Muṣarrif's, so both sides are normalised before they are compared as Arabic.
+export function normalizeArabic(form: string): string {
+  return form.replaceAll(String(SUKOON), '').normalize('NFC')
+}
+
+// A pronoun is only comparable when both sides actually inflect it. Muṣarrif returns an empty
+// string for pronouns a paradigm does not fill — an impersonal passive inflects 3ms alone — and
+// those are absent rather than wrong, so reporting them as mismatches only manufactures noise.
+// ElixirFM cites a lexeme by its stem, without the final case vowel Muṣarrif carries on a lemma, so
+// only what precedes that vowel identifies the verb. A stem vowel that still differs after this
+// means ElixirFM holds a different verb of the same root and form — كَبَر against Muṣarrif's كَبُرَ.
+// NFC orders a short vowel before a shadda, so on a doubled final radical the case vowel is the
+// second-to-last character rather than the last (أَصَمَّ ends shadda, not fatḥa).
+
+export function isSameLexeme(citation: string, lemma: string): boolean {
+  const stem = (form: string) =>
+    normalizeArabic(form).replace(new RegExp(`[${FATHA}${DAMMA}${KASRA}](${SHADDA}?)$`), '$1')
+  return stem(citation) === stem(lemma)
+}
+
+export function compareForm(musarrif: string, elixir: string | undefined): 'match' | 'mismatch' | 'skip' {
+  if (!musarrif || !elixir) return 'skip'
+  return normalizeArabic(musarrif) === normalizeArabic(elixir) ? 'match' : 'mismatch'
+}
+
+async function resolve(text: string): Promise<Map<string, ResolvedLexeme>> {
+  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }))
+}
+
+// The vocalised lemma is the precise query — صَمَّ resolves to صَمّ "plug", while unvocalised صم
+// also matches وَصَم and would pick the wrong lexeme. But ElixirFM only matches its own
+// vocalisation, so a lemma it vowels differently (كَبُرَ against its كَبَر) resolves to nothing;
+// retrying unvocalised finds that lexeme, and the caller compares citation forms to see it differs.
+export async function resolveVerb(lemma: string): Promise<Map<string, ResolvedLexeme>> {
+  const entries = await resolve(lemma)
+  return entries.size > 0 ? entries : resolve(applyDiacriticsPreference(lemma, 'none'))
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {

@@ -12,7 +12,7 @@ import { conjugate } from '../src/paradigms/conjugation.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import { ALL_TENSES, type VerbTense } from '../src/paradigms/tense.ts'
 import { type DisplayVerb, getAvailableParadigms, verbs } from '../src/paradigms/verbs.ts'
-import { inflectVerb, resolveVerb } from './lib/elixirfm.mts'
+import { compareForm, inflectVerb, isSameLexeme, resolveVerb } from './lib/elixirfm.mts'
 
 const RATE_MS = 500
 
@@ -83,14 +83,6 @@ function stripFutureSa(form: string): string {
   return form.startsWith(SA_PREFIX) ? form.slice(2) : form
 }
 
-// Normalize before comparison:
-// 1. Strip sukun (U+0652) — Muṣarrif marks it, ElixirFM omits it; both are valid Arabic
-// 2. NFC-normalize to unify combining character order (shadda+fatha vs fatha+shadda)
-const SUKUN = 'ْ'
-function normalize(form: string): string {
-  return form.replaceAll(SUKUN, '').normalize('NFC')
-}
-
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms))
 }
@@ -131,6 +123,8 @@ if (sampleN) verbsToTest = verbsToTest.slice(0, sampleN)
 const mismatches: Mismatch[] = []
 let matched = 0
 let notFound = 0
+let skipped = 0
+let differing = 0
 let errors = 0
 
 console.log(`Testing ${verbsToTest.length} verbs against ElixirFM…\n`)
@@ -158,7 +152,17 @@ for (const verb of verbsToTest as DisplayVerb[]) {
       continue
     }
 
-    const [lexemeId, entryNum] = entry
+    const [lexemeId, entryNum, citation] = entry
+
+    // ElixirFM may hold a different vocalisation of the same root and form — its Form I for ك ب ر
+    // is كَبَر where Muṣarrif has كَبُرَ. Those are different verbs, so comparing their paradigms
+    // would report every cell as a mismatch; name the difference once instead.
+    if (!isSameLexeme(citation, verb.lemma)) {
+      console.log(`different lexeme in ElixirFM: ${citation}`)
+      differing++
+      continue
+    }
+
     await sleep(RATE_MS)
     const elixirForms = await inflectVerb(lexemeId, entryNum)
 
@@ -177,13 +181,17 @@ for (const verb of verbsToTest as DisplayVerb[]) {
         const tag = buildTag(tense, pronounId)
         if (!tag) continue
         const elixirForm = elixirForms.get(tag)
-        if (!elixirForm) continue
+        if (!elixirForm) {
+          skipped++
+          continue
+        }
 
         const musarrifStr = musarrifForm.toString()
-        const musNorm = normalize(isFuture ? stripFutureSa(musarrifStr) : musarrifStr)
-        const eliNorm = normalize(elixirForm)
+        const result = compareForm(isFuture ? stripFutureSa(musarrifStr) : musarrifStr, elixirForm)
 
-        if (musNorm === eliNorm) {
+        if (result === 'skip') {
+          skipped++
+        } else if (result === 'match') {
           verbMatched++
         } else {
           verbMismatch++
@@ -221,5 +229,7 @@ if (mismatches.length > 0) {
 console.log('\n════ SUMMARY ════')
 console.log(`Matched  : ${matched}`)
 console.log(`Mismatch : ${mismatches.length}`)
+console.log(`Skipped  : ${skipped}`)
 console.log(`Not found: ${notFound}`)
+console.log(`Differing: ${differing}`)
 console.log(`Errors   : ${errors}`)

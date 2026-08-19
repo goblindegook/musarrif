@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { buildVerbFromId } from '../../src/paradigms/verbs'
-import { fetchParadigms } from './elixirfm.mts'
+import { compareForm, fetchParadigms, isSameLexeme, resolveVerb } from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
@@ -170,5 +170,89 @@ describe('fetchElixirFmParadigms', () => {
         text: 'verb noun adjective',
       },
     ])
+  })
+})
+
+describe('compareForm', () => {
+  test('matches identical forms', () => {
+    expect(compareForm('كَتَبَ', 'كَتَبَ')).toBe('match')
+  })
+
+  test('matches when only Muṣarrif marks sukūn, which ElixirFM omits', () => {
+    expect(compareForm('كَتَبْتُ', 'كَتَبتُ')).toBe('match')
+  })
+
+  test('matches across combining-mark order', () => {
+    expect(compareForm('صَمَّ'.normalize('NFD'), 'صَمَّ'.normalize('NFC'))).toBe('match')
+  })
+
+  test('reports a genuine vocalisation difference', () => {
+    expect(compareForm('يَصَمُّ', 'يَصُمُّ')).toBe('mismatch')
+  })
+
+  test('skips pronouns Muṣarrif does not inflect', () => {
+    expect(compareForm('', 'اُنكُتِبتُ')).toBe('skip')
+  })
+
+  test('skips pronouns ElixirFM does not return', () => {
+    expect(compareForm('كَتَبْتُ', undefined)).toBe('skip')
+  })
+})
+
+describe('resolveVerb', () => {
+  test('exposes the citation form alongside the clip', async () => {
+    expect(await resolveVerb('كَتَبَ')).toEqual(
+      new Map([
+        ['I', ['111', '2', 'كَتَبَ']],
+        ['IVq', ['333', '4', 'تَدَحْرَجَ']],
+      ]),
+    )
+  })
+})
+
+describe('isSameLexeme', () => {
+  test('ignores the final case vowel', () => {
+    expect(isSameLexeme('كَبَّر', 'كَبَّرَ')).toBe(true)
+  })
+
+  test('ignores omitted sukūn', () => {
+    expect(isSameLexeme('أَكبَر', 'أَكْبَرَ')).toBe(true)
+  })
+
+  test('ignores both together', () => {
+    expect(isSameLexeme('اِستَكبَر', 'اِسْتَكْبَرَ')).toBe(true)
+  })
+
+  test('ignores the case vowel on a doubled final radical', () => {
+    expect(isSameLexeme('أَصَمّ', 'أَصَمَّ')).toBe(true)
+  })
+
+  test('ignores the case vowel on a geminate lemma', () => {
+    expect(isSameLexeme('صَمّ', 'صَمَّ')).toBe(true)
+  })
+
+  test('reports a differing stem vowel', () => {
+    expect(isSameLexeme('كَبَر', 'كَبُرَ')).toBe(false)
+  })
+})
+
+describe('resolveVerb fallback', () => {
+  test('retries unvocalised when the vocalised lemma resolves to nothing', async () => {
+    const requests: string[] = []
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const text = new URLSearchParams(await request.text()).get('text') ?? ''
+        requests.push(text)
+        return HttpResponse.text(text === 'كتب' ? RESOLVE_HTML : '<html></html>')
+      }),
+    )
+
+    expect(await resolveVerb('كَتَبَ')).toEqual(
+      new Map([
+        ['I', ['111', '2', 'كَتَبَ']],
+        ['IVq', ['333', '4', 'تَدَحْرَجَ']],
+      ]),
+    )
+    expect(requests).toEqual(['كَتَبَ', 'كتب'])
   })
 })
