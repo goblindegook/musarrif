@@ -18,6 +18,13 @@
   },
   {
     "root": "$ff",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fu3ool", "fa3iil", "fa3l"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "$ff",
     "form": 10
   },
   {
@@ -45,8 +52,8 @@
   {
     "root": "$kr",
     "form": 1,
-    "vowels": "a-a",
-    "masdars": ["fu3l"]
+    "vowels": "a-u",
+    "masdars": ["fu3l", "fu3laan"]
   },
   {
     "root": "$kr",
