@@ -764,6 +764,11 @@
     "form": 10
   },
   {
+    "root": "Edw",
+    "form": 3,
+    "lexicalMasdars": ["EidaA'"]
+  },
+  {
     "root": "Efw",
     "form": 6,
     "passiveVoice": "impersonal"
@@ -2434,6 +2439,10 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fu3ool"]
+  },
+  {
+    "root": "jlw",
+    "form": 7
   },
   {
     "root": "jmE",

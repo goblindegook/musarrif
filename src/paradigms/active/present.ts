@@ -1,6 +1,7 @@
 import { mapRecord } from '../../primitives/objects'
 import { formIPresentVowel, isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
+import { derivedRadicals } from '../roots'
 import type { Mood } from '../tense'
 import {
   ALIF,
@@ -401,7 +402,7 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   return [
     radicalMorpheme(c1),
@@ -415,7 +416,7 @@ function deriveFormII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormIII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
   if (c2.equals(c3)) return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3)]
@@ -424,7 +425,7 @@ function deriveFormIII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [radicalMorpheme(c1)]
 
   if (c2.isHamza) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
@@ -453,7 +454,7 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c3.equals(YEH))
     return [
@@ -476,7 +477,7 @@ function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormVI(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
   if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(ALIF_MAQSURA)]
@@ -487,7 +488,7 @@ function deriveFormVI(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormVII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
   if (c2.equals(c3)) return [...prefix, radicalMorpheme(c2), measureMorpheme(SHADDA)]
@@ -500,7 +501,7 @@ function deriveFormVII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const assimilatedC1 = c1.isHamza || c1.isWeak ? TEH : c1
   const infix = resolveFormVIIIInfixConsonant(c1)
 
@@ -535,7 +536,7 @@ function deriveFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormIX(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   return [
     radicalMorpheme(c1),
@@ -549,7 +550,7 @@ function deriveFormIX(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
   if (c2.isWeak && c3.isWeak)

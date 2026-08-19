@@ -1,5 +1,6 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { isFormIPresentVowel } from '../form-i-vowels'
+import { derivedRadicals } from '../roots'
 import {
   ALIF,
   ALIF_HAMZA_BELOW,
@@ -241,7 +242,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
 }
 
 function deriveMasdarFormII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
   if (c2.equals(YEH) && c3.equals(YEH))
@@ -268,7 +269,7 @@ function deriveMasdarFormII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormIII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(MEEM, DAMMA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
   if (c2.equals(c3))
@@ -292,7 +293,7 @@ function deriveMasdarFormIII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormIV(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF_HAMZA_BELOW, KASRA), radicalMorpheme(c1.isWeak || c1.isHamza ? YEH : c1)]
 
   if (c2.isHamza)
@@ -325,7 +326,7 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormV(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [
     measureMorpheme(TEH, FATHA),
     radicalMorpheme(c1),
@@ -340,7 +341,7 @@ function deriveMasdarFormV(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormVI(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c3.isWeak)
     return [
@@ -372,7 +373,7 @@ function deriveMasdarFormVI(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormVII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(KASRA)]
 
   if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF, HAMZA)]
@@ -383,7 +384,7 @@ function deriveMasdarFormVII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const infix = resolveFormVIIIInfixConsonant(c1)
   const prefix = [
     measureMorpheme(ALIF, KASRA),
@@ -410,7 +411,7 @@ function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormIX(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   return [
     measureMorpheme(ALIF, KASRA),
     radicalMorpheme(c1),
@@ -424,7 +425,7 @@ function deriveMasdarFormIX(verb: NonFormIVerb): readonly Morpheme[] {
 }
 
 function deriveMasdarFormX(verb: NonFormIVerb): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, KASRA)]
 
   if (c1.isWeak)

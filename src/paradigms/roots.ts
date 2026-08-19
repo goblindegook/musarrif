@@ -1,4 +1,4 @@
-import { type Token, WAW } from './tokens'
+import { type Token, WAW, YEH } from './tokens'
 
 export type RootAnalysisType =
   | 'sound'
@@ -76,4 +76,11 @@ function analyzeType(
 
 function toWeakVariant(letter: Token, wawType: RootAnalysisType, yaaType: RootAnalysisType): RootAnalysisType {
   return letter.equals(WAW) ? wawType : yaaType
+}
+
+// Outside Form I a final weak radical always surfaces as yā', so a wāw-final root builds its derived
+// stems on yā' (خَلَّى، يُخَلِّي، أَعْطَى، اِصْطَفَى) instead of keeping the wāw the way Form I does (خَلَا، يَخْلُو).
+export function derivedRadicals(rootTokens: readonly [Token, Token, Token]): readonly [Token, Token, Token] {
+  const [c1, c2, c3] = rootTokens
+  return [c1, c2, c3.isWeak ? YEH : c3]
 }

@@ -1,5 +1,6 @@
 import { mapRecord } from '../../primitives/objects'
 import type { PronounId } from '../pronouns'
+import { derivedRadicals } from '../roots'
 import {
   ALIF,
   DAL,
@@ -104,7 +105,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   return {
     stem: [
@@ -113,14 +114,14 @@ function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
       radicalMorpheme(c2),
       measureMorpheme(SHADDA),
       measureMorpheme(KASRA),
-      radicalMorpheme(c3.isWeak ? YEH : c3),
+      radicalMorpheme(c3),
     ],
     suffix3sd: [measureMorpheme(FATHA)],
   }
 }
 
 function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   if (c3.isWeak)
     return {
       stem: [
@@ -153,7 +154,7 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c2.isHamza)
     return {
@@ -218,7 +219,7 @@ function derivePassivePastFormV(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c2.equals(c3))
     return {
@@ -254,7 +255,7 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c2.equals(c3)) {
     return {
@@ -287,7 +288,7 @@ function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const infix = resolveFormVIIIInfixConsonant(c1)
 
   if (c2.equals(c3))
@@ -347,7 +348,7 @@ function derivePassivePastFormVIII(verb: NonFormIVerb): PassivePastParams {
 }
 
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
   if (c3.isWeak)
     return {
