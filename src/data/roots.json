@@ -745,7 +745,9 @@
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fi3al", "fa3aala"],
-    "lexicalActiveParticiple": "EaZiym"
+    "lexicalActiveParticiple": "EaZiym",
+    "noPassiveParticiple": true,
+    "passiveVoice": "none"
   },
   {
     "root": "Ebd",
