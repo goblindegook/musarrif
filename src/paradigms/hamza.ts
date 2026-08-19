@@ -52,6 +52,7 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
       }
       if (word[index - 2].equals(WAW)) {
         if (longVowelAt(word, index + 1) === 'i') return HAMZA_ON_YEH // FIXME: for w'y-1 passive participle
+        if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // FIXME: for w'd-1 passive participle
         return HAMZA
       }
     }

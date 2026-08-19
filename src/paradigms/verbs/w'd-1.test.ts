@@ -168,8 +168,7 @@ describe("w'd-1 (Wiktionary)", () => {
   })
 
   test('passive participle', () => {
-    // مَوْءُود is the correct passive participle, Wiktionary is wrong.
-    expect(derivePassiveParticiple(getVerbById("w'd-1")!)).toEqualT('مَوْءُود')
+    expect(derivePassiveParticiple(getVerbById("w'd-1")!)).toEqualT('مَوْؤُود')
   })
 
   test('masdar', () => {
