@@ -5,6 +5,7 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 ## Always Read First
 
 - Do not commit or push.
+- Paradigm sources rank Wiktionary → ElixirFM → Reverso, in that order. Reverso is the least reliable and is a last resort — see [Localization, Conjugation Rules, and Verb Entry Workflow](docs/06-localization-and-lexicon.md).
 - Use RTK for all commands — e.g. `rtk mise exec -- npm test`. RTK has a documented failure mode of silently not firing; if `rtk gain` shows no savings, the invocation is wrong, not the tool.
 
 ## Topic Index

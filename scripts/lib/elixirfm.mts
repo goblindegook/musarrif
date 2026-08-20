@@ -2,41 +2,69 @@ import { applyDiacriticsPreference, DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
-const PARADIGM_PREFIXES: Record<Exclude<VerbParadigm, 'active imperative'>, string> = {
-  'active past': 'VP-A-',
-  'active present indicative': 'VIIA-',
-  'active present subjunctive': 'VISA-',
-  'active present jussive': 'VIJA-',
-  'passive past': 'VP-P-',
-  'passive present indicative': 'VIIP-',
-  'passive present subjunctive': 'VISP-',
-  'passive present jussive': 'VIJP-',
+// ElixirFM tags every form positionally: V, aspect, mood, voice, then person, gender and number at
+// indices 5–7 — VP-A-3MS--, VIJA-3FP--, VCJ---MS--. Reading those positions replaces the prefix and
+// suffix tables this file used to keep, and gives one flat key space shared with the inflection rows.
+// Aspect and mood together — the perfective leaves the mood position empty.
+const TAG_ASPECT_MOOD: Record<VerbParadigm, string> = {
+  'active past': 'P-',
+  'active present indicative': 'II',
+  'active present subjunctive': 'IS',
+  'active present jussive': 'IJ',
+  'active imperative': 'CJ',
+  'passive past': 'P-',
+  'passive present indicative': 'II',
+  'passive present subjunctive': 'IS',
+  'passive present jussive': 'IJ',
 }
 
-const PRONOUN_BY_SUFFIX = new Map<string, PronounId>([
-  ['1MS', '1s'],
-  ['2MS', '2ms'],
-  ['2FS', '2fs'],
-  ['3MS', '3ms'],
-  ['3FS', '3fs'],
-  ['2MD', '2d'],
-  ['3MD', '3md'],
-  ['3FD', '3fd'],
-  ['1MP', '1p'],
-  ['2MP', '2mp'],
-  ['2FP', '2fp'],
-  ['3MP', '3mp'],
-  ['3FP', '3fp'],
-])
+// Positions 2–4 of the tag: aspect, mood, voice. The imperative is always active, so it leaves the
+// voice position empty rather than carrying an A.
+function aspectMoodVoice(paradigm: VerbParadigm): string {
+  if (paradigm === 'active imperative') return `${TAG_ASPECT_MOOD[paradigm]}-`
+  return `${TAG_ASPECT_MOOD[paradigm]}${paradigm.startsWith('active') ? 'A' : 'P'}`
+}
 
-const IMPERATIVE_PRONOUN_BY_SUFFIX = new Map<string, PronounId>([
-  ['MS', '2ms'],
-  ['FS', '2fs'],
-  ['MD', '2d'],
-  ['FD', '2d'],
-  ['MP', '2mp'],
-  ['FP', '2fp'],
-])
+const PARADIGM_BY_ASPECT_MOOD_VOICE = new Map<string, VerbParadigm>(
+  (Object.keys(TAG_ASPECT_MOOD) as VerbParadigm[]).map((paradigm) => [aspectMoodVoice(paradigm), paradigm]),
+)
+
+// The imperative carries no person, and ElixirFM inflects a first-person gender and a second-person
+// feminine dual that Muṣarrif has no pronoun for — those tags simply have no reading here.
+const PGN_BY_PRONOUN: Record<PronounId, string> = {
+  '1s': '1MS',
+  '2ms': '2MS',
+  '2fs': '2FS',
+  '3ms': '3MS',
+  '3fs': '3FS',
+  '2d': '2MD',
+  '3md': '3MD',
+  '3fd': '3FD',
+  '1p': '1MP',
+  '2mp': '2MP',
+  '2fp': '2FP',
+  '3mp': '3MP',
+  '3fp': '3FP',
+}
+
+const PRONOUN_BY_PGN = new Map<string, PronounId>(
+  Object.entries(PGN_BY_PRONOUN).map(([pronounId, pgn]) => [pgn, pronounId as PronounId]),
+)
+
+export function toTag(paradigm: VerbParadigm, pronounId: PronounId): string | undefined {
+  const pgn = PGN_BY_PRONOUN[pronounId]
+  if (paradigm === 'active imperative') {
+    return pgn.startsWith('2') ? `V${aspectMoodVoice(paradigm)}--${pgn.slice(1)}--` : undefined
+  }
+  return `V${aspectMoodVoice(paradigm)}-${pgn}--`
+}
+
+export function fromTag(tag: string): { paradigm: VerbParadigm; pronounId: PronounId } | undefined {
+  const paradigm = tag.startsWith('V') ? PARADIGM_BY_ASPECT_MOOD_VOICE.get(tag.slice(1, 4)) : undefined
+  if (!paradigm) return undefined
+  const pronounId = PRONOUN_BY_PGN.get(paradigm === 'active imperative' ? `2${tag.slice(6, 8)}` : tag.slice(5, 8))
+  return pronounId && { paradigm, pronounId }
+}
 
 function getCell(block: string, klass: string): string | undefined {
   const match = new RegExp(`<td class="${klass}"[^>]*>([^<]+)</td>`).exec(block)
@@ -93,20 +121,6 @@ function parseNominals(html: string): NominalSet {
 
   if (masdar.length > 0) nominals.masdar = masdar
   return nominals
-}
-
-function mergeParadigmPrefix(
-  paradigms: ParsedParadigms['paradigms'],
-  rawForms: Map<string, string>,
-  paradigm: Exclude<VerbParadigm, 'active imperative'>,
-  prefix: string,
-): void {
-  for (const [tag, value] of rawForms) {
-    if (!tag.startsWith(prefix)) continue
-    const pronounId = PRONOUN_BY_SUFFIX.get(tag.slice(prefix.length, prefix.length + 3))
-    if (!pronounId) continue
-    addConjugation(paradigms, paradigm, pronounId, value)
-  }
 }
 
 async function postElixir(params: Record<string, string>): Promise<string> {
@@ -201,18 +215,9 @@ async function deriveVerb(lexemeId: string, entryNum: string): Promise<NominalSe
 function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSet): ParsedParadigms {
   const paradigms: ParsedParadigms['paradigms'] = {}
 
-  for (const [paradigm, prefix] of Object.entries(PARADIGM_PREFIXES) as [
-    Exclude<VerbParadigm, 'active imperative'>,
-    string,
-  ][]) {
-    mergeParadigmPrefix(paradigms, rawForms, paradigm, prefix)
-  }
-
   for (const [tag, value] of rawForms) {
-    if (!tag.startsWith('VCJ---')) continue
-    const pronounId = IMPERATIVE_PRONOUN_BY_SUFFIX.get(tag.slice(6, 8))
-    if (!pronounId) continue
-    addConjugation(paradigms, 'active imperative', pronounId, value)
+    const cell = fromTag(tag)
+    if (cell) addConjugation(paradigms, cell.paradigm, cell.pronounId, value)
   }
 
   return { nominals, paradigms }

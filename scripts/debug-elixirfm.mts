@@ -12,54 +12,16 @@ import { conjugate } from '../src/paradigms/conjugation.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import { ALL_TENSES, type VerbTense } from '../src/paradigms/tense.ts'
 import { type DisplayVerb, getAvailableParadigms, verbs } from '../src/paradigms/verbs.ts'
-import { compareForm, inflectVerb, isSameLexeme, resolveVerb } from './lib/elixirfm.mts'
+import { compareForm, inflectVerb, isSameLexeme, resolveVerb, toTag } from './lib/elixirfm.mts'
+import type { VerbParadigm } from './lib/paradigms.mts'
 
 const RATE_MS = 500
 
 // ── TAG mappings ──────────────────────────────────────────────────────────────
 
-// VerbTense → ElixirFM TAG prefix (10-char positional, pos 1-5)
-const TENSE_PREFIX: Record<VerbTense, string | null> = {
-  'active.past': 'VP-A-',
-  'passive.past': 'VP-P-',
-  'active.present.indicative': 'VIIA-',
-  'active.present.subjunctive': 'VISA-',
-  'active.present.jussive': 'VIJA-',
-  'active.future': null, // ElixirFM has no future tense
-  'active.imperative': 'VCJ---',
-  'passive.present.indicative': 'VIIP-',
-  'passive.present.subjunctive': 'VISP-',
-  'passive.present.jussive': 'VIJP-',
-  'passive.future': null, // ElixirFM has no future tense
-}
-
+// ElixirFM has no future tense, and Muṣarrif builds one by prefixing سَ to the present indicative —
+// so stripping that prefix would compare the very cells the present indicative already compares.
 const FUTURE_TENSES = new Set<VerbTense>(['active.future', 'passive.future'])
-
-// PronounId → ElixirFM person+gender+number suffix
-const PGN: Record<PronounId, string> = {
-  '1s': '1MS',
-  '2ms': '2MS',
-  '2fs': '2FS',
-  '3ms': '3MS',
-  '3fs': '3FS',
-  '2d': '2MD',
-  '3md': '3MD',
-  '3fd': '3FD',
-  '1p': '1MP',
-  '2mp': '2MP',
-  '2fp': '2FP',
-  '3mp': '3MP',
-  '3fp': '3FP',
-}
-
-// Imperative: PronounId → gender+number only (no person in imperative tag)
-const IMP_GN: Partial<Record<PronounId, string>> = {
-  '2ms': 'MS',
-  '2fs': 'FS',
-  '2d': 'MD',
-  '2mp': 'MP',
-  '2fp': 'FP',
-}
 
 // Verb form number → ElixirFM Roman numeral (+ q suffix for quadrilateral)
 const FORM_ROMAN: Record<number, string> = {
@@ -75,29 +37,17 @@ const FORM_ROMAN: Record<number, string> = {
   10: 'X',
 }
 
-// ── Arabic handling ───────────────────────────────────────────────────────────
-
-// Strip leading سَ (SEEN + FATHA) from Muṣarrif future forms before comparing
-const SA_PREFIX = 'سَ'
-function stripFutureSa(form: string): string {
-  return form.startsWith(SA_PREFIX) ? form.slice(2) : form
-}
-
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms))
 }
 
 // ── Tag builder ───────────────────────────────────────────────────────────────
 
-function buildTag(tense: VerbTense, pronounId: PronounId): string | null {
-  const prefix = TENSE_PREFIX[tense]
-  if (!prefix) return null
-  if (tense === 'active.imperative') {
-    const gn = IMP_GN[pronounId]
-    return gn ? `VCJ---${gn}--` : null
-  }
-  const pgn = PGN[pronounId]
-  return pgn ? `${prefix}${pgn}--` : null
+// ElixirFM has no future tense, and every remaining VerbTense is the parser's VerbParadigm spelled
+// with dots instead of spaces — so the two vocabularies convert without a table of their own.
+function buildTag(tense: VerbTense, pronounId: PronounId): string | undefined {
+  if (FUTURE_TENSES.has(tense)) return undefined
+  return toTag(tense.replaceAll('.', ' ') as VerbParadigm, pronounId)
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -172,7 +122,6 @@ for (const verb of verbsToTest as DisplayVerb[]) {
 
     for (const tense of ALL_TENSES) {
       if (!availableTenses.has(tense)) continue
-      const isFuture = FUTURE_TENSES.has(tense)
       const musarrifForms = conjugate(verb, tense)
 
       for (const pronounId of PRONOUN_IDS) {
@@ -187,7 +136,7 @@ for (const verb of verbsToTest as DisplayVerb[]) {
         }
 
         const musarrifStr = musarrifForm.toString()
-        const result = compareForm(isFuture ? stripFutureSa(musarrifStr) : musarrifStr, elixirForm)
+        const result = compareForm(musarrifStr, elixirForm)
 
         if (result === 'skip') {
           skipped++

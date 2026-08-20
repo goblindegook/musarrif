@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { buildVerbFromId } from '../../src/paradigms/verbs'
-import { compareForm, fetchParadigms, isSameLexeme, resolveVerb } from './elixirfm.mts'
+import { compareForm, fetchParadigms, fromTag, isSameLexeme, resolveVerb, toTag } from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
@@ -196,6 +196,57 @@ describe('compareForm', () => {
 
   test('skips pronouns ElixirFM does not return', () => {
     expect(compareForm('كَتَبْتُ', undefined)).toBe('skip')
+  })
+})
+
+describe('toTag', () => {
+  test('builds a perfective tag', () => {
+    expect(toTag('active past', '3ms')).toBe('VP-A-3MS--')
+  })
+
+  test('builds an imperfective tag from mood and voice', () => {
+    expect(toTag('active present jussive', '3fp')).toBe('VIJA-3FP--')
+  })
+
+  test('builds a passive imperfective tag', () => {
+    expect(toTag('passive present indicative', '1s')).toBe('VIIP-1MS--')
+  })
+
+  test('omits the person position on an imperative', () => {
+    expect(toTag('active imperative', '2fs')).toBe('VCJ---FS--')
+  })
+
+  test('has no tag for a pronoun the imperative does not inflect', () => {
+    expect(toTag('active imperative', '3ms')).toBeUndefined()
+  })
+})
+
+describe('fromTag', () => {
+  test('reads a passive perfective tag', () => {
+    expect(fromTag('VP-P-3MS--')).toEqual({ paradigm: 'passive past', pronounId: '3ms' })
+  })
+
+  test('reads a subjunctive tag', () => {
+    expect(fromTag('VISA-2MP--')).toEqual({ paradigm: 'active present subjunctive', pronounId: '2mp' })
+  })
+
+  test('reads an imperative tag as second person', () => {
+    expect(fromTag('VCJ---MD--')).toEqual({ paradigm: 'active imperative', pronounId: '2d' })
+  })
+
+  test('has no reading for the feminine first person ElixirFM inflects but Muṣarrif collapses', () => {
+    expect(fromTag('VP-A-1FS--')).toBeUndefined()
+  })
+
+  test('has no reading for a nominal tag', () => {
+    expect(fromTag('N---------')).toBeUndefined()
+  })
+
+  test('round-trips every tag it reads', () => {
+    expect(fromTag(toTag('passive present jussive', '3fd') as string)).toEqual({
+      paradigm: 'passive present jussive',
+      pronounId: '3fd',
+    })
   })
 })
 
