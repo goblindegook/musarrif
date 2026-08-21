@@ -295,7 +295,7 @@
   "tense.present": "Present",
   "tense.subjunctive": "Subjunctive",
   "explanation.form-i-pattern.a-a": "Use the past fatḥa (<span lang=\"ar\">{pastForm}</span>), present fatḥa (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Common for transitive physical action. Memorize the vowel class with each Form I verb.",
-  "explanation.form-i-pattern.a-i": "Use the past fatḥa (<span lang=\"ar\">{pastForm}</span>), present kasra (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Common for sitting, dwelling, and intransitive motion. Memorize the vowel class with each Form I verb.",
+  "explanation.form-i-pattern.a-i": "Use the past fatḥa (<span lang=\"ar\">{pastForm}</span>), present kasra (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Memorize the vowel class with each Form I verb.",
   "explanation.form-i-pattern.a-u": "Use the past fatḥa (<span lang=\"ar\">{pastForm}</span>), present ḍamma (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Roots with <span lang=\"ar\">ح، ع، غ، خ</span> often follow this pattern. However, there are many exceptions, so the vowel class for Form I verbs must be memorized.",
   "explanation.form-i-pattern.i-a": "Use the past kasra (<span lang=\"ar\">{pastForm}</span>), present fatḥa (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Often for stative or emotional verbs. Memorize the vowel class with each Form I verb.",
   "explanation.form-i-pattern.i-i": "Use the past kasra (<span lang=\"ar\">{pastForm}</span>), present kasra (<span lang=\"ar\">{presentForm}</span>) pattern for this verb. Memorize the vowel class with each Form I verb.",

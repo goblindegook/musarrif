@@ -295,7 +295,7 @@
   "tense.present": "Presente",
   "tense.subjunctive": "Congiuntivo",
   "explanation.form-i-pattern.a-a": "Usa il passato con fatḥa (<span lang=\"ar\">{pastForm}</span>) e il presente con fatḥa (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Comune per azioni fisiche transitive. Memorizza la classe vocalica con ogni verbo di Forma I.",
-  "explanation.form-i-pattern.a-i": "Usa il passato con fatḥa (<span lang=\"ar\">{pastForm}</span>) e il presente con kasra (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Comune per stare seduti, dimorare e moto intransitivo. Memorizza la classe vocalica con ogni verbo di Forma I.",
+  "explanation.form-i-pattern.a-i": "Usa il passato con fatḥa (<span lang=\"ar\">{pastForm}</span>) e il presente con kasra (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Memorizza la classe vocalica con ogni verbo di Forma I.",
   "explanation.form-i-pattern.a-u": "Usa il passato con fatḥa (<span lang=\"ar\">{pastForm}</span>) e il presente con ḍamma (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Le radici con <span lang=\"ar\">ح، ع، غ، خ</span> seguono spesso questo schema. Ci sono però molte eccezioni, quindi la classe vocalica va memorizzata per ogni verbo di Forma I.",
   "explanation.form-i-pattern.i-a": "Usa il passato con kasra (<span lang=\"ar\">{pastForm}</span>) e il presente con fatḥa (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Spesso per verbi stativi o emotivi. Memorizza la classe vocalica con ogni verbo di Forma I.",
   "explanation.form-i-pattern.i-i": "Usa il passato con kasra (<span lang=\"ar\">{pastForm}</span>) e il presente con kasra (<span lang=\"ar\">{presentForm}</span>) per questo verbo. Memorizza la classe vocalica con ogni verbo di Forma I.",
