@@ -67,6 +67,8 @@
   "exercise.focus.nominal.pickerTitle": "ٱخْتَرْ نَوْعًا ٱسْمِيًّا",
   "exercise.next": "ٱلتَّالِي",
   "exercise.pass": "تخطَّ",
+  "exercise.answer.correct": "صَحِيحٌ.",
+  "exercise.answer.incorrect": "خَطَأٌ. ٱلْإِجَابَةُ ٱلصَّحِيحَةُ هِيَ {answer}.",
   "exercise.prompt.activeParticipleForm": "مَا صِيغَةُ ٱسْمِ ٱلْفَاعِلِ هَذَا؟",
   "exercise.prompt.activeParticipleRoot": "مَا جَذْرُ ٱسْمِ ٱلْفَاعِلِ هَذَا؟",
   "exercise.prompt.activeParticipleVerb": "إِلَى أَيِّ فِعْلٍ يَنْتَمِي ٱسْمُ ٱلْفَاعِلِ هَذَا؟",

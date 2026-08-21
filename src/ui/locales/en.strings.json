@@ -62,6 +62,8 @@
   "exercise.conjugation.tense.subjunctive": "subjunctive",
   "exercise.next": "Next",
   "exercise.pass": "Skip question",
+  "exercise.answer.correct": "Correct.",
+  "exercise.answer.incorrect": "Incorrect. The correct answer is {answer}.",
   "exercise.toggle.type": "Type the answer",
   "exercise.toggle.options": "See options",
   "exercise.typing.placeholder": "Type your answer",

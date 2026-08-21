@@ -192,6 +192,18 @@ test('toggle button is hidden after answering', () => {
   expect(screen.queryByText(/Type the answer/)).not.toBeInTheDocument()
 })
 
+test('clicking the correct option announces "Correct."', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText('كَتَبَ', { selector: 'button' }))
+  expect(screen.getByRole('status')).toHaveTextContent('Correct.')
+})
+
+test('clicking a wrong option announces the correct answer', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.click(screen.getByText('يَكتُبُ', { selector: 'button' }))
+  expect(screen.getByRole('status')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
+})
+
 test('forceReveal shows correct option, disables buttons, hides toggle', () => {
   render(
     <ExerciseAnswerArea

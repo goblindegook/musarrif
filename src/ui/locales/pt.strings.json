@@ -62,6 +62,8 @@
   "exercise.conjugation.tense.subjunctive": "conjuntivo",
   "exercise.next": "Próximo",
   "exercise.pass": "Saltar",
+  "exercise.answer.correct": "Correto.",
+  "exercise.answer.incorrect": "Incorreto. A resposta correta é {answer}.",
   "exercise.toggle.type": "Escrever resposta",
   "exercise.toggle.options": "Mostrar opções",
   "exercise.typing.placeholder": "Escreva a sua resposta",

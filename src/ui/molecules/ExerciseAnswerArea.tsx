@@ -2,6 +2,7 @@ import { css, styled } from 'goober'
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import type { Exercise, InputMode } from '../../exercises/exercises'
 import { normalizeForComparison } from '../../paradigms/tokens'
+import { ScreenReaderOnly } from '../atoms/ScreenReaderOnly'
 import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
@@ -71,6 +72,13 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
 
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
+      <ScreenReaderOnly role="status">
+        {effectiveMode === 'multiple-choice' && reveal && selected !== null
+          ? selected === exercise.answer
+            ? t('exercise.answer.correct')
+            : t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })
+          : ''}
+      </ScreenReaderOnly>
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
