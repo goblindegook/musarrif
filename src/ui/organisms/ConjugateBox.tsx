@@ -2,7 +2,7 @@ import { transliterate } from '@pacote/buckwalter'
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
-import { FORM_I_PATTERNS, type FormIPattern } from '../../paradigms/form-i-vowels'
+import { FORM_I_PATTERNS, type FormIPattern, RARE_FORM_I_PATTERNS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
 import {
@@ -133,6 +133,8 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
                 aria-pressed={vowelPattern === p}
                 lang="ar"
                 dir="rtl"
+                tone={RARE_FORM_I_PATTERNS.has(p as FormIPattern) ? 'muted' : 'default'}
+                title={RARE_FORM_I_PATTERNS.has(p as FormIPattern) ? t('build.patternRareTitle') : undefined}
                 onClick={() => setVowelPattern(p as FormIPattern)}
               >
                 {applyDiacriticsPreference(l, diacriticsPreference)}

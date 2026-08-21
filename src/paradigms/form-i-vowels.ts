@@ -18,6 +18,8 @@ export type FormIPattern = keyof typeof FORM_I_VOWELS
 
 export const FORM_I_PATTERNS = keys(FORM_I_VOWELS)
 
+export const RARE_FORM_I_PATTERNS: ReadonlySet<FormIPattern> = new Set(['i-i', 'i-u', 'u-a', 'u-i'])
+
 export function formIPastVowel(verb: FormIVerb): Token {
   return FORM_I_VOWELS[verb.vowels][0]
 }

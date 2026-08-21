@@ -2,6 +2,7 @@ import { styled } from 'goober'
 import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 
 type SelectableButtonSize = 'compact' | 'normal'
+type SelectableButtonTone = 'default' | 'muted'
 
 interface SelectableButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   active?: boolean
@@ -9,6 +10,7 @@ interface SelectableButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
 
   size?: SelectableButtonSize
   badge?: string | number
+  tone?: SelectableButtonTone
 }
 
 export function SelectableButton({
@@ -16,10 +18,11 @@ export function SelectableButton({
   children,
   size = 'normal',
   badge,
+  tone = 'default',
   ...props
 }: SelectableButtonProps) {
   return (
-    <Button {...props} active={active} size={size} type="button">
+    <Button {...props} active={active} size={size} tone={tone} type="button">
       {children}
       {badge != null && <Badge>{badge}</Badge>}
     </Button>
@@ -29,6 +32,7 @@ export function SelectableButton({
 const Button = styled('button')<{
   active: boolean
   size: SelectableButtonSize
+  tone: SelectableButtonTone
 }>`
   align-items: center;
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
@@ -36,6 +40,7 @@ const Button = styled('button')<{
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
+  opacity: ${({ tone }) => (tone === 'muted' ? '0.5' : '1')};
   cursor: pointer;
   display: inline-flex;
   font-size: ${({ size }) => (size === 'compact' ? '0.78rem' : '0.8rem')};
@@ -63,12 +68,14 @@ const Button = styled('button')<{
     border-color: var(--color-accent);
     box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
     color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
+    opacity: 1;
   }
 
   &:focus-visible {
     outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
     border-color: var(--color-accent);
+    opacity: 1;
   }
 
   &:disabled {

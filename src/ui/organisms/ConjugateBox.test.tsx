@@ -141,6 +141,15 @@ describe('ConjugateBox', () => {
     expect(group.querySelector('[role="listbox"]')).toBeNull()
   })
 
+  test('rare Form I vowel patterns are marked with a title', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<ConjugateBox onSelect={noop} />)
+
+    await user.click(screen.getByText('I', { selector: 'button' }))
+
+    expect(screen.getAllByTitle('Extremely rare: may not occur in Modern Standard Arabic.')).toHaveLength(4)
+  })
+
   test('pre-populates letters and form from selectedVerb', () => {
     renderWithProviders(
       <ConjugateBox
