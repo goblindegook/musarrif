@@ -1,4 +1,4 @@
-import { cleanup } from '@testing-library/preact'
+import { cleanup, screen } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { act } from 'preact/test-utils'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
@@ -77,6 +77,18 @@ describe('Search mobile behavior', () => {
 
     const listbox = container.querySelector('[role="listbox"]')
     expect(input).toHaveAttribute('aria-controls', listbox!.id)
+  })
+
+  test('tabbing from the input into the suggestions keeps the list open and moves focus into it', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = screen.getByLabelText('Verb')
+    await user.type(input, 'ktb')
+
+    await user.tab()
+
+    expect(document.activeElement).toHaveAttribute('role', 'option')
+    expect(container.querySelector('[role="listbox"]')).toBeInTheDocument()
   })
 
   test('search input lang follows typed script', async () => {

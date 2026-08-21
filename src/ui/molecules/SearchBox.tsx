@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { forwardRef } from 'preact/compat'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { search } from '../../paradigms/search'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
@@ -194,7 +195,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
   )
 }
 
-const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
+const SuggestionContainer = styled('search', forwardRef)<{ isActive?: boolean }>`
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -256,7 +257,7 @@ const SuggestionContainer = styled('search')<{ isActive?: boolean }>`
   }
 `
 
-const Input = styled('input')`
+const Input = styled('input', forwardRef)`
   border-radius: 0.9rem;
   border: 1px solid var(--color-border-input);
   padding: 0.9rem 1rem;
