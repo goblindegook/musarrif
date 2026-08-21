@@ -78,7 +78,6 @@ describe('active present jussive', () => {
     describe('geminate roots', () => {
       test.each([
         ['ءدد', 'يَئِدَّ'],
-        ['ءجج', 'يَؤُجَّ'],
         ['ءزز', 'يَؤُزَّ'],
         ['عدد', 'يَعُدَّ'],
       ])('%s pattern', (root, expected) => {

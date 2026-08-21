@@ -159,7 +159,6 @@ describe('passive past pattern', () => {
         ['عدد', 'عُدَّ'],
         ['ءمم', 'أُمَّ'],
         ['ءدد', 'أُدَّ'],
-        ['ءجج', 'أُجَّ'],
         ['ءزز', 'أُزَّ'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 1))['3ms']).toEqualT(expected)

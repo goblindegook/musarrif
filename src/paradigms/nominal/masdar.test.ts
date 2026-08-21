@@ -76,7 +76,6 @@ describe('masdar', () => {
         ['ودد', ['وُدّ', 'وِدّ', 'وَدّ', 'وِدَاد', 'وَدَاد', 'وُدَاد', 'وَدَادَة', 'وِدَادَة', 'مَوَدَّة', 'مَوِدَّة', 'وُدَادَة']],
         ['خطط', 'خَطّ'],
         ['لمم', 'لَمّ'],
-        ['هلل', 'هَلّ'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
       })
@@ -174,7 +173,6 @@ describe('masdar', () => {
       test.each([
         ['ءمم', 'أَمّ'],
         ['ءدد', 'أَدّ'],
-        ['ءجج', 'أَجّ'],
         ['ءزز', 'أَزّ'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())

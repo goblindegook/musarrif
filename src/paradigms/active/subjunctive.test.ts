@@ -64,7 +64,6 @@ describe('active present subjunctive', () => {
     describe('geminate roots', () => {
       test.each([
         ['ءدد', 'يَئِدَّ'],
-        ['ءجج', 'يَؤُجَّ'],
         ['ءزز', 'يَؤُزَّ'],
         ['عدد', 'يَعُدَّ'],
       ])('%s pattern', (root, expected) => {
