@@ -99,6 +99,7 @@ describe('useDimensionStore', () => {
         profile: {
           ...INITIAL_DIMENSION_PROFILE,
           pronouns: 1,
+          tenses: 1,
           forms: 0,
         },
         windows: {
@@ -119,6 +120,7 @@ describe('useDimensionStore', () => {
         ...INITIAL_DIMENSION_PROFILE,
         forms: 1,
         pronouns: 1,
+        tenses: 1,
       })
       expect(result.current[1]).toEqual([
         {

@@ -513,13 +513,31 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('forms promotes at exactly 80% accuracy when singular pronouns are unlocked', () => {
+  test('forms promotes at exactly 80% accuracy when singular pronouns and the present tense are unlocked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 1 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(16) },
       }).profile.forms,
     ).toBe(1)
+  })
+
+  test('forms blocked at level 0 until the present tense is unlocked', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 0 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20) },
+      }).profile.forms,
+    ).toBe(0)
+  })
+
+  test('forms promotes beyond level 1 regardless of tenses level', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 0, forms: 1 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20) },
+      }).profile.forms,
+    ).toBe(2)
   })
 
   test('does not promote when allowPromotion is false even above threshold', () => {
@@ -537,7 +555,7 @@ describe('promoteDimensions', () => {
   test('clears window after promotion', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 1 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20) },
       }).windows.forms,
     ).toEqual([])
@@ -599,7 +617,7 @@ describe('promoteDimensions', () => {
 
   test('each dimension advances independently', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 1 },
       windows: {
         ...INITIAL_DIMENSION_WINDOWS,
         forms: filledWindow(20),
@@ -608,7 +626,7 @@ describe('promoteDimensions', () => {
     })
     expect(next.profile).toMatchObject({
       forms: 1,
-      tenses: 0,
+      tenses: 1,
     })
   })
 
@@ -670,19 +688,10 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('tenses blocked at level 0 until Form V is unlocked', () => {
+  test('tenses promotes to level 1 while only Form I is unlocked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1, forms: 3 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
-      }).profile.tenses,
-    ).toBe(0)
-  })
-
-  test('tenses promotes to level 1 when Form V is unlocked', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1, forms: 4 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1, forms: 0 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
       }).profile.tenses,
     ).toBe(1)

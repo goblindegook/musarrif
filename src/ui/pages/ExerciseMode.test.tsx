@@ -215,7 +215,7 @@ describe('ExerciseMode', () => {
         'conjugator:dimensions',
         JSON.stringify({
           profile: {
-            tenses: 0,
+            tenses: 1,
             pronouns: 1,
             diacritics: 0,
             forms: 0,

@@ -391,8 +391,9 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
   // Do not unlock tenses, forms and root types before exposure to all singular pronouns:
   if (['tenses', 'forms', 'rootTypes'].includes(dimension) && profile.pronouns < 1) return false
 
-  // Do not unlock present tense before Form V is unlocked:
-  if (dimension === 'tenses' && level === 0 && profile.forms < 4) return false
+  // Textbooks pair Form I past and present before any derived form, so gate the first derived form
+  // on the present tense rather than the reverse:
+  if (dimension === 'forms' && level === 0 && profile.tenses < 1) return false
 
   // Do not unlock passive verbs before exposure to all forms:
   if (dimension === 'tenses' && level >= 4 && profile.forms < MAX_LEVELS.forms) return false
