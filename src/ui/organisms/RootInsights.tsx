@@ -12,15 +12,15 @@ import { VerbPill } from '../molecules/VerbPill'
 export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
   const { t, dir, lang } = useI18n()
   const rootAnalysis = analyzeRoot(tokenize(root))
-  const semanticMeaning = t(rootId)
+  const rootGloss = t(rootId)
   const derivedForms = useMemo(() => findVerbsByRoot(root).toSorted((a, b) => a.form - b.form), [root])
   return (
     <>
       <RootDisplay>
-        {semanticMeaning !== rootId && (
+        {rootGloss !== rootId && (
           <Text dir={dir} lang={lang}>
             <em>
-              <q>{semanticMeaning}</q>
+              <q>{rootGloss}</q>
             </em>
           </Text>
         )}

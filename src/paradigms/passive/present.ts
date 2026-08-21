@@ -435,6 +435,9 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
+  if (c2.equals(c3) && c2.isWeak)
+    return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
+
   if (c3.isWeak)
     return [
       ...prefix,

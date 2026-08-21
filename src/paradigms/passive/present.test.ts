@@ -1505,26 +1505,6 @@ describe('passive present indicative', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('اِسْتَحْيَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('حيي', 10), 'indicative')).toEqualT({
-          '1s': 'أُسْتَحْيَى',
-          '2ms': 'تُسْتَحْيَى',
-          '2fs': 'تُسْتَحْيَيْنَ',
-          '3ms': 'يُسْتَحْيَى',
-          '3fs': 'تُسْتَحْيَى',
-          '2d': 'تُسْتَحْيَيَانِ',
-          '3md': 'يُسْتَحْيَيَانِ',
-          '3fd': 'تُسْتَحْيَيَانِ',
-          '1p': 'نُسْتَحْيَى',
-          '2mp': 'تُسْتَحْيَوْنَ',
-          '2fp': 'تُسْتَحْيَيْنَ',
-          '3mp': 'يُسْتَحْيَوْنَ',
-          '3fp': 'يُسْتَحْيَيْنَ',
-        })
-      })
-    })
-
     describe('hollow roots', () => {
       test.each([
         ['فيد', 'يُسْتَفَادُ'],

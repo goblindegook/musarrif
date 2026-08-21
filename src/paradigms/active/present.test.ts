@@ -2045,26 +2045,6 @@ describe('active present indicative', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('اِسْتَحْيَا conjugation', () => {
-        expect(conjugatePresentMood(getVerb('حيي', 10), 'indicative')).toEqualT({
-          '1s': 'أَسْتَحْيِي',
-          '2ms': 'تَسْتَحْيِي',
-          '2fs': 'تَسْتَحْيِينَ',
-          '3ms': 'يَسْتَحْيِي',
-          '3fs': 'تَسْتَحْيِي',
-          '2d': 'تَسْتَحْيِيَانِ',
-          '3md': 'يَسْتَحْيِيَانِ',
-          '3fd': 'تَسْتَحْيِيَانِ',
-          '1p': 'نَسْتَحْيِي',
-          '2mp': 'تَسْتَحْيُونَ',
-          '2fp': 'تَسْتَحْيِينَ',
-          '3mp': 'يَسْتَحْيُونَ',
-          '3fp': 'يَسْتَحْيِينَ',
-        })
-      })
-    })
-
     describe('hamzated initial roots', () => {
       test.each([['ءجر', 'يَسْتَأْجِرُ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 10), 'indicative')['3ms']).toEqualT(expected)

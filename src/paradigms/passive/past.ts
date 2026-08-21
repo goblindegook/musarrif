@@ -366,6 +366,17 @@ function derivePassivePastFormIX(verb: NonFormIVerb): PassivePastParams {
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
 
+  if (c2.equals(c3) && c2.isWeak)
+    return {
+      stem: [
+        measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA),
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        radicalMorpheme(c3),
+      ],
+      suffix3sd: [measureMorpheme(FATHA)],
+    }
+
   if (c3.isWeak)
     return {
       stem: [

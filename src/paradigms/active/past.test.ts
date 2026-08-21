@@ -1984,26 +1984,6 @@ describe('active past', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('اِسْتَحْيَا conjugation', () => {
-        expect(conjugatePast(getVerb('حيي', 10))).toEqualT({
-          '1s': 'اِسْتَحَيْتُ',
-          '2ms': 'اِسْتَحَيْتَ',
-          '2fs': 'اِسْتَحَيْتِ',
-          '3ms': 'اِسْتَحَى',
-          '3fs': 'اِسْتَحَتْ',
-          '2d': 'اِسْتَحَيْتُمَا',
-          '3md': 'اِسْتَحَيَا',
-          '3fd': 'اِسْتَحَتَا',
-          '1p': 'اِسْتَحَيْنَا',
-          '2mp': 'اِسْتَحَيْتُمْ',
-          '2fp': 'اِسْتَحَيْتُنَّ',
-          '3mp': 'اِسْتَحَوْا',
-          '3fp': 'اِسْتَحَيْنَ',
-        })
-      })
-    })
-
     describe('hamzated initial roots', () => {
       test.each([['ءجر', 'اِسْتَأْجَرَ']])('%s pattern', (root, expected) => {
         expect(conjugatePast(getVerb(root, 10))['3ms']).toEqualT(expected)

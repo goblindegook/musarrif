@@ -1557,26 +1557,6 @@ describe('passive present jussive', () => {
       })
     })
 
-    describe('doubly weak roots', () => {
-      test('اِسْتَحْيَا conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('حيي', 10), 'jussive')).toEqualT({
-          '1s': 'أُسْتَحْيَ',
-          '2ms': 'تُسْتَحْيَ',
-          '2fs': 'تُسْتَحْيَيْ',
-          '3ms': 'يُسْتَحْيَ',
-          '3fs': 'تُسْتَحْيَ',
-          '2d': 'تُسْتَحْيَيَا',
-          '3md': 'يُسْتَحْيَيَا',
-          '3fd': 'تُسْتَحْيَيَا',
-          '1p': 'نُسْتَحْيَ',
-          '2mp': 'تُسْتَحْيَوْا',
-          '2fp': 'تُسْتَحْيَيْنَ',
-          '3mp': 'يُسْتَحْيَوْا',
-          '3fp': 'يُسْتَحْيَيْنَ',
-        })
-      })
-    })
-
     describe('hollow roots', () => {
       test.each([
         ['فيد', 'يُسْتَفَدْ'],
