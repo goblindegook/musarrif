@@ -9,8 +9,9 @@ and mobile that is lightweight and works offline.
 
 ## What It Is
 
-- A reference-first Arabic verb conjugation app.
+- A reference-first Arabic verb conjugation app covering 991 verbs across triliteral Forms I–X and quadriliteral Forms Iq–IVq.
 - A progressive testing environment for paradigm recognition.
+- Offline-capable, with camera-based optical transfer to move your data (favourites, progress) between devices without a server.
 
 ## What It Is Not
 
@@ -24,6 +25,14 @@ and mobile that is lightweight and works offline.
 - Independent Arabic learners who need quick, reliable conjugation lookup.
 - Students following a textbook/class who want fast pattern verification.
 - Teachers and tutors who need a compact paradigm reference during instruction.
+
+## Accuracy
+
+Every conjugation is checked against [Wiktionary](https://en.wiktionary.org/) first and [ElixirFM](https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi) second.
+
+Running the ElixirFM comparison across the full 991-verb dataset (`npm run debug:elixirfm`) currently scores **~98.2% cell-level agreement** (paradigm cells matched vs. mismatched, excluding cells ElixirFM has no equivalent for).
+
+Most of the remaining ~1.8% are not errors. There are documented presentation quirks (ElixirFM omits sukūns, and renders jussive/imperative of doubled verbs uncontracted where Muṣarrif prefers to contract them) and dual-attested vowel variants where both readings are valid.
 
 ## Setup
 
@@ -131,7 +140,7 @@ npm run add:verb
 
 The wizard guides you through:
 
-- Root and form selection (`I` to `X`)
+- Root and form selection (`I` to `X` for triliteral roots, `Iq` to `IVq` for quadriliteral roots)
 - Form I vowel pattern
 - Passive voice support (`full`, `impersonal`, `none`)
 - Masdar pattern selection
@@ -167,6 +176,14 @@ npm run add:tests:wiktionary -- ktb-1
 - `add:tests:elixirfm`: Resolves the slug to a verb/form and fetches paradigms from ElixirFM.
 - `add:tests:reverso`: Resolves the slug to a lemma and fetches paradigms from Reverso.
 - `add:tests:wiktionary`: Resolves the slug to a lemma/root and fetches paradigms from Wiktionary.
+
+Generate test files for every verb in the dataset at once:
+
+```bash
+npm run add:tests:all
+```
+
+ElixirFM responses are cached under `.caches/elixirfm/` so repeat runs (including `debug:elixirfm`) don't re-fetch unchanged lookups.
 
 Usage notes:
 
