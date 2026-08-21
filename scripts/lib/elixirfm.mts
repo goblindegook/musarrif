@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { resolve as resolvePath } from 'node:path'
 import { applyDiacriticsPreference, DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
@@ -124,13 +127,25 @@ function parseNominals(html: string): NominalSet {
 }
 
 async function postElixir(params: Record<string, string>): Promise<string> {
+  const requestKey = JSON.stringify(Object.entries(params).toSorted(([left], [right]) => left.localeCompare(right)))
+  const cachePath = resolvePath(
+    process.cwd(),
+    '.caches/elixirfm',
+    `${createHash('sha256').update(requestKey).digest('hex')}.html`,
+  )
+  if (existsSync(cachePath)) return readFileSync(cachePath, 'utf8')
+
   const response = await fetch('https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(params).toString(),
   })
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  return response.text()
+
+  const html = await response.text()
+  mkdirSync(resolvePath(process.cwd(), '.caches/elixirfm'), { recursive: true })
+  writeFileSync(cachePath, html)
+  return html
 }
 
 // [lexemeId, entryNum, citation form]

@@ -1,6 +1,9 @@
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
-import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { buildVerbFromId } from '../../src/paradigms/verbs'
 import { compareForm, fetchParadigms, fromTag, isSameLexeme, resolveVerb, toTag } from './elixirfm.mts'
 
@@ -55,6 +58,8 @@ const DERIVE_HTML = `
 `
 
 const requests: Array<Record<string, string>> = []
+const originalCwd = process.cwd()
+let cacheCwd: string | undefined
 
 const server = setupServer(
   http.post(ELIXIR_URL, async ({ request }) => {
@@ -74,9 +79,19 @@ beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' })
 })
 
+beforeEach(() => {
+  cacheCwd = mkdtempSync(join(tmpdir(), 'musarrif-elixirfm-cache-'))
+  process.chdir(cacheCwd)
+})
+
 afterEach(() => {
   requests.length = 0
   server.resetHandlers()
+  if (cacheCwd) {
+    process.chdir(originalCwd)
+    rmSync(cacheCwd, { recursive: true, force: true })
+  }
+  cacheCwd = undefined
 })
 
 afterAll(() => {
@@ -84,6 +99,14 @@ afterAll(() => {
 })
 
 describe('fetchElixirFmParadigms', () => {
+  test('reuses the cached responses for a repeated verb lookup', async () => {
+    const first = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const second = await fetchParadigms(buildVerbFromId('ktb-1'))
+
+    expect(second).toEqual(first)
+    expect(requests).toHaveLength(3)
+  })
+
   test('parses resolved, inflected, and derived forms through the public loader', async () => {
     const paradigms = await fetchParadigms(buildVerbFromId('ktb-1'))
 
