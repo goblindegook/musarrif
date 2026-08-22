@@ -12,12 +12,14 @@ function deserialize<T>(raw: string | null, defaultValue: T): T {
 }
 
 export function useLocalStorage<T>(
-  key: string,
+  keyName: string,
   fallback: T,
   validate?: Validate<T>,
 ): [T, (updater: Updater<T>) => void, () => T] {
+  const key = `conjugator:${keyName}`
+
   const read = useCallback((): T => {
-    const raw = window?.localStorage?.getItem?.(`conjugator:${key}`) ?? null
+    const raw = window?.localStorage?.getItem?.(key) ?? null
     if (raw == null) return fallback
 
     const deserialized = deserialize<unknown>(raw, raw)
@@ -26,7 +28,7 @@ export function useLocalStorage<T>(
     const parsed = validate(deserialized, fallback)
 
     if (JSON.stringify(parsed) !== JSON.stringify(deserialized))
-      window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(parsed))
+      window?.localStorage?.setItem?.(key, JSON.stringify(parsed))
 
     return parsed
   }, [validate, fallback, key])
@@ -38,9 +40,9 @@ export function useLocalStorage<T>(
   const update = useCallback(
     (updater: Updater<T>) => {
       const next = typeof updater === 'function' ? (updater as (current: T) => T)(valueRef.current) : updater
-      window?.localStorage?.setItem?.(`conjugator:${key}`, JSON.stringify(next))
+      window?.localStorage?.setItem?.(key, JSON.stringify(next))
       setValue(next)
-      window.dispatchEvent(new Event(`musarrif:storagechange:${key}`))
+      window.dispatchEvent(new StorageEvent('storage', { key }))
     },
     [key],
   )
@@ -53,7 +55,13 @@ export function useLocalStorage<T>(
 
   useEffect(() => {
     const controller = new AbortController()
-    window.addEventListener(`musarrif:storagechange:${key}`, refetch, { signal: controller.signal })
+    window.addEventListener(
+      'storage',
+      (event: StorageEvent) => {
+        if (event.key === key || event.key === null) refetch()
+      },
+      { signal: controller.signal },
+    )
     return () => controller.abort()
   }, [key, refetch])
 
