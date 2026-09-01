@@ -139,7 +139,12 @@ export function utcAddDays(date: string, days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
-export function updateCardState(current: CardState | undefined, result: AnswerResult, today: string): CardState {
+export function updateCardState(
+  current: CardState | undefined,
+  result: AnswerResult,
+  today: string,
+  elapsedMs?: number,
+): CardState {
   const ef = current?.ef ?? 2.5
   const repetitions = current?.repetitions ?? 0
   const interval = current?.interval ?? 1
@@ -160,7 +165,8 @@ export function updateCardState(current: CardState | undefined, result: AnswerRe
     newRepetitions = repetitions + 1
   }
 
-  const grade = result === 'correct' ? 4 : result === 'wrong' ? 1 : 3
+  const quick = elapsedMs != null && elapsedMs < 5000
+  const grade = result === 'correct' ? (quick ? 5 : 4) : result === 'wrong' ? 1 : 3
   const newEf = result === 'pass' ? ef : Math.max(1.3, ef + 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02))
 
   return { interval: newInterval, ef: newEf, repetitions: newRepetitions, dueDate: utcAddDays(today, newInterval) }
@@ -217,9 +223,10 @@ export function recordAnswer(
   cardKey: string | undefined,
   result: AnswerResult,
   today = utcToday(),
+  elapsedMs?: number,
 ): SrsStore {
   if (cardKey == null) return store
-  return { ...store, [cardKey]: updateCardState(store[cardKey], result, today) }
+  return { ...store, [cardKey]: updateCardState(store[cardKey], result, today, elapsedMs) }
 }
 
 export function getSrsCards(srsStore: SrsStore): readonly SrsCard[] {

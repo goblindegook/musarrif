@@ -97,6 +97,16 @@ describe('updateCardState', () => {
     expect(result.ef).toBeCloseTo(2.5)
   })
 
+  test('correct answer under 5 seconds grades 5 and raises ef', () => {
+    const result = updateCardState(undefined, 'correct', '2026-03-23', 4_999)
+    expect(result.ef).toBeCloseTo(2.6)
+  })
+
+  test('correct answer at or over 5 seconds grades 4 and keeps ef', () => {
+    const result = updateCardState(undefined, 'correct', '2026-03-23', 5_000)
+    expect(result.ef).toBeCloseTo(2.5)
+  })
+
   test('second correct answer sets interval 6, repetitions 2', () => {
     const after1 = updateCardState(undefined, 'correct', '2026-03-23')
     const result = updateCardState(after1, 'correct', '2026-03-23')

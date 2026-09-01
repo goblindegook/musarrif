@@ -54,6 +54,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const [dimensionProfile, dimensionChanges, recordDimensionAnswer, clearDimensionChanges] = useDimensionStore()
   const [srsStore, recordSrsAnswer] = useSrsStore()
   const sessionRef = useRef<ExerciseSession>({ reviews: 0, lastNewAt: -3 })
+  const shownAtRef = useRef(Date.now())
   const [activeFocus, setActiveFocus] = useState<ExerciseFocus>({})
   const [isFocusPickerOpen, setIsFocusPickerOpen] = useState(false)
   const [exercise, setExercise] = useState<Exercise>(() =>
@@ -221,6 +222,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const loadNextExercise = useCallback(
     (profile: DimensionProfile) => {
       setExercise(generateExercise(profile, srsStore, sessionRef.current, activeFocus))
+      shownAtRef.current = Date.now()
       setAnsweredIndex(null)
       setSkipped(false)
       clearDimensionChanges()
@@ -251,7 +253,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       }
       setAnsweredIndex(index)
       recordResult(isCorrect ? 'correct' : 'incorrect')
-      recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong')
+      recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong', Date.now() - shownAtRef.current)
       recordDimensionAnswer(exercise.dimensions, isCorrect)
     },
     [exercise, srsStore, recordResult, recordSrsAnswer, recordDimensionAnswer],
