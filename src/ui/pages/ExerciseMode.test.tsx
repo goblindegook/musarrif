@@ -534,6 +534,44 @@ describe('mastery filtering in ExerciseMode', () => {
     expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
     expect(screen.getByText(/apply the pattern directly/i)).toBeInTheDocument()
   })
+
+  test('wrong typed answer shows full explanation regardless of mastery', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+      }),
+    )
+
+    renderWithProviders(
+      <ExerciseMode generateExercise={() => testExercise({ inputModes: ['multiple-choice', 'keyboard'] })} />,
+    )
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'IV' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+
+    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(screen.getByText(/apply the pattern directly/i)).toBeInTheDocument()
+  })
+
+  test('wrong typed answer leaves focus on the answer area rather than the next button', () => {
+    renderWithProviders(<ExerciseMode generateExercise={() => conjugationExercise()} />)
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+
+    expect(document.activeElement).not.toBe(screen.getByText(/next/i, { selector: 'button' }))
+  })
+
+  test('correct typed answer moves focus to the next button', () => {
+    renderWithProviders(<ExerciseMode generateExercise={() => conjugationExercise()} />)
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+
+    expect(document.activeElement).toBe(screen.getByText(/next/i, { selector: 'button' }))
+  })
 })
 
 function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
@@ -622,7 +660,7 @@ describe('typing mode', () => {
     fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
     fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
     fireEvent.click(screen.getByLabelText('Submit'))
-    expect(screen.getByText('كَتَبَ', { selector: 'p' })).toBeInTheDocument()
+    expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('كَتَبَ')
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
   })
 
@@ -868,5 +906,49 @@ describe('focus chip', () => {
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
     expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { nominal: 'masdar' })
+  })
+})
+
+describe('partial answers and dimension levels', () => {
+  // 8 successes in 19 answers sits exactly on the demotion boundary: one more success
+  // gives 9/20 = 0.45 (above the 0.4 threshold), one more failure gives 8/20 = 0.40 (at it).
+  function storeAtDemotionBoundary() {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 0, pronouns: 0, diacritics: 1, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: {
+          tenses: [],
+          pronouns: [],
+          diacritics: [...Array(8).fill(true), ...Array(11).fill(false)],
+          forms: [],
+          rootTypes: [],
+          nominals: [],
+        },
+      }),
+    )
+  }
+
+  function submitTyped(value: string) {
+    renderWithProviders(<ExerciseMode generateExercise={() => conjugationExercise({ answerText: 'كَتَبَ' })} />)
+    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
+    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value } })
+    fireEvent.click(screen.getByLabelText('Submit'))
+    return JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
+  }
+
+  test('an answer missing only a vowel keeps the diacritics level', () => {
+    storeAtDemotionBoundary()
+    expect(submitTyped('كتَبَ').profile.diacritics).toBe(1)
+  })
+
+  test('an answer missing only a vowel is recorded as a success', () => {
+    storeAtDemotionBoundary()
+    expect(submitTyped('كتَبَ').windows.diacritics.filter(Boolean)).toHaveLength(9)
+  })
+
+  test('a wrong answer at the same boundary demotes the diacritics level', () => {
+    storeAtDemotionBoundary()
+    expect(submitTyped('يَكتُبُ').profile.diacritics).toBe(0)
   })
 })

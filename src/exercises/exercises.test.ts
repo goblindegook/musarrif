@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
+import { exerciseDiacritics } from './dimensions'
 import { defineExercise } from './exercises'
+import { conjugationExercise } from './generators/conjugation'
 
 describe('defineExerciseGenerator', () => {
   test('injects kind into generated exercise', () => {
@@ -64,5 +66,12 @@ describe('defineExerciseGenerator', () => {
       cardKey: 'verbForm:regular:2:active.past:3ms',
       dimensions: ['forms', 'rootTypes', 'diacritics'],
     })
+  })
+
+  test('a keyboard-capable exercise carries the fully vocalised answer', () => {
+    const exercise = conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+
+    expect(exercise.answerText).toBe(exerciseDiacritics(exercise.answerText ?? '', 0))
+    expect(exerciseDiacritics(exercise.answerText ?? '', 2)).toBe(exercise.options[exercise.answer])
   })
 })

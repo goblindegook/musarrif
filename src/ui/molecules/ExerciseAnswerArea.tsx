@@ -1,7 +1,10 @@
 import { css, styled } from 'goober'
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
+import { type AnswerDiffResult, diffAnswer } from '../../exercises/answer-diff'
 import type { Exercise, InputMode } from '../../exercises/exercises'
+import type { AnswerResult } from '../../exercises/srs'
 import { normalizeForComparison } from '../../paradigms/tokens'
+import { AnswerDiff } from '../atoms/AnswerDiff'
 import { ScreenReaderOnly } from '../atoms/ScreenReaderOnly'
 import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
@@ -10,7 +13,7 @@ import { ShortcutButton } from './ShortcutButton'
 type Props = {
   exercise: Exercise
   forceReveal?: boolean
-  onAnswer: (index: number, isCorrect: boolean) => void
+  onAnswer: (index: number, result: AnswerResult) => void
   promptId?: string
 }
 
@@ -18,7 +21,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
   const { t } = useI18n()
   const [mode, setMode] = useState<InputMode>('multiple-choice')
   const [selected, setSelected] = useState<number | null>(null)
-  const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
+  const [typedResult, setTypedResult] = useState<'idle' | 'correct' | 'partial' | 'wrong'>('idle')
+  const [diff, setDiff] = useState<AnswerDiffResult | null>(null)
   const [typedValue, setTypedValue] = useState('')
   const [speechResult, setSpeechResult] = useState<'idle' | 'correct' | 'wrong'>('idle')
   const {
@@ -40,6 +44,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
   useLayoutEffect(() => {
     setSelected(null)
     setTypedResult('idle')
+    setDiff(null)
     setSpeechResult('idle')
     resetSpeech()
   }, [exercise, resetSpeech])
@@ -64,7 +69,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     if (!transcript) return
     if (normalizedCompare(transcript, exercise.options[exercise.answer])) {
       setSpeechResult('correct')
-      onAnswer(exercise.answer, true)
+      onAnswer(exercise.answer, 'correct')
     } else {
       document.querySelector<HTMLElement>('[data-retry-button]')?.focus()
     }
@@ -73,11 +78,21 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
       <ScreenReaderOnly role="status">
-        {effectiveMode === 'multiple-choice' && reveal && selected !== null
-          ? selected === exercise.answer
-            ? t('exercise.answer.correct')
-            : t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })
-          : ''}
+        {!reveal
+          ? ''
+          : effectiveMode === 'keyboard'
+            ? typedResult === 'correct'
+              ? t('exercise.answer.correct')
+              : typedResult === 'partial'
+                ? t('exercise.answer.partial')
+                : typedResult === 'wrong'
+                  ? t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })
+                  : ''
+            : selected === null
+              ? ''
+              : selected === exercise.answer
+                ? t('exercise.answer.correct')
+                : t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })}
       </ScreenReaderOnly>
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
@@ -97,7 +112,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
                 onClick={() => {
                   if (reveal) return
                   setSelected(index)
-                  onAnswer(index, index === exercise.answer)
+                  onAnswer(index, index === exercise.answer ? 'correct' : 'wrong')
                 }}
                 disabled={reveal}
                 data-state={state}
@@ -115,38 +130,55 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           onSubmit={(e) => {
             e.preventDefault()
             if (!isAnswered && hasTypedAnswer) {
-              const isCorrect = normalizedCompare(typedValue, exercise.options[exercise.answer])
-              const answeredIndex = isCorrect ? exercise.answer : (exercise.answer + 1) % exercise.options.length
-              setTypedResult(isCorrect ? 'correct' : 'wrong')
-              onAnswer(answeredIndex, isCorrect)
+              const presented = exercise.options[exercise.answer]
+              const solution = /\p{Mn}/u.test(typedValue) ? (exercise.answerText ?? presented) : presented
+              const result = diffAnswer(typedValue, solution)
+              setDiff(result)
+              setTypedResult(result.outcome)
+              onAnswer(exercise.answer, result.outcome)
             }
           }}
         >
           <InputRow>
-            <ArabicInput
-              ref={inputRef}
-              type="text"
-              dir="rtl"
-              lang="ar"
-              value={typedValue}
-              aria-labelledby={promptId}
-              placeholder={t('exercise.typing.placeholder')}
-              onInput={(e) => setTypedValue((e.target as HTMLInputElement).value)}
-              onChange={(e) => setTypedValue((e.target as HTMLInputElement).value)}
-              disabled={reveal}
-              data-state={typedResult !== 'idle' ? typedResult : undefined}
-              aria-invalid={typedResult === 'wrong' || undefined}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect="off"
-            />
+            {reveal && typedResult === 'wrong' && diff != null ? (
+              <AnnotatedAnswer
+                dir="rtl"
+                lang="ar"
+                role="textbox"
+                aria-readonly="true"
+                aria-labelledby={promptId}
+                aria-invalid="true"
+                data-state={typedResult}
+                data-testid="typed-answer-diff"
+              >
+                <ScreenReaderOnly>{t('exercise.typing.youTyped')}</ScreenReaderOnly>
+                <AnswerDiff segments={diff.typed} />
+              </AnnotatedAnswer>
+            ) : (
+              <ArabicInput
+                ref={inputRef}
+                type="text"
+                dir="rtl"
+                lang="ar"
+                value={typedValue}
+                aria-labelledby={promptId}
+                placeholder={t('exercise.typing.placeholder')}
+                onInput={(e) => setTypedValue((e.target as HTMLInputElement).value)}
+                onChange={(e) => setTypedValue((e.target as HTMLInputElement).value)}
+                disabled={reveal}
+                data-state={typedResult !== 'idle' ? typedResult : undefined}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect="off"
+              />
+            )}
             <ActionButton type="submit" aria-label={t('exercise.typing.submit')} disabled={reveal || !hasTypedAnswer}>
               ↵
             </ActionButton>
           </InputRow>
           {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-              {t(exercise.options[exercise.answer])}
+              {diff != null ? <AnswerDiff segments={diff.correct} /> : t(exercise.options[exercise.answer])}
             </CorrectReveal>
           )}
         </TypingForm>
@@ -273,20 +305,25 @@ const InputRow = styled('div')`
   width: 100%;
 `
 
-const ArabicInput = styled('input')`
-  flex: 1;
-  min-width: 0;
+const ANSWER_FIELD_BOX = `
   padding: 0.9rem 1rem;
   border-radius: 0.9rem;
-  border: 1px solid var(--color-border-input);
-  background: var(--color-bg-surface-secondary);
-  color: var(--color-text-primary);
+  border: 1px solid transparent;
   font-size: 1.2rem;
   line-height: 1.5;
   font-family: 'Noto Sans Arabic', sans-serif;
   text-align: center;
-  direction: rtl;
   box-sizing: border-box;
+`
+
+const ArabicInput = styled('input')`
+  ${ANSWER_FIELD_BOX}
+  flex: 1;
+  min-width: 0;
+  border-color: var(--color-border-input);
+  background: var(--color-bg-surface-secondary);
+  color: var(--color-text-primary);
+  direction: rtl;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 
   &::placeholder {
@@ -317,6 +354,12 @@ const ArabicInput = styled('input')`
     background: var(--color-error-bg);
     border-color: var(--color-error-border);
     color: var(--color-error-text);
+  }
+
+  &[data-state='partial'] {
+    background: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
+    color: var(--color-warning-text);
   }
 
   &:disabled {
@@ -376,15 +419,22 @@ const ActionButton = styled('button')`
 `
 
 const CorrectReveal = styled('p')`
+  ${ANSWER_FIELD_BOX}
   margin: 0;
-  padding: 0.625rem 0.75rem;
-  border-radius: 0.75rem;
+  width: 100%;
   background: var(--color-success-bg);
-  border: 2px solid var(--color-success-border);
+  border-color: var(--color-success-border);
   color: var(--color-success-text);
-  font-size: 1.2rem;
-  text-align: center;
-  font-family: 'Noto Sans Arabic', sans-serif;
+`
+
+const AnnotatedAnswer = styled('div')`
+  ${ANSWER_FIELD_BOX}
+  flex: 1;
+  min-width: 0;
+  direction: rtl;
+  background: var(--color-error-bg);
+  border-color: var(--color-error-border);
+  color: var(--color-error-text);
 `
 
 const SpeechField = styled('input')`

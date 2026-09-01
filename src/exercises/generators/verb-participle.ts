@@ -33,6 +33,7 @@ export const verbParticipleExercise = defineExercise(
       spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
+      answerText: kind === 'active' ? active : passive,
       cardKey: buildCardKey('verbParticiple', getSrsRootType(verb.root), verb.form),
       explanation: resolveNominalExplanationLayers(
         verb,

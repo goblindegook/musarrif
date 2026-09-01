@@ -124,9 +124,9 @@ export const conjugationExercise = defineExercise(
       targetTense,
       constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns),
     )
-    const conjugatedVerb = String(conjugate(verb, targetTense)[targetPronoun])
-    const answer = exerciseDiacritics(conjugatedVerb, profile.diacritics)
-    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, conjugatedVerb)
+    const answerText = String(conjugate(verb, targetTense)[targetPronoun])
+    const answer = exerciseDiacritics(answerText, profile.diacritics)
+    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, answerText)
 
     const raw =
       profile.pronouns >= 2 && profile.tenses >= 2
@@ -156,6 +156,7 @@ export const conjugationExercise = defineExercise(
       spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
+      answerText,
       cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
       explanation,
       inputModes: ['multiple-choice', 'keyboard', 'speech'],

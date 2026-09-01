@@ -348,3 +348,37 @@ describe('recordAnswer', () => {
     expect(recordAnswer(store, undefined, 'correct')).toBe(store)
   })
 })
+
+test('a partial answer advances the card like a correct answer', () => {
+  const card = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-09-01' }
+
+  expect(updateCardState(card, 'partial', '2026-09-01')).toMatchObject({
+    interval: 15,
+    repetitions: 3,
+    dueDate: '2026-09-16',
+  })
+})
+
+test('a partial answer lowers the easiness factor where a correct answer leaves it alone', () => {
+  const card = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-09-01' }
+
+  expect(updateCardState(card, 'correct', '2026-09-01').ef).toBeCloseTo(2.5, 10)
+  expect(updateCardState(card, 'partial', '2026-09-01').ef).toBeCloseTo(2.36, 10)
+})
+
+test('a partial answer is not a pass: a pass halves the interval and holds repetitions', () => {
+  const card = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-09-01' }
+
+  expect(updateCardState(card, 'pass', '2026-09-01')).toMatchObject({
+    interval: 3,
+    repetitions: 2,
+    ef: 2.5,
+  })
+})
+
+test('a fast partial answer does not earn the speed bonus a fast correct answer earns', () => {
+  const card = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-09-01' }
+
+  expect(updateCardState(card, 'correct', '2026-09-01', 1000).ef).toBeCloseTo(2.6, 10)
+  expect(updateCardState(card, 'partial', '2026-09-01', 1000).ef).toBeCloseTo(2.36, 10)
+})

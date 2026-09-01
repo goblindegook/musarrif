@@ -46,14 +46,14 @@ test('clicking an option calls onAnswer with its index and correctness', () => {
   const onAnswer = vi.fn()
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={onAnswer} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText('يَكتُبُ', { selector: 'button' }))
-  expect(onAnswer).toHaveBeenCalledWith(1, false)
+  expect(onAnswer).toHaveBeenCalledWith(1, 'wrong')
 })
 
-test('clicking the correct option calls onAnswer with isCorrect=true', () => {
+test("clicking the correct option calls onAnswer with 'correct'", () => {
   const onAnswer = vi.fn()
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={onAnswer} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText('كَتَبَ', { selector: 'button' }))
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
+  expect(onAnswer).toHaveBeenCalledWith(0, 'correct')
 })
 
 test('multiple-choice option buttons with Arabic text set lang and dir attributes', () => {
@@ -130,7 +130,7 @@ test('toggle button has T shortcut', () => {
   expect(screen.getByPlaceholderText('Type your answer')).toBeInTheDocument()
 })
 
-test('submitting the typing form calls onAnswer with correct index and true', () => {
+test("submitting the typing form calls onAnswer with correct index and 'correct'", () => {
   const onAnswer = vi.fn()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={onAnswer} />,
@@ -141,7 +141,7 @@ test('submitting the typing form calls onAnswer with correct index and true', ()
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
+  expect(onAnswer).toHaveBeenCalledWith(0, 'correct')
 })
 
 test('typing the correct answer disables input and shows no reveal', () => {
@@ -156,7 +156,7 @@ test('typing the correct answer disables input and shows no reveal', () => {
   expect(screen.queryByText('كَتَبَ')).not.toBeInTheDocument()
 })
 
-test('typing a wrong answer calls onAnswer with false and reveals correct answer', () => {
+test("typing a wrong answer calls onAnswer with 'wrong' and reveals correct answer", () => {
   const onAnswer = vi.fn()
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={onAnswer} />,
@@ -167,9 +167,25 @@ test('typing a wrong answer calls onAnswer with false and reveals correct answer
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
-  expect(onAnswer).toHaveBeenCalledWith(1, false)
+  expect(onAnswer).toHaveBeenCalledWith(0, 'wrong')
   expect(screen.getByText('كَتَبَ')).toBeInTheDocument()
-  expect(screen.getByPlaceholderText('Type your answer')).toBeDisabled()
+  expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
+})
+
+test('a wrong typed answer replaces the input with the annotated answer in place', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَمَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(screen.getByTestId('typed-answer-diff')).toHaveTextContent('كَتَمَ')
+  expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
 })
 
 test('empty typing submit does not answer', () => {
@@ -262,7 +278,7 @@ test('typing mode input has aria-labelledby pointing to the prompt', () => {
   expect(screen.getByPlaceholderText('Type your answer')).toHaveAttribute('aria-labelledby', 'exercise-prompt')
 })
 
-test('typing input has aria-invalid="true" after wrong answer submitted', () => {
+test('the annotated answer has aria-invalid="true" after a wrong answer is submitted', () => {
   render(
     <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })} onAnswer={noop} />,
     { wrapper: Wrapper },
@@ -270,7 +286,22 @@ test('typing input has aria-invalid="true" after wrong answer submitted', () => 
   fireEvent.click(screen.getByText(/Type the answer/))
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
-  expect(screen.getByPlaceholderText('Type your answer')).toHaveAttribute('aria-invalid', 'true')
+  expect(screen.getByTestId('typed-answer-diff')).toHaveAttribute('aria-invalid', 'true')
+})
+
+test('the annotated answer keeps the prompt as its accessible label', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })}
+      onAnswer={noop}
+      promptId="exercise-prompt"
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+  expect(screen.getByTestId('typed-answer-diff')).toHaveAttribute('aria-labelledby', 'exercise-prompt')
 })
 
 test('typing input does not have aria-invalid after correct answer submitted', () => {
@@ -352,7 +383,7 @@ test('correct speech result auto-submits and calls onAnswer', () => {
   )
   fireEvent.click(screen.getByText(/Speak the answer/))
   act(() => mock.fire.result('كَتَبَ'))
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
+  expect(onAnswer).toHaveBeenCalledWith(0, 'correct')
 })
 
 test('correct speech result shows no submit or retry buttons', () => {
@@ -444,7 +475,7 @@ test('correct speech result after wrong attempt auto-submits', () => {
   act(() => mock.fire.result('يَكتُبُ'))
   fireEvent.click(screen.getByLabelText('Try again'))
   act(() => mock.fire.result('كَتَبَ'))
-  expect(onAnswer).toHaveBeenCalledWith(0, true)
+  expect(onAnswer).toHaveBeenCalledWith(0, 'correct')
 })
 
 test('re-record button after wrong result starts listening without returning to idle', () => {
@@ -494,7 +525,7 @@ test('speech toggle hidden after correct answer auto-submits', () => {
   expect(screen.queryByText(/Speak the answer/)).not.toBeInTheDocument()
 })
 
-// ─── Mode reset on exercise change ────────────────────────────────────────────
+// Mode reset on exercise change
 
 test('typing mode falls back to MC when new exercise does not support typing', () => {
   const { rerender } = render(
@@ -531,4 +562,101 @@ test('speech mode falls back to MC when new exercise does not support speech', (
   )
   expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
   expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+})
+
+// Typed answer diff rendering
+
+test('a wrong typed answer shows what was typed alongside the correct form', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَمَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(screen.getByTestId('typed-answer-diff')).toHaveTextContent('كَتَمَ')
+  expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('كَتَبَ')
+})
+
+test('a wrong typed answer marks the offending letter on both sides', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَمَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(screen.getByText('مَ')).toHaveAttribute('data-mark', 'error')
+  expect(screen.getByText('بَ')).toHaveAttribute('data-mark', 'error')
+})
+
+test('an answer missing only a vowel is graded partial and marks the missing vowel', () => {
+  const onAnswer = vi.fn()
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={onAnswer}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كتَبَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(onAnswer).toHaveBeenCalledWith(0, 'partial')
+  expect(screen.getByText('كَ')).toHaveAttribute('data-mark', 'missing')
+})
+
+test('a bare skeleton with matching letters is graded correct', () => {
+  const onAnswer = vi.fn()
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={onAnswer}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كتب' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(onAnswer).toHaveBeenCalledWith(0, 'correct')
+})
+
+test('a wrong typed answer announces the correct answer to screen readers', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَمَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(screen.getByRole('status')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
+})
+
+test('a partial answer announces that vowel marks were missing', () => {
+  render(
+    <ExerciseAnswerArea
+      exercise={makeExercise({ inputModes: ['multiple-choice', 'keyboard'], answerText: 'كَتَبَ' })}
+      onAnswer={noop}
+    />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Type the answer/))
+  fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كتَبَ' } })
+  fireEvent.click(screen.getByLabelText('Submit'))
+
+  expect(screen.getByRole('status')).toHaveTextContent('Correct. Some vowel marks were missing.')
 })

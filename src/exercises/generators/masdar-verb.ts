@@ -30,6 +30,7 @@ export const masdarVerbExercise = defineExercise(
       spokenWord: String(masdar),
       options,
       answer,
+      answerText: String(verb.lemma),
       cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),
       explanation,
       inputModes: ['multiple-choice', 'keyboard', 'speech'],

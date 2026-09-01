@@ -33,6 +33,7 @@ export const participleVerbExercise = defineExercise(
       spokenWord: participle,
       options,
       answer: options.indexOf(answerLabel),
+      answerText: String(verb.lemma),
       cardKey: buildCardKey('participleVerb', getSrsRootType(verb.root), verb.form),
       explanation: resolveNominalExplanationLayers(
         verb,

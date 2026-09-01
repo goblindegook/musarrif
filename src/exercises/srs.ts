@@ -8,7 +8,7 @@ import { utcToday } from '../primitives/dates'
 import { formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercises'
 
-export type AnswerResult = 'correct' | 'wrong' | 'pass'
+export type AnswerResult = 'correct' | 'partial' | 'wrong' | 'pass'
 export type SrsRootType = 'sound' | 'doubled' | 'hamzated' | 'assimilated' | 'hollow' | 'defective'
 
 export interface CardConstraints {

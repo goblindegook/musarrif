@@ -17,10 +17,12 @@ export const verbMasdarExercise = defineExercise(
   'verbMasdar',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
-    const masdars = deriveMasdar(verb).map((m) => exerciseDiacritics(m, profile.diacritics))
-    const answer = random(masdars)
+    const rawMasdars = deriveMasdar(verb)
+    const answerText = String(random(rawMasdars))
+    const stopList = rawMasdars.map((m) => exerciseDiacritics(m, profile.diacritics))
+    const answer = exerciseDiacritics(answerText, profile.diacritics)
     const word = exerciseDiacritics(verb.lemma, profile.diacritics)
-    const options = buildOptions(verb, answer, masdars, profile)
+    const options = buildOptions(verb, answer, stopList, profile)
     const answerIndex = options.indexOf(answer)
     const explanation = resolveNominalExplanationLayers(verb, 'masdar', answer)
 
@@ -31,6 +33,7 @@ export const verbMasdarExercise = defineExercise(
       spokenWord: verb.lemma,
       options,
       answer: answerIndex,
+      answerText,
       cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),
       explanation,
       inputModes: verb.form !== 1 ? ['multiple-choice', 'keyboard', 'speech'] : ['multiple-choice'],
@@ -42,7 +45,7 @@ export const verbMasdarExercise = defineExercise(
 function buildOptions(
   verb: DisplayVerb,
   answer: string,
-  masdars: readonly string[],
+  stopList: readonly string[],
   profile: DimensionProfile,
 ): readonly string[] {
   const generators = [
@@ -56,7 +59,7 @@ function buildOptions(
 
   while (options.size < 4) {
     const candidate = exerciseDiacritics(random(generators)(), profile.diacritics)
-    if (!masdars.includes(candidate)) options.add(candidate)
+    if (!stopList.includes(candidate)) options.add(candidate)
   }
 
   return shuffle(Array.from(options))

@@ -28,6 +28,7 @@ export interface Exercise<T extends ExerciseKind = ExerciseKind> {
   promptParams?: Record<string, string>
   options: readonly string[]
   answer: number
+  answerText?: string
   cardKey: string
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null

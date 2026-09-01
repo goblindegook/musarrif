@@ -6,7 +6,7 @@ import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
 import { computeMastery, findLowestMastery, type MasteryItemId } from '../../exercises/mastery'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
-import type { SrsStore } from '../../exercises/srs'
+import type { AnswerResult, SrsStore } from '../../exercises/srs'
 import { renderExplanation } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import { toRoman } from '../../primitives/numbers'
@@ -61,6 +61,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     generateExercise(dimensionProfile, srsStore, sessionRef.current, {}),
   )
   const [answeredIndex, setAnsweredIndex] = useState<number | null>(null)
+  const [answerResult, setAnswerResult] = useState<AnswerResult | null>(null)
   const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
   const { streak, recordResult } = useStats()
@@ -224,6 +225,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       setExercise(generateExercise(profile, srsStore, sessionRef.current, activeFocus))
       shownAtRef.current = Date.now()
       setAnsweredIndex(null)
+      setAnswerResult(null)
       setSkipped(false)
       clearDimensionChanges()
       setStreakExtendedAlert(false)
@@ -237,7 +239,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     if (answeredIndex == null && !skipped) return []
     if (exercise.explanation == null) return []
     return renderExplanation(
-      answeredIndex !== exercise.answer || skipped
+      answerResult !== 'correct' || skipped
         ? exercise.explanation
         : filterMasteredLayers(srsStore, exercise.explanation),
       t,
@@ -245,16 +247,17 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   })()
 
   const handleAnswer = useCallback(
-    (index: number, isCorrect: boolean) => {
+    (index: number, result: AnswerResult) => {
       if (isCoveredTriple(exercise.cardKey, srsStore)) {
         sessionRef.current = { ...sessionRef.current, reviews: sessionRef.current.reviews + 1 }
       } else {
         sessionRef.current = { ...sessionRef.current, lastNewAt: sessionRef.current.reviews }
       }
       setAnsweredIndex(index)
-      recordResult(isCorrect ? 'correct' : 'incorrect')
-      recordSrsAnswer(exercise.cardKey, isCorrect ? 'correct' : 'wrong', Date.now() - shownAtRef.current)
-      recordDimensionAnswer(exercise.dimensions, isCorrect)
+      setAnswerResult(result)
+      recordResult(result === 'wrong' ? 'incorrect' : 'correct')
+      recordSrsAnswer(exercise.cardKey, result, Date.now() - shownAtRef.current)
+      recordDimensionAnswer(exercise.dimensions, result !== 'wrong')
     },
     [exercise, srsStore, recordResult, recordSrsAnswer, recordDimensionAnswer],
   )
@@ -267,10 +270,10 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
   useEffect(() => {
     if (!isAnswered) return
-    if (answeredIndex !== exercise.answer) return
+    if (answerResult !== 'correct') return
     const nextButton = document.querySelector('button[autofocus]')
     if (nextButton instanceof HTMLButtonElement) nextButton.focus()
-  }, [isAnswered, answeredIndex, exercise.answer])
+  }, [isAnswered, answerResult])
 
   return (
     <ExerciseLayout id="main-content" tabIndex={-1}>

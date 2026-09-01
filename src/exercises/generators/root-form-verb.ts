@@ -33,6 +33,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     spokenWord: spell(verb.root).join(', '),
     options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
     answer,
+    answerText: String(verb.lemma),
     cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
     explanation,
     inputModes: ['multiple-choice', 'keyboard', 'speech'],
