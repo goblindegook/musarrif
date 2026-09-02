@@ -389,7 +389,7 @@ const ExerciseLayout = styled('main')`
 
 const ExerciseCard = styled('div')`
   background: transparent;
-  padding: 0.75rem;
+  padding: 0.75rem 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -398,7 +398,7 @@ const ExerciseCard = styled('div')`
   position: relative;
 
   @media (min-width: 480px) {
-    padding: 1rem 1.25rem;
+    padding: 1rem 0;
   }
 `
 

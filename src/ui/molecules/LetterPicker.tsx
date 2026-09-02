@@ -182,7 +182,7 @@ const LetterInput = styled('input')`
   padding: 0.35rem 0.25rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  background: var(--color-bg-surface-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   cursor: pointer;
   outline: none;
@@ -208,7 +208,6 @@ const LetterPopover = styled('div')`
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-interactive);
   z-index: 100;
   padding: 0.25rem;
   gap: 2px;
@@ -245,13 +244,13 @@ const LetterOption = styled('button')`
   }
 
   &[data-active='true'] {
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
     border-color: var(--color-accent);
     color: var(--color-text-primary);
   }
 
   &:hover {
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
     border-color: var(--color-accent);
     color: var(--color-text-primary);
   }

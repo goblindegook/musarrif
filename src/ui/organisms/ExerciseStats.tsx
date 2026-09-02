@@ -463,7 +463,7 @@ const MasterySummary = styled('summary')`
   transition: background 150ms ease;
 
   &:hover {
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
   }
 
   &:focus-visible {

@@ -280,7 +280,7 @@ const chipButton = `
   gap: 0.45rem;
   min-height: 2.2rem;
   padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   cursor: pointer;
   font: inherit;
   font-size: 0.78rem;
@@ -318,9 +318,8 @@ const InactiveChip = styled('button')`
 
   &:enabled:hover {
     border-style: solid;
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
     color: var(--color-text-primary);
-    box-shadow: var(--shadow-interactive-hover);
   }
 `
 
@@ -328,9 +327,8 @@ const ActiveRow = styled('div')`
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--color-accent);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--color-bg-accent);
-  box-shadow: var(--shadow-interactive-active);
   animation: chip-activate 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
 
   @keyframes chip-activate {
@@ -369,10 +367,10 @@ const ClearButton = styled('button')`
   width: 1.8rem;
   height: 1.8rem;
   margin-inline-end: 0.25rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
   border: none;
-  background: color-mix(in srgb, var(--color-bg-surface) 88%, var(--color-bg-accent) 12%);
-  color: var(--color-text-secondary);
+  background: transparent;
+  color: var(--color-text-emphasis);
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 700;
@@ -384,7 +382,7 @@ const ClearButton = styled('button')`
     color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
-    background: var(--color-bg-surface);
+    background: transparent;
     color: var(--color-text-primary);
   }
 

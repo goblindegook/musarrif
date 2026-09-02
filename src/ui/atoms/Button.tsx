@@ -42,7 +42,7 @@ const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant
   }
 
   &:enabled:hover {
-    background: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-button-primary-hover)' : 'var(--color-bg-accent-hover)')};
+    background: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-button-primary-hover)' : 'var(--color-bg-hover)')};
     border-color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-button-primary-hover)' : 'var(--color-accent)')};
     color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-surface)' : 'var(--color-text-primary)')};
   }

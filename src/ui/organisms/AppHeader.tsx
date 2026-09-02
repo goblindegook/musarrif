@@ -234,9 +234,8 @@ const TopBar = styled('header')`
   left: 0;
   right: 0;
   z-index: 100;
-  background: radial-gradient(circle at top, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-mid) 60%, var(--color-bg-gradient-end) 100%);
+  background: var(--color-bg-page);
   padding: 1rem 0.75rem;
-  box-shadow: var(--shadow-interactive);
   transition: padding 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 480px) {

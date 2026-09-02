@@ -80,10 +80,9 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
   &:hover {
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
     border-color: var(--color-accent);
     color: var(--color-text-primary);
-    box-shadow: var(--shadow-interactive-hover);
   }
 
   &:focus-visible {
@@ -96,7 +95,6 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
     border-color: var(--color-accent);
     background: var(--color-bg-accent);
     color: var(--color-text-emphasis);
-    box-shadow: var(--shadow-interactive-hover);
 
     &:hover {
       background: var(--color-bg-accent);

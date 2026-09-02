@@ -4,17 +4,14 @@
   font-weight: 400;
   color: var(--color-text-primary);
   background-color: var(--color-bg-page);
-  /* Color tokens — rubrication: paper, iron-gall ink, one cinnabar red */
+  /* Rubrication palette: paper ground, iron-gall ink, one cinnabar red */
   --color-bg-page: #f6f3ec;
-  --color-bg-surface: #fdfcf9;
+  --color-bg-surface: #fbfaf7;
   --color-bg-surface-secondary: #f0ece2;
+  --color-bg-input: #fefdfa;
   --color-bg-accent: #f7ebe6;
-  --color-bg-accent-hover: #f2e2db;
-  --color-bg-selected: #f3f0e8;
+  --color-bg-hover: #fefdfa;
   --color-bg-button-primary-hover: #3a322c;
-  --color-bg-gradient-start: #fbfaf6;
-  --color-bg-gradient-mid: #f6f3ec;
-  --color-bg-gradient-end: #efebe1;
   --color-text-primary: #1f1a17;
   --color-text-secondary: #5b5147;
   --color-text-tertiary: #423a33;
@@ -24,10 +21,6 @@
   --color-focus-outline: #a32b18;
   --color-border: #ddd6ca;
   --color-border-input: #c7bfb1;
-  --shadow-interactive: none;
-  --shadow-interactive-hover: none;
-  --shadow-interactive-active: none;
-  --shadow-surface: none;
   --shadow-elevated: 0 12px 32px rgba(31, 26, 23, 0.12);
   --color-overlay: rgba(31, 26, 23, 0.5);
   --color-success-bg: #e8efe4;
@@ -60,13 +53,10 @@
   --color-bg-page: #17140f;
   --color-bg-surface: #211d16;
   --color-bg-surface-secondary: #1c1812;
+  --color-bg-input: #2c2620;
   --color-bg-accent: #33201a;
-  --color-bg-accent-hover: #3d271f;
-  --color-bg-selected: #201c16;
+  --color-bg-hover: #2c2620;
   --color-bg-button-primary-hover: #d6cec1;
-  --color-bg-gradient-start: #1c1813;
-  --color-bg-gradient-mid: #17140f;
-  --color-bg-gradient-end: #14110d;
   --color-text-primary: #f2ede2;
   --color-text-secondary: #a2988a;
   --color-text-tertiary: #cbc2b3;
@@ -76,10 +66,6 @@
   --color-focus-outline: #e8705a;
   --color-border: #383129;
   --color-border-input: #4a4238;
-  --shadow-interactive: none;
-  --shadow-interactive-hover: none;
-  --shadow-interactive-active: none;
-  --shadow-surface: none;
   --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.5);
   --color-overlay: rgba(0, 0, 0, 0.75);
   --color-success-bg: #1e2a18;

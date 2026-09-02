@@ -38,7 +38,6 @@ const Button = styled('button')<{
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
   border-radius: var(--radius);
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
-  box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
   opacity: ${({ tone }) => (tone === 'muted' ? '0.5' : '1')};
   cursor: pointer;
@@ -64,9 +63,8 @@ const Button = styled('button')<{
   }
 
   &:enabled:hover {
-    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-accent-hover)')};
+    background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-hover)')};
     border-color: var(--color-accent);
-    box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
     color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
     opacity: 1;
   }

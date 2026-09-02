@@ -20,7 +20,7 @@ export const LinkButton = styled('a')`
   text-decoration: none;
 
   &:hover {
-    background: var(--color-bg-accent-hover);
+    background: var(--color-bg-hover);
     border-color: var(--color-accent);
     color: var(--color-text-primary);
   }

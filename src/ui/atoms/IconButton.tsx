@@ -68,8 +68,8 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   @media (pointer: coarse) {
-    min-width: 44px;
-    min-height: 44px;
+    min-width: ${({ size }) => (size === 'sm' ? '28px' : '44px')};
+    min-height: ${({ size }) => (size === 'sm' ? '28px' : '44px')};
   }
 
   @media (prefers-reduced-motion: reduce) {

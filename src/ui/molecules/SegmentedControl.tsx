@@ -61,7 +61,7 @@ const Control = styled('div')<{
   display: flex;
   align-items: center;
   border: 1px solid var(--color-border);
-  background: transparent;
+  background: var(--color-bg-surface);
   padding: 0.25rem;
   border-radius: var(--radius);
   gap: 0;
@@ -87,7 +87,6 @@ const Control = styled('div')<{
     border-radius: var(--radius);
     background: var(--color-bg-accent);
     border: 1px solid var(--color-accent);
-    box-shadow: var(--shadow-interactive-active);
     transform: translateX(calc(100% * var(--segmented-active-index) * var(--segmented-direction)));
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;

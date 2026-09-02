@@ -225,8 +225,7 @@ const SuggestionContainer = styled('search', forwardRef)<{ isActive?: boolean }>
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at top, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-mid) 60%, var(--color-bg-gradient-end) 100%);
-        box-shadow: var(--shadow-interactive);
+        background: var(--color-bg-page);
         z-index: 101;
       }
 
@@ -265,7 +264,7 @@ const Input = styled('input', forwardRef)`
   line-height: 1;
   font-family: 'Noto Sans Arabic', system-ui, sans-serif;
   color: var(--color-text-primary);
-  background: var(--color-bg-surface-secondary);
+  background: var(--color-bg-input);
   width: 100%;
   box-sizing: border-box;
   appearance: none;
@@ -288,7 +287,6 @@ const Input = styled('input', forwardRef)`
   &:hover {
     background: var(--color-bg-surface);
     border-color: var(--color-border-input);
-    box-shadow: var(--shadow-interactive-hover);
   }
 
   &:focus {
@@ -308,7 +306,6 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
   border-left: none;
   border-right: none;
   background: var(--color-bg-surface);
-  box-shadow: var(--shadow-surface);
   width: calc(100% + 1rem);
   z-index: 102;
   max-height: calc(100vh - 5rem);
@@ -335,7 +332,7 @@ const SuggestionItem = styled('button')<{ highlighted?: boolean }>`
   width: 100%;
   padding: 0.8rem 1.5rem;
   border: none;
-  background: ${({ highlighted }) => (highlighted ? 'var(--color-bg-selected)' : 'var(--color-bg-surface)')};
+  background: ${({ highlighted }) => (highlighted ? 'var(--color-bg-surface-secondary)' : 'var(--color-bg-surface)')};
   color: ${({ highlighted }) => (highlighted ? 'var(--color-text-tertiary)' : 'var(--color-text-primary)')};
   cursor: pointer;
   text-align: left;

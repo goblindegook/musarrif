@@ -321,7 +321,7 @@ const ArabicInput = styled('input')`
   flex: 1;
   min-width: 0;
   border-color: var(--color-border-input);
-  background: var(--color-bg-surface-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   direction: rtl;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
@@ -336,7 +336,6 @@ const ArabicInput = styled('input')`
   &:hover:not(:disabled) {
     background: var(--color-bg-surface);
     border-color: var(--color-border-input);
-    box-shadow: var(--shadow-interactive-hover);
   }
 
   &:focus {
@@ -443,7 +442,7 @@ const SpeechField = styled('input')`
   padding: 0.9rem 1rem;
   border-radius: var(--radius);
   border: 1px solid var(--color-accent);
-  background: var(--color-bg-surface-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-muted);
   font-size: 1.2rem;
   font-family: 'Noto Sans Arabic', sans-serif;
