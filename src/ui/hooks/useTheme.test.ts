@@ -15,7 +15,7 @@ function mockMatchMedia(prefersDark: boolean) {
 function insertThemeColorMeta() {
   const meta = document.createElement('meta')
   meta.setAttribute('name', 'theme-color')
-  meta.setAttribute('content', '#f5f4ee')
+  meta.setAttribute('content', '#f6f3ec')
   document.head.append(meta)
 }
 
@@ -51,7 +51,7 @@ test('applies light theme color meta when preference is light', () => {
   mockMatchMedia(true)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('light'))
-  expect(getThemeColorMetaContent()).toBe('#f5f4ee')
+  expect(getThemeColorMetaContent()).toBe('#f6f3ec')
 })
 
 test('applies dark theme to document when preference is dark', () => {
@@ -65,7 +65,7 @@ test('applies dark theme color meta when preference is dark', () => {
   mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('dark'))
-  expect(getThemeColorMetaContent()).toBe('#1c1a14')
+  expect(getThemeColorMetaContent()).toBe('#17140f')
 })
 
 test('follows OS dark preference when system is chosen on dark OS', () => {
@@ -86,14 +86,14 @@ test('updates theme color meta when OS preference changes in system mode', () =>
   const mq = mockMatchMedia(false)
   const { result } = renderHook(() => useTheme())
   act(() => result.current.setThemePreference('system'))
-  expect(getThemeColorMetaContent()).toBe('#f5f4ee')
+  expect(getThemeColorMetaContent()).toBe('#f6f3ec')
 
   const systemHandler = mq.addEventListener.mock.calls.find(([event]) => event === 'change')?.[1]
   expect(systemHandler).toBeDefined()
   mq.matches = true
   act(() => (systemHandler as () => void)())
 
-  expect(getThemeColorMetaContent()).toBe('#1c1a14')
+  expect(getThemeColorMetaContent()).toBe('#17140f')
 })
 
 test('registers and removes OS change listener when preference is system', () => {

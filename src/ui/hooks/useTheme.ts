@@ -5,7 +5,7 @@ export type ThemePreference = 'light' | 'dark' | 'system'
 
 function apply(theme: 'light' | 'dark') {
   document.documentElement.setAttribute('data-theme', theme)
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1c1a14' : '#f5f4ee')
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#17140f' : '#f6f3ec')
 }
 
 function resolve(pref: ThemePreference): 'light' | 'dark' {

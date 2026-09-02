@@ -382,7 +382,7 @@ const Row = styled('tr')`
   border-bottom: 1px solid var(--color-border);
 
   @media print {
-    border-bottom-color: #cbd5e1;
+    border-bottom-color: #c7bfb1;
   }
 `
 

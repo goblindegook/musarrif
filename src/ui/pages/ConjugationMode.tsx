@@ -540,7 +540,7 @@ const ConjugationSection = styled('div')`
   background: transparent;
 
   @media print {
-    border: 1px solid #e2e8f0;
+    border: 1px solid #ddd6ca;
     border-radius: var(--radius);
     box-shadow: none;
   }
