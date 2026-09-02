@@ -5,7 +5,7 @@ export const LinkButton = styled('a')`
   display: inline-block;
   text-align: center;
   padding: 0.85rem 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   border: 2px solid var(--color-border);
   background: var(--color-bg-surface);
   color: var(--color-text-tertiary);

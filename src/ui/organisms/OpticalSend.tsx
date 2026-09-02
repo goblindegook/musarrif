@@ -92,7 +92,7 @@ const CodeFrame = styled('div')`
   display: flex;
   justify-content: center;
   padding: 1rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   background: #ffffff;
 
   & canvas {

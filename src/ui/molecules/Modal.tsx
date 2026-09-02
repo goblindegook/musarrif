@@ -61,7 +61,7 @@ const Dialog = styled('dialog')`
   margin: auto;
   background: var(--color-bg-surface);
   color: var(--color-text-primary);
-  border-radius: 1.25rem;
+  border-radius: var(--radius);
   padding: 0;
   max-width: 520px;
   width: min(100%, 520px);

@@ -36,7 +36,7 @@ const Button = styled('button')<{
 }>`
   align-items: center;
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  border-radius: ${({ size }) => (size === 'compact' ? '0.65rem' : '0.75rem')};
+  border-radius: var(--radius);
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
@@ -94,6 +94,6 @@ const Button = styled('button')<{
 const Badge = styled('span')`
   background: var(--color-accent);
   color: var(--color-streak-bg);
-  border-radius: 0.4rem;
+  border-radius: var(--radius);
   padding: 0 0.25rem;
 `

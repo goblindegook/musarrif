@@ -101,7 +101,7 @@ const DetailActions = styled('span')`
 
 const DetailItem = styled('div')`
   background: var(--color-bg-surface-secondary);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 0.75rem;
   border: 1px solid var(--color-border);
   display: flex;
@@ -110,13 +110,13 @@ const DetailItem = styled('div')`
   gap: 0.5rem;
 
   @media (min-width: 480px) {
-    border-radius: 1rem;
+    border-radius: var(--radius);
     padding: 0.75rem 1rem;
     gap: 0.625rem;
   }
 
   @media print {
-    border-radius: 0.3rem;
+    border-radius: var(--radius);
     padding: 0.3rem 0.4rem;
     gap: 0.3rem;
   }

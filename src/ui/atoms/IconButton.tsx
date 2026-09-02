@@ -26,8 +26,8 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   width: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
   height: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
   border-radius: 50%;
-  border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
-  background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
+  border: none;
+  background: transparent;
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-tertiary)')};
   font-size: 1.15rem;
   font-weight: 700;
@@ -36,12 +36,8 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   place-items: center;
   padding: 0;
   cursor: pointer;
-  box-shadow: ${({ active }) => (active ? `var(--shadow-interactive-active)` : `var(--shadow-interactive)`)};
   transition:
-    background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   svg {
@@ -53,31 +49,21 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   &:enabled:hover {
-    background: var(--color-bg-accent-hover);
-    color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-primary)')};
-    border-color: var(--color-accent);
-    box-shadow: ${({ active }) => (active ? `var(--shadow-interactive-active)` : `var(--shadow-interactive-hover)`)};
+    color: var(--color-text-emphasis);
   }
 
   &:focus-visible {
     outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: var(--color-accent);
   }
 
   &:enabled:active {
     color: var(--color-text-emphasis);
-    background: var(--color-bg-accent);
-    border-color: var(--color-accent);
     transform: scale(0.96);
-    box-shadow: var(--shadow-interactive-active);
   }
 
   &:disabled {
     color: var(--color-text-muted);
-    background: var(--color-bg-surface-secondary);
-    border-color: var(--color-border);
-    box-shadow: none;
     cursor: default;
   }
 

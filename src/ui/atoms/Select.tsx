@@ -3,7 +3,7 @@ import { styled } from 'goober'
 export const Select = styled('select')`
   -webkit-appearance: none;
   appearance: none;
-  border-radius: 0.9rem;
+  border-radius: var(--radius);
   border: 1px solid var(--color-border-input);
   padding: 0.6rem 2.2rem 0.6rem 1rem;
   font-size: 1rem;

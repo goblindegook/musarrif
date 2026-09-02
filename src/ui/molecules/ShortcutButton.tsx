@@ -78,7 +78,7 @@ const ShortcutBadge = styled('span')`
   color: var(--color-text-muted);
   background: var(--color-bg-surface-secondary);
   border: 1px solid var(--color-border);
-  border-radius: 0.25rem;
+  border-radius: var(--radius);
   padding: 0.2rem 0.35rem;
   pointer-events: none;
   font-family: ui-monospace, monospace;

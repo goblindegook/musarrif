@@ -290,7 +290,7 @@ const MOOD_LABELS: Readonly<Record<Mood, TranslationKey>> = {
 const TabsContainer = styled('nav')`
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-surface-secondary);
+  background: transparent;
 
   @media print {
     background: #fff;
@@ -301,14 +301,14 @@ const TabBlock = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 1rem 1rem 0.35rem;
 
   @media (min-width: 480px) {
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.25rem 0.35rem;
   }
 
   @media (min-width: 720px) {
-    padding: 1.5rem 1.25rem;
+    padding: 1.5rem 1.25rem 0.35rem;
   }
 
   @media print {
@@ -355,6 +355,10 @@ const Table = styled('table')`
 `
 
 const TableBody = styled('tbody')`
+  tr:last-of-type {
+    border-bottom: none;
+  }
+
   tr:last-of-type td {
     padding-bottom: 1.25rem;
   }
@@ -441,7 +445,7 @@ const VerbCell = styled('td')`
 const TableHeadCell = styled('th')`
   text-align: left;
   padding: 0.6rem 0.75rem;
-  background: var(--color-bg-surface-secondary);
+  background: transparent;
   vertical-align: middle;
 
   @media (min-width: 480px) {

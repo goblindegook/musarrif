@@ -388,12 +388,9 @@ const ExerciseLayout = styled('main')`
 `
 
 const ExerciseCard = styled('div')`
-  background: var(--color-bg-surface);
-  border-radius: 1.5rem;
+  background: transparent;
   padding: 0.75rem;
   width: 100%;
-  box-shadow: var(--shadow-elevated);
-  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -482,7 +479,7 @@ const SuccessAlert = styled('output')`
   background: var(--color-success-bg);
   border: 2px solid var(--color-success-border);
   color: var(--color-success-text);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 0.625rem 0.75rem;
   animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
 
@@ -495,7 +492,7 @@ const WarningAlert = styled('output')`
   background: var(--color-warning-bg);
   border: 2px solid var(--color-warning-border);
   color: var(--color-warning-text);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 0.625rem 0.75rem;
   animation: alert-in 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
 
@@ -508,7 +505,7 @@ const StreakAlert = styled('output')`
   background: var(--color-streak-bg);
   border: 2px solid var(--color-accent);
   color: var(--color-streak-text);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 0.625rem 0.75rem;
   animation: streak-in 380ms cubic-bezier(0.25, 1, 0.5, 1) both;
 

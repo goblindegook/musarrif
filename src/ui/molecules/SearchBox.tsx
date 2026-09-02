@@ -258,7 +258,7 @@ const SuggestionContainer = styled('search', forwardRef)<{ isActive?: boolean }>
 `
 
 const Input = styled('input', forwardRef)`
-  border-radius: 0.9rem;
+  border-radius: var(--radius);
   border: 1px solid var(--color-border-input);
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
@@ -320,7 +320,7 @@ const SuggestionMenu = styled('div')<{ active?: boolean }>`
     right: 0;
     width: 100%;
     margin-top: 0.35rem;
-    border-radius: 0.75rem;
+    border-radius: var(--radius);
     border-left: 1px solid var(--color-border);
     border-right: 1px solid var(--color-border);
     z-index: 5;

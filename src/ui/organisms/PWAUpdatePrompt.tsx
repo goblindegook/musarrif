@@ -41,7 +41,7 @@ const Banner = styled('div')`
   gap: 0.75rem;
   max-width: calc(100% - 2rem);
   padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   background: var(--color-bg-surface);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);

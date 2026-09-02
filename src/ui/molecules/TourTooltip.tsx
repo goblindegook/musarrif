@@ -166,7 +166,7 @@ const Card = styled('div')`
   position: relative;
   border: 1px solid var(--color-border);
   background: var(--color-bg-surface);
-  border-radius: 1rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-elevated);
   padding: 1rem;
   width: min(320px, calc(100vw - 24px));

@@ -25,7 +25,7 @@ export const ScreenReaderOnly = styled('span')<{ focusable?: boolean }>`
       overflow: visible;
       clip: auto;
       white-space: normal;
-      border-radius: 0.5rem;
+      border-radius: var(--radius);
       background: var(--color-bg-surface);
       box-shadow: var(--shadow-elevated);
     }

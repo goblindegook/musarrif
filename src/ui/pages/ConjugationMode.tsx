@@ -454,6 +454,7 @@ const Main = styled('main')`
 
   @media (min-width: 960px) {
     gap: 1.25rem;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
     max-width: inherit;
     grid-template-columns: 1fr 1.5fr;
     grid-template-rows: auto auto 1fr;
@@ -534,15 +535,13 @@ const MasdarNote = styled('span')`
 `
 
 const ConjugationSection = styled('div')`
-  border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-bottom: 1px solid var(--color-border);
   overflow: hidden;
-  background: var(--color-bg-surface);
-  box-shadow: var(--shadow-elevated);
+  background: transparent;
 
   @media print {
     border: 1px solid #e2e8f0;
-    border-radius: 0.3rem;
+    border-radius: var(--radius);
     box-shadow: none;
   }
 `

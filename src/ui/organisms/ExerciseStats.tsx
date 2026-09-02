@@ -438,7 +438,7 @@ const MasteryGrid = styled('div')`
 
 const MasteryCategory = styled('details')`
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   background: color-mix(in srgb, var(--color-bg-surface) 92%, var(--color-bg-base) 8%);
   overflow: hidden;
   transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);

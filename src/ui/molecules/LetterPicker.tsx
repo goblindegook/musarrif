@@ -181,7 +181,7 @@ const LetterInput = styled('input')`
   box-sizing: border-box;
   padding: 0.35rem 0.25rem;
   border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
   background: var(--color-bg-surface-secondary);
   color: var(--color-text-primary);
   cursor: pointer;
@@ -207,7 +207,7 @@ const LetterPopover = styled('div')`
   overflow-y: auto;
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-interactive);
   z-index: 100;
   padding: 0.25rem;
@@ -232,7 +232,7 @@ const LetterOption = styled('button')`
   min-height: 22px;
   aspect-ratio: 1;
   border: 1px solid transparent;
-  border-radius: 0.25rem;
+  border-radius: var(--radius);
   background: transparent;
   color: var(--color-text-tertiary);
   cursor: pointer;

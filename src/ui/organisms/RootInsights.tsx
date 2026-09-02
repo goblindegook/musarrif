@@ -70,7 +70,7 @@ const RootDisplay = styled('div')`
   gap: 0.75rem;
   padding: 1rem 4rem;
   background: var(--color-bg-surface-secondary);
-  border-radius: 1rem;
+  border-radius: var(--radius);
   border: 1px solid var(--color-border);
   margin-bottom: 1rem;
 `

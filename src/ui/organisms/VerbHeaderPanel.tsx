@@ -85,6 +85,7 @@ const Lemma = styled('h2')`
   margin: 0;
   font-size: 2rem;
   font-weight: 600;
+  color: var(--color-text-emphasis);
 `
 
 const MetaRow = styled('div')`

@@ -19,7 +19,7 @@ const Container = styled('div')`
   justify-content: center;
   padding: 1rem;
   background: var(--color-bg-surface-secondary);
-  border-radius: 1rem;
+  border-radius: var(--radius);
   border: 1px solid var(--color-border);
 `
 

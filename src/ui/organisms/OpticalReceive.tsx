@@ -100,6 +100,6 @@ const Body = styled('div')`
 const Preview = styled('video', forwardRef)`
   width: 100%;
   max-height: 60vh;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   background: var(--color-bg-surface-secondary);
 `

@@ -415,7 +415,7 @@ const Popover = styled('div', forwardRef)`
   max-width: anchor-size(width);
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-elevated);
   padding: 0.8rem;
 

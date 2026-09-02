@@ -19,7 +19,7 @@ export const TabButton = styled('button')<{
 }>`
   align-items: center;
   background: ${({ active }) => (active ? 'var(--color-bg-accent)' : 'var(--color-bg-surface)')};
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   border: 1px solid ${({ active }) => (active ? 'var(--color-accent)' : 'var(--color-border)')};
   box-shadow: ${({ active }) => (active ? 'var(--shadow-interactive-active)' : 'none')};
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};
@@ -71,7 +71,7 @@ export const TabButton = styled('button')<{
       active &&
       hasChildren &&
       `
-      border-radius: 0.75rem 0.75rem 0 0;
+      border-radius: var(--radius) var(--radius) 0 0;
       border-bottom: none;
       z-index: 1;
 

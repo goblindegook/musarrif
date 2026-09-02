@@ -307,7 +307,7 @@ const InputRow = styled('div')`
 
 const ANSWER_FIELD_BOX = `
   padding: 0.9rem 1rem;
-  border-radius: 0.9rem;
+  border-radius: var(--radius);
   border: 1px solid transparent;
   font-size: 1.2rem;
   line-height: 1.5;
@@ -374,7 +374,7 @@ const ActionButton = styled('button')`
   justify-content: center;
   min-width: 3.25rem;
   padding: 0.85rem 0.75rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   border: 2px solid var(--color-text-tertiary);
   background: var(--color-text-tertiary);
   color: var(--color-bg-surface);
@@ -441,7 +441,7 @@ const SpeechField = styled('input')`
   flex: 1;
   min-width: 0;
   padding: 0.9rem 1rem;
-  border-radius: 0.9rem;
+  border-radius: var(--radius);
   border: 1px solid var(--color-accent);
   background: var(--color-bg-surface-secondary);
   color: var(--color-text-muted);

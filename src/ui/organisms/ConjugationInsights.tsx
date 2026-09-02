@@ -103,7 +103,7 @@ const StepsTable = styled('div')`
   display: flex;
   flex-direction: column;
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   overflow: hidden;
 `
 

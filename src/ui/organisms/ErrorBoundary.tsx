@@ -43,7 +43,7 @@ const Wrapper = styled('div')`
   max-width: 420px;
   margin: 4rem auto;
   padding: 1.5rem;
-  border-radius: 1.25rem;
+  border-radius: var(--radius);
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-elevated);

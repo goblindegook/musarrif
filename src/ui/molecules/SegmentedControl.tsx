@@ -61,10 +61,9 @@ const Control = styled('div')<{
   display: flex;
   align-items: center;
   border: 1px solid var(--color-border);
-  background: var(--color-bg-surface);
+  background: transparent;
   padding: 0.25rem;
-  border-radius: 0.95rem;
-  box-shadow: var(--shadow-surface);
+  border-radius: var(--radius);
   gap: 0;
   position: relative;
   overflow: hidden;
@@ -85,7 +84,7 @@ const Control = styled('div')<{
     inset-block: 0.25rem;
     inset-inline-start: 0.25rem;
     width: var(--segmented-pill-width);
-    border-radius: 0.7rem;
+    border-radius: var(--radius);
     background: var(--color-bg-accent);
     border: 1px solid var(--color-accent);
     box-shadow: var(--shadow-interactive-active);
@@ -106,7 +105,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   display: flex;
   align-items: center;
   background: transparent;
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   border: 1px solid transparent;
   box-shadow: none;
   color: ${({ active }) => (active ? 'var(--color-text-emphasis)' : 'var(--color-text-secondary)')};

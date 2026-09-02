@@ -64,7 +64,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
 
 const VerbPillLink = styled('a')<{ block: boolean }>`
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   padding: 0.3rem 0.9rem;
   background: var(--color-bg-surface);
   box-sizing: border-box;
