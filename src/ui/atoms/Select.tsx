@@ -9,7 +9,7 @@ export const Select = styled('select')`
   font-size: 1rem;
   font-family: inherit;
   color: var(--color-text-primary);
-  background-color: var(--color-bg-surface-secondary);
+  background-color: var(--color-bg-input);
   background-image:
     linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
     linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%);
