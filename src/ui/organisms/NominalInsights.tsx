@@ -1,24 +1,15 @@
 import { styled } from 'goober'
 import { Fragment } from 'preact'
-import type { ExplanationKind, NominalKind } from '../../paradigms/explanation'
+import type { NominalKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
-import { FormattedText } from '../atoms/FormattedText'
-import { Text } from '../atoms/Text'
 import { useI18n } from '../hooks/useI18n'
 import { Detail } from '../molecules/Detail'
-
-const KIND_COLORS: Record<ExplanationKind, string> = {
-  radical: 'var(--color-insight-root)',
-  measure: 'var(--color-insight-form)',
-  agreement: 'var(--color-insight-suffix)',
-  particle: 'var(--color-insight-tense)',
-  elided: 'var(--color-insight-dropped)',
-}
+import { ExplanationText } from '../molecules/ExplanationText'
 
 interface NominalInsightsProps {
   verb: DisplayVerb
@@ -68,18 +59,10 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
         </Detail>
         <Detail label={t('meta.verb')} value={verb.lemma} valueLang="ar" valueDir="rtl" />
       </VerbContextSection>
-      {renderExplanation(resolveNominalExplanationLayers(verb, nominal, arabic), t).map((paragraph, pi) => (
-        <Text key={pi}>
-          {paragraph.map((sentence, si) => (
-            <span key={si}>
-              {(si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
-                <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
-              )}
-              <FormattedText as="span" text={sentence.text} />{' '}
-            </span>
-          ))}
-        </Text>
-      ))}
+      <ExplanationText
+        paragraphs={renderExplanation(resolveNominalExplanationLayers(verb, nominal, arabic), t)}
+        showMorphemeMarkers
+      />
     </>
   )
 }

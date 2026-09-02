@@ -19,6 +19,7 @@ import { useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'
 import { useStats } from '../hooks/useStats'
 import { ExerciseAnswerArea } from '../molecules/ExerciseAnswerArea'
+import { ExplanationText } from '../molecules/ExplanationText'
 import { OptionChip, type OptionGroup, type OptionItem, type OptionValue } from '../molecules/OptionChip'
 import { ShortcutButton } from '../molecules/ShortcutButton'
 import { SpeechButton } from '../molecules/SpeechButton'
@@ -318,9 +319,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
           <ExplanationInner>
             {explanation.length > 0 && (
               <Explanation lang={lang} dir={dir}>
-                {explanation.map((paragraph, index) => (
-                  <FormattedText key={index} text={paragraph.map((s) => s.text).join(' ')} />
-                ))}
+                <ExplanationText paragraphs={explanation} />
               </Explanation>
             )}
           </ExplanationInner>

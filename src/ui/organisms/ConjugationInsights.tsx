@@ -1,27 +1,17 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
 import { type DerivationStep, derivationSteps } from '../../paradigms/annotation'
-import type { ExplanationKind } from '../../paradigms/explanation'
 import { renderExplanation, resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import type { PronounId } from '../../paradigms/pronouns'
 import type { VerbTense } from '../../paradigms/tense'
 import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
 import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
-import { FormattedText } from '../atoms/FormattedText'
 import { IconButton } from '../atoms/IconButton'
-import { Text } from '../atoms/Text'
 import { type Translate, useI18n } from '../hooks/useI18n'
 import { LightBulbIcon } from '../icons/LightBulbIcon'
+import { ExplanationText } from '../molecules/ExplanationText'
 import { Modal } from '../molecules/Modal'
-
-const KIND_COLORS: Record<ExplanationKind, string> = {
-  radical: 'var(--color-insight-root)',
-  measure: 'var(--color-insight-form)',
-  agreement: 'var(--color-insight-suffix)',
-  particle: 'var(--color-insight-tense)',
-  elided: 'var(--color-insight-dropped)',
-}
 
 interface ConjugationInsightsProps {
   verb: DisplayVerb
@@ -81,18 +71,10 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
             </ArabicDisplay>
             <DerivationSteps steps={steps} verb={verb} t={t} />
           </VerbDisplayArea>
-          {renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t).map((paragraph, pi) => (
-            <Text key={pi}>
-              {paragraph.map((sentence, si) => (
-                <span key={si}>
-                  {(si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
-                    <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
-                  )}
-                  <FormattedText as="span" text={sentence.text} />{' '}
-                </span>
-              ))}
-            </Text>
-          ))}
+          <ExplanationText
+            paragraphs={renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t)}
+            showMorphemeMarkers
+          />
         </Modal>
       )}
     </>
