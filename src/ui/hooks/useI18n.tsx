@@ -60,6 +60,7 @@ const LEXICON_LOADERS: Partial<Record<Language, () => Promise<Omit<Translation, 
   en: async () => (await import('../locales/en.verbs.json')).default as Omit<Translation, 'strings'>,
   it: async () => (await import('../locales/it.verbs.json')).default as Omit<Translation, 'strings'>,
   pt: async () => (await import('../locales/pt.verbs.json')).default as Omit<Translation, 'strings'>,
+  ar: async () => (await import('../locales/ar.verbs.json')).default as Omit<Translation, 'strings'>,
 }
 
 const STRING_PROMISES: Partial<Record<Language, Promise<Record<string, string>>>> = {}
@@ -116,7 +117,7 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
         const rendered = format(template, params)
         return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
       },
-      hasLexicon: translation.verbs != null || translation.roots != null,
+      hasLexicon: translation.verbs != null,
       diacriticsPreference,
       setDiacriticsPreference,
       setLang,
