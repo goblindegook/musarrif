@@ -42,9 +42,9 @@ describe('VerbHeaderPanel', () => {
     expect(document.querySelector('h2')?.textContent).toContain('*')
   })
 
-  test('hides translation for synthetic verb', () => {
+  test('shows a generated-form notice in place of the translation for a synthetic verb', () => {
     renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'a-u') })
-    expect(screen.queryByText('to do')).not.toBeInTheDocument()
+    expect(screen.getByText('generated form not attested in the lexicon')).toBeInTheDocument()
   })
 
   test('shows a single valency value', () => {

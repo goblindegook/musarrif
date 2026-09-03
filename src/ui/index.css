@@ -19,8 +19,8 @@
   --color-text-emphasis: #a32b18;
   --color-accent: #a32b18;
   --color-focus-outline: #a32b18;
-  --color-border: #ddd6ca;
-  --color-border-input: #c7bfb1;
+  --color-border: #969085;
+  --color-border-input: #969085;
   --shadow-elevated: 0 12px 32px rgba(31, 26, 23, 0.12);
   --color-overlay: rgba(31, 26, 23, 0.5);
   --color-success-bg: #e8efe4;
@@ -39,8 +39,6 @@
   --color-insight-tense: #15803d;
   --color-insight-suffix: #be185d;
   --color-insight-dropped: #9ca3af;
-  --color-table-row-alt: #f5f2ea;
-  /* Two radii, not eleven */
   --radius: 0.25rem;
   --radius-pill: 999px;
   font-synthesis: none;
@@ -64,8 +62,8 @@
   --color-text-emphasis: #e8705a;
   --color-accent: #e8705a;
   --color-focus-outline: #e8705a;
-  --color-border: #383129;
-  --color-border-input: #4a4238;
+  --color-border: #726855;
+  --color-border-input: #7d7260;
   --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.5);
   --color-overlay: rgba(0, 0, 0, 0.75);
   --color-success-bg: #1e2a18;
@@ -84,7 +82,6 @@
   --color-insight-tense: #4ade80;
   --color-insight-suffix: #f472b6;
   --color-insight-dropped: #d1d5db;
-  --color-table-row-alt: #232018;
 }
 
 @font-face {

@@ -357,7 +357,7 @@ const TableBody = styled('tbody')`
   }
 
   tr:nth-child(odd) {
-    background: var(--color-table-row-alt);
+    background: var(--color-bg-surface-secondary);
   }
 
   @media print {

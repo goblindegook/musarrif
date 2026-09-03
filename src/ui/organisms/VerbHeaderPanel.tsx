@@ -21,7 +21,8 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
   )
 
   const translation = useMemo(() => {
-    if (verb.synthetic || lang === 'ar') return undefined
+    if (verb.synthetic) return t('meta.synthetic')
+    if (lang === 'ar') return undefined
     const result = t(verb.id)
     return result !== verb.id ? result : '—'
   }, [verb, lang, t])

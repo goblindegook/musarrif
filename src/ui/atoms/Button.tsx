@@ -21,7 +21,7 @@ export function Button({ children, variant = 'secondary', size = 'normal', ...pr
 const StyledButton = styled('button')<{ size: ButtonSize; variant: ButtonVariant }>`
   position: relative;
   border-radius: var(--radius);
-  border: 2px solid ${({ variant }) => (variant === 'primary' ? 'var(--color-text-tertiary)' : 'var(--color-border)')};
+  border: 1px solid ${({ variant }) => (variant === 'primary' ? 'var(--color-text-tertiary)' : 'var(--color-border)')};
   background: ${({ variant }) => (variant === 'primary' ? 'var(--color-text-tertiary)' : 'var(--color-bg-surface)')};
   color: ${({ variant }) => (variant === 'primary' ? 'var(--color-bg-surface)' : 'var(--color-text-tertiary)')};
   width: ${({ size }) => (size === 'compact' ? 'auto' : '100%')};

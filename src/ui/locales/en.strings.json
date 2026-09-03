@@ -441,6 +441,7 @@
   "meta.form.withNumber": "Form {form}",
   "meta.passiveParticiple": "Passive participle",
   "meta.root": "Root",
+  "meta.synthetic": "generated form not attested in the lexicon",
   "meta.translation": "Translation",
   "meta.valency": "Valency",
   "meta.verb": "Verb",

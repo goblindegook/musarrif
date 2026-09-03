@@ -374,7 +374,7 @@ const ActionButton = styled('button')`
   min-width: 3.25rem;
   padding: 0.85rem 0.75rem;
   border-radius: var(--radius);
-  border: 2px solid var(--color-text-tertiary);
+  border: 1px solid var(--color-text-tertiary);
   background: var(--color-text-tertiary);
   color: var(--color-bg-surface);
   font-size: 1rem;
