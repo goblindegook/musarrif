@@ -14,6 +14,12 @@
   },
   {
     "root": "$dd",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "$dd",
     "form": 2
   },
   {
