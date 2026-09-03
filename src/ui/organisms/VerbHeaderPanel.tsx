@@ -43,7 +43,7 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
             {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
             {formatArabic(verb.lemma)}
           </Lemma>
-          {actions}
+          <Actions>{actions}</Actions>
         </PanelTitleRow>
         {(valency || translation) && (
           <MetaRow>
@@ -77,6 +77,13 @@ const PanelTitleRow = styled('div')`
   align-items: flex-start;
   gap: 0.5rem;
   margin-top: 0;
+`
+
+const Actions = styled('div')`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.25rem;
 `
 
 const Lemma = styled('h2')`

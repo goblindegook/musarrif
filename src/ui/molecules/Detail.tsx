@@ -90,7 +90,7 @@ const DetailActions = styled('span')`
 
   @media (min-width: 480px) {
     margin-inline-start: -0.5rem;
-    gap: 0.35rem;
+    gap: 0.25rem;
     padding-inline-end: 0.5rem;
   }
 

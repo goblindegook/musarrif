@@ -192,8 +192,9 @@ export function ConjugationTable({
           <thead>
             <Row>
               <TableHeadCell scope="col">{t('table.pronoun')}</TableHeadCell>
-              <VerbHeadCell scope="col">{t(`tense.${verbTense}`)}</VerbHeadCell>
-              <TableHeadCell scope="col"></TableHeadCell>
+              <VerbHeadCell scope="col" colspan={2}>
+                {t(`tense.${verbTense}`)}
+              </VerbHeadCell>
             </Row>
           </thead>
           <TableBody>
@@ -301,14 +302,14 @@ const TabBlock = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem 1rem 0.35rem;
+  padding: 1rem 0rem 0.35rem;
 
   @media (min-width: 480px) {
     padding: 1rem 1.25rem 0.35rem;
   }
 
   @media (min-width: 720px) {
-    padding: 1.5rem 1.25rem 0.35rem;
+    padding: 1.5rem 0 0.35rem;
   }
 
   @media print {
@@ -320,15 +321,7 @@ const SubTabBar = styled(TabBar)`
   background: linear-gradient(to bottom, var(--color-bg-accent) 0%, transparent 50%);
   border-top: 1px solid var(--color-accent);
   margin-top: -4px;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  padding: 0.75rem;
-
-  @media (min-width: 480px) {
-    margin-left: -1.25rem;
-    margin-right: -1.25rem;
-    padding: 0.75rem 1.25rem;
-  }
+  padding: 0.75rem 0;
 `
 
 const TenseBlock = styled('div')`
@@ -436,7 +429,7 @@ const VerbCell = styled('td')`
 
   @media print {
     width: auto;
-    padding: 0.35rem 0.35rem;
+    padding: 0.35rem;
     font-size: 1.18rem;
     line-height: 1.15;
   }
@@ -488,10 +481,6 @@ const ActionButtons = styled('div')`
   align-items: center;
   justify-content: flex-end;
   gap: 0.25rem;
-
-  @media (min-width: 480px) {
-    gap: 0.35rem;
-  }
 
   @media print {
     display: none;
