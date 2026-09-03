@@ -60,6 +60,19 @@ describe('search', () => {
     expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
   })
 
+  test.each([
+    ['KTB', 'كتب'],
+    ['Kataba', 'كتب'],
+    ['ELM', 'علم'],
+    ['fth', 'فتح'],
+    ['FTH', 'فتح'],
+    ['ftH', 'فتح'],
+  ])('matches root and lemma case-insensitively for "%s"', (query, expectedRoot) => {
+    const matches = search(query, { translate: () => '', language: 'casefold' })
+
+    expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
+  })
+
   test('matches verbs by translated text', () => {
     const translations = (en as { verbs?: Record<string, string> }).verbs ?? {}
     const matches = search('translate', { translate: (key) => translations[key], language: 'en' })

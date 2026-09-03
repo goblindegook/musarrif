@@ -15,45 +15,34 @@ const DEFAULT_SEARCH_OPTIONS: SearchOptions = {
 }
 
 function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): DisplayVerb[] {
-  const matches: DisplayVerb[] = []
   const normalizedQuery = normalizeQuery(query)
-  if (!normalizedQuery) return matches
+  if (!normalizedQuery) return []
 
-  const candidates = extractRootCandidates(normalizedQuery)
-  const distance = new Map<string, number>()
+  const candidates = [
+    ...extractRootCandidates(normalizedQuery),
+    ...[query, query.toLowerCase()].map((value) => transliterateReverse(value).replace(/[^ء-ي]/g, '')),
+  ]
 
-  const addMatches = (verbsForRoot: readonly DisplayVerb[]) => {
-    for (const verb of verbsForRoot) {
-      if (distance.has(verb.id)) continue
-      matches.push(verb)
-      distance.set(verb.id, wordDistance(normalizedQuery, normalizeQuery(verb.lemma)))
-    }
-  }
-
-  const buckwalterCandidate = Array.from(transliterateReverse(query))
-    .filter((char) => /[ء-ي]/.test(char))
-    .join('')
-
-  addMatches(candidates.flatMap(matchVerbsForCandidate))
-  if (buckwalterCandidate) addMatches(matchVerbsForCandidate(buckwalterCandidate))
-
-  if (options.language)
-    addMatches(
-      verbs.filter((v) => {
-        const translated = options.translate(v.id)
-        return normalizeQuery(translated ?? '').includes(normalizedQuery)
-      }),
+  return Array.from(
+    new Set([
+      ...candidates.flatMap(matchVerbsForCandidate),
+      ...verbs.filter(
+        (verb) =>
+          verb.id.toLowerCase().startsWith(normalizedQuery) ||
+          (options.language && normalizeQuery(options.translate(verb.id) ?? '').includes(normalizedQuery)),
+      ),
+    ]),
+  )
+    .map((verb) => ({
+      verb,
+      distance: wordDistance(normalizedQuery, normalizeQuery(verb.lemma)),
+      translation: normalizeQuery(options.translate(verb.id) ?? ''),
+    }))
+    .toSorted(
+      (a, b) =>
+        a.distance - b.distance || a.verb.root.localeCompare(b.verb.root) || a.translation.localeCompare(b.translation),
     )
-
-  return matches.sort((v1, v2) => {
-    const d1 = distance.get(v1.id) ?? 0
-    const d2 = distance.get(v2.id) ?? 0
-    if (d1 !== d2) return d1 - d2
-    if (v1.root !== v2.root) return v1.root.localeCompare(v2.root)
-    const t1 = options.translate(v1.id) ?? ''
-    const t2 = options.translate(v2.id) ?? ''
-    return normalizeQuery(t1).localeCompare(normalizeQuery(t2))
-  })
+    .map((entry) => entry.verb)
 }
 
 export const search = memoize(
@@ -62,38 +51,24 @@ export const search = memoize(
   { capacity: 10000 },
 )
 
-function addCandidate(acc: Set<string>, value: string): void {
-  acc.add(value)
-  acc.add(value.replace(new RegExp(String(ALIF), 'g'), String(HAMZA)))
-}
-
 function extractRootCandidates(query: string): string[] {
-  return Array.from(
-    query.split(/[^ء-ي]+/).reduce((acc, part) => {
-      if (!part) return acc
-      const letters = Array.from(part).filter((char) => /[ء-ي]/.test(char))
-      if (letters.length < 1) return acc
-      if (letters.length <= 5) addCandidate(acc, letters.join(''))
-
-      const maxWindow = Math.min(letters.length, 5)
-      for (let size = 1; size <= maxWindow; size += 1) {
-        for (let start = 0; start <= letters.length - size; start += 1) {
-          addCandidate(acc, letters.slice(start, start + size).join(''))
-        }
+  const candidates = new Set<string>()
+  for (const part of query.split(/[^ء-ي]+/)) {
+    for (let size = 1; size <= Math.min(part.length, 5); size += 1) {
+      for (let start = 0; start + size <= part.length; start += 1) {
+        const candidate = part.slice(start, start + size)
+        candidates.add(candidate)
+        candidates.add(candidate.replaceAll(String(ALIF), String(HAMZA)))
       }
-      return acc
-    }, new Set<string>()),
-  )
+    }
+  }
+  return Array.from(candidates)
 }
 
 function matchVerbsForCandidate(candidate: string): readonly DisplayVerb[] {
-  const matches: DisplayVerb[] = []
-  if (!candidate) return matches
-
+  if (!candidate) return []
   const exact = findVerbsByRoot(candidate)
-  if (exact.length > 0) return exact
-
-  return findVerbsByRootPrefix(candidate)
+  return exact.length > 0 ? exact : findVerbsByRootPrefix(candidate)
 }
 
 const normalizeQuery = (value: string): string =>
