@@ -1,6 +1,14 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/preact" />
 
+interface ImportMetaEnv {
+  readonly VITE_ROUTING_MODE?: 'hash' | 'path'
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
 interface SpeechRecognitionPhrase {
   readonly phrase: string
   readonly boost: number

@@ -1,5 +1,5 @@
 import { act, cleanup, render, renderHook, screen } from '@testing-library/preact'
-import type { ComponentChildren } from 'preact'
+import type { ComponentChildren, VNode } from 'preact'
 import { afterEach, expect, test, vi } from 'vitest'
 import { createRouting } from './useRouting'
 
@@ -138,6 +138,79 @@ test('scrolls to top when navigating to a new route', () => {
 
   expect(window.location.hash).toBe('#/article/42')
   expect(scrollSpy).toHaveBeenCalledWith(0, 0)
+})
+
+const articleRouting = (mode: 'hash' | 'path') =>
+  createRouting<DemoRoute>({
+    mode,
+    parse: (segments) => (segments[0] === 'article' ? ['article', segments[1]] : ['home']),
+  })
+
+const wrapperFor =
+  (RoutingProvider: (props: { children: ComponentChildren }) => VNode) =>
+  ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+
+test('builds hash hrefs with a leading hash and no trailing slash', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('hash')
+
+  window.history.replaceState({}, '', '/#/home')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.toHref(['article', '42'])).toBe('#/article/42')
+})
+
+test('builds path hrefs with a trailing slash', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/article/42/')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.toHref(['article', '42'])).toBe('/article/42/')
+})
+
+test('builds the root path href for an empty route', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.toHref([] as unknown as DemoRoute)).toBe('/')
+})
+
+test('parses the route from the pathname in path mode', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/article/42/')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.route).toEqual(['article', '42'])
+})
+
+test('resolves a legacy hash URL to the same route in path mode', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/#/article/42')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.route).toEqual(['article', '42'])
+})
+
+test('rewrites a legacy hash URL to its path form and drops the fragment', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/#/article/42')
+  renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(`${window.location.pathname}${window.location.hash}`).toBe('/article/42/')
+})
+
+test('reads query params from a legacy hash URL in path mode', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+
+  window.history.replaceState({}, '', '/#/article/42?form=2')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+
+  expect(result.current.queryParams.get('form')).toBe('2')
 })
 
 test('scrolls to top when route changes via hashchange event', () => {

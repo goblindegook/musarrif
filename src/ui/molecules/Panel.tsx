@@ -3,6 +3,7 @@ import type { ComponentChildren } from 'preact'
 import { useId, useState } from 'preact/hooks'
 
 interface PanelProps {
+  prerender?: 'omit'
   title?: ComponentChildren
   dir?: 'auto' | 'rtl' | 'ltr'
   lang?: string
@@ -12,12 +13,12 @@ interface PanelProps {
   hint?: string
 }
 
-export const Panel = ({ title, dir, lang, children, collapsible, defaultCollapsed, hint }: PanelProps) => {
+export const Panel = ({ prerender, title, dir, lang, children, collapsible, defaultCollapsed, hint }: PanelProps) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed ?? false)
   const bodyId = useId()
 
   return (
-    <PanelContainer>
+    <PanelContainer data-prerender={prerender}>
       {title &&
         (collapsible ? (
           <PanelTitleButton

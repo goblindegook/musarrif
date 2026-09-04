@@ -1,5 +1,6 @@
 import { setup } from 'goober'
 import { h, render } from 'preact'
+import { hasAppRoute } from './app-route'
 import './index.css'
 import { ErrorBoundary } from './organisms/ErrorBoundary'
 
@@ -8,8 +9,6 @@ setup(h)
 const appRoot = document.getElementById('app')
 let mounted = false
 let mounting: Promise<void> | null = null
-
-const hasAppRoute = () => window.location.hash.startsWith('#/')
 
 const mountApp = () => {
   if (mounted || mounting != null || appRoot == null) return
@@ -37,7 +36,7 @@ const mountApp = () => {
   })()
 }
 
-if (hasAppRoute()) mountApp()
+if (hasAppRoute(window.location)) mountApp()
 window.addEventListener('hashchange', () => {
-  if (hasAppRoute()) mountApp()
+  if (hasAppRoute(window.location)) mountApp()
 })

@@ -595,7 +595,8 @@
         if (themeColorMeta) {
           themeColorMeta.setAttribute('content', theme === 'dark' ? '#17140f' : '#f6f3ec');
         }
-        if (window.location.hash.startsWith('#/')) {
+        const appSegment = window.location.pathname.split('/').filter(Boolean)[0];
+        if (window.location.hash.startsWith('#/') || appSegment === 'verbs' || appSegment === 'test') {
           document.documentElement.setAttribute('data-app-route', '');
         }
       })();

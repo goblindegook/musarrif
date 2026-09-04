@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { renderWithProviders } from '../test/fixtures'
+import { currentUrl, renderWithProviders } from '../test/fixtures'
 import { App } from './app'
 
 const renderApp = (path = '') => {
@@ -68,7 +68,7 @@ describe('Language', () => {
   it('is English by default', () => {
     renderApp('/')
 
-    expect(window.location.hash).toBe('#/verbs')
+    expect(currentUrl()).toBe('/verbs/')
   })
 
   it('remembers user preference', async () => {
@@ -114,7 +114,7 @@ describe('Conjugation', () => {
     expect(await screen.findByText('to dictate')).toBeInTheDocument()
     await user.keyboard('{Enter}')
 
-    expect(window.location.hash).toBe('#/verbs/ktb-2')
+    expect(currentUrl()).toBe('/verbs/ktb-2/')
   })
 
   it('navigates when building a known verb', () => {
@@ -127,7 +127,7 @@ describe('Conjugation', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(window.location.hash).toBe('#/verbs/bnr-1')
+    expect(currentUrl()).toBe('/verbs/bnr-1/')
   })
 
   it('navigates when building an unknown verb', () => {
@@ -140,7 +140,7 @@ describe('Conjugation', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(window.location.hash).toBe('#/verbs/vny-1')
+    expect(currentUrl()).toBe('/verbs/vny-1/')
   })
 
   it('reflects tense changes in the URL', async () => {
@@ -149,7 +149,7 @@ describe('Conjugation', () => {
 
     await user.click(screen.getByText('Present'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/')
   })
 
   it('switches to the present-tense table via tabs', async () => {
@@ -171,7 +171,7 @@ describe('Conjugation', () => {
     ) as HTMLElement
     await user.click(passiveTab)
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/passive/past')
+    expect(currentUrl()).toBe('/verbs/ktb-1/passive/past/')
     const tenseTabs = document.querySelector<HTMLElement>('[role="tablist"][aria-label="Select tense"]')!
     expect(within(tenseTabs).queryByText('Imperative')).not.toBeInTheDocument()
   })
@@ -182,7 +182,7 @@ describe('Conjugation', () => {
 
     await user.click(screen.getByText('Active'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/indicative')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/indicative/')
   })
 
   it('preserves subjunctive mood when switching from passive present to active', async () => {
@@ -191,7 +191,7 @@ describe('Conjugation', () => {
 
     await user.click(screen.getByText('Active'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/subjunctive')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/subjunctive/')
   })
 
   it('preserves jussive mood when switching from passive present to active', async () => {
@@ -200,7 +200,7 @@ describe('Conjugation', () => {
 
     await user.click(screen.getByText('Active'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/jussive')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/jussive/')
   })
 
   it('preserves jussive mood after changing mood before switching voice', async () => {
@@ -210,7 +210,7 @@ describe('Conjugation', () => {
     await user.click(screen.getByText('Jussive'))
     await user.click(screen.getByText('Active'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/jussive')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/jussive/')
   })
 
   it('reflects imperative tense changes in the URL', async () => {
@@ -219,13 +219,13 @@ describe('Conjugation', () => {
 
     await user.click(screen.getByText('Imperative'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/imperative')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/imperative/')
   })
 
   it('preserves requested conjugation when loading a built verb URL', () => {
     renderApp('/#/verbs/%24zb-1/active/present/subjunctive')
 
-    expect(window.location.hash).toBe('#/verbs/%24zb-1/active/present/subjunctive')
+    expect(currentUrl()).toBe('/verbs/%24zb-1/active/present/subjunctive/')
   })
 
   it('allows picking among multiple forms of the same verb', async () => {
@@ -233,7 +233,7 @@ describe('Conjugation', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     const derivedForms = screen.getByText(/Derived forms/i).closest('section') as HTMLElement
-    await user.click(within(derivedForms).getByLabelText(/II.*Form.*to concentrate/i))
+    await user.click(await within(derivedForms).findByLabelText(/II.*Form.*to concentrate/i))
 
     expect(await screen.findByText('to concentrate', { exact: false, selector: 'p' })).toBeInTheDocument()
   })
@@ -252,7 +252,7 @@ describe('Builder navigation', () => {
 
     fireEvent.click(exampleLink)
 
-    expect(window.location.hash).toBe(expectedPath)
+    expect(currentUrl()).toBe(expectedPath)
   })
 
   it('updates the conjugation when the vowel pattern changes for a built Form I verb', () => {
@@ -292,7 +292,7 @@ describe('Builder navigation', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
     await user.click(screen.getByText('Present'))
 
-    expect(window.location.hash).toBe('#/verbs/qqq-1/active/present')
+    expect(currentUrl()).toBe('/verbs/qqq-1/active/present/')
   })
 
   it('keeps Build tab selected when choosing an existing verb from builder controls', () => {
@@ -319,7 +319,7 @@ describe('Recently viewed', () => {
 
     const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['#/verbs/ktb-1', '#/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['/verbs/ktb-1/', '/verbs/bdl-1/'])
   })
 
   it('excludes currently viewed verb pill', () => {
@@ -328,7 +328,7 @@ describe('Recently viewed', () => {
 
     const links = screen.getByText('Recently viewed').closest('section')!.querySelectorAll('a')
 
-    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['#/verbs/bdl-1'])
+    expect(Array.from(links).map((link) => link.getAttribute('href'))).toEqual(['/verbs/bdl-1/'])
   })
 
   it('does not crash when localStorage contains stale verb IDs', () => {
@@ -349,22 +349,28 @@ describe('Recently viewed', () => {
 })
 
 describe('routing', () => {
+  it('renders exercise mode on /test', async () => {
+    renderApp('/test/')
+
+    expect(await screen.findByText('Skip question')).toBeInTheDocument()
+  })
+
   it('defaults to conjugation mode on unknown routes', () => {
     renderApp('/#/unknown')
 
-    expect(window.location.hash).toBe('#/verbs')
+    expect(currentUrl()).toBe('/verbs/')
   })
 
   it('defaults to conjugation mode on invalid verb IDs', () => {
     renderApp('/#/verbs/invalid')
 
-    expect(window.location.hash).toBe('#/verbs')
+    expect(currentUrl()).toBe('/verbs/')
   })
 
   it('accepts verb IDs with non-alphanumeric characters', () => {
     renderApp('/#/verbs/nf*-1')
 
-    expect(window.location.hash).toBe('#/verbs/nf*-1')
+    expect(currentUrl()).toBe('/verbs/nf*-1/')
   })
 })
 

@@ -16,7 +16,7 @@ export function IconButton({
   ...props
 }: IconButtonProps) {
   return (
-    <StyledIconButton type="button" onClick={onClick} {...props} active={active} size={size}>
+    <StyledIconButton type="button" onClick={onClick} {...props} data-prerender="omit" active={active} size={size}>
       {children}
     </StyledIconButton>
   )

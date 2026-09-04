@@ -11,7 +11,7 @@ type AppRoute =
   | readonly ['test']
 
 export const { Route, Router, RoutingProvider, useRouting } = createRouting({
-  mode: 'hash',
+  mode: import.meta.env?.VITE_ROUTING_MODE === 'hash' ? 'hash' : 'path',
   parse,
 })
 

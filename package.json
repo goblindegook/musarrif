@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run prerender",
     "build:desktop": "npm run tauri:icons && npm run tauri:build",
     "preview": "vite preview",
     "tauri:dev": "tauri dev",
@@ -26,7 +26,9 @@
     "add:tests:all": "tsx scripts/generate-verb-tests.mts",
     "add:tests:elixirfm": "tsx scripts/test-elixirfm.mts",
     "add:tests:reverso": "tsx scripts/test-reverso.mts",
-    "add:tests:wiktionary": "tsx scripts/test-wiktionary.mts"
+    "add:tests:wiktionary": "tsx scripts/test-wiktionary.mts",
+    "build:hash": "VITE_ROUTING_MODE=hash tsc && VITE_ROUTING_MODE=hash vite build",
+    "prerender": "tsx scripts/prerender.mts"
   },
   "dependencies": {
     "@pacote/buckwalter": "^0.1.1",

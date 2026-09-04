@@ -8,7 +8,6 @@ import { useTour } from './hooks/useTour'
 import { AppHeader } from './organisms/AppHeader'
 import { TourLayer } from './organisms/TourLayer'
 import { ConjugationMode } from './pages/ConjugationMode'
-import { ExerciseMode } from './pages/ExerciseMode'
 import { Home } from './pages/Home'
 import { Route, Router, useRouting } from './routes'
 import {
@@ -41,10 +40,10 @@ export function App() {
       </ScreenReaderOnly>
       <AppHeader onHelp={openTour} />
       <TourLayer isOpen={isOpen} step={step} totalSteps={totalSteps} onNext={nextStep} onSkip={closeTour} />
-      <PWAUpdateGate />
+      <LazyPWAUpdate />
       <Router route={route}>
         <Route path="/test">
-          <ExerciseMode />
+          <LazyExerciseMode />
         </Route>
         <Route path="/verbs/:verbId/:voice/:tense/:mood">
           {({ mood, tense, verbId, voice }) => (
@@ -66,7 +65,23 @@ export function App() {
   )
 }
 
-function PWAUpdateGate() {
+function LazyExerciseMode() {
+  const [Mode, setMode] = useState<ComponentType | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    import('./pages/ExerciseMode').then((mod) => {
+      if (!cancelled) setMode(() => mod.ExerciseMode)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return Mode ? <Mode /> : null
+}
+
+function LazyPWAUpdate() {
   const [Prompt, setPrompt] = useState<ComponentType | null>(null)
 
   useEffect(() => {

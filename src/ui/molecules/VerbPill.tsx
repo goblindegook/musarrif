@@ -13,8 +13,9 @@ interface VerbPillProps {
 
 export function VerbPill({ verb, className, block = false }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
-  const { toHref } = useRouting()
+  const { navigateTo, toHref } = useRouting()
   const formLabel = formatFormLabel(verb.form, verb.root)
+  const route = ['verbs', verb.id] as const
 
   const formatArabic = useCallback(
     (value: string) => applyDiacriticsPreference(value, diacriticsPreference),
@@ -33,9 +34,14 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
 
   return (
     <VerbPillLink
-      href={toHref(['verbs', verb.id])}
+      href={toHref(route)}
       className={className}
       block={block}
+      onClick={(event: MouseEvent) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+        event.preventDefault()
+        navigateTo(route)
+      }}
       aria-label={[
         verb.synthetic ? '*' : null,
         formatArabic(verb.lemma),

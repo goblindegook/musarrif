@@ -191,7 +191,7 @@ export function Home() {
   return (
     <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
-        <Panel>
+        <Panel prerender="omit">
           <TabBar role="tablist">
             <TabButton
               id="panel-tab-search"

@@ -3,8 +3,10 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
+const routingMode = process.env.VITE_ROUTING_MODE === 'hash' ? 'hash' : 'path'
+
 export default defineConfig({
-  base: './',
+  base: routingMode === 'hash' ? './' : '/',
   plugins: [
     preact(),
     VitePWA({
@@ -21,15 +23,21 @@ export default defineConfig({
         'fonts/NotoSansArabic-SemiBold.ttf',
         'fonts/NotoSansArabic-Bold.ttf',
       ],
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'],
-      },
+      workbox:
+        routingMode === 'hash'
+          ? { globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'] }
+          : {
+              globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'],
+              globIgnores: ['verbs/**/*.html'],
+              navigateFallback: '/index.html',
+              navigateFallbackDenylist: [/^\/assets\//, /^\/fonts\//, /^\/piper\//, /^\/voices\//],
+            },
       manifest: {
         name: 'Muṣarrif',
         short_name: 'Muṣarrif',
         description: 'Arabic verb conjugator',
-        start_url: './',
-        scope: './',
+        start_url: routingMode === 'hash' ? './' : '/',
+        scope: routingMode === 'hash' ? './' : '/',
         display: 'standalone',
         background_color: '#f5f4ee',
         theme_color: '#f5f4ee',
@@ -37,7 +45,7 @@ export default defineConfig({
         dir: 'ltr',
         file_handlers: [
           {
-            action: './#/verbs',
+            action: routingMode === 'hash' ? './#/verbs' : '/verbs/',
             accept: {
               'application/vnd.musarrif.userdata+json': ['.musarrif'],
             },

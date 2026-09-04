@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
-import { renderWithProviders } from '../../test/fixtures'
+import { currentUrl, renderWithProviders } from '../../test/fixtures'
 import { ConjugationMode } from './ConjugationMode'
 
 interface ConjugationModeRenderProps {
@@ -52,6 +52,22 @@ test('search and build tabs are correctly linked to their tabpanels', () => {
 
   const buildPanel = document.getElementById('panel-content-build')
   expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
+})
+
+test('marks the search and build form for prerender omission', () => {
+  renderConjugationMode({ verbId: 'ktb-1' })
+
+  expect(document.getElementById('panel-content-search')?.closest('section')).toHaveAttribute('data-prerender', 'omit')
+})
+
+test('marks user-state panels for prerender omission', () => {
+  renderConjugationMode({ verbId: 'ktb-1' })
+
+  const favourites = screen.getByRole('heading', { name: 'Favourites' }).closest('section')!
+  const feedback = screen.getByRole('heading', { name: 'See something off?' }).closest('section')!
+
+  expect(favourites).toHaveAttribute('data-prerender', 'omit')
+  expect(feedback).toHaveAttribute('data-prerender', 'omit')
 })
 
 test('shows translation subtitle for corpus verb with known translation', async () => {
@@ -134,7 +150,7 @@ describe('Conjugation table', () => {
 
     fireEvent.click(screen.getByText('Active'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/active/present/subjunctive')
+    expect(currentUrl()).toBe('/verbs/ktb-1/active/present/subjunctive/')
   })
 
   it('falls back to passive past when switching from active imperative', () => {
@@ -142,7 +158,7 @@ describe('Conjugation table', () => {
 
     fireEvent.click(screen.getByText('Passive'))
 
-    expect(window.location.hash).toBe('#/verbs/ktb-1/passive/past')
+    expect(currentUrl()).toBe('/verbs/ktb-1/passive/past/')
   })
 })
 
@@ -171,7 +187,7 @@ describe('Form', () => {
     expect(links.length).toBeGreaterThan(0)
     expect(links.length).toBeLessThanOrEqual(5)
     links.forEach((link) => {
-      expect(link.getAttribute('href')).toMatch(/#\/verbs\/.+-5$/)
+      expect(link.getAttribute('href')).toMatch(/^\/verbs\/.+-5\/$/)
     })
 
     fireEvent.click(within(dialog).getByLabelText('Close'))

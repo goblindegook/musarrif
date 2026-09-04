@@ -104,11 +104,17 @@ function splitPathAndQuery(path: string): { path: string; query: string } {
   }
 }
 
+function readLocation(mode: RoutingMode): { path: string; query: string } {
+  const { pathname, search, hash } = window.location
+  if (mode === 'hash') return splitPathAndQuery(hash.replace(/^#/, ''))
+  if (pathname.split('/').filter(Boolean).length === 0 && hash.startsWith('#/'))
+    return splitPathAndQuery(hash.replace(/^#/, ''))
+  return { path: pathname, query: search }
+}
+
 function readSegments(mode: RoutingMode): readonly string[] {
-  const rawPath = mode === 'hash' ? window.location.hash.replace(/^#/, '') : window.location.pathname
-  const { path } = splitPathAndQuery(rawPath)
-  return path
-    .split('/')
+  return readLocation(mode)
+    .path.split('/')
     .filter(Boolean)
     .map((segment) => {
       try {
@@ -120,16 +126,13 @@ function readSegments(mode: RoutingMode): readonly string[] {
 }
 
 function readQuery(mode: RoutingMode): string {
-  if (mode === 'hash') {
-    const rawPath = window.location.hash.replace(/^#/, '')
-    return splitPathAndQuery(rawPath).query
-  }
-
-  return window.location.search
+  return readLocation(mode).query
 }
 
 function toHref(route: RouteSegments, mode: RoutingMode): string {
-  return [mode === 'path' ? '' : '#'].concat(route.map(encodeURIComponent)).join('/')
+  const segments = route.map(encodeURIComponent)
+  if (mode === 'hash') return ['#'].concat(segments).join('/')
+  return `/${segments.join('/')}${segments.length > 0 ? '/' : ''}`
 }
 
 export function createRouting<TRoute extends RouteSegments>({ mode = 'hash', parse }: RoutingConfig<TRoute>) {

@@ -25,6 +25,10 @@ export function renderWithProviders(ui: ComponentChild): RenderResult {
   return render(ui, { wrapper: Wrapper })
 }
 
+export function currentUrl(): string {
+  return `${window.location.pathname}${window.location.search}`
+}
+
 export function mockSpeechSynthesis(voices: Array<{ name: string; lang: string }> = []) {
   const synthesis = {
     getVoices: vi.fn(() => voices),

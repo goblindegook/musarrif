@@ -170,7 +170,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   const recentsAndFavouritesPanels = (
     <>
       {recentVerbs.length > 0 && (
-        <Panel title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+        <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
           <VerbList>
             {recentVerbs.map((verb) => (
               <VerbPill key={verb.id} verb={verb} />
@@ -179,7 +179,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         </Panel>
       )}
 
-      <Panel title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+      <Panel prerender="omit" title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
         {favourites.length > 0 ? (
           <VerbList>
             {favourites.map((verb) => (
@@ -198,7 +198,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   return (
     <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
-        <Panel>
+        <Panel prerender="omit">
           <TabBar role="tablist">
             <TabButton
               id="panel-tab-search"
@@ -415,7 +415,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
       <Stack area="recents">{recentsAndFavouritesPanels}</Stack>
 
       <Stack area="footer">
-        <Panel title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
+        <Panel prerender="omit" title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
           <FormattedText dir={dir} lang={lang} text={t('footer.feedback.body')} />
           <LinkButton dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
             {t('footer.feedback.cta')}

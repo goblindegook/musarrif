@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
-import { renderWithProviders } from '../../test/fixtures'
+import { currentUrl, renderWithProviders } from '../../test/fixtures'
 import { Home } from './Home'
 
 const renderHome = (url = '/#/verbs') => {
@@ -41,6 +41,12 @@ test('search and build tabs are correctly linked to their tabpanels', () => {
   expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
 })
 
+test('marks the search and build form for prerender omission', () => {
+  renderHome()
+
+  expect(document.getElementById('panel-content-search')?.closest('section')).toHaveAttribute('data-prerender', 'omit')
+})
+
 test('Shows verbs grouped by form at the verbs base route, including quadriliteral forms', () => {
   renderHome()
 
@@ -75,8 +81,8 @@ describe('quadriliteral form filter', () => {
     await user.click(screen.getByText('Iq', { selector: 'button' }))
 
     const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-    expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeTruthy()
-    expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+    expect(includedVerbsPanel?.querySelector('a[href="/verbs/brhn-1/"]')).toBeTruthy()
+    expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeNull()
   })
 
   test('selecting a quadriliteral form clears an active triliteral form filter, and vice versa', async () => {
@@ -104,7 +110,7 @@ describe('quadriliteral form filter', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Iq', { selector: 'button' }))
-    expect(window.location.hash).toBe('#/verbs?form=1q')
+    expect(currentUrl()).toBe('/verbs/?form=1q')
   })
 })
 
@@ -134,7 +140,7 @@ test('filters included verbs to ẓanna and her sisters', async () => {
   expect(includedVerbsPanel).toBeTruthy()
   const scoped = within(includedVerbsPanel as HTMLElement)
 
-  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(13)
+  expect(includedVerbsPanel?.querySelectorAll('a[href^="/verbs/"]')).toHaveLength(13)
   expect(scoped.getByText('اِتَّخَذَ')).toBeInTheDocument()
   expect(scoped.getByText('عَدَّ')).toBeInTheDocument()
   expect(scoped.getByText('عَلِمَ')).toBeInTheDocument()
@@ -210,7 +216,7 @@ test('allows combining form and kāna filters', async () => {
   expect(includedVerbsPanel).toBeTruthy()
   const scoped = within(includedVerbsPanel as HTMLElement)
 
-  expect(includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')).toHaveLength(3)
+  expect(includedVerbsPanel?.querySelectorAll('a[href^="/verbs/"]')).toHaveLength(3)
   expect(scoped.getByText('أَصبَحَ')).toBeInTheDocument()
   expect(scoped.getByText('أَضحى')).toBeInTheDocument()
   expect(scoped.getByText('أَمسى')).toBeInTheDocument()
@@ -272,8 +278,8 @@ test('filters included verbs to doubled roots', async () => {
   await user.click(screen.getByText('Doubled', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Edd-4"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/Edd-4/"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeNull()
 })
 
 test('shows a Biliteral root type filter button', () => {
@@ -288,9 +294,9 @@ test('filters included verbs to biliteral quadriliteral roots (c1=c3, c2=c4)', a
   await user.click(screen.getByText('Biliteral', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/zlzl-1"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/brhn-1"]')).toBeNull()
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/zlzl-1/"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/brhn-1/"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeNull()
 })
 
 test('keeps sound filter enabled when kāna + form I includes sound roots', async () => {
@@ -314,7 +320,7 @@ test('doubled filter shows Zll-1 for kāna form I combination', async () => {
   await user.click(screen.getByText('Doubled', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/Zll-1"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/Zll-1/"]')).toBeTruthy()
 })
 
 test('filters included verbs to favourites only', async () => {
@@ -327,11 +333,11 @@ test('filters included verbs to favourites only', async () => {
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel).toBeTruthy()
-  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
+  const links = includedVerbsPanel?.querySelectorAll('a[href^="/verbs/"]')
 
   expect(links).toHaveLength(2)
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/ktb-1"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/sfr-1"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/sfr-1/"]')).toBeTruthy()
 })
 
 test('applies favourites filter together with form filters', async () => {
@@ -345,11 +351,11 @@ test('applies favourites filter together with form filters', async () => {
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel).toBeTruthy()
-  const links = includedVerbsPanel?.querySelectorAll('a[href^="#/verbs/"]')
+  const links = includedVerbsPanel?.querySelectorAll('a[href^="/verbs/"]')
 
   expect(links).toHaveLength(1)
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/wjd-1"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="#/verbs/SbH-4"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/wjd-1/"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/SbH-4/"]')).toBeNull()
 })
 
 test('restores verb list filters and pagination from hash query params', () => {
@@ -357,7 +363,7 @@ test('restores verb list filters and pagination from hash query params', () => {
 
   expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'true')
   expect(screen.getByText(/Page 2 of \d+/)).toBeInTheDocument()
-  expect(window.location.hash).toBe('#/verbs?form=1&page=2')
+  expect(currentUrl()).toBe('/verbs/?form=1&page=2')
 })
 
 test('syncs verb list filters and pagination to hash query params', async () => {
@@ -365,10 +371,10 @@ test('syncs verb list filters and pagination to hash query params', async () => 
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(screen.getByText('Next'))
-  expect(window.location.hash).toBe('#/verbs?page=2')
+  expect(currentUrl()).toBe('/verbs/?page=2')
 
   await user.click(document.querySelector('#form-tab-2') as HTMLButtonElement)
-  expect(window.location.hash).toBe('#/verbs?form=2')
+  expect(currentUrl()).toBe('/verbs/?form=2')
 })
 
 test('syncs favourites filter to hash query params', async () => {
@@ -378,10 +384,10 @@ test('syncs favourites filter to hash query params', async () => {
   const otherFilters = screen.getByLabelText('Other filters')
 
   await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs?group=favourites')
+  expect(currentUrl()).toBe('/verbs/?group=favourites')
 
   await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs')
+  expect(currentUrl()).toBe('/verbs/')
 })
 
 test('syncs other filters exclusively to hash query params', async () => {
@@ -391,13 +397,13 @@ test('syncs other filters exclusively to hash query params', async () => {
   const otherFilters = screen.getByLabelText('Other filters')
 
   await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs?group=kana')
+  expect(currentUrl()).toBe('/verbs/?group=kana')
 
   await user.click(within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs?group=zanna')
+  expect(currentUrl()).toBe('/verbs/?group=zanna')
 
   await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
-  expect(window.location.hash).toBe('#/verbs?group=favourites')
+  expect(currentUrl()).toBe('/verbs/?group=favourites')
 })
 
 test('restores group filter from hash query params', () => {
@@ -412,7 +418,7 @@ test('restores group filter from hash query params', () => {
     'aria-pressed',
     'false',
   )
-  expect(window.location.hash).toBe('#/verbs?group=zanna')
+  expect(currentUrl()).toBe('/verbs/?group=zanna')
 })
 
 test('allows selecting multiple root type filters with intersection semantics', async () => {

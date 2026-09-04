@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "com.musarrif",
   "build": {
-    "beforeDevCommand": "npm run dev -- --host 0.0.0.0 --port 5173",
+    "beforeDevCommand": "VITE_ROUTING_MODE=hash npm run dev -- --host 0.0.0.0 --port 5173",
     "devUrl": "http://localhost:5173/#/verbs",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "npm run build:hash",
     "frontendDist": "../dist"
   },
   "bundle": {
