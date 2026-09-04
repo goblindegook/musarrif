@@ -234,11 +234,25 @@ test('Show a feedback panel with an issues link', () => {
 
 test('Order derived form options by form number', () => {
   renderConjugationMode({ verbId: 'bdl-1' })
-  const derivedFormHeading = screen.getByText('Derived forms')
-  const formLabels = Array.from(derivedFormHeading.nextElementSibling!.children)
+  const derivedFormPanel = screen.getByText('Derived forms').closest('section')!
+  const formLabels = Array.from(derivedFormPanel.querySelectorAll('a[aria-label]'))
     .map((button) => button.getAttribute('aria-label')!)
     .map((label) => label.match(/-\s([IVX]+)\s-\sForm/i)?.[1])
   expect(formLabels).toEqual(['I', 'II', 'IV', 'VI', 'X'])
+})
+
+describe('Sister verbs', () => {
+  it('lists kāna and her sisters', () => {
+    renderConjugationMode({ verbId: 'kwn-1' })
+    const panel = screen.getByText('Kāna and her sisters').closest('section')!
+    expect(within(panel).getByText('لَيسَ')).toBeInTheDocument()
+  })
+
+  it('lists ẓanna and her sisters', () => {
+    renderConjugationMode({ verbId: 'Znn-1' })
+    const panel = screen.getByText('Ẓanna and her sisters').closest('section')!
+    expect(within(panel).getByText('عَلِمَ')).toBeInTheDocument()
+  })
 })
 
 describe('Root insights', () => {

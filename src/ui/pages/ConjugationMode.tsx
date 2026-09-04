@@ -14,10 +14,12 @@ import {
   getAvailableParadigms,
   getVerbById,
   isTriliteralFormIDisplayVerb,
+  KWN_SISTERS_IDS,
   type TriliteralDisplayVerb,
+  verbs,
+  ZNN_SISTERS_IDS,
 } from '../../paradigms/verbs'
 import { FormattedText } from '../atoms/FormattedText'
-import { Heading } from '../atoms/Heading'
 import { LinkButton } from '../atoms/LinkButton'
 import { Text } from '../atoms/Text'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -47,6 +49,11 @@ const formIVowelPattern = (verb: TriliteralDisplayVerb<1>) => {
   const present = formIPresentVowel(verb)
   return past.equals(present) ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
 }
+
+const SISTER_GROUPS = [
+  { ids: KWN_SISTERS_IDS, titleKey: 'verbsList.filter.kanaSisters.label' },
+  { ids: ZNN_SISTERS_IDS, titleKey: 'verbsList.filter.zannaSisters.label' },
+] as const
 
 interface ConjugationModeProps {
   verbId: string
@@ -105,6 +112,11 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     () => findVerbsByRoot(selectedVerb.root).toSorted((a, b) => a.form - b.form),
     [selectedVerb.root],
   )
+
+  const sisters = useMemo(() => {
+    const group = SISTER_GROUPS.find(({ ids }) => ids.has(selectedVerb.id))
+    return group && { titleKey: group.titleKey, verbs: verbs.filter((verb) => group.ids.has(verb.id)) }
+  }, [selectedVerb.id])
 
   const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== verbId), [recents, verbId])
 
@@ -223,19 +235,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
               aria-label={t('tabs.search')}
             >
               <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
-
-              {derivedForms.length > 1 && (
-                <>
-                  <Heading dir={dir} lang={lang}>
-                    {t('selectDerivedForm')}
-                  </Heading>
-                  <VerbList>
-                    {derivedForms.map((verb) => (
-                      <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-                    ))}
-                  </VerbList>
-                </>
-              )}
             </TabPanel>
           )}
 
@@ -250,6 +249,26 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
             </TabPanel>
           )}
         </Panel>
+
+        {derivedForms.length > 1 && (
+          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
+            <VerbList>
+              {derivedForms.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        {sisters && (
+          <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
+            <VerbList>
+              {sisters.verbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
       </Stack>
 
       <Stack area="verb">

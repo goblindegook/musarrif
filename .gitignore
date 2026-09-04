@@ -41,6 +41,7 @@ entities.json
 /src-tauri/icons/
 
 /.claude
+/.impact
 /docs/superpowers
 /docs/specs
 /docs/plans

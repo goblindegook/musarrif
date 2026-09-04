@@ -232,7 +232,7 @@ describe('Conjugation', () => {
     renderApp('/#/verbs/rkz-1')
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-    const derivedForms = screen.getByText(/Derived forms/i).nextElementSibling as HTMLElement
+    const derivedForms = screen.getByText(/Derived forms/i).closest('section') as HTMLElement
     await user.click(within(derivedForms).getByLabelText(/II.*Form.*to concentrate/i))
 
     expect(await screen.findByText('to concentrate', { exact: false, selector: 'p' })).toBeInTheDocument()
