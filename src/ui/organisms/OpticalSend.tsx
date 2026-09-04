@@ -59,7 +59,15 @@ export function OpticalSend({ payload }: OpticalSendProps) {
     let cancelled = false
     drawQueueRef.current = drawQueueRef.current.then(() => {
       if (cancelled) return
-      return toCanvas(canvas, frame, { errorCorrectionLevel: 'M', margin: 2, width: 320 }).catch(() => {
+      return toCanvas(canvas, frame, {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        width: 320,
+        color: {
+          light: '#fbfaf7',
+          dark: '#1f1a17',
+        },
+      }).catch(() => {
         // Swallow so a QR draw failure never surfaces as an unhandled rejection; the canvas
         // simply keeps showing the last successfully drawn frame.
       })
@@ -93,7 +101,7 @@ const CodeFrame = styled('div')`
   justify-content: center;
   padding: 1rem;
   border-radius: var(--radius);
-  background: #ffffff;
+  background: #fbfaf7;
 
   & canvas {
     max-width: 100%;
