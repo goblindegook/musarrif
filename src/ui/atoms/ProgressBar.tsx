@@ -23,16 +23,17 @@ const Track = styled('span')`
   display: block;
   width: 100%;
   height: 0.5rem;
-  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
   overflow: hidden;
-  background: var(--color-border);
+  background: var(--color-bg-surface-secondary);
 `
 
 const Fill = styled('span')`
   display: block;
   height: 100%;
   background: var(--color-success-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: width 220ms ease;
 
   @media (prefers-reduced-motion: reduce) {
