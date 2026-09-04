@@ -20,6 +20,7 @@ const mountApp = () => {
       import('./routes'),
     ])
 
+    appRoot.replaceChildren()
     render(
       <RoutingProvider>
         <I18nProvider>
