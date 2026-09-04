@@ -5,6 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 const routingMode = process.env.VITE_ROUTING_MODE === 'hash' ? 'hash' : 'path'
 
+const FILE_REQUEST = /\/[^/?]+\.[^/]+$/
+
 export default defineConfig({
   base: routingMode === 'hash' ? './' : '/',
   plugins: [
@@ -25,12 +27,12 @@ export default defineConfig({
       ],
       workbox:
         routingMode === 'hash'
-          ? { globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'] }
+          ? { globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'], navigateFallbackDenylist: [FILE_REQUEST] }
           : {
               globPatterns: ['**/*.{js,css,html,ico,png,svg,ttf}'],
               globIgnores: ['verbs/**/*.html'],
               navigateFallback: '/index.html',
-              navigateFallbackDenylist: [/^\/assets\//, /^\/fonts\//, /^\/piper\//, /^\/voices\//],
+              navigateFallbackDenylist: [FILE_REQUEST],
             },
       manifest: {
         name: 'Muṣarrif',
