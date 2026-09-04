@@ -90,7 +90,7 @@ describe('ExerciseMode', () => {
 
   test('answer area is labelled by the exercise prompt', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
-    const group = screen.getByRole('group')
+    const group = document.querySelector<HTMLElement>('[role="group"]')!
     const promptId = group.getAttribute('aria-labelledby')
     expect(promptId).toBeTruthy()
     expect(document.getElementById(promptId!)).toBeInTheDocument()

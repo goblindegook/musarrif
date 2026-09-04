@@ -227,7 +227,7 @@ describe('ExerciseStats', () => {
   test('chart is accessible with aria-label and rendered by uPlot', () => {
     const { container } = renderStats()
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.getByRole('img')).toBeInTheDocument()
+    expect(container.querySelector('[role="img"][aria-label^="Last 7 days"]')).toBeInTheDocument()
     expect(container.querySelector('.uplot')).toBeInTheDocument()
   })
 
@@ -237,10 +237,10 @@ describe('ExerciseStats', () => {
       { date: sixDaysAgo, correct: 1, incorrect: 3, passed: 0 },
       { date: TODAY, correct: 4, incorrect: 1, passed: 2 },
     ]
-    renderStats(stats)
+    const { container } = renderStats(stats)
     fireEvent.click(screen.getByText('Progress'))
 
-    const ariaLabel = screen.getByRole('img').getAttribute('aria-label')
+    const ariaLabel = container.querySelector('[role="img"][aria-label^="Last 7 days"]')?.getAttribute('aria-label')
     expect(ariaLabel).toContain('Last 7 days')
     expect(ariaLabel).toContain('Correct 5 (up)')
     expect(ariaLabel).toContain('Incorrect 4 (down)')
@@ -468,7 +468,7 @@ describe('ExerciseStats', () => {
   test('does not render learning insights modal before See insights is clicked', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(document.querySelector('[role="dialog"]')).not.toBeInTheDocument()
     expect(screen.queryByText(/^Your journey so far:/)).not.toBeInTheDocument()
   })
 

@@ -63,8 +63,8 @@ test('marks the search and build form for prerender omission', () => {
 test('marks user-state panels for prerender omission', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
 
-  const favourites = screen.getByRole('heading', { name: 'Favourites' }).closest('section')!
-  const feedback = screen.getByRole('heading', { name: 'See something off?' }).closest('section')!
+  const favourites = screen.getByText('Favourites').closest('section')!
+  const feedback = screen.getByText('See something off?').closest('section')!
 
   expect(favourites).toHaveAttribute('data-prerender', 'omit')
   expect(feedback).toHaveAttribute('data-prerender', 'omit')

@@ -270,8 +270,8 @@ it('voice picker lists all available Arabic voices', () => {
   ])
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))
-  expect(screen.getByRole('option', { name: 'Majed' })).toBeInTheDocument()
-  expect(screen.getByRole('option', { name: 'Tarik' })).toBeInTheDocument()
+  const options = screen.getByLabelText('Voice').querySelectorAll('option')
+  expect([...options].map((option) => option.textContent)).toEqual(['Majed', 'Tarik'])
 })
 
 it('selecting a voice persists to localStorage', async () => {

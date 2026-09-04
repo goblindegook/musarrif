@@ -211,13 +211,13 @@ test('toggle button is hidden after answering', () => {
 test('clicking the correct option announces "Correct."', () => {
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText('كَتَبَ', { selector: 'button' }))
-  expect(screen.getByRole('status')).toHaveTextContent('Correct.')
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Correct.')
 })
 
 test('clicking a wrong option announces the correct answer', () => {
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText('يَكتُبُ', { selector: 'button' }))
-  expect(screen.getByRole('status')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
 })
 
 test('forceReveal shows correct option, disables buttons, hides toggle', () => {
@@ -261,7 +261,7 @@ test('answer area has role="group" and aria-labelledby when promptId is provided
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} promptId="exercise-prompt" />, {
     wrapper: Wrapper,
   })
-  const group = screen.getByRole('group')
+  const group = document.querySelector<HTMLElement>('[role="group"]')!
   expect(group).toHaveAttribute('aria-labelledby', 'exercise-prompt')
 })
 
@@ -360,7 +360,7 @@ test('clicking speech toggle again returns to multiple-choice', () => {
   fireEvent.click(screen.getByText(/Speak the answer/)) // enter speech
   fireEvent.click(screen.getByText(/See options/)) // exit speech
   expect(screen.queryByDisplayValue(/Listening/)).not.toBeInTheDocument()
-  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
 })
 
 test('entering speech mode auto-starts recognition and shows listening state', () => {
@@ -542,7 +542,7 @@ test('typing mode falls back to MC when new exercise does not support typing', (
     </I18nProvider>,
   )
   expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
-  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
 })
 
 test('speech mode falls back to MC when new exercise does not support speech', () => {
@@ -561,7 +561,7 @@ test('speech mode falls back to MC when new exercise does not support speech', (
     </I18nProvider>,
   )
   expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
-  expect(screen.getAllByRole('button').some((b) => b.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
 })
 
 // Typed answer diff rendering
@@ -643,7 +643,7 @@ test('a wrong typed answer announces the correct answer to screen readers', () =
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَمَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
 
-  expect(screen.getByRole('status')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
 })
 
 test('a partial answer announces that vowel marks were missing', () => {
@@ -658,5 +658,5 @@ test('a partial answer announces that vowel marks were missing', () => {
   fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كتَبَ' } })
   fireEvent.click(screen.getByLabelText('Submit'))
 
-  expect(screen.getByRole('status')).toHaveTextContent('Correct. Some vowel marks were missing.')
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Correct. Some vowel marks were missing.')
 })

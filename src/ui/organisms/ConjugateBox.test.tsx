@@ -72,10 +72,8 @@ describe('ConjugateBox', () => {
     await user.click(input)
     await user.keyboard('{ArrowDown}')
 
-    const listbox = within(input.closest('[role="group"]')!).getByRole('listbox')
-    const optionIds = within(listbox)
-      .getAllByRole('option')
-      .map((option) => option.id)
+    const listbox = input.closest('[role="group"]')!.querySelector<HTMLElement>('[role="listbox"]')!
+    const optionIds = [...listbox.querySelectorAll('[role="option"]')].map((option) => option.id)
     expect(input).toHaveAttribute('role', 'combobox')
     expect(input).toHaveAttribute('aria-controls', listbox.id)
     expect(listbox).toHaveAttribute('role', 'listbox')
