@@ -4,7 +4,7 @@
  * Usage:
  *   npx tsx scripts/elixirfm-compare.mts [--sample N] [--root ROOT]
  *
- * --sample N   Only test N verbs (default: all 936)
+ * --sample N   Only test N verbs (default: all)
  * --root ROOT  Only test verbs with this Buckwalter root (e.g. ktb)
  */
 

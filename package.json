@@ -19,6 +19,7 @@
     "lint:fix": "biome check --write --unsafe .",
     "format": "npm run lint:fix && biome format --write .",
     "add:verb": "tsx scripts/verb.mts",
+    "count:verbs": "jq 'length' src/data/roots.json",
     "debug:elixirfm": "tsx scripts/debug-elixirfm.mts",
     "debug:explain": "tsx scripts/debug-explain.mts",
     "debug:srs": "tsx scripts/debug-srs.mts",
