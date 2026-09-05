@@ -4,6 +4,12 @@ import { prerenderPages, renderDocument } from './pages'
 import { renderSitemap } from './sitemap'
 
 const verbPage = prerenderPages('http://localhost').find((page) => page.path === '/verbs/ktb-1/')!
+const indexPage = prerenderPages('http://localhost').find((page) => page.path === '/verbs/')!
+
+function structuredData(html: string): Record<string, unknown> {
+  return JSON.parse(html.match(/<script type="application\/ld\+json">(.*)<\/script>/)![1]!)
+}
+
 const renderedPage = {
   title: 'كَتَبَ · Muṣarrif',
   stylesheetHref: '/assets/prerender-abc123.css',
@@ -23,7 +29,7 @@ describe('renderDocument', () => {
 
     expect(html).toContain('<title>كَتَبَ · Muṣarrif</title>')
     expect(html).toContain(
-      '<meta name="description" content="Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب. Full active and passive tables for every tense and mood, plus verbal noun and participles." />',
+      '<meta name="description" content="Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب." />',
     )
     expect(html).toContain('<link rel="canonical" href="http://localhost/verbs/ktb-1/" />')
   })
@@ -51,10 +57,72 @@ describe('renderDocument', () => {
     )
   })
 
-  test('embeds the page breadcrumbs as JSON-LD', () => {
-    expect(renderDocument(verbPage, renderedPage, 'http://localhost')).toContain(
-      '<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Muṣarrif","item":"http://localhost/"},{"@type":"ListItem","position":2,"name":"Verbs","item":"http://localhost/verbs/"},{"@type":"ListItem","position":3,"name":"كَتَبَ · Muṣarrif","item":"http://localhost/verbs/ktb-1/"}]}</script>',
-    )
+  test('embeds the verb page, its breadcrumbs and the verb it defines as JSON-LD', () => {
+    expect(structuredData(renderDocument(verbPage, renderedPage, 'http://localhost'))).toEqual({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'WebSite',
+          '@id': 'http://localhost/#website',
+          url: 'http://localhost/',
+          name: 'Muṣarrif',
+        },
+        {
+          '@type': 'WebPage',
+          '@id': 'http://localhost/verbs/ktb-1/',
+          url: 'http://localhost/verbs/ktb-1/',
+          name: 'كَتَبَ · Muṣarrif',
+          description: 'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+          inLanguage: 'en',
+          isPartOf: { '@id': 'http://localhost/#website' },
+          breadcrumb: { '@id': 'http://localhost/verbs/ktb-1/#breadcrumb' },
+          mainEntity: { '@id': 'http://localhost/verbs/ktb-1/#verb' },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          '@id': 'http://localhost/verbs/ktb-1/#breadcrumb',
+          name: 'كَتَبَ · Muṣarrif',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Muṣarrif', item: 'http://localhost/' },
+            { '@type': 'ListItem', position: 2, name: 'Verbs', item: 'http://localhost/verbs/' },
+            { '@type': 'ListItem', position: 3, name: 'كَتَبَ', item: 'http://localhost/verbs/ktb-1/' },
+          ],
+        },
+        {
+          '@type': 'DefinedTerm',
+          '@id': 'http://localhost/verbs/ktb-1/#verb',
+          name: 'كَتَبَ',
+          description: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+          inLanguage: 'ar',
+          inDefinedTermSet: { '@id': 'http://localhost/verbs/#verbs' },
+        },
+      ],
+    })
+  })
+
+  test('describes the index as the set the verbs belong to', () => {
+    const graph = structuredData(renderDocument(indexPage, { ...renderedPage, title: 'Muṣarrif' }, 'http://localhost'))[
+      '@graph'
+    ] as Record<string, unknown>[]
+
+    expect(graph).toContainEqual({
+      '@type': 'DefinedTermSet',
+      '@id': 'http://localhost/verbs/#verbs',
+      url: 'http://localhost/verbs/',
+      name: 'Arabic verbs',
+      description:
+        'Browse every Arabic verb in Muṣarrif: triliteral Forms I-X and quadriliteral Forms Iq-IVq, with full conjugation tables for each.',
+      inLanguage: 'ar',
+    })
+    expect(graph).toContainEqual({
+      '@type': 'BreadcrumbList',
+      '@id': 'http://localhost/verbs/#breadcrumb',
+      name: 'Muṣarrif',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Muṣarrif', item: 'http://localhost/' },
+        { '@type': 'ListItem', position: 2, name: 'Verbs', item: 'http://localhost/verbs/' },
+      ],
+    })
   })
 
   test('closes the document', () => {
@@ -121,9 +189,16 @@ describe('prerenderPages', () => {
       file: 'verbs/ktb-1/index.html',
       route: ['verbs', 'ktb-1'],
       canonical: 'http://localhost/verbs/ktb-1/',
-      description:
-        'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب. Full active and passive tables for every tense and mood, plus verbal noun and participles.',
+      description: 'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+      name: 'كَتَبَ',
+      termDescription: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
     })
+  })
+
+  test('claims no derived forms for a verb that has none', () => {
+    expect(pages.find((candidate) => candidate.path === '/verbs/lys-1/')?.termDescription).toBe(
+      'Conjugation of لَيْسَ (not to be), an Arabic Form I verb from the root ل-ي-س.',
+    )
   })
 
   test('encodes route paths while preserving host filenames', () => {
@@ -135,7 +210,7 @@ describe('prerenderPages', () => {
 
   test('uses quadriliteral form labels in page descriptions', () => {
     expect(pages.find((candidate) => candidate.path === '/verbs/zlzl-1/')?.description).toBe(
-      'Conjugate زَلْزَلَ (to shake), an Arabic Form Iq verb from the root ز-ل-ز-ل. Full active and passive tables for every tense and mood, plus verbal noun and participles.',
+      'Conjugate زَلْزَلَ (to shake), an Arabic Form Iq verb from the root ز-ل-ز-ل.',
     )
   })
 

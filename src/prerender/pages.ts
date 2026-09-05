@@ -1,4 +1,4 @@
-import { type DisplayVerb, formatFormLabel, verbs } from '../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel, getAvailableParadigms, verbs } from '../paradigms/verbs'
 import enVerbs from '../ui/locales/en.verbs.json'
 
 interface PrerenderPage {
@@ -7,6 +7,8 @@ interface PrerenderPage {
   route: readonly string[]
   canonical: string
   description: string
+  name?: string
+  termDescription?: string
   staticMarkup?: string
 }
 
@@ -38,11 +40,46 @@ export function renderDocument(
 ): string {
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Muṣarrif', item: `${origin}/` },
-      { '@type': 'ListItem', position: 2, name: 'Verbs', item: `${origin}/verbs/` },
-      ...(page.path === '/verbs/' ? [] : [{ '@type': 'ListItem', position: 3, name: title, item: page.canonical }]),
+    '@graph': [
+      { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'Muṣarrif' },
+      {
+        '@type': 'WebPage',
+        '@id': page.canonical,
+        url: page.canonical,
+        name: title,
+        description: page.description,
+        inLanguage: 'en',
+        isPartOf: { '@id': `${origin}/#website` },
+        breadcrumb: { '@id': `${page.canonical}#breadcrumb` },
+        mainEntity: { '@id': page.name ? `${page.canonical}#verb` : `${origin}/verbs/#verbs` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${page.canonical}#breadcrumb`,
+        name: title,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Muṣarrif', item: `${origin}/` },
+          { '@type': 'ListItem', position: 2, name: 'Verbs', item: `${origin}/verbs/` },
+          ...(page.name ? [{ '@type': 'ListItem', position: 3, name: page.name, item: page.canonical }] : []),
+        ],
+      },
+      page.name
+        ? {
+            '@type': 'DefinedTerm',
+            '@id': `${page.canonical}#verb`,
+            name: page.name,
+            description: page.termDescription,
+            inLanguage: 'ar',
+            inDefinedTermSet: { '@id': `${origin}/verbs/#verbs` },
+          }
+        : {
+            '@type': 'DefinedTermSet',
+            '@id': `${origin}/verbs/#verbs`,
+            url: `${origin}/verbs/`,
+            name: 'Arabic verbs',
+            description: page.description,
+            inLanguage: 'ar',
+          },
     ],
   }
 
@@ -90,11 +127,22 @@ function canonicalUrl(path: string, origin: string): string {
   return `${origin}${path}`
 }
 
-function pageDescription(verb: DisplayVerb, gloss: string | undefined): string {
+function verbSummary(verb: DisplayVerb, gloss: string | undefined): string {
   const subject = gloss ? `${verb.lemma} (${gloss})` : verb.lemma
   const form = formatFormLabel(verb.form, verb.root)
   const root = Array.from(verb.root).join('-')
-  return `Conjugate ${subject}, an Arabic Form ${form} verb from the root ${root}. Full active and passive tables for every tense and mood, plus verbal noun and participles.`
+  return `${subject}, an Arabic Form ${form} verb from the root ${root}`
+}
+
+function pageDescription(verb: DisplayVerb, gloss: string | undefined): string {
+  return `Conjugate ${verbSummary(verb, gloss)}.`
+}
+
+function termDescription(verb: DisplayVerb, gloss: string | undefined): string {
+  const derived = getAvailableParadigms(verb).some(
+    (paradigm) => paradigm === 'masdar' || paradigm.endsWith('participle'),
+  )
+  return `Conjugation${derived ? ' and derived forms' : ''} of ${verbSummary(verb, gloss)}.`
 }
 
 export function prerenderPages(origin: string): PrerenderPage[] {
@@ -117,6 +165,8 @@ export function prerenderPages(origin: string): PrerenderPage[] {
         route: ['verbs', verb.id],
         canonical: canonicalUrl(path, origin),
         description: pageDescription(verb, glosses[verb.id]),
+        name: String(verb.lemma),
+        termDescription: termDescription(verb, glosses[verb.id]),
       }
     }),
   ]
