@@ -9,20 +9,19 @@ import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
 describe('mrr-10', () => {
-  // FIXME: Active past tests are not consistent with other Form X geminate roots, confirmation needed.
-  test.skip('active past', () => {
+  test('active past', () => {
     expect(conjugatePast(getVerbById('mrr-10')!)).toEqualT({
-      '1s': 'اِسْتَمَرَّيْتُ',
-      '2ms': 'اِسْتَمَرَّيْتَ',
-      '2fs': 'اِسْتَمَرَّيْتِ',
+      '1s': 'اِسْتَمْرَرْتُ',
+      '2ms': 'اِسْتَمْرَرْتَ',
+      '2fs': 'اِسْتَمْرَرْتِ',
       '3ms': 'اِسْتَمَرَّ',
       '3fs': 'اِسْتَمَرَّتْ',
-      '2d': 'اِسْتَمَرَّيْتُمَا',
+      '2d': 'اِسْتَمْرَرْتُمَا',
       '3md': 'اِسْتَمَرَّا',
       '3fd': 'اِسْتَمَرَّتَا',
-      '1p': 'اِسْتَمَرَّيْنَا',
-      '2mp': 'اِسْتَمَرَّيْتُمْ',
-      '2fp': 'اِسْتَمَرَّيْتُنَّ',
+      '1p': 'اِسْتَمْرَرْنَا',
+      '2mp': 'اِسْتَمْرَرْتُمْ',
+      '2fp': 'اِسْتَمْرَرْتُنَّ',
       '3mp': 'اِسْتَمَرُّوا',
       '3fp': 'اِسْتَمْرَرْنَ',
     })

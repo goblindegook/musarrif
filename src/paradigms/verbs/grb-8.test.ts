@@ -171,8 +171,7 @@ describe('grb-8 (Wiktionary)', () => {
     expect(derivePassiveParticiple(getVerbById('grb-8')!)).toEqualT('مُغْتَرَب')
   })
 
-  // FIXME: Wiktionary masdar doesn't follow the Form VIII pattern.
-  test.skip('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById('grb-8')!))).toEqualT(new Set(['غُرْبَة']))
+  test('masdar', () => {
+    expect(deriveMasdar(getVerbById('grb-8')!)).toEqualT(['اِغْتِرَاب'])
   })
 })
