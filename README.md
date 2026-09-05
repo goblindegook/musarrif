@@ -52,6 +52,8 @@ Running the ElixirFM comparison across the full 992-verb dataset (`npm run debug
 | **Geminate wāw spelling.** Muṣarrif writes أُووِي (long ū + wāw), ElixirFM أُوِّي (shadda). | <details><summary>2 verbs</summary>`'wy-1`, `'wy-4`</details> | Under review |
 | **Contracted imperative of أَمَرَ.** مُرْ vs. ElixirFM's اُؤمُر. Both attested. | <details><summary>1 verb</summary>`'mr-1`</details> | No |
 
+ElixirFM also omits sukūns entirely; the comparison normalises them away before matching, so they never surface as mismatches.
+
 ### Under Review
 
 The 18 verbs whose discrepancies are still open questions, and what was found for each:
@@ -76,8 +78,6 @@ The 18 verbs whose discrepancies are still open questions, and what was found fo
 | `w'y-1` | وَأَى | Hamza seat after a long vowel | Form I passive of assimilated verbs |
 | `wdd-1` | وَدَّ | Prothetic imperative vowel | Doubled-verb contraction |
 | `ysr-1` | يَسُرَ | Prothetic imperative vowel | |
-
-ElixirFM also omits sukūns entirely; the comparison normalises them away before matching, so they never surface as mismatches.
 
 ## Setup
 
