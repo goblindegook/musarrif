@@ -160,6 +160,10 @@ const Container = styled('div', forwardRef)`
   background: transparent;
   color: var(--color-text-primary);
   overflow: visible;
+
+  @media print {
+    display: none;
+  }
 `
 
 const Card = styled('div')`
