@@ -114,6 +114,34 @@ describe('Conjugation table', () => {
     expect(screen.getByText('Active Past')).toBeInTheDocument()
   })
 
+  it.each([
+    'Active Past',
+    'Active Present',
+    'Active Subjunctive',
+    'Active Jussive',
+    'Active Future',
+    'Imperative',
+    'Passive Past',
+    'Passive Present',
+    'Passive Subjunctive',
+    'Passive Jussive',
+    'Passive Future',
+  ])('keeps the %s table in the document whichever paradigm is selected', (heading) => {
+    renderConjugationMode({ verbId: 'ktb-1', voice: 'active', tense: 'past' })
+
+    expect(screen.getByText(heading, { selector: 'th' })).toBeInTheDocument()
+  })
+
+  it('shows only the selected paradigm on screen', () => {
+    renderConjugationMode({ verbId: 'ktb-1', voice: 'active', tense: 'present', mood: 'jussive' })
+
+    const selected = screen.getByText('Active Jussive', { selector: 'th' }).closest('[role="tabpanel"]')!
+    const others = screen.getByText('Active Past', { selector: 'th' }).closest('[role="tabpanel"]')!
+
+    expect(selected).toBeVisible()
+    expect(others).toHaveAttribute('hidden')
+  })
+
   it('shows active and passive voice tabs', () => {
     renderConjugationMode({ verbId: 'ktb-1' })
 

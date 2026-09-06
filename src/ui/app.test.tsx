@@ -217,7 +217,7 @@ describe('Conjugation', () => {
     renderApp('/#/verbs/ktb-1')
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-    await user.click(screen.getByText('Imperative'))
+    await user.click(screen.getByText('Imperative', { selector: 'button' }))
 
     expect(currentUrl()).toBe('/verbs/ktb-1/active/imperative/')
   })

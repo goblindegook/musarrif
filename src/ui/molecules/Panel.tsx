@@ -81,6 +81,10 @@ const PanelTitleRow = styled('div')`
   margin-top: 0;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--color-border);
+
+  @media print {
+    display: none;
+  }
 `
 
 const PanelTitleButton = styled('button')`

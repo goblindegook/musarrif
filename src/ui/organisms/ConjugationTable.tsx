@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { conjugate } from '../../paradigms/conjugation'
 import { ARABIC_PRONOUNS, type PronounId } from '../../paradigms/pronouns'
-import type { Mood, Tense, VerbTense, Voice } from '../../paradigms/tense'
+import { ALL_TENSES, type Mood, type Tense, type VerbTense, type Voice } from '../../paradigms/tense'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb } from '../../paradigms/verbs'
 import { getAvailableParadigms } from '../../paradigms/verbs'
@@ -99,11 +99,11 @@ export function ConjugationTable({
       : tense === 'present'
         ? `${selectedVoice}.present.${mood}`
         : `${selectedVoice}.${tense}`
-  const conjugations = conjugate(verb, verbTense)
   const availableTenses = TENSE_OPTIONS[selectedVoice].filter((t) =>
     availableParadigms.some((p) => p === `${selectedVoice}.${t}` || p.startsWith(`${selectedVoice}.${t}.`)),
   )
   const moodOptions = keys(MOOD_LABELS)
+  const paradigms = ALL_TENSES.filter((paradigm) => availableParadigms.includes(paradigm))
 
   return (
     <TabsContainer>
@@ -118,7 +118,7 @@ export function ConjugationTable({
               role="tab"
               id={`voice-tab-${option}`}
               aria-selected={option === selectedVoice}
-              aria-controls={'conjugation-panel'}
+              aria-controls={panelId(verbTense)}
               tabIndex={option === selectedVoice ? 0 : -1}
               aria-label={t(VOICE_LABELS[option])}
               onClick={() => onVoiceChange(option)}
@@ -142,7 +142,7 @@ export function ConjugationTable({
                 role="tab"
                 id={`tense-tab-${option}`}
                 aria-selected={option === tense}
-                aria-controls={'conjugation-panel'}
+                aria-controls={panelId(verbTense)}
                 tabIndex={option === tense ? 0 : -1}
                 aria-label={t(TENSE_LABELS[option])}
                 onClick={() => onTenseChange(option)}
@@ -165,7 +165,7 @@ export function ConjugationTable({
                   role="tab"
                   id={`mood-tab-${option}`}
                   aria-selected={option === mood}
-                  aria-controls={'conjugation-panel'}
+                  aria-controls={panelId(verbTense)}
                   tabIndex={option === mood ? 0 : -1}
                   aria-label={t(MOOD_LABELS[option])}
                   size="sm"
@@ -181,65 +181,106 @@ export function ConjugationTable({
           )}
         </TenseBlock>
       </TabBlock>
-      <TabPanel
-        role="tabpanel"
-        id="conjugation-panel"
-        aria-labelledby={
-          tense === 'past' || tense === 'future' || tense === 'imperative' ? `tense-tab-${tense}` : `mood-tab-${mood}`
-        }
-      >
-        <Table dir="rtl">
-          <thead>
-            <Row>
-              <TableHeadCell scope="col">{t('table.pronoun')}</TableHeadCell>
-              <VerbHeadCell scope="col" colspan={2}>
-                {t(`tense.${verbTense}`)}
-              </VerbHeadCell>
-            </Row>
-          </thead>
-          <TableBody>
-            {PRONOUNS.map((slot) => {
-              const conjugation = conjugations[slot.id]
-              if (!String(conjugation)) return null
-              const displayText = applyDiacriticsPreference(String(conjugation), diacriticsPreference)
-
-              return (
-                <Row key={slot.id}>
-                  <PronounCell>
-                    <span dir="rtl" lang="ar">
-                      {applyDiacriticsPreference(ARABIC_PRONOUNS[slot.id], diacriticsPreference)}
-                    </span>
-                    <PronounDescription dir={dir} lang={lang}>
-                      {formatDescription(slot, t)}
-                    </PronounDescription>
-                  </PronounCell>
-                  <VerbCell dir="rtl" lang="ar">
-                    {displayText}
-                  </VerbCell>
-
-                  <ActionCell>
-                    <ActionButtons>
-                      <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
-                      <SpeechButton
-                        text={String(conjugation)}
-                        lang="ar"
-                        ariaLabel={t('aria.speak', { text: String(conjugation) })}
-                      />
-                      <ConjugationInsights
-                        verb={verb}
-                        verbTense={verbTense}
-                        pronoun={slot.id}
-                        arabic={String(conjugation)}
-                      />
-                    </ActionButtons>
-                  </ActionCell>
-                </Row>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </TabPanel>
+      {paradigms.map((paradigm) => (
+        <ParadigmPanel
+          key={paradigm}
+          role="tabpanel"
+          id={panelId(paradigm)}
+          aria-label={t(`tense.${paradigm}`)}
+          hidden={paradigm !== verbTense}
+          data-print={paradigm.endsWith('.future') ? 'omit' : undefined}
+        >
+          <ParadigmTable
+            verb={verb}
+            verbTense={paradigm}
+            diacriticsPreference={diacriticsPreference}
+            interactive={paradigm === verbTense}
+          />
+        </ParadigmPanel>
+      ))}
     </TabsContainer>
+  )
+}
+
+const panelId = (verbTense: VerbTense) => `conjugation-panel-${verbTense}`
+
+interface ParadigmTableProps {
+  verb: DisplayVerb
+  verbTense: VerbTense
+  diacriticsPreference: DiacriticsPreference
+  interactive: boolean
+}
+
+function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: ParadigmTableProps) {
+  const { t, dir, lang } = useI18n()
+  const conjugations = conjugate(verb, verbTense)
+
+  return (
+    <Table dir="rtl">
+      <thead>
+        <Row>
+          <TableHeadCell scope="col">
+            <HeadLabel>{t('table.pronoun')}</HeadLabel>
+          </TableHeadCell>
+          <VerbHeadCell scope="col" colspan={2}>
+            {t(`tense.${verbTense}`)}
+          </VerbHeadCell>
+        </Row>
+      </thead>
+      <TableBody>
+        {PRONOUNS.map((slot) => {
+          const conjugation = conjugations[slot.id]
+
+          if (!String(conjugation))
+            return (
+              <BlankRow key={slot.id}>
+                <PronounCell />
+                <VerbCell dir="rtl" lang="ar">
+                  {'\u00a0'}
+                </VerbCell>
+                <ActionCell />
+              </BlankRow>
+            )
+
+          const displayText = applyDiacriticsPreference(String(conjugation), diacriticsPreference)
+
+          return (
+            <Row key={slot.id}>
+              <PronounCell>
+                <span dir="rtl" lang="ar">
+                  {applyDiacriticsPreference(ARABIC_PRONOUNS[slot.id], diacriticsPreference)}
+                </span>
+                <PronounDescription dir={dir} lang={lang}>
+                  {formatDescription(slot, t)}
+                </PronounDescription>
+              </PronounCell>
+              <VerbCell dir="rtl" lang="ar">
+                {displayText}
+              </VerbCell>
+
+              <ActionCell>
+                {interactive && (
+                  <ActionButtons>
+                    <CopyButton text={displayText} ariaLabel={t('aria.copy', { text: displayText })} />
+                    <SpeechButton
+                      text={String(conjugation)}
+                      lang="ar"
+                      ariaLabel={t('aria.speak', { text: String(conjugation) })}
+                    />
+                    <ConjugationInsights
+                      verb={verb}
+                      verbTense={verbTense}
+                      pronoun={slot.id}
+                      arabic={String(conjugation)}
+                    />
+                  </ActionButtons>
+                )}
+              </ActionCell>
+            </Row>
+          )
+        })}
+      </TableBody>
+    </Table>
   )
 }
 
@@ -295,6 +336,29 @@ const TabsContainer = styled('nav')`
 
   @media print {
     background: #fff;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: start;
+    gap: 6mm 4mm;
+  }
+`
+
+const ParadigmPanel = styled(TabPanel)`
+  &[hidden] {
+    display: none;
+  }
+
+  @media print {
+    padding-top: 0;
+    break-inside: avoid;
+
+    &[hidden] {
+      display: flex;
+    }
+
+    &[data-print='omit'] {
+      display: none;
+    }
   }
 `
 
@@ -338,9 +402,12 @@ const Table = styled('table')`
   border: none;
 
   @media print {
-    font-size: 0.86rem;
-    line-height: 1.15;
-    thead th:last-child,
+    font-size: 0.62rem;
+    line-height: 1.05;
+    thead tr {
+      border-top: none;
+      border-bottom: 0.5px solid #e2ddd4;
+    }
     tbody td:last-child {
       display: none;
     }
@@ -362,7 +429,7 @@ const TableBody = styled('tbody')`
 
   @media print {
     tr:last-of-type td {
-      padding-bottom: 0.35rem;
+      padding-bottom: 0.28rem;
     }
 
     tr:nth-child(odd) {
@@ -375,7 +442,18 @@ const Row = styled('tr')`
   border-bottom: 1px solid var(--color-border);
 
   @media print {
-    border-bottom-color: #c7bfb1;
+    border-top: 0.5px solid #e2ddd4;
+    border-bottom: 0.5px solid #e2ddd4;
+  }
+`
+
+const BlankRow = styled(Row)`
+  display: none;
+
+  @media print {
+    display: table-row;
+    border-style: dashed;
+    border-color: transparent;
   }
 `
 
@@ -395,11 +473,15 @@ const PronounCell = styled('td')`
   }
 
   @media print {
-    padding: 0.35rem 0 0.35rem 0.45rem;
+    width: 1%;
+    white-space: nowrap;
+    padding: 0.28rem 0 0.28rem 0.2rem;
+    font-weight: 400;
+    color: #4d4d4d;
 
     span {
-      font-size: 0.96rem;
-      line-height: 1.1;
+      font-size: 0.5rem;
+      line-height: 1.05;
     }
   }
 `
@@ -429,9 +511,15 @@ const VerbCell = styled('td')`
 
   @media print {
     width: auto;
-    padding: 0.35rem;
-    font-size: 1.18rem;
-    line-height: 1.15;
+    padding: 0.28rem 0.2rem;
+    font-size: 0.88rem;
+    line-height: 1.05;
+  }
+`
+
+const HeadLabel = styled('span')`
+  @media print {
+    display: none;
   }
 `
 
@@ -446,10 +534,11 @@ const TableHeadCell = styled('th')`
   }
 
   @media print {
-    padding: 0.2rem 0.45rem;
-    font-size: 0.7rem;
-    line-height: 1.1;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.5rem;
+    line-height: 1.05;
     background: transparent;
+    white-space: nowrap;
   }
 `
 
@@ -459,7 +548,7 @@ const VerbHeadCell = styled(TableHeadCell)`
   width: 65%;
 
   @media print {
-    padding: 0.2rem 0.35rem;
+    padding: 0.1rem 0.2rem;
   }
 `
 
