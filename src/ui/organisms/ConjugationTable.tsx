@@ -187,7 +187,7 @@ export function ConjugationTable({
           role="tabpanel"
           id={panelId(paradigm)}
           aria-label={t(`tense.${paradigm}`)}
-          hidden={paradigm !== verbTense}
+          data-selected={paradigm === verbTense ? 'true' : 'false'}
           data-print={paradigm.endsWith('.future') ? 'omit' : undefined}
         >
           <ParadigmTable
@@ -344,7 +344,7 @@ const TabsContainer = styled('nav')`
 `
 
 const ParadigmPanel = styled(TabPanel)`
-  &[hidden] {
+  &[data-selected='false'] {
     display: none;
   }
 
@@ -352,7 +352,7 @@ const ParadigmPanel = styled(TabPanel)`
     padding-top: 0;
     break-inside: avoid;
 
-    &[hidden] {
+    &[data-selected='false'] {
       display: flex;
     }
 

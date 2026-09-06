@@ -138,8 +138,8 @@ describe('Conjugation table', () => {
     const selected = screen.getByText('Active Jussive', { selector: 'th' }).closest('[role="tabpanel"]')!
     const others = screen.getByText('Active Past', { selector: 'th' }).closest('[role="tabpanel"]')!
 
-    expect(selected).toBeVisible()
-    expect(others).toHaveAttribute('hidden')
+    expect(selected).toHaveAttribute('data-selected', 'true')
+    expect(others).toHaveAttribute('data-selected', 'false')
   })
 
   it('shows active and passive voice tabs', () => {
