@@ -595,19 +595,18 @@ describe('renderExplanation', () => {
     })
   })
 
-  test('groups root, form description, and formIPattern in first paragraph', () => {
+  test('leads the first paragraph with the formIPattern, then the form, then the root', () => {
     expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual(
       [
         [
-          { text: 'explanation.root.sound', kind: 'radical' },
-          { text: 'explanation.form.1-action', kind: 'measure' },
           { text: 'explanation.form-i-pattern.a-u', kind: 'measure' },
+          { text: 'explanation.form.1-action', kind: 'measure' },
+          { text: 'explanation.root.sound', kind: 'radical' },
         ],
         [
           { text: 'explanation.tense.active.past', kind: 'measure' },
           { text: 'explanation.tense.active.past.form-i', kind: 'measure' },
         ],
-        [{ text: 'explanation.pronoun.base-form', kind: 'agreement' }],
       ],
     )
   })
@@ -617,6 +616,11 @@ describe('renderExplanation', () => {
       text: 'explanation.form.3',
       kind: 'measure',
     })
+  })
+
+  test('form I past tense paragraph keeps the citation sentence to the citation cell', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('كتب', 1), 'active.past', '3mp', 'كَتَبُوا')
+    expect(renderExplanation(layers, t)[1]).toEqual([{ text: 'explanation.tense.active.past', kind: 'measure' }])
   })
 
   test('includes form-i past pattern sentence for form I active.past', () => {
@@ -747,8 +751,8 @@ describe('renderExplanation', () => {
       ),
     ).toEqual([
       [
-        { text: 'explanation.root.hollow-waw', kind: 'radical' },
         { text: 'explanation.form.8', kind: 'measure' },
+        { text: 'explanation.root.hollow-waw', kind: 'radical' },
         { text: 'explanation.form-root.assimilation-voicing', kind: 'radical' },
       ],
       [{ text: 'explanation.tense.active.past', kind: 'measure' }],
@@ -792,8 +796,13 @@ describe('renderExplanation paragraph 3 template selection', () => {
   const kataba = getVerb('كتب', 1)
 
   test('past 3ms renders base-form template', () => {
-    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
+    const layers = resolveVerbExplanationLayers(getVerb('كتب', 2), 'active.past', '3ms', 'كَتَّبَ')
     expect(renderExplanation(layers, t)[2]).toContainEqual({ text: 'explanation.pronoun.base-form', kind: 'agreement' })
+  })
+
+  test('form I past 3ms leaves the base form to the citation sentence', () => {
+    const layers = resolveVerbExplanationLayers(kataba, 'active.past', '3ms', 'كَتَبَ')
+    expect(renderExplanation(layers, t)[2]).toBeUndefined()
   })
 
   test('past 1s renders suffix-only template', () => {
@@ -966,8 +975,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.sound', kind: 'radical' },
         { text: 'explanation.form.1-action', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.activeParticiple', kind: 'measure' }],
     ])
@@ -986,8 +995,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.sound', kind: 'radical' },
         { text: 'explanation.form.1-intermediate', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.activeParticiple.form-i-lexical', kind: 'measure' }],
     ])
@@ -1006,8 +1015,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.sound', kind: 'radical' },
         { text: 'explanation.form.1-intermediate', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.activeParticiple.form-i-fa3iil', kind: 'measure' }],
     ])
@@ -1025,8 +1034,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.sound', kind: 'radical' },
         { text: 'explanation.form.1-action', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.passiveParticiple', kind: 'measure' }],
     ])
@@ -1045,8 +1054,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.sound', kind: 'radical' },
         { text: 'explanation.form.1-action', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.masdar.form-i', kind: 'measure' }],
     ])
@@ -1066,8 +1075,8 @@ describe('renderExplanation with nominal', () => {
     }
     expect(renderExplanation(layers, t)).toEqual([
       [
-        { text: 'explanation.root.assimilated', kind: 'radical' },
         { text: 'explanation.form.1-action', kind: 'measure' },
+        { text: 'explanation.root.assimilated', kind: 'radical' },
       ],
       [{ text: 'explanation.nominal.masdar.form-i-mimi', kind: 'measure' }],
     ])

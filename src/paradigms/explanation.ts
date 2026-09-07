@@ -228,7 +228,9 @@ function renderPronounSentences(
         ? t('explanation.pronoun.prefix-only', { ...pronounParams, prefix })
         : suffix
           ? t('explanation.pronoun.suffix-only', { ...pronounParams, suffix })
-          : t('explanation.pronoun.base-form', pronounParams)
+          : layers.paradigmForm === 1 && layers.tense === 'active.past'
+            ? ''
+            : t('explanation.pronoun.base-form', pronounParams)
 
   const sentences = [
     mainText && { text: mainText, kind: 'agreement' },
@@ -289,12 +291,12 @@ export function renderExplanation(
 
   return [
     [
-      layers.rootType && { text: t(`explanation.root.${layers.rootType}`, params), kind: 'radical' },
+      layers.vowels != null && { text: t(`explanation.form-i-pattern.${layers.vowels}`, params), kind: 'measure' },
       layers.form && {
         text: t(`explanation.form.${layers.form === '1q-bd' ? '1q' : layers.form}`, params),
         kind: 'measure',
       },
-      layers.vowels != null && { text: t(`explanation.form-i-pattern.${layers.vowels}`, params), kind: 'measure' },
+      layers.rootType && { text: t(`explanation.root.${layers.rootType}`, params), kind: 'radical' },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
     [nominalKey && { text: t(nominalKey, params), kind: 'measure' }],
@@ -321,7 +323,8 @@ export function renderExplanation(
           kind: tenseKind(verbLayers?.tense),
         },
       layers.paradigmForm === 1 &&
-        verbLayers?.tense === 'active.past' && {
+        verbLayers?.tense === 'active.past' &&
+        verbLayers.pronoun === '3ms' && {
           text: t('explanation.tense.active.past.form-i', params),
           kind: 'measure',
         },
