@@ -194,14 +194,13 @@ Keep locale updates atomic with verb entry changes.
 Generate a paradigm test file at `src/paradigms/verbs/<slug>.test.ts`:
 
 ```bash
-npm run add:tests:elixirfm -- ktb-1
-npm run add:tests:reverso -- ktb-1
-npm run add:tests:wiktionary -- ktb-1
+npm run add:tests -- elixirfm ktb-1
+npm run add:tests -- reverso ktb-1
+npm run add:tests -- wiktionary ktb-1
+npm run add:tests -- qutrub ktb-1
 ```
 
-- `add:tests:elixirfm`: Resolves the slug to a verb/form and fetches paradigms from ElixirFM.
-- `add:tests:reverso`: Resolves the slug to a lemma and fetches paradigms from Reverso.
-- `add:tests:wiktionary`: Resolves the slug to a lemma/root and fetches paradigms from Wiktionary.
+`add:tests` takes a source (`elixirfm`, `reverso`, `wiktionary`, or `qutrub`) and a slug, resolves the slug to a verb/lemma/root, and fetches paradigms from that source.
 
 Generate test files for every verb in the dataset at once:
 
@@ -214,7 +213,7 @@ ElixirFM responses are cached under `.caches/elixirfm/` so repeat runs (includin
 Usage notes:
 
 - Slug format is `<root>-<form>` (example: `ktb-1`)
-- If the slug contains an apostrophe, quote it in the shell (example: `npm run add:tests:wiktionary -- "qr'-1"`)
+- If the slug contains an apostrophe, quote it in the shell (example: `npm run add:tests -- wiktionary "qr'-1"`)
 
 ## Reporting Incorrect Conjugations
 
