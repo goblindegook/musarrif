@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
+import { buildVerbFromId } from '../../src/paradigms/verbs'
 import { fetchParadigms, presentVowelOf } from './qutrub.mts'
 
 const QUTRUB_RESULT = {
@@ -268,8 +269,8 @@ describe('presentVowelOf', () => {
 })
 
 describe('fetchParadigms', () => {
-  test('asks Qutrub to conjugate the lemma with the requested present vowel', async () => {
-    await fetchParadigms('كَتَبَ', 'u')
+  test('asks Qutrub to conjugate the lemma with the present vowel derived from the verb', async () => {
+    await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(requestBody).toEqual({
       data: { text: 'كَتَبَ', action: 'Conjugate', all: 1, transitive: 1, future_type: 'u' },
@@ -277,7 +278,7 @@ describe('fetchParadigms', () => {
   })
 
   test('maps every column Muṣarrif models, and leaves the energetic moods out', async () => {
-    const parsed = await fetchParadigms('كَتَبَ', 'u')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(Object.keys(parsed.paradigms)).toEqual([
       'active past',
@@ -294,7 +295,7 @@ describe('fetchParadigms', () => {
   })
 
   test('parses a full conjugation column, restoring the sukūn Qutrub drops on أنتم', async () => {
-    const parsed = await fetchParadigms('كَتَبَ', 'u')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(parsed.paradigms['active past']).toEqual({
       '1s': ['كَتَبْتُ'],
@@ -315,7 +316,7 @@ describe('fetchParadigms', () => {
   })
 
   test('keeps only the second-person cells of the imperative column', async () => {
-    const parsed = await fetchParadigms('كَتَبَ', 'u')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(parsed.paradigms['active imperative']).toEqual({
       '2ms': ['اُكْتُبْ'],
@@ -337,7 +338,7 @@ describe('fetchParadigms', () => {
       ),
     )
 
-    const parsed = await fetchParadigms('كَتَبَ', 'u')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(parsed.paradigms['active past']?.['2fp']).toEqual([shaddaFirst.normalize('NFC')])
   })
@@ -345,6 +346,6 @@ describe('fetchParadigms', () => {
   test('reports an unusable response instead of writing an empty paradigm', async () => {
     server.use(http.post('https://qutrub.arabeyes.org/ajaxGet', () => HttpResponse.json({ result: {} })))
 
-    await expect(fetchParadigms('كَتَبَ', 'u')).rejects.toThrow('Qutrub returned no conjugation for كَتَبَ')
+    await expect(fetchParadigms(buildVerbFromId('ktb-1'))).rejects.toThrow('Qutrub returned no conjugation for كَتَبَ')
   })
 })

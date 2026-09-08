@@ -1,3 +1,4 @@
+import { type DisplayVerb, isTriliteralFormIDisplayVerb } from '../../src/paradigms/verbs'
 import type { ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 const ENDPOINT = 'https://qutrub.arabeyes.org/ajaxGet'
@@ -50,7 +51,9 @@ function normalizeForm(form: string): string {
   return (form.endsWith('تُم') ? form + SUKOON : form).normalize('NFC')
 }
 
-export async function fetchParadigms(lemma: string, presentVowel: PresentVowel): Promise<ParsedParadigms> {
+export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
+  const lemma = verb.lemma
+  const presentVowel = presentVowelOf(isTriliteralFormIDisplayVerb(verb) ? verb.vowels : '')
   const response = await fetch(ENDPOINT, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },

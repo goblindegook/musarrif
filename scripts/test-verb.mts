@@ -1,26 +1,18 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { buildVerbFromId, isTriliteralFormIDisplayVerb } from '../src/paradigms/verbs'
-import { fetchParadigms as fetchElixirfm } from './lib/elixirfm.mts'
+import { buildVerbFromId } from '../src/paradigms/verbs'
+import { fetchParadigms as elixirfm } from './lib/elixirfm.mts'
 import type { GenerationTool } from './lib/generate-verb-tests.mts'
-import type { ParsedParadigms } from './lib/paradigms.mts'
-import { fetchParadigms as fetchQutrub, presentVowelOf } from './lib/qutrub.mts'
+import { fetchParadigms as qutrub } from './lib/qutrub.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
-import { fetchParadigms as fetchReverso } from './lib/reverso.mts'
-import { fetchParadigms as fetchWiktionary } from './lib/wiktionary.mts'
+import { fetchParadigms as reverso } from './lib/reverso.mts'
+import { fetchParadigms as wiktionary } from './lib/wiktionary.mts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = join(__dirname, '..', 'src/paradigms/verbs')
 
-type Verb = ReturnType<typeof buildVerbFromId>
-
-const fetchers: Record<GenerationTool, (verb: Verb) => Promise<ParsedParadigms>> = {
-  elixirfm: (verb) => fetchElixirfm(verb),
-  reverso: (verb) => fetchReverso(verb.lemma),
-  wiktionary: (verb) => fetchWiktionary(verb.lemma, verb.root, verb.form),
-  qutrub: (verb) => fetchQutrub(verb.lemma, presentVowelOf(isTriliteralFormIDisplayVerb(verb) ? verb.vowels : '')),
-}
+const fetchers: Record<GenerationTool, typeof elixirfm> = { elixirfm, qutrub, reverso, wiktionary }
 
 function usage(): never {
   const sources = Object.keys(fetchers).join('|')

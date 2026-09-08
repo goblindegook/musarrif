@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
+import { buildVerbFromId } from '../../src/paradigms/verbs'
 import { fetchParadigms } from './reverso.mts'
 
 const REVERSO_HTML = `
@@ -87,7 +88,7 @@ afterAll(() => {
 
 describe('fetchParadigms', () => {
   test('fetches and parses nominals and paradigms for the requested lemma', async () => {
-    const parsed = await fetchParadigms('كَتَبَ')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
 
     expect(parsed.nominals).toEqual({
       activeParticiple: 'كَاتِب',
@@ -145,7 +146,7 @@ describe('fetchParadigms', () => {
       }),
     )
 
-    const parsed = await fetchParadigms('كَتَبَ')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
     expect(parsed.paradigms['active past']?.['1s']).toEqual(['كَتَبْتُ'])
   })
 
@@ -163,7 +164,7 @@ describe('fetchParadigms', () => {
       }),
     )
 
-    const parsed = await fetchParadigms('كَتَبَ')
+    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
     expect(parsed.paradigms['active past']?.['1s']).toEqual([unnormalized.trim().normalize('NFC')])
   })
 
@@ -174,7 +175,7 @@ describe('fetchParadigms', () => {
       }),
     )
 
-    await expect(fetchParadigms('كَتَبَ')).rejects.toThrow(
+    await expect(fetchParadigms(buildVerbFromId('ktb-1'))).rejects.toThrow(
       'Failed to fetch Reverso page (429): https://conjugator.reverso.net/conjugation-arabic-verb-%D9%83%D9%8E%D8%AA%D9%8E%D8%A8%D9%8E.html',
     )
   })

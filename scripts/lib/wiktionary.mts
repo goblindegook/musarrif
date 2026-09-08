@@ -1,5 +1,6 @@
 import { JSDOM } from 'jsdom'
 import { applyDiacriticsPreference } from '../../src/paradigms/tokens'
+import type { DisplayVerb } from '../../src/paradigms/verbs'
 import { toRoman } from '../../src/primitives/numbers'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
@@ -253,7 +254,7 @@ function parseConjugationTable(html: string, lemma: string, root?: string, form?
   }
 }
 
-export async function fetchParadigms(lemma: string, root?: string, form?: number): Promise<ParsedParadigms> {
-  const html = await fetchHtml(applyDiacriticsPreference(lemma, 'none'))
-  return parseConjugationTable(html, lemma, root, form)
+export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
+  const html = await fetchHtml(applyDiacriticsPreference(verb.lemma, 'none'))
+  return parseConjugationTable(html, verb.lemma, verb.root, verb.form)
 }

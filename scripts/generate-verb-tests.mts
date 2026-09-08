@@ -1,11 +1,11 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getVerbById, isTriliteralFormIDisplayVerb, verbs } from '../src/paradigms/verbs'
+import { getVerbById, verbs } from '../src/paradigms/verbs'
 import { fetchParadigms as fetchElixirfmParadigms } from './lib/elixirfm.mts'
 import { type GenerationTool, generateVerbTests } from './lib/generate-verb-tests.mts'
 import type { ParsedParadigms } from './lib/paradigms.mts'
-import { fetchParadigms as fetchQutrubParadigms, presentVowelOf } from './lib/qutrub.mts'
+import { fetchParadigms as fetchQutrubParadigms } from './lib/qutrub.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
 import { fetchParadigms as fetchReversoParadigms } from './lib/reverso.mts'
 import { fetchParadigms as fetchWiktionaryParadigms } from './lib/wiktionary.mts'
@@ -60,7 +60,7 @@ async function generateFromWiktionary(slug: string): Promise<boolean> {
   if (!verb) return false
 
   try {
-    const parsed = await fetchWiktionaryParadigms(verb.lemma, verb.root, verb.form)
+    const parsed = await fetchWiktionaryParadigms(verb)
     if (!hasParsedContent(parsed)) return false
     writeVerbTest(slug, parsed, 'wiktionary')
     return true
@@ -75,8 +75,7 @@ async function generateFromQutrub(slug: string): Promise<boolean> {
   if (!verb) return false
 
   try {
-    const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : ''
-    const parsed = await fetchQutrubParadigms(verb.lemma, presentVowelOf(vowels))
+    const parsed = await fetchQutrubParadigms(verb)
     if (!hasParsedContent(parsed)) return false
     writeVerbTest(slug, parsed, 'qutrub')
     return true
@@ -91,7 +90,7 @@ async function generateFromReverso(slug: string): Promise<boolean> {
   if (!verb) return false
 
   try {
-    const parsed = await fetchReversoParadigms(verb.lemma)
+    const parsed = await fetchReversoParadigms(verb)
     if (!hasParsedContent(parsed)) return false
     writeVerbTest(slug, parsed, 'reverso')
     return true

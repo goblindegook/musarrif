@@ -1,4 +1,5 @@
 import { JSDOM } from 'jsdom'
+import type { DisplayVerb } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 const MOBILE_TITLE_TO_PARADIGM: Partial<Record<string, VerbParadigm>> = {
@@ -58,8 +59,8 @@ function parseConjugation(box: Element, pronounOrder: readonly PronounId[]): Par
   return result
 }
 
-export async function fetchParadigms(lemma: string): Promise<ParsedParadigms> {
-  const url = `https://conjugator.reverso.net/conjugation-arabic-verb-${encodeURIComponent(lemma)}.html`
+export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
+  const url = `https://conjugator.reverso.net/conjugation-arabic-verb-${encodeURIComponent(verb.lemma)}.html`
   const response = await fetch(url, {
     headers: {
       accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
