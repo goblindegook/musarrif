@@ -1,4 +1,4 @@
-export type GenerationTool = 'wiktionary' | 'reverso' | 'elixirfm'
+export type GenerationTool = 'wiktionary' | 'reverso' | 'elixirfm' | 'qutrub'
 type GenerationStatus = GenerationTool | 'existing' | 'missing'
 
 export interface VerbTestGenerationResult {

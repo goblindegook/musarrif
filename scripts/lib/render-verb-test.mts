@@ -6,6 +6,7 @@ const SOURCE_LABEL: Record<GenerationTool, string> = {
   wiktionary: 'Wiktionary',
   reverso: 'Reverso',
   elixirfm: 'ElixirFM',
+  qutrub: 'Qutrub',
 }
 
 const PARADIGM_ORDER: VerbParadigm[] = [

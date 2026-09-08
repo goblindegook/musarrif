@@ -1,10 +1,11 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getVerbById, verbs } from '../src/paradigms/verbs'
+import { getVerbById, isTriliteralFormIDisplayVerb, verbs } from '../src/paradigms/verbs'
 import { fetchParadigms as fetchElixirfmParadigms } from './lib/elixirfm.mts'
 import { type GenerationTool, generateVerbTests } from './lib/generate-verb-tests.mts'
 import type { ParsedParadigms } from './lib/paradigms.mts'
+import { fetchParadigms as fetchQutrubParadigms, presentVowelOf } from './lib/qutrub.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
 import { fetchParadigms as fetchReversoParadigms } from './lib/reverso.mts'
 import { fetchParadigms as fetchWiktionaryParadigms } from './lib/wiktionary.mts'
@@ -42,6 +43,10 @@ function isWiktionaryNotFound(error: unknown): boolean {
   )
 }
 
+function isQutrubNotFound(error: unknown): boolean {
+  return errorMessage(error).includes('Qutrub returned no conjugation')
+}
+
 function isReversoNotFound(error: unknown): boolean {
   return errorMessage(error).includes('Failed to fetch Reverso page (404):')
 }
@@ -61,6 +66,22 @@ async function generateFromWiktionary(slug: string): Promise<boolean> {
     return true
   } catch (error: unknown) {
     if (isWiktionaryNotFound(error)) return false
+    throw error
+  }
+}
+
+async function generateFromQutrub(slug: string): Promise<boolean> {
+  const verb = getVerbById(slug)
+  if (!verb) return false
+
+  try {
+    const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : ''
+    const parsed = await fetchQutrubParadigms(verb.lemma, presentVowelOf(vowels))
+    if (!hasParsedContent(parsed)) return false
+    writeVerbTest(slug, parsed, 'qutrub')
+    return true
+  } catch (error: unknown) {
+    if (isQutrubNotFound(error)) return false
     throw error
   }
 }
@@ -104,8 +125,9 @@ async function run() {
     hasExistingTest: (slug) => existsSync(join(OUTPUT_DIR, `${slug}.test.ts`)),
     generators: [
       { source: 'wiktionary', generate: generateFromWiktionary },
-      { source: 'reverso', generate: generateFromReverso },
       { source: 'elixirfm', generate: generateFromElixirfm },
+      { source: 'qutrub', generate: generateFromQutrub },
+      { source: 'reverso', generate: generateFromReverso },
     ],
     writeReport: (path, content) => {
       writeFileSync(path, content)
@@ -117,12 +139,13 @@ async function run() {
     wiktionary: results.filter(({ source }) => source === 'wiktionary').length,
     reverso: results.filter(({ source }) => source === 'reverso').length,
     elixirfm: results.filter(({ source }) => source === 'elixirfm').length,
+    qutrub: results.filter(({ source }) => source === 'qutrub').length,
     missing: results.filter(({ source }) => source === 'missing').length,
   }
 
   console.log(`Wrote ${reportPath}`)
   console.log(
-    `existing=${counts.existing} wiktionary=${counts.wiktionary} reverso=${counts.reverso} elixirfm=${counts.elixirfm} missing=${counts.missing}`,
+    `existing=${counts.existing} wiktionary=${counts.wiktionary} elixirfm=${counts.elixirfm} qutrub=${counts.qutrub} reverso=${counts.reverso} missing=${counts.missing}`,
   )
 }
 
