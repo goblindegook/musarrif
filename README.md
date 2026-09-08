@@ -36,7 +36,7 @@ Every conjugation is checked against [Wiktionary](https://en.wiktionary.org/) fi
 
 Running the ElixirFM comparison across the full 992-verb dataset (`npm run debug:elixirfm`) currently scores **~98.2% agreement**, excluding the conjugations ElixirFM has no equivalent for.
 
-130 verbs cannot be compared at all, and another 101 disagree with ElixirFM somewhere in their paradigm. Every discrepancy falls into one of the categories below; the 18 verbs marked under review are listed again [below](#under-review). Seven verbs disagree in two ways and are listed under both categories, so the rows do not sum to 101.
+130 verbs cannot be compared at all, and another 101 disagree with ElixirFM somewhere in their paradigm. Every discrepancy falls into one of the categories below; the 13 verbs marked under review are listed again [below](#under-review). Four verbs disagree in two ways and are listed under both categories, so the rows do not sum to 101.
 
 | Discrepancy | Verbs | Error? |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ Running the ElixirFM comparison across the full 992-verb dataset (`npm run debug
 | **Form IX gemination.** The pattern geminates the final radical of a sound root, and ElixirFM again leaves the jussive and imperative uncontracted: يَحمَرِر where Muṣarrif contracts to يَحْمَرَّ. | <details><summary>6 verbs</summary>`Hmr-9`, `Sfr-9`, `byD-9`, `xDl-9`, `xDr-9`, `zrq-9`</details> | No |
 | **Form I stem-vowel variants.** Muṣarrif reads أَحْسَبُ where ElixirFM reads أَحسِبُ, and مَسِسْتُ where it reads مَسَستُ. Both vowellings are lexically attested. | <details><summary>6 verbs</summary>`Hsb-1`, `Hss-1`, `Tbx-1`, `lms-1`, `mss-1`, `rkz-1`</details> | No |
 | **Form I passive of assimilated verbs.** ElixirFM drops the stem wāw (يُعَى) where the passive retains it (يُوعَى). | <details><summary>5 verbs</summary>`w'y-1`, `wEy-1`, `wly-1`, `wny-1`, `wqy-1`</details> | No |
-| **Prothetic imperative vowel on weak and hamzated initials.** Muṣarrif writes اِيدِدْنَ where ElixirFM has اِئدِدنَ, and اُوسُرْ where it has اُيسُر. | <details><summary>5 verbs</summary>`'dd-1`, `'jj-1`, `'zz-1`, `wdd-1`, `ysr-1`</details> | Under review |
+| **Prothetic imperative vowel on weak initials.** After the prothetic alif, Muṣarrif merges a vowelless weak first radical into the matching long vowel — اِيدَدْنَ for وَدَّ, اُوسُرْ for يَسُرَ — where ElixirFM keeps the radical (اِودَد, اُيسُر). Wiktionary and Reverso both write the merged forms. | <details><summary>2 verbs</summary>`wdd-1`, `ysr-1`</details> | No |
 | **Variant lexeme compared.** The citation form matches, but ElixirFM inflects a different verb of the same root: `zwl-1` compares Muṣarrif's زَالَ يَزُولُ (to cease) against ElixirFM's auxiliary يَزَالُ; `gyr-1` compares غَارَ يَغَارُ (gh-y-r) against a gh-w-r entry. | <details><summary>4 verbs</summary>`Swr-1`, `bky-1`, `gyr-1`, `zwl-1`</details> | No |
 | **Geminate wāw spelling.** Muṣarrif writes أُووِي (long ū + wāw), ElixirFM أُوِّي (shadda). | <details><summary>2 verbs</summary>`'wy-1`, `'wy-4`</details> | Under review |
 | **Contracted imperative of أَمَرَ.** مُرْ vs. ElixirFM's اُؤمُر. Both attested. | <details><summary>1 verb</summary>`'mr-1`</details> | No |
@@ -56,15 +56,12 @@ ElixirFM also omits sukūns entirely; the comparison normalises them away before
 
 ### Under Review
 
-The 18 verbs whose discrepancies are still open questions, and what was found for each:
+The 13 verbs whose discrepancies are still open questions, and what was found for each:
 
 | Verb | Lemma | Under review | Settled |
 | --- | --- | --- | --- |
-| `'dd-1` | أَدَّ | Prothetic imperative vowel | Doubled-verb contraction |
-| `'jj-1` | أَجَّ | Prothetic imperative vowel | Doubled-verb contraction |
 | `'wy-1` | أَوَى | Geminate wāw spelling | |
 | `'wy-4` | آوَى | Geminate wāw spelling | |
-| `'zz-1` | أَزَّ | Prothetic imperative vowel | Doubled-verb contraction |
 | `Dw'-4` | أَضَاءَ | Hamza seat after a long vowel | |
 | `Dw'-10` | اِسْتَضَاءَ | Hamza seat after a long vowel | |
 | `bw'-1` | بَاءَ | Hamza seat after a long vowel | |
@@ -76,8 +73,6 @@ The 18 verbs whose discrepancies are still open questions, and what was found fo
 | `sw'-8` | اِسْتَاءَ | Hamza seat after a long vowel | |
 | `w'd-1` | وَأَدَ | Hamza seat after a long vowel | |
 | `w'y-1` | وَأَى | Hamza seat after a long vowel | Form I passive of assimilated verbs |
-| `wdd-1` | وَدَّ | Prothetic imperative vowel | Doubled-verb contraction |
-| `ysr-1` | يَسُرَ | Prothetic imperative vowel | |
 
 ## Setup
 

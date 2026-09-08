@@ -97,7 +97,6 @@ const PanelTitleButton = styled('button')`
   background: none;
   border: none;
   border-bottom: 1px solid var(--color-border);
-  border-radius: var(--radius);
   cursor: pointer;
   text-align: start;
   width: 100%;
