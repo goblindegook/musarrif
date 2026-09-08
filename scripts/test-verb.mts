@@ -12,7 +12,7 @@ import { fetchParadigms as wiktionary } from './lib/wiktionary.mts'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = join(__dirname, '..', 'src/paradigms/verbs')
 
-const fetchers: Record<GenerationTool, typeof elixirfm> = { elixirfm, qutrub, reverso, wiktionary }
+const fetchers = { elixirfm, qutrub, reverso, wiktionary } as const
 
 function usage(): never {
   const sources = Object.keys(fetchers).join('|')
