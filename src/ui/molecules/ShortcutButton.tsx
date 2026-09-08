@@ -13,6 +13,7 @@ interface ShortcutButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
   shortcutKey: string
   showShortcut?: boolean
   badgeLabel?: string
+  statusGlyph?: 'correct' | 'wrong'
   variant?: ButtonVariant
   size?: ButtonSize
 }
@@ -22,6 +23,7 @@ export function ShortcutButton({
   shortcutKey,
   showShortcut = true,
   badgeLabel,
+  statusGlyph,
   onClick,
   disabled,
   ...props
@@ -58,6 +60,11 @@ export function ShortcutButton({
           {SHORTCUT_LABELS[shortcutKey.toLowerCase()] ?? shortcutKey.toUpperCase()}
         </ShortcutBadge>
       )}
+      {statusGlyph && (
+        <StatusBadge aria-hidden="true" data-status={statusGlyph}>
+          {statusGlyph === 'correct' ? '✓' : '✗'}
+        </StatusBadge>
+      )}
       {children}
       {badgeLabel && <InfoBadge>{badgeLabel}</InfoBadge>}
     </Button>
@@ -67,7 +74,7 @@ export function ShortcutButton({
 const ShortcutBadge = styled('span')`
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: 0.85rem;
+  left: 0.85rem;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
@@ -84,10 +91,32 @@ const ShortcutBadge = styled('span')`
   font-family: ui-monospace, monospace;
 `
 
+const StatusBadge = styled('span')`
+  position: absolute;
+  inset-block-start: 50%;
+  left: 0.85rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+
+  &[data-status='correct'] {
+    color: var(--color-success-text);
+  }
+
+  &[data-status='wrong'] {
+    color: var(--color-error-text);
+  }
+`
+
 const InfoBadge = styled('span')`
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-end: 0.85rem;
+  right: 0.85rem;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;

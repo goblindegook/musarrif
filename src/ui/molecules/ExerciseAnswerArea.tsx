@@ -109,6 +109,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
                 className={OPTION_BUTTON_CLASS}
                 shortcutKey={`${index + 1}`}
                 showShortcut={!reveal}
+                statusGlyph={reveal ? (isCorrect ? 'correct' : isSelected ? 'wrong' : undefined) : undefined}
                 onClick={() => {
                   if (reveal) return
                   setSelected(index)

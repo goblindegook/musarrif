@@ -25,8 +25,8 @@ import { Panel } from '../molecules/Panel'
 import { LearningInsights } from './LearningInsights'
 
 const CHART_COLORS = {
-  light: { correct: '#16a34a', incorrect: '#dc2626', passed: '#94a3b8' },
-  dark: { correct: '#4ade80', incorrect: '#f87171', passed: '#7a7060' },
+  light: { correct: '#3d5c2e', incorrect: '#8c1d18', passed: '#8a8076' },
+  dark: { correct: '#a3c48a', incorrect: '#f0a08e', passed: '#968c7e' },
 }
 
 interface Props {
@@ -428,24 +428,18 @@ const MasteryContainer = styled('section')`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  margin-block-end: 1rem;
 `
 
 const MasteryGrid = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  border-block-start: 1px solid var(--color-border);
 `
 
 const MasteryCategory = styled('details')`
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--color-bg-surface) 92%, var(--color-bg-base) 8%);
-  overflow: hidden;
+  border-block-end: 1px solid var(--color-border);
   transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
-
-  &:has(> button:hover) {
-    border-color: var(--color-accent);
-  }
 `
 
 const MasterySummary = styled('summary')`
@@ -507,10 +501,10 @@ const MasteryCategoryRow = styled('span')`
 
 const MasteryItems = styled('div')`
   border-top: 1px solid var(--color-border);
-  padding: 0.45rem 0.6rem 0.6rem;
+  padding: 1.2rem 0.6rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.6rem;
 `
 
 const MasteryItem = styled('div')`

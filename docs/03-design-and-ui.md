@@ -15,7 +15,7 @@ Elegant, minimal, quietly authoritative. Three words: **precise, warm, scholarly
 - **Palette**: Paper ground `#f6f3ec`, iron-gall ink text (`#1f1a17` → `#5b5147` → `#8a8076`), **one** accent — cinnabar `#a32b18` (`#e8705a` dark). Red carries emphasis, focus, active states. Semantic green/amber/red only for exercise feedback; insight colors are a coding channel, not decoration.
 - **Flat surfaces**: no gradients; no shadows except `--shadow-elevated` for modals/overlays. Panels transparent, separated by hairline rules — not cards.
 - **Two radii only**: `--radius` (`0.25rem`) and `--radius-pill`. No third value.
-- **Borders carry structure**: 1px everywhere; hover/focus shift border to accent instead of adding depth. Border colour must hold 3:1 against the surface it sits on (WCAG 1.4.11) — it is the only affordance these controls have.
+- **Borders carry structure**: 1px everywhere; hover/focus shift border to accent instead of adding depth. Resting border contrast is deliberately soft (~2.8:1 on paper) — quiet until engaged. Hover/focus raises the border to cinnabar and the 3px accent focus outline carries the accessible affordance; the resting border does not target WCAG 1.4.11 on its own.
 - **Typography**: `system-ui` for UI (intentional), Noto Sans Arabic (400–700) for Arabic. Uppercase + `0.08em` tracking on tabs and structural labels. Generous Arabic sizing — always the visual centrepiece. No decorative eyebrows.
 - **Motion**: `180ms cubic-bezier(0.22, 1, 0.36, 1)` for state, `300ms` for collapse; every transition needs a `prefers-reduced-motion` escape.
 - **Theme**: light + dark, fully tokenised (`:root` / `[data-theme="dark"]`).
