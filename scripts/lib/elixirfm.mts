@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve as resolvePath } from 'node:path'
 import { DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
-import { type DisplayVerb, formatFormLabel, verbs } from '../../src/paradigms/verbs'
+import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb, verbs } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 // ElixirFM tags every form positionally: V, aspect, mood, voice, then person, gender and number at
@@ -173,7 +173,7 @@ function parseResolvedVerbHtml(
   html: string,
   root: string,
   ownedRoots: ReadonlySet<string>,
-): Map<string, ResolvedLexeme> {
+): Map<string, ResolvedLexeme[]> {
   const candidates: Array<[formKey: string, entryRoot: string, lexeme: ResolvedLexeme]> = []
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
@@ -186,14 +186,15 @@ function parseResolvedVerbHtml(
     candidates.push([formKey.replace(/q$/, ''), entryRoot, [clipMatch[1], clipMatch[2], citation]])
   }
 
-  const entries = new Map<string, ResolvedLexeme>()
+  const entries = new Map<string, ResolvedLexeme[]>()
   for (const matches of [
     (entryRoot: string) => normalizeRoot(entryRoot) === normalizeRoot(root),
     (entryRoot: string) => weakenRoot(entryRoot) === weakenRoot(root) && !ownedRoots.has(normalizeRoot(entryRoot)),
   ]) {
+    const filled = new Set(entries.keys())
     for (const [formKey, entryRoot, lexeme] of candidates) {
-      if (entries.has(formKey) || !matches(entryRoot)) continue
-      entries.set(formKey, lexeme)
+      if (filled.has(formKey) || !matches(entryRoot)) continue
+      entries.set(formKey, [...(entries.get(formKey) ?? []), lexeme])
     }
   }
 
@@ -230,7 +231,7 @@ async function resolve(
   text: string,
   root: string,
   ownedRoots: ReadonlySet<string>,
-): Promise<Map<string, ResolvedLexeme>> {
+): Promise<Map<string, ResolvedLexeme[]>> {
   const html = await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text })
   return parseResolvedVerbHtml(html, root, ownedRoots)
 }
@@ -253,11 +254,34 @@ function unvocalise(lemma: string): string {
 // vocalisation, so a lemma it vowels differently (كَبُرَ against its كَبَر) resolves to another form
 // of the root or to nothing at all; retrying unvocalised finds the form asked for, and the caller
 // compares citation forms to see whether it is the same verb.
+const SHORT_VOWEL_LETTERS: Record<string, string> = {
+  [String(FATHA)]: 'a',
+  [String(KASRA)]: 'i',
+  [String(DAMMA)]: 'u',
+}
+
+function presentVowelOf(imperfect: string): string | undefined {
+  const vowels = [...normalizeArabic(imperfect).slice(0, -1)].filter((char) => char in SHORT_VOWEL_LETTERS)
+  return SHORT_VOWEL_LETTERS[vowels.at(-1) ?? '']
+}
+
+async function pickByPresentVowel(candidates: ResolvedLexeme[], vowel: string): Promise<ResolvedLexeme | undefined> {
+  const tag = toTag('active present indicative', '3ms') as string
+  for (const [lexemeId, entryNum, citation] of candidates) {
+    const forms = await inflectVerb(lexemeId, entryNum)
+    if (presentVowelOf(forms.get(tag) ?? '') === vowel) return [lexemeId, entryNum, citation]
+  }
+  return undefined
+}
+
 export async function resolveVerb(verb: DisplayVerb): Promise<ResolvedLexeme | undefined> {
   const formKey = toFormKey(verb)
   const owned = rootsOwnedByOtherVerbs(verb)
   const vocalised = await resolve(verb.lemma, verb.root, owned)
-  return vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root, owned)).get(formKey)
+  const candidates = vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root, owned)).get(formKey)
+  if (!candidates?.length) return undefined
+  if (candidates.length === 1 || !isTriliteralFormIDisplayVerb(verb)) return candidates[0]
+  return (await pickByPresentVowel(candidates, verb.vowels.split('-')[1])) ?? candidates[0]
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {

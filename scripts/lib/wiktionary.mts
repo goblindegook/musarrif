@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom'
 import { applyDiacriticsPreference } from '../../src/paradigms/tokens'
-import type { DisplayVerb } from '../../src/paradigms/verbs'
+import { type DisplayVerb, isTriliteralFormIDisplayVerb } from '../../src/paradigms/verbs'
 import { toRoman } from '../../src/primitives/numbers'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
@@ -190,6 +190,12 @@ function readCaptionForm(table: HTMLTableElement): string | undefined {
   return caption.match(/\(([IVX]+q?),/)?.[1]
 }
 
+function readCaptionVowels(table: HTMLTableElement): string | undefined {
+  const caption = normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')
+  const match = caption.match(/\b([aiu]) ~ ([aiu])\b/)
+  return match ? `${match[1]}-${match[2]}` : undefined
+}
+
 type RootDeclaration = { el: Element; arabicRoot: string }
 
 function findRootDeclarations(arabicSection: Element): RootDeclaration[] {
@@ -213,7 +219,13 @@ function nearestRoot(table: HTMLTableElement, declarations: RootDeclaration[]): 
   return result
 }
 
-function parseConjugationTable(html: string, lemma: string, root?: string, form?: number): ParsedParadigms {
+function parseConjugationTable(
+  html: string,
+  lemma: string,
+  root?: string,
+  form?: number,
+  vowels?: string,
+): ParsedParadigms {
   const dom = new JSDOM(html)
   const doc = dom.window.document
   const arabicHeading = doc.querySelector('h2#Arabic')
@@ -239,12 +251,16 @@ function parseConjugationTable(html: string, lemma: string, root?: string, form?
   const formMatches = expectedForm
     ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm)
     : lemmaMatches
-  const matchingTable = formMatches[0]
+  const vowelMatches =
+    vowels && formMatches.some((table) => readCaptionVowels(table))
+      ? formMatches.filter((table) => readCaptionVowels(table) === vowels)
+      : formMatches
+  const matchingTable = vowelMatches[0]
   const table = matchingTable ?? tablesToSearch[0]
 
   if (!matchingTable) {
     throw new Error(
-      `No conjugation table matched lemma "${lemma}"${expectedForm ? ` (form ${expectedForm})` : ''}. Closest caption: ${normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')}`,
+      `No conjugation table matched lemma "${lemma}"${expectedForm ? ` (form ${expectedForm})` : ''}${vowels ? ` (vowels ${vowels})` : ''}. Closest caption: ${normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')}`,
     )
   }
 
@@ -255,6 +271,11 @@ function parseConjugationTable(html: string, lemma: string, root?: string, form?
 }
 
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
-  const html = await fetchHtml(applyDiacriticsPreference(verb.lemma, 'none'))
-  return parseConjugationTable(html, verb.lemma, verb.root, verb.form)
+  return parseConjugationTable(
+    await fetchHtml(applyDiacriticsPreference(verb.lemma, 'none')),
+    verb.lemma,
+    verb.root,
+    verb.form,
+    isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined,
+  )
 }

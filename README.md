@@ -202,6 +202,12 @@ npm run add:tests -- qutrub ktb-1
 
 `add:tests` takes a source (`elixirfm`, `reverso`, `wiktionary`, or `qutrub`) and a slug, resolves the slug to a verb/lemma/root, and fetches paradigms from that source.
 
+Form I verbs accept an optional vowel pattern (`a-a`, `a-i`, `a-u`, `i-a`, …) as a third argument, which disambiguates roots with more than one Form I conjugation:
+
+```bash
+npm run add:tests -- wiktionary qdr-1 a-u
+```
+
 Generate test files for every verb in the dataset at once:
 
 ```bash

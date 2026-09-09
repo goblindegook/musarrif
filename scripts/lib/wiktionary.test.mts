@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
-import { buildVerbFromId } from '../../src/paradigms/verbs'
+import { buildVerbFromId, synthesizeVerb } from '../../src/paradigms/verbs'
 import { fetchParadigms } from './wiktionary.mts'
 
 const WIKTIONARY_HTML = `
@@ -265,6 +265,59 @@ ${formIVCaption}
 
     const formIV = await fetchParadigms(buildVerbFromId("'ty-4"))
     expect(formIV.paradigms['active past']?.['1s']).toEqual(['آتَيْتُ (IV)'])
+  })
+
+  test('picks the Form I table whose caption declares the requested vowel pattern', async () => {
+    const twoPatternHtml = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>قَدَرَ</strong></i> (I, sound, a ~ i)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">non-past (imperfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">أَقْدِرُ</span></td>
+<td><span class="Arab">تَقْدِرُ</span></td>
+<td><span class="Arab">يَقْدِرُ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation_2">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>قَدَرَ</strong></i> (I, sound, a ~ u)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">non-past (imperfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">أَقْدُرُ</span></td>
+<td><span class="Arab">تَقْدُرُ</span></td>
+<td><span class="Arab">يَقْدُرُ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(twoPatternHtml, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const patternAU = await fetchParadigms(synthesizeVerb('قدر', 1, 'a-u'))
+    expect(patternAU.paradigms['active present indicative']?.['3ms']).toEqual(['يَقْدُرُ'])
+
+    const patternAI = await fetchParadigms(synthesizeVerb('قدر', 1, 'a-i'))
+    expect(patternAI.paradigms['active present indicative']?.['3ms']).toEqual(['يَقْدِرُ'])
   })
 
   test('matches quadriliteral form captions labelled with a trailing "q" (e.g. "Iq")', async () => {

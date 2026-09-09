@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
-import { buildVerbFromId } from '../../src/paradigms/verbs'
+import { buildVerbFromId, synthesizeVerb } from '../../src/paradigms/verbs'
 import { compareForm, fetchParadigms, fromTag, isSameLexeme, resolveVerb, toTag } from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
@@ -334,6 +334,32 @@ ${RESOLVE_HTML}`
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(foreignFirst)))
 
     expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+  })
+
+  test('picks the Form I lexeme whose imperfect carries the requested present vowel', async () => {
+    const lexeme = (clip: string) => `
+<table cellspacing="0" class="lexeme">
+  <tr>
+    <td class="xtag" title="verb">V</td>
+    <td class="orth" title="citation form">قَدَر</td>
+    <td class="root" title="root of citation form">q d r قدر</td>
+    <td class="class" title="derivational class">I</td>
+    <td class="button"><a href="index.fcgi?mode=inflect&amp;clip=${clip}" title="inflect this lexeme">Inflect</a></td>
+  </tr>
+</table>`
+    const imperfect = (form: string) =>
+      `<table cellspacing="0"><tr><td class="xtag" title="imperfective">VIIA-3MS--</td><td class="orth" title="inflected form">${form}</td></tr></table>`
+
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const data = Object.fromEntries(new URLSearchParams(await request.text()).entries())
+        if (data.mode === 'resolve') return HttpResponse.text(`${lexeme('(4926,1)')}${lexeme('(4926,6)')}`)
+        return HttpResponse.text(imperfect(data.clip === '(4926,1)' ? 'يَقدُرُ' : 'يَقدَرُ'))
+      }),
+    )
+
+    expect(await resolveVerb(synthesizeVerb('قدر', 1, 'a-u'))).toEqual(['4926', '1', 'قَدَر'])
+    expect(await resolveVerb(synthesizeVerb('قدر', 1, 'a-a'))).toEqual(['4926', '6', 'قَدَر'])
   })
 })
 
