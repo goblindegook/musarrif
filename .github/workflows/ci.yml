@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check module boundaries
+        run: npm run check:boundaries
+
       - name: Test
         run: npm test
 
