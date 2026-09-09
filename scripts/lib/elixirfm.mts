@@ -148,18 +148,26 @@ async function postElixir(params: Record<string, string>): Promise<string> {
   return html
 }
 
-// [lexemeId, entryNum, citation form]
-export type ResolvedLexeme = [string, string, string]
+export type ResolvedLexeme = [lexemeId: string, entryNum: string, citationForm: string]
 
-function parseResolvedVerbHtml(html: string): Map<string, ResolvedLexeme> {
+function normalizeRoot(root: string): string {
+  return root
+    .replaceAll(/[^ء-ْ]/gu, '')
+    .replaceAll(new RegExp(`(.)${SHADDA}`, 'gu'), '$1$1')
+    .replaceAll(/[أإآؤئ]/gu, 'ء')
+}
+
+function parseResolvedVerbHtml(html: string, root: string): Map<string, ResolvedLexeme> {
   const entries = new Map<string, ResolvedLexeme>()
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
     const pos = getCell(block, 'xtag')
     const formKey = getCell(block, 'class')
     const citation = getCell(block, 'orth')
+    const entryRoot = getCell(block, 'root')
     const clipMatch = /clip=\((\d+),(\d+)\)/.exec(block)
-    if (pos !== 'V' || !formKey || !citation || !clipMatch || entries.has(formKey)) continue
+    if (pos !== 'V' || !formKey || !citation || !entryRoot || !clipMatch || entries.has(formKey)) continue
+    if (normalizeRoot(entryRoot) !== normalizeRoot(root)) continue
     entries.set(formKey, [clipMatch[1], clipMatch[2], citation])
   }
 
@@ -192,17 +200,17 @@ export function compareForm(musarrif: string, elixir: string | undefined): 'matc
   return normalizeArabic(musarrif) === normalizeArabic(elixir) ? 'match' : 'mismatch'
 }
 
-async function resolve(text: string): Promise<Map<string, ResolvedLexeme>> {
-  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }))
+async function resolve(text: string, root: string): Promise<Map<string, ResolvedLexeme>> {
+  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }), root)
 }
 
 // The vocalised lemma is the precise query — صَمَّ resolves to صَمّ "plug", while unvocalised صم
 // also matches وَصَم and would pick the wrong lexeme. But ElixirFM only matches its own
 // vocalisation, so a lemma it vowels differently (كَبُرَ against its كَبَر) resolves to nothing;
 // retrying unvocalised finds that lexeme, and the caller compares citation forms to see it differs.
-export async function resolveVerb(lemma: string): Promise<Map<string, ResolvedLexeme>> {
-  const entries = await resolve(lemma)
-  return entries.size > 0 ? entries : resolve(applyDiacriticsPreference(lemma, 'none'))
+export async function resolveVerb(lemma: string, root: string): Promise<Map<string, ResolvedLexeme>> {
+  const entries = await resolve(lemma, root)
+  return entries.size > 0 ? entries : resolve(applyDiacriticsPreference(lemma, 'none'), root)
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {
@@ -239,7 +247,7 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
 }
 
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
-  const entries = await resolveVerb(verb.lemma)
+  const entries = await resolveVerb(verb.lemma, verb.root)
   const match = entries.get(formatFormLabel(verb.form, verb.root))
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
   const [lexemeId, entryNum] = match

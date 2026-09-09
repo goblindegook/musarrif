@@ -85,7 +85,7 @@ for (const verb of verbsToTest as DisplayVerb[]) {
     process.stdout.write(`${label} (${verb.lemma})… `)
     await sleep(RATE_MS)
 
-    const entries = await resolveVerb(verb.lemma)
+    const entries = await resolveVerb(verb.lemma, verb.root)
     const isQuad = verb.root.length === 4
     const formKey = isQuad ? `${FORM_ROMAN[verb.form]}q` : FORM_ROMAN[verb.form]
 

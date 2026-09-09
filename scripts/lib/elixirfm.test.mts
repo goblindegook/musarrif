@@ -15,6 +15,7 @@ const RESOLVE_HTML = `
     <td class="xtag" title="verb">V</td>
     <td class="phon" title="citation form">katab</td>
     <td class="orth" title="citation form">كَتَبَ</td>
+    <td class="root" title="root of citation form">k t b كتب</td>
     <td class="morphs" title="morphs of citation form">FaCaL</td>
     <td class="class" title="derivational class">I</td>
     <td class="reflex" title="lexical reference">"write"</td>
@@ -26,6 +27,7 @@ const RESOLVE_HTML = `
     <td class="xtag" title="verb">V</td>
     <td class="phon" title="citation form">tadahraj</td>
     <td class="orth" title="citation form">تَدَحْرَجَ</td>
+    <td class="root" title="root of citation form">d ḥ r ǧ دحرج</td>
     <td class="morphs" title="morphs of citation form">TaKaRDaS</td>
     <td class="class" title="derivational class">IVq</td>
     <td class="reflex" title="lexical reference">"roll"</td>
@@ -275,12 +277,34 @@ describe('fromTag', () => {
 
 describe('resolveVerb', () => {
   test('exposes the citation form alongside the clip', async () => {
-    expect(await resolveVerb('كَتَبَ')).toEqual(
-      new Map([
-        ['I', ['111', '2', 'كَتَبَ']],
-        ['IVq', ['333', '4', 'تَدَحْرَجَ']],
-      ]),
+    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
+  })
+
+  test('keeps the entry of a root ElixirFM writes with a shadda', async () => {
+    server.use(
+      http.post(ELIXIR_URL, () =>
+        HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'k b b كبّ').replace('كَتَبَ</td>', 'كَبَّ</td>')),
+      ),
     )
+
+    expect(await resolveVerb('كَبَّ', 'كبب')).toEqual(new Map([['I', ['111', '2', 'كَبَّ']]]))
+  })
+
+  test('drops a lexeme of another root that shares the form', async () => {
+    const foreignFirst = `
+<table cellspacing="0" class="lexeme">
+  <tr>
+    <td class="xtag" title="verb">V</td>
+    <td class="orth" title="citation form">كَرَّ</td>
+    <td class="root" title="root of citation form">k r r كرّ</td>
+    <td class="class" title="derivational class">I</td>
+    <td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(999,1)" title="inflect this lexeme">Inflect</a></td>
+  </tr>
+</table>
+${RESOLVE_HTML}`
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(foreignFirst)))
+
+    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
   })
 })
 
@@ -321,12 +345,7 @@ describe('resolveVerb fallback', () => {
       }),
     )
 
-    expect(await resolveVerb('كَتَبَ')).toEqual(
-      new Map([
-        ['I', ['111', '2', 'كَتَبَ']],
-        ['IVq', ['333', '4', 'تَدَحْرَجَ']],
-      ]),
-    )
+    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
     expect(requests).toEqual(['كَتَبَ', 'كتب'])
   })
 })
