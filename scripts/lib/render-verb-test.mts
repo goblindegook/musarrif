@@ -21,8 +21,8 @@ const PARADIGM_ORDER: VerbParadigm[] = [
   'passive present jussive',
 ]
 
-function toDoubleQuotedLiteral(value: string): string {
-  return JSON.stringify(value)
+function toStringLiteral(value: string): string {
+  return value.includes("'") ? JSON.stringify(value) : `'${value}'`
 }
 
 function formatObject(values: Partial<Record<PronounId, string[]>>): string {
@@ -55,7 +55,7 @@ function renderParadigmBody(
     'passive present jussive': "conjugatePassivePresentMood(verb, 'jussive')",
   }
 
-  const conjugationCall = CONJUGATOR[paradigm].replace('verb', () => `getVerbById(${toDoubleQuotedLiteral(slug)})!`)
+  const conjugationCall = CONJUGATOR[paradigm].replace('verb', () => `getVerbById(${toStringLiteral(slug)})!`)
   return `  test('${paradigm}', () => {\n    expect(${conjugationCall}).${matcher}(${formatObject(values)})\n  })`
 }
 
@@ -93,26 +93,26 @@ export function renderVerbTestFile(slug: string, parsed: ParsedParadigms, source
 
   if (parsed.nominals.activeParticiple) {
     tests.push(
-      `  test('active participle', () => {\n    expect(deriveActiveParticiple(getVerbById(${toDoubleQuotedLiteral(slug)})!)).toEqualT('${parsed.nominals.activeParticiple}')\n  })`,
+      `  test('active participle', () => {\n    expect(deriveActiveParticiple(getVerbById(${toStringLiteral(slug)})!)).toEqualT('${parsed.nominals.activeParticiple}')\n  })`,
     )
   }
 
   if (parsed.nominals.passiveParticiple) {
     tests.push(
-      `  test('passive participle', () => {\n    expect(derivePassiveParticiple(getVerbById(${toDoubleQuotedLiteral(slug)})!)).toEqualT('${parsed.nominals.passiveParticiple}')\n  })`,
+      `  test('passive participle', () => {\n    expect(derivePassiveParticiple(getVerbById(${toStringLiteral(slug)})!)).toEqualT('${parsed.nominals.passiveParticiple}')\n  })`,
     )
   }
 
   if (parsed.nominals.masdar?.length) {
     const masdarList = parsed.nominals.masdar.map((value) => `'${value}'`).join(', ')
     tests.push(
-      `  test('masdar', () => {\n    expect(new Set(deriveMasdar(getVerbById(${toDoubleQuotedLiteral(slug)})!))).toEqualT(new Set([${masdarList}]))\n  })`,
+      `  test('masdar', () => {\n    expect(new Set(deriveMasdar(getVerbById(${toStringLiteral(slug)})!))).toEqualT(new Set([${masdarList}]))\n  })`,
     )
   }
 
   return `${imports}
 
-describe(${toDoubleQuotedLiteral(`${slug} (${SOURCE_LABEL[source]})`)}, () => {
+describe(${toStringLiteral(`${slug} (${SOURCE_LABEL[source]})`)}, () => {
 ${tests.join('\n\n')}
 })
 `

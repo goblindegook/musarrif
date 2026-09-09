@@ -53,16 +53,16 @@ describe('renderVerbTestFile', () => {
     const file = renderVerbTestFile('ktb-1', PARSED_FIXTURE, 'wiktionary')
 
     expect(file).not.toContain("const verb = getVerbById('ktb-1')!")
-    expect(file).toContain('describe("ktb-1 (Wiktionary)", () => {')
+    expect(file).toContain("describe('ktb-1 (Wiktionary)', () => {")
     expect(file).toContain("test('active past', () => {")
-    expect(file).toContain('expect(conjugatePast(getVerbById("ktb-1")!)).toEqualT({')
+    expect(file).toContain("expect(conjugatePast(getVerbById('ktb-1')!)).toEqualT({")
     expect(file).toContain("test('active imperative', () => {")
-    expect(file).toContain('expect(conjugateImperative(getVerbById("ktb-1")!)).toMatchObjectT({')
+    expect(file).toContain("expect(conjugateImperative(getVerbById('ktb-1')!)).toMatchObjectT({")
     expect(file).toContain("test('active participle', () => {")
     expect(file).toContain("test('passive participle', () => {")
     expect(file).toContain("test('masdar', () => {")
     expect(file).toContain(
-      "expect(new Set(deriveMasdar(getVerbById(\"ktb-1\")!))).toEqualT(new Set(['كِتَابَة', 'كَتْب', 'كِتَاب']))",
+      "expect(new Set(deriveMasdar(getVerbById('ktb-1')!))).toEqualT(new Set(['كِتَابَة', 'كَتْب', 'كِتَاب']))",
     )
   })
 
@@ -92,7 +92,7 @@ describe('renderVerbTestFile', () => {
   test('labels the describe block with the ElixirFM source', () => {
     const file = renderVerbTestFile('ktb-1', PARSED_FIXTURE, 'elixirfm')
 
-    expect(file).toContain('describe("ktb-1 (ElixirFM)", () => {')
+    expect(file).toContain("describe('ktb-1 (ElixirFM)', () => {")
   })
 
   test('renders paradigm slots with multiple forms as toBeOneOf while keeping toEqualT when every pronoun is present', () => {
@@ -122,7 +122,7 @@ describe('renderVerbTestFile', () => {
       'wiktionary',
     )
 
-    expect(file).toContain('expect(conjugatePresentMood(getVerbById("ktb-1")!, \'jussive\')).toEqualT({')
+    expect(file).toContain("expect(conjugatePresentMood(getVerbById('ktb-1')!, 'jussive')).toEqualT({")
     expect(file).toContain("'3ms': expect.toBeOneOf(['يَكْتُبْ', 'يَكْتُبِ', 'يَكْتُبِي']),")
   })
 })
