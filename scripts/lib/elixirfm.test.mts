@@ -296,6 +296,12 @@ describe('resolveVerb', () => {
     expect(await resolveVerb(buildVerbFromId('Ely-1'))).toEqual(['111', '2', 'كَتَبَ'])
   })
 
+  test('drops a hollow entry whose medial radical is the other weak letter', async () => {
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ṣ y r صير'))))
+
+    expect(await resolveVerb(buildVerbFromId('Swr-1'))).toBeUndefined()
+  })
+
   test('prefers the entry whose root matches exactly', async () => {
     const weakFirst = `
 <table cellspacing="0" class="lexeme">

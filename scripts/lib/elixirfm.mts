@@ -158,7 +158,7 @@ function normalizeRoot(root: string): string {
 }
 
 function weakenRoot(root: string): string {
-  return normalizeRoot(root).replaceAll(/[وي]/gu, 'و')
+  return normalizeRoot(root).replace(/[وي]$/u, 'و')
 }
 
 function parseResolvedVerbHtml(html: string, root: string): Map<string, ResolvedLexeme> {
