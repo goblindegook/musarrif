@@ -20,7 +20,13 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 
 ## Contribution Checklist
 
-Before finishing, run the `check` skill (`.claude/skills/check/`) — it covers TDD compliance, lint, tests, build, comments, and locale files as a runnable pre-submission gate. Two things it doesn't check, so still worth a manual pass:
+After any change, run the full CI gate — lint, dependency boundaries, tests, typecheck, and bundle (no prerender) — before considering the task done:
+
+```bash
+rtk mise exec -- npm run check:all
+```
+
+Before finishing, also run the `check` skill (`.claude/skills/check/`) — it covers TDD compliance, comments, and locale files that `npm run check:all` does not. Two things neither checks, so still worth a manual pass:
 
 - [ ] Linter passes without undocumented ignores (`check` confirms lint passes, not that every ignore is explained)
 - [ ] Existing UI primitives reused (no bespoke wrappers)

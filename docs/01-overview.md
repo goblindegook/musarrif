@@ -22,9 +22,8 @@ rtk mise exec -- npm test -- --no-watch   # Run tests once (default is watch mod
 rtk mise exec -- npm test -- --no-watch src/path/to/file.test.ts  # Single test file
 rtk mise exec -- npm run test:coverage    # Coverage report
 rtk mise exec -- npm run test:mutation    # Stryker mutation testing
-rtk mise exec -- npm run lint             # Biome lint check
-rtk mise exec -- npm run lint:fix         # Auto-fix lint issues
-rtk mise exec -- npm run format           # lint:fix + format
+rtk mise exec -- npm run check:lint       # Biome lint check
+rtk mise exec -- npm run format           # Fix lint + format
 rtk mise exec -- node script.js           # Node scripts (always with mise exec --)
 ```
 

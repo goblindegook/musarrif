@@ -127,8 +127,7 @@ npm run test:mutation
 Lint and formatting:
 
 ```bash
-npm run lint
-npm run lint:fix
+npm run check:lint
 npm run format
 ```
 
@@ -147,7 +146,7 @@ Contributions are welcome, especially for:
 1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
 2. Create a focused branch
 3. Implement the smallest change needed, remembering to add or update tests
-4. Run lint + tests locally before opening a PR
+4. Run `npm run check:all` locally before opening a PR
 5. Include lexical sources whenever changing verb data or grammar expectations
 
 ## Verb Adding Utility
