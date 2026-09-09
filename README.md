@@ -208,12 +208,6 @@ Form I verbs accept an optional vowel pattern (`a-a`, `a-i`, `a-u`, `i-a`, …) 
 npm run add:tests -- wiktionary qdr-1 a-u
 ```
 
-Generate test files for every verb in the dataset at once:
-
-```bash
-npm run add:tests:all
-```
-
 ElixirFM responses are cached under `.caches/elixirfm/` so repeat runs (including `debug:elixirfm`) don't re-fetch unchanged lookups.
 
 Usage notes:

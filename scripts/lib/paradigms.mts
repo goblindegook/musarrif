@@ -2,6 +2,8 @@ import type { PronounId } from '../../src/paradigms/pronouns.ts'
 
 export type { PronounId }
 
+export type GenerationTool = 'wiktionary' | 'reverso' | 'elixirfm' | 'qutrub'
+
 export type VerbParadigm =
   | 'active past'
   | 'active present indicative'

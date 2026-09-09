@@ -26,7 +26,7 @@ Neither skill verifies sources for you: confirm each cited source URL resolves a
 
 ### Source Preference
 
-Four sources exist for `npm run add:tests -- <source> <slug> [vowels]` (`wiktionary`, `elixirfm`, `qutrub`, `reverso`); the optional Form I vowel pattern (`a-u`, `a-i`, …) picks between roots that have more than one Form I conjugation. Use them in this order, which is also the order `add:tests:all` falls back through:
+Four sources exist for `npm run add:tests -- <source> <slug> [vowels]` (`wiktionary`, `elixirfm`, `qutrub`, `reverso`); the optional Form I vowel pattern (`a-u`, `a-i`, …) picks between roots that have more than one Form I conjugation. Use them in this order:
 
 1. **Wiktionary** — the default for both skills. Fully vocalised, includes sukūn, matches the project's orthographic conventions.
 2. **ElixirFM** — accurate morphology, but two known quirks to normalise before trusting a generated test: it never writes sukūn, and it renders the jussive/imperative of doubled verbs uncontracted (`يُمَادِد`) where this project contracts (`يُمَادَّ`). Its lexicon glosses are the preferred translation source; when the service is down (`quest.ms.mff.cuni.cz`), the same data is in `Elixir/Data/**.hs` in the `otakar-smrz/elixir-fm` GitHub repo.

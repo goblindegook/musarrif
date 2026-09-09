@@ -25,7 +25,6 @@
     "debug:explain": "tsx scripts/debug-explain.mts",
     "debug:srs": "tsx scripts/debug-srs.mts",
     "report:srs": "tsx scripts/report-srs.mts",
-    "add:tests:all": "tsx scripts/generate-verb-tests.mts",
     "add:tests": "tsx scripts/test-verb.mts",
     "build:hash": "VITE_ROUTING_MODE=hash tsc && VITE_ROUTING_MODE=hash vite build",
     "prerender": "tsx scripts/prerender.mts"

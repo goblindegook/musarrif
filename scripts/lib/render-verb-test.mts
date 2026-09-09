@@ -1,6 +1,5 @@
 import { PRONOUN_IDS } from '../../src/paradigms/pronouns.ts'
-import type { GenerationTool } from './generate-verb-tests.mts'
-import type { ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
+import type { GenerationTool, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 const SOURCE_LABEL: Record<GenerationTool, string> = {
   wiktionary: 'Wiktionary',
