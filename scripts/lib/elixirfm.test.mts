@@ -291,12 +291,12 @@ describe('resolveVerb', () => {
   })
 
   test('keeps the entry of a root ElixirFM spells with the other weak radical', async () => {
-    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ʿ l w علو'))))
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ʿ y d عيد'))))
 
-    expect(await resolveVerb(buildVerbFromId('Ely-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(buildVerbFromId('Ewd-1'))).toEqual(['111', '2', 'كَتَبَ'])
   })
 
-  test('drops a hollow entry whose medial radical is the other weak letter', async () => {
+  test('drops a weak-radical entry another verb of the same form owns', async () => {
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ṣ y r صير'))))
 
     expect(await resolveVerb(buildVerbFromId('Swr-1'))).toBeUndefined()

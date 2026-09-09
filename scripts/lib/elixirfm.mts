@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve as resolvePath } from 'node:path'
 import { DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
-import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
+import { type DisplayVerb, formatFormLabel, verbs } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
 // ElixirFM tags every form positionally: V, aspect, mood, voice, then person, gender and number at
@@ -158,10 +158,22 @@ function normalizeRoot(root: string): string {
 }
 
 function weakenRoot(root: string): string {
-  return normalizeRoot(root).replace(/[وي]$/u, 'و')
+  return normalizeRoot(root).replaceAll(/[وي]/gu, 'و')
 }
 
-function parseResolvedVerbHtml(html: string, root: string): Map<string, ResolvedLexeme> {
+function rootsOwnedByOtherVerbs(verb: DisplayVerb): ReadonlySet<string> {
+  return new Set(
+    (verbs as readonly DisplayVerb[])
+      .filter((other) => other.id !== verb.id && other.form === verb.form)
+      .map((other) => normalizeRoot(other.root)),
+  )
+}
+
+function parseResolvedVerbHtml(
+  html: string,
+  root: string,
+  ownedRoots: ReadonlySet<string>,
+): Map<string, ResolvedLexeme> {
   const candidates: Array<[formKey: string, entryRoot: string, lexeme: ResolvedLexeme]> = []
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
@@ -177,7 +189,7 @@ function parseResolvedVerbHtml(html: string, root: string): Map<string, Resolved
   const entries = new Map<string, ResolvedLexeme>()
   for (const matches of [
     (entryRoot: string) => normalizeRoot(entryRoot) === normalizeRoot(root),
-    (entryRoot: string) => weakenRoot(entryRoot) === weakenRoot(root),
+    (entryRoot: string) => weakenRoot(entryRoot) === weakenRoot(root) && !ownedRoots.has(normalizeRoot(entryRoot)),
   ]) {
     for (const [formKey, entryRoot, lexeme] of candidates) {
       if (entries.has(formKey) || !matches(entryRoot)) continue
@@ -214,8 +226,13 @@ export function compareForm(musarrif: string, elixir: string | undefined): 'matc
   return normalizeArabic(musarrif) === normalizeArabic(elixir) ? 'match' : 'mismatch'
 }
 
-async function resolve(text: string, root: string): Promise<Map<string, ResolvedLexeme>> {
-  return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }), root)
+async function resolve(
+  text: string,
+  root: string,
+  ownedRoots: ReadonlySet<string>,
+): Promise<Map<string, ResolvedLexeme>> {
+  const html = await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text })
+  return parseResolvedVerbHtml(html, root, ownedRoots)
 }
 
 export function toFormKey(verb: DisplayVerb): string {
@@ -238,8 +255,9 @@ function unvocalise(lemma: string): string {
 // compares citation forms to see whether it is the same verb.
 export async function resolveVerb(verb: DisplayVerb): Promise<ResolvedLexeme | undefined> {
   const formKey = toFormKey(verb)
-  const vocalised = await resolve(verb.lemma, verb.root)
-  return vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root)).get(formKey)
+  const owned = rootsOwnedByOtherVerbs(verb)
+  const vocalised = await resolve(verb.lemma, verb.root, owned)
+  return vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root, owned)).get(formKey)
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {
