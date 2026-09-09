@@ -3433,6 +3433,32 @@
     "form": 5
   },
   {
+    "root": "qdr",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fu3la"],
+    "lexicalMasdars": ["maqodurap", "maqodarap", "maqodirap"],
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "qdr",
+    "form": 2
+  },
+  {
+    "root": "qdr",
+    "form": 4
+  },
+  {
+    "root": "qdr",
+    "form": 5,
+    "passiveVoice": "impersonal"
+  },
+  {
+    "root": "qdr",
+    "form": 8,
+    "passiveVoice": "impersonal"
+  },
+  {
     "root": "qfl",
     "form": 4
   },
