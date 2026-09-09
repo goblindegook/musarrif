@@ -277,17 +277,40 @@ describe('fromTag', () => {
 
 describe('resolveVerb', () => {
   test('exposes the citation form alongside the clip', async () => {
-    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
+    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+  })
+
+  test('reads a quadriliteral class, which ElixirFM writes without the q Muṣarrif appends', async () => {
+    expect(await resolveVerb(buildVerbFromId('dHrj-4'))).toEqual(['333', '4', 'تَدَحْرَجَ'])
   })
 
   test('keeps the entry of a root ElixirFM writes with a shadda', async () => {
-    server.use(
-      http.post(ELIXIR_URL, () =>
-        HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'k b b كبّ').replace('كَتَبَ</td>', 'كَبَّ</td>')),
-      ),
-    )
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'm d d مدّ'))))
 
-    expect(await resolveVerb('كَبَّ', 'كبب')).toEqual(new Map([['I', ['111', '2', 'كَبَّ']]]))
+    expect(await resolveVerb(buildVerbFromId('mdd-1'))).toEqual(['111', '2', 'كَتَبَ'])
+  })
+
+  test('keeps the entry of a root ElixirFM spells with the other weak radical', async () => {
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ʿ l w علو'))))
+
+    expect(await resolveVerb(buildVerbFromId('Ely-1'))).toEqual(['111', '2', 'كَتَبَ'])
+  })
+
+  test('prefers the entry whose root matches exactly', async () => {
+    const weakFirst = `
+<table cellspacing="0" class="lexeme">
+  <tr>
+    <td class="xtag" title="verb">V</td>
+    <td class="orth" title="citation form">عَلَا</td>
+    <td class="root" title="root of citation form">ʿ l w علو</td>
+    <td class="class" title="derivational class">I</td>
+    <td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(999,1)" title="inflect this lexeme">Inflect</a></td>
+  </tr>
+</table>
+${RESOLVE_HTML.replace('k t b كتب', 'ʿ l y علي').replace('كَتَبَ</td>', 'عَلِيَ</td>')}`
+    server.use(http.post(ELIXIR_URL, () => HttpResponse.text(weakFirst)))
+
+    expect(await resolveVerb(buildVerbFromId('Ely-1'))).toEqual(['111', '2', 'عَلِيَ'])
   })
 
   test('drops a lexeme of another root that shares the form', async () => {
@@ -304,7 +327,7 @@ describe('resolveVerb', () => {
 ${RESOLVE_HTML}`
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(foreignFirst)))
 
-    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
+    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
   })
 })
 
@@ -345,7 +368,36 @@ describe('resolveVerb fallback', () => {
       }),
     )
 
-    expect(await resolveVerb('كَتَبَ', 'كتب')).toEqual(new Map([['I', ['111', '2', 'كَتَبَ']]]))
+    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
     expect(requests).toEqual(['كَتَبَ', 'كتب'])
+  })
+
+  test('retries unvocalised when the vocalised lemma resolves to another form of the root', async () => {
+    const requests: string[] = []
+    const formIIOnly = RESOLVE_HTML.replace('>I<', '>II<').replace('كَتَبَ</td>', 'كَتَّبَ</td>')
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const text = new URLSearchParams(await request.text()).get('text') ?? ''
+        requests.push(text)
+        return HttpResponse.text(text === 'كتب' ? RESOLVE_HTML : formIIOnly)
+      }),
+    )
+
+    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(requests).toEqual(['كَتَبَ', 'كتب'])
+  })
+
+  test('keeps the shadda when unvocalising, so a geminate lemma stays two radicals and a shadda', async () => {
+    const requests: string[] = []
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const text = new URLSearchParams(await request.text()).get('text') ?? ''
+        requests.push(text)
+        return HttpResponse.text('<html></html>')
+      }),
+    )
+
+    expect(await resolveVerb(buildVerbFromId('mdd-1'))).toBeUndefined()
+    expect(requests).toEqual(['مَدَّ', 'مدّ'])
   })
 })

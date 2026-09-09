@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve as resolvePath } from 'node:path'
-import { applyDiacriticsPreference, DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
+import { DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
 import { type DisplayVerb, formatFormLabel } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
@@ -157,8 +157,12 @@ function normalizeRoot(root: string): string {
     .replaceAll(/[أإآؤئ]/gu, 'ء')
 }
 
+function weakenRoot(root: string): string {
+  return normalizeRoot(root).replaceAll(/[وي]/gu, 'و')
+}
+
 function parseResolvedVerbHtml(html: string, root: string): Map<string, ResolvedLexeme> {
-  const entries = new Map<string, ResolvedLexeme>()
+  const candidates: Array<[formKey: string, entryRoot: string, lexeme: ResolvedLexeme]> = []
   for (const lexemeMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
     const block = lexemeMatch[1]
     const pos = getCell(block, 'xtag')
@@ -166,9 +170,19 @@ function parseResolvedVerbHtml(html: string, root: string): Map<string, Resolved
     const citation = getCell(block, 'orth')
     const entryRoot = getCell(block, 'root')
     const clipMatch = /clip=\((\d+),(\d+)\)/.exec(block)
-    if (pos !== 'V' || !formKey || !citation || !entryRoot || !clipMatch || entries.has(formKey)) continue
-    if (normalizeRoot(entryRoot) !== normalizeRoot(root)) continue
-    entries.set(formKey, [clipMatch[1], clipMatch[2], citation])
+    if (pos !== 'V' || !formKey || !citation || !entryRoot || !clipMatch) continue
+    candidates.push([formKey.replace(/q$/, ''), entryRoot, [clipMatch[1], clipMatch[2], citation]])
+  }
+
+  const entries = new Map<string, ResolvedLexeme>()
+  for (const matches of [
+    (entryRoot: string) => normalizeRoot(entryRoot) === normalizeRoot(root),
+    (entryRoot: string) => weakenRoot(entryRoot) === weakenRoot(root),
+  ]) {
+    for (const [formKey, entryRoot, lexeme] of candidates) {
+      if (entries.has(formKey) || !matches(entryRoot)) continue
+      entries.set(formKey, lexeme)
+    }
   }
 
   return entries
@@ -204,13 +218,28 @@ async function resolve(text: string, root: string): Promise<Map<string, Resolved
   return parseResolvedVerbHtml(await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }), root)
 }
 
+export function toFormKey(verb: DisplayVerb): string {
+  return formatFormLabel(verb.form, verb.root).replace(/q$/, '')
+}
+
+// Short vowels and sukūn go, shadda stays: stripping it too would query أم for أَمَّ and resolve a
+// two-letter word ElixirFM reads as another root entirely.
+function unvocalise(lemma: string): string {
+  return lemma.replaceAll(
+    /[\u0610-\u061a\u064b-\u0650\u0652-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/gu,
+    '',
+  )
+}
+
 // The vocalised lemma is the precise query — صَمَّ resolves to صَمّ "plug", while unvocalised صم
 // also matches وَصَم and would pick the wrong lexeme. But ElixirFM only matches its own
-// vocalisation, so a lemma it vowels differently (كَبُرَ against its كَبَر) resolves to nothing;
-// retrying unvocalised finds that lexeme, and the caller compares citation forms to see it differs.
-export async function resolveVerb(lemma: string, root: string): Promise<Map<string, ResolvedLexeme>> {
-  const entries = await resolve(lemma, root)
-  return entries.size > 0 ? entries : resolve(applyDiacriticsPreference(lemma, 'none'), root)
+// vocalisation, so a lemma it vowels differently (كَبُرَ against its كَبَر) resolves to another form
+// of the root or to nothing at all; retrying unvocalised finds the form asked for, and the caller
+// compares citation forms to see whether it is the same verb.
+export async function resolveVerb(verb: DisplayVerb): Promise<ResolvedLexeme | undefined> {
+  const formKey = toFormKey(verb)
+  const vocalised = await resolve(verb.lemma, verb.root)
+  return vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root)).get(formKey)
 }
 
 export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {
@@ -247,8 +276,7 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
 }
 
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
-  const entries = await resolveVerb(verb.lemma, verb.root)
-  const match = entries.get(formatFormLabel(verb.form, verb.root))
+  const match = await resolveVerb(verb)
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
   const [lexemeId, entryNum] = match
 

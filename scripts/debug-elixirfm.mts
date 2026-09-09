@@ -23,20 +23,6 @@ const RATE_MS = 500
 // so stripping that prefix would compare the very cells the present indicative already compares.
 const FUTURE_TENSES = new Set<VerbTense>(['active.future', 'passive.future'])
 
-// Verb form number → ElixirFM Roman numeral (+ q suffix for quadrilateral)
-const FORM_ROMAN: Record<number, string> = {
-  1: 'I',
-  2: 'II',
-  3: 'III',
-  4: 'IV',
-  5: 'V',
-  6: 'VI',
-  7: 'VII',
-  8: 'VIII',
-  9: 'IX',
-  10: 'X',
-}
-
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms))
 }
@@ -85,17 +71,7 @@ for (const verb of verbsToTest as DisplayVerb[]) {
     process.stdout.write(`${label} (${verb.lemma})… `)
     await sleep(RATE_MS)
 
-    const entries = await resolveVerb(verb.lemma, verb.root)
-    const isQuad = verb.root.length === 4
-    const formKey = isQuad ? `${FORM_ROMAN[verb.form]}q` : FORM_ROMAN[verb.form]
-
-    if (!entries.has(formKey)) {
-      console.log('not in ElixirFM')
-      notFound++
-      continue
-    }
-
-    const entry = entries.get(formKey)
+    const entry = await resolveVerb(verb)
     if (!entry) {
       console.log('not in ElixirFM')
       notFound++
