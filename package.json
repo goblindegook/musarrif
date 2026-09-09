@@ -20,6 +20,7 @@
     "check:boundaries": "depcruise src scripts",
     "format": "biome check --write --unsafe . && biome format --write .",
     "add:verb": "tsx scripts/verb.mts",
+    "add:verb:wizard": "tsx scripts/verb-wizard.mts",
     "count:verbs": "jq 'length' src/data/roots.json",
     "debug:elixirfm": "tsx scripts/debug-elixirfm.mts",
     "debug:explain": "tsx scripts/debug-explain.mts",
