@@ -126,7 +126,7 @@ function parseNominals(html: string): NominalSet {
   return nominals
 }
 
-async function postElixir(params: Record<string, string>): Promise<string> {
+async function postElixir(params: Record<string, string>, rateMs: number): Promise<string> {
   const requestKey = JSON.stringify(Object.entries(params).toSorted(([left], [right]) => left.localeCompare(right)))
   const cachePath = resolvePath(
     process.cwd(),
@@ -134,6 +134,8 @@ async function postElixir(params: Record<string, string>): Promise<string> {
     `${createHash('sha256').update(requestKey).digest('hex')}.html`,
   )
   if (existsSync(cachePath)) return readFileSync(cachePath, 'utf8')
+
+  if (rateMs > 0) await new Promise((resolve) => setTimeout(resolve, rateMs))
 
   const response = await fetch('https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi', {
     method: 'POST',
@@ -231,8 +233,9 @@ async function resolve(
   text: string,
   root: string,
   ownedRoots: ReadonlySet<string>,
+  rateMs: number,
 ): Promise<Map<string, ResolvedLexeme[]>> {
-  const html = await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text })
+  const html = await postElixir({ code: 'Unicode', mode: 'resolve', submit: 'Resolve', text }, rateMs)
   return parseResolvedVerbHtml(html, root, ownedRoots)
 }
 
@@ -265,44 +268,55 @@ function presentVowelOf(imperfect: string): string | undefined {
   return SHORT_VOWEL_LETTERS[vowels.at(-1) ?? '']
 }
 
-async function pickByPresentVowel(candidates: ResolvedLexeme[], vowel: string): Promise<ResolvedLexeme | undefined> {
+async function pickByPresentVowel(
+  candidates: ResolvedLexeme[],
+  vowel: string,
+  rateMs: number,
+): Promise<ResolvedLexeme | undefined> {
   const tag = toTag('active present indicative', '3ms') as string
   for (const [lexemeId, entryNum, citation] of candidates) {
-    const forms = await inflectVerb(lexemeId, entryNum)
+    const forms = await inflectVerb(lexemeId, entryNum, rateMs)
     if (presentVowelOf(forms.get(tag) ?? '') === vowel) return [lexemeId, entryNum, citation]
   }
   return undefined
 }
 
-export async function resolveVerb(verb: DisplayVerb): Promise<ResolvedLexeme | undefined> {
+export async function resolveVerb(verb: DisplayVerb, rateMs = 0): Promise<ResolvedLexeme | undefined> {
   const formKey = toFormKey(verb)
   const owned = rootsOwnedByOtherVerbs(verb)
-  const vocalised = await resolve(verb.lemma, verb.root, owned)
-  const candidates = vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root, owned)).get(formKey)
+  const vocalised = await resolve(verb.lemma, verb.root, owned, rateMs)
+  const candidates =
+    vocalised.get(formKey) ?? (await resolve(unvocalise(verb.lemma), verb.root, owned, rateMs)).get(formKey)
   if (!candidates?.length) return undefined
   if (candidates.length === 1 || !isTriliteralFormIDisplayVerb(verb)) return candidates[0]
-  return (await pickByPresentVowel(candidates, verb.vowels.split('-')[1])) ?? candidates[0]
+  return (await pickByPresentVowel(candidates, verb.vowels.split('-')[1], rateMs)) ?? candidates[0]
 }
 
-export async function inflectVerb(lexemeId: string, entryNum: string): Promise<Map<string, string>> {
+export async function inflectVerb(lexemeId: string, entryNum: string, rateMs = 0): Promise<Map<string, string>> {
   return parseInflectionRows(
-    await postElixir({
-      clip: `(${lexemeId},${entryNum})`,
-      mode: 'inflect',
-      submit: 'Inflect',
-      text: 'perfect imperfect active passive imperative',
-    }),
+    await postElixir(
+      {
+        clip: `(${lexemeId},${entryNum})`,
+        mode: 'inflect',
+        submit: 'Inflect',
+        text: 'perfect imperfect active passive imperative',
+      },
+      rateMs,
+    ),
   )
 }
 
-async function deriveVerb(lexemeId: string, entryNum: string): Promise<NominalSet> {
+async function deriveVerb(lexemeId: string, entryNum: string, rateMs: number): Promise<NominalSet> {
   return parseNominals(
-    await postElixir({
-      clip: `(${lexemeId},${entryNum})`,
-      mode: 'derive',
-      submit: 'Derive',
-      text: 'verb noun adjective',
-    }),
+    await postElixir(
+      {
+        clip: `(${lexemeId},${entryNum})`,
+        mode: 'derive',
+        submit: 'Derive',
+        text: 'verb noun adjective',
+      },
+      rateMs,
+    ),
   )
 }
 
@@ -317,13 +331,16 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
   return { nominals, paradigms }
 }
 
-export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
-  const match = await resolveVerb(verb)
+export async function fetchParadigms(verb: DisplayVerb, rateMs = 0): Promise<ParsedParadigms> {
+  const match = await resolveVerb(verb, rateMs)
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
   const [lexemeId, entryNum, citation] = match
 
   if (!isSameLexeme(citation, verb.lemma))
     throw new Error(`ElixirFM holds a different lexeme for ${verb.id}: ${citation} against ${verb.lemma}`)
 
-  return buildParsedParadigms(await inflectVerb(lexemeId, entryNum), await deriveVerb(lexemeId, entryNum))
+  return buildParsedParadigms(
+    await inflectVerb(lexemeId, entryNum, rateMs),
+    await deriveVerb(lexemeId, entryNum, rateMs),
+  )
 }
