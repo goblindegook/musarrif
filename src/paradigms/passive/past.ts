@@ -358,7 +358,6 @@ function derivePassivePastFormIX(verb: NonFormIVerb): PassivePastParams {
       radicalMorpheme(c2),
       measureMorpheme(DAMMA),
     ],
-    suffix: [radicalMorpheme(c3), measureMorpheme(FATHA), radicalMorpheme(c3)],
     suffix3sd: [radicalMorpheme(c3), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
   }
 }
