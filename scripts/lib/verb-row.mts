@@ -35,24 +35,25 @@ function derivedMasdar(verb: DisplayVerb, masdars?: readonly MasdarPattern[]): s
 }
 
 function selectMasdars(verb: DisplayVerb, sourceMasdars: readonly string[]): MasdarSelection {
-  const patterns = isTriliteralFormIDisplayVerb(verb) ? MASDAR_PATTERNS : []
-  const byDerivation = new Map<string, MasdarPattern | undefined>([[derivedMasdar(verb), undefined]])
-  for (const pattern of patterns) byDerivation.set(derivedMasdar(verb, [pattern]), pattern)
+  const isFormI = isTriliteralFormIDisplayVerb(verb)
+  const byPattern = new Map<string, MasdarPattern>()
+  for (const pattern of isFormI ? MASDAR_PATTERNS : []) {
+    const derived = derivedMasdar(verb, [pattern])
+    if (!byPattern.has(derived)) byPattern.set(derived, pattern)
+  }
+  const defaultMasdar = derivedMasdar(verb)
 
   const masdars: MasdarPattern[] = []
   const lexicalMasdars: string[] = []
 
-  for (const masdar of sourceMasdars) {
-    if (!byDerivation.has(masdar)) {
-      lexicalMasdars.push(transliterate(masdar))
-      continue
-    }
-    const pattern = byDerivation.get(masdar)
+  for (const masdar of new Set(sourceMasdars)) {
+    const pattern = byPattern.get(masdar)
     if (pattern) masdars.push(pattern)
+    else if (masdar !== defaultMasdar) lexicalMasdars.push(transliterate(masdar))
   }
 
   return {
-    masdars: masdars.length > 0 ? masdars : undefined,
+    masdars: isFormI && sourceMasdars.length > 0 ? masdars : undefined,
     lexicalMasdars: lexicalMasdars.length > 0 ? lexicalMasdars : undefined,
   }
 }
@@ -66,20 +67,23 @@ function selectPassiveVoice(parsed: ParsedParadigms): PassiveVoice | undefined {
 
 export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, existing?: RootEntry): RootEntry {
   const { masdars, lexicalMasdars } = selectMasdars(verb, parsed.nominals.masdar ?? [])
+  const passiveVoice = selectPassiveVoice(parsed)
+  const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined
+  const carried = existing?.vowels === vowels ? existing : undefined
 
   return {
     root: verb.rootId,
     form: verb.form,
-    ...(isTriliteralFormIDisplayVerb(verb) ? { vowels: verb.vowels } : {}),
-    ...(existing?.hollowContraction ? { hollowContraction: existing.hollowContraction } : {}),
-    ...(existing?.contractedImperative ? { contractedImperative: true } : {}),
+    ...(vowels ? { vowels } : {}),
+    ...(carried?.hollowContraction ? { hollowContraction: carried.hollowContraction } : {}),
+    ...(carried?.contractedImperative ? { contractedImperative: true } : {}),
     ...(masdars ? { masdars } : {}),
     ...(lexicalMasdars ? { lexicalMasdars } : {}),
-    ...(selectPassiveVoice(parsed) ? { passiveVoice: selectPassiveVoice(parsed) } : {}),
+    ...(passiveVoice ? { passiveVoice } : {}),
     ...(parsed.nominals.passiveParticiple ? {} : { noPassiveParticiple: true }),
-    ...(existing?.lexicalActiveParticiple ? { lexicalActiveParticiple: existing.lexicalActiveParticiple } : {}),
-    ...(existing?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: existing.lexicalPassiveParticiple } : {}),
-    ...(existing?.valency?.length ? { valency: existing.valency } : {}),
+    ...(carried?.lexicalActiveParticiple ? { lexicalActiveParticiple: carried.lexicalActiveParticiple } : {}),
+    ...(carried?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: carried.lexicalPassiveParticiple } : {}),
+    ...(carried?.valency?.length ? { valency: carried.valency } : {}),
   }
 }
 

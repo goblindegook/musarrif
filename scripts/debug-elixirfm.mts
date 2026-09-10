@@ -48,10 +48,20 @@ interface Mismatch {
 }
 
 const args = process.argv.slice(2)
-const sampleIdx = args.indexOf('--sample')
-const sampleN = sampleIdx >= 0 ? Number(args[sampleIdx + 1]) : undefined
-const rootIdx = args.indexOf('--root')
-const rootFilter = rootIdx >= 0 ? args[rootIdx + 1] : undefined
+
+function flagValue(name: string): string | undefined {
+  const index = args.indexOf(name)
+  if (index < 0) return undefined
+  const value = args[index + 1]
+  if (!value || value.startsWith('--')) throw new Error(`${name} requires a value`)
+  return value
+}
+
+const sampleValue = flagValue('--sample')
+const sampleN = sampleValue === undefined ? undefined : Number(sampleValue)
+if (sampleN !== undefined && (!Number.isInteger(sampleN) || sampleN < 1))
+  throw new Error(`--sample requires a positive integer, received "${sampleValue}"`)
+const rootFilter = flagValue('--root')
 
 let verbsToTest = rootFilter ? verbs.filter((v) => v.rootId === rootFilter) : verbs
 if (sampleN) verbsToTest = verbsToTest.slice(0, sampleN)

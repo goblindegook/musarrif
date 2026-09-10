@@ -66,7 +66,10 @@ const warnAboutCaseCollisions = (files: readonly string[]) => {
 
 warnAboutCaseCollisions(pages.map((page) => page.file))
 
-window.happyDOM.setURL(pages[1].canonical)
+const warmUpPage = pages[1] ?? pages[0]
+if (!warmUpPage) throw new Error('prerenderPages returned no pages to render')
+
+window.happyDOM.setURL(warmUpPage.canonical)
 renderInto(renderTarget)
 await new Promise((resolve) => setTimeout(resolve, 200))
 

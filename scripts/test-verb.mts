@@ -1,36 +1,14 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels'
-import { buildVerbFromId, synthesizeVerb } from '../src/paradigms/verbs'
-import { fetchParadigms as elixirfm } from './lib/elixirfm.mts'
-import type { GenerationTool } from './lib/paradigms.mts'
-import { fetchParadigms as qutrub } from './lib/qutrub.mts'
 import { renderVerbTestFile } from './lib/render-verb-test.mts'
-import { fetchParadigms as reverso } from './lib/reverso.mts'
-import { fetchParadigms as wiktionary } from './lib/wiktionary.mts'
+import { fetchers, parseVerbArgs } from './lib/verb-args.mts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = join(__dirname, '..', 'src/paradigms/verbs')
 
-const fetchers = { elixirfm, qutrub, reverso, wiktionary } as const
-
-function usage(): never {
-  const sources = Object.keys(fetchers).join('|')
-  throw new Error(
-    `Usage: npm run add:tests <${sources}> <verb-slug> [${FORM_I_PATTERNS.join('|')}] (example: npm run add:tests wiktionary ktb-1 a-u)`,
-  )
-}
-
 async function run() {
-  const source = process.argv[2]?.trim() as GenerationTool | undefined
-  const slug = process.argv[3]?.trim()
-  const pattern = process.argv[4]?.trim() as FormIPattern | undefined
-  if (!source || !slug || !(source in fetchers)) usage()
-  if (pattern && !FORM_I_PATTERNS.includes(pattern)) usage()
-
-  const slugVerb = buildVerbFromId(slug)
-  const verb = pattern ? synthesizeVerb(String(slugVerb.root), 1, pattern) : slugVerb
+  const { source, verb } = parseVerbArgs(process.argv, 'add:tests')
   const parsed = await fetchers[source](verb)
   const outputPath = join(OUTPUT_DIR, `${verb.id}.test.ts`)
 

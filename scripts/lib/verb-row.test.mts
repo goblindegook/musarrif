@@ -75,7 +75,7 @@ describe('buildRootEntry', () => {
 
   test('keeps fields the source cannot describe', () => {
     const verb = synthesizeVerb('كتب', 1, 'a-u')
-    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-a', valency: [2, 3], contractedImperative: true }
+    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-u', valency: [2, 3], contractedImperative: true }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
       root: 'ktb',
@@ -84,6 +84,35 @@ describe('buildRootEntry', () => {
       contractedImperative: true,
       masdars: ['fa3l'],
       valency: [2, 3],
+    })
+  })
+
+  test('drops fields belonging to the lexeme a changed vowel pattern replaces', () => {
+    const verb = synthesizeVerb('كتب', 1, 'a-u')
+    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-a', valency: [2, 3], lexicalActiveParticiple: 'x' }
+
+    expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
+      root: 'ktb',
+      form: 1,
+      vowels: 'a-u',
+      masdars: ['fa3l'],
+    })
+  })
+
+  test('records an empty pattern list when every Form I masdar is lexical', () => {
+    const verb = synthesizeVerb('حسب', 1, 'i-a')
+
+    expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['حِسْبَان', 'مَحْسَبَة'] } }))).toMatchObject({
+      masdars: [],
+      lexicalMasdars: ['HisobaAn', 'maHosabap'],
+    })
+  })
+
+  test('reads a repeated source masdar once', () => {
+    const verb = synthesizeVerb('كتب', 1, 'a-u')
+
+    expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب', 'كَتْب'] } }))).toMatchObject({
+      masdars: ['fa3l'],
     })
   })
 })
