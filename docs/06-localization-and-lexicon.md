@@ -6,7 +6,7 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 - Verb translations live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (verbs need no Arabic translation)
 - Root glosses (`roots` key) live in all four: en/it/pt plus `ar.verbs.json`, which has **only** `roots` — Arabic maṣdar/abstract-noun labels, fully vocalised. Wired via `LEXICON_LOADERS` in `useI18n.tsx`
 - Portuguese locale must be `pt_PT`, use pre-AO90 orthography (e.g., `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`)
-- Add `verbs` + `roots` entries to en/it/pt; add the matching `roots` entry to `ar.verbs.json` by hand — the `add:verb` wizard does not write it yet
+- Add `verbs` + `roots` entries to en/it/pt and the matching `roots` entry to `ar.verbs.json` by hand — no script writes locale entries
 - Translate primary meaning; add secondary only when diverges significantly (e.g. `"to love, to like"`)
 - Include translations in same change as verb entry
 
@@ -20,15 +20,13 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 
 ## Verb Entry Workflow
 
-Adding a new verb, root, or form: use the `add-verb` skill (`.claude/skills/add-verb/`) — it drives the process through `npm run add:tests -- wiktionary` and the `add:verb` wizard, which write `roots.json` and all three locale files together in one step. Correcting an existing conjugated form instead: use the `fix-conjugation` skill. Do not hand-edit `roots.json` or the locale files directly unless the wizard genuinely can't express the case — hand-editing is the fallback now, not the default.
-
-Neither skill verifies sources for you: confirm each cited source URL resolves and actually contains the target entry, and state explicitly when falling back to a secondary source.
+Adding a new verb, root, or form — and correcting a wrong conjugated form — both use the `add-verb` skill (`.claude/skills/add-verb/`). It drives the process through `npm run add:tests -- <source> <slug>` for the reference table and `npm run add:verb -- <source> <slug>` for the `roots.json` row. The row script writes no locale entries: add `verbs`/`roots` to en/it/pt and `roots` to `ar.verbs.json` by hand, then run biome over `src/data/roots.json` and `src/ui/locales`. `npm run add:verb:wizard` is the interactive fallback for a case no source covers.
 
 ### Source Preference
 
 Four sources exist for `npm run add:tests -- <source> <slug> [vowels]` (`wiktionary`, `elixirfm`, `qutrub`, `reverso`); the optional Form I vowel pattern (`a-u`, `a-i`, …) picks between roots that have more than one Form I conjugation. Use them in this order:
 
-1. **Wiktionary** — the default for both skills. Fully vocalised, includes sukūn, matches the project's orthographic conventions.
+1. **Wiktionary** — the default. Fully vocalised, includes sukūn, matches the project's orthographic conventions.
 2. **ElixirFM** — accurate morphology, but two known quirks to normalise before trusting a generated test: it never writes sukūn, and it renders the jussive/imperative of doubled verbs uncontracted (`يُمَادِد`) where this project contracts (`يُمَادَّ`). Its lexicon glosses are the preferred translation source; when the service is down (`quest.ms.mff.cuni.cz`), the same data is in `Elixir/Data/**.hs` in the `otakar-smrz/elixir-fm` GitHub repo.
 3. **Qutrub** — Arabeyes' rule-based conjugator, fully vocalised including sukūn. Verbs only: no masdar, no participles. Four quirks the parser or the reader has to absorb — it writes a shadda ahead of its vowel (the parser normalises to NFC), it drops the sukūn on the أنتم past (`كَتَبْتُم`, restored by the parser), it leaves the jussive and imperative of doubled verbs uncontracted like ElixirFM, and when its own lexicon disagrees with `roots.json` on a Form I stem vowel it silently conjugates its own reading (`'dd-1`, `ysr-1`) — check the 3ms present before trusting a Qutrub table. It also emits nonsense for the 2fp imperative of doubled assimilated verbs (`wdd-1` → `دَّْنَ`).
 4. **Reverso** — least reliable, last resort. Verified failure modes (2026-08-20): silently conjugates a *different lemma* when the query has a shadda (`تَسَابَّ` returned the hollow paradigm of `سَابَ`), leaves untransliterated placeholders like `tusaaba` in cells, and produces uncontracted doubled forms that are outright ungrammatical in the past tense (`مُودِدَ` for `مُودَّ`, masdar `مُمَادَدَة` for `مُمَادَّة`). Never accept a Reverso table without checking it against one of the other three.

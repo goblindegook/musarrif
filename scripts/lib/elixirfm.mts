@@ -320,7 +320,10 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
   const match = await resolveVerb(verb)
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)
-  const [lexemeId, entryNum] = match
+  const [lexemeId, entryNum, citation] = match
+
+  if (!isSameLexeme(citation, verb.lemma))
+    throw new Error(`ElixirFM holds a different lexeme for ${verb.id}: ${citation} against ${verb.lemma}`)
 
   return buildParsedParadigms(await inflectVerb(lexemeId, entryNum), await deriveVerb(lexemeId, entryNum))
 }

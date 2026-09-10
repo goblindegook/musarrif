@@ -25,10 +25,10 @@ const RESOLVE_HTML = `
 <table cellspacing="0" class="lexeme">
   <tr>
     <td class="xtag" title="verb">V</td>
-    <td class="phon" title="citation form">tadahraj</td>
-    <td class="orth" title="citation form">تَدَحْرَجَ</td>
+    <td class="phon" title="citation form">idharajj</td>
+    <td class="orth" title="citation form">اِدْحَرَجَّ</td>
     <td class="root" title="root of citation form">d ḥ r ǧ دحرج</td>
-    <td class="morphs" title="morphs of citation form">TaKaRDaS</td>
+    <td class="morphs" title="morphs of citation form">IKRaDaSS</td>
     <td class="class" title="derivational class">IVq</td>
     <td class="reflex" title="lexical reference">"roll"</td>
     <td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(333,4)" title="inflect this lexeme">Inflect</a></td>
@@ -107,6 +107,19 @@ describe('fetchElixirFmParadigms', () => {
 
     expect(second).toEqual(first)
     expect(requests).toHaveLength(3)
+  })
+
+  test('refuses a lexeme ElixirFM vocalises as a different verb of the same root and form', async () => {
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const data = Object.fromEntries(new URLSearchParams(await request.text()).entries())
+        if (data.mode === 'resolve') return new HttpResponse(RESOLVE_HTML.replace('كَتَبَ', 'كَتُبَ'), { status: 200 })
+        if (data.mode === 'inflect') return new HttpResponse(INFLECT_HTML, { status: 200 })
+        return new HttpResponse(DERIVE_HTML, { status: 200 })
+      }),
+    )
+
+    await expect(fetchParadigms(buildVerbFromId('ktb-1'))).rejects.toThrow('كَتُبَ')
   })
 
   test('parses resolved, inflected, and derived forms through the public loader', async () => {
@@ -281,7 +294,7 @@ describe('resolveVerb', () => {
   })
 
   test('reads a quadriliteral class, which ElixirFM writes without the q Muṣarrif appends', async () => {
-    expect(await resolveVerb(buildVerbFromId('dHrj-4'))).toEqual(['333', '4', 'تَدَحْرَجَ'])
+    expect(await resolveVerb(buildVerbFromId('dHrj-4'))).toEqual(['333', '4', 'اِدْحَرَجَّ'])
   })
 
   test('keeps the entry of a root ElixirFM writes with a shadda', async () => {
