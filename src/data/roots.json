@@ -827,6 +827,12 @@
     "form": 4
   },
   {
+    "root": "Elq",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3al"]
+  },
+  {
     "root": "Elw",
     "form": 1,
     "vowels": "a-u",
@@ -1381,6 +1387,15 @@
     "root": "SHb",
     "form": 3,
     "lexicalMasdars": ["SiHaAb"]
+  },
+  {
+    "root": "SHy",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": [],
+    "lexicalMasdars": ["SaHFA"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true
   },
   {
     "root": "SbH",
@@ -2162,6 +2177,10 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "fty",
+    "form": 10
+  },
+  {
     "root": "fwD",
     "form": 6,
     "passiveVoice": "impersonal"
@@ -2262,6 +2281,10 @@
     "root": "gmD",
     "form": 1,
     "vowels": "a-a"
+  },
+  {
+    "root": "gmy",
+    "form": 4
   },
   {
     "root": "gny",
@@ -2919,6 +2942,10 @@
     "lexicalMasdars": ["muDiy~"]
   },
   {
+    "root": "mTr",
+    "form": 4
+  },
+  {
     "root": "mdH",
     "form": 1,
     "vowels": "a-a",
@@ -3357,6 +3384,12 @@
   {
     "root": "qDy",
     "form": 8
+  },
+  {
+    "root": "qEd",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fu3ool", "mimi"]
   },
   {
     "root": "qEd",
@@ -4396,6 +4429,12 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l", "fu3ool", "fi3aala"]
+  },
+  {
+    "root": "wfq",
+    "form": 1,
+    "vowels": "i-i",
+    "masdars": ["fa3l"]
   },
   {
     "root": "wfq",
