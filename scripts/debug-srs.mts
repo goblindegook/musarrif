@@ -23,7 +23,7 @@ import {
 } from '../src/exercises/srs.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
-import { getAvailableParadigms, type VerbForm, verbs } from '../src/paradigms/verbs.ts'
+import { getAvailableParadigms, type TriliteralForm, verbs } from '../src/paradigms/verbs.ts'
 import { utcToday } from '../src/primitives/dates.ts'
 
 type CoverageDimension = 'kind' | 'rootType' | 'form' | 'tense' | 'pronoun' | 'nominal'
@@ -34,7 +34,7 @@ interface UniverseCard {
   key: string
   kind: ExerciseKind
   rootType: SrsRootType
-  form: VerbForm
+  form: TriliteralForm
   tense?: VerbTense
   pronoun?: PronounId
   nominal?: NominalGroup
@@ -87,7 +87,7 @@ const EXERCISE_KINDS: readonly ExerciseKind[] = [
 ]
 
 const ROOT_TYPE_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
-const FORM_ORDER: readonly VerbForm[] = formPool(9)
+const FORM_ORDER: readonly TriliteralForm[] = formPool(9)
 const TENSE_ORDER: readonly VerbTense[] = tensePool(4)
 
 const NOMINAL_ORDER: readonly NominalGroup[] = ['participles', 'masdar']

@@ -7,16 +7,11 @@ import { passivePastDerivationSteps } from './passive/past-annotation'
 import { passivePresentMoodDerivationSteps } from './passive/present-annotation'
 import type { PronounId } from './pronouns'
 import type { VerbTense } from './tense'
-import type { Verb, VerbForm } from './verbs'
-import type { Morpheme } from './word'
+import type { Verb } from './verb-types'
 
-export type DerivationStep =
-  | { type: 'root'; morphemes: readonly Morpheme[] }
-  | { type: 'form'; form: VerbForm; morphemes: readonly Morpheme[] }
-  | { type: 'tense'; tense: VerbTense; morphemes: readonly Morpheme[] }
-  | { type: 'pronoun'; pronounId: PronounId; morphemes: readonly Morpheme[] }
+export type { DerivationStep, DerivationSteps } from './annotation-types'
 
-export type DerivationSteps = readonly DerivationStep[]
+import type { DerivationSteps } from './annotation-types'
 
 export function derivationSteps(verb: Verb, verbTense: VerbTense, pronounId: PronounId): DerivationSteps {
   switch (verbTense) {

@@ -1,22 +1,9 @@
 import type { ExplanationLayers } from '../paradigms/explanation'
 import type { DimensionKey, DimensionProfile } from './dimensions'
-import type { CardConstraints } from './srs'
+import type { ExerciseKind } from './exercise-kinds'
+import type { CardConstraints } from './srs-types'
 
-export type ExerciseKind =
-  | 'conjugation'
-  | 'masdarForm'
-  | 'masdarRoot'
-  | 'masdarVerb'
-  | 'participleForm'
-  | 'participleRoot'
-  | 'participleVerb'
-  | 'verbParticiple'
-  | 'verbForm'
-  | 'verbMasdar'
-  | 'verbPronoun'
-  | 'verbRoot'
-  | 'rootFormVerb'
-  | 'verbTense'
+export type { ExerciseKind } from './exercise-kinds'
 
 export type InputMode = 'multiple-choice' | 'keyboard' | 'speech'
 

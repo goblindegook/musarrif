@@ -1,4 +1,4 @@
-import type { DerivationSteps } from '../annotation'
+import type { DerivationSteps } from '../annotation-types'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { radicalMorpheme } from '../word'

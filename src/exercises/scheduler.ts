@@ -1,6 +1,6 @@
 import type { PronounId } from '../paradigms/pronouns.ts'
 import type { VerbTense } from '../paradigms/tense.ts'
-import type { VerbForm } from '../paradigms/verbs.ts'
+import type { TriliteralForm } from '../paradigms/verbs.ts'
 import { verbs } from '../paradigms/verbs.ts'
 import { utcToday } from '../primitives/dates.ts'
 import { type DimensionProfile, formPool, pronounPool, random, rootTypesPool, tensePool } from './dimensions.ts'
@@ -31,7 +31,7 @@ import {
 } from './srs.ts'
 
 export interface ExerciseFocus {
-  form?: VerbForm | null
+  form?: TriliteralForm | null
   tense?: VerbTense | null
   rootType?: SrsRootType | null
   pronoun?: PronounId | null
@@ -162,7 +162,7 @@ function isDueCardInFocus(card: Omit<SrsCardIdentity, 'key'>, focus: ExerciseFoc
 interface Triple {
   kind: ExerciseKind
   rootType: SrsRootType
-  form: VerbForm
+  form: TriliteralForm
 }
 
 function filterUncoveredForBacklog(

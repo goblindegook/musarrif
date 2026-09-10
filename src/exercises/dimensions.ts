@@ -9,14 +9,14 @@ import {
   getAvailableParadigms,
   type QuadriliteralForm,
   synthesizeVerb,
-  type VerbForm,
+  type TriliteralForm,
   verbs,
 } from '../paradigms/verbs'
 import type { Word } from '../paradigms/word'
 import { clamp } from '../primitives/numbers'
 import { keys } from '../primitives/objects'
-import type { CardConstraints } from './srs'
-import { getSrsRootType, type SrsRootType } from './srs'
+import { getSrsRootType, type SrsRootType } from './root-types'
+import type { CardConstraints } from './srs-types'
 
 type Level<T extends readonly unknown[]> =
   Exclude<keyof T, keyof (readonly unknown[])> extends `${infer I extends number}` ? I : never
@@ -117,19 +117,19 @@ export function normalizeExercisePronoun(verb: DisplayVerb, tense: VerbTense, pr
   return pronoun
 }
 
-const F0: VerbForm[] = [1]
-const F1: VerbForm[] = [...F0, 2]
-const F2: VerbForm[] = [...F1, 3]
-const F3: VerbForm[] = [...F2, 4]
-const F4: VerbForm[] = [...F3, 5]
-const F5: VerbForm[] = [...F4, 6]
-const F6: VerbForm[] = [...F5, 7]
-const F7: VerbForm[] = [...F6, 8]
-const F8: VerbForm[] = [...F7, 9]
-const F9: VerbForm[] = [...F8, 10]
+const F0: TriliteralForm[] = [1]
+const F1: TriliteralForm[] = [...F0, 2]
+const F2: TriliteralForm[] = [...F1, 3]
+const F3: TriliteralForm[] = [...F2, 4]
+const F4: TriliteralForm[] = [...F3, 5]
+const F5: TriliteralForm[] = [...F4, 6]
+const F6: TriliteralForm[] = [...F5, 7]
+const F7: TriliteralForm[] = [...F6, 8]
+const F8: TriliteralForm[] = [...F7, 9]
+const F9: TriliteralForm[] = [...F8, 10]
 const FORM_POOLS = [F0, F1, F2, F3, F4, F5, F6, F7, F8, F9] as const
 
-export function formPool(forms: FormsLevel): readonly VerbForm[] {
+export function formPool(forms: FormsLevel): readonly TriliteralForm[] {
   return FORM_POOLS[forms]
 }
 
@@ -264,7 +264,7 @@ export function randomNominalVerb(profile: DimensionProfile, constraints?: CardC
   return randomVerbFromPool(profile, constraints, NOMINAL_EXCLUDED_VERB_IDS)
 }
 
-export function randomGeneratedVerb(root: string, form: VerbForm = random(FORMS)): DisplayVerb {
+export function randomGeneratedVerb(root: string, form: TriliteralForm = random(FORMS)): DisplayVerb {
   if (root.length === 4) return synthesizeVerb(root, clamp(form, 1, 4) as QuadriliteralForm)
   if (form === 1) return synthesizeVerb(root, 1, random(FORM_I_PATTERNS))
   return synthesizeVerb(root, form)

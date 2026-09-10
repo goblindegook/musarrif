@@ -1,5 +1,5 @@
 import { activePastDerivationSteps } from '../active/past-annotation'
-import type { DerivationSteps } from '../annotation'
+import type { DerivationSteps } from '../annotation-types'
 import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import type { Verb } from '../verbs'

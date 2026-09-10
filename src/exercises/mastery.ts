@@ -1,6 +1,6 @@
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import { FORMS, type VerbForm } from '../paradigms/verbs'
+import { FORMS, type TriliteralForm } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
 import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
@@ -54,7 +54,7 @@ export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 
 
 export type MasteryItemIdByCategory = {
   rootTypes: SrsRootType
-  forms: VerbForm
+  forms: TriliteralForm
   tenses: VerbTense
   pronouns: PronounId
   nominals: 'participles' | 'masdar'

@@ -1,7 +1,7 @@
 import { memoize } from '@pacote/memoize'
-import type { Word } from './word'
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
+type Stringifiable = { toString(): string }
 
 export class Token {
   private readonly raw: string
@@ -87,7 +87,7 @@ const LONG_VOWEL_TARGETS: Record<string, ReadonlySet<string>> = {
   [String(DAMMA)]: new Set([String(WAW), String(HAMZA_ON_WAW)]),
 }
 
-export function applyDiacriticsPreference(text: string | Word, preference: DiacriticsPreference): string {
+export function applyDiacriticsPreference(text: string | Stringifiable, preference: DiacriticsPreference): string {
   if (preference === 'all') return String(text)
   if (preference === 'none')
     return String(text).replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e8\u06ea-\u06ed]/g, '')
@@ -104,7 +104,7 @@ export function applyDiacriticsPreference(text: string | Word, preference: Diacr
 
 export const normalizeHamza = (value: string): string => value.replace(/[آأإؤئ]/g, String(HAMZA))
 
-export function normalizeForComparison(text: string | Word): string {
+export function normalizeForComparison(text: string | Stringifiable): string {
   return normalizeHamza(applyDiacriticsPreference(String(text), 'none'))
     .trim()
     .normalize('NFD')

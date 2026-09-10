@@ -23,7 +23,7 @@ import {
   FORMS,
   isTriliteralFormIDisplayVerb,
   synthesizeVerb,
-  type VerbForm,
+  type TriliteralForm,
   verbs,
 } from '../src/paradigms/verbs.ts'
 import type { Word } from '../src/paradigms/word.ts'
@@ -52,7 +52,7 @@ function resolveRoot(input: string): string {
   return transliterateReverse(input)
 }
 
-function findVerb(rootInput: string, form: VerbForm, vowels: FormIPattern): DisplayVerb {
+function findVerb(rootInput: string, form: TriliteralForm, vowels: FormIPattern): DisplayVerb {
   const root = resolveRoot(rootInput)
   if (form === 1) {
     const existingFormI = verbs.find(
@@ -119,7 +119,7 @@ if (args.length < 3) usage()
 
 const [rootArg, formArg, ...rest] = args
 
-const form = parseInt(formArg ?? '', 10) as VerbForm
+const form = parseInt(formArg ?? '', 10) as TriliteralForm
 if (!FORMS.includes(form)) {
   console.error(`Invalid form: ${formArg}. Must be 1–${FORMS[FORMS.length - 1]}.`)
   process.exit(1)

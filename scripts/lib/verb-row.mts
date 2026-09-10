@@ -7,15 +7,15 @@ import {
   MASDAR_PATTERNS,
   type MasdarPattern,
   type PassiveVoice,
+  type TriliteralForm,
   type Valency,
   type Verb,
-  type VerbForm,
 } from '../../src/paradigms/verbs.ts'
 import type { ParsedParadigms } from './paradigms.mts'
 
 export interface RootEntry {
   root: string
-  form: VerbForm
+  form: TriliteralForm
   vowels?: FormIPattern
   hollowContraction?: 'contracted' | 'uncontracted'
   contractedImperative?: boolean

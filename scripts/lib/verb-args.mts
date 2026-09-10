@@ -5,7 +5,7 @@ import {
   formsForRoot,
   getVerbById,
   synthesizeVerb,
-  type VerbForm,
+  type TriliteralForm,
 } from '../../src/paradigms/verbs.ts'
 import { fetchParadigms as elixirfm } from './elixirfm.mts'
 import type { GenerationTool } from './paradigms.mts'
@@ -43,9 +43,9 @@ export function parseVerbArgs(argv: readonly string[], scriptName: string): Verb
   if (root.length !== 3 && root.length !== 4)
     fail(`Root "${rootId}" has ${root.length} radical(s), expected three or four.`)
 
-  const allowedForms = formsForRoot(root) as readonly VerbForm[]
+  const allowedForms = formsForRoot(root) as readonly TriliteralForm[]
   const form = Number(formText)
-  if (!Number.isInteger(form) || !allowedForms.includes(form as VerbForm))
+  if (!Number.isInteger(form) || !allowedForms.includes(form as TriliteralForm))
     fail(`Form "${formText}" is not available for root "", expected one of ${allowedForms.join(', ')}.`)
 
   if (pattern) {
@@ -56,7 +56,7 @@ export function parseVerbArgs(argv: readonly string[], scriptName: string): Verb
 
   const verb = pattern
     ? synthesizeVerb(root, 1, pattern as FormIPattern)
-    : (getVerbById(`${rootId}-${form}`) ?? synthesizeVerb(root, form as VerbForm))
+    : (getVerbById(`${rootId}-${form}`) ?? synthesizeVerb(root, form as TriliteralForm))
 
   return { source: source as GenerationTool, verb, pattern: pattern as FormIPattern | undefined }
 }

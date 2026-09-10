@@ -9,7 +9,7 @@ import {
   getVerb,
   getVerbById,
   synthesizeVerb,
-  type VerbForm,
+  type TriliteralForm,
 } from './verbs'
 
 describe('synthesizeVerb', () => {
@@ -142,7 +142,7 @@ describe('getAvailableParadigms', () => {
   })
 
   describe('has passive voice', () => {
-    test.each<[string, VerbForm]>([
+    test.each<[string, TriliteralForm]>([
       ['يود', 2],
       ['شوق', 2],
       ['زور', 2],
@@ -310,7 +310,7 @@ describe('getAvailableParadigms', () => {
   })
 
   describe('has no passive voice', () => {
-    test.each<[string, VerbForm]>([
+    test.each<[string, TriliteralForm]>([
       ['وفي', 1],
       ['قضي', 7],
       ['يءس', 1],
@@ -381,7 +381,7 @@ describe('getAvailableParadigms', () => {
     })
   })
 
-  test.each<[string, VerbForm]>([
+  test.each<[string, TriliteralForm]>([
     ['Ewm', 1],
     ['سعد', 1],
     ['موت', 1],

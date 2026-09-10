@@ -1,4 +1,4 @@
-import type { DerivationStep } from '../annotation'
+import type { DerivationStep } from '../annotation-types'
 import type { PronounId } from '../pronouns'
 import type { Verb } from '../verbs'
 import { conjugatePassiveFuture } from './future'

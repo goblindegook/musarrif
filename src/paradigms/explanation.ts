@@ -8,7 +8,7 @@ import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType } from './roots'
 import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
-import { isQuadriliteralVerb, isTriliteralFormIVerb, type Verb, type VerbForm } from './verbs'
+import { isQuadriliteralVerb, isTriliteralFormIVerb, type TriliteralForm, type Verb } from './verbs'
 import type { Morpheme } from './word'
 import { Word } from './word'
 
@@ -34,7 +34,7 @@ type TenseRootInteraction =
 
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
-const NON_FORM_I_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
+const NON_FORM_I_MASDAR_PATTERNS: Partial<Record<TriliteralForm, string>> = {
   2: 'تَفْعِيل',
   3: 'مُفَاعَلَة',
   4: 'إِفْعَال',
@@ -46,7 +46,7 @@ const NON_FORM_I_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
   10: 'اِسْتِفْعَال',
 }
 
-const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<VerbForm, string>> = {
+const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<TriliteralForm, string>> = {
   1: 'فَعْلَلَة',
   2: 'تَفَعْلُل',
   3: 'اِفْعِنْلَال',
@@ -92,7 +92,7 @@ export function toFormDescriptor(
 interface BaseExplanationLayers {
   arabic: string | readonly string[]
   paradigmRoots: string[]
-  paradigmForm: VerbForm
+  paradigmForm: TriliteralForm
   rootType?: RootAnalysisType
   form?: VerbFormDescriptor
   vowels?: FormIPattern
@@ -392,7 +392,7 @@ export function resolveVerbExplanationLayers(
   }
 }
 
-function toFormRoot(form: VerbForm, [c1]: readonly Token[]): FormRootInteraction | undefined {
+function toFormRoot(form: TriliteralForm, [c1]: readonly Token[]): FormRootInteraction | undefined {
   if (form !== 8) return
   const infixConsonant = resolveFormVIIIInfixConsonant(c1)
   if (infixConsonant.equals(c1)) return 'assimilation-complete'
@@ -403,7 +403,7 @@ function toFormRoot(form: VerbForm, [c1]: readonly Token[]): FormRootInteraction
 function toTenseRoot(
   rootType: RootAnalysisType,
   tenseContext: VerbTense,
-  form: VerbForm,
+  form: TriliteralForm,
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
   if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(rootType, tenseContext)
@@ -416,7 +416,7 @@ function toTenseRoot(
   if (rootType === 'hamzated') return 'hamza-seat'
 }
 
-function resolveGeminate(tenseContext: VerbTense, form: VerbForm): TenseRootInteraction | undefined {
+function resolveGeminate(tenseContext: VerbTense, form: TriliteralForm): TenseRootInteraction | undefined {
   if (form === 2 || form === 5) return undefined
   return tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative'
     ? 'geminate-jussive'

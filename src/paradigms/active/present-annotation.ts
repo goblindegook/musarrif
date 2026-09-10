@@ -1,4 +1,4 @@
-import type { DerivationSteps } from '../annotation'
+import type { DerivationSteps } from '../annotation-types'
 import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, type Token } from '../tokens'

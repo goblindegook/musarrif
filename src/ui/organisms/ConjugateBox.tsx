@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern, RARE_FORM_I_PATTERNS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
-import type { DisplayVerb, VerbForm } from '../../paradigms/verbs'
+import type { DisplayVerb, TriliteralForm } from '../../paradigms/verbs'
 import {
   FORMS,
   getVerbById,
@@ -39,7 +39,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
   const [c1, setC1] = useState<string | undefined>(initialLetters[0])
   const [c2, setC2] = useState<string | undefined>(initialLetters[1])
   const [c3, setC3] = useState<string | undefined>(initialLetters[2])
-  const [form, setForm] = useState<VerbForm | undefined>(selectedVerb?.form)
+  const [form, setForm] = useState<TriliteralForm | undefined>(selectedVerb?.form)
   const [vowelPattern, setVowelPattern] = useState<FormIPattern>(
     selectedVerb && isTriliteralFormIDisplayVerb(selectedVerb) ? selectedVerb.vowels : 'a-a',
   )

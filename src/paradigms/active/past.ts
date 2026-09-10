@@ -22,7 +22,7 @@ import {
   WAW,
   YEH,
 } from '../tokens.ts'
-import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verbs'
+import type { FormIVerb, NonFormIVerb, QuadriliteralVerb, Verb } from '../verb-types'
 import { agreementMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word.ts'
 
 function isQuadriliteralVerb(verb: Verb): verb is QuadriliteralVerb {

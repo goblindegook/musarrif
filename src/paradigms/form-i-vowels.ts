@@ -1,6 +1,5 @@
 import { keys } from '../primitives/objects'
 import { DAMMA, FATHA, KASRA, type Token } from './tokens'
-import type { FormIVerb } from './verbs'
 
 const FORM_I_VOWELS = {
   'a-a': [FATHA, FATHA],
@@ -20,18 +19,18 @@ export const FORM_I_PATTERNS = keys(FORM_I_VOWELS)
 
 export const RARE_FORM_I_PATTERNS: ReadonlySet<FormIPattern> = new Set(['i-i', 'i-u', 'u-a', 'u-i'])
 
-export function formIPastVowel(verb: FormIVerb): Token {
+export function formIPastVowel(verb: { vowels: FormIPattern }): Token {
   return FORM_I_VOWELS[verb.vowels][0]
 }
 
-export function formIPresentVowel(verb: FormIVerb): Token {
+export function formIPresentVowel(verb: { vowels: FormIPattern }): Token {
   return FORM_I_VOWELS[verb.vowels][1]
 }
 
-export function isFormIPastVowel(verb: FormIVerb, vowel: Token): boolean {
+export function isFormIPastVowel(verb: { vowels: FormIPattern }, vowel: Token): boolean {
   return vowel.equals(FORM_I_VOWELS[verb.vowels][0])
 }
 
-export function isFormIPresentVowel(verb: FormIVerb, vowel: Token): boolean {
+export function isFormIPresentVowel(verb: { vowels: FormIPattern }, vowel: Token): boolean {
   return vowel.equals(FORM_I_VOWELS[verb.vowels][1])
 }

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { confirm, input, select } from '@inquirer/prompts'
 import { transliterate } from '@pacote/buckwalter'
 import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels.ts'
-import { MASDAR_PATTERNS, type MasdarPattern, type PassiveVoice, type VerbForm } from '../src/paradigms/verbs.ts'
+import { MASDAR_PATTERNS, type MasdarPattern, type PassiveVoice, type TriliteralForm } from '../src/paradigms/verbs.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -27,7 +27,7 @@ type MasdarPatternChoice = MasdarPattern
 
 interface RootEntry {
   root: string
-  form: VerbForm
+  form: TriliteralForm
   vowels?: FormIPattern
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
@@ -49,7 +49,7 @@ interface WizardState {
   rootStr: string
   existing: RootEntry[]
   editEntry: RootEntry | null
-  form: VerbForm | null
+  form: TriliteralForm | null
   vowels?: FormIPattern
   passiveVoice?: PassiveVoice
   masdars?: MasdarPatternChoice[]
@@ -88,7 +88,7 @@ function writeLocale(lang: LanguageCode, data: LocaleData): void {
   writeFileSync(LOCALE_PATHS[lang], `${JSON.stringify(out, null, 2)}\n`)
 }
 
-function verbId(root: string, form: VerbForm): string {
+function verbId(root: string, form: TriliteralForm): string {
   return `${root}-${form}`
 }
 
@@ -213,7 +213,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
         console.log()
       }
 
-      const form = await select<VerbForm | Back>({
+      const form = await select<TriliteralForm | Back>({
         message: 'Select form:',
         choices: [
           { name: '← Back', value: BACK },
@@ -415,7 +415,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     }
 
     if (step === 9) {
-      const entry: RootEntry = { root: state.rootStr, form: state.form as VerbForm }
+      const entry: RootEntry = { root: state.rootStr, form: state.form as TriliteralForm }
       if (state.vowels != null) entry.vowels = state.vowels
       if (state.masdars != null) entry.masdars = state.masdars
 

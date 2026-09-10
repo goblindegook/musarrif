@@ -2,21 +2,17 @@ import { memoize } from '@pacote/memoize'
 import * as v from 'valibot'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
-import { tokenize } from '../paradigms/tokens'
-import { getAvailableParadigms, type VerbForm, verbs } from '../paradigms/verbs'
+import { getAvailableParadigms, type TriliteralForm, verbs } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
 import { formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
-import type { ExerciseKind } from './exercises'
+import type { ExerciseKind } from './exercise-kinds'
+import { getSrsRootType, type SrsRootType } from './root-types'
+import type { SrsCardIdentity } from './srs-types'
 
 export type AnswerResult = 'correct' | 'partial' | 'wrong' | 'pass'
-export type SrsRootType = 'sound' | 'doubled' | 'hamzated' | 'assimilated' | 'hollow' | 'defective'
-
-export interface CardConstraints {
-  rootType?: SrsRootType
-  form?: VerbForm
-  tense?: VerbTense
-  pronoun?: PronounId
-}
+export type { SrsRootType } from './root-types'
+export type { CardConstraints, SrsCardIdentity } from './srs-types'
+export { getSrsRootType }
 
 const CardState = v.object({
   interval: v.pipe(v.number(), v.finite(), v.gtValue(0)),
@@ -43,15 +39,6 @@ export const SrsStore = v.fallback(
 
 export type SrsStore = v.InferOutput<typeof SrsStore>
 
-export interface SrsCardIdentity {
-  key: string
-  kind: ExerciseKind
-  rootType: SrsRootType
-  form: VerbForm
-  tense?: VerbTense
-  pronoun?: PronounId
-}
-
 export type SrsCard = SrsCardIdentity & CardState
 
 const VERB_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
@@ -65,28 +52,18 @@ const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
 
 const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
 
-export function getSrsRootType(root: string): SrsRootType {
-  const [c1, c2, c3] = tokenize(root)
-  if (c3.isWeak) return 'defective'
-  if (c2.isWeak) return 'hollow'
-  if (c1.isWeak) return 'assimilated'
-  if ([c1, c2, c3].some((t) => t.isHamza)) return 'hamzated'
-  if (c2.equals(c3)) return 'doubled'
-  return 'sound'
-}
-
-export function buildCardKey(kind: ExerciseKind, rootType: SrsRootType, form: VerbForm): string
+export function buildCardKey(kind: ExerciseKind, rootType: SrsRootType, form: TriliteralForm): string
 export function buildCardKey(
   kind: ExerciseKind,
   rootType: SrsRootType,
-  form: VerbForm,
+  form: TriliteralForm,
   tense: VerbTense,
   pronoun: PronounId,
 ): string
 export function buildCardKey(
   kind: ExerciseKind,
   rootType: SrsRootType,
-  form: VerbForm,
+  form: TriliteralForm,
   tense?: VerbTense,
   pronoun?: PronounId,
 ): string {
@@ -117,7 +94,7 @@ export function parseCardKey(key: string): SrsCardIdentity {
       key,
       kind: kind as ExerciseKind,
       rootType: rootType as SrsRootType,
-      form: Number(formStr) as VerbForm,
+      form: Number(formStr) as TriliteralForm,
       tense: undefined,
       pronoun: undefined,
     }
@@ -127,7 +104,7 @@ export function parseCardKey(key: string): SrsCardIdentity {
     key,
     kind: kind as ExerciseKind,
     rootType: rootType as SrsRootType,
-    form: Number(formStr) as VerbForm,
+    form: Number(formStr) as TriliteralForm,
     tense: tense as VerbTense,
     pronoun: pronoun as PronounId,
   }

@@ -4,20 +4,48 @@ import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
 import { ALL_TENSES, type VerbParadigm } from './tense'
-import { type Token, tokenize } from './tokens'
+import { tokenize } from './tokens'
+import type {
+  AllowedFormForRoot,
+  DisplayVerb,
+  DisplayVerbForRootAndForm,
+  HollowContractionBehaviour,
+  MasdarPattern,
+  PassiveVoice,
+  QuadriliteralForm,
+  QuadriliteralRoot,
+  QuadriliteralRootTokens,
+  QuadriliteralVerb,
+  RootKind,
+  RootTokens,
+  TriliteralDisplayVerb,
+  TriliteralForm,
+  TriliteralFormIVerb,
+  TriliteralRoot,
+  TriliteralRootTokens,
+  Valency,
+  Verb,
+  VerbBase,
+  VerbForRootAndForm,
+} from './verb-types'
+import { FORMS, QUADRILITERAL_FORMS } from './verb-types'
 
-export type TriliteralForm = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-export type QuadriliteralForm = 1 | 2 | 3 | 4
-export type VerbForm = TriliteralForm
-
-export const FORMS: readonly TriliteralForm[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-export const QUADRILITERAL_FORMS: readonly QuadriliteralForm[] = [1, 2, 3, 4]
-
-declare const triliteralRootBrand: unique symbol
-declare const quadriliteralRootBrand: unique symbol
-
-type TriliteralRoot = string & { readonly [triliteralRootBrand]: 'triliteral' }
-type QuadriliteralRoot = string & { readonly [quadriliteralRootBrand]: 'quadriliteral' }
+export type {
+  AllowedFormForRoot,
+  DisplayVerb,
+  FormIVerb,
+  MasdarPattern,
+  NonFormIVerb,
+  PassiveVoice,
+  QuadriliteralForm,
+  QuadriliteralVerb,
+  TriliteralDisplayVerb,
+  TriliteralForm,
+  TriliteralFormIVerb,
+  Valency,
+  Verb,
+} from './verb-types'
+export { FORMS, MASDAR_PATTERNS, QUADRILITERAL_FORMS } from './verb-types'
 
 export const KWN_SISTERS_IDS = new Set([
   'brH-1',
@@ -50,126 +78,9 @@ export const ZNN_SISTERS_IDS = new Set([
   "'x*-8",
 ])
 
-type RootLength<Value extends string, Acc extends readonly unknown[] = []> = string extends Value
-  ? number
-  : Value extends `${infer _}${infer Rest}`
-    ? RootLength<Rest, [...Acc, unknown]>
-    : Acc['length']
-
-type RootKind<Value extends string> = Value extends TriliteralRoot
-  ? 'triliteral'
-  : Value extends QuadriliteralRoot
-    ? 'quadriliteral'
-    : RootLength<Value> extends 3
-      ? 'triliteral'
-      : RootLength<Value> extends 4
-        ? 'quadriliteral'
-        : 'unknown'
-
-export type AllowedFormForRoot<Value extends string> =
-  RootKind<Value> extends 'quadriliteral'
-    ? QuadriliteralForm
-    : RootKind<Value> extends 'triliteral'
-      ? TriliteralForm
-      : VerbForm
-
-type TriliteralRootTokens = readonly [Token, Token, Token]
-type QuadriliteralRootTokens = readonly [Token, Token, Token, Token]
-type RootTokens = TriliteralRootTokens | QuadriliteralRootTokens
-
-export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
-export type PassiveVoice = 'none' | 'impersonal'
-export type Valency = 1 | 2 | 3
-type HollowContractionBehaviour = 'contracted' | 'uncontracted'
-
-type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
-  root: Root
-  rootTokens: Tokens
-  form: Form
-  masdars?: readonly MasdarPattern[]
-  lexicalMasdars?: readonly string[]
-  passiveVoice?: PassiveVoice
-  noPassiveParticiple?: boolean
-  lexicalPassiveParticiple?: string
-  valency: readonly Valency[]
-}
-
-export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
-  vowels: FormIPattern
-  hollowContraction?: HollowContractionBehaviour
-  contractedImperative?: boolean
-  lexicalActiveParticiple?: string
-}
-
-type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
-type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
-
-export type QuadriliteralVerb = VerbProps<QuadriliteralRoot, QuadriliteralRootTokens, QuadriliteralForm>
-
-export type FormIVerb = TriliteralFormIVerb
-export type NonFormIVerb = TriliteralNonFormIVerb
-export type Verb = TriliteralVerb | QuadriliteralVerb
-
-type VerbBase<T extends Verb> = T & {
-  id: string
-  lemma: string
-  rootId: string
-  synthetic?: true
-}
-
-export type DisplayVerb<T extends Verb | VerbForm = Verb> = T extends Verb
-  ? VerbBase<T>
-  : VerbBase<Extract<Verb, { form: T }>>
-
-export type TriliteralDisplayVerb<Form extends TriliteralForm = TriliteralForm> = VerbBase<
-  Extract<TriliteralVerb, { form: Form }>
->
-
-type VerbForRootAndForm<Root extends string, Form extends AllowedFormForRoot<Root>> =
-  RootKind<Root> extends 'quadriliteral'
-    ? QuadriliteralVerb
-    : RootKind<Root> extends 'triliteral'
-      ? Form extends 1
-        ? TriliteralFormIVerb
-        : TriliteralNonFormIVerb
-      : Form extends 1
-        ? Extract<Verb, { form: 1 }>
-        : Exclude<Verb, { form: 1 }>
-
-type DisplayVerbForRootAndForm<Root extends string, Form extends AllowedFormForRoot<Root>> = VerbBase<
-  VerbForRootAndForm<Root, Form>
->
-
-export const MASDAR_PATTERNS = [
-  // Basic
-  'fa3l', // simple action
-  'fi3l', // mental states, abstract qualities
-  'fu3l', // inherent states, qualities
-  'fa3al', // abstract result
-  'fa3il', // action (uncommon)
-  // Extended vowel
-  'fa3aal', // extended activity, occupation
-  'fa3iil', // sometimes adjective-like (rare)
-  'fi3aal', // ongoing action
-  'fu3aal', // bodily state, sound, illness (uncommon)
-  'fu3ool', // movement, transition, repeated action
-  'fa3alaan', // ongoing process
-  'fu3laan', // state or condition
-  // Feminine
-  'fa3aala', // profession, craft, continued activity
-  'fa3la', // single concrete event
-  'fi3aala', // process, organized activity
-  'fi3la', // single concrete event
-  'fu3la', // single concrete event
-  // Uncommon
-  'fi3al', // inherent qualities
-  // Mimi
-  'mimi',
-] as const
-
 type RawVerb = {
   root: string
-  form: VerbForm
+  form: TriliteralForm
   vowels?: FormIPattern
   hollowContraction?: HollowContractionBehaviour
   contractedImperative?: boolean
@@ -334,7 +245,7 @@ export function buildVerbFromId(id = ''): DisplayVerb {
   const [rootId, formText] = id.split('-')
   const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
   const maxForm = formsForRoot(root).at(-1) ?? 1
-  const form = clamp(parseInteger(formText, 1), 1, maxForm) as VerbForm
+  const form = clamp(parseInteger(formText, 1), 1, maxForm) as TriliteralForm
 
   if (isQuadriliteralRoot(root)) return synthesizeVerb(root, form as QuadriliteralForm)
   if (form === 1) return synthesizeVerb(root, 1, 'a-a')
@@ -346,7 +257,7 @@ export function synthesizeVerb<Root extends string, Form extends AllowedFormForR
   form: Form,
   pattern?: RootKind<Root> extends 'quadriliteral' ? never : FormIPattern,
 ): DisplayVerbForRootAndForm<Root, Form>
-export function synthesizeVerb(root: string, form: VerbForm, pattern: FormIPattern = 'a-a'): DisplayVerb {
+export function synthesizeVerb(root: string, form: TriliteralForm, pattern: FormIPattern = 'a-a'): DisplayVerb {
   const rootTokens = tokenizeRoot(root)
 
   if (rootTokens.length === 4) {

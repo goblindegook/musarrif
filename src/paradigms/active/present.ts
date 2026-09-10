@@ -386,6 +386,7 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
       radicalMorpheme(c3),
     ]
 
+  // FIXME: use of isFormIPastVowel in present conjugation
   if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA))
     return [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
