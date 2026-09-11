@@ -145,14 +145,17 @@ function buildFormIPatternsByRoot(raw: readonly RawVerb[]): Map<string, readonly
   return byRoot
 }
 
-// Roots with a single Form I row keep the bare `<root>-1` id. A root with two or more gets no bare id at
-// all: every reading is `<root>-1-<vowels>`, ordered alphabetically, and the alphabetically-first reading
-// is what a stale bare-id lookup resolves to.
+// Roots with a single Form I row keep the bare `<root>-1` id for that row's vowels. A root with two or
+// more gets no bare id at all: every reading is `<root>-1-<vowels>`, ordered alphabetically, and the
+// alphabetically-first reading is what a stale bare-id lookup resolves to. A root with no Form I row at
+// all (a fully synthetic build) treats the default `a-a` reading as bare; any other synthesized vowel
+// pattern must be suffixed too, or two different synthetic readings collide on the same id.
 const formIPatternsByRoot = buildFormIPatternsByRoot(rawVerbs as RawVerb[])
 
 function formIVerbId(rootId: string, vowels: FormIPattern): string {
   const patterns = formIPatternsByRoot.get(rootId) ?? []
-  return patterns.length > 1 ? `${rootId}-1-${vowels}` : `${rootId}-1`
+  const isBareReading = patterns.length === 1 ? patterns[0] === vowels : patterns.length === 0 && vowels === 'a-a'
+  return isBareReading ? `${rootId}-1` : `${rootId}-1-${vowels}`
 }
 
 function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T> {

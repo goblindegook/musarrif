@@ -50,7 +50,7 @@ describe('getVerbById', () => {
 
   test('Form I', () => {
     expect(getVerbById('Dfz-1-a-u')).toEqual({
-      id: 'Dfz-1',
+      id: 'Dfz-1-a-u',
       form: 1,
       vowels: 'a-u',
       lemma: 'ضَفَزَ',
@@ -465,6 +465,12 @@ describe('Form I roots with more than one vowel pattern', () => {
   test('an unambiguous root keeps its bare Form I id', () => {
     expect(getVerbById('ktb-1')).toEqual(getVerb('كتب', 1))
     expect(getVerbById('ktb-1-a-u')).toEqual(getVerb('كتب', 1))
+  })
+
+  test('a root with no Form I row gets distinct ids for distinct synthetic vowel patterns', () => {
+    expect(getVerb('ضفز', 1, 'a-a').id).toBe('Dfz-1')
+    expect(getVerb('ضفز', 1, 'a-i').id).toBe('Dfz-1-a-i')
+    expect(getVerb('ضفز', 1, 'a-i').id).not.toBe(getVerb('ضفز', 1, 'a-a').id)
   })
 
   test.each<[string, FormIPattern, string]>([

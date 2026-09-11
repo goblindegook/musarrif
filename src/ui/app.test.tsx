@@ -127,7 +127,7 @@ describe('Conjugation', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(currentUrl()).toBe('/verbs/bnr-1/')
+    expect(currentUrl()).toBe('/verbs/bnr-1-a-u/')
   })
 
   it('navigates when building an unknown verb', () => {
@@ -140,7 +140,7 @@ describe('Conjugation', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(currentUrl()).toBe('/verbs/vny-1/')
+    expect(currentUrl()).toBe('/verbs/vny-1-a-u/')
   })
 
   it('reflects tense changes in the URL', async () => {
@@ -292,7 +292,7 @@ describe('Builder navigation', () => {
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
     await user.click(screen.getByText('Present'))
 
-    expect(currentUrl()).toBe('/verbs/qqq-1/active/present/')
+    expect(currentUrl()).toBe('/verbs/qqq-1-a-u/active/present/')
   })
 
   it('keeps Build tab selected when choosing an existing verb from builder controls', () => {
