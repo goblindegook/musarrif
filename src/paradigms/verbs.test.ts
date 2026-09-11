@@ -2,7 +2,6 @@ import { describe, expect, test } from 'vitest'
 import type { FormIPattern } from './form-i-vowels'
 import { tokenize } from './tokens'
 import {
-  buildVerbFromId,
   findVerbsByRoot,
   findVerbsByRootPrefix,
   formatFormLabel,
@@ -10,67 +9,83 @@ import {
   getVerb,
   getVerbById,
   isTriliteralFormIDisplayVerb,
-  synthesizeVerb,
   type TriliteralForm,
   ZNN_SISTERS_IDS,
 } from './verbs'
 
-describe('synthesizeVerb', () => {
-  test('marks synthesized Form I verb as synthetic', () => {
-    expect(synthesizeVerb('كتب', 1, 'a-u').synthetic).toBe(true)
-  })
-
-  test('marks synthesized Form II–X verb as synthetic', () => {
-    expect(synthesizeVerb('كتب', 2).synthetic).toBe(true)
-  })
-
-  test('corpus verbs are not synthetic', () => {
-    expect(getVerbById('ktb-1')?.synthetic).toBeUndefined()
-  })
-})
-
-describe('synthesizeVerb', () => {
-  test('Form I', () => {
-    const verb = synthesizeVerb('كتب', 1, 'a-u')
-    expect(verb).toEqual({
-      id: 'ktb-1',
+describe('getVerbById', () => {
+  test('returns corpus verbs without marking them synthetic', () => {
+    expect(getVerbById('ktb-1')).toEqual({
+      root: 'كتب',
+      rootTokens: tokenize('كتب'),
       form: 1,
       vowels: 'a-u',
+      hollowContraction: undefined,
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
-      lexicalMasdars: [],
-      lemma: 'كَتَبَ',
-      root: 'كتب',
-      rootId: 'ktb',
-      rootTokens: tokenize('كتب'),
-      synthetic: true,
+      lexicalMasdars: undefined,
+      passiveVoice: undefined,
+      noPassiveParticiple: undefined,
+      contractedImperative: undefined,
+      lexicalActiveParticiple: undefined,
       valency: [2, 3],
+      id: 'ktb-1',
+      lemma: 'كَتَبَ',
+      rootId: 'ktb',
+    })
+  })
+
+  test('synthesizes missing ids and marks them synthetic', () => {
+    expect(getVerbById('Dfz-2')).toEqual({
+      id: 'Dfz-2',
+      form: 2,
+      lemma: 'ضَفَّزَ',
+      root: 'ضفز',
+      rootId: 'Dfz',
+      rootTokens: tokenize('ضفز'),
+      passiveVoice: undefined,
+      synthetic: true,
+      valency: [],
+    })
+  })
+
+  test('Form I', () => {
+    expect(getVerbById('Dfz-1-a-u')).toEqual({
+      id: 'Dfz-1',
+      form: 1,
+      vowels: 'a-u',
+      lemma: 'ضَفَزَ',
+      root: 'ضفز',
+      rootId: 'Dfz',
+      rootTokens: tokenize('ضفز'),
+      masdars: undefined,
+      lexicalMasdars: [],
+      lexicalActiveParticiple: undefined,
+      synthetic: true,
+      valency: [],
     })
   })
 
   test('Forms II-X', () => {
-    const verb = synthesizeVerb('كتب', 2)
-    expect(verb).toEqual({
+    expect(getVerbById('Dfz-2')).toEqual({
       form: 2,
-      id: 'ktb-2',
-      lemma: 'كَتَّبَ',
-      root: 'كتب',
-      rootId: 'ktb',
-      rootTokens: tokenize('كتب'),
+      id: 'Dfz-2',
+      lemma: 'ضَفَّزَ',
+      root: 'ضفز',
+      rootId: 'Dfz',
+      rootTokens: tokenize('ضفز'),
       synthetic: true,
       valency: [],
     })
   })
 })
 
-describe('buildVerbFromId', () => {
+describe('getVerbById fallback parsing', () => {
   test('falls back to Form I when form segment is missing', () => {
-    const verb = buildVerbFromId('ktb-')
-    expect(verb).toMatchObject({ form: 1, id: 'ktb-1' })
+    expect(getVerbById('ktb-')).toEqual(getVerb('كتب', 1))
   })
 
   test('falls back to Form I when form segment is invalid', () => {
-    const verb = buildVerbFromId('ktb-foo')
-    expect(verb).toMatchObject({ form: 1, id: 'ktb-1' })
+    expect(getVerbById('ktb-foo')).toEqual(getVerb('كتب', 1))
   })
 })
 
@@ -413,20 +428,14 @@ describe('Form I roots with more than one vowel pattern', () => {
     ['Hsb-1-a-u', 'a-u'],
     ['Hsb-1-i-a', 'i-a'],
   ])('%s is addressable and carries vowels %s', (id, vowels) => {
-    expect(getVerbById(id)).toMatchObject({ vowels })
-  })
-
-  test.each(['Hsb-1', 'jml-1'])('no bare id exists for %s', (id) => {
-    expect(getVerbById(id)).toBeUndefined()
+    expect(getVerbById(id)).toEqual(getVerb('حسب', 1, vowels))
   })
 
   test.each<[string, string]>([
     ['Hsb-1', 'Hsb-1-a-u'],
     ['jml-1', 'jml-1-a-u'],
-  ])('a stale bare link to %s resolves to %s', (bareId, canonicalId) => {
-    const resolved = buildVerbFromId(bareId)
-    expect(resolved.id).toBe(canonicalId)
-    expect(resolved.synthetic).toBeUndefined()
+  ])('a stale bare lookup for %s resolves to %s', (bareId, canonicalId) => {
+    expect(getVerbById(bareId)).toEqual(getVerbById(canonicalId))
   })
 
   test.each<[string, FormIPattern]>([
@@ -436,16 +445,33 @@ describe('Form I roots with more than one vowel pattern', () => {
     expect(getVerb(root, 1).vowels).toBe(vowels)
   })
 
+  test('getVerb defaults a missing Form I root to a-a', () => {
+    expect(getVerb('ضفز', 1)).toEqual({
+      id: 'Dfz-1',
+      form: 1,
+      lemma: 'ضَفَزَ',
+      root: 'ضفز',
+      rootId: 'Dfz',
+      rootTokens: tokenize('ضفز'),
+      vowels: 'a-a',
+      masdars: undefined,
+      lexicalMasdars: [],
+      lexicalActiveParticiple: undefined,
+      synthetic: true,
+      valency: [],
+    })
+  })
+
   test('an unambiguous root keeps its bare Form I id', () => {
-    expect(getVerbById('ktb-1')).toMatchObject({ vowels: 'a-u' })
-    expect(getVerbById('ktb-1-a-u')).toBeUndefined()
+    expect(getVerbById('ktb-1')).toEqual(getVerb('كتب', 1))
+    expect(getVerbById('ktb-1-a-u')).toEqual(getVerb('كتب', 1))
   })
 
   test.each<[string, FormIPattern, string]>([
     ['حسب', 'a-u', 'Hsb-1-a-u'],
     ['جمل', 'u-u', 'jml-1-u-u'],
-  ])('synthesizing %s %s for an ambiguous root produces the suffixed id %s', (root, pattern, id) => {
-    expect(synthesizeVerb(root, 1, pattern).id).toBe(id)
+  ])('looking up %s %s for an ambiguous root produces the suffixed id %s', (root, pattern, id) => {
+    expect(getVerb(root, 1, pattern).id).toBe(id)
   })
 
   test('ZNN_SISTERS_IDS points at Hsb’s "to deem" sense, not the "to compute" one', () => {

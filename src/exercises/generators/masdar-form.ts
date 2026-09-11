@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
-import { formatFormLabel, formsForRoot, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { formatFormLabel, formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
@@ -15,7 +15,7 @@ export const masdarFormExercise = defineExercise(
 
     const eligibleForms = formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
-      const alternative = form === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, form)
+      const alternative = form === 1 ? getVerb(verb.root, 1, 'a-a') : getVerb(verb.root, form)
       return !deriveMasdar(alternative).some((masdar) => exerciseDiacritics(masdar, profile.diacritics) === word)
     })
 

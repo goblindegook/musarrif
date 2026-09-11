@@ -7,7 +7,6 @@ import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
 import { applyDiacriticsPreference, spell } from '../../paradigms/tokens'
 import {
-  buildVerbFromId,
   type DisplayVerb,
   findVerbsByRoot,
   formatFormLabel,
@@ -64,10 +63,13 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     'form' | 'root' | 'active-participle' | 'passive-participle' | 'masdar' | null
   >(null)
   const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
-  const routeVerb = useMemo(() => buildVerbFromId(verbId), [verbId])
+  const routeVerb = useMemo(() => {
+    const verb = getVerbById(verbId)
+    if (!verb) throw new Error(`Unknown verb id: ${verbId}`)
+    return verb
+  }, [verbId])
   const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
-    if (getVerbById(verbId)) return 'search'
-    return routeVerb ? 'build' : 'search'
+    return routeVerb.synthetic ? 'build' : 'search'
   })
 
   const formatArabic = useMemo(

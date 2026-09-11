@@ -5,7 +5,7 @@ import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'
 import type { VerbTense } from './tense'
-import { getVerb, getVerbById, synthesizeVerb } from './verbs'
+import { getVerb, getVerbById } from './verbs'
 
 const localeT = (key: string, params?: Record<string, string>): string => {
   const strings = enStrings as Record<string, string>
@@ -333,32 +333,32 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
 
 describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
   test('Form VIII with ز as first radical → voicing assimilation', () => {
-    const verb = synthesizeVerb('زوج', 8)
+    const verb = getVerb('زوج', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِزْدَوَجَ')
     expect(layers.formRoot).toBe('assimilation-voicing')
   })
 
   test('Form VIII with د as first radical → complete assimilation', () => {
-    const verb = synthesizeVerb('دخل', 8)
+    const verb = getVerb('دخل', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِدَّخَلَ')
     expect(layers.formRoot).toBe('assimilation-complete')
   })
 
   test('Form VIII with ص as first radical → emphasis assimilation', () => {
-    const verb = synthesizeVerb('صبر', 8)
+    const verb = getVerb('صبر', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِصْطَبَرَ')
     expect(layers.formRoot).toBe('assimilation-emphasis')
   })
 
   test('renderExplanation includes voicing assimilation sentence', () => {
-    const verb = synthesizeVerb('زوج', 8)
+    const verb = getVerb('زوج', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِزْدَوَجَ')
     const rendered = renderExplanation(layers, (key) => key)
     expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-voicing', kind: 'radical' })
   })
 
   test('Form VIII with default infix keeps no extra first-radical assimilation sentence', () => {
-    const verb = synthesizeVerb('كتب', 8)
+    const verb = getVerb('كتب', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِكْتَتَبَ')
     expect(layers.formRoot).toBeUndefined()
   })

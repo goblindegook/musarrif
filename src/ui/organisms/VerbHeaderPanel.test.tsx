@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/preact'
 import { describe, expect, test } from 'vitest'
-import { getVerbById, synthesizeVerb } from '../../paradigms/verbs'
+import { getVerb, getVerbById } from '../../paradigms/verbs'
 import { I18nProvider } from '../hooks/useI18n'
 import { VerbHeaderPanel, type VerbHeaderPanelProps } from './VerbHeaderPanel'
 
@@ -38,12 +38,12 @@ describe('VerbHeaderPanel', () => {
   })
 
   test('prepends asterisk to verb for synthetic verb', () => {
-    renderVerbHeaderPanel({ verb: synthesizeVerb('كتب', 9) })
+    renderVerbHeaderPanel({ verb: getVerb('كتب', 9) })
     expect(document.querySelector('h2')?.textContent).toContain('*')
   })
 
   test('shows a generated-form notice in place of the translation for a synthetic verb', () => {
-    renderVerbHeaderPanel({ verb: synthesizeVerb('فعل', 1, 'a-u') })
+    renderVerbHeaderPanel({ verb: getVerb('فعل', 1, 'a-u') })
     expect(screen.getByText('generated form not attested in the lexicon')).toBeInTheDocument()
   })
 

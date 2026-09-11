@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
-import { buildVerbFromId, synthesizeVerb } from '../../src/paradigms/verbs'
+import { getVerb, getVerbById } from '../../src/paradigms/verbs'
 import { compareForm, fetchParadigms, fromTag, isSameLexeme, resolveVerb, toTag } from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
@@ -102,8 +102,8 @@ afterAll(() => {
 
 describe('fetchElixirFmParadigms', () => {
   test('reuses the cached responses for a repeated verb lookup', async () => {
-    const first = await fetchParadigms(buildVerbFromId('ktb-1'))
-    const second = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const first = await fetchParadigms(getVerbById('ktb-1')!)
+    const second = await fetchParadigms(getVerbById('ktb-1')!)
 
     expect(second).toEqual(first)
     expect(requests).toHaveLength(3)
@@ -119,11 +119,11 @@ describe('fetchElixirFmParadigms', () => {
       }),
     )
 
-    await expect(fetchParadigms(buildVerbFromId('ktb-1'))).rejects.toThrow('كَتُبَ')
+    await expect(fetchParadigms(getVerbById('ktb-1')!)).rejects.toThrow('كَتُبَ')
   })
 
   test('parses resolved, inflected, and derived forms through the public loader', async () => {
-    const paradigms = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const paradigms = await fetchParadigms(getVerbById('ktb-1')!)
 
     expect(paradigms).toEqual({
       paradigms: {
@@ -176,7 +176,7 @@ describe('fetchElixirFmParadigms', () => {
   })
 
   test('selects the entry matching the verb form', async () => {
-    const paradigms = await fetchParadigms(buildVerbFromId('dHrj-4'))
+    const paradigms = await fetchParadigms(getVerbById('dHrj-4')!)
 
     expect(paradigms).toMatchObject({
       nominals: { masdar: ['كِتَابَة'] },
@@ -290,29 +290,29 @@ describe('fromTag', () => {
 
 describe('resolveVerb', () => {
   test('exposes the citation form alongside the clip', async () => {
-    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('ktb-1')!)).toEqual(['111', '2', 'كَتَبَ'])
   })
 
   test('reads a quadriliteral class, which ElixirFM writes without the q Muṣarrif appends', async () => {
-    expect(await resolveVerb(buildVerbFromId('dHrj-4'))).toEqual(['333', '4', 'اِدْحَرَجَّ'])
+    expect(await resolveVerb(getVerbById('dHrj-4')!)).toEqual(['333', '4', 'اِدْحَرَجَّ'])
   })
 
   test('keeps the entry of a root ElixirFM writes with a shadda', async () => {
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'm d d مدّ'))))
 
-    expect(await resolveVerb(buildVerbFromId('mdd-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('mdd-1')!)).toEqual(['111', '2', 'كَتَبَ'])
   })
 
   test('keeps the entry of a root ElixirFM spells with the other weak radical', async () => {
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ʿ y d عيد'))))
 
-    expect(await resolveVerb(buildVerbFromId('Ewd-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('Ewd-1')!)).toEqual(['111', '2', 'كَتَبَ'])
   })
 
   test('drops a weak-radical entry another verb of the same form owns', async () => {
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(RESOLVE_HTML.replace('k t b كتب', 'ṣ y r صير'))))
 
-    expect(await resolveVerb(buildVerbFromId('Swr-1'))).toBeUndefined()
+    expect(await resolveVerb(getVerbById('Swr-1')!)).toBeUndefined()
   })
 
   test('prefers the entry whose root matches exactly', async () => {
@@ -329,7 +329,7 @@ describe('resolveVerb', () => {
 ${RESOLVE_HTML.replace('k t b كتب', 'ʿ l y علي').replace('كَتَبَ</td>', 'عَلِيَ</td>')}`
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(weakFirst)))
 
-    expect(await resolveVerb(buildVerbFromId('Ely-1'))).toEqual(['111', '2', 'عَلِيَ'])
+    expect(await resolveVerb(getVerbById('Ely-1')!)).toEqual(['111', '2', 'عَلِيَ'])
   })
 
   test('drops a lexeme of another root that shares the form', async () => {
@@ -346,7 +346,7 @@ ${RESOLVE_HTML.replace('k t b كتب', 'ʿ l y علي').replace('كَتَبَ</t
 ${RESOLVE_HTML}`
     server.use(http.post(ELIXIR_URL, () => HttpResponse.text(foreignFirst)))
 
-    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('ktb-1')!)).toEqual(['111', '2', 'كَتَبَ'])
   })
 
   test('picks the Form I lexeme whose imperfect carries the requested present vowel', async () => {
@@ -371,8 +371,8 @@ ${RESOLVE_HTML}`
       }),
     )
 
-    expect(await resolveVerb(synthesizeVerb('قدر', 1, 'a-u'))).toEqual(['4926', '1', 'قَدَر'])
-    expect(await resolveVerb(synthesizeVerb('قدر', 1, 'a-a'))).toEqual(['4926', '6', 'قَدَر'])
+    expect(await resolveVerb(getVerb('قدر', 1, 'a-u'))).toEqual(['4926', '1', 'قَدَر'])
+    expect(await resolveVerb(getVerb('قدر', 1, 'a-a'))).toEqual(['4926', '6', 'قَدَر'])
   })
 })
 
@@ -413,7 +413,7 @@ describe('resolveVerb fallback', () => {
       }),
     )
 
-    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('ktb-1')!)).toEqual(['111', '2', 'كَتَبَ'])
     expect(requests).toEqual(['كَتَبَ', 'كتب'])
   })
 
@@ -428,7 +428,7 @@ describe('resolveVerb fallback', () => {
       }),
     )
 
-    expect(await resolveVerb(buildVerbFromId('ktb-1'))).toEqual(['111', '2', 'كَتَبَ'])
+    expect(await resolveVerb(getVerbById('ktb-1')!)).toEqual(['111', '2', 'كَتَبَ'])
     expect(requests).toEqual(['كَتَبَ', 'كتب'])
   })
 
@@ -442,7 +442,7 @@ describe('resolveVerb fallback', () => {
       }),
     )
 
-    expect(await resolveVerb(buildVerbFromId('mdd-1'))).toBeUndefined()
+    expect(await resolveVerb(getVerbById('mdd-1')!)).toBeUndefined()
     expect(requests).toEqual(['مَدَّ', 'مدّ'])
   })
 })

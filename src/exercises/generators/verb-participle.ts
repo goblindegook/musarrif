@@ -1,7 +1,7 @@
 import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
-import { synthesizeVerb } from '../../paradigms/verbs.ts'
+import { getVerb } from '../../paradigms/verbs.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -92,7 +92,7 @@ function weakRootDistractor(verb: DisplayVerb, kind: Participle, profile: Dimens
 }
 
 function oppositeParticipleDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
-  const alternative = synthesizeVerb(verb.root, verb.form)
+  const alternative = getVerb(verb.root, verb.form)
   return () =>
     exerciseDiacritics(
       kind === 'active' ? derivePassiveParticiple(alternative) : deriveActiveParticiple(alternative),

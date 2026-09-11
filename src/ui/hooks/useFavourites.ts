@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'preact/hooks'
-import { buildVerbFromId, type DisplayVerb } from '../../paradigms/verbs'
+import { type DisplayVerb, getVerbById } from '../../paradigms/verbs'
 import { useLocalStorage } from './useLocalStorage'
 
 export function useFavourites() {
@@ -18,7 +18,7 @@ export function useFavourites() {
   const favourites = useMemo(
     () =>
       verbIds
-        .map((id) => buildVerbFromId(id))
+        .map((id) => getVerbById(id))
         .filter((verb): verb is DisplayVerb => verb != null)
         .sort((a, b) => a.lemma.localeCompare(b.lemma, 'ar')),
     [verbIds],

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { synthesizeVerb } from '../../src/paradigms/verbs.ts'
+import { getVerb } from '../../src/paradigms/verbs.ts'
 import type { ParsedParadigms } from './paradigms.mts'
 import { buildRootEntry, type RootEntry, upsertRootEntry } from './verb-row.mts'
 
@@ -28,7 +28,7 @@ function parsed(overrides: Partial<ParsedParadigms> = {}): ParsedParadigms {
 
 describe('buildRootEntry', () => {
   test('matches Form I masdars to patterns in source order', () => {
-    const verb = synthesizeVerb('كتب', 1, 'a-u')
+    const verb = getVerb('كتب', 1, 'a-u')
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كِتَابَة', 'كَتْب', 'كِتَاب'] } }))).toEqual({
       root: 'ktb',
@@ -39,7 +39,7 @@ describe('buildRootEntry', () => {
   })
 
   test('records masdars with no matching pattern as transliterated lexical masdars', () => {
-    const verb = synthesizeVerb('ءبي', 1, 'a-a')
+    const verb = getVerb('ءبي', 1, 'a-a')
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['إِبَاء', 'إِبَاءَة'] } }))).toMatchObject({
       masdars: ['fi3aal'],
@@ -48,7 +48,7 @@ describe('buildRootEntry', () => {
   })
 
   test('marks a verb with no passive paradigm as having no passive voice', () => {
-    const verb = synthesizeVerb('ذهب', 1, 'a-a')
+    const verb = getVerb('ذهب', 1, 'a-a')
 
     expect(buildRootEntry(verb, { paradigms: {}, nominals: { activeParticiple: 'ذَاهِب' } })).toMatchObject({
       passiveVoice: 'none',
@@ -57,7 +57,7 @@ describe('buildRootEntry', () => {
   })
 
   test('marks a verb with a third person masculine singular passive only as impersonal', () => {
-    const verb = synthesizeVerb('شعر', 1, 'a-u')
+    const verb = getVerb('شعر', 1, 'a-u')
 
     expect(buildRootEntry(verb, parsed({ paradigms: { 'passive past': { '3ms': ['شُعِرَ'] } } }))).toMatchObject({
       passiveVoice: 'impersonal',
@@ -65,7 +65,7 @@ describe('buildRootEntry', () => {
   })
 
   test('omits masdar patterns for forms beyond the first', () => {
-    const verb = synthesizeVerb('كتب', 8)
+    const verb = getVerb('كتب', 8)
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['اِكْتِتَاب'] } }))).toEqual({
       root: 'ktb',
@@ -74,7 +74,7 @@ describe('buildRootEntry', () => {
   })
 
   test('keeps fields the source cannot describe', () => {
-    const verb = synthesizeVerb('كتب', 1, 'a-u')
+    const verb = getVerb('كتب', 1, 'a-u')
     const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-u', valency: [2, 3], contractedImperative: true }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
@@ -88,7 +88,7 @@ describe('buildRootEntry', () => {
   })
 
   test('drops fields belonging to the lexeme a changed vowel pattern replaces', () => {
-    const verb = synthesizeVerb('كتب', 1, 'a-u')
+    const verb = getVerb('كتب', 1, 'a-u')
     const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-a', valency: [2, 3], lexicalActiveParticiple: 'x' }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
@@ -100,7 +100,7 @@ describe('buildRootEntry', () => {
   })
 
   test('records an empty pattern list when every Form I masdar is lexical', () => {
-    const verb = synthesizeVerb('حسب', 1, 'i-a')
+    const verb = getVerb('حسب', 1, 'i-a')
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['حِسْبَان', 'مَحْسَبَة'] } }))).toMatchObject({
       masdars: [],
@@ -109,7 +109,7 @@ describe('buildRootEntry', () => {
   })
 
   test('reads a repeated source masdar once', () => {
-    const verb = synthesizeVerb('كتب', 1, 'a-u')
+    const verb = getVerb('كتب', 1, 'a-u')
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب', 'كَتْب'] } }))).toMatchObject({
       masdars: ['fa3l'],

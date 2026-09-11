@@ -21,7 +21,7 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.test.tsx", "**/*.test.ts"],
+      "includes": ["**/*.test.tsx", "**/*.test.ts", "**/*.test.mts"],
       "linter": {
         "rules": {
           "style": {

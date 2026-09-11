@@ -26,7 +26,6 @@ import type {
   Valency,
   Verb,
   VerbBase,
-  VerbForRootAndForm,
 } from './verb-types'
 import { FORMS, QUADRILITERAL_FORMS } from './verb-types'
 
@@ -148,7 +147,7 @@ function buildFormIPatternsByRoot(raw: readonly RawVerb[]): Map<string, readonly
 
 // Roots with a single Form I row keep the bare `<root>-1` id. A root with two or more gets no bare id at
 // all: every reading is `<root>-1-<vowels>`, ordered alphabetically, and the alphabetically-first reading
-// is what a stale bare-id lookup resolves to (see `buildVerbFromId`).
+// is what a stale bare-id lookup resolves to.
 const formIPatternsByRoot = buildFormIPatternsByRoot(rawVerbs as RawVerb[])
 
 function formIVerbId(rootId: string, vowels: FormIPattern): string {
@@ -237,9 +236,6 @@ export function formatFormLabel<Root extends string>(form: AllowedFormForRoot<Ro
 
 export const verbs: DisplayVerb[] = (rawVerbs as RawVerb[]).map(parseRawVerb)
 
-const verbsById = new Map<string, DisplayVerb>()
-for (const verb of verbs) verbsById.set(verb.id, verb)
-
 export function findVerbsByRoot(query: string): readonly DisplayVerb[] {
   return verbs.filter((verb) => verb.root === query)
 }
@@ -248,46 +244,54 @@ export function findVerbsByRootPrefix(prefix: string): readonly DisplayVerb[] {
   return verbs.filter((verb) => verb.root.startsWith(prefix))
 }
 
-export function getVerbById(id?: string): DisplayVerb | undefined {
-  return id ? verbsById.get(id) : undefined
+export function getVerbById(id: string): DisplayVerb | undefined {
+  const [rootId, formText, ...patternParts] = id.split('-')
+  const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
+  try {
+    tokenizeRoot(root)
+  } catch {
+    return undefined
+  }
+  const maxForm = formsForRoot(root).at(-1) ?? 1
+  const form = clamp(parseInteger(formText, 1), 1, maxForm) as TriliteralForm
+  const pattern = patternParts.length > 0 ? (patternParts.join('-') as FormIPattern) : undefined
+
+  if (isQuadriliteralRoot(root)) return getVerb(root, form as QuadriliteralForm)
+  if (form === 1) return getVerb(root, 1, pattern)
+  return getVerb(root, form as Exclude<TriliteralForm, 1>)
+}
+
+function findVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
+  root: Root,
+  form: Form,
+  pattern?: FormIPattern,
+): DisplayVerbForRootAndForm<Root, Form> | undefined {
+  const rootId = /[\u0600-\u06ff]/.test(root) ? transliterate(root) : root
+  const formIPattern =
+    form === 1 && pattern == null && (formIPatternsByRoot.get(rootId)?.length ?? 0) > 1
+      ? formIPatternsByRoot.get(rootId)?.[0]
+      : pattern
+
+  return verbs.find((entry) => {
+    if (String(entry.root) !== String(root) && entry.rootId !== root) return false
+    if (entry.form !== form) return false
+    return form !== 1 || formIPattern == null || (isTriliteralFormIDisplayVerb(entry) && entry.vowels === formIPattern)
+  }) as DisplayVerbForRootAndForm<Root, Form> | undefined
 }
 
 export function getVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
   root: Root,
   form: Form,
-): VerbForRootAndForm<Root, Form> {
-  const verbByRoot = verbs.find((entry) => String(entry.root) === String(root) && entry.form === form)
-  if (verbByRoot) return verbByRoot as unknown as VerbForRootAndForm<Root, Form>
-  const verbById = getVerbById(`${root}-${form}`)
-  if (verbById) return verbById as unknown as VerbForRootAndForm<Root, Form>
-  throw new Error(`Verb with root ${root} and form ${form} not found`)
-}
-
-export function buildVerbFromId(id = ''): DisplayVerb {
-  const existingVerb = getVerbById(id)
-  if (existingVerb) return existingVerb
-
-  const [rootId, formText, ...patternParts] = id.split('-')
-  const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
-  const maxForm = formsForRoot(root).at(-1) ?? 1
-  const form = clamp(parseInteger(formText, 1), 1, maxForm) as TriliteralForm
-
-  if (isQuadriliteralRoot(root)) return synthesizeVerb(root, form as QuadriliteralForm)
-  if (form !== 1) return synthesizeVerb(root, form as Exclude<TriliteralForm, 1>)
-
-  if (patternParts.length > 0) return synthesizeVerb(root, 1, patternParts.join('-') as FormIPattern)
-
-  const patterns = formIPatternsByRoot.get(rootId)
-  const primary = patterns && patterns.length > 1 ? getVerbById(`${rootId}-1-${patterns[0]}`) : undefined
-  return primary ?? synthesizeVerb(root, 1, 'a-a')
-}
-
-export function synthesizeVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
-  root: Root,
-  form: Form,
   pattern?: RootKind<Root> extends 'quadriliteral' ? never : FormIPattern,
 ): DisplayVerbForRootAndForm<Root, Form>
-export function synthesizeVerb(root: string, form: TriliteralForm, pattern: FormIPattern = 'a-a'): DisplayVerb {
+export function getVerb(root: string, form: TriliteralForm, pattern?: FormIPattern): DisplayVerb {
+  const existingVerb = findVerb(root, form, pattern)
+  if (existingVerb) return existingVerb
+
+  return buildSyntheticVerb(transliterateReverse(root), form, pattern ?? 'a-a')
+}
+
+function buildSyntheticVerb(root: string, form: TriliteralForm, pattern: FormIPattern): DisplayVerb {
   const rootTokens = tokenizeRoot(root)
 
   if (rootTokens.length === 4) {

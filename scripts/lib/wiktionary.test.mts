@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
-import { buildVerbFromId, synthesizeVerb } from '../../src/paradigms/verbs'
+import { getVerb, getVerbById } from '../../src/paradigms/verbs'
 import { fetchParadigms } from './wiktionary.mts'
 
 const WIKTIONARY_HTML = `
@@ -133,7 +133,7 @@ afterAll(() => {
 
 describe('fetchParadigms', () => {
   test('fetches and parses nominals and paradigms for the requested lemma', async () => {
-    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const parsed = await fetchParadigms(getVerbById('ktb-1')!)
 
     expect(parsed.nominals).toEqual({
       activeParticiple: 'كَاتِب',
@@ -205,7 +205,7 @@ describe('fetchParadigms', () => {
       }),
     )
 
-    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const parsed = await fetchParadigms(getVerbById('ktb-1')!)
     expect(parsed.paradigms['active past']?.['3ms']).toEqual(['كَتَبَ'])
   })
 
@@ -260,10 +260,10 @@ ${formIVCaption}
       }),
     )
 
-    const formIII = await fetchParadigms(buildVerbFromId("'ty-3"))
+    const formIII = await fetchParadigms(getVerbById("'ty-3")!)
     expect(formIII.paradigms['active past']?.['1s']).toEqual(['آتَيْتُ (III)'])
 
-    const formIV = await fetchParadigms(buildVerbFromId("'ty-4"))
+    const formIV = await fetchParadigms(getVerbById("'ty-4")!)
     expect(formIV.paradigms['active past']?.['1s']).toEqual(['آتَيْتُ (IV)'])
   })
 
@@ -313,10 +313,10 @@ ${formIVCaption}
       }),
     )
 
-    const patternAU = await fetchParadigms(synthesizeVerb('قدر', 1, 'a-u'))
+    const patternAU = await fetchParadigms(getVerb('قدر', 1, 'a-u'))
     expect(patternAU.paradigms['active present indicative']?.['3ms']).toEqual(['يَقْدُرُ'])
 
-    const patternAI = await fetchParadigms(synthesizeVerb('قدر', 1, 'a-i'))
+    const patternAI = await fetchParadigms(getVerb('قدر', 1, 'a-i'))
     expect(patternAI.paradigms['active present indicative']?.['3ms']).toEqual(['يَقْدِرُ'])
   })
 
@@ -350,7 +350,7 @@ ${formIVCaption}
       }),
     )
 
-    const parsed = await fetchParadigms(buildVerbFromId('wsws-1'))
+    const parsed = await fetchParadigms(getVerbById('wsws-1')!)
 
     expect(parsed.paradigms['active past']?.['3ms']).toEqual(['وَسْوَسَ'])
   })
@@ -385,7 +385,7 @@ ${formIVCaption}
       }),
     )
 
-    const parsed = await fetchParadigms(buildVerbFromId('ktb-1'))
+    const parsed = await fetchParadigms(getVerbById('ktb-1')!)
 
     expect(parsed.paradigms['active present jussive']?.['3ms']).toEqual(['يَكْتُبْ', 'يَكْتُبِ', 'يَكْتُبِي'])
     expect(parsed.paradigms['active present jussive']?.['2ms']).toEqual(['تَكْتُبْ'])
@@ -398,7 +398,7 @@ ${formIVCaption}
       }),
     )
 
-    await expect(fetchParadigms(buildVerbFromId('ktb-1'))).rejects.toThrow(
+    await expect(fetchParadigms(getVerbById('ktb-1')!)).rejects.toThrow(
       'Failed to fetch Wiktionary page (429): https://en.wiktionary.org/wiki/%D9%83%D8%AA%D8%A8',
     )
   })

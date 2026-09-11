@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
-import { formatFormLabel, formsForRoot, synthesizeVerb } from '../../paradigms/verbs.ts'
+import { formatFormLabel, formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import {
   type DimensionProfile,
   exerciseDiacritics,
@@ -32,9 +32,7 @@ export const verbFormExercise = defineExercise(
       (f) =>
         f !== verb.form &&
         exerciseDiacritics(
-          String(
-            conjugate(f === 1 ? synthesizeVerb(verb.root, 1, 'a-a') : synthesizeVerb(verb.root, f), tense)[pronoun],
-          ),
+          String(conjugate(f === 1 ? getVerb(verb.root, 1, 'a-a') : getVerb(verb.root, f), tense)[pronoun]),
           profile.diacritics,
         ) !== word,
     )

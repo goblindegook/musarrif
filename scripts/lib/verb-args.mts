@@ -1,12 +1,6 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { FORM_I_PATTERNS, type FormIPattern } from '../../src/paradigms/form-i-vowels.ts'
-import {
-  type DisplayVerb,
-  formsForRoot,
-  getVerbById,
-  synthesizeVerb,
-  type TriliteralForm,
-} from '../../src/paradigms/verbs.ts'
+import { type DisplayVerb, formsForRoot, getVerb, type TriliteralForm } from '../../src/paradigms/verbs.ts'
 import { fetchParadigms as elixirfm } from './elixirfm.mts'
 import type { GenerationTool } from './paradigms.mts'
 import { fetchParadigms as qutrub } from './qutrub.mts'
@@ -54,9 +48,9 @@ export function parseVerbArgs(argv: readonly string[], scriptName: string): Verb
       fail(`A vowel pattern only applies to a triliteral Form I verb, not "${slug}".`)
   }
 
-  const verb = pattern
-    ? synthesizeVerb(root, 1, pattern as FormIPattern)
-    : (getVerbById(`${rootId}-${form}`) ?? synthesizeVerb(root, form as TriliteralForm))
-
-  return { source: source as GenerationTool, verb, pattern: pattern as FormIPattern | undefined }
+  return {
+    source: source as GenerationTool,
+    verb: getVerb(root, form as TriliteralForm, pattern as FormIPattern | undefined),
+    pattern: pattern as FormIPattern | undefined,
+  }
 }

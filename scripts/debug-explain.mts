@@ -1,4 +1,3 @@
-import { transliterateReverse } from '@pacote/buckwalter'
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
@@ -18,14 +17,7 @@ import { conjugatePassivePast } from '../src/paradigms/passive/past.ts'
 import { conjugatePassivePresentMood } from '../src/paradigms/passive/present.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import { ALL_TENSES, type VerbParadigm, type VerbTense } from '../src/paradigms/tense.ts'
-import {
-  type DisplayVerb,
-  FORMS,
-  isTriliteralFormIDisplayVerb,
-  synthesizeVerb,
-  type TriliteralForm,
-  verbs,
-} from '../src/paradigms/verbs.ts'
+import { type DisplayVerb, FORMS, getVerb, type TriliteralForm } from '../src/paradigms/verbs.ts'
 import type { Word } from '../src/paradigms/word.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 import { mapRecord } from '../src/primitives/objects.ts'
@@ -42,26 +34,6 @@ const t = (key: string, params?: TranslationParams): string => {
   const template = locale[key] ?? key
   if (params == null) return template
   return template.replace(/\{(\w+)\}/g, (_: string, k: string) => params[k] ?? `{${k}}`)
-}
-
-function resolveRoot(input: string): string {
-  const exact = verbs.find((verb) => verb.root === input)
-  if (exact) return exact.root
-  const byId = verbs.find((verb) => verb.rootId === input)
-  if (byId) return byId.root
-  return transliterateReverse(input)
-}
-
-function findVerb(rootInput: string, form: TriliteralForm, vowels: FormIPattern): DisplayVerb {
-  const root = resolveRoot(rootInput)
-  if (form === 1) {
-    const existingFormI = verbs.find(
-      (verb) => verb.root === root && isTriliteralFormIDisplayVerb(verb) && verb.vowels === vowels,
-    )
-    if (existingFormI) return existingFormI
-    return synthesizeVerb(root, 1, vowels)
-  }
-  return verbs.find((verb) => verb.root === root && verb.form === form) ?? synthesizeVerb(root, form)
 }
 
 function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
@@ -157,7 +129,7 @@ if (isVerbTense && pronounArg == null) {
   process.exit(1)
 }
 
-const verb = findVerb(rootArg ?? '', form, vowels)
+const verb = getVerb(rootArg ?? '', form, form === 1 ? vowels : undefined)
 
 const NOMINAL_PARADIGM_MAP: Record<string, NominalKind> = {
   'active.participle': 'activeParticiple',

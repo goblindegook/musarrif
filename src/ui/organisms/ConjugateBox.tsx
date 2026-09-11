@@ -1,17 +1,10 @@
-import { transliterate } from '@pacote/buckwalter'
 import { styled } from 'goober'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { conjugate } from '../../paradigms/conjugation'
 import { FORM_I_PATTERNS, type FormIPattern, RARE_FORM_I_PATTERNS } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import type { DisplayVerb, TriliteralForm } from '../../paradigms/verbs'
-import {
-  FORMS,
-  getVerbById,
-  isTriliteralFormIDisplayVerb,
-  synthesizeVerb,
-  toTriliteralRoot,
-} from '../../paradigms/verbs'
+import { FORMS, getVerb, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
@@ -26,8 +19,8 @@ interface ConjugateBoxProps {
 const FORM_I_PATTERN_OPTIONS = FORM_I_PATTERNS.map((pattern) => [
   pattern,
   [
-    String(conjugate(synthesizeVerb('فعل', 1, pattern), 'active.past')['3ms']),
-    String(conjugate(synthesizeVerb('فعل', 1, pattern), 'active.present.indicative')['3ms']),
+    String(conjugate(getVerb('فعل', 1, pattern), 'active.past')['3ms']),
+    String(conjugate(getVerb('فعل', 1, pattern), 'active.present.indicative')['3ms']),
   ].join(' / '),
 ])
 
@@ -58,16 +51,7 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
     if (!c1 || !c2 || !c3 || !form) return
     if (form === 1 && !vowelPattern) return
     const root = [c1, c2, c3].join('')
-    const existing = getVerbById(`${transliterate(root)}-${form}`)
-    const nextVerb =
-      existing &&
-      isTriliteralFormIDisplayVerb(existing) &&
-      existing.vowels === vowelPattern &&
-      (existing.masdars?.length ?? 0) > 0
-        ? existing
-        : form === 1
-          ? synthesizeVerb(toTriliteralRoot(root), form, vowelPattern)
-          : (existing ?? synthesizeVerb(root, form))
+    const nextVerb = getVerb(root, form, form === 1 ? vowelPattern : undefined)
 
     const currentSelectedVerb = selectedVerbRef.current
     if (currentSelectedVerb?.id === nextVerb.id) {

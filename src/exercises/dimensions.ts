@@ -7,8 +7,8 @@ import {
   type DisplayVerb,
   FORMS,
   getAvailableParadigms,
+  getVerb,
   type QuadriliteralForm,
-  synthesizeVerb,
   type TriliteralForm,
   verbs,
 } from '../paradigms/verbs'
@@ -265,9 +265,9 @@ export function randomNominalVerb(profile: DimensionProfile, constraints?: CardC
 }
 
 export function randomGeneratedVerb(root: string, form: TriliteralForm = random(FORMS)): DisplayVerb {
-  if (root.length === 4) return synthesizeVerb(root, clamp(form, 1, 4) as QuadriliteralForm)
-  if (form === 1) return synthesizeVerb(root, 1, random(FORM_I_PATTERNS))
-  return synthesizeVerb(root, form)
+  if (root.length === 4) return getVerb(root, clamp(form, 1, 4) as QuadriliteralForm)
+  if (form === 1) return getVerb(root, 1, random(FORM_I_PATTERNS))
+  return getVerb(root, form)
 }
 
 export function exerciseDiacritics(word: string | Word, diacritics: DiacriticsLevel): string {
