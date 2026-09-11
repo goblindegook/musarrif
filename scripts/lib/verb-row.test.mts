@@ -118,15 +118,37 @@ describe('buildRootEntry', () => {
 })
 
 describe('upsertRootEntry', () => {
-  test('replaces the entry with the same root and form', () => {
+  test('replaces the entry with the same root, form, and vowels', () => {
     const roots: RootEntry[] = [
-      { root: 'ktb', form: 1, vowels: 'a-a' },
+      { root: 'ktb', form: 1, vowels: 'a-u', valency: [2] },
       { root: 'ktb', form: 2 },
     ]
 
-    expect(upsertRootEntry(roots, { root: 'ktb', form: 1, vowels: 'a-u' })).toEqual([
-      { root: 'ktb', form: 1, vowels: 'a-u' },
+    expect(upsertRootEntry(roots, { root: 'ktb', form: 1, vowels: 'a-u', masdars: ['fa3l'] })).toEqual([
+      { root: 'ktb', form: 1, vowels: 'a-u', masdars: ['fa3l'] },
       { root: 'ktb', form: 2 },
+    ])
+  })
+
+  test('adds a new Form I entry, in vowel order, when the root already has a different pattern', () => {
+    const roots: RootEntry[] = [
+      { root: 'Hsb', form: 1, vowels: 'i-a', masdars: [] },
+      { root: 'Hsb', form: 3 },
+    ]
+
+    expect(upsertRootEntry(roots, { root: 'Hsb', form: 1, vowels: 'a-u', masdars: ['fa3l'] })).toEqual([
+      { root: 'Hsb', form: 1, vowels: 'a-u', masdars: ['fa3l'] },
+      { root: 'Hsb', form: 1, vowels: 'i-a', masdars: [] },
+      { root: 'Hsb', form: 3 },
+    ])
+  })
+
+  test("keeps a root's Form I entries ordered by vowels when a later-sorting pattern is added", () => {
+    const roots: RootEntry[] = [{ root: 'jml', form: 1, vowels: 'a-u' }]
+
+    expect(upsertRootEntry(roots, { root: 'jml', form: 1, vowels: 'u-u' })).toEqual([
+      { root: 'jml', form: 1, vowels: 'a-u' },
+      { root: 'jml', form: 1, vowels: 'u-u' },
     ])
   })
 

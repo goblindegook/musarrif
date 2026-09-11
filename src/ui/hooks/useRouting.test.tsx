@@ -168,6 +168,29 @@ test('builds path hrefs with a trailing slash', () => {
   expect(result.current.toHref(['article', '42'])).toBe('/article/42/')
 })
 
+test('navigateTo pushes a new history entry by default', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+  window.history.replaceState({}, '', '/home/')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+  const pushSpy = vi.spyOn(window.history, 'pushState')
+
+  act(() => result.current.navigateTo(['article', '42']))
+
+  expect(pushSpy).toHaveBeenCalled()
+})
+
+test('navigateTo replaces the current history entry when asked to', () => {
+  const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
+  window.history.replaceState({}, '', '/home/')
+  const { result } = renderHook(() => useDemoRouting(), { wrapper: wrapperFor(RoutingProvider) })
+  const replaceSpy = vi.spyOn(window.history, 'replaceState')
+
+  act(() => result.current.navigateTo(['article', '42'], { replace: true }))
+
+  expect(window.location.pathname).toBe('/article/42/')
+  expect(replaceSpy).toHaveBeenCalled()
+})
+
 test('builds the root path href for an empty route', () => {
   const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('path')
 

@@ -22,7 +22,7 @@ function parse(segments: readonly string[]): AppRoute {
 
   const [_, verbId, voice, tense, mood] = segments
 
-  if (!verbId?.match(/^[^-]{3,5}-\d+$/)) return ['verbs']
+  if (!verbId?.match(/^[^-]{3,5}-\d+(-[aiu]-[aiu])?$/)) return ['verbs']
   if (!isVoice(voice)) return ['verbs', verbId]
   if (!isTense(tense)) return ['verbs', verbId, voice, 'past']
 

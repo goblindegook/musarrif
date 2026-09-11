@@ -46,7 +46,7 @@ export interface RouterProps<TRoute> {
 
 export interface RoutingContextValue<TRoute extends RouteSegments> {
   route: TRoute
-  navigateTo: (route: TRoute) => void
+  navigateTo: (route: TRoute, options?: { replace?: boolean }) => void
   toHref: (route: TRoute) => string
   queryParams: URLSearchParams
   setQueryParams: (
@@ -195,8 +195,10 @@ export function createRouting<TRoute extends RouteSegments>({ mode = 'hash', par
     }, [route, mode])
 
     const navigateTo = useCallback(
-      (nextRoute: TRoute) => {
-        window.history.pushState({}, '', toHref(nextRoute, mode))
+      (nextRoute: TRoute, options?: { replace?: boolean }) => {
+        const nextHref = toHref(nextRoute, mode)
+        if (options?.replace) window.history.replaceState({}, '', nextHref)
+        else window.history.pushState({}, '', nextHref)
         setRoute(nextRoute)
         setQuery('')
       },

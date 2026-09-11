@@ -1,7 +1,8 @@
 import { styled } from 'goober'
 import { useCallback } from 'preact/hooks'
+import { formIVowelPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
-import { type DisplayVerb, formatFormLabel } from '../../paradigms/verbs'
+import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
 import { useI18n } from '../hooks/useI18n'
 import { useRouting } from '../routes'
 
@@ -14,7 +15,7 @@ interface VerbPillProps {
 export function VerbPill({ verb, className, block = false }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
   const { navigateTo, toHref } = useRouting()
-  const formLabel = formatFormLabel(verb.form, verb.root)
+  const form = formatFormLabel(verb.form, verb.root)
   const route = ['verbs', verb.id] as const
 
   const formatArabic = useCallback(
@@ -45,8 +46,8 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
       aria-label={[
         verb.synthetic ? '*' : null,
         formatArabic(verb.lemma),
-        formLabel,
-        t('meta.form'),
+        t('meta.form.withNumber', { form }),
+        isTriliteralFormIDisplayVerb(verb) ? formIVowelPattern(verb) : null,
         translateVerb(verb),
       ]
         .filter(Boolean)
@@ -57,7 +58,8 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
           {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
           {formatArabic(verb.lemma)}
         </span>
-        <small>{formLabel}</small>
+        <small>{form}</small>
+        {isTriliteralFormIDisplayVerb(verb) && <small>{formIVowelPattern(verb)}</small>}
       </InlineRow>
       {lang !== 'ar' && (
         <VerbTranslation dir={dir} lang={lang}>

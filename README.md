@@ -13,7 +13,7 @@ and mobile that is lightweight and works offline.
 
 ## What It Is
 
-- A reference-first Arabic verb conjugation app covering 1004 verbs across triliteral Forms I–X and quadriliteral Forms Iq–IVq.
+- A reference-first Arabic verb conjugation app covering 1006 verbs across triliteral Forms I–X and quadriliteral Forms Iq–IVq.
 - A progressive testing environment for paradigm recognition.
 - Offline-capable, with camera-based optical transfer to move your data (favourites, progress) between devices without a server.
 
@@ -34,7 +34,7 @@ and mobile that is lightweight and works offline.
 
 Every conjugation is checked against [Wiktionary](https://en.wiktionary.org/) first and [ElixirFM](https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi) second.
 
-Running the ElixirFM comparison across the full 1004-verb dataset (`npm run debug:elixirfm`) currently scores **~98.4% agreement**, excluding the conjugations ElixirFM has no equivalent for.
+Running the ElixirFM comparison across the full 1006-verb dataset (`npm run debug:elixirfm`) currently scores **~98.4% agreement**, excluding the conjugations ElixirFM has no equivalent for.
 
 92 verbs cannot be compared at all, and another 100 disagree with ElixirFM somewhere in their paradigm. Every discrepancy falls into one of the categories below, and each category has been adjudicated against Wiktionary. Four verbs disagree in two ways and are listed under both categories, so the rows do not sum to 100.
 

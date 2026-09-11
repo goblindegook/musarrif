@@ -34,3 +34,9 @@ export function isFormIPastVowel(verb: { vowels: FormIPattern }, vowel: Token): 
 export function isFormIPresentVowel(verb: { vowels: FormIPattern }, vowel: Token): boolean {
   return vowel.equals(FORM_I_VOWELS[verb.vowels][1])
 }
+
+export function formIVowelPattern(verb: { vowels: FormIPattern }): string {
+  const past = formIPastVowel(verb)
+  const present = formIPresentVowel(verb)
+  return past.equals(present) ? `◌${past}` : `◌${past} / ◌${present}`
+}

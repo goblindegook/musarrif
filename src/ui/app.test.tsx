@@ -233,7 +233,7 @@ describe('Conjugation', () => {
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     const derivedForms = screen.getByText(/Derived forms/i).closest('section') as HTMLElement
-    await user.click(await within(derivedForms).findByLabelText(/II.*Form.*to concentrate/i))
+    await user.click(await within(derivedForms).findByLabelText(/Form.*II.*to concentrate/i))
 
     expect(await screen.findByText('to concentrate', { exact: false, selector: 'p' })).toBeInTheDocument()
   })

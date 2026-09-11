@@ -65,7 +65,7 @@ export const KWN_SISTERS_IDS = new Set([
 export const ZNN_SISTERS_IDS = new Set([
   'dry-1',
   'Elm-1',
-  'Hsb-1',
+  'Hsb-1-i-a',
   'lfw-4',
   'wjd-1',
   'xyl-1',
@@ -130,12 +130,37 @@ export function isTriliteralFormIDisplayVerb(verb: DisplayVerb): verb is Trilite
   return verb.form === 1 && verb.rootTokens.length === 3
 }
 
+function isFormIVerbInput(verb: Verb): verb is TriliteralFormIVerb {
+  return verb.form === 1 && 'vowels' in verb
+}
+
+function buildFormIPatternsByRoot(raw: readonly RawVerb[]): Map<string, readonly FormIPattern[]> {
+  const byRoot = new Map<string, FormIPattern[]>()
+  for (const entry of raw) {
+    if (entry.form !== 1 || entry.root.length !== 3) continue
+    const patterns = byRoot.get(entry.root) ?? []
+    patterns.push(entry.vowels ?? 'a-a')
+    byRoot.set(entry.root, patterns)
+  }
+  for (const patterns of byRoot.values()) patterns.sort()
+  return byRoot
+}
+
+// Roots with a single Form I row keep the bare `<root>-1` id. A root with two or more gets no bare id at
+// all: every reading is `<root>-1-<vowels>`, ordered alphabetically, and the alphabetically-first reading
+// is what a stale bare-id lookup resolves to (see `buildVerbFromId`).
+const formIPatternsByRoot = buildFormIPatternsByRoot(rawVerbs as RawVerb[])
+
+function formIVerbId(rootId: string, vowels: FormIPattern): string {
+  const patterns = formIPatternsByRoot.get(rootId) ?? []
+  return patterns.length > 1 ? `${rootId}-1-${vowels}` : `${rootId}-1`
+}
+
 function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T> {
   const lemma = String(conjugatePast(verb)['3ms'])
   const rootId = transliterate(verb.root)
-  return synthetic
-    ? { ...verb, id: `${rootId}-${verb.form}`, lemma, rootId, synthetic }
-    : { ...verb, id: `${rootId}-${verb.form}`, lemma, rootId }
+  const id = isFormIVerbInput(verb) ? formIVerbId(rootId, verb.vowels) : `${rootId}-${verb.form}`
+  return synthetic ? { ...verb, id, lemma, rootId, synthetic } : { ...verb, id, lemma, rootId }
 }
 
 function parseRawVerb(raw: RawVerb): DisplayVerb {
@@ -242,14 +267,19 @@ export function buildVerbFromId(id = ''): DisplayVerb {
   const existingVerb = getVerbById(id)
   if (existingVerb) return existingVerb
 
-  const [rootId, formText] = id.split('-')
+  const [rootId, formText, ...patternParts] = id.split('-')
   const root = transliterateReverse(rootId.length < 3 ? 'Srf' : rootId)
   const maxForm = formsForRoot(root).at(-1) ?? 1
   const form = clamp(parseInteger(formText, 1), 1, maxForm) as TriliteralForm
 
   if (isQuadriliteralRoot(root)) return synthesizeVerb(root, form as QuadriliteralForm)
-  if (form === 1) return synthesizeVerb(root, 1, 'a-a')
-  return synthesizeVerb(root, form as Exclude<TriliteralForm, 1>)
+  if (form !== 1) return synthesizeVerb(root, form as Exclude<TriliteralForm, 1>)
+
+  if (patternParts.length > 0) return synthesizeVerb(root, 1, patternParts.join('-') as FormIPattern)
+
+  const patterns = formIPatternsByRoot.get(rootId)
+  const primary = patterns && patterns.length > 1 ? getVerbById(`${rootId}-1-${patterns[0]}`) : undefined
+  return primary ?? synthesizeVerb(root, 1, 'a-a')
 }
 
 export function synthesizeVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(

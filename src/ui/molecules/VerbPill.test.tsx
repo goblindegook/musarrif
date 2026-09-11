@@ -42,4 +42,30 @@ describe('VerbPill', () => {
     renderWithProviders(<VerbPill verb={verb} />)
     expect(screen.getByText('Iq')).toBeInTheDocument()
   })
+
+  describe('Form I vowel pattern', () => {
+    test('shows past and present vowels for a two-vowel pattern', () => {
+      const verb = getVerbById('ktb-1')! // a-u
+      renderWithProviders(<VerbPill verb={verb} />)
+      expect(screen.getByText('◌َ / ◌ُ')).toBeInTheDocument()
+    })
+
+    test('shows a single vowel mark when past and present share it', () => {
+      const verb = getVerbById('$jE-1')! // a-a
+      renderWithProviders(<VerbPill verb={verb} />)
+      expect(screen.getByText('◌َ')).toBeInTheDocument()
+    })
+
+    test('does not show a vowel pattern for a non-Form-I verb', () => {
+      const verb = getVerbById('ktb-2')!
+      renderWithProviders(<VerbPill verb={verb} />)
+      expect(screen.queryByText(/◌/)).not.toBeInTheDocument()
+    })
+
+    test('includes the vowel pattern in the accessible name for a Form I verb', () => {
+      const verb = getVerbById('ktb-1')! // a-u
+      renderWithProviders(<VerbPill verb={verb} />)
+      expect(screen.getByRole('link').getAttribute('aria-label')).toContain('◌َ / ◌ُ')
+    })
+  })
 })

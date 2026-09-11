@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { Fragment } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
-import { formIPastVowel, formIPresentVowel } from '../../paradigms/form-i-vowels'
+import { formIVowelPattern } from '../../paradigms/form-i-vowels'
 import { deriveMasdar } from '../../paradigms/nominal/masdar'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
@@ -15,7 +15,6 @@ import {
   getVerbById,
   isTriliteralFormIDisplayVerb,
   KWN_SISTERS_IDS,
-  type TriliteralDisplayVerb,
   verbs,
   ZNN_SISTERS_IDS,
 } from '../../paradigms/verbs'
@@ -43,12 +42,6 @@ import { NominalInsights } from '../organisms/NominalInsights'
 import { RootInsights } from '../organisms/RootInsights'
 import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 import { useRouting } from '../routes'
-
-const formIVowelPattern = (verb: TriliteralDisplayVerb<1>) => {
-  const past = formIPastVowel(verb)
-  const present = formIPresentVowel(verb)
-  return past.equals(present) ? `\u25cc${past}` : `\u25cc${past} / \u25cc${present}`
-}
 
 const SISTER_GROUPS = [
   { ids: KWN_SISTERS_IDS, titleKey: 'verbsList.filter.kanaSisters.label' },
@@ -121,8 +114,12 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
   const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== verbId), [recents, verbId])
 
   useEffect(() => {
-    addRecent(verbId)
-  }, [verbId])
+    addRecent(routeVerb.id)
+  }, [routeVerb.id])
+
+  useEffect(() => {
+    if (routeVerb.id !== verbId && !routeVerb.synthetic) navigateTo(['verbs', routeVerb.id], { replace: true })
+  }, [routeVerb, verbId, navigateTo])
 
   const currentTense = voice === 'passive' && tense === 'imperative' ? 'past' : tense
   const currentMood = tense === 'present' ? mood : undefined

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import type { FormIPattern } from './form-i-vowels'
 import { tokenize } from './tokens'
 import {
   buildVerbFromId,
@@ -8,8 +9,10 @@ import {
   getAvailableParadigms,
   getVerb,
   getVerbById,
+  isTriliteralFormIDisplayVerb,
   synthesizeVerb,
   type TriliteralForm,
+  ZNN_SISTERS_IDS,
 } from './verbs'
 
 describe('synthesizeVerb', () => {
@@ -402,5 +405,61 @@ describe('getAvailableParadigms', () => {
     ['جلعد', 4],
   ])('%s (Form %d) omits passive participle', (root, form) => {
     expect(getAvailableParadigms(getVerb(root, form))).not.toContain('passive.participle')
+  })
+})
+
+describe('Form I roots with more than one vowel pattern', () => {
+  test.each<[string, FormIPattern]>([
+    ['Hsb-1-a-u', 'a-u'],
+    ['Hsb-1-i-a', 'i-a'],
+  ])('%s is addressable and carries vowels %s', (id, vowels) => {
+    expect(getVerbById(id)).toMatchObject({ vowels })
+  })
+
+  test.each(['Hsb-1', 'jml-1'])('no bare id exists for %s', (id) => {
+    expect(getVerbById(id)).toBeUndefined()
+  })
+
+  test.each<[string, string]>([
+    ['Hsb-1', 'Hsb-1-a-u'],
+    ['jml-1', 'jml-1-a-u'],
+  ])('a stale bare link to %s resolves to %s', (bareId, canonicalId) => {
+    const resolved = buildVerbFromId(bareId)
+    expect(resolved.id).toBe(canonicalId)
+    expect(resolved.synthetic).toBeUndefined()
+  })
+
+  test.each<[string, FormIPattern]>([
+    ['حسب', 'a-u'],
+    ['جمل', 'a-u'],
+  ])('getVerb(%s, 1) returns the alphabetically-first reading', (root, vowels) => {
+    expect(getVerb(root, 1).vowels).toBe(vowels)
+  })
+
+  test('an unambiguous root keeps its bare Form I id', () => {
+    expect(getVerbById('ktb-1')).toMatchObject({ vowels: 'a-u' })
+    expect(getVerbById('ktb-1-a-u')).toBeUndefined()
+  })
+
+  test.each<[string, FormIPattern, string]>([
+    ['حسب', 'a-u', 'Hsb-1-a-u'],
+    ['جمل', 'u-u', 'jml-1-u-u'],
+  ])('synthesizing %s %s for an ambiguous root produces the suffixed id %s', (root, pattern, id) => {
+    expect(synthesizeVerb(root, 1, pattern).id).toBe(id)
+  })
+
+  test('ZNN_SISTERS_IDS points at Hsb’s "to deem" sense, not the "to compute" one', () => {
+    expect(ZNN_SISTERS_IDS.has('Hsb-1-i-a')).toBe(true)
+    expect(ZNN_SISTERS_IDS.has('Hsb-1')).toBe(false)
+  })
+
+  test.each<[string, FormIPattern[]]>([
+    ['حسب', ['a-u', 'i-a']],
+    ['جمل', ['a-u', 'u-u']],
+  ])('%s stores its Form I readings in ascending vowel order', (root, expected) => {
+    const patterns = findVerbsByRoot(root)
+      .filter(isTriliteralFormIDisplayVerb)
+      .map((verb) => verb.vowels)
+    expect(patterns).toEqual(expected)
   })
 })

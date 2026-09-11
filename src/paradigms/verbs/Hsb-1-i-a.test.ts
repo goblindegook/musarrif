@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('Hsb-1 (Wiktionary)', () => {
+describe('Hsb-1-i-a (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('Hsb-1')!)).toEqualT({
+    expect(conjugatePast(getVerbById('Hsb-1-i-a')!)).toEqualT({
       '1s': 'حَسِبْتُ',
       '2ms': 'حَسِبْتَ',
       '2fs': 'حَسِبْتِ',
@@ -28,7 +28,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('Hsb-1')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hsb-1-i-a')!, 'indicative')).toEqualT({
       '1s': expect.toBeOneOf(['أَحْسَبُ', 'أَحْسِبُ']),
       '2ms': expect.toBeOneOf(['تَحْسَبُ', 'تَحْسِبُ']),
       '2fs': expect.toBeOneOf(['تَحْسَبِينَ', 'تَحْسِبِينَ']),
@@ -46,7 +46,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('Hsb-1')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hsb-1-i-a')!, 'subjunctive')).toEqualT({
       '1s': expect.toBeOneOf(['أَحْسَبَ', 'أَحْسِبَ']),
       '2ms': expect.toBeOneOf(['تَحْسَبَ', 'تَحْسِبَ']),
       '2fs': expect.toBeOneOf(['تَحْسَبِي', 'تَحْسِبِي']),
@@ -64,7 +64,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('Hsb-1')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hsb-1-i-a')!, 'jussive')).toEqualT({
       '1s': expect.toBeOneOf(['أَحْسَبْ', 'أَحْسِبْ']),
       '2ms': expect.toBeOneOf(['تَحْسَبْ', 'تَحْسِبْ']),
       '2fs': expect.toBeOneOf(['تَحْسَبِي', 'تَحْسِبِي']),
@@ -82,7 +82,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('Hsb-1')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('Hsb-1-i-a')!)).toMatchObjectT({
       '2ms': expect.toBeOneOf(['اِحْسَبْ', 'اِحْسِبْ']),
       '2fs': expect.toBeOneOf(['اِحْسَبِي', 'اِحْسِبِي']),
       '2d': expect.toBeOneOf(['اِحْسَبَا', 'اِحْسِبَا']),
@@ -92,7 +92,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('Hsb-1')!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('Hsb-1-i-a')!)).toEqualT({
       '1s': 'حُسِبْتُ',
       '2ms': 'حُسِبْتَ',
       '2fs': 'حُسِبْتِ',
@@ -110,7 +110,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hsb-1')!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hsb-1-i-a')!, 'indicative')).toEqualT({
       '1s': 'أُحْسَبُ',
       '2ms': 'تُحْسَبُ',
       '2fs': 'تُحْسَبِينَ',
@@ -128,7 +128,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hsb-1')!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hsb-1-i-a')!, 'subjunctive')).toEqualT({
       '1s': 'أُحْسَبَ',
       '2ms': 'تُحْسَبَ',
       '2fs': 'تُحْسَبِي',
@@ -146,7 +146,7 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hsb-1')!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hsb-1-i-a')!, 'jussive')).toEqualT({
       '1s': 'أُحْسَبْ',
       '2ms': 'تُحْسَبْ',
       '2fs': 'تُحْسَبِي',
@@ -164,14 +164,14 @@ describe('Hsb-1 (Wiktionary)', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('Hsb-1')!)).toEqualT('أَحْسَب')
+    expect(deriveActiveParticiple(getVerbById('Hsb-1-i-a')!)).toEqualT('أَحْسَب')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('Hsb-1')!)).toEqualT('مَحْسُوب')
+    expect(derivePassiveParticiple(getVerbById('Hsb-1-i-a')!)).toEqualT('مَحْسُوب')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById('Hsb-1')!))).toEqualT(new Set(['حِسْبَان', 'مَحْسَبَة', 'مَحْسِبَة']))
+    expect(new Set(deriveMasdar(getVerbById('Hsb-1-i-a')!))).toEqualT(new Set(['حِسْبَان', 'مَحْسَبَة', 'مَحْسِبَة']))
   })
 })

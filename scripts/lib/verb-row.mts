@@ -88,7 +88,13 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
 }
 
 export function upsertRootEntry(roots: readonly RootEntry[], entry: RootEntry): RootEntry[] {
-  const index = roots.findIndex((root) => root.root === entry.root && root.form === entry.form)
+  const index = roots.findIndex(
+    (root) => root.root === entry.root && root.form === entry.form && root.vowels === entry.vowels,
+  )
   const merged = index === -1 ? [...roots, entry] : roots.map((root, at) => (at === index ? entry : root))
-  return merged.toSorted((a, b) => (a.root < b.root ? -1 : a.root > b.root ? 1 : a.form - b.form))
+  return merged.toSorted((a, b) => {
+    if (a.root !== b.root) return a.root < b.root ? -1 : 1
+    if (a.form !== b.form) return a.form - b.form
+    return (a.vowels ?? '').localeCompare(b.vowels ?? '')
+  })
 }

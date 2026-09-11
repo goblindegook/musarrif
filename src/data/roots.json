@@ -1248,6 +1248,12 @@
   {
     "root": "Hsb",
     "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fi3aal", "fu3laan"]
+  },
+  {
+    "root": "Hsb",
+    "form": 1,
     "vowels": "i-a",
     "masdars": [],
     "lexicalMasdars": ["HisobaAn", "maHosabap", "maHosibap"],
@@ -2549,6 +2555,15 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l"]
+  },
+  {
+    "root": "jml",
+    "form": 1,
+    "vowels": "u-u",
+    "masdars": ["fa3aal"],
+    "passiveVoice": "none",
+    "noPassiveParticiple": true,
+    "lexicalActiveParticiple": "jamiyl"
   },
   {
     "root": "jml",

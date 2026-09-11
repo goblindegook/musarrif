@@ -35,6 +35,18 @@ test.each([
   expect(screen.getAllByText(expectedPast).length).toBeGreaterThan(0)
 })
 
+test('a stale bare Form I id for an ambiguous root redirects to the explicit reading', () => {
+  renderConjugationMode({ verbId: 'Hsb-1' })
+
+  expect(currentUrl()).toBe('/verbs/Hsb-1-a-u/')
+})
+
+test('recents remember the canonical id, not the stale bare one', () => {
+  renderConjugationMode({ verbId: 'Hsb-1' })
+
+  expect(JSON.parse(localStorage.getItem('conjugator:recentVerbs') ?? '[]')).toContain('Hsb-1-a-u')
+})
+
 test('search and build tabs are correctly linked to their tabpanels', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
 
@@ -255,7 +267,7 @@ describe('Form', () => {
     const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
 
     expect(links.length).toBeGreaterThan(0)
-    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - IVq - Form - '))).toBe(true)
+    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - Form IVq - '))).toBe(true)
   })
 
   it('shows only triliteral examples for triliteral forms', () => {
@@ -266,7 +278,7 @@ describe('Form', () => {
     const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
 
     expect(links.length).toBeGreaterThan(0)
-    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - IV - Form - '))).toBe(true)
+    expect(links.every((link) => link.getAttribute('aria-label')?.includes(' - Form IV - '))).toBe(true)
   })
 })
 
@@ -281,7 +293,7 @@ test('Order derived form options by form number', () => {
   const derivedFormPanel = screen.getByText('Derived forms').closest('section')!
   const formLabels = Array.from(derivedFormPanel.querySelectorAll('a[aria-label]'))
     .map((button) => button.getAttribute('aria-label')!)
-    .map((label) => label.match(/-\s([IVX]+)\s-\sForm/i)?.[1])
+    .map((label) => label.match(/Form\s([IVX]+)/i)?.[1])
   expect(formLabels).toEqual(['I', 'II', 'IV', 'VI', 'X'])
 })
 
