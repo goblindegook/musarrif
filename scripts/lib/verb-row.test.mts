@@ -52,7 +52,6 @@ describe('buildRootEntry', () => {
 
     expect(buildRootEntry(verb, { paradigms: {}, nominals: { activeParticiple: 'ذَاهِب' } })).toMatchObject({
       passiveVoice: 'none',
-      noPassiveParticiple: true,
     })
   })
 

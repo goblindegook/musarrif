@@ -175,7 +175,7 @@ describe('Conjugation table', () => {
   })
 
   it('shows only the active voice tab when passive is unavailable', () => {
-    renderConjugationMode({ verbId: 'Zll-1' })
+    renderConjugationMode({ verbId: 'wjb-1' })
 
     const voiceTabs = document.querySelector('[role="tablist"][aria-label="Select voice"]')!
     const tabs = Array.from(voiceTabs.querySelectorAll('[role="tab"]'))

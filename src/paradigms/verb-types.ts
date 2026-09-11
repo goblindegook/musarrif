@@ -70,7 +70,6 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
-  noPassiveParticiple?: boolean
   lexicalPassiveParticiple?: string
   valency: readonly Valency[]
 }

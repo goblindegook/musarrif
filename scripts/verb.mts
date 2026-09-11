@@ -21,7 +21,6 @@ async function run() {
   execFileSync(join(ROOT, 'node_modules/.bin/biome'), ['format', '--write', ROOTS_PATH], { stdio: 'ignore' })
 
   if (entry.passiveVoice) console.warn(`${source} reported no full passive, wrote passiveVoice: ${entry.passiveVoice}`)
-  if (entry.noPassiveParticiple) console.warn(`${source} reported no passive participle`)
   console.log(`${existing ? 'Updated' : 'Added'} ${verb.id} in ${ROOTS_PATH}`)
   console.log(JSON.stringify(entry, null, 2))
 }

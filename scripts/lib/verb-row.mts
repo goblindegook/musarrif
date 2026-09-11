@@ -22,7 +22,6 @@ export interface RootEntry {
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
-  noPassiveParticiple?: boolean
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
@@ -80,7 +79,6 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     ...(masdars ? { masdars } : {}),
     ...(lexicalMasdars ? { lexicalMasdars } : {}),
     ...(passiveVoice ? { passiveVoice } : {}),
-    ...(parsed.nominals.passiveParticiple ? {} : { noPassiveParticiple: true }),
     ...(carried?.lexicalActiveParticiple ? { lexicalActiveParticiple: carried.lexicalActiveParticiple } : {}),
     ...(carried?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: carried.lexicalPassiveParticiple } : {}),
     ...(carried?.valency?.length ? { valency: carried.valency } : {}),

@@ -46,7 +46,6 @@ describe('passive participle', () => {
         ['وثق', 'مَوْثُوق'],
         ['وجز', 'مَوْجُوز'],
         ['وطن', 'مَوْطُون'],
-        ['وجب', 'مَوْجُوب'],
         ['وصف', 'مَوْصُوف'],
         ['وفد', 'مَوْفُود'],
         ['وهن', 'مَوْهُون'],
@@ -86,7 +85,6 @@ describe('passive participle', () => {
         ['بدو', 'مَبْدُوّ'],
         ['جدو', 'مَجْدُوّ'],
         ['لهو', 'مَلْهُوّ'],
-        ['علي', 'مَعْلِيّ'],
         ['شفي', 'مَشْفِيّ'],
         ['غشي', 'مَغْشِيّ'],
         ['سعي', 'مَسْعِيّ'],
@@ -392,7 +390,6 @@ describe('passive participle', () => {
         ['لحق', 'مُلْحَق'],
         ['فلت', 'مُفْلَت'],
         ['مكن', 'مُمْكَن'],
-        ['صبح', 'مُصْبَح'],
         ['سلم', 'مُسْلَم'],
         ['كتب', 'مُكْتَب'],
         ['عرب', 'مُعْرَب'],
@@ -481,10 +478,8 @@ describe('passive participle', () => {
     describe('hamzated initial roots', () => {
       test.each([
         ['ءخر', 'مُتَأَخَّر'],
-        ['ءلف', 'مُتَأَلَّف'],
         ['ءول', 'مُتَأَوَّل'],
         ['ءكد', 'مُتَأَكَّد'],
-        ['ءكل', 'مُتَأَكَّل'],
         ['ءثر', 'مُتَأَثَّر'],
         ['ءوه', 'مُتَأَوَّه'],
       ])('%s', (root, expected) => {
@@ -513,7 +508,6 @@ describe('passive participle', () => {
         ['هدد', 'مُتَهَدَّد'],
         ['حدد', 'مُتَحَدَّد'],
         ['عزز', 'مُتَعَزَّز'],
-        ['سبب', 'مُتَسَبَّب'],
         ['قرر', 'مُتَقَرَّر'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
@@ -539,7 +533,6 @@ describe('passive participle', () => {
         ['قول', 'مُتَقَوَّل'],
         ['عين', 'مُتَعَيَّن'],
         ['غير', 'مُتَغَيَّر'],
-        ['طور', 'مُتَطَوَّر'],
         ['شوق', 'مُتَشَوَّق'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
@@ -549,7 +542,6 @@ describe('passive participle', () => {
     describe('defective roots', () => {
       test.each([
         ['بقي', 'مُتَبَقًّى'],
-        ['سني', 'مُتَسَنًّى'],
         ['بني', 'مُتَبَنًّى'],
         ['حدي', 'مُتَحَدًّى'],
         ['سمي', 'مُتَسَمًّى'],
@@ -571,10 +563,7 @@ describe('passive participle', () => {
     })
 
     describe('hamzated final hollow roots', () => {
-      test.each([
-        ['هيء', 'مُتَهَيَّأ'],
-        ['ضوء', 'مُتَضَوَّأ'],
-      ])('%s', (root, expected) => {
+      test.each([['ضوء', 'مُتَضَوَّأ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 5))).toEqualT(expected)
       })
     })
@@ -585,7 +574,6 @@ describe('passive participle', () => {
       test.each([
         ['كتب', 'مُتَكَاتَب'],
         ['عمل', 'مُتَعَامَل'],
-        ['كمل', 'مُتَكَامَل'],
         ['شرك', 'مُتَشَارَك'],
         ['علج', 'مُتَعَالَج'],
         ['قسم', 'مُتَقَاسَم'],
@@ -632,7 +620,6 @@ describe('passive participle', () => {
         ['وجه', 'مُتَوَاجَه'],
         ['وفر', 'مُتَوَافَر'],
         ['وجد', 'مُتَوَاجَد'],
-        ['وزن', 'مُتَوَازَن'],
       ])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 6))).toEqualT(expected)
       })
@@ -666,10 +653,7 @@ describe('passive participle', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([
-        ['بثث', 'مُنْبَثّ'],
-        ['كفف', 'مُنْكَفّ'],
-      ])('%s', (root, expected) => {
+      test.each([['كفف', 'مُنْكَفّ']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
       })
     })
@@ -685,11 +669,7 @@ describe('passive participle', () => {
     })
 
     describe('defective roots', () => {
-      test.each([
-        ['قضي', 'مُنْقَضًى'],
-        ['حني', 'مُنْحَنًى'],
-        ['ثني', 'مُنْثَنًى'],
-      ])('%s', (root, expected) => {
+      test.each([['ثني', 'مُنْثَنًى']])('%s', (root, expected) => {
         expect(derivePassiveParticiple(getVerb(root, 7))).toEqualT(expected)
       })
     })
@@ -736,7 +716,6 @@ describe('passive participle', () => {
       test.each([
         ['وصل', 'مُتَّصَل'],
         ['وعد', 'مُتَّعَد'],
-        ['وسخ', 'مُتَّسَخ'],
         ['وكء', 'مُتَّكَأ'],
         ['وحد', 'مُتَّحَد'],
       ])('%s', (root, expected) => {

@@ -32,7 +32,6 @@ interface RootEntry {
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   passiveVoice?: PassiveVoice
-  noPassiveParticiple?: boolean
   contractedImperative?: boolean
 }
 
@@ -54,7 +53,6 @@ interface WizardState {
   passiveVoice?: PassiveVoice
   masdars?: MasdarPatternChoice[]
   lexicalMasdars?: string[]
-  noPassiveParticiple?: true
   isNewRoot: boolean
   rootGloss: Translations
   vid: string
@@ -163,7 +161,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     passiveVoice: undefined,
     masdars: undefined,
     lexicalMasdars: undefined,
-    noPassiveParticiple: undefined,
     isNewRoot: false,
     rootGloss: { en: '', it: '', pt: '' },
     vid: '',
@@ -172,7 +169,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
 
   let step = 0
 
-  while (step < 11) {
+  while (step < 9) {
     if (step === 0) {
       const rootStr = (
         await input({ message: 'Enter verb root (Arabic or transliterated):', default: state.rootStr })
@@ -190,7 +187,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.passiveVoice = undefined
       state.masdars = undefined
       state.lexicalMasdars = undefined
-      state.noPassiveParticiple = undefined
       state.isNewRoot = !locales.en.roots[rootStr]
       state.vid = ''
       state.verbTranslations = { en: '', it: '', pt: '' }
@@ -207,7 +203,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
           if (e.masdars?.length) parts.push(`masdars: [${e.masdars.join(', ')}]`)
           if (e.lexicalMasdars?.length) parts.push(`lexicalMasdars: [${e.lexicalMasdars.join(', ')}]`)
           if (e.passiveVoice) parts.push(`passive: ${e.passiveVoice}`)
-          if (e.noPassiveParticiple) parts.push('no passive participle')
           console.log(`  ${e.root}-${e.form}: ${parts.join(', ')}`)
         }
         console.log()
@@ -240,7 +235,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.passiveVoice = undefined
       state.masdars = undefined
       state.lexicalMasdars = undefined
-      state.noPassiveParticiple = undefined
       step += 1
       continue
     }
@@ -329,28 +323,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     }
 
     if (step === 6) {
-      if (state.form === 9) {
-        state.noPassiveParticiple = undefined
-        step += 1
-        continue
-      }
-
-      const supported = await confirmWithBack(
-        'Passive participle supported?',
-        state.editEntry ? !state.editEntry.noPassiveParticiple : true,
-      )
-
-      if (supported === BACK) {
-        step -= 1
-        continue
-      }
-
-      state.noPassiveParticiple = supported ? undefined : true
-      step += 1
-      continue
-    }
-
-    if (step === 7) {
       if (!state.isNewRoot) {
         step += 1
         continue
@@ -380,7 +352,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       continue
     }
 
-    if (step === 8) {
+    if (step === 7) {
       console.log()
       const enVerb = await inputWithBack(
         'Verb translation (EN, e.g. "to write"):',
@@ -414,7 +386,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       continue
     }
 
-    if (step === 9) {
+    if (step === 8) {
       const entry: RootEntry = { root: state.rootStr, form: state.form as TriliteralForm }
       if (state.vowels != null) entry.vowels = state.vowels
       if (state.masdars != null) entry.masdars = state.masdars
@@ -423,7 +395,6 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       if (lexicalMasdars.length > 0) entry.lexicalMasdars = lexicalMasdars
 
       if (state.passiveVoice != null) entry.passiveVoice = state.passiveVoice
-      if (state.noPassiveParticiple) entry.noPassiveParticiple = true
       if (state.editEntry?.contractedImperative) entry.contractedImperative = true
 
       console.log('\n─── Summary ───────────────────────────────')

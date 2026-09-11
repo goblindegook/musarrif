@@ -24,7 +24,6 @@ describe('getVerbById', () => {
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
       lexicalMasdars: undefined,
       passiveVoice: undefined,
-      noPassiveParticiple: undefined,
       contractedImperative: undefined,
       lexicalActiveParticiple: undefined,
       valency: [2, 3],
@@ -131,16 +130,9 @@ describe('getAvailableParadigms', () => {
   })
 
   test('excludes all passive.* for a verb with passiveVoice: none', () => {
-    const verb = getVerb('وفي', 1) // passiveVoice: 'none' in roots.json
+    const verb = getVerb('وجب', 1) // passiveVoice: 'none' in roots.json
     const available = getAvailableParadigms(verb)
     expect(available.filter((p) => p.startsWith('passive'))).toHaveLength(0)
-  })
-
-  test('excludes passive.participle for a verb with noPassiveParticiple: true', () => {
-    // ءمن form 1 has noPassiveParticiple: true but passive conjugation is available
-    const verb = getVerb('Drb', 8)
-    const available = getAvailableParadigms(verb)
-    expect(available).not.toContain('passive.participle')
   })
 
   test('excludes all passive.* for Form IX verbs', () => {
@@ -322,6 +314,32 @@ describe('getAvailableParadigms', () => {
       ['نوم', 10],
       ['بعد', 1],
       ['خضل', 9],
+      ['وفي', 1],
+      ['يءس', 1],
+      ['ظلل', 1],
+      ['بدو', 1],
+      ['جرء', 1],
+      ['ءذن', 1],
+      ['ءمر', 1],
+      ['حدث', 5],
+      ['طلب', 5],
+      ['مثل', 5],
+      ['حدد', 5],
+      ['حدي', 5],
+      ['سمي', 5],
+      ['عين', 5],
+      ['ءخر', 5],
+      ['ءمم', 5],
+      ['ءكد', 5],
+      ['ءوه', 5],
+      ['ءذي', 5],
+      ['وكء', 5],
+      ['حول', 5],
+      ['ضوء', 5],
+      ['غير', 5],
+      ['شوق', 5],
+      ['قسم', 6],
+      ['وجه', 6],
     ])('%s (Form %d)', (root, form) => {
       expect(getAvailableParadigms(getVerb(root, form))).toContain('passive.past')
     })
@@ -329,54 +347,28 @@ describe('getAvailableParadigms', () => {
 
   describe('has no passive voice', () => {
     test.each<[string, TriliteralForm]>([
-      ['وفي', 1],
       ['قضي', 7],
-      ['يءس', 1],
       ['وجب', 1],
-      ['ظلل', 1],
       ['موت', 1],
       ['قرر', 1],
-      ['بدو', 1],
-      ['جرء', 1],
-      ['ءذن', 1],
       ['ءصل', 1],
-      ['ءمر', 1],
       ['وري', 1],
-      ['حدث', 5],
-      ['طلب', 5],
-      ['مثل', 5],
-      ['حدد', 5],
       ['سبب', 5],
       ['وسع', 5],
       ['سني', 5],
-      ['حدي', 5],
-      ['سمي', 5],
       ['حني', 7],
       ['زوي', 7],
       ['قرء', 7],
       ['بثث', 7],
       ['دسس', 7],
-      ['عين', 5],
-      ['ءخر', 5],
-      ['ءمم', 5],
       ['ءلف', 5],
-      ['ءكد', 5],
       ['ءكل', 5],
-      ['ءوه', 5],
-      ['ءذي', 5],
-      ['وكء', 5],
-      ['حول', 5],
-      ['ضوء', 5],
       ['هيء', 5],
       ['طور', 5],
-      ['غير', 5],
-      ['شوق', 5],
       ['مدد', 5],
       ['كمل', 6],
-      ['قسم', 6],
       ['نمو', 6],
       ['مشي', 6],
-      ['وجه', 6],
       ['وزن', 6],
       ['ءكل', 6],
       ['بطء', 6],

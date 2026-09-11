@@ -88,7 +88,6 @@ type RawVerb = {
   lexicalMasdars?: readonly string[]
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
-  noPassiveParticiple?: boolean
   valency?: readonly Valency[]
 }
 
@@ -183,7 +182,6 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             masdars: raw.masdars,
             lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
-            noPassiveParticiple: raw.noPassiveParticiple,
             valency: raw.valency ?? [],
           }
         : {
@@ -192,7 +190,6 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             form: raw.form as Exclude<QuadriliteralForm, 1>,
             lexicalMasdars: raw.lexicalMasdars,
             passiveVoice: raw.passiveVoice,
-            noPassiveParticiple: raw.noPassiveParticiple,
             valency: raw.valency ?? [],
           },
     )
@@ -208,7 +205,6 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       masdars: raw.masdars,
       lexicalMasdars: raw.lexicalMasdars,
       passiveVoice: raw.passiveVoice,
-      noPassiveParticiple: raw.noPassiveParticiple,
       contractedImperative: raw.contractedImperative,
       lexicalActiveParticiple: raw.lexicalActiveParticiple,
       valency: raw.valency ?? [],
@@ -221,7 +217,6 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     form: raw.form as Exclude<TriliteralForm, 1>,
     lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
     masdars: raw.masdars,
-    noPassiveParticiple: raw.noPassiveParticiple,
     lexicalMasdars: raw.lexicalMasdars,
     // Form VII supports at most an impersonal passive.
     passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
@@ -359,9 +354,5 @@ export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
       'active.future',
     ]
 
-  return ALL_PARADIGMS.filter((paradigm) => {
-    if (paradigm.startsWith('passive') && verb.passiveVoice === 'none') return false
-    if (paradigm === 'passive.participle' && verb.noPassiveParticiple) return false
-    return true
-  })
+  return ALL_PARADIGMS.filter((paradigm) => !(paradigm.startsWith('passive') && verb.passiveVoice === 'none'))
 }
