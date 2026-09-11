@@ -1,0 +1,141 @@
+-- allium: 3
+-- explanation.allium
+--
+-- Muṣarrif: Grammatical Explanation Engine
+--
+-- Scope: Turning a conjugated verb form or a derived nominal (masdar, active or
+--        passive participle) into a structured explanation the learner can read,
+--        and hiding parts of it once told which layers to hide.
+-- Includes: explanation structure, sentence kinds, the grammatical layers an
+--           explanation draws on and the root-interaction phenomena they can
+--           name, layer-based hiding, the reduced form-only summary used by
+--           verb-form browsing
+-- Excludes:
+--   - The phonological rule engine that decides WHICH interaction (if any)
+--     applies for a given root type, form, tense and pronoun, and how it is
+--     realised in the Arabic script — an extension of the conjugation-algorithm
+--     exclusion in conjugate.allium
+--   - Locale string content and translation mechanics
+--   - Rendering: colour coding, morpheme markers, modal/panel placement
+--     (see conjugate.allium and exercise.allium surfaces)
+--   - Mastery computation itself (spaced-repetition intervals, thresholds) —
+--     see exercise.allium; this spec only covers hiding, given a set of layers
+
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+-- One sentence of an explanation, tagged with the visual/conceptual category it
+-- belongs to.
+value ExplanationSentence {
+    text: String
+    kind: ExplanationKind
+}
+
+-- An explanation is computed on demand from a verb and a grammatical context — a
+-- (tense, pronoun) pair for a conjugated verb form, or one of masdar, active
+-- participle, passive participle for a derived nominal. Its sentences are grouped
+-- into up to four paragraphs, in order: form and root, nominal pattern, tense and
+-- voice, pronoun agreement. A paragraph left with no sentences is omitted, so an
+-- explanation may carry fewer than four paragraphs, or in the extreme, none.
+--
+-- Verb-form browsing (see conjugate.allium's VerbBrowse surface) shows a reduced
+-- explanation instead of the full one: only the form-and-root paragraph, always
+-- generated for the citation form (3ms active past) regardless of which
+-- conjugation the learner is currently viewing, and rendered as plain joined text
+-- rather than kind-coloured sentences.
+value Explanation {
+    paragraphs: List<List<ExplanationSentence>>
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+-- The visual/conceptual category a sentence belongs to. Consecutive sentences of
+-- the same kind are grouped under one colour marker where a morpheme breakdown is
+-- shown alongside the explanation.
+--   radical:   root-phonology sentences — root type, and how form or tense
+--              interacts with the root's weak or doubled letters
+--   measure:   binyan/pattern sentences — form, vowel pattern, nominal pattern,
+--              passive voice, imperative stem support
+--   agreement: pronoun agreement and most tense sentences
+--   particle:  the future-tense sentence (marked by a separate particle)
+--   elided:    a dropped prefix, dropped suffix, or elided final radical
+enum ExplanationKind { radical | measure | agreement | particle | elided }
+
+-- The independently hideable pieces of context an explanation draws on. rootType
+-- and form apply to both verb and nominal explanations; tense and pronoun apply to
+-- verb explanations only; nominal applies to nominal explanations only.
+enum ExplanationLayer { rootType | form | tense | pronoun | nominal }
+
+-- The way Form VIII's infixed ت assimilates to the root's first radical. Applies
+-- only to Form VIII, and only when that radical calls for it.
+--   assimilationComplete: the infix becomes identical to the first radical
+--   assimilationVoicing:  the infix becomes د (voicing assimilation)
+--   assimilationEmphasis: the infix becomes ط (emphatic assimilation)
+enum FormRootInteraction { assimilationComplete | assimilationVoicing | assimilationEmphasis }
+
+-- How a verb's weak or doubled root radical interacts with the tense being
+-- conjugated. Which one (if any) applies for a given root type, form, tense and
+-- pronoun is excluded (see Excludes); this only names the phenomena.
+--
+-- Hollow roots (weak middle radical):
+--   middleLengthensAa: the middle radical lengthens to a long ا in the past
+--   middleLengthensUu: lengthens to a long و in the active present/future (waw roots)
+--   middleLengthensIi: lengthens to a long ي in the active present/future (yaa roots)
+--   middleShortens:    shortens in the jussive and imperative
+--   middlePassiveAa:   lengthens to a long ا in the passive present
+--   middlePassiveIi:   lengthens to a long ي in the passive past
+--
+-- Defective roots (weak final radical):
+--   finalIsolated:    the final radical stands alone in the 3ms past
+--   finalElides:      the final radical elides before a vowel-initial suffix (3fs, 3fd)
+--   finalResurfaces:  the final radical resurfaces before a consonant-initial suffix
+--   finalLengthensUu: lengthens to a long و in the active present/future (waw roots)
+--   finalLengthensIi: lengthens to a long ي in the active present/future (yaa roots)
+--   finalDrops:       drops in the jussive and imperative
+--
+-- Assimilated roots (weak initial radical, Form I only):
+--   initialDrops: the initial و drops in the active present and future
+--
+-- Doubled and hamzated-doubled roots (identical final radicals):
+--   geminateContracts: the two identical radicals contract into one doubled consonant
+--   geminateJussive:   the radicals stay uncontracted in the jussive and imperative
+--
+-- Hamzated roots:
+--   hamzaSeat: the hamza's seat letter (أ / إ / ؤ / ئ / ء) is chosen for the
+--              surrounding vowels
+enum TenseRootInteraction {
+    finalDrops | finalElides | finalIsolated
+        | finalLengthensIi | finalLengthensUu | finalResurfaces
+        | geminateContracts | geminateJussive
+        | hamzaSeat | initialDrops
+        | middleLengthensAa | middleLengthensIi | middleLengthensUu
+        | middlePassiveAa | middlePassiveIi | middleShortens
+}
+
+------------------------------------------------------------
+-- Layer Visibility
+------------------------------------------------------------
+
+-- An explanation can be narrowed to a subset of visible ExplanationLayers —
+-- consumed by exercise.allium to fade out material the learner has already
+-- mastered (see its own scope for how "mastered" is decided; this spec only
+-- covers the hiding itself, given a set of hidden layers).
+--
+-- Hiding a layer removes the sentences it alone is responsible for:
+--   rootType hidden  -> the root-type sentence is removed
+--   form hidden      -> the vowel-pattern and form sentences are removed
+--   tense hidden     -> the tense and voice sentences are removed
+--   pronoun hidden   -> the pronoun agreement, dropped-prefix and dropped-suffix
+--                       sentences are removed
+--   nominal hidden   -> the nominal-pattern sentence is removed
+--
+-- Two sentences describe how the root's weak or doubled letters interact with
+-- form or tense, and so depend on rootType as well as their own layer: the
+-- form-root sentence is removed only once BOTH form and rootType are hidden, and
+-- the tense-root sentence only once BOTH tense and rootType are hidden. While
+-- either layer in the pair stays visible, the sentence stays.
+--
+-- A paragraph left with no visible sentences is omitted.

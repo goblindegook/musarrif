@@ -10,26 +10,24 @@
 --   - Exercise system (see exercise.allium)
 --   - Conjugation algorithms (hamza seating, diacritic NFC normalization,
 --     weak-letter transformation rules)
---   - URL hash structure and encoding
---   - localStorage key encoding
+--   - Morpheme annotation and grammatical explanation generation
+--   - URL structure and encoding
+--   - Browser storage key encoding
 --   - Transliteration algorithm internals
---   - Speech synthesis implementation
+--   - Speech synthesis and speech recognition implementation
 
-config {
-    max_recent_verbs: Integer = 11
+------------------------------------------------------------
+-- Given
+------------------------------------------------------------
+
+given {
+    prefs: UserPreferences
+    selection: VerbSelection
 }
 
--- ─────────────────────────────────────────────
--- Actors
--- ─────────────────────────────────────────────
-
-actor User {
-    identified_by: browser
-}
-
--- ─────────────────────────────────────────────
--- Roots and verbs
--- ─────────────────────────────────────────────
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
 
 -- The root is the consonantal skeleton of an Arabic verb, stored as an Arabic string.
 -- Most roots are triliteral (3 radicals); a small number are quadriliteral (4 radicals).
@@ -59,49 +57,137 @@ value Root {
 --   Past component:     fa3ala (fatha) | fa3ila (kasra) | fa3ula (damma)
 --   Present component:  yaf3alu (fatha) | yaf3ilu (kasra) | yaf3ulu (damma)
 --
--- These combine to give 9 possible patterns. The vast majority of Form I
--- verbs use a-u, a-i, or i-a.
+-- All 9 combinations exist and are selectable in the verb builder. The vast majority
+-- of Form I verbs use a-u, a-i or i-a; i-i, i-u, u-a and u-i are marked rare (muted,
+-- with a tooltip) since they seldom occur in Modern Standard Arabic.
 -- Forms II–X do not need a pattern because their stem vowels are fixed by form.
 value FormIVowelPattern {
     name: a-a | a-i | a-u
         | i-a | i-i | i-u
         | u-a | u-i | u-u
-    pastVowel: fatha | kasra | damma
-    presentVowel: fatha | kasra | damma
+    pastVowel: Vowel
+    presentVowel: Vowel
 }
 
--- Form I verbal nouns follow 17 attested patterns.
--- A single verb may have more than one accepted masdar.
--- Forms II–X each have a single fixed masdar shape (mimi: maf3al / muf3al).
+-- Verbal-noun (masdar) shapes attested in the corpus.
+-- A single Form I verb may have more than one accepted masdar.
+-- Forms II–X derive a single shape from the binyan (mimi: maf3al / muf3al),
+-- to which any lexically attested masdars are appended.
 value MasdarPattern {
-    name: fa3l | fa3al | fa3lan | fa3aal
-        | fu3l | fu3ool | fu3aal | fu3ul
-        | fi3aal | fi3la | fu3la | fi3al | fi3an | fi3l
-        | fa3aala | fi3aala | fi3iil
-        | mimi    -- fixed shape for Forms II–X and the 'mimi' masdar of Form I
+    name: MasdarPatternName
 }
 
--- Passive voice classification for a verb.
--- full = full paradigm (all pronouns); none = no passive voice at all;
--- impersonal = only 3ms is grammatical (subject unexpressed).
-enum PassiveVoice { full | none | impersonal }
+-- A conjugation table is computed on demand from (verb, tense, diacritics).
+-- It is not persisted; it is recomputed whenever the selection changes.
+value ConjugationTable {
+    verb: Verb
+    tense: VerbTense
+    diacritics: DiacriticsPreference
+    forms: List<ConjugatedForm>    -- one entry per applicable pronoun
+}
 
--- Arabic morphological forms I–X; each form carries a fixed binyan pattern.
--- Verbs are identified by (root, form); a single root may have multiple forms.
+value ConjugatedForm {
+    pronounId: PronounId
+    arabic: String                 -- normalised Arabic script with diacritics per preference
+}
+
+-- Masdar, active participle and passive participle are derived from the verb
+-- but are not conjugated by tense; they show gender/number agreement separately.
+--
+-- A verb of any form may have more than one masdar: the shapes derived from its
+-- masdar patterns, followed by any lexically attested masdars recorded for it.
+-- Derivations that the verb does not support are absent.
+value NominalForms {
+    verb: Verb
+    diacritics: DiacriticsPreference
+    masdars: List<String>         -- derived shapes first, lexical shapes last; empty if unsupported
+    activeParticiple: String?     -- absent when the verb has no participle paradigm
+    passiveParticiple: String?    -- absent when the verb has no passive participle
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum Vowel { fatha | kasra | damma }
+
+enum MasdarPatternName {
+    fa3l | fi3l | fu3l
+        | fa3al | fa3il | fa3aal | fa3iil
+        | fi3aal | fu3aal | fu3ool
+        | fa3alaan | fu3laan
+        | fa3aala | fa3la | fi3aala | fi3la | fu3la | fi3al
+        | mimi    -- derived shape for Forms II–X and the 'mimi' masdar of Form I
+}
+
+-- Passive voice restriction recorded on a verb.
+-- Absent means the full passive paradigm (all pronouns) is available.
+-- none = no passive voice at all; impersonal = only 3ms is grammatical
+-- (subject unexpressed).
+enum PassiveVoice { none | impersonal }
+
+-- Some Form I hollow verbs contract their stem in the jussive and imperative;
+-- the corpus records the behaviour explicitly where it is irregular.
+enum HollowContraction { contracted | uncontracted }
+
+enum Voice { active | passive }
+
+enum Tense { past | present | future | imperative }
+
+enum Mood { indicative | subjunctive | jussive }
+
+enum DiacriticsPreference { all | some | none }
+
+enum Language { en | it | pt | ar }
+
+------------------------------------------------------------
+-- Pronoun positions
+------------------------------------------------------------
+
+-- Thirteen pronoun positions covering all person / number / gender combinations.
+-- Codes are not valid enum literals (they start with a digit), so the position
+-- is carried as a code string.
+--
+--   Singular:  1s, 2ms, 2fs, 3ms, 3fs
+--   Dual:      2d, 3md, 3fd
+--   Plural:    1p, 2mp, 2fp, 3mp, 3fp
+value PronounId {
+    code: String
+}
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
+
+-- Arabic morphological forms; each form carries a fixed binyan pattern.
+-- Triliteral roots take forms I–X, quadriliteral roots forms Iq–IVq.
+-- Verbs are identified by (root, form) plus, for Form I roots with more than one
+-- attested reading, the vowel pattern. A single root may have multiple forms.
+--
+-- Verbs absent from the corpus are constructed on demand (synthetic verbs);
+-- they borrow masdar patterns, lexical overrides and valency from a corpus entry
+-- for the same root when one exists.
 entity Verb {
     root: Root
-    form: Integer                          -- 1–10
+    form: Integer                          -- 1–10 for triliteral roots, 1–4 for quadriliteral
 
-    -- Form I only; one of 9 vowel patterns.
+    -- Form I triliteral only; one of 9 vowel patterns.
     -- Absent for forms II–X (stem vowels are determined by the binyan).
     vowels: FormIVowelPattern?
 
     -- Form I only; lists accepted masdar shapes.
-    -- Absent means the form default is used.
+    -- Absent means the mimi shape is derived.
     masdars: List<MasdarPattern>?
 
-    -- Whether this verb allows passive voice conjugation (default: full).
-    passiveVoice: PassiveVoice
+    -- Attested masdars that no pattern derives; appended after the derived shapes.
+    lexicalMasdars: List<String>?
+
+    -- Attested participles that no pattern derives.
+    lexicalActiveParticiple: String?
+    lexicalPassiveParticiple: String?
+
+    -- Passive restriction; absent means the full passive paradigm is available.
+    passiveVoice: PassiveVoice?
 
     -- When true, the passive participle is suppressed (not derivable for this verb).
     noPassiveParticiple: Boolean?
@@ -110,20 +196,27 @@ entity Verb {
     -- their imperative is contracted (hamzat al-wasl is dropped).
     contractedImperative: Boolean?
 
+    -- Form I hollow verbs only; overrides the default stem-contraction behaviour.
+    hollowContraction: HollowContraction?
+
+    -- Numbers of arguments the verb takes; drives the grammatical explanations.
+    valency: List<Integer>
+
+    -- true when the verb was constructed on demand rather than read from the corpus.
+    synthetic: Boolean?
+
     -- Derived
-    id: String                             -- transliterated root + "-" + form, e.g. "k-t-b-1"
-    label: String                          -- 3ms active past in Arabic script (citation form)
-    supportsPassive: form != 9 and passiveVoice != none
+    rootId: String        -- transliterated root, e.g. "ktb"
+    id: String            -- rootId + "-" + form, e.g. "ktb-1"; Form I roots with more
+                          -- than one attested reading append the pattern, e.g. "Hsb-1-a-u"
+    lemma: String         -- 3ms active past in Arabic script (citation form)
+    supportsPassive: passiveVoice != none
+    supportsPassiveParticiple: supportsPassive and not (noPassiveParticiple ?? false)
 }
 
 -- ─────────────────────────────────────────────
 -- Conjugation paradigm
 -- ─────────────────────────────────────────────
-
--- Thirteen pronoun positions covering all person / number / gender combinations:
---   Singular:  1s, 2ms, 2fs, 3ms, 3fs
---   Dual:      2d, 3md, 3fd
---   Plural:    1p, 2mp, 2fp, 3mp, 3fp
 
 -- Valid tense / voice / mood combinations.
 -- The three variants capture the exact combinations that exist in Arabic morphology.
@@ -136,123 +229,60 @@ entity VerbTense {
 variant ActiveImperative : VerbTense {
     -- Only 2nd-person pronouns (2ms, 2fs, 2d, 2mp, 2fp) have imperative forms.
     -- Always active; there is no passive imperative in Arabic.
-    voice: active
-    tense: imperative
+    voice: Voice
+    tense: Tense
 }
 
 variant PastOrFuture : VerbTense {
-    voice: active | passive
-    tense: past | future
+    voice: Voice
+    tense: Tense
     -- No mood distinction for past or future tenses.
 }
 
 variant PresentWithMood : VerbTense {
-    voice: active | passive
-    tense: present
-    mood: indicative | subjunctive | jussive
+    voice: Voice
+    tense: Tense
+    mood: Mood
     -- Subjunctive and jussive are derived from the indicative by suffix reduction.
 }
-
--- A conjugation table is computed on demand from (verb, tense, diacritics).
--- It is not persisted; it is recomputed whenever the selection changes.
-value ConjugationTable {
-    verb: Verb
-    tense: VerbTense
-    diacritics: all | some | none
-    forms: List<ConjugatedForm>    -- one entry per applicable pronoun
-}
-
-value ConjugatedForm {
-    pronounId: PronounId
-    arabic: String                 -- normalised Arabic script with diacritics per preference
-}
-
--- Passive tables may only exist for verbs that support passive voice
-invariant PassiveConjugationRequiresSupport {
-    for t in ConjugationTable:
-        if t.tense.kind = PastOrFuture:
-            t.tense.voice = passive implies t.verb.supportsPassive
-}
-
-invariant PassivePresentRequiresSupport {
-    for t in ConjugationTable:
-        if t.tense.kind = PresentWithMood:
-            t.tense.voice = passive implies t.verb.supportsPassive
-}
-
--- Imperative forms exist only for 2nd-person pronouns
-invariant ImperativeSecondPersonOnly {
-    for t in ConjugationTable:
-        if t.tense.kind = ActiveImperative:
-            t.forms.all(f => f.pronounId in { 2ms, 2fs, 2d, 2mp, 2fp })
-}
-
--- Impersonal passive verbs produce only the 3ms form (subject is unexpressed)
-invariant ImpersonalPassiveConjugation {
-    for t in ConjugationTable:
-        if t.tense.kind = PastOrFuture:
-            (t.tense.voice = passive and t.verb.passiveVoice = impersonal)
-                implies (t.forms.count = 1 and t.forms.all(f => f.pronounId = 3ms))
-}
-
-invariant ImpersonalPassivePresentConjugation {
-    for t in ConjugationTable:
-        if t.tense.kind = PresentWithMood:
-            (t.tense.voice = passive and t.verb.passiveVoice = impersonal)
-                implies (t.forms.count = 1 and t.forms.all(f => f.pronounId = 3ms))
-}
-
--- ─────────────────────────────────────────────
--- Nominal derivations
--- ─────────────────────────────────────────────
-
--- Masdar, active participle and passive participle are derived from the verb
--- but are not conjugated by tense; they show gender/number agreement separately.
---
--- A Form I verb may have more than one accepted masdar (one per pattern in
--- masdars). Forms II–X always produce exactly one masdar.
-value NominalForms {
-    verb: Verb
-    diacritics: all | some | none
-    masdars: List<String>         -- one string per masdar pattern; empty if none defined
-    activeParticiple: String
-    passiveParticiple: String?    -- absent when verb.noPassiveParticiple = true
-}
-
-invariant FormIIMasdarExactlyOne {
-    for n in NominalForms where n.verb.form != 1:
-        n.masdars.count = 1
-}
-
--- ─────────────────────────────────────────────
--- Search and discovery
--- ─────────────────────────────────────────────
-
--- Search accepts Arabic script, Buckwalter transliteration, or translation keywords
--- (English, Italian, or Portuguese). Results are ranked by proximity; exact root
--- matches rank above partial matches and transliteration near-matches.
---
--- The verb builder constructs synthetic verbs for any (root, form) pair not present
--- in the corpus, allowing conjugation of roots that are not yet indexed.
 
 -- ─────────────────────────────────────────────
 -- User preferences and history
 -- ─────────────────────────────────────────────
 
-given {
-    prefs: UserPreferences
-}
-
 -- Preferences persist across browser sessions (stored locally in the user's browser).
 -- There is no server-side account; all state is per-device.
+-- Language defaults to the browser language when it is one of the supported
+-- languages, and diacriticsPreference defaults to some.
 -- Exercise progression state (dimension profile, spaced repetition cards) is
 -- defined and managed in exercise.allium.
 entity UserPreferences {
-    language: en | it | pt | ar
-    diacriticsPreference: all | some | none   -- applies to the conjugation view
+    language: Language
+    diacriticsPreference: DiacriticsPreference   -- applies to the conjugation view
     recentVerbs: List<Verb>    -- ordered most-recent-first, max config.max_recent_verbs
-    favouriteVerbs: Set<Verb>  -- ordered by Arabic collation of verb.label
+    favouriteVerbs: List<Verb> -- insertion ordered; presented sorted by Arabic collation of lemma
 }
+
+-- VerbSelection holds the navigational state of the conjugation view.
+-- It is encoded in the URL and restored on load.
+entity VerbSelection {
+    verb: Verb?
+    tense: VerbTense
+    conjugationTable: ConjugationTable?    -- null when verb is null
+    nominalForms: NominalForms?            -- null when verb is null
+}
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    max_recent_verbs: Integer = 11
+}
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
 
 rule UserViewedVerb {
     when: UserViewsVerb(verb)
@@ -272,6 +302,90 @@ rule UserToggledFavourite {
             prefs.favouriteVerbs = prefs.favouriteVerbs + { verb }
 }
 
+-- Selecting a verb resets the tense to the default: active past, no mood.
+rule UserSelectsVerb {
+    when: UserSelectsVerb(verb)
+    ensures: selection.verb = verb
+    ensures: selection.tense = PastOrFuture.created(voice: active, tense: past)
+    ensures: UserViewsVerb(verb: verb)
+}
+
+-- Selecting the imperative also forces the voice to active, because the
+-- passive imperative does not exist.
+rule UserSelectsTense {
+    when: UserSelectsTense(tense)
+    ensures:
+        if tense = imperative:
+            selection.tense = ActiveImperative.created(voice: active, tense: imperative)
+        else if tense = present:
+            selection.tense = PresentWithMood.created(
+                voice: selection.tense.voice,
+                tense: present,
+                mood: indicative    -- default; a mood is only carried when already present
+            )
+        else:
+            selection.tense = PastOrFuture.created(voice: selection.tense.voice, tense: tense)
+}
+
+-- Switching voice preserves the present-tense mood. The imperative has no passive
+-- form, so switching to passive while the imperative is selected falls back to past.
+rule UserSelectsVoice {
+    when: UserSelectsVoice(voice)
+    ensures:
+        if selection.tense.kind = PresentWithMood:
+            selection.tense = PresentWithMood.created(
+                voice: voice,
+                tense: present,
+                mood: selection.tense.mood
+            )
+        else if voice = passive and selection.tense.tense = imperative:
+            selection.tense = PastOrFuture.created(voice: passive, tense: past)
+        else if voice = active and selection.tense.tense = imperative:
+            selection.tense = ActiveImperative.created(voice: active, tense: imperative)
+        else:
+            selection.tense = PastOrFuture.created(voice: voice, tense: selection.tense.tense)
+}
+
+rule UserSelectsMood {
+    when: UserSelectsMood(mood)
+    ensures: selection.tense = PresentWithMood.created(
+        voice: selection.tense.voice,
+        tense: present,
+        mood: mood
+    )
+}
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+-- Passive tables may only exist for verbs that support passive voice
+invariant PassiveConjugationRequiresSupport {
+    for t in ConjugationTables:
+        t.tense.voice = passive implies t.verb.supportsPassive
+}
+
+-- Imperative forms exist only for 2nd-person pronouns
+invariant ImperativeSecondPersonOnly {
+    for t in ConjugationTables:
+        t.tense.kind = ActiveImperative
+            implies t.forms.all(f => f.pronounId.code in { "2ms", "2fs", "2d", "2mp", "2fp" })
+}
+
+-- Impersonal passive verbs produce only the 3ms form (subject is unexpressed)
+invariant ImpersonalPassiveConjugation {
+    for t in ConjugationTables:
+        (t.tense.voice = passive and t.verb.passiveVoice = impersonal)
+            implies (t.forms.count = 1 and t.forms.all(f => f.pronounId.code = "3ms"))
+}
+
+-- A passive participle is only derived when the verb supports the passive voice
+-- and does not suppress the participle
+invariant PassiveParticipleRequiresSupport {
+    for n in NominalForms:
+        n.passiveParticiple != null implies n.verb.supportsPassiveParticiple
+}
+
 invariant RecentVerbsMaxSize {
     prefs.recentVerbs.count <= config.max_recent_verbs
 }
@@ -282,63 +396,41 @@ invariant RecentVerbsNoDuplicates {
             a != b implies a.id != b.id
 }
 
--- ─────────────────────────────────────────────
+------------------------------------------------------------
+-- Actor Declarations
+------------------------------------------------------------
+
+actor User {
+    identified_by: UserPreferences where language != null
+}
+
+------------------------------------------------------------
 -- Surfaces
--- ─────────────────────────────────────────────
+------------------------------------------------------------
 
--- VerbSelection holds the navigational state of the conjugation view.
--- It is encoded in the URL and restored on load.
-entity VerbSelection {
-    verb: Verb?
-    tense: VerbTense
-    conjugationTable: ConjugationTable?    -- null when verb is null
-    nominalForms: NominalForms?            -- null when verb is null
-}
+-- Search accepts Arabic script, Buckwalter transliteration, verb ids, or translation
+-- keywords in the active language. Arabic substrings of the query are matched against
+-- roots, preferring an exact root match over a prefix match. Results are ranked by
+-- edit distance between the query and the verb's citation form, breaking ties by root
+-- and then by translation.
+--
+-- The verb builder constructs synthetic verbs for any (root, form) pair not present
+-- in the corpus, allowing conjugation of roots that are not yet indexed.
+--
+-- The verb list is additionally browsable: it can be filtered by form, by root type
+-- (filters combine conjunctively) and by group (favourites, kāna sisters,
+-- ẓanna sisters), and is paginated. Filter and page state is carried in the URL.
+surface VerbBrowse {
+    facing visitor: User
 
-given {
-    selection: VerbSelection
-}
+    exposes:
+        prefs.favouriteVerbs
 
--- Default tense on first load and after verb switch: active past, no mood.
-
-rule UserSelectsVerb {
-    when: UserSelectsVerb(verb)
-    ensures: selection.verb = verb
-    ensures: selection.tense = PastOrFuture(voice: active, tense: past)
-}
-
-rule UserSelectsTense {
-    when: UserSelectsTense(tense)
-    ensures:
-        if tense = present:
-            selection.tense = PresentWithMood(
-                voice: selection.tense.voice,
-                tense: present,
-                mood: indicative    -- default; preserved if already present
-            )
-        else:
-            selection.tense = PastOrFuture(voice: selection.tense.voice, tense: tense)
-}
-
-rule UserSelectsVoice {
-    when: UserSelectsVoice(voice)
-    -- Imperative has no passive form; fall back to past when switching to passive
-    -- while imperative is selected.
-    let tense = if voice = passive and selection.tense.tense = imperative then past
-                else selection.tense.tense
-    ensures: selection.tense = PastOrFuture(voice: voice, tense: tense)
-        if tense != present
-    ensures: selection.tense = PresentWithMood(voice: voice, tense: present, mood: selection.tense.mood)
-        if tense = present
-}
-
-rule UserSelectsMood {
-    when: UserSelectsMood(mood)
-    ensures: selection.tense = PresentWithMood(
-        voice: selection.tense.voice,
-        tense: present,
-        mood: mood
-    )
+    provides:
+        UserSearchesVerbs(query: String)
+        UserBuildsVerb(rootLetters: String, form: Integer)
+        UserFiltersVerbs(form: Integer?, rootTypes: Set<RootType>, group: String?)
+        UserSelectsVerb(verb: Verb)
 }
 
 surface ConjugationSurface {
@@ -348,6 +440,11 @@ surface ConjugationSurface {
 
     exposes:
         selection.verb
+        selection.verb.lemma
+        selection.verb.rootId
+        selection.verb.form
+        selection.verb.vowels
+        selection.verb.valency
         selection.tense
         selection.conjugationTable
         selection.nominalForms
@@ -357,21 +454,34 @@ surface ConjugationSurface {
         prefs.language
 
     provides:
-        UserSearchesVerbs(query: String)
-        UserBuildsVerb(rootLetters: String, form: Integer)
         UserSelectsVerb(verb: Verb)
-        UserSelectsVoice(voice: active | passive)
+        UserSelectsVoice(voice: Voice)
             when selection.verb != null and selection.verb.supportsPassive
-        UserSelectsTense(tense: past | present | future | imperative)
+        UserSelectsTense(tense: Tense)
             when selection.verb != null
-        UserSelectsMood(mood: indicative | subjunctive | jussive)
+        UserSelectsMood(mood: Mood)
             when selection.tense.kind = PresentWithMood
         UserTogglesFavourite(verb: Verb)
             when selection.verb != null
-        UserTogglesDiacritics(preference: all | some | none)
-        UserChangesLanguage(language: en | it | pt | ar)
+        UserTogglesDiacritics(preference: DiacriticsPreference)
+        UserChangesLanguage(language: Language)
         UserSpeaksForm(arabic: String)
         UserCopiesForm(arabic: String)
         UserSharesVerb(verb: Verb)
             when selection.verb != null
+        UserOpensInsights(topic: String)
+
+    @guarantee AvailableParadigmsOnly
+        -- Only the tenses, voices and nominal derivations the selected verb
+        -- supports are offered. A handful of defective verbs expose a reduced
+        -- paradigm: ليس offers the active past alone, and زيل offers the active
+        -- tenses without an imperative.
+
+    @guarantee InsightsPerSelection
+        -- Root, form, masdar, active participle and passive participle each expose
+        -- a grammatical breakdown of the currently selected verb. Participle and
+        -- masdar breakdowns are offered only when the verb derives them.
+
+    related:
+        VerbBrowse
 }
