@@ -189,9 +189,6 @@ entity Verb {
     -- Passive restriction; absent means the full passive paradigm is available.
     passiveVoice: PassiveVoice?
 
-    -- When true, the passive participle is suppressed (not derivable for this verb).
-    noPassiveParticiple: Boolean?
-
     -- true for some Form I verbs whose first radical is a weak letter;
     -- their imperative is contracted (hamzat al-wasl is dropped).
     contractedImperative: Boolean?
@@ -211,7 +208,7 @@ entity Verb {
                           -- than one attested reading append the pattern, e.g. "Hsb-1-a-u"
     lemma: String         -- 3ms active past in Arabic script (citation form)
     supportsPassive: passiveVoice != none
-    supportsPassiveParticiple: supportsPassive and not (noPassiveParticiple ?? false)
+    supportsPassiveParticiple: supportsPassive
 }
 
 -- ─────────────────────────────────────────────
