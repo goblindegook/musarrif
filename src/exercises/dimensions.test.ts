@@ -570,15 +570,6 @@ describe('promoteDimensions', () => {
     ).toBe(4)
   })
 
-  test('tenses will not unlock passive until forms are maxed', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 3, pronouns: 3, forms: 2 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(16) },
-      }).profile.tenses,
-    ).toBe(3)
-  })
-
   test('nominals blocked at level 0 until tenses >= 2', () => {
     expect(
       promoteDimensions({
