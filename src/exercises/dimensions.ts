@@ -396,7 +396,7 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
   if (dimension === 'forms' && level === 0 && profile.tenses < 1) return false
 
   // Do not unlock passive verbs before exposure to all forms:
-  if (dimension === 'tenses' && level >= 4 && profile.forms < MAX_LEVELS.forms) return false
+  if (dimension === 'tenses' && level >= 3 && profile.forms < MAX_LEVELS.forms) return false
 
   return true
 }
