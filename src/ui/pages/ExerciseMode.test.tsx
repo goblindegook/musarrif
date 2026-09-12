@@ -19,7 +19,7 @@ afterEach(() => {
 function testExercise(overrides = {}): Exercise {
   return {
     kind: 'verbForm',
-    dimensions: ['forms', 'rootTypes', 'diacritics'],
+    dimensions: ['forms', 'rootTypes'],
     word: 'كَتَبَ',
     spokenWord: 'كَتَبَ',
     promptTranslationKey: 'exercise.prompt.verbForm',
@@ -156,7 +156,6 @@ describe('ExerciseMode', () => {
       return {
         tenses: 0,
         pronouns: 0,
-        diacritics: 0,
         forms: 0,
         rootTypes: 0,
         nominals: 0,
@@ -187,7 +186,7 @@ describe('ExerciseMode', () => {
         'conjugator:dimensions',
         JSON.stringify({
           profile: testProfile({ tenses: 1 }),
-          windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+          windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
         }),
       )
       renderWithProviders(<ExerciseMode generateExercise={createProfileExerciseGenerator()} />)
@@ -199,7 +198,7 @@ describe('ExerciseMode', () => {
         'conjugator:dimensions',
         JSON.stringify({
           profile: testProfile({ tenses: 2, pronouns: 2 }),
-          windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+          windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
         }),
       )
       renderWithProviders(<ExerciseMode generateExercise={createProfileExerciseGenerator()} />)
@@ -217,7 +216,6 @@ describe('ExerciseMode', () => {
           profile: {
             tenses: 1,
             pronouns: 1,
-            diacritics: 0,
             forms: 0,
             rootTypes: 0,
             nominals: 0,
@@ -225,7 +223,6 @@ describe('ExerciseMode', () => {
           windows: {
             tenses: [],
             pronouns: [],
-            diacritics: [],
             forms: Array(19).fill(true),
             rootTypes: [],
             nominals: [],
@@ -246,7 +243,6 @@ describe('ExerciseMode', () => {
           profile: {
             tenses: 0,
             pronouns: 1,
-            diacritics: 0,
             forms: 0,
             rootTypes: 0,
             nominals: 0,
@@ -254,7 +250,6 @@ describe('ExerciseMode', () => {
           windows: {
             tenses: [],
             pronouns: [],
-            diacritics: [],
             forms: Array(19).fill(true),
             rootTypes: [],
             nominals: [],
@@ -276,7 +271,6 @@ describe('ExerciseMode', () => {
           profile: {
             tenses: 0,
             pronouns: 1,
-            diacritics: 0,
             forms: 0,
             rootTypes: 0,
             nominals: 0,
@@ -284,7 +278,6 @@ describe('ExerciseMode', () => {
           windows: {
             tenses: [],
             pronouns: [],
-            diacritics: [],
             forms: Array(19).fill(true),
             rootTypes: [],
             nominals: [],
@@ -577,7 +570,7 @@ describe('mastery filtering in ExerciseMode', () => {
 function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
   return {
     kind: 'conjugation',
-    dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
+    dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes'],
     word: 'يَكتُبُ',
     spokenWord: 'يَكتُبُ',
     promptTranslationKey: 'exercise.prompt.conjugation',
@@ -711,8 +704,8 @@ describe('typing mode', () => {
 describe('focus chip', () => {
   function multiFormProfile() {
     return JSON.stringify({
-      profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
-      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      profile: { tenses: 0, pronouns: 0, forms: 2, rootTypes: 0, nominals: 0 },
+      windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
     })
   }
 
@@ -772,8 +765,8 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:dimensions',
       JSON.stringify({
-        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
-        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        profile: { tenses: 1, pronouns: 0, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       }),
     )
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
@@ -784,8 +777,8 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:dimensions',
       JSON.stringify({
-        profile: { tenses: 0, pronouns: 1, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
-        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        profile: { tenses: 0, pronouns: 1, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       }),
     )
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
@@ -802,8 +795,8 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:dimensions',
       JSON.stringify({
-        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
-        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        profile: { tenses: 1, pronouns: 0, forms: 2, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       }),
     )
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
@@ -816,8 +809,8 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:dimensions',
       JSON.stringify({
-        profile: { tenses: 1, pronouns: 0, diacritics: 0, forms: 2, rootTypes: 0, nominals: 0 },
-        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        profile: { tenses: 1, pronouns: 0, forms: 2, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       }),
     )
     const gen = vi.fn().mockReturnValue(testExercise())
@@ -838,8 +831,8 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:dimensions',
       JSON.stringify({
-        profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 4, nominals: 0 },
-        windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        profile: { tenses: 0, pronouns: 0, forms: 0, rootTypes: 4, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       }),
     )
     const gen = vi.fn().mockReturnValue(testExercise())
@@ -873,8 +866,8 @@ describe('focus chip', () => {
   function nominals2Profile() {
     // nominals: 2 requires tenses >= 2, pronouns >= 2, forms = MAX (9)
     return JSON.stringify({
-      profile: { tenses: 2, pronouns: 2, diacritics: 0, forms: 9, rootTypes: 0, nominals: 2 },
-      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      profile: { tenses: 2, pronouns: 2, forms: 9, rootTypes: 0, nominals: 2 },
+      windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
     })
   }
 
@@ -906,49 +899,5 @@ describe('focus chip', () => {
     fireEvent.click(screen.getByText(/next/i, { selector: 'button' }))
 
     expect(gen).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), expect.any(Object), { nominal: 'masdar' })
-  })
-})
-
-describe('partial answers and dimension levels', () => {
-  // 8 successes in 19 answers sits exactly on the demotion boundary: one more success
-  // gives 9/20 = 0.45 (above the 0.4 threshold), one more failure gives 8/20 = 0.40 (at it).
-  function storeAtDemotionBoundary() {
-    localStorage.setItem(
-      'conjugator:dimensions',
-      JSON.stringify({
-        profile: { tenses: 0, pronouns: 0, diacritics: 1, forms: 0, rootTypes: 0, nominals: 0 },
-        windows: {
-          tenses: [],
-          pronouns: [],
-          diacritics: [...Array(8).fill(true), ...Array(11).fill(false)],
-          forms: [],
-          rootTypes: [],
-          nominals: [],
-        },
-      }),
-    )
-  }
-
-  function submitTyped(value: string) {
-    renderWithProviders(<ExerciseMode generateExercise={() => conjugationExercise({ answerText: 'كَتَبَ' })} />)
-    fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
-    fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value } })
-    fireEvent.click(screen.getByLabelText('Submit'))
-    return JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
-  }
-
-  test('an answer missing only a vowel keeps the diacritics level', () => {
-    storeAtDemotionBoundary()
-    expect(submitTyped('كتَبَ').profile.diacritics).toBe(1)
-  })
-
-  test('an answer missing only a vowel is recorded as a success', () => {
-    storeAtDemotionBoundary()
-    expect(submitTyped('كتَبَ').windows.diacritics.filter(Boolean)).toHaveLength(9)
-  })
-
-  test('a wrong answer at the same boundary demotes the diacritics level', () => {
-    storeAtDemotionBoundary()
-    expect(submitTyped('يَكتُبُ').profile.diacritics).toBe(0)
   })
 })

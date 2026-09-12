@@ -117,7 +117,7 @@ export const conjugationExercise = defineExercise(
   'conjugation',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
-    const word = exerciseDiacritics(verb.lemma, profile.diacritics)
+    const word = exerciseDiacritics(verb.lemma)
     const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const targetPronoun = normalizeExercisePronoun(
       verb,
@@ -125,7 +125,7 @@ export const conjugationExercise = defineExercise(
       constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns),
     )
     const answerText = String(conjugate(verb, targetTense)[targetPronoun])
-    const answer = exerciseDiacritics(answerText, profile.diacritics)
+    const answer = exerciseDiacritics(answerText)
     const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, answerText)
 
     const raw =
@@ -135,7 +135,7 @@ export const conjugationExercise = defineExercise(
           ? easyCandidates(targetTense, targetPronoun, verb, profile)
           : mediumCandidates(verb, targetTense, targetPronoun, profile)
 
-    const candidates = new Set(raw.map((r) => exerciseDiacritics(r, profile.diacritics)))
+    const candidates = new Set(raw.map((r) => exerciseDiacritics(r)))
     candidates.delete('')
     candidates.delete(answer)
     const uniqueOptions = new Set<string>([answer])
@@ -146,7 +146,7 @@ export const conjugationExercise = defineExercise(
     const options = shuffle(Array.from(uniqueOptions))
 
     return {
-      dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes'],
       promptTranslationKey: 'exercise.prompt.conjugation',
       promptParams: {
         tense: tensePromptKey(targetTense, profile.tenses >= 4),

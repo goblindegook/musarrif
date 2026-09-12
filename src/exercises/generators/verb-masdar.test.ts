@@ -21,12 +21,8 @@ describe('verbMasdarExercise', () => {
     )
   })
 
-  test('medium returns exactly four options', () => {
-    expect(verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).options).toHaveLength(4)
-  })
-
-  test('hard returns exactly four options', () => {
-    expect(verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).options).toHaveLength(4)
+  test('returns exactly four options', () => {
+    expect(verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('correct answer is a valid index into options', () => {
@@ -37,30 +33,19 @@ describe('verbMasdarExercise', () => {
   })
 
   test('all options are unique by visible label', () => {
-    const medium = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const exercise = verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(new Set(medium.options).size).toBe(medium.options.length)
-    expect(new Set(hard.options).size).toBe(hard.options.length)
+    expect(new Set(exercise.options).size).toBe(exercise.options.length)
   })
 
-  test('answer is a masdar of the shown verb at the same difficulty', () => {
-    const medium = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbMasdarExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+  test('answer is a masdar of the shown verb', () => {
+    const exercise = verbMasdarExercise.generate(INITIAL_DIMENSION_PROFILE)
 
     expect(
       verbs
-        .filter((verb) => exerciseDiacritics(verb.lemma, 1) === medium.word)
+        .filter((verb) => exerciseDiacritics(verb.lemma) === exercise.word)
         .some((verb) =>
-          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 1) === medium.options[medium.answer]),
-        ),
-    ).toBe(true)
-
-    expect(
-      verbs
-        .filter((verb) => exerciseDiacritics(verb.lemma, 2) === hard.word)
-        .some((verb) =>
-          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 2) === hard.options[hard.answer]),
+          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar) === exercise.options[exercise.answer]),
         ),
     ).toBe(true)
   })

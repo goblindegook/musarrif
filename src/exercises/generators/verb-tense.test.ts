@@ -63,19 +63,9 @@ describe('tenseExercise difficulty', () => {
     vi.restoreAllMocks()
   })
 
-  test('diacritics:0 (all): word is شَعَرَ (active past 3ms, all diacritics, random=0)', () => {
+  test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
-  })
-
-  test('diacritics:1 (some): word is شَعَرَ (active past 3ms, some diacritics, random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).word).toEqualT('شَعَرَ')
-  })
-
-  test('diacritics:2 (none): word is شعر (active past 3ms, no diacritics, random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
   })
 
   test('options are unvoiced tense keys', () => {

@@ -11,12 +11,12 @@ export const masdarFormExercise = defineExercise(
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
     const masdar = String(random(deriveMasdar(verb)))
-    const word = exerciseDiacritics(masdar, profile.diacritics)
+    const word = exerciseDiacritics(masdar)
 
     const eligibleForms = formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
       const alternative = form === 1 ? getVerb(verb.root, 1, 'a-a') : getVerb(verb.root, form)
-      return !deriveMasdar(alternative).some((masdar) => exerciseDiacritics(masdar, profile.diacritics) === word)
+      return !deriveMasdar(alternative).some((masdar) => exerciseDiacritics(masdar) === word)
     })
 
     const distractors = shuffle(eligibleForms).slice(0, 3)
@@ -25,7 +25,7 @@ export const masdarFormExercise = defineExercise(
     const explanation = resolveNominalExplanationLayers(verb, 'masdar', word)
 
     return {
-      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['nominals', 'forms', 'rootTypes'],
       promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
       spokenWord: masdar,

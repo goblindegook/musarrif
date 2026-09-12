@@ -10,7 +10,7 @@ import {
   YEH,
 } from '../paradigms/tokens'
 import { verbs } from '../paradigms/verbs'
-import { type DimensionProfile, exerciseDiacritics, random } from './dimensions'
+import { exerciseDiacritics, random } from './dimensions'
 
 type DistractorGenerator = () => string
 type DistractorNormaliser = (distractor: string) => string
@@ -22,13 +22,12 @@ const RANDOM_LETTERS = [...Array.from(new Set(verbs.flatMap((verb) => verb.rootT
 export function randomizeOptions(
   answer: string,
   generators: readonly DistractorGenerator[],
-  profile: DimensionProfile,
   size = 4,
   normalizers: readonly DistractorNormaliser[] = [],
 ): string[] {
   const options = new Set([answer])
 
-  const allNormalizers = [...normalizers, (c: string) => exerciseDiacritics(c, profile.diacritics)]
+  const allNormalizers = [...normalizers, exerciseDiacritics]
 
   while (options.size < size) {
     const generateCandidate = random(generators)

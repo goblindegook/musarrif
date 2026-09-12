@@ -1980,8 +1980,8 @@
     "root": "dwr",
     "form": 1,
     "vowels": "a-u",
-    "passive": "impersonal",
-    "masdars": ["fa3alaan", "fa3l"]
+    "masdars": ["fa3l", "fa3alaan"],
+    "passive": "impersonal"
   },
   {
     "root": "dwr",

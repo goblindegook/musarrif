@@ -33,7 +33,7 @@ export const verbTenseExercise = defineExercise(
     const answer = options.indexOf(tense)
 
     return {
-      dimensions: ['tenses', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['tenses', 'forms', 'rootTypes'],
       promptTranslationKey: 'exercise.prompt.verbTense',
       word,
       spokenWord,
@@ -58,10 +58,10 @@ function buildOptions(
   pronoun: PronounId,
   profile: DimensionProfile,
 ): [string, readonly VerbTense[]] {
-  const word = exerciseDiacritics(String(conjugate(verb, tense)[pronoun]), profile.diacritics)
+  const word = exerciseDiacritics(String(conjugate(verb, tense)[pronoun]))
 
   const distractors = tensePool(Math.max(profile.tenses, 3) as TensesLevel).filter(
-    (option) => exerciseDiacritics(String(conjugate(verb, option)[pronoun]), profile.diacritics) !== word,
+    (option) => exerciseDiacritics(String(conjugate(verb, option)[pronoun])) !== word,
   )
 
   return [word, shuffle([tense, ...shuffle(distractors).slice(0, 3)])]

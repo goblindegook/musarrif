@@ -312,7 +312,6 @@ describe('find lowest mastery', () => {
 const COMPLETE_PROFILE: DimensionProfile = {
   tenses: 4,
   pronouns: 3,
-  diacritics: 2,
   forms: 9,
   rootTypes: 5,
   nominals: 2,

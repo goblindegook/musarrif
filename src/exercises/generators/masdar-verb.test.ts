@@ -3,11 +3,8 @@ import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { getVerbById, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
 import * as dimensions from '../dimensions.ts'
-import { type DimensionProfile, exerciseDiacritics } from '../dimensions.ts'
+import { exerciseDiacritics } from '../dimensions.ts'
 import { masdarVerbExercise } from './masdar-verb.ts'
-
-const mediumProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }
-const hardProfile: DimensionProfile = { ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }
 
 describe('masdarVerbExercise', () => {
   afterEach(() => {
@@ -24,12 +21,8 @@ describe('masdarVerbExercise', () => {
     )
   })
 
-  test('medium returns exactly four options', () => {
-    expect(masdarVerbExercise.generate(mediumProfile).options).toHaveLength(4)
-  })
-
-  test('hard returns exactly four options', () => {
-    expect(masdarVerbExercise.generate(hardProfile).options).toHaveLength(4)
+  test('returns exactly four options', () => {
+    expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('correct answer is a valid index into options', () => {
@@ -40,34 +33,20 @@ describe('masdarVerbExercise', () => {
   })
 
   test('all options are unique by visible label', () => {
-    const medium = masdarVerbExercise.generate(mediumProfile)
-    const hard = masdarVerbExercise.generate(hardProfile)
+    const exercise = masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(new Set(medium.options).size).toBe(medium.options.length)
-    expect(new Set(hard.options).size).toBe(hard.options.length)
+    expect(new Set(exercise.options).size).toBe(exercise.options.length)
   })
 
-  test('answer points to a verb whose masdar matches the exercise word at the same difficulty', () => {
-    const medium = masdarVerbExercise.generate(mediumProfile)
-    const hard = masdarVerbExercise.generate(hardProfile)
+  test('answer points to a verb whose masdar matches the exercise word', () => {
+    const exercise = masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const mediumLabel = medium.options[medium.answer]
-    const hardLabel = hard.options[hard.answer]
+    const answerLabel = exercise.options[exercise.answer]
 
-    const mediumMatches = verbs.filter(
-      (verb) => exerciseDiacritics(verb.lemma, mediumProfile.diacritics) === mediumLabel,
-    )
-    const hardMatches = verbs.filter((verb) => exerciseDiacritics(verb.lemma, hardProfile.diacritics) === hardLabel)
+    const matches = verbs.filter((verb) => exerciseDiacritics(verb.lemma) === answerLabel)
 
     expect(
-      mediumMatches.some((verb) =>
-        deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, mediumProfile.diacritics) === medium.word),
-      ),
-    ).toBe(true)
-    expect(
-      hardMatches.some((verb) =>
-        deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, hardProfile.diacritics) === hard.word),
-      ),
+      matches.some((verb) => deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar) === exercise.word)),
     ).toBe(true)
   })
 

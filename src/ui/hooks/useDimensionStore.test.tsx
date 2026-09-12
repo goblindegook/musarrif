@@ -5,7 +5,6 @@ import { useDimensionStore } from './useDimensionStore'
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
   pronouns: 0,
-  diacritics: 0,
   forms: 0,
   rootTypes: 0,
   nominals: 0,
@@ -14,7 +13,6 @@ const INITIAL_DIMENSION_PROFILE = {
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
   pronouns: [],
-  diacritics: [],
   forms: [],
   rootTypes: [],
   nominals: [],
@@ -40,7 +38,6 @@ describe('useDimensionStore', () => {
           pronouns: 3,
           forms: 9,
           rootTypes: 5,
-          diacritics: 2,
           nominals: 2,
         },
         windows: INITIAL_DIMENSION_WINDOWS,
@@ -112,7 +109,7 @@ describe('useDimensionStore', () => {
     const { result } = renderHook(() => useDimensionStore())
 
     act(() => {
-      result.current[2](['forms', 'rootTypes', 'diacritics'], true)
+      result.current[2](['forms', 'rootTypes'], true)
     })
 
     await waitFor(() => {

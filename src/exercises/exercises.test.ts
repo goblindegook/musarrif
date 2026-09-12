@@ -15,7 +15,7 @@ describe('defineExerciseGenerator', () => {
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
         cardKey: 'verbForm:sound:1',
-        dimensions: ['forms', 'rootTypes', 'diacritics'],
+        dimensions: ['forms', 'rootTypes'],
         inputModes: ['multiple-choice'],
       }),
       {},
@@ -32,7 +32,7 @@ describe('defineExerciseGenerator', () => {
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,
       cardKey: 'verbForm:sound:1',
-      dimensions: ['forms', 'rootTypes', 'diacritics'],
+      dimensions: ['forms', 'rootTypes'],
       inputModes: ['multiple-choice'],
     })
   })
@@ -47,7 +47,7 @@ describe('defineExerciseGenerator', () => {
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
         cardKey: `verbForm:regular:${constraints?.form}:${constraints?.tense}:${constraints?.pronoun}`,
-        dimensions: ['forms', 'rootTypes', 'diacritics'],
+        dimensions: ['forms', 'rootTypes'],
         inputModes: ['multiple-choice'],
       }),
       { minNominals: 1, weight: 2 },
@@ -64,14 +64,14 @@ describe('defineExerciseGenerator', () => {
       word: 'profile:0',
       spokenWord: 'constraint:2',
       cardKey: 'verbForm:regular:2:active.past:3ms',
-      dimensions: ['forms', 'rootTypes', 'diacritics'],
+      dimensions: ['forms', 'rootTypes'],
     })
   })
 
   test('a keyboard-capable exercise carries the fully vocalised answer', () => {
-    const exercise = conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(exercise.answerText).toBe(exerciseDiacritics(exercise.answerText ?? '', 0))
-    expect(exerciseDiacritics(exercise.answerText ?? '', 2)).toBe(exercise.options[exercise.answer])
+    expect(exercise.answerText).toBe(exerciseDiacritics(exercise.answerText ?? ''))
+    expect(exerciseDiacritics(exercise.answerText ?? '')).toBe(exercise.options[exercise.answer])
   })
 })

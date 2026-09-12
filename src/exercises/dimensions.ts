@@ -14,7 +14,6 @@ import {
 } from '../paradigms/verbs'
 import type { Word } from '../paradigms/word'
 import { clamp } from '../primitives/numbers'
-import { keys } from '../primitives/objects'
 import { getSrsRootType, type SrsRootType } from './root-types'
 import type { CardConstraints } from './srs-types'
 
@@ -23,7 +22,6 @@ type Level<T extends readonly unknown[]> =
 
 export type TensesLevel = Level<typeof TENSE_POOLS>
 export type PronounsLevel = Level<typeof PRONOUN_POOLS>
-export type DiacriticsLevel = Level<typeof DIACRITICS_PREFERENCES>
 export type FormsLevel = Level<typeof FORM_POOLS>
 export type RootTypesLevel = Level<typeof ROOT_TYPE_POOLS>
 export type NominalsLevel = Level<typeof NOMINAL_UNLOCK_KEYS>
@@ -31,7 +29,6 @@ export type NominalsLevel = Level<typeof NOMINAL_UNLOCK_KEYS>
 export type DimensionProfile = {
   tenses: TensesLevel
   pronouns: PronounsLevel
-  diacritics: DiacriticsLevel
   forms: FormsLevel
   rootTypes: RootTypesLevel
   nominals: NominalsLevel
@@ -48,7 +45,6 @@ export type DimensionStore = {
 export const DEFAULT_DIMENSION_PROFILE: DimensionProfile = {
   tenses: 0,
   pronouns: 0,
-  diacritics: 0,
   forms: 0,
   rootTypes: 0,
   nominals: 0,
@@ -57,7 +53,6 @@ export const DEFAULT_DIMENSION_PROFILE: DimensionProfile = {
 export const DEFAULT_DIMENSION_WINDOWS: DimensionWindows = {
   tenses: [],
   pronouns: [],
-  diacritics: [],
   forms: [],
   rootTypes: [],
   nominals: [],
@@ -141,8 +136,6 @@ const R4: SrsRootType[] = [...R3, 'defective']
 const R5: SrsRootType[] = [...R4, 'hamzated']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
 
-const DIACRITICS_PREFERENCES = ['all', 'some', 'none'] as const
-
 const NOMINAL_UNLOCK_KEYS = [
   [],
   ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
@@ -152,7 +145,6 @@ const NOMINAL_UNLOCK_KEYS = [
 export const MAX_LEVELS: Record<DimensionKey, number> = {
   tenses: TENSE_POOLS.length - 1,
   pronouns: PRONOUN_POOLS.length - 1,
-  diacritics: DIACRITICS_PREFERENCES.length - 1,
   forms: FORM_POOLS.length - 1,
   rootTypes: ROOT_TYPE_POOLS.length - 1,
   nominals: NOMINAL_UNLOCK_KEYS.length - 1,
@@ -169,7 +161,6 @@ export const DimensionStore = v.fallback(
       v.object({
         tenses: v.fallback(integerBetween(0, MAX_LEVELS.tenses), 0),
         pronouns: v.fallback(integerBetween(0, MAX_LEVELS.pronouns), 0),
-        diacritics: v.fallback(integerBetween(0, MAX_LEVELS.diacritics), 0),
         forms: v.fallback(integerBetween(0, MAX_LEVELS.forms), 0),
         rootTypes: v.fallback(integerBetween(0, MAX_LEVELS.rootTypes), 0),
         nominals: v.fallback(integerBetween(0, MAX_LEVELS.nominals), 0),
@@ -180,7 +171,6 @@ export const DimensionStore = v.fallback(
       v.object({
         tenses: v.fallback(BooleanArray, []),
         pronouns: v.fallback(BooleanArray, []),
-        diacritics: v.fallback(BooleanArray, []),
         forms: v.fallback(BooleanArray, []),
         rootTypes: v.fallback(BooleanArray, []),
         nominals: v.fallback(BooleanArray, []),
@@ -193,6 +183,8 @@ export const DimensionStore = v.fallback(
     windows: DEFAULT_DIMENSION_WINDOWS,
   },
 )
+
+const DIMENSIONS = ['tenses', 'pronouns', 'forms', 'rootTypes', 'nominals'] as const
 
 const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]> = {
   tenses: [
@@ -208,7 +200,6 @@ const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]
     ['exercise.unlock.pronounGroup.plural'],
     ['exercise.unlock.pronounGroup.dual'],
   ],
-  diacritics: [[], ['exercise.unlock.diacriticsMode.some'], ['exercise.unlock.diacriticsMode.none']],
   forms: [
     [],
     ['exercise.unlock.form.2'],
@@ -270,14 +261,13 @@ export function randomGeneratedVerb(root: string, form: TriliteralForm = random(
   return getVerb(root, form)
 }
 
-export function exerciseDiacritics(word: string | Word, diacritics: DiacriticsLevel): string {
-  return applyDiacriticsPreference(word, DIACRITICS_PREFERENCES[diacritics])
+export function exerciseDiacritics(word: string | Word): string {
+  return applyDiacriticsPreference(word, 'some')
 }
 
 export const WINDOW_SIZES: Record<DimensionKey, number> = {
   tenses: 20,
   pronouns: 20,
-  diacritics: 100,
   forms: 20,
   rootTypes: 20,
   nominals: 20,
@@ -285,7 +275,6 @@ export const WINDOW_SIZES: Record<DimensionKey, number> = {
 const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
   tenses: [0.8, 0.8, 0.8, 0.8],
   pronouns: [0.8, 0.8, 0.8],
-  diacritics: [0.8, 0.9],
   forms: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
   rootTypes: [0.8, 0.8, 0.8, 0.8, 0.8],
   nominals: [0.8, 0.8],
@@ -293,14 +282,7 @@ const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
 const DEMOTION_THRESHOLD = 0.4
 const MIN_DEMOTION_WINDOW = 20
 
-const DEMOTION_PRIORITY: readonly DimensionKey[] = [
-  'diacritics',
-  'nominals',
-  'forms',
-  'rootTypes',
-  'tenses',
-  'pronouns',
-]
+const DEMOTION_PRIORITY: readonly DimensionKey[] = ['nominals', 'forms', 'rootTypes', 'tenses', 'pronouns']
 
 export function parseDimensionStore(raw: unknown): DimensionStore {
   return normalizeDimensionStore(v.parse(DimensionStore, raw) as DimensionStore)
@@ -317,16 +299,6 @@ function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
   if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
   if (p.nominals >= 2 && p.forms < MAX_LEVELS.forms) p.nominals = 1
-  if (
-    p.diacritics >= 2 &&
-    (p.tenses < MAX_LEVELS.tenses ||
-      p.pronouns < MAX_LEVELS.pronouns ||
-      p.forms < MAX_LEVELS.forms ||
-      p.rootTypes < MAX_LEVELS.rootTypes ||
-      p.nominals < MAX_LEVELS.nominals)
-  ) {
-    p.diacritics = 1
-  }
   return p
 }
 
@@ -352,7 +324,7 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
   const nextProfile = { ...profile }
   const demotionCandidates = new Set<DimensionKey>()
 
-  for (const dimension of keys(profile)) {
+  for (const dimension of DIMENSIONS) {
     const level = profile[dimension]
     const w = windows[dimension]
     if (w.length < MIN_DEMOTION_WINDOW) continue
@@ -374,7 +346,7 @@ export function promoteDimensions(store: DimensionStore, allowPromotion = true):
 
   const nextWindows = { ...windows }
   const enforced = enforcePrerequisites(nextProfile)
-  for (const dimension of keys(profile)) {
+  for (const dimension of DIMENSIONS) {
     if (enforced[dimension] !== profile[dimension]) nextWindows[dimension] = []
   }
 
@@ -403,7 +375,7 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
 
 export function getDimensionChanges(previous: DimensionProfile, next: DimensionProfile): DimensionChange[] {
   const changes: DimensionChange[] = []
-  for (const dimension of keys(previous)) {
+  for (const dimension of DIMENSIONS) {
     const current = previous[dimension]
     const target = next[dimension]
     if (target > current) {

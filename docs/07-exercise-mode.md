@@ -26,10 +26,11 @@ interface Exercise {
 **Adaptive dimensions** (`src/exercises/dimensions.ts`):
 - `tenses` (0–4): unlocks active past → full passive set
 - `pronouns` (0–3): `3ms` → full inventory
-- `diacritics` (0–2): `all` → `some` → `none`
 - `forms` (0–9): form I → all ten forms
 - `rootTypes` (0–5): sound → doubled → assimilated → hollow → defective → hamzated
 - `nominals` (0–2): none → participles → masdar
+
+Exercise prompts render with partial diacritics by default. Diacritics are not stored in the exercise dimension profile and answers do not promote, demote, or announce diacritics changes.
 
 `recordDimensionAnswer` tracks rolling windows; `promoteDimensions` promotes/demotes via accuracy thresholds; `enforcePrerequisites` blocks invalid profiles.
 

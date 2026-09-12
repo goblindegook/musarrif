@@ -14,7 +14,6 @@ import {
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
   pronouns: 0,
-  diacritics: 0,
   forms: 0,
   rootTypes: 0,
   nominals: 0,
@@ -23,7 +22,6 @@ const INITIAL_DIMENSION_PROFILE = {
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
   pronouns: [],
-  diacritics: [],
   forms: [],
   rootTypes: [],
   nominals: [],
@@ -60,22 +58,13 @@ describe('rawPronounPool', () => {
   })
 })
 
-describe('diacriticsDifficulty', () => {
-  const word = 'كَتَبَ'
+describe('exerciseDiacritics', () => {
   const wordWithSukoon = 'يَكْتُبُ'
 
-  test('level 0 returns all diacritics', () => {
-    expect(exerciseDiacritics(word, 0)).toBe(word)
-  })
-
-  test('level 1 returns partial diacritics', () => {
-    const result = exerciseDiacritics(wordWithSukoon, 1)
+  test('renders exercise words with partial diacritics', () => {
+    const result = exerciseDiacritics(wordWithSukoon)
     expect(result).not.toBe(wordWithSukoon)
     expect(result).not.toBe('يكتب')
-  })
-
-  test('level 2 strips diacritics', () => {
-    expect(exerciseDiacritics(word, 2)).toBe('كتب')
   })
 })
 
@@ -85,7 +74,6 @@ describe('randomNominalVerb', () => {
     const selected = randomNominalVerb({
       tenses: 4,
       pronouns: 3,
-      diacritics: 0,
       forms: 9,
       rootTypes: 5,
       nominals: 2,
@@ -97,14 +85,13 @@ describe('randomNominalVerb', () => {
 })
 
 describe('recordDimensionAnswer', () => {
-  test('appends correct to all touched dimensions', () => {
+  test('appends correct to all adaptive dimensions touched by the exercise', () => {
     const next = recordDimensionAnswer(
       { profile: INITIAL_DIMENSION_PROFILE, windows: INITIAL_DIMENSION_WINDOWS },
-      ['tenses', 'pronouns', 'forms', 'rootTypes', 'diacritics'],
+      ['tenses', 'pronouns', 'forms', 'rootTypes'],
       true,
     )
     expect(next.windows).toEqual({
-      diacritics: [true],
       forms: [true],
       nominals: [],
       pronouns: [true],
@@ -120,17 +107,16 @@ describe('recordDimensionAnswer', () => {
         ...INITIAL_DIMENSION_WINDOWS,
         forms: Array(20).fill(true),
         rootTypes: Array(20).fill(true),
-        diacritics: Array(20).fill(true),
       },
     }
-    const next = recordDimensionAnswer(fullStore, ['forms', 'rootTypes', 'diacritics'], true)
+    const next = recordDimensionAnswer(fullStore, ['forms', 'rootTypes'], true)
     expect(next.windows.forms).toHaveLength(20)
   })
 
   test('pass answers count as false', () => {
     const next = recordDimensionAnswer(
       { profile: INITIAL_DIMENSION_PROFILE, windows: INITIAL_DIMENSION_WINDOWS },
-      ['forms', 'rootTypes', 'diacritics'],
+      ['forms', 'rootTypes'],
       false,
     )
     expect(next.windows.forms[0]).toBe(false)
@@ -142,7 +128,7 @@ describe('recordDimensionAnswer', () => {
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 0 },
         windows: INITIAL_DIMENSION_WINDOWS,
       },
-      ['forms', 'rootTypes', 'diacritics'],
+      ['forms', 'rootTypes'],
       true,
     )
     expect(next.windows.nominals).toEqual([true])
@@ -154,7 +140,7 @@ describe('recordDimensionAnswer', () => {
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2, nominals: 0 },
         windows: INITIAL_DIMENSION_WINDOWS,
       },
-      ['forms', 'rootTypes', 'diacritics'],
+      ['forms', 'rootTypes'],
       true,
     )
     expect(next.windows.nominals).toEqual([])
@@ -171,11 +157,11 @@ describe('parseDimensionStore', () => {
 
   test('sanitizes invalid windows and clamps profile levels', () => {
     const sanitized = parseDimensionStore({
-      profile: { tenses: 99, pronouns: 3, diacritics: 2, forms: 9, rootTypes: 5, nominals: 2 },
+      profile: { tenses: 99, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
       windows: {
         tenses: [true, false, 'x'],
         pronouns: [true],
-        diacritics: 'bad',
+        obsoleteDimension: 'bad',
         forms: [false],
         rootTypes: null,
         nominals: [true, true],
@@ -186,8 +172,8 @@ describe('parseDimensionStore', () => {
     expect(sanitized.windows).toMatchObject({
       tenses: [],
       pronouns: [true],
-      diacritics: [],
     })
+    expect(sanitized.windows).not.toHaveProperty('obsoleteDimension')
   })
 })
 
@@ -255,40 +241,6 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
     ).toBe(1)
   })
 
-  test('rolls back diacritics from 2 to 1 when not all dimensions at max', () => {
-    expect(
-      normalizeDimensionStore({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 2,
-          tenses: 4,
-          pronouns: 3,
-          forms: 3,
-          rootTypes: 3,
-          nominals: 1,
-        },
-        windows: INITIAL_DIMENSION_WINDOWS,
-      }).profile.diacritics,
-    ).toBe(1)
-  })
-
-  test('keeps diacritics at 2 when all dimensions at max', () => {
-    expect(
-      normalizeDimensionStore({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 2,
-          tenses: 4,
-          pronouns: 3,
-          forms: 9,
-          rootTypes: 5,
-          nominals: 2,
-        },
-        windows: INITIAL_DIMENSION_WINDOWS,
-      }).profile.diacritics,
-    ).toBe(2)
-  })
-
   test('rolls back nominals to 0 when pronouns drop below plural level, even when tenses stay unlocked', () => {
     const result = normalizeDimensionStore({
       profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 },
@@ -300,7 +252,7 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
     })
   })
 
-  test('keeps unlocked tenses while still rolling back diacritics when prerequisites are unmet', () => {
+  test('keeps unlocked tenses when prerequisites are unmet', () => {
     const result = normalizeDimensionStore({
       profile: {
         tenses: 2,
@@ -308,13 +260,11 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
         forms: 3,
         rootTypes: 3,
         nominals: 2,
-        diacritics: 2,
       },
       windows: INITIAL_DIMENSION_WINDOWS,
     }).profile
     expect(result).toMatchObject({
       tenses: 2,
-      diacritics: 1,
     })
   })
 
@@ -332,103 +282,6 @@ describe('promoteDimensions', () => {
   function filledWindow(correct: number, total = 20): boolean[] {
     return Array.from({ length: total }, (_, i) => i < correct)
   }
-
-  test('diacritics does not promote with only 20 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20) },
-      }).profile.diacritics,
-    ).toBe(0)
-  })
-
-  test('diacritics demotes on partial window when accuracy below threshold', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(0) },
-      }).profile.diacritics,
-    ).toBe(0)
-  })
-
-  test('diacritics does not demote on partial window when accuracy above threshold', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(15, 20) },
-      }).profile.diacritics,
-    ).toBe(1)
-  })
-
-  test('diacritics promotes from level 0 to 1 at 80% over 100 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(80, 100) },
-      }).profile.diacritics,
-    ).toBe(1)
-  })
-
-  test('diacritics does not promote from level 0 with only 50 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 50) },
-      }).profile.diacritics,
-    ).toBe(0)
-  })
-
-  test('diacritics demotes at 40% over 100 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(40, 100) },
-      }).profile.diacritics,
-    ).toBe(0)
-  })
-
-  test('diacritics demotes from level 1 on partial window at exactly 40% accuracy', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, diacritics: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20, 50) },
-      }).profile.diacritics,
-    ).toBe(0)
-  })
-
-  test('diacritics does not promote from level 1 to 2 at 80% over 100 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 1,
-          tenses: 4,
-          pronouns: 3,
-          forms: 9,
-          rootTypes: 5,
-          nominals: 2,
-        },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(80, 100) },
-      }).profile.diacritics,
-    ).toBe(1)
-  })
-
-  test('diacritics promotes from level 1 to 2 at 90% over 100 answers', () => {
-    expect(
-      promoteDimensions({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 1,
-          tenses: 4,
-          pronouns: 3,
-          forms: 9,
-          rootTypes: 5,
-          nominals: 2,
-        },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(90, 100) },
-      }).profile.diacritics,
-    ).toBe(2)
-  })
 
   test('does not demote on partial window when accuracy is above threshold', () => {
     expect(
@@ -489,7 +342,7 @@ describe('promoteDimensions', () => {
   test('does not promote with fewer than 20 answers', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
+        profile: INITIAL_DIMENSION_PROFILE,
         windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(20, 19) },
       }).profile.forms,
     ).toBe(0)
@@ -498,7 +351,7 @@ describe('promoteDimensions', () => {
   test('does not promote below 80% accuracy', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
+        profile: INITIAL_DIMENSION_PROFILE,
         windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(15) },
       }).profile.forms,
     ).toBe(0)
@@ -507,7 +360,7 @@ describe('promoteDimensions', () => {
   test('forms does not promote at exactly 80% accuracy while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
+        profile: INITIAL_DIMENSION_PROFILE,
         windows: { ...INITIAL_DIMENSION_WINDOWS, forms: filledWindow(16) },
       }).profile.forms,
     ).toBe(0)
@@ -633,7 +486,7 @@ describe('promoteDimensions', () => {
   test('tenses does not promote while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
+        profile: INITIAL_DIMENSION_PROFILE,
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
       }).profile.tenses,
     ).toBe(0)
@@ -642,7 +495,7 @@ describe('promoteDimensions', () => {
   test('rootTypes does not promote while pronouns are locked', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE },
+        profile: INITIAL_DIMENSION_PROFILE,
         windows: { ...INITIAL_DIMENSION_WINDOWS, rootTypes: filledWindow(20) },
       }).profile.rootTypes,
     ).toBe(0)
@@ -661,22 +514,6 @@ describe('promoteDimensions', () => {
       tenses: 2,
       nominals: 1,
     })
-  })
-
-  test('corrects legacy diacritics: 2 even with no window activity', () => {
-    expect(
-      promoteDimensions({
-        windows: INITIAL_DIMENSION_WINDOWS,
-        profile: {
-          diacritics: 2,
-          tenses: 4,
-          pronouns: 3,
-          forms: 3,
-          rootTypes: 3,
-          nominals: 1,
-        },
-      }).profile.diacritics,
-    ).toBe(1)
   })
 
   test('tenses blocked at level 0 while pronouns are locked', () => {
@@ -738,13 +575,12 @@ describe('promoteDimensions', () => {
       profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2, forms: 1, rootTypes: 1 },
       windows: { ...INITIAL_DIMENSION_WINDOWS, pronouns: filledWindow(8) },
     })
-    expect(next.profile).toEqual({ diacritics: 0, forms: 1, nominals: 0, pronouns: 0, rootTypes: 1, tenses: 2 })
+    expect(next.profile).toEqual({ forms: 1, nominals: 0, pronouns: 0, rootTypes: 1, tenses: 2 })
   })
 
   test('demotes only one dimension at a time using reverse unlock order', () => {
     const next = promoteDimensions({
       profile: {
-        diacritics: 2,
         forms: 9,
         rootTypes: 3,
         tenses: 4,
@@ -753,7 +589,6 @@ describe('promoteDimensions', () => {
       },
       windows: {
         ...INITIAL_DIMENSION_WINDOWS,
-        diacritics: filledWindow(0, 100),
         forms: filledWindow(0),
         rootTypes: filledWindow(0),
       },
@@ -761,53 +596,17 @@ describe('promoteDimensions', () => {
 
     expect(next).toMatchObject({
       profile: {
-        diacritics: 1,
-        forms: 9,
-        nominals: 2,
+        forms: 8,
+        nominals: 1,
         pronouns: 3,
         rootTypes: 3,
         tenses: 4,
       },
       windows: {
-        diacritics: [],
+        forms: [],
       },
     })
-    expect(next.windows.forms).toHaveLength(20)
     expect(next.windows.rootTypes).toHaveLength(20)
-  })
-
-  test('diacritics blocked at level 1 until all other dimensions are at max', () => {
-    expect(
-      promoteDimensions({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 1,
-          tenses: 4,
-          pronouns: 3,
-          forms: 3,
-          rootTypes: 3,
-          nominals: 1,
-        },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(20) },
-      }).profile.diacritics,
-    ).toBe(1)
-  })
-
-  test('diacritics promotes to level 2 when all other dimensions are at max', () => {
-    expect(
-      promoteDimensions({
-        profile: {
-          ...INITIAL_DIMENSION_PROFILE,
-          diacritics: 1,
-          tenses: 4,
-          pronouns: 3,
-          forms: 9,
-          rootTypes: 5,
-          nominals: 2,
-        },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, diacritics: filledWindow(90, 100) },
-      }).profile.diacritics,
-    ).toBe(2)
   })
 })
 

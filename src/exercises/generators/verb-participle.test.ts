@@ -24,12 +24,8 @@ describe('verbParticipleExercise', () => {
     expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
   })
 
-  test('medium returns exactly four options', () => {
-    expect(verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).options).toHaveLength(4)
-  })
-
-  test('hard returns exactly four options', () => {
-    expect(verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).options).toHaveLength(4)
+  test('returns exactly four options', () => {
+    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
 
   test('correct answer is a valid index into options', () => {
@@ -39,33 +35,22 @@ describe('verbParticipleExercise', () => {
   })
 
   test('all options are unique by visible label', () => {
-    const medium = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(new Set(medium.options).size).toBe(medium.options.length)
-    expect(new Set(hard.options).size).toBe(hard.options.length)
+    expect(new Set(exercise.options).size).toBe(exercise.options.length)
   })
 
-  test('answer matches requested participle type for the shown verb at the same difficulty', () => {
-    const medium = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 })
-    const hard = verbParticipleExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+  test('answer matches requested participle type for the shown verb', () => {
+    const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const mediumVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma, 1) === medium.word)
-    const hardVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma, 2) === hard.word)
+    const matchingVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma) === exercise.word)
 
-    const mediumAnswer = medium.options[medium.answer]
-    const hardAnswer = hard.options[hard.answer]
+    const answer = exercise.options[exercise.answer]
 
     expect(
-      medium.promptTranslationKey === 'exercise.prompt.verbActiveParticiple'
-        ? mediumVerbs.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb), 1) === mediumAnswer)
-        : mediumVerbs.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb), 1) === mediumAnswer),
-    ).toBe(true)
-
-    expect(
-      hard.promptTranslationKey === 'exercise.prompt.verbActiveParticiple'
-        ? hardVerbs.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb), 2) === hardAnswer)
-        : hardVerbs.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb), 2) === hardAnswer),
+      exercise.promptTranslationKey === 'exercise.prompt.verbActiveParticiple'
+        ? matchingVerbs.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === answer)
+        : matchingVerbs.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === answer),
     ).toBe(true)
   })
 })

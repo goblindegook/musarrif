@@ -80,12 +80,12 @@ describe('participleFormExercise', () => {
     const activeMatch = selectedFormVerbs.some(
       (verb) =>
         getAvailableParadigms(verb).includes('active.participle') &&
-        exerciseDiacritics(deriveActiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+        exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
     )
     const passiveMatch = selectedFormVerbs.some(
       (verb) =>
         getAvailableParadigms(verb).includes('passive.participle') &&
-        exerciseDiacritics(derivePassiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+        exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
     )
 
     expect(

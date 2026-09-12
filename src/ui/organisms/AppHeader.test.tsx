@@ -116,8 +116,8 @@ it('exports user data in JSON format', async () => {
     trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1, passed: 0 }],
     srs: {},
     dimensions: {
-      profile: { tenses: 0, pronouns: 0, diacritics: 0, forms: 0, rootTypes: 0, nominals: 0 },
-      windows: { tenses: [], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+      profile: { tenses: 0, pronouns: 0, forms: 0, rootTypes: 0, nominals: 0 },
+      windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
     },
   })
 })

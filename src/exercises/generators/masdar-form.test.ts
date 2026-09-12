@@ -81,7 +81,7 @@ describe('masdarFormExercise', () => {
       matchingVerbs.some(
         (verb) =>
           getAvailableParadigms(verb).includes('masdar') &&
-          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar, 0) === exercise.word),
+          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar) === exercise.word),
       ),
     ).toBe(true)
   })

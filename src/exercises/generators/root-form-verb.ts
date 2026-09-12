@@ -10,13 +10,13 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
   const verb = randomVerb(profile, constraints)
   const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
 
-  const answerDisplay = exerciseDiacritics(verb.lemma, profile.diacritics)
+  const answerDisplay = exerciseDiacritics(verb.lemma)
 
   const distractors = shuffle(
     formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
       const candidate = getVerb(verb.root, form)
-      return exerciseDiacritics(candidate.lemma, profile.diacritics) !== answerDisplay
+      return exerciseDiacritics(candidate.lemma) !== answerDisplay
     }),
   )
     .slice(0, 3)
@@ -26,12 +26,12 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
   const answer = options.findIndex(({ form }) => form === verb.form)
 
   return {
-    dimensions: ['forms', 'rootTypes', 'diacritics'],
+    dimensions: ['forms', 'rootTypes'],
     promptTranslationKey: 'exercise.prompt.rootFormVerb',
     promptParams: { form: formatFormLabel(verb.form, verb.root) },
     word: Array.from(verb.root).join(' '),
     spokenWord: spell(verb.root).join(', '),
-    options: options.map(({ label }) => exerciseDiacritics(label, profile.diacritics)),
+    options: options.map(({ label }) => exerciseDiacritics(label)),
     answer,
     answerText: String(verb.lemma),
     cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),

@@ -91,10 +91,10 @@ describe('formExercise difficulty', () => {
     expect(word).toBe('شَعَرَ')
   })
 
-  test('pronouns:2 diacritics:2 uses random pronoun and strips diacritics (random=0 → active past, 3ms)', () => {
+  test('pronouns:2 uses a random pronoun with the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = verbFormExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, diacritics: 2 })
-    expect(word).toBe('شعر')
+    const { word } = verbFormExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2 })
+    expect(word).toBe('شَعَرَ')
   })
 })
 
@@ -118,7 +118,7 @@ describe('verbFormExercise with constraints', () => {
       paradigmRoots: ['ش', 'ر', 'ب'],
       paradigmForm: 10,
       form: '10',
-      arabic: 'اِسْتَشْرَبَ',
+      arabic: 'اِستَشرَبَ',
       rootType: 'sound',
       tense: 'active.past',
       pronoun: '3ms',

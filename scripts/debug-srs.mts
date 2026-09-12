@@ -94,13 +94,12 @@ const NOMINAL_ORDER: readonly NominalGroup[] = ['participles', 'masdar']
 const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
   tenses: 0,
   pronouns: 0,
-  diacritics: 0,
   forms: 0,
   rootTypes: 0,
   nominals: 0,
 }
 
-const DIMENSION_ORDER: readonly DimensionKey[] = ['tenses', 'pronouns', 'diacritics', 'forms', 'rootTypes', 'nominals']
+const DIMENSION_ORDER: readonly DimensionKey[] = ['tenses', 'pronouns', 'forms', 'rootTypes', 'nominals']
 
 const TENSE_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
 const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
@@ -166,7 +165,6 @@ function loadDimensions(raw: unknown): LoadedDimensions {
   const emptyWindows: Record<DimensionKey, readonly boolean[]> = {
     tenses: [],
     pronouns: [],
-    diacritics: [],
     forms: [],
     rootTypes: [],
     nominals: [],

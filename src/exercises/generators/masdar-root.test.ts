@@ -47,7 +47,9 @@ describe('masdarRootExercise', () => {
     const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
     const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
 
-    expect(matchingVerbs.flatMap((verb) => deriveMasdar(verb).map(String))).toContain(exercise.word)
+    expect(matchingVerbs.flatMap((verb) => deriveMasdar(verb).map(dimensions.exerciseDiacritics))).toContain(
+      exercise.word,
+    )
   })
 
   test('includes exactly three wrong options and all differ from the correct root', () => {

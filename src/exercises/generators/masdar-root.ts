@@ -2,7 +2,7 @@ import { resolveNominalExplanationLayers } from '../../paradigms/explanation'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { normalizeHamza } from '../../paradigms/tokens.ts'
 import type { Verb } from '../../paradigms/verbs.ts'
-import { type DimensionProfile, exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
+import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import {
   mixedWordDistractor,
   randomizeOptions,
@@ -18,13 +18,13 @@ export const masdarRootExercise = defineExercise(
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
     const masdar = random(deriveMasdar(verb))
-    const word = exerciseDiacritics(masdar, profile.diacritics)
-    const options = buildOptions(verb, word, profile)
+    const word = exerciseDiacritics(masdar)
+    const options = buildOptions(verb, word)
     const answer = options.indexOf(verb.root)
     const explanation = resolveNominalExplanationLayers(verb, 'masdar', word)
 
     return {
-      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['nominals', 'forms', 'rootTypes'],
       promptTranslationKey: 'exercise.prompt.masdarRoot',
       word,
       spokenWord: String(masdar),
@@ -40,7 +40,7 @@ export const masdarRootExercise = defineExercise(
   },
 )
 
-function buildOptions(verb: Verb, word: string, profile: DimensionProfile): readonly string[] {
+function buildOptions(verb: Verb, word: string): readonly string[] {
   const generators = [
     singleLetterWordDistractor(verb.root),
     wordSliceDistractor(word, verb.root.length),
@@ -48,5 +48,5 @@ function buildOptions(verb: Verb, word: string, profile: DimensionProfile): read
     Array.from(verb.rootTokens).some((t) => t.isWeak) ? weakAlternativeRootDistractor(verb.root) : null,
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(verb.root, generators, profile, 4, [normalizeHamza])
+  return randomizeOptions(verb.root, generators, 4, [normalizeHamza])
 }

@@ -17,24 +17,22 @@ export const participleFormExercise = defineExercise(
     const passive = paradigms.includes('passive.participle') ? String(derivePassiveParticiple(verb)) : ''
     const kind: Participle = paradigms.includes('passive.participle') ? random(['active', 'passive']) : 'active'
     const participle = kind === 'active' ? active : passive
-    const word = exerciseDiacritics(participle, profile.diacritics)
+    const word = exerciseDiacritics(participle)
 
     const eligibleForms = formsForRoot(verb.root).filter((form) => {
       if (form === verb.form) return false
       const alternative = getVerb(verb.root, form)
       const available = getAvailableParadigms(alternative)
       return kind === 'active'
-        ? available.includes('active.participle') &&
-            exerciseDiacritics(deriveActiveParticiple(alternative), profile.diacritics) !== word
-        : available.includes('passive.participle') &&
-            exerciseDiacritics(derivePassiveParticiple(alternative), profile.diacritics) !== word
+        ? available.includes('active.participle') && exerciseDiacritics(deriveActiveParticiple(alternative)) !== word
+        : available.includes('passive.participle') && exerciseDiacritics(derivePassiveParticiple(alternative)) !== word
     })
 
     const distractors = shuffle(eligibleForms).slice(0, 3)
     const options = [verb.form, ...distractors].sort((a, b) => a - b)
 
     return {
-      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['nominals', 'forms', 'rootTypes'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.activeParticipleForm' : 'exercise.prompt.passiveParticipleForm',
       word,

@@ -60,30 +60,13 @@ describe('conjugationExercise difficulty', () => {
     vi.restoreAllMocks()
   })
 
-  test('diacritics:0 (all): word is شَعَرَ (3ms active past, all diacritics, random=0)', () => {
+  test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(word).toEqualT('شَعَرَ')
   })
 
-  test('medium profile: word is شَعَرَ (3ms active past, some diacritics, random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 1, tenses: 2 })
-    expect(word).toEqualT('شَعَرَ')
-  })
-
-  test('diacritics:2 (none): word has no diacritics (random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { word } = conjugationExercise.generate({
-      ...INITIAL_DIMENSION_PROFILE,
-      pronouns: 2,
-      tenses: 2,
-      diacritics: 2,
-    })
-    expect(word).toBe('شعر')
-  })
-
-  test('pronouns:0/tenses:0: answer is 3ms active past with all diacritics (random=0)', () => {
+  test('pronouns:0/tenses:0: answer is 3ms active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options[answer]).toEqualT('شَعَرَ')
@@ -99,16 +82,14 @@ describe('conjugationExercise difficulty', () => {
   test('tenses:4: promptParams.tense uses unvoiced key (voice not yet unlocked)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 3, diacritics: 2 }).promptParams
-        ?.tense,
+      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 3 }).promptParams?.tense,
     ).toBe('exercise.conjugation.tense.past')
   })
 
   test('tenses:4: promptParams.tense uses voiced key for active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4, diacritics: 2 }).promptParams
-        ?.tense,
+      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4 }).promptParams?.tense,
     ).toBe('exercise.conjugation.tense.active.past')
   })
 
@@ -160,7 +141,6 @@ describe('conjugationExercise distractors', () => {
       ...INITIAL_DIMENSION_PROFILE,
       pronouns: 2,
       tenses: 2,
-      diacritics: 2,
     })
     expect(options.every((o) => o.length > 0)).toBe(true)
   })
@@ -171,7 +151,6 @@ describe('conjugationExercise distractors', () => {
       ...INITIAL_DIMENSION_PROFILE,
       pronouns: 2,
       tenses: 2,
-      diacritics: 2,
     })
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)

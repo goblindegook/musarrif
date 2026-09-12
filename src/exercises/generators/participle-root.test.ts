@@ -52,10 +52,10 @@ describe('participleRootExercise', () => {
     const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
     const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
     const matchesActive = matchingVerbs.some(
-      (verb) => exerciseDiacritics(deriveActiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+      (verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
     )
     const matchesPassive = matchingVerbs.some(
-      (verb) => exerciseDiacritics(derivePassiveParticiple(verb), easyProfile.diacritics) === exercise.word,
+      (verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
     )
 
     expect(

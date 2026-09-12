@@ -39,7 +39,7 @@ export const verbPronounExercise = defineExercise(
       options: options.map((p) => ARABIC_PRONOUNS[p]),
       answer,
       cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
-      dimensions: ['pronouns', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['pronouns', 'forms', 'rootTypes'],
       explanation,
       inputModes: ['multiple-choice'],
     }
@@ -54,15 +54,13 @@ function buildOptions(
   profile: DimensionProfile,
 ): [string, readonly PronounId[]] {
   const conjugated = conjugate(verb, tense)
-  const word = exerciseDiacritics(String(conjugated[pronoun]), profile.diacritics)
+  const word = exerciseDiacritics(String(conjugated[pronoun]))
 
   // Exclude dual pronouns unless the user has reached that level
   const pronouns = pronounPool(Math.max(profile.pronouns, 2) as PronounsLevel)
 
   const eligible = pronouns.filter(
-    (p) =>
-      word !== exerciseDiacritics(String(conjugated[p]), profile.diacritics) &&
-      ARABIC_PRONOUNS[p] !== ARABIC_PRONOUNS[pronoun],
+    (p) => word !== exerciseDiacritics(String(conjugated[p])) && ARABIC_PRONOUNS[p] !== ARABIC_PRONOUNS[pronoun],
   )
 
   const distractors = shuffle(eligible).slice(0, 3)

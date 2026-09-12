@@ -51,19 +51,9 @@ describe('verbPronounExercise difficulty', () => {
     vi.restoreAllMocks()
   })
 
-  test('diacritics:0 (all): word has full diacritics (random=0 → active past 3ms of شعر)', () => {
+  test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
-  })
-
-  test('diacritics:1 (some): word has some diacritics (random=0 → active past 3ms of شعر)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 1 }).word).toEqualT('شَعَرَ')
-  })
-
-  test('diacritics:2 (none): word has no diacritics (random=0 → active past 3ms of شعر)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 }).word).toEqualT('شعر')
   })
 
   test('pronouns:0: options never include dual pronouns', () => {
@@ -83,12 +73,6 @@ describe('verbPronounExercise difficulty', () => {
     const { options, answer } = verbPronounExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 1 })
     expect(options[answer]).toBe('هُوَ')
   })
-
-  test('diacritics:2: correct answer is هُوَ (random=0 → 3ms)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options, answer } = verbPronounExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
-    expect(options[answer]).toBe('هُوَ')
-  })
 })
 
 describe('verbPronounExercise distractor strategies', () => {
@@ -103,9 +87,9 @@ describe('verbPronounExercise distractor strategies', () => {
     expect(distractors.every((d) => d !== word)).toBe(true)
   })
 
-  test('diacritics:2: distractors whose conjugation strips to the same as the word are excluded', () => {
+  test('distractors whose displayed conjugation matches the word are excluded', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    const { options } = verbPronounExercise.generate({ ...INITIAL_DIMENSION_PROFILE, diacritics: 2 })
+    const { options } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
     expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
   })
 })

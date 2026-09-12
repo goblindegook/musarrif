@@ -2,13 +2,7 @@ import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import { getVerb } from '../../paradigms/verbs.ts'
-import {
-  type DimensionProfile,
-  exerciseDiacritics,
-  random,
-  randomGeneratedVerb,
-  randomNominalVerb,
-} from '../dimensions.ts'
+import { exerciseDiacritics, random, randomGeneratedVerb, randomNominalVerb } from '../dimensions.ts'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
@@ -22,14 +16,14 @@ export const verbParticipleExercise = defineExercise(
     const active = String(deriveActiveParticiple(verb))
     const passive = String(derivePassiveParticiple(verb))
     const kind: Participle = passive ? random(['active', 'passive']) : 'active'
-    const answer = exerciseDiacritics(kind === 'active' ? active : passive, profile.diacritics)
-    const options = buildOptions(verb, answer, kind, profile)
+    const answer = exerciseDiacritics(kind === 'active' ? active : passive)
+    const options = buildOptions(verb, answer, kind)
 
     return {
-      dimensions: ['nominals', 'forms', 'rootTypes', 'diacritics'],
+      dimensions: ['nominals', 'forms', 'rootTypes'],
       promptTranslationKey:
         kind === 'active' ? 'exercise.prompt.verbActiveParticiple' : 'exercise.prompt.verbPassiveParticiple',
-      word: exerciseDiacritics(verb.lemma, profile.diacritics),
+      word: exerciseDiacritics(verb.lemma),
       spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
@@ -46,56 +40,48 @@ export const verbParticipleExercise = defineExercise(
   { minNominals: 1 },
 )
 
-function buildOptions(
-  verb: DisplayVerb,
-  answer: string,
-  kind: Participle,
-  profile: DimensionProfile,
-): readonly string[] {
+function buildOptions(verb: DisplayVerb, answer: string, kind: Participle): readonly string[] {
   const generators = [
-    formDistractor(verb, kind, profile),
-    rootDistractor(verb, kind, profile),
-    verb.rootTokens.some((t) => t.isWeak) ? weakRootDistractor(verb, kind, profile) : null,
+    formDistractor(verb, kind),
+    rootDistractor(verb, kind),
+    verb.rootTokens.some((t) => t.isWeak) ? weakRootDistractor(verb, kind) : null,
     singleLetterWordDistractor(answer),
-    oppositeParticipleDistractor(verb, kind, profile),
+    oppositeParticipleDistractor(verb, kind),
   ].filter((generator) => generator != null)
 
-  return randomizeOptions(answer, generators, profile)
+  return randomizeOptions(answer, generators)
 }
 
-function formDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
+function formDistractor(verb: DisplayVerb, kind: Participle): () => string {
   return () => {
     const alternative = randomGeneratedVerb(verb.root)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return exerciseDiacritics(participle, profile.diacritics)
+    return exerciseDiacritics(participle)
   }
 }
 
-function rootDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
+function rootDistractor(verb: DisplayVerb, kind: Participle): () => string {
   const rootGenerator = singleLetterWordDistractor(verb.root)
 
   return () => {
     const alternative = randomGeneratedVerb(rootGenerator(), verb.form)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return exerciseDiacritics(participle, profile.diacritics)
+    return exerciseDiacritics(participle)
   }
 }
 
-function weakRootDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
+function weakRootDistractor(verb: DisplayVerb, kind: Participle): () => string {
   const rootGenerator = weakAlternativeRootDistractor(verb.root)
 
   return () => {
     const alternative = randomGeneratedVerb(rootGenerator(), verb.form)
     const participle = kind === 'active' ? deriveActiveParticiple(alternative) : derivePassiveParticiple(alternative)
-    return exerciseDiacritics(participle, profile.diacritics)
+    return exerciseDiacritics(participle)
   }
 }
 
-function oppositeParticipleDistractor(verb: DisplayVerb, kind: Participle, profile: DimensionProfile): () => string {
+function oppositeParticipleDistractor(verb: DisplayVerb, kind: Participle): () => string {
   const alternative = getVerb(verb.root, verb.form)
   return () =>
-    exerciseDiacritics(
-      kind === 'active' ? derivePassiveParticiple(alternative) : deriveActiveParticiple(alternative),
-      profile.diacritics,
-    )
+    exerciseDiacritics(kind === 'active' ? derivePassiveParticiple(alternative) : deriveActiveParticiple(alternative))
 }

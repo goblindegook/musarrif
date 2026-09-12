@@ -299,7 +299,6 @@ describe('ExerciseStats', () => {
         dimensionProfile: {
           tenses: 4,
           pronouns: 3,
-          diacritics: 0,
           forms: 9,
           rootTypes: 5,
           nominals: 2,
@@ -316,7 +315,6 @@ describe('ExerciseStats', () => {
         dimensionProfile: {
           tenses: 4,
           pronouns: 3,
-          diacritics: 0,
           forms: 9,
           rootTypes: 5,
           nominals: 2,

@@ -6,7 +6,6 @@ import { getUserData, importUserData, type LaunchConsumer, registerUserDataFileL
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
   pronouns: [],
-  diacritics: [],
   forms: [],
   rootTypes: [],
   nominals: [],
@@ -59,10 +58,9 @@ describe('getUserData', () => {
     expect(data.dimensions.profile.tenses).toBe(2)
   })
 
-  test('rolls back dimension levels that violate prerequisites', () => {
+  test('rolls back adaptive dimension levels that violate prerequisites', () => {
     const profile = {
       ...INITIAL_DIMENSION_PROFILE,
-      diacritics: 2,
       tenses: 4,
       pronouns: 3,
       forms: 3,
@@ -71,7 +69,9 @@ describe('getUserData', () => {
     }
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
-    expect(data.dimensions.profile.diacritics).toBe(1)
+    expect(data.dimensions.profile).toMatchObject({
+      nominals: 1,
+    })
   })
 
   test('clamps stored dimension profile levels above current maximums', () => {
@@ -79,7 +79,6 @@ describe('getUserData', () => {
       ...INITIAL_DIMENSION_PROFILE,
       tenses: 5,
       pronouns: 3,
-      diacritics: 2,
       forms: 9,
       rootTypes: 5,
       nominals: 2,
@@ -165,7 +164,7 @@ describe('importUserData', () => {
       settings: { language: 'en', diacriticsPreference: 'all' },
       dimensions: {
         profile,
-        windows: { tenses: [true, false], pronouns: [], diacritics: [], forms: [], rootTypes: [], nominals: [] },
+        windows: { tenses: [true, false], pronouns: [], forms: [], rootTypes: [], nominals: [] },
       },
     })
     importUserData(payload)
