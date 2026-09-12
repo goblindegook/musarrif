@@ -234,7 +234,7 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
           if (!String(conjugation))
             return (
               <BlankRow key={slot.id}>
-                <PronounCell />
+                <PronounCell scope="row" />
                 <VerbCell dir="rtl" lang="ar">
                   {'\u00a0'}
                 </VerbCell>
@@ -246,7 +246,7 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
 
           return (
             <Row key={slot.id}>
-              <PronounCell>
+              <PronounCell scope="row">
                 <span dir="rtl" lang="ar">
                   {applyDiacriticsPreference(ARABIC_PRONOUNS[slot.id], diacriticsPreference)}
                 </span>
@@ -457,7 +457,7 @@ const BlankRow = styled(Row)`
   }
 `
 
-const PronounCell = styled('td')`
+const PronounCell = styled('th')`
   padding: 0.6rem 0.75rem;
   text-align: left;
   font-weight: 600;
