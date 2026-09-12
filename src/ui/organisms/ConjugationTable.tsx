@@ -118,7 +118,7 @@ export function ConjugationTable({
               role="tab"
               id={`voice-tab-${option}`}
               aria-selected={option === selectedVoice}
-              aria-controls={panelId(tabId(option, tense, mood ?? 'indicative'))}
+              aria-controls={panelId(tabId(option, tense, mood))}
               tabIndex={option === selectedVoice ? 0 : -1}
               aria-label={t(VOICE_LABELS[option])}
               onClick={() => onVoiceChange(option)}
@@ -142,7 +142,9 @@ export function ConjugationTable({
                 role="tab"
                 id={`tense-tab-${option}`}
                 aria-selected={option === tense}
-                aria-controls={panelId(tabId(selectedVoice, option, mood ?? 'indicative'))}
+                aria-controls={panelId(
+                  tabId(selectedVoice, option, option === 'present' ? (mood ?? 'indicative') : undefined),
+                )}
                 tabIndex={option === tense ? 0 : -1}
                 aria-label={t(TENSE_LABELS[option])}
                 onClick={() => onTenseChange(option)}
