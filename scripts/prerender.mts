@@ -94,6 +94,7 @@ writeFileSync(
   renderSitemap(
     pages.map((page) => page.path),
     ORIGIN,
+    new Date().toISOString().slice(0, 10),
   ),
 )
 writeFileSync(join(DIST, '404.html'), indexHtml)

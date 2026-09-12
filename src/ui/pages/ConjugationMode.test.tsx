@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/preact'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 import type { Mood, Tense, Voice } from '../../paradigms/tense'
 import { currentUrl, renderWithProviders } from '../../test/fixtures'
@@ -80,6 +80,18 @@ test('marks user-state panels for prerender omission', () => {
 
   expect(favourites).toHaveAttribute('data-prerender', 'omit')
   expect(feedback).toHaveAttribute('data-prerender', 'omit')
+})
+
+test('titles the document with the verb, its gloss and the conjugation keyword', async () => {
+  renderConjugationMode({ verbId: 'ktb-1' })
+
+  await waitFor(() => expect(document.title).toBe('Conjugate كَتَبَ (to write) · Muṣarrif'))
+})
+
+test('drops the gloss from the document title when the verb has none', () => {
+  renderConjugationMode({ verbId: 'ktb-10' })
+
+  expect(document.title).toBe('Conjugate اِستَكتَبَ · Muṣarrif')
 })
 
 test('shows translation subtitle for corpus verb with known translation', async () => {

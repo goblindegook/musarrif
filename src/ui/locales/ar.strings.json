@@ -21,6 +21,8 @@
   "diacritics.none": "عَدَم",
   "diacritics.some": "جُزْئِيَّةٌ",
   "diacritics.title": "ٱلتَّشْكِيلُ",
+  "documentTitle.conjugation": "تَصْرِيفُ {verb}",
+  "documentTitle.conjugation.withGloss": "تَصْرِيفُ {verb} ({gloss})",
   "error.boundary.message": "حَدَثَ خَطَأٌ مَا. عَادَةً مَا تَحُلُّ إِعَادَةُ التَّحْمِيلِ الْمُشْكِلَةَ.",
   "error.boundary.title": "وَاجَهَتْ هَذِهِ الصَّفْحَةُ مُشْكِلَةً.",
   "error.conjugation": "تَعَذَّرَ تَصْرِيفُ هَذَا ٱلْفِعْلِ.",

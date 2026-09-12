@@ -131,19 +131,19 @@ describe('renderDocument', () => {
 })
 
 describe('renderSitemap', () => {
-  test('lists every path as an absolute canonical URL', () => {
-    expect(renderSitemap(['/verbs/', '/verbs/ktb-1/'], 'http://localhost')).toBe(
+  test('lists every path as an absolute canonical URL stamped with the content date', () => {
+    expect(renderSitemap(['/verbs/', '/verbs/ktb-1/'], 'http://localhost', '2026-09-12')).toBe(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-        '  <url><loc>http://localhost/</loc><priority>1.0</priority></url>\n' +
-        '  <url><loc>http://localhost/verbs/</loc><priority>0.8</priority></url>\n' +
-        '  <url><loc>http://localhost/verbs/ktb-1/</loc><priority>0.6</priority></url>\n' +
+        '  <url><loc>http://localhost/</loc><lastmod>2026-09-12</lastmod><priority>1.0</priority></url>\n' +
+        '  <url><loc>http://localhost/verbs/</loc><lastmod>2026-09-12</lastmod><priority>0.8</priority></url>\n' +
+        '  <url><loc>http://localhost/verbs/ktb-1/</loc><lastmod>2026-09-12</lastmod><priority>0.6</priority></url>\n' +
         '</urlset>\n',
     )
   })
 
   test('escapes ampersands so the XML stays well formed', () => {
-    expect(renderSitemap(['/verbs/a&b-1/'], 'http://localhost')).toContain(
+    expect(renderSitemap(['/verbs/a&b-1/'], 'http://localhost', '2026-09-12')).toContain(
       '<loc>http://localhost/verbs/a&amp;b-1/</loc>',
     )
   })

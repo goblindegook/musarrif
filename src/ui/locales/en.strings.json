@@ -21,6 +21,8 @@
   "diacritics.none": "None",
   "diacritics.some": "Some",
   "diacritics.title": "Diacritics",
+  "documentTitle.conjugation": "Conjugate {verb}",
+  "documentTitle.conjugation.withGloss": "Conjugate {verb} ({gloss})",
   "error.boundary.message": "Something went wrong. Reloading usually fixes it.",
   "error.boundary.title": "This page hit a problem.",
   "error.conjugation": "Unable to conjugate this verb.",

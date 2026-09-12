@@ -21,6 +21,8 @@
   "diacritics.none": "Nenhum",
   "diacritics.some": "Alguns",
   "diacritics.title": "Diacríticos",
+  "documentTitle.conjugation": "Conjugação de {verb}",
+  "documentTitle.conjugation.withGloss": "Conjugação de {verb} ({gloss})",
   "error.boundary.message": "Algo correu mal. Recarregar geralmente resolve.",
   "error.boundary.title": "Esta página encontrou um problema.",
   "error.conjugation": "Não foi possível conjugar este verbo.",

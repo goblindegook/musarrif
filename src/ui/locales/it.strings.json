@@ -21,6 +21,8 @@
   "diacritics.none": "Nessuno",
   "diacritics.some": "Alcuni",
   "diacritics.title": "Segni diacritici",
+  "documentTitle.conjugation": "Coniugazione di {verb}",
+  "documentTitle.conjugation.withGloss": "Coniugazione di {verb} ({gloss})",
   "error.boundary.message": "Qualcosa è andato storto. Ricaricare di solito risolve il problema.",
   "error.boundary.title": "Si è verificato un problema in questa pagina.",
   "error.conjugation": "Impossibile coniugare questo verbo.",

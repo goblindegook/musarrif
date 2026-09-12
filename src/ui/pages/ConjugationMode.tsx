@@ -82,10 +82,15 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     [syntheticVerb, verbId, routeVerb],
   )
 
-  const documentTitle = useMemo(
-    () => [formatArabic(selectedVerb.lemma), t('title')].filter(Boolean).join(' · '),
-    [formatArabic, selectedVerb, t],
-  )
+  const documentTitle = useMemo(() => {
+    const verb = formatArabic(selectedVerb.lemma)
+    const gloss = selectedVerb.synthetic || lang === 'ar' ? undefined : t(selectedVerb.id)
+    const conjugation =
+      gloss && gloss !== selectedVerb.id
+        ? t('documentTitle.conjugation.withGloss', { verb, gloss })
+        : t('documentTitle.conjugation', { verb })
+    return [conjugation, t('title')].filter(Boolean).join(' · ')
+  }, [formatArabic, selectedVerb, lang, t])
 
   useDocumentTitle(documentTitle)
 
