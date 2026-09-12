@@ -81,11 +81,9 @@ body:
         - label: fu3la
         - label: fi3al
         - label: mimi
-    validations:
-      required: false
 
   - type: dropdown
-    id: passive_voice
+    id: passive
     attributes:
       label: Passive voice support
       description: If unknown, choose "unknown" and explain in notes
@@ -93,17 +91,6 @@ body:
         - full
         - impersonal
         - none
-        - unknown
-    validations:
-      required: true
-
-  - type: dropdown
-    id: passive_participle
-    attributes:
-      label: Passive participle availability
-      options:
-        - available
-        - not available
         - unknown
     validations:
       required: true
