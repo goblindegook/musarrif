@@ -281,7 +281,7 @@ function buildUniverse(): readonly UniverseCard[] {
       }
 
       for (const tense of availableTenses) {
-        for (const pronoun of pronounSpace(tense, allPronouns, verb.passiveVoice === 'impersonal')) {
+        for (const pronoun of pronounSpace(tense, allPronouns, verb.passive === 'impersonal')) {
           const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
           unique.set(key, {
             key,

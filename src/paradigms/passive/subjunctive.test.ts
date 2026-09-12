@@ -11,7 +11,7 @@ describe('passive present subjunctive', () => {
         fc.constantFrom(
           ...verbs.filter(
             (verb) =>
-              verb.passiveVoice === 'impersonal' && getAvailableParadigms(verb).includes('passive.present.subjunctive'),
+              verb.passive === 'impersonal' && getAvailableParadigms(verb).includes('passive.present.subjunctive'),
           ),
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),

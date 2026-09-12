@@ -23,7 +23,7 @@ describe('getVerbById', () => {
       hollowContraction: undefined,
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
       lexicalMasdars: undefined,
-      passiveVoice: undefined,
+      passive: undefined,
       contractedImperative: undefined,
       lexicalActiveParticiple: undefined,
       valency: [2, 3],
@@ -41,7 +41,7 @@ describe('getVerbById', () => {
       root: 'ضفز',
       rootId: 'Dfz',
       rootTokens: tokenize('ضفز'),
-      passiveVoice: undefined,
+      passive: undefined,
       synthetic: true,
       valency: [],
     })
@@ -129,8 +129,8 @@ describe('getAvailableParadigms', () => {
     ])
   })
 
-  test('excludes all passive.* for a verb with passiveVoice: none', () => {
-    const verb = getVerb('وجب', 1) // passiveVoice: 'none' in roots.json
+  test('excludes all passive.* for a verb with passive: none', () => {
+    const verb = getVerb('وجب', 1) // passive: 'none' in roots.json
     const available = getAvailableParadigms(verb)
     expect(available.filter((p) => p.startsWith('passive'))).toHaveLength(0)
   })

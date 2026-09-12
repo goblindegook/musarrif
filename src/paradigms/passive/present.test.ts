@@ -11,7 +11,7 @@ describe('passive present indicative', () => {
         fc.constantFrom(
           ...verbs.filter(
             (verb) =>
-              verb.passiveVoice === 'impersonal' && getAvailableParadigms(verb).includes('passive.present.indicative'),
+              verb.passive === 'impersonal' && getAvailableParadigms(verb).includes('passive.present.indicative'),
           ),
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),

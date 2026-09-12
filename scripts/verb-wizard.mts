@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { confirm, input, select } from '@inquirer/prompts'
 import { transliterate } from '@pacote/buckwalter'
 import { FORM_I_PATTERNS, type FormIPattern } from '../src/paradigms/form-i-vowels.ts'
-import { MASDAR_PATTERNS, type MasdarPattern, type PassiveVoice, type TriliteralForm } from '../src/paradigms/verbs.ts'
+import { MASDAR_PATTERNS, type MasdarPattern, type Passive, type TriliteralForm } from '../src/paradigms/verbs.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -31,7 +31,7 @@ interface RootEntry {
   vowels?: FormIPattern
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
-  passiveVoice?: PassiveVoice
+  passive?: Passive
   contractedImperative?: boolean
 }
 
@@ -42,7 +42,7 @@ interface LocaleData {
 
 type LocaleMap = Record<LanguageCode, LocaleData>
 type Translations = Record<LanguageCode, string>
-type PassiveVoiceSelection = 'full' | PassiveVoice
+type PassiveSelection = 'full' | Passive
 
 interface WizardState {
   rootStr: string
@@ -50,7 +50,7 @@ interface WizardState {
   editEntry: RootEntry | null
   form: TriliteralForm | null
   vowels?: FormIPattern
-  passiveVoice?: PassiveVoice
+  passive?: Passive
   masdars?: MasdarPatternChoice[]
   lexicalMasdars?: string[]
   isNewRoot: boolean
@@ -158,7 +158,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
     editEntry: null,
     form: null,
     vowels: undefined,
-    passiveVoice: undefined,
+    passive: undefined,
     masdars: undefined,
     lexicalMasdars: undefined,
     isNewRoot: false,
@@ -184,7 +184,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.editEntry = null
       state.form = null
       state.vowels = undefined
-      state.passiveVoice = undefined
+      state.passive = undefined
       state.masdars = undefined
       state.lexicalMasdars = undefined
       state.isNewRoot = !locales.en.roots[rootStr]
@@ -202,7 +202,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
           if (e.vowels) parts.push(`vowels: ${e.vowels}`)
           if (e.masdars?.length) parts.push(`masdars: [${e.masdars.join(', ')}]`)
           if (e.lexicalMasdars?.length) parts.push(`lexicalMasdars: [${e.lexicalMasdars.join(', ')}]`)
-          if (e.passiveVoice) parts.push(`passive: ${e.passiveVoice}`)
+          if (e.passive) parts.push(`passive: ${e.passive}`)
           console.log(`  ${e.root}-${e.form}: ${parts.join(', ')}`)
         }
         console.log()
@@ -232,7 +232,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       state.editEntry = state.existing.find((e) => e.form === form) ?? null
       state.vid = verbId(state.rootStr, form)
       state.vowels = undefined
-      state.passiveVoice = undefined
+      state.passive = undefined
       state.masdars = undefined
       state.lexicalMasdars = undefined
       step += 1
@@ -264,12 +264,12 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
 
     if (step === 3) {
       if (state.form === 9) {
-        state.passiveVoice = undefined
+        state.passive = undefined
         step += 1
         continue
       }
 
-      const passiveVoice = await select<PassiveVoiceSelection | Back>({
+      const passive = await select<PassiveSelection | Back>({
         message: 'Passive voice support:',
         choices: [
           { name: '← Back', value: BACK },
@@ -277,15 +277,15 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
           { name: 'impersonal — 3ms only', value: 'impersonal' },
           { name: 'none — no passive voice', value: 'none' },
         ],
-        default: state.editEntry?.passiveVoice ?? 'full',
+        default: state.editEntry?.passive ?? 'full',
       })
 
-      if (passiveVoice === BACK) {
+      if (passive === BACK) {
         step -= 1
         continue
       }
 
-      state.passiveVoice = passiveVoice === 'full' ? undefined : passiveVoice
+      state.passive = passive === 'full' ? undefined : passive
       step += 1
       continue
     }
@@ -394,7 +394,7 @@ async function runSingle(roots: RootEntry[], locales: LocaleMap): Promise<boolea
       const lexicalMasdars = [...new Set((state.lexicalMasdars ?? []).map((value) => normalizeArabic(value)))]
       if (lexicalMasdars.length > 0) entry.lexicalMasdars = lexicalMasdars
 
-      if (state.passiveVoice != null) entry.passiveVoice = state.passiveVoice
+      if (state.passive != null) entry.passive = state.passive
       if (state.editEntry?.contractedImperative) entry.contractedImperative = true
 
       console.log('\n─── Summary ───────────────────────────────')

@@ -59,7 +59,7 @@ export const MASDAR_PATTERNS = [
 ] as const
 
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
-export type PassiveVoice = 'none' | 'impersonal'
+export type Passive = 'none' | 'impersonal'
 export type Valency = 1 | 2 | 3
 export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
@@ -69,7 +69,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   form: Form
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
-  passiveVoice?: PassiveVoice
+  passive?: Passive
   lexicalPassiveParticiple?: string
   valency: readonly Valency[]
 }

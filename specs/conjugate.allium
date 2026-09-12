@@ -124,7 +124,7 @@ enum MasdarPatternName {
 -- Absent means the full passive paradigm (all pronouns) is available.
 -- none = no passive voice at all; impersonal = only 3ms is grammatical
 -- (subject unexpressed).
-enum PassiveVoice { none | impersonal }
+enum Passive { none | impersonal }
 
 -- Some Form I hollow verbs contract their stem in the jussive and imperative;
 -- the corpus records the behaviour explicitly where it is irregular.
@@ -187,7 +187,7 @@ entity Verb {
     lexicalPassiveParticiple: String?
 
     -- Passive restriction; absent means the full passive paradigm is available.
-    passiveVoice: PassiveVoice?
+    passive: Passive?
 
     -- true for some Form I verbs whose first radical is a weak letter;
     -- their imperative is contracted (hamzat al-wasl is dropped).
@@ -207,7 +207,7 @@ entity Verb {
     id: String            -- rootId + "-" + form, e.g. "ktb-1"; Form I roots with more
                           -- than one attested reading append the pattern, e.g. "Hsb-1-a-u"
     lemma: String         -- 3ms active past in Arabic script (citation form)
-    supportsPassive: passiveVoice != none
+    supportsPassive: passive != none
     supportsPassiveParticiple: supportsPassive
 }
 
@@ -372,7 +372,7 @@ invariant ImperativeSecondPersonOnly {
 -- Impersonal passive verbs produce only the 3ms form (subject is unexpressed)
 invariant ImpersonalPassiveConjugation {
     for t in ConjugationTables:
-        (t.tense.voice = passive and t.verb.passiveVoice = impersonal)
+        (t.tense.voice = passive and t.verb.passive = impersonal)
             implies (t.forms.count = 1 and t.forms.all(f => f.pronounId.code = "3ms"))
 }
 

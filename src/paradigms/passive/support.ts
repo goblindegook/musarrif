@@ -7,6 +7,6 @@ export function constrainPassiveConjugation<T>(
   conjugation: Record<PronounId, T>,
   emptyValue: T,
 ): Record<PronounId, T> {
-  if (verb.passiveVoice !== 'impersonal') return conjugation
+  if (verb.passive !== 'impersonal') return conjugation
   return mapRecord(conjugation, (value, pronounId) => (pronounId === '3ms' ? value : emptyValue))
 }

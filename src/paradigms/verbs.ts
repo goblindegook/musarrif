@@ -11,7 +11,7 @@ import type {
   DisplayVerbForRootAndForm,
   HollowContractionBehaviour,
   MasdarPattern,
-  PassiveVoice,
+  Passive,
   QuadriliteralForm,
   QuadriliteralRoot,
   QuadriliteralRootTokens,
@@ -35,7 +35,7 @@ export type {
   FormIVerb,
   MasdarPattern,
   NonFormIVerb,
-  PassiveVoice,
+  Passive as Passive,
   QuadriliteralForm,
   QuadriliteralVerb,
   TriliteralDisplayVerb,
@@ -83,7 +83,7 @@ type RawVerb = {
   vowels?: FormIPattern
   hollowContraction?: HollowContractionBehaviour
   contractedImperative?: boolean
-  passiveVoice?: PassiveVoice
+  passive?: Passive
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   lexicalActiveParticiple?: string
@@ -181,7 +181,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             form: 1,
             masdars: raw.masdars,
             lexicalMasdars: raw.lexicalMasdars,
-            passiveVoice: raw.passiveVoice,
+            passive: raw.passive,
             valency: raw.valency ?? [],
           }
         : {
@@ -189,7 +189,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
             rootTokens,
             form: raw.form as Exclude<QuadriliteralForm, 1>,
             lexicalMasdars: raw.lexicalMasdars,
-            passiveVoice: raw.passiveVoice,
+            passive: raw.passive,
             valency: raw.valency ?? [],
           },
     )
@@ -204,7 +204,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       hollowContraction: raw.hollowContraction,
       masdars: raw.masdars,
       lexicalMasdars: raw.lexicalMasdars,
-      passiveVoice: raw.passiveVoice,
+      passive: raw.passive,
       contractedImperative: raw.contractedImperative,
       lexicalActiveParticiple: raw.lexicalActiveParticiple,
       valency: raw.valency ?? [],
@@ -219,7 +219,7 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     masdars: raw.masdars,
     lexicalMasdars: raw.lexicalMasdars,
     // Form VII supports at most an impersonal passive.
-    passiveVoice: raw.passiveVoice ?? (raw.form === 7 ? 'impersonal' : undefined),
+    passive: raw.passive ?? (raw.form === 7 ? 'impersonal' : undefined),
     valency: raw.valency ?? [],
   })
 }
@@ -334,7 +334,7 @@ function buildSyntheticVerb(root: string, form: TriliteralForm, pattern: FormIPa
           rootTokens,
           form: form as Exclude<TriliteralForm, 1>,
           // Form VII supports at most an impersonal passive.
-          passiveVoice: form === 7 ? 'impersonal' : undefined,
+          passive: form === 7 ? 'impersonal' : undefined,
           valency: matchingNonFormI?.valency ?? [],
         },
     true,
@@ -354,5 +354,5 @@ export function getAvailableParadigms(verb: Verb): VerbParadigm[] {
       'active.future',
     ]
 
-  return ALL_PARADIGMS.filter((paradigm) => !(paradigm.startsWith('passive') && verb.passiveVoice === 'none'))
+  return ALL_PARADIGMS.filter((paradigm) => !(paradigm.startsWith('passive') && verb.passive === 'none'))
 }

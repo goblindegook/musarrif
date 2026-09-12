@@ -10,7 +10,7 @@ describe('passive past pattern', () => {
       fc.property(
         fc.constantFrom(
           ...verbs.filter(
-            (verb) => verb.passiveVoice === 'impersonal' && getAvailableParadigms(verb).includes('passive.past'),
+            (verb) => verb.passive === 'impersonal' && getAvailableParadigms(verb).includes('passive.past'),
           ),
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),

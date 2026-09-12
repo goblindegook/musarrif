@@ -241,7 +241,7 @@ export const cardSpace = memoize(
 
       for (const kind of VERB_EXERCISES) {
         for (const tense of availableVerbTenses) {
-          for (const pronoun of pronounSpace(tense, verb.passiveVoice === 'impersonal')) {
+          for (const pronoun of pronounSpace(tense, verb.passive === 'impersonal')) {
             const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
             unique.set(key, { key, kind, rootType, form: verb.form, tense, pronoun })
           }

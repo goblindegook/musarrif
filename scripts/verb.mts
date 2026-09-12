@@ -20,7 +20,7 @@ async function run() {
   writeFileSync(ROOTS_PATH, `${JSON.stringify(upsertRootEntry(roots, entry), null, 2)}\n`)
   execFileSync(join(ROOT, 'node_modules/.bin/biome'), ['format', '--write', ROOTS_PATH], { stdio: 'ignore' })
 
-  if (entry.passiveVoice) console.warn(`${source} reported no full passive, wrote passiveVoice: ${entry.passiveVoice}`)
+  if (entry.passive) console.warn(`${source} reported no full passive, wrote passive: ${entry.passive}`)
   console.log(`${existing ? 'Updated' : 'Added'} ${verb.id} in ${ROOTS_PATH}`)
   console.log(JSON.stringify(entry, null, 2))
 }

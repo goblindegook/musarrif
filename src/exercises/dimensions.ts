@@ -108,12 +108,12 @@ export function randomPronoun(verb: DisplayVerb, tense: VerbTense, pronouns: Pro
     const imperativePool = PRONOUN_POOLS[pronouns].filter((p) => p.startsWith('2'))
     return imperativePool.length > 0 ? random(imperativePool) : '2ms'
   }
-  if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return '3ms'
+  if (tense.startsWith('passive') && verb.passive === 'impersonal') return '3ms'
   return random(PRONOUN_POOLS[pronouns])
 }
 
 export function normalizeExercisePronoun(verb: DisplayVerb, tense: VerbTense, pronoun: PronounId): PronounId {
-  if (tense.startsWith('passive') && verb.passiveVoice === 'impersonal') return '3ms'
+  if (tense.startsWith('passive') && verb.passive === 'impersonal') return '3ms'
   return pronoun
 }
 

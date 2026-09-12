@@ -51,7 +51,7 @@ describe('buildRootEntry', () => {
     const verb = getVerb('ذهب', 1, 'a-a')
 
     expect(buildRootEntry(verb, { paradigms: {}, nominals: { activeParticiple: 'ذَاهِب' } })).toMatchObject({
-      passiveVoice: 'none',
+      passive: 'none',
     })
   })
 
@@ -59,7 +59,7 @@ describe('buildRootEntry', () => {
     const verb = getVerb('شعر', 1, 'a-u')
 
     expect(buildRootEntry(verb, parsed({ paradigms: { 'passive past': { '3ms': ['شُعِرَ'] } } }))).toMatchObject({
-      passiveVoice: 'impersonal',
+      passive: 'impersonal',
     })
   })
 

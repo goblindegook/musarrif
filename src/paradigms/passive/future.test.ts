@@ -14,7 +14,7 @@ describe('passive future', () => {
       fc.property(
         fc.constantFrom(
           ...verbs.filter(
-            (verb) => verb.passiveVoice === 'impersonal' && getAvailableParadigms(verb).includes('passive.future'),
+            (verb) => verb.passive === 'impersonal' && getAvailableParadigms(verb).includes('passive.future'),
           ),
         ),
         fc.constantFrom(...PRONOUN_IDS.filter((pronounId) => pronounId !== '3ms')),
@@ -31,7 +31,7 @@ describe('passive future', () => {
         fc.constantFrom(
           ...verbs.filter((verb) => {
             const available = getAvailableParadigms(verb)
-            return verb.passiveVoice !== 'impersonal' && available.includes('passive.future')
+            return verb.passive !== 'impersonal' && available.includes('passive.future')
           }),
         ),
         fc.constantFrom(...PRONOUN_IDS),

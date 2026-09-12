@@ -6,7 +6,7 @@ import {
   isTriliteralFormIDisplayVerb,
   MASDAR_PATTERNS,
   type MasdarPattern,
-  type PassiveVoice,
+  type Passive,
   type TriliteralForm,
   type Valency,
   type Verb,
@@ -21,7 +21,7 @@ export interface RootEntry {
   contractedImperative?: boolean
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
-  passiveVoice?: PassiveVoice
+  passive?: Passive
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
@@ -57,7 +57,7 @@ function selectMasdars(verb: DisplayVerb, sourceMasdars: readonly string[]): Mas
   }
 }
 
-function selectPassiveVoice(parsed: ParsedParadigms): PassiveVoice | undefined {
+function selectPassive(parsed: ParsedParadigms): Passive | undefined {
   const pronouns = Object.keys(parsed.paradigms['passive past'] ?? {})
   if (pronouns.length === 0) return 'none'
   if (pronouns.every((pronoun) => pronoun === '3ms')) return 'impersonal'
@@ -66,7 +66,7 @@ function selectPassiveVoice(parsed: ParsedParadigms): PassiveVoice | undefined {
 
 export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, existing?: RootEntry): RootEntry {
   const { masdars, lexicalMasdars } = selectMasdars(verb, parsed.nominals.masdar ?? [])
-  const passiveVoice = selectPassiveVoice(parsed)
+  const passive = selectPassive(parsed)
   const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined
   const carried = existing?.vowels === vowels ? existing : undefined
 
@@ -78,7 +78,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     ...(carried?.contractedImperative ? { contractedImperative: true } : {}),
     ...(masdars ? { masdars } : {}),
     ...(lexicalMasdars ? { lexicalMasdars } : {}),
-    ...(passiveVoice ? { passiveVoice } : {}),
+    ...(passive ? { passive } : {}),
     ...(carried?.lexicalActiveParticiple ? { lexicalActiveParticiple: carried.lexicalActiveParticiple } : {}),
     ...(carried?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: carried.lexicalPassiveParticiple } : {}),
     ...(carried?.valency?.length ? { valency: carried.valency } : {}),
