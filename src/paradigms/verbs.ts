@@ -35,7 +35,7 @@ export type {
   FormIVerb,
   MasdarPattern,
   NonFormIVerb,
-  Passive as Passive,
+  Passive,
   QuadriliteralForm,
   QuadriliteralVerb,
   TriliteralDisplayVerb,
