@@ -118,7 +118,7 @@ export function ConjugationTable({
               role="tab"
               id={`voice-tab-${option}`}
               aria-selected={option === selectedVoice}
-              aria-controls={panelId(verbTense)}
+              aria-controls={panelId(tabId(option, tense, mood ?? 'indicative'))}
               tabIndex={option === selectedVoice ? 0 : -1}
               aria-label={t(VOICE_LABELS[option])}
               onClick={() => onVoiceChange(option)}
@@ -142,7 +142,7 @@ export function ConjugationTable({
                 role="tab"
                 id={`tense-tab-${option}`}
                 aria-selected={option === tense}
-                aria-controls={panelId(verbTense)}
+                aria-controls={panelId(tabId(selectedVoice, option, mood ?? 'indicative'))}
                 tabIndex={option === tense ? 0 : -1}
                 aria-label={t(TENSE_LABELS[option])}
                 onClick={() => onTenseChange(option)}
@@ -165,7 +165,7 @@ export function ConjugationTable({
                   role="tab"
                   id={`mood-tab-${option}`}
                   aria-selected={option === mood}
-                  aria-controls={panelId(verbTense)}
+                  aria-controls={panelId(tabId(selectedVoice, 'present', option))}
                   tabIndex={option === mood ? 0 : -1}
                   aria-label={t(MOOD_LABELS[option])}
                   size="sm"
@@ -181,28 +181,31 @@ export function ConjugationTable({
           )}
         </TenseBlock>
       </TabBlock>
-      {paradigms.map((paradigm) => (
-        <ParadigmPanel
-          key={paradigm}
-          role="tabpanel"
-          id={panelId(paradigm)}
-          aria-label={t(`tense.${paradigm}`)}
-          data-selected={paradigm === verbTense ? 'true' : 'false'}
-          data-print={paradigm.endsWith('.future') ? 'omit' : undefined}
-        >
-          <ParadigmTable
-            verb={verb}
-            verbTense={paradigm}
-            diacriticsPreference={diacriticsPreference}
-            interactive={paradigm === verbTense}
-          />
-        </ParadigmPanel>
-      ))}
+      {paradigms.map((paradigm) => {
+        const [pVoice, pTense, pMood] = paradigm.split('.')
+        return (
+          <ParadigmPanel
+            key={paradigm}
+            role="tabpanel"
+            id={panelId(tabId(pVoice, pTense, pMood))}
+            aria-label={t(`tense.${paradigm}`)}
+            data-selected={paradigm === verbTense ? 'true' : 'false'}
+            data-print={paradigm.endsWith('.future') ? 'omit' : undefined}
+          >
+            <ParadigmTable
+              verb={verb}
+              verbTense={paradigm}
+              diacriticsPreference={diacriticsPreference}
+              interactive={paradigm === verbTense}
+            />
+          </ParadigmPanel>
+        )
+      })}
     </TabsContainer>
   )
 }
 
-const panelId = (verbTense: VerbTense) => `conjugation-panel-${verbTense}`
+const panelId = (id: string) => `conjugation-panel-${id}`
 
 interface ParadigmTableProps {
   verb: DisplayVerb
@@ -283,6 +286,8 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
     </Table>
   )
 }
+
+const tabId = (...parts: (string | undefined)[]) => parts.join('.')
 
 function tabKeyDown<T extends string>(
   options: readonly T[],
