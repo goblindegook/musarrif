@@ -221,15 +221,26 @@ function buildCategory<K extends MasteryCategoryId>(id: K, items: readonly Maste
   return { id, items, score: average(items.map((item) => item.score)), locked: items.every((item) => item.locked) }
 }
 
-export function findLowestMastery<K extends MasteryCategoryId>(
-  mastery: readonly MasteryCategory<K>[],
-  limit = 5,
-): readonly MasteryItem<K>[] {
-  const unlocked = mastery.flatMap((cat) => cat.items.filter((item) => !item.locked))
-  if (unlocked.length === 0) return []
-  const sorted = unlocked.toSorted((a, b) => a.score - b.score)
-  const threshold = sorted[Math.min(2, sorted.length - 1)].score
-  return sorted.slice(0, limit).filter((item) => item.score <= threshold)
+export function insightItemIds(
+  candidate: Pick<InsightCandidate, 'type' | 'value'>,
+  profile: DimensionProfile,
+): readonly MasteryItemId[] {
+  switch (candidate.type) {
+    case 'rootType':
+      return [`rootTypes.${candidate.value}` as MasteryItemId]
+    case 'tense':
+      return [`tenses.${candidate.value}` as MasteryItemId]
+    case 'form':
+      return [`forms.${candidate.value}` as MasteryItemId]
+    case 'nominal':
+      return [`nominals.${candidate.value}` as MasteryItemId]
+    case 'pronounClass': {
+      const unlocked = pronounPool(profile.pronouns)
+      return PRONOUN_CLASS_MEMBERS[candidate.value as PronounClassId]
+        .filter((pronoun) => unlocked.includes(pronoun))
+        .map((pronoun) => `pronouns.${pronoun}` as MasteryItemId)
+    }
+  }
 }
 
 export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass' | 'nominal'
@@ -275,6 +286,7 @@ export interface InsightData {
   stuck: {
     topDimensions: readonly InsightCandidate[]
   }
+  focus: readonly InsightCandidate[]
   recommendation: readonly Recommendation[]
 }
 
@@ -479,6 +491,7 @@ export function computeInsights(
     overdue: { count: overdueCount },
     backlog,
     stuck,
+    focus: stuck.topDimensions.length > 0 ? stuck.topDimensions : challenge,
     recommendation: buildRecommendations(trend, volume.trend, backlog.state, stuck, challenge),
   }
 }

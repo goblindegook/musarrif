@@ -791,6 +791,33 @@ describe('focus chip', () => {
     )
   })
 
+  test('marks the item insights call the current challenge as recommended', () => {
+    localStorage.setItem(
+      'conjugator:dimensions',
+      JSON.stringify({
+        profile: { tenses: 1, pronouns: 1, forms: 1, rootTypes: 1, nominals: 0 },
+        windows: { tenses: [], pronouns: [], forms: [], rootTypes: [], nominals: [] },
+      }),
+    )
+    const mature = { interval: 90, ef: 2.5, repetitions: 6, dueDate: '2999-01-01' }
+    const fresh = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2999-01-01' }
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:1:active.past:3ms': mature,
+        'verbForm:sound:1:active.past:3ms': mature,
+        'verbRoot:sound:1:active.past:3ms': mature,
+        'conjugation:sound:2:active.past:3ms': fresh,
+        'verbForm:sound:2:active.past:3ms': fresh,
+        'verbRoot:sound:2:active.past:3ms': fresh,
+      }),
+    )
+    renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
+    fireEvent.click(screen.getByText(/focus/i).closest('button')!)
+    fireEvent.click(screen.getByText('Form', { selector: 'button' }))
+    expect(screen.getByLabelText('Form II, recommended')).toBeInTheDocument()
+  })
+
   test('shows group picker when multiple dimensions have options', () => {
     localStorage.setItem(
       'conjugator:dimensions',

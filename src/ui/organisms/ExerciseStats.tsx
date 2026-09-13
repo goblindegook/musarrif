@@ -3,7 +3,10 @@ import { useMemo, useState } from 'preact/hooks'
 import 'uplot/dist/uPlot.min.css'
 import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../exercises/dimensions'
 import {
+  computeInsights,
   computeMastery,
+  type InsightCandidate,
+  type InsightData,
   type MasteryCategoryId,
   type MasteryCategory as MasteryCategoryType,
   type MasteryItem as MasteryItemData,
@@ -51,6 +54,10 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   const { stats, streak, findDate: findStats, getDailyWindow: days } = useStats()
   const dateFormatter = useMemo(() => new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric' }), [lang])
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
+  const insights = useMemo(
+    () => computeInsights(dimensionProfile, srsStore, stats),
+    [dimensionProfile, srsStore, stats],
+  )
   const week = useMemo(() => days(7), [days])
   const [insightsOpen, setInsightsOpen] = useState(false)
 
@@ -59,8 +66,8 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   yesterday.setDate(today.getDate() - 1)
 
   const [streakHintKey, streakHintParams] = useMemo(
-    () => buildStreakHint(streak, findStats(today), findStats(yesterday), mastery),
-    [streak, findStats, mastery],
+    () => buildStreakHint(streak, findStats(today), findStats(yesterday), insights),
+    [streak, findStats, insights],
   )
 
   if (stats.length === 0) return null
@@ -287,22 +294,6 @@ function StatsDetailsPanel({ mastery, onOpenInsights }: StatsDetailsPanelProps) 
   )
 }
 
-function strongestMasteryItem(
-  mastery: readonly MasteryCategoryType<MasteryCategoryId>[],
-): MasteryItemData<MasteryCategoryId> | null {
-  const unlockedItems = mastery.flatMap((category) => category.items.filter((item) => !item.locked))
-  if (unlockedItems.length === 0) return null
-  return unlockedItems.reduce((strongest, item) => (item.score > strongest.score ? item : strongest), unlockedItems[0])
-}
-
-function weakestMasteryItem(
-  mastery: readonly MasteryCategoryType<MasteryCategoryId>[],
-): MasteryItemData<MasteryCategoryId> | null {
-  const unlockedItems = mastery.flatMap((category) => category.items.filter((item) => !item.locked))
-  if (unlockedItems.length === 0) return null
-  return unlockedItems.reduce((weakest, item) => (item.score < weakest.score ? item : weakest), unlockedItems[0])
-}
-
 interface StreakHintParams extends Record<string, string | undefined> {
   remaining?: string
   target?: string
@@ -311,15 +302,19 @@ interface StreakHintParams extends Record<string, string | undefined> {
   form?: string
 }
 
-function masteryItemLabelDescriptor(item: MasteryItemData<MasteryCategoryId>): [key: string, form: string] {
-  const { categoryId, value } = item
-  if (categoryId === 'rootTypes') return [ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS], '']
-  if (categoryId === 'forms') return ['exercise.stats.mastery.form', toRoman(parseInteger(String(value), 0))]
-  if (categoryId === 'tenses') return [`tense.${value}`, '']
-  if (categoryId === 'pronouns') return [`pronoun.${value}`, '']
-  if (categoryId === 'nominals' && value === 'participles') return ['exercise.stats.mastery.nominal.participles', '']
-  if (categoryId === 'nominals' && value === 'masdar') return ['exercise.stats.mastery.nominal.masdar', '']
-  return ['', '']
+function candidateLabelDescriptor({ type, value }: InsightCandidate): [key: string, form: string] {
+  switch (type) {
+    case 'rootType':
+      return [ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS], '']
+    case 'form':
+      return ['exercise.stats.mastery.form', toRoman(parseInteger(value, 0))]
+    case 'tense':
+      return [`tense.${value}`, '']
+    case 'pronounClass':
+      return [`exercise.insights.pronounClass.${value}`, '']
+    case 'nominal':
+      return [`exercise.stats.mastery.nominal.${value}`, '']
+  }
 }
 
 function resolveStreakHintParams(t: Translate, streakHintParams: StreakHintParams) {
@@ -338,7 +333,7 @@ function buildStreakHint(
   streak: Streak,
   today?: DailyActivity,
   yesterday?: DailyActivity,
-  mastery: readonly MasteryCategoryType<MasteryCategoryId>[] = [],
+  insights?: InsightData,
 ): [string, StreakHintParams] {
   if (streak.remaining > 1) return ['exercise.stats.progressHint.streak', { remaining: String(streak.remaining) }]
   if (streak.remaining === 1) return ['exercise.stats.progressHint.streak.almostThere', {}]
@@ -353,17 +348,15 @@ function buildStreakHint(
   if (passed >= Math.max(attempted, 4)) return ['exercise.stats.progressHint.skipping', {}]
   if (attempted >= 12 && correct / attempted >= 0.9) return ['exercise.stats.progressHint.excellent', {}]
 
-  const strongest = strongestMasteryItem(mastery)
-  const weakest = weakestMasteryItem(mastery)
-  const spread = strongest != null && weakest != null ? strongest.score - weakest.score : 0
-
-  if (strongest != null && strongest.score >= 0.75 && spread >= 0.25) {
-    const [dimensionLabelKey, form] = masteryItemLabelDescriptor(strongest)
+  const strongest = insights?.strengths[0]
+  if (strongest != null && strongest.score >= 0.75) {
+    const [dimensionLabelKey, form] = candidateLabelDescriptor(strongest)
     return ['exercise.stats.progressHint.strongDimension', { dimensionLabelKey, form }]
   }
 
-  if (weakest != null && weakest.score <= 0.25 && spread >= 0.25) {
-    const [dimensionLabelKey, form] = masteryItemLabelDescriptor(weakest)
+  const stuck = insights?.stuck.topDimensions[0]
+  if (stuck != null) {
+    const [dimensionLabelKey, form] = candidateLabelDescriptor(stuck)
     return ['exercise.stats.progressHint.weakDimension', { dimensionLabelKey, form }]
   }
 

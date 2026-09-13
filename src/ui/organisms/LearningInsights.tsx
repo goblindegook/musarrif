@@ -67,27 +67,31 @@ export function LearningInsights() {
           </SectionText>
         </Section>
       )}
-      <Section>
-        <SectionText>
-          <SectionLabel>{t('exercise.insights.heading.strengths')}:</SectionLabel>{' '}
-          {buildSectionText(t, insights.strengths, 'strengths', 'exercise.insights.strengths.none')}
-        </SectionText>
-      </Section>
-      <Section>
-        <SectionText>
-          <SectionLabel>{t('exercise.insights.heading.challenge')}:</SectionLabel>{' '}
-          {insights.stuck.topDimensions.length > 0
-            ? insights.stuck.topDimensions.length === 1
-              ? t('exercise.insights.difficult.single', {
-                  value: t(candidateKey(insights.stuck.topDimensions[0])),
-                })
-              : t('exercise.insights.difficult.pair', {
-                  value1: t(candidateKey(insights.stuck.topDimensions[0])),
-                  value2: t(candidateKey(insights.stuck.topDimensions[1])),
-                })
-            : buildSectionText(t, insights.challenge, 'challenge', 'exercise.insights.challenge.none')}
-        </SectionText>
-      </Section>
+      {insights.strengths.length > 0 && (
+        <Section>
+          <SectionText>
+            <SectionLabel>{t('exercise.insights.heading.strengths')}:</SectionLabel>{' '}
+            {buildSectionText(t, insights.strengths, 'strengths')}
+          </SectionText>
+        </Section>
+      )}
+      {insights.focus.length > 0 && (
+        <Section>
+          <SectionText>
+            <SectionLabel>{t('exercise.insights.heading.challenge')}:</SectionLabel>{' '}
+            {insights.stuck.topDimensions.length > 0
+              ? insights.stuck.topDimensions.length === 1
+                ? t('exercise.insights.difficult.single', {
+                    value: t(candidateKey(insights.stuck.topDimensions[0])),
+                  })
+                : t('exercise.insights.difficult.pair', {
+                    value1: t(candidateKey(insights.stuck.topDimensions[0])),
+                    value2: t(candidateKey(insights.stuck.topDimensions[1])),
+                  })
+              : buildSectionText(t, insights.challenge, 'challenge')}
+          </SectionText>
+        </Section>
+      )}
       <Section>
         <SectionText>
           <SectionLabel>{t('exercise.insights.heading.stage')}:</SectionLabel> {stageLine}
@@ -141,10 +145,7 @@ function buildSectionText(
   t: Translate,
   candidates: InsightData['strengths'],
   section: 'strengths' | 'challenge',
-  noneKey: string,
 ): string {
-  if (candidates.length === 0) return t(noneKey)
-
   if (candidates.length === 1) {
     const [a] = candidates
     return t(`exercise.insights.${section}.single.${a.type}`, {

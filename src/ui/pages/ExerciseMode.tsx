@@ -4,7 +4,7 @@ import type { DimensionProfile } from '../../exercises/dimensions'
 import { formPool, pronounPool, rootTypesPool, tensePool } from '../../exercises/dimensions'
 import type { Exercise } from '../../exercises/exercises'
 import { filterMasteredLayers } from '../../exercises/explanation'
-import { computeMastery, findLowestMastery, type MasteryItemId } from '../../exercises/mastery'
+import { computeInsights, computeMastery, insightItemIds, type MasteryItemId } from '../../exercises/mastery'
 import { type ExerciseFocus, type ExerciseSession, isCoveredTriple, nextExercise } from '../../exercises/scheduler'
 import type { AnswerResult, SrsStore } from '../../exercises/srs'
 import { renderExplanation } from '../../paradigms/explanation'
@@ -65,7 +65,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const [answerResult, setAnswerResult] = useState<AnswerResult | null>(null)
   const [skipped, setSkipped] = useState(false)
   const [streakExtendedAlert, setStreakExtendedAlert] = useState(false)
-  const { streak, recordResult } = useStats()
+  const { stats, streak, recordResult } = useStats()
 
   useEffect(() => {
     if (streak.correct === streak.goal) setStreakExtendedAlert(true)
@@ -76,17 +76,21 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const mastery = useMemo(() => computeMastery(dimensionProfile, srsStore), [dimensionProfile, srsStore])
 
   const focusGroups = useMemo((): readonly OptionGroup<MasteryItemId>[] => {
-    const recommended = Object.fromEntries(findLowestMastery(mastery).map((i) => [i.id, i]))
+    const recommended = new Set(
+      computeInsights(dimensionProfile, srsStore, stats).focus.flatMap((candidate) =>
+        insightItemIds(candidate, dimensionProfile),
+      ),
+    )
     const recommendedLabel = t('exercise.focus.recommended')
 
     const itemOption = (label: string, id: MasteryItemId, ariaLabel?: string) =>
-      Object.keys(recommended).includes(id)
+      recommended.has(id)
         ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') }
         : { ariaLabel: ariaLabel ?? label }
 
     const groupOption = (key: string, options: readonly OptionItem<MasteryItemId>[]) => {
       const label = t(`exercise.focus.${key}.label`)
-      const recommendation = options.some((o) => Object.keys(recommended).includes(o.value))
+      const recommendation = options.some((o) => recommended.has(o.value))
         ? {
             glyph: '↓',
             ariaLabel: [label, recommendedLabel].join(', '),
@@ -179,7 +183,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       )
 
     return groups
-  }, [mastery, dimensionProfile, t])
+  }, [dimensionProfile, srsStore, stats, t])
 
   const focusOptionValue = useMemo((): OptionValue<MasteryItemId> | null => {
     if (activeFocus.form) return { groupKey: 'form', value: `forms.${activeFocus.form}` as MasteryItemId }

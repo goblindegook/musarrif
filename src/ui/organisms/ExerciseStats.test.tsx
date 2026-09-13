@@ -1,13 +1,6 @@
 import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
-import {
-  buildCardKey,
-  cardSpace,
-  isNominalCard,
-  isVerbCard,
-  type SrsCardIdentity,
-  type SrsStore,
-} from '../../exercises/srs'
+import { cardSpace, type SrsCardIdentity, type SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import { renderWithProviders } from '../../test/fixtures'
 import { serializeDayStats } from '../hooks/useStats'
@@ -294,7 +287,7 @@ describe('ExerciseStats', () => {
 
     test('shows strongest-dimension hint in the collapsed header with real SRS data', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 2, passed: 1 }]
-      const srsStore = createSrsStore((card) => (isVerbCard(card) ? 120 : 1))
+      const srsStore = createSrsStore((card) => (card.tense === 'active.past' ? 120 : 1))
       renderStats(stats, {
         dimensionProfile: {
           tenses: 4,
@@ -308,21 +301,19 @@ describe('ExerciseStats', () => {
       expect(within(screen.getByText('Progress').parentElement!).getByText('Strong in Active Past')).toBeInTheDocument()
     })
 
-    test('shows weakest-dimension hint in the collapsed header with real SRS data', () => {
+    test('shows the stuck dimension as a hint in the collapsed header', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 11, incorrect: 2, passed: 1 }]
-      const srsStore = createSrsStore((card) => (isNominalCard(card) ? 1 : 10))
+      const failing = { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2999-01-01' }
       renderStats(stats, {
-        dimensionProfile: {
-          tenses: 4,
-          pronouns: 3,
-          forms: 9,
-          rootTypes: 5,
-          nominals: 2,
+        dimensionProfile: { tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
+        srsStore: {
+          'conjugation:sound:1:passive.past:3ms': failing,
+          'conjugation:sound:1:passive.past:1s': failing,
+          'conjugation:sound:1:active.past:3ms': failing,
         },
-        srsStore,
       })
 
-      expect(within(screen.getByText('Progress').parentElement!).getByText('Work on Participles')).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Work on Passive Past')).toBeInTheDocument()
     })
 
     test("shows yesterday challenge when today's correct total is below yesterday", () => {
@@ -371,13 +362,17 @@ describe('ExerciseStats', () => {
   })
 
   describe('learning insights — new sections', () => {
-    test('shows momentum section with insufficient text when stats are minimal', () => {
+    test('hides empty strengths and challenge but always shows momentum, keeping the recommendation last', () => {
       renderStats(SAMPLE_STATS)
       fireEvent.click(screen.getByText('Progress'))
       fireEvent.click(screen.getByText('See insights'))
-      expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
-      expect(screen.getByText('Not enough history yet to assess your practice rhythm.')).toBeInTheDocument()
-      expect(screen.queryByText(/^Your backlog:/)).not.toBeInTheDocument()
+      const dialog = screen.getByText(/^Your journey so far:/).closest('[role="dialog"]')!
+      expect([...dialog.querySelectorAll('strong')].map((label) => label.textContent)).toEqual([
+        'Your journey so far:',
+        'Your momentum:',
+        'Your stage:',
+        'Recommendation:',
+      ])
     })
 
     test('shows a separate backlog section after momentum when many cards are overdue', () => {
@@ -423,24 +418,9 @@ describe('ExerciseStats', () => {
 
     test('shows Difficult section when stuck cards exist', () => {
       const store: SrsStore = {
-        [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
-          ef: 1.3,
-          repetitions: 0,
-          interval: 1,
-          dueDate: '2099-01-01',
-        },
-        [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
-          ef: 1.3,
-          repetitions: 0,
-          interval: 1,
-          dueDate: '2099-01-01',
-        },
-        [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
-          ef: 1.3,
-          repetitions: 0,
-          interval: 1,
-          dueDate: '2099-01-01',
-        },
+        'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+        'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+        'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
       }
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
       renderStats(SAMPLE_STATS)
@@ -450,6 +430,15 @@ describe('ExerciseStats', () => {
     })
 
     test('shows Challenge section (not Difficult) when no stuck cards exist', () => {
+      const fresh = { ef: 2.5, repetitions: 1, interval: 1, dueDate: '2999-01-01' }
+      localStorage.setItem(
+        'conjugator:srs',
+        JSON.stringify({
+          'conjugation:sound:1:active.past:3ms': fresh,
+          'verbForm:sound:1:active.past:3ms': fresh,
+          'verbRoot:sound:1:active.past:3ms': fresh,
+        }),
+      )
       renderStats(SAMPLE_STATS)
       fireEvent.click(screen.getByText('Progress'))
       fireEvent.click(screen.getByText('See insights'))
@@ -483,10 +472,6 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByText('See insights'))
     expect(screen.getByText('Learning insights')).toBeInTheDocument()
     expect(screen.getByText(/^Your journey so far:/)).toBeInTheDocument()
-    expect(screen.getByText(/^Your momentum:/)).toBeInTheDocument()
-    expect(screen.queryByText(/^Your backlog:/)).not.toBeInTheDocument()
-    expect(screen.getByText(/^Where you shine:/)).toBeInTheDocument()
-    expect(screen.getByText(/^Your current challenge:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your stage:/)).toBeInTheDocument()
     expect(screen.getByText(/^Recommendation:/)).toBeInTheDocument()
   })

@@ -14,7 +14,7 @@ describe('FormInsights', () => {
     renderWithProviders(<FormInsights verb={verb} />)
     expect(
       screen.getByText(
-        'Notice the doubled middle consonant — that gemination is the Form II marker, typically adding intensity or a causative sense.',
+        'Notice the doubled middle consonant: that gemination is the Form II marker, typically adding intensity or a causative sense.',
       ),
     ).toBeInTheDocument()
   })
