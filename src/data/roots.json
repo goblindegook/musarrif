@@ -5011,6 +5011,12 @@
   {
     "root": "zrq",
     "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "zrq",
+    "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "passive": "impersonal",

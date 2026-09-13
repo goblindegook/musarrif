@@ -205,8 +205,8 @@ describe('active participle', () => {
     })
 
     describe('lexical (stative) active participles', () => {
-      test.each([['زرق', 'أَزْرَق']])('%s', (root, expected) => {
-        expect(deriveActiveParticiple(getVerb(root, 1))).toEqualT(expected)
+      test('زرق', () => {
+        expect(deriveActiveParticiple(getVerb('زرق', 1, 'i-a'))).toEqualT('أَزْرَق')
       })
 
       test('فَعِيل lexical active participles still mark root radicals and pattern vowels separately', () => {

@@ -940,7 +940,7 @@ describe('resolveNominalExplanationLayers', () => {
   })
 
   test('activeParticipleKind is "lexical" for a lexical active participle in a non-فَعِيل pattern', () => {
-    const zrq = getVerbById('zrq-1')!
+    const zrq = getVerbById('zrq-1-i-a')!
     const layers = resolveNominalExplanationLayers(zrq, 'activeParticiple', 'أَزْرَق')
     expect(layers.activeParticipleKind).toBe('lexical')
   })

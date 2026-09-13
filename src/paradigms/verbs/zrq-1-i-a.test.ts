@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('zrq-1', () => {
+describe('zrq-1-i-a (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('zrq-1')!)).toEqualT({
+    expect(conjugatePast(getVerbById('zrq-1-i-a')!)).toEqualT({
       '1s': 'زَرِقْتُ',
       '2ms': 'زَرِقْتَ',
       '2fs': 'زَرِقْتِ',
@@ -28,7 +28,7 @@ describe('zrq-1', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('zrq-1')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zrq-1-i-a')!, 'indicative')).toEqualT({
       '1s': 'أَزْرَقُ',
       '2ms': 'تَزْرَقُ',
       '2fs': 'تَزْرَقِينَ',
@@ -46,7 +46,7 @@ describe('zrq-1', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('zrq-1')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zrq-1-i-a')!, 'subjunctive')).toEqualT({
       '1s': 'أَزْرَقَ',
       '2ms': 'تَزْرَقَ',
       '2fs': 'تَزْرَقِي',
@@ -64,7 +64,7 @@ describe('zrq-1', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('zrq-1')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('zrq-1-i-a')!, 'jussive')).toEqualT({
       '1s': 'أَزْرَقْ',
       '2ms': 'تَزْرَقْ',
       '2fs': 'تَزْرَقِي',
@@ -82,7 +82,7 @@ describe('zrq-1', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('zrq-1')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('zrq-1-i-a')!)).toMatchObjectT({
       '2ms': 'اِزْرَقْ',
       '2fs': 'اِزْرَقِي',
       '2d': 'اِزْرَقَا',
@@ -92,38 +92,38 @@ describe('zrq-1', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('zrq-1')!)).toMatchObjectT({
+    expect(conjugatePassivePast(getVerbById('zrq-1-i-a')!)).toMatchObjectT({
       '3ms': 'زُرِقَ',
     })
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('zrq-1')!, 'indicative')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('zrq-1-i-a')!, 'indicative')).toMatchObjectT({
       '3ms': 'يُزْرَقُ',
     })
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('zrq-1')!, 'subjunctive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('zrq-1-i-a')!, 'subjunctive')).toMatchObjectT({
       '3ms': 'يُزْرَقَ',
     })
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('zrq-1')!, 'jussive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('zrq-1-i-a')!, 'jussive')).toMatchObjectT({
       '3ms': 'يُزْرَقْ',
     })
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('zrq-1')!)).toEqualT('أَزْرَق')
+    expect(deriveActiveParticiple(getVerbById('zrq-1-i-a')!)).toEqualT('أَزْرَق')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('zrq-1')!)).toEqualT('مَزْرُوق')
+    expect(derivePassiveParticiple(getVerbById('zrq-1-i-a')!)).toEqualT('مَزْرُوق')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('zrq-1')!)).toEqualT(['زَرَق'])
+    expect(new Set(deriveMasdar(getVerbById('zrq-1-i-a')!))).toEqualT(new Set(['زَرَق']))
   })
 })
