@@ -79,12 +79,11 @@ function vowelStrength(token?: Token): number {
   return 0
 }
 
-function longVowelAt(tokens: readonly Token[], index: number): 'a' | 'i' | 'u' | undefined {
+function longVowelAt(tokens: readonly Token[], index: number): 'i' | 'u' | undefined {
   const curr = tokens.at(index)
   const next = tokens.at(index + 1)
 
   if (curr?.equals(KASRA) && next?.equals(YEH)) return 'i'
-  if (curr?.equals(FATHA) && next?.equals(ALIF)) return 'a'
   if (curr?.equals(DAMMA) && next?.equals(WAW)) return 'u'
 }
 
