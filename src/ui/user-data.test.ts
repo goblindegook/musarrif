@@ -70,7 +70,7 @@ describe('getUserData', () => {
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
     expect(data.dimensions.profile).toMatchObject({
-      nominals: 1,
+      nominals: 0,
     })
   })
 

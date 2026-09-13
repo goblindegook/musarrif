@@ -126,7 +126,31 @@ describe('recordDimensionAnswer', () => {
   test('bootstraps nominal window from non-nominal answers after prerequisites are met', () => {
     const next = recordDimensionAnswer(
       {
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 0 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 4, nominals: 0 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      },
+      ['forms', 'rootTypes'],
+      true,
+    )
+    expect(next.windows.nominals).toEqual([true])
+  })
+
+  test('does not bootstrap nominal window before the participle gate opens on forms', () => {
+    const next = recordDimensionAnswer(
+      {
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 3, nominals: 0 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      },
+      ['forms', 'rootTypes'],
+      true,
+    )
+    expect(next.windows.nominals).toEqual([])
+  })
+
+  test('bootstraps nominal window at forms >= 4 whatever the pronoun level', () => {
+    const next = recordDimensionAnswer(
+      {
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 0, forms: 4, nominals: 0 },
         windows: INITIAL_DIMENSION_WINDOWS,
       },
       ['forms', 'rootTypes'],
@@ -138,7 +162,7 @@ describe('recordDimensionAnswer', () => {
   test('does not bootstrap nominal window before prerequisites are met', () => {
     const next = recordDimensionAnswer(
       {
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2, nominals: 0 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2, forms: 4, nominals: 0 },
         windows: INITIAL_DIMENSION_WINDOWS,
       },
       ['forms', 'rootTypes'],
@@ -218,39 +242,37 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
   test('rolls back nominals from 1 to 0 when tenses < 2', () => {
     expect(
       normalizeDimensionStore({
-        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1, pronouns: 2 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 1, pronouns: 2, forms: 4 },
         windows: INITIAL_DIMENSION_WINDOWS,
       }).profile.nominals,
     ).toBe(0)
   })
 
-  test('rolls back nominals from 1 to 0 when pronouns < 2', () => {
+  test('rolls back nominals from 1 to 0 when forms < 4', () => {
     expect(
       normalizeDimensionStore({
-        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 2, forms: 3 },
         windows: INITIAL_DIMENSION_WINDOWS,
       }).profile.nominals,
     ).toBe(0)
   })
 
-  test('rolls back nominals from 2 to 1 when forms < max', () => {
+  test('keeps nominals at 1 when forms >= 4 whatever the pronoun level', () => {
     expect(
       normalizeDimensionStore({
-        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 2 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 1, tenses: 2, pronouns: 1, forms: 4 },
         windows: INITIAL_DIMENSION_WINDOWS,
       }).profile.nominals,
     ).toBe(1)
   })
 
-  test('rolls back nominals to 0 when pronouns drop below plural level, even when tenses stay unlocked', () => {
-    const result = normalizeDimensionStore({
-      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1, nominals: 1 },
-      windows: INITIAL_DIMENSION_WINDOWS,
-    }).profile
-    expect(result).toMatchObject({
-      tenses: 2,
-      nominals: 0,
-    })
+  test('rolls back nominals from 2 to 1 when forms < max', () => {
+    expect(
+      normalizeDimensionStore({
+        profile: { ...INITIAL_DIMENSION_PROFILE, nominals: 2, tenses: 2, pronouns: 2, forms: 4 },
+        windows: INITIAL_DIMENSION_WINDOWS,
+      }).profile.nominals,
+    ).toBe(1)
   })
 
   test('keeps unlocked tenses when prerequisites are unmet', () => {
@@ -458,19 +480,10 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
-  test('nominals blocked at level 0 until pronouns >= 2', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 1 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
-      }).profile.nominals,
-    ).toBe(0)
-  })
-
   test('nominals promotes to level 1 when tenses >= 2', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 4 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
@@ -479,7 +492,7 @@ describe('promoteDimensions', () => {
   test('nominals blocked at level 1 until forms >= max', () => {
     expect(
       promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 2 },
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, nominals: 1, forms: 4 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, nominals: filledWindow(20) },
       }).profile.nominals,
     ).toBe(1)
@@ -529,7 +542,7 @@ describe('promoteDimensions', () => {
 
   test('promoting tenses allows nominals to cascade in same call', () => {
     const next = promoteDimensions({
-      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2 },
+      profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, pronouns: 2, forms: 4 },
       windows: {
         ...INITIAL_DIMENSION_WINDOWS,
         tenses: filledWindow(40, 40),

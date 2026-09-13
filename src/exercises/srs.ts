@@ -4,7 +4,7 @@ import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, type TriliteralForm, verbs } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
-import { formPool, pronounPool, rootTypesPool, tensePool } from './dimensions'
+import { formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import type { ExerciseKind } from './exercise-kinds'
 import { getSrsRootType, type SrsRootType } from './root-types'
 import type { SrsCardIdentity } from './srs-types'
@@ -215,7 +215,7 @@ export function getSrsCards(srsStore: SrsStore): readonly SrsCard[] {
 }
 
 function pronounSpace(tense: VerbTense, impersonalPassive: boolean): readonly PronounId[] {
-  const pronouns = pronounPool(3)
+  const pronouns = pronounPool(MAX_LEVELS.pronouns)
   if (tense === 'active.imperative') {
     const imperativePool = pronouns.filter((pronoun) => pronoun.startsWith('2'))
     return imperativePool.length > 0 ? imperativePool : ['2ms']
@@ -227,9 +227,9 @@ function pronounSpace(tense: VerbTense, impersonalPassive: boolean): readonly Pr
 export const cardSpace = memoize(
   () => 'constant',
   () => {
-    const allForms = new Set(formPool(9))
-    const allRootTypes = new Set(rootTypesPool(5))
-    const allTenses = tensePool(5)
+    const allForms = new Set(formPool(MAX_LEVELS.forms))
+    const allRootTypes = new Set(rootTypesPool(MAX_LEVELS.rootTypes))
+    const allTenses = tensePool(MAX_LEVELS.tenses)
     const unique = new Map<string, SrsCardIdentity>()
 
     for (const verb of verbs) {

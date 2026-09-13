@@ -137,13 +137,13 @@ const NOMINAL_UNLOCK_KEYS = [
   ['exercise.unlock.nominal.masdar'],
 ] as const
 
-export const MAX_LEVELS: Record<DimensionKey, number> = {
-  tenses: TENSE_POOLS.length - 1,
-  pronouns: PRONOUN_POOLS.length - 1,
-  forms: FORM_POOLS.length - 1,
-  rootTypes: ROOT_TYPE_POOLS.length - 1,
-  nominals: NOMINAL_UNLOCK_KEYS.length - 1,
-}
+export const MAX_LEVELS = {
+  tenses: (TENSE_POOLS.length - 1) as TensesLevel,
+  pronouns: (PRONOUN_POOLS.length - 1) as PronounsLevel,
+  forms: (FORM_POOLS.length - 1) as FormsLevel,
+  rootTypes: (ROOT_TYPE_POOLS.length - 1) as RootTypesLevel,
+  nominals: (NOMINAL_UNLOCK_KEYS.length - 1) as NominalsLevel,
+} satisfies Record<DimensionKey, number>
 
 const integerBetween = (min: number, max: number) =>
   v.pipe(v.number(), v.integer(), v.toMinValue(min), v.toMaxValue(max))
@@ -293,7 +293,9 @@ export function normalizeDimensionStore(store: DimensionStore): DimensionStore {
 
 function enforcePrerequisites(profile: DimensionProfile): DimensionProfile {
   const p = { ...profile }
-  if (p.nominals >= 1 && (p.tenses < 2 || p.pronouns < 2)) p.nominals = 0
+  // Participles are taught after the common derived forms, and "which form is this participle?" has a
+  // constant answer while only Form I is unlocked:
+  if (p.nominals >= 1 && (p.tenses < 2 || p.forms < 4)) p.nominals = 0
   if (p.nominals >= 2 && p.forms < MAX_LEVELS.forms) p.nominals = 1
   return p
 }
@@ -305,7 +307,9 @@ export function recordDimensionAnswer(
 ): DimensionStore {
   const windows = { ...store.windows }
   const trackedDimensions = new Set<DimensionKey>(dimensions)
-  if (store.profile.nominals === 0 && store.profile.tenses >= 2 && store.profile.pronouns >= 2)
+  // Mirrors the participle gate in enforcePrerequisites, so the window does not fill against a level
+  // that will be clamped straight back:
+  if (store.profile.nominals === 0 && store.profile.tenses >= 2 && store.profile.forms >= 4)
     trackedDimensions.add('nominals')
 
   for (const dim of trackedDimensions) {
