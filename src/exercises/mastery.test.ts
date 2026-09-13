@@ -591,6 +591,17 @@ describe('computeInsights — stuck', () => {
     expect(result.recommendation[1]).toMatchObject({ kind: 'focus' })
   })
 
+  test('a backlog the current pace clears within a week does not ask for more practice', () => {
+    const store: SrsStore = Object.fromEntries(
+      Array.from({ length: 30 }, (_, i) => [
+        `conjugation:sound:1:active.past:3ms:${i}`,
+        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
+      ]),
+    )
+    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
+    expect(result.recommendation[0]).toEqual({ kind: 'habit', action: 'keepSteady' })
+  })
+
   test('declining accuracy prioritizes protecting accuracy over increasing pace', () => {
     const store: SrsStore = {}
     for (let i = 0; i < 25; i++) {

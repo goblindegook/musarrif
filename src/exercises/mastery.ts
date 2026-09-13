@@ -415,7 +415,7 @@ function buildRecommendations(
           ? 'protectAccuracy'
           : volumeTrend === 'inactive'
             ? 'rebuildDailyHabit'
-            : backlogState !== 'none'
+            : backlogState === 'many'
               ? 'increaseSlightly'
               : 'keepSteady',
     },
