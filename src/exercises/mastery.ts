@@ -358,10 +358,10 @@ function computeVolumeTrend(stats: TrackedExercises, today: Date): InsightData['
   return { trend: 'steady' }
 }
 
-function computeBacklogState(overdueCount: number): BacklogState {
+function computeBacklogState(overdueCount: number, eta?: BacklogETA): BacklogState {
   if (overdueCount === 0) return 'none'
-  if (overdueCount <= 20) return 'few'
-  return 'many'
+  if (eta == null) return overdueCount <= 20 ? 'few' : 'many'
+  return eta === 'fewDays' || eta === 'oneWeek' ? 'few' : 'many'
 }
 
 function estimateBacklogETA(srsStore: SrsStore, stats: TrackedExercises, today: string): BacklogETA | undefined {
@@ -463,10 +463,8 @@ export function computeInsights(
       (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
     )[0] ?? null
   const overdueCount = Object.values(srsStore).filter((s) => s.dueDate < today).length
-  const backlog = {
-    state: computeBacklogState(overdueCount),
-    eta: estimateBacklogETA(srsStore, stats, today),
-  }
+  const eta = estimateBacklogETA(srsStore, stats, today)
+  const backlog = { state: computeBacklogState(overdueCount, eta), eta }
   const volume = computeVolumeTrend(stats, todayDate)
   const stuck = computeStuck(srsStore)
   const challenge = sorted.filter((c) => c.score < STRENGTH_THRESHOLD).slice(0, 2)

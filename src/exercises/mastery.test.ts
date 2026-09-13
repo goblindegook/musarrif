@@ -428,6 +428,28 @@ describe('computeInsights — overdue', () => {
     expect(result.overdue.count).toBe(1)
   })
 
+  test('a backlog the current pace clears within a week is few, however many cards', () => {
+    const store: SrsStore = Object.fromEntries(
+      Array.from({ length: 30 }, (_, i) => [
+        `conjugation:sound:1:active.past:3ms:${i}`,
+        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
+      ]),
+    )
+    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
+    expect(result.backlog).toEqual({ state: 'few', eta: 'fewDays' })
+  })
+
+  test('a backlog the current pace needs weeks to clear is many, however few cards', () => {
+    const store: SrsStore = Object.fromEntries(
+      Array.from({ length: 15 }, (_, i) => [
+        `conjugation:sound:1:active.past:3ms:${i}`,
+        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
+      ]),
+    )
+    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 1, 0), ANCHOR_DATE)
+    expect(result.backlog).toEqual({ state: 'many', eta: 'threeWeeks' })
+  })
+
   test('backlog state is none when no cards are overdue', () => {
     const result = computeInsights(BASE_PROFILE, {}, [], ANCHOR_DATE)
     expect(result.backlog).toEqual({ state: 'none' })

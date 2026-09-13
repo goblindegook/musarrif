@@ -383,7 +383,7 @@ describe('ExerciseStats', () => {
         incorrect: 1,
         passed: 0,
       }))
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 100; i++) {
         store[`conjugation:sound:1:active.past:3ms:${i}`] = {
           ef: 2.5,
           repetitions: 3,
