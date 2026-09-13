@@ -46,21 +46,17 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
 
     if (before.equals(SUKOON)) {
-      if (word[index - 2].equals(YEH)) {
-        if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // FIXME: for y's-1 passive participle
-        return HAMZA_ON_YEH
-      }
-      if (word[index - 2].equals(WAW)) {
-        if (longVowelAt(word, index + 1) === 'i') return HAMZA_ON_YEH // FIXME: for w'y-1 passive participle
-        if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // FIXME: for w'd-1 passive participle
-        return HAMZA
-      }
+      if (longVowelAt(word, index + 1) === 'i') return HAMZA_ON_YEH // for w'y-1 passive participle
+      if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // for y's-1 and w'd-1 passive participle
+
+      if (word[index - 2].equals(YEH)) return HAMZA_ON_YEH
+      if (word[index - 2].equals(WAW)) return HAMZA
     }
 
     if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
     if (longVowelBefore === 'u') {
-      if (vowel?.equals(KASRA)) return HAMZA_ON_YEH // FIXME: for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
+      if (vowel?.equals(KASRA)) return HAMZA_ON_YEH // for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
 
       // Hamza directly after waw in the masculine plural waw-alif (uw'wA endings). Avoid waw-on-waw, seat on yeh instead:
       if (word[index + 3]?.equals(ALIF)) return HAMZA_ON_YEH

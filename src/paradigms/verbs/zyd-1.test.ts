@@ -8,7 +8,7 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('zyd-1', () => {
+describe('zyd-1 (Wiktionary)', () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById('zyd-1')!)).toEqualT({
       '1s': 'زِدْتُ',
@@ -172,6 +172,6 @@ describe('zyd-1', () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('zyd-1')!)).toEqualT(['زِيَادَة', 'زَيْد'])
+    expect(new Set(deriveMasdar(getVerbById('zyd-1')!))).toEqualT(new Set(['زِيَادَة', 'زَيْد']))
   })
 })

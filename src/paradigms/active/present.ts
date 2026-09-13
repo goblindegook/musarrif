@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { formIPresentVowel, isFormIPastVowel, isFormIPresentVowel } from '../form-i-vowels'
+import { formIPresentVowel, isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import { derivedRadicals } from '../roots'
 import type { Mood } from '../tense'
@@ -385,10 +385,6 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
       measureMorpheme(FATHA),
       radicalMorpheme(c3),
     ]
-
-  // FIXME: use of isFormIPastVowel in present conjugation
-  if (c2.equals(YEH) && isFormIPastVowel(verb, FATHA))
-    return [radicalMorpheme(c1), measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
   if (c2.isWeak) {
     const [shortVowel, longLetter] = longVowel(presentVowel)

@@ -163,7 +163,7 @@
   {
     "root": "$yd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3l"]
   },
   {
@@ -1659,7 +1659,7 @@
   {
     "root": "Tyr",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fa3alaan", "fa3l"],
     "lexicalMasdars": ["Tayoruwrap"]
   },
@@ -2610,7 +2610,7 @@
   {
     "root": "jy'",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["mimi", "fa3l"],
     "lexicalMasdars": ["jayo}ap", "jiy}ap"]
   },
@@ -5079,7 +5079,7 @@
   {
     "root": "zyd",
     "form": 1,
-    "vowels": "a-a",
+    "vowels": "a-i",
     "masdars": ["fi3aala", "fa3l"]
   },
   {

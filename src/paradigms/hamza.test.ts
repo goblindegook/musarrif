@@ -68,34 +68,28 @@ test.each<[string, string, string]>([
   ["Tayo'uT", 'on yeh', HAMZA_ON_YEH],
   ["Tayo'aT", 'on yeh', HAMZA_ON_YEH],
   ["Tayo'iyT", 'on yeh', HAMZA_ON_YEH],
-  // FIXME: conflicts with y's-1 passive participle mayo&uws
-  // ["Tayo'uwT", 'on yeh', HAMZA_ON_YEH],
+  // ["Tayo'uwT", 'on yeh', HAMZA_ON_YEH], // Conflicts with y's-1 passive participle mayo&uws
   ["Tayo'aAT", 'on yeh', HAMZA_ON_YEH],
 
-  // FIXME: conflicts with l'm-3 passive past 3ms
-  // ["Tuw'iT", 'on the line', HAMZA],
+  // ["Tuw'iT", 'on the line', HAMZA], // Conflicts with l'm-3 passive past 3ms
   ["Tuw'uT", 'on the line', HAMZA],
   ["Tuw'aT", 'on the line', HAMZA],
-  // FIXME: conflicts with bw'-1 active jussive 3fs
-  // ["Tuw'iyT", 'on the line', HAMZA],
+  // ["Tuw'iyT", 'on the line', HAMZA], // Conflicts with bw'-1 active jussive 3fs
   ["Tuw'uwT", 'on the line', HAMZA],
   ["Tuw'aAT", 'on the line', HAMZA],
 
   ["Tawo'iT", 'on the line', HAMZA],
   ["Tawo'uT", 'on the line', HAMZA],
   ["Tawo'aT", 'on the line', HAMZA],
-  // FIXME: conflicts with w'y-1 passive participle
-  // ["Tawo'iyT", 'on the line', HAMZA],
-  // FIXME: conflicts with w'd-1 passive participle
-  // ["Tawo'uwT", 'on the line', HAMZA],
+  // ["Tawo'iyT", 'on the line', HAMZA], // Conflicts with w'y-1 passive participle
+  // ["Tawo'uwT", 'on the line', HAMZA], // Conflicts with w'd-1 passive participle
   ["Tawo'aAT", 'on the line', HAMZA],
 
   ["TaA'iT", 'on yeh', HAMZA_ON_YEH],
   ["TaA'uT", 'on waw', HAMZA_ON_WAW],
   ["TaA'aT", 'on the line', HAMZA],
   ["TaA'iyT", 'on yeh', HAMZA_ON_YEH],
-  // FIXME: conflicts with jy'-1 past 3pm
-  // ["TaA'uwT", 'on the line', HAMZA],
+  // ["TaA'uwT", 'on the line', HAMZA], // Conflicts with jy'-1 past 3pm
   ["TaA'aAT", 'on the line', HAMZA],
 ])(`hamza in %s seats %s`, (word, seat, expected) => {
   const x = new Word([measureMorpheme(...tokenize(transliterateReverse(word)))])
