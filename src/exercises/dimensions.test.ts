@@ -9,6 +9,7 @@ import {
   pronounPool,
   randomNominalVerb,
   recordDimensionAnswer,
+  tensePool,
 } from './dimensions'
 
 const INITIAL_DIMENSION_PROFILE = {
@@ -168,7 +169,7 @@ describe('parseDimensionStore', () => {
       },
     })
 
-    expect(sanitized.profile.tenses).toBe(4)
+    expect(sanitized.profile.tenses).toBe(5)
     expect(sanitized.windows).toMatchObject({
       tenses: [],
       pronouns: [true],
@@ -275,6 +276,31 @@ describe('normalizeDimensionStore prerequisite enforcement', () => {
         windows: INITIAL_DIMENSION_WINDOWS,
       }).profile.tenses,
     ).toBe(4)
+  })
+})
+
+describe('tensePool', () => {
+  test('level 4 adds only the passive past and level 5 adds the passive present moods', () => {
+    expect(tensePool(4)).toEqual([
+      'active.past',
+      'active.present.indicative',
+      'active.present.subjunctive',
+      'active.present.jussive',
+      'active.imperative',
+      'passive.past',
+    ])
+
+    expect(tensePool(5)).toEqual([
+      'active.past',
+      'active.present.indicative',
+      'active.present.subjunctive',
+      'active.present.jussive',
+      'active.imperative',
+      'passive.past',
+      'passive.present.indicative',
+      'passive.present.subjunctive',
+      'passive.present.jussive',
+    ])
   })
 })
 
@@ -541,6 +567,22 @@ describe('promoteDimensions', () => {
     ).toBe(4)
   })
 
+  test('the same gate holds the passive present back when forms have been demoted', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 3, forms: 3 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(4)
+
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 3, forms: 4 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(5)
+  })
+
   test('tenses promotes to level 1 while only Form I is unlocked', () => {
     expect(
       promoteDimensions({
@@ -568,22 +610,13 @@ describe('promoteDimensions', () => {
     ).toBe(2)
   })
 
-  test('tenses blocked at level 4 when forms are not all unlocked', () => {
-    expect(
-      promoteDimensions({
-        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 8 },
-        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
-      }).profile.tenses,
-    ).toBe(4)
-  })
-
   test('tenses promotes to level 5 when all forms are unlocked', () => {
     expect(
       promoteDimensions({
         profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 1, forms: 9 },
         windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(40, 40) },
       }).profile.tenses,
-    ).toBe(4)
+    ).toBe(5)
   })
 
   test('pronoun demotion does not re-lock unlocked tenses, forms, or root types', () => {
@@ -651,10 +684,16 @@ describe('getDimensionChanges', () => {
     ])
   })
 
-  test('returns promotion for passive tense unlock', () => {
+  test('returns promotion for passive past unlock', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 3 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 4 }),
-    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passive'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passivePast'] }])
+  })
+
+  test('returns promotion for passive present unlock', () => {
+    expect(
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 5 }),
+    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passivePresent'] }])
   })
 
   test('returns demotion for level decrease', () => {

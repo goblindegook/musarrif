@@ -70,14 +70,9 @@ const T0: VerbTense[] = ['active.past']
 const T1: VerbTense[] = [...T0, 'active.present.indicative']
 const T2: VerbTense[] = [...T1, 'active.present.subjunctive', 'active.present.jussive']
 const T3: VerbTense[] = [...T2, 'active.imperative']
-const T4: VerbTense[] = [
-  ...T3,
-  'passive.past',
-  'passive.present.indicative',
-  'passive.present.subjunctive',
-  'passive.present.jussive',
-]
-const TENSE_POOLS = [T0, T1, T2, T3, T4] as const
+const T4: VerbTense[] = [...T3, 'passive.past']
+const T5: VerbTense[] = [...T4, 'passive.present.indicative', 'passive.present.subjunctive', 'passive.present.jussive']
+const TENSE_POOLS = [T0, T1, T2, T3, T4, T5] as const
 
 export function randomTense(verb: DisplayVerb, tenses: TensesLevel): VerbTense {
   const available = getAvailableParadigms(verb)
@@ -192,7 +187,8 @@ const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]
     ['exercise.unlock.tenseGroup.presentIndicative'],
     ['exercise.unlock.tenseGroup.subjunctiveJussive'],
     ['exercise.unlock.tenseGroup.imperative'],
-    ['exercise.unlock.tenseGroup.passive'],
+    ['exercise.unlock.tenseGroup.passivePast'],
+    ['exercise.unlock.tenseGroup.passivePresent'],
   ],
   pronouns: [
     [],
@@ -273,7 +269,7 @@ export const WINDOW_SIZES: Record<DimensionKey, number> = {
   nominals: 20,
 }
 const PROMOTION_THRESHOLDS: Record<DimensionKey, readonly number[]> = {
-  tenses: [0.8, 0.8, 0.8, 0.8],
+  tenses: [0.8, 0.8, 0.8, 0.8, 0.8],
   pronouns: [0.8, 0.8, 0.8],
   forms: [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
   rootTypes: [0.8, 0.8, 0.8, 0.8, 0.8],

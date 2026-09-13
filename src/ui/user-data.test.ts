@@ -61,7 +61,7 @@ describe('getUserData', () => {
   test('rolls back adaptive dimension levels that violate prerequisites', () => {
     const profile = {
       ...INITIAL_DIMENSION_PROFILE,
-      tenses: 4,
+      tenses: 5,
       pronouns: 3,
       forms: 3,
       rootTypes: 3,
@@ -86,7 +86,7 @@ describe('getUserData', () => {
     localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
     const data = getUserData()
     expect(data.dimensions.profile).toMatchObject({
-      tenses: 4,
+      tenses: 5,
       nominals: 2,
     })
   })
@@ -125,15 +125,15 @@ describe('importUserData', () => {
     expect(stored.profile.forms).toBe(1)
   })
 
-  test('imports dimension profile with max tenses level (4)', () => {
-    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 3, forms: 9, rootTypes: 5 }
+  test('imports dimension profile with max tenses level (5)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 6, pronouns: 3, forms: 9, rootTypes: 5 }
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       dimensions: { profile },
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile.tenses).toBe(4)
+    expect(stored.profile.tenses).toBe(5)
   })
 
   test('imports dimension profile with high forms level (9)', () => {
@@ -179,7 +179,7 @@ describe('importUserData', () => {
     })
     importUserData(payload)
     const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
-    expect(stored.profile).toEqual({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 })
+    expect(stored.profile).toEqual({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
   })
 
   test('accepts payload without dimensions field without error', () => {

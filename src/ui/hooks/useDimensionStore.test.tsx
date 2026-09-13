@@ -34,7 +34,7 @@ describe('useDimensionStore', () => {
       JSON.stringify({
         profile: {
           ...INITIAL_DIMENSION_PROFILE,
-          tenses: 5,
+          tenses: 6,
           pronouns: 3,
           forms: 9,
           rootTypes: 5,
@@ -47,14 +47,14 @@ describe('useDimensionStore', () => {
     const { result } = renderHook(() => useDimensionStore())
 
     expect(result.current[0]).toMatchObject({
-      tenses: 4,
+      tenses: 5,
       nominals: 2,
     })
 
     await waitFor(() => {
       const stored = JSON.parse(localStorage.getItem('conjugator:dimensions') ?? '{}')
       expect(stored.profile).toMatchObject({
-        tenses: 4,
+        tenses: 5,
         nominals: 2,
       })
     })

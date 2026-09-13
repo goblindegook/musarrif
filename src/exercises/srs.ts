@@ -229,7 +229,7 @@ export const cardSpace = memoize(
   () => {
     const allForms = new Set(formPool(9))
     const allRootTypes = new Set(rootTypesPool(5))
-    const allTenses = tensePool(4)
+    const allTenses = tensePool(5)
     const unique = new Map<string, SrsCardIdentity>()
 
     for (const verb of verbs) {

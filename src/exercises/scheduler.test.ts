@@ -59,7 +59,7 @@ describe('nextExercise', () => {
     const session = { reviews: 0, lastNewAt: 0 }
 
     const exercise = nextExercise(
-      { ...INITIAL_DIMENSION_PROFILE, tenses: 4, pronouns: 2, forms: 9, rootTypes: 5 },
+      { ...INITIAL_DIMENSION_PROFILE, tenses: 5, pronouns: 2, forms: 9, rootTypes: 5 },
       store,
       session,
     )
