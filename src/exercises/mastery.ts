@@ -8,7 +8,6 @@ import {
   cardSpace,
   getSrsCards,
   isMasdarCard,
-  isNominalCard,
   isParticipleCard,
   isVerbCard,
   type SrsCardIdentity,
@@ -16,7 +15,7 @@ import {
   type SrsStore,
   utcAddDays,
 } from './srs'
-import { getAccuracyPercent, getRecentAccuracyPercent, getStatsWindow, type TrackedExercises } from './stats'
+import { getAccuracyPercent, getStatsWindow, type TrackedExercises } from './stats'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const TENSE_ORDER: readonly VerbTense[] = [
@@ -175,7 +174,7 @@ export function computeMastery(
           categoryId: 'nominals',
           value,
           score: computeScore(
-            cards.filter((card) => isNominalCard(card)),
+            cards.filter(value === 'participles' ? isParticipleCard : isMasdarCard),
             srsStore,
             today,
             locked,
@@ -189,9 +188,12 @@ export function computeMastery(
 
 function cardStrength(store: SrsStore, key: string, today: string): number {
   const state = store[key]
-  if (state == null || state.dueDate <= today) return 0
+  if (state == null) return 0
   const interval = clamp(Math.round(state.interval), 1, MASTERY_THRESHOLD_DAYS)
-  return clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
+  const strength = clamp(Math.log2(interval + 1) / STRENGTH_DENOMINATOR, 0, 1)
+  if (state.dueDate >= today) return strength
+  const daysOverdue = (Date.parse(today) - Date.parse(state.dueDate)) / 86_400_000
+  return strength * (interval / (interval + daysOverdue))
 }
 
 function computeScore(cards: readonly SrsCardIdentity[], store: SrsStore, today: string, isLocked: boolean): number {
@@ -230,7 +232,7 @@ export function findLowestMastery<K extends MasteryCategoryId>(
   return sorted.slice(0, limit).filter((item) => item.score <= threshold)
 }
 
-export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass'
+export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass' | 'nominal'
 type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
 
 export interface InsightCandidate {
@@ -257,8 +259,6 @@ export interface InsightData {
   strengths: readonly InsightCandidate[]
   challenge: readonly InsightCandidate[]
   stage: {
-    unlockedRootTypes: number
-    totalRootTypes: number
     nextDimension?: MasteryCategoryId
     nextValue?: string
   }
@@ -298,7 +298,7 @@ function getPronounClass(pronoun: PronounId): PronounClassId | null {
 }
 
 function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
-  const stuck = getSrsCards(srsStore).filter((c) => c.ef <= 1.5 && c.repetitions >= 3)
+  const stuck = getSrsCards(srsStore).filter((c) => c.ef <= 1.5 && c.repetitions < 3)
 
   if (stuck.length === 0) return { topDimensions: [] }
 
@@ -312,6 +312,7 @@ function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
   }
 
   for (const card of stuck) {
+    bump('rootType', card.rootType)
     bump('form', String(card.form))
     if (card.tense != null) bump('tense', card.tense)
     if (card.pronoun != null) {
@@ -338,8 +339,8 @@ function computeVolumeTrend(stats: TrackedExercises, today: Date): InsightData['
   const recent = window.slice(7, 14)
   const avgPrior = average(prior.map((d) => d.correct + d.incorrect))
   const avgRecent = average(recent.map((d) => d.correct + d.incorrect))
+  if (avgRecent === 0 && stats.length > 0) return { trend: 'inactive' }
   if (avgPrior === 0) return { trend: 'insufficient' }
-  if (avgRecent === 0) return { trend: 'inactive' }
   if (avgRecent > avgPrior * 1.25) return { trend: 'ramping' }
   if (avgRecent < avgPrior * 0.75) return { trend: 'dropping' }
   return { trend: 'steady' }
@@ -357,17 +358,17 @@ function estimateBacklogETA(srsStore: SrsStore, stats: TrackedExercises, today: 
   const dailyPace = average(recentWindow.map((d) => d.correct + d.incorrect + d.passed))
   if (dailyPace < 1) return
 
-  const overdueCount = Object.values(srsStore).filter((state) => state.dueDate <= today).length
+  const overdueCount = Object.values(srsStore).filter((state) => state.dueDate < today).length
   if (overdueCount === 0) return
 
   const futureDue = new Map<string, number>()
   for (const state of Object.values(srsStore)) {
-    if (state.dueDate <= today) continue
+    if (state.dueDate < today) continue
     futureDue.set(state.dueDate, (futureDue.get(state.dueDate) ?? 0) + 1)
   }
 
   let newlyDue = 0
-  for (let day = 1; day <= 60; day++) {
+  for (let day = 0; day <= 60; day++) {
     const date = utcAddDays(today, day)
     newlyDue += futureDue.get(date) ?? 0
     if (dailyPace * day >= overdueCount + newlyDue) return backlogEtaBucket(day)
@@ -416,47 +417,47 @@ export function computeInsights(
   stats: TrackedExercises,
   today = utcToday(),
 ): InsightData {
-  const mastery = computeMastery(profile, srsStore, today)
-
   const todayDate = new Date(`${today}T00:00:00`)
   const accuracy = getAccuracyPercent(stats)
-  const recentAccuracy = getRecentAccuracyPercent(stats, 15, todayDate)
-  const trend = computeInsightTrend(stats, accuracy, recentAccuracy)
+  const trend = computeInsightTrend(stats, accuracy, getStatsWindow(stats, 15, todayDate))
 
-  const candidates: InsightCandidate[] = []
+  const practised = getSrsCards(srsStore)
+  const unlockedPronouns = pronounPool(profile.pronouns)
+  const candidate = (type: InsightCandidateType, value: string, matches: (card: SrsCardIdentity) => boolean) =>
+    practisedCandidate(type, value, practised.filter(matches), srsStore, today)
 
-  for (const item of (mastery.find((c) => c.id === 'rootTypes')?.items ?? []).filter((i) => !i.locked))
-    candidates.push({ type: 'rootType', value: String(item.value), score: item.score })
-
-  for (const item of (mastery.find((c) => c.id === 'tenses')?.items ?? []).filter((i) => !i.locked))
-    candidates.push({ type: 'tense', value: String(item.value), score: item.score })
-
-  for (const item of (mastery.find((c) => c.id === 'forms')?.items ?? []).filter((i) => !i.locked))
-    candidates.push({ type: 'form', value: String(item.value), score: item.score })
-
-  const pronounItems = mastery.find((c) => c.id === 'pronouns')?.items ?? []
-  for (const classId of PRONOUN_CLASS_ORDER) {
-    const unlockedMembers = pronounItems.filter(
-      (item) => PRONOUN_CLASS_MEMBERS[classId].includes(item.value as PronounId) && !item.locked,
-    )
-    if (unlockedMembers.length > 0)
-      candidates.push({ type: 'pronounClass', value: classId, score: average(unlockedMembers.map((i) => i.score)) })
-  }
-
-  const sorted = candidates.sort((a, b) => a.score - b.score)
+  const sorted = [
+    ...rootTypesPool(profile.rootTypes).map((value) => candidate('rootType', value, (c) => c.rootType === value)),
+    ...tensePool(profile.tenses).map((value) => candidate('tense', value, (c) => c.tense === value)),
+    ...formPool(profile.forms).map((value) => candidate('form', String(value), (c) => c.form === value)),
+    ...PRONOUN_CLASS_ORDER.map((classId) =>
+      candidate(
+        'pronounClass',
+        classId,
+        (c) =>
+          c.pronoun != null &&
+          PRONOUN_CLASS_MEMBERS[classId].includes(c.pronoun) &&
+          unlockedPronouns.includes(c.pronoun),
+      ),
+    ),
+    ...(profile.nominals >= 1 ? [candidate('nominal', 'participles', isParticipleCard)] : []),
+    ...(profile.nominals >= 2 ? [candidate('nominal', 'masdar', isMasdarCard)] : []),
+  ]
+    .filter((c): c is InsightCandidate => c != null)
+    .sort((a, b) => a.score - b.score)
 
   const nextDimension =
     MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
       (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
     )[0] ?? null
-  const overdueCount = Object.values(srsStore).filter((s) => s.dueDate <= today).length
+  const overdueCount = Object.values(srsStore).filter((s) => s.dueDate < today).length
   const backlog = {
     state: computeBacklogState(overdueCount),
     eta: estimateBacklogETA(srsStore, stats, today),
   }
   const volume = computeVolumeTrend(stats, todayDate)
   const stuck = computeStuck(srsStore)
-  const challenge = sorted.slice(0, 2)
+  const challenge = sorted.filter((c) => c.score < STRENGTH_THRESHOLD).slice(0, 2)
 
   return {
     journey: {
@@ -465,11 +466,12 @@ export function computeInsights(
       accuracy,
       trend,
     },
-    strengths: sorted.slice(-2).reverse(),
+    strengths: sorted
+      .filter((c) => c.score >= STRENGTH_THRESHOLD)
+      .slice(-2)
+      .reverse(),
     challenge,
     stage: {
-      unlockedRootTypes: rootTypesPool(profile.rootTypes).length,
-      totalRootTypes: 6,
       nextDimension,
       nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : undefined,
     },
@@ -481,12 +483,27 @@ export function computeInsights(
   }
 }
 
+const MIN_PRACTISED_CARDS = 3
+const STRENGTH_THRESHOLD = 0.5
+
+function practisedCandidate(
+  type: InsightCandidateType,
+  value: string,
+  cards: readonly SrsCardIdentity[],
+  store: SrsStore,
+  today: string,
+): InsightCandidate | null {
+  if (cards.length < MIN_PRACTISED_CARDS) return null
+  return { type, value, score: computeScore(cards, store, today, false) }
+}
+
 function computeInsightTrend(
   stats: TrackedExercises,
   allTimeAccuracy: number,
-  recentAccuracy: number,
+  recentWindow: TrackedExercises,
 ): InsightData['journey']['trend'] {
-  if (stats.length < 15) return 'insufficient'
+  if (stats.length < 15 || recentWindow.every((d) => d.correct + d.incorrect === 0)) return 'insufficient'
+  const recentAccuracy = getAccuracyPercent(recentWindow)
   if (recentAccuracy > allTimeAccuracy + 5) return 'improving'
   if (recentAccuracy < allTimeAccuracy - 5) return 'declining'
   return 'steady'

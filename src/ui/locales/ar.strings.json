@@ -189,7 +189,6 @@
   "exercise.insights.recommendation.habit.keepSteady": "حَافِظْ عَلَى عَادَتِكَ ٱلْيَوْمِيَّةِ بِثَبَاتٍ.",
   "exercise.insights.recommendation.habit.protectAccuracy": "تَمَهَّلْ قَلِيلًا وَحَافِظْ عَلَى دِقَّتِكَ.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "أَعِدْ بِنَاءَ عَادَةٍ يَوْمِيَّةٍ صَغِيرَةٍ قَبْلَ زِيَادَةِ ٱلسُّرْعَةِ.",
-  "exercise.insights.stage": "فَتَحْتَ {unlocked} مِنْ أَصْلِ {total} أَنْوَاعِ جُذُورٍ.",
   "exercise.insights.stage.next.complete": "فَتَحْتَ جَمِيعَ ٱلْأَبْعَادِ — ٱسْتَمِرَّ فِي ٱلتَّدْرِيبِ لِإِتْقَانِهَا كُلِّهَا.",
   "exercise.insights.stage.next.forms": "ٱلْقَادِمُ: ٱلْوَزْنُ {value}.",
   "exercise.insights.stage.next.nominals": "ٱلْقَادِمُ: {value}.",
@@ -567,5 +566,19 @@
   "formInfo.form1-stative.semantic": "ٱلْمَعْنَى ٱلْأَسَاسِيُّ · وَصْفِيٌّ · جَوْدَةٌ",
   "explanation.form.1-action": "حِينَ تَكُونُ حَرَكَةُ ٱلْمَاضِي فَتْحَةً، تَوَقَّعْ غَالِبًا فِعْلًا مَادِّيًّا أَوْ خَارِجِيًّا مُوَجَّهًا نَحْوَ مَفْعُولٍ بِهِ أَوْ مَكَانٍ — وَهُوَ ٱلصِّنْفُ ٱلْأَوْسَعُ فِي ٱلْبَابِ ٱلْأَوَّلِ.",
   "explanation.form.1-intermediate": "حِينَ تَكُونُ حَرَكَةُ ٱلْمَاضِي كَسْرَةً، يُتَوَقَّعُ غَالِبًا مَعْنًى ذِهْنِيٌّ أَوْ عَاطِفِيٌّ — فِي مُنْتَصَفِ ٱلطَّرِيقِ بَيْنَ ٱلْفِعْلِ وَٱلصِّفَةِ.",
-  "explanation.form.1-stative": "حِينَ تَكُونُ حَرَكَةُ ٱلْمَاضِي ضَمَّةً، يُتَوَقَّعُ غَالِبًا صِفَةٌ أَصِيلَةٌ أَوْ حَالَةٌ رَاسِخَةٌ — وَصِيغَةُ ٱلْأَمْرِ نَادِرًا مَا تَكُونُ ذَاتَ مَعْنًى هُنَا."
+  "explanation.form.1-stative": "حِينَ تَكُونُ حَرَكَةُ ٱلْمَاضِي ضَمَّةً، يُتَوَقَّعُ غَالِبًا صِفَةٌ أَصِيلَةٌ أَوْ حَالَةٌ رَاسِخَةٌ — وَصِيغَةُ ٱلْأَمْرِ نَادِرًا مَا تَكُونُ ذَاتَ مَعْنًى هُنَا.",
+  "exercise.insights.nominal.masdar": "ٱلْمَصْدَرُ",
+  "exercise.insights.nominal.participles": "ٱسْمَا ٱلْفَاعِلِ وَٱلْمَفْعُولِ",
+  "exercise.insights.strengths.single.nominal": "تَتَأَلَّقُ فِي {value}.",
+  "exercise.insights.strengths.pair.rootType.nominal": "تَتَأَلَّقُ فِي {value1} وَ{value2}.",
+  "exercise.insights.strengths.pair.tense.nominal": "تَتَأَلَّقُ فِي زَمَنِ {value1} وَ{value2}.",
+  "exercise.insights.strengths.pair.form.nominal": "تَتَأَلَّقُ فِي {value1} وَ{value2}.",
+  "exercise.insights.strengths.pair.pronounClass.nominal": "تَتَأَلَّقُ فِي {value1} وَ{value2}.",
+  "exercise.insights.strengths.pair.nominal.nominal": "تَتَأَلَّقُ فِي {value1} وَ{value2}.",
+  "exercise.insights.challenge.single.nominal": "{value} مَجَالُ نُمُوِّكَ.",
+  "exercise.insights.challenge.pair.rootType.nominal": "{value1} وَ{value2} هُمَا مَجَالُ نُمُوِّكَ.",
+  "exercise.insights.challenge.pair.tense.nominal": "زَمَنُ {value1} وَ{value2} هُمَا مَجَالُ نُمُوِّكَ.",
+  "exercise.insights.challenge.pair.form.nominal": "{value1} وَ{value2} هُمَا مَجَالُ نُمُوِّكَ.",
+  "exercise.insights.challenge.pair.pronounClass.nominal": "{value1} وَ{value2} هُمَا مَجَالُ نُمُوِّكَ.",
+  "exercise.insights.challenge.pair.nominal.nominal": "{value1} وَ{value2} هُمَا مَجَالُ نُمُوِّكَ."
 }

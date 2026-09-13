@@ -230,7 +230,7 @@ function t(key: string, params?: Record<string, string>): string {
   return str
 }
 
-const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
+const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass', 'nominal']
 
 function candidateKey(c: Pick<InsightCandidate, 'type' | 'value'>): string {
   switch (c.type) {
@@ -242,6 +242,8 @@ function candidateKey(c: Pick<InsightCandidate, 'type' | 'value'>): string {
       return `exercise.unlock.form.${c.value}`
     case 'pronounClass':
       return `exercise.insights.pronounClass.${c.value}`
+    case 'nominal':
+      return `exercise.insights.nominal.${c.value}`
   }
 }
 
@@ -308,19 +310,12 @@ function buildInsightRows(): Array<{ label: string; text: string }> {
       ? `${journeyText} ${t(`exercise.insights.journey.trend.${insights.journey.trend}`)}`
       : journeyText
 
-  const stageLine = (() => {
-    const base = t('exercise.insights.stage', {
-      unlocked: String(insights.stage.unlockedRootTypes),
-      total: String(insights.stage.totalRootTypes),
-    })
-    const next =
-      insights.stage.nextDimension != null && insights.stage.nextValue != null
-        ? t(`exercise.insights.stage.next.${insights.stage.nextDimension}`, {
-            value: resolveNextLabel(insights.stage.nextDimension, insights.stage.nextValue),
-          })
-        : t('exercise.insights.stage.next.complete')
-    return insights.stage.nextDimension == null ? next : `${base} ${next}`
-  })()
+  const stageLine =
+    insights.stage.nextDimension != null && insights.stage.nextValue != null
+      ? t(`exercise.insights.stage.next.${insights.stage.nextDimension}`, {
+          value: resolveNextLabel(insights.stage.nextDimension, insights.stage.nextValue),
+        })
+      : t('exercise.insights.stage.next.complete')
 
   const challengeText =
     insights.stuck.topDimensions.length > 0

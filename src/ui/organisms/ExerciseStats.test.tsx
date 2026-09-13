@@ -414,23 +414,30 @@ describe('ExerciseStats', () => {
       expect(screen.getByText(/^Recommendation:/)).toBeInTheDocument()
     })
 
+    test('stage line names only what unlocks next', () => {
+      renderStats(SAMPLE_STATS)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.getByText(/^Your stage:/).parentElement?.textContent).toBe('Your stage: Up next: Doubled roots.')
+    })
+
     test('shows Difficult section when stuck cards exist', () => {
       const store: SrsStore = {
         [buildCardKey('conjugation', 'sound', 1, 'passive.past', '3ms')]: {
           ef: 1.3,
-          repetitions: 5,
+          repetitions: 0,
           interval: 1,
           dueDate: '2099-01-01',
         },
         [buildCardKey('conjugation', 'sound', 1, 'passive.past', '1s')]: {
           ef: 1.3,
-          repetitions: 5,
+          repetitions: 0,
           interval: 1,
           dueDate: '2099-01-01',
         },
         [buildCardKey('conjugation', 'sound', 1, 'active.past', '3ms')]: {
           ef: 1.3,
-          repetitions: 5,
+          repetitions: 0,
           interval: 1,
           dueDate: '2099-01-01',
         },

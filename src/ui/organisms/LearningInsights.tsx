@@ -16,7 +16,7 @@ import { type Translate, useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'
 import { useStats } from '../hooks/useStats'
 
-const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass']
+const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass', 'nominal']
 
 export function LearningInsights() {
   const [srsStore] = useSrsStore()
@@ -35,12 +35,7 @@ export function LearningInsights() {
           accuracy: String(insights.journey.accuracy),
         })
 
-  const stageText = t('exercise.insights.stage', {
-    unlocked: String(insights.stage.unlockedRootTypes),
-    total: String(insights.stage.totalRootTypes),
-  })
-
-  const stageNextText =
+  const stageLine =
     insights.stage.nextDimension != null && insights.stage.nextValue != null
       ? t(`exercise.insights.stage.next.${insights.stage.nextDimension}`, {
           value: resolveNextValueLabel(t, insights.stage.nextDimension, insights.stage.nextValue),
@@ -50,7 +45,6 @@ export function LearningInsights() {
     insights.journey.days > 0
       ? `${journeyText} ${t(`exercise.insights.journey.trend.${insights.journey.trend}`)}`
       : journeyText
-  const stageLine = insights.stage.nextDimension == null ? stageNextText : `${stageText} ${stageNextText}`
   const backlogText = buildBacklogText(t, insights.backlog.state, insights.backlog.eta)
 
   return (
@@ -180,6 +174,8 @@ function candidateKey(candidate: InsightCandidate): string {
       return `exercise.unlock.form.${candidate.value}`
     case 'pronounClass':
       return `exercise.insights.pronounClass.${candidate.value}`
+    case 'nominal':
+      return `exercise.insights.nominal.${candidate.value}`
   }
 }
 

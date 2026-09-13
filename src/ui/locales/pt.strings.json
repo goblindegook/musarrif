@@ -250,7 +250,6 @@
   "exercise.insights.recommendation.habit.keepSteady": "Mantenha estável o seu hábito diário.",
   "exercise.insights.recommendation.habit.protectAccuracy": "Abrande ligeiramente e proteja a sua precisão.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "Reconstrua um pequeno hábito diário antes de aumentar o ritmo.",
-  "exercise.insights.stage": "Desbloqueou {unlocked} de {total} tipos de raiz.",
   "exercise.insights.stage.next.complete": "Desbloqueou todas as dimensões — continue a praticar para as dominar.",
   "exercise.insights.stage.next.forms": "A seguir: Forma {value}.",
   "exercise.insights.stage.next.nominals": "A seguir: {value}.",
@@ -567,5 +566,19 @@
   "valency.2": "Transitivo",
   "valency.3": "Ditransitivo",
   "voice.active": "Activo",
-  "voice.passive": "Passivo"
+  "voice.passive": "Passivo",
+  "exercise.insights.nominal.masdar": "substantivos verbais",
+  "exercise.insights.nominal.participles": "particípios",
+  "exercise.insights.strengths.single.nominal": "Destaca-se nos {value}.",
+  "exercise.insights.strengths.pair.rootType.nominal": "Destaca-se nas {value1} e nos {value2}.",
+  "exercise.insights.strengths.pair.tense.nominal": "Destaca-se no tempo {value1} e nos {value2}.",
+  "exercise.insights.strengths.pair.form.nominal": "Destaca-se na {value1} e nos {value2}.",
+  "exercise.insights.strengths.pair.pronounClass.nominal": "Destaca-se nas {value1} e nos {value2}.",
+  "exercise.insights.strengths.pair.nominal.nominal": "Destaca-se nos {value1} e nos {value2}.",
+  "exercise.insights.challenge.single.nominal": "Os {value} são o seu território de crescimento.",
+  "exercise.insights.challenge.pair.rootType.nominal": "As {value1} e os {value2} são o seu território de crescimento.",
+  "exercise.insights.challenge.pair.tense.nominal": "O tempo {value1} e os {value2} são o seu território de crescimento.",
+  "exercise.insights.challenge.pair.form.nominal": "{value1} e os {value2} são o seu território de crescimento.",
+  "exercise.insights.challenge.pair.pronounClass.nominal": "As {value1} e os {value2} são o seu território de crescimento.",
+  "exercise.insights.challenge.pair.nominal.nominal": "Os {value1} e os {value2} são o seu território de crescimento."
 }

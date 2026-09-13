@@ -250,7 +250,6 @@
   "exercise.insights.recommendation.habit.keepSteady": "Mantieni costante la tua abitudine quotidiana.",
   "exercise.insights.recommendation.habit.protectAccuracy": "Rallenta leggermente e proteggi la tua precisione.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "Ricostruisci una piccola abitudine quotidiana prima di aumentare il ritmo.",
-  "exercise.insights.stage": "Hai sbloccato {unlocked} di {total} tipi di radice.",
   "exercise.insights.stage.next.complete": "Hai sbloccato tutte le dimensioni — continua ad allenarti per padroneggiarle tutte.",
   "exercise.insights.stage.next.forms": "Il prossimo: Forma {value}.",
   "exercise.insights.stage.next.nominals": "Il prossimo: {value}.",
@@ -567,5 +566,19 @@
   "valency.2": "Transitivo",
   "valency.3": "Ditransitivo",
   "voice.active": "Attivo",
-  "voice.passive": "Passivo"
+  "voice.passive": "Passivo",
+  "exercise.insights.nominal.masdar": "sostantivi verbali",
+  "exercise.insights.nominal.participles": "participi",
+  "exercise.insights.strengths.single.nominal": "Eccelli con i {value}.",
+  "exercise.insights.strengths.pair.rootType.nominal": "Eccelli con le {value1} e i {value2}.",
+  "exercise.insights.strengths.pair.tense.nominal": "Eccelli nel tempo {value1} e con i {value2}.",
+  "exercise.insights.strengths.pair.form.nominal": "Eccelli con {value1} e i {value2}.",
+  "exercise.insights.strengths.pair.pronounClass.nominal": "Eccelli con le {value1} e i {value2}.",
+  "exercise.insights.strengths.pair.nominal.nominal": "Eccelli con i {value1} e i {value2}.",
+  "exercise.insights.challenge.single.nominal": "I {value} sono il tuo territorio di crescita.",
+  "exercise.insights.challenge.pair.rootType.nominal": "Le {value1} e i {value2} sono il tuo territorio di crescita.",
+  "exercise.insights.challenge.pair.tense.nominal": "Il tempo {value1} e i {value2} sono il tuo territorio di crescita.",
+  "exercise.insights.challenge.pair.form.nominal": "{value1} e i {value2} sono il tuo territorio di crescita.",
+  "exercise.insights.challenge.pair.pronounClass.nominal": "Le {value1} e i {value2} sono il tuo territorio di crescita.",
+  "exercise.insights.challenge.pair.nominal.nominal": "I {value1} e i {value2} sono il tuo territorio di crescita."
 }

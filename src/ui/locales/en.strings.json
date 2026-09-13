@@ -250,7 +250,6 @@
   "exercise.insights.recommendation.habit.keepSteady": "Keep your daily habit steady.",
   "exercise.insights.recommendation.habit.protectAccuracy": "Slow down slightly and protect your accuracy.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "Rebuild a small daily habit before pushing for speed.",
-  "exercise.insights.stage": "You’ve unlocked {unlocked} of {total} root types.",
   "exercise.insights.stage.next.complete": "You’ve unlocked all dimensions — keep drilling to master them all.",
   "exercise.insights.stage.next.forms": "Up next: Form {value}.",
   "exercise.insights.stage.next.nominals": "Up next: {value}.",
@@ -567,5 +566,19 @@
   "valency.2": "Transitive",
   "valency.3": "Ditransitive",
   "voice.active": "Active",
-  "voice.passive": "Passive"
+  "voice.passive": "Passive",
+  "exercise.insights.nominal.masdar": "verbal nouns",
+  "exercise.insights.nominal.participles": "participles",
+  "exercise.insights.strengths.single.nominal": "You shine brightest with {value}.",
+  "exercise.insights.strengths.pair.rootType.nominal": "You shine brightest with {value1} and {value2}.",
+  "exercise.insights.strengths.pair.tense.nominal": "You shine brightest in the {value1} and with {value2}.",
+  "exercise.insights.strengths.pair.form.nominal": "You shine brightest with {value1} and {value2}.",
+  "exercise.insights.strengths.pair.pronounClass.nominal": "You shine brightest with {value1} and {value2}.",
+  "exercise.insights.strengths.pair.nominal.nominal": "You shine brightest with {value1} and {value2}.",
+  "exercise.insights.challenge.single.nominal": "{value} are your growth territory right now.",
+  "exercise.insights.challenge.pair.rootType.nominal": "{value1} and {value2} are your growth territory right now.",
+  "exercise.insights.challenge.pair.tense.nominal": "The {value1} and {value2} are your growth territory right now.",
+  "exercise.insights.challenge.pair.form.nominal": "{value1} and {value2} are your growth territory right now.",
+  "exercise.insights.challenge.pair.pronounClass.nominal": "{value1} and {value2} are your growth territory right now.",
+  "exercise.insights.challenge.pair.nominal.nominal": "{value1} and {value2} are your growth territory right now."
 }
