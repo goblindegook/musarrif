@@ -525,6 +525,22 @@ describe('promoteDimensions', () => {
     ).toBe(0)
   })
 
+  test('tenses does not unlock the passive until Forms II to V are available', () => {
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 3, pronouns: 3, forms: 3 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(3)
+
+    expect(
+      promoteDimensions({
+        profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 3, pronouns: 3, forms: 4 },
+        windows: { ...INITIAL_DIMENSION_WINDOWS, tenses: filledWindow(20) },
+      }).profile.tenses,
+    ).toBe(4)
+  })
+
   test('tenses promotes to level 1 while only Form I is unlocked', () => {
     expect(
       promoteDimensions({

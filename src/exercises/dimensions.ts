@@ -367,8 +367,8 @@ function canPromote<T extends DimensionKey>(profile: DimensionProfile, dimension
   // on the present tense rather than the reverse:
   if (dimension === 'forms' && level === 0 && profile.tenses < 1) return false
 
-  // Do not unlock passive verbs before exposure to all forms:
-  if (dimension === 'tenses' && level >= 4 && profile.forms < MAX_LEVELS.forms) return false
+  // Courses introduce the passive once the common derived forms are in hand, so gate it on Forms II-V:
+  if (dimension === 'tenses' && level >= 3 && profile.forms < 4) return false
 
   return true
 }

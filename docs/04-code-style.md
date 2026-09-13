@@ -11,7 +11,7 @@
 
 ### Formatting Rules (Biome)
 
-Formatting is set in `biome.json` and enforced by CI (`npm run lint`). Run `npm run format` rather than hand-matching a style.
+Formatting is set in `biome.json` and enforced by CI (`npm run check:lint`). Run `npm run format` rather than hand-matching a style.
 
 ### Naming Conventions
 
@@ -19,6 +19,12 @@ Formatting is set in `biome.json` and enforced by CI (`npm run lint`). Run `npm 
 - **Components/Types/Interfaces**: PascalCase (`Verb`, `VerbMetaProps`)
 - **Constants**: UPPER_SNAKE_CASE for module-level constants (`ALIF_HAMZA`)
 - **Files**: PascalCase for components (`SpeechButton.tsx`), camelCase for utilities (`pronouns.ts`)
+
+### Function and Code Organization
+
+- Keep functions small, single responsibility; prefer pure functions
+- Use `const` for components and module-level constants; use spread over mutation
+- Imports: external packages first, then internal type imports, then internal component/utility imports
 
 ### Type Definitions
 
@@ -30,19 +36,13 @@ Formatting is set in `biome.json` and enforced by CI (`npm run lint`). Run `npm 
 ### Comments
 
 - Explain WHY, not what/how
-- No comments explaining what code does
+- No comments explaining what code is obviously doing
 - Write comments for non-obvious decisions, workarounds, or grammar rules
-- Use comments with linter ignores to explain why rule is ignored
+- Use comments with linter ignores to explain why a rule is ignored
 
 #### Good Comment Example
 
 ```typescript
 // Doubly weak (middle wāw, final yā') keeps the glide and takes kasra before yā': يَحْوِي
-return `${YEH}${FATHA}${c1}${SUKOON}${c2}${KASRA}${YEH}`
+return [YEH, FATHA, c1, SUKOON, c2, KASRA, YEH]
 ```
-
-### Function and Code Organization
-
-- Keep functions small, single responsibility; prefer pure functions
-- Use `const` for components and module-level constants; use spread over mutation
-- Imports: external packages first, then internal type imports, then internal component/utility imports
