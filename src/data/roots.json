@@ -1139,6 +1139,14 @@
   },
   {
     "root": "Hlm",
+    "form": 1,
+    "vowels": "u-u",
+    "masdars": ["fi3l"],
+    "passive": "none",
+    "lexicalActiveParticiple": "Haliym"
+  },
+  {
+    "root": "Hlm",
     "form": 8,
     "passive": "none"
   },
@@ -2645,6 +2653,12 @@
     "masdars": ["fa3il", "fi3l", "fi3la"]
   },
   {
+    "root": "kbb",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
     "root": "kbr",
     "form": 1,
     "vowels": "u-u",
@@ -2685,6 +2699,16 @@
     "root": "kfhr",
     "form": 4,
     "passive": "none"
+  },
+  {
+    "root": "kfr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fu3l", "fu3laan", "fu3ool"]
+  },
+  {
+    "root": "kfr",
+    "form": 2
   },
   {
     "root": "kl'",
@@ -2786,6 +2810,10 @@
   {
     "root": "kvr",
     "form": 4
+  },
+  {
+    "root": "kwm",
+    "form": 2
   },
   {
     "root": "kwn",
@@ -3383,6 +3411,12 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": ["fa3l"]
+  },
+  {
+    "root": "qTn",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fu3ool"]
   },
   {
     "root": "qbD",
