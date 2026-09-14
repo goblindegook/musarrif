@@ -161,7 +161,6 @@ function presentPrefixVowel(verb: Verb): Token {
 }
 
 function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, _c2, _c3] = verb.rootTokens
   const indicative = conjugateIndicative(verb)
 
   return {
@@ -203,7 +202,6 @@ const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
 }
 
 function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const [, _c2, _c3] = verb.rootTokens
   const indicative = conjugateIndicative(verb)
 
   return {
