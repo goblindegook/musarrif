@@ -402,12 +402,11 @@ function deriveMasdarFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
       radicalMorpheme(c3.isWeak ? HAMZA : c3),
     ]
 
-  if (c3.isWeak)
-    return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3.isWeak ? HAMZA : c3)]
+  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(HAMZA)]
 
   if (c2.isWeak && !infix.equals(DAL)) return [...prefix, measureMorpheme(YEH, FATHA, ALIF), radicalMorpheme(c3)]
 
-  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3.isWeak ? HAMZA : c3)]
+  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA, ALIF), radicalMorpheme(c3)]
 }
 
 function deriveMasdarFormIX(verb: NonFormIVerb): readonly Morpheme[] {
