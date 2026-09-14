@@ -66,7 +66,6 @@ export const PanelContainer = styled('section')`
 
   @media print {
     border: none;
-    border-radius: 0;
     padding: 0.4rem 0;
     gap: 0.4rem;
     box-shadow: none;
