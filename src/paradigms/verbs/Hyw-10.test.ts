@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('Hyy-10 (Wiktionary)', () => {
+describe('Hyw-10 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('Hyy-10')!)).toEqualT({
+    expect(conjugatePast(getVerbById('Hyw-10')!)).toEqualT({
       '1s': 'اِسْتَحَيْتُ',
       '2ms': 'اِسْتَحَيْتَ',
       '2fs': 'اِسْتَحَيْتِ',
@@ -28,7 +28,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-10')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-10')!, 'indicative')).toEqualT({
       '1s': 'أَسْتَحِي',
       '2ms': 'تَسْتَحِي',
       '2fs': 'تَسْتَحِينَ',
@@ -46,7 +46,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-10')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-10')!, 'subjunctive')).toEqualT({
       '1s': 'أَسْتَحِيَ',
       '2ms': 'تَسْتَحِيَ',
       '2fs': 'تَسْتَحِي',
@@ -64,7 +64,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-10')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-10')!, 'jussive')).toEqualT({
       '1s': 'أَسْتَحِ',
       '2ms': 'تَسْتَحِ',
       '2fs': 'تَسْتَحِي',
@@ -82,7 +82,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('Hyy-10')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('Hyw-10')!)).toMatchObjectT({
       '2ms': 'اِسْتَحِ',
       '2fs': 'اِسْتَحِي',
       '2d': 'اِسْتَحِيَا',
@@ -92,7 +92,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('Hyy-10')!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('Hyw-10')!)).toEqualT({
       '1s': 'اُسْتُحِيتُ',
       '2ms': 'اُسْتُحِيتَ',
       '2fs': 'اُسْتُحِيتِ',
@@ -110,7 +110,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-10')!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-10')!, 'indicative')).toEqualT({
       '1s': 'أُسْتَحَى',
       '2ms': 'تُسْتَحَى',
       '2fs': 'تُسْتَحَيْنَ',
@@ -128,7 +128,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-10')!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-10')!, 'subjunctive')).toEqualT({
       '1s': 'أُسْتَحَى',
       '2ms': 'تُسْتَحَى',
       '2fs': 'تُسْتَحَيْ',
@@ -146,7 +146,7 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-10')!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-10')!, 'jussive')).toEqualT({
       '1s': 'أُسْتَحَ',
       '2ms': 'تُسْتَحَ',
       '2fs': 'تُسْتَحَيْ',
@@ -164,14 +164,14 @@ describe('Hyy-10 (Wiktionary)', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('Hyy-10')!)).toEqualT('مُسْتَحٍ')
+    expect(deriveActiveParticiple(getVerbById('Hyw-10')!)).toEqualT('مُسْتَحٍ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('Hyy-10')!)).toEqualT('مُسْتَحًى')
+    expect(derivePassiveParticiple(getVerbById('Hyw-10')!)).toEqualT('مُسْتَحًى')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById('Hyy-10')!))).toEqualT(new Set(['اِسْتِحَاء']))
+    expect(new Set(deriveMasdar(getVerbById('Hyw-10')!))).toEqualT(new Set(['اِسْتِحَاء']))
   })
 })

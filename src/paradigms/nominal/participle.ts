@@ -1,5 +1,6 @@
 import { transliterateReverse } from '@pacote/buckwalter'
 import { derivePresentStem } from '../active/present'
+import { derivedRadicals } from '../roots'
 import {
   ALIF,
   ALIF_MAQSURA,
@@ -123,7 +124,7 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
     }
   }
 
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = verb.form === 1 ? verb.rootTokens : derivedRadicals(verb.rootTokens)
   const defectiveSuffix = isActive ? measureMorpheme(TANWEEN_KASRA) : measureMorpheme(TANWEEN_FATHA, ALIF_MAQSURA)
 
   switch (verb.form) {

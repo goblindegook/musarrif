@@ -150,7 +150,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
 
-  if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
+  if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(pastVowel.equals(KASRA) ? YEH : c3)]]
 
   if (c2.isWeak && verb.hollowContraction !== 'uncontracted') return [[...prefix, radicalMorpheme(c3)]]
 
@@ -385,7 +385,10 @@ function contractDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morphem
 
   if (before.equals([KASRA])) {
     // Elide kasra + c3 before a damma-initial agreement suffix (3mp):
-    if (agreement.startsWith([DAMMA])) return morphemes.toSpliced(index - 1, 2)
+    if (agreement.startsWith([DAMMA]))
+      return findPrecedingRadical(morphemes, index)?.equals(c3)
+        ? morphemes.with(index - 1, measureMorpheme(SUKOON))
+        : morphemes.toSpliced(index - 1, 2)
 
     // Elide the sukoon linking c3 to a consonant-initial agreement suffix:
     if (agreement.startsWith([SUKOON])) return morphemes.with(-1, agreement.slice(1))

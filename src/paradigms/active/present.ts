@@ -31,11 +31,11 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 
   if (isQuadriliteralVerb(verb)) return [...stem, kasra]
 
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = verb.form === 1 ? verb.rootTokens : derivedRadicals(verb.rootTokens)
 
   // Form I defective shapes collide structurally with each other. Every other case is handled generically — see contractActivePresentDefectiveRoot.
   if (verb.form === 1) {
-    if (c3.equals(YEH) && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), agreementMorpheme(FATHA)]
+    if (c3.isWeak && isFormIPresentVowel(verb, FATHA)) return [...stem.slice(0, -2), agreementMorpheme(FATHA)]
     if (c3.isWeak && (c1.isWeak || c3.equals(WAW))) return [...stem.slice(0, -2), kasra]
     if (c3.isWeak) return stem.with(-1, kasra)
   }
@@ -196,7 +196,7 @@ function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]
 
 const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
   const finalMorpheme = stem.at(-1)
-  if (finalMorpheme?.equals([ALIF_MAQSURA])) return stem
+  if (finalMorpheme?.equals([ALIF_MAQSURA]) || finalMorpheme?.equals([ALIF])) return stem
   if (finalMorpheme?.equals([DAMMA])) return stem.with(-1, finalMorpheme.with(-1, FATHA))
   return [...stem, agreementMorpheme(FATHA)]
 }
@@ -344,7 +344,7 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
   if (c3.isWeak) {
     if (c1.equals(WAW)) return [radicalMorpheme(c2), measureMorpheme(presentVowel), radicalMorpheme(c3)]
 
-    if (c3.equals(WAW))
+    if (c3.equals(WAW) && presentVowel.equals(DAMMA))
       return [
         radicalMorpheme(c1),
         measureMorpheme(SUKOON),
@@ -361,7 +361,7 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
         measureMorpheme(SUKOON),
         radicalMorpheme(c2),
         measureMorpheme(FATHA),
-        radicalMorpheme(ALIF_MAQSURA),
+        radicalMorpheme(c2.equals(YEH) ? ALIF : ALIF_MAQSURA),
       ]
 
     return [
@@ -610,7 +610,7 @@ function contractHollowRoot(morphemes: readonly Morpheme[]): readonly Morpheme[]
 
 function substituteWeakRadicalWithYehBeforeDualMarker(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   const index = morphemes.findIndex(
-    (m, i) => m.equals([ALIF_MAQSURA]) && morphemes[i + 1]?.equals([FATHA, ALIF, NOON, KASRA]),
+    (m, i) => (m.equals([ALIF_MAQSURA]) || m.equals([ALIF])) && morphemes[i + 1]?.equals([FATHA, ALIF, NOON, KASRA]),
   )
   if (index === -1) return morphemes
   return [...morphemes.slice(0, index), radicalMorpheme(YEH), ...morphemes.slice(index + 1)]
@@ -654,7 +654,10 @@ function elideWeakRadicalBeforeMasculinePluralDamma(morphemes: readonly Morpheme
   )
   if (index < 1) return morphemes
 
-  const vowel = morphemes[index].equals([ALIF_MAQSURA]) ? agreementMorpheme(FATHA) : agreementMorpheme(DAMMA)
+  const vowel =
+    morphemes[index].equals([ALIF_MAQSURA]) || morphemes[index].equals([ALIF])
+      ? agreementMorpheme(FATHA)
+      : agreementMorpheme(DAMMA)
   return [...morphemes.slice(0, index - 1), vowel, ...morphemes.slice(index + 2)]
 }
 

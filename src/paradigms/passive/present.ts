@@ -1,6 +1,7 @@
 import { mapRecord } from '../../primitives/objects'
 import type { PronounId } from '../pronouns'
 import { isDual, isFemininePlural, isMasculinePlural } from '../pronouns'
+import { derivedRadicals } from '../roots'
 import type { Mood } from '../tense'
 import {
   ALIF,
@@ -144,7 +145,7 @@ function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mo
 }
 
 function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
 
@@ -170,7 +171,7 @@ function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounI
 }
 
 function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
   if (c2.isHamza) return [radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
@@ -431,7 +432,7 @@ function derivePassivePresentStemFormIX(verb: NonFormIVerb, pronounId: PronounId
 }
 
 function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 

@@ -1357,15 +1357,23 @@
     "passive": "impersonal"
   },
   {
-    "root": "Hyy",
+    "root": "Hyw",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": [],
+    "lexicalMasdars": ["HayaAp", "maHoyFA"],
+    "passive": "none"
+  },
+  {
+    "root": "Hyw",
     "form": 2
   },
   {
-    "root": "Hyy",
+    "root": "Hyw",
     "form": 4
   },
   {
-    "root": "Hyy",
+    "root": "Hyw",
     "form": 10
   },
   {
@@ -2226,8 +2234,9 @@
   {
     "root": "gdw",
     "form": 1,
-    "vowels": "a-a",
-    "masdars": ["fa3la", "fu3la", "fu3ool"]
+    "vowels": "a-u",
+    "masdars": ["fa3la", "fu3la", "fu3ool"],
+    "passive": "impersonal"
   },
   {
     "root": "gfr",

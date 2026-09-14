@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('Hyy-4', () => {
+describe('Hyw-4 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('Hyy-4')!)).toEqualT({
+    expect(conjugatePast(getVerbById('Hyw-4')!)).toEqualT({
       '1s': 'أَحْيَيْتُ',
       '2ms': 'أَحْيَيْتَ',
       '2fs': 'أَحْيَيْتِ',
@@ -28,7 +28,7 @@ describe('Hyy-4', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-4')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-4')!, 'indicative')).toEqualT({
       '1s': 'أُحْيِي',
       '2ms': 'تُحْيِي',
       '2fs': 'تُحْيِينَ',
@@ -46,7 +46,7 @@ describe('Hyy-4', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-4')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-4')!, 'subjunctive')).toEqualT({
       '1s': 'أُحْيِيَ',
       '2ms': 'تُحْيِيَ',
       '2fs': 'تُحْيِي',
@@ -64,7 +64,7 @@ describe('Hyy-4', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('Hyy-4')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('Hyw-4')!, 'jussive')).toEqualT({
       '1s': 'أُحْيِ',
       '2ms': 'تُحْيِ',
       '2fs': 'تُحْيِي',
@@ -82,7 +82,7 @@ describe('Hyy-4', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('Hyy-4')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('Hyw-4')!)).toMatchObjectT({
       '2ms': 'أَحْيِ',
       '2fs': 'أَحْيِي',
       '2d': 'أَحْيِيَا',
@@ -92,7 +92,7 @@ describe('Hyy-4', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('Hyy-4')!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('Hyw-4')!)).toEqualT({
       '1s': 'أُحْيِيتُ',
       '2ms': 'أُحْيِيتَ',
       '2fs': 'أُحْيِيتِ',
@@ -110,7 +110,7 @@ describe('Hyy-4', () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-4')!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-4')!, 'indicative')).toEqualT({
       '1s': 'أُحْيَا',
       '2ms': 'تُحْيَا',
       '2fs': 'تُحْيَيْنَ',
@@ -128,7 +128,7 @@ describe('Hyy-4', () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-4')!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-4')!, 'subjunctive')).toEqualT({
       '1s': 'أُحْيَا',
       '2ms': 'تُحْيَا',
       '2fs': 'تُحْيَيْ',
@@ -146,7 +146,7 @@ describe('Hyy-4', () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('Hyy-4')!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('Hyw-4')!, 'jussive')).toEqualT({
       '1s': 'أُحْيَ',
       '2ms': 'تُحْيَ',
       '2fs': 'تُحْيَيْ',
@@ -164,14 +164,14 @@ describe('Hyy-4', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('Hyy-4')!)).toEqualT('مُحْيٍ')
+    expect(deriveActiveParticiple(getVerbById('Hyw-4')!)).toEqualT('مُحْيٍ')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('Hyy-4')!)).toEqualT('مُحْيًى')
+    expect(derivePassiveParticiple(getVerbById('Hyw-4')!)).toEqualT('مُحْيًى')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('Hyy-4')!)).toEqualT(['إِحْيَاء'])
+    expect(new Set(deriveMasdar(getVerbById('Hyw-4')!))).toEqualT(new Set(['إِحْيَاء']))
   })
 })

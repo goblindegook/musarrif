@@ -244,6 +244,10 @@ describe('active past', () => {
         expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
       })
 
+      test('حَيِيَ pattern', () => {
+        expect(conjugatePast(getVerb('حيو', 1, 'i-a'))['3ms']).toEqualT('حَيِيَ')
+      })
+
       test('رَمَى conjugation', () => {
         expect(conjugatePast(getVerb('رمي', 1))).toEqualT({
           '1s': 'رَمَيْتُ',
