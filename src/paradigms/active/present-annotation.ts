@@ -2,7 +2,7 @@ import type { DerivationSteps } from '../annotation-types'
 import type { PronounId } from '../pronouns'
 import type { Mood } from '../tense'
 import { ALIF, ALIF_HAMZA, FATHA, KASRA, type Token } from '../tokens'
-import type { Verb } from '../verbs'
+import { isQuadriliteralVerb, type Verb } from '../verbs'
 import { elidedMorpheme } from '../word'
 import { activePastDerivationSteps } from './past-annotation'
 import { conjugatePresentMood } from './present'
@@ -50,7 +50,8 @@ export function activePresentMoodDerivationSteps(verb: Verb, mood: Mood, pronoun
 }
 
 function elidedPastPrefix(verb: Verb): readonly Token[] | null {
+  if (isQuadriliteralVerb(verb) && verb.form >= 3) return [ALIF, KASRA]
   if (verb.form === 4) return [ALIF_HAMZA, FATHA]
-  if (verb.form === 10) return [ALIF, KASRA]
+  if (verb.form >= 7) return [ALIF, KASRA]
   return null
 }

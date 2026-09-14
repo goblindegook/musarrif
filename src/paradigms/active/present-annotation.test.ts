@@ -126,6 +126,7 @@ describe('annotateActivePresentMood', () => {
         type: 'tense',
         tense: 'active.present.indicative',
         morphemes: [
+          { text: 'اِ', role: 'elided' },
           { text: 'يَ', role: 'agreement' },
           { text: 'نْ', role: 'measure' },
           { text: 'ك', role: 'radical' },
@@ -133,6 +134,54 @@ describe('annotateActivePresentMood', () => {
           { text: 'ت', role: 'radical' },
           { text: 'ِ', role: 'measure' },
           { text: 'ب', role: 'radical' },
+          { text: 'ُ', role: 'agreement' },
+        ],
+      },
+    ])
+  })
+
+  test('indicative Form IVq — شمءز (3ms) matches annotation object', () => {
+    const result = activePresentMoodDerivationSteps(getVerb('شمءز', 4), 'indicative', '3ms')
+
+    expect(detokenizeDerivationSteps(result)).toEqual([
+      {
+        type: 'root',
+        morphemes: [
+          { text: 'ش', role: 'radical' },
+          { text: 'م', role: 'radical' },
+          { text: 'ء', role: 'radical' },
+          { text: 'ز', role: 'radical' },
+        ],
+      },
+      {
+        type: 'form',
+        form: 4,
+        morphemes: [
+          { text: 'اِ', role: 'measure' },
+          { text: 'ش', role: 'radical' },
+          { text: 'ْ', role: 'measure' },
+          { text: 'م', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'أ', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'ز', role: 'radical' },
+          { text: 'َّ', role: 'measure' },
+        ],
+      },
+      {
+        type: 'tense',
+        tense: 'active.present.indicative',
+        morphemes: [
+          { text: 'اِ', role: 'elided' },
+          { text: 'يَ', role: 'agreement' },
+          { text: 'ش', role: 'radical' },
+          { text: 'ْ', role: 'measure' },
+          { text: 'م', role: 'radical' },
+          { text: 'َ', role: 'measure' },
+          { text: 'ئ', role: 'radical' },
+          { text: 'ِ', role: 'measure' },
+          { text: 'ز', role: 'radical' },
+          { text: 'ّ', role: 'measure' },
           { text: 'ُ', role: 'agreement' },
         ],
       },
