@@ -43,7 +43,7 @@ describe('getVerbById', () => {
       rootTokens: tokenize('ضفز'),
       passive: undefined,
       synthetic: true,
-      valency: [],
+      valency: undefined,
     })
   })
 
@@ -56,11 +56,7 @@ describe('getVerbById', () => {
       root: 'ضفز',
       rootId: 'Dfz',
       rootTokens: tokenize('ضفز'),
-      masdars: undefined,
-      lexicalMasdars: [],
-      lexicalActiveParticiple: undefined,
       synthetic: true,
-      valency: [],
     })
   })
 
@@ -73,7 +69,6 @@ describe('getVerbById', () => {
       rootId: 'Dfz',
       rootTokens: tokenize('ضفز'),
       synthetic: true,
-      valency: [],
     })
   })
 })
@@ -446,11 +441,7 @@ describe('Form I roots with more than one vowel pattern', () => {
       rootId: 'Dfz',
       rootTokens: tokenize('ضفز'),
       vowels: 'a-a',
-      masdars: undefined,
-      lexicalMasdars: [],
-      lexicalActiveParticiple: undefined,
       synthetic: true,
-      valency: [],
     })
   })
 

@@ -29,7 +29,7 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
 
   const valency = useMemo(
     () =>
-      verb.valency
+      (verb.valency ?? [])
         .toSorted((a, b) => a - b)
         .map((value) => t(`valency.${value}`))
         .join(' · '),

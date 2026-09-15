@@ -280,63 +280,37 @@ function findVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
 export function getVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
   root: Root,
   form: Form,
-  pattern?: RootKind<Root> extends 'quadriliteral' ? never : FormIPattern,
+  vowels?: RootKind<Root> extends 'quadriliteral' ? never : FormIPattern,
 ): DisplayVerbForRootAndForm<Root, Form>
-export function getVerb(root: string, form: TriliteralForm, pattern?: FormIPattern): DisplayVerb {
-  const existingVerb = findVerb(root, form, pattern)
+export function getVerb(root: string, form: TriliteralForm, vowels?: FormIPattern): DisplayVerb {
+  const existingVerb = findVerb(root, form, vowels)
   if (existingVerb) return existingVerb
 
-  return buildSyntheticVerb(transliterateReverse(root), form, pattern ?? 'a-a')
+  return synthesizeVerb(transliterateReverse(root), form, vowels)
 }
 
-function buildSyntheticVerb(root: string, form: TriliteralForm, pattern: FormIPattern): DisplayVerb {
+function synthesizeVerb<Root extends string, Form extends AllowedFormForRoot<Root>>(
+  root: Root,
+  form: Form,
+  vowels?: FormIPattern,
+): DisplayVerb {
   const rootTokens = tokenizeRoot(root)
 
   if (rootTokens.length === 4) {
-    const quadriliteralRoot = toQuadriliteralRoot(root)
-    const matchingQuadriliteral = verbs.find((entry) => isQuadriliteralVerb(entry) && entry.root === quadriliteralRoot)
-
     return buildDisplayVerb(
       {
-        root: quadriliteralRoot,
+        root: toQuadriliteralRoot(root),
         rootTokens,
         form: clamp(form, 1, 4) as QuadriliteralForm,
-        valency: matchingQuadriliteral?.valency ?? [],
       },
       true,
     )
   }
 
-  const triliteralRoot = toTriliteralRoot(root)
-  const matchingFormI = verbs.find(
-    (entry): entry is TriliteralDisplayVerb<1> =>
-      isTriliteralFormIDisplayVerb(entry) && entry.root === triliteralRoot && entry.vowels === pattern,
-  )
-  const matchingNonFormI = verbs.find(
-    (entry): entry is TriliteralDisplayVerb<Exclude<TriliteralForm, 1>> =>
-      !isTriliteralFormIDisplayVerb(entry) && entry.root === triliteralRoot,
-  )
-
   return buildDisplayVerb(
     form === 1
-      ? {
-          root: triliteralRoot,
-          rootTokens,
-          form: 1,
-          vowels: pattern,
-          masdars: matchingFormI?.masdars,
-          lexicalMasdars: matchingFormI?.lexicalMasdars ?? [],
-          lexicalActiveParticiple: matchingFormI?.lexicalActiveParticiple,
-          valency: matchingFormI?.valency ?? [],
-        }
-      : {
-          root: triliteralRoot,
-          rootTokens,
-          form: form as Exclude<TriliteralForm, 1>,
-          // Form VII supports at most an impersonal passive.
-          passive: form === 7 ? 'impersonal' : undefined,
-          valency: matchingNonFormI?.valency ?? [],
-        },
+      ? { root: toTriliteralRoot(root), rootTokens, form, vowels: vowels ?? 'a-a' }
+      : { root: toTriliteralRoot(root), rootTokens, form },
     true,
   )
 }

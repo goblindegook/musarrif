@@ -71,7 +71,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   lexicalMasdars?: readonly string[]
   passive?: Passive
   lexicalPassiveParticiple?: string
-  valency: readonly Valency[]
+  valency?: readonly Valency[]
 }
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
