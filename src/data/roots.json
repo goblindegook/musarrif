@@ -1682,6 +1682,10 @@
     "passive": "none"
   },
   {
+    "root": "TrH",
+    "form": 3
+  },
+  {
     "root": "Trd",
     "form": 10
   },
@@ -2723,6 +2727,11 @@
     "form": 10
   },
   {
+    "root": "kfH",
+    "form": 3,
+    "lexicalMasdars": ["kifaAH"]
+  },
+  {
     "root": "kff",
     "form": 7
   },
@@ -2946,6 +2955,11 @@
   {
     "root": "lwm",
     "form": 10
+  },
+  {
+    "root": "lwy",
+    "form": 3,
+    "lexicalMasdars": ["liwaA'"]
   },
   {
     "root": "lys",
@@ -3265,6 +3279,10 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": ["fa3l"]
+  },
+  {
+    "root": "nfH",
+    "form": 3
   },
   {
     "root": "nfq",
@@ -5074,6 +5092,10 @@
     "lexicalMasdars": ["yubuwsap"]
   },
   {
+    "root": "ydy",
+    "form": 3
+  },
+  {
     "root": "ymn",
     "form": 1,
     "vowels": "i-a",
@@ -5092,6 +5114,10 @@
   {
     "root": "ywd",
     "form": 2
+  },
+  {
+    "root": "ywm",
+    "form": 3
   },
   {
     "root": "zEm",
