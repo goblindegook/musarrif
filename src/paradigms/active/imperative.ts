@@ -41,7 +41,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
       switch (verb.form) {
         case 1: {
           const isPatternI = isFormIPresentVowel(verb, KASRA)
-          const isPatternU = isFormIPresentVowel(verb, DAMMA) || (c3.equals(WAW) && !isFormIPresentVowel(verb, FATHA))
+          const isPatternU = isFormIPresentVowel(verb, DAMMA)
           const patternLongVowel = isPatternU ? longVowelU : longVowelI
 
           if (c1.isWeak) {

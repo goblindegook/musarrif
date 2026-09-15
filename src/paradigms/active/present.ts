@@ -31,7 +31,7 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 
   if (isQuadriliteralVerb(verb)) return [...stem, kasra]
 
-  const [c1, c2, c3] = verb.form === 1 ? verb.rootTokens : derivedRadicals(verb.rootTokens)
+  const [c1, _c2, c3] = verb.form === 1 ? verb.rootTokens : derivedRadicals(verb.rootTokens)
 
   // Form I defective shapes collide structurally with each other. Every other case is handled generically — see contractActivePresentDefectiveRoot.
   if (verb.form === 1) {
@@ -41,8 +41,6 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
   }
 
   if ([2, 3, 4, 5].includes(verb.form) && c3.isWeak) return stem.slice(0, -1)
-
-  if (c2.equals(c3) && c2.isWeak) return stem.slice(0, -1)
 
   return [...stem, kasra]
 }
