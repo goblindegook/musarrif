@@ -1,3 +1,4 @@
+import { applyDiacriticsPreference } from '../paradigms/tokens'
 import { type DisplayVerb, formatFormLabel, getAvailableParadigms, verbs } from '../paradigms/verbs'
 import enVerbs from '../ui/locales/en.verbs.json'
 
@@ -8,6 +9,7 @@ interface PrerenderPage {
   canonical: string
   description: string
   name?: string
+  alternateName?: string
   termDescription?: string
   staticMarkup?: string
 }
@@ -68,6 +70,7 @@ export function renderDocument(
             '@type': 'DefinedTerm',
             '@id': `${page.canonical}#verb`,
             name: page.name,
+            alternateName: page.alternateName,
             description: page.termDescription,
             inLanguage: 'ar',
             inDefinedTermSet: { '@id': `${origin}/verbs/#verbs` },
@@ -166,6 +169,7 @@ export function prerenderPages(origin: string): PrerenderPage[] {
         canonical: canonicalUrl(path, origin),
         description: pageDescription(verb, glosses[verb.id]),
         name: String(verb.lemma),
+        alternateName: applyDiacriticsPreference(verb.lemma, 'none'),
         termDescription: termDescription(verb, glosses[verb.id]),
       }
     }),

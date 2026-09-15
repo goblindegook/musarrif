@@ -92,6 +92,7 @@ describe('renderDocument', () => {
           '@type': 'DefinedTerm',
           '@id': 'http://localhost/verbs/ktb-1/#verb',
           name: 'كَتَبَ',
+          alternateName: 'كتب',
           description: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
           inLanguage: 'ar',
           inDefinedTermSet: { '@id': 'http://localhost/verbs/#verbs' },
@@ -191,6 +192,7 @@ describe('prerenderPages', () => {
       canonical: 'http://localhost/verbs/ktb-1/',
       description: 'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
       name: 'كَتَبَ',
+      alternateName: 'كتب',
       termDescription: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
     })
   })
