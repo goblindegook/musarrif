@@ -725,6 +725,10 @@
     "masdars": ["fu3l"]
   },
   {
+    "root": "ESrn",
+    "form": 1
+  },
+  {
     "root": "ESy",
     "form": 10,
     "passive": "impersonal"
@@ -3037,6 +3041,10 @@
     "form": 4
   },
   {
+    "root": "mknn",
+    "form": 1
+  },
+  {
     "root": "mkv",
     "form": 1,
     "vowels": "a-u",
@@ -3584,6 +3592,27 @@
     "form": 8
   },
   {
+    "root": "qrf",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "qrf",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3al"],
+    "passive": "impersonal"
+  },
+  {
+    "root": "qrf",
+    "form": 2
+  },
+  {
+    "root": "qrf",
+    "form": 8
+  },
+  {
     "root": "qrr",
     "form": 1,
     "vowels": "a-i",
@@ -3736,6 +3765,17 @@
     "form": 2
   },
   {
+    "root": "qyn",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "qys",
+    "form": 3,
+    "lexicalMasdars": ["qiyaAs"]
+  },
+  {
     "root": "r$f",
     "form": 4
   },
@@ -3867,7 +3907,16 @@
     "root": "rkb",
     "form": 1,
     "vowels": "i-a",
+    "masdars": ["fu3ool"],
     "lexicalActiveParticiple": "rakiyb"
+  },
+  {
+    "root": "rkb",
+    "form": 2
+  },
+  {
+    "root": "rkb",
+    "form": 8
   },
   {
     "root": "rkl",
