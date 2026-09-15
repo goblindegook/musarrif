@@ -1883,6 +1883,10 @@ describe('active past', () => {
   })
 
   describe('Form X', () => {
+    test('اِسْتَعْيَا pattern', () => {
+      expect(conjugatePast(getVerb('عيي', 10))['3ms']).toEqualT('اِسْتَعْيَا')
+    })
+
     describe('regular roots', () => {
       test.each([
         ['عرض', 'اِسْتَعْرَضَ'],

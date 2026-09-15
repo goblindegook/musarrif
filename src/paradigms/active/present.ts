@@ -460,7 +460,7 @@ function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
       measureMorpheme(FATHA),
       radicalMorpheme(c2),
       measureMorpheme(SUKOON, c2, FATHA),
-      radicalMorpheme(ALIF_MAQSURA),
+      radicalMorpheme(c2.equals(YEH) ? ALIF : ALIF_MAQSURA),
     ]
 
   return [
@@ -477,7 +477,13 @@ function deriveFormVI(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
-  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(ALIF_MAQSURA)]
+  if (c3.isWeak)
+    return [
+      ...prefix,
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c2.equals(YEH) ? ALIF : ALIF_MAQSURA),
+    ]
 
   if (c2.equals(c3)) return [...prefix, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c2)]
 
@@ -550,7 +556,8 @@ function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
-  if (c2.equals(c3) && c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
+  if (c2.equals(c3) && c2.isWeak)
+    return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 
   if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 

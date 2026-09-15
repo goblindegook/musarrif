@@ -436,8 +436,6 @@ function deriveMasdarFormX(verb: NonFormIVerb): readonly Morpheme[] {
       radicalMorpheme(c3.isWeak ? HAMZA : c3),
     ]
 
-  if (c2.equals(c3) && c2.isWeak) return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA, ALIF, HAMZA)]
-
   if (c3.isWeak)
     return [
       ...prefix,

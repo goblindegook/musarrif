@@ -306,7 +306,8 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
-  if (c2.isWeak && c3.isWeak) return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)]]
+  if (c2.isWeak && c3.isWeak)
+    return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
   if (c2.equals(c3))
     return [

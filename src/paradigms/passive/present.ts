@@ -232,7 +232,7 @@ function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId,
       measureMorpheme(FATHA),
       radicalMorpheme(c2),
       measureMorpheme(SHADDA, FATHA),
-      ...defectiveSuffix(mood, pronounId),
+      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
     ]
 
   return [
@@ -256,7 +256,7 @@ function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId
       measureMorpheme(FATHA, ALIF),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
+      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
     ]
 
   if (c2.equals(c3)) {
@@ -436,9 +436,6 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
   const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (c2.equals(c3) && c2.isWeak)
-    return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
-
   if (c3.isWeak)
     return [
       ...prefix,
@@ -446,7 +443,7 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
       measureMorpheme(SUKOON),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
+      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
     ]
 
   if (c2.equals(c3)) {

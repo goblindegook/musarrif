@@ -975,6 +975,24 @@
     "form": 5
   },
   {
+    "root": "Eyy",
+    "form": 4
+  },
+  {
+    "root": "Eyy",
+    "form": 5,
+    "passive": "impersonal"
+  },
+  {
+    "root": "Eyy",
+    "form": 6
+  },
+  {
+    "root": "Eyy",
+    "form": 10,
+    "passive": "impersonal"
+  },
+  {
     "root": "Ezm",
     "form": 1,
     "vowels": "a-i",
