@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import preact from '@preact/preset-vite'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -7,9 +8,15 @@ const routingMode = process.env.VITE_ROUTING_MODE === 'hash' ? 'hash' : 'path'
 
 const FILE_REQUEST = /\/[^/?]+\.[^/]+$/
 
+const verbCount = Object.keys(JSON.parse(readFileSync('src/data/roots.json', 'utf8'))).length
+
 export default defineConfig({
   base: routingMode === 'hash' ? './' : '/',
   plugins: [
+    {
+      name: 'verb-count',
+      transformIndexHtml: (html) => html.replaceAll('%VERB_COUNT%', String(verbCount)),
+    },
     preact(),
     VitePWA({
       registerType: 'prompt',
