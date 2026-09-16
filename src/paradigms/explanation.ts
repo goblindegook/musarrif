@@ -8,6 +8,7 @@ import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType, type RootShape, rootTypeLocaleKey, type WeakLetter } from './roots'
 import type { VerbTense } from './tense'
 import {
+  ALIF,
   ALIF_MADDA,
   DAL,
   NOON,
@@ -32,6 +33,7 @@ type TenseRootInteraction =
   | 'final-drops'
   | 'final-elides'
   | 'final-isolated'
+  | 'final-lengthens-aa'
   | 'final-lengthens-ii'
   | 'final-lengthens-uu'
   | 'final-passive-aa'
@@ -134,7 +136,6 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
   suffix?: string
   elidedPrefix?: string
   elidedSuffix?: string
-  contractedImperative?: boolean
 }
 
 type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
@@ -190,27 +191,31 @@ const APOCOPATING_TENSES: readonly VerbTense[] = [
   'passive.present.jussive',
 ]
 
-// Forms II, III, V and VI keep the middle radical a plain consonant: the gemination of II/V and the
-// long vowel of III/VI protect it, so a hollow root conjugates sound throughout those forms.
-const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
+// Forms II, III, V, VI and IX keep the middle radical a plain consonant: the gemination of II/V, the
+// long vowel of III/VI and the final gemination of IX (اِبْيَضَّ) protect it, so a hollow root
+// conjugates sound throughout those forms.
+const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6, 9]
 
 // Only the gemination of Forms II and V protects identical radicals; III and VI still contract.
 const DOUBLED_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 5]
 
-// Only Form I takes its active-present vowel from the root letter. Forms IV and X always give ī
-// (يُقِيمُ, يَسْتَقِيمُ) and Forms VII and VIII always give ā (يَنْقَامُ, يَخْتَارُ), waw or yaa alike.
+// Forms IV and X always give ī (يُقِيمُ, يَسْتَقِيمُ) and Forms VII and VIII always give ā
+// (يَنْقَامُ, يَخْتَارُ), waw or yaa alike.
 const HOLLOW_PRESENT_II_FORMS: readonly TriliteralForm[] = [4, 10]
 const HOLLOW_PRESENT_AA_FORMS: readonly TriliteralForm[] = [7, 8]
+
+// Form I takes it from the pattern's own present vowel instead, so the root letter does not decide:
+// يَقُولُ gives ū and يَبِيعُ ī, but the يَخَافُ / يَنَامُ class gives ā with either middle radical.
+const FORM_I_PRESENT_LENGTHENING = {
+  a: 'middle-lengthens-aa-present',
+  i: 'middle-lengthens-ii',
+  u: 'middle-lengthens-uu',
+} as const satisfies Record<string, TenseRootInteraction>
 
 // The long middle vowel survives only when nothing consonantal follows it: a vowel-initial ending
 // keeps it in every tense, while the jussive and imperative shorten it wherever such an ending is
 // absent, and the feminine plural ـْنَ shortens it even in the indicative.
-function resolveHollow(
-  isWaw: boolean,
-  tenseContext: VerbTense,
-  pronoun: PronounId,
-  form: TriliteralForm,
-): TenseRootInteraction {
+function resolveHollow(verb: Verb, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
   const isPassive = tenseContext.startsWith('passive')
 
   if (tenseContext.endsWith('past')) {
@@ -222,16 +227,13 @@ function resolveHollow(
   if (!keepsLongVowel && APOCOPATING_TENSES.includes(tenseContext)) return 'middle-shortens'
   if (FEMININE_PLURAL_PRONOUNS.includes(pronoun)) return 'middle-shortens-consonant'
   if (isPassive) return 'middle-passive-aa'
-  if (HOLLOW_PRESENT_II_FORMS.includes(form)) return 'middle-lengthens-ii-derived'
-  if (HOLLOW_PRESENT_AA_FORMS.includes(form)) return 'middle-lengthens-aa-present'
-  return isWaw ? 'middle-lengthens-uu' : 'middle-lengthens-ii'
+  if (HOLLOW_PRESENT_II_FORMS.includes(verb.form)) return 'middle-lengthens-ii-derived'
+  if (HOLLOW_PRESENT_AA_FORMS.includes(verb.form)) return 'middle-lengthens-aa-present'
+  if (isTriliteralFormIVerb(verb)) return FORM_I_PRESENT_LENGTHENING[verb.vowels[2] as 'a' | 'i' | 'u']
+  return 'middle-lengthens-aa-present'
 }
 
-function resolveDefective(
-  isWaw: boolean,
-  tenseContext: VerbTense,
-  pronoun: PronounId,
-): TenseRootInteraction | undefined {
+function resolveDefective(verb: Verb, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction | undefined {
   switch (tenseContext) {
     case 'active.past':
       if (pronoun === '3ms') return 'final-isolated'
@@ -239,8 +241,7 @@ function resolveDefective(
       return 'final-resurfaces'
     case 'active.present.indicative':
     case 'active.future':
-      if (!BARE_PRESENT_PRONOUNS.includes(pronoun)) return 'final-surfaces-consonant'
-      return isWaw ? 'final-lengthens-uu' : 'final-lengthens-ii'
+      return BARE_PRESENT_PRONOUNS.includes(pronoun) ? barePresentEnding(verb) : 'final-surfaces-consonant'
     case 'active.present.subjunctive':
       // The subjunctive's own fatḥa sits on the final radical, so it is a consonant even when bare.
       return 'final-surfaces-consonant'
@@ -256,6 +257,22 @@ function resolveDefective(
     case 'passive.present.jussive':
       return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-drops' : 'final-surfaces-consonant'
   }
+}
+
+// Forms V and VI always close on ـَى (يَتَخَلَّى, يَتَعَافَى); the other derived forms always on ī
+// (يُخَلِّي, يُنَادِي, يَسْتَدْعِي). Form I follows its own present vowel, exactly as a hollow root does.
+const DEFECTIVE_PRESENT_AA_FORMS: readonly TriliteralForm[] = [5, 6]
+
+const FORM_I_PRESENT_ENDING = {
+  a: 'final-lengthens-aa',
+  i: 'final-lengthens-ii',
+  u: 'final-lengthens-uu',
+} as const satisfies Record<string, TenseRootInteraction>
+
+function barePresentEnding(verb: Verb): TenseRootInteraction {
+  if (DEFECTIVE_PRESENT_AA_FORMS.includes(verb.form)) return 'final-lengthens-aa'
+  if (isTriliteralFormIVerb(verb)) return FORM_I_PRESENT_ENDING[verb.vowels[2] as 'a' | 'i' | 'u']
+  return 'final-lengthens-ii'
 }
 
 const FORM_I_BASE_PATTERNS: Record<FormIPattern, { pastVowel: string; arabicVowel: string }> = {
@@ -319,8 +336,11 @@ function renderPronounSentences(
 
 // ـْنَ and ـْنَا merge into a stem that already ends in ن (سَكَنَّ, سَكَنَّا), so the ending's own nūn
 // never reaches the extracted suffix and the affix sentence alone would leave it unaccounted for.
+// Outside the past, 1p carries no nūn at all: its ending is the bare mood vowel of نَكْتُبَ.
 function hasAssimilatedEndingNun(layers: VerbExplanationLayers): boolean {
-  if (!NUN_INITIAL_ENDING_PRONOUNS.includes(layers.pronoun as PronounId)) return false
+  const pronoun = layers.pronoun as PronounId
+  if (!NUN_INITIAL_ENDING_PRONOUNS.includes(pronoun)) return false
+  if (pronoun === '1p' && !layers.tense?.endsWith('past')) return false
   return layers.suffix != null && !layers.suffix.includes(String(NOON))
 }
 
@@ -371,6 +391,14 @@ function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
   return false
 }
 
+// Only the imperatives that actually open on a cluster carry the prop: اُشْكُرْ and اِنْقَصَّ do,
+// while a contracted geminate (ذُمَّ) and a Form IV hamza (أَبْقِ) do not.
+const hasAlifAlWasl = (arabic: string): boolean => arabic.startsWith(String(ALIF))
+
+// لَيْسَ is جامد: no pattern prose applies to it, the same exception derivePastFormI and
+// getAvailableParadigms already make.
+const isLaysa = (root: string): boolean => root === 'ليس'
+
 const tenseKind = (tense: VerbTense): ExplanationKind =>
   tense === 'active.future'
     ? 'particle'
@@ -388,6 +416,7 @@ export function renderExplanation(
     ...(layers.vowels && FORM_I_BASE_PATTERNS[layers.vowels]),
     arabic: toArabicText(layers.arabic),
     root: layers.paradigmRoots.join('-'),
+    initialRadical: layers.paradigmRoots[0] ?? '',
     form: toRoman(layers.paradigmForm),
     pattern: (nominalLayers?.nominal === 'masdar' ? nominalLayers?.masdarPattern : undefined) ?? '',
     pastForm: layers.pastForm ?? '',
@@ -396,6 +425,17 @@ export function renderExplanation(
 
   const nominalKey = resolveNominalKey(nominalLayers)
   const rootNoteKey = layers.rootType && resolveRootNoteKey(layers.rootType, layers.weakLetter, layers.paradigmForm)
+
+  if (verbLayers && isLaysa(layers.paradigmRoots.join(''))) {
+    return [
+      [
+        { text: t('explanation.laysa.frozen', params), kind: 'measure' as const },
+        { text: t('explanation.laysa.radical', params), kind: 'radical' as const },
+      ],
+      [{ text: t('explanation.laysa.meaning', params), kind: 'measure' as const }],
+      renderPronounSentences(verbLayers, t),
+    ].filter((paragraph) => paragraph.length > 0)
+  }
 
   return [
     [
@@ -418,9 +458,7 @@ export function renderExplanation(
         kind: 'elided',
       },
       verbLayers?.tense === 'active.imperative' &&
-        (layers.paradigmForm === 1 || layers.paradigmForm >= 7) &&
-        !layers.form?.endsWith('q') &&
-        !verbLayers.contractedImperative && {
+        hasAlifAlWasl(params.arabic) && {
           text: t('explanation.tense.active.imperative.support', params),
           kind: 'measure',
         },
@@ -474,7 +512,7 @@ function extractAffixes(morphemes: readonly Morpheme[] = []): {
 
 export function resolveVerbExplanationLayers(verb: Verb, tense: VerbTense, pronoun: PronounId): VerbExplanationLayers {
   const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
-  const isFormI = isTriliteralFormIVerb(verb)
+  const isFormI = isTriliteralFormIVerb(verb) && !isLaysa(verb.root)
   const arabic = String(conjugate(verb, tense)[pronoun])
 
   return {
@@ -490,9 +528,8 @@ export function resolveVerbExplanationLayers(verb: Verb, tense: VerbTense, prono
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
-    tenseRoot: toTenseRoot(rootType, weakLetter, tense, verb.form, pronoun, arabic),
+    tenseRoot: isLaysa(verb.root) ? undefined : toTenseRoot(verb, tense, pronoun),
     pronoun,
-    contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
     ...extractAffixes(derivationSteps(verb, tense, pronoun).at(-1)?.morphemes),
   }
 }
@@ -507,27 +544,35 @@ function toFormRoot(form: TriliteralForm, [c1]: readonly Token[]): FormRootInter
 }
 
 // A root can carry more than one irregular shape at once (e.g. assimilated + defective). Only one
-// tenseRoot sentence renders, so the dominant shape wins: hollow > defective > assimilated > doubled >
-// hamzated - the same priority analyzeRoot already uses to pick the dominant weak letter for these roots.
-function toTenseRoot(
-  rootType: RootAnalysisType,
-  weakLetter: WeakLetter | undefined,
-  tenseContext: VerbTense,
-  form: TriliteralForm,
-  pronoun: PronounId,
-  arabic: string,
-): TenseRootInteraction | undefined {
-  const isWaw = weakLetter === 'waw'
+// tenseRoot sentence renders, so the dominant shape wins: defective > hollow > assimilated > doubled >
+// hamzated - the priority the conjugation itself follows. A root that is both hollow and defective
+// (لفيف مقرون) conjugates defective throughout: its middle weak letter stays a plain consonant
+// (نَوَى، يَنْوِي), so the final radical is what drives every tense change. A lexically uncontracted
+// hollow verb (عَوِزَ، يَعْوَزُ) keeps its middle consonant in every cell, so no cell has one either.
+function toTenseRoot(verb: Verb, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction | undefined {
+  const { type: rootType } = analyzeRoot(verb.rootTokens)
 
-  if (rootType.includes('hollow') && !HOLLOW_NEUTRAL_FORMS.includes(form))
-    return resolveHollow(isWaw, tenseContext, pronoun, form)
-  if (rootType.includes('defective')) return resolveDefective(isWaw, tenseContext, pronoun)
+  if (rootType.includes('defective')) return resolveDefective(verb, tenseContext, pronoun)
+  if (rootType.includes('hollow') && !HOLLOW_NEUTRAL_FORMS.includes(verb.form) && contractsHollow(verb))
+    return resolveHollow(verb, tenseContext, pronoun)
+  // Only a wāw drops in the Form I present; a yāʾ-initial verb keeps it (يَبِسَ، يَيْبَسُ).
   if (rootType.includes('assimilated'))
-    return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
+    return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') &&
+      verb.form === 1 &&
+      verb.rootTokens[0].equals(WAW)
       ? 'initial-drops'
       : undefined
-  if (rootType.includes('doubled')) return resolveGeminate(tenseContext, form, pronoun)
-  if (rootType.includes('hamzated')) return arabic.includes(String(ALIF_MADDA)) ? 'hamza-madda' : 'hamza-seat'
+  if (rootType.includes('doubled')) return resolveGeminate(tenseContext, verb.form, pronoun)
+  if (rootType.includes('hamzated'))
+    return String(conjugate(verb, tenseContext)[pronoun]).includes(String(ALIF_MADDA)) ? 'hamza-madda' : 'hamza-seat'
+}
+
+// A Form VIII stem whose infix assimilates to د keeps a wāw middle radical intact (اِزْدَوَجَ), while
+// a yāʾ one still contracts (اِزْدَادَ) - the same split derivePastFormVIII makes.
+function contractsHollow(verb: Verb): boolean {
+  const [c1, c2] = Array.from(verb.rootTokens)
+  if (verb.form === 8 && c2.equals(WAW) && resolveFormVIIIInfixConsonant(c1).equals(DAL)) return false
+  return !isTriliteralFormIVerb(verb) || verb.hollowContraction !== 'uncontracted'
 }
 
 function resolveGeminate(

@@ -14,6 +14,7 @@ describe('analyzeRoot', () => {
     ['أول', ['hamzated', 'hollow'], 'waw', [1], [0]],
     ['ءوي', ['hamzated', 'hollow', 'defective'], undefined, [1, 2], [0]],
     ['ءتى', ['hamzated', 'defective'], 'yaa', [2], [0]],
+    ['وأد', ['hamzated', 'assimilated'], undefined, [0], [1]],
   ])('identifies %s as %s', (root, type, weakLetter, weakPositions, hamzaPositions) => {
     expect(analyzeRoot(tokenize(root))).toEqual({ type, weakLetter, weakPositions, hamzaPositions, isBiliteral: false })
   })
@@ -64,8 +65,23 @@ describe('analyzeRoot', () => {
     expect(analyzeRoot(tokenize('ءلءل'))).toMatchObject({ type: ['hamzated'], isBiliteral: true })
   })
 
-  test('analyzeRoot keeps type assimilated+defective and flags isBiliteral for a reduplicated root with weak letters', () => {
-    expect(analyzeRoot(tokenize('ولول'))).toMatchObject({ type: ['assimilated', 'defective'], isBiliteral: true })
+  test('analyzeRoot keeps type quadriliteral-weak and flags isBiliteral for a reduplicated root with weak letters', () => {
+    expect(analyzeRoot(tokenize('ولول'))).toMatchObject({ type: ['quadriliteral-weak'], isBiliteral: true })
+  })
+
+  test.each<[string, readonly string[]]>([
+    ['سيطر', ['quadriliteral-weak']],
+    ['بلور', ['quadriliteral-weak']],
+    ['كلور', ['quadriliteral-weak']],
+    ['وسوس', ['quadriliteral-weak']],
+    ['زلزل', []],
+    ['عرقل', []],
+    ['ءرشف', ['hamzated']],
+    ['لءلء', ['hamzated']],
+    ['ءلوز', ['hamzated', 'quadriliteral-weak']],
+    ['سيءطر', ['hamzated', 'quadriliteral-weak']],
+  ])('identifies quadriliteral %s as %s', (root, type) => {
+    expect(analyzeRoot(tokenize(root)).type).toEqual(type)
   })
 
   test('analyzeRoot does not flag a triliteral root as biliteral', () => {

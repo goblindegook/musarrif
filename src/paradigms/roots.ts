@@ -1,6 +1,6 @@
 import { type Token, WAW, YEH } from './tokens'
 
-export type RootShape = 'assimilated' | 'hollow' | 'defective' | 'doubled' | 'hamzated'
+export type RootShape = 'assimilated' | 'hollow' | 'defective' | 'doubled' | 'hamzated' | 'quadriliteral-weak'
 export type RootAnalysisType = readonly RootShape[]
 export type WeakLetter = 'waw' | 'yaa'
 
@@ -34,6 +34,10 @@ function isBiliteralRoot(root: readonly Token[]): boolean {
   return root.length === 4 && c1.equals(c3) && c2.equals(c4)
 }
 
+function rootShapesOn(predicate: boolean, shape: RootShape): RootShape[] {
+  return predicate ? [shape] : []
+}
+
 function analyzeType(
   root: readonly Token[],
   weakPositions: readonly number[],
@@ -41,29 +45,36 @@ function analyzeType(
 ): Pick<RootAnalysis, 'type' | 'weakLetter'> {
   const [c1, c2, c3] = Array.from(root)
 
-  if (hamzaPositions.length > 0) {
-    if (c2.isWeak && c3.isWeak) return { type: ['hamzated', 'hollow', 'defective'] }
-    if (c2.isWeak) return { type: ['hamzated', 'hollow'], weakLetter: weakLetterOf(c2) }
-    if (c3.isWeak) return { type: ['hamzated', 'defective'], weakLetter: weakLetterOf(c3) }
-    if (c2.equals(c3)) return { type: ['hamzated', 'doubled'] }
-    return { type: ['hamzated'] }
-  }
+  const isQuadriliteral = root.length > 3
+  const hasHamza = hamzaPositions.length > 0
+  const hollow = !isQuadriliteral && c2.isWeak
+  const defective = !isQuadriliteral && c3.isWeak
+  const doubled = !isQuadriliteral && !hollow && !defective && c2.equals(c3)
+  const assimilated = !isQuadriliteral && c1.isWeak
 
-  if (weakPositions.length >= 2) {
-    const dominant = weakPositions.includes(1) ? c2 : c3
-    const type: RootShape[] = weakPositions.includes(1)
-      ? weakPositions.includes(2)
-        ? ['hollow', 'defective']
-        : ['assimilated', 'hollow']
-      : ['assimilated', 'defective']
-    return { type, weakLetter: weakLetterOf(dominant) }
-  }
+  const type: RootShape[] = [
+    ...rootShapesOn(hasHamza, 'hamzated'),
+    // assimilated/hollow/defective/doubled are positions within a three-consonant root.
+    ...rootShapesOn(assimilated, 'assimilated'),
+    ...rootShapesOn(hollow, 'hollow'),
+    ...rootShapesOn(defective, 'defective'),
+    ...rootShapesOn(doubled, 'doubled'),
+    // A quadriliteral can be weak but it takes none of those behaviors.
+    ...rootShapesOn(isQuadriliteral && weakPositions.length > 0, 'quadriliteral-weak'),
+  ]
 
-  if (c1.isWeak) return { type: ['assimilated'] }
-  if (c2.isWeak) return { type: ['hollow'], weakLetter: weakLetterOf(c2) }
-  if (c3.isWeak) return { type: ['defective'], weakLetter: weakLetterOf(c3) }
-  if (c2.equals(c3)) return { type: ['doubled'] }
-  return { type: [] }
+  const weakLetter =
+    hollow && defective
+      ? hasHamza
+        ? undefined
+        : weakLetterOf(c2)
+      : hollow
+        ? weakLetterOf(c2)
+        : defective
+          ? weakLetterOf(c3)
+          : undefined
+
+  return { type, weakLetter }
 }
 
 function weakLetterOf(letter: Token): WeakLetter {

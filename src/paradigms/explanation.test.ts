@@ -19,14 +19,14 @@ const localeT = (key: string, params?: Record<string, string>): string => {
 
 describe('resolveVerbExplanationLayers rootType', () => {
   test.each([
-    ['sound root', 'كتب', { rootType: [] }],
-    ['hollow-waw root', 'قول', { rootType: ['hollow'], weakLetter: 'waw' }],
-    ['hollow-yaa root', 'بيع', { rootType: ['hollow'], weakLetter: 'yaa' }],
-    ['defective-waw root', 'دعو', { rootType: ['defective'], weakLetter: 'waw' }],
-    ['defective-yaa root', 'رمي', { rootType: ['defective'], weakLetter: 'yaa' }],
-    ['assimilated root', 'وصل', { rootType: ['assimilated'] }],
-    ['doubled root', 'مدد', { rootType: ['doubled'] }],
-  ] as const)('%s resolves root metadata', (_, root, expected) => {
+    ['كتب', { rootType: [] }],
+    ['قول', { rootType: ['hollow'], weakLetter: 'waw' }],
+    ['بيع', { rootType: ['hollow'], weakLetter: 'yaa' }],
+    ['دعو', { rootType: ['defective'], weakLetter: 'waw' }],
+    ['رمي', { rootType: ['defective'], weakLetter: 'yaa' }],
+    ['وصل', { rootType: ['assimilated'] }],
+    ['مدد', { rootType: ['doubled'] }],
+  ] as const)('%s resolves root metadata', (root, expected) => {
     const verb = getVerb(root, 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     expect(layers).toMatchObject(expected)
@@ -37,18 +37,15 @@ describe('resolveVerbExplanationLayers rootType', () => {
 
 describe('resolveVerbExplanationLayers formIPattern', () => {
   test.each([
-    ['Form I verb', 1, { vowels: 'a-u', pastForm: 'كَتَبَ', presentForm: 'يَكْتُبُ' }],
-    ['Form II verb', 2, { vowels: undefined, pastForm: undefined, presentForm: undefined }],
-  ] as const)('%s resolves Form I citation metadata', (_, form, expected) => {
+    [1, { vowels: 'a-u', pastForm: 'كَتَبَ', presentForm: 'يَكْتُبُ' }],
+    [2, { vowels: undefined, pastForm: undefined, presentForm: undefined }],
+  ] as const)('Form %d resolves Form I citation metadata', (form, expected) => {
     const verb = getVerb('كتب', form)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     expect(layers).toMatchObject(expected)
   })
 
-  test.each([
-    ['past citation', 'كَتَبَ'],
-    ['present citation', 'يَكْتُبُ'],
-  ] as const)('form-i-pattern sentence contains the actual %s form', (_, expected) => {
+  test.each([['كَتَبَ'], ['يَكْتُبُ']] as const)('form-i-pattern sentence contains citation %s', (expected) => {
     const verb = getVerb('كتب', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     const result = renderExplanation(layers, localeT)
@@ -62,13 +59,13 @@ describe('resolveVerbExplanationLayers tenseContext', () => {
   const verb = getVerb('كتب', 1)
 
   test.each([
-    ['active past', 'active.past', '3ms'],
-    ['active present indicative', 'active.present.indicative', '3ms'],
-    ['active present jussive', 'active.present.jussive', '3ms'],
-    ['active imperative', 'active.imperative', '2ms'],
-    ['passive past', 'passive.past', '3ms'],
-    ['passive present jussive', 'passive.present.jussive', '3ms'],
-  ] as const)('%s resolves tense %s', (_, tense, pronoun) => {
+    ['active.past', '3ms'],
+    ['active.present.indicative', '3ms'],
+    ['active.present.jussive', '3ms'],
+    ['active.imperative', '2ms'],
+    ['passive.past', '3ms'],
+    ['passive.present.jussive', '3ms'],
+  ] as const)('%s + %s resolves tense', (tense, pronoun) => {
     expect(resolveVerbExplanationLayers(verb, tense, pronoun).tense).toBe(tense)
   })
 })
@@ -120,6 +117,46 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
     [8, 'active.present.indicative', '3ms', 'middle-lengthens-aa-present'],
   ] as const)('hollow-yaa + Form %d + %s + %s -> %s', (form, tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(getVerb('بيع', form), tense, pronoun).tenseRoot).toBe(expected)
+  })
+
+  test.each([
+    ['zwj-8', 'active.past', '3ms', undefined],
+    ['zwj-8', 'active.present.indicative', '3ms', undefined],
+    ['zwj-8', 'passive.past', '3ms', undefined],
+    ['zyd-8', 'active.past', '3ms', 'middle-lengthens-aa'],
+    ['zyd-8', 'active.present.indicative', '3ms', 'middle-lengthens-aa-present'],
+  ] as const)('Form VIII %s %s %s -> %s', (id, tense, pronoun, expected) => {
+    expect(resolveVerbExplanationLayers(getVerbById(id)!, tense, pronoun).tenseRoot).toBe(expected)
+  })
+
+  test.each([
+    ['active.past', '3ms'],
+    ['active.present.indicative', '3ms'],
+    ['active.present.jussive', '3ms'],
+  ] as const)('hollow Form IX %s %s has no middle-vowel change', (tense, pronoun) => {
+    expect(resolveVerbExplanationLayers(getVerbById('byD-9')!, tense, pronoun).tenseRoot).toBeUndefined()
+  })
+
+  test.each([
+    ['qwl-1', 'middle-lengthens-uu'],
+    ['byE-1', 'middle-lengthens-ii'],
+    ['xwf-1', 'middle-lengthens-aa-present'],
+    ['nwm-1', 'middle-lengthens-aa-present'],
+    ['gyr-1', 'middle-lengthens-aa-present'],
+    ['xyl-1', 'middle-lengthens-aa-present'],
+  ] as const)('hollow Form I %s active present -> %s', (id, expected) => {
+    expect(resolveVerbExplanationLayers(getVerbById(id)!, 'active.present.indicative', '3ms').tenseRoot).toBe(expected)
+  })
+
+  test.each([
+    ['active.past', '3ms', undefined],
+    ['active.past', '1s', undefined],
+    ['active.present.indicative', '3ms', undefined],
+    ['active.present.jussive', '3ms', undefined],
+    ['passive.past', '3ms', undefined],
+    ['passive.present.indicative', '3ms', undefined],
+  ] as const)('uncontracted hollow + %s + %s -> %s', (tense, pronoun, expected) => {
+    expect(resolveVerbExplanationLayers(getVerbById('Ewz-1')!, tense, pronoun).tenseRoot).toBe(expected)
   })
 })
 
@@ -175,6 +212,23 @@ describe('resolveVerbExplanationLayers tenseRoot defective', () => {
     expect(resolveVerbExplanationLayers(getVerb('رمي', form), tense, pronoun).tenseRoot).toBe(expected)
   })
 
+  // The bare active present ends the same way the hollow middle lengthens: Form I follows its own
+  // present vowel (يَدْعُو، يَرْمِي، يَبْقَى) and Forms V and VI always give ـَى (يَتَخَلَّى).
+  test.each([
+    ['دعو', 1, 'final-lengthens-uu'],
+    ['رمي', 1, 'final-lengthens-ii'],
+    ['بقي', 1, 'final-lengthens-aa'],
+    ['سعي', 1, 'final-lengthens-aa'],
+    ['خلو', 4, 'final-lengthens-ii'],
+    ['ندي', 3, 'final-lengthens-ii'],
+    ['خلو', 5, 'final-lengthens-aa'],
+    ['عفو', 6, 'final-lengthens-aa'],
+  ] as const)('defective %s Form %d bare active present -> %s', (root, form, expected) => {
+    expect(resolveVerbExplanationLayers(getVerb(root, form), 'active.present.indicative', '3ms').tenseRoot).toBe(
+      expected,
+    )
+  })
+
   test('renderExplanation explains the passive present ending of a defective verb', () => {
     const layers = resolveVerbExplanationLayers(getVerb('دعو', 1), 'passive.present.indicative', '3ms')
     expect(renderExplanation(layers, (key) => key)[1]).toContainEqual({
@@ -184,9 +238,52 @@ describe('resolveVerbExplanationLayers tenseRoot defective', () => {
   })
 })
 
+describe('resolveVerbExplanationLayers laysa', () => {
+  const laysa = getVerb('ليس', 1)
+
+  test.each([
+    ['active.past', '3ms'],
+    ['active.past', '1s'],
+    ['active.past', '3fp'],
+  ] as const)('%s %s claims no Form I vowel class or hollow contraction', (tense, pronoun) => {
+    expect(resolveVerbExplanationLayers(laysa, tense, pronoun)).toMatchObject({
+      tenseRoot: undefined,
+      vowels: undefined,
+      pastForm: undefined,
+      presentForm: undefined,
+    })
+  })
+
+  test('3ms renders the frozen-verb prose in place of the Form I pattern prose', () => {
+    expect(renderExplanation(resolveVerbExplanationLayers(laysa, 'active.past', '3ms'), (key) => key)).toEqual([
+      [
+        { text: 'explanation.laysa.frozen', kind: 'measure' },
+        { text: 'explanation.laysa.radical', kind: 'radical' },
+      ],
+      [{ text: 'explanation.laysa.meaning', kind: 'measure' }],
+    ])
+  })
+
+  test('1s keeps its own affix sentence after the frozen-verb prose', () => {
+    expect(renderExplanation(resolveVerbExplanationLayers(laysa, 'active.past', '1s'), (key) => key).at(-1)).toEqual([
+      { text: 'explanation.pronoun.suffix-only', kind: 'agreement' },
+    ])
+  })
+})
+
 // ── tenseRoot: assimilated ───────────────────────────────────────────────────
 
 describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
+  // Only a wāw drops: يَبِسَ keeps its yāʾ right through the present (يَيْبَسُ).
+  test.each([
+    ['يبس', 'active.present.indicative', undefined],
+    ['يسر', 'active.present.indicative', undefined],
+    ['يبس', 'active.future', undefined],
+    ['وصل', 'active.present.indicative', 'initial-drops'],
+  ] as const)('yaa-initial %s %s -> %s', (root, tense, expected) => {
+    expect(resolveVerbExplanationLayers(getVerb(root, 1), tense, '3ms').tenseRoot).toBe(expected)
+  })
+
   test.each([
     [1, 'active.present.indicative', 'initial-drops'],
     [1, 'active.present.subjunctive', 'initial-drops'],
@@ -201,8 +298,8 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
 
 // ── tenseRoot: combined irregularities ───────────────────────────────────────
 // A root can carry two irregular shapes at once (e.g. assimilated + defective). toTenseRoot picks
-// one dominant behavior to describe rather than showing nothing, using the same hollow > defective >
-// assimilated priority that analyzeRoot already uses to pick the dominant weak letter for these roots.
+// one dominant behavior to describe rather than showing nothing, using the same defective > hollow >
+// assimilated priority the conjugation itself follows for these roots.
 
 describe('resolveVerbExplanationLayers tenseRoot combined irregularities', () => {
   test('assimilated + defective root → defective behavior wins over assimilated', () => {
@@ -211,15 +308,23 @@ describe('resolveVerbExplanationLayers tenseRoot combined irregularities', () =>
     )
   })
 
-  test('hollow + defective root (no hamza) → hollow behavior wins over defective', () => {
-    expect(resolveVerbExplanationLayers(getVerbById('rwy-1')!, 'active.past', '3ms').tenseRoot).toBe(
-      'middle-lengthens-aa',
-    )
+  test.each([
+    ['active.past', '3ms', 'final-isolated'],
+    ['active.present.indicative', '3ms', 'final-lengthens-ii'],
+    ['active.present.jussive', '3ms', 'final-drops'],
+  ] as const)('hollow + defective root + %s + %s -> %s', (tense, pronoun, expected) => {
+    expect(resolveVerbExplanationLayers(getVerbById('rwy-1')!, tense, pronoun).tenseRoot).toBe(expected)
   })
 
   test('assimilated + hollow root → hollow behavior wins over assimilated', () => {
     expect(resolveVerbExplanationLayers(getVerbById('wyl-1')!, 'active.past', '3ms').tenseRoot).toBe(
       'middle-lengthens-aa',
+    )
+  })
+
+  test('wāw-defective root above Form I builds on yāʾ', () => {
+    expect(resolveVerbExplanationLayers(getVerb('خلو', 4), 'active.present.indicative', '3ms').tenseRoot).toBe(
+      'final-lengthens-ii',
     )
   })
 })
@@ -228,12 +333,12 @@ describe('resolveVerbExplanationLayers tenseRoot combined irregularities', () =>
 
 describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
   test.each([
-    ['zah', 'زوج', 'assimilation-voicing'],
-    ['del', 'دخل', 'assimilation-complete'],
-    ['seen', 'صبر', 'assimilation-emphasis'],
-    ['waw', 'وحد', 'assimilation-weak-initial'],
-    ['default infix', 'كتب', undefined],
-  ] as const)('Form VIII with %s as first radical', (_, root, expected) => {
+    ['زوج', 'assimilation-voicing'],
+    ['دخل', 'assimilation-complete'],
+    ['صبر', 'assimilation-emphasis'],
+    ['وحد', 'assimilation-weak-initial'],
+    ['كتب', undefined],
+  ] as const)('Form VIII root %s -> %s', (root, expected) => {
     const verb = getVerb(root, 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     expect(layers.formRoot).toBe(expected)
@@ -256,12 +361,12 @@ describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
 
 describe('resolveVerbExplanationLayers tenseRoot hamzated', () => {
   test.each([
-    ['hamzated + past + 3ms', 'ءمن', 4, 'active.past', '3ms', 'hamza-madda'],
-    ['hamzated + past + 2d', 'ءمن', 4, 'active.past', '2d', 'hamza-madda'],
-    ['hamzated + indicative', 'ءمن', 4, 'active.present.indicative', '3ms', 'hamza-seat'],
-    ['hamzated + passive past', 'ءمن', 4, 'passive.past', '3ms', 'hamza-seat'],
-    ['medial hamza keeps seat rule', 'قرء', 7, 'active.past', '3fd', 'hamza-seat'],
-  ] as const)('%s → %s', (_, root, form, tense, pronoun, expected) => {
+    ['ءمن', 4, 'active.past', '3ms', 'hamza-madda'],
+    ['ءمن', 4, 'active.past', '2d', 'hamza-madda'],
+    ['ءمن', 4, 'active.present.indicative', '3ms', 'hamza-seat'],
+    ['ءمن', 4, 'passive.past', '3ms', 'hamza-seat'],
+    ['قرء', 7, 'active.past', '3fd', 'hamza-seat'],
+  ] as const)('%s Form %d + %s + %s -> %s', (root, form, tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(getVerb(root, form), tense, pronoun).tenseRoot).toBe(expected)
   })
 })
@@ -270,38 +375,66 @@ describe('resolveVerbExplanationLayers tenseRoot hamzated', () => {
 
 describe('renderExplanation root note by form', () => {
   test.each([
-    ['hollow root in Form I keeps the hollow root note', 1, '3ms', 'explanation.root.hollow-waw'],
-    ['hollow root in Form III renders sound root note', 3, '3ms', 'explanation.root.hollow-sound-form'],
-    ['hollow root in Form VI renders sound root note', 6, '1s', 'explanation.root.hollow-sound-form'],
-  ] as const)('%s', (_, form, pronoun, text) => {
+    [1, '3ms', 'explanation.root.hollow-waw'],
+    [3, '3ms', 'explanation.root.hollow-sound-form'],
+    [6, '1s', 'explanation.root.hollow-sound-form'],
+  ] as const)('hollow root Form %d + active.past + %s -> %s', (form, pronoun, text) => {
     const layers = resolveVerbExplanationLayers(getVerb('قول', form), 'active.past', pronoun)
     expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({ text, kind: 'radical' })
   })
 
   test.each([
-    ['doubled root in Form I keeps doubled root note', 1, '3ms', 'explanation.root.doubled'],
-    ['doubled root in Form II renders sound root note', 2, '3ms', 'explanation.root.doubled-sound-form'],
-    ['doubled root in Form III keeps doubled root note', 3, '3ms', 'explanation.root.doubled'],
-    ['doubled root in Form V renders sound root note', 5, '1s', 'explanation.root.doubled-sound-form'],
-  ] as const)('%s', (_, form, pronoun, text) => {
+    [1, '3ms', 'explanation.root.doubled'],
+    [2, '3ms', 'explanation.root.doubled-sound-form'],
+    [3, '3ms', 'explanation.root.doubled'],
+    [5, '1s', 'explanation.root.doubled-sound-form'],
+  ] as const)('doubled root Form %d + active.past + %s -> %s', (form, pronoun, text) => {
     const layers = resolveVerbExplanationLayers(getVerb('مدد', form), 'active.past', pronoun)
     expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({ text, kind: 'radical' })
   })
 
   test.each([
-    ['hollow+defective in Form I keeps both', 'لوي', 1, 'explanation.root.hollow-defective-waw'],
-    ['hollow+defective in Form III drops the neutralized hollow', 'لوي', 3, 'explanation.root.defective-yaa'],
-    ['hamzated+doubled in Form I keeps both', 'ءسس', 1, 'explanation.root.hamzated-doubled'],
-    ['hamzated+doubled in Form II drops the neutralized doubled', 'ءسس', 2, 'explanation.root.hamzated'],
-    ['hamzated+hollow in Form III drops the neutralized hollow', 'ءول', 3, 'explanation.root.hamzated'],
-    ['hollow+defective in Form IV keeps both', 'حيو', 4, 'explanation.root.hollow-defective-yaa'],
-    ['assimilated in Form I keeps the dropping note', 'وصل', 1, 'explanation.root.assimilated'],
-    ['assimilated in Form II reports a stable initial waw', 'وصل', 2, 'explanation.root.assimilated-sound-form'],
-    ['assimilated in Form IV reports a stable initial waw', 'وصل', 4, 'explanation.root.assimilated-sound-form'],
-    ['assimilated in Form X reports a stable initial waw', 'وصل', 10, 'explanation.root.assimilated-sound-form'],
-  ] as const)('%s', (_, root, form, expected) => {
+    ['لوي', 1, 'explanation.root.hollow-defective-waw'],
+    ['لوي', 3, 'explanation.root.defective-yaa'],
+    ['ءسس', 1, 'explanation.root.hamzated-doubled'],
+    ['ءسس', 2, 'explanation.root.hamzated'],
+    ['ءول', 3, 'explanation.root.hamzated'],
+    ['حيو', 4, 'explanation.root.hollow-defective-yaa'],
+    ['وصل', 1, 'explanation.root.assimilated'],
+    ['وصل', 2, 'explanation.root.assimilated-sound-form'],
+    ['وصل', 4, 'explanation.root.assimilated-sound-form'],
+    ['وصل', 10, 'explanation.root.assimilated-sound-form'],
+  ] as const)('%s Form %d -> %s', (root, form, expected) => {
     const layers = resolveVerbExplanationLayers(getVerb(root, form), 'active.past', '3ms')
     expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({ text: expected, kind: 'radical' })
+  })
+
+  test.each([
+    ['وصل', 10, 'و'],
+    ['يقظ', 10, 'ي'],
+    ['يود', 2, 'ي'],
+  ] as const)('assimilated %s in Form %d names its own initial radical %s', (root, form, initialRadical) => {
+    const layers = resolveVerbExplanationLayers(getVerb(root, form), 'active.past', '3ms')
+    const echoParams = (key: string, params?: Record<string, string>) => `${key}|${params?.initialRadical}`
+    expect(renderExplanation(layers, echoParams)[0]).toContainEqual({
+      text: `explanation.root.assimilated-sound-form|${initialRadical}`,
+      kind: 'radical',
+    })
+  })
+
+  // A weak radical inside a quadriliteral root is inert, so no cell has a change to describe.
+  test.each([
+    ['سيطر', 1, 'active.imperative', '2mp'],
+    ['كلور', 1, 'passive.present.indicative', '3ms'],
+    ['بلور', 2, 'active.present.jussive', '1p'],
+    ['وسوس', 1, 'active.present.indicative', '1s'],
+  ] as const)('quadriliteral %s Form %d %s %s has no tenseRoot', (root, form, tense, pronoun) => {
+    const layers = resolveVerbExplanationLayers(getVerb(root, form), tense, pronoun)
+    expect(layers.tenseRoot).toBeUndefined()
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.quadriliteral-weak',
+      kind: 'radical',
+    })
   })
 
   test('assimilated root in Form VIII replaces the Form I note with the infix assimilation', () => {
@@ -317,29 +450,29 @@ describe('renderExplanation root note by form', () => {
 
 describe('resolveVerbExplanationLayers tenseRoot geminate', () => {
   test.each([
-    ['doubled + Form I + past', 1, 'active.past', '3ms', 'geminate-contracts'],
-    ['doubled + Form I + indicative', 1, 'active.present.indicative', '3ms', 'geminate-contracts'],
-    ['doubled + Form I + jussive', 1, 'active.present.jussive', '3ms', 'geminate-jussive'],
-    ['doubled + Form I + imperative', 1, 'active.imperative', '2ms', 'geminate-jussive'],
-    ['doubled + Form II + past', 2, 'active.past', '3ms', undefined],
-    ['doubled + Form V + past', 5, 'active.past', '3ms', undefined],
-    ['doubled + past + 3mp', 1, 'active.past', '3mp', 'geminate-contracts'],
-    ['doubled + past + 1s', 1, 'active.past', '1s', 'geminate-separates'],
-    ['doubled + past + 2ms', 1, 'active.past', '2ms', 'geminate-separates'],
-    ['doubled + past + 3fp', 1, 'active.past', '3fp', 'geminate-separates'],
-    ['doubled + indicative + 3mp', 1, 'active.present.indicative', '3mp', 'geminate-contracts'],
-    ['doubled + indicative + 2fp', 1, 'active.present.indicative', '2fp', 'geminate-separates'],
-    ['doubled + future + 3fp', 1, 'active.future', '3fp', 'geminate-separates'],
-    ['doubled + passive past + 1s', 1, 'passive.past', '1s', 'geminate-separates'],
-    ['doubled + passive past + 3ms', 1, 'passive.past', '3ms', 'geminate-contracts'],
-    ['doubled + passive indicative + 3fp', 1, 'passive.present.indicative', '3fp', 'geminate-separates'],
-    ['doubled + jussive + 3mp', 1, 'active.present.jussive', '3mp', 'geminate-contracts'],
-    ['doubled + jussive + 2fs', 1, 'active.present.jussive', '2fs', 'geminate-contracts'],
-    ['doubled + imperative + 2fs', 1, 'active.imperative', '2fs', 'geminate-contracts'],
-    ['doubled + imperative + 2mp', 1, 'active.imperative', '2mp', 'geminate-contracts'],
-    ['doubled + jussive + 3fp', 1, 'active.present.jussive', '3fp', 'geminate-separates'],
-    ['doubled + imperative + 2fp', 1, 'active.imperative', '2fp', 'geminate-separates'],
-  ] as const)('%s', (_, form, tense, pronoun, expected) => {
+    [1, 'active.past', '3ms', 'geminate-contracts'],
+    [1, 'active.present.indicative', '3ms', 'geminate-contracts'],
+    [1, 'active.present.jussive', '3ms', 'geminate-jussive'],
+    [1, 'active.imperative', '2ms', 'geminate-jussive'],
+    [2, 'active.past', '3ms', undefined],
+    [5, 'active.past', '3ms', undefined],
+    [1, 'active.past', '3mp', 'geminate-contracts'],
+    [1, 'active.past', '1s', 'geminate-separates'],
+    [1, 'active.past', '2ms', 'geminate-separates'],
+    [1, 'active.past', '3fp', 'geminate-separates'],
+    [1, 'active.present.indicative', '3mp', 'geminate-contracts'],
+    [1, 'active.present.indicative', '2fp', 'geminate-separates'],
+    [1, 'active.future', '3fp', 'geminate-separates'],
+    [1, 'passive.past', '1s', 'geminate-separates'],
+    [1, 'passive.past', '3ms', 'geminate-contracts'],
+    [1, 'passive.present.indicative', '3fp', 'geminate-separates'],
+    [1, 'active.present.jussive', '3mp', 'geminate-contracts'],
+    [1, 'active.present.jussive', '2fs', 'geminate-contracts'],
+    [1, 'active.imperative', '2fs', 'geminate-contracts'],
+    [1, 'active.imperative', '2mp', 'geminate-contracts'],
+    [1, 'active.present.jussive', '3fp', 'geminate-separates'],
+    [1, 'active.imperative', '2fp', 'geminate-separates'],
+  ] as const)('doubled root Form %d + %s + %s -> %s', (form, tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(getVerb('مدد', form), tense, pronoun).tenseRoot).toBe(expected)
   })
 })
@@ -350,9 +483,9 @@ describe('resolveVerbExplanationLayers pronoun and arabic', () => {
   const verb = getVerb('كتب', 1)
 
   test.each([
-    ['pronoun', '2fs', { pronoun: '2fs' }],
-    ['arabic', '3ms', { arabic: 'كَتَبَ' }],
-  ] as const)('%s field matches resolved value', (_, pronoun, expected) => {
+    ['2fs', { pronoun: '2fs' }],
+    ['3ms', { arabic: 'كَتَبَ' }],
+  ] as const)('active.past + %s matches resolved fields', (pronoun, expected) => {
     expect(resolveVerbExplanationLayers(verb, 'active.past', pronoun)).toMatchObject(expected)
   })
 })
@@ -361,21 +494,14 @@ describe('resolveVerbExplanationLayers pronoun and arabic', () => {
 
 describe('resolveVerbExplanationLayers prefix and suffix extraction', () => {
   test.each([
-    ['past 3ms has no prefix and no suffix (base form)', 1, 'active.past', '3ms', undefined, undefined],
-    ['past 1s has suffix only', 1, 'active.past', '1s', undefined, 'ْتُ'],
-    ['present indicative 3ms has fatha prefix and damma suffix', 1, 'active.present.indicative', '3ms', 'يَ', 'ُ'],
-    [
-      'future 3ms collapses seen and person prefix and keeps the indicative suffix',
-      1,
-      'active.future',
-      '3ms',
-      'سَيَ',
-      'ُ',
-    ],
-    ['imperative 2ms Form II has no prefix and no suffix', 2, 'active.imperative', '2ms', undefined, undefined],
-    ['imperative 2ms Form I has no prefix and no suffix', 1, 'active.imperative', '2ms', undefined, undefined],
-    ['imperative 2fs Form II has suffix only', 2, 'active.imperative', '2fs', undefined, 'ِي'],
-  ] as const)('%s', (_, form, tense, pronoun, prefix, suffix) => {
+    [1, 'active.past', '3ms', undefined, undefined],
+    [1, 'active.past', '1s', undefined, 'ْتُ'],
+    [1, 'active.present.indicative', '3ms', 'يَ', 'ُ'],
+    [1, 'active.future', '3ms', 'سَيَ', 'ُ'],
+    [2, 'active.imperative', '2ms', undefined, undefined],
+    [1, 'active.imperative', '2ms', undefined, undefined],
+    [2, 'active.imperative', '2fs', undefined, 'ِي'],
+  ] as const)('Form %d + %s + %s -> prefix %s, suffix %s', (form, tense, pronoun, prefix, suffix) => {
     expect(resolveVerbExplanationLayers(getVerb('كتب', form), tense, pronoun)).toMatchObject({
       prefix,
       suffix,
@@ -389,24 +515,14 @@ describe('resolveVerbExplanationLayers elided extraction', () => {
   const kataba = getVerb('كتب', 1)
 
   test.each([
-    [
-      'imperative 2ms surfaces the dropped jussive prefix تَ, no suffix',
-      'active.imperative',
-      '2ms',
-      { elidedPrefix: 'تَ' },
-    ],
-    ['jussive 3md surfaces the dropped dual noon نِ, no prefix', 'active.present.jussive', '3md', { elidedSuffix: 'نِ' }],
-    ['subjunctive 2fs surfaces the dropped noon نَ', 'active.present.subjunctive', '2fs', { elidedSuffix: 'نَ' }],
-    ['jussive 3mp surfaces the dropped plural noon نَ', 'active.present.jussive', '3mp', { elidedSuffix: 'نَ' }],
-    ['subjunctive 2mp surfaces the dropped plural noon نَ', 'active.present.subjunctive', '2mp', { elidedSuffix: 'نَ' }],
-    ['passive jussive 3mp surfaces the dropped plural noon نَ', 'passive.present.jussive', '3mp', { elidedSuffix: 'نَ' }],
-    [
-      'passive subjunctive 3md surfaces the dropped dual noon نِ',
-      'passive.present.subjunctive',
-      '3md',
-      { elidedSuffix: 'نِ' },
-    ],
-  ] as const)('%s', (_, tense, pronoun, expected) => {
+    ['active.imperative', '2ms', { elidedPrefix: 'تَ' }],
+    ['active.present.jussive', '3md', { elidedSuffix: 'نِ' }],
+    ['active.present.subjunctive', '2fs', { elidedSuffix: 'نَ' }],
+    ['active.present.jussive', '3mp', { elidedSuffix: 'نَ' }],
+    ['active.present.subjunctive', '2mp', { elidedSuffix: 'نَ' }],
+    ['passive.present.jussive', '3mp', { elidedSuffix: 'نَ' }],
+    ['passive.present.subjunctive', '3md', { elidedSuffix: 'نِ' }],
+  ] as const)('%s + %s resolves elided prefix/suffix', (tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(kataba, tense, pronoun)).toMatchObject(expected)
   })
 })
@@ -429,10 +545,10 @@ describe('renderExplanation elision prose', () => {
   })
 
   test.each([
-    ['nun-final stem + past 3fp', 'سكن', 'active.past', '3fp'],
-    ['nun-final stem + past 1p', 'سكن', 'active.past', '1p'],
-    ['nun-final stem + present 2fp', 'سكن', 'active.present.indicative', '2fp'],
-  ] as const)('%s explains the merged feminine/plural nūn', (_, root, tense, pronoun) => {
+    ['سكن', 'active.past', '3fp'],
+    ['سكن', 'active.past', '1p'],
+    ['سكن', 'active.present.indicative', '2fp'],
+  ] as const)('%s + %s + %s explains the merged feminine/plural nūn', (root, tense, pronoun) => {
     const layers = resolveVerbExplanationLayers(getVerb(root, 1), tense, pronoun)
     expect(renderExplanation(layers, (key) => key).at(-1)).toContainEqual({
       text: 'explanation.pronoun.assimilated-nun',
@@ -441,12 +557,23 @@ describe('renderExplanation elision prose', () => {
   })
 
   test.each([
-    ['sound stem + past 3fp', 'كتب', 'active.past', '3fp'],
-    ['nun-final stem + past 2fp keeps its own tā ending', 'سكن', 'active.past', '2fp'],
-  ] as const)('%s renders the suffix sentence alone', (_, root, tense, pronoun) => {
+    ['كتب', 'active.past', '3fp'],
+    ['سكن', 'active.past', '2fp'],
+  ] as const)('%s + %s + %s renders the suffix sentence alone', (root, tense, pronoun) => {
     const layers = resolveVerbExplanationLayers(getVerb(root, 1), tense, pronoun)
     expect(renderExplanation(layers, (key) => key).at(-1)).toEqual([
       { text: 'explanation.pronoun.suffix-only', kind: 'agreement' },
+    ])
+  })
+
+  test.each([
+    ['1p', 'active.present.indicative'],
+    ['1p', 'active.present.subjunctive'],
+    ['1p', 'active.future'],
+  ] as const)('%s + %s has no nūn-initial ending to merge', (pronoun, tense) => {
+    const layers = resolveVerbExplanationLayers(kataba, tense, pronoun)
+    expect(renderExplanation(layers, (key) => key).at(-1)).toEqual([
+      { text: 'explanation.pronoun.prefix-and-suffix', kind: 'agreement' },
     ])
   })
 
@@ -470,6 +597,19 @@ describe('renderExplanation elision prose', () => {
     const rendered = renderExplanation(layers, (key) => key).flat()
     expect(rendered).toContainEqual({ text: 'explanation.pronoun.suffix-only', kind: 'agreement' })
     expect(rendered).not.toContainEqual({ text: 'explanation.pronoun.dropped-prefix', kind: 'elided' })
+  })
+
+  test.each([
+    ['2ms', 'geminate-jussive'],
+    ['2fs', 'geminate-contracts'],
+    ['2d', 'geminate-contracts'],
+    ['2mp', 'geminate-contracts'],
+  ] as const)('contracted geminate imperative %s explains %s without alif al-wasl', (pronoun, tenseRoot) => {
+    const layers = resolveVerbExplanationLayers(getVerb('ذمم', 1), 'active.imperative', pronoun)
+    expect(renderExplanation(layers, (key) => key)[1]).toEqual([
+      { text: 'explanation.tense.active.imperative.elision', kind: 'elided' },
+      { text: `explanation.tense-root.${tenseRoot}`, kind: 'radical' },
+    ])
   })
 
   test('imperative explanation mentions alif al-wasl', () => {
@@ -564,44 +704,27 @@ describe('renderExplanation', () => {
     })
   })
 
-  test('tags imperative support-vowel sentence as measure', () => {
-    expect(sentences(testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }))).toContainEqual({
-      text: 'explanation.tense.active.imperative.support',
-      kind: 'measure',
-    })
-  })
-
-  test('includes imperative support sentence for initial-hamza Form I roots', () => {
+  test.each([
+    ['اُشْكُرْ', 1],
+    ['اُؤْجُرْ', 1],
+    ['اِنْقَصَّ', 7],
+  ] as const)('imperative %s (form %d) explains its alif al-wasl', (arabic, paradigmForm) => {
     expect(
-      sentences({
-        ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
-        paradigmRoots: ['ء', 'ج', 'ر'],
-      }),
+      sentences(testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms', arabic, paradigmForm })),
     ).toContainEqual({
       text: 'explanation.tense.active.imperative.support',
       kind: 'measure',
     })
   })
 
-  test('contracted imperative tense paragraph contains only elision', () => {
-    const layers = {
-      ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
-      contractedImperative: true,
-    }
+  test.each([
+    ['ذُمَّ', 1],
+    ['أَبْقِ', 4],
+    ['سَيْطِرْ', 1],
+  ] as const)('imperative %s (form %d) has no alif al-wasl to explain', (arabic, paradigmForm) => {
+    const layers = testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms', arabic, paradigmForm })
     const [, tenseParagraph] = renderExplanation(layers, t)
     expect(tenseParagraph).toEqual([{ text: 'explanation.tense.active.imperative.elision', kind: 'elided' }])
-  })
-
-  test('omits imperative support sentence for form IV', () => {
-    expect(
-      sentences({
-        ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }),
-        paradigmForm: 4,
-      }),
-    ).not.toContainEqual({
-      text: 'explanation.tense.active.imperative.support',
-      kind: 'agreement',
-    })
   })
 
   test.each([[2, '2'] as const, [3, '3'] as const, [5, '5'] as const, [6, '6'] as const])(
@@ -614,14 +737,6 @@ describe('renderExplanation', () => {
       expect(tenseParagraph).toEqual([{ text: 'explanation.tense.active.imperative.elision', kind: 'elided' }])
     },
   )
-
-  test('imperative tense paragraph for form 7 includes support sentence', () => {
-    const [, tenseParagraph] = renderExplanation(
-      { ...testExplanationLayers({ tense: 'active.imperative', pronoun: '2ms' }), paradigmForm: 7, form: '7' },
-      t,
-    )
-    expect(tenseParagraph).toContainEqual({ text: 'explanation.tense.active.imperative.support', kind: 'measure' })
-  })
 
   test.each<VerbTense>([
     'passive.past',
