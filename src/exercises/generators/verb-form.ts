@@ -26,7 +26,7 @@ export const verbFormExercise = defineExercise(
     )
     const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
     const word = exerciseDiacritics(conjugatedVerb)
-    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, word)
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun)
 
     const eligibleForms = formsForRoot(verb.root).filter(
       (f) =>

@@ -72,7 +72,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
             <DerivationSteps steps={steps} verb={verb} t={t} />
           </VerbDisplayArea>
           <ExplanationText
-            paragraphs={renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun, arabic), t)}
+            paragraphs={renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun), t)}
             showMorphemeMarkers
           />
         </Modal>

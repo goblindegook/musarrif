@@ -181,10 +181,5 @@ if (nominalKind != null) {
     console.error(`No form produced for ${tense} / ${pronoun}.`)
     process.exit(1)
   }
-  printRendered(
-    `verb (${tense} / ${pronoun})`,
-    verb,
-    derived,
-    resolveVerbExplanationLayers(verb, tense, pronoun, derived),
-  )
+  printRendered(`verb (${tense} / ${pronoun})`, verb, derived, resolveVerbExplanationLayers(verb, tense, pronoun))
 }

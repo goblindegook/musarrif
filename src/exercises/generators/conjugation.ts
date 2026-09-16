@@ -126,7 +126,7 @@ export const conjugationExercise = defineExercise(
     )
     const answerText = String(conjugate(verb, targetTense)[targetPronoun])
     const answer = exerciseDiacritics(answerText)
-    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun, answerText)
+    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun)
 
     const raw =
       profile.pronouns >= 2 && profile.tenses >= 2

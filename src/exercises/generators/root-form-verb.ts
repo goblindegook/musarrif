@@ -8,7 +8,7 @@ import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
-  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms', verb.lemma)
+  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
 
   const answerDisplay = exerciseDiacritics(verb.lemma)
 

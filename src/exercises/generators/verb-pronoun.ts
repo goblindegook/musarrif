@@ -28,7 +28,7 @@ export const verbPronounExercise = defineExercise(
       constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
     )
     const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
-    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedVerb)
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun)
     const [word, options] = buildOptions(verb, tense, pronoun, profile)
     const answer = options.indexOf(pronoun)
 

@@ -21,7 +21,7 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
     constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
   )
   const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
-  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun, conjugatedVerb)
+  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun)
 
   const word = exerciseDiacritics(conjugatedVerb)
   const options = buildOptions(verb.root, word)

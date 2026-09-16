@@ -5,7 +5,7 @@ import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
-import { analyzeRoot, type RootAnalysisType, rootTypeLocaleKey, type WeakLetter } from './roots'
+import { analyzeRoot, type RootAnalysisType, type RootShape, rootTypeLocaleKey, type WeakLetter } from './roots'
 import type { VerbTense } from './tense'
 import {
   ALIF_MADDA,
@@ -48,6 +48,8 @@ type TenseRootInteraction =
   | 'middle-lengthens-aa'
   | 'middle-lengthens-ii'
   | 'middle-lengthens-uu'
+  | 'middle-lengthens-ii-derived'
+  | 'middle-lengthens-aa-present'
   | 'middle-passive-aa'
   | 'middle-passive-ii'
   | 'middle-shortens'
@@ -175,6 +177,9 @@ const FEMININE_PLURAL_PRONOUNS: readonly PronounId[] = ['2fp', '3fp']
 // The present-tense pronouns whose ending starts with a vowel, which protects the stem from apocope.
 const VOWEL_SUFFIX_PRESENT_PRONOUNS: readonly PronounId[] = ['2fs', '2d', '2mp', '3md', '3fd', '3mp']
 
+// The pronouns whose personal ending begins with nūn: ـْنَ for the feminine plural, ـْنَا for 1p.
+const NUN_INITIAL_ENDING_PRONOUNS: readonly PronounId[] = ['1p', '2fp', '3fp']
+
 // The present-tense pronouns that carry no personal ending at all, leaving the stem's final vowel bare.
 const BARE_PRESENT_PRONOUNS: readonly PronounId[] = ['1s', '1p', '2ms', '3ms', '3fs']
 
@@ -192,10 +197,20 @@ const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
 // Only the gemination of Forms II and V protects identical radicals; III and VI still contract.
 const DOUBLED_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 5]
 
+// Only Form I takes its active-present vowel from the root letter. Forms IV and X always give ī
+// (يُقِيمُ, يَسْتَقِيمُ) and Forms VII and VIII always give ā (يَنْقَامُ, يَخْتَارُ), waw or yaa alike.
+const HOLLOW_PRESENT_II_FORMS: readonly TriliteralForm[] = [4, 10]
+const HOLLOW_PRESENT_AA_FORMS: readonly TriliteralForm[] = [7, 8]
+
 // The long middle vowel survives only when nothing consonantal follows it: a vowel-initial ending
 // keeps it in every tense, while the jussive and imperative shorten it wherever such an ending is
 // absent, and the feminine plural ـْنَ shortens it even in the indicative.
-function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
+function resolveHollow(
+  isWaw: boolean,
+  tenseContext: VerbTense,
+  pronoun: PronounId,
+  form: TriliteralForm,
+): TenseRootInteraction {
   const isPassive = tenseContext.startsWith('passive')
 
   if (tenseContext.endsWith('past')) {
@@ -207,6 +222,8 @@ function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: Pronoun
   if (!keepsLongVowel && APOCOPATING_TENSES.includes(tenseContext)) return 'middle-shortens'
   if (FEMININE_PLURAL_PRONOUNS.includes(pronoun)) return 'middle-shortens-consonant'
   if (isPassive) return 'middle-passive-aa'
+  if (HOLLOW_PRESENT_II_FORMS.includes(form)) return 'middle-lengthens-ii-derived'
+  if (HOLLOW_PRESENT_AA_FORMS.includes(form)) return 'middle-lengthens-aa-present'
   return isWaw ? 'middle-lengthens-uu' : 'middle-lengthens-ii'
 }
 
@@ -229,7 +246,7 @@ function resolveDefective(
       return 'final-surfaces-consonant'
     case 'active.present.jussive':
     case 'active.imperative':
-      return 'final-drops'
+      return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-drops' : 'final-surfaces-consonant'
     case 'passive.past':
       return pronoun === '3mp' ? 'final-passive-uu' : 'final-passive-ya'
     case 'passive.present.indicative':
@@ -237,7 +254,7 @@ function resolveDefective(
     case 'passive.future':
       return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-passive-aa' : 'final-surfaces-consonant'
     case 'passive.present.jussive':
-      return 'final-drops'
+      return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-drops' : 'final-surfaces-consonant'
   }
 }
 
@@ -291,9 +308,20 @@ function renderPronounSentences(
       text: t('explanation.pronoun.dropped-suffix', { ...pronounParams, elidedSuffix: `ـ${layers.elidedSuffix}` }),
       kind: 'elided',
     },
+    hasAssimilatedEndingNun(layers) && {
+      text: t('explanation.pronoun.assimilated-nun', pronounParams),
+      kind: 'elided',
+    },
   ]
 
   return sentences.filter((s): s is ExplanationSentence => Boolean(s))
+}
+
+// ـْنَ and ـْنَا merge into a stem that already ends in ن (سَكَنَّ, سَكَنَّا), so the ending's own nūn
+// never reaches the extracted suffix and the affix sentence alone would leave it unaccounted for.
+function hasAssimilatedEndingNun(layers: VerbExplanationLayers): boolean {
+  if (!NUN_INITIAL_ENDING_PRONOUNS.includes(layers.pronoun as PronounId)) return false
+  return layers.suffix != null && !layers.suffix.includes(String(NOON))
 }
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
@@ -317,11 +345,30 @@ function resolveRootNoteKey(
   weakLetter: WeakLetter | undefined,
   form: TriliteralForm,
 ): string {
-  const onlyWeakness = rootType.length === 1 ? rootType[0] : undefined
-  if (onlyWeakness === 'hollow' && HOLLOW_NEUTRAL_FORMS.includes(form)) return 'explanation.root.hollow-sound-form'
-  if (onlyWeakness === 'doubled' && DOUBLED_NEUTRAL_FORMS.includes(form)) return 'explanation.root.doubled-sound-form'
-  if (onlyWeakness === 'assimilated' && form === 8) return ''
-  return `explanation.root.${rootTypeLocaleKey(rootType, weakLetter)}`
+  const live = rootType.filter((shape) => !isNeutralizedByForm(shape, form))
+
+  if (live.length === 0 && rootType.includes('hollow')) return 'explanation.root.hollow-sound-form'
+  if (live.length === 0 && rootType.includes('doubled')) return 'explanation.root.doubled-sound-form'
+  if (live.length === 1 && live[0] === 'assimilated' && form === 8) return ''
+  if (live.length === 1 && live[0] === 'assimilated' && form !== 1) return 'explanation.root.assimilated-sound-form'
+
+  // A neutralized shape only ever drops out above Form I, where a final weak radical is always yāʾ.
+  const liveWeakLetter = live.includes('hollow')
+    ? weakLetter
+    : live.includes('defective')
+      ? liveFinalLetter(form, weakLetter)
+      : undefined
+  return `explanation.root.${rootTypeLocaleKey(live, liveWeakLetter)}`
+}
+
+function liveFinalLetter(form: TriliteralForm, weakLetter: WeakLetter | undefined): WeakLetter | undefined {
+  return form === 1 ? weakLetter : 'yaa'
+}
+
+function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
+  if (shape === 'hollow') return HOLLOW_NEUTRAL_FORMS.includes(form)
+  if (shape === 'doubled') return DOUBLED_NEUTRAL_FORMS.includes(form)
+  return false
 }
 
 const tenseKind = (tense: VerbTense): ExplanationKind =>
@@ -425,14 +472,10 @@ function extractAffixes(morphemes: readonly Morpheme[] = []): {
   }
 }
 
-export function resolveVerbExplanationLayers(
-  verb: Verb,
-  tense: VerbTense,
-  pronoun: PronounId,
-  arabic: string,
-): VerbExplanationLayers {
+export function resolveVerbExplanationLayers(verb: Verb, tense: VerbTense, pronoun: PronounId): VerbExplanationLayers {
   const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
   const isFormI = isTriliteralFormIVerb(verb)
+  const arabic = String(conjugate(verb, tense)[pronoun])
 
   return {
     category: 'verb',
@@ -477,7 +520,7 @@ function toTenseRoot(
   const isWaw = weakLetter === 'waw'
 
   if (rootType.includes('hollow') && !HOLLOW_NEUTRAL_FORMS.includes(form))
-    return resolveHollow(isWaw, tenseContext, pronoun)
+    return resolveHollow(isWaw, tenseContext, pronoun, form)
   if (rootType.includes('defective')) return resolveDefective(isWaw, tenseContext, pronoun)
   if (rootType.includes('assimilated'))
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
@@ -493,7 +536,9 @@ function resolveGeminate(
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
   if (DOUBLED_NEUTRAL_FORMS.includes(form)) return undefined
-  if (tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative') return 'geminate-jussive'
+  // Only the bare jussive and imperative admit both an expanded and a contracted form; a personal
+  // ending settles the question on its own, exactly as it does in the indicative.
+  if (BARE_PRESENT_PRONOUNS.includes(pronoun) && APOCOPATING_TENSES.includes(tenseContext)) return 'geminate-jussive'
   const contracts = tenseContext.endsWith('past')
     ? VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun)
     : !FEMININE_PLURAL_PRONOUNS.includes(pronoun)
