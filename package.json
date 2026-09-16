@@ -35,7 +35,7 @@
     "@pacote/memoize": "^3.0.1",
     "@pacote/shuffle": "^3.0.0",
     "@tauri-apps/api": "^2.11.1",
-    "@tauri-apps/plugin-deep-link": "^2.4.9",
+    "@tauri-apps/plugin-deep-link": "^2.4.10",
     "@zxing/browser": "^0.2.1",
     "@zxing/library": "^0.23.0",
     "goober": "^2.1.19",
