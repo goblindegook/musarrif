@@ -39,6 +39,7 @@ type TenseRootInteraction =
   | 'final-resurfaces'
   | 'geminate-contracts'
   | 'geminate-jussive'
+  | 'geminate-separates'
   | 'hamza-madda'
   | 'hamza-seat'
   | 'initial-drops'
@@ -163,16 +164,23 @@ function toArabicText(arabic: string | readonly string[]): string {
   return Array.isArray(arabic) ? arabic.join('، ') : String(arabic)
 }
 
-const HOLLOW_PAST_LONG_VOWEL_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
+// The past-tense pronouns whose ending starts with a vowel, so nothing forces the stem to break up.
+const VOWEL_SUFFIX_PAST_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
+
+// The present-tense pronouns whose ـْنَ ending starts with sukūn.
+const FEMININE_PLURAL_PRONOUNS: readonly PronounId[] = ['2fp', '3fp']
 
 // Forms II, III, V and VI keep the middle radical a plain consonant: the gemination of II/V and the
 // long vowel of III/VI protect it, so a hollow root conjugates sound throughout those forms.
 const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
 
+// Only the gemination of Forms II and V protects identical radicals; III and VI still contract.
+const DOUBLED_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 5]
+
 function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
   switch (tenseContext) {
     case 'active.past':
-      return HOLLOW_PAST_LONG_VOWEL_PRONOUNS.includes(pronoun) ? 'middle-lengthens-aa' : 'middle-shortens-past'
+      return VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun) ? 'middle-lengthens-aa' : 'middle-shortens-past'
     case 'active.present.indicative':
     case 'active.present.subjunctive':
     case 'active.future':
@@ -296,6 +304,7 @@ function resolveRootNoteKey(
 ): string {
   const onlyWeakness = rootType.length === 1 ? rootType[0] : undefined
   if (onlyWeakness === 'hollow' && HOLLOW_NEUTRAL_FORMS.includes(form)) return 'explanation.root.hollow-sound-form'
+  if (onlyWeakness === 'doubled' && DOUBLED_NEUTRAL_FORMS.includes(form)) return 'explanation.root.doubled-sound-form'
   if (onlyWeakness === 'assimilated' && form === 8) return ''
   return `explanation.root.${rootTypeLocaleKey(rootType, weakLetter)}`
 }
@@ -459,15 +468,21 @@ function toTenseRoot(
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
       ? 'initial-drops'
       : undefined
-  if (rootType.includes('doubled')) return resolveGeminate(tenseContext, form)
+  if (rootType.includes('doubled')) return resolveGeminate(tenseContext, form, pronoun)
   if (rootType.includes('hamzated')) return arabic.includes(String(ALIF_MADDA)) ? 'hamza-madda' : 'hamza-seat'
 }
 
-function resolveGeminate(tenseContext: VerbTense, form: TriliteralForm): TenseRootInteraction | undefined {
-  if (form === 2 || form === 5) return undefined
-  return tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative'
-    ? 'geminate-jussive'
-    : 'geminate-contracts'
+function resolveGeminate(
+  tenseContext: VerbTense,
+  form: TriliteralForm,
+  pronoun: PronounId,
+): TenseRootInteraction | undefined {
+  if (DOUBLED_NEUTRAL_FORMS.includes(form)) return undefined
+  if (tenseContext === 'active.present.jussive' || tenseContext === 'active.imperative') return 'geminate-jussive'
+  const contracts = tenseContext.endsWith('past')
+    ? VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun)
+    : !FEMININE_PLURAL_PRONOUNS.includes(pronoun)
+  return contracts ? 'geminate-contracts' : 'geminate-separates'
 }
 
 function isMimiMasdarSelection(verb: Verb, arabic: string | readonly string[]): boolean {

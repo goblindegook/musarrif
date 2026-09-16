@@ -517,6 +517,38 @@ describe('renderExplanation root note by form', () => {
     })
   })
 
+  test('doubled root in Form I keeps the doubled root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('مدد', 1), 'active.past', '3ms', 'مَدَّ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.doubled',
+      kind: 'radical',
+    })
+  })
+
+  test('doubled root in Form II renders the sound-form root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('مدد', 2), 'active.past', '3ms', 'مَدَّدَ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.doubled-sound-form',
+      kind: 'radical',
+    })
+  })
+
+  test('doubled root in Form V renders the sound-form root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('مدد', 5), 'active.present.subjunctive', '1s', 'أَتَمَدَّدَ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.doubled-sound-form',
+      kind: 'radical',
+    })
+  })
+
+  test('doubled root in Form III keeps the doubled root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('مدد', 3), 'active.past', '3ms', 'مَادَّ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.doubled',
+      kind: 'radical',
+    })
+  })
+
   test('assimilated root in Form VIII replaces the Form I note with the infix assimilation', () => {
     const layers = resolveVerbExplanationLayers(getVerb('وحد', 8), 'active.past', '3ms', 'اِتَّحَدَ')
     expect(renderExplanation(layers, (key) => key)[0]).toEqual([
@@ -559,6 +591,52 @@ describe('resolveVerbExplanationLayers tenseRoot geminate', () => {
   test('doubled + Form V + active.past → undefined', () => {
     const verb5 = getVerb('مدد', 5)
     expect(resolveVerbExplanationLayers(verb5, 'active.past', '3ms', 'تَمَدَّدَ').tenseRoot).toBeUndefined()
+  })
+
+  test('doubled + active.past + 3mp → geminate-contracts', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.past', '3mp', 'مَدُّوا').tenseRoot).toBe('geminate-contracts')
+  })
+
+  test('doubled + active.past + 1s → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.past', '1s', 'مَدَدْتُ').tenseRoot).toBe('geminate-separates')
+  })
+
+  test('doubled + active.past + 2ms → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.past', '2ms', 'مَدَدْتَ').tenseRoot).toBe('geminate-separates')
+  })
+
+  test('doubled + active.past + 3fp → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.past', '3fp', 'مَدَدْنَ').tenseRoot).toBe('geminate-separates')
+  })
+
+  test('doubled + active.present.indicative + 3mp → geminate-contracts', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.present.indicative', '3mp', 'يَمُدُّونَ').tenseRoot).toBe(
+      'geminate-contracts',
+    )
+  })
+
+  test('doubled + active.present.indicative + 2fp → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.present.indicative', '2fp', 'تَمْدُدْنَ').tenseRoot).toBe(
+      'geminate-separates',
+    )
+  })
+
+  test('doubled + active.future + 3fp → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'active.future', '3fp', 'سَيَمْدُدْنَ').tenseRoot).toBe('geminate-separates')
+  })
+
+  test('doubled + passive.past + 1s → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'passive.past', '1s', 'مُدِدْتُ').tenseRoot).toBe('geminate-separates')
+  })
+
+  test('doubled + passive.past + 3ms → geminate-contracts', () => {
+    expect(resolveVerbExplanationLayers(madda, 'passive.past', '3ms', 'مُدَّ').tenseRoot).toBe('geminate-contracts')
+  })
+
+  test('doubled + passive.present.indicative + 3fp → geminate-separates', () => {
+    expect(resolveVerbExplanationLayers(madda, 'passive.present.indicative', '3fp', 'يُمْدَدْنَ').tenseRoot).toBe(
+      'geminate-separates',
+    )
   })
 })
 
