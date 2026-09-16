@@ -5177,7 +5177,8 @@
   },
   {
     "root": "zwj",
-    "form": 8
+    "form": 8,
+    "passive": "none"
   },
   {
     "root": "zwl",
