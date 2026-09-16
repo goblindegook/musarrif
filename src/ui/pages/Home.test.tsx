@@ -232,7 +232,7 @@ test('applies other filters exclusively', async () => {
 
   const kana = within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' })
   const zanna = within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' })
-  const favourites = within(otherFilters).getByText('Favourites', { selector: 'button' })
+  const favourites = within(otherFilters).getByText('Favorites', { selector: 'button' })
 
   await user.click(kana)
   expect(kana).toHaveAttribute('aria-pressed', 'true')
@@ -253,7 +253,7 @@ test('disables other-filter options that would yield zero results', async () => 
   renderHome()
   const otherFilters = screen.getByLabelText('Other filters')
 
-  expect(within(otherFilters).getByText('Favourites', { selector: 'button' })).toBeDisabled()
+  expect(within(otherFilters).getByText('Favorites', { selector: 'button' })).toBeDisabled()
 })
 
 test('disables form options that would yield zero results', async () => {
@@ -329,7 +329,7 @@ test('filters included verbs to favourites only', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel).toBeTruthy()
@@ -346,7 +346,7 @@ test('applies favourites filter together with form filters', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
@@ -383,10 +383,10 @@ test('syncs favourites filter to hash query params', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
   const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/?group=favourites')
 
-  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/')
 })
 
@@ -402,7 +402,7 @@ test('syncs other filters exclusively to hash query params', async () => {
   await user.click(within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/?group=zanna')
 
-  await user.click(within(otherFilters).getByText('Favourites', { selector: 'button' }))
+  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/?group=favourites')
 })
 

@@ -75,7 +75,7 @@ test('marks the search and build form for prerender omission', () => {
 test('marks user-state panels for prerender omission', () => {
   renderConjugationMode({ verbId: 'ktb-1' })
 
-  const favourites = screen.getByText('Favourites').closest('section')!
+  const favourites = screen.getByText('Favorites').closest('section')!
   const feedback = screen.getByText('See something off?').closest('section')!
 
   expect(favourites).toHaveAttribute('data-prerender', 'omit')
@@ -234,7 +234,7 @@ describe('Form', () => {
     fireEvent.click(screen.getByLabelText(/View form insights/i))
 
     const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
-    expect(within(dialog).getByText(/simultaneously causer and caused/i)).toBeInTheDocument()
+    expect(within(dialog).getByText(/causes the change and undergoes it/i)).toBeInTheDocument()
     const links = Array.from(dialog.querySelectorAll('a[href]'))
     expect(links.length).toBeGreaterThan(0)
     expect(links.length).toBeLessThanOrEqual(5)

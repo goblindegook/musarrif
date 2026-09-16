@@ -17,6 +17,7 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 - [Testing Standards and TDD](docs/05-testing.md)
 - [Localization, Conjugation Rules, and Verb Entry Workflow](docs/06-localization-and-lexicon.md)
 - [Exercise Mode Architecture](docs/07-exercise-mode.md)
+- [Copy Terminology and Punctuation](docs/08-terminology.md)
 
 ## Contribution Checklist
 

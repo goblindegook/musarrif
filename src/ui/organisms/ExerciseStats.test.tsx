@@ -258,7 +258,7 @@ describe('ExerciseStats', () => {
     test('shows Almost there in the collapsed header when one correct answer is left', () => {
       const stats: DailyActivity[] = [{ date: TODAY, correct: 9, incorrect: 1, passed: 0 }]
       renderStats(stats)
-      expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there...')).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('Almost there…')).toBeInTheDocument()
     })
 
     test('shows Well done in the collapsed header when streak is newly extended today', () => {
@@ -335,7 +335,7 @@ describe('ExerciseStats', () => {
         { date: TODAY, correct: 15, incorrect: 4, passed: 0 },
       ]
       renderStats(stats)
-      expect(within(screen.getByText('Progress').parentElement!).getByText('5 more to go...')).toBeInTheDocument()
+      expect(within(screen.getByText('Progress').parentElement!).getByText('5 more to go…')).toBeInTheDocument()
     })
 
     test("congratulates when today's correct total reaches yesterday", () => {
