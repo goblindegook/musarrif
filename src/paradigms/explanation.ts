@@ -276,15 +276,15 @@ function barePresentEnding(verb: Verb): TenseRootInteraction {
 }
 
 const FORM_I_BASE_PATTERNS: Record<FormIPattern, { pastVowel: string; arabicVowel: string }> = {
-  'a-a': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
-  'a-i': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
-  'a-u': { pastVowel: 'fatḥa', arabicVowel: 'فتحة' },
-  'i-a': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
-  'i-i': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
-  'i-u': { pastVowel: 'kasra', arabicVowel: 'كسرة' },
-  'u-a': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
-  'u-i': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
-  'u-u': { pastVowel: 'ḍamma', arabicVowel: 'ضمة' },
+  'a-a': { pastVowel: 'fatḥa', arabicVowel: 'فَتْحَة' },
+  'a-i': { pastVowel: 'fatḥa', arabicVowel: 'فَتْحَة' },
+  'a-u': { pastVowel: 'fatḥa', arabicVowel: 'فَتْحَة' },
+  'i-a': { pastVowel: 'kasra', arabicVowel: 'كَسْرَة' },
+  'i-i': { pastVowel: 'kasra', arabicVowel: 'كَسْرَة' },
+  'i-u': { pastVowel: 'kasra', arabicVowel: 'كَسْرَة' },
+  'u-a': { pastVowel: 'ḍamma', arabicVowel: 'ضَمَّة' },
+  'u-i': { pastVowel: 'ḍamma', arabicVowel: 'ضَمَّة' },
+  'u-u': { pastVowel: 'ḍamma', arabicVowel: 'ضَمَّة' },
 }
 
 export type ExplanationKind = 'radical' | 'measure' | 'agreement' | 'particle' | 'elided'

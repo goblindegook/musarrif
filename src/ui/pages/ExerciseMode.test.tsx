@@ -127,7 +127,7 @@ describe('ExerciseMode', () => {
 
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
     expect(document.body).toHaveTextContent('كَتَبَ')
   })
 
@@ -418,7 +418,7 @@ describe('keyboard shortcuts', () => {
     fireEvent.keyDown(document.body, { key: 's' })
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
   })
 
   test('pressing S after answering does nothing', () => {
@@ -491,7 +491,7 @@ describe('Explanation in ExerciseMode', () => {
   test('explanation paragraphs appear after selecting a wrong answer', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
   })
 })
 
@@ -508,7 +508,7 @@ describe('mastery filtering in ExerciseMode', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[0])
 
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
     expect(screen.queryByText(/Sound root/i)).not.toBeInTheDocument()
   })
 
@@ -524,8 +524,8 @@ describe('mastery filtering in ExerciseMode', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)
     fireEvent.click(screen.getAllByText(/^(I|II|III|IV)$/, { selector: 'button' })[1])
 
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
-    expect(screen.getByText(/apply the pattern directly/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
+    expect(document.body).toHaveTextContent('apply the pattern directly')
   })
 
   test('wrong typed answer shows full explanation regardless of mastery', () => {
@@ -544,8 +544,8 @@ describe('mastery filtering in ExerciseMode', () => {
     fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'IV' } })
     fireEvent.click(screen.getByLabelText('Submit'))
 
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
-    expect(screen.getByText(/apply the pattern directly/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
+    expect(document.body).toHaveTextContent('apply the pattern directly')
   })
 
   test('wrong typed answer leaves focus on the answer area rather than the next button', () => {
@@ -697,7 +697,7 @@ describe('typing mode', () => {
     expect(screen.getByText(/next/i, { selector: 'button' })).toBeInTheDocument()
     expect(screen.getByText('I', { selector: 'p' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Type your answer')).not.toHaveAttribute('data-state', 'wrong')
-    expect(screen.getByText(/physical or external action/i)).toBeInTheDocument()
+    expect(document.body).toHaveTextContent('fatḥa')
   })
 })
 

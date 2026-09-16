@@ -57,7 +57,7 @@ describe('NominalInsights', () => {
 
     test('adds mimi-masdar explanation when one masdar is mimi', () => {
       renderWithProviders(<NominalInsights verb={getVerbById('wEd-1')!} nominal="masdar" arabic={['وَعْد', 'مَوْعِد']} />)
-      expect(document.body).toHaveTextContent(/pattern مَفْعِل/)
+      expect(document.body).toHaveTextContent(/pattern مَفعِل/)
     })
 
     test('shows lexical masdar label', () => {

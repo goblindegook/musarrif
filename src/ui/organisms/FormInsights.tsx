@@ -21,8 +21,8 @@ const getVowelPattern = (verb: DisplayVerb): string => {
 }
 
 export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
-  const { t, dir, lang } = useI18n()
-  const pattern = applyDiacriticsPreference(getVowelPattern(verb), 'some')
+  const { t, dir, lang, diacriticsPreference } = useI18n()
+  const pattern = applyDiacriticsPreference(getVowelPattern(verb), diacriticsPreference)
   const formExplanationParagraph = useMemo(() => {
     const { paradigmRoots, paradigmForm, arabic, form, formRoot } = resolveVerbExplanationLayers(
       verb,
@@ -48,7 +48,13 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
         {t(`formInfo.form${toFormDescriptor(verb)}.semantic`)}
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
-      {formExplanationParagraph && <FormattedText dir={dir} lang={lang} text={formExplanationParagraph} />}
+      {formExplanationParagraph && (
+        <FormattedText
+          dir={dir}
+          lang={lang}
+          text={applyDiacriticsPreference(formExplanationParagraph, diacriticsPreference)}
+        />
+      )}
       {verb.root.length === 3 && (
         <Text dir={dir} lang={lang}>
           {t(`formInfo.form${verb.form}.relationship`)}
