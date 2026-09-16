@@ -31,6 +31,7 @@ type TenseRootInteraction =
   | 'middle-passive-aa'
   | 'middle-passive-ii'
   | 'middle-shortens'
+  | 'middle-shortens-past'
 
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
@@ -145,10 +146,12 @@ function toArabicText(arabic: string | readonly string[]): string {
   return Array.isArray(arabic) ? arabic.join('، ') : String(arabic)
 }
 
-function resolveHollow(isWaw: boolean, tenseContext: VerbTense): TenseRootInteraction {
+const HOLLOW_PAST_LONG_VOWEL_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
+
+function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
   switch (tenseContext) {
     case 'active.past':
-      return 'middle-lengthens-aa'
+      return HOLLOW_PAST_LONG_VOWEL_PRONOUNS.includes(pronoun) ? 'middle-lengthens-aa' : 'middle-shortens-past'
     case 'active.present.indicative':
     case 'active.present.subjunctive':
     case 'active.future':
@@ -415,7 +418,7 @@ function toTenseRoot(
 ): TenseRootInteraction | undefined {
   const isWaw = weakLetter === 'waw'
 
-  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(isWaw, tenseContext)
+  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(isWaw, tenseContext, pronoun)
   if (rootType.includes('defective')) return resolveDefective(isWaw, tenseContext, pronoun)
   if (rootType.includes('assimilated'))
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1

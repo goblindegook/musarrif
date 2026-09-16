@@ -377,6 +377,7 @@
   "explanation.tense-root.hamza-seat": "O assento da hamza segue a vogal adjacente mais forte: kasra → <span lang=\"ar\">ي</span>, ḍamma → <span lang=\"ar\">و</span>, fatḥa → <span lang=\"ar\">ا</span>, sem vogal → <span lang=\"ar\">ء</span>. Resultado: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.initial-drops": "Para formar o presente activo da Forma I: elimine o <span lang=\"ar\">و</span> inicial; <span lang=\"ar\">{arabic}</span> é o resultado. Reaparece em todas as outras formas.",
   "explanation.tense-root.middle-lengthens-aa": "No passado activo, o medial oco contrai-se em ā longa: <span lang=\"ar\">{arabic}</span>. Tanto as raízes ocas com waw como as com yaa usam esta mesma vogal.",
+  "explanation.tense-root.middle-shortens-past": "No passado activo, uma terminação iniciada por consoante obriga o medial oco a encurtar-se: <span lang=\"ar\">{arabic}</span>. Tanto as raízes ocas com waw como as com yaa perdem aqui a vogal longa.",
   "explanation.tense-root.middle-lengthens-ii": "No presente activo, as raízes ocas com yā manifestam sempre o medial como ī longa: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.middle-lengthens-uu": "No presente activo, as raízes ocas com wāw manifestam sempre o medial como ū longa: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.middle-passive-aa": "No presente passivo, ambos os tipos de raiz oca manifestam o medial como ā longa: <span lang=\"ar\">{arabic}</span>.",

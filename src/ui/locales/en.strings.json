@@ -377,6 +377,7 @@
   "explanation.tense-root.hamza-seat": "Check the hamza’s seat follows the strongest adjacent vowel: kasra → <span lang=\"ar\">ي</span>, ḍamma → <span lang=\"ar\">و</span>, fatḥa → <span lang=\"ar\">ا</span>, no vowel → <span lang=\"ar\">ء</span>. Result: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.initial-drops": "When forming the Form I active present: drop the initial <span lang=\"ar\">و</span>; <span lang=\"ar\">{arabic}</span> is the result. It reappears in all other forms.",
   "explanation.tense-root.middle-lengthens-aa": "In the active past, the hollow middle contracts to long ā: <span lang=\"ar\">{arabic}</span>. Both waw- and yaa-hollow roots use this same vowel.",
+  "explanation.tense-root.middle-shortens-past": "In the active past, a consonant-initial ending forces the hollow middle to shorten: <span lang=\"ar\">{arabic}</span>. Both waw- and yaa-hollow roots lose the long vowel here.",
   "explanation.tense-root.middle-lengthens-ii": "In the active present, yā-hollow roots always surface the middle as long ī: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.middle-lengthens-uu": "In the active present, wāw-hollow roots always surface the middle as long ū: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.middle-passive-aa": "In the passive present, both hollow root types surface the middle as long ā: <span lang=\"ar\">{arabic}</span>.",
