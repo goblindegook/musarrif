@@ -21,6 +21,7 @@ function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): Displa
   const candidates = [
     ...extractRootCandidates(normalizedQuery),
     ...[query, query.toLowerCase()].map((value) => transliterateReverse(value).replace(/[^ء-ي]/g, '')),
+    transliterateReverse(foldRomanisedDigraphs(query)).replace(/[^ء-ي]/g, ''),
   ]
 
   return Array.from(
@@ -50,6 +51,18 @@ export const search = memoize(
   searchInternal,
   { capacity: 10000 },
 )
+
+const DIGRAPH_FOLDS: Record<string, string> = {
+  kh: 'x',
+  dh: '*',
+  sh: '$',
+  th: 'v',
+  gh: 'g',
+}
+
+function foldRomanisedDigraphs(value: string): string {
+  return value.replace(/kh|dh|sh|th|gh/gi, (match) => DIGRAPH_FOLDS[match.toLowerCase()])
+}
 
 function extractRootCandidates(query: string): string[] {
   const candidates = new Set<string>()

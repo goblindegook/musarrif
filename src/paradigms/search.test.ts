@@ -73,6 +73,23 @@ describe('search', () => {
     expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
   })
 
+  test.each([
+    ['kharaja', 'خرج'],
+    ['dhahaba', 'ذهب'],
+    ['shariba', 'شرب'],
+    ['ghasala', 'غسل'],
+  ])('matches verbs by romanised digraph input "%s"', (query, expectedRoot) => {
+    const matches = search(query, { translate: () => '', language: 'digraph' })
+
+    expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
+  })
+
+  test('matches a root-triplet romanised digraph without vowels between consonants', () => {
+    const matches = search('khrj', { translate: () => '', language: 'digraph' })
+
+    expect(matches.find((verb) => verb.root === 'خرج')).toBeDefined()
+  })
+
   test('matches verbs by translated text', () => {
     const translations = (en as { verbs?: Record<string, string> }).verbs ?? {}
     const matches = search('translate', { translate: (key) => translations[key], language: 'en' })
