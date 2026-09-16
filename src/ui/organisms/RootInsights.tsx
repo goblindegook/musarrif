@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { analyzeRoot } from '../../paradigms/roots.ts'
+import { analyzeRoot, rootTypeLocaleKey } from '../../paradigms/roots.ts'
 import { tokenize } from '../../paradigms/tokens.ts'
 import { findVerbsByRoot } from '../../paradigms/verbs.ts'
 import { Heading } from '../atoms/Heading.tsx'
@@ -39,7 +39,8 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
         </RootLetters>
       </RootDisplay>
       <Text dir={dir} lang={lang}>
-        {t(`rootInfo.${rootAnalysis.type}.description`) || t('rootInfo.sound.description')}
+        {t(`rootInfo.${rootTypeLocaleKey(rootAnalysis.type, rootAnalysis.weakLetter)}.description`) ||
+          t('rootInfo.sound.description')}
       </Text>
       {rootAnalysis.isBiliteral && (
         <Text dir={dir} lang={lang}>

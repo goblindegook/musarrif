@@ -1,25 +1,12 @@
 import { type Token, WAW, YEH } from './tokens'
 
-export type RootAnalysisType =
-  | 'sound'
-  | 'doubled'
-  | 'assimilated'
-  | 'hollow-waw'
-  | 'hollow-yaa'
-  | 'defective-waw'
-  | 'defective-yaa'
-  | 'hamzated'
-  | 'hamzated-hollow-waw'
-  | 'hamzated-hollow-yaa'
-  | 'hamzated-defective-waw'
-  | 'hamzated-defective-yaa'
-  | 'hamzated-doubled'
-  | 'doubly-weak-waw'
-  | 'doubly-weak-yaa'
-  | 'hamzated-hollow-defective'
+export type RootShape = 'assimilated' | 'hollow' | 'defective' | 'doubled' | 'hamzated'
+export type RootAnalysisType = readonly RootShape[]
+export type WeakLetter = 'waw' | 'yaa'
 
 export interface RootAnalysis {
   type: RootAnalysisType
+  weakLetter?: WeakLetter
   weakPositions: number[]
   hamzaPositions: number[]
   isBiliteral: boolean
@@ -35,7 +22,7 @@ export function analyzeRoot(root: readonly Token[]): RootAnalysis {
   })
 
   return {
-    type: analyzeType(root, weakPositions, hamzaPositions),
+    ...analyzeType(root, weakPositions, hamzaPositions),
     weakPositions,
     hamzaPositions,
     isBiliteral: isBiliteralRoot(root),
@@ -51,31 +38,41 @@ function analyzeType(
   root: readonly Token[],
   weakPositions: readonly number[],
   hamzaPositions: readonly number[],
-): RootAnalysisType {
+): Pick<RootAnalysis, 'type' | 'weakLetter'> {
   const [c1, c2, c3] = Array.from(root)
 
   if (hamzaPositions.length > 0) {
-    if (c2.isWeak && c3.isWeak) return 'hamzated-hollow-defective'
-    if (c2.isWeak) return toWeakVariant(c2, 'hamzated-hollow-waw', 'hamzated-hollow-yaa')
-    if (c3.isWeak) return toWeakVariant(c3, 'hamzated-defective-waw', 'hamzated-defective-yaa')
-    if (c2.equals(c3)) return 'hamzated-doubled'
-    return 'hamzated'
+    if (c2.isWeak && c3.isWeak) return { type: ['hamzated', 'hollow', 'defective'] }
+    if (c2.isWeak) return { type: ['hamzated', 'hollow'], weakLetter: weakLetterOf(c2) }
+    if (c3.isWeak) return { type: ['hamzated', 'defective'], weakLetter: weakLetterOf(c3) }
+    if (c2.equals(c3)) return { type: ['hamzated', 'doubled'] }
+    return { type: ['hamzated'] }
   }
 
   if (weakPositions.length >= 2) {
-    const dominantIndex = weakPositions.includes(1) ? 1 : 2
-    return toWeakVariant(root[dominantIndex], 'doubly-weak-waw', 'doubly-weak-yaa')
+    const dominant = weakPositions.includes(1) ? c2 : c3
+    const type: RootShape[] = weakPositions.includes(1)
+      ? weakPositions.includes(2)
+        ? ['hollow', 'defective']
+        : ['assimilated', 'hollow']
+      : ['assimilated', 'defective']
+    return { type, weakLetter: weakLetterOf(dominant) }
   }
 
-  if (c1.isWeak) return 'assimilated'
-  if (c2.isWeak) return toWeakVariant(c2, 'hollow-waw', 'hollow-yaa')
-  if (c3.isWeak) return toWeakVariant(c3, 'defective-waw', 'defective-yaa')
-  if (c2.equals(c3)) return 'doubled'
-  return 'sound'
+  if (c1.isWeak) return { type: ['assimilated'] }
+  if (c2.isWeak) return { type: ['hollow'], weakLetter: weakLetterOf(c2) }
+  if (c3.isWeak) return { type: ['defective'], weakLetter: weakLetterOf(c3) }
+  if (c2.equals(c3)) return { type: ['doubled'] }
+  return { type: [] }
 }
 
-function toWeakVariant(letter: Token, wawType: RootAnalysisType, yaaType: RootAnalysisType): RootAnalysisType {
-  return letter.equals(WAW) ? wawType : yaaType
+function weakLetterOf(letter: Token): WeakLetter {
+  return letter.equals(WAW) ? 'waw' : 'yaa'
+}
+
+export function rootTypeLocaleKey(type: RootAnalysisType, weakLetter?: WeakLetter): string {
+  if (type.length === 0) return 'sound'
+  return weakLetter ? `${type.join('-')}-${weakLetter}` : type.join('-')
 }
 
 // Outside Form I a final weak radical always surfaces as yā', so a wāw-final root builds its derived

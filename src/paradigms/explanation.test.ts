@@ -18,46 +18,46 @@ const localeT = (key: string, params?: Record<string, string>): string => {
 // ── rootType ──────────────────────────────────────────────────────────────
 
 describe('resolveVerbExplanationLayers rootType', () => {
-  test('sound root → rootType sound', () => {
+  test('sound root → rootType []', () => {
     const verb = getVerb('كتب', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'كَتَبَ')
-    expect(layers.rootType).toBe('sound')
+    expect(layers.rootType).toEqual([])
   })
 
-  test('hollow-waw root → rootType hollow-waw', () => {
+  test('hollow-waw root → rootType [hollow], weakLetter waw', () => {
     const verb = getVerb('قول', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'قَالَ')
-    expect(layers.rootType).toBe('hollow-waw')
+    expect(layers).toMatchObject({ rootType: ['hollow'], weakLetter: 'waw' })
   })
 
-  test('hollow-yaa root → rootType hollow-yaa', () => {
+  test('hollow-yaa root → rootType [hollow], weakLetter yaa', () => {
     const verb = getVerb('بيع', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'بَاعَ')
-    expect(layers.rootType).toBe('hollow-yaa')
+    expect(layers).toMatchObject({ rootType: ['hollow'], weakLetter: 'yaa' })
   })
 
-  test('defective-waw root → rootType defective-waw', () => {
+  test('defective-waw root → rootType [defective], weakLetter waw', () => {
     const verb = getVerb('دعو', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'دَعَا')
-    expect(layers.rootType).toBe('defective-waw')
+    expect(layers).toMatchObject({ rootType: ['defective'], weakLetter: 'waw' })
   })
 
-  test('defective-yaa root → rootType defective-yaa', () => {
+  test('defective-yaa root → rootType [defective], weakLetter yaa', () => {
     const verb = getVerb('رمي', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'رَمَى')
-    expect(layers.rootType).toBe('defective-yaa')
+    expect(layers).toMatchObject({ rootType: ['defective'], weakLetter: 'yaa' })
   })
 
-  test('assimilated root → rootType assimilated', () => {
+  test('assimilated root → rootType [assimilated]', () => {
     const verb = getVerb('وصل', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'وَصَلَ')
-    expect(layers.rootType).toBe('assimilated')
+    expect(layers.rootType).toEqual(['assimilated'])
   })
 
-  test('doubled root → rootType doubled', () => {
+  test('doubled root → rootType [doubled]', () => {
     const verb = getVerb('مدد', 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'مَدَّ')
-    expect(layers.rootType).toBe('doubled')
+    expect(layers.rootType).toEqual(['doubled'])
   })
 })
 
@@ -329,6 +329,30 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
   })
 })
 
+// ── tenseRoot: combined irregularities ───────────────────────────────────────
+// A root can carry two irregular shapes at once (e.g. assimilated + defective). toTenseRoot picks
+// one dominant behavior to describe rather than showing nothing, using the same hollow > defective >
+// assimilated priority that analyzeRoot already uses to pick the dominant weak letter for these roots.
+
+describe('resolveVerbExplanationLayers tenseRoot combined irregularities', () => {
+  test('assimilated + defective root → defective behavior wins over assimilated', () => {
+    const waqy = getVerbById('wqy-1')!
+    expect(resolveVerbExplanationLayers(waqy, 'active.present.indicative', '3ms', 'x').tenseRoot).toBe(
+      'final-lengthens-ii',
+    )
+  })
+
+  test('hollow + defective root (no hamza) → hollow behavior wins over defective', () => {
+    const rawy = getVerbById('rwy-1')!
+    expect(resolveVerbExplanationLayers(rawy, 'active.past', '3ms', 'x').tenseRoot).toBe('middle-lengthens-aa')
+  })
+
+  test('assimilated + hollow root → hollow behavior wins over assimilated', () => {
+    const wyl = getVerbById('wyl-1')!
+    expect(resolveVerbExplanationLayers(wyl, 'active.past', '3ms', 'x').tenseRoot).toBe('middle-lengthens-aa')
+  })
+})
+
 // ── formRoot: form VIII assimilation by first radical ───────────────────────
 
 describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
@@ -580,7 +604,8 @@ describe('renderExplanation', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'قَالَ',
-      rootType: 'hollow-waw',
+      rootType: ['hollow'],
+      weakLetter: 'waw',
       vowels: 'a-u',
       tense: 'active.past',
       pronoun: '3ms',
@@ -589,26 +614,29 @@ describe('renderExplanation', () => {
   }
 
   test('includes root sentence', () => {
-    expect(sentences(testExplanationLayers({ rootType: 'sound' }))).toContainEqual({
+    expect(sentences(testExplanationLayers({ rootType: [], weakLetter: undefined }))).toContainEqual({
       text: 'explanation.root.sound',
       kind: 'radical',
     })
   })
 
   test('leads the first paragraph with the formIPattern, then the form, then the root', () => {
-    expect(renderExplanation(testExplanationLayers({ form: '1-action', rootType: 'sound', vowels: 'a-u' }), t)).toEqual(
+    expect(
+      renderExplanation(
+        testExplanationLayers({ form: '1-action', rootType: [], weakLetter: undefined, vowels: 'a-u' }),
+        t,
+      ),
+    ).toEqual([
       [
-        [
-          { text: 'explanation.form-i-pattern.a-u', kind: 'measure' },
-          { text: 'explanation.form.1-action', kind: 'measure' },
-          { text: 'explanation.root.sound', kind: 'radical' },
-        ],
-        [
-          { text: 'explanation.tense.active.past', kind: 'measure' },
-          { text: 'explanation.tense.active.past.form-i', kind: 'measure' },
-        ],
+        { text: 'explanation.form-i-pattern.a-u', kind: 'measure' },
+        { text: 'explanation.form.1-action', kind: 'measure' },
+        { text: 'explanation.root.sound', kind: 'radical' },
       ],
-    )
+      [
+        { text: 'explanation.tense.active.past', kind: 'measure' },
+        { text: 'explanation.tense.active.past.form-i', kind: 'measure' },
+      ],
+    ])
   })
 
   test('includes form description in first paragraph for non-form-I', () => {
@@ -724,7 +752,8 @@ describe('renderExplanation', () => {
         paradigmForm: 1,
         form: '1-action',
         arabic: 'قَالَ',
-        rootType: 'hollow-waw',
+        rootType: ['hollow'],
+        weakLetter: 'waw',
         vowels: 'a-u',
         tense: 'active.past',
         tenseRoot: 'middle-lengthens-aa',
@@ -742,7 +771,8 @@ describe('renderExplanation', () => {
           paradigmForm: 8,
           form: '8',
           arabic: 'اِزْدَوَجَ',
-          rootType: 'hollow-waw',
+          rootType: ['hollow'],
+          weakLetter: 'waw',
           formRoot: 'assimilation-voicing',
           tense: 'active.past',
           pronoun: '3ms',
@@ -890,9 +920,9 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.nominal).toBe('activeParticiple')
   })
 
-  test('returns rootType sound for sound root', () => {
+  test('returns rootType [] for sound root', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.rootType).toBe('sound')
+    expect(layers.rootType).toEqual([])
   })
 
   test('returns formIPattern for Form I verb', () => {
@@ -969,7 +999,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
     }
@@ -989,7 +1019,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-intermediate',
       arabic: 'أَزْرَق',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'activeParticiple',
       activeParticipleKind: 'lexical',
     }
@@ -1009,7 +1039,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-intermediate',
       arabic: 'سَعِيد',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'activeParticiple',
       activeParticipleKind: 'fa3iil',
     }
@@ -1029,7 +1059,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'مَكْتُوب',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'passiveParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
@@ -1048,7 +1078,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كِتَابَة',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'masdar',
       isMasdarMimi: false,
     }
@@ -1068,7 +1098,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: ['وَعْد', 'مَوْعِد'],
-      rootType: 'assimilated',
+      rootType: ['assimilated'],
       nominal: 'masdar',
       isMasdarMimi: true,
       masdarPattern: 'مَفْعِل',
@@ -1089,7 +1119,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: 'sound',
+      rootType: [],
       vowels: 'a-u',
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
@@ -1104,7 +1134,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: 'sound',
+      rootType: [],
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
     }

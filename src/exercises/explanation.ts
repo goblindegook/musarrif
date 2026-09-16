@@ -14,11 +14,11 @@ interface LayerMastery {
 // Priority mirrors getSrsRootType: defective > hollow > assimilated > hamzated > doubled > sound
 function toSrsRootType(rootType?: RootAnalysisType): SrsRootType | undefined {
   if (!rootType) return undefined
-  if (rootType.includes('defective') || rootType.startsWith('doubly-weak')) return 'defective'
+  if (rootType.includes('defective') || (rootType.length >= 2 && !rootType.includes('hamzated'))) return 'defective'
   if (rootType.includes('hollow')) return 'hollow'
-  if (rootType === 'assimilated') return 'assimilated'
+  if (rootType.length === 1 && rootType[0] === 'assimilated') return 'assimilated'
   if (rootType.includes('hamzated')) return 'hamzated'
-  if (rootType === 'doubled') return 'doubled'
+  if (rootType.length === 1 && rootType[0] === 'doubled') return 'doubled'
   return 'sound'
 }
 
@@ -87,6 +87,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
       return {
         ...layers,
         rootType: on(showRootType, layers.rootType),
+        weakLetter: on(showRootType, layers.weakLetter),
         form: on(showForm, layers.form),
         vowels: on(showForm, layers.vowels),
         formRoot: on(showForm || showRootType, layers.formRoot),
@@ -98,6 +99,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
     return {
       ...layers,
       rootType: on(showRootType, layers.rootType),
+      weakLetter: on(showRootType, layers.weakLetter),
       form: on(showForm, layers.form),
       vowels: on(showForm, layers.vowels),
       formRoot: on(showForm || showRootType, layers.formRoot),
@@ -111,6 +113,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
   return {
     ...layers,
     rootType: on(showRootType, layers.rootType),
+    weakLetter: on(showRootType, layers.weakLetter),
     form: on(showForm, layers.form),
     vowels: on(showForm, layers.vowels),
     formRoot: on(showForm || showRootType, layers.formRoot),

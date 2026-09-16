@@ -8,7 +8,7 @@ describe('filterMasteredLayers', () => {
     paradigmRoots: ['ك', 'ت', 'ب'],
     paradigmForm: 1,
     arabic: 'كَتَبَ',
-    rootType: 'sound',
+    rootType: [],
     form: '1-action',
     vowels: 'a-u',
     tense: 'active.past',
@@ -20,7 +20,7 @@ describe('filterMasteredLayers', () => {
   test('returns all fields unchanged when store is empty', () => {
     const result = filterMasteredLayers({}, FULL_LAYERS)
     expect(result).toMatchObject({
-      rootType: 'sound',
+      rootType: [],
       form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
@@ -34,7 +34,7 @@ describe('filterMasteredLayers', () => {
       FULL_LAYERS,
     )
     expect(result).toMatchObject({
-      rootType: 'sound',
+      rootType: [],
       form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
@@ -55,7 +55,7 @@ describe('filterMasteredLayers', () => {
       { 'conjugation:hollow:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
-    expect(result.rootType).toBe('sound')
+    expect(result.rootType).toEqual([])
   })
 
   test('computes rootType median from two cards with different combo keys', () => {
@@ -88,7 +88,7 @@ describe('filterMasteredLayers', () => {
       21,
       '2099-01-01',
     )
-    expect(result.rootType).toBe('sound')
+    expect(result.rootType).toEqual([])
   })
 
   test('deduplicates by combination key keeping max interval per combination', () => {
@@ -153,7 +153,7 @@ describe('filterMasteredLayers', () => {
           paradigmForm: 8,
           arabic: 'اِكْتَتَبَ',
           form: '8',
-          rootType: 'sound',
+          rootType: [],
           formRoot: 'assimilation-complete',
         },
       ),
@@ -174,7 +174,8 @@ describe('filterMasteredLayers', () => {
           paradigmForm: 1,
           arabic: 'قَالَ',
           tense: 'active.past',
-          rootType: 'hollow-waw',
+          rootType: ['hollow'],
+          weakLetter: 'waw',
           tenseRoot: 'middle-lengthens-aa',
         },
       ),
@@ -219,7 +220,8 @@ describe('filterMasteredLayers', () => {
         paradigmRoots: ['ق', 'و', 'ل'],
         paradigmForm: 1,
         arabic: 'قَالَ',
-        rootType: 'hollow-waw',
+        rootType: ['hollow'],
+        weakLetter: 'waw',
       },
     )
 

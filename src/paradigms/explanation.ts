@@ -5,7 +5,7 @@ import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
-import { analyzeRoot, type RootAnalysisType } from './roots'
+import { analyzeRoot, type RootAnalysisType, rootTypeLocaleKey, type WeakLetter } from './roots'
 import type { VerbTense } from './tense'
 import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
 import { isQuadriliteralVerb, isTriliteralFormIVerb, type TriliteralForm, type Verb } from './verbs'
@@ -94,6 +94,7 @@ interface BaseExplanationLayers {
   paradigmRoots: string[]
   paradigmForm: TriliteralForm
   rootType?: RootAnalysisType
+  weakLetter?: WeakLetter
   form?: VerbFormDescriptor
   vowels?: FormIPattern
   formRoot?: FormRootInteraction
@@ -144,8 +145,7 @@ function toArabicText(arabic: string | readonly string[]): string {
   return Array.isArray(arabic) ? arabic.join('، ') : String(arabic)
 }
 
-function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): TenseRootInteraction {
-  const isWaw = rootType.includes('waw')
+function resolveHollow(isWaw: boolean, tenseContext: VerbTense): TenseRootInteraction {
   switch (tenseContext) {
     case 'active.past':
       return 'middle-lengthens-aa'
@@ -167,11 +167,10 @@ function resolveHollow(rootType: RootAnalysisType, tenseContext: VerbTense): Ten
 }
 
 function resolveDefective(
-  rootType: RootAnalysisType,
+  isWaw: boolean,
   tenseContext: VerbTense,
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
-  const isWaw = rootType.includes('waw')
   switch (tenseContext) {
     case 'active.past':
       if (pronoun === '3ms') return 'final-isolated'
@@ -296,7 +295,10 @@ export function renderExplanation(
         text: t(`explanation.form.${layers.form === '1q-bd' ? '1q' : layers.form}`, params),
         kind: 'measure',
       },
-      layers.rootType && { text: t(`explanation.root.${layers.rootType}`, params), kind: 'radical' },
+      layers.rootType && {
+        text: t(`explanation.root.${rootTypeLocaleKey(layers.rootType, layers.weakLetter)}`, params),
+        kind: 'radical',
+      },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
     [nominalKey && { text: t(nominalKey, params), kind: 'measure' }],
@@ -370,7 +372,7 @@ export function resolveVerbExplanationLayers(
   pronoun: PronounId,
   arabic: string,
 ): VerbExplanationLayers {
-  const rootType = analyzeRoot(verb.rootTokens).type
+  const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
   const isFormI = isTriliteralFormIVerb(verb)
 
   return {
@@ -380,12 +382,13 @@ export function resolveVerbExplanationLayers(
     form: toFormDescriptor(verb),
     arabic,
     rootType,
+    weakLetter,
     vowels: isFormI ? verb.vowels : undefined,
     pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
-    tenseRoot: toTenseRoot(rootType, tense, verb.form, pronoun),
+    tenseRoot: toTenseRoot(rootType, weakLetter, tense, verb.form, pronoun),
     pronoun,
     contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
     ...extractAffixes(derivationSteps(verb, tense, pronoun).at(-1)?.morphemes),
@@ -400,20 +403,26 @@ function toFormRoot(form: TriliteralForm, [c1]: readonly Token[]): FormRootInter
   if (infixConsonant.equals(TAH)) return 'assimilation-emphasis'
 }
 
+// A root can carry more than one irregular shape at once (e.g. assimilated + defective). Only one
+// tenseRoot sentence renders, so the dominant shape wins: hollow > defective > assimilated > doubled >
+// hamzated - the same priority analyzeRoot already uses to pick the dominant weak letter for these roots.
 function toTenseRoot(
   rootType: RootAnalysisType,
+  weakLetter: WeakLetter | undefined,
   tenseContext: VerbTense,
   form: TriliteralForm,
   pronoun: PronounId,
 ): TenseRootInteraction | undefined {
-  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(rootType, tenseContext)
-  if (rootType.includes('defective')) return resolveDefective(rootType, tenseContext, pronoun)
-  if (rootType === 'assimilated')
+  const isWaw = weakLetter === 'waw'
+
+  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(isWaw, tenseContext)
+  if (rootType.includes('defective')) return resolveDefective(isWaw, tenseContext, pronoun)
+  if (rootType.includes('assimilated'))
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
       ? 'initial-drops'
       : undefined
-  if (rootType === 'doubled' || rootType === 'hamzated-doubled') return resolveGeminate(tenseContext, form)
-  if (rootType === 'hamzated') return 'hamza-seat'
+  if (rootType.includes('doubled')) return resolveGeminate(tenseContext, form)
+  if (rootType.includes('hamzated')) return 'hamza-seat'
 }
 
 function resolveGeminate(tenseContext: VerbTense, form: TriliteralForm): TenseRootInteraction | undefined {
@@ -464,12 +473,15 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
   const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
   const isFormI = isTriliteralFormIVerb(verb)
 
+  const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
+
   const base = {
     paradigmRoots: Array.from(verb.root),
     paradigmForm: verb.form,
     form: toFormDescriptor(verb),
     arabic: arabicString,
-    rootType: analyzeRoot(verb.rootTokens).type,
+    rootType,
+    weakLetter,
     vowels: isFormI ? verb.vowels : undefined,
     pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
