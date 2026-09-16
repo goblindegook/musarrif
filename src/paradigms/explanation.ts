@@ -10,6 +10,7 @@ import type { VerbTense } from './tense'
 import {
   ALIF_MADDA,
   DAL,
+  NOON,
   normalizeForComparison,
   resolveFormVIIIInfixConsonant,
   TAH,
@@ -37,6 +38,7 @@ type TenseRootInteraction =
   | 'final-passive-ya'
   | 'final-passive-uu'
   | 'final-resurfaces'
+  | 'final-surfaces-consonant'
   | 'geminate-contracts'
   | 'geminate-jussive'
   | 'geminate-separates'
@@ -49,7 +51,7 @@ type TenseRootInteraction =
   | 'middle-passive-aa'
   | 'middle-passive-ii'
   | 'middle-shortens'
-  | 'middle-shortens-past'
+  | 'middle-shortens-consonant'
 
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
@@ -170,6 +172,19 @@ const VOWEL_SUFFIX_PAST_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '
 // The present-tense pronouns whose ـْنَ ending starts with sukūn.
 const FEMININE_PLURAL_PRONOUNS: readonly PronounId[] = ['2fp', '3fp']
 
+// The present-tense pronouns whose ending starts with a vowel, which protects the stem from apocope.
+const VOWEL_SUFFIX_PRESENT_PRONOUNS: readonly PronounId[] = ['2fs', '2d', '2mp', '3md', '3fd', '3mp']
+
+// The present-tense pronouns that carry no personal ending at all, leaving the stem's final vowel bare.
+const BARE_PRESENT_PRONOUNS: readonly PronounId[] = ['1s', '1p', '2ms', '3ms', '3fs']
+
+// The moods that drop the stem's final vowel when no vowel-initial ending follows.
+const APOCOPATING_TENSES: readonly VerbTense[] = [
+  'active.present.jussive',
+  'active.imperative',
+  'passive.present.jussive',
+]
+
 // Forms II, III, V and VI keep the middle radical a plain consonant: the gemination of II/V and the
 // long vowel of III/VI protect it, so a hollow root conjugates sound throughout those forms.
 const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
@@ -177,25 +192,22 @@ const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
 // Only the gemination of Forms II and V protects identical radicals; III and VI still contract.
 const DOUBLED_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 5]
 
+// The long middle vowel survives only when nothing consonantal follows it: a vowel-initial ending
+// keeps it in every tense, while the jussive and imperative shorten it wherever such an ending is
+// absent, and the feminine plural ـْنَ shortens it even in the indicative.
 function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
-  switch (tenseContext) {
-    case 'active.past':
-      return VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun) ? 'middle-lengthens-aa' : 'middle-shortens-past'
-    case 'active.present.indicative':
-    case 'active.present.subjunctive':
-    case 'active.future':
-      return isWaw ? 'middle-lengthens-uu' : 'middle-lengthens-ii'
-    case 'active.present.jussive':
-    case 'active.imperative':
-      return 'middle-shortens'
-    case 'passive.past':
-      return 'middle-passive-ii'
-    case 'passive.present.indicative':
-    case 'passive.present.subjunctive':
-    case 'passive.present.jussive':
-    case 'passive.future':
-      return 'middle-passive-aa'
+  const isPassive = tenseContext.startsWith('passive')
+
+  if (tenseContext.endsWith('past')) {
+    if (!VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun)) return 'middle-shortens-consonant'
+    return isPassive ? 'middle-passive-ii' : 'middle-lengthens-aa'
   }
+
+  const keepsLongVowel = VOWEL_SUFFIX_PRESENT_PRONOUNS.includes(pronoun)
+  if (!keepsLongVowel && APOCOPATING_TENSES.includes(tenseContext)) return 'middle-shortens'
+  if (FEMININE_PLURAL_PRONOUNS.includes(pronoun)) return 'middle-shortens-consonant'
+  if (isPassive) return 'middle-passive-aa'
+  return isWaw ? 'middle-lengthens-uu' : 'middle-lengthens-ii'
 }
 
 function resolveDefective(
@@ -209,9 +221,12 @@ function resolveDefective(
       if (['3fs', '3fd'].includes(pronoun)) return 'final-elides'
       return 'final-resurfaces'
     case 'active.present.indicative':
-    case 'active.present.subjunctive':
     case 'active.future':
+      if (!BARE_PRESENT_PRONOUNS.includes(pronoun)) return 'final-surfaces-consonant'
       return isWaw ? 'final-lengthens-uu' : 'final-lengthens-ii'
+    case 'active.present.subjunctive':
+      // The subjunctive's own fatḥa sits on the final radical, so it is a consonant even when bare.
+      return 'final-surfaces-consonant'
     case 'active.present.jussive':
     case 'active.imperative':
       return 'final-drops'
@@ -220,7 +235,7 @@ function resolveDefective(
     case 'passive.present.indicative':
     case 'passive.present.subjunctive':
     case 'passive.future':
-      return 'final-passive-aa'
+      return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-passive-aa' : 'final-surfaces-consonant'
     case 'passive.present.jussive':
       return 'final-drops'
   }
@@ -272,7 +287,7 @@ function renderPronounSentences(
         text: t('explanation.pronoun.dropped-prefix', { ...pronounParams, elidedPrefix: `${layers.elidedPrefix}ـ` }),
         kind: 'elided',
       },
-    layers.elidedSuffix && {
+    layers.elidedSuffix?.includes(String(NOON)) && {
       text: t('explanation.pronoun.dropped-suffix', { ...pronounParams, elidedSuffix: `ـ${layers.elidedSuffix}` }),
       kind: 'elided',
     },
