@@ -7,12 +7,25 @@ import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
 import { analyzeRoot, type RootAnalysisType, rootTypeLocaleKey, type WeakLetter } from './roots'
 import type { VerbTense } from './tense'
-import { DAL, normalizeForComparison, resolveFormVIIIInfixConsonant, TAH, type Token } from './tokens'
+import {
+  ALIF_MADDA,
+  DAL,
+  normalizeForComparison,
+  resolveFormVIIIInfixConsonant,
+  TAH,
+  type Token,
+  WAW,
+  YEH,
+} from './tokens'
 import { isQuadriliteralVerb, isTriliteralFormIVerb, type TriliteralForm, type Verb } from './verbs'
 import type { Morpheme } from './word'
 import { Word } from './word'
 
-type FormRootInteraction = 'assimilation-complete' | 'assimilation-voicing' | 'assimilation-emphasis'
+type FormRootInteraction =
+  | 'assimilation-complete'
+  | 'assimilation-voicing'
+  | 'assimilation-emphasis'
+  | 'assimilation-weak-initial'
 
 type TenseRootInteraction =
   | 'final-drops'
@@ -20,9 +33,13 @@ type TenseRootInteraction =
   | 'final-isolated'
   | 'final-lengthens-ii'
   | 'final-lengthens-uu'
+  | 'final-passive-aa'
+  | 'final-passive-ya'
+  | 'final-passive-uu'
   | 'final-resurfaces'
   | 'geminate-contracts'
   | 'geminate-jussive'
+  | 'hamza-madda'
   | 'hamza-seat'
   | 'initial-drops'
   | 'middle-lengthens-aa'
@@ -148,6 +165,10 @@ function toArabicText(arabic: string | readonly string[]): string {
 
 const HOLLOW_PAST_LONG_VOWEL_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
 
+// Forms II, III, V and VI keep the middle radical a plain consonant: the gemination of II/V and the
+// long vowel of III/VI protect it, so a hollow root conjugates sound throughout those forms.
+const HOLLOW_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 3, 5, 6]
+
 function resolveHollow(isWaw: boolean, tenseContext: VerbTense, pronoun: PronounId): TenseRootInteraction {
   switch (tenseContext) {
     case 'active.past':
@@ -187,11 +208,13 @@ function resolveDefective(
     case 'active.imperative':
       return 'final-drops'
     case 'passive.past':
+      return pronoun === '3mp' ? 'final-passive-uu' : 'final-passive-ya'
     case 'passive.present.indicative':
     case 'passive.present.subjunctive':
-    case 'passive.present.jussive':
     case 'passive.future':
-      return undefined
+      return 'final-passive-aa'
+    case 'passive.present.jussive':
+      return 'final-drops'
   }
 }
 
@@ -266,6 +289,17 @@ function resolveNominalKey(layers?: NominalExplanationLayers): string {
   return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : ''
 }
 
+function resolveRootNoteKey(
+  rootType: RootAnalysisType,
+  weakLetter: WeakLetter | undefined,
+  form: TriliteralForm,
+): string {
+  const onlyWeakness = rootType.length === 1 ? rootType[0] : undefined
+  if (onlyWeakness === 'hollow' && HOLLOW_NEUTRAL_FORMS.includes(form)) return 'explanation.root.hollow-sound-form'
+  if (onlyWeakness === 'assimilated' && form === 8) return ''
+  return `explanation.root.${rootTypeLocaleKey(rootType, weakLetter)}`
+}
+
 const tenseKind = (tense: VerbTense): ExplanationKind =>
   tense === 'active.future'
     ? 'particle'
@@ -290,6 +324,7 @@ export function renderExplanation(
   }
 
   const nominalKey = resolveNominalKey(nominalLayers)
+  const rootNoteKey = layers.rootType && resolveRootNoteKey(layers.rootType, layers.weakLetter, layers.paradigmForm)
 
   return [
     [
@@ -298,10 +333,7 @@ export function renderExplanation(
         text: t(`explanation.form.${layers.form === '1q-bd' ? '1q' : layers.form}`, params),
         kind: 'measure',
       },
-      layers.rootType && {
-        text: t(`explanation.root.${rootTypeLocaleKey(layers.rootType, layers.weakLetter)}`, params),
-        kind: 'radical',
-      },
+      rootNoteKey && { text: t(rootNoteKey, params), kind: 'radical' },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
     [nominalKey && { text: t(nominalKey, params), kind: 'measure' }],
@@ -391,7 +423,7 @@ export function resolveVerbExplanationLayers(
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
     formRoot: toFormRoot(verb.form, verb.rootTokens),
     tense,
-    tenseRoot: toTenseRoot(rootType, weakLetter, tense, verb.form, pronoun),
+    tenseRoot: toTenseRoot(rootType, weakLetter, tense, verb.form, pronoun, arabic),
     pronoun,
     contractedImperative: tense === 'active.imperative' && isFormI ? verb.contractedImperative : undefined,
     ...extractAffixes(derivationSteps(verb, tense, pronoun).at(-1)?.morphemes),
@@ -400,6 +432,7 @@ export function resolveVerbExplanationLayers(
 
 function toFormRoot(form: TriliteralForm, [c1]: readonly Token[]): FormRootInteraction | undefined {
   if (form !== 8) return
+  if ([WAW, YEH].some((weak) => c1.equals(weak))) return 'assimilation-weak-initial'
   const infixConsonant = resolveFormVIIIInfixConsonant(c1)
   if (infixConsonant.equals(c1)) return 'assimilation-complete'
   if (infixConsonant.equals(DAL)) return 'assimilation-voicing'
@@ -415,17 +448,19 @@ function toTenseRoot(
   tenseContext: VerbTense,
   form: TriliteralForm,
   pronoun: PronounId,
+  arabic: string,
 ): TenseRootInteraction | undefined {
   const isWaw = weakLetter === 'waw'
 
-  if (rootType.includes('hollow') && form !== 2 && form !== 5) return resolveHollow(isWaw, tenseContext, pronoun)
+  if (rootType.includes('hollow') && !HOLLOW_NEUTRAL_FORMS.includes(form))
+    return resolveHollow(isWaw, tenseContext, pronoun)
   if (rootType.includes('defective')) return resolveDefective(isWaw, tenseContext, pronoun)
   if (rootType.includes('assimilated'))
     return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') && form === 1
       ? 'initial-drops'
       : undefined
   if (rootType.includes('doubled')) return resolveGeminate(tenseContext, form)
-  if (rootType.includes('hamzated')) return 'hamza-seat'
+  if (rootType.includes('hamzated')) return arabic.includes(String(ALIF_MADDA)) ? 'hamza-madda' : 'hamza-seat'
 }
 
 function resolveGeminate(tenseContext: VerbTense, form: TriliteralForm): TenseRootInteraction | undefined {

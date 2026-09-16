@@ -208,6 +208,26 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
     const shawq = getVerb('شوق', 5)
     expect(resolveVerbExplanationLayers(shawq, 'active.past', '3ms', 'تَشَوَّقَ').tenseRoot).toBeUndefined()
   })
+
+  test('hollow-waw Form III + active.past → undefined (form lengthening suppresses hollow)', () => {
+    const nawl = getVerb('نول', 3)
+    expect(resolveVerbExplanationLayers(nawl, 'active.past', '3ms', 'نَاوَلَ').tenseRoot).toBeUndefined()
+  })
+
+  test('hollow-waw Form III + active.present.indicative → undefined (form lengthening suppresses hollow)', () => {
+    const nawl = getVerb('نول', 3)
+    expect(resolveVerbExplanationLayers(nawl, 'active.present.indicative', '3ms', 'يُنَاوِلُ').tenseRoot).toBeUndefined()
+  })
+
+  test('hollow-waw Form VI + active.past + 1s → undefined (form lengthening suppresses hollow)', () => {
+    const nawl = getVerb('نول', 6)
+    expect(resolveVerbExplanationLayers(nawl, 'active.past', '1s', 'تَنَاوَلْتُ').tenseRoot).toBeUndefined()
+  })
+
+  test('hollow-waw Form VI + passive.present.indicative → undefined (form lengthening suppresses hollow)', () => {
+    const nawl = getVerb('نول', 6)
+    expect(resolveVerbExplanationLayers(nawl, 'passive.present.indicative', '3ms', 'يُتَنَاوَلُ').tenseRoot).toBeUndefined()
+  })
 })
 
 // ── tenseRoot: defective ─────────────────────────────────────────────────────
@@ -288,12 +308,48 @@ describe('resolveVerbExplanationLayers tenseRoot defective', () => {
     expect(resolveVerbExplanationLayers(da3a, 'active.imperative', '2ms', 'اُدْعُ').tenseRoot).toBe('final-drops')
   })
 
-  test('defective + passive.past → no tenseRoot', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '3ms', 'دُعِيَ').tenseRoot).toBeUndefined()
+  test('defective-waw + passive.past + 3ms → final-passive-ya', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '3ms', 'دُعِيَ').tenseRoot).toBe('final-passive-ya')
   })
 
-  test('defective + passive.present.indicative → no tenseRoot', () => {
-    expect(resolveVerbExplanationLayers(da3a, 'passive.present.indicative', '3ms', 'يُدْعَى').tenseRoot).toBeUndefined()
+  test('defective-yaa + passive.past + 3ms → final-passive-ya', () => {
+    expect(resolveVerbExplanationLayers(rama, 'passive.past', '3ms', 'رُمِيَ').tenseRoot).toBe('final-passive-ya')
+  })
+
+  test('defective + passive.past + 1s → final-passive-ya', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '1s', 'دُعِيتُ').tenseRoot).toBe('final-passive-ya')
+  })
+
+  test('defective + passive.past + 3mp → final-passive-uu', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.past', '3mp', 'دُعُوا').tenseRoot).toBe('final-passive-uu')
+  })
+
+  test('defective + passive.present.indicative → final-passive-aa', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.present.indicative', '3ms', 'يُدْعَى').tenseRoot).toBe(
+      'final-passive-aa',
+    )
+  })
+
+  test('defective + passive.present.subjunctive → final-passive-aa', () => {
+    expect(resolveVerbExplanationLayers(rama, 'passive.present.subjunctive', '3ms', 'يُرْمَى').tenseRoot).toBe(
+      'final-passive-aa',
+    )
+  })
+
+  test('defective + passive.future → final-passive-aa', () => {
+    expect(resolveVerbExplanationLayers(rama, 'passive.future', '3ms', 'سَيُرْمَى').tenseRoot).toBe('final-passive-aa')
+  })
+
+  test('defective + passive.present.jussive → final-drops', () => {
+    expect(resolveVerbExplanationLayers(da3a, 'passive.present.jussive', '3ms', 'يُدْعَ').tenseRoot).toBe('final-drops')
+  })
+
+  test('renderExplanation explains the passive present ending of a defective verb', () => {
+    const layers = resolveVerbExplanationLayers(da3a, 'passive.present.indicative', '3ms', 'يُدْعَى')
+    expect(renderExplanation(layers, (key) => key)[1]).toContainEqual({
+      text: 'explanation.tense-root.final-passive-aa',
+      kind: 'radical',
+    })
   })
 })
 
@@ -385,10 +441,88 @@ describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
     expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-voicing', kind: 'radical' })
   })
 
+  test('Form VIII with و as first radical → weak-initial assimilation', () => {
+    const verb = getVerb('وحد', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِتَّحَدَ')
+    expect(layers.formRoot).toBe('assimilation-weak-initial')
+  })
+
+  test('renderExplanation explains the Form VIII weak-initial assimilation in prose', () => {
+    const verb = getVerb('وحد', 8)
+    const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِتَّحَدَ')
+    const rendered = renderExplanation(layers, (key) => key)
+    expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-weak-initial', kind: 'radical' })
+  })
+
   test('Form VIII with default infix keeps no extra first-radical assimilation sentence', () => {
     const verb = getVerb('كتب', 8)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms', 'اِكْتَتَبَ')
     expect(layers.formRoot).toBeUndefined()
+  })
+})
+
+// ── tenseRoot: hamzated ──────────────────────────────────────────────────────
+
+describe('resolveVerbExplanationLayers tenseRoot hamzated', () => {
+  const aamana = getVerb('ءمن', 4)
+
+  test('hamzated + active.past + 3ms → hamza-madda', () => {
+    expect(resolveVerbExplanationLayers(aamana, 'active.past', '3ms', 'آمَنَ').tenseRoot).toBe('hamza-madda')
+  })
+
+  test('hamzated + active.past + 2d → hamza-madda', () => {
+    expect(resolveVerbExplanationLayers(aamana, 'active.past', '2d', 'آمَنْتُمَا').tenseRoot).toBe('hamza-madda')
+  })
+
+  test('hamzated + active.present.indicative → hamza-seat', () => {
+    expect(resolveVerbExplanationLayers(aamana, 'active.present.indicative', '3ms', 'يُؤْمِنُ').tenseRoot).toBe(
+      'hamza-seat',
+    )
+  })
+
+  test('hamzated + passive.past → hamza-seat', () => {
+    expect(resolveVerbExplanationLayers(aamana, 'passive.past', '3ms', 'أُومِنَ').tenseRoot).toBe('hamza-seat')
+  })
+
+  test('medial hamza keeps the seat rule', () => {
+    const qara = getVerb('قرء', 7)
+    expect(resolveVerbExplanationLayers(qara, 'active.past', '3fd', 'اِنْقَرَأَتَا').tenseRoot).toBe('hamza-seat')
+  })
+})
+
+// ── root note: form sensitivity ──────────────────────────────────────────────
+
+describe('renderExplanation root note by form', () => {
+  test('hollow root in Form I keeps the hollow root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('قول', 1), 'active.past', '3ms', 'قَالَ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.hollow-waw',
+      kind: 'radical',
+    })
+  })
+
+  test('hollow root in Form III renders the sound-form root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('نول', 3), 'active.past', '3ms', 'نَاوَلَ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.hollow-sound-form',
+      kind: 'radical',
+    })
+  })
+
+  test('hollow root in Form VI renders the sound-form root note', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('نول', 6), 'active.past', '1s', 'تَنَاوَلْتُ')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.hollow-sound-form',
+      kind: 'radical',
+    })
+  })
+
+  test('assimilated root in Form VIII replaces the Form I note with the infix assimilation', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('وحد', 8), 'active.past', '3ms', 'اِتَّحَدَ')
+    expect(renderExplanation(layers, (key) => key)[0]).toEqual([
+      { text: 'explanation.form.8', kind: 'measure' },
+      { text: 'explanation.form-root.assimilation-weak-initial', kind: 'radical' },
+    ])
   })
 })
 

@@ -46,6 +46,7 @@ test('descriptive test name', () => {
 - ❌ Avoid `*ByRole` queries — significant performance overhead
 - ❌ Avoid negative assertions except when verifying something disappears from user action
 - ❌ No replacing user-facing copy assertions with translation-key assertions to make tests pass
+- ❌ No asserting translated text outside UI tests. Core paradigm logic is locale agnostic: pass `(key) => key` to `renderExplanation` and assert the translation key, so a reworded locale string cannot fail a logic test. Translations fluctuate; only UI tests assert rendered copy
 - ❌ No changing test behavioral intent as shortcut; fix setup/data/implementation instead
 
 ### UI Test Best Practices
