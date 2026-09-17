@@ -294,6 +294,14 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
   ] as const)('assimilated + Form %d + %s -> %s', (form, tense, expected) => {
     expect(resolveVerbExplanationLayers(getVerb('وصل', form), tense, '3ms').tenseRoot).toBe(expected)
   })
+
+  test.each([
+    ['wjz-1', 'initial-retained'],
+    ['wvq-1', 'initial-retained'],
+    ['wdd-1', 'geminate-contracts'],
+  ] as const)('%s keeps its wāw in the present -> %s', (id, expected) => {
+    expect(resolveVerbExplanationLayers(getVerbById(id)!, 'active.present.indicative', '3ms').tenseRoot).toBe(expected)
+  })
 })
 
 // ── tenseRoot: combined irregularities ───────────────────────────────────────
@@ -368,6 +376,16 @@ describe('resolveVerbExplanationLayers tenseRoot hamzated', () => {
     ['قرء', 7, 'active.past', '3fd', 'hamza-seat'],
   ] as const)('%s Form %d + %s + %s -> %s', (root, form, tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(getVerb(root, form), tense, pronoun).tenseRoot).toBe(expected)
+  })
+
+  test.each([
+    ['kl-1', '2ms'],
+    ['x*-1', '2fp'],
+    ['mr-1', '2ms'],
+  ] as const)("'%s imperative %s -> hamza-elides", (id, pronoun) => {
+    expect(resolveVerbExplanationLayers(getVerbById(`'${id}`)!, 'active.imperative', pronoun).tenseRoot).toBe(
+      'hamza-elides',
+    )
   })
 })
 
@@ -542,6 +560,19 @@ describe('renderExplanation elision prose', () => {
     const rendered = renderExplanation(layers, localeT).flat()
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('nūn') }))
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('drop') }))
+  })
+
+  test.each([
+    ['سكن', 'active.past', '3fp', 'explanation.pronoun.suffix-only', 'ـنَ'],
+    ['سكن', 'active.past', '1p', 'explanation.pronoun.suffix-only', 'ـنَا'],
+    ['سكن', 'active.present.indicative', '2fp', 'explanation.pronoun.prefix-and-suffix', 'ـنَ'],
+  ] as const)('%s + %s + %s names the whole ending in its %s sentence: %s', (root, tense, pronoun, key, suffix) => {
+    const layers = resolveVerbExplanationLayers(getVerb(root, 1), tense, pronoun)
+    const echoSuffix = (key: string, params?: Record<string, string>) => `${key}|${params?.suffix}`
+    expect(renderExplanation(layers, echoSuffix).at(-1)).toContainEqual({
+      text: `${key}|${suffix}`,
+      kind: 'agreement',
+    })
   })
 
   test.each([

@@ -1,4 +1,5 @@
 import { toRoman } from '../primitives/numbers'
+import { dropsInitialWaw } from './active/present'
 import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
 import type { FormIPattern } from './form-i-vowels'
@@ -46,7 +47,9 @@ type TenseRootInteraction =
   | 'geminate-separates'
   | 'hamza-madda'
   | 'hamza-seat'
+  | 'hamza-elides'
   | 'initial-drops'
+  | 'initial-retained'
   | 'middle-lengthens-aa'
   | 'middle-lengthens-ii'
   | 'middle-lengthens-uu'
@@ -301,7 +304,8 @@ function renderPronounSentences(
   if (layers?.pronoun == null) return []
   const pronounParams = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) }
   const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
-  const suffix = layers.suffix ? `ـ${layers.suffix}` : undefined
+  const endingNun = hasAssimilatedEndingNun(layers) ? String(NOON) : ''
+  const suffix = layers.suffix ? `ـ${endingNun}${layers.suffix}` : undefined
 
   const mainText =
     prefix && suffix
@@ -544,8 +548,9 @@ function toFormRoot(form: TriliteralForm, [c1]: readonly Token[]): FormRootInter
 }
 
 // A root can carry more than one irregular shape at once (e.g. assimilated + defective). Only one
-// tenseRoot sentence renders, so the dominant shape wins: defective > hollow > assimilated > doubled >
-// hamzated - the priority the conjugation itself follows. A root that is both hollow and defective
+// tenseRoot sentence renders, so the dominant shape wins: defective > hollow > doubled > assimilated >
+// hamzated - the priority the conjugation itself follows, where a geminate stem (وَدَّ، يَوَدُّ) settles
+// the cell before the initial wāw ever could. A root that is both hollow and defective
 // (لفيف مقرون) conjugates defective throughout: its middle weak letter stays a plain consonant
 // (نَوَى، يَنْوِي), so the final radical is what drives every tense change. A lexically uncontracted
 // hollow verb (عَوِزَ، يَعْوَزُ) keeps its middle consonant in every cell, so no cell has one either.
@@ -555,16 +560,18 @@ function toTenseRoot(verb: Verb, tenseContext: VerbTense, pronoun: PronounId): T
   if (rootType.includes('defective')) return resolveDefective(verb, tenseContext, pronoun)
   if (rootType.includes('hollow') && !HOLLOW_NEUTRAL_FORMS.includes(verb.form) && contractsHollow(verb))
     return resolveHollow(verb, tenseContext, pronoun)
-  // Only a wāw drops in the Form I present; a yāʾ-initial verb keeps it (يَبِسَ، يَيْبَسُ).
-  if (rootType.includes('assimilated'))
-    return (tenseContext.startsWith('active.present') || tenseContext === 'active.future') &&
-      verb.form === 1 &&
-      verb.rootTokens[0].equals(WAW)
-      ? 'initial-drops'
-      : undefined
   if (rootType.includes('doubled')) return resolveGeminate(tenseContext, verb.form, pronoun)
-  if (rootType.includes('hamzated'))
-    return String(conjugate(verb, tenseContext)[pronoun]).includes(String(ALIF_MADDA)) ? 'hamza-madda' : 'hamza-seat'
+  if (rootType.includes('assimilated')) {
+    if (!tenseContext.startsWith('active.present') && tenseContext !== 'active.future') return undefined
+    if (!isTriliteralFormIVerb(verb) || !verb.rootTokens[0].equals(WAW)) return undefined
+    return dropsInitialWaw(verb) ? 'initial-drops' : 'initial-retained'
+  }
+  if (rootType.includes('hamzated')) {
+    const word = conjugate(verb, tenseContext)[pronoun]
+    if (word.includes(ALIF_MADDA)) return 'hamza-madda'
+    // كُلْ, خُذْ and مُرْ shed the hamza entirely, leaving no seat to describe.
+    return word.some((token) => token.isHamza) ? 'hamza-seat' : 'hamza-elides'
+  }
 }
 
 // A Form VIII stem whose infix assimilates to د keeps a wāw middle radical intact (اِزْدَوَجَ), while

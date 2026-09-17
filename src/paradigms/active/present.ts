@@ -23,7 +23,14 @@ import {
   WAW,
   YEH,
 } from '../tokens'
-import { type FormIVerb, isQuadriliteralVerb, type NonFormIVerb, type QuadriliteralVerb, type Verb } from '../verbs'
+import {
+  type FormIVerb,
+  isQuadriliteralVerb,
+  isTriliteralFormIVerb,
+  type NonFormIVerb,
+  type QuadriliteralVerb,
+  type Verb,
+} from '../verbs'
 import { agreementMorpheme, elidedMorpheme, type Morpheme, measureMorpheme, radicalMorpheme, Word } from '../word'
 
 function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
@@ -326,6 +333,15 @@ function deriveFormIVq(verb: QuadriliteralVerb): readonly Morpheme[] {
   ]
 }
 
+// وَعَدَ يَعِدُ and وَضَعَ يَضَعُ lose the wāw; وَجُزَ يَوْجُزُ keeps it before a ḍamma present, and
+// وَدَّ يَوَدُّ keeps it because the geminate stem never exposes it to the drop.
+export function dropsInitialWaw(verb: Verb): boolean {
+  if (!isTriliteralFormIVerb(verb)) return false
+  const [c1, c2, c3] = verb.rootTokens
+  if (!c1.equals(WAW) || c2.equals(c3)) return false
+  return c3.isWeak || !formIPresentVowel(verb).equals(DAMMA)
+}
+
 function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
   const presentVowel = formIPresentVowel(verb)
@@ -339,9 +355,9 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
       radicalMorpheme(c2),
     ]
 
-  if (c3.isWeak) {
-    if (c1.equals(WAW)) return [radicalMorpheme(c2), measureMorpheme(presentVowel), radicalMorpheme(c3)]
+  if (dropsInitialWaw(verb)) return [radicalMorpheme(c2), measureMorpheme(presentVowel), radicalMorpheme(c3)]
 
+  if (c3.isWeak) {
     if (c3.equals(WAW) && presentVowel.equals(DAMMA))
       return [
         radicalMorpheme(c1),
@@ -369,9 +385,6 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
       measureMorpheme(...longVowel(presentVowel)),
     ]
   }
-
-  if (c1.equals(WAW) && !presentVowel.equals(DAMMA))
-    return [radicalMorpheme(c2), measureMorpheme(presentVowel), radicalMorpheme(c3)]
 
   if (verb.hollowContraction === 'uncontracted')
     return [

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { ALIF, ALIF_HAMZA, BA, DAL, FATHA, HAH, HAMZA, KASRA, LAM, SHADDA, SUKOON } from './tokens'
-import { agreementMorpheme, Morpheme, measureMorpheme, radicalMorpheme, Word } from './word'
+import { agreementMorpheme, elidedMorpheme, Morpheme, measureMorpheme, radicalMorpheme, Word } from './word'
 
 describe('MorphemeToken', () => {
   test('toString joins raw token strings', () => {
@@ -18,6 +18,21 @@ describe('Word', () => {
   test('toString concatenates all morpheme strings', () => {
     const w = new Word([measureMorpheme(FATHA), measureMorpheme(KASRA)])
     expect(w.toString()).toBe('َِ')
+  })
+
+  test('includes finds a token the word is built from', () => {
+    const w = new Word([radicalMorpheme(BA), measureMorpheme(FATHA), radicalMorpheme(DAL)])
+    expect(w.includes(FATHA)).toBe(true)
+  })
+
+  test('includes ignores a token the word never took', () => {
+    const w = new Word([radicalMorpheme(BA), measureMorpheme(FATHA), radicalMorpheme(DAL)])
+    expect(w.includes(KASRA)).toBe(false)
+  })
+
+  test('includes ignores an elided token', () => {
+    const w = new Word([radicalMorpheme(BA), measureMorpheme(FATHA), elidedMorpheme(KASRA)])
+    expect(w.includes(KASRA)).toBe(false)
   })
 })
 

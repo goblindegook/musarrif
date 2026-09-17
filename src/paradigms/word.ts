@@ -69,6 +69,14 @@ export class Word {
   toString(): string {
     return stringify(this.morphemes.filter((m) => m.role !== 'elided'))
   }
+
+  some(predicate: (token: Token) => boolean): boolean {
+    return this.morphemes.some((m) => m.role !== 'elided' && m.some(predicate))
+  }
+
+  includes(token: Token): boolean {
+    return this.some((t) => t.equals(token))
+  }
 }
 
 export const radicalMorpheme = (token: Token): Morpheme => new Morpheme([token], 'radical')
