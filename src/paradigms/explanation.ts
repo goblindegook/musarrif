@@ -624,13 +624,11 @@ function resolveRootNoteKey(layers: ExplanationLayers): string {
   const liveWeakLetter = live.includes('hollow')
     ? weakLetter
     : live.includes('defective')
-      ? liveFinalLetter(form, weakLetter)
+      ? form === 1
+        ? weakLetter
+        : 'yaa'
       : undefined
   return `explanation.root.${rootTypeLocaleKey(live, liveWeakLetter)}`
-}
-
-function liveFinalLetter(form: TriliteralForm, weakLetter: WeakLetter | undefined): WeakLetter | undefined {
-  return form === 1 ? weakLetter : 'yaa'
 }
 
 function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
