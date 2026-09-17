@@ -8,7 +8,7 @@ describe('filterMasteredLayers', () => {
     paradigmRoots: ['ك', 'ت', 'ب'],
     paradigmForm: 1,
     arabic: 'كَتَبَ',
-    rootType: [],
+    rootType: ['sound'],
     form: '1-action',
     vowels: 'a-u',
     tense: 'active.past',
@@ -20,7 +20,7 @@ describe('filterMasteredLayers', () => {
   test('returns all fields unchanged when store is empty', () => {
     const result = filterMasteredLayers({}, FULL_LAYERS)
     expect(result).toMatchObject({
-      rootType: [],
+      rootType: ['sound'],
       form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
@@ -34,7 +34,7 @@ describe('filterMasteredLayers', () => {
       FULL_LAYERS,
     )
     expect(result).toMatchObject({
-      rootType: [],
+      rootType: ['sound'],
       form: '1-action',
       vowels: 'a-u',
       tense: 'active.past',
@@ -50,12 +50,20 @@ describe('filterMasteredLayers', () => {
     expect(result.rootType).toBeUndefined()
   })
 
+  test('a mastered doubled card hides the root note of a sound doubled root, which files under doubled', () => {
+    const result = filterMasteredLayers(
+      { 'conjugation:doubled:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { ...FULL_LAYERS, paradigmRoots: ['م', 'د', 'د'], arabic: 'مَدَّ', rootType: ['sound', 'doubled'] },
+    )
+    expect(result.rootType).toBeUndefined()
+  })
+
   test('excludes cards of a different root type from rootType mastery', () => {
     const result = filterMasteredLayers(
       { 'conjugation:hollow:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
-    expect(result.rootType).toEqual([])
+    expect(result.rootType).toEqual(['sound'])
   })
 
   test('computes rootType median from two cards with different combo keys', () => {
@@ -88,7 +96,7 @@ describe('filterMasteredLayers', () => {
       21,
       '2099-01-01',
     )
-    expect(result.rootType).toEqual([])
+    expect(result.rootType).toEqual(['sound'])
   })
 
   test('deduplicates by combination key keeping max interval per combination', () => {
@@ -153,7 +161,7 @@ describe('filterMasteredLayers', () => {
           paradigmForm: 8,
           arabic: 'اِكْتَتَبَ',
           form: '8',
-          rootType: [],
+          rootType: ['sound'],
           formRoot: 'assimilation-complete',
         },
       ),

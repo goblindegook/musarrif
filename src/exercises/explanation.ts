@@ -1,5 +1,4 @@
 import type { ExplanationLayers } from '../paradigms/explanation'
-import type { RootAnalysisType } from '../paradigms/roots'
 import { utcToday } from '../primitives/dates'
 import { getSrsCards, isNominalCard, isVerbCard, type SrsCard, type SrsRootType, type SrsStore } from './srs'
 
@@ -11,16 +10,9 @@ interface LayerMastery {
   nominal: number
 }
 
-// Priority mirrors getSrsRootType: defective > hollow > assimilated > hamzated > doubled > sound
-function toSrsRootType(rootType?: RootAnalysisType): SrsRootType | undefined {
-  if (!rootType) return undefined
-  if (rootType.includes('defective') || (rootType.length >= 2 && !rootType.includes('hamzated'))) return 'defective'
-  if (rootType.includes('hollow')) return 'hollow'
-  if (rootType.length === 1 && rootType[0] === 'assimilated') return 'assimilated'
-  if (rootType.includes('hamzated')) return 'hamzated'
-  if (rootType.length === 1 && rootType[0] === 'doubled') return 'doubled'
-  return 'sound'
-}
+// Priority mirrors getSrsRootType: the last radical decides before the middle one, and a hamza
+// before a doubled pair, so a root carrying several shapes lands on the same card either way.
+const SRS_ROOT_TYPES: readonly SrsRootType[] = ['defective', 'hollow', 'assimilated', 'hamzated', 'doubled', 'sound']
 
 function strongestDeduped(cards: SrsCard[], today: string): number {
   const grouped = new Map<string, number>()
@@ -34,7 +26,8 @@ function strongestDeduped(cards: SrsCard[], today: string): number {
 
 function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers, today: string): LayerMastery {
   const cards = getSrsCards(srsStore)
-  const srsType = toSrsRootType(explanation.rootType)
+  const { rootType } = explanation
+  const srsType = rootType && SRS_ROOT_TYPES.find((shape) => rootType.includes(shape))
 
   return {
     rootType: strongestDeduped(
