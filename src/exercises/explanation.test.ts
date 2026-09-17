@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import type { VerbExplanationLayers } from '../paradigms/explanation'
+import { renderExplanation, type VerbExplanationLayers } from '../paradigms/explanation'
 import { filterMasteredLayers } from './explanation'
 
 describe('filterMasteredLayers', () => {
@@ -218,6 +218,23 @@ describe('filterMasteredLayers', () => {
       },
     )
     expect(result.nominal).toBeUndefined()
+  })
+
+  test('renders nothing once every nominal layer is mastered', () => {
+    const result = filterMasteredLayers(
+      { 'masdarForm:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      {
+        category: 'nominal',
+        paradigmRoots: ['ك', 'ت', 'ب'],
+        paradigmForm: 1,
+        arabic: 'كِتَابَة',
+        rootType: ['sound'],
+        form: '1-action',
+        nominal: 'masdar',
+        isMasdarMimi: false,
+      },
+    )
+    expect(renderExplanation(result, (key) => key)).toEqual([])
   })
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {

@@ -638,7 +638,7 @@ function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
 }
 
 function resolveNominalKey(layers?: NominalExplanationLayers): string {
-  if (layers == null) return ''
+  if (layers?.nominal == null) return ''
 
   const isQuadriliteral = layers.paradigmRoots.length > 3
 
