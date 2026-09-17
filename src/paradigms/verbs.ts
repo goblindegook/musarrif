@@ -173,26 +173,16 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     if (!QUADRILITERAL_FORMS.includes(raw.form as QuadriliteralForm))
       throw new Error(`Quadriliteral root ${root} cannot use Form ${raw.form}`)
 
-    return buildDisplayVerb(
-      raw.form === 1
-        ? {
-            root: toQuadriliteralRoot(root),
-            rootTokens,
-            form: 1,
-            masdars: raw.masdars,
-            lexicalMasdars: raw.lexicalMasdars,
-            passive: raw.passive,
-            valency: raw.valency ?? [],
-          }
-        : {
-            root: toQuadriliteralRoot(root),
-            rootTokens,
-            form: raw.form as Exclude<QuadriliteralForm, 1>,
-            lexicalMasdars: raw.lexicalMasdars,
-            passive: raw.passive,
-            valency: raw.valency ?? [],
-          },
-    )
+    return buildDisplayVerb({
+      root: toQuadriliteralRoot(root),
+      rootTokens,
+      form: raw.form as QuadriliteralForm,
+      masdars: raw.masdars,
+      lexicalMasdars: raw.lexicalMasdars,
+      lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
+      passive: raw.passive,
+      valency: raw.valency ?? [],
+    })
   }
 
   if (raw.form === 1) {
@@ -202,11 +192,12 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       form: 1,
       vowels: raw.vowels ?? 'a-a',
       hollowContraction: raw.hollowContraction,
+      contractedImperative: raw.contractedImperative,
       masdars: raw.masdars,
       lexicalMasdars: raw.lexicalMasdars,
-      passive: raw.passive,
-      contractedImperative: raw.contractedImperative,
       lexicalActiveParticiple: raw.lexicalActiveParticiple,
+      lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
+      passive: raw.passive,
       valency: raw.valency ?? [],
     })
   }
@@ -215,11 +206,11 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
     root: toTriliteralRoot(root),
     rootTokens,
     form: raw.form as Exclude<TriliteralForm, 1>,
-    lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
     masdars: raw.masdars,
     lexicalMasdars: raw.lexicalMasdars,
-    // Form VII supports at most an impersonal passive.
-    passive: raw.passive ?? (raw.form === 7 ? 'impersonal' : undefined),
+    lexicalActiveParticiple: raw.lexicalActiveParticiple,
+    lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
+    passive: raw.passive,
     valency: raw.valency ?? [],
   })
 }

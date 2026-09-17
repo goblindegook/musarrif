@@ -104,7 +104,8 @@
   },
   {
     "root": "$rb",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "$rb",
@@ -493,7 +494,8 @@
   },
   {
     "root": "'x*",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "'x*",
@@ -1320,7 +1322,8 @@
   },
   {
     "root": "Hsn",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "Hsn",
@@ -2121,7 +2124,8 @@
   },
   {
     "root": "fjr",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "fkk",
@@ -2550,7 +2554,8 @@
   },
   {
     "root": "jlw",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "jmE",
@@ -2733,7 +2738,8 @@
   },
   {
     "root": "kff",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "kfhr",
@@ -3725,7 +3731,8 @@
   },
   {
     "root": "qwd",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "qwd",
@@ -3970,7 +3977,8 @@
   },
   {
     "root": "rmy",
-    "form": 7
+    "form": 7,
+    "passive": "impersonal"
   },
   {
     "root": "rqS",
