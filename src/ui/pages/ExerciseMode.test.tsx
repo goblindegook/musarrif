@@ -33,7 +33,7 @@ function testExercise(overrides = {}): Exercise {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَتَبَ',
-      rootType: [],
+      rootType: ['sound'],
       vowels: 'a-u',
       tense: 'active.past',
       pronoun: '3ms',

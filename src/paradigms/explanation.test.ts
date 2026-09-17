@@ -19,13 +19,13 @@ const localeT = (key: string, params?: Record<string, string>): string => {
 
 describe('resolveVerbExplanationLayers rootType', () => {
   test.each([
-    ['كتب', { rootType: [] }],
+    ['كتب', { rootType: ['sound'] }],
     ['قول', { rootType: ['hollow'], weakLetter: 'waw' }],
     ['بيع', { rootType: ['hollow'], weakLetter: 'yaa' }],
     ['دعو', { rootType: ['defective'], weakLetter: 'waw' }],
     ['رمي', { rootType: ['defective'], weakLetter: 'yaa' }],
     ['وصل', { rootType: ['assimilated'] }],
-    ['مدد', { rootType: ['doubled'] }],
+    ['مدد', { rootType: ['sound', 'doubled'] }],
   ] as const)('%s resolves root metadata', (root, expected) => {
     const verb = getVerb(root, 1)
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
@@ -783,7 +783,7 @@ describe('renderExplanation', () => {
   }
 
   test('includes root sentence', () => {
-    expect(sentences(testExplanationLayers({ rootType: [], weakLetter: undefined }))).toContainEqual({
+    expect(sentences(testExplanationLayers({ rootType: ['sound'], weakLetter: undefined }))).toContainEqual({
       text: 'explanation.root.sound',
       kind: 'radical',
     })
@@ -792,7 +792,7 @@ describe('renderExplanation', () => {
   test('leads the first paragraph with the formIPattern, then the form, then the root', () => {
     expect(
       renderExplanation(
-        testExplanationLayers({ form: '1-action', rootType: [], weakLetter: undefined, vowels: 'a-u' }),
+        testExplanationLayers({ form: '1-action', rootType: ['sound'], weakLetter: undefined, vowels: 'a-u' }),
         t,
       ),
     ).toEqual([
@@ -1063,9 +1063,9 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.nominal).toBe('activeParticiple')
   })
 
-  test('returns rootType [] for sound root', () => {
+  test("returns rootType ['sound'] for a sound root", () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
-    expect(layers.rootType).toEqual([])
+    expect(layers.rootType).toEqual(['sound'])
   })
 
   test('returns formIPattern for Form I verb', () => {
@@ -1142,7 +1142,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
     }
@@ -1162,7 +1162,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-intermediate',
       arabic: 'أَزْرَق',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'activeParticiple',
       activeParticipleKind: 'lexical',
     }
@@ -1182,7 +1182,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-intermediate',
       arabic: 'سَعِيد',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'activeParticiple',
       activeParticipleKind: 'fa3iil',
     }
@@ -1202,7 +1202,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'مَكْتُوب',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'passiveParticiple',
     }
     expect(renderExplanation(layers, t)).toEqual([
@@ -1221,7 +1221,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كِتَابَة',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'masdar',
       isMasdarMimi: false,
     }
@@ -1262,7 +1262,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: [],
+      rootType: ['sound'],
       vowels: 'a-u',
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
@@ -1277,7 +1277,7 @@ describe('renderExplanation with nominal', () => {
       paradigmForm: 1,
       form: '1-action',
       arabic: 'كَاتِب',
-      rootType: [],
+      rootType: ['sound'],
       nominal: 'activeParticiple',
       activeParticipleKind: 'faa3il',
     }
@@ -1331,20 +1331,56 @@ describe('renderExplanation with nominal', () => {
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('تَفْعِيل') }))
   })
 
-  test('BQI masdar explanation uses 1q-bd key distinct from generic Iq', () => {
+  test('biliteral quadriliteral masdar explanation names the فَعْلَلَة pattern', () => {
     const bqi = getVerbById('zlzl-1')!
     const [masdar] = deriveMasdar(bqi)
     const rendered = renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), localeT).flat()
     expect(rendered).toContainEqual(expect.objectContaining({ text: expect.stringContaining('فَعْلَلَة') }))
   })
 
-  test('BQI masdar key in renderExplanation is explanation.nominal.masdar.1q-bd not 1q', () => {
+  test('biliteral quadriliteral masdar takes the Form Iq key, since reduplication is a root property', () => {
     const t = (key: string) => key
     const bqi = getVerbById('zlzl-1')!
     const [masdar] = deriveMasdar(bqi)
     expect(renderExplanation(resolveNominalExplanationLayers(bqi, 'masdar', masdar), t).flat()).toContainEqual({
-      text: 'explanation.nominal.masdar.1q-bd',
+      text: 'explanation.nominal.masdar.1q',
       kind: 'measure',
     })
+  })
+})
+
+describe('renderExplanation biliteral roots', () => {
+  const t = (key: string) => key
+
+  test('a reduplicated quadriliteral gets its own root sentence', () => {
+    const bqi = getVerbById('zlzl-1')!
+    expect(renderExplanation(resolveVerbExplanationLayers(bqi, 'active.past', '3ms'), t).flat()).toContainEqual({
+      text: 'explanation.root.biliteral',
+      kind: 'radical',
+    })
+  })
+
+  test('a reduplicated quadriliteral keeps the sound-root note alongside it', () => {
+    const bqi = getVerbById('zlzl-1')!
+    expect(renderExplanation(resolveVerbExplanationLayers(bqi, 'active.past', '3ms'), t).flat()).toContainEqual({
+      text: 'explanation.root.sound',
+      kind: 'radical',
+    })
+  })
+
+  test('a reduplicated quadriliteral takes the Form Iq measure sentence', () => {
+    const bqi = getVerbById('zlzl-1')!
+    expect(renderExplanation(resolveVerbExplanationLayers(bqi, 'active.past', '3ms'), t).flat()).toContainEqual({
+      text: 'explanation.form.1q',
+      kind: 'measure',
+    })
+  })
+
+  test('a plain quadriliteral has no biliteral root sentence', () => {
+    const quad = getVerb('عرقل', 1)
+    const texts = renderExplanation(resolveVerbExplanationLayers(quad, 'active.past', '3ms'), t)
+      .flat()
+      .map((sentence) => sentence.text)
+    expect(texts.filter((text) => text === 'explanation.root.biliteral')).toEqual([])
   })
 })

@@ -1,6 +1,14 @@
 import { type Token, WAW, YEH } from './tokens'
 
-export type RootShape = 'assimilated' | 'hollow' | 'defective' | 'doubled' | 'hamzated' | 'quadriliteral-weak'
+export type RootShape =
+  | 'sound'
+  | 'assimilated'
+  | 'hollow'
+  | 'defective'
+  | 'doubled'
+  | 'hamzated'
+  | 'quadriliteral-weak'
+  | 'biliteral'
 export type RootAnalysisType = readonly RootShape[]
 export type WeakLetter = 'waw' | 'yaa'
 
@@ -9,7 +17,6 @@ export interface RootAnalysis {
   weakLetter?: WeakLetter
   weakPositions: number[]
   hamzaPositions: number[]
-  isBiliteral: boolean
 }
 
 export function analyzeRoot(root: readonly Token[]): RootAnalysis {
@@ -21,12 +28,7 @@ export function analyzeRoot(root: readonly Token[]): RootAnalysis {
     if (letter.isHamza) hamzaPositions.push(index)
   })
 
-  return {
-    ...analyzeType(root, weakPositions, hamzaPositions),
-    weakPositions,
-    hamzaPositions,
-    isBiliteral: isBiliteralRoot(root),
-  }
+  return { ...analyzeType(root, weakPositions, hamzaPositions), weakPositions, hamzaPositions }
 }
 
 function isBiliteralRoot(root: readonly Token[]): boolean {
@@ -36,6 +38,21 @@ function isBiliteralRoot(root: readonly Token[]): boolean {
 
 function rootShapesOn(predicate: boolean, shape: RootShape): RootShape[] {
   return predicate ? [shape] : []
+}
+
+// عِلَّة is carried by و and ي alone, so only they make a root weak: a hamza seat (أَمَّ) and a
+// doubled pair (مَدَّ) are shapes a صحيح root wears, and reduplication rides along with either
+// (زلزل is a sound biliteral root, وسوس a weak one).
+const WEAK_SHAPES: readonly RootShape[] = ['assimilated', 'hollow', 'defective', 'quadriliteral-weak']
+
+export function rootShapes(shapes: readonly RootShape[]): RootAnalysisType {
+  const named = shapes.filter((shape) => shape !== 'sound')
+  return [...rootShapesOn(!named.some((shape) => WEAK_SHAPES.includes(shape)), 'sound'), ...named]
+}
+
+// 'sound' and 'biliteral' classify the root without naming anything a cell has to work around.
+export function behaviourShapes(type: RootAnalysisType): RootAnalysisType {
+  return type.filter((shape) => shape !== 'sound' && shape !== 'biliteral')
 }
 
 function analyzeType(
@@ -52,7 +69,7 @@ function analyzeType(
   const doubled = !isQuadriliteral && !hollow && !defective && c2.equals(c3)
   const assimilated = !isQuadriliteral && c1.isWeak
 
-  const type: RootShape[] = [
+  const type = rootShapes([
     ...rootShapesOn(hasHamza, 'hamzated'),
     // assimilated/hollow/defective/doubled are positions within a three-consonant root.
     ...rootShapesOn(assimilated, 'assimilated'),
@@ -61,7 +78,9 @@ function analyzeType(
     ...rootShapesOn(doubled, 'doubled'),
     // A quadriliteral can be weak but it takes none of those behaviors.
     ...rootShapesOn(isQuadriliteral && weakPositions.length > 0, 'quadriliteral-weak'),
-  ]
+    // Reduplication (زلزل) is a shape of the root itself, so it holds in every form built on it.
+    ...rootShapesOn(isBiliteralRoot(root), 'biliteral'),
+  ])
 
   const weakLetter =
     hollow && defective
@@ -82,8 +101,8 @@ function weakLetterOf(letter: Token): WeakLetter {
 }
 
 export function rootTypeLocaleKey(type: RootAnalysisType, weakLetter?: WeakLetter): string {
-  if (type.length === 0) return 'sound'
-  return weakLetter ? `${type.join('-')}-${weakLetter}` : type.join('-')
+  const key = behaviourShapes(type).join('-') || 'sound'
+  return weakLetter ? `${key}-${weakLetter}` : key
 }
 
 // Outside Form I a final weak radical always surfaces as yā', so a wāw-final root builds its derived

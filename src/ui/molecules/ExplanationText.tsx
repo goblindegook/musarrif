@@ -1,4 +1,4 @@
-import type { ExplanationKind, ExplanationSentence } from '../../paradigms/explanation'
+import type { ExplanationKind, Paragraphs } from '../../paradigms/explanation'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { FormattedText } from '../atoms/FormattedText'
 import { Text } from '../atoms/Text'
@@ -13,7 +13,7 @@ const KIND_COLORS: Record<ExplanationKind, string> = {
 }
 
 interface ExplanationTextProps {
-  paragraphs: ExplanationSentence[][]
+  paragraphs: Paragraphs
   /** Only where a morpheme breakdown is on screen for the markers to key into. */
   showMorphemeMarkers?: boolean
 }

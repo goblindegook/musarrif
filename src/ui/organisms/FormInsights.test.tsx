@@ -50,17 +50,11 @@ describe('FormInsights', () => {
     })
   })
 
-  describe('BQI biliteral doubling', () => {
-    test('BQI verb shows "Repetitive · Intensive" anchor', () => {
+  describe('quadriliteral semantic anchor', () => {
+    test('biliteral Iq verb shows the same "Base meaning" anchor as any Iq verb', () => {
       const verb = getVerbById('zlzl-1')!
       renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.getByText('Repetitive · Intensive')).toBeInTheDocument()
-    })
-
-    test('BQI verb does not show generic "Base meaning" anchor', () => {
-      const verb = getVerbById('zlzl-1')!
-      renderWithProviders(<FormInsights verb={verb} />)
-      expect(screen.queryByText('Base meaning')).not.toBeInTheDocument()
+      expect(screen.getByText('Base meaning')).toBeInTheDocument()
     })
 
     test('generic Iq verb still shows "Base meaning" anchor', () => {

@@ -69,7 +69,7 @@ describe('rootFormVerbExercise with constraints', () => {
       paradigmForm: 2,
       form: '2',
       arabic: exercise.options[exercise.answer],
-      rootType: [],
+      rootType: ['sound'],
       tense: 'active.past',
       pronoun: '3ms',
     })

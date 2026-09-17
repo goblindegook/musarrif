@@ -1,8 +1,7 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import * as v from 'valibot'
-import { analyzeRoot } from '../../paradigms/roots'
-import { tokenize } from '../../paradigms/tokens'
+import { analyzeRoot, type RootShape } from '../../paradigms/roots'
 import {
   type DisplayVerb,
   FORMS,
@@ -31,9 +30,7 @@ const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.lemma.localeCompare(b.lemma, 'ar'))
 
-type RootTypeFilter = 'sound' | 'doubled' | 'assimilated' | 'hollow' | 'defective' | 'hamzated' | 'biliteral'
-
-const ROOT_TYPE_FILTERS: readonly RootTypeFilter[] = [
+const ROOT_TYPE_FILTERS: readonly RootShape[] = [
   'sound',
   'doubled',
   'assimilated',
@@ -94,22 +91,6 @@ const OTHER_FILTERS = [
   { key: 'zanna', labelKey: 'verbsList.filter.zannaSisters.label' },
 ] as const
 
-function getVerbRootTypes(verb: DisplayVerb): RootTypeFilter[] {
-  const analysis = analyzeRoot(tokenize(verb.root))
-  const result: RootTypeFilter[] = []
-  if (analysis.type.length === 0) result.push('sound')
-  if (analysis.type.includes('doubled')) result.push('doubled')
-  if (analysis.weakPositions.includes(0)) result.push('assimilated')
-  if (analysis.weakPositions.includes(1)) result.push('hollow')
-  if (analysis.weakPositions.includes(2)) result.push('defective')
-  if (analysis.hamzaPositions.length > 0) result.push('hamzated')
-  if (verb.rootTokens.length > 3) {
-    const [c1, c2, c3, c4] = verb.rootTokens
-    if (c1.equals(c3) && c2.equals(c4)) result.push('biliteral')
-  }
-  return result
-}
-
 function withFormFilter(query: Query, option: string): Query {
   return { ...query, filters: { ...query.filters, form: query.filters.form === option ? null : option }, page: 1 }
 }
@@ -118,7 +99,7 @@ function withGroupFilter(query: Query, option: GroupFilter): Query {
   return { ...query, filters: { ...query.filters, group: query.filters.group === option ? null : option }, page: 1 }
 }
 
-function withRootTypeFilter(query: Query, option: RootTypeFilter): Query {
+function withRootShape(query: Query, option: RootShape): Query {
   let root = query.filters.root
   const exists = root.includes(option)
   if (exists) root = root.filter((f) => f !== option)
@@ -132,7 +113,10 @@ function filterVerbs({ filters }: Query, favouriteVerbIds: ReadonlySet<string>):
   const { form } = filters
   if (form) filtered = filtered.filter((verb) => matchesFormFilter(verb, form))
   if (filters.root.length > 0)
-    filtered = filtered.filter((verb) => filters.root.every((item) => getVerbRootTypes(verb).includes(item)))
+    filtered = filtered.filter((verb) => {
+      const { type } = analyzeRoot(verb.rootTokens)
+      return filters.root.every((shape) => type.includes(shape))
+    })
   if (filters.group === 'favourites') filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
   if (filters.group === 'kana') filtered = filtered.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
   if (filters.group === 'zanna') filtered = filtered.filter((verb) => ZNN_SISTERS_IDS.has(verb.id))
@@ -178,8 +162,8 @@ export function Home() {
     [setQueryParams, query],
   )
 
-  const applyRootTypeFilter = useCallback(
-    (option: RootTypeFilter) => setQueryParams((current) => setQuery(withRootTypeFilter(parseQuery(current), option))),
+  const applyRootShape = useCallback(
+    (option: RootShape) => setQueryParams((current) => setQuery(withRootShape(parseQuery(current), option))),
     [setQueryParams, query],
   )
 
@@ -305,8 +289,8 @@ export function Home() {
                     type="button"
                     aria-pressed={query.filters.root.includes(option)}
                     active={query.filters.root.includes(option)}
-                    disabled={isFilterDisabled(query.filters.root.includes(option), withRootTypeFilter(query, option))}
-                    onClick={() => applyRootTypeFilter(option)}
+                    disabled={isFilterDisabled(query.filters.root.includes(option), withRootShape(query, option))}
+                    onClick={() => applyRootShape(option)}
                   >
                     {t(`verbsList.filter.rootType.${option}.label`)}
                   </SelectableButton>

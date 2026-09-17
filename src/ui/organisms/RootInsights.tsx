@@ -42,7 +42,7 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
         {t(`rootInfo.${rootTypeLocaleKey(rootAnalysis.type, rootAnalysis.weakLetter)}.description`) ||
           t('rootInfo.sound.description')}
       </Text>
-      {rootAnalysis.isBiliteral && (
+      {rootAnalysis.type.includes('biliteral') && (
         <Text dir={dir} lang={lang}>
           {t('rootInfo.biliteral.description')}
         </Text>

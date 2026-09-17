@@ -119,7 +119,7 @@ describe('verbFormExercise with constraints', () => {
       paradigmForm: 10,
       form: '10',
       arabic: 'اِسْتَشْرَبَ',
-      rootType: [],
+      rootType: ['sound'],
       tense: 'active.past',
       pronoun: '3ms',
     })
