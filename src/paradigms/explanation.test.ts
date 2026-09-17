@@ -495,6 +495,39 @@ describe('resolveVerbExplanationLayers tenseRoot geminate', () => {
   })
 })
 
+// ── nominalRoot: geminate ────────────────────────────────────────────────────
+
+describe('resolveNominalExplanationLayers nominalRoot', () => {
+  test.each([
+    [1, 'masdar', 'مَدّ', 'geminate-contracts'],
+    [1, 'activeParticiple', 'مَادّ', 'geminate-contracts'],
+    [1, 'passiveParticiple', 'مَمْدُود', 'geminate-separates'],
+    [8, 'masdar', 'اِمْتِدَاد', 'geminate-separates'],
+    [8, 'activeParticiple', 'مُمْتَدّ', 'geminate-contracts'],
+    [3, 'masdar', 'مُمَادَّة', 'geminate-contracts'],
+    [2, 'masdar', 'تَمْدِيد', undefined],
+    [2, 'activeParticiple', 'مُمَدِّد', undefined],
+  ] as const)('doubled root Form %d + %s -> %s', (form, nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb('مدد', form), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test('sound root has no identical pair to describe', () => {
+    expect(resolveNominalExplanationLayers(getVerb('كتب', 1), 'masdar', 'كِتَابَة').nominalRoot).toBeUndefined()
+  })
+
+  test('masdar list that splits on the pair describes neither outcome', () => {
+    expect(resolveNominalExplanationLayers(getVerb('ضرر', 1), 'masdar', ['ضَرّ', 'ضَرَر']).nominalRoot).toBeUndefined()
+  })
+
+  test('renderExplanation puts the nominal geminate sentence in the nominal paragraph', () => {
+    const layers = resolveNominalExplanationLayers(getVerb('مدد', 1), 'passiveParticiple', 'مَمْدُود')
+    expect(renderExplanation(layers, (key) => key)[1]).toContainEqual({
+      text: 'explanation.nominal-root.geminate-separates',
+      kind: 'radical',
+    })
+  })
+})
+
 // ── pronoun / arabic fields ───────────────────────────────────────────────────
 
 describe('resolveVerbExplanationLayers pronoun and arabic', () => {

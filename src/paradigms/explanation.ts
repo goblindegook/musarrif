@@ -60,6 +60,8 @@ type TenseRootInteraction =
   | 'middle-shortens'
   | 'middle-shortens-consonant'
 
+type NominalRootInteraction = 'geminate-contracts' | 'geminate-separates'
+
 export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
 const NON_FORM_I_MASDAR_PATTERNS: Partial<Record<TriliteralForm, string>> = {
@@ -143,19 +145,21 @@ export interface VerbExplanationLayers extends BaseExplanationLayers {
 
 type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
 
-interface ActiveParticipleExplanationLayers extends BaseExplanationLayers {
+interface BaseNominalExplanationLayers extends BaseExplanationLayers {
   category: 'nominal'
+  nominalRoot?: NominalRootInteraction
+}
+
+interface ActiveParticipleExplanationLayers extends BaseNominalExplanationLayers {
   nominal: 'activeParticiple'
   activeParticipleKind: ActiveParticipleKind
 }
 
-interface PassiveParticipleExplanationLayers extends BaseExplanationLayers {
-  category: 'nominal'
+interface PassiveParticipleExplanationLayers extends BaseNominalExplanationLayers {
   nominal: 'passiveParticiple'
 }
 
-interface MasdarExplanationLayers extends BaseExplanationLayers {
-  category: 'nominal'
+interface MasdarExplanationLayers extends BaseNominalExplanationLayers {
   nominal: 'masdar'
   isMasdarMimi: boolean
   masdarPattern?: string
@@ -451,7 +455,13 @@ export function renderExplanation(
       rootNoteKey && { text: t(rootNoteKey, params), kind: 'radical' },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
-    [nominalKey && { text: t(nominalKey, params), kind: 'measure' }],
+    [
+      nominalKey && { text: t(nominalKey, params), kind: 'measure' },
+      nominalLayers?.nominalRoot && {
+        text: t(`explanation.nominal-root.${nominalLayers.nominalRoot}`, params),
+        kind: 'radical',
+      },
+    ],
     [
       verbLayers?.tense?.startsWith('passive') && {
         text: t(`explanation.voice.${verbLayers?.tense}`, params),
@@ -630,6 +640,27 @@ function resolveActiveParticipleKind(verb: Verb): ActiveParticipleKind {
   return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'faa3il'
 }
 
+// Every pattern either writes the identical pair once with a شَدَّة (مَدّ، مُمْتَدّ) or keeps a vowel
+// between them (ضَرَر، مَمْدُود، اِمْتِدَاد), so the second radical's own count settles the cell. A masdar
+// list that does both (ضَرّ، ضَرَر) has no single answer to give.
+function toNominalRoot(
+  verb: Verb,
+  rootType: RootAnalysisType,
+  arabic: string | readonly string[],
+): NominalRootInteraction | undefined {
+  if (!rootType.includes('doubled') || DOUBLED_NEUTRAL_FORMS.includes(verb.form)) return undefined
+
+  const [, c2] = verb.rootTokens
+  const forms: readonly string[] = typeof arabic === 'string' ? [arabic] : arabic
+  const outcomes = new Set(
+    forms.map((form) =>
+      Array.from(form).filter((letter) => c2.equals(letter)).length > 1 ? 'geminate-separates' : 'geminate-contracts',
+    ),
+  )
+
+  return outcomes.size === 1 ? [...outcomes][0] : undefined
+}
+
 export function resolveNominalExplanationLayers<T extends NominalKind>(
   verb: Verb,
   nominal: T,
@@ -647,6 +678,7 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
     arabic: arabicString,
     rootType,
     weakLetter,
+    nominalRoot: toNominalRoot(verb, rootType, arabicString),
     vowels: isFormI ? verb.vowels : undefined,
     pastForm: isFormI ? String(conjugate(verb, 'active.past')['3ms']) : undefined,
     presentForm: isFormI ? String(conjugate(verb, 'active.present.indicative')['3ms']) : undefined,
