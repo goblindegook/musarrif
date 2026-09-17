@@ -13,6 +13,5 @@ export function conjugatePassiveFuture(verb: Verb): Record<PronounId, Word> {
       conjugatePassivePresentMood(verb, 'indicative'),
       (word) => new Word([particleMorpheme(SEEN, FATHA), ...word.morphemes]),
     ),
-    new Word([]),
   )
 }

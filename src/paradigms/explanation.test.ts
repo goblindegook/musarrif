@@ -158,6 +158,14 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
   ] as const)('uncontracted hollow + %s + %s -> %s', (tense, pronoun, expected) => {
     expect(resolveVerbExplanationLayers(getVerbById('Ewz-1')!, tense, pronoun).tenseRoot).toBe(expected)
   })
+
+  test.each([['Ewz-1'], ['xwr-1']] as const)('%s root note describes a verb with no weak behaviour', (id) => {
+    const layers = resolveVerbExplanationLayers(getVerbById(id)!, 'active.past', '3ms')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.root.sound',
+      kind: 'radical',
+    })
+  })
 })
 
 // ── tenseRoot: defective ─────────────────────────────────────────────────────
@@ -427,6 +435,25 @@ describe('renderExplanation root note by form', () => {
     expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({ text: expected, kind: 'radical' })
   })
 
+  test('form VIII past explains the waṣl alif it opens on', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('سلم', 8), 'active.past', '3ms')
+    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+      text: 'explanation.form.8-wasl',
+      kind: 'measure',
+    })
+  })
+
+  test.each([
+    ['active.present.jussive', '3fs'],
+    ['active.present.indicative', '1s'],
+  ] as const)('form VIII %s %s carries the form sentence alone', (tense, pronoun) => {
+    const layers = resolveVerbExplanationLayers(getVerb('كشف', 8), tense, pronoun)
+    expect(renderExplanation(layers, (key) => key)[0]).toEqual([
+      { text: 'explanation.form.8', kind: 'measure' },
+      { text: 'explanation.root.sound', kind: 'radical' },
+    ])
+  })
+
   test.each([
     ['وصل', 10, 'و'],
     ['يقظ', 10, 'ي'],
@@ -459,8 +486,23 @@ describe('renderExplanation root note by form', () => {
     const layers = resolveVerbExplanationLayers(getVerb('وحد', 8), 'active.past', '3ms')
     expect(renderExplanation(layers, (key) => key)[0]).toEqual([
       { text: 'explanation.form.8', kind: 'measure' },
+      { text: 'explanation.form.8-wasl', kind: 'measure' },
       { text: 'explanation.form-root.assimilation-weak-initial', kind: 'radical' },
     ])
+  })
+})
+
+// ── paradigms the verb does not have ─────────────────────────────────────────
+
+describe('renderExplanation for a paradigm the verb does not have', () => {
+  test.each([
+    ['Sfr-9', 'passive.past', '3ms'],
+    ['Sfr-9', 'passive.present.indicative', '3fp'],
+    ['Hrb-1', 'passive.future', '2mp'],
+    ['qsm-6', 'passive.present.jussive', '3mp'],
+  ] as const)('%s %s %s renders no explanation at all', (id, tense, pronoun) => {
+    const layers = resolveVerbExplanationLayers(getVerbById(id)!, tense, pronoun)
+    expect(renderExplanation(layers, (key) => key)).toEqual([])
   })
 })
 
@@ -599,11 +641,35 @@ describe('renderExplanation elision prose', () => {
     ['سكن', 'active.past', '3fp', 'explanation.pronoun.suffix-only', 'ـنَ'],
     ['سكن', 'active.past', '1p', 'explanation.pronoun.suffix-only', 'ـنَا'],
     ['سكن', 'active.present.indicative', '2fp', 'explanation.pronoun.prefix-and-suffix', 'ـنَ'],
+    ['قرء', 'active.present.indicative', '3md', 'explanation.pronoun.prefix-and-suffix', 'ـَانِ'],
+    ['قرء', 'active.present.subjunctive', '3fd', 'explanation.pronoun.prefix-and-suffix', 'ـَا'],
+    ['قرء', 'active.past', '3md', 'explanation.pronoun.suffix-only', 'ـَا'],
   ] as const)('%s + %s + %s names the whole ending in its %s sentence: %s', (root, tense, pronoun, key, suffix) => {
     const layers = resolveVerbExplanationLayers(getVerb(root, 1), tense, pronoun)
     const echoSuffix = (key: string, params?: Record<string, string>) => `${key}|${params?.suffix}`
     expect(renderExplanation(layers, echoSuffix).at(-1)).toContainEqual({
       text: `${key}|${suffix}`,
+      kind: 'agreement',
+    })
+  })
+
+  test.each([
+    ['علي', 4, 'passive.present.indicative', '2fp'],
+    ['علي', 4, 'passive.present.indicative', '3fp'],
+  ] as const)('%s Form %d %s %s keeps the final radical out of the ending', (root, form, tense, pronoun) => {
+    const layers = resolveVerbExplanationLayers(getVerb(root, form), tense, pronoun)
+    const echoSuffix = (key: string, params?: Record<string, string>) => `${key}|${params?.suffix}`
+    expect(renderExplanation(layers, echoSuffix).at(-1)).toContainEqual({
+      text: 'explanation.pronoun.prefix-and-suffix|ـْنَ',
+      kind: 'agreement',
+    })
+  })
+
+  test('form IV madda stem keeps the dual ending it already carries', () => {
+    const layers = resolveVerbExplanationLayers(getVerb('ءمن', 4), 'active.past', '3md')
+    const echoSuffix = (key: string, params?: Record<string, string>) => `${key}|${params?.suffix}`
+    expect(renderExplanation(layers, echoSuffix).at(-1)).toContainEqual({
+      text: 'explanation.pronoun.suffix-only|ـَا',
       kind: 'agreement',
     })
   })
@@ -858,6 +924,7 @@ describe('renderExplanation', () => {
     ).toEqual([
       [
         { text: 'explanation.form.8', kind: 'measure' },
+        { text: 'explanation.form.8-wasl', kind: 'measure' },
         { text: 'explanation.root.hollow-waw', kind: 'radical' },
         { text: 'explanation.form-root.assimilation-voicing', kind: 'radical' },
       ],

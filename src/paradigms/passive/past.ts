@@ -526,5 +526,5 @@ function derivePassivePastForms(verb: Verb): PassivePastParams {
 }
 
 export function conjugatePassivePast(verb: Verb): Record<PronounId, Word> {
-  return constrainPassiveConjugation(verb, toConjugation(derivePassivePastForms(verb)), new Word([]))
+  return constrainPassiveConjugation(verb, toConjugation(derivePassivePastForms(verb)))
 }

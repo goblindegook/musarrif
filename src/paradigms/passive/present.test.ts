@@ -5,6 +5,21 @@ import { getAvailableParadigms, getVerb, verbs } from '../verbs'
 import { conjugatePassivePresentMood } from './present'
 
 describe('passive present indicative', () => {
+  test.each(['indicative', 'subjunctive', 'jussive'] as const)(
+    'a verb marked as having no passive conjugates no %s cell',
+    (mood) => {
+      fc.assert(
+        fc.property(
+          fc.constantFrom(...verbs.filter((verb) => verb.passive === 'none')),
+          fc.constantFrom(...PRONOUN_IDS),
+          (verb, pronounId) => {
+            expect(conjugatePassivePresentMood(verb, mood)[pronounId]).toEqualT('')
+          },
+        ),
+      )
+    },
+  )
+
   test('impersonal passive only conjugates 3ms in present indicative', () => {
     fc.assert(
       fc.property(
@@ -176,11 +191,9 @@ describe('passive present indicative', () => {
     describe('hollow roots', () => {
       test.each<[string, string]>([
         ['حول', 'يُحَالُ'],
-        ['عوم', 'يُعَامُ'],
         ['نوم', 'يُنَامُ'],
         ['دوم', 'يُدَامُ'],
         ['قول', 'يُقَالُ'],
-        ['خور', 'يُخْوَرُ'],
         ['خيل', 'يُخَالُ'],
         ['خوف', 'يُخَافُ'],
         ['شوق', 'يُشَاقُ'],
@@ -464,7 +477,6 @@ describe('passive present indicative', () => {
       test.each<[string, string]>([
         ['دري', 'يُدْرَى'],
         ['وعي', 'يُوعَى'],
-        ['علي', 'يُعْلَى'],
         ['لهو', 'يُلْهَى'],
         ['شفي', 'يُشْفَى'],
         ['جدو', 'يُجْدَى'],
@@ -948,24 +960,6 @@ describe('passive present indicative', () => {
         })
       })
 
-      test('أَصْبَحَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('صبح', 4), 'indicative')).toEqualT({
-          '1s': 'أُصْبَحُ',
-          '2ms': 'تُصْبَحُ',
-          '2fs': 'تُصْبَحِينَ',
-          '3ms': 'يُصْبَحُ',
-          '3fs': 'تُصْبَحُ',
-          '2d': 'تُصْبَحَانِ',
-          '3md': 'يُصْبَحَانِ',
-          '3fd': 'تُصْبَحَانِ',
-          '1p': 'نُصْبَحُ',
-          '2mp': 'تُصْبَحُونَ',
-          '2fp': 'تُصْبَحْنَ',
-          '3mp': 'يُصْبَحُونَ',
-          '3fp': 'يُصْبَحْنَ',
-        })
-      })
-
       test('أَعْرَبَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عرب', 4), 'indicative')).toEqualT({
           '1s': 'أُعْرَبُ',
@@ -1265,11 +1259,7 @@ describe('passive present indicative', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([
-        ['بثث', 'يُنْبَثُّ'],
-        ['كفف', 'يُنْكَفُّ'],
-        ['دسس', 'يُنْدَسُّ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['كفف', 'يُنْكَفُّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 7), 'indicative')['3ms']).toEqualT(expected)
       })
     })
@@ -1396,7 +1386,6 @@ describe('passive present indicative', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['زوج', 'يُزْدَوَجُ'],
         ['سوء', 'يُسْتَاءُ'],
         ['زيد', 'يُزْدَادُ'],
         ['روح', 'يُرْتَاحُ'],

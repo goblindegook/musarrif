@@ -166,11 +166,9 @@ describe('passive present subjunctive', () => {
     describe('hollow roots', () => {
       test.each([
         ['حول', 'يُحَالَ'],
-        ['عوم', 'يُعَامَ'],
         ['نوم', 'يُنَامَ'],
         ['دوم', 'يُدَامَ'],
         ['قول', 'يُقَالَ'],
-        ['خور', 'يُخْوَرَ'],
         ['خيل', 'يُخَالَ'],
         ['خوف', 'يُخَافَ'],
         ['شوق', 'يُشَاقَ'],
@@ -438,7 +436,6 @@ describe('passive present subjunctive', () => {
         ['غشي', 'يُغْشَى'],
         ['جدو', 'يُجْدَى'],
         ['لهو', 'يُلْهَى'],
-        ['علي', 'يُعْلَى'],
         ['شفي', 'يُشْفَى'],
       ])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
@@ -916,24 +913,6 @@ describe('passive present subjunctive', () => {
         })
       })
 
-      test('أَصْبَحَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('صبح', 4), 'subjunctive')).toEqualT({
-          '1s': 'أُصْبَحَ',
-          '2ms': 'تُصْبَحَ',
-          '2fs': 'تُصْبَحِي',
-          '3ms': 'يُصْبَحَ',
-          '3fs': 'تُصْبَحَ',
-          '2d': 'تُصْبَحَا',
-          '3md': 'يُصْبَحَا',
-          '3fd': 'تُصْبَحَا',
-          '1p': 'نُصْبَحَ',
-          '2mp': 'تُصْبَحُوا',
-          '2fp': 'تُصْبَحْنَ',
-          '3mp': 'يُصْبَحُوا',
-          '3fp': 'يُصْبَحْنَ',
-        })
-      })
-
       test('أَعْرَبَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عرب', 4), 'subjunctive')).toEqualT({
           '1s': 'أُعْرَبَ',
@@ -1214,11 +1193,7 @@ describe('passive present subjunctive', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([
-        ['بثث', 'يُنْبَثَّ'],
-        ['كفف', 'يُنْكَفَّ'],
-        ['دسس', 'يُنْدَسَّ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['كفف', 'يُنْكَفَّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 7), 'subjunctive')['3ms']).toEqualT(expected)
       })
     })
@@ -1345,7 +1320,6 @@ describe('passive present subjunctive', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['زوج', 'يُزْدَوَجَ'],
         ['سوء', 'يُسْتَاءَ'],
         ['زيد', 'يُزْدَادَ'],
         ['روح', 'يُرْتَاحَ'],

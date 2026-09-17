@@ -6,12 +6,20 @@ import type { FormIPattern } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
-import { analyzeRoot, type RootAnalysisType, type RootShape, rootTypeLocaleKey, type WeakLetter } from './roots'
+import {
+  analyzeRoot,
+  type RootAnalysis,
+  type RootAnalysisType,
+  type RootShape,
+  rootTypeLocaleKey,
+  type WeakLetter,
+} from './roots'
 import type { VerbTense } from './tense'
 import {
   ALIF,
   ALIF_MADDA,
   DAL,
+  FATHA,
   NOON,
   normalizeForComparison,
   resolveFormVIIIInfixConsonant,
@@ -20,7 +28,13 @@ import {
   WAW,
   YEH,
 } from './tokens'
-import { isQuadriliteralVerb, isTriliteralFormIVerb, type TriliteralForm, type Verb } from './verbs'
+import {
+  getAvailableParadigms,
+  isQuadriliteralVerb,
+  isTriliteralFormIVerb,
+  type TriliteralForm,
+  type Verb,
+} from './verbs'
 import type { Morpheme } from './word'
 import { Word } from './word'
 
@@ -185,6 +199,9 @@ const FEMININE_PLURAL_PRONOUNS: readonly PronounId[] = ['2fp', '3fp']
 // The present-tense pronouns whose ending starts with a vowel, which protects the stem from apocope.
 const VOWEL_SUFFIX_PRESENT_PRONOUNS: readonly PronounId[] = ['2fs', '2d', '2mp', '3md', '3fd', '3mp']
 
+// The pronouns whose ending opens on the dual's own alif: ـَا, or ـَانِ in the indicative.
+const DUAL_PRONOUNS: readonly PronounId[] = ['2d', '3md', '3fd']
+
 // The pronouns whose personal ending begins with nūn: ـْنَ for the feminine plural, ـْنَا for 1p.
 const NUN_INITIAL_ENDING_PRONOUNS: readonly PronounId[] = ['1p', '2fp', '3fp']
 
@@ -309,7 +326,9 @@ function renderPronounSentences(
   const pronounParams = { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) }
   const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
   const endingNun = hasAssimilatedEndingNun(layers) ? String(NOON) : ''
-  const suffix = layers.suffix ? `ـ${endingNun}${layers.suffix}` : undefined
+  const dualAlif = hasAbsorbedDualAlif(layers) ? `${FATHA}${ALIF}` : ''
+  const ending = `${dualAlif}${endingNun}${layers.suffix ?? ''}`
+  const suffix = ending ? `ـ${ending}` : undefined
 
   const mainText =
     prefix && suffix
@@ -340,6 +359,14 @@ function renderPronounSentences(
   ]
 
   return sentences.filter((s): s is ExplanationSentence => Boolean(s))
+}
+
+// A stem-final hamza swallows the dual's own alif into a madda (يَقْرَآنِ, قَرَآ, يَطَآنِ), leaving the
+// extracted suffix with the nūn alone, or with nothing at all where the mood drops the nūn too.
+function hasAbsorbedDualAlif(layers: VerbExplanationLayers): boolean {
+  if (!DUAL_PRONOUNS.includes(layers.pronoun as PronounId)) return false
+  if (layers.suffix?.includes(String(ALIF))) return false
+  return toArabicText(layers.arabic).includes(String(ALIF_MADDA))
 }
 
 // ـْنَ and ـْنَا merge into a stem that already ends in ن (سَكَنَّ, سَكَنَّا), so the ending's own nūn
@@ -418,11 +445,16 @@ export function renderExplanation(
   layers: ExplanationLayers,
   t: (key: string, params?: Record<string, string>) => string,
 ): ExplanationSentence[][] {
+  const arabic = toArabicText(layers.arabic)
+
+  // A paradigm the verb does not have leaves the cell empty, and an empty cell has nothing to explain.
+  if (!arabic) return []
+
   const nominalLayers = layers.category === 'nominal' ? layers : undefined
   const verbLayers = layers.category === 'verb' ? layers : undefined
   const params = {
     ...(layers.vowels && FORM_I_BASE_PATTERNS[layers.vowels]),
-    arabic: toArabicText(layers.arabic),
+    arabic,
     root: layers.paradigmRoots.join('-'),
     initialRadical: layers.paradigmRoots[0] ?? '',
     form: toRoman(layers.paradigmForm),
@@ -452,6 +484,11 @@ export function renderExplanation(
         text: t(`explanation.form.${layers.form === '1q-bd' ? '1q' : layers.form}`, params),
         kind: 'measure',
       },
+      layers.form === '8' &&
+        hasAlifAlWasl(params.arabic) && {
+          text: t('explanation.form.8-wasl', params),
+          kind: 'measure',
+        },
       rootNoteKey && { text: t(rootNoteKey, params), kind: 'radical' },
       layers.formRoot && { text: t(`explanation.form-root.${layers.formRoot}`, params), kind: 'radical' },
     ],
@@ -524,10 +561,18 @@ function extractAffixes(morphemes: readonly Morpheme[] = []): {
   }
 }
 
+// عَوِزَ and خَوِرَ carry a wāw that never turns into a long vowel, so the hollow shape they have on
+// paper is not one any cell shows.
+function liveRootAnalysis(verb: Verb): RootAnalysis {
+  const analysis = analyzeRoot(verb.rootTokens)
+  if (contractsHollow(verb)) return analysis
+  return { ...analysis, type: analysis.type.filter((shape) => shape !== 'hollow'), weakLetter: undefined }
+}
+
 export function resolveVerbExplanationLayers(verb: Verb, tense: VerbTense, pronoun: PronounId): VerbExplanationLayers {
-  const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
+  const { type: rootType, weakLetter } = liveRootAnalysis(verb)
   const isFormI = isTriliteralFormIVerb(verb) && !isLaysa(verb.root)
-  const arabic = String(conjugate(verb, tense)[pronoun])
+  const arabic = getAvailableParadigms(verb).includes(tense) ? String(conjugate(verb, tense)[pronoun]) : ''
 
   return {
     category: 'verb',
@@ -669,7 +714,7 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
   const arabicString: string | readonly string[] = arabic instanceof Word ? String(arabic) : arabic
   const isFormI = isTriliteralFormIVerb(verb)
 
-  const { type: rootType, weakLetter } = analyzeRoot(verb.rootTokens)
+  const { type: rootType, weakLetter } = liveRootAnalysis(verb)
 
   const base = {
     paradigmRoots: Array.from(verb.root),

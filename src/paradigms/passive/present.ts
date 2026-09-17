@@ -598,7 +598,8 @@ function defectiveSuffix(mood: Mood, pronounId: PronounId, isGeminateRoot?: bool
   if (pronounId === '2fs') return [agreementMorpheme(YEH, SUKOON), elidedMorpheme(NOON, FATHA)]
   if (isDual(pronounId)) return [agreementMorpheme(YEH, FATHA, ALIF), elidedMorpheme(NOON, KASRA)]
   if (isMasculinePlural(pronounId)) return [agreementMorpheme(WAW, SUKOON, ALIF), elidedMorpheme(NOON, FATHA)]
-  if (isFemininePlural(pronounId)) return [agreementMorpheme(YEH, SUKOON, NOON, FATHA)]
+  // The yāʾ before ـْنَ is the final radical resurfacing as a consonant, not part of the ending.
+  if (isFemininePlural(pronounId)) return [radicalMorpheme(YEH), agreementMorpheme(SUKOON, NOON, FATHA)]
 
   if (mood === 'jussive') return []
 
@@ -673,6 +674,5 @@ export function conjugatePassivePresentMood(verb: Verb, mood: Mood): Record<Pron
         return new Word([prefix, ...stem])
       },
     ),
-    new Word([]),
   )
 }

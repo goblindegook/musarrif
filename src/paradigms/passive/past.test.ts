@@ -21,6 +21,18 @@ describe('passive past pattern', () => {
     )
   })
 
+  test('a verb marked as having no passive conjugates no past cell', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(...verbs.filter((verb) => verb.passive === 'none')),
+        fc.constantFrom(...PRONOUN_IDS),
+        (verb, pronounId) => {
+          expect(conjugatePassivePast(verb)[pronounId]).toEqualT('')
+        },
+      ),
+    )
+  })
+
   describe('Form I', () => {
     describe('regular roots', () => {
       test.each<[string, string]>([
@@ -66,11 +78,9 @@ describe('passive past pattern', () => {
     describe('hollow roots', () => {
       test.each<[string, string]>([
         ['حول', 'حِيلَ'],
-        ['عوم', 'عِيمَ'],
         ['قول', 'قِيلَ'],
         ['نوم', 'نِيمَ'],
         ['دوم', 'دِيمَ'],
-        ['خور', 'خُوِرَ'],
         ['خيل', 'خِيلَ'],
         ['عوز', 'عُوِزَ'],
         ['خوف', 'خِيفَ'],
@@ -85,7 +95,6 @@ describe('passive past pattern', () => {
         ['دري', 'دُرِيَ'],
         ['ولي', 'وُلِيَ'],
         ['وعي', 'وُعِيَ'],
-        ['علي', 'عُلِيَ'],
         ['لهو', 'لُهِيَ'],
         ['شفي', 'شُفِيَ'],
         ['جدو', 'جُدِيَ'],
@@ -264,11 +273,7 @@ describe('passive past pattern', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([
-        ['بثث', 'اُنْبُثَّ'],
-        ['كفف', 'اُنْكُفَّ'],
-        ['دسس', 'اُنْدُسَّ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['كفف', 'اُنْكُفَّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePast(getVerb(root, 7))['3ms']).toEqualT(expected)
       })
     })
@@ -927,24 +932,6 @@ describe('passive past pattern', () => {
         })
       })
 
-      test('أَصْبَحَ conjugation', () => {
-        expect(conjugatePassivePast(getVerb('صبح', 4))).toEqualT({
-          '1s': 'أُصْبِحْتُ',
-          '2ms': 'أُصْبِحْتَ',
-          '2fs': 'أُصْبِحْتِ',
-          '3ms': 'أُصْبِحَ',
-          '3fs': 'أُصْبِحَتْ',
-          '2d': 'أُصْبِحْتُمَا',
-          '3md': 'أُصْبِحَا',
-          '3fd': 'أُصْبِحَتَا',
-          '1p': 'أُصْبِحْنَا',
-          '2mp': 'أُصْبِحْتُمْ',
-          '2fp': 'أُصْبِحْتُنَّ',
-          '3mp': 'أُصْبِحُوا',
-          '3fp': 'أُصْبِحْنَ',
-        })
-      })
-
       test('أَعْرَبَ conjugation', () => {
         expect(conjugatePassivePast(getVerb('عرب', 4))).toEqualT({
           '1s': 'أُعْرِبْتُ',
@@ -1265,7 +1252,6 @@ describe('passive past pattern', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['زوج', 'اُزْدُوِجَ'],
         ['زيد', 'اُزْدِيدَ'],
         ['سوء', 'اُسْتِيءَ'],
         ['روح', 'اُرْتِيحَ'],

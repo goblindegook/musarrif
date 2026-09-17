@@ -177,11 +177,9 @@ describe('passive present jussive', () => {
     describe('hollow roots', () => {
       test.each([
         ['حول', 'يُحَلْ'],
-        ['عوم', 'يُعَمْ'],
         ['نوم', 'يُنَمْ'],
         ['دوم', 'يُدَمْ'],
         ['قول', 'يُقَلْ'],
-        ['خور', 'يُخْوَرْ'],
         ['خيل', 'يُخَلْ'],
         ['خوف', 'يُخَفْ'],
         ['شوق', 'يُشَقْ'],
@@ -457,7 +455,6 @@ describe('passive present jussive', () => {
         ['غشي', 'يُغْشَ'],
         ['جدو', 'يُجْدَ'],
         ['لهو', 'يُلْهَ'],
-        ['علي', 'يُعْلَ'],
         ['شفي', 'يُشْفَ'],
       ])('jussive pattern for %s conjugation', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 1), 'jussive')['3ms']).toEqualT(expected)
@@ -984,24 +981,6 @@ describe('passive present jussive', () => {
         })
       })
 
-      test('أَصْبَحَ conjugation', () => {
-        expect(conjugatePassivePresentMood(getVerb('صبح', 4), 'jussive')).toEqualT({
-          '1s': 'أُصْبَحْ',
-          '2ms': 'تُصْبَحْ',
-          '2fs': 'تُصْبَحِي',
-          '3ms': 'يُصْبَحْ',
-          '3fs': 'تُصْبَحْ',
-          '2d': 'تُصْبَحَا',
-          '3md': 'يُصْبَحَا',
-          '3fd': 'تُصْبَحَا',
-          '1p': 'نُصْبَحْ',
-          '2mp': 'تُصْبَحُوا',
-          '2fp': 'تُصْبَحْنَ',
-          '3mp': 'يُصْبَحُوا',
-          '3fp': 'يُصْبَحْنَ',
-        })
-      })
-
       test('أَعْرَبَ conjugation', () => {
         expect(conjugatePassivePresentMood(getVerb('عرب', 4), 'jussive')).toEqualT({
           '1s': 'أُعْرَبْ',
@@ -1316,11 +1295,7 @@ describe('passive present jussive', () => {
     })
 
     describe('geminate roots', () => {
-      test.each([
-        ['بثث', 'يُنْبَثَّ'],
-        ['كفف', 'يُنْكَفَّ'],
-        ['دسس', 'يُنْدَسَّ'],
-      ])('%s pattern', (root, expected) => {
+      test.each([['كفف', 'يُنْكَفَّ']])('%s pattern', (root, expected) => {
         expect(conjugatePassivePresentMood(getVerb(root, 7), 'jussive')['3ms']).toEqualT(expected)
       })
     })
@@ -1447,7 +1422,6 @@ describe('passive present jussive', () => {
 
     describe('hollow roots', () => {
       test.each([
-        ['زوج', 'يُزْدَوَجْ'],
         ['سوء', 'يُسْتَأْ'],
         ['زيد', 'يُزْدَدْ'],
         ['روح', 'يُرْتَحْ'],

@@ -9,6 +9,18 @@ const SEEN = '\u0633'
 const FATHA = '\u064E'
 
 describe('passive future', () => {
+  it('a verb marked as having no passive conjugates no future cell', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(...verbs.filter((verb) => verb.passive === 'none')),
+        fc.constantFrom(...PRONOUN_IDS),
+        (verb, pronounId) => {
+          expect(conjugatePassiveFuture(verb)[pronounId]).toEqualT('')
+        },
+      ),
+    )
+  })
+
   it('impersonal passive only conjugates 3ms in future', () => {
     fc.assert(
       fc.property(
