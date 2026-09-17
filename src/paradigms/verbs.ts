@@ -165,8 +165,7 @@ function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T
 }
 
 function parseRawVerb(raw: RawVerb): DisplayVerb {
-  const rootId = raw.root
-  const root = transliterateReverse(rootId)
+  const root = transliterateReverse(raw.root)
   const rootTokens = tokenizeRoot(root)
 
   if (rootTokens.length === 4) {
@@ -174,43 +173,30 @@ function parseRawVerb(raw: RawVerb): DisplayVerb {
       throw new Error(`Quadriliteral root ${root} cannot use Form ${raw.form}`)
 
     return buildDisplayVerb({
+      ...raw,
       root: toQuadriliteralRoot(root),
       rootTokens,
       form: raw.form as QuadriliteralForm,
-      masdars: raw.masdars,
-      lexicalMasdars: raw.lexicalMasdars,
-      lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
-      passive: raw.passive,
       valency: raw.valency ?? [],
     })
   }
 
   if (raw.form === 1) {
     return buildDisplayVerb({
+      ...raw,
       root: toTriliteralRoot(root),
       rootTokens,
       form: 1,
       vowels: raw.vowels ?? 'a-a',
-      hollowContraction: raw.hollowContraction,
-      contractedImperative: raw.contractedImperative,
-      masdars: raw.masdars,
-      lexicalMasdars: raw.lexicalMasdars,
-      lexicalActiveParticiple: raw.lexicalActiveParticiple,
-      lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
-      passive: raw.passive,
       valency: raw.valency ?? [],
     })
   }
 
   return buildDisplayVerb({
+    ...raw,
     root: toTriliteralRoot(root),
     rootTokens,
     form: raw.form as Exclude<TriliteralForm, 1>,
-    masdars: raw.masdars,
-    lexicalMasdars: raw.lexicalMasdars,
-    lexicalActiveParticiple: raw.lexicalActiveParticiple,
-    lexicalPassiveParticiple: raw.lexicalPassiveParticiple,
-    passive: raw.passive,
     valency: raw.valency ?? [],
   })
 }
