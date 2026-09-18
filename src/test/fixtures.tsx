@@ -1,6 +1,7 @@
 import { type RenderResult, render } from '@testing-library/preact'
 import type { ComponentChild, ComponentChildren } from 'preact'
 import { vi } from 'vitest'
+import { App } from '../ui/app'
 import { I18nProvider } from '../ui/hooks/useI18n'
 import { RoutingProvider } from '../ui/routes'
 
@@ -22,6 +23,12 @@ function Wrapper({ children }: { children: ComponentChildren }) {
 
 export function renderWithProviders(ui: ComponentChild): RenderResult {
   return render(ui, { wrapper: Wrapper })
+}
+
+export function renderApp(path = ''): void {
+  localStorage.setItem('conjugator:tourSeen', 'true')
+  window.history.replaceState({}, '', path)
+  renderWithProviders(<App />)
 }
 
 export function currentUrl(): string {
