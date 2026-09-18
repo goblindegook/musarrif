@@ -233,7 +233,7 @@ export function OptionChip<T>({
           <>
             <TitleRow>
               {multiGroup && (
-                <IconButton size="sm" type="button" aria-label={backLabel} onClick={handleBack}>
+                <IconButton size="compact" type="button" aria-label={backLabel} onClick={handleBack}>
                   <BackGlyph>‹</BackGlyph>
                 </IconButton>
               )}

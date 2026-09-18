@@ -5,19 +5,20 @@ import { SegmentedControl } from './SegmentedControl'
 type Props = {
   activeMode: number
   labels: readonly string[]
-  icons: readonly ComponentChild[]
+  icons?: readonly ComponentChild[]
   onClick: (index: number) => void
   ariaLabel?: string
+  size?: 'compact' | 'large'
 }
 
-export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel }: Props) {
+export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel, size = 'compact' }: Props) {
   return (
-    <Control>
+    <Control size={size}>
       <SegmentedControl
         options={labels.map((label, index) => ({
           value: `${index}`,
           label,
-          content: (
+          content: icons && (
             <SegmentContent>
               {icons[index]}
               <SegmentLabel>{label}</SegmentLabel>
@@ -26,15 +27,16 @@ export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel }: Pr
         }))}
         value={`${activeMode}`}
         onChange={(_value: string, index: number) => onClick(index)}
-        compact
+        size={size}
+        fill={size === 'large'}
         aria-label={ariaLabel}
       />
     </Control>
   )
 }
 
-const Control = styled('div')`
-  height: 36px;
+const Control = styled('div')<{ size: 'compact' | 'large' }>`
+  height: ${({ size }) => (size === 'compact' ? '36px' : 'auto')};
 `
 
 const SegmentContent = styled('span')`

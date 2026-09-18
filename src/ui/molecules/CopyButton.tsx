@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'preact/hooks'
-import { IconButton } from '../atoms/IconButton'
+import { IconButton, type IconButtonSize } from '../atoms/IconButton'
 import { CheckIcon } from '../icons/CheckIcon'
 import { CopyIcon } from '../icons/CopyIcon'
 
 interface CopyButtonProps {
   text: string
   ariaLabel?: string
-  size?: 'sm' | 'md'
+  size?: IconButtonSize
 }
 
 export function CopyButton({ text, ariaLabel, size }: CopyButtonProps) {

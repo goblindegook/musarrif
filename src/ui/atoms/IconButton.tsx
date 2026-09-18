@@ -1,10 +1,12 @@
 import { styled } from 'goober'
 import type { ButtonHTMLAttributes, ComponentChildren } from 'preact'
 
+export type IconButtonSize = 'compact' | 'normal'
+
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   children: ComponentChildren
   active?: boolean
-  size?: 'sm' | 'md'
+  size?: IconButtonSize
 }
 
 export function IconButton({
@@ -12,7 +14,7 @@ export function IconButton({
   onClick,
 
   active,
-  size = 'md',
+  size = 'normal',
   ...props
 }: IconButtonProps) {
   return (
@@ -22,9 +24,9 @@ export function IconButton({
   )
 }
 
-const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md' }>`
-  width: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
-  height: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
+const StyledIconButton = styled('button')<{ active?: boolean; size?: IconButtonSize }>`
+  width: ${({ size }) => (size === 'compact' ? '28px' : '36px')};
+  height: ${({ size }) => (size === 'compact' ? '28px' : '36px')};
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -68,8 +70,8 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: 'sm' | 'md'
   }
 
   @media (pointer: coarse) {
-    min-width: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
-    min-height: ${({ size }) => (size === 'sm' ? '28px' : '36px')};
+    min-width: ${({ size }) => (size === 'compact' ? '28px' : '36px')};
+    min-height: ${({ size }) => (size === 'compact' ? '28px' : '36px')};
   }
 
   @media (prefers-reduced-motion: reduce) {

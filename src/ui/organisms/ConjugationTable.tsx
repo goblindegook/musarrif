@@ -170,7 +170,7 @@ export function ConjugationTable({
                   aria-controls={panelId(tabId(selectedVoice, 'present', option))}
                   tabIndex={option === mood ? 0 : -1}
                   aria-label={t(MOOD_LABELS[option])}
-                  size="sm"
+                  size="compact"
                   onClick={() => onMoodChange(option)}
                   onKeyDown={tabKeyDown(moodOptions, option, 'mood-tab', onMoodChange)}
                   dir={dir}

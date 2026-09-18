@@ -8,13 +8,15 @@ interface SegmentedControlOption<T extends string = string> {
   readonly title?: string
 }
 
+export type SegmentedControlSize = 'compact' | 'normal' | 'large'
+
 interface SegmentedControlProps<T extends string = string>
   extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'value'> {
   readonly options: readonly SegmentedControlOption<T>[]
   readonly value: T
   readonly onChange: (value: T, index: number) => void
   readonly fill?: boolean
-  readonly compact?: boolean
+  readonly size?: SegmentedControlSize
 }
 
 export function SegmentedControl<T extends string = string>({
@@ -22,7 +24,7 @@ export function SegmentedControl<T extends string = string>({
   value,
   onChange,
   fill,
-  compact,
+  size = 'normal',
   ...rest
 }: SegmentedControlProps<T>) {
   const activeIndex = Math.max(
@@ -39,7 +41,7 @@ export function SegmentedControl<T extends string = string>({
             type="button"
             key={option.value}
             active={isActive}
-            compact={compact}
+            size={size}
             aria-pressed={isActive}
             aria-label={option.label}
             title={option.title}
@@ -100,7 +102,19 @@ const Control = styled('div')<{
   }
 `
 
-const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boolean }>`
+const SIZE_STYLES = {
+  compact: { fontSize: '0.75rem', minInlineSize: '0', padding: '0.2rem 0.75rem' },
+  normal: { fontSize: '0.75rem', minInlineSize: '64px', padding: '0.45rem 0.75rem' },
+  large: { fontSize: '0.9rem', minInlineSize: '0', padding: '0.4rem 0.6rem' },
+} as const
+
+const SIZE_STYLES_WIDE = {
+  compact: { minInlineSize: '0', padding: '0.2rem 0.75rem' },
+  normal: { minInlineSize: '96px', padding: '0.5rem 0.9rem' },
+  large: { minInlineSize: '0', padding: '0.4rem 0.6rem' },
+} as const
+
+const SegmentedControlButton = styled('button')<{ active: boolean; size: SegmentedControlSize }>`
   display: flex;
   align-items: center;
   background: transparent;
@@ -111,12 +125,12 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   cursor: pointer;
   flex: 1 1 0;
   min-width: 0;
-  font-size: 0.75rem;
+  font-size: ${({ size }) => SIZE_STYLES[size].fontSize};
   font-weight: 400;
   justify-content: center;
   letter-spacing: 0.08em;
-  min-inline-size: ${({ compact }) => (compact ? '0' : '64px')};
-  padding: ${({ compact }) => (compact ? '0.2rem 0.75rem' : '0.45rem 0.75rem')};
+  min-inline-size: ${({ size }) => SIZE_STYLES[size].minInlineSize};
+  padding: ${({ size }) => SIZE_STYLES[size].padding};
   text-transform: uppercase;
   position: relative;
   z-index: 1;
@@ -140,7 +154,7 @@ const SegmentedControlButton = styled('button')<{ active: boolean; compact?: boo
   }
 
   @media (min-width: 720px) {
-    min-inline-size: ${({ compact }) => (compact ? '0' : '96px')};
-    padding: ${({ compact }) => (compact ? '0.2rem 0.75rem' : '0.5rem 0.9rem')};
+    min-inline-size: ${({ size }) => SIZE_STYLES_WIDE[size].minInlineSize};
+    padding: ${({ size }) => SIZE_STYLES_WIDE[size].padding};
   }
 `

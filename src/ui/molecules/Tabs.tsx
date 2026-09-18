@@ -13,7 +13,7 @@ export const TabBar = styled('div')<{ wrap?: boolean }>`
 
 export const TabButton = styled('button')<{
   active?: boolean
-  size?: 'sm' | 'lg'
+  size?: 'compact' | 'normal'
   fluid?: boolean
   hasChildren?: boolean
 }>`
@@ -27,7 +27,7 @@ export const TabButton = styled('button')<{
   flex-direction: column;
   flex: 1;
   font-family: inherit;
-  font-size: ${({ size }) => (size === 'sm' ? '0.8rem' : '0.9rem')};
+  font-size: ${({ size }) => (size === 'compact' ? '0.8rem' : '0.9rem')};
   gap: 0.1rem;
   justify-content: center;
   letter-spacing: 0.08em;
@@ -89,5 +89,4 @@ export const TabPanel = styled('div')`
   flex-direction: column;
   gap: 1rem;
   outline: none;
-  padding-top: 0.5rem;
 `

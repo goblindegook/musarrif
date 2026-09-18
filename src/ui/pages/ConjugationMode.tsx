@@ -28,11 +28,11 @@ import { CopyButton } from '../molecules/CopyButton'
 import { Detail } from '../molecules/Detail'
 import { FavouriteButton } from '../molecules/FavouriteButton'
 import { Modal } from '../molecules/Modal'
+import { ModeToggle } from '../molecules/ModeToggle'
 import { Panel } from '../molecules/Panel'
 import { Search } from '../molecules/SearchBox'
 import { ShareButton } from '../molecules/ShareButton'
 import { SpeechButton } from '../molecules/SpeechButton'
-import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 import { ConjugationTable } from '../organisms/ConjugationTable'
@@ -203,55 +203,20 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
         <Panel prerender="omit">
-          <TabBar role="tablist">
-            <TabButton
-              id="panel-tab-search"
-              role="tab"
-              type="button"
-              aria-selected={searchTab === 'search'}
-              aria-controls="panel-content-search"
-              active={searchTab === 'search'}
-              fluid
-              onClick={() => setSearchTab('search')}
-            >
-              {t('tabs.search')}
-            </TabButton>
-            <TabButton
-              id="panel-tab-build"
-              data-tour-step="2"
-              role="tab"
-              type="button"
-              aria-selected={searchTab === 'build'}
-              aria-controls="panel-content-build"
-              active={searchTab === 'build'}
-              fluid
-              onClick={() => setSearchTab('build')}
-            >
-              {t('tabs.build')}
-            </TabButton>
-          </TabBar>
+          <span data-tour-step="2">
+            <ModeToggle
+              activeMode={searchTab === 'build' ? 1 : 0}
+              labels={[t('tabs.search'), t('tabs.build')]}
+              size="large"
+              onClick={(index) => setSearchTab(index === 0 ? 'search' : 'build')}
+            />
+          </span>
 
           {searchTab === 'search' && (
-            <TabPanel
-              id="panel-content-search"
-              role="tabpanel"
-              aria-labelledby="panel-tab-search"
-              aria-label={t('tabs.search')}
-            >
-              <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
-            </TabPanel>
+            <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
           )}
 
-          {searchTab === 'build' && (
-            <TabPanel
-              id="panel-content-build"
-              role="tabpanel"
-              aria-labelledby="panel-tab-build"
-              aria-label={t('tabs.build')}
-            >
-              <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />
-            </TabPanel>
-          )}
+          {searchTab === 'build' && <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />}
         </Panel>
 
         {derivedForms.length > 1 && (

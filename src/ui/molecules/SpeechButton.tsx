@@ -1,4 +1,4 @@
-import { IconButton } from '../atoms/IconButton'
+import { IconButton, type IconButtonSize } from '../atoms/IconButton'
 import { useSpeech } from '../hooks/useSpeech'
 import { SpeakIcon } from '../icons/SpeakIcon'
 
@@ -6,7 +6,7 @@ interface SpeechButtonProps {
   text: string
   lang: string
   ariaLabel?: string
-  size?: 'sm' | 'md'
+  size?: IconButtonSize
 }
 
 export function SpeechButton({ text, lang, ariaLabel, size }: SpeechButtonProps) {

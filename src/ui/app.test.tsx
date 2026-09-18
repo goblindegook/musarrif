@@ -298,7 +298,7 @@ describe('Builder navigation', () => {
   it('keeps Build tab selected when choosing an existing verb from builder controls', () => {
     renderApp('/#/verbs/qqq-2')
 
-    expect(screen.getByText('Build')).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Build')).toHaveAttribute('aria-pressed', 'true')
 
     setBuildLetter(1, 'ك')
     setBuildLetter(2, 'ت')
@@ -306,7 +306,7 @@ describe('Builder navigation', () => {
     fireEvent.click(getBuildButton('I'))
     fireEvent.click(getBuildButton('فَعَلَ / يَفعُلُ'))
 
-    expect(screen.getByText('Build')).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Build')).toHaveAttribute('aria-pressed', 'true')
   })
 })
 
@@ -375,7 +375,7 @@ describe('routing', () => {
 })
 
 function getBuildPanel(): HTMLElement {
-  return document.getElementById('panel-content-build')!
+  return screen.getByText('Build', { selector: 'button' }).closest('section')!
 }
 
 function getBuildButton(label: string): HTMLElement {

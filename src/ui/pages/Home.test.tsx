@@ -22,29 +22,30 @@ test('sets the page title ', () => {
   expect(document.title).toBe('Muṣarrif')
 })
 
-test('search and build tabs are correctly linked to their tabpanels', () => {
+test('search and build mode toggle switches between panels', () => {
   renderHome()
 
   const searchTab = screen.getByText('Search', { selector: 'button' })
   const buildTab = screen.getByText('Build', { selector: 'button' })
-  const searchPanel = document.getElementById('panel-content-search')
 
-  expect(searchTab).toHaveAttribute('id', 'panel-tab-search')
-  expect(buildTab).toHaveAttribute('id', 'panel-tab-build')
-  expect(searchTab).toHaveAttribute('aria-controls', 'panel-content-search')
-  expect(buildTab).toHaveAttribute('aria-controls', 'panel-content-build')
-  expect(searchPanel).toHaveAttribute('aria-labelledby', 'panel-tab-search')
+  expect(searchTab).toHaveAttribute('aria-pressed', 'true')
+  expect(buildTab).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByLabelText('Verb', { selector: 'input' })).toBeInTheDocument()
 
   fireEvent.click(buildTab)
 
-  const buildPanel = document.getElementById('panel-content-build')
-  expect(buildPanel).toHaveAttribute('aria-labelledby', 'panel-tab-build')
+  expect(searchTab).toHaveAttribute('aria-pressed', 'false')
+  expect(buildTab).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
 })
 
 test('marks the search and build form for prerender omission', () => {
   renderHome()
 
-  expect(document.getElementById('panel-content-search')?.closest('section')).toHaveAttribute('data-prerender', 'omit')
+  expect(screen.getByLabelText('Verb', { selector: 'input' }).closest('section')).toHaveAttribute(
+    'data-prerender',
+    'omit',
+  )
 })
 
 test('Shows verbs grouped by form at the verbs base route, including quadriliteral forms', () => {

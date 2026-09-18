@@ -48,7 +48,7 @@ export const Detail = ({
               aria-label={insightsLabel}
               aria-has-popup="dialog"
               aria-expanded={insightsOpen}
-              size="sm"
+              size="compact"
             >
               <LightBulbIcon />
             </IconButton>
@@ -58,10 +58,10 @@ export const Detail = ({
               text={speechText}
               lang={valueLang}
               ariaLabel={t('aria.speak', { text: speechText })}
-              size="sm"
+              size="compact"
             />
           )}
-          {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} size="sm" />}
+          {copyText && <CopyButton text={copyText} ariaLabel={t('aria.copy', { text: copyText })} size="compact" />}
         </DetailActions>
       )}
       <DetailMain>

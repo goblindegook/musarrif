@@ -19,9 +19,9 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useFavourites } from '../hooks/useFavourites'
 import { useI18n } from '../hooks/useI18n'
 import { useRecent } from '../hooks/useRecent'
+import { ModeToggle } from '../molecules/ModeToggle'
 import { Panel } from '../molecules/Panel'
 import { Search } from '../molecules/SearchBox'
-import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 import { useRouting } from '../routes'
@@ -176,55 +176,18 @@ export function Home() {
     <Main id="main-content" tabIndex={-1}>
       <Stack area="search">
         <Panel prerender="omit">
-          <TabBar role="tablist">
-            <TabButton
-              id="panel-tab-search"
-              role="tab"
-              type="button"
-              aria-selected={searchTab === 'search'}
-              aria-controls="panel-content-search"
-              active={searchTab === 'search'}
-              fluid
-              onClick={() => setSearchTab('search')}
-            >
-              {t('tabs.search')}
-            </TabButton>
-            <TabButton
-              id="panel-tab-build"
-              data-tour-step="2"
-              role="tab"
-              type="button"
-              aria-selected={searchTab === 'build'}
-              aria-controls="panel-content-build"
-              active={searchTab === 'build'}
-              fluid
-              onClick={() => setSearchTab('build')}
-            >
-              {t('tabs.build')}
-            </TabButton>
-          </TabBar>
+          <span data-tour-step="2">
+            <ModeToggle
+              activeMode={searchTab === 'build' ? 1 : 0}
+              labels={[t('tabs.search'), t('tabs.build')]}
+              size="large"
+              onClick={(index) => setSearchTab(index === 0 ? 'search' : 'build')}
+            />
+          </span>
 
-          {searchTab === 'search' && (
-            <TabPanel
-              id="panel-content-search"
-              role="tabpanel"
-              aria-labelledby="panel-tab-search"
-              aria-label={t('tabs.search')}
-            >
-              <Search id="verb-search-input" onSelect={handleSelect} />
-            </TabPanel>
-          )}
+          {searchTab === 'search' && <Search id="verb-search-input" onSelect={handleSelect} />}
 
-          {searchTab === 'build' && (
-            <TabPanel
-              id="panel-content-build"
-              role="tabpanel"
-              aria-labelledby="panel-tab-build"
-              aria-label={t('tabs.build')}
-            >
-              <ConjugateBox onSelect={handleSelect} />
-            </TabPanel>
-          )}
+          {searchTab === 'build' && <ConjugateBox onSelect={handleSelect} />}
         </Panel>
 
         {recents.length > 0 && (
