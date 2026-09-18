@@ -477,7 +477,7 @@ describe('renderExplanation root note by form', () => {
     const layers = resolveVerbExplanationLayers(getVerb(root, form), tense, pronoun)
     expect(layers.tenseRoot).toBeUndefined()
     expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
-      text: 'explanation.root.quadriliteral-weak',
+      text: 'explanation.root.sound',
       kind: 'radical',
     })
   })

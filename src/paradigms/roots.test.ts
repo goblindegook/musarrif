@@ -62,21 +62,21 @@ describe('analyzeRoot', () => {
     expect(analyzeRoot(tokenize('ءلءل')).type).toEqual(['sound', 'hamzated', 'biliteral'])
   })
 
-  test('analyzeRoot types a reduplicated root with weak letters as quadriliteral-weak and biliteral', () => {
-    expect(analyzeRoot(tokenize('ولول')).type).toEqual(['quadriliteral-weak', 'biliteral'])
+  test('analyzeRoot types a reduplicated root with weak letters as sound and biliteral', () => {
+    expect(analyzeRoot(tokenize('ولول')).type).toEqual(['sound', 'biliteral'])
   })
 
   test.each<[string, readonly string[]]>([
-    ['سيطر', ['quadriliteral-weak']],
-    ['بلور', ['quadriliteral-weak']],
-    ['كلور', ['quadriliteral-weak']],
-    ['وسوس', ['quadriliteral-weak', 'biliteral']],
+    ['سيطر', ['sound']],
+    ['بلور', ['sound']],
+    ['كلور', ['sound']],
+    ['وسوس', ['sound', 'biliteral']],
     ['زلزل', ['sound', 'biliteral']],
     ['عرقل', ['sound']],
     ['ءرشف', ['sound', 'hamzated']],
     ['لءلء', ['sound', 'hamzated', 'biliteral']],
-    ['ءلوز', ['hamzated', 'quadriliteral-weak']],
-    ['سيءطر', ['hamzated', 'quadriliteral-weak']],
+    ['ءلوز', ['sound', 'hamzated']],
+    ['سيءطر', ['sound', 'hamzated']],
   ])('identifies quadriliteral %s as %s', (root, type) => {
     expect(analyzeRoot(tokenize(root)).type).toEqual(type)
   })
@@ -92,7 +92,6 @@ describe('rootTypeLocaleKey', () => {
     [['sound', 'doubled'], 'doubled'],
     [['sound', 'hamzated', 'biliteral'], 'hamzated'],
     [['hamzated', 'biliteral'], 'hamzated'],
-    [['quadriliteral-weak', 'biliteral'], 'quadriliteral-weak'],
   ])('reads %s as %s: sound and biliteral name no behaviour of their own', (type, key) => {
     expect(rootTypeLocaleKey(type as RootAnalysisType)).toBe(key)
   })

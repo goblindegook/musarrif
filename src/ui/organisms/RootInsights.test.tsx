@@ -19,12 +19,4 @@ describe('RootInsights', () => {
     renderWithProviders(<RootInsights root="كتب" rootId="root.ktb" />)
     expect(screen.getByText(/strong root with all radicals being consonants/i, { selector: 'p' })).toBeInTheDocument()
   })
-
-  test('biliteral quadriliteral root with weak radicals shows both the inert-weak and the repetition description', () => {
-    renderWithProviders(<RootInsights root="وسوس" rootId="root.wsws" />)
-    expect(screen.getByText(/stays a plain consonant/i, { selector: 'p' })).toBeInTheDocument()
-    expect(
-      screen.getByText(/first two radicals repeat as the third and fourth/i, { selector: 'p' }),
-    ).toBeInTheDocument()
-  })
 })
