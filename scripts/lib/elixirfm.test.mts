@@ -5,7 +5,7 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { getVerb, getVerbById } from '../../src/paradigms/verbs'
-import { compareForm, fetchParadigms, fromTag, isSameLexeme, resolveVerb, toTag } from './elixirfm.mts'
+import { compareForm, fetchParadigms, fromTag, isSameLexeme, lookupRoot, resolveVerb, toTag } from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
@@ -444,5 +444,67 @@ describe('resolveVerb fallback', () => {
 
     expect(await resolveVerb(getVerbById('mdd-1')!)).toBeUndefined()
     expect(requests).toEqual(['مَدَّ', 'مدّ'])
+  })
+})
+
+const LOOKUP_HTML = `
+<table cellspacing="0" class="lexeme"><tbody><tr>
+<td class="xtag" title="verb">V</td>
+<td class="phon" title="citation form">katab</td>
+<td class="orth" title="citation form">كَتَب</td>
+<td class="morphs" title="morphs of citation form">FaCaL</td>
+<td class="class" title="derivational class">I</td>
+<td class="reflex" title="lexical reference">"write", "inscribe"</td>
+<td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(1,1)">Inflect</a></td>
+</tr></tbody></table>
+<table cellspacing="0" class="lexeme"><tbody><tr>
+<td class="xtag" title="verb">V</td>
+<td class="phon" title="citation form">kātab</td>
+<td class="orth" title="citation form">كَاتَب</td>
+<td class="morphs" title="morphs of citation form">FāCaL</td>
+<td class="class" title="derivational class">III</td>
+<td class="reflex" title="lexical reference">"correspond with"</td>
+<td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(1,7)">Inflect</a></td>
+</tr></tbody></table>
+<table cellspacing="0" class="lexeme"><tbody><tr>
+<td class="xtag" title="noun">N</td>
+<td class="phon" title="citation form">kitāb</td>
+<td class="orth" title="citation form">كِتَاب</td>
+<td class="morphs" title="morphs of citation form">FiCāL</td>
+<td class="class" title="derivational class"></td>
+<td class="reflex" title="lexical reference">"book"</td>
+<td class="button"><a href="index.fcgi?mode=inflect&amp;clip=(1,32)">Inflect</a></td>
+</tr></tbody></table>
+`
+
+describe('lookupRoot', () => {
+  test('parses every lexicon entry nested under the root, verbs and nominals alike', async () => {
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const data = Object.fromEntries(new URLSearchParams(await request.text()).entries())
+        expect(data.mode).toBe('lookup')
+        return new HttpResponse(LOOKUP_HTML, { status: 200 })
+      }),
+    )
+
+    expect(await lookupRoot('كتب')).toEqual([
+      { pos: 'V', phon: 'katab', orth: 'كَتَب', pattern: 'FaCaL', formClass: 'I', glosses: ['write', 'inscribe'] },
+      { pos: 'V', phon: 'kātab', orth: 'كَاتَب', pattern: 'FāCaL', formClass: 'III', glosses: ['correspond with'] },
+      { pos: 'N', phon: 'kitāb', orth: 'كِتَاب', pattern: 'FiCāL', formClass: '', glosses: ['book'] },
+    ])
+  })
+
+  test('sends the root as space-separated radicals', async () => {
+    let sentText = ''
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        sentText = new URLSearchParams(await request.text()).get('text') ?? ''
+        return new HttpResponse(LOOKUP_HTML, { status: 200 })
+      }),
+    )
+
+    await lookupRoot('محق')
+
+    expect(sentText).toBe('م ح ق')
   })
 })

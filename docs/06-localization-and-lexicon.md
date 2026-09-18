@@ -6,7 +6,7 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 - Verb translations live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (verbs need no Arabic translation)
 - Root glosses (`roots` key) live in all four: en/it/pt plus `ar.verbs.json`, which has **only** `roots` — Arabic maṣdar/abstract-noun labels, fully vocalised. Wired via `LEXICON_LOADERS` in `useI18n.tsx`
 - Portuguese locale must be `pt_PT`, use pre-AO90 orthography (e.g., `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`)
-- Add `verbs` + `roots` entries to en/it/pt and the matching `roots` entry to `ar.verbs.json` by hand — no script writes locale entries
+- Add `verbs` + `roots` entries to en/it/pt and the matching `roots` entry to `ar.verbs.json` by hand — no script writes locale entries; `npm run glosses -- --missing` lists what's still untranslated, and `npm run glosses -- <root> [form]` fetches Wiktionary/ElixirFM candidates to translate from (see the `translate-verb` skill)
 - Translate primary meaning; add secondary only when diverges significantly (e.g. `"to love, to like"`)
 - Include translations in same change as verb entry
 
@@ -21,6 +21,8 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 ## Verb Entry Workflow
 
 Adding a new verb, root, or form — and correcting a wrong conjugated form — both use the `add-verb` skill (`.claude/skills/add-verb/`). It drives the process through `npm run add:tests -- <source> <slug>` for the reference table and `npm run add:verb -- <source> <slug>` for the `roots.json` row. The row script writes no locale entries: add `verbs`/`roots` to en/it/pt and `roots` to `ar.verbs.json` by hand, then run biome over `src/data/roots.json` and `src/ui/locales`. `npm run add:verb:wizard` is the interactive fallback for a case no source covers.
+
+Translating the entry once the row exists — or sweeping the dataset for anything left untranslated — uses the `translate-verb` skill (`.claude/skills/translate-verb/`), backed by `npm run glosses`.
 
 ### Source Preference
 

@@ -331,6 +331,42 @@ function buildParsedParadigms(rawForms: Map<string, string>, nominals: NominalSe
   return { nominals, paradigms }
 }
 
+export interface LexiconEntry {
+  pos: string
+  phon: string
+  orth: string
+  pattern: string
+  formClass: string
+  glosses: string[]
+}
+
+function parseLexiconEntries(html: string): LexiconEntry[] {
+  const entries: LexiconEntry[] = []
+  for (const tableMatch of html.matchAll(/<table[^>]*class="lexeme"[^>]*>(.*?)<\/table>/gs)) {
+    const block = tableMatch[1]
+    const pos = getCell(block, 'xtag')
+    const orth = getCell(block, 'orth')
+    if (!pos || !orth) continue
+    entries.push({
+      pos,
+      phon: getCell(block, 'phon') ?? '',
+      orth,
+      pattern: getCell(block, 'morphs') ?? '',
+      formClass: getCell(block, 'class') ?? '',
+      glosses: Array.from((getCell(block, 'reflex') ?? '').matchAll(/"([^"]+)"/g)).map((m) => m[1]),
+    })
+  }
+  return entries
+}
+
+export async function lookupRoot(arabicRoot: string, rateMs = 0): Promise<LexiconEntry[]> {
+  const html = await postElixir(
+    { code: 'Unicode', mode: 'lookup', submit: 'Lookup', text: Array.from(arabicRoot).join(' ') },
+    rateMs,
+  )
+  return parseLexiconEntries(html)
+}
+
 export async function fetchParadigms(verb: DisplayVerb, rateMs = 0): Promise<ParsedParadigms> {
   const match = await resolveVerb(verb, rateMs)
   if (!match) throw new Error(`ElixirFM entry not found for ${verb.id}`)

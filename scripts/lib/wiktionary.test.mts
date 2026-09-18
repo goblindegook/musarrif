@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { getVerb, getVerbById } from '../../src/paradigms/verbs'
-import { fetchParadigms } from './wiktionary.mts'
+import { fetchParadigms, fetchRootNote } from './wiktionary.mts'
 
 const WIKTIONARY_HTML = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
@@ -401,5 +401,73 @@ ${formIVCaption}
     await expect(fetchParadigms(getVerbById('ktb-1')!)).rejects.toThrow(
       'Failed to fetch Wiktionary page (429): https://en.wiktionary.org/wiki/%D9%83%D8%AA%D8%A8',
     )
+  })
+})
+
+const ROOT_APPENDIX_HTML = `
+<div id="mw-content-text" class="mw-body-content">
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading3"><h3 id="Root">Root</h3></div>
+<p><span class="headword-line"><strong class="Arab headword" lang="ar">ش ب ب</strong> (<span lang="ar-Latn" class="headword-tr tr Latn" dir="ltr">š b b</span>)</span></p>
+<ol><li>related to being <a href="/wiki/raise" title="raise">raised</a></li></ol>
+<div class="mw-heading mw-heading4"><h4 id="Derived_terms">Derived terms</h4></div>
+<ul>
+<li><b><a href="/wiki/Appendix:Arabic_verbs#Form_I" title="Appendix:Arabic verbs">Form I</a></b>: <span class="Arab" lang="ar"><a href="/wiki/%D8%B4%D8%A8" title="شب">شَبَّ</a></span> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ar-Latn" class="tr Latn">šabba</span>, <span class="mention-gloss-double-quote">“</span><span class="mention-gloss">to become a <a href="/wiki/young_man" title="young man">young man</a>, to <a href="/wiki/grow_up" title="grow up">grow up</a></span><span class="mention-gloss-double-quote">”</span><span class="mention-gloss-paren annotation-paren">)</span>
+<ul><li>Verbal noun: <span class="Arab" lang="ar">شَبَاب</span> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ar-Latn" class="tr Latn">šabāb</span><span class="mention-gloss-paren annotation-paren">)</span></li></ul>
+</li>
+<li><b><a href="/wiki/Appendix:Arabic_verbs#Form_X" title="Appendix:Arabic verbs">Form X</a></b>: <span class="Arab" lang="ar"><a href="/wiki/%D8%A7%D8%B3%D8%AA%D8%B4%D8%A8" title="استشب">اِسْتَشَبَّ</a></span> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ar-Latn" class="tr Latn">istašabba</span><span class="mention-gloss-paren annotation-paren">)</span>
+<ul><li>Verbal noun: <span class="Arab" lang="ar">اِسْتِشْبَاب</span></li></ul>
+</li>
+</ul>
+</div>
+`
+
+const ROOT_APPENDIX_WITHOUT_NOTE_HTML = `
+<div id="mw-content-text" class="mw-body-content">
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading3"><h3 id="Root">Root</h3></div>
+<p><span class="headword-line"><strong class="Arab headword" lang="ar">و ح ش</strong> (<span lang="ar-Latn" class="headword-tr tr Latn" dir="ltr">w ḥ š</span>)</span></p>
+<div class="mw-heading mw-heading4"><h4 id="Derived_terms">Derived terms</h4></div>
+<ul><li>استوحش</li></ul>
+</div>
+`
+
+describe('fetchRootNote', () => {
+  test('extracts the root note and every Form entry with its inline gloss when present', async () => {
+    server.use(
+      http.get(/^https:\/\/en\.wiktionary\.org\/wiki\//, () => new HttpResponse(ROOT_APPENDIX_HTML, { status: 200 })),
+    )
+
+    expect(await fetchRootNote('شبب')).toEqual({
+      note: 'related to being raised',
+      forms: [
+        { roman: 'I', arabic: 'شَبَّ', translit: 'šabba', gloss: 'to become a young man, to grow up' },
+        { roman: 'X', arabic: 'اِسْتَشَبَّ', translit: 'istašabba', gloss: undefined },
+      ],
+    })
+  })
+
+  test('leaves the note undefined when the appendix page has none', async () => {
+    server.use(
+      http.get(
+        /^https:\/\/en\.wiktionary\.org\/wiki\//,
+        () => new HttpResponse(ROOT_APPENDIX_WITHOUT_NOTE_HTML, { status: 200 }),
+      ),
+    )
+
+    expect((await fetchRootNote('وحش')).note).toBeUndefined()
+  })
+
+  test('requests the appendix page with each radical percent-encoded and underscore-joined', async () => {
+    server.use(
+      http.get(/^https:\/\/en\.wiktionary\.org\/wiki\//, ({ request }) => {
+        requestUrl = request.url
+        return new HttpResponse(ROOT_APPENDIX_HTML, { status: 200 })
+      }),
+    )
+
+    await fetchRootNote('محق')
+
+    expect(requestUrl).toBe('https://en.wiktionary.org/wiki/Appendix:Arabic_roots/%D9%85_%D8%AD_%D9%82')
   })
 })

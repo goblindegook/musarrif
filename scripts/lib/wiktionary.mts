@@ -4,8 +4,8 @@ import { type DisplayVerb, isTriliteralFormIDisplayVerb } from '../../src/paradi
 import { toRoman } from '../../src/primitives/numbers'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
 
-async function fetchHtml(title: string): Promise<string> {
-  const url = `https://en.wiktionary.org/wiki/${encodeURIComponent(title)}`
+async function fetchHtmlAtPath(path: string): Promise<string> {
+  const url = `https://en.wiktionary.org/wiki/${path}`
   const response = await fetch(url, {
     headers: {
       accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -16,6 +16,17 @@ async function fetchHtml(title: string): Promise<string> {
   })
   if (response.ok) return response.text()
   throw new Error(`Failed to fetch Wiktionary page (${response.status}): ${url}`)
+}
+
+async function fetchHtml(title: string): Promise<string> {
+  return fetchHtmlAtPath(encodeURIComponent(title))
+}
+
+// The appendix page's title has a literal "/" between "Appendix:Arabic_roots" and the radicals, and
+// the radicals themselves are underscore-joined rather than spaced — encoding the title as one
+// component (as a lemma page needs) would percent-escape that slash and break the path.
+function rootAppendixPath(arabicRoot: string): string {
+  return `Appendix:Arabic_roots/${Array.from(arabicRoot).map(encodeURIComponent).join('_')}`
 }
 
 function normalizeWhitespace(value: string): string {
@@ -278,4 +289,56 @@ export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms
     verb.form,
     isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined,
   )
+}
+
+export interface RootFormGloss {
+  roman: string
+  arabic: string
+  translit: string
+  gloss?: string
+}
+
+export interface RootGlossInfo {
+  note?: string
+  forms: RootFormGloss[]
+}
+
+function readRootNote(content: Element): string | undefined {
+  const rootHeading = content.querySelector('h3#Root')
+  const headwordParagraph = rootHeading?.closest('.mw-heading')?.nextElementSibling
+  const noteList = headwordParagraph?.nextElementSibling
+  if (noteList?.tagName !== 'OL') return undefined
+  const note = normalizeWhitespace(noteList.querySelector('li')?.textContent ?? '')
+  return note || undefined
+}
+
+// "Derived terms" lists each verb as `<li><b>Form <roman></b>: <span class="Arab">…</span> (<span
+// class="tr Latn">translit</span>[, "<span class="mention-gloss">gloss</span>"])`, with a nested
+// `<ul>` of verbal-noun/participle entries that carry no "Form" label — scanning every `<li>` for
+// that label rather than anchoring to "Derived terms" copes with roots that nest it a level deeper
+// under a "Verbs" subheading.
+function readFormGlosses(content: Element): RootFormGloss[] {
+  const forms: RootFormGloss[] = []
+  for (const item of content.querySelectorAll('li')) {
+    const roman = /^Form\s+([IVX]+q?)$/.exec(
+      normalizeWhitespace(item.querySelector(':scope > b')?.textContent ?? ''),
+    )?.[1]
+    const arabic = normalizeWhitespace(item.querySelector(':scope > .Arab')?.textContent ?? '')
+    if (!roman || !arabic) continue
+    const translit = normalizeWhitespace(item.querySelector(':scope > .tr.Latn')?.textContent ?? '')
+    const glossText = item.querySelector(':scope > .mention-gloss')?.textContent
+    forms.push({ roman, arabic, translit, gloss: glossText ? normalizeWhitespace(glossText) : undefined })
+  }
+  return forms
+}
+
+// Reads the "related to X" root note and every Form entry's inline gloss off a root's Appendix page
+// — the same page the add-verb skill has agents read manually for roots Wiktionary's per-lemma
+// pages don't gloss. Coverage is partial: many roots list Form entries with no inline gloss at all,
+// leaving `gloss` undefined for those — the caller falls back to ElixirFM or the lemma's own page.
+export async function fetchRootNote(arabicRoot: string): Promise<RootGlossInfo> {
+  const dom = new JSDOM(await fetchHtmlAtPath(rootAppendixPath(arabicRoot)))
+  const content = dom.window.document.querySelector('#mw-content-text') ?? dom.window.document.body
+
+  return { note: readRootNote(content), forms: readFormGlosses(content) }
 }
