@@ -229,7 +229,7 @@ test('applies other filters exclusively', async () => {
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
+  const otherFilters = getOtherFilters()
 
   const kana = within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' })
   const zanna = within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' })
@@ -252,17 +252,15 @@ test('applies other filters exclusively', async () => {
 
 test('disables other-filter options that would yield zero results', async () => {
   renderHome()
-  const otherFilters = screen.getByLabelText('Other filters')
 
-  expect(within(otherFilters).getByText('Favorites', { selector: 'button' })).toBeDisabled()
+  expect(within(getOtherFilters()).getByText('Favorites', { selector: 'button' })).toBeDisabled()
 })
 
 test('disables form options that would yield zero results', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  await user.click(within(getOtherFilters()).getByText('Kāna and her sisters', { selector: 'button' }))
 
   expect(screen.getByText('IX', { selector: 'button' })).toBeDisabled()
 })
@@ -303,9 +301,8 @@ test('filters included verbs to biliteral quadriliteral roots (c1=c3, c2=c4)', a
 test('keeps sound filter enabled when kāna + form I includes sound roots', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  await user.click(within(getOtherFilters()).getByText('Kāna and her sisters', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
 
   expect(screen.getByText('Sound', { selector: 'button' })).toBeEnabled()
@@ -314,9 +311,8 @@ test('keeps sound filter enabled when kāna + form I includes sound roots', asyn
 test('doubled filter shows Zll-1 for kāna form I combination', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
+  await user.click(within(getOtherFilters()).getByText('Kāna and her sisters', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
   await user.click(screen.getByText('Doubled', { selector: 'button' }))
 
@@ -328,9 +324,8 @@ test('filters included verbs to favourites only', async () => {
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
 
-  await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
+  await user.click(within(getOtherFilters()).getByText('Favorites', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel).toBeTruthy()
@@ -345,7 +340,7 @@ test('applies favourites filter together with form filters', async () => {
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['wjd-1', 'SbH-4']))
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
+  const otherFilters = getOtherFilters()
 
   await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   await user.click(screen.getByText('I', { selector: 'button' }))
@@ -382,7 +377,7 @@ test('syncs favourites filter to hash query params', async () => {
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
   renderHome('/#/verbs')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
+  const otherFilters = getOtherFilters()
 
   await user.click(within(otherFilters).getByText('Favorites', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/?group=favourites')
@@ -395,7 +390,7 @@ test('syncs other filters exclusively to hash query params', async () => {
   localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
   renderHome('/#/verbs')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
-  const otherFilters = screen.getByLabelText('Other filters')
+  const otherFilters = getOtherFilters()
 
   await user.click(within(otherFilters).getByText('Kāna and her sisters', { selector: 'button' }))
   expect(currentUrl()).toBe('/verbs/?group=kana')
@@ -409,7 +404,7 @@ test('syncs other filters exclusively to hash query params', async () => {
 
 test('restores group filter from hash query params', () => {
   renderHome('/#/verbs?group=zanna')
-  const otherFilters = screen.getByLabelText('Other filters')
+  const otherFilters = getOtherFilters()
 
   expect(within(otherFilters).getByText('Ẓanna and her sisters', { selector: 'button' })).toHaveAttribute(
     'aria-pressed',
@@ -530,3 +525,7 @@ describe('Search', () => {
     expect(document.querySelector('[role="listbox"][aria-label="Verb"]')).toBeNull()
   })
 })
+
+function getOtherFilters(): HTMLElement {
+  return within(screen.getByText('Other filters').parentElement!).getByLabelText('Other filters')
+}

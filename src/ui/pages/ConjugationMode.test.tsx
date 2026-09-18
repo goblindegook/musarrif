@@ -232,7 +232,7 @@ describe('Form', () => {
 
   it('has insights with linked examples', async () => {
     renderConjugationMode({ verbId: 'Elm-5' })
-    fireEvent.click(screen.getByLabelText(/View form insights/i))
+    fireEvent.click(within(getVerbDetails()).getByLabelText(/View form insights/i))
 
     const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText(/causes the change and undergoes it/i)).toBeInTheDocument()
@@ -249,14 +249,14 @@ describe('Form', () => {
 
   it('shows the selected Form I past/present pattern in form insights', () => {
     renderConjugationMode({ verbId: 'glb-1' })
-    fireEvent.click(screen.getByLabelText('View form insights for Form I'))
+    fireEvent.click(within(getVerbDetails()).getByLabelText('View form insights for Form I'))
     const dialog = screen.getByText('Form I insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('فَعَلَ / يَفعِلُ')).toBeInTheDocument()
   })
 
   it('shows both past and present patterns in non-Form-I insights', () => {
     renderConjugationMode({ verbId: 'Elm-5' })
-    fireEvent.click(screen.getByLabelText('View form insights for Form V'))
+    fireEvent.click(within(getVerbDetails()).getByLabelText('View form insights for Form V'))
     const dialog = screen.getByText('Form V insights').closest('[role="dialog"]') as HTMLElement
     expect(within(dialog).getByText('تَفَعَّلَ / يَتَفَعَّلُ')).toBeInTheDocument()
   })
@@ -268,14 +268,14 @@ describe('Form', () => {
     const formDetail = formLabel.parentElement as HTMLElement
     expect(within(formDetail).getByText('IVq')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByLabelText('View form insights for Form IVq'))
+    fireEvent.click(within(getVerbDetails()).getByLabelText('View form insights for Form IVq'))
     expect(screen.getByText('Form IVq insights')).toBeInTheDocument()
   })
 
   it('shows only quadriliteral examples for quadriliteral forms', () => {
     renderConjugationMode({ verbId: 'jlEb-4' })
 
-    fireEvent.click(screen.getByLabelText('View form insights for Form IVq'))
+    fireEvent.click(within(getVerbDetails()).getByLabelText('View form insights for Form IVq'))
     const dialog = screen.getByText('Form IVq insights').closest('[role="dialog"]') as HTMLElement
     const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
 
@@ -286,7 +286,7 @@ describe('Form', () => {
   it('shows only triliteral examples for triliteral forms', () => {
     renderConjugationMode({ verbId: 'ktb-4' })
 
-    fireEvent.click(screen.getByLabelText('View form insights for Form IV'))
+    fireEvent.click(within(getVerbDetails()).getByLabelText('View form insights for Form IV'))
     const dialog = screen.getByText('Form IV insights').closest('[role="dialog"]') as HTMLElement
     const links = Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a[aria-label]'))
 
@@ -328,7 +328,7 @@ describe('Root insights', () => {
   it('displays root semantics when available', async () => {
     renderConjugationMode({ verbId: 'ktb-1' })
 
-    fireEvent.click(screen.getByLabelText(/View root insights/i))
+    fireEvent.click(within(getVerbDetails()).getByLabelText(/View root insights/i))
 
     const dialog = screen.getByText('Root insights').closest<HTMLElement>('[role="dialog"]')!
     expect(await within(dialog).findByText('writing')).toBeInTheDocument()
@@ -364,3 +364,7 @@ describe('Build tab', () => {
     expect(getLetter(3)).toHaveValue('ق')
   })
 })
+
+function getVerbDetails(): HTMLElement {
+  return screen.getByText('Form').closest('section')!
+}

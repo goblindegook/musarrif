@@ -44,6 +44,7 @@ test('descriptive test name', () => {
 - ❌ No reimplementing production logic in tests; assert exported functions instead
 - ❌ No asserting on dataset field existence — if incorrect, tests fail naturally
 - ❌ Avoid `*ByRole` queries — significant performance overhead
+- ❌ Avoid unscoped `screen.*ByLabelText` on large pages: happy-dom resolves labels with a document-wide scan per form control, so cost grows quadratically; scope with `within(container)` first
 - ❌ Avoid negative assertions except when verifying something disappears from user action
 - ❌ No replacing user-facing copy assertions with translation-key assertions to make tests pass
 - ❌ No asserting translated text outside UI tests. Core paradigm logic is locale agnostic: pass `(key) => key` to `renderExplanation` and assert the translation key, so a reworded locale string cannot fail a logic test. Translations fluctuate; only UI tests assert rendered copy
