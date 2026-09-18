@@ -2781,6 +2781,31 @@
   },
   {
     "root": "k$f",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"],
+    "lexicalMasdars": ["ka$ifap"]
+  },
+  {
+    "root": "k$f",
+    "form": 3
+  },
+  {
+    "root": "k$f",
+    "form": 4
+  },
+  {
+    "root": "k$f",
+    "form": 5,
+    "passive": "impersonal"
+  },
+  {
+    "root": "k$f",
+    "form": 6,
+    "passive": "impersonal"
+  },
+  {
+    "root": "k$f",
     "form": 7,
     "passive": "none"
   },
