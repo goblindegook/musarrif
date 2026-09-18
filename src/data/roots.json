@@ -2059,6 +2059,21 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "dll",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3aala"]
+  },
+  {
+    "root": "dll",
+    "form": 2
+  },
+  {
+    "root": "dll",
+    "form": 10,
+    "passive": "impersonal"
+  },
+  {
     "root": "dml",
     "form": 7,
     "passive": "none"
