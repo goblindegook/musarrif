@@ -5123,6 +5123,22 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "xdE",
+    "form": 1,
+    "vowels": "a-a",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "xdE",
+    "form": 3,
+    "lexicalMasdars": ["xidaAE"]
+  },
+  {
+    "root": "xdE",
+    "form": 7,
+    "passive": "impersonal"
+  },
+  {
     "root": "xdm",
     "form": 1,
     "vowels": "a-u",
