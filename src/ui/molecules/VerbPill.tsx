@@ -62,7 +62,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
         {isTriliteralFormIDisplayVerb(verb) && <small>{formIVowelPattern(verb)}</small>}
       </InlineRow>
       {lang !== 'ar' && (
-        <VerbTranslation dir={dir} lang={lang}>
+        <VerbTranslation dir={dir} lang={lang} block={block}>
           {translateVerb(verb)}
         </VerbTranslation>
       )}
@@ -140,9 +140,9 @@ const InlineRow = styled('div')`
   }
 `
 
-const VerbTranslation = styled('small')`
+const VerbTranslation = styled('small')<{ block: boolean }>`
   display: block;
-  max-width: 7rem;
+  max-width: ${({ block }) => (block ? 'none' : '7rem')};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
