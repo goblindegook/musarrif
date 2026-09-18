@@ -3004,7 +3004,17 @@
   },
   {
     "root": "mTr",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fa3al"]
+  },
+  {
+    "root": "mTr",
     "form": 4
+  },
+  {
+    "root": "mTr",
+    "form": 10
   },
   {
     "root": "mdH",
