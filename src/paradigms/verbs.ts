@@ -158,10 +158,14 @@ function formIVerbId(rootId: string, vowels: FormIPattern): string {
 }
 
 function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T> {
-  const lemma = String(conjugatePast(verb)['3ms'])
   const rootId = transliterate(verb.root)
-  const id = isFormIVerbInput(verb) ? formIVerbId(rootId, verb.vowels) : `${rootId}-${verb.form}`
-  return synthetic ? { ...verb, id, lemma, rootId, synthetic } : { ...verb, id, lemma, rootId }
+  return {
+    ...verb,
+    id: isFormIVerbInput(verb) ? formIVerbId(rootId, verb.vowels) : `${rootId}-${verb.form}`,
+    lemma: String(conjugatePast(verb)['3ms']),
+    rootId,
+    synthetic,
+  }
 }
 
 function parseRawVerb(raw: RawVerb): DisplayVerb {

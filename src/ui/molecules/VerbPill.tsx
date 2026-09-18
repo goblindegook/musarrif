@@ -38,7 +38,6 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
       href={toHref(route)}
       className={className}
       block={block}
-      hasTranslation={lang !== 'ar'}
       onClick={(event: MouseEvent) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
         event.preventDefault()
@@ -71,12 +70,10 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
   )
 }
 
-const VerbPillLink = styled('a')<{ block: boolean; hasTranslation: boolean }>`
-  position: relative;
+const VerbPillLink = styled('a')<{ block: boolean }>`
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 0.3rem 0.9rem;
-  padding-bottom: ${({ hasTranslation }) => (hasTranslation ? '1.3rem' : '0.3rem')};
   background: var(--color-bg-surface);
   box-sizing: border-box;
   cursor: pointer;
@@ -87,7 +84,6 @@ const VerbPillLink = styled('a')<{ block: boolean; hasTranslation: boolean }>`
   align-items: flex-start;
   font-size: 1rem;
   width: ${({ block }) => (block ? '100%' : 'auto')};
-  min-width: ${({ block }) => (block ? '0' : '7rem')};
   max-width: 100%;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
@@ -145,15 +141,13 @@ const InlineRow = styled('div')`
 `
 
 const VerbTranslation = styled('small')`
-  position: absolute;
-  left: 0.9rem;
-  right: 0.9rem;
-  bottom: 0.3rem;
+  display: block;
+  max-width: 7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--color-text-secondary);
   font-size: 0.75rem;
   line-height: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
   transition: color 120ms ease;
-  white-space: nowrap;
 `

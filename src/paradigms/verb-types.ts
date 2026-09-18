@@ -67,9 +67,9 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   root: Root
   rootTokens: Tokens
   form: Form
+  passive?: Passive
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
-  passive?: Passive
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
 }
@@ -81,7 +81,7 @@ export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens
   lexicalActiveParticiple?: string
 }
 
-export type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
+type TriliteralNonFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, Exclude<TriliteralForm, 1>>
 type TriliteralVerb = TriliteralFormIVerb | TriliteralNonFormIVerb
 
 export type QuadriliteralVerb = VerbProps<QuadriliteralRoot, QuadriliteralRootTokens, QuadriliteralForm>
