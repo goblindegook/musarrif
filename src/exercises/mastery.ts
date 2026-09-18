@@ -1,3 +1,4 @@
+import { memoize } from '@pacote/memoize'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { FORMS, type TriliteralForm } from '../paradigms/verbs'
@@ -83,7 +84,18 @@ export function computeMastery(
   srsStore: SrsStore,
   today = utcToday(),
 ): readonly MasteryCategory<MasteryCategoryId>[] {
-  const cards = cardSpace()
+  const { groupCounts, cardGroups } = masteryGroups()
+  const strongest = new Map<MasteryItemId, number[]>()
+  for (const key of Object.keys(srsStore)) {
+    const strength = cardStrength(srsStore, key, today)
+    for (const { itemId, group } of cardGroups.get(key) ?? []) {
+      const groups = strongest.get(itemId) ?? Array<number>(groupCounts.get(itemId) ?? 0).fill(0)
+      groups[group] = Math.max(groups[group], strength)
+      strongest.set(itemId, groups)
+    }
+  }
+  const score = (itemId: MasteryItemId, locked: boolean) => (locked ? 0 : average(strongest.get(itemId) ?? []))
+
   const unlockedRootTypes = new Set(rootTypesPool(profile.rootTypes))
   const unlockedForms = new Set(formPool(profile.forms))
   const unlockedTenses = new Set(tensePool(profile.tenses))
@@ -101,12 +113,7 @@ export function computeMastery(
           id: `rootTypes.${value}`,
           categoryId: 'rootTypes',
           value,
-          score: computeScore(
-            cards.filter((card) => card.rootType === value),
-            srsStore,
-            today,
-            locked,
-          ),
+          score: score(`rootTypes.${value}`, locked),
           locked,
         }
       }),
@@ -119,12 +126,7 @@ export function computeMastery(
           id: `forms.${value}`,
           categoryId: 'forms',
           value,
-          score: computeScore(
-            cards.filter((card) => card.form === value),
-            srsStore,
-            today,
-            locked,
-          ),
+          score: score(`forms.${value}`, locked),
           locked,
         }
       }),
@@ -137,12 +139,7 @@ export function computeMastery(
           id: `tenses.${value}`,
           categoryId: 'tenses',
           value,
-          score: computeScore(
-            cards.filter((card) => card.tense === value && isVerbCard(card)),
-            srsStore,
-            today,
-            locked,
-          ),
+          score: score(`tenses.${value}`, locked),
           locked,
         }
       }),
@@ -155,12 +152,7 @@ export function computeMastery(
           id: `pronouns.${value}`,
           categoryId: 'pronouns',
           value,
-          score: computeScore(
-            cards.filter((card) => card.pronoun === value && isVerbCard(card)),
-            srsStore,
-            today,
-            locked,
-          ),
+          score: score(`pronouns.${value}`, locked),
           locked,
         }
       }),
@@ -173,18 +165,50 @@ export function computeMastery(
           id: `nominals.${value}`,
           categoryId: 'nominals',
           value,
-          score: computeScore(
-            cards.filter(value === 'participles' ? isParticipleCard : isMasdarCard),
-            srsStore,
-            today,
-            locked,
-          ),
+          score: score(`nominals.${value}`, locked),
           locked,
         }
       }),
     ),
   ]
 }
+
+const MASTERY_ITEMS: readonly (readonly [MasteryItemId, (card: SrsCardIdentity) => boolean])[] = [
+  ...ROOT_TYPES_ORDER.map(
+    (value) => [`rootTypes.${value}`, (card: SrsCardIdentity) => card.rootType === value] as const,
+  ),
+  ...FORMS.map((value) => [`forms.${value}`, (card: SrsCardIdentity) => card.form === value] as const),
+  ...TENSE_ORDER.map(
+    (value) => [`tenses.${value}`, (card: SrsCardIdentity) => card.tense === value && isVerbCard(card)] as const,
+  ),
+  ...PRONOUN_TABLE_ORDER.map(
+    (value) => [`pronouns.${value}`, (card: SrsCardIdentity) => card.pronoun === value && isVerbCard(card)] as const,
+  ),
+  ['nominals.participles', isParticipleCard],
+  ['nominals.masdar', isMasdarCard],
+]
+
+const masteryGroups = memoize(
+  () => 'constant',
+  () => {
+    const groupCounts = new Map<MasteryItemId, number>()
+    const cardGroups = new Map<string, { itemId: MasteryItemId; group: number }[]>()
+    for (const [itemId, matches] of MASTERY_ITEMS) {
+      const groups = new Map<string, number>()
+      for (const card of cardSpace()) {
+        if (!matches(card)) continue
+        const groupKey = combinationGroupKey(card)
+        const group = groups.get(groupKey) ?? groups.size
+        groups.set(groupKey, group)
+        const memberships = cardGroups.get(card.key) ?? []
+        memberships.push({ itemId, group })
+        cardGroups.set(card.key, memberships)
+      }
+      groupCounts.set(itemId, groups.size)
+    }
+    return { groupCounts, cardGroups }
+  },
+)
 
 function cardStrength(store: SrsStore, key: string, today: string): number {
   const state = store[key]
