@@ -1731,6 +1731,19 @@
     "masdars": ["fa3l", "fu3laan"]
   },
   {
+    "root": "Thw",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3ool"]
+  },
+  {
+    "root": "Thy",
+    "form": 1,
+    "vowels": "a-a",
+    "masdars": ["fa3l", "fa3aala"],
+    "lexicalMasdars": ["Tuhiy~"]
+  },
+  {
     "root": "Tlb",
     "form": 1,
     "vowels": "a-u",
@@ -2676,7 +2689,16 @@
     "root": "jls",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fu3ool"]
+    "masdars": ["fu3ool"],
+    "passive": "impersonal"
+  },
+  {
+    "root": "jls",
+    "form": 3
+  },
+  {
+    "root": "jls",
+    "form": 4
   },
   {
     "root": "jlw",
@@ -3070,6 +3092,25 @@
     "lexicalActiveParticiple": "laAbis"
   },
   {
+    "root": "lff",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "lff",
+    "form": 2
+  },
+  {
+    "root": "lff",
+    "form": 5,
+    "passive": "none"
+  },
+  {
+    "root": "lff",
+    "form": 8
+  },
+  {
     "root": "lfw",
     "form": 4
   },
@@ -3452,6 +3493,16 @@
     "lexicalActiveParticiple": "naZiyf"
   },
   {
+    "root": "nZf",
+    "form": 2
+  },
+  {
+    "root": "nZm",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
     "root": "nZm",
     "form": 2
   },
@@ -3500,7 +3551,26 @@
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3al", "fi3aal", "fa3aala"],
+    "passive": "none",
     "lexicalActiveParticiple": "nafiys"
+  },
+  {
+    "root": "nfs",
+    "form": 2
+  },
+  {
+    "root": "nfs",
+    "form": 3
+  },
+  {
+    "root": "nfs",
+    "form": 5,
+    "passive": "impersonal"
+  },
+  {
+    "root": "nfs",
+    "form": 6,
+    "passive": "impersonal"
   },
   {
     "root": "nfx",
@@ -4620,7 +4690,13 @@
     "root": "wDE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l", "mimi"]
+    "masdars": ["fa3l", "mimi"],
+    "lexicalMasdars": ["mawoDaE"]
+  },
+  {
+    "root": "wDE",
+    "form": 6,
+    "passive": "impersonal"
   },
   {
     "root": "wDH",
@@ -4986,6 +5062,16 @@
   {
     "root": "wqf",
     "form": 5
+  },
+  {
+    "root": "wqt",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"]
+  },
+  {
+    "root": "wqt",
+    "form": 2
   },
   {
     "root": "wqy",
