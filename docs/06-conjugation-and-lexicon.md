@@ -1,16 +1,3 @@
-## Localization
-
-Supports English, Italian, European Portuguese, Arabic. Translation files in `src/ui/locales/`.
-
-- All UI strings live in flat `*.strings.json` files for all four languages
-- Verb translations live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (verbs need no Arabic translation)
-- Root glosses (`roots` key) live in all four: en/it/pt plus `ar.verbs.json`, which has **only** `roots` — Arabic maṣdar/abstract-noun labels, fully vocalised. Wired via `LEXICON_LOADERS` in `useI18n.tsx`
-- Portuguese locale must be `pt_PT`, use pre-AO90 orthography (e.g., `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`)
-- Add `verbs` + `roots` entries to en/it/pt and the matching `roots` entry to `ar.verbs.json` by hand — no script writes locale entries; `npm run glosses -- --missing` lists what's still untranslated, and `npm run glosses -- <root> [form]` fetches Wiktionary/ElixirFM candidates to translate from (see the `translate-verb` skill)
-- Translate primary meaning; add secondary only when diverges significantly (e.g. `"to love, to like"`)
-- Include translations in same change as verb entry
-
-
 ## Conjugation Rule Patterns
 
 - **Use direct slicing/indexing** when word structure fixed/known; avoid `findIndex` + conditionals when positions deterministic.

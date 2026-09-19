@@ -5,7 +5,7 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 ## Always Read First
 
 - Do not commit or push.
-- Paradigm sources rank Wiktionary → ElixirFM → Reverso, in that order. Reverso is the least reliable and is a last resort — see [Localization, Conjugation Rules, and Verb Entry Workflow](docs/06-localization-and-lexicon.md).
+- Paradigm sources rank Wiktionary → ElixirFM → Reverso, in that order. Reverso is the least reliable and is a last resort — see [Conjugation Rules and Verb Entry Workflow](docs/06-conjugation-and-lexicon.md).
 - Use RTK for all commands — e.g. `rtk mise exec -- npm test`. RTK has a documented failure mode of silently not firing; if `rtk gain` shows no savings, the invocation is wrong, not the tool.
 
 ## Topic Index
@@ -15,9 +15,9 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 - [Design Context and UI Conventions](docs/03-design-and-ui.md)
 - [Code Style and Formatting](docs/04-code-style.md)
 - [Testing Standards and TDD](docs/05-testing.md)
-- [Localization, Conjugation Rules, and Verb Entry Workflow](docs/06-localization-and-lexicon.md)
+- [Conjugation Rules and Verb Entry Workflow](docs/06-conjugation-and-lexicon.md)
 - [Exercise Mode Architecture](docs/07-exercise-mode.md)
-- [Copy Terminology and Punctuation](docs/08-terminology.md)
+- [Localization, Copy Terminology, and Punctuation](docs/08-localization-and-copy.md)
 
 ## Contribution Checklist
 
@@ -27,12 +27,12 @@ After any change, run the full CI gate — lint, dependency boundaries, tests, t
 rtk mise exec -- npm run check:all
 ```
 
-Before finishing, also run the `check` skill (`.claude/skills/check/`) — it covers TDD compliance, comments, and locale files that `npm run check:all` does not. Two things neither checks, so still worth a manual pass:
+`npm run check:all` does not check two things, so do a manual pass:
 
-- [ ] Linter passes without undocumented ignores (`check` confirms lint passes, not that every ignore is explained)
+- [ ] Linter passes without undocumented ignores (`check:all` confirms lint passes, not that every ignore is explained)
 - [ ] Existing UI primitives reused (no bespoke wrappers)
 
-**If TDD was violated (tests written after production code), `check` will flag it — but the fix isn't automatic, you must start over.**
+**If TDD was violated (tests written after production code), the fix isn't automatic: you must start over.**
 
 ## Notes
 

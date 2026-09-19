@@ -40,7 +40,7 @@ entities.json
 # Generated files
 /src-tauri/icons/
 
-/.claude
+/.claude/launch.json
 /.impact
 /docs/superpowers
 /docs/specs
