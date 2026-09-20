@@ -6,7 +6,7 @@ import { deriveMasdar } from '../nominal/masdar'
 import { deriveActiveParticiple } from '../nominal/participle'
 import { getVerbById } from '../verbs'
 
-describe('wjz-1', () => {
+describe('wjz-1 (Wiktionary)', () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById('wjz-1')!)).toEqualT({
       '1s': 'وَجُزْتُ',
@@ -94,6 +94,6 @@ describe('wjz-1', () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('wjz-1')!)).toEqualT(['وَجَازَة'])
+    expect(new Set(deriveMasdar(getVerbById('wjz-1')!))).toEqualT(new Set(['وَجَازَة']))
   })
 })
