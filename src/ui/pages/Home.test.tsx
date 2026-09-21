@@ -198,11 +198,13 @@ test('allows deselecting kāna filter back to unfiltered verbs', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-  await user.click(screen.getByText('Kāna and her sisters'))
-  expect(screen.queryByText('اِتَّخَذَ')).toBeNull()
+  expect(screen.getByText(/^Page 1 of \d+$/)).toBeInTheDocument()
 
   await user.click(screen.getByText('Kāna and her sisters'))
-  expect(screen.getByText('اِتَّخَذَ')).toBeInTheDocument()
+  expect(screen.queryByText(/^Page 1 of \d+$/)).toBeNull()
+
+  await user.click(screen.getByText('Kāna and her sisters'))
+  expect(screen.getByText(/^Page 1 of \d+$/)).toBeInTheDocument()
   expect(screen.getByText('Kāna and her sisters', { selector: 'button' })).toHaveAttribute('aria-pressed', 'false')
 })
 
@@ -274,11 +276,12 @@ test('filters included verbs to doubled roots', async () => {
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
+  await user.click(screen.getByText('IV', { selector: 'button' }))
   await user.click(screen.getByText('Doubled', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
   expect(includedVerbsPanel?.querySelector('a[href="/verbs/Edd-4/"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-4/"]')).toBeNull()
 })
 
 test('shows a Biliteral root type filter button', () => {

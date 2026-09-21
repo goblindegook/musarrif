@@ -231,7 +231,10 @@ function randomVerbFromPool(
   excludedVerbIds?: ReadonlySet<string>,
 ): DisplayVerb {
   const triliterals = verbs.filter(
-    ({ id, root }) => root.length === 3 && (excludedVerbIds == null || !excludedVerbIds.has(id)),
+    (verb) =>
+      verb.root.length === 3 &&
+      (excludedVerbIds == null || !excludedVerbIds.has(verb.id)) &&
+      (constraints?.tense == null || getAvailableParadigms(verb).includes(constraints.tense)),
   )
   const availableForms = formPool(profile.forms)
   const availableRootTypes = rootTypesPool(profile.rootTypes)

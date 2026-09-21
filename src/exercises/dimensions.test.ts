@@ -1,4 +1,6 @@
-import { describe, expect, test, vi } from 'vitest'
+import fc from 'fast-check'
+import { afterEach, describe, expect, test, vi } from 'vitest'
+import { getAvailableParadigms } from '../paradigms/verbs'
 import {
   type DimensionStore,
   exerciseDiacritics,
@@ -8,9 +10,18 @@ import {
   promoteDimensions,
   pronounPool,
   randomNominalVerb,
+  randomVerb,
   recordDimensionAnswer,
   tensePool,
 } from './dimensions'
+
+const FULL_PROFILE = {
+  tenses: 5,
+  pronouns: 3,
+  forms: 9,
+  rootTypes: 5,
+  nominals: 2,
+} as const
 
 const INITIAL_DIMENSION_PROFILE = {
   tenses: 0,
@@ -82,6 +93,25 @@ describe('randomNominalVerb', () => {
     restore.mockRestore()
 
     expect(selected.id).not.toBe('lys-1')
+  })
+})
+
+describe('randomVerb', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  test('never picks a verb that does not support the constrained tense', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(...tensePool(5)),
+        fc.double({ min: 0, max: 1, maxExcluded: true, noNaN: true }),
+        (tense, random) => {
+          vi.spyOn(Math, 'random').mockReturnValue(random)
+          expect(getAvailableParadigms(randomVerb(FULL_PROFILE, { tense }))).toContain(tense)
+        },
+      ),
+    )
   })
 })
 

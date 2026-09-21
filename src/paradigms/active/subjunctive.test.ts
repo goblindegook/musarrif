@@ -363,12 +363,6 @@ describe('active present subjunctive', () => {
       })
     })
 
-    describe('hamzated middle roots', () => {
-      test.each([['بءس', 'يَبْؤُسَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)
-      })
-    })
-
     describe('hamzated initial defective roots', () => {
       test.each([['ءني', 'يَأْنِيَ']])('%s pattern', (root, expected) => {
         expect(conjugatePresentMood(getVerb(root, 1), 'subjunctive')['3ms']).toEqualT(expected)

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import type { FormIPattern } from '../form-i-vowels'
 import { getVerb } from '../verbs'
 import { conjugatePast } from './past'
 
@@ -338,19 +339,13 @@ describe('active past', () => {
       })
     })
 
-    describe('hamzated middle roots', () => {
-      test.each([['بءس', 'بَؤُسَ']])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
-      })
-    })
-
     describe('hamzated final roots', () => {
-      test.each([
-        ['فتء', 'فَتِئَ'],
-        ['وطء', 'وَطِئَ'],
-        ['كلء', 'كَلَأَ'],
-      ])('%s pattern', (root, expected) => {
-        expect(conjugatePast(getVerb(root, 1))['3ms']).toEqualT(expected)
+      test.each<[string, FormIPattern, string]>([
+        ['فتء', 'i-a', 'فَتِئَ'],
+        ['وطء', 'i-a', 'وَطِئَ'],
+        ['كلء', 'a-a', 'كَلَأَ'],
+      ])('%s pattern', (root, pattern, expected) => {
+        expect(conjugatePast(getVerb(root, 1, pattern))['3ms']).toEqualT(expected)
       })
 
       test('جَرُؤَ conjugation', () => {

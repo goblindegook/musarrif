@@ -87,7 +87,7 @@ describe('root lookup helpers', () => {
   test('findVerbsByRoot returns all derived forms for a root', () => {
     const matches = findVerbsByRoot('درس')
 
-    expect(matches.map((verb) => verb.form)).toEqual([1, 2, 5, 10])
+    expect(matches.map((verb) => verb.form)).toEqual([1, 2, 3, 5, 10])
   })
 
   test('findVerbsByRootPrefix returns verbs whose roots start with the prefix', () => {
@@ -468,7 +468,7 @@ describe('Form I roots with more than one vowel pattern', () => {
   })
 
   test.each<[string, FormIPattern[]]>([
-    ['حسب', ['a-u', 'i-a']],
+    ['حسب', ['a-u', 'i-a', 'u-u']],
     ['جمل', ['a-u', 'u-u']],
   ])('%s stores its Form I readings in ascending vowel order', (root, expected) => {
     const patterns = findVerbsByRoot(root)

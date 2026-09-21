@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { getVerbById } from '../../paradigms/verbs'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import * as dimensions from '../dimensions'
 import { verbFormExercise } from './verb-form.ts'
 
 const FORM_LABEL_ORDER = [
@@ -108,7 +110,7 @@ describe('verbFormExercise with constraints', () => {
   })
 
   test('includes full explanation for all options', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
+    vi.spyOn(dimensions, 'randomVerb').mockReturnValue(getVerbById('$rb-10')!)
 
     const exercise = verbFormExercise.generate(
       { ...INITIAL_DIMENSION_PROFILE, forms: 9, rootTypes: 0 },

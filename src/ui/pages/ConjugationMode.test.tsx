@@ -307,7 +307,7 @@ test('Order derived form options by form number', () => {
   const formLabels = Array.from(derivedFormPanel.querySelectorAll('a[aria-label]'))
     .map((button) => button.getAttribute('aria-label')!)
     .map((label) => label.match(/Form\s([IVX]+)/i)?.[1])
-  expect(formLabels).toEqual(['I', 'II', 'IV', 'VI', 'X'])
+  expect(formLabels).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'X'])
 })
 
 describe('Sister verbs', () => {

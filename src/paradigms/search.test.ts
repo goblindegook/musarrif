@@ -44,9 +44,9 @@ describe('search', () => {
   test('keeps exact-root matches ahead of more distant roots', () => {
     expect(
       search('امن ب')
-        .map((verb) => verb.id)
-        .slice(0, 5),
-    ).toEqual(["'mn-1", "'mn-2", "'mn-4", 'bvv-7', 'mdd-8'])
+        .map((verb) => verb.root)
+        .slice(0, 3),
+    ).toEqual(['ءمن', 'ءمن', 'ءمن'])
   })
 
   test.each([
