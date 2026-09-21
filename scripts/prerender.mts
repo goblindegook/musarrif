@@ -74,7 +74,11 @@ renderInto(renderTarget)
 await new Promise((resolve) => setTimeout(resolve, 200))
 
 const started = Date.now()
-const renderedPages = pages.map(renderPage)
+const renderedPages: ReturnType<typeof renderPage>[] = []
+for (const page of pages) {
+  renderedPages.push(renderPage(page))
+  await window.happyDOM.waitUntilComplete()
+}
 const css: string = extractCss()
 const cssName = `prerender-${createHash('sha256').update(css).digest('hex').slice(0, 8)}.css`
 mkdirSync(join(DIST, 'assets'), { recursive: true })
