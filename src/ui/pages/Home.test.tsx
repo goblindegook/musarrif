@@ -293,12 +293,12 @@ test('filters included verbs to biliteral quadriliteral roots (c1=c3, c2=c4)', a
   renderHome()
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
+  await user.click(screen.getByText('IIq', { selector: 'button' }))
   await user.click(screen.getByText('Biliteral', { selector: 'button' }))
 
   const includedVerbsPanel = screen.getByText('Included verbs').closest('section')
-  expect(includedVerbsPanel?.querySelector('a[href="/verbs/zlzl-1/"]')).toBeTruthy()
-  expect(includedVerbsPanel?.querySelector('a[href="/verbs/brhn-1/"]')).toBeNull()
-  expect(includedVerbsPanel?.querySelector('a[href="/verbs/ktb-1/"]')).toBeNull()
+  expect(includedVerbsPanel?.querySelector('a[href="/verbs/zlzl-2/"]')).toBeTruthy()
+  expect(includedVerbsPanel?.querySelector(`a[href="/verbs/'mrk-2/"]`)).toBeNull()
 })
 
 test('keeps sound filter enabled when kāna + form I includes sound roots', async () => {

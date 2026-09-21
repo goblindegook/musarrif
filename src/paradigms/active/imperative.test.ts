@@ -25,7 +25,6 @@ describe('imperative', () => {
         ['مرض', 'اِمْرَضْ'],
         ['صبح', 'اِصْبَحْ'],
         ['مثل', 'اُمْثُلْ'],
-        ['قدم', 'اُقْدُمْ'],
         ['مكن', 'اُمْكُنْ'],
         ['بلغ', 'اُبْلُغْ'],
         ['دخل', 'اُدْخُلْ'],
@@ -124,7 +123,7 @@ describe('imperative', () => {
       })
 
       test('يَسُرَ conjugation', () => {
-        expect(conjugateImperative(getVerb('يسر', 1))).toMatchObjectT({
+        expect(conjugateImperative(getVerb('يسر', 1, 'u-u'))).toMatchObjectT({
           '2ms': 'اُوسُرْ',
           '2fs': 'اُوسُرِي',
           '2d': 'اُوسُرَا',

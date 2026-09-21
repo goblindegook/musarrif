@@ -44,7 +44,6 @@ describe('masdar', () => {
         ['عمل', 'عَمَل'],
         ['فعل', ['فَعْل', 'فِعْل', 'فَعَال']],
         ['قتل', ['قَتْل', 'مَقْتَل']],
-        ['قدم', 'قِدَم'],
         ['قسم', 'قَسْم'],
         ['قفز', ['قَفْز', 'قَفَزَان', 'قُفَاز', 'قُفُوز']],
         ['كتب', ['كِتَابَة', 'كَتْب', 'كِتَاب']],
@@ -60,6 +59,10 @@ describe('masdar', () => {
         ['هدم', 'هَدْم'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
+      })
+
+      test('قدم', () => {
+        expect(deriveMasdar(getVerb('قدم', 1, 'u-u'))).toEqualT(['قِدَم'])
       })
     })
 
@@ -81,7 +84,6 @@ describe('masdar', () => {
     describe('assimilated roots', () => {
       test.each([
         ['وصل', ['وَصْل', 'وُصْلَة', 'صِلَة']],
-        ['يسر', ['يُسْر', 'يَسَارَة']],
         ['ولد', ['وِلَادَة', 'مَوْلِد', 'لِدَة']],
         ['وطن', 'وَطْن'],
         ['وجب', 'وُجُوب'],
@@ -95,6 +97,10 @@ describe('masdar', () => {
         ['وثق', 'وَثَاقَة'],
       ])('%s', (root, expected) => {
         expect(deriveMasdar(getVerb(root, 1))).toEqualT([expected].flat())
+      })
+
+      test('يسر', () => {
+        expect(deriveMasdar(getVerb('يسر', 1, 'u-u'))).toEqualT(['يُسْر', 'يَسَارَة'])
       })
     })
 

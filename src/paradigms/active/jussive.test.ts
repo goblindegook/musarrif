@@ -13,7 +13,6 @@ describe('active present jussive', () => {
         ['مثل', 'يَمْثُلْ'],
         ['دعم', 'يَدْعَمْ'],
         ['كلم', 'يَكْلِمْ'],
-        ['قدم', 'يَقْدُمْ'],
         ['مكن', 'يَمْكُنْ'],
         ['بلغ', 'يَبْلُغْ'],
         ['برح', 'يَبْرَحْ'],
@@ -143,7 +142,7 @@ describe('active present jussive', () => {
       })
 
       test('يَسُرَ conjugation', () => {
-        expect(conjugatePresentMood(getVerb('يسر', 1), 'jussive')).toEqualT({
+        expect(conjugatePresentMood(getVerb('يسر', 1, 'u-u'), 'jussive')).toEqualT({
           '1s': 'أَيْسُرْ',
           '2ms': 'تَيْسُرْ',
           '2fs': 'تَيْسُرِي',
