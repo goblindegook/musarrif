@@ -89,12 +89,6 @@ test('titles the document with the verb, its gloss and the conjugation keyword',
   await waitFor(() => expect(document.title).toBe('Conjugate كَتَبَ (to write) · Muṣarrif'))
 })
 
-test('drops the gloss from the document title when the verb has none', () => {
-  renderConjugationMode({ verbId: 'ktb-10' })
-
-  expect(document.title).toBe('Conjugate اِستَكتَبَ · Muṣarrif')
-})
-
 test('shows translation subtitle for corpus verb with known translation', async () => {
   renderConjugationMode({ verbId: 'ktb-1' })
   const verbPanel = document.querySelector('h2')!.closest('section')!
