@@ -481,11 +481,11 @@ describe('Search', () => {
     expect(screen.getAllByText('كَتَبَ')).not.toHaveLength(0)
   })
 
-  it('shows dropdown suggestions for partial matches', async () => {
+  it('shows dropdown suggestions with their form', async () => {
     renderHome()
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-    await user.type(screen.getByLabelText('Verb'), 'كت')
+    await user.type(screen.getByLabelText('Verb'), 'أكتب')
 
     const listbox = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Verb"]')!
     expect(within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)).toBeInTheDocument()
@@ -517,7 +517,7 @@ describe('Search', () => {
     renderHome()
     const input = screen.getByLabelText('Verb') as HTMLInputElement
     fireEvent.focus(input)
-    fireEvent.input(input, { target: { value: 'كت' } })
+    fireEvent.input(input, { target: { value: 'أكتب' } })
 
     const listbox = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Verb"]')!
     const suggestion = within(listbox).getByLabelText(/ك.*ت.*ب.*Form IV/)

@@ -934,14 +934,14 @@ describe('renderExplanation', () => {
   })
 
   test('active.past form-i base pattern renders past form for u-u pattern', () => {
-    const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
+    const verb = getVerbById('kbr-1-u-u')!
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('كَبُرَ') }))
   })
 
   test('active.past form-i base pattern renders ḍamma for u-u pattern', () => {
-    const verb = getVerbById('kbr-1')! // كَبُرَ, u-u
+    const verb = getVerbById('kbr-1-u-u')!
     const layers = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
     const result = renderExplanation(layers, localeT)
     expect(result[1]).toContainEqual(expect.objectContaining({ text: expect.stringContaining('ḍamma') }))
