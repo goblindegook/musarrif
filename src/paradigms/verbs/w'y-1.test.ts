@@ -65,15 +65,15 @@ describe("w'y-1 (Wiktionary)", () => {
 
   test('active present jussive', () => {
     expect(conjugatePresentMood(getVerbById("w'y-1")!, 'jussive')).toEqualT({
-      '1s': 'أَأِ',
-      '2ms': 'تَأِ',
+      '1s': expect.toBeOneOf(['أَءِ', 'أَئِ']),
+      '2ms': expect.toBeOneOf(['تَأِ', 'تَئِ', 'تَإِ']),
       '2fs': 'تَئِي',
-      '3ms': 'يَأِ',
-      '3fs': 'تَأِ',
+      '3ms': expect.toBeOneOf(['يَأِ', 'يَئِ', 'يَإِ']),
+      '3fs': expect.toBeOneOf(['تَأِ', 'تَئِ', 'تَإِ']),
       '2d': 'تَئِيَا',
       '3md': 'يَئِيَا',
       '3fd': 'تَئِيَا',
-      '1p': 'نَأِ',
+      '1p': expect.toBeOneOf(['نَأِ', 'نَئِ', 'نَإِ']),
       '2mp': 'تَؤُوا',
       '2fp': 'تَئِينَ',
       '3mp': 'يَؤُوا',

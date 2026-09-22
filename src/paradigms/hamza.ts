@@ -32,6 +32,9 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     if (!word.at(index + 2)) {
       if (index < word.length - 1 && longVowelBefore === 'i' && !after.isVowel) return HAMZA_ON_YEH
 
+      // Two hamzas in a row are never both written on alif; a kasra-voweled second one sits on yeh (أَئِمَّة, w'y-1 jussive 1s أَئِ):
+      if (before.equals(FATHA) && word[index - 2]?.equals(HAMZA) && vowel?.equals(KASRA)) return HAMZA_ON_YEH
+
       // case vowel doesn't govern the seat, only the preceding vowel does:
       if (before.equals(KASRA)) return HAMZA_ON_YEH
       if (before.equals(DAMMA)) return HAMZA_ON_WAW
