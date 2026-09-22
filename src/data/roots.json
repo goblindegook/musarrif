@@ -21780,8 +21780,10 @@
   {
     "root": "wHl",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "waHil",
     "passive": "none"
   },
   {
