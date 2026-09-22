@@ -32,8 +32,10 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     if (!word.at(index + 2)) {
       if (index < word.length - 1 && longVowelBefore === 'i' && !after.isVowel) return HAMZA_ON_YEH
 
-      // Two hamzas in a row are never both written on alif; a kasra-voweled second one sits on yeh (أَئِمَّة, w'y-1 jussive 1s أَئِ):
-      if (before.equals(FATHA) && word[index - 2]?.equals(HAMZA) && vowel?.equals(KASRA)) return HAMZA_ON_YEH
+      // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
+      // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
+      // which leaves the hamza effectively medial, and kasra dominates:
+      if (vowel?.equals(KASRA)) return HAMZA_ON_YEH
 
       // case vowel doesn't govern the seat, only the preceding vowel does:
       if (before.equals(KASRA)) return HAMZA_ON_YEH

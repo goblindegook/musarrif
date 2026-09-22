@@ -220,7 +220,7 @@ describe('prerenderPages', () => {
     expect(pages.filter((page) => page.description.length > 0)).toHaveLength(pages.length)
   })
 
-  test.skip('gives no two pages the same description', () => {
+  test('gives no two pages the same description', () => {
     expect(new Set(pages.map((page) => page.description)).size).toBe(pages.length)
   })
 })

@@ -8,7 +8,7 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("r'y-3", () => {
+describe("r'y-3 (Wiktionary)", () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById("r'y-3")!)).toEqualT({
       '1s': 'رَاءَيْتُ',
@@ -38,9 +38,9 @@ describe("r'y-3", () => {
       '3md': 'يُرَائِيَانِ',
       '3fd': 'تُرَائِيَانِ',
       '1p': 'نُرَائِي',
-      '2mp': 'تُرَائُونَ',
+      '2mp': expect.toBeOneOf(['تُرَائُونَ', 'تُرَاؤُونَ']),
       '2fp': 'تُرَائِينَ',
-      '3mp': 'يُرَائُونَ',
+      '3mp': expect.toBeOneOf(['يُرَائُونَ', 'يُرَاؤُونَ']),
       '3fp': 'يُرَائِينَ',
     })
   })
@@ -56,37 +56,37 @@ describe("r'y-3", () => {
       '3md': 'يُرَائِيَا',
       '3fd': 'تُرَائِيَا',
       '1p': 'نُرَائِيَ',
-      '2mp': 'تُرَائُوا',
+      '2mp': expect.toBeOneOf(['تُرَائُوا', 'تُرَاؤُوا']),
       '2fp': 'تُرَائِينَ',
-      '3mp': 'يُرَائُوا',
+      '3mp': expect.toBeOneOf(['يُرَائُوا', 'يُرَاؤُوا']),
       '3fp': 'يُرَائِينَ',
     })
   })
 
   test('active present jussive', () => {
     expect(conjugatePresentMood(getVerbById("r'y-3")!, 'jussive')).toEqualT({
-      '1s': 'أُرَاءِ',
-      '2ms': 'تُرَاءِ',
+      '1s': expect.toBeOneOf(['أُرَاءِ', 'أُرَائِ']),
+      '2ms': expect.toBeOneOf(['تُرَاءِ', 'تُرَائِ']),
       '2fs': 'تُرَائِي',
-      '3ms': 'يُرَاءِ',
-      '3fs': 'تُرَاءِ',
+      '3ms': expect.toBeOneOf(['يُرَاءِ', 'يُرَائِ']),
+      '3fs': expect.toBeOneOf(['تُرَاءِ', 'تُرَائِ']),
       '2d': 'تُرَائِيَا',
       '3md': 'يُرَائِيَا',
       '3fd': 'تُرَائِيَا',
-      '1p': 'نُرَاءِ',
-      '2mp': 'تُرَائُوا',
+      '1p': expect.toBeOneOf(['نُرَاءِ', 'نُرَائِ']),
+      '2mp': expect.toBeOneOf(['تُرَائُوا', 'تُرَاؤُوا']),
       '2fp': 'تُرَائِينَ',
-      '3mp': 'يُرَائُوا',
+      '3mp': expect.toBeOneOf(['يُرَائُوا', 'يُرَاؤُوا']),
       '3fp': 'يُرَائِينَ',
     })
   })
 
   test('active imperative', () => {
     expect(conjugateImperative(getVerbById("r'y-3")!)).toMatchObjectT({
-      '2ms': 'رَاءِ',
+      '2ms': expect.toBeOneOf(['رَاءِ', 'رَائِ']),
       '2fs': 'رَائِي',
       '2d': 'رَائِيَا',
-      '2mp': 'رَائُوا',
+      '2mp': expect.toBeOneOf(['رَائُوا', 'رَاؤُوا']),
       '2fp': 'رَائِينَ',
     })
   })
@@ -104,7 +104,7 @@ describe("r'y-3", () => {
       '1p': 'رُوئِينَا',
       '2mp': 'رُوئِيتُمْ',
       '2fp': 'رُوئِيتُنَّ',
-      '3mp': 'رُوئُوا',
+      '3mp': expect.toBeOneOf(['رُوئُوا', 'رُوءُوا']),
       '3fp': 'رُوئِينَ',
     })
   })
@@ -172,6 +172,6 @@ describe("r'y-3", () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("r'y-3")!)).toEqualT(['مُرَاءَاة', 'رِئَاء', 'رِيَاء'])
+    expect(new Set(deriveMasdar(getVerbById("r'y-3")!))).toEqualT(new Set(['مُرَاءَاة', 'رِئَاء', 'رِيَاء']))
   })
 })

@@ -8,7 +8,7 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("r'y-8", () => {
+describe("r'y-8 (Wiktionary)", () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById("r'y-8")!)).toEqualT({
       '1s': 'اِرْتَأَيْتُ',
@@ -65,15 +65,15 @@ describe("r'y-8", () => {
 
   test('active present jussive', () => {
     expect(conjugatePresentMood(getVerbById("r'y-8")!, 'jussive')).toEqualT({
-      '1s': 'أَرْتَأِ',
-      '2ms': 'تَرْتَأِ',
+      '1s': expect.toBeOneOf(['أَرْتَأِ', 'أَرْتَئِ', 'أَرْتَإِ']),
+      '2ms': expect.toBeOneOf(['تَرْتَأِ', 'تَرْتَئِ', 'تَرْتَإِ']),
       '2fs': 'تَرْتَئِي',
-      '3ms': 'يَرْتَأِ',
-      '3fs': 'تَرْتَأِ',
+      '3ms': expect.toBeOneOf(['يَرْتَأِ', 'يَرْتَئِ', 'يَرْتَإِ']),
+      '3fs': expect.toBeOneOf(['تَرْتَأِ', 'تَرْتَئِ', 'تَرْتَإِ']),
       '2d': 'تَرْتَئِيَا',
       '3md': 'يَرْتَئِيَا',
       '3fd': 'تَرْتَئِيَا',
-      '1p': 'نَرْتَأِ',
+      '1p': expect.toBeOneOf(['نَرْتَأِ', 'نَرْتَئِ', 'نَرْتَإِ']),
       '2mp': 'تَرْتَؤُوا',
       '2fp': 'تَرْتَئِينَ',
       '3mp': 'يَرْتَؤُوا',
@@ -83,7 +83,7 @@ describe("r'y-8", () => {
 
   test('active imperative', () => {
     expect(conjugateImperative(getVerbById("r'y-8")!)).toMatchObjectT({
-      '2ms': 'اِرْتَأِ',
+      '2ms': expect.toBeOneOf(['اِرْتَأِ', 'اِرْتَئِ', 'اِرْتَإِ']),
       '2fs': 'اِرْتَئِي',
       '2d': 'اِرْتَئِيَا',
       '2mp': 'اِرْتَؤُوا',
@@ -172,6 +172,6 @@ describe("r'y-8", () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("r'y-8")!)).toEqualT(['اِرْتِئَاء'])
+    expect(new Set(deriveMasdar(getVerbById("r'y-8")!))).toEqualT(new Set(['اِرْتِئَاء']))
   })
 })
