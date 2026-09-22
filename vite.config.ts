@@ -12,6 +12,7 @@ const verbCount = Object.keys(JSON.parse(readFileSync('src/data/roots.json', 'ut
 
 export default defineConfig({
   base: routingMode === 'hash' ? './' : '/',
+  server: { watch: { ignored: ['**/.stryker-tmp/**'] } },
   plugins: [
     {
       name: 'verb-count',
