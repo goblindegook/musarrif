@@ -175,7 +175,8 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const initial = c1.equals(YEH) ? WAW : c1
 
-  if (c2.isHamza) return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
+  if (c2.isHamza && c3.isWeak)
+    return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
   if (c3.isWeak)
     return [
