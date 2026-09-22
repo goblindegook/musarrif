@@ -570,7 +570,8 @@ function deriveFormX(verb: NonFormIVerb): readonly Morpheme[] {
   if (c2.equals(c3) && c2.isWeak)
     return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 
-  if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
+  // A weak final radical keeps the middle wāw consonantal (يَسْتَهْوِي), so only a sound final makes it hollow.
+  if (c2.isWeak && !c3.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
   if (c2.equals(c3))
     return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]

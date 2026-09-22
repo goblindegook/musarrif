@@ -294,6 +294,16 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
       ...geminateSuffix(mood, pronounId),
     ]
 
+  if (c3.isWeak)
+    return [
+      measureMorpheme(NOON, SUKOON),
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA),
+      ...defectiveSuffix(mood, pronounId),
+    ]
+
   if (c2.isWeak && mood === 'jussive')
     return [
       measureMorpheme(NOON, SUKOON),
@@ -311,16 +321,6 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
       radicalMorpheme(ALIF),
       radicalMorpheme(c3),
       ...MOOD_SUFFIXES[mood][pronounId],
-    ]
-
-  if (c3.isWeak)
-    return [
-      measureMorpheme(NOON, SUKOON),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
     ]
 
   return [
