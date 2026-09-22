@@ -296,7 +296,7 @@ function deriveMasdarFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF_HAMZA_BELOW, KASRA), radicalMorpheme(c1.isWeak || c1.isHamza ? YEH : c1)]
 
-  if (c2.isHamza && c3.isWeak)
+  if (verb.hamzaElision)
     return [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA, TEH_MARBUTA)]
 
   if (c3.isWeak)

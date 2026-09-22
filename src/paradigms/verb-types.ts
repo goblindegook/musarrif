@@ -68,6 +68,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   rootTokens: Tokens
   form: Form
   passive?: Passive
+  hamzaElision?: boolean
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   lexicalPassiveParticiple?: string

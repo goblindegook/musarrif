@@ -197,7 +197,7 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
       [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
     ]
 
-  if (c2.isHamza && c3.isWeak) return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)]]
+  if (verb.hamzaElision) return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
   if (c3.isWeak)
     return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]

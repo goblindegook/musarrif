@@ -88,19 +88,15 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
 
   if (c1.equals(YEH)) return [radicalMorpheme(WAW)]
 
-  // c1 takes no sukoon only when c2's hamza itself contracts away (defective roots, رأى → يُرَى);
-  // a sound c3 keeps the hamza (سَأَلَ → تُسْأَلُ), so c1 still needs its own sukoon here.
-  if (c1.isWeak || (c2.isHamza && c3.isWeak)) return [radicalMorpheme(c1)]
+  if (c1.isWeak || verb.hamzaElision) return [radicalMorpheme(c1)]
 
   return [radicalMorpheme(c1), measureMorpheme(SUKOON)]
 }
 
 function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
-  const [c1, c2, c3] = verb.rootTokens
+  const [, c2, c3] = verb.rootTokens
 
-  // Contract only for defective roots with c1 sound (رأى → يُرَى); keep hamza when c1 is weak
-  // (وَأَى → يُوءَى) or c3 is sound (سَأَلَ → تُسْأَلُ — no vowel-blending to elide here):
-  if (!c1.isWeak && c2.isHamza && c3.isWeak) return []
+  if (verb.hamzaElision) return []
 
   if (c2.equals(c3)) {
     if (isFemininePlural(pronounId)) return [radicalMorpheme(c2), measureMorpheme(FATHA)]
@@ -175,8 +171,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const initial = c1.equals(YEH) ? WAW : c1
 
-  if (c2.isHamza && c3.isWeak)
-    return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
+  if (verb.hamzaElision) return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
   if (c3.isWeak)
     return [

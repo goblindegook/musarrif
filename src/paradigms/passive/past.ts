@@ -157,7 +157,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const initial = c1.isHamza || c1.equals(YEH) ? WAW : c1
 
-  if (c2.isHamza && c3.isWeak)
+  if (verb.hamzaElision)
     return {
       stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(initial), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [measureMorpheme(FATHA)],

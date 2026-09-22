@@ -18585,6 +18585,7 @@
     "root": "r'y",
     "form": 1,
     "vowels": "a-a",
+    "hamzaElision": true,
     "masdars": [],
     "lexicalMasdars": ["ru&oyap"]
   },
@@ -18595,7 +18596,8 @@
   },
   {
     "root": "r'y",
-    "form": 4
+    "form": 4,
+    "hamzaElision": true
   },
   {
     "root": "r'y",

@@ -19,6 +19,7 @@ export interface RootEntry {
   vowels?: FormIPattern
   hollowContraction?: 'contracted' | 'uncontracted'
   contractedImperative?: boolean
+  hamzaElision?: boolean
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
   passive?: Passive
@@ -76,6 +77,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     ...(vowels ? { vowels } : {}),
     ...(carried?.hollowContraction ? { hollowContraction: carried.hollowContraction } : {}),
     ...(carried?.contractedImperative ? { contractedImperative: true } : {}),
+    ...(carried?.hamzaElision ? { hamzaElision: true } : {}),
     ...(masdars ? { masdars } : {}),
     ...(lexicalMasdars ? { lexicalMasdars } : {}),
     ...(passive ? { passive } : {}),

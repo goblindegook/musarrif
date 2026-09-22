@@ -74,13 +74,21 @@ describe('buildRootEntry', () => {
 
   test('keeps fields the source cannot describe', () => {
     const verb = getVerb('كتب', 1, 'a-u')
-    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-u', valency: [2, 3], contractedImperative: true }
+    const existing: RootEntry = {
+      root: 'ktb',
+      form: 1,
+      vowels: 'a-u',
+      valency: [2, 3],
+      contractedImperative: true,
+      hamzaElision: true,
+    }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
       root: 'ktb',
       form: 1,
       vowels: 'a-u',
       contractedImperative: true,
+      hamzaElision: true,
       masdars: ['fa3l'],
       valency: [2, 3],
     })

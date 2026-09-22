@@ -83,6 +83,7 @@ type RawVerb = {
   vowels?: FormIPattern
   hollowContraction?: HollowContractionBehaviour
   contractedImperative?: boolean
+  hamzaElision?: boolean
   passive?: Passive
   masdars?: readonly MasdarPattern[]
   lexicalMasdars?: readonly string[]
