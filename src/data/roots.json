@@ -21919,8 +21919,10 @@
   {
     "root": "wbr",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "wabir",
     "passive": "none"
   },
   {
@@ -22087,13 +22089,16 @@
   {
     "root": "whl",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "wahil",
     "passive": "none"
   },
   {
     "root": "whm",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "passive": "impersonal"
@@ -22120,8 +22125,10 @@
   {
     "root": "wjE",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "wajiE"
   },
   {
     "root": "wjE",
@@ -22187,9 +22194,11 @@
   {
     "root": "wjl",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalMasdars": ["mawojal"],
+    "lexicalActiveParticiple": ">awojal",
     "passive": "none"
   },
   {
@@ -22265,9 +22274,11 @@
   {
     "root": "wlE",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalMasdars": ["waluwE"],
+    "lexicalActiveParticiple": "waliE",
     "passive": "none"
   },
   {
@@ -22567,9 +22578,11 @@
   {
     "root": "wsn",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al", "fa3la"],
     "lexicalMasdars": ["sinap"],
+    "lexicalActiveParticiple": "wasin",
     "passive": "none"
   },
   {
@@ -22586,8 +22599,10 @@
   {
     "root": "wsx",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "wasix",
     "passive": "impersonal"
   },
   {
@@ -22669,8 +22684,10 @@
   {
     "root": "wxm",
     "form": 1,
+    "hollowContraction": "uncontracted",
     "vowels": "i-a",
     "masdars": ["fa3al"],
+    "lexicalActiveParticiple": "waxim",
     "passive": "none"
   },
   {

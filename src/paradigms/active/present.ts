@@ -333,12 +333,13 @@ function deriveFormIVq(verb: QuadriliteralVerb): readonly Morpheme[] {
   ]
 }
 
-// وَعَدَ يَعِدُ and وَضَعَ يَضَعُ lose the wāw; وَجُزَ يَوْجُزُ keeps it before a ḍamma present, and
-// وَدَّ يَوَدُّ keeps it because the geminate stem never exposes it to the drop.
+// وَعَدَ يَعِدُ and وَضَعَ يَضَعُ lose the wāw; وَجُزَ يَوْجُزُ keeps it before a ḍamma present,
+// while explicitly uncontracted stems retain it before other vowels. وَدَّ يَوَدُّ also keeps it because the
+// geminate stem never exposes it to the drop.
 export function dropsInitialWaw(verb: Verb): boolean {
   if (!isTriliteralFormIVerb(verb)) return false
   const [c1, c2, c3] = verb.rootTokens
-  if (!c1.equals(WAW) || c2.equals(c3)) return false
+  if (!c1.equals(WAW) || c2.equals(c3) || verb.hollowContraction === 'uncontracted') return false
   return c3.isWeak || !formIPresentVowel(verb).equals(DAMMA)
 }
 

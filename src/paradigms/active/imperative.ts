@@ -49,6 +49,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
               return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
             if (c1.equals(YEH)) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
             if (c1.equals(WAW) && isPatternU) return [measureMorpheme(ALIF, ...patternLongVowel), ...stem.slice(2)]
+            if (c1.equals(WAW) && !c2.equals(c3) && stem.at(0)?.equals([WAW]))
+              return [measureMorpheme(ALIF, ...longVowelI), ...stem.slice(2)]
             if (c2.isHamza) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
           }
 
