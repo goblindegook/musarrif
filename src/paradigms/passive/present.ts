@@ -173,12 +173,13 @@ function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounI
 function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
+  const initial = c1.equals(YEH) ? WAW : c1
 
-  if (c2.isHamza) return [radicalMorpheme(c1), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
+  if (c2.isHamza) return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
   if (c3.isWeak)
     return [
-      radicalMorpheme(c1),
+      radicalMorpheme(initial),
       ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
@@ -187,14 +188,14 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
 
   if (c2.isWeak) {
     if (isFemininePlural(pronounId) || moodSuffix.at(0)?.equals([SUKOON]))
-      return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-    return [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
+      return [radicalMorpheme(initial), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
+    return [radicalMorpheme(initial), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
   if (c2.equals(c3)) {
     if (isFemininePlural(pronounId))
       return [
-        radicalMorpheme(c1),
+        radicalMorpheme(initial),
         measureMorpheme(SUKOON),
         radicalMorpheme(c2),
         measureMorpheme(FATHA),
@@ -202,7 +203,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
         ...geminateSuffix(mood, pronounId),
       ]
     return [
-      radicalMorpheme(c1),
+      radicalMorpheme(initial),
       measureMorpheme(FATHA),
       radicalMorpheme(c2),
       measureMorpheme(SUKOON),
@@ -212,7 +213,7 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
   }
 
   return [
-    radicalMorpheme(c1),
+    radicalMorpheme(initial),
     ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
     radicalMorpheme(c2),
     measureMorpheme(FATHA),

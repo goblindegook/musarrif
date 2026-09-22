@@ -155,6 +155,7 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
+  const initial = c1.isHamza || c1.equals(YEH) ? WAW : c1
 
   if (c2.isHamza)
     return {
@@ -166,7 +167,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
     return {
       stem: [
         measureMorpheme(HAMZA, DAMMA),
-        radicalMorpheme(c1.isHamza ? WAW : c1),
+        radicalMorpheme(initial),
         ...(c1.isWeak || c1.isHamza ? [] : [measureMorpheme(SUKOON)]),
         radicalMorpheme(c2),
         measureMorpheme(KASRA),
@@ -185,7 +186,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.equals(c3))
     return {
-      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1.isHamza ? WAW : c1)],
+      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(initial)],
       suffix: [measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [
         measureMorpheme(KASRA),
@@ -199,7 +200,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   return {
     stem: [
       measureMorpheme(HAMZA, DAMMA),
-      radicalMorpheme(c1.isHamza ? WAW : c1),
+      radicalMorpheme(initial),
       ...(c1.isWeak || c1.isHamza ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(KASRA),

@@ -434,7 +434,7 @@ function deriveFormIII(verb: NonFormIVerb): readonly Morpheme[] {
 
 function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  const prefix = [radicalMorpheme(c1)]
+  const prefix = [radicalMorpheme(c1.equals(YEH) ? WAW : c1)]
 
   if (c2.isHamza) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 
