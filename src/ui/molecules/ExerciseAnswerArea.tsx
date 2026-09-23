@@ -387,17 +387,12 @@ const ActionButton = styled('button')`
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
     color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:enabled:hover {
     background: var(--color-bg-button-primary-hover);
     border-color: var(--color-bg-button-primary-hover);
     color: var(--color-bg-surface);
-  }
-
-  &:enabled:active {
-    transform: scale(0.96);
   }
 
   &:focus-visible {

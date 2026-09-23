@@ -471,6 +471,47 @@ test('treats sound as exclusive with other root type filters', async () => {
   expect(hamzated).toHaveAttribute('aria-pressed', 'false')
 })
 
+describe('progressive disclosure of secondary filters', () => {
+  test('keeps the form filter always visible, outside any disclosure', () => {
+    renderHome()
+
+    expect(screen.getByText('Filter by form').closest('details')).toBeNull()
+  })
+
+  test('hides root type and other filters behind a collapsed "More filters" disclosure by default', () => {
+    renderHome()
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details).toBeTruthy()
+    expect(details.open).toBe(false)
+    expect(screen.getByText('Filter by root type').closest('details')).toBe(details)
+    expect(screen.getByText('Filter by group').closest('details')).toBe(details)
+  })
+
+  test('expands the disclosure when a root type filter is already active from hash query params', () => {
+    renderHome('/#/verbs?root=hollow')
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
+  })
+
+  test('expands the disclosure when a group filter is already active from hash query params', () => {
+    renderHome('/#/verbs?group=kana')
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
+  })
+
+  test('opens on click, revealing root type and other filters', () => {
+    renderHome()
+
+    fireEvent.click(screen.getByText('More filters'))
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
+  })
+})
+
 describe('Search', () => {
   it('matches verbs when a derived form is typed', async () => {
     renderHome()
@@ -530,5 +571,5 @@ describe('Search', () => {
 })
 
 function getOtherFilters(): HTMLElement {
-  return within(screen.getByText('Other filters').parentElement!).getByLabelText('Other filters')
+  return within(screen.getByText('Filter by group').parentElement!).getByLabelText('Filter by group')
 }

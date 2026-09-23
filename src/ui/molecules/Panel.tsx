@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useId, useState } from 'preact/hooks'
+import { DisclosureChevron } from '../atoms/DisclosureChevron'
 
 interface PanelProps {
   prerender?: 'omit'
@@ -32,7 +33,7 @@ export const Panel = ({ prerender, title, dir, lang, children, collapsible, defa
             <PanelTitle>{title}</PanelTitle>
             <PanelTitleTail>
               {collapsed && hint ? <Hint>{hint}</Hint> : null}
-              <CollapseArrow collapsed={collapsed}>›</CollapseArrow>
+              <DisclosureChevron open={!collapsed} />
             </PanelTitleTail>
           </PanelTitleButton>
         ) : (
@@ -126,15 +127,6 @@ const PanelTitle = styled('h2')`
   flex: 1;
   min-width: 0;
   text-wrap: balance;
-`
-
-const CollapseArrow = styled('span')<{ collapsed: boolean }>`
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-  transform: ${({ collapsed }) => (collapsed ? 'rotate(90deg)' : 'rotate(-90deg)')};
-  display: inline-block;
-  user-select: none;
 `
 
 const PanelTitleTail = styled('span')`

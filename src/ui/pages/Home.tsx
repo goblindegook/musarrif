@@ -12,6 +12,7 @@ import {
 } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
+import { DisclosureChevron } from '../atoms/DisclosureChevron'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
 import { Text } from '../atoms/Text'
@@ -133,6 +134,7 @@ export function Home() {
   useDocumentTitle(t('title'))
 
   const query = useMemo(() => parseQuery(queryParams), [queryParams])
+  const [moreFiltersOpen] = useState(() => query.filters.root.length > 0 || query.filters.group != null)
   const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
   const visibleVerbs = useMemo(() => filterVerbs(query, favouriteVerbIds), [favouriteVerbIds, query])
 
@@ -241,45 +243,57 @@ export function Home() {
               </FormFilterBar>
             </FilterGroup>
 
-            <FilterGroup>
-              <Subheading dir={dir} lang={lang}>
-                {t('verbsList.filter.rootType.title')}
-              </Subheading>
-              <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
-                {ROOT_TYPE_FILTERS.map((option) => (
-                  <SelectableButton
-                    key={option}
-                    type="button"
-                    aria-pressed={query.filters.root.includes(option)}
-                    active={query.filters.root.includes(option)}
-                    disabled={isFilterDisabled(query.filters.root.includes(option), withRootShape(query, option))}
-                    onClick={() => applyRootShape(option)}
-                  >
-                    {t(`verbsList.filter.rootType.${option}.label`)}
-                  </SelectableButton>
-                ))}
-              </FilterBar>
-            </FilterGroup>
+            <MoreFilters open={moreFiltersOpen}>
+              <MoreFiltersSummary>
+                <DisclosureChevron />
+                {t('verbsList.filter.more.label')}
+              </MoreFiltersSummary>
 
-            <FilterGroup>
-              <Subheading dir={dir} lang={lang}>
-                {t('verbsList.filter.other.title')}
-              </Subheading>
-              <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
-                {OTHER_FILTERS.map((option) => (
-                  <SelectableButton
-                    key={option.key}
-                    type="button"
-                    aria-pressed={query.filters.group === option.key}
-                    active={query.filters.group === option.key}
-                    disabled={isFilterDisabled(query.filters.group === option.key, withGroupFilter(query, option.key))}
-                    onClick={() => applyGroupFilter(option.key)}
-                  >
-                    {t(option.labelKey)}
-                  </SelectableButton>
-                ))}
-              </FilterBar>
-            </FilterGroup>
+              <MoreFiltersBody>
+                <FilterGroup>
+                  <Subheading dir={dir} lang={lang}>
+                    {t('verbsList.filter.rootType.title')}
+                  </Subheading>
+                  <FilterBar role="group" aria-label={t('verbsList.filter.rootType.title')}>
+                    {ROOT_TYPE_FILTERS.map((option) => (
+                      <SelectableButton
+                        key={option}
+                        type="button"
+                        aria-pressed={query.filters.root.includes(option)}
+                        active={query.filters.root.includes(option)}
+                        disabled={isFilterDisabled(query.filters.root.includes(option), withRootShape(query, option))}
+                        onClick={() => applyRootShape(option)}
+                      >
+                        {t(`verbsList.filter.rootType.${option}.label`)}
+                      </SelectableButton>
+                    ))}
+                  </FilterBar>
+                </FilterGroup>
+
+                <FilterGroup>
+                  <Subheading dir={dir} lang={lang}>
+                    {t('verbsList.filter.other.title')}
+                  </Subheading>
+                  <FilterBar role="group" aria-label={t('verbsList.filter.other.title')}>
+                    {OTHER_FILTERS.map((option) => (
+                      <SelectableButton
+                        key={option.key}
+                        type="button"
+                        aria-pressed={query.filters.group === option.key}
+                        active={query.filters.group === option.key}
+                        disabled={isFilterDisabled(
+                          query.filters.group === option.key,
+                          withGroupFilter(query, option.key),
+                        )}
+                        onClick={() => applyGroupFilter(option.key)}
+                      >
+                        {t(option.labelKey)}
+                      </SelectableButton>
+                    ))}
+                  </FilterBar>
+                </FilterGroup>
+              </MoreFiltersBody>
+            </MoreFilters>
 
             <VerbResults>
               <VerbList>
@@ -347,6 +361,29 @@ const Stack = styled('div')<{ area: 'search' | 'verbList' }>`
   align-self: flex-start;
 `
 
+const MoreFilters = styled('details')``
+
+const MoreFiltersBody = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block-start: 1rem;
+`
+
+const MoreFiltersSummary = styled('summary')`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+`
+
 const FilterGroup = styled('section')`
   display: flex;
   flex-direction: column;
@@ -402,7 +439,7 @@ const InlineVerbList = styled('div')`
 const VerbResults = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   outline: none;
   padding-top: 0.5rem;
 `

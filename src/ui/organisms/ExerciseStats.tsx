@@ -15,6 +15,7 @@ import type { SrsStore } from '../../exercises/srs'
 import type { DailyActivity } from '../../exercises/stats'
 import { parseInteger, sum, toRoman } from '../../primitives/numbers'
 import { Button } from '../atoms/Button'
+import { DisclosureChevron } from '../atoms/DisclosureChevron'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
 import { type Translate, useI18n } from '../hooks/useI18n'
@@ -166,7 +167,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                     </InlineLock>
                   )}
                 </MasteryLabelGroup>
-                <Chevron data-testid={`mastery-category-chevron-${category.id}`}>›</Chevron>
+                <MasteryChevron data-testid={`mastery-category-chevron-${category.id}`} />
                 <MasteryCategoryRow data-testid={`mastery-category-row-${category.id}`}>
                   <ProgressBar
                     value={categoryProgress.value}
@@ -469,22 +470,10 @@ const MasteryLabelGroup = styled('span')`
   grid-row: 1;
 `
 
-const Chevron = styled('span')`
+const MasteryChevron = styled(DisclosureChevron)`
   color: var(--color-text-muted);
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-  transform: rotate(90deg);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   grid-column: 2;
   grid-row: 1 / span 2;
-  user-select: none;
-
-  details[open] & {
-    transform: rotate(-90deg);
-  }
 `
 
 const MasteryCategoryRow = styled('span')`

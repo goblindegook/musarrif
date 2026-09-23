@@ -12,6 +12,15 @@ const KIND_COLORS: Record<ExplanationKind, string> = {
   elided: 'var(--color-insight-dropped)',
 }
 
+// A distinct glyph per kind (WCAG 1.4.1): the marker must read without colour vision, not just with it.
+const KIND_GLYPHS: Record<ExplanationKind, string> = {
+  radical: '●',
+  measure: '■',
+  agreement: '◆',
+  particle: '▲',
+  elided: '–',
+}
+
 interface ExplanationTextProps {
   paragraphs: Paragraphs
   /** Only where a morpheme breakdown is on screen for the markers to key into. */
@@ -28,7 +37,9 @@ export const ExplanationText = ({ paragraphs, showMorphemeMarkers = false }: Exp
           {paragraph.map((sentence, si) => (
             <span key={si}>
               {showMorphemeMarkers && (si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
-                <span style={{ color: KIND_COLORS[sentence.kind] }}>● </span>
+                <span aria-hidden="true" style={{ color: KIND_COLORS[sentence.kind] }}>
+                  {KIND_GLYPHS[sentence.kind]}{' '}
+                </span>
               )}
               <FormattedText as="span" text={applyDiacriticsPreference(sentence.text, diacriticsPreference)} />{' '}
             </span>

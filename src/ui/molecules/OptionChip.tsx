@@ -288,15 +288,10 @@ const chipButton = `
   transition:
     background 180ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   &:enabled:hover {
     border-color: var(--color-accent);
-  }
-
-  &:enabled:active {
-    transform: scale(0.96);
   }
 
   &:focus-visible {

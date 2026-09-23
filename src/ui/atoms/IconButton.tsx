@@ -38,9 +38,7 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: IconButtonS
   place-items: center;
   padding: 0;
   cursor: pointer;
-  transition:
-    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
   svg {
     width: 1.5rem;
@@ -61,7 +59,6 @@ const StyledIconButton = styled('button')<{ active?: boolean; size?: IconButtonS
 
   &:enabled:active {
     color: var(--color-text-emphasis);
-    transform: scale(0.96);
   }
 
   &:disabled {

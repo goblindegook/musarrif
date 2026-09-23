@@ -20,17 +20,30 @@ describe('ExplanationText', () => {
     )
   })
 
-  test('marks the start of each kind run with that kind colour', () => {
+  test('marks the start of each kind run with that kind colour, and a distinct glyph per kind', () => {
     const paragraphs: ExplanationSentence[][] = [
       [
         { text: 'Root is sound.', kind: 'radical' },
         { text: 'Form I applies.', kind: 'measure' },
+        { text: 'Add the future particle.', kind: 'particle' },
+        { text: 'The suffix marks agreement.', kind: 'agreement' },
+        { text: 'The prefix is dropped.', kind: 'elided' },
       ],
     ]
     renderWithProviders(<ExplanationText paragraphs={paragraphs} showMorphemeMarkers />)
 
-    const markers = screen.getAllByText('●', { exact: false })
-    expect(markers.map((m) => m.style.color)).toEqual(['var(--color-insight-root)', 'var(--color-insight-form)'])
+    expect(screen.getByText('●').style.color).toBe('var(--color-insight-root)')
+    expect(screen.getByText('■').style.color).toBe('var(--color-insight-form)')
+    expect(screen.getByText('▲').style.color).toBe('var(--color-insight-tense)')
+    expect(screen.getByText('◆').style.color).toBe('var(--color-insight-suffix)')
+    expect(screen.getByText('–').style.color).toBe('var(--color-insight-dropped)')
+  })
+
+  test('hides the kind marker glyph from screen readers, since it is decorative', () => {
+    const paragraphs: ExplanationSentence[][] = [[{ text: 'Root is sound.', kind: 'radical' }]]
+    renderWithProviders(<ExplanationText paragraphs={paragraphs} showMorphemeMarkers />)
+
+    expect(screen.getByText('●')).toHaveAttribute('aria-hidden', 'true')
   })
 
   test('marks a run once, not once per sentence', () => {
@@ -43,7 +56,8 @@ describe('ExplanationText', () => {
     ]
     renderWithProviders(<ExplanationText paragraphs={paragraphs} showMorphemeMarkers />)
 
-    expect(screen.getAllByText('●', { exact: false })).toHaveLength(2)
+    expect(screen.getAllByText('●', { exact: false })).toHaveLength(1)
+    expect(screen.getAllByText('■', { exact: false })).toHaveLength(1)
   })
 
   test('omits the morpheme markers when they have no breakdown to refer to', () => {
