@@ -134,7 +134,12 @@ export function Home() {
   useDocumentTitle(t('title'))
 
   const query = useMemo(() => parseQuery(queryParams), [queryParams])
-  const [moreFiltersOpen] = useState(() => query.filters.root.length > 0 || query.filters.group != null)
+  const hasMoreFilters = query.filters.root.length > 0 || query.filters.group != null
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(hasMoreFilters)
+
+  useEffect(() => {
+    if (hasMoreFilters) setMoreFiltersOpen(true)
+  }, [hasMoreFilters])
   const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
   const visibleVerbs = useMemo(() => filterVerbs(query, favouriteVerbIds), [favouriteVerbIds, query])
 
@@ -243,7 +248,7 @@ export function Home() {
               </FormFilterBar>
             </FilterGroup>
 
-            <MoreFilters open={moreFiltersOpen}>
+            <MoreFilters open={moreFiltersOpen} onToggle={(event) => setMoreFiltersOpen(event.currentTarget.open)}>
               <MoreFiltersSummary>
                 <DisclosureChevron />
                 {t('verbsList.filter.more.label')}
@@ -341,6 +346,7 @@ const Main = styled('main')`
 
   @media (min-width: 960px) {
     gap: 1.25rem;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
     max-width: inherit;
     grid-template-columns: 1fr 1.5fr;
     grid-template-rows: auto auto 1fr;

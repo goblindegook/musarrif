@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 import { currentUrl, renderWithProviders } from '../../test/fixtures'
@@ -497,6 +497,25 @@ describe('progressive disclosure of secondary filters', () => {
 
   test('expands the disclosure when a group filter is already active from hash query params', () => {
     renderHome('/#/verbs?group=kana')
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
+  })
+
+  test('expands the disclosure when a root type filter is active from path query params', () => {
+    renderHome('/verbs/?root=doubled')
+
+    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
+  })
+
+  test('expands the disclosure when history navigation activates a filter', () => {
+    renderHome('/#/verbs')
+
+    act(() => {
+      window.history.pushState({}, '', '/#/verbs?group=kana')
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
 
     const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
