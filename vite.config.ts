@@ -16,7 +16,10 @@ export default defineConfig({
   plugins: [
     {
       name: 'verb-count',
-      transformIndexHtml: (html) => html.replaceAll('%VERB_COUNT%', String(verbCount)),
+      transformIndexHtml: (html) =>
+        html
+          .replaceAll('%VERB_COUNT%', String(verbCount))
+          .replaceAll('%APP_PREFIX%', routingMode === 'hash' ? '#/' : '/'),
     },
     preact(),
     VitePWA({
