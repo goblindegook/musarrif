@@ -219,6 +219,10 @@ Usage notes:
 
 Use the GitHub [incorrect conjugation issue form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml). Include verb details, expected output, and source references.
 
+## Acknowledgements
+
+Verb frequency ranking uses the [CAMeL Arabic Frequency Lists](https://github.com/CAMeL-Lab/Camel_Arabic_Frequency_Lists) by CAMeL Lab, NYU Abu Dhabi, licensed CC BY-SA 4.0. Lemmatization is performed offline with [CAMeL Tools](https://github.com/CAMeL-Lab/camel_tools) (MIT license, data GPL v2).
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0.

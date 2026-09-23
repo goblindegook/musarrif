@@ -28,6 +28,7 @@
     "report:srs": "tsx scripts/report-srs.mts",
     "add:tests": "tsx scripts/test-verb.mts",
     "glosses": "tsx scripts/glosses.mts",
+    "frequency": "tsx scripts/frequency.mts",
     "build:hash": "VITE_ROUTING_MODE=hash tsc && VITE_ROUTING_MODE=hash vite build",
     "prerender": "tsx scripts/prerender.mts"
   },

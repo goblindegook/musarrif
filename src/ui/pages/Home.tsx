@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import * as v from 'valibot'
+import verbFrequency from '../../data/verb-frequency.json'
 import { analyzeRoot, type RootShape } from '../../paradigms/roots'
 import {
   type DisplayVerb,
@@ -30,6 +31,17 @@ import { useRouting } from '../routes'
 const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.lemma.localeCompare(b.lemma, 'ar'))
+
+const FREQUENCY_RANK = new Map(verbFrequency.map((id, rank) => [id, rank]))
+
+// Unranked verbs share the last rank, so the stable sort keeps them in alphabetical order.
+const allVerbsByFrequency = allVerbs.toSorted(
+  (a, b) => (FREQUENCY_RANK.get(a.id) ?? verbFrequency.length) - (FREQUENCY_RANK.get(b.id) ?? verbFrequency.length),
+)
+
+const SORT_ORDERS = ['alphabetical', 'frequency'] as const
+
+type SortOrder = (typeof SORT_ORDERS)[number]
 
 const ROOT_TYPE_FILTERS: readonly RootShape[] = [
   'sound',
@@ -61,6 +73,7 @@ const Query = v.object({
     root: v.fallback(v.array(v.picklist(ROOT_TYPE_FILTERS)), []),
     group: v.fallback(v.nullable(v.picklist(['favourites', 'kana', 'zanna'])), null),
   }),
+  sort: v.fallback(v.picklist(SORT_ORDERS), 'alphabetical'),
   page: v.fallback(v.pipe(v.string(), v.toNumber(), v.toMinValue(1)), 1),
 })
 
@@ -73,6 +86,7 @@ function parseQuery(params: URLSearchParams): Query {
       root: params.getAll('root'),
       group: params.get('group'),
     },
+    sort: params.get('sort'),
     page: params.get('page'),
   })
 }
@@ -82,6 +96,7 @@ function setQuery(query: Query): URLSearchParams {
   if (query.filters.form) next.set('form', query.filters.form)
   for (const rootType of query.filters.root) next.append('root', rootType)
   if (query.filters.group) next.set('group', query.filters.group)
+  if (query.sort === 'frequency') next.set('sort', query.sort)
   if (query.page > 1) next.set('page', String(query.page))
   return next
 }
@@ -96,6 +111,10 @@ function withFormFilter(query: Query, option: string): Query {
   return { ...query, filters: { ...query.filters, form: query.filters.form === option ? null : option }, page: 1 }
 }
 
+function withSort(query: Query, sort: SortOrder): Query {
+  return { ...query, sort, page: 1 }
+}
+
 function withGroupFilter(query: Query, option: GroupFilter): Query {
   return { ...query, filters: { ...query.filters, group: query.filters.group === option ? null : option }, page: 1 }
 }
@@ -106,11 +125,11 @@ function withRootShape(query: Query, option: RootShape): Query {
   if (exists) root = root.filter((f) => f !== option)
   if (!exists && option === 'sound') root = ['sound']
   if (!exists && option !== 'sound') root = [...root.filter((entry) => entry !== 'sound'), option]
-  return { filters: { ...query.filters, root }, page: 1 }
+  return { ...query, filters: { ...query.filters, root }, page: 1 }
 }
 
-function filterVerbs({ filters }: Query, favouriteVerbIds: ReadonlySet<string>): DisplayVerb[] {
-  let filtered = allVerbs
+function filterVerbs({ filters, sort }: Query, favouriteVerbIds: ReadonlySet<string>): DisplayVerb[] {
+  let filtered = sort === 'frequency' ? allVerbsByFrequency : allVerbs
   const { form } = filters
   if (form) filtered = filtered.filter((verb) => matchesFormFilter(verb, form))
   if (filters.root.length > 0)
@@ -134,12 +153,12 @@ export function Home() {
   useDocumentTitle(t('title'))
 
   const query = useMemo(() => parseQuery(queryParams), [queryParams])
-  const hasMoreFilters = query.filters.root.length > 0 || query.filters.group != null
-  const [moreFiltersOpen, setMoreFiltersOpen] = useState(hasMoreFilters)
+  const hasActiveFilters = query.filters.form != null || query.filters.root.length > 0 || query.filters.group != null
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(hasActiveFilters)
 
   useEffect(() => {
-    if (hasMoreFilters) setMoreFiltersOpen(true)
-  }, [hasMoreFilters])
+    if (hasActiveFilters) setMoreFiltersOpen(true)
+  }, [hasActiveFilters])
   const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
   const visibleVerbs = useMemo(() => filterVerbs(query, favouriteVerbIds), [favouriteVerbIds, query])
 
@@ -172,6 +191,11 @@ export function Home() {
   const applyRootShape = useCallback(
     (option: RootShape) => setQueryParams((current) => setQuery(withRootShape(parseQuery(current), option))),
     [setQueryParams, query],
+  )
+
+  const applySort = useCallback(
+    (sort: SortOrder) => setQueryParams((current) => setQuery(withSort(parseQuery(current), sort))),
+    [setQueryParams],
   )
 
   const applyGroupFilter = useCallback(
@@ -228,24 +252,14 @@ export function Home() {
           <Panel title={t('verbList.title')} dir={dir} lang={lang}>
             <FilterGroup>
               <Subheading dir={dir} lang={lang}>
-                {t('verbsList.filter.form.title')}
+                {t('verbsList.sort.title')}
               </Subheading>
-              <FormFilterBar role="group" aria-label={t('aria.selectForm')}>
-                {([...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const).map((option) => (
-                  <SelectableButton
-                    key={option}
-                    id={`form-tab-${option}`}
-                    type="button"
-                    aria-selected={query.filters.form === option}
-                    aria-controls={`form-panel-${option}`}
-                    active={query.filters.form === option}
-                    disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
-                    onClick={() => applyFormFilter(option)}
-                  >
-                    {formFilterLabel(option)}
-                  </SelectableButton>
-                ))}
-              </FormFilterBar>
+              <ModeToggle
+                activeMode={SORT_ORDERS.indexOf(query.sort)}
+                labels={SORT_ORDERS.map((order) => t(`verbsList.sort.${order}.label`))}
+                ariaLabel={t('verbsList.sort.title')}
+                onClick={(index) => applySort(SORT_ORDERS[index])}
+              />
             </FilterGroup>
 
             <MoreFilters open={moreFiltersOpen} onToggle={(event) => setMoreFiltersOpen(event.currentTarget.open)}>
@@ -255,6 +269,30 @@ export function Home() {
               </MoreFiltersSummary>
 
               <MoreFiltersBody>
+                <FilterGroup>
+                  <Subheading dir={dir} lang={lang}>
+                    {t('verbsList.filter.form.title')}
+                  </Subheading>
+                  <FormFilterBar role="group" aria-label={t('aria.selectForm')}>
+                    {([...FORMS.map(String), ...QUADRILITERAL_FORMS.map((form) => `${form}q`)] as const).map(
+                      (option) => (
+                        <SelectableButton
+                          key={option}
+                          id={`form-tab-${option}`}
+                          type="button"
+                          aria-selected={query.filters.form === option}
+                          aria-controls={`form-panel-${option}`}
+                          active={query.filters.form === option}
+                          disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
+                          onClick={() => applyFormFilter(option)}
+                        >
+                          {formFilterLabel(option)}
+                        </SelectableButton>
+                      ),
+                    )}
+                  </FormFilterBar>
+                </FilterGroup>
+
                 <FilterGroup>
                   <Subheading dir={dir} lang={lang}>
                     {t('verbsList.filter.rootType.title')}

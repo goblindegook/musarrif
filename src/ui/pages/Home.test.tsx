@@ -471,41 +471,42 @@ test('treats sound as exclusive with other root type filters', async () => {
   expect(hamzated).toHaveAttribute('aria-pressed', 'false')
 })
 
-describe('progressive disclosure of secondary filters', () => {
-  test('keeps the form filter always visible, outside any disclosure', () => {
+describe('filters disclosure', () => {
+  test('hides every filter behind a collapsed "Filters" disclosure by default', () => {
     renderHome()
 
-    expect(screen.getByText('Filter by form').closest('details')).toBeNull()
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(false)
+    expect(screen.getByText('By form').closest('details')).toBe(details)
+    expect(screen.getByText('By root type').closest('details')).toBe(details)
+    expect(screen.getByText('By group').closest('details')).toBe(details)
   })
 
-  test('hides root type and other filters behind a collapsed "More filters" disclosure by default', () => {
-    renderHome()
+  test('expands the disclosure when a form filter is already active from hash query params', () => {
+    renderHome('/#/verbs?form=2')
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
-    expect(details).toBeTruthy()
-    expect(details.open).toBe(false)
-    expect(screen.getByText('Filter by root type').closest('details')).toBe(details)
-    expect(screen.getByText('Filter by group').closest('details')).toBe(details)
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
+    expect(details.open).toBe(true)
   })
 
   test('expands the disclosure when a root type filter is already active from hash query params', () => {
     renderHome('/#/verbs?root=hollow')
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
   })
 
   test('expands the disclosure when a group filter is already active from hash query params', () => {
     renderHome('/#/verbs?group=kana')
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
   })
 
   test('expands the disclosure when a root type filter is active from path query params', () => {
     renderHome('/verbs/?root=doubled')
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
   })
 
@@ -517,17 +518,82 @@ describe('progressive disclosure of secondary filters', () => {
       window.dispatchEvent(new PopStateEvent('popstate'))
     })
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
   })
 
   test('opens on click, revealing root type and other filters', () => {
     renderHome()
 
-    fireEvent.click(screen.getByText('More filters'))
+    fireEvent.click(screen.getByText('Filters'))
 
-    const details = screen.getByText('More filters').closest('details') as HTMLDetailsElement
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)
+  })
+})
+
+describe('sort by frequency', () => {
+  const sortControl = () => within(document.querySelector('[role="group"][aria-label="Order"]') as HTMLElement)
+
+  test('places the sort control before the filters', () => {
+    renderHome()
+
+    const sort = document.querySelector('[role="group"][aria-label="Order"]') as HTMLElement
+    const formFilter = document.querySelector('[role="group"][aria-label="Select form"]') as HTMLElement
+    expect(sort.compareDocumentPosition(formFilter) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  test('lists the most common verbs first', () => {
+    renderHome('/#/verbs?sort=frequency')
+
+    const kana = screen.getByText('كانَ')
+    const qala = screen.getByText('قالَ')
+    expect(kana.compareDocumentPosition(qala) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  test('sorts within the active filters', () => {
+    renderHome('/#/verbs?form=4&sort=frequency')
+
+    const amkana = screen.getByText('أَمكَنَ')
+    const alana = screen.getByText('أَعلَنَ')
+    expect(amkana.compareDocumentPosition(alana) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  test('lists unranked verbs after the ranked ones, in alphabetical order', () => {
+    renderHome('/#/verbs?form=9&sort=frequency')
+
+    const ihmarra = screen.getByText('اِحمَرَّ')
+    const ibyadda = screen.getByText('اِبيَضَّ')
+    const ihwalla = screen.getByText('اِحوَلَّ')
+    const iwajja = screen.getByText('اِعوَجَّ')
+    expect(ihmarra.compareDocumentPosition(ibyadda) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(ibyadda.compareDocumentPosition(ihwalla) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(ihwalla.compareDocumentPosition(iwajja) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  test('syncs the sort to query params, going back to the first page', async () => {
+    renderHome('/#/verbs?page=2')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(sortControl().getByLabelText('Most common'))
+    expect(currentUrl()).toBe('/verbs/?sort=frequency')
+
+    await user.click(sortControl().getByLabelText('Alphabetical'))
+    expect(currentUrl()).toBe('/verbs/')
+  })
+
+  test('keeps the sort when a root type filter changes', async () => {
+    renderHome('/#/verbs?sort=frequency')
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+
+    await user.click(screen.getByText('Doubled'))
+    expect(currentUrl()).toBe('/verbs/?root=doubled&sort=frequency')
+  })
+
+  test.each([['/#/verbs'], ['/#/verbs?sort=unknown']])('selects alphabetical order for %s', (url) => {
+    renderHome(url)
+
+    expect(sortControl().getByLabelText('Alphabetical')).toHaveAttribute('aria-pressed', 'true')
   })
 })
 
@@ -590,5 +656,5 @@ describe('Search', () => {
 })
 
 function getOtherFilters(): HTMLElement {
-  return within(screen.getByText('Filter by group').parentElement!).getByLabelText('Filter by group')
+  return within(screen.getByText('By group').parentElement!).getByLabelText('By group')
 }
