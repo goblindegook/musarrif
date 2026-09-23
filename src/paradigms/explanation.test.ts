@@ -159,13 +159,16 @@ describe('resolveVerbExplanationLayers tenseRoot hollow', () => {
     expect(resolveVerbExplanationLayers(getVerbById('Ewz-1')!, tense, pronoun).tenseRoot).toBe(expected)
   })
 
-  test.each([['Ewz-1'], ['xwr-1']] as const)('%s root note describes a verb with no weak behaviour', (id) => {
-    const layers = resolveVerbExplanationLayers(getVerbById(id)!, 'active.past', '3ms')
-    expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
-      text: 'explanation.root.sound',
-      kind: 'radical',
-    })
-  })
+  test.each([['Ewz-1'], ['xwr-1']])(
+    '%s root note describes a lexically uncontracted hollow root, not a plain sound one',
+    (id) => {
+      const layers = resolveVerbExplanationLayers(getVerbById(id)!, 'active.past', '3ms')
+      expect(renderExplanation(layers, (key) => key)[0]).toContainEqual({
+        text: 'explanation.root.hollow-uncontracted-waw',
+        kind: 'radical',
+      })
+    },
+  )
 })
 
 // ── tenseRoot: defective ─────────────────────────────────────────────────────

@@ -373,6 +373,8 @@
   "explanation.root.hollow-yaa": "Attenzione alla radicale mediana <span lang=\"ar\">ي</span>: diventa vocale lunga, ma si accorcia davanti a una desinenza che inizia per consonante, perciò il verbo cambia tra passato e presente.",
   "explanation.root.doubled-sound-form": "Le Forme II e V raddoppiano già la radicale mediana, perciò la coppia identica di questa radice non si fonde mai: restano entrambe scritte per esteso.",
   "explanation.root.hollow-sound-form": "Nelle Forme II, III, V, VI e IX la radicale mediana debole resta una consonante ordinaria: il raddoppiamento o la vocale lunga dello schema la protegge, perciò questo verbo si comporta ovunque come un verbo sano.",
+  "explanation.root.hollow-uncontracted-waw": "La radicale mediana <span lang=\"ar\">و</span> sembra una radice debole, ma questo verbo non la trasforma mai in vocale lunga: si comporta ovunque come un verbo sano.",
+  "explanation.root.hollow-uncontracted-yaa": "La radicale mediana <span lang=\"ar\">ي</span> sembra una radice debole, ma questo verbo non la trasforma mai in vocale lunga: si comporta ovunque come un verbo sano.",
   "explanation.root.sound": "Ogni radicale di <span lang=\"ar\">{root}</span> è stabile: applica il modello direttamente, senza cambi irregolari.",
   "explanation.tense-root.final-drops": "Al giussivo e all’imperativo, le forme senza desinenza perdono del tutto l’ultima radicale debole: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.final-elides": "Al passato attivo, la terza persona femminile singolare e duale perde l’ultima radicale debole senza lasciare traccia, e la radicale mediana prende una fatḥa breve: <span lang=\"ar\">{arabic}</span>.",

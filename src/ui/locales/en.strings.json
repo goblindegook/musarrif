@@ -373,6 +373,8 @@
   "explanation.root.hollow-yaa": "Watch the middle radical <span lang=\"ar\">ي</span>: it becomes a long vowel, but shortens before an ending that starts with a consonant, so the verb looks different in the past and the present.",
   "explanation.root.doubled-sound-form": "Forms II and V already double the middle radical, so the identical pair in this root never merges: both stay written out.",
   "explanation.root.hollow-sound-form": "In Forms II, III, V, VI and IX the weak middle radical stays an ordinary consonant: the doubling or the long vowel of the pattern protects it, so this verb behaves like a sound verb throughout.",
+  "explanation.root.hollow-uncontracted-waw": "The middle radical <span lang=\"ar\">و</span> looks like a hollow root, but this verb never lengthens it to a long vowel: it behaves like a sound verb throughout.",
+  "explanation.root.hollow-uncontracted-yaa": "The middle radical <span lang=\"ar\">ي</span> looks like a hollow root, but this verb never lengthens it to a long vowel: it behaves like a sound verb throughout.",
   "explanation.root.sound": "Every radical in <span lang=\"ar\">{root}</span> is stable: apply the pattern directly, with no irregular changes.",
   "explanation.tense-root.final-drops": "In the jussive and imperative, forms with no ending drop the last weak letter completely: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.final-elides": "In the active past, the third-person feminine singular and dual drop the last weak letter silently, and the middle radical takes a short fatḥa: <span lang=\"ar\">{arabic}</span>.",

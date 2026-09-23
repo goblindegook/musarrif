@@ -277,7 +277,7 @@ export function toFormDescriptor(
 function liveRootAnalysis(verb: Verb): RootAnalysis {
   const analysis = analyzeRoot(verb.rootTokens)
   if (contractsHollow(verb)) return analysis
-  return { ...analysis, type: rootShapes(analysis.type.filter((shape) => shape !== 'hollow')), weakLetter: undefined }
+  return { ...analysis, type: rootShapes(analysis.type.filter((shape) => shape !== 'hollow')) }
 }
 
 // A Form VIII stem whose infix assimilates to د keeps a wāw middle radical intact (اِزْدَوَجَ), while
@@ -619,6 +619,7 @@ function resolveRootNoteKey(layers: ExplanationLayers): string {
 
   if (live.length === 0 && rootType.includes('hollow')) return 'explanation.root.hollow-sound-form'
   if (live.length === 0 && rootType.includes('doubled')) return 'explanation.root.doubled-sound-form'
+  if (live.length === 0 && weakLetter) return `explanation.root.hollow-uncontracted-${weakLetter}`
   if (live.length === 1 && live[0] === 'assimilated' && form === 8) return ''
   if (live.length === 1 && live[0] === 'assimilated' && form !== 1) return 'explanation.root.assimilated-sound-form'
 

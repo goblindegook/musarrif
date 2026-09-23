@@ -373,6 +373,8 @@
   "explanation.root.hollow-yaa": "Atenção à radical medial <span lang=\"ar\">ي</span>: torna-se vogal longa, mas encurta antes de uma desinência iniciada por consoante, pelo que o verbo muda entre passado e presente.",
   "explanation.root.doubled-sound-form": "As Formas II e V já duplicam a radical medial, pelo que o par idêntico desta raiz nunca se funde: ambas permanecem escritas por extenso.",
   "explanation.root.hollow-sound-form": "Nas Formas II, III, V, VI e IX a radical medial fraca mantém-se consoante comum: a duplicação ou a vogal longa do padrão protege-a, pelo que este verbo se comporta como um verbo são em todo o paradigma.",
+  "explanation.root.hollow-uncontracted-waw": "A radical medial <span lang=\"ar\">و</span> parece uma radical fraca, mas este verbo nunca a transforma em vogal longa: comporta-se como um verbo são em todo o paradigma.",
+  "explanation.root.hollow-uncontracted-yaa": "A radical medial <span lang=\"ar\">ي</span> parece uma radical fraca, mas este verbo nunca a transforma em vogal longa: comporta-se como um verbo são em todo o paradigma.",
   "explanation.root.sound": "Todas as radicais de <span lang=\"ar\">{root}</span> são estáveis: aplique o padrão diretamente, sem mudanças irregulares.",
   "explanation.tense-root.final-drops": "No jussivo e no imperativo, as formas sem desinência perdem por completo a última radical fraca: <span lang=\"ar\">{arabic}</span>.",
   "explanation.tense-root.final-elides": "No passado ativo, a terceira pessoa feminina singular e dual perde a última radical fraca sem deixar marca, e a radical medial leva uma fatḥa breve: <span lang=\"ar\">{arabic}</span>.",
