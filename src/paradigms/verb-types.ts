@@ -47,6 +47,7 @@ export const MASDAR_PATTERNS = [
   'fi3aal',
   'fu3aal',
   'fu3ool',
+  'fu3oola',
   'fa3alaan',
   'fu3laan',
   'fa3aala',
