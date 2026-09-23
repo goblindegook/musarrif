@@ -2,6 +2,7 @@ import { isMood, isTense, isVoice, type Mood, type NonPresentTense, type Voice }
 import { createRouting } from './hooks/useRouting'
 
 type AppRoute =
+  | readonly []
   | readonly ['verbs']
   | readonly ['verbs', verbId: string]
   | readonly ['verbs', verbId: string, voice: Voice]
@@ -16,7 +17,7 @@ export const { Route, Router, RoutingProvider, useRouting } = createRouting({
 })
 
 function parse(segments: readonly string[]): AppRoute {
-  if (!segments.at(0)) return ['verbs']
+  if (!segments.at(0)) return []
   if (segments.at(0) === 'test') return ['test']
   if (segments.at(0) !== 'verbs') return parse(segments.slice(1))
 

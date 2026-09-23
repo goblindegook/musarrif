@@ -18,8 +18,13 @@ import {
 
 export function App() {
   const { lang, dir, t } = useI18n()
-  const { route } = useRouting()
+  const { route, navigateTo } = useRouting()
   const { isOpen, step, totalSteps, openTour, closeTour, nextStep } = useTour()
+
+  // The landing page shares the root route, so only the app shell canonicalises it to the verb list.
+  useEffect(() => {
+    if (route.length === 0) navigateTo(['verbs'], { replace: true })
+  }, [route, navigateTo])
 
   useEffect(registerUserDataFileLaunchHandler, [])
   useEffect(registerFileDragDropHandler, [])

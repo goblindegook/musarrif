@@ -24,6 +24,7 @@ import { OpticalReceive } from './OpticalReceive'
 import { OpticalSend } from './OpticalSend'
 
 const DIACRITICS_OPTIONS = ['all', 'some', 'none'] as const
+const ACTIVE_MODE: Record<string, number | undefined> = { verbs: 0, test: 1 }
 const THEME_OPTIONS = ['light', 'dark', 'system'] as const
 
 interface AppHeaderProps {
@@ -34,7 +35,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
   const { voices, voiceName, setVoiceName } = useSpeech('ar')
-  const { route, navigateTo } = useRouting()
+  const { route, navigateTo, toHref } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [pendingImportContent, setPendingImportContent] = useState<string | null>(null)
   const [opticalMode, setOpticalMode] = useState<'send' | 'receive' | null>(null)
@@ -83,14 +84,23 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
             {t('eyebrow')}
           </Eyebrow>
           <PageTitle dir={dir} lang={lang}>
-            {t('title')}
+            <TitleLink
+              href={toHref(['verbs'])}
+              onClick={(event: MouseEvent) => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+                event.preventDefault()
+                navigateTo(['verbs'])
+              }}
+            >
+              {t('title')}
+            </TitleLink>
           </PageTitle>
         </TitleGroup>
         <RightGroup>
           {/* FIXME: data-tour-step on ModeToggle  */}
           <span data-tour-step="3">
             <ModeToggle
-              activeMode={route[0] === 'test' ? 1 : 0}
+              activeMode={ACTIVE_MODE[route[0] ?? '']}
               labels={[t('mode.conjugate'), t('mode.exercise')]}
               icons={[<ConjugateIcon />, <ExerciseIcon />]}
               ariaLabel={t('mode.label')}
@@ -305,6 +315,16 @@ const PageTitle = styled('h1')`
   @media (min-width: 960px) {
     font-size: clamp(1.9rem, 3vw, 2.4rem);
     line-height: 1.5;
+  }
+`
+
+const TitleLink = styled('a')`
+  color: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: 2px;
   }
 `
 

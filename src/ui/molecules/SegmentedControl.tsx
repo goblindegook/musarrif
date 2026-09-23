@@ -27,10 +27,7 @@ export function SegmentedControl<T extends string = string>({
   size = 'normal',
   ...rest
 }: SegmentedControlProps<T>) {
-  const activeIndex = Math.max(
-    0,
-    options.findIndex((option) => option.value === value),
-  )
+  const activeIndex = options.findIndex((option) => option.value === value)
 
   return (
     <Control fill={fill} activeIndex={activeIndex} optionCount={options.length} {...rest} role="group">
@@ -72,6 +69,7 @@ const Control = styled('div')<{
   ${({ fill }) => fill && 'flex: 1; min-width: 0; width: 100%;'}
   --segmented-count: ${({ optionCount = 1 }) => Math.max(optionCount, 1)};
   --segmented-active-index: ${({ activeIndex = 0 }) => Math.max(activeIndex, 0)};
+  --segmented-pill-opacity: ${({ activeIndex = 0 }) => (activeIndex < 0 ? 0 : 1)};
   --segmented-track-width: calc(100% - 0.5rem);
   --segmented-pill-width: calc(var(--segmented-track-width) / var(--segmented-count));
   --segmented-direction: 1;
@@ -91,6 +89,7 @@ const Control = styled('div')<{
     border: 1px solid var(--color-accent);
     transform: translateX(calc(100% * var(--segmented-active-index) * var(--segmented-direction)));
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: var(--segmented-pill-opacity);
     will-change: transform;
     pointer-events: none;
   }

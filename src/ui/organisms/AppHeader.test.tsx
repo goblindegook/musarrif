@@ -34,9 +34,23 @@ it('shows the title', () => {
   expect(screen.getByText('Muṣarrif')).toBeInTheDocument()
 })
 
+it('links the title to the verb list', () => {
+  renderHeader('/#/test')
+  const link = screen.getByText('Muṣarrif').closest('a')
+  expect(link).toHaveAttribute('href', '/verbs/')
+  fireEvent.click(link!)
+  expect(window.location.pathname).toBe('/verbs/')
+})
+
 it('Conjugate segment has aria-pressed="true" by default (conjugation mode)', () => {
   renderHeader('/#/verbs')
   expect(screen.getByText('Conjugate').closest('button')).toHaveAttribute('aria-pressed', 'true')
+})
+
+it('presses neither mode segment on the landing page', () => {
+  renderHeader('/')
+  expect(screen.getByText('Conjugate').closest('button')).toHaveAttribute('aria-pressed', 'false')
+  expect(screen.getByText('Exercise').closest('button')).toHaveAttribute('aria-pressed', 'false')
 })
 
 it('clicking the Exercise segment pushes /#/test to history', () => {

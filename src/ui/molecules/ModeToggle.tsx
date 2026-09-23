@@ -3,7 +3,7 @@ import type { ComponentChild } from 'preact'
 import { SegmentedControl } from './SegmentedControl'
 
 type Props = {
-  activeMode: number
+  activeMode?: number
   labels: readonly string[]
   icons?: readonly ComponentChild[]
   onClick: (index: number) => void
@@ -25,7 +25,7 @@ export function ModeToggle({ activeMode, labels, icons, onClick, ariaLabel, size
             </SegmentContent>
           ),
         }))}
-        value={`${activeMode}`}
+        value={`${activeMode ?? ''}`}
         onChange={(_value: string, index: number) => onClick(index)}
         size={size}
         fill={size === 'large'}
