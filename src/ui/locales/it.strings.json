@@ -309,6 +309,7 @@
   "explanation.form-i-pattern.u-u": "Passato ḍamma (<span lang=\"ar\">{pastForm}</span>), presente ḍamma (<span lang=\"ar\">{presentForm}</span>). Impara le vocali insieme al verbo.",
   "explanation.form-root.assimilation-complete": "Nella Forma VIII, una prima radicale <span lang=\"ar\">د، ذ، ث، ط</span> o <span lang=\"ar\">ظ</span> assorbe del tutto la <span lang=\"ar\">تَ</span>: al suo posto compare una lettera doppia.",
   "explanation.form-root.assimilation-emphasis": "Nella Forma VIII, una prima radicale <span lang=\"ar\">ص</span> o <span lang=\"ar\">ض</span> trasforma la <span lang=\"ar\">تَ</span> nella enfatica <span lang=\"ar\">طَ</span>.",
+  "explanation.form-root.assimilation-hamza-initial": "Nella Forma VIII, una prima radicale hamza si fonde nella <span lang=\"ar\">تَ</span> e la raddoppia; la hamza stessa scompare.",
   "explanation.form-root.assimilation-voicing": "Nella Forma VIII, una prima radicale <span lang=\"ar\">ز</span> trasforma la <span lang=\"ar\">تَ</span> nella sonora <span lang=\"ar\">دَ</span>.",
   "explanation.form-root.assimilation-weak-initial": "Una prima radicale debole si fonde nella <span lang=\"ar\">ت</span> della Forma VIII e la raddoppia.",
   "explanation.form.1-action": "Una fatḥa al passato indica di solito un’azione compiuta su qualcosa, o rivolta al mondo esterno. È il gruppo più ampio della Forma I.",

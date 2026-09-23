@@ -68,6 +68,7 @@ type FormRootInteraction =
   | 'assimilation-voicing'
   | 'assimilation-emphasis'
   | 'assimilation-weak-initial'
+  | 'assimilation-hamza-initial'
 
 type TenseRootInteraction =
   | 'final-drops'
@@ -387,6 +388,7 @@ function toFormRoot(verb: Verb): FormRootInteraction | undefined {
 
   const [c1] = verb.rootTokens
   if ([WAW, YEH].some((weak) => c1.equals(weak))) return 'assimilation-weak-initial'
+  if (c1.isHamza) return 'assimilation-hamza-initial'
 
   const infixConsonant = resolveFormVIIIInfixConsonant(c1)
   if (infixConsonant.equals(c1)) return 'assimilation-complete'

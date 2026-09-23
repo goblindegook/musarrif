@@ -270,6 +270,7 @@
   "explanation.form-i-pattern.u-u": "ٱلْمَاضِي بِٱلضَّمَّةِ (<span lang=\"ar\">{pastForm}</span>)، وَٱلْمُضَارِعُ بِٱلضَّمَّةِ (<span lang=\"ar\">{presentForm}</span>). ٱحْفَظِ ٱلْحَرَكَاتِ مَعَ ٱلْفِعْلِ.",
   "explanation.form-root.assimilation-complete": "فِي ٱلْبَابِ ٱلثَّامِنِ، إِذَا كَانَتِ ٱلْفَاءُ <span lang=\"ar\">د، ذ، ث، ط</span> أَوْ <span lang=\"ar\">ظ</span> أُدْغِمَتْ فِيهَا ٱلتَّاءُ إِدْغَامًا تَامًّا: يَظْهَرُ حَرْفٌ مُضَعَّفٌ مَكَانَ ٱلتَّاءِ.",
   "explanation.form-root.assimilation-emphasis": "فِي ٱلْبَابِ ٱلثَّامِنِ، إِذَا كَانَتِ ٱلْفَاءُ <span lang=\"ar\">ص</span> أَوْ <span lang=\"ar\">ض</span> قُلِبَتِ ٱلتَّاءُ طَاءً مُطْبَقَةً.",
+  "explanation.form-root.assimilation-hamza-initial": "فِي ٱلْبَابِ ٱلثَّامِنِ، إِذَا كَانَتِ ٱلْفَاءُ هَمْزَةً أُدْغِمَتْ فِي ٱلتَّاءِ فَتُضَعِّفُهَا، وَتَسْقُطُ ٱلْهَمْزَةُ نَفْسُهَا.",
   "explanation.form-root.assimilation-voicing": "فِي ٱلْبَابِ ٱلثَّامِنِ، إِذَا كَانَتِ ٱلْفَاءُ <span lang=\"ar\">ز</span> قُلِبَتِ ٱلتَّاءُ دَالًا مَجْهُورَةً.",
   "explanation.form-root.assimilation-weak-initial": "تَنْدَغِمُ ٱلْفَاءُ ٱلْمُعْتَلَّةُ فِي <span lang=\"ar\">ت</span> ٱلْبَابِ ٱلثَّامِنِ فَتُضَعِّفُهَا.",
   "explanation.form.10": "زِيَادَةُ <span lang=\"ar\">اِسْتَـ</span> (<span lang=\"ar\">اِسْتَفْعَلَ</span>) عَلَامَةُ ٱلْبَابِ ٱلْعَاشِرِ. يُفِيدُ غَالِبًا ٱلطَّلَبَ أَوِ ٱلسُّؤَالَ أَوِ ٱعْتِبَارَ مَعْنَى ٱلْبَابِ ٱلْأَوَّلِ.",

@@ -353,6 +353,7 @@ describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
     ['دخل', 'assimilation-complete'],
     ['صبر', 'assimilation-emphasis'],
     ['وحد', 'assimilation-weak-initial'],
+    ['أخذ', 'assimilation-hamza-initial'],
     ['كتب', undefined],
   ] as const)('Form VIII root %s -> %s', (root, expected) => {
     const verb = getVerb(root, 8)
@@ -360,16 +361,10 @@ describe('resolveVerbExplanationLayers formRoot form VIII assimilation', () => {
     expect(layers.formRoot).toBe(expected)
   })
 
-  test('renderExplanation includes voicing assimilation sentence', () => {
+  test('renderExplanation turns formRoot into its explanation.form-root.<key> sentence', () => {
     const layers = resolveVerbExplanationLayers(getVerb('زوج', 8), 'active.past', '3ms')
     const rendered = renderExplanation(layers, (key) => key)
     expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-voicing', kind: 'radical' })
-  })
-
-  test('renderExplanation explains the Form VIII weak-initial assimilation in prose', () => {
-    const layers = resolveVerbExplanationLayers(getVerb('وحد', 8), 'active.past', '3ms')
-    const rendered = renderExplanation(layers, (key) => key)
-    expect(rendered[0]).toContainEqual({ text: 'explanation.form-root.assimilation-weak-initial', kind: 'radical' })
   })
 })
 

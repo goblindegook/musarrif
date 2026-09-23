@@ -309,6 +309,7 @@
   "explanation.form-i-pattern.u-u": "Past ḍamma (<span lang=\"ar\">{pastForm}</span>), present ḍamma (<span lang=\"ar\">{presentForm}</span>). Learn the vowels together with the verb.",
   "explanation.form-root.assimilation-complete": "In Form VIII, a first radical of <span lang=\"ar\">د، ذ، ث، ط</span> or <span lang=\"ar\">ظ</span> swallows the <span lang=\"ar\">تَ</span> completely: a doubled letter appears where the <span lang=\"ar\">تَ</span> would be.",
   "explanation.form-root.assimilation-emphasis": "In Form VIII, a first radical of <span lang=\"ar\">ص</span> or <span lang=\"ar\">ض</span> turns the <span lang=\"ar\">تَ</span> into the emphatic <span lang=\"ar\">طَ</span>.",
+  "explanation.form-root.assimilation-hamza-initial": "In Form VIII, a first-radical hamza merges into the <span lang=\"ar\">تَ</span> and doubles it; the hamza itself disappears.",
   "explanation.form-root.assimilation-voicing": "In Form VIII, a first radical of <span lang=\"ar\">ز</span> turns the <span lang=\"ar\">تَ</span> into the voiced <span lang=\"ar\">دَ</span>.",
   "explanation.form-root.assimilation-weak-initial": "A weak first radical merges into the Form VIII <span lang=\"ar\">ت</span> and doubles it.",
   "explanation.form.1-action": "A fatḥa in the past usually means an action done to something, or out in the world. It is the widest Form I group.",

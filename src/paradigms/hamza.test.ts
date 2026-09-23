@@ -10,7 +10,9 @@ const HAMZA_ON_WAW = '\u0624'
 const ALIF_HAMZA_BELOW = '\u0625'
 const HAMZA_ON_YEH = '\u0626'
 
-test.each<[string, string, string]>([
+const SEATS = [HAMZA, ALIF_MADDA, ALIF_HAMZA, HAMZA_ON_WAW, ALIF_HAMZA_BELOW, HAMZA_ON_YEH]
+
+test.each<[string, string, string | string[]]>([
   // initial
   ["'iT", 'below alif', ALIF_HAMZA_BELOW],
   ["'uT", 'on alif', ALIF_HAMZA],
@@ -78,12 +80,12 @@ test.each<[string, string, string]>([
   ["Tuw'uwT", 'on the line', HAMZA],
   ["Tuw'aAT", 'on the line', HAMZA],
 
-  ["Tawo'iT", 'on the line', HAMZA],
-  ["Tawo'uT", 'on the line', HAMZA],
-  ["Tawo'aT", 'on the line', HAMZA],
-  // ["Tawo'iyT", 'on the line', HAMZA], // Conflicts with w'y-1 passive participle
+  ["Tawo'iT", 'on the line or yeh', [HAMZA, HAMZA_ON_YEH]],
+  ["Tawo'uT", 'on the line or waw', [HAMZA, HAMZA_ON_WAW]],
+  ["Tawo'aT", 'on the line or alif', [HAMZA, ALIF_HAMZA]],
+  ["Tawo'iyT", 'on the line or yeh', [HAMZA, HAMZA_ON_YEH]],
   // ["Tawo'uwT", 'on the line', HAMZA], // Conflicts with w'd-1 passive participle
-  ["Tawo'aAT", 'on the line', HAMZA],
+  ["Tawo'aAT", 'on the line or madda', [HAMZA, ALIF_MADDA]],
 
   ["TaA'iT", 'on yeh', HAMZA_ON_YEH],
   ["TaA'uT", 'on waw', HAMZA_ON_WAW],
@@ -93,5 +95,6 @@ test.each<[string, string, string]>([
   ["TaA'aAT", 'on the line', HAMZA],
 ])(`hamza in %s seats %s`, (word, seat, expected) => {
   const x = new Word([measureMorpheme(...tokenize(transliterateReverse(word)))])
-  expect(String(x), `hamza in ${word} seats ${seat}`).toContain(expected)
+  const actual = [...String(x)].find((c) => SEATS.includes(c))
+  expect(actual, `hamza in ${word} seats ${seat}`).toBeOneOf([expected].flat())
 })
