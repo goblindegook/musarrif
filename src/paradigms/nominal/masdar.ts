@@ -207,7 +207,7 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
         measureMorpheme(KASRA),
         radicalMorpheme(c2.isWeak && !c3.isWeak ? YEH : c2),
         measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c3.isWeak ? YEH : c3),
+        radicalMorpheme(c3),
         measureMorpheme(FATHA, TEH_MARBUTA),
       ]
 
