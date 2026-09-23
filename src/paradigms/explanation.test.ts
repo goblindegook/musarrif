@@ -568,6 +568,85 @@ describe('resolveNominalExplanationLayers nominalRoot', () => {
   })
 })
 
+// ── nominalRoot: hollow and defective participles ───────────────────────────
+
+describe('resolveNominalExplanationLayers nominalRoot hollow participles', () => {
+  test.each([
+    [1, 'activeParticiple', 'شَائِق', 'hollow-hamza'],
+    [1, 'passiveParticiple', 'مَشُوق', 'hollow-long-vowel'],
+    [1, 'masdar', 'شَوْق', undefined],
+    [2, 'activeParticiple', 'مُشَوِّق', undefined],
+    [3, 'activeParticiple', 'مُشَاوِر', undefined],
+    [5, 'activeParticiple', 'مُتَشَوِّق', undefined],
+    [6, 'activeParticiple', 'مُتَضَايِق', undefined],
+    [8, 'activeParticiple', 'مُشْتَاق', 'hollow-always-alif'],
+  ] as const)('شوق Form %d + %s -> %s', (form, nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb('شوق', form), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test.each([
+    ['activeParticiple', 'مُشِيل', 'hollow-voice-selects'],
+    ['passiveParticiple', 'مُشَال', 'hollow-voice-selects'],
+  ] as const)('شول Form 4 (voice-selects) + %s -> %s', (nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb('شول', 4), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test.each([
+    ['activeParticiple', 'مُسْتَشِير', 'hollow-voice-selects'],
+    ['passiveParticiple', 'مُسْتَشَار', 'hollow-voice-selects'],
+  ] as const)('شور Form 10 (voice-selects) + %s -> %s', (nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb('شور', 10), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test('حوز Form 7 always spells the weak middle radical alif regardless of voice', () => {
+    expect(resolveNominalExplanationLayers(getVerb('حوز', 7), 'activeParticiple', 'مُنْحَاز').nominalRoot).toBe(
+      'hollow-always-alif',
+    )
+  })
+
+  test('زوج Form 8 keeps the weak middle radical plain when the infix assimilates to د', () => {
+    expect(resolveNominalExplanationLayers(getVerb('زوج', 8), 'activeParticiple', 'مُزْدَوِج').nominalRoot).toBeUndefined()
+  })
+
+  test('renderExplanation puts the hollow-hamza sentence in the nominal paragraph', () => {
+    const layers = resolveNominalExplanationLayers(getVerb('شوق', 1), 'activeParticiple', 'شَائِق')
+    expect(renderExplanation(layers, (key) => key)[1]).toContainEqual({
+      text: 'explanation.nominal-root.hollow-hamza',
+      kind: 'radical',
+    })
+  })
+})
+
+describe('resolveNominalExplanationLayers nominalRoot defective participles', () => {
+  test.each([
+    [1, 'activeParticiple', 'شَاظٍ', 'defective-form-i-active'],
+    [1, 'passiveParticiple', 'مَشْظِيّ', 'defective-form-i-passive'],
+    [1, 'masdar', 'شَظًى', undefined],
+  ] as const)('شظي Form %d + %s -> %s', (form, nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb('شظي', form), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test.each([
+    [2, 'ءذي', 'activeParticiple', 'مُؤَذٍّ', 'defective-tanween-active'],
+    [2, 'ءذي', 'passiveParticiple', 'مُؤَذًّى', 'defective-tanween-passive'],
+    [4, 'شقو', 'activeParticiple', 'مُشْقٍ', 'defective-tanween-active'],
+    [4, 'شقو', 'passiveParticiple', 'مُشْقًى', 'defective-tanween-passive'],
+    [6, 'عطو', 'activeParticiple', 'مُتَعَاطٍ', 'defective-tanween-active'],
+    [8, 'شهو', 'activeParticiple', 'مُشْتَهٍ', 'defective-tanween-active'],
+    [10, 'ءني', 'activeParticiple', 'مُسْتَأْنٍ', 'defective-tanween-active'],
+  ] as const)('%s Form %s + %s -> %s', (form, root, nominal, arabic, expected) => {
+    expect(resolveNominalExplanationLayers(getVerb(root, form), nominal, arabic).nominalRoot).toBe(expected)
+  })
+
+  test('renderExplanation puts the defective-tanween-passive sentence in the nominal paragraph', () => {
+    const layers = resolveNominalExplanationLayers(getVerb('ءذي', 2), 'passiveParticiple', 'مُؤَذًّى')
+    expect(renderExplanation(layers, (key) => key)[1]).toContainEqual({
+      text: 'explanation.nominal-root.defective-tanween-passive',
+      kind: 'radical',
+    })
+  })
+})
+
 // ── pronoun / arabic fields ───────────────────────────────────────────────────
 
 describe('resolveVerbExplanationLayers pronoun and arabic', () => {

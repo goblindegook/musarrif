@@ -100,7 +100,17 @@ type TenseRootInteraction =
   | 'middle-shortens'
   | 'middle-shortens-consonant'
 
-type NominalRootInteraction = 'geminate-contracts' | 'geminate-separates'
+type NominalRootInteraction =
+  | 'geminate-contracts'
+  | 'geminate-separates'
+  | 'hollow-hamza'
+  | 'hollow-long-vowel'
+  | 'hollow-voice-selects'
+  | 'hollow-always-alif'
+  | 'defective-form-i-active'
+  | 'defective-form-i-passive'
+  | 'defective-tanween-active'
+  | 'defective-tanween-passive'
 
 interface BaseExplanationLayers {
   arabic: string | readonly string[]
@@ -203,6 +213,13 @@ const DOUBLED_NEUTRAL_FORMS: readonly TriliteralForm[] = [2, 5]
 // (يَنْقَامُ, يَخْتَارُ), waw or yaa alike.
 const HOLLOW_PRESENT_II_FORMS: readonly TriliteralForm[] = [4, 10]
 const HOLLOW_PRESENT_AA_FORMS: readonly TriliteralForm[] = [7, 8]
+
+// deriveParticiple: Forms IV and X spell the weak middle radical ي in the active participle and ا
+// in the passive one (مُقِيم / مُقَام); Forms VII and VIII always spell it ا regardless of voice
+// (مُنْقَاد، مُخْتَار). Forms II, III, V, VI and IX are covered by HOLLOW_NEUTRAL_FORMS above: the
+// weak radical stays a plain consonant there, so no nominal cell sentence is needed for them.
+const HOLLOW_PARTICIPLE_VOICE_FORMS: readonly TriliteralForm[] = [4, 10]
+const HOLLOW_PARTICIPLE_ALIF_FORMS: readonly TriliteralForm[] = [7, 8]
 
 // Form I takes it from the pattern's own present vowel instead, so the root letter does not decide:
 // يَقُولُ gives ū and يَبِيعُ ī, but the يَخَافُ / يَنَامُ class gives ā with either middle radical.
@@ -341,7 +358,7 @@ export function resolveNominalExplanationLayers<T extends NominalKind>(
     ...formICitation(verb),
     category: 'nominal' as const,
     nominal,
-    nominalRoot: toNominalRoot(verb, arabicText),
+    nominalRoot: toNominalRoot(verb, nominal, arabicText),
   }
 
   if (nominal === 'activeParticiple')
@@ -491,11 +508,22 @@ function resolveHamzated(verb: Verb, tense: VerbTense, pronoun: PronounId): Tens
   return word.some((token) => token.isHamza) ? 'hamza-seat' : 'hamza-elides'
 }
 
-// Every pattern either writes the identical pair once with a شَدَّة (مَدّ، مُمْتَدّ) or keeps a vowel
-// between them (ضَرَر، مَمْدُود، اِمْتِدَاد), so the second radical's own count settles the cell. A masdar
-// list that does both (ضَرّ، ضَرَر) has no single answer to give.
-function toNominalRoot(verb: Verb, arabic: string | readonly string[]): NominalRootInteraction | undefined {
+// The masdar has no cell of its own to report here: Form I is lexical (memorize it, per
+// explanation.nominal.masdar.form-i) and Forms II-X show a fixed pattern label
+// (resolveMasdarPattern) rather than root-shape-dependent branching, so hollow/defective never
+// apply to it. Only the two participles carry a per-cell fact worth naming.
+function toNominalRoot(
+  verb: Verb,
+  nominal: NominalKind,
+  arabic: string | readonly string[],
+): NominalRootInteraction | undefined {
   const { type: rootType } = liveRootAnalysis(verb)
+
+  if (nominal !== 'masdar') {
+    if (rootType.includes('defective')) return toDefectiveNominalRoot(verb, nominal)
+    if (rootType.includes('hollow')) return toHollowNominalRoot(verb, nominal)
+  }
+
   if (!rootType.includes('doubled') || DOUBLED_NEUTRAL_FORMS.includes(verb.form)) return undefined
 
   const [, c2] = verb.rootTokens
@@ -506,6 +534,27 @@ function toNominalRoot(verb: Verb, arabic: string | readonly string[]): NominalR
   )
 
   return outcomes.size === 1 ? [...outcomes][0] : undefined
+}
+
+// deriveActiveParticiple keeps Form I entirely separate from deriveParticiple's shared switch, so
+// its hollow/defective shapes are named here on their own rather than folded into the Forms II-X
+// groups below.
+function toHollowNominalRoot(verb: Verb, nominal: NominalKind): NominalRootInteraction | undefined {
+  if (verb.form === 1) return nominal === 'activeParticiple' ? 'hollow-hamza' : 'hollow-long-vowel'
+  if (HOLLOW_NEUTRAL_FORMS.includes(verb.form)) return undefined
+  if (HOLLOW_PARTICIPLE_ALIF_FORMS.includes(verb.form)) return 'hollow-always-alif'
+  if (HOLLOW_PARTICIPLE_VOICE_FORMS.includes(verb.form)) return 'hollow-voice-selects'
+  return undefined
+}
+
+// deriveParticiple: Form I's defective active participle drops the last radical for a bare
+// ending (رَامٍ), while its passive participle doubles the radical into the pattern instead
+// (مَرْمِيّ) - a different shape from Forms II-X, which fold the ending into a shared tanween
+// suffix either way (مُرَبٍّ / مُرَبًّى).
+function toDefectiveNominalRoot(verb: Verb, nominal: NominalKind): NominalRootInteraction {
+  const isActive = nominal === 'activeParticiple'
+  if (verb.form === 1) return isActive ? 'defective-form-i-active' : 'defective-form-i-passive'
+  return isActive ? 'defective-tanween-active' : 'defective-tanween-passive'
 }
 
 function resolveActiveParticipleKind(verb: Verb): ActiveParticipleKind {
