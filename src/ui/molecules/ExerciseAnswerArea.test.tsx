@@ -8,6 +8,7 @@ import { ExerciseAnswerArea } from './ExerciseAnswerArea'
 
 afterEach(() => {
   cleanup()
+  localStorage.clear()
   Object.defineProperty(window, 'SpeechRecognition', {
     writable: true,
     configurable: true,
@@ -60,6 +61,26 @@ test('multiple-choice option buttons with Arabic text set lang and dir attribute
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
   expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('lang', 'ar')
   expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('dir', 'rtl')
+})
+
+test('multiple-choice options keep their diacritics when the Arabic UI hides diacritics', () => {
+  localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+  localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ options: ['يَكتُبُ', 'يَكتُبَ', 'يَكتُب', 'كَتَبَ'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  expect(screen.getByText('يَكتُبَ', { selector: 'button' })).toBeInTheDocument()
+})
+
+test('a skipped typing exercise reveals the answer with its diacritics when the Arabic UI hides diacritics', () => {
+  localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+  localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+  const exercise = makeExercise({ inputModes: ['multiple-choice', 'keyboard'] })
+  const { rerender } = render(<ExerciseAnswerArea exercise={exercise} onAnswer={noop} />, { wrapper: Wrapper })
+  fireEvent.keyDown(document, { key: 't' })
+  rerender(<ExerciseAnswerArea exercise={exercise} onAnswer={noop} forceReveal />)
+  expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('كَتَبَ')
 })
 
 test('multiple-choice option buttons with localized non-Arabic text do not force Arabic lang or direction', () => {
@@ -218,6 +239,24 @@ test('clicking a wrong option announces the correct answer', () => {
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} />, { wrapper: Wrapper })
   fireEvent.click(screen.getByText('يَكتُبُ', { selector: 'button' }))
   expect(document.querySelector('[role="status"]')).toHaveTextContent('Incorrect. The correct answer is كَتَبَ.')
+})
+
+test('skipping an exercise announces the correct answer', () => {
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} forceReveal />, { wrapper: Wrapper })
+  expect(document.querySelector('[role="status"]')).toHaveTextContent(
+    'Question skipped. The correct answer is كَتَبَ.',
+  )
+})
+
+test('a correct spoken answer announces "Correct."', () => {
+  const mock = mockSpeechRecognition()
+  render(
+    <ExerciseAnswerArea exercise={makeExercise({ inputModes: ['multiple-choice', 'speech'] })} onAnswer={noop} />,
+    { wrapper: Wrapper },
+  )
+  fireEvent.click(screen.getByText(/Speak the answer/))
+  act(() => mock.fire.result('كَتَبَ'))
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Correct.')
 })
 
 test('forceReveal shows correct option, disables buttons, hides toggle', () => {

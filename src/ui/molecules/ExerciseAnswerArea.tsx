@@ -97,7 +97,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
-            const optionLabel = t(option)
+            const optionLabel = t(option, {}, { keepDiacritics: true })
             const hasArabicScript = /[؀-ۿ]/.test(optionLabel)
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
@@ -179,7 +179,11 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           </InputRow>
           {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-              {diff != null ? <AnswerDiff segments={diff.correct} /> : t(exercise.options[exercise.answer])}
+              {diff != null ? (
+                <AnswerDiff segments={diff.correct} />
+              ) : (
+                t(exercise.options[exercise.answer], {}, { keepDiacritics: true })
+              )}
             </CorrectReveal>
           )}
         </TypingForm>
