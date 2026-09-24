@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import { verbTenseExercise } from './verb-tense.ts'
 
 const UNVOICED_KEYS = new Set([

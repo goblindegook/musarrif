@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { verbs } from '../../paradigms/verbs.ts'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import { verbRootExercise } from './verb-root.ts'
 
 describe('rootExercise', () => {

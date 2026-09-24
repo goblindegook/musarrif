@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE as BASE_PROFILE } from '../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE as BASE_PROFILE } from '../test/profiles'
 import type { DimensionProfile } from './dimensions'
 import {
   computeInsights,

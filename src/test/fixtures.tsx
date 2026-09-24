@@ -5,14 +5,6 @@ import { App } from '../ui/app'
 import { I18nProvider } from '../ui/hooks/useI18n'
 import { RoutingProvider } from '../ui/routes'
 
-export const INITIAL_DIMENSION_PROFILE = {
-  tenses: 0,
-  pronouns: 0,
-  forms: 0,
-  rootTypes: 0,
-  nominals: 0,
-} as const
-
 function Wrapper({ children }: { children: ComponentChildren }) {
   return (
     <RoutingProvider>

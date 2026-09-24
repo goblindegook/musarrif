@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../test/profiles'
 import { getUserData, importUserData, type LaunchConsumer, registerUserDataFileLaunchHandler } from './user-data'
 
 const INITIAL_DIMENSION_WINDOWS = {
