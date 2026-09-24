@@ -1206,7 +1206,8 @@
     "root": "'hl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "lexicalActiveParticiple": ">ahil"
   },
   {
     "root": "'hl",
@@ -5722,14 +5723,16 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3al"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "Sadi}"
   },
   {
     "root": "Sd'",
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3aala"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "Sadi}"
   },
   {
     "root": "Sd'",
@@ -9952,6 +9955,7 @@
   {
     "root": "fy'",
     "form": 2,
+    "masdars": [],
     "lexicalMasdars": ["tafoyiy'"]
   },
   {
@@ -21662,7 +21666,8 @@
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3aala", "fu3ool"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "waDiy'"
   },
   {
     "root": "wD'",

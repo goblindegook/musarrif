@@ -1,0 +1,129 @@
+import { describe, expect, test } from 'vitest'
+import { conjugateImperative } from '../active/imperative'
+import { conjugatePast } from '../active/past'
+import { conjugatePresentMood } from '../active/present'
+import { deriveMasdar } from '../nominal/masdar'
+import { deriveActiveParticiple, derivePassiveParticiple } from '../nominal/participle'
+import { conjugatePassivePast } from '../passive/past'
+import { conjugatePassivePresentMood } from '../passive/present'
+import { getVerbById } from '../verbs'
+
+describe('$yE-5 (Wiktionary)', () => {
+  test('active past', () => {
+    expect(conjugatePast(getVerbById('$yE-5')!)).toEqualT({
+      '1s': 'تَشَيَّعْتُ',
+      '2ms': 'تَشَيَّعْتَ',
+      '2fs': 'تَشَيَّعْتِ',
+      '3ms': 'تَشَيَّعَ',
+      '3fs': 'تَشَيَّعَتْ',
+      '2d': 'تَشَيَّعْتُمَا',
+      '3md': 'تَشَيَّعَا',
+      '3fd': 'تَشَيَّعَتَا',
+      '1p': 'تَشَيَّعْنَا',
+      '2mp': 'تَشَيَّعْتُمْ',
+      '2fp': 'تَشَيَّعْتُنَّ',
+      '3mp': 'تَشَيَّعُوا',
+      '3fp': 'تَشَيَّعْنَ',
+    })
+  })
+
+  test('active present indicative', () => {
+    expect(conjugatePresentMood(getVerbById('$yE-5')!, 'indicative')).toEqualT({
+      '1s': 'أَتَشَيَّعُ',
+      '2ms': 'تَتَشَيَّعُ',
+      '2fs': 'تَتَشَيَّعِينَ',
+      '3ms': 'يَتَشَيَّعُ',
+      '3fs': 'تَتَشَيَّعُ',
+      '2d': 'تَتَشَيَّعَانِ',
+      '3md': 'يَتَشَيَّعَانِ',
+      '3fd': 'تَتَشَيَّعَانِ',
+      '1p': 'نَتَشَيَّعُ',
+      '2mp': 'تَتَشَيَّعُونَ',
+      '2fp': 'تَتَشَيَّعْنَ',
+      '3mp': 'يَتَشَيَّعُونَ',
+      '3fp': 'يَتَشَيَّعْنَ',
+    })
+  })
+
+  test('active present subjunctive', () => {
+    expect(conjugatePresentMood(getVerbById('$yE-5')!, 'subjunctive')).toEqualT({
+      '1s': 'أَتَشَيَّعَ',
+      '2ms': 'تَتَشَيَّعَ',
+      '2fs': 'تَتَشَيَّعِي',
+      '3ms': 'يَتَشَيَّعَ',
+      '3fs': 'تَتَشَيَّعَ',
+      '2d': 'تَتَشَيَّعَا',
+      '3md': 'يَتَشَيَّعَا',
+      '3fd': 'تَتَشَيَّعَا',
+      '1p': 'نَتَشَيَّعَ',
+      '2mp': 'تَتَشَيَّعُوا',
+      '2fp': 'تَتَشَيَّعْنَ',
+      '3mp': 'يَتَشَيَّعُوا',
+      '3fp': 'يَتَشَيَّعْنَ',
+    })
+  })
+
+  test('active present jussive', () => {
+    expect(conjugatePresentMood(getVerbById('$yE-5')!, 'jussive')).toEqualT({
+      '1s': 'أَتَشَيَّعْ',
+      '2ms': 'تَتَشَيَّعْ',
+      '2fs': 'تَتَشَيَّعِي',
+      '3ms': 'يَتَشَيَّعْ',
+      '3fs': 'تَتَشَيَّعْ',
+      '2d': 'تَتَشَيَّعَا',
+      '3md': 'يَتَشَيَّعَا',
+      '3fd': 'تَتَشَيَّعَا',
+      '1p': 'نَتَشَيَّعْ',
+      '2mp': 'تَتَشَيَّعُوا',
+      '2fp': 'تَتَشَيَّعْنَ',
+      '3mp': 'يَتَشَيَّعُوا',
+      '3fp': 'يَتَشَيَّعْنَ',
+    })
+  })
+
+  test('active imperative', () => {
+    expect(conjugateImperative(getVerbById('$yE-5')!)).toMatchObjectT({
+      '2ms': 'تَشَيَّعْ',
+      '2fs': 'تَشَيَّعِي',
+      '2d': 'تَشَيَّعَا',
+      '2mp': 'تَشَيَّعُوا',
+      '2fp': 'تَشَيَّعْنَ',
+    })
+  })
+
+  test('passive past', () => {
+    expect(conjugatePassivePast(getVerbById('$yE-5')!)).toMatchObjectT({
+      '3ms': 'تُشُيِّعَ',
+    })
+  })
+
+  test('passive present indicative', () => {
+    expect(conjugatePassivePresentMood(getVerbById('$yE-5')!, 'indicative')).toMatchObjectT({
+      '3ms': 'يُتَشَيَّعُ',
+    })
+  })
+
+  test('passive present subjunctive', () => {
+    expect(conjugatePassivePresentMood(getVerbById('$yE-5')!, 'subjunctive')).toMatchObjectT({
+      '3ms': 'يُتَشَيَّعَ',
+    })
+  })
+
+  test('passive present jussive', () => {
+    expect(conjugatePassivePresentMood(getVerbById('$yE-5')!, 'jussive')).toMatchObjectT({
+      '3ms': 'يُتَشَيَّعْ',
+    })
+  })
+
+  test('active participle', () => {
+    expect(deriveActiveParticiple(getVerbById('$yE-5')!)).toEqualT('مُتَشَيِّع')
+  })
+
+  test('passive participle', () => {
+    expect(derivePassiveParticiple(getVerbById('$yE-5')!)).toEqualT('مُتَشَيَّع')
+  })
+
+  test('masdar', () => {
+    expect(new Set(deriveMasdar(getVerbById('$yE-5')!))).toEqualT(new Set(['تَشَيُّع']))
+  })
+})
