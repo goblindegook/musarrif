@@ -280,8 +280,7 @@ export function Home() {
                           key={option}
                           id={`form-tab-${option}`}
                           type="button"
-                          aria-selected={query.filters.form === option}
-                          aria-controls={`form-panel-${option}`}
+                          aria-pressed={query.filters.form === option}
                           active={query.filters.form === option}
                           disabled={isFilterDisabled(query.filters.form === option, withFormFilter(query, option))}
                           onClick={() => applyFormFilter(option)}

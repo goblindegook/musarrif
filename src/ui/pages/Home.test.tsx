@@ -70,7 +70,7 @@ test('Shows verbs grouped by form at the verbs base route, including quadriliter
   ])
 
   expect(
-    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
+    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-pressed="true"]'),
   ).toHaveLength(0)
 })
 
@@ -92,18 +92,18 @@ describe('quadriliteral form filter', () => {
 
     await user.click(screen.getByText('I', { selector: 'button' }))
     await user.click(screen.getByText('Iq', { selector: 'button' }))
-    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'false')
-    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'true')
+    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-pressed', 'false')
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-pressed', 'true')
 
     await user.click(screen.getByText('I', { selector: 'button' }))
-    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'true')
-    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'false')
+    expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-pressed', 'true')
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-pressed', 'false')
   })
 
   test('restores the quadriliteral form filter from hash query params', () => {
     renderHome('/#/verbs?form=1q')
 
-    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-selected', 'true')
+    expect(document.querySelector('#form-tab-1q')).toHaveAttribute('aria-pressed', 'true')
   })
 
   test('syncs the quadriliteral form filter to hash query params', async () => {
@@ -190,7 +190,7 @@ test('allows deselecting a form filter back to unfiltered verbs', async () => {
   await user.click(screen.getByText('II', { selector: 'button' }))
   expect(screen.getByText('آلَ')).toBeInTheDocument()
   expect(
-    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-selected="true"]'),
+    document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-pressed="true"]'),
   ).toHaveLength(0)
 })
 
@@ -360,7 +360,7 @@ test('applies favourites filter together with form filters', async () => {
 test('restores verb list filters and pagination from hash query params', () => {
   renderHome('/#/verbs?form=1&page=2')
 
-  expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-selected', 'true')
+  expect(document.querySelector('#form-tab-1')).toHaveAttribute('aria-pressed', 'true')
   expect(screen.getByText(/Page 2 of \d+/)).toBeInTheDocument()
   expect(currentUrl()).toBe('/verbs/?form=1&page=2')
 })
