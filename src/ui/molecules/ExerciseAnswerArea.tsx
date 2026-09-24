@@ -75,25 +75,20 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     }
   }, [effectiveMode, speechState, speechResult, transcript, exercise, onAnswer])
 
+  const answerLabel = t(exercise.options[exercise.answer])
+  const status = !reveal
+    ? ''
+    : selected === exercise.answer || typedResult === 'correct' || speechResult === 'correct'
+      ? t('exercise.answer.correct')
+      : typedResult === 'partial'
+        ? t('exercise.answer.partial')
+        : selected !== null || typedResult === 'wrong'
+          ? t('exercise.answer.incorrect', { answer: answerLabel })
+          : t('exercise.answer.skipped', { answer: answerLabel })
+
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
-      <ScreenReaderOnly role="status">
-        {!reveal
-          ? ''
-          : effectiveMode === 'keyboard'
-            ? typedResult === 'correct'
-              ? t('exercise.answer.correct')
-              : typedResult === 'partial'
-                ? t('exercise.answer.partial')
-                : typedResult === 'wrong'
-                  ? t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })
-                  : ''
-            : selected === null
-              ? ''
-              : selected === exercise.answer
-                ? t('exercise.answer.correct')
-                : t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })}
-      </ScreenReaderOnly>
+      <ScreenReaderOnly role="status">{status}</ScreenReaderOnly>
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {

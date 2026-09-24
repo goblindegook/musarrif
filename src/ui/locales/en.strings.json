@@ -67,6 +67,7 @@
   "exercise.answer.correct": "Correct.",
   "exercise.answer.incorrect": "Incorrect. The correct answer is {answer}.",
   "exercise.answer.partial": "Correct. Some vowel marks were missing.",
+  "exercise.answer.skipped": "Question skipped. The correct answer is {answer}.",
   "exercise.toggle.type": "Type the answer",
   "exercise.toggle.options": "See options",
   "exercise.typing.placeholder": "Type your answer",

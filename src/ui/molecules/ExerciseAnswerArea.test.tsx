@@ -66,10 +66,9 @@ test('multiple-choice option buttons with Arabic text set lang and dir attribute
 test('multiple-choice options keep their diacritics when the Arabic UI hides diacritics', () => {
   localStorage.setItem('conjugator:language', JSON.stringify('ar'))
   localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
-  render(
-    <ExerciseAnswerArea exercise={makeExercise({ options: ['يَكتُبُ', 'يَكتُبَ', 'يَكتُب', 'كَتَبَ'] })} onAnswer={noop} />,
-    { wrapper: Wrapper },
-  )
+  render(<ExerciseAnswerArea exercise={makeExercise({ options: ['يَكتُبُ', 'يَكتُبَ', 'يَكتُب', 'كَتَبَ'] })} onAnswer={noop} />, {
+    wrapper: Wrapper,
+  })
   expect(screen.getByText('يَكتُبَ', { selector: 'button' })).toBeInTheDocument()
 })
 
@@ -243,9 +242,7 @@ test('clicking a wrong option announces the correct answer', () => {
 
 test('skipping an exercise announces the correct answer', () => {
   render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} forceReveal />, { wrapper: Wrapper })
-  expect(document.querySelector('[role="status"]')).toHaveTextContent(
-    'Question skipped. The correct answer is كَتَبَ.',
-  )
+  expect(document.querySelector('[role="status"]')).toHaveTextContent('Question skipped. The correct answer is كَتَبَ.')
 })
 
 test('a correct spoken answer announces "Correct."', () => {
@@ -271,7 +268,7 @@ test('forceReveal shows correct option, disables buttons, hides toggle', () => {
     },
   )
   expect(screen.getByText('كَتَبَ', { selector: 'button' })).toHaveAttribute('data-state', 'correct')
-  for (const btn of screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/)) {
+  for (const btn of screen.getAllByText(/كَتَبَ|يَكتُبُ|كَتَّبَ|أَكتَبَ|Type the answer|See options/, { selector: 'button' })) {
     expect(btn).toBeDisabled()
   }
   expect(screen.queryByText(/Type the answer/)).not.toBeInTheDocument()
