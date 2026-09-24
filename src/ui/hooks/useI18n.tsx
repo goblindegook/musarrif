@@ -15,7 +15,11 @@ interface Translation {
   roots?: Record<string, string>
 }
 
-export type Translate = (key: string, params?: Record<string, string | undefined>) => string
+export type Translate = (
+  key: string,
+  params?: Record<string, string | undefined>,
+  options?: { keepDiacritics?: boolean },
+) => string
 
 export interface I18nContextValue {
   lang: Language
@@ -104,7 +108,7 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
     () => ({
       lang,
       dir: LANGUAGE_DIRECTIONS[lang],
-      t: (key, params) => {
+      t: (key, params, options) => {
         const fallback = getCachedTranslation('en') ?? EN_TRANSLATION
         const template =
           translation.strings[key] ??
@@ -115,7 +119,9 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
           fallback.roots?.[key] ??
           key
         const rendered = format(template, params)
-        return lang === 'ar' ? applyDiacriticsPreference(rendered, diacriticsPreference) : rendered
+        return lang === 'ar' && !options?.keepDiacritics
+          ? applyDiacriticsPreference(rendered, diacriticsPreference)
+          : rendered
       },
       hasLexicon: translation.verbs != null,
       diacriticsPreference,

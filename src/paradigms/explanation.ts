@@ -2,7 +2,7 @@ import { toRoman } from '../primitives/numbers'
 import { dropsInitialWaw } from './active/present'
 import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
-import type { FormIPattern } from './form-i-vowels'
+import { type FormIPattern, isFormIPresentVowel } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
 import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
@@ -21,6 +21,7 @@ import {
   ALIF,
   ALIF_MADDA,
   DAL,
+  DAMMA,
   FATHA,
   NOON,
   normalizeForComparison,
@@ -90,6 +91,7 @@ type TenseRootInteraction =
   | 'hamza-elides'
   | 'initial-drops'
   | 'initial-retained'
+  | 'initial-retained-lexical'
   | 'middle-lengthens-aa'
   | 'middle-lengthens-ii'
   | 'middle-lengthens-uu'
@@ -498,7 +500,8 @@ function resolveGeminate(verb: Verb, tense: VerbTense, pronoun: PronounId): Tens
 function resolveAssimilated(verb: Verb, tense: VerbTense): TenseRootInteraction | undefined {
   if (!tense.startsWith('active.present') && tense !== 'active.future') return undefined
   if (!isTriliteralFormIVerb(verb) || !verb.rootTokens[0].equals(WAW)) return undefined
-  return dropsInitialWaw(verb) ? 'initial-drops' : 'initial-retained'
+  if (dropsInitialWaw(verb)) return 'initial-drops'
+  return isFormIPresentVowel(verb, DAMMA) ? 'initial-retained' : 'initial-retained-lexical'
 }
 
 function resolveHamzated(verb: Verb, tense: VerbTense, pronoun: PronounId): TenseRootInteraction {
