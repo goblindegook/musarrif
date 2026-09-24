@@ -60,11 +60,12 @@ function easyCandidates(
   return buildSiblings(verb).flatMap((v) =>
     tensePool(tensesLevel)
       .filter((t) => t !== targetTense)
-      .flatMap((t) =>
-        distractorPronouns(t, { ...profile, tenses: tensesLevel, pronouns: pronounsLevel })
+      .flatMap((t) => {
+        const table = conjugate(v, t)
+        return distractorPronouns(t, { ...profile, tenses: tensesLevel, pronouns: pronounsLevel })
           .filter((p) => p !== targetPronoun)
-          .map((p) => String(conjugate(v, t)[p])),
-      ),
+          .map((p) => String(table[p]))
+      }),
   )
 }
 
@@ -78,16 +79,18 @@ function mediumCandidates(
   return [
     ...tensePool(profile.tenses)
       .filter((t) => t !== targetTense)
-      .flatMap((t) =>
-        distractorPronouns(t, profile)
+      .flatMap((t) => {
+        const table = conjugate(verb, t)
+        return distractorPronouns(t, profile)
           .filter((p) => p !== targetPronoun)
-          .map((p) => String(conjugate(verb, t)[p])),
-      ),
-    ...siblings.flatMap((sibling) =>
-      distractorPronouns(targetTense, profile)
+          .map((p) => String(table[p]))
+      }),
+    ...siblings.flatMap((sibling) => {
+      const table = conjugate(sibling, targetTense)
+      return distractorPronouns(targetTense, profile)
         .filter((p) => p !== targetPronoun)
-        .map((p) => String(conjugate(sibling, targetTense)[p])),
-    ),
+        .map((p) => String(table[p]))
+    }),
     ...siblings.flatMap((sibling) =>
       tensePool(profile.tenses)
         .filter((t) => t !== targetTense)
@@ -102,10 +105,11 @@ function hardCandidates(
   targetPronoun: PronounId,
   profile: DimensionProfile,
 ): string[] {
+  const table = conjugate(verb, targetTense)
   return [
     ...distractorPronouns(targetTense, profile)
       .filter((p) => p !== targetPronoun)
-      .map((p) => String(conjugate(verb, targetTense)[p])),
+      .map((p) => String(table[p])),
     ...tensePool(profile.tenses)
       .filter((t) => t !== targetTense)
       .map((t) => String(conjugate(verb, t)[targetPronoun])),
