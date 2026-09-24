@@ -69,7 +69,7 @@ Start development server:
 npm run dev
 ```
 
-Build production bundle:
+Build production bundle (typecheck, Vite build, then static verb page prerender):
 
 ```bash
 npm run build
@@ -94,7 +94,7 @@ npm run tauri:dev
 Build desktop bundles:
 
 ```bash
-npm run tauri:build
+npm run build:desktop
 ```
 
 ## Quality Commands
@@ -105,18 +105,6 @@ Run tests (single pass, no watch):
 npm test -- --no-watch
 ```
 
-Run one test file:
-
-```bash
-npm test -- --no-watch src/path/to/file.test.ts
-```
-
-Count the verbs in the dataset (requires `jq`):
-
-```bash
-npm run count:verbs
-```
-
 Coverage and mutation:
 
 ```bash
@@ -124,70 +112,19 @@ npm run test:coverage
 npm run test:mutation
 ```
 
-Lint and formatting:
+Lint, dependency boundaries and formatting:
 
 ```bash
 npm run check:lint
+npm run check:boundaries
 npm run format
 ```
 
-## Contributing
-
-Contributions are welcome, especially for:
-
-- Incorrect or incomplete conjugation behavior
-- Missing verb entries and lexical metadata
-- Exercise quality and distractor quality improvements
-- Localization improvements (English, Italian, Portuguese or Arabic copy)
-- Accessibility and mobile usability fixes
-
-### Contribution Workflow
-
-1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
-2. Create a focused branch
-3. Implement the smallest change needed, remembering to add or update tests
-4. Run `npm run check:all` locally before opening a PR
-5. Include lexical sources whenever changing verb data or grammar expectations
-
-## Verb Adding Utility
-
-Use the interactive wizard to add or edit entries in:
-
-- `src/data/roots.json`
-- `src/ui/locales/en.verbs.json`
-- `src/ui/locales/it.verbs.json`
-- `src/ui/locales/pt.verbs.json`
-
-Run it with:
+Full CI gate (lint, boundaries, tests, typecheck, bundle):
 
 ```bash
-npm run add:verb
+npm run check:all
 ```
-
-The wizard guides you through:
-
-- Root and form selection (`I` to `X` for triliteral roots, `Iq` to `IVq` for quadriliteral roots)
-- Form I vowel pattern
-- Passive voice support (`full`, `impersonal`, `none`)
-- Masdar pattern selection
-- Passive participle support
-- Root glosses (EN/IT/PT)
-- Verb translations (EN/IT/PT)
-
-It then shows a summary and writes sorted JSON updates.
-
-### Data Expectations
-
-Before adding verbs, verify from lexical sources:
-
-- Root
-- Form
-- Present vowel pattern (for Form I)
-- Masdar pattern(s)
-- Passive voice support
-- Passive participle support
-
-Keep locale updates atomic with verb entry changes.
 
 ## Test Generators
 
@@ -214,6 +151,79 @@ Usage notes:
 
 - Slug format is `<root>-<form>` (example: `ktb-1`)
 - If the slug contains an apostrophe, quote it in the shell (example: `npm run add:tests -- wiktionary "qr'-1"`)
+
+## Analysis Commands
+
+Compare conjugations against ElixirFM (optionally `--sample N` verbs or one `--root ktb`):
+
+```bash
+npm run debug:elixirfm
+```
+
+Rank verbs by frequency into `src/data/verb-frequency.json` (needs the lemma counts from `scripts/frequency.py`, see [Acknowledgements](#acknowledgements)):
+
+```bash
+uv run scripts/frequency.py <path-to-MSA_freq_lists.tsv>
+npm run frequency
+```
+
+## Verb Adding Utility
+
+Write a `src/data/roots.json` row from a lexical source (`wiktionary`, `elixirfm`, `qutrub` or `reverso`), with the same slug and optional Form I vowel pattern as `add:tests`:
+
+```bash
+npm run add:verb -- wiktionary ktb-1
+npm run add:verb -- wiktionary qdr-1 a-u
+```
+
+This writes no locale entries. Add `verbs` and `roots` translations to `en`, `it` and `pt`, and `roots` to `ar`, in `src/ui/locales/*.verbs.json` by hand. `npm run glosses -- --missing` lists what is still untranslated, and `npm run glosses -- <root> [form]` fetches candidate glosses.
+
+For a verb no source covers, use the interactive wizard, which edits `src/data/roots.json` and the `en`, `it` and `pt` verb locale files:
+
+```bash
+npm run add:verb:wizard
+```
+
+The wizard guides you through:
+
+- Root and form selection (`I` to `X` for triliteral roots, `Iq` to `IVq` for quadriliteral roots)
+- Form I vowel pattern
+- Passive voice support (`full`, `impersonal`, `none`)
+- Masdar pattern selection
+- Root glosses (EN/IT/PT)
+- Verb translations (EN/IT/PT)
+
+It then shows a summary and writes sorted JSON updates.
+
+### Data Expectations
+
+Before adding verbs, verify from lexical sources:
+
+- Root
+- Form
+- Present vowel pattern (for Form I)
+- Masdar pattern(s)
+- Passive voice support
+
+Keep locale updates atomic with verb entry changes.
+
+## Contributing
+
+Contributions are welcome, especially for:
+
+- Incorrect or incomplete conjugation behavior
+- Missing verb entries and lexical metadata
+- Exercise quality and distractor quality improvements
+- Localization improvements (English, Italian, Portuguese or Arabic copy)
+- Accessibility and mobile usability fixes
+
+### Contribution Workflow
+
+1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
+2. Create a focused branch
+3. Implement the smallest change needed, remembering to add or update tests
+4. Run `npm run check:all` locally before opening a PR
+5. Include lexical sources whenever changing verb data or grammar expectations
 
 ## Reporting Incorrect Conjugations
 
