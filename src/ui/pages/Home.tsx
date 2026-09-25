@@ -24,6 +24,7 @@ import { useRecent } from '../hooks/useRecent'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { Panel } from '../molecules/Panel'
 import { Search } from '../molecules/SearchBox'
+import { VerbIndexRow } from '../molecules/VerbIndexRow'
 import { VerbPill } from '../molecules/VerbPill'
 import { ConjugateBox } from '../organisms/ConjugateBox'
 import { useRouting } from '../routes'
@@ -250,6 +251,7 @@ export function Home() {
                 {t('verbsList.sort.title')}
               </Subheading>
               <ModeToggle
+                size="large"
                 activeMode={SORT_ORDERS.indexOf(query.sort)}
                 labels={SORT_ORDERS.map((order) => t(`verbsList.sort.${order}.label`))}
                 ariaLabel={t('verbsList.sort.title')}
@@ -257,13 +259,13 @@ export function Home() {
               />
             </FilterGroup>
 
-            <MoreFilters open={moreFiltersOpen} onToggle={(event) => setMoreFiltersOpen(event.currentTarget.open)}>
-              <MoreFiltersSummary>
+            <Filters open={moreFiltersOpen} onToggle={(event) => setMoreFiltersOpen(event.currentTarget.open)}>
+              <FiltersSummary>
                 <DisclosureChevron />
                 {t('verbsList.filter.more.label')}
-              </MoreFiltersSummary>
+              </FiltersSummary>
 
-              <MoreFiltersBody>
+              <FiltersBody>
                 <FilterGroup>
                   <Subheading dir={dir} lang={lang}>
                     {t('verbsList.filter.form.title')}
@@ -329,13 +331,13 @@ export function Home() {
                     ))}
                   </FilterBar>
                 </FilterGroup>
-              </MoreFiltersBody>
-            </MoreFilters>
+              </FiltersBody>
+            </Filters>
 
             <VerbResults>
               <VerbList>
                 {paginatedVerbs.map((verb) => (
-                  <VerbPill key={verb.id} verb={verb} block />
+                  <VerbIndexRow key={verb.id} verb={verb} />
                 ))}
               </VerbList>
               {pageCount > 1 && (
@@ -399,16 +401,16 @@ const Stack = styled('div')<{ area: 'search' | 'verbList' }>`
   align-self: flex-start;
 `
 
-const MoreFilters = styled('details')``
+const Filters = styled('details')``
 
-const MoreFiltersBody = styled('div')`
+const FiltersBody = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding-block-start: 1rem;
 `
 
-const MoreFiltersSummary = styled('summary')`
+const FiltersSummary = styled('summary')`
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -443,9 +445,21 @@ const FormFilterBar = styled(FilterBar)`
 
 const VerbList = styled('div')`
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
-  
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 2rem;
+
+  & > :last-child {
+    border-bottom-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    & > :nth-last-child(-n + 2) {
+      border-bottom-width: 0;
+    }
+  }
+
   & > * {
     min-width: 0;
   }

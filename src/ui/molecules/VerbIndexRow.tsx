@@ -6,12 +6,11 @@ import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from 
 import { useI18n } from '../hooks/useI18n'
 import { useRouting } from '../routes'
 
-interface VerbPillProps {
+interface VerbIndexRowProps {
   verb: DisplayVerb
-  className?: string
 }
 
-export function VerbPill({ verb, className }: VerbPillProps) {
+export function VerbIndexRow({ verb }: VerbIndexRowProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
   const { navigateTo, toHref } = useRouting()
   const form = formatFormLabel(verb.form, verb.root)
@@ -33,9 +32,8 @@ export function VerbPill({ verb, className }: VerbPillProps) {
   )
 
   return (
-    <VerbPillLink
+    <RowLink
       href={toHref(route)}
-      className={className}
       onClick={(event: MouseEvent) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
         event.preventDefault()
@@ -51,74 +49,67 @@ export function VerbPill({ verb, className }: VerbPillProps) {
         .filter(Boolean)
         .join(' - ')}
     >
-      <InlineRow>
-        <span dir="rtl" lang="ar">
+      <Headword>
+        <Lemma dir="rtl" lang="ar">
           {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
           {formatArabic(verb.lemma)}
-        </span>
+        </Lemma>
         <small>{form}</small>
         {isTriliteralFormIDisplayVerb(verb) && <small>{formIVowelPattern(verb)}</small>}
-      </InlineRow>
+      </Headword>
       {lang !== 'ar' && (
-        <VerbTranslation dir={dir} lang={lang}>
+        <Gloss dir={dir} lang={lang}>
           {translateVerb(verb)}
-        </VerbTranslation>
+        </Gloss>
       )}
-    </VerbPillLink>
+    </RowLink>
   )
 }
 
-const VerbPillLink = styled('a')`
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 0.3rem 0.9rem;
-  background: var(--color-bg-surface);
-  box-sizing: border-box;
-  cursor: pointer;
+const RowLink = styled('a')`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
   text-decoration: none;
   color: inherit;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 1rem;
-  max-width: 100%;
-  transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
+  cursor: pointer;
+  transition: color 120ms ease;
 
-  &:hover {
-    background: var(--color-bg-hover);
-    border-color: var(--color-accent);
-    color: var(--color-text-primary);
+  small {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    transition: color 120ms ease;
+  }
+
+  &:hover,
+  &:hover small {
+    color: var(--color-text-emphasis);
   }
 
   &:focus-visible {
     outline: 3px solid var(--color-focus-outline);
     outline-offset: 2px;
-    border-color: var(--color-accent);
   }
+`
 
-  &.active {
-    border-color: var(--color-accent);
-    color: var(--color-text-emphasis);
-
-    &:hover {
-      border-color: var(--color-accent);
-      color: var(--color-text-emphasis);
-    }
-  }
+const Headword = styled('div')`
+  display: flex;
+  flex-direction: row-reverse;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 1rem;
 
   small {
-    color: var(--color-text-secondary);
     font-size: 0.75rem;
-    transition: color 120ms ease;
   }
+`
 
-  &:hover small {
-    color: var(--color-text-primary);
-  }
-
-  &.active small {
-    color: var(--color-text-emphasis);
-  }
+const Lemma = styled('span')`
+  font-size: 1.4rem;
 `
 
 const SyntheticMarker = styled('span')`
@@ -129,24 +120,9 @@ const SyntheticMarker = styled('span')`
   line-height: 1.8;
 `
 
-const InlineRow = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  small {
-    white-space: nowrap;
-  }
-`
-
-const VerbTranslation = styled('small')`
-  display: block;
-  max-width: 7rem;
+const Gloss = styled('small')`
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--color-text-secondary);
-  font-size: 0.75rem;
-  line-height: 1rem;
-  transition: color 120ms ease;
+  font-size: 0.85rem;
 `
