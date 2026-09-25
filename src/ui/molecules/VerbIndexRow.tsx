@@ -50,10 +50,10 @@ export function VerbIndexRow({ verb }: VerbIndexRowProps) {
         .filter(Boolean)
         .join(' - ')}
     >
+      <Chevron>
+        <ChevronIcon />
+      </Chevron>
       <Headword>
-        <Chevron>
-          <ChevronIcon />
-        </Chevron>
         <Lemma dir="rtl" lang="ar">
           {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
           {formatArabic(verb.lemma)}
@@ -110,6 +110,10 @@ const Headword = styled('div')`
   small {
     font-size: 0.75rem;
   }
+
+  [dir='rtl'] & {
+    flex-direction: row;
+  }
 `
 
 const Chevron = styled('span')`
@@ -144,6 +148,7 @@ const SyntheticMarker = styled('span')`
 `
 
 const Gloss = styled('small')`
+  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
