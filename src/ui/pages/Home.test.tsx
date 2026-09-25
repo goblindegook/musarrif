@@ -116,7 +116,7 @@ describe('quadriliteral form filter', () => {
 })
 
 test('Shows alphabetized verbs for the selected form', async () => {
-  renderHome()
+  renderHome('/#/verbs?sort=alphabetical')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(
@@ -132,7 +132,7 @@ test('Shows alphabetized verbs for the selected form', async () => {
 })
 
 test('filters included verbs to ẓanna and her sisters', async () => {
-  renderHome()
+  renderHome('/#/verbs?sort=alphabetical')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(screen.getByText('Ẓanna and her sisters'))
@@ -164,7 +164,7 @@ test('filters included verbs to ẓanna and her sisters', async () => {
 })
 
 test('filters included verbs to kāna and her sisters in alphabetical order', async () => {
-  renderHome()
+  renderHome('/#/verbs?sort=alphabetical')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(screen.getByText('Kāna and her sisters'))
@@ -185,10 +185,10 @@ test('allows deselecting a form filter back to unfiltered verbs', async () => {
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
   await user.click(screen.getByText('II', { selector: 'button' }))
-  expect(screen.queryByText('آلَ')).not.toBeInTheDocument()
+  expect(screen.queryByText('كانَ')).not.toBeInTheDocument()
 
   await user.click(screen.getByText('II', { selector: 'button' }))
-  expect(screen.getByText('آلَ')).toBeInTheDocument()
+  expect(screen.getByText('كانَ')).toBeInTheDocument()
   expect(
     document.querySelectorAll('[role="group"][aria-label="Select form"] button[aria-pressed="true"]'),
   ).toHaveLength(0)
@@ -575,25 +575,25 @@ describe('sort by frequency', () => {
     renderHome('/#/verbs?page=2')
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-    await user.click(sortControl().getByLabelText('Most common'))
-    expect(currentUrl()).toBe('/verbs/?sort=frequency')
-
     await user.click(sortControl().getByLabelText('Alphabetical'))
+    expect(currentUrl()).toBe('/verbs/?sort=alphabetical')
+
+    await user.click(sortControl().getByLabelText('Most common'))
     expect(currentUrl()).toBe('/verbs/')
   })
 
   test('keeps the sort when a root type filter changes', async () => {
-    renderHome('/#/verbs?sort=frequency')
+    renderHome('/#/verbs?sort=alphabetical')
     const user = userEvent.setup({ pointerEventsCheck: 0 })
 
     await user.click(screen.getByText('Doubled'))
-    expect(currentUrl()).toBe('/verbs/?root=doubled&sort=frequency')
+    expect(currentUrl()).toBe('/verbs/?root=doubled&sort=alphabetical')
   })
 
-  test.each([['/#/verbs'], ['/#/verbs?sort=unknown']])('selects alphabetical order for %s', (url) => {
+  test.each([['/#/verbs'], ['/#/verbs?sort=unknown']])('selects most common order for %s', (url) => {
     renderHome(url)
 
-    expect(sortControl().getByLabelText('Alphabetical')).toHaveAttribute('aria-pressed', 'true')
+    expect(sortControl().getByLabelText('Most common')).toHaveAttribute('aria-pressed', 'true')
   })
 })
 

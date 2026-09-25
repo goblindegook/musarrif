@@ -1,11 +1,11 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import * as v from 'valibot'
-import verbFrequency from '../../data/verb-frequency.json'
 import { analyzeRoot, type RootShape } from '../../paradigms/roots'
 import {
   type DisplayVerb,
   FORMS,
+  frequencyRank,
   KWN_SISTERS_IDS,
   QUADRILITERAL_FORMS,
   verbs,
@@ -32,14 +32,9 @@ const VERBS_PER_PAGE = 30
 
 const allVerbs = verbs.toSorted((a, b) => a.lemma.localeCompare(b.lemma, 'ar'))
 
-const FREQUENCY_RANK = new Map(verbFrequency.map((id, rank) => [id, rank]))
+const allVerbsByFrequency = allVerbs.toSorted((a, b) => frequencyRank(a) - frequencyRank(b))
 
-// Unranked verbs share the last rank, so the stable sort keeps them in alphabetical order.
-const allVerbsByFrequency = allVerbs.toSorted(
-  (a, b) => (FREQUENCY_RANK.get(a.id) ?? verbFrequency.length) - (FREQUENCY_RANK.get(b.id) ?? verbFrequency.length),
-)
-
-const SORT_ORDERS = ['alphabetical', 'frequency'] as const
+const SORT_ORDERS = ['frequency', 'alphabetical'] as const
 
 type SortOrder = (typeof SORT_ORDERS)[number]
 
@@ -73,7 +68,7 @@ const Query = v.object({
     root: v.fallback(v.array(v.picklist(ROOT_TYPE_FILTERS)), []),
     group: v.fallback(v.nullable(v.picklist(['favourites', 'kana', 'zanna'])), null),
   }),
-  sort: v.fallback(v.picklist(SORT_ORDERS), 'alphabetical'),
+  sort: v.fallback(v.picklist(SORT_ORDERS), 'frequency'),
   page: v.fallback(v.pipe(v.string(), v.toNumber(), v.toMinValue(1)), 1),
 })
 
@@ -96,7 +91,7 @@ function setQuery(query: Query): URLSearchParams {
   if (query.filters.form) next.set('form', query.filters.form)
   for (const rootType of query.filters.root) next.append('root', rootType)
   if (query.filters.group) next.set('group', query.filters.group)
-  if (query.sort === 'frequency') next.set('sort', query.sort)
+  if (query.sort === 'alphabetical') next.set('sort', query.sort)
   if (query.page > 1) next.set('page', String(query.page))
   return next
 }
