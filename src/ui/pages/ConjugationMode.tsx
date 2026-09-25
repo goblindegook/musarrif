@@ -191,16 +191,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
           {searchTab === 'build' && <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />}
         </Panel>
-
-        {derivedForms.length > 1 && (
-          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
-            <VerbList>
-              {derivedForms.map((verb) => (
-                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-              ))}
-            </VerbList>
-          </Panel>
-        )}
       </Stack>
 
       <Stack area="verb">
@@ -345,6 +335,16 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
       </Stack>
 
       <Stack area="recents">
+        {derivedForms.length > 1 && (
+          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
+            <VerbList>
+              {derivedForms.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
         {sisters && (
           <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
             <VerbList>
