@@ -39,6 +39,7 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
     if (!isOpen || selector == null) return
     const target = document.querySelector(selector)
     if (!(target instanceof HTMLElement)) return
+    target.scrollIntoView({ block: 'nearest' })
 
     const header = document.querySelector<HTMLElement>('header')
     if (header?.contains(target)) {
