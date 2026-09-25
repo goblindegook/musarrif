@@ -4,6 +4,7 @@ import { formIVowelPattern } from '../../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../../paradigms/tokens'
 import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb } from '../../paradigms/verbs'
 import { useI18n } from '../hooks/useI18n'
+import { ChevronIcon } from '../icons/ChevronIcon'
 import { useRouting } from '../routes'
 
 interface VerbIndexRowProps {
@@ -50,6 +51,9 @@ export function VerbIndexRow({ verb }: VerbIndexRowProps) {
         .join(' - ')}
     >
       <Headword>
+        <Chevron>
+          <ChevronIcon />
+        </Chevron>
         <Lemma dir="rtl" lang="ar">
           {verb.synthetic && <SyntheticMarker aria-hidden="true">*</SyntheticMarker>}
           {formatArabic(verb.lemma)}
@@ -105,6 +109,25 @@ const Headword = styled('div')`
 
   small {
     font-size: 0.75rem;
+  }
+`
+
+const Chevron = styled('span')`
+  display: inline-flex;
+  color: var(--color-text-muted);
+  transition: color 120ms ease;
+
+  svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  a:hover & {
+    color: var(--color-text-emphasis);
+  }
+
+  [dir='rtl'] & {
+    transform: scaleX(-1);
   }
 `
 

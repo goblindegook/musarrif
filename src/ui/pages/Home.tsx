@@ -247,9 +247,6 @@ export function Home() {
         <div data-tour-step="1">
           <Panel title={t('verbList.title')} dir={dir} lang={lang}>
             <FilterGroup>
-              <Subheading dir={dir} lang={lang}>
-                {t('verbsList.sort.title')}
-              </Subheading>
               <ModeToggle
                 size="large"
                 activeMode={SORT_ORDERS.indexOf(query.sort)}
