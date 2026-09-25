@@ -28,7 +28,7 @@ Elegant, minimal, quietly authoritative. Three words: **precise, warm, scholarly
 - **WCAG 2.1 AA** required across all interfaces.
 - Support `prefers-reduced-motion` for animations.
 - Focus always visible: `3px` accent outline, `2px` offset — never suppressed.
-- 44px touch targets on coarse pointers.
+- 36px touch targets on coarse pointers (`IconButton` size). 44px crowds icon rows such as the conjugation table actions.
 - Sufficient contrast in both themes; cinnabar must pass on paper and on dark ground.
 - Test w/ screen readers; Arabic regions need `lang`/`dir` + ARIA labels.
 

@@ -297,6 +297,10 @@ const Eyebrow = styled('p')`
   &[lang='ar'] {
     letter-spacing: 0;
   }
+
+  @media (max-width: 479px) {
+    display: none;
+  }
 `
 
 const PageTitle = styled('h1')`
