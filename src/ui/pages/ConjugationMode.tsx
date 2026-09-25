@@ -356,7 +356,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         )}
 
         {recentVerbs.length > 0 && (
-          <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
+          <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible defaultCollapsed>
             <VerbList>
               {recentVerbs.map((verb) => (
                 <VerbPill key={verb.id} verb={verb} />
