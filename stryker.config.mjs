@@ -12,6 +12,7 @@ export default {
   ignoreStatic: true,
   incremental: true,
   timeoutFactor: 2,
+  dryRunTimeoutMinutes: 15,
   vitest: {
     configFile: 'vitest.config.ts',
   },
