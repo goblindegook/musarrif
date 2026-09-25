@@ -2,7 +2,7 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { memoize } from '@pacote/memoize'
 import { wordDistance } from '../primitives/strings'
 import { ALIF, HAMZA, normalizeForComparison } from './tokens'
-import { type DisplayVerb, findVerbsByRoot, findVerbsByRootPrefix, verbs } from './verbs'
+import { type DisplayVerb, findVerbsByRoot, findVerbsByRootPrefix, frequencyRank, verbs } from './verbs'
 
 type SearchOptions = {
   language: string
@@ -36,12 +36,18 @@ function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): Displa
   )
     .map((verb) => ({
       verb,
+      // Lemma distance cannot tell an exact root from a root-prefix match: ءمن and منع both sit 3 edits from "امن ب".
+      rootMatch: candidates.includes(verb.root) ? 0 : 1,
       distance: wordDistance(normalizedQuery, normalizeQuery(verb.lemma)),
       translation: normalizeQuery(options.translate(verb.id) ?? ''),
     }))
     .toSorted(
       (a, b) =>
-        a.distance - b.distance || a.verb.root.localeCompare(b.verb.root) || a.translation.localeCompare(b.translation),
+        a.rootMatch - b.rootMatch ||
+        a.distance - b.distance ||
+        frequencyRank(a.verb) - frequencyRank(b.verb) ||
+        a.verb.root.localeCompare(b.verb.root) ||
+        a.translation.localeCompare(b.translation),
     )
     .map((entry) => entry.verb)
 }
