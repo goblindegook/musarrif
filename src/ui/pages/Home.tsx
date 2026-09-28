@@ -332,7 +332,7 @@ export function Home() {
             </Filters>
 
             <VerbResults>
-              <VerbList>
+              <VerbList rows={Math.max(1, Math.ceil(paginatedVerbs.length / 2))}>
                 {paginatedVerbs.map((verb) => (
                   <VerbIndexRow key={verb.id} verb={verb} />
                 ))}
@@ -440,7 +440,7 @@ const FormFilterBar = styled(FilterBar)`
   }
 `
 
-const VerbList = styled('div')`
+const VerbList = styled('div')<{ rows: number }>`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   column-gap: 2rem;
@@ -451,8 +451,10 @@ const VerbList = styled('div')`
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-template-rows: repeat(${({ rows }) => rows}, auto);
 
-    & > :nth-last-child(-n + 2) {
+    & > :nth-child(${({ rows }) => rows}) {
       border-bottom-width: 0;
     }
   }
