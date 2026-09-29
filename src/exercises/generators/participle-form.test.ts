@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { formatFormLabel, getAvailableParadigms, verbs } from '../../paradigms/verbs.ts'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import { type DimensionProfile, exerciseDiacritics } from '../dimensions.ts'
 import { participleFormExercise } from './participle-form.ts'
 

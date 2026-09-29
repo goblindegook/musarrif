@@ -9,10 +9,9 @@ import { useRouting } from '../routes'
 interface VerbPillProps {
   verb: DisplayVerb
   className?: string
-  block?: boolean
 }
 
-export function VerbPill({ verb, className, block = false }: VerbPillProps) {
+export function VerbPill({ verb, className }: VerbPillProps) {
   const { lang, dir, t, diacriticsPreference } = useI18n()
   const { navigateTo, toHref } = useRouting()
   const form = formatFormLabel(verb.form, verb.root)
@@ -37,7 +36,6 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
     <VerbPillLink
       href={toHref(route)}
       className={className}
-      block={block}
       onClick={(event: MouseEvent) => {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
         event.preventDefault()
@@ -62,7 +60,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
         {isTriliteralFormIDisplayVerb(verb) && <small>{formIVowelPattern(verb)}</small>}
       </InlineRow>
       {lang !== 'ar' && (
-        <VerbTranslation dir={dir} lang={lang} block={block}>
+        <VerbTranslation dir={dir} lang={lang}>
           {translateVerb(verb)}
         </VerbTranslation>
       )}
@@ -70,7 +68,7 @@ export function VerbPill({ verb, className, block = false }: VerbPillProps) {
   )
 }
 
-const VerbPillLink = styled('a')<{ block: boolean }>`
+const VerbPillLink = styled('a')`
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 0.3rem 0.9rem;
@@ -83,7 +81,6 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
   flex-direction: column;
   align-items: flex-start;
   font-size: 1rem;
-  width: ${({ block }) => (block ? '100%' : 'auto')};
   max-width: 100%;
   transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
 
@@ -101,11 +98,9 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
 
   &.active {
     border-color: var(--color-accent);
-    background: var(--color-bg-accent);
     color: var(--color-text-emphasis);
 
     &:hover {
-      background: var(--color-bg-accent);
       border-color: var(--color-accent);
       color: var(--color-text-emphasis);
     }
@@ -119,6 +114,10 @@ const VerbPillLink = styled('a')<{ block: boolean }>`
 
   &:hover small {
     color: var(--color-text-primary);
+  }
+
+  &.active small {
+    color: var(--color-text-emphasis);
   }
 `
 
@@ -140,9 +139,9 @@ const InlineRow = styled('div')`
   }
 `
 
-const VerbTranslation = styled('small')<{ block: boolean }>`
+const VerbTranslation = styled('small')`
   display: block;
-  max-width: ${({ block }) => (block ? 'none' : '7rem')};
+  max-width: 7rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

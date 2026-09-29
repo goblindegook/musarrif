@@ -97,6 +97,13 @@ describe('search', () => {
     expect(matches.find((verb) => verb.id === 'trjm-1')).toBeDefined()
   })
 
+  test('ranks the more common verb first among translated matches', () => {
+    const translations: Record<string, string> = en.verbs
+    const matches = search('write', { translate: (key) => translations[key], language: 'en' })
+
+    expect(matches[0]?.id).toBe('ktb-1')
+  })
+
   test('partitions translated matches by language', () => {
     const english: Record<string, string> = en?.verbs ?? {}
     const portuguese: Record<string, string> = pt?.verbs ?? {}
@@ -108,11 +115,11 @@ describe('search', () => {
   })
 
   test('uses a different cache entry once translated search is enabled', () => {
-    const untranslated = search('كتب')
+    const untranslated = search('write')
     const english = (en as { verbs?: Record<string, string> }).verbs ?? {}
-    const translated = search('كتب', { translate: (key) => english[key], language: 'en' })
+    const translated = search('write', { translate: (key) => english[key], language: 'en' })
 
-    expect(untranslated[0]?.id).toBe('ktb-1')
-    expect(translated[0]?.id).toBe('ktb-2')
+    expect(untranslated).toEqual([])
+    expect(translated[0]?.id).toBe('ktb-1')
   })
 })

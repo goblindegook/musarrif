@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../test/profiles'
 import { exerciseDiacritics } from './dimensions'
 import { defineExercise } from './exercises'
 import { conjugationExercise } from './generators/conjugation'

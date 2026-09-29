@@ -84,9 +84,6 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
 const StepsTable = styled('div')`
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
 `
 
 const StepRow = styled('div')<{ isFinal: boolean }>`

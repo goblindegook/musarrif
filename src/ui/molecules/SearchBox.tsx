@@ -75,7 +75,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
         ref={suggestionWrapperRef}
         isActive={suggestionsOpen}
         onBlur={(event: FocusEvent) => {
-          if (!suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
+          if (!isMobile && !suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node | null)) {
             setSuggestionsOpen(false)
           }
         }}
@@ -93,6 +93,7 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
             setSuggestionsOpen(true)
           }}
           onBlur={(event) => {
+            if (isMobile) return
             if (suggestionWrapperRef.current?.contains?.(event.relatedTarget as Node)) return
 
             setTimeout(() => {

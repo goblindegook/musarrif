@@ -52,8 +52,10 @@ function selectMasdars(verb: DisplayVerb, sourceMasdars: readonly string[]): Mas
     else if (masdar !== defaultMasdar) lexicalMasdars.push(transliterate(masdar))
   }
 
+  // A derived form has no patterns to pick, so an empty list is how its row drops the regular masdar.
+  const omitsDefault = sourceMasdars.length > 0 && !sourceMasdars.includes(defaultMasdar)
   return {
-    masdars: isFormI && sourceMasdars.length > 0 ? masdars : undefined,
+    masdars: isFormI && sourceMasdars.length > 0 ? masdars : omitsDefault ? [] : undefined,
     lexicalMasdars: lexicalMasdars.length > 0 ? lexicalMasdars : undefined,
   }
 }

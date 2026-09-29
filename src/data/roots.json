@@ -979,6 +979,13 @@
   },
   {
     "root": "$y'",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": [],
+    "lexicalMasdars": ["ma$iy}ap"]
+  },
+  {
+    "root": "$y'",
     "form": 5,
     "passive": "impersonal"
   },
@@ -1199,7 +1206,8 @@
     "root": "'hl",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "lexicalActiveParticiple": ">ahil"
   },
   {
     "root": "'hl",
@@ -5715,14 +5723,16 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3al"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "Sadi}"
   },
   {
     "root": "Sd'",
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3aala"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "Sadi}"
   },
   {
     "root": "Sd'",
@@ -9803,8 +9813,7 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3l"],
-    "passive": "impersonal",
-    "lexicalActiveParticiple": "fatiy'"
+    "passive": "impersonal"
   },
   {
     "root": "ftH",
@@ -9946,6 +9955,7 @@
   {
     "root": "fy'",
     "form": 2,
+    "masdars": [],
     "lexicalMasdars": ["tafoyiy'"]
   },
   {
@@ -10769,6 +10779,13 @@
   {
     "root": "hdrj",
     "form": 1
+  },
+  {
+    "root": "hdy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fi3aala"],
+    "lexicalMasdars": ["hudFY"]
   },
   {
     "root": "hdy",
@@ -12265,6 +12282,12 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l"]
+  },
+  {
+    "root": "jzy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3aal"]
   },
   {
     "root": "jzy",
@@ -17162,6 +17185,12 @@
   },
   {
     "root": "qDy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l", "fa3aal"]
+  },
+  {
+    "root": "qDy",
     "form": 2
   },
   {
@@ -21187,6 +21216,12 @@
   },
   {
     "root": "tlw",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fu3ool", "fu3l", "fi3aala"]
+  },
+  {
+    "root": "tlw",
     "form": 6,
     "passive": "impersonal"
   },
@@ -21621,11 +21656,18 @@
     "masdars": ["fa3l"]
   },
   {
+    "root": "w*r",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3al"]
+  },
+  {
     "root": "wD'",
     "form": 1,
     "vowels": "u-u",
     "masdars": ["fa3aala", "fu3ool"],
-    "passive": "none"
+    "passive": "none",
+    "lexicalActiveParticiple": "waDiy'"
   },
   {
     "root": "wD'",
@@ -22746,6 +22788,12 @@
   {
     "root": "x$n",
     "form": 3
+  },
+  {
+    "root": "x$y",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3l", "fa3la"]
   },
   {
     "root": "x*l",
