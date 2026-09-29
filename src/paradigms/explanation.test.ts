@@ -309,6 +309,8 @@ describe('resolveVerbExplanationLayers tenseRoot assimilated', () => {
   test.each([
     ['wjz-1', 'initial-retained'],
     ['wvq-1', 'initial-retained'],
+    ['wjl-1', 'initial-retained-lexical'],
+    ['wsx-1', 'initial-retained-lexical'],
     ['wdd-1', 'geminate-contracts'],
   ] as const)('%s keeps its wāw in the present -> %s', (id, expected) => {
     expect(resolveVerbExplanationLayers(getVerbById(id)!, 'active.present.indicative', '3ms').tenseRoot).toBe(expected)

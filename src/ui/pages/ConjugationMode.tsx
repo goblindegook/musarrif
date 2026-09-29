@@ -171,33 +171,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     () => (availableParadigms.includes('passive.participle') ? String(derivePassiveParticiple(selectedVerb)) : null),
     [selectedVerb, availableParadigms],
   )
-  const recentsAndFavouritesPanels = (
-    <>
-      {recentVerbs.length > 0 && (
-        <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible>
-          <VerbList>
-            {recentVerbs.map((verb) => (
-              <VerbPill key={verb.id} verb={verb} />
-            ))}
-          </VerbList>
-        </Panel>
-      )}
-
-      <Panel prerender="omit" title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
-        {favourites.length > 0 ? (
-          <VerbList>
-            {favourites.map((verb) => (
-              <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-            ))}
-          </VerbList>
-        ) : (
-          <Text dir={dir} lang={lang}>
-            {t('favourites.empty')}
-          </Text>
-        )}
-      </Panel>
-    </>
-  )
 
   return (
     <Main id="main-content" tabIndex={-1}>
@@ -218,26 +191,6 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
           {searchTab === 'build' && <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />}
         </Panel>
-
-        {derivedForms.length > 1 && (
-          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
-            <VerbList>
-              {derivedForms.map((verb) => (
-                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-              ))}
-            </VerbList>
-          </Panel>
-        )}
-
-        {sisters && (
-          <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
-            <VerbList>
-              {sisters.verbs.map((verb) => (
-                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
-              ))}
-            </VerbList>
-          </Panel>
-        )}
       </Stack>
 
       <Stack area="verb">
@@ -381,7 +334,51 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         </Panel>
       </Stack>
 
-      <Stack area="recents">{recentsAndFavouritesPanels}</Stack>
+      <Stack area="recents">
+        {derivedForms.length > 1 && (
+          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
+            <VerbList>
+              {derivedForms.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        {sisters && (
+          <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
+            <VerbList>
+              {sisters.verbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        {recentVerbs.length > 0 && (
+          <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible defaultCollapsed>
+            <VerbList>
+              {recentVerbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        <Panel prerender="omit" title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+          {favourites.length > 0 ? (
+            <VerbList>
+              {favourites.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          ) : (
+            <Text dir={dir} lang={lang}>
+              {t('favourites.empty')}
+            </Text>
+          )}
+        </Panel>
+      </Stack>
 
       <Stack area="footer">
         <Panel prerender="omit" title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>

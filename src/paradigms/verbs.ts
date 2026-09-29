@@ -1,5 +1,6 @@
 import { transliterate, transliterateReverse } from '@pacote/buckwalter'
 import rawVerbs from '../data/roots.json'
+import verbFrequency from '../data/verb-frequency.json'
 import { clamp, parseInteger, toRoman } from '../primitives/numbers'
 import { conjugatePast } from './active/past'
 import type { FormIPattern } from './form-i-vowels'
@@ -215,6 +216,12 @@ export function formatFormLabel<Root extends string>(form: AllowedFormForRoot<Ro
 }
 
 export const verbs: DisplayVerb[] = (rawVerbs as RawVerb[]).map(parseRawVerb)
+
+const FREQUENCY_RANK = new Map(verbFrequency.map((id, rank) => [id, rank]))
+
+export function frequencyRank(verb: DisplayVerb): number {
+  return FREQUENCY_RANK.get(verb.id) ?? verbFrequency.length
+}
 
 export function findVerbsByRoot(query: string): readonly DisplayVerb[] {
   return verbs.filter((verb) => verb.root === query)

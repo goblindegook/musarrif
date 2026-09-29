@@ -34,9 +34,9 @@ and mobile that is lightweight and works offline.
 
 Every conjugation is checked against [Wiktionary](https://en.wiktionary.org/) first and [ElixirFM](https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi) second.
 
-Running the ElixirFM comparison across the full 4969-verb dataset (`npm run debug:elixirfm`) currently scores **~98.9% agreement**, excluding the conjugations ElixirFM has no equivalent for.
+Running the ElixirFM comparison across the full 4976-verb dataset (`npm run debug:elixirfm`) currently scores **~98.9% agreement**, excluding the conjugations ElixirFM has no equivalent for.
 
-132 verbs cannot be compared at all, and another 296 disagree with ElixirFM somewhere in their paradigm. Every discrepancy falls into one of the categories below. Every category has been adjudicated against Wiktionary, and none is a Muṣarrif error. Six verbs disagree in two ways and are listed under both categories, so the rows do not sum to 296.
+132 verbs cannot be compared at all, and another 297 disagree with ElixirFM somewhere in their paradigm. Every discrepancy falls into one of the categories below. Every category has been adjudicated against Wiktionary, and none is a Muṣarrif error. Six verbs disagree in two ways and are listed under both categories, so the rows do not sum to 297.
 
 | Discrepancy | Verbs | Error? |
 | --- | --- | --- |
@@ -44,7 +44,7 @@ Running the ElixirFM comparison across the full 4969-verb dataset (`npm run debu
 | <details><summary>**Not in ElixirFM.** The lexeme is absent from ElixirFM's lexicon, so the whole paradigm is skipped.</summary>`$bb-4`, `$bb-10`, `$qq-3`, `$rb-7`, `$rb-10`, `'*y-2`, `'jr-3`, `'kl-8`, `'mm-1`, `'r$f-1`, `'tmt-1`, `'wl-5`, `'x*-7`, `'x*-10`, `*hb-5`, `*hb-6`, `*hb-10`, `*xr-2`, `DHk-2`, `ESrn-1`, `ETy-4`, `Ely-1`, `Ely-4`, `Eml-2`, `Ewd-8`, `Eyl-4`, `Eyy-5`, `Eyy-6`, `Eyy-10`, `Hdy-5`, `Hr$f-3`, `Hrb-1`, `Hrfz-3`, `Hrjm-3`, `Hrk-1`, `Hsn-6`, `Hsn-7`, `Hsn-8`, `Hss-2`, `Hwr-8`, `Hwr-9`, `Hwz-7`, `Hyw-2`, `Hyw-4`, `Hyw-10`, `SbH-1`, `Sdr-6`, `Srf-3`, `Srf-10`, `Srx-4`, `Swr-1`, `TEm-6`, `Tbq-1`, `bHbH-1`, `brg$-4`, `drs-5`, `drs-10`, `dxl-2`, `fEl-2`, `fEl-4`, `fHl-1`, `fkr-1`, `fkr-6`, `fty-10`, `gTy-2`, `gsl-7`, `jlEb-4`, `jlEd-4`, `jlfE-3`, `jlw-7`, `jrmz-4`, `k$f-4`, `klm-1`, `klm-6`, `ktb-2`, `ktb-5`, `kyf-2`, `lwy-3`, `mHq-2`, `mkn-1`, `mknn-1`, `mrD-10`, `ndy-3`, `nmw-6`, `qSS-7`, `qdr-4`, `qdr-5`, `qr'-2`, `qr'-3`, `qr'-5`, `qr'-7`, `qwd-2`, `qwd-3`, `qwd-5`, `qwd-6`, `qwl-2`, `qwl-5`, `qyn-1`, `r$f-4`, `rbd-2`, `rbd-4`, `rdd-3`, `rdd-6`, `rmy-2`, `rmy-7`, `rtb-1`, `sny-5`, `tHd-1`, `tHr-1`, `tdr-1`, `tmr-1`, `tnb-1`, `wH$-1`, `wld-4`, `wqt-1`, `xrmS-4`, `ydy-3`, `zrq-2`</details> | 118 | No |
 | <details><summary>**Form I stem-vowel variants.** Same lexeme, different Form I stem vowel: Muṣarrif reads أَحْسَبُ where ElixirFM reads أَحسِبُ, and مَسِسْتُ where it reads مَسَستُ. Wiktionary records the Muṣarrif vowelling, except for `bky-1`, where ElixirFM inflects بَكَى with an *a-a* imperfect (يَبكَى, تَبكَونَ) against Muṣarrif's *a-i* (يَبْكِي, تَبْكُونَ): Wiktionary and Reverso record only the Muṣarrif vowelling.</summary>`$br-1`, `$rT-1`, `'fl-1`, `E$w-1`, `Er$-1`, `Etb-1`, `H$d-1`, `H$r-1`, `HSb-1`, `HSd-1`, `Hds-1`, `Hjl-1`, `Hjz-1`, `Hrv-1`, `Hsb-1`, `Hsr-1`, `Hss-1`, `Tbx-1`, `bHH-1`, `bky-1`, `bqr-1`, `dbg-1`, `dfq-1`, `ftn-1`, `fzz-1`, `h*r-1`, `hn'-1`, `jvm-1`, `kfr-1`, `khn-1`, `lbb-1`, `lgm-1`, `lms-1`, `mDg-1`, `mhr-1`, `msk-1`, `mss-1`, `nEq-1`, `nEr-1`, `nHl-1`, `nbE-1`, `nfr-1`, `nhb-1`, `nsb-1`, `nxr-1`, `nzH-1`, `qdr-1`, `qmT-1`, `r$f-1`, `r's-1`, `rbT-1`, `rjH-1`, `rkz-1`, `rms-1`, `sbq-1`, `slx-1`, `srT-1`, `xm$-1`, `z'r-1`, `zHr-1`, `zbr-1`</details> | 61 | No |
 | <details><summary>**Form IX gemination.** The pattern geminates the final radical of a sound root, and ElixirFM again leaves the jussive and imperative uncontracted: يَحمَرِر where Muṣarrif contracts to يَحْمَرَّ.</summary>`Ewj-9`, `Hmr-9`, `Hwl-9`, `Sfr-9`, `Shb-9`, `byD-9`, `dhm-9`, `gbr-9`, `kmd-9`, `qtm-9`, `rbd-9`, `rfD-9`, `smr-9`, `swd-9`, `xDl-9`, `xDr-9`, `zrq-9`</details> | 17 | No |
-| <details><summary>**Hamza seat.** Carrier choice, not vocalisation: Muṣarrif writes بَائُوا, تَبُوءَانِ, أُوءَدُ and تَرْتَئِ where ElixirFM has بَاؤُوا, تَبُوؤَانِ, أُوؤَدُ and تَرتَإِ. Wiktionary always lists the Muṣarrif spelling: first, where it gives variants before a long -ū (جَائُوا). A word-final hamza carrying the stem kasra of a dropped weak radical (تَرْتَئِ, يُرَائِ) is the one place Wiktionary accepts every seat, and Muṣarrif writes ئ, the only seat all of its variant lists share.</summary>`Dw'-4`, `Dw'-10`, `bw'-1`, `fy'-4`, `jy'-1`, `n'y-8`, `nw'-1`, `nw'-4`, `r'y-3`, `r'y-6`, `r'y-8`, `sw'-4`, `sw'-8`, `w'd-1`, `y's-1`</details> | 15 | No |
+| <details><summary>**Hamza seat.** Carrier choice, not vocalisation: Muṣarrif writes بَائُوا, تَبُوءَانِ, أُوءَدُ and تَرْتَئِ where ElixirFM has بَاؤُوا, تَبُوؤَانِ, أُوؤَدُ and تَرتَإِ. Wiktionary always lists the Muṣarrif spelling: first, where it gives variants before a long -ū (جَائُوا). A word-final hamza carrying the stem kasra of a dropped weak radical (تَرْتَئِ, يُرَائِ) is the one place Wiktionary accepts every seat, and Muṣarrif writes ئ, the only seat all of its variant lists share.</summary>`$y'-1`, `Dw'-4`, `Dw'-10`, `bw'-1`, `fy'-4`, `jy'-1`, `n'y-8`, `nw'-1`, `nw'-4`, `r'y-3`, `r'y-6`, `r'y-8`, `sw'-4`, `sw'-8`, `w'd-1`, `y's-1`</details> | 16 | No |
 | <details><summary>**Form I citation vowel differs.** ElixirFM's Form I entry for the root is a different vowelling of the same verb — حَبَط for Muṣarrif's حَبِطَ, كَبَر for كَبُرَ — so the paradigm is skipped rather than compared.</summary>`$Zy-1`, `$jE-1`, `'hl-1`, `HbT-1`, `bEd-1`, `dh$-1`, `g$y-1`, `gmD-1`, `kbr-1`, `qdm-1`, `wfq-1`, `wjz-1`, `wvq-1`, `xsr-1`</details> | 14 | No |
 | <details><summary>**Prothetic imperative vowel on weak initials.** After the prothetic alif, Muṣarrif merges a vowelless weak first radical into the matching long vowel — اِيدَدْنَ for وَدَّ, اِيجَلْ for وَجِلَ, اُوسُرْ for يَسُرَ — where ElixirFM keeps the radical (اِودَد, اِوجَل, اُيسُر). Wiktionary writes the merged forms.</summary>`wHl-1`, `wbr-1`, `wdd-1`, `whl-1`, `whm-1`, `wjE-1`, `wjl-1`, `wlE-1`, `wsn-1`, `wsx-1`, `wxm-1`, `ysr-1`</details> | 12 | No |
 | <details><summary>**Form I passive of assimilated verbs.** ElixirFM drops the stem wāw (يُعَى) where the passive retains it (يُوعَى).</summary>`w'y-1`, `wEy-1`, `wfy-1`, `wly-1`, `wny-1`, `wqy-1`</details> | 6 | No |
@@ -69,7 +69,7 @@ Start development server:
 npm run dev
 ```
 
-Build production bundle:
+Build production bundle (typecheck, Vite build, then static verb page prerender):
 
 ```bash
 npm run build
@@ -94,7 +94,7 @@ npm run tauri:dev
 Build desktop bundles:
 
 ```bash
-npm run tauri:build
+npm run build:desktop
 ```
 
 ## Quality Commands
@@ -105,18 +105,6 @@ Run tests (single pass, no watch):
 npm test -- --no-watch
 ```
 
-Run one test file:
-
-```bash
-npm test -- --no-watch src/path/to/file.test.ts
-```
-
-Count the verbs in the dataset (requires `jq`):
-
-```bash
-npm run count:verbs
-```
-
 Coverage and mutation:
 
 ```bash
@@ -124,70 +112,19 @@ npm run test:coverage
 npm run test:mutation
 ```
 
-Lint and formatting:
+Lint, dependency boundaries and formatting:
 
 ```bash
 npm run check:lint
+npm run check:boundaries
 npm run format
 ```
 
-## Contributing
-
-Contributions are welcome, especially for:
-
-- Incorrect or incomplete conjugation behavior
-- Missing verb entries and lexical metadata
-- Exercise quality and distractor quality improvements
-- Localization improvements (English, Italian, Portuguese or Arabic copy)
-- Accessibility and mobile usability fixes
-
-### Contribution Workflow
-
-1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
-2. Create a focused branch
-3. Implement the smallest change needed, remembering to add or update tests
-4. Run `npm run check:all` locally before opening a PR
-5. Include lexical sources whenever changing verb data or grammar expectations
-
-## Verb Adding Utility
-
-Use the interactive wizard to add or edit entries in:
-
-- `src/data/roots.json`
-- `src/ui/locales/en.verbs.json`
-- `src/ui/locales/it.verbs.json`
-- `src/ui/locales/pt.verbs.json`
-
-Run it with:
+Full CI gate (lint, boundaries, tests, typecheck, bundle):
 
 ```bash
-npm run add:verb
+npm run check:all
 ```
-
-The wizard guides you through:
-
-- Root and form selection (`I` to `X` for triliteral roots, `Iq` to `IVq` for quadriliteral roots)
-- Form I vowel pattern
-- Passive voice support (`full`, `impersonal`, `none`)
-- Masdar pattern selection
-- Passive participle support
-- Root glosses (EN/IT/PT)
-- Verb translations (EN/IT/PT)
-
-It then shows a summary and writes sorted JSON updates.
-
-### Data Expectations
-
-Before adding verbs, verify from lexical sources:
-
-- Root
-- Form
-- Present vowel pattern (for Form I)
-- Masdar pattern(s)
-- Passive voice support
-- Passive participle support
-
-Keep locale updates atomic with verb entry changes.
 
 ## Test Generators
 
@@ -215,9 +152,86 @@ Usage notes:
 - Slug format is `<root>-<form>` (example: `ktb-1`)
 - If the slug contains an apostrophe, quote it in the shell (example: `npm run add:tests -- wiktionary "qr'-1"`)
 
+## Analysis Commands
+
+Compare conjugations against ElixirFM (optionally `--sample N` verbs or one `--root ktb`):
+
+```bash
+npm run debug:elixirfm
+```
+
+Rank verbs by frequency into `src/data/verb-frequency.json` (needs the lemma counts from `scripts/frequency.py`, see [Acknowledgements](#acknowledgements)):
+
+```bash
+uv run scripts/frequency.py <path-to-MSA_freq_lists.tsv>
+npm run frequency
+```
+
+## Verb Adding Utility
+
+Write a `src/data/roots.json` row from a lexical source (`wiktionary`, `elixirfm`, `qutrub` or `reverso`), with the same slug and optional Form I vowel pattern as `add:tests`:
+
+```bash
+npm run add:verb -- wiktionary ktb-1
+npm run add:verb -- wiktionary qdr-1 a-u
+```
+
+This writes no locale entries. Add `verbs` and `roots` translations to `en`, `it` and `pt`, and `roots` to `ar`, in `src/ui/locales/*.verbs.json` by hand. `npm run glosses -- --missing` lists what is still untranslated, and `npm run glosses -- <root> [form]` fetches candidate glosses.
+
+For a verb no source covers, use the interactive wizard, which edits `src/data/roots.json` and the `en`, `it` and `pt` verb locale files:
+
+```bash
+npm run add:verb:wizard
+```
+
+The wizard guides you through:
+
+- Root and form selection (`I` to `X` for triliteral roots, `Iq` to `IVq` for quadriliteral roots)
+- Form I vowel pattern
+- Passive voice support (`full`, `impersonal`, `none`)
+- Masdar pattern selection
+- Root glosses (EN/IT/PT)
+- Verb translations (EN/IT/PT)
+
+It then shows a summary and writes sorted JSON updates.
+
+### Data Expectations
+
+Before adding verbs, verify from lexical sources:
+
+- Root
+- Form
+- Present vowel pattern (for Form I)
+- Masdar pattern(s)
+- Passive voice support
+
+Keep locale updates atomic with verb entry changes.
+
+## Contributing
+
+Contributions are welcome, especially for:
+
+- Incorrect or incomplete conjugation behavior
+- Missing verb entries and lexical metadata
+- Exercise quality and distractor quality improvements
+- Localization improvements (English, Italian, Portuguese or Arabic copy)
+- Accessibility and mobile usability fixes
+
+### Contribution Workflow
+
+1. Open an issue describing the bug or change (or use the [incorrect conjugation form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml))
+2. Create a focused branch
+3. Implement the smallest change needed, remembering to add or update tests
+4. Run `npm run check:all` locally before opening a PR
+5. Include lexical sources whenever changing verb data or grammar expectations
+
 ## Reporting Incorrect Conjugations
 
 Use the GitHub [incorrect conjugation issue form](https://github.com/goblindegook/musarrif/issues/new?template=incorrect-conjugation.yml). Include verb details, expected output, and source references.
+
+## Acknowledgements
+
+Verb frequency ranking uses the [CAMeL Arabic Frequency Lists](https://github.com/CAMeL-Lab/Camel_Arabic_Frequency_Lists) by CAMeL Lab, NYU Abu Dhabi, licensed CC BY-SA 4.0. Lemmatization is performed offline with [CAMeL Tools](https://github.com/CAMeL-Lab/camel_tools) (MIT license, data GPL v2).
 
 ## License
 

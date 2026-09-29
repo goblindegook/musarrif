@@ -14,6 +14,8 @@ export default defineConfig({
         test: {
           name: 'logic',
           pool: 'threads',
+          // shares parsed verb corpus across files, Stryker needs isolation
+          isolate: 'STRYKER_MUTATOR_WORKER' in process.env,
           sequence: { groupOrder: 0 },
           include: [
             'src/exercises/**/*.test.{ts,tsx}',
@@ -28,6 +30,7 @@ export default defineConfig({
           name: 'dom',
           environment: 'happy-dom',
           pool: 'forks',
+          isolate: true, // dom tests are leaky
           sequence: { groupOrder: 1 },
           include: ['src/prerender/**/*.test.{ts,tsx}', 'src/ui/**/*.test.{ts,tsx}'],
         },

@@ -23,7 +23,13 @@ rtk mise exec -- npm test -- --no-watch src/path/to/file.test.ts  # Single test 
 rtk mise exec -- npm run test:coverage    # Coverage report
 rtk mise exec -- npm run test:mutation    # Stryker mutation testing
 rtk mise exec -- npm run check:lint       # Biome lint check
+rtk mise exec -- npm run check:all        # Full CI gate
+rtk mise exec -- npm run check:boundaries # Dependency boundaries (depcruise)
 rtk mise exec -- npm run format           # Fix lint + format
+rtk mise exec -- npm run add:verb -- <source> <slug> [vowels]   # Write roots.json row
+rtk mise exec -- npm run add:tests -- <source> <slug> [vowels]  # Generate paradigm test file
+rtk mise exec -- npm run glosses -- --missing                   # Untranslated verbs/roots
+rtk mise exec -- npm run debug:elixirfm   # Compare against ElixirFM
 rtk mise exec -- node script.js           # Node scripts (always with mise exec --)
 ```
 

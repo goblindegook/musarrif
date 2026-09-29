@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../paradigms/verbs'
-import { INITIAL_DIMENSION_PROFILE } from '../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../test/profiles'
 import * as dimensions from './dimensions'
 import { isCoveredTriple, nextExercise } from './scheduler'
 import { parseCardKey } from './srs'

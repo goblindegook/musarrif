@@ -19,9 +19,9 @@ describe('Search', () => {
     const input = screen.getByLabelText('Verb')
 
     await user.type(input, 'كتب')
-    expect(await screen.findByText('to dictate')).toBeInTheDocument()
+    expect(await screen.findByText('to write', { selector: '[role="option"] *' })).toBeInTheDocument()
     await user.keyboard('{Enter}')
 
-    expect(currentUrl()).toBe('/verbs/ktb-2/')
+    expect(currentUrl()).toBe('/verbs/ktb-1/')
   })
 })

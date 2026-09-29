@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../../paradigms/verbs'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import * as dimensions from '../dimensions'
 import { conjugationExercise } from './conjugation'
 

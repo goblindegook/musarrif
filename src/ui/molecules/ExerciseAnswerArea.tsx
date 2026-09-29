@@ -75,29 +75,24 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     }
   }, [effectiveMode, speechState, speechResult, transcript, exercise, onAnswer])
 
+  const answerLabel = t(exercise.options[exercise.answer])
+  const status = !reveal
+    ? ''
+    : selected === exercise.answer || typedResult === 'correct' || speechResult === 'correct'
+      ? t('exercise.answer.correct')
+      : typedResult === 'partial'
+        ? t('exercise.answer.partial')
+        : selected !== null || typedResult === 'wrong'
+          ? t('exercise.answer.incorrect', { answer: answerLabel })
+          : t('exercise.answer.skipped', { answer: answerLabel })
+
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
-      <ScreenReaderOnly role="status">
-        {!reveal
-          ? ''
-          : effectiveMode === 'keyboard'
-            ? typedResult === 'correct'
-              ? t('exercise.answer.correct')
-              : typedResult === 'partial'
-                ? t('exercise.answer.partial')
-                : typedResult === 'wrong'
-                  ? t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })
-                  : ''
-            : selected === null
-              ? ''
-              : selected === exercise.answer
-                ? t('exercise.answer.correct')
-                : t('exercise.answer.incorrect', { answer: t(exercise.options[exercise.answer]) })}
-      </ScreenReaderOnly>
+      <ScreenReaderOnly role="status">{status}</ScreenReaderOnly>
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
-            const optionLabel = t(option)
+            const optionLabel = t(option, {}, { keepDiacritics: true })
             const hasArabicScript = /[؀-ۿ]/.test(optionLabel)
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
@@ -179,7 +174,11 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           </InputRow>
           {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-              {diff != null ? <AnswerDiff segments={diff.correct} /> : t(exercise.options[exercise.answer])}
+              {diff != null ? (
+                <AnswerDiff segments={diff.correct} />
+              ) : (
+                t(exercise.options[exercise.answer], {}, { keepDiacritics: true })
+              )}
             </CorrectReveal>
           )}
         </TypingForm>

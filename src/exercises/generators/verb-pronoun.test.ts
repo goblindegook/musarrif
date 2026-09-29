@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import { verbPronounExercise } from './verb-pronoun.ts'
 
 const ALL_PRONOUN_KEYS = new Set(['أَنَا', 'نَحْنُ', 'أَنْتَ', 'أَنْتِ', 'أَنْتُمَا', 'أَنْتُمْ', 'أَنْتُنَّ', 'هُوَ', 'هِيَ', 'هُمَا', 'هُمْ', 'هُنَّ'])

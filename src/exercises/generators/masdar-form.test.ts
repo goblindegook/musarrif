@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { formatFormLabel, getAvailableParadigms, getVerbById, verbs } from '../../paradigms/verbs.ts'
-import { INITIAL_DIMENSION_PROFILE } from '../../test/fixtures'
+import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
 import * as dimensions from '../dimensions.ts'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { masdarFormExercise } from './masdar-form.ts'

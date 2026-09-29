@@ -115,6 +115,15 @@ describe('buildRootEntry', () => {
     })
   })
 
+  test('records an empty pattern list when a derived form source omits its regular masdar', () => {
+    const verb = getVerb('فيء', 2)
+
+    expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['تَفْيِيء'] } }))).toMatchObject({
+      masdars: [],
+      lexicalMasdars: ["tafoyiy'"],
+    })
+  })
+
   test('reads a repeated source masdar once', () => {
     const verb = getVerb('كتب', 1, 'a-u')
 
