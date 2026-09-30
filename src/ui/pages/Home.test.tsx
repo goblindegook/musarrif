@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, screen, within } from '@testing-library/preact'
+import { cleanup, fireEvent, screen, within } from '@testing-library/preact'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, test, vi } from 'vitest'
 import { currentUrl, renderWithProviders } from '../../test/fixtures'
@@ -369,7 +369,7 @@ test('syncs verb list filters and pagination to hash query params', async () => 
   renderHome('/#/verbs')
   const user = userEvent.setup({ pointerEventsCheck: 0 })
 
-  await user.click(screen.getByText('Next'))
+  await user.click(screen.getByLabelText('Next'))
   expect(currentUrl()).toBe('/verbs/?page=2')
 
   await user.click(document.querySelector('#form-tab-2') as HTMLButtonElement)
@@ -477,9 +477,17 @@ describe('filters disclosure', () => {
 
     const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(false)
+    expect(within(details).queryByText('0', { selector: 'span' })).toBeNull()
     expect(screen.getByText('By form').closest('details')).toBe(details)
     expect(screen.getByText('By root type').closest('details')).toBe(details)
     expect(screen.getByText('By group').closest('details')).toBe(details)
+  })
+
+  test('shows the number of active filters in the disclosure label', () => {
+    renderHome('/#/verbs?form=2&root=hollow&group=kana')
+
+    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
+    expect(within(details).getByText('3', { selector: 'span' })).toBeInTheDocument()
   })
 
   test('expands the disclosure when a form filter is already active from hash query params', () => {
@@ -505,18 +513,6 @@ describe('filters disclosure', () => {
 
   test('expands the disclosure when a root type filter is active from path query params', () => {
     renderHome('/verbs/?root=doubled')
-
-    const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
-    expect(details.open).toBe(true)
-  })
-
-  test('expands the disclosure when history navigation activates a filter', () => {
-    renderHome('/#/verbs')
-
-    act(() => {
-      window.history.pushState({}, '', '/#/verbs?group=kana')
-      window.dispatchEvent(new PopStateEvent('popstate'))
-    })
 
     const details = screen.getByText('Filters').closest('details') as HTMLDetailsElement
     expect(details.open).toBe(true)

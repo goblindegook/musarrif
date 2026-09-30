@@ -12,8 +12,8 @@ import {
   ZNN_SISTERS_IDS,
 } from '../../paradigms/verbs'
 import { toRoman } from '../../primitives/numbers'
-import { Button } from '../atoms/Button'
 import { DisclosureChevron } from '../atoms/DisclosureChevron'
+import { IconButton } from '../atoms/IconButton'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
 import { Text } from '../atoms/Text'
@@ -21,6 +21,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useFavourites } from '../hooks/useFavourites'
 import { useI18n } from '../hooks/useI18n'
 import { useRecent } from '../hooks/useRecent'
+import { ArrowIcon } from '../icons/ArrowIcon'
 import { ModeToggle } from '../molecules/ModeToggle'
 import { Panel } from '../molecules/Panel'
 import { Search } from '../molecules/SearchBox'
@@ -149,12 +150,11 @@ export function Home() {
   useDocumentTitle(t('title'))
 
   const query = useMemo(() => parseQuery(queryParams), [queryParams])
-  const hasActiveFilters = query.filters.form != null || query.filters.root.length > 0 || query.filters.group != null
-  const [moreFiltersOpen, setMoreFiltersOpen] = useState(hasActiveFilters)
+  const activeFilterCount =
+    Number(query.filters.form != null) + query.filters.root.length + Number(query.filters.group != null)
 
-  useEffect(() => {
-    if (hasActiveFilters) setMoreFiltersOpen(true)
-  }, [hasActiveFilters])
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(activeFilterCount > 0)
+
   const favouriteVerbIds = useMemo(() => new Set(favourites.map((verb) => verb.id)), [favourites])
   const visibleVerbs = useMemo(() => filterVerbs(query, favouriteVerbIds), [favouriteVerbIds, query])
 
@@ -260,6 +260,7 @@ export function Home() {
               <FiltersSummary>
                 <DisclosureChevron />
                 {t('verbsList.filter.more.label')}
+                {activeFilterCount > 0 && <FilterCount>{activeFilterCount}</FilterCount>}
               </FiltersSummary>
 
               <FiltersBody>
@@ -338,22 +339,30 @@ export function Home() {
                 ))}
               </VerbList>
               {pageCount > 1 && (
-                <PaginationBar>
-                  <Button
+                <PaginationBar dir={dir}>
+                  <IconButton
+                    aria-label={t('pagination.previous')}
+                    title={t('pagination.previous')}
                     disabled={currentPage === 1}
                     onClick={() => setQueryParams(setQuery({ ...query, page: currentPage - 1 }))}
                   >
-                    {t('pagination.previous')}
-                  </Button>
+                    <PaginationArrow flip={dir === 'ltr'}>
+                      <ArrowIcon />
+                    </PaginationArrow>
+                  </IconButton>
                   <PaginationStatus dir={dir} lang={lang}>
                     {t('pagination.page', { current: String(currentPage), total: String(pageCount) })}
                   </PaginationStatus>
-                  <Button
+                  <IconButton
+                    aria-label={t('pagination.next')}
+                    title={t('pagination.next')}
                     disabled={currentPage === pageCount}
                     onClick={() => setQueryParams(setQuery({ ...query, page: currentPage + 1 }))}
                   >
-                    {t('pagination.next')}
-                  </Button>
+                    <PaginationArrow flip={dir === 'rtl'}>
+                      <ArrowIcon />
+                    </PaginationArrow>
+                  </IconButton>
                 </PaginationBar>
               )}
             </VerbResults>
@@ -409,16 +418,32 @@ const FiltersBody = styled('div')`
 
 const FiltersSummary = styled('summary')`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.4rem;
   cursor: pointer;
   font-weight: 500;
   color: var(--color-text-secondary);
   list-style: none;
 
+  & > :first-child {
+    align-self: center;
+  }
+
   &::-webkit-details-marker {
     display: none;
   }
+`
+
+const FilterCount = styled('span')`
+  min-width: 1.25rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-text-primary);
+  color: var(--color-bg-page);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
 `
 
 const FilterGroup = styled('section')`
@@ -470,9 +495,23 @@ const PaginationBar = styled('div')`
   gap: 0.75rem;
   align-items: center;
 
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
+  & > :first-child {
+    justify-self: start;
   }
+
+  & > :last-child {
+    justify-self: end;
+  }
+
+  & > button:disabled {
+    opacity: 0.45;
+  }
+`
+
+const PaginationArrow = styled('span')<{ flip: boolean }>`
+  display: grid;
+  place-items: center;
+  transform: ${({ flip }) => (flip ? 'rotate(180deg)' : 'none')};
 `
 
 const PaginationStatus = styled('div')`
@@ -490,7 +529,7 @@ const InlineVerbList = styled('div')`
 const VerbResults = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 3rem;
   outline: none;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
 `
