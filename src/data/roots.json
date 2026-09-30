@@ -3852,6 +3852,12 @@
   },
   {
     "root": "Eyl",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3la", "fa3l"]
+  },
+  {
+    "root": "Eyl",
     "form": 4
   },
   {
