@@ -38,7 +38,7 @@ export interface ExerciseFocus {
   nominal?: 'participles' | 'masdar' | null
 }
 
-const EXERCISES: readonly ExerciseGenerator<ExerciseKind>[] = [
+export const EXERCISE_GENERATORS: readonly ExerciseGenerator<ExerciseKind>[] = [
   conjugationExercise,
   masdarFormExercise,
   masdarRootExercise,
@@ -72,7 +72,7 @@ export function nextExercise(
   session: ExerciseSession = { reviews: 0, lastNewAt: -3 },
   focus: ExerciseFocus = {},
 ): Exercise<ExerciseKind> {
-  const available = EXERCISES.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
+  const available = EXERCISE_GENERATORS.filter((e) => e.minNominals == null || profile.nominals >= e.minNominals)
   const availableGenerators = new Map(available.map((e) => [e.kind, e]))
   const availableRootTypes = rootTypesPool(profile.rootTypes)
   const availableForms = formPool(profile.forms)

@@ -147,7 +147,7 @@ export function Home() {
   const { recents } = useRecent()
   const [searchTab, setSearchTab] = useState<'search' | 'build'>('search')
 
-  useDocumentTitle(t('title'))
+  useDocumentTitle(`${t('title')} · ${t('eyebrow')}`)
 
   const query = useMemo(() => parseQuery(queryParams), [queryParams])
   const activeFilterCount =

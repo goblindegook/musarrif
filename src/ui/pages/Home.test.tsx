@@ -17,9 +17,9 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-test('sets the page title ', () => {
+test('sets a descriptive title for the verb index', () => {
   renderHome()
-  expect(document.title).toBe('Muṣarrif')
+  expect(document.title).toBe('Muṣarrif · Arabic Verb Conjugator')
 })
 
 test('search and build mode toggle switches between panels', () => {
