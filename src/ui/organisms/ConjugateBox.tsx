@@ -78,7 +78,11 @@ export function ConjugateBox({ onSelect, selectedVerb }: ConjugateBoxProps) {
             <LetterPicker
               key={pos}
               defaultValue={selected}
-              labelText={t('build.rootSlotLabel', { index: String(pos + 1) })}
+              labelText={t(
+                (['build.rootSlotLabel.initial', 'build.rootSlotLabel.medial', 'build.rootSlotLabel.final'] as const)[
+                  pos
+                ],
+              )}
               dir={dir}
               onChange={[setC1, setC2, setC3][pos]}
             />

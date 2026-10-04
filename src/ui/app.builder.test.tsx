@@ -118,7 +118,9 @@ function getBuildButton(label: string): HTMLElement {
 }
 
 function setBuildLetter(pos: number, letter: string) {
-  const slotInput = within(getBuildPanel()).getByLabelText(`Root ${pos}`, { selector: 'input' })
+  const slotInput = within(getBuildPanel()).getByLabelText(['Initial root', 'Medial root', 'Final root'][pos - 1], {
+    selector: 'input',
+  })
   fireEvent.click(slotInput)
   fireEvent.click(within(slotInput.closest(`[role="group"]`)!).getByText(letter, { selector: '[role="option"]' }))
 }

@@ -36,7 +36,7 @@ test('search and build mode toggle switches between panels', () => {
 
   expect(searchTab).toHaveAttribute('aria-pressed', 'false')
   expect(buildTab).toHaveAttribute('aria-pressed', 'true')
-  expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
+  expect(screen.getByLabelText('Initial root', { selector: 'input' })).toBeInTheDocument()
 })
 
 test('marks the search and build form for prerender omission', () => {

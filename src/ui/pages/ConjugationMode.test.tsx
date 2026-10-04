@@ -61,7 +61,7 @@ test('search and build mode toggle switches between panels', () => {
 
   expect(searchTab).toHaveAttribute('aria-pressed', 'false')
   expect(buildTab).toHaveAttribute('aria-pressed', 'true')
-  expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
+  expect(screen.getByLabelText('Initial root', { selector: 'input' })).toBeInTheDocument()
 })
 
 test('marks the search and build form for prerender omission', () => {
@@ -335,7 +335,9 @@ describe('Build tab', () => {
   }
 
   function getLetter(slotHeader: number): HTMLInputElement {
-    return within(getBuildPanel()).getByLabelText(`Root ${slotHeader}`, { selector: 'input' })
+    return within(getBuildPanel()).getByLabelText(['Initial root', 'Medial root', 'Final root'][slotHeader - 1], {
+      selector: 'input',
+    })
   }
 
   it('pre-populates root and form when switching to Build tab with a selected verb', async () => {

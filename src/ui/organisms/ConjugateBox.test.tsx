@@ -37,24 +37,24 @@ describe('ConjugateBox', () => {
   test('each letter slot has a text input', () => {
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Root 2', { selector: 'input' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Root 3', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Initial root', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Medial root', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Final root', { selector: 'input' })).toBeInTheDocument()
   })
 
   test('slot header labels the slot input', () => {
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    expect(screen.getByLabelText('Root 1', { selector: 'input' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Root 2', { selector: 'input' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Root 3', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Initial root', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Medial root', { selector: 'input' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Final root', { selector: 'input' })).toBeInTheDocument()
   })
 
   test('focusing a slot input shows popup with valid letters for that slot', async () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const c1Input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const c1Input = screen.getByLabelText('Initial root', { selector: 'input' })
     const c1Group = c1Input.closest('[role="group"]') as HTMLElement
     await user.click(c1Input)
 
@@ -68,7 +68,7 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const input = screen.getByLabelText('Initial root', { selector: 'input' })
     await user.click(input)
     await user.keyboard('{ArrowDown}')
 
@@ -84,7 +84,7 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const input = screen.getByLabelText('Initial root', { selector: 'input' })
     await user.click(input)
     await user.keyboard('{ArrowDown}{Enter}')
 
@@ -96,7 +96,7 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const input = screen.getByLabelText('Initial root', { selector: 'input' })
     await user.click(input)
     expect(input.closest('[role="group"]')!.querySelector('[role="listbox"]')).toBeInTheDocument()
 
@@ -109,7 +109,7 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const input = screen.getByLabelText('Initial root', { selector: 'input' })
     const group = input.closest<HTMLElement>('[role="group"]')!
 
     await user.click(input)
@@ -127,7 +127,7 @@ describe('ConjugateBox', () => {
     const user = userEvent.setup()
     renderWithProviders(<ConjugateBox onSelect={noop} />)
 
-    const input = screen.getByLabelText('Root 1', { selector: 'input' })
+    const input = screen.getByLabelText('Initial root', { selector: 'input' })
     const group = input.closest<HTMLElement>('[role="group"]')!
     await user.click(input)
     expect(group.querySelector('[role="listbox"]')).toBeInTheDocument()
@@ -164,9 +164,9 @@ describe('ConjugateBox', () => {
       />,
     )
 
-    expect(screen.getByLabelText('Root 1', { selector: 'input' })).toHaveValue('ك')
-    expect(screen.getByLabelText('Root 2', { selector: 'input' })).toHaveValue('ت')
-    expect(screen.getByLabelText('Root 3', { selector: 'input' })).toHaveValue('ب')
+    expect(screen.getByLabelText('Initial root', { selector: 'input' })).toHaveValue('ك')
+    expect(screen.getByLabelText('Medial root', { selector: 'input' })).toHaveValue('ت')
+    expect(screen.getByLabelText('Final root', { selector: 'input' })).toHaveValue('ب')
     expect(screen.getByText('II', { selector: 'button' })).toHaveAttribute('aria-pressed', 'true')
   })
 })
