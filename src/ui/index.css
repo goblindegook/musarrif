@@ -34,11 +34,11 @@
   --color-warning-text: #6b5c38;
   --color-streak-bg: #f7ebe6;
   --color-streak-text: #a32b18;
-  --color-insight-root: #1d4ed8;
-  --color-insight-form: #ea580c;
-  --color-insight-tense: #15803d;
-  --color-insight-suffix: #be185d;
-  --color-insight-dropped: #9ca3af;
+  --color-insight-root: #1f5fbf;
+  --color-insight-form: #b36200;
+  --color-insight-tense: #1d7a2c;
+  --color-insight-suffix: #c0206f;
+  --color-insight-dropped: #9a9285;
   --radius: 0.25rem;
   --radius-pill: 999px;
   font-synthesis: none;
@@ -77,11 +77,11 @@
   --color-warning-text: #ccbc93;
   --color-streak-bg: #33201a;
   --color-streak-text: #e8705a;
-  --color-insight-root: #93c5fd;
-  --color-insight-form: #fb923c;
-  --color-insight-tense: #4ade80;
-  --color-insight-suffix: #f472b6;
-  --color-insight-dropped: #d1d5db;
+  --color-insight-root: #6fa3ff;
+  --color-insight-form: #f2b440;
+  --color-insight-tense: #6fdc6f;
+  --color-insight-suffix: #ff7eb6;
+  --color-insight-dropped: #c9c2b4;
 }
 
 @font-face {

@@ -41,11 +41,12 @@ entities.json
 /src-tauri/icons/
 
 /.claude/launch.json
-/.impact
+.impact/
 /docs/superpowers
 /docs/specs
 /docs/plans
 /public/piper
 /public/voices
+.impeccable/
 .impeccable.md
 *.musarrif
