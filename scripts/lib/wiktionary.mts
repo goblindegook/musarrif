@@ -94,10 +94,11 @@ function findConjugationTables(arabicSection: Element): HTMLTableElement[] {
   return tables
 }
 
-function resolveParadigm(voice: 'active' | 'passive' | undefined, tenseText: string): VerbParadigm | undefined {
+function resolveParadigm(voice: 'active' | 'passive' | undefined, rowText: string): VerbParadigm | undefined {
   if (!voice) return undefined
-  if (tenseText.includes('past (perfect) indicative')) return `${voice} past`
-  if (tenseText.includes('non-past (imperfect) indicative')) return `${voice} present indicative`
+  const tenseText = rowText.replace(/\([^)]*\)\s*/g, '')
+  if (tenseText.includes('non-past indicative')) return `${voice} present indicative`
+  if (tenseText.includes('past indicative')) return `${voice} past`
   if (tenseText.includes('subjunctive')) return `${voice} present subjunctive`
   if (tenseText.includes('jussive')) return `${voice} present jussive`
   if (voice === 'active' && tenseText.includes('imperative')) return 'active imperative'

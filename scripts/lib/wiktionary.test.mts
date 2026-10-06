@@ -355,6 +355,47 @@ ${formIVCaption}
     expect(parsed.paradigms['active past']?.['3ms']).toEqual(['وَسْوَسَ'])
   })
 
+  test.each([
+    { header: 'past indicative<br>(perfect)', tense: 'past', active: 'كَتَبَ', passive: 'كُتِبَ' },
+    { header: 'non-past indicative<br>(imperfect)', tense: 'present indicative', active: 'يَكْتُبُ', passive: 'يُكْتَبُ' },
+  ])('reads the "$header" row in both voices as $tense', async ({ header, tense, active, passive }) => {
+    const row = (word: string) => `
+<tr>
+<th rowspan="2">${header}</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">x</span></td>
+<td><span class="Arab">y</span></td>
+<td><span class="Arab">${word}</span></td>
+</tr>`
+    const html = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>كَتَبَ</strong></i> (I, sound, full passive)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>${row(active)}
+<tr><th colspan="12" class="outer">passive voice</th></tr>${row(passive)}
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(html, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const parsed = await fetchParadigms(getVerbById('ktb-1')!)
+
+    expect(parsed.paradigms[`active ${tense}` as 'active past']?.['3ms']).toEqual([active])
+    expect(parsed.paradigms[`passive ${tense}` as 'passive past']?.['3ms']).toEqual([passive])
+  })
+
   test('captures multiple alternative forms in a single cell as an array', async () => {
     const html = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
