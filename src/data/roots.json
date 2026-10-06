@@ -6411,11 +6411,6 @@
   },
   {
     "root": "Tbq",
-    "form": 1,
-    "vowels": "a-a"
-  },
-  {
-    "root": "Tbq",
     "form": 2
   },
   {
@@ -6429,8 +6424,19 @@
   },
   {
     "root": "Tbq",
+    "form": 5,
+    "passive": "none",
+    "masdars": [],
+    "lexicalMasdars": ["taTab~uq"]
+  },
+  {
+    "root": "Tbq",
     "form": 7,
     "passive": "impersonal"
+  },
+  {
+    "root": "Tbq",
+    "form": 10
   },
   {
     "root": "Tbx",
