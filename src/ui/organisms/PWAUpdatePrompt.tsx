@@ -12,29 +12,35 @@ export const PWAUpdatePrompt = () => {
     onRegisterError: (error) => console.error('Service worker registration failed', error),
   })
 
-  if (!needRefresh) return null
-
   return (
-    <Banner dir={dir} role="status">
-      <Message>{t('pwa.updateAvailable')}</Message>
-      <Actions>
-        <Button size="compact" onClick={() => updateServiceWorker(true)}>
-          {t('pwa.reload')}
-        </Button>
-        <Button size="compact" variant="secondary" onClick={() => setNeedRefresh(false)}>
-          {t('aria.close')}
-        </Button>
-      </Actions>
-    </Banner>
+    <Region role="status">
+      {needRefresh && (
+        <Banner dir={dir}>
+          <Message>{t('pwa.updateAvailable')}</Message>
+          <Actions>
+            <Button size="compact" onClick={() => updateServiceWorker(true)}>
+              {t('pwa.reload')}
+            </Button>
+            <Button size="compact" variant="secondary" onClick={() => setNeedRefresh(false)}>
+              {t('aria.close')}
+            </Button>
+          </Actions>
+        </Banner>
+      )}
+    </Region>
   )
 }
+
+const Region = styled('div')`
+  position: fixed;
+  z-index: 250;
+`
 
 const Banner = styled('div')`
   position: fixed;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 250;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
