@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/vitest'
 import { setup } from 'goober'
 import { h } from 'preact'
 import { expect, vi } from 'vitest'

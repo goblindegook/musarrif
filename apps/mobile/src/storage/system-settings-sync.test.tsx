@@ -1,6 +1,5 @@
 import { act, render } from '@testing-library/react-native'
-import { Settings } from 'react-native'
-import RCTDeviceEventEmitter from 'react-native/Libraries/EventEmitter/RCTDeviceEventEmitter'
+import { DeviceEventEmitter, Settings } from 'react-native'
 import { createInMemoryRepository } from './in-memory-repository'
 import type { UserDataKey, UserDataValue } from './schema'
 import { useSystemSettingsSync } from './system-settings-sync'
@@ -45,7 +44,7 @@ describe('system settings sync', () => {
     const values: Partial<Record<UserDataKey, UserDataValue>> = { 'setting:diacriticsPreference': 'some' }
     await renderWith(values)
     await act(async () => {
-      RCTDeviceEventEmitter.emit('settingsUpdated', { diacriticsPreference: 'none' })
+      DeviceEventEmitter.emit('settingsUpdated', { diacriticsPreference: 'none' })
     })
     expect(values['setting:diacriticsPreference']).toBe('none')
   })

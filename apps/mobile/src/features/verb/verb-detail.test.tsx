@@ -1,5 +1,3 @@
-import { Picker, Toggle } from '@expo/ui/swift-ui'
-import { disabled } from '@expo/ui/swift-ui/modifiers'
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native'
 import * as Clipboard from 'expo-clipboard'
 import { getVerbById } from '../../../../../src/paradigms/verbs'
@@ -23,21 +21,9 @@ const english = {
   onOpenVerb: jest.fn(),
 }
 
-function segmentedPicker(label: string) {
-  return screen.UNSAFE_getAllByType(Picker).find((picker) => picker.props.label === label)!
-}
-
-function selectTense(tense: string) {
-  act(() => segmentedPicker('Select tense').props.onSelectionChange(tense))
-}
-
-function selectVoice(voice: string) {
-  act(() => screen.UNSAFE_getAllByType(Toggle)[0].props.onIsOnChange(voice === 'passive'))
-}
-
-function selectMood(mood: string) {
-  act(() => segmentedPicker('Select mood').props.onSelectionChange(mood))
-}
+const tenses = () => within(screen.getByRole('radiogroup', { name: 'Select tense' }))
+const moods = () => within(screen.getByRole('radiogroup', { name: 'Select mood' }))
+const passiveSwitch = () => screen.getByRole('switch', { name: 'Passive' })
 
 describe('native verb detail', () => {
   beforeEach(() => {
@@ -52,8 +38,8 @@ describe('native verb detail', () => {
     expect(screen.queryByText(/Verb:/u)).toBeNull()
     expect(screen.getByText('ك ت ب')).toBeTruthy()
     expect(within(screen.getByRole('button', { name: 'Form insights' })).getByText('I')).toBeTruthy()
-    expect(screen.getByTestId('passive-switch').props.isOn).toBe(false)
-    expect(segmentedPicker('Select tense').props.selection).toBe('past')
+    expect(passiveSwitch()).not.toBeChecked()
+    expect(tenses().getByRole('radio', { name: 'Past' })).toBeSelected()
     expect(screen.getAllByTestId('conjugation-form')).toHaveLength(13)
     expect(screen.queryByRole('button', { name: 'Add to favorites' })).toBeNull()
   })
@@ -79,17 +65,17 @@ describe('native verb detail', () => {
   test('keeps mood when changing voices and offers only active imperative', async () => {
     await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
-    selectTense('present')
-    selectMood('subjunctive')
-    selectVoice('passive')
-    expect(screen.getByTestId('passive-switch').props.isOn).toBe(true)
-    expect(segmentedPicker('Select mood').props.selection).toBe('subjunctive')
-    expect(segmentedPicker('Select tense').props.children).toHaveLength(3)
+    await fireEvent.press(tenses().getByRole('radio', { name: 'Present' }))
+    await fireEvent.press(moods().getByRole('radio', { name: 'Subjunctive' }))
+    await fireEvent.press(passiveSwitch())
+    expect(passiveSwitch()).toBeChecked()
+    expect(moods().getByRole('radio', { name: 'Subjunctive' })).toBeSelected()
+    expect(tenses().getAllByRole('radio')).toHaveLength(3)
 
-    selectVoice('active')
-    expect(segmentedPicker('Select mood').props.selection).toBe('subjunctive')
-    selectTense('imperative')
-    expect(screen.getByTestId('passive-switch').props.modifiers).toContainEqual(disabled(true))
+    await fireEvent.press(passiveSwitch())
+    expect(moods().getByRole('radio', { name: 'Subjunctive' })).toBeSelected()
+    await fireEvent.press(tenses().getByRole('radio', { name: 'Imperative' }))
+    expect(passiveSwitch()).toBeDisabled()
     expect(screen.queryByLabelText('Select mood')).toBeNull()
     expect(screen.getAllByTestId('conjugation-form')).toHaveLength(5)
   })
@@ -97,10 +83,9 @@ describe('native verb detail', () => {
   test('locks paradigms that are unavailable for the selected verb', async () => {
     await render(<VerbDetail verb={getVerbById('lys-1')!} {...english} />)
 
-    expect(segmentedPicker('Select tense').props.selection).toBe('past')
-    selectTense('present')
-    expect(segmentedPicker('Select tense').props.selection).toBe('past')
-    expect(screen.queryByTestId('passive-switch')).toBeNull()
+    expect(tenses().getByRole('radio', { name: 'Past' })).toBeSelected()
+    expect(tenses().queryByRole('radio', { name: 'Present' })).toBeNull()
+    expect(screen.queryByRole('switch')).toBeNull()
   })
 
   test.each([
@@ -111,9 +96,9 @@ describe('native verb detail', () => {
     await render(<VerbDetail verb={getVerbById(verbId)!} {...english} />)
 
     expect(
-      segmentedPicker('Select tense').props.children.map(
-        (item: { props: { children: string } }) => item.props.children,
-      ),
+      tenses()
+        .getAllByRole('radio')
+        .map((radio) => radio.props.accessibilityLabel),
     ).toEqual(labels)
   })
 
@@ -134,7 +119,7 @@ describe('native verb detail', () => {
     expect(screen.getByText('Active participle')).toBeTruthy()
     expect(screen.getByText('Passive participle')).toBeTruthy()
     expect(screen.getAllByTestId('nominal-form')).toHaveLength(3)
-    expect(screen.UNSAFE_getAllByType(Picker)).toHaveLength(1)
+    expect(screen.getAllByRole('radiogroup')).toHaveLength(1)
   })
 
   test('shows localized valency, including multiple readings in numeric order', async () => {

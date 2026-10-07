@@ -28,7 +28,7 @@ export function ChoiceButton({
   fontSize?: number
   minHeight: number
   onPress: () => void
-  selected: boolean
+  selected?: boolean
   shape?: 'capsule' | 'circle' | 'roundedRectangle'
   testID: string
   text: string

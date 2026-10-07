@@ -74,7 +74,12 @@ jest.mock('@expo/ui/swift-ui', () => {
         children,
       ),
     Image: (props: { systemName: string }) => React.createElement(View, props),
-    ProgressView: (props: { value: number }) => React.createElement(View, props),
+    ProgressView: ({ value }: { value: number }) =>
+      React.createElement(View, {
+        accessible: true,
+        accessibilityRole: 'progressbar',
+        accessibilityValue: { min: 0, max: 1, now: value },
+      }),
     NavigationStack: ({ children }: { children: React.ReactNode }) => React.createElement(View, null, children),
     Toolbar,
     ToolbarItem: ({ children }: { children: React.ReactNode }) => React.createElement(View, null, children),
@@ -111,7 +116,9 @@ test('Progress shows accuracy, the streak goal, and expandable mastery items', a
   await fireEvent.press(screen.getByRole('button', { name: 'Root types' }))
   expect(screen.getByText('Sound')).toBeTruthy()
   expect(screen.getAllByText('Locked').length).toBeGreaterThan(0)
-  expect(within(screen.getByTestId('mastery-rootTypes-sound-progress')).UNSAFE_getByProps({ value: 0 })).toBeTruthy()
+  expect(
+    within(screen.getByTestId('mastery-rootTypes-sound-progress')).getByRole('progressbar'),
+  ).toHaveAccessibilityValue({ now: 0 })
 })
 
 test('Progress keeps only one mastery category open at a time', async () => {

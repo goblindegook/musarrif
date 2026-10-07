@@ -1,6 +1,6 @@
 import { transliterate } from '@pacote/buckwalter'
-import type { MatcherState } from '@vitest/expect'
 import { diff } from '@vitest/utils/diff'
+import type { MatcherState } from 'vitest'
 import { mapRecord } from '../primitives/objects'
 
 export const matchers = {

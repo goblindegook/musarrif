@@ -63,12 +63,12 @@ describe('native browse flow', () => {
     )
 
     await fireEvent.press(screen.getByTestId('root-slot-1'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ث' }))
     expect(playKeyClick).toHaveBeenCalledTimes(1)
     await fireEvent.press(screen.getByTestId('root-slot-2'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ن' }))
     await fireEvent.press(screen.getByTestId('root-slot-3'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ي' }))
     await fireEvent.press(screen.getByTestId('form-1'))
     await fireEvent.press(screen.getByTestId('pattern-a-i'))
     await fireEvent.press(screen.getByTestId('build-submit'))
@@ -77,7 +77,6 @@ describe('native browse flow', () => {
   })
 
   test('names the verb on the build button once the root is complete', async () => {
-    const submitLabel = () => String(screen.getByTestId('build-submit').props.children.props.children)
     await render(
       <SafeAreaProvider
         initialMetrics={{
@@ -89,16 +88,16 @@ describe('native browse flow', () => {
       </SafeAreaProvider>,
     )
 
-    expect(submitLabel()).toBe('Conjugate')
+    expect(screen.getByText('Conjugate')).toBeTruthy()
     await fireEvent.press(screen.getByTestId('root-slot-1'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ث' }))
     await fireEvent.press(screen.getByTestId('root-slot-2'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ن' }))
     await fireEvent.press(screen.getByTestId('root-slot-3'))
-    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Select letter ي' }))
     await fireEvent.press(screen.getByTestId('pattern-a-i'))
 
-    expect(submitLabel()).toBe('Conjugate ثَنَى')
+    expect(screen.getByText('Conjugate ثَنَى')).toBeTruthy()
   })
 
   test('selects a verb from the favorites-filtered list', async () => {
@@ -122,7 +121,9 @@ describe('native browse flow', () => {
     const { rerender } = await render(<VerbList language="en" onSelect={onSelect} />)
 
     expect(hasIncludedVerb('كَانَ, Form I, ◌َ / ◌ُ, to be')).toBe(true)
-    await rerender(<VerbList filters={{ ...DEFAULT_FILTERS, sort: 'alphabetical' }} language="en" onSelect={onSelect} />)
+    await rerender(
+      <VerbList filters={{ ...DEFAULT_FILTERS, sort: 'alphabetical' }} language="en" onSelect={onSelect} />,
+    )
     expect(hasIncludedVerb('كَانَ, Form I, ◌َ / ◌ُ, to be')).toBe(false)
   })
 

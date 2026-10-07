@@ -1,5 +1,4 @@
-import { Picker } from '@expo/ui/swift-ui'
-import { act, render, screen } from '@testing-library/react-native'
+import { fireEvent, render, screen } from '@testing-library/react-native'
 import { DEFAULT_FILTERS } from './filter-model'
 import { VerbFilterSheet } from './VerbFilterSheet'
 
@@ -18,8 +17,7 @@ describe('native verb filters', () => {
       />,
     )
 
-    const sortPicker = screen.UNSAFE_getAllByType(Picker).find((picker) => picker.props.label === 'Order')!
-    await act(() => sortPicker.props.onSelectionChange('alphabetical'))
+    await fireEvent.press(screen.getByRole('radio', { name: 'Alphabetical' }))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, sort: 'alphabetical' })
   })
 
@@ -37,7 +35,7 @@ describe('native verb filters', () => {
       />,
     )
 
-    await act(() => screen.getByTestId('filter-root-sound').props.onIsOnChange({ nativeEvent: { isOn: true } }))
+    await fireEvent.press(screen.getByRole('switch', { name: 'Sound' }))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, rootShapes: ['sound'] })
   })
 
@@ -55,10 +53,7 @@ describe('native verb filters', () => {
       />,
     )
 
-    const formPicker = screen
-      .UNSAFE_getAllByProps({ label: 'Form' })
-      .find((node) => typeof node.props.onSelectionChange === 'function')
-    await act(() => formPicker?.props.onSelectionChange('2'))
+    await fireEvent.press(screen.getByRole('radio', { name: 'II' }))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, form: '2' })
   })
 
@@ -76,7 +71,7 @@ describe('native verb filters', () => {
       />,
     )
 
-    await act(() => screen.UNSAFE_getByProps({ label: 'By group' }).props.onSelectionChange('favourites'))
+    await fireEvent.press(screen.getByRole('radio', { name: 'Favorites' }))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, group: 'favourites' })
   })
 
@@ -95,8 +90,8 @@ describe('native verb filters', () => {
       />,
     )
 
-    await act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
-    await act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Apply' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Clear All' }))
     expect(onApply).toHaveBeenCalledTimes(1)
     expect(onClear).toHaveBeenCalledTimes(1)
   })

@@ -56,7 +56,7 @@ describe('Search route', () => {
   beforeEach(() => mockRouterPush.mockClear())
 
   async function renderRoute() {
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <SearchRoute />
       </UserDataProvider>,
@@ -89,13 +89,13 @@ describe('Search route', () => {
     await renderRoute()
 
     await fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
-    expect(screen.getByTestId('filter-root-sound')).toBeTruthy()
-    await act(() => screen.UNSAFE_getByProps({ selection: '', label: 'By group' }).props.onSelectionChange('favourites'))
+    expect(screen.getByRole('switch', { name: 'Sound' })).toBeTruthy()
+    await fireEvent.press(screen.getByRole('radio', { name: 'Favorites' }))
     expect(screen.queryByText('No verbs found')).toBeNull()
-    await act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Apply' }))
     expect(screen.getByText('No verbs found')).toBeTruthy()
     await fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
-    await act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Clear All' }))
     expect(screen.queryByText('No verbs found')).toBeNull()
   })
 })

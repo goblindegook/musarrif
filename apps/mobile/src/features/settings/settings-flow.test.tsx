@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react-native'
+import { act, fireEvent, render, screen } from '@testing-library/react-native'
 import { createInMemoryRepository } from '../../storage/in-memory-repository'
 import type { UserDataKey, UserDataValue } from '../../storage/schema'
 import { UserDataProvider } from '../../storage/UserDataProvider'
@@ -50,13 +50,10 @@ describe('native settings', () => {
       </UserDataProvider>,
     )
     await act(async () => {})
-    const diacriticsPicker = screen.UNSAFE_getByProps({ label: 'Diacritics' })
-    expect(diacriticsPicker.props.selection).toBe('none')
-    await act(async () => diacriticsPicker.props.onSelectionChange('all'))
+    expect(screen.getByRole('radio', { name: 'None' })).toBeSelected()
+    await fireEvent.press(screen.getByRole('radio', { name: 'All' }))
     expect(values['setting:diacriticsPreference']).toBe('all')
-    await act(async () => {
-      screen.UNSAFE_getByProps({ label: 'Export data' }).props.onPress()
-    })
+    await fireEvent.press(screen.getByRole('button', { name: 'Export data' }))
     expect(mockFileCreate).toHaveBeenCalledWith({ overwrite: true })
     expect(mockFileWrite).toHaveBeenCalledWith(expect.stringContaining('"version": 1'))
     expect(mockShareAsync).toHaveBeenCalledWith(

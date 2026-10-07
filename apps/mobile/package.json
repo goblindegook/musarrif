@@ -51,7 +51,8 @@
       "<rootDir>/src/**/*.test.tsx"
     ],
     "setupFiles": [
-      "<rootDir>/jest.setup.js"
+      "<rootDir>/jest.setup.js",
+      "<rootDir>/jest.expo-ui.js"
     ]
   }
 }

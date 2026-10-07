@@ -1,11 +1,9 @@
-import { TextField } from '@expo/ui/swift-ui'
 import { act, fireEvent, render, screen } from '@testing-library/react-native'
 import type { Exercise } from '../../../../../src/exercises/exercises'
 import { ExerciseSession } from './ExerciseSession'
 import { sessionProps } from './exercise-session-props.ts'
 
-const answerField = () => screen.UNSAFE_getByType(TextField)
-const nextLabel = () => String(screen.getByTestId('exercise-next').props.children.props.children)
+const answerField = () => screen.getByPlaceholderText('Type your answer')
 
 jest.mock('../../theme/tokens', () => require('./mock-theme-tokens').themeTokensMock)
 
@@ -49,10 +47,10 @@ describe('native exercise answer flow', () => {
     await render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer })} />)
 
     await fireEvent.press(screen.getByTestId('mode-keyboard'))
-    await act(() => answerField().props.onTextChange('يَكْتُبُ'))
+    await fireEvent.changeText(answerField(), 'يَكْتُبُ')
     await fireEvent.press(screen.getByTestId('submit-answer'))
 
-    expect(nextLabel()).toBe('Correct · Next')
+    expect(screen.getByText('Correct · Next')).toBeTruthy()
     expect(onPersistAnswer).toHaveBeenCalledWith(
       expect.objectContaining({ cardKey: exercise.cardKey, result: 'correct', answer: 'يَكْتُبُ' }),
     )
@@ -63,7 +61,7 @@ describe('native exercise answer flow', () => {
 
     await fireEvent.press(screen.getByTestId('mode-keyboard'))
 
-    expect(answerField().props.autoFocus).toBe(true)
+    expect(answerField()).toHaveProp('autoFocus', true)
   })
 
   test('marks wrong Arabic letters in the diff and reveals the answer before continuing', async () => {
@@ -72,10 +70,10 @@ describe('native exercise answer flow', () => {
     await render(<ExerciseSession {...sessionProps({ exercise, onNext, onPersistAnswer })} />)
 
     await fireEvent.press(screen.getByTestId('mode-keyboard'))
-    await act(() => answerField().props.onTextChange('يَفْعَلُ'))
+    await fireEvent.changeText(answerField(), 'يَفْعَلُ')
     await fireEvent.press(screen.getByTestId('submit-answer'))
 
-    expect(nextLabel()).toBe('Incorrect · Next')
+    expect(screen.getByText('Incorrect · Next')).toBeTruthy()
     expect(screen.getByTestId('typed-answer-diff')).toBeTruthy()
     expect(screen.getAllByText('يَكْتُبُ').length).toBeGreaterThan(0)
     expect(onPersistAnswer).toHaveBeenCalledWith(expect.objectContaining({ result: 'wrong' }))
@@ -116,7 +114,7 @@ describe('native exercise answer flow', () => {
     await render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext })} />)
 
     await fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
-    expect(nextLabel()).toBe('Correct · Next')
+    expect(screen.getByText('Correct · Next')).toBeTruthy()
     expect(screen.getByLabelText('Answer explanation')).toBeTruthy()
     expect(onNext).not.toHaveBeenCalled()
 
@@ -154,7 +152,7 @@ describe('native exercise answer flow', () => {
     await rerender(<ExerciseSession {...sessionProps({ exercise: nextQuestion, onNext, onPersistAnswer })} />)
 
     expect(screen.queryByTestId('exercise-next')).toBeNull()
-    expect(screen.getByRole('radio', { name: 'كَتَبَ' }).props.accessibilityState.disabled).toBe(false)
+    expect(screen.getByRole('radio', { name: 'كَتَبَ' })).toBeEnabled()
     await fireEvent.press(screen.getByRole('radio', { name: 'كَتَبَ' }))
     expect(onPersistAnswer).toHaveBeenCalledTimes(2)
   })
@@ -174,12 +172,14 @@ describe('native exercise answer flow', () => {
         pronoun: '3ms',
       },
     }
-    await render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext: jest.fn(), onPersistAnswer })} />)
+    await render(
+      <ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext: jest.fn(), onPersistAnswer })} />,
+    )
 
     await fireEvent.press(screen.getByTestId('skip-question'))
 
     expect(onPersistAnswer).toHaveBeenCalledWith(expect.objectContaining({ cardKey: exercise.cardKey, result: 'pass' }))
-    expect(nextLabel()).toBe('Skipped · Next')
+    expect(screen.getByText('Skipped · Next')).toBeTruthy()
     expect(screen.getByLabelText('Correct answer')).toBeTruthy()
     expect(screen.getByLabelText('Answer explanation')).toBeTruthy()
     expect(screen.queryByTestId('skip-question')).toBeNull()
@@ -198,9 +198,9 @@ describe('native exercise answer flow', () => {
     await render(<ExerciseSession {...sessionProps({ exercise, translate })} />)
 
     await fireEvent.press(screen.getByTestId('mode-keyboard'))
-    await act(() => answerField().props.onTextChange('يَكْتُبُ'))
+    await fireEvent.changeText(answerField(), 'يَكْتُبُ')
     await fireEvent.press(screen.getByTestId('submit-answer'))
-    expect(nextLabel()).toBe('Risposta corretta · Avanti')
+    expect(screen.getByText('Risposta corretta · Avanti')).toBeTruthy()
   })
 
   test('shows translated labels for answer options that are translation keys', async () => {

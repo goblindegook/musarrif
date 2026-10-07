@@ -1,6 +1,5 @@
 import { FieldGroup } from '@expo/ui'
-import { Text } from '@expo/ui/swift-ui'
-import { act, render, screen } from '@testing-library/react-native'
+import { act, fireEvent, render, screen } from '@testing-library/react-native'
 import type { ArabicSpeechOutput } from '../../speech-synthesis/arabic-speech'
 import { createInMemoryRepository } from '../../storage/in-memory-repository'
 import type { UserDataKey, UserDataValue } from '../../storage/schema'
@@ -27,7 +26,7 @@ describe('voice settings', () => {
     )
     await act(async () => {})
 
-    await act(async () => screen.UNSAFE_getByProps({ label: 'Arabic voice' }).props.onSelectionChange('ar-eg'))
+    await fireEvent.press(screen.getByRole('radio', { name: 'Arabic Egypt' }))
 
     expect(values['local:arabicTtsVoice']).toBe('ar-eg')
   })
@@ -51,7 +50,7 @@ describe('voice settings', () => {
     )
     await act(async () => {})
 
-    await act(async () => screen.UNSAFE_getByProps({ label: 'Arabic voice' }).props.onSelectionChange('ar-eg'))
+    await fireEvent.press(screen.getByRole('radio', { name: 'Arabic Egypt' }))
 
     expect(speechOutput.speakArabic).toHaveBeenCalledWith('مَرْحَبًا بِكَ', { voiceIdentifier: 'ar-eg', rate: 0.7 })
     expect(values['local:arabicTtsVoice']).toBe('ar-eg')
@@ -75,6 +74,6 @@ describe('voice settings', () => {
     )
     await act(async () => {})
 
-    expect(screen.UNSAFE_queryAllByType(Text).map((text) => text.props.children)).toEqual([])
+    expect(screen.queryByRole('radio')).toBeNull()
   })
 })

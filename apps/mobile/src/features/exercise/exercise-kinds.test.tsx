@@ -29,9 +29,7 @@ describe('native exercise kinds', () => {
       expect(screen.getByText(exercise.promptTranslationKey)).toBeTruthy()
       await fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
 
-      expect(String(screen.getByTestId('exercise-next').props.children.props.children)).toBe(
-        'exercise.answer.correct · exercise.next',
-      )
+      expect(screen.getByText('exercise.answer.correct · exercise.next')).toBeTruthy()
       expect(onPersistAnswer).toHaveBeenCalledWith(
         expect.objectContaining({
           cardKey: exercise.cardKey,

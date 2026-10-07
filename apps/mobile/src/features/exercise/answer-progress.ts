@@ -34,7 +34,7 @@ export function recordExerciseAnswer(
   const nextDimensions = skipped
     ? dimensions
     : promoteDimensions(recordDimensionAnswer(dimensions, answer.dimensions, correct), correct)
-  const nextActivity = addResult(readDailyActivity(values), skipped ? 'passed' : correct ? 'correct' : 'incorrect')
+  const nextActivity = addResult(readDailyActivity(values), skipped ? 'passed' : correct ? 'correct' : 'incorrect', now)
   const daily = findStatsForDate(nextActivity, now)
   if (!daily) return undefined
 
