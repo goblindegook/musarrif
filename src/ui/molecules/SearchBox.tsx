@@ -217,7 +217,6 @@ const SuggestionContainer = styled('search', forwardRef)<{ isActive?: boolean }>
       z-index: 101;
       height: 5rem;
       gap: 0;
-      animation: slideFromBottom 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
       &::before {
         content: '';
@@ -239,22 +238,12 @@ const SuggestionContainer = styled('search', forwardRef)<{ isActive?: boolean }>
         z-index: auto;
         padding: 0;
         height: auto;
-        animation: none;
 
         &::before {
           display: none;
         }
       }
   `}
-
-  @keyframes slideFromBottom {
-    from {
-      top: 100vh;
-    }
-    to {
-      top: 0;
-    }
-  }
 `
 
 const Input = styled('input', forwardRef)`
