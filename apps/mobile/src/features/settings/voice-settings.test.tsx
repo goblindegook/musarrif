@@ -18,7 +18,7 @@ describe('voice settings', () => {
       speakArabic: async () => undefined,
       stop: async () => undefined,
     }
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => createInMemoryRepository(values)}>
         <FieldGroup>
           <VoiceSettings language="en" speechOutput={speechOutput} />
@@ -42,7 +42,7 @@ describe('voice settings', () => {
       speakArabic: jest.fn(async () => undefined),
       stop: jest.fn(async () => undefined),
     }
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => createInMemoryRepository(values)}>
         <FieldGroup>
           <VoiceSettings language="en" speechOutput={speechOutput} />
@@ -66,7 +66,7 @@ describe('voice settings', () => {
       speakArabic: async () => undefined,
       stop: async () => undefined,
     }
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => createInMemoryRepository({})}>
         <FieldGroup>
           <VoiceSettings language="en" speechOutput={speechOutput} />

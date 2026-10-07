@@ -14,8 +14,8 @@ jest.mock('../storage/UserDataProvider', () => ({
   useUserData: () => ({ ready: false, values: {} }),
 }))
 
-test('public musarrif.com/verbs links open inside the Search tab', () => {
-  render(<PublicVerbRoute />)
+test('public musarrif.com/verbs links open inside the Search tab', async () => {
+  await render(<PublicVerbRoute />)
 
   expect(screen.getByLabelText('Redirect destination').props.children).toContain('/search/verb/[verbId]')
 })

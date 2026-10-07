@@ -23,7 +23,7 @@ const exercise: Exercise<'conjugation'> = {
 }
 
 describe('native exercise answer flow', () => {
-  test('reveals the shared grammar explanation after an answer', () => {
+  test('reveals the shared grammar explanation after an answer', async () => {
     const explainedExercise: Exercise<'conjugation'> = {
       ...exercise,
       explanation: {
@@ -37,20 +37,20 @@ describe('native exercise answer flow', () => {
         pronoun: '3ms',
       },
     }
-    render(<ExerciseSession {...sessionProps({ exercise: explainedExercise })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise: explainedExercise })} />)
 
     expect(screen.queryByText(/A fatḥa in the past usually means/)).toBeNull()
-    fireEvent.press(screen.getByRole('radio', { name: explainedExercise.options[1] }))
+    await fireEvent.press(screen.getByRole('radio', { name: explainedExercise.options[1] }))
     expect(screen.getByText(/A fatḥa in the past usually means/)).toBeTruthy()
   })
 
-  test('accepts an Arabic keyboard answer and shows the shared answer diff', () => {
+  test('accepts an Arabic keyboard answer and shows the shared answer diff', async () => {
     const onPersistAnswer = jest.fn()
-    render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer })} />)
 
-    fireEvent.press(screen.getByTestId('mode-keyboard'))
-    act(() => answerField().props.onTextChange('يَكْتُبُ'))
-    fireEvent.press(screen.getByTestId('submit-answer'))
+    await fireEvent.press(screen.getByTestId('mode-keyboard'))
+    await act(() => answerField().props.onTextChange('يَكْتُبُ'))
+    await fireEvent.press(screen.getByTestId('submit-answer'))
 
     expect(nextLabel()).toBe('Correct · Next')
     expect(onPersistAnswer).toHaveBeenCalledWith(
@@ -58,22 +58,22 @@ describe('native exercise answer flow', () => {
     )
   })
 
-  test('choosing to type focuses the answer field so the keyboard opens', () => {
-    render(<ExerciseSession {...sessionProps({ exercise })} />)
+  test('choosing to type focuses the answer field so the keyboard opens', async () => {
+    await render(<ExerciseSession {...sessionProps({ exercise })} />)
 
-    fireEvent.press(screen.getByTestId('mode-keyboard'))
+    await fireEvent.press(screen.getByTestId('mode-keyboard'))
 
     expect(answerField().props.autoFocus).toBe(true)
   })
 
-  test('marks wrong Arabic letters in the diff and reveals the answer before continuing', () => {
+  test('marks wrong Arabic letters in the diff and reveals the answer before continuing', async () => {
     const onPersistAnswer = jest.fn()
     const onNext = jest.fn()
-    render(<ExerciseSession {...sessionProps({ exercise, onNext, onPersistAnswer })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise, onNext, onPersistAnswer })} />)
 
-    fireEvent.press(screen.getByTestId('mode-keyboard'))
-    act(() => answerField().props.onTextChange('يَفْعَلُ'))
-    fireEvent.press(screen.getByTestId('submit-answer'))
+    await fireEvent.press(screen.getByTestId('mode-keyboard'))
+    await act(() => answerField().props.onTextChange('يَفْعَلُ'))
+    await fireEvent.press(screen.getByTestId('submit-answer'))
 
     expect(nextLabel()).toBe('Incorrect · Next')
     expect(screen.getByTestId('typed-answer-diff')).toBeTruthy()
@@ -81,23 +81,23 @@ describe('native exercise answer flow', () => {
     expect(onPersistAnswer).toHaveBeenCalledWith(expect.objectContaining({ result: 'wrong' }))
 
     expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull()
-    fireEvent.press(screen.getByTestId('exercise-next'))
+    await fireEvent.press(screen.getByTestId('exercise-next'))
     expect(onNext).toHaveBeenCalledTimes(1)
     expect(onPersistAnswer).toHaveBeenCalledTimes(1)
   })
 
-  test('wrong multiple-choice answers can continue without retrying', () => {
+  test('wrong multiple-choice answers can continue without retrying', async () => {
     const onNext = jest.fn()
-    render(<ExerciseSession {...sessionProps({ exercise, onNext })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise, onNext })} />)
 
-    fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
+    await fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
     expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull()
-    fireEvent.press(screen.getByTestId('exercise-next'))
+    await fireEvent.press(screen.getByTestId('exercise-next'))
 
     expect(onNext).toHaveBeenCalledTimes(1)
   })
 
-  test('a correct answer keeps feedback and explanation visible until Next is tapped', () => {
+  test('a correct answer keeps feedback and explanation visible until Next is tapped', async () => {
     jest.useFakeTimers()
     const onNext = jest.fn()
     const explainedExercise: Exercise<'conjugation'> = {
@@ -113,35 +113,35 @@ describe('native exercise answer flow', () => {
         pronoun: '3ms',
       },
     }
-    render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext })} />)
 
-    fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
+    await fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
     expect(nextLabel()).toBe('Correct · Next')
     expect(screen.getByLabelText('Answer explanation')).toBeTruthy()
     expect(onNext).not.toHaveBeenCalled()
 
-    act(() => jest.advanceTimersByTime(2000))
+    await act(() => jest.advanceTimersByTime(2000))
     expect(onNext).not.toHaveBeenCalled()
     expect(screen.getByLabelText('Answer explanation')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('exercise-next'))
+    await fireEvent.press(screen.getByTestId('exercise-next'))
     expect(onNext).toHaveBeenCalledTimes(1)
     jest.useRealTimers()
   })
 
-  test('locks the input mode once an answer has been given', () => {
-    render(<ExerciseSession {...sessionProps({ exercise })} />)
+  test('locks the input mode once an answer has been given', async () => {
+    await render(<ExerciseSession {...sessionProps({ exercise })} />)
 
-    fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
+    await fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
     expect(screen.queryByTestId('mode-keyboard')).toBeNull()
   })
 
-  test('a new question with the same review card starts unanswered after Next', () => {
+  test('a new question with the same review card starts unanswered after Next', async () => {
     const onNext = jest.fn()
     const onPersistAnswer = jest.fn()
-    const { rerender } = render(<ExerciseSession {...sessionProps({ exercise, onNext, onPersistAnswer })} />)
+    const { rerender } = await render(<ExerciseSession {...sessionProps({ exercise, onNext, onPersistAnswer })} />)
 
-    fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
-    fireEvent.press(screen.getByTestId('exercise-next'))
+    await fireEvent.press(screen.getByRole('radio', { name: exercise.options[1] }))
+    await fireEvent.press(screen.getByTestId('exercise-next'))
     expect(onNext).toHaveBeenCalledTimes(1)
 
     const nextQuestion = {
@@ -151,15 +151,15 @@ describe('native exercise answer flow', () => {
       answer: 0,
       answerText: 'كَتَبَ',
     }
-    rerender(<ExerciseSession {...sessionProps({ exercise: nextQuestion, onNext, onPersistAnswer })} />)
+    await rerender(<ExerciseSession {...sessionProps({ exercise: nextQuestion, onNext, onPersistAnswer })} />)
 
     expect(screen.queryByTestId('exercise-next')).toBeNull()
     expect(screen.getByRole('radio', { name: 'كَتَبَ' }).props.accessibilityState.disabled).toBe(false)
-    fireEvent.press(screen.getByRole('radio', { name: 'كَتَبَ' }))
+    await fireEvent.press(screen.getByRole('radio', { name: 'كَتَبَ' }))
     expect(onPersistAnswer).toHaveBeenCalledTimes(2)
   })
 
-  test('Skip records a pass, reveals the correct answer and explanation, then offers Next', () => {
+  test('Skip records a pass, reveals the correct answer and explanation, then offers Next', async () => {
     const onPersistAnswer = jest.fn()
     const explainedExercise: Exercise<'conjugation'> = {
       ...exercise,
@@ -174,9 +174,9 @@ describe('native exercise answer flow', () => {
         pronoun: '3ms',
       },
     }
-    render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext: jest.fn(), onPersistAnswer })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise: explainedExercise, onNext: jest.fn(), onPersistAnswer })} />)
 
-    fireEvent.press(screen.getByTestId('skip-question'))
+    await fireEvent.press(screen.getByTestId('skip-question'))
 
     expect(onPersistAnswer).toHaveBeenCalledWith(expect.objectContaining({ cardKey: exercise.cardKey, result: 'pass' }))
     expect(nextLabel()).toBe('Skipped · Next')
@@ -186,7 +186,7 @@ describe('native exercise answer flow', () => {
     expect(screen.getByTestId('exercise-next')).toBeTruthy()
   })
 
-  test('uses the injected locale translator for controls and answer feedback', () => {
+  test('uses the injected locale translator for controls and answer feedback', async () => {
     const translate = (key: string) =>
       ({
         'exercise.answer.correct': 'Risposta corretta',
@@ -195,22 +195,22 @@ describe('native exercise answer flow', () => {
         'exercise.typing.placeholder': 'Type your answer',
         'exercise.typing.submit': 'Submit answer',
       })[key] ?? key
-    render(<ExerciseSession {...sessionProps({ exercise, translate })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise, translate })} />)
 
-    fireEvent.press(screen.getByTestId('mode-keyboard'))
-    act(() => answerField().props.onTextChange('يَكْتُبُ'))
-    fireEvent.press(screen.getByTestId('submit-answer'))
+    await fireEvent.press(screen.getByTestId('mode-keyboard'))
+    await act(() => answerField().props.onTextChange('يَكْتُبُ'))
+    await fireEvent.press(screen.getByTestId('submit-answer'))
     expect(nextLabel()).toBe('Risposta corretta · Avanti')
   })
 
-  test('shows translated labels for answer options that are translation keys', () => {
+  test('shows translated labels for answer options that are translation keys', async () => {
     const tenseExercise: Exercise<'conjugation'> = {
       ...exercise,
       options: ['tense.past', 'tense.present'],
       answer: 0,
       answerText: 'tense.past',
     }
-    render(<ExerciseSession {...sessionProps({ exercise: tenseExercise })} />)
+    await render(<ExerciseSession {...sessionProps({ exercise: tenseExercise })} />)
 
     expect(screen.getByRole('radio', { name: 'Past' })).toBeTruthy()
     expect(screen.getByRole('radio', { name: 'Present' })).toBeTruthy()

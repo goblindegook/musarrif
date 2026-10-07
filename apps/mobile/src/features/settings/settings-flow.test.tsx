@@ -44,7 +44,7 @@ describe('native settings', () => {
       'setting:diacriticsPreference': 'none',
     }
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <SettingsScreen />
       </UserDataProvider>,

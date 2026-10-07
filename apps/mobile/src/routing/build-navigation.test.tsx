@@ -19,13 +19,13 @@ jest.mock('../features/browse/VerbBuilder', () => ({
 
 test('opens a built verb inside the Build tab stack', async () => {
   const repository = createInMemoryRepository()
-  render(
+  await render(
     <UserDataProvider repositoryFactory={async () => repository}>
       <BuildRoute />
     </UserDataProvider>,
   )
   await act(async () => {})
-  fireEvent.press(screen.getByRole('button', { name: 'Open built verb' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Open built verb' }))
 
   expect(mockPush).toHaveBeenCalledWith({
     pathname: '/build/verb/[verbId]',

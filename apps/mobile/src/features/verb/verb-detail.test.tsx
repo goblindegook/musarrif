@@ -44,9 +44,9 @@ describe('native verb detail', () => {
     english.onOpenVerb.mockClear()
   })
 
-  test('defaults to active past and exposes root, form, and all 13 pronoun rows', () => {
+  test('defaults to active past and exposes root, form, and all 13 pronoun rows', async () => {
     const verb = getVerbById('ktb-1')!
-    render(<VerbDetail verb={verb} {...english} />)
+    await render(<VerbDetail verb={verb} {...english} />)
 
     expect(screen.queryByRole('header', { name: verb.lemma })).toBeNull()
     expect(screen.queryByText(/Verb:/u)).toBeNull()
@@ -64,20 +64,20 @@ describe('native verb detail', () => {
     [3, '3rd m. s.'],
     [4, '3rd f. s.'],
     [5, '2nd d.'],
-  ])('labels paradigm row %i with its pronoun abbreviation %s', (index, abbreviation) => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  ])('labels paradigm row %i with its pronoun abbreviation %s', async (index, abbreviation) => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
     expect(within(screen.getAllByTestId('conjugation-form')[index]).getByText(abbreviation)).toBeTruthy()
   })
 
-  test('shows the selected verb translation above the paradigm', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('shows the selected verb translation above the paradigm', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
     expect(screen.getByTestId('verb-translation').props.children).toBe('to write')
   })
 
-  test('keeps mood when changing voices and offers only active imperative', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('keeps mood when changing voices and offers only active imperative', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
     selectTense('present')
     selectMood('subjunctive')
@@ -94,8 +94,8 @@ describe('native verb detail', () => {
     expect(screen.getAllByTestId('conjugation-form')).toHaveLength(5)
   })
 
-  test('locks paradigms that are unavailable for the selected verb', () => {
-    render(<VerbDetail verb={getVerbById('lys-1')!} {...english} />)
+  test('locks paradigms that are unavailable for the selected verb', async () => {
+    await render(<VerbDetail verb={getVerbById('lys-1')!} {...english} />)
 
     expect(segmentedPicker('Select tense').props.selection).toBe('past')
     selectTense('present')
@@ -107,8 +107,8 @@ describe('native verb detail', () => {
     ['lys-1', ['Past']],
     ['zyl-1', ['Past', 'Present', 'Future']],
     ['ktb-1', ['Past', 'Present', 'Future', 'Imperative']],
-  ])('%s offers only its available tenses in the segmented control', (verbId, labels) => {
-    render(<VerbDetail verb={getVerbById(verbId)!} {...english} />)
+  ])('%s offers only its available tenses in the segmented control', async (verbId, labels) => {
+    await render(<VerbDetail verb={getVerbById(verbId)!} {...english} />)
 
     expect(
       segmentedPicker('Select tense').props.children.map(
@@ -117,8 +117,8 @@ describe('native verb detail', () => {
     ).toEqual(labels)
   })
 
-  test('omits unavailable nominal forms', () => {
-    render(<VerbDetail verb={getVerbById('lys-1')!} {...english} />)
+  test('omits unavailable nominal forms', async () => {
+    await render(<VerbDetail verb={getVerbById('lys-1')!} {...english} />)
 
     expect(screen.getByText('Form')).toBeTruthy()
     expect(screen.queryByText('Nominals')).toBeNull()
@@ -126,8 +126,8 @@ describe('native verb detail', () => {
     expect(screen.queryByText('Active participle')).toBeNull()
   })
 
-  test('renders masdars and participles with nominal explanations when available', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('renders masdars and participles with nominal explanations when available', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
     expect(screen.getByText('Nominals')).toBeTruthy()
     expect(screen.getByText('Verbal nouns')).toBeTruthy()
@@ -137,52 +137,52 @@ describe('native verb detail', () => {
     expect(screen.UNSAFE_getAllByType(Picker)).toHaveLength(1)
   })
 
-  test('shows localized valency, including multiple readings in numeric order', () => {
-    const { rerender } = render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('shows localized valency, including multiple readings in numeric order', async () => {
+    const { rerender } = await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
     expect(screen.getByTestId('verb-valency').props.children).toBe('Transitive · Ditransitive')
 
-    rerender(<VerbDetail verb={getVerbById("'kl-1")!} {...english} />)
+    await rerender(<VerbDetail verb={getVerbById("'kl-1")!} {...english} />)
     expect(screen.getByTestId('verb-valency').props.children).toBe('Intransitive · Transitive')
 
-    rerender(<VerbDetail verb={getVerbById('sfr-1')!} {...english} />)
+    await rerender(<VerbDetail verb={getVerbById('sfr-1')!} {...english} />)
     expect(screen.queryByTestId('verb-valency')).toBeNull()
   })
 
   test('long-pressing a conjugation shows the system edit menu to copy or speak it', async () => {
     const presentEditMenu = jest.mocked(EditMenu.presentEditMenu)
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
     const row = screen.getAllByTestId('conjugation-form')[0]
 
     presentEditMenu.mockResolvedValueOnce(0)
-    await act(async () => fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
+    await act(async () => await fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
     expect(presentEditMenu).toHaveBeenCalledWith({ x: 120, y: 300 }, ['Copy', 'Look Up', 'Translate', 'Speak'])
     expect(Clipboard.setStringAsync).toHaveBeenCalledWith('كَتَبْتُ')
 
     presentEditMenu.mockResolvedValueOnce(1)
-    await act(async () => fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
+    await act(async () => await fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
     expect(EditMenu.lookUp).toHaveBeenCalledWith('كَتَبْتُ')
 
     presentEditMenu.mockResolvedValueOnce(2)
-    await act(async () => fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
+    await act(async () => await fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
     expect(EditMenu.translate).toHaveBeenCalledWith('كَتَبْتُ')
 
     presentEditMenu.mockResolvedValueOnce(3)
-    await act(async () => fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
+    await act(async () => await fireEvent(row, 'longPress', { nativeEvent: { pageX: 120, pageY: 300 } }))
     expect(arabicSpeechOutput.speakArabic).toHaveBeenCalledWith('كَتَبْتُ', { rate: 0.7 })
   })
 
-  test('titles the conjugation sheet with the conjugated verb and shows root letters separately', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
-    fireEvent.press(screen.getAllByTestId('conjugation-form')[0])
+  test('titles the conjugation sheet with the conjugated verb and shows root letters separately', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+    await fireEvent.press(screen.getAllByTestId('conjugation-form')[0])
 
     expect(screen.getByRole('header', { name: 'كَتَبْتُ' })).toBeTruthy()
     expect(within(screen.getByLabelText('Explanation details')).getByText('ك ت ب')).toBeTruthy()
   })
 
-  test('shows the complete formatted explanation and derivation', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('shows the complete formatted explanation and derivation', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
     const row = screen.getAllByTestId('conjugation-form')[0]
-    fireEvent.press(row)
+    await fireEvent.press(row)
 
     expect(screen.getByLabelText('Explanation details')).toBeTruthy()
     expect(screen.getByText(/A fatḥa in the past usually means/)).toBeTruthy()
@@ -192,10 +192,10 @@ describe('native verb detail', () => {
     expect(screen.queryByRole('button', { name: 'Close explanation' })).toBeNull()
   })
 
-  test('opens root insights from the verb metadata', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('opens root insights from the verb metadata', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
-    fireEvent.press(screen.getByRole('button', { name: 'Root insights' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Root insights' }))
     const drawer = screen.getByLabelText('Explanation details')
     expect(within(drawer).getAllByLabelText(/^Root radical /)).toHaveLength(3)
     expect(within(drawer).getByText(/writing/)).toBeTruthy()
@@ -204,57 +204,57 @@ describe('native verb detail', () => {
     expect(within(drawer).getByTestId('root-form-ktb-6')).toBeTruthy()
   })
 
-  test('shows root forms with the lemma, form, Form I vowel pattern, and gloss', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
-    fireEvent.press(screen.getByRole('button', { name: 'Root insights' }))
+  test('shows root forms with the lemma, form, Form I vowel pattern, and gloss', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+    await fireEvent.press(screen.getByRole('button', { name: 'Root insights' }))
 
     expect(screen.getByTestId('root-form-ktb-1').props.accessibilityLabel).toBe('كَتَبَ, Form I, ◌َ / ◌ُ, to write')
     expect(screen.getByTestId('root-form-ktb-3').props.accessibilityLabel).toBe('كَاتَبَ, Form III, to correspond')
   })
 
-  test('links to other forms of the root at the bottom of the verb screen', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('links to other forms of the root at the bottom of the verb screen', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
     const related = screen.getByTestId('related-forms')
     expect(within(related).getByText('Derived forms')).toBeTruthy()
     const link = within(related).getByTestId('related-form-ktb-3')
     expect(within(related).queryByTestId('related-form-ktb-1')).toBeNull()
 
-    fireEvent.press(link)
+    await fireEvent.press(link)
     expect(english.onOpenVerb).toHaveBeenCalledWith(getVerbById('ktb-3'))
   })
 
-  test('opens the form semantic explanation from the verb metadata', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('opens the form semantic explanation from the verb metadata', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
-    fireEvent.press(screen.getByRole('button', { name: 'Form insights' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Form insights' }))
     expect(screen.getByLabelText('Explanation details')).toBeTruthy()
     expect(screen.getByText('Base meaning · Action')).toBeTruthy()
   })
 
-  test('shows complete formatted nominal explanations', () => {
-    render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
+  test('shows complete formatted nominal explanations', async () => {
+    await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
 
-    fireEvent.press(screen.getByRole('button', { name: 'Show explanation for Verbal nouns' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Show explanation for Verbal nouns' }))
     expect(screen.getByText(/In Form I, the masdar is lexical/)).toBeTruthy()
     expect(screen.queryByText(/<span|<\/span>/)).toBeNull()
   })
 
-  test('separates multiple verbal nouns with Arabic commas in their insights', () => {
-    render(<VerbDetail verb={getVerbById('wEd-1')!} {...english} />)
+  test('separates multiple verbal nouns with Arabic commas in their insights', async () => {
+    await render(<VerbDetail verb={getVerbById('wEd-1')!} {...english} />)
 
-    fireEvent.press(screen.getByRole('button', { name: 'Show explanation for Verbal nouns' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Show explanation for Verbal nouns' }))
     expect(within(screen.getByLabelText('Explanation details')).getAllByText('،')).toHaveLength(3)
   })
 
-  test('related Kāna and Ẓanna sisters open their canonical verb detail', () => {
-    render(<VerbDetail verb={getVerbById('kwn-1')!} {...english} />)
-    fireEvent.press(screen.getByRole('button', { name: /kwn-1/ }))
+  test('related Kāna and Ẓanna sisters open their canonical verb detail', async () => {
+    await render(<VerbDetail verb={getVerbById('kwn-1')!} {...english} />)
+    await fireEvent.press(screen.getByRole('button', { name: /kwn-1/ }))
     expect(english.onOpenVerb).toHaveBeenCalledWith(expect.objectContaining({ id: 'kwn-1' }))
   })
 
-  test('renders the Ẓanna sisters group for matching verbs', () => {
-    render(<VerbDetail verb={getVerbById('Znn-1')!} {...english} />)
+  test('renders the Ẓanna sisters group for matching verbs', async () => {
+    await render(<VerbDetail verb={getVerbById('Znn-1')!} {...english} />)
     expect(screen.getByText('Ẓanna and her sisters')).toBeTruthy()
   })
 })

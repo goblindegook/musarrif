@@ -8,7 +8,7 @@ const shownText = () => screen.UNSAFE_getAllByType(Text).map((text) => text.prop
 describe('CloudSyncSettings', () => {
   test('shows an account confirmation only when the iCloud account changed', async () => {
     const onConfirm = jest.fn(async () => undefined)
-    render(
+    await render(
       <FieldGroup>
         <CloudSyncSettings language="en" status="needsAttention" onConfirm={onConfirm} />
       </FieldGroup>,
@@ -25,8 +25,8 @@ describe('CloudSyncSettings', () => {
     expect(onConfirm).toHaveBeenCalledTimes(1)
   })
 
-  test('shows the current sync state and does not offer account confirmation otherwise', () => {
-    render(
+  test('shows the current sync state and does not offer account confirmation otherwise', async () => {
+    await render(
       <FieldGroup>
         <CloudSyncSettings language="en" status="synced" onConfirm={jest.fn()} />
       </FieldGroup>,

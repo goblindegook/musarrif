@@ -17,7 +17,7 @@ function Sync() {
 }
 
 async function renderWith(values: Partial<Record<UserDataKey, UserDataValue>>) {
-  render(
+  await render(
     <UserDataProvider repositoryFactory={async () => createInMemoryRepository(values)}>
       <Sync />
     </UserDataProvider>,

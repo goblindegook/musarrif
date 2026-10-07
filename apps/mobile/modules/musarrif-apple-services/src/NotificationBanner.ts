@@ -1,4 +1,4 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { requireNativeModule } from 'expo'
 
 type BannerKind = 'success' | 'warning' | 'streak'
 

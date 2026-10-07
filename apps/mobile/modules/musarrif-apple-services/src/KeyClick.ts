@@ -1,4 +1,4 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { requireNativeModule } from 'expo'
 
 interface KeyClickModule {
   play(): void

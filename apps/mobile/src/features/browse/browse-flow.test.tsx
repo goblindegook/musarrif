@@ -14,21 +14,21 @@ jest.mock('../../../modules/musarrif-apple-services/src/KeyClick', () => ({ play
 
 beforeEach(() => jest.useFakeTimers())
 
-afterEach(() => {
-  act(() => jest.runOnlyPendingTimers())
+afterEach(async () => {
+  await act(() => jest.runOnlyPendingTimers())
   jest.useRealTimers()
 })
 
 describe('native browse flow', () => {
-  test('searches within the included verbs on the same list screen', () => {
-    render(<VerbList language="en" query="kataba" onSelect={jest.fn<void, [DisplayVerb]>()} />)
+  test('searches within the included verbs on the same list screen', async () => {
+    await render(<VerbList language="en" query="kataba" onSelect={jest.fn<void, [DisplayVerb]>()} />)
 
     expect(screen.getByRole('button', { name: /كَتَبَ.*to write/u })).toBeTruthy()
     expect(screen.queryByRole('button', { name: /كَانَ/u })).toBeNull()
   })
 
-  test('uses the selected diacritics setting for search results', () => {
-    render(<VerbList language="en" query="kataba" diacriticsPreference="none" onSelect={jest.fn()} />)
+  test('uses the selected diacritics setting for search results', async () => {
+    await render(<VerbList language="en" query="kataba" diacriticsPreference="none" onSelect={jest.fn()} />)
 
     expect(screen.getAllByRole('button', { name: /كتب.*to write/u }).length).toBeGreaterThan(0)
     expect(screen.queryByText('كَتَبَ')).toBeNull()
@@ -40,18 +40,18 @@ describe('native browse flow', () => {
     ['Buckwalter root', 'ktb'],
     ['romanized lemma', 'kataba'],
     ['English translation', 'write'],
-  ])('selects the canonical verb for a %s query', (_description, query) => {
+  ])('selects the canonical verb for a %s query', async (_description, query) => {
     const onSelect = jest.fn<void, [DisplayVerb]>()
-    render(<VerbList language="en" query={query} onSelect={onSelect} />)
+    await render(<VerbList language="en" query={query} onSelect={onSelect} />)
 
-    fireEvent.press(screen.getByRole('button', { name: 'كَتَبَ, Form I, ◌َ / ◌ُ, to write' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'كَتَبَ, Form I, ◌َ / ◌ُ, to write' }))
 
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'ktb-1' }))
   })
 
-  test('builds a verb from three root letters, a form, and the selected Form I vowel pattern', () => {
+  test('builds a verb from three root letters, a form, and the selected Form I vowel pattern', async () => {
     const onSelect = jest.fn<void, [DisplayVerb]>()
-    render(
+    await render(
       <SafeAreaProvider
         initialMetrics={{
           frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -62,23 +62,23 @@ describe('native browse flow', () => {
       </SafeAreaProvider>,
     )
 
-    fireEvent.press(screen.getByTestId('root-slot-1'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('root-slot-1'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
     expect(playKeyClick).toHaveBeenCalledTimes(1)
-    fireEvent.press(screen.getByTestId('root-slot-2'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
-    fireEvent.press(screen.getByTestId('root-slot-3'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
-    fireEvent.press(screen.getByTestId('form-1'))
-    fireEvent.press(screen.getByTestId('pattern-a-i'))
-    fireEvent.press(screen.getByTestId('build-submit'))
+    await fireEvent.press(screen.getByTestId('root-slot-2'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('root-slot-3'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('form-1'))
+    await fireEvent.press(screen.getByTestId('pattern-a-i'))
+    await fireEvent.press(screen.getByTestId('build-submit'))
 
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ root: 'ثني', form: 1, vowels: 'a-i' }))
   })
 
-  test('names the verb on the build button once the root is complete', () => {
+  test('names the verb on the build button once the root is complete', async () => {
     const submitLabel = () => String(screen.getByTestId('build-submit').props.children.props.children)
-    render(
+    await render(
       <SafeAreaProvider
         initialMetrics={{
           frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -90,20 +90,20 @@ describe('native browse flow', () => {
     )
 
     expect(submitLabel()).toBe('Conjugate')
-    fireEvent.press(screen.getByTestId('root-slot-1'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
-    fireEvent.press(screen.getByTestId('root-slot-2'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
-    fireEvent.press(screen.getByTestId('root-slot-3'))
-    act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
-    fireEvent.press(screen.getByTestId('pattern-a-i'))
+    await fireEvent.press(screen.getByTestId('root-slot-1'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ث' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('root-slot-2'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ن' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('root-slot-3'))
+    await act(() => screen.UNSAFE_getByProps({ testID: 'letter-ي' }).props.onPress())
+    await fireEvent.press(screen.getByTestId('pattern-a-i'))
 
     expect(submitLabel()).toBe('Conjugate ثَنَى')
   })
 
-  test('selects a verb from the favorites-filtered list', () => {
+  test('selects a verb from the favorites-filtered list', async () => {
     const onSelect = jest.fn<void, [DisplayVerb]>()
-    render(
+    await render(
       <VerbList
         filters={{ ...DEFAULT_FILTERS, group: 'favourites' }}
         language="en"
@@ -112,24 +112,24 @@ describe('native browse flow', () => {
       />,
     )
 
-    fireEvent.press(screen.getByTestId('verb-row'))
+    await fireEvent.press(screen.getByTestId('verb-row'))
 
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'ktb-1' }))
   })
 
-  test('switches between frequency and Arabic alphabetical order', () => {
+  test('switches between frequency and Arabic alphabetical order', async () => {
     const onSelect = jest.fn<void, [DisplayVerb]>()
-    const { rerender } = render(<VerbList language="en" onSelect={onSelect} />)
+    const { rerender } = await render(<VerbList language="en" onSelect={onSelect} />)
 
     expect(hasIncludedVerb('كَانَ, Form I, ◌َ / ◌ُ, to be')).toBe(true)
-    rerender(<VerbList filters={{ ...DEFAULT_FILTERS, sort: 'alphabetical' }} language="en" onSelect={onSelect} />)
+    await rerender(<VerbList filters={{ ...DEFAULT_FILTERS, sort: 'alphabetical' }} language="en" onSelect={onSelect} />)
     expect(hasIncludedVerb('كَانَ, Form I, ◌َ / ◌ُ, to be')).toBe(false)
   })
 
-  test('intersects form, root, and group filters and keeps the group filter exclusive', () => {
+  test('intersects form, root, and group filters and keeps the group filter exclusive', async () => {
     const favorites = new Set(['ktb-1', 'ktb-2'])
     const onSelect = jest.fn<void, [DisplayVerb]>()
-    const { rerender } = render(
+    const { rerender } = await render(
       <VerbList
         filters={{ ...DEFAULT_FILTERS, form: '1', rootShapes: ['sound'], group: 'favourites' }}
         language="en"
@@ -140,7 +140,7 @@ describe('native browse flow', () => {
 
     expect(hasIncludedVerb('كَتَبَ, Form I, ◌َ / ◌ُ, to write')).toBe(true)
 
-    rerender(
+    await rerender(
       <VerbList
         filters={{ ...DEFAULT_FILTERS, group: 'kana' }}
         language="en"

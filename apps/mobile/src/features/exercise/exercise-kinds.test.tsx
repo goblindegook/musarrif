@@ -21,13 +21,13 @@ const exercises = EXERCISE_GENERATORS.map((generator, index) => {
 describe('native exercise kinds', () => {
   test.each(exercises.map((exercise) => [exercise.kind, exercise] as const))(
     '%s renders its generated prompt and preserves card identity on answer',
-    (kind: ExerciseKind, exercise: Exercise) => {
+    async (kind: ExerciseKind, exercise: Exercise) => {
       const onPersistAnswer = jest.fn()
-      render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer, translate: (key) => key })} />)
+      await render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer, translate: (key) => key })} />)
 
       expect(screen.getByText(exercise.word)).toBeTruthy()
       expect(screen.getByText(exercise.promptTranslationKey)).toBeTruthy()
-      fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
+      await fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
 
       expect(String(screen.getByTestId('exercise-next').props.children.props.children)).toBe(
         'exercise.answer.correct · exercise.next',

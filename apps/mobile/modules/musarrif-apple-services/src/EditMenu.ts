@@ -1,4 +1,4 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { requireNativeModule } from 'expo'
 
 interface EditMenuModule {
   present(x: number, y: number, titles: readonly string[]): Promise<number | null>

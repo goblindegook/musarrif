@@ -27,10 +27,10 @@ jest.mock('@expo/ui/swift-ui', () => {
   }
 })
 
-test('native search control forwards search and filter actions', () => {
+test('native search control forwards search and filter actions', async () => {
   const onChangeText = jest.fn()
   const onFilter = jest.fn()
-  render(
+  await render(
     <NativeSearchHeader
       width={400}
       onChangeText={onChangeText}
@@ -40,15 +40,15 @@ test('native search control forwards search and filter actions', () => {
     />,
   )
 
-  fireEvent(screen.getByTestId('verb-search-field'), 'onTextChange', 'ktb')
+  await fireEvent(screen.getByTestId('verb-search-field'), 'onTextChange', 'ktb')
   expect(onChangeText).toHaveBeenCalledWith('ktb')
-  fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
   expect(onFilter).toHaveBeenCalledTimes(1)
 })
 
-test('shows a clear action for a non-empty query that empties it', () => {
+test('shows a clear action for a non-empty query that empties it', async () => {
   const onChangeText = jest.fn()
-  render(
+  await render(
     <NativeSearchHeader
       width={400}
       clearLabel="Clear search"
@@ -60,6 +60,6 @@ test('shows a clear action for a non-empty query that empties it', () => {
     />,
   )
 
-  fireEvent.press(screen.getByRole('button', { name: 'Clear search' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Clear search' }))
   expect(onChangeText).toHaveBeenCalledWith('')
 })

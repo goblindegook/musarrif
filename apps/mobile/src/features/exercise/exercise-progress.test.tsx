@@ -87,15 +87,15 @@ const repository = createInMemoryRepository({
   [`exercise:daily:${dayKey(older)}`]: { date: dayKey(older), correct: 0, incorrect: 10, passed: 0 },
 })
 
-test('the exercise title bar opens a dedicated Progress screen', () => {
-  render(<ExerciseTab />)
+test('the exercise title bar opens a dedicated Progress screen', async () => {
+  await render(<ExerciseTab />)
 
-  fireEvent.press(screen.getByRole('button', { name: 'Progress' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Progress' }))
   expect(mockPush).toHaveBeenCalledWith('/exercise/progress')
 })
 
 test('Progress shows accuracy, the streak goal, and expandable mastery items', async () => {
-  render(
+  await render(
     <UserDataProvider repositoryFactory={async () => repository}>
       <ExerciseProgressScreen />
     </UserDataProvider>,
@@ -108,37 +108,37 @@ test('Progress shows accuracy, the streak goal, and expandable mastery items', a
   expect(screen.getByText('Streak')).toBeTruthy()
   expect(screen.getByText('Answer 2 correctly to extend your streak.')).toBeTruthy()
   expect(screen.getByText('Mastery')).toBeTruthy()
-  fireEvent.press(screen.getByRole('button', { name: 'Root types' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Root types' }))
   expect(screen.getByText('Sound')).toBeTruthy()
   expect(screen.getAllByText('Locked').length).toBeGreaterThan(0)
   expect(within(screen.getByTestId('mastery-rootTypes-sound-progress')).UNSAFE_getByProps({ value: 0 })).toBeTruthy()
 })
 
 test('Progress keeps only one mastery category open at a time', async () => {
-  render(
+  await render(
     <UserDataProvider repositoryFactory={async () => repository}>
       <ExerciseProgressScreen />
     </UserDataProvider>,
   )
   await act(async () => {})
 
-  fireEvent.press(screen.getByRole('button', { name: 'Root types' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Root types' }))
   expect(screen.getByText('Sound')).toBeTruthy()
-  fireEvent.press(screen.getByRole('button', { name: 'Forms' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Forms' }))
   expect(screen.queryByText('Sound')).toBeNull()
   expect(screen.getByText('Form I')).toBeTruthy()
-  fireEvent.press(screen.getByRole('button', { name: 'Forms' }))
+  await fireEvent.press(screen.getByRole('button', { name: 'Forms' }))
   expect(screen.queryByText('Form I')).toBeNull()
 })
 
 test('Progress opens learning insights in a bottom sheet', async () => {
-  render(
+  await render(
     <UserDataProvider repositoryFactory={async () => repository}>
       <ExerciseProgressScreen />
     </UserDataProvider>,
   )
   await act(async () => {})
 
-  fireEvent.press(screen.getByTestId('see-insights'))
+  await fireEvent.press(screen.getByTestId('see-insights'))
   expect(screen.getByTestId('exercise-learning-insights-sheet')).toBeTruthy()
 })

@@ -30,7 +30,7 @@ describe('native exercise route', () => {
     const values: UserDataSnapshot['values'] = {}
     const repository = createInMemoryRepository(values)
 
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <ExerciseRoute />
       </UserDataProvider>,
@@ -39,7 +39,7 @@ describe('native exercise route', () => {
 
     expect(screen.getAllByText(expected.word).length).toBeGreaterThan(0)
     const wrongAnswerIndex = (expected.answer + 1) % expected.options.length
-    fireEvent.press(screen.getAllByRole('radio')[wrongAnswerIndex])
+    await fireEvent.press(screen.getAllByRole('radio')[wrongAnswerIndex])
     await act(async () => {
       await Promise.resolve()
       await Promise.resolve()
@@ -48,7 +48,7 @@ describe('native exercise route', () => {
     expect(values[`srs:${expected.cardKey}`]).toBeDefined()
     expect(values['dimension:store']).toEqual(expect.objectContaining({ profile: DEFAULT_DIMENSION_PROFILE }))
     expect(Object.keys(values).some((key) => key.startsWith('exercise:daily:'))).toBe(true)
-    fireEvent.press(screen.getByTestId('exercise-next'))
+    await fireEvent.press(screen.getByTestId('exercise-next'))
     expect(scheduler).toHaveBeenLastCalledWith(expect.objectContaining({}), expect.anything(), {
       reviews: 0,
       lastNewAt: 0,
@@ -65,7 +65,7 @@ describe('native exercise route', () => {
     jest.mocked(nextExercise).mockReturnValue(expected)
     const values: UserDataSnapshot['values'] = {}
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <ExerciseRoute />
       </UserDataProvider>,
@@ -74,7 +74,7 @@ describe('native exercise route', () => {
 
     await act(async () => {})
     expect(screen.getAllByText(expected.word).length).toBeGreaterThan(0)
-    fireEvent.press(screen.getByTestId('skip-question'))
+    await fireEvent.press(screen.getByTestId('skip-question'))
     await act(async () => {})
 
     expect(values[`srs:${expected.cardKey}`]).toBeDefined()
@@ -98,14 +98,14 @@ describe('native exercise route', () => {
       [`exercise:daily:${day}`]: { date: day, correct: 9, incorrect: 0, passed: 0 },
     }
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <ExerciseRoute />
       </UserDataProvider>,
     )
     await act(async () => {})
 
-    fireEvent.press(screen.getAllByRole('radio')[expected.answer])
+    await fireEvent.press(screen.getAllByRole('radio')[expected.answer])
     await act(async () => {})
 
     expect(showBanner).toHaveBeenCalledWith({ kind: 'streak', message: 'Streak extended!', color: '#a32b18' })

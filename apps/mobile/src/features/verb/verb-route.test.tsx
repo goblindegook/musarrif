@@ -74,39 +74,39 @@ describe('verb detail route', () => {
 
   test('offers a way to Search only when the verb was opened without history', async () => {
     const repository = createInMemoryRepository()
-    const { unmount } = render(
+    const { unmount } = await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
     )
     await act(async () => {})
     expect(screen.queryByRole('button', { name: 'Search' })).toBeNull()
-    unmount()
+    await unmount()
 
     mockStackDepth = 1
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
     )
     await act(async () => {})
-    fireEvent.press(screen.getByRole('button', { name: 'Search' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Search' }))
     expect(mockReplace).toHaveBeenCalledWith('/search')
   })
 
   test('shows generated as a subtitle of the title for generated verbs only', async () => {
     const repository = createInMemoryRepository()
-    const { unmount } = render(
+    const { unmount } = await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
     )
     await act(async () => {})
     expect(screen.queryByText('generated')).toBeNull()
-    unmount()
+    await unmount()
 
     mockParams = { verbId: 'Dfz-2' }
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
@@ -119,26 +119,26 @@ describe('verb detail route', () => {
     mockStackDepth = 1
     mockParams = { verbId: 'Dfz-2' }
     const repository = createInMemoryRepository()
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="build" />
       </UserDataProvider>,
     )
     await act(async () => {})
-    fireEvent.press(screen.getByRole('button', { name: 'Build' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Build' }))
     expect(mockReplace).toHaveBeenCalledWith('/build')
   })
 
   test('shares the canonical public verb URL', async () => {
-    const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: Share.sharedAction })
+    const share = jest.spyOn(Share, 'share').mockResolvedValue({ action: Share.sharedAction, activityType: undefined })
     const repository = createInMemoryRepository()
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
     )
     await act(async () => {})
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Share' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Share' })))
 
     expect(share).toHaveBeenCalledWith({ url: 'https://musarrif.com/verbs/ktb-1' })
     share.mockRestore()
@@ -147,7 +147,7 @@ describe('verb detail route', () => {
   test('persists favorite changes through the local repository', async () => {
     const values: Partial<Record<UserDataKey, UserDataValue>> = {}
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,
@@ -157,14 +157,14 @@ describe('verb detail route', () => {
 
     expect(screen.getAllByText('كَتَبَ').length).toBeGreaterThan(0)
     expect(mockHeaderOptions.title).toBe('كَتَبَ')
-    fireEvent.press(screen.getByRole('button', { name: 'Add to favorites' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Add to favorites' }))
     await act(async () => {})
     expect(values['favorite:ktb-1']).toBe(true)
   })
 
   test('applies the saved diacritics setting to the verb title', async () => {
     const repository = createInMemoryRepository({ 'setting:diacriticsPreference': 'none' })
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <VerbScreen source="search" />
       </UserDataProvider>,

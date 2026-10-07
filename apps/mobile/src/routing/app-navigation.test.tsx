@@ -67,8 +67,8 @@ describe('Search route', () => {
   test('opens the selected canonical verb route from search', async () => {
     await renderRoute()
 
-    fireEvent.changeText(screen.getByLabelText('Search'), 'kataba')
-    fireEvent.press(screen.getByRole('button', { name: /كَتَبَ.*to write/u }))
+    await fireEvent.changeText(screen.getByLabelText('Search'), 'kataba')
+    await fireEvent.press(screen.getByRole('button', { name: /كَتَبَ.*to write/u }))
 
     expect(mockRouterPush).toHaveBeenCalledWith({
       pathname: '/search/verb/[verbId]',
@@ -79,23 +79,23 @@ describe('Search route', () => {
   test('clears filtered results through the filled search control', async () => {
     await renderRoute()
 
-    fireEvent.changeText(screen.getByLabelText('Search'), 'zzzz-no-verb')
+    await fireEvent.changeText(screen.getByLabelText('Search'), 'zzzz-no-verb')
     expect(screen.getByText('No verbs found')).toBeTruthy()
-    fireEvent.press(screen.getByRole('button', { name: 'Clear search' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Clear search' }))
     expect(screen.queryByText('No verbs found')).toBeNull()
   })
 
   test('applies draft filters only on Apply and clears them', async () => {
     await renderRoute()
 
-    fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
+    await fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
     expect(screen.getByTestId('filter-root-sound')).toBeTruthy()
-    act(() => screen.UNSAFE_getByProps({ selection: '', label: 'By group' }).props.onSelectionChange('favourites'))
+    await act(() => screen.UNSAFE_getByProps({ selection: '', label: 'By group' }).props.onSelectionChange('favourites'))
     expect(screen.queryByText('No verbs found')).toBeNull()
-    act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
+    await act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
     expect(screen.getByText('No verbs found')).toBeTruthy()
-    fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
-    act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
+    await fireEvent.press(screen.getByRole('button', { name: 'Filters' }))
+    await act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
     expect(screen.queryByText('No verbs found')).toBeNull()
   })
 })

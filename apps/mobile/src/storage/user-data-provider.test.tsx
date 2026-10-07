@@ -66,7 +66,7 @@ function ThemeProbe({ onRender }: { onRender: () => void }) {
 describe('UserDataProvider', () => {
   test('a consumer re-renders only when the key it reads changes', async () => {
     const onRender = jest.fn()
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => createInMemoryRepository()}>
         <ThemeProbe onRender={onRender} />
       </UserDataProvider>,
@@ -74,10 +74,10 @@ describe('UserDataProvider', () => {
     await act(async () => {})
     const rendersAfterHydration = onRender.mock.calls.length
 
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Favourite' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Favourite' })))
     expect(onRender).toHaveBeenCalledTimes(rendersAfterHydration)
 
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Theme' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Theme' })))
     expect(screen.getByTestId('probe-theme').props.children).toBe('dark')
   })
 
@@ -96,13 +96,13 @@ describe('UserDataProvider', () => {
         },
       },
     )
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <ConcurrentWritesHarness />
       </UserDataProvider>,
     )
     await act(async () => {})
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Save answer' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Save answer' })))
 
     expect(screen.getByTestId('write-status').props.children).toBe('saved')
     expect(saved).toEqual(['srs:card', 'dimension:store', 'exercise:daily:2026-10-01'])
@@ -111,7 +111,7 @@ describe('UserDataProvider', () => {
   test('hydrates once and publishes durable writes to subscribed screens', async () => {
     const values: Partial<Record<UserDataKey, UserDataValue>> = { 'setting:theme': 'light' }
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <Harness />
       </UserDataProvider>,
@@ -120,7 +120,7 @@ describe('UserDataProvider', () => {
     await act(async () => {})
     expect(screen.getByTestId('ready').props.children).toBe('true')
     expect(screen.getByTestId('theme').props.children).toBe('light')
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Set dark' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Set dark' })))
     expect(values['setting:theme']).toBe('dark')
     expect(screen.getByTestId('theme').props.children).toBe('dark')
   })
@@ -128,14 +128,14 @@ describe('UserDataProvider', () => {
   test('reloads values that changed in the repository outside the provider, such as remote sync', async () => {
     const values: Partial<Record<UserDataKey, UserDataValue>> = { 'setting:theme': 'light' }
     const repository = createInMemoryRepository(values)
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <Harness />
       </UserDataProvider>,
     )
     await act(async () => {})
     values['setting:theme'] = 'dark'
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Reload' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Reload' })))
 
     expect(screen.getByTestId('theme').props.children).toBe('dark')
   })
@@ -150,13 +150,13 @@ describe('UserDataProvider', () => {
         Object.assign(values, imported.values)
       },
     })
-    render(
+    await render(
       <UserDataProvider repositoryFactory={async () => repository}>
         <Harness />
       </UserDataProvider>,
     )
     await act(async () => {})
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Import export' })))
+    await act(async () => await fireEvent.press(screen.getByRole('button', { name: 'Import export' })))
 
     expect(screen.getByTestId('theme').props.children).toBe('dark')
     expect(values['favorite:ktb-1']).toBe(true)

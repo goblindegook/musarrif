@@ -14,7 +14,7 @@ afterEach(() => {
 describe('useMotionDuration', () => {
   test('removes transitions when reduced motion is enabled', async () => {
     mockReduceMotion(true)
-    const { result } = renderHook(() => useMotionDuration(180))
+    const { result } = await renderHook(() => useMotionDuration(180))
 
     await waitFor(() => expect(AccessibilityInfo.isReduceMotionEnabled).toHaveBeenCalled())
     expect(result.current).toBe(0)
@@ -22,7 +22,7 @@ describe('useMotionDuration', () => {
 
   test('keeps the requested duration when reduced motion is disabled', async () => {
     mockReduceMotion(false)
-    const { result } = renderHook(() => useMotionDuration(180))
+    const { result } = await renderHook(() => useMotionDuration(180))
 
     await waitFor(() => expect(result.current).toBe(180))
   })

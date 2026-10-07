@@ -1,4 +1,4 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { requireNativeModule } from 'expo'
 import type { SyncEntry } from '../storage/schema'
 
 type CloudAccountStatus = 'available' | 'noAccount' | 'restricted' | 'temporarilyUnavailable' | 'couldNotDetermine'

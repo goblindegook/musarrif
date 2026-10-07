@@ -4,9 +4,9 @@ import { DEFAULT_FILTERS } from './filter-model'
 import { VerbFilterSheet } from './VerbFilterSheet'
 
 describe('native verb filters', () => {
-  test('shows sort choices as the same native list style as group choices', () => {
+  test('shows sort choices as the same native list style as group choices', async () => {
     const onChange = jest.fn()
-    render(
+    await render(
       <VerbFilterSheet
         filters={DEFAULT_FILTERS}
         isPresented
@@ -19,13 +19,13 @@ describe('native verb filters', () => {
     )
 
     const sortPicker = screen.UNSAFE_getAllByType(Picker).find((picker) => picker.props.label === 'Order')!
-    act(() => sortPicker.props.onSelectionChange('alphabetical'))
+    await act(() => sortPicker.props.onSelectionChange('alphabetical'))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, sort: 'alphabetical' })
   })
 
-  test('makes sound roots exclusive when toggled on', () => {
+  test('makes sound roots exclusive when toggled on', async () => {
     const onChange = jest.fn()
-    render(
+    await render(
       <VerbFilterSheet
         filters={{ ...DEFAULT_FILTERS, rootShapes: ['doubled'] }}
         isPresented
@@ -37,13 +37,13 @@ describe('native verb filters', () => {
       />,
     )
 
-    act(() => screen.getByTestId('filter-root-sound').props.onIsOnChange({ nativeEvent: { isOn: true } }))
+    await act(() => screen.getByTestId('filter-root-sound').props.onIsOnChange({ nativeEvent: { isOn: true } }))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, rootShapes: ['sound'] })
   })
 
-  test('selects a form from the native form picker', () => {
+  test('selects a form from the native form picker', async () => {
     const onChange = jest.fn()
-    render(
+    await render(
       <VerbFilterSheet
         filters={DEFAULT_FILTERS}
         isPresented
@@ -58,13 +58,13 @@ describe('native verb filters', () => {
     const formPicker = screen
       .UNSAFE_getAllByProps({ label: 'Form' })
       .find((node) => typeof node.props.onSelectionChange === 'function')
-    act(() => formPicker?.props.onSelectionChange('2'))
+    await act(() => formPicker?.props.onSelectionChange('2'))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, form: '2' })
   })
 
-  test('keeps the favorites option in the exclusive group picker', () => {
+  test('keeps the favorites option in the exclusive group picker', async () => {
     const onChange = jest.fn()
-    render(
+    await render(
       <VerbFilterSheet
         filters={DEFAULT_FILTERS}
         isPresented
@@ -76,14 +76,14 @@ describe('native verb filters', () => {
       />,
     )
 
-    act(() => screen.UNSAFE_getByProps({ label: 'By group' }).props.onSelectionChange('favourites'))
+    await act(() => screen.UNSAFE_getByProps({ label: 'By group' }).props.onSelectionChange('favourites'))
     expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS, group: 'favourites' })
   })
 
-  test('exposes native apply and clear actions', () => {
+  test('exposes native apply and clear actions', async () => {
     const onApply = jest.fn()
     const onClear = jest.fn()
-    render(
+    await render(
       <VerbFilterSheet
         filters={DEFAULT_FILTERS}
         isPresented
@@ -95,8 +95,8 @@ describe('native verb filters', () => {
       />,
     )
 
-    act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
-    act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
+    await act(() => screen.UNSAFE_getByProps({ label: 'Apply' }).props.onPress())
+    await act(() => screen.UNSAFE_getByProps({ label: 'Clear All' }).props.onPress())
     expect(onApply).toHaveBeenCalledTimes(1)
     expect(onClear).toHaveBeenCalledTimes(1)
   })
