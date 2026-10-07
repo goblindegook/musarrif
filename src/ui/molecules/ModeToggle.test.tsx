@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ModeToggle } from './ModeToggle'
 
 const labels = ['Conjugate', 'Exercise']
-const icons = [<span>icon-a</span>, <span>icon-b</span>]
+const icons = [<span key="a">icon-a</span>, <span key="b">icon-b</span>]
 
 describe('ModeToggle', () => {
   afterEach(() => {

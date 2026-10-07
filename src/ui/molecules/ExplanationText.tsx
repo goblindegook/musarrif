@@ -33,8 +33,10 @@ export const ExplanationText = ({ paragraphs, showMorphemeMarkers = false }: Exp
   return (
     <>
       {paragraphs.map((paragraph, pi) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
         <Text key={pi}>
           {paragraph.map((sentence, si) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
             <span key={si}>
               {showMorphemeMarkers && (si === 0 || paragraph[si - 1]?.kind !== sentence.kind) && (
                 <span aria-hidden="true" style={{ color: KIND_COLORS[sentence.kind] }}>

@@ -50,6 +50,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
         <Detail label={t('meta.root')} valueDir="rtl" valueLang="ar">
           <RootLetters dir="rtl" lang="ar">
             {Array.from(verb.root).map((letter, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
               <span key={i}>{letter}</span>
             ))}
           </RootLetters>

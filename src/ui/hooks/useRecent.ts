@@ -5,9 +5,12 @@ import { useLocalStorage } from './useLocalStorage'
 export function useRecent() {
   const [verbIds, setVerbIds] = useLocalStorage<readonly string[]>('recentVerbs', [])
 
-  const addRecent = useCallback((id: string) => {
-    setVerbIds((currentIds) => [id, ...currentIds.filter((currentId) => currentId !== id)].slice(0, 11))
-  }, [])
+  const addRecent = useCallback(
+    (id: string) => {
+      setVerbIds((currentIds) => [id, ...currentIds.filter((currentId) => currentId !== id)].slice(0, 11))
+    },
+    [setVerbIds],
+  )
 
   const recents = useMemo(
     () => verbIds.map((id) => getVerbById(id)).filter((verb): verb is DisplayVerb => verb != null),

@@ -37,6 +37,7 @@ function DerivationSteps({ steps, verb, t }: { steps: readonly DerivationStep[];
   return (
     <StepsTable>
       {steps.map((step, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
         <StepRow key={i} isFinal={i === steps.length - 1}>
           <StepLabel>{stepLabel(step, verb, t)}</StepLabel>
           <StepArabic dir="rtl" lang="ar">

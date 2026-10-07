@@ -102,7 +102,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
             <ModeToggle
               activeMode={ACTIVE_MODE[route[0] ?? '']}
               labels={[t('mode.conjugate'), t('mode.exercise')]}
-              icons={[<ConjugateIcon />, <ExerciseIcon />]}
+              icons={[<ConjugateIcon key="conjugate" />, <ExerciseIcon key="exercise" />]}
               ariaLabel={t('mode.label')}
               onClick={(index) => {
                 if (index === 0) navigateTo(['verbs'])

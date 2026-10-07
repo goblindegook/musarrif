@@ -18,11 +18,14 @@ export function useTheme() {
   const [theme, setTheme] = useState(resolve(themePreference))
   const cleanupRef = useRef<(() => void) | null>(null)
 
-  const changeTheme = useCallback((pref: ThemePreference) => {
-    setStoredTheme(pref)
-    setTheme(resolve(pref))
-    apply(resolve(pref))
-  }, [])
+  const changeTheme = useCallback(
+    (pref: ThemePreference) => {
+      setStoredTheme(pref)
+      setTheme(resolve(pref))
+      apply(resolve(pref))
+    },
+    [setStoredTheme],
+  )
 
   const setThemePreference = useCallback(
     (next: ThemePreference) => {
@@ -41,10 +44,10 @@ export function useTheme() {
         cleanupRef.current = () => mq.removeEventListener('change', handler)
       }
     },
-    [setStoredTheme],
+    [changeTheme],
   )
 
-  // On mount: apply stored theme and register OS listener if system
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the stored preference seeds the theme once; later changes go through setThemePreference
   useEffect(() => {
     changeTheme(themePreference)
     if (themePreference === 'system') {
@@ -55,7 +58,6 @@ export function useTheme() {
       mq.addEventListener('change', handler)
       cleanupRef.current = () => mq.removeEventListener('change', handler)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Cleanup OS listener on unmount

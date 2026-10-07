@@ -71,7 +71,7 @@ export function useStats() {
       correct,
       remaining: Math.max(0, STREAK_DAILY_GOAL - correct),
     }
-  }, [stats])
+  }, [stats, findDate])
 
   return { accuracy, stats, streak, findDate, getDailyWindow, recordResult }
 }

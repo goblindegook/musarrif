@@ -29,6 +29,7 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
             const isWeak = rootAnalysis.weakPositions.includes(index)
             const isHamza = rootAnalysis.hamzaPositions.includes(index)
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
               <RootLetter key={index} weak={isWeak} hamza={isHamza}>
                 {letter}
                 {isWeak && <RootLetterAnnotation>{t('rootInfo.annotation.weak')}</RootLetterAnnotation>}

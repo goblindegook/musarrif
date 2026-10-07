@@ -33,10 +33,10 @@ export function Chart({ series, data, ariaLabel, width: defaultWidth, height = 2
     return () => ro.disconnect()
   }, [])
 
-  const spline = uPlot.paths?.spline?.()
-
   useEffect(() => {
     if (width === 0 || !mountRef.current) return
+
+    const spline = uPlot.paths?.spline?.()
 
     const plot = new uPlot(
       {

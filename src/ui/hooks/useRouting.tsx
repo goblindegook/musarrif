@@ -186,24 +186,21 @@ export function createRouting<TRoute extends RouteSegments>({ mode = 'hash', par
       window.addEventListener('popstate', syncRouteFromLocation, { signal: controller.signal })
 
       return () => controller.abort()
-    }, [parse, mode])
+    }, [])
 
     useEffect(() => {
       const routeHref = toHref(route, mode)
       if (previousRouteHref.current != null && previousRouteHref.current !== routeHref) window.scrollTo(0, 0)
       previousRouteHref.current = routeHref
-    }, [route, mode])
+    }, [route])
 
-    const navigateTo = useCallback(
-      (nextRoute: TRoute, options?: { replace?: boolean }) => {
-        const nextHref = toHref(nextRoute, mode)
-        if (options?.replace) window.history.replaceState({}, '', nextHref)
-        else window.history.pushState({}, '', nextHref)
-        setRoute(nextRoute)
-        setQuery('')
-      },
-      [mode],
-    )
+    const navigateTo = useCallback((nextRoute: TRoute, options?: { replace?: boolean }) => {
+      const nextHref = toHref(nextRoute, mode)
+      if (options?.replace) window.history.replaceState({}, '', nextHref)
+      else window.history.pushState({}, '', nextHref)
+      setRoute(nextRoute)
+      setQuery('')
+    }, [])
 
     const queryParams = useMemo(() => new URLSearchParams(query.replace(/^\?/, '')), [query])
 
@@ -221,12 +218,12 @@ export function createRouting<TRoute extends RouteSegments>({ mode = 'hash', par
         else window.history.replaceState({}, '', nextHref)
         setQuery(nextQuery)
       },
-      [mode, queryParams, route],
+      [queryParams, route],
     )
 
     const value = useMemo<RoutingContextValue<TRoute>>(
       () => ({ route, navigateTo, toHref: (route: TRoute) => toHref(route, mode), queryParams, setQueryParams }),
-      [route, navigateTo, queryParams, setQueryParams, mode],
+      [route, navigateTo, queryParams, setQueryParams],
     )
 
     return <RoutingContext.Provider value={value}>{children}</RoutingContext.Provider>

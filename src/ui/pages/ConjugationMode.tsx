@@ -104,6 +104,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
     [navigateTo],
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: picking another verb closes any open insight modal, though the body never reads the verb
   useEffect(() => {
     setOpenModal(null)
   }, [selectedVerb])
@@ -122,7 +123,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
   useEffect(() => {
     addRecent(routeVerb.id)
-  }, [routeVerb.id])
+  }, [routeVerb.id, addRecent])
 
   useEffect(() => {
     if (routeVerb.id !== verbId && !routeVerb.synthetic) navigateTo(['verbs', routeVerb.id], { replace: true })
@@ -227,6 +228,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
             >
               <RootMetaValue dir="rtl" lang="ar">
                 {Array.from(selectedVerb.root).map((letter, index) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
                   <span key={index}>{letter}</span>
                 ))}
               </RootMetaValue>

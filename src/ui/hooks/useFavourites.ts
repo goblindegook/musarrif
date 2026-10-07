@@ -12,7 +12,7 @@ export function useFavourites() {
       setVerbIds((current) =>
         current.includes(toggledId) ? current.filter((id) => id !== toggledId) : [...current, toggledId],
       ),
-    [],
+    [setVerbIds],
   )
 
   const favourites = useMemo(

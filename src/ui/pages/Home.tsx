@@ -181,12 +181,12 @@ export function Home() {
 
   const applyFormFilter = useCallback(
     (option: string) => setQueryParams((current) => setQuery(withFormFilter(parseQuery(current), option))),
-    [setQueryParams, query],
+    [setQueryParams],
   )
 
   const applyRootShape = useCallback(
     (option: RootShape) => setQueryParams((current) => setQuery(withRootShape(parseQuery(current), option))),
-    [setQueryParams, query],
+    [setQueryParams],
   )
 
   const applySort = useCallback(
@@ -196,7 +196,7 @@ export function Home() {
 
   const applyGroupFilter = useCallback(
     (option: GroupFilter) => setQueryParams((current) => setQuery(withGroupFilter(parseQuery(current), option))),
-    [setQueryParams, query],
+    [setQueryParams],
   )
 
   return (

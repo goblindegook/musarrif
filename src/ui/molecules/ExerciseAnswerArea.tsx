@@ -41,6 +41,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     exercise.inputModes.includes(mode) && (mode !== 'speech' || speechSupported) ? mode : 'multiple-choice'
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a new exercise must clear the previous answer before it paints, though the body never reads it
   useLayoutEffect(() => {
     setSelected(null)
     setTypedResult('idle')

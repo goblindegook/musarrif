@@ -62,14 +62,12 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   const week = useMemo(() => days(7), [days])
   const [insightsOpen, setInsightsOpen] = useState(false)
 
-  const today = new Date()
-  const yesterday = new Date()
-  yesterday.setDate(today.getDate() - 1)
-
-  const [streakHintKey, streakHintParams] = useMemo(
-    () => buildStreakHint(streak, findStats(today), findStats(yesterday), insights),
-    [streak, findStats, insights],
-  )
+  const [streakHintKey, streakHintParams] = useMemo(() => {
+    const today = new Date()
+    const yesterday = new Date()
+    yesterday.setDate(today.getDate() - 1)
+    return buildStreakHint(streak, findStats(today), findStats(yesterday), insights)
+  }, [streak, findStats, insights])
 
   if (stats.length === 0) return null
 

@@ -19,7 +19,7 @@ export function CopyButton({ text, ariaLabel, size }: CopyButtonProps) {
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     } catch {}
-  }, [supported, text])
+  }, [text])
 
   return (
     supported && (

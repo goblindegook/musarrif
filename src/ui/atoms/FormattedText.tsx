@@ -14,6 +14,7 @@ const Root = styled('p')`
 `
 
 export const FormattedText = ({ text, ...props }: FormattedTextProps) => (
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: locale strings carry inline markup, and sanitizeHtml keeps only an allowlist of tags and attributes
   <Root {...props} dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
 )
 

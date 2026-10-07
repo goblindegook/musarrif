@@ -119,6 +119,7 @@ export function OptionChip<T>({
     } catch {}
   }, [open])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the height transition runs when the shown group changes, though the body never reads the key
   useLayoutEffect(() => {
     const panel = panelRef.current
     const from = resizeFromRef.current

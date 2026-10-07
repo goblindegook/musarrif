@@ -271,7 +271,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
     recordSrsAnswer(exercise.cardKey, 'pass')
     recordResult('passed')
     setSkipped(true)
-  }, [exercise.cardKey, recordSrsAnswer, recordResult, setSkipped])
+  }, [exercise.cardKey, recordSrsAnswer, recordResult])
 
   useEffect(() => {
     if (!isAnswered) return
@@ -334,6 +334,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
               <Alerts>
                 {dimensionChanges.map((change, index) =>
                   change.type === 'promotion' ? (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: a change has no id of its own; the list is rebuilt per exercise and never reordered
                     <SuccessAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.unlock.line', {
@@ -343,6 +344,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                       </Text>
                     </SuccessAlert>
                   ) : (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: a change has no id of its own; the list is rebuilt per exercise and never reordered
                     <WarningAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.demotion.line', {

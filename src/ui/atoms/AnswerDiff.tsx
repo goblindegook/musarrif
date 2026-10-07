@@ -5,6 +5,7 @@ export function AnswerDiff({ segments }: { segments: readonly AnswerSegment[] })
   return (
     <>
       {segments.map((segment, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
         <Segment key={`s-${index}`} data-mark={segment.mark}>
           {segment.text}
         </Segment>

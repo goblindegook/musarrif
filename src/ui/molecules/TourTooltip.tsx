@@ -84,6 +84,7 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
     return () => controller.abort()
   }, [placement, updatePosition])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: each step reopens the popover, though the body never reads it
   useLayoutEffect(() => {
     const node = containerRef.current
     if (!node) return
@@ -100,6 +101,7 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
     }
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: each step moves focus to its primary button, though the body never reads it
   useEffect(() => document.querySelector<HTMLElement>('[data-tour-primary]')?.focus(), [step])
 
   return (
