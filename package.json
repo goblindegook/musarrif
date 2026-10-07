@@ -49,9 +49,9 @@
     "qrcode": "^1.5.4",
     "uplot": "^1.6.32",
     "valibot": "^1.4.2",
-    "expo": "~57.0.25",
-    "react": "19.2.3",
-    "react-native": "0.86.3"
+    "expo": "~58.0.0",
+    "react": "19.3.0",
+    "react-native": "0.88.0-rc.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8",
@@ -86,12 +86,12 @@
     "apps/*"
   ],
   "overrides": {
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-test-renderer": "19.2.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-test-renderer": "19.3.0",
     "react-server-dom-webpack": "19.1.5",
-    "react-native-worklets": "0.10.1",
-    "react-native-reanimated": "4.5.1"
+    "react-native-worklets": "0.13.0",
+    "react-native-reanimated": "4.7.0"
   },
   "version": "1.0.0"
 }
