@@ -85,6 +85,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
         vowels: on(showForm, layers.vowels),
         formRoot: on(showForm || showRootType, layers.formRoot),
         nominal: on(showNominal, layers.nominal),
+        nominalRoot: on(showNominal || showRootType, layers.nominalRoot),
         isMasdarMimi: on(showNominal, layers.isMasdarMimi),
         masdarPattern: on(showNominal, layers.masdarPattern),
       }
@@ -97,6 +98,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
       vowels: on(showForm, layers.vowels),
       formRoot: on(showForm || showRootType, layers.formRoot),
       nominal: on(showNominal, layers.nominal),
+      nominalRoot: on(showNominal || showRootType, layers.nominalRoot),
     }
   }
 

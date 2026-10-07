@@ -220,6 +220,28 @@ describe('filterMasteredLayers', () => {
     expect(result.nominal).toBeUndefined()
   })
 
+  test.each([
+    ['masdarForm:doubled:1', undefined],
+    ['masdarForm:sound:1', 'geminate-contracts'],
+    ['conjugation:doubled:1:active.past:3ms', 'geminate-contracts'],
+  ])('hides nominalRoot only when both nominal and rootType exceed threshold', (card, nominalRoot) => {
+    expect(
+      filterMasteredLayers(
+        { [card]: { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+        {
+          category: 'nominal',
+          paradigmRoots: ['م', 'د', 'د'],
+          paradigmForm: 1,
+          arabic: 'مَدّ',
+          rootType: ['doubled'],
+          nominal: 'masdar',
+          isMasdarMimi: false,
+          nominalRoot: 'geminate-contracts',
+        },
+      ),
+    ).toMatchObject({ nominalRoot })
+  })
+
   test('renders nothing once every nominal layer is mastered', () => {
     const result = filterMasteredLayers(
       { 'masdarForm:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
