@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Musarrif",
+    "slug": "musarrif",
+    "scheme": "musarrif",
+    "version": "0.1.0",
+    "icon": "../../public/icon.png",
+    "platforms": ["ios"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.musarrif.mobile",
+      "associatedDomains": ["applinks:musarrif.com"]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": ["en", "it", "pt", "ar"]
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "26.0",
+            "enableSceneSupport": true
+          }
+        }
+      ],
+      "expo-sqlite",
+      "./modules/musarrif-apple-services/app.plugin.js"
+    ]
+  }
+}

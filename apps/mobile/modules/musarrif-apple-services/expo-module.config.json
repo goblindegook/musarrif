@@ -1,0 +1,7 @@
+{
+  "platforms": ["apple"],
+  "apple": {
+    "podspecPath": "./MusarrifAppleServices.podspec",
+    "modules": ["CloudSyncModule", "EditMenuModule", "NotificationBannerModule", "KeyClickModule"]
+  }
+}

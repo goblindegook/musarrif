@@ -1,0 +1,11 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowImportingTsExtensions": true,
+    "types": ["jest", "node", "react", "react-native"]
+  },
+  "include": ["*.test.ts", "src/**/*.ts", "src/**/*.tsx"]
+}
