@@ -15,7 +15,7 @@ import { File, Paths } from 'expo-file-system'
 import * as Sharing from 'expo-sharing'
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
-import { NativeHeading } from '../../components/Heading'
+import { FormSectionHeading } from '../../components/Heading'
 import { decodeUserDataExport, encodeUserDataExport } from '../../data/UserDataCodec'
 import { getCopy, useSystemLanguage } from '../../i18n/copy'
 import { getLocaleDirection } from '../../i18n/direction'
@@ -117,7 +117,7 @@ function SettingsContent() {
           <VoiceSettings language={language} />
           <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
             <FieldGroup.SectionHeader>
-              <NativeHeading>{t('settings.data.title')}</NativeHeading>
+              <FormSectionHeading>{t('settings.data.title')}</FormSectionHeading>
             </FieldGroup.SectionHeader>
             <Button
               label={t('settings.data.export')}

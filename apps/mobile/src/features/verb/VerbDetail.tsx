@@ -1,4 +1,4 @@
-import { Host, Text as NativeText, Picker, Toggle } from '@expo/ui/swift-ui'
+import { Host, Picker, Text as SwiftText, Toggle } from '@expo/ui/swift-ui'
 import {
   background,
   disabled,
@@ -338,9 +338,9 @@ export function VerbDetail({ verb, language, diacriticsPreference, speechVoice, 
             selection={tense}
           >
             {TENSES.filter((item) => makeTense(voice, item)).map((item) => (
-              <NativeText key={item} modifiers={[tag(item)]}>
+              <SwiftText key={item} modifiers={[tag(item)]}>
                 {t[item]}
-              </NativeText>
+              </SwiftText>
             ))}
           </Picker>
         </Host>
@@ -362,9 +362,9 @@ export function VerbDetail({ verb, language, diacriticsPreference, speechVoice, 
                 selection={mood}
               >
                 {MOODS.filter((item) => makeTense(voice, 'present', item)).map((item) => (
-                  <NativeText key={item} modifiers={[tag(item)]}>
+                  <SwiftText key={item} modifiers={[tag(item)]}>
                     {t[item]}
-                  </NativeText>
+                  </SwiftText>
                 ))}
               </Picker>
             </Host>

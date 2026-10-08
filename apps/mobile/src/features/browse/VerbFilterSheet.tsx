@@ -10,7 +10,7 @@ import {
   tint,
 } from '@expo/ui/swift-ui/modifiers'
 import type { RootShape } from '../../../../../src/paradigms/roots'
-import { NativeHeading } from '../../components/Heading'
+import { FormSectionHeading } from '../../components/Heading'
 import {
   SHEET_BODY_PADDING_BOTTOM,
   SHEET_MARGIN,
@@ -73,7 +73,7 @@ export function VerbFilterSheet({
         <FieldGroup modifiers={[tint(theme.accent), scrollContentBackground('hidden'), background(theme.background)]}>
           <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
             <FieldGroup.SectionHeader>
-              <NativeHeading>{t('verbsList.sort.title')}</NativeHeading>
+              <FormSectionHeading>{t('verbsList.sort.title')}</FormSectionHeading>
             </FieldGroup.SectionHeader>
             <Picker
               label={t('verbsList.sort.title')}
@@ -87,7 +87,7 @@ export function VerbFilterSheet({
           </FieldGroup.Section>
           <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
             <FieldGroup.SectionHeader>
-              <NativeHeading>{t('verbsList.filter.form.title')}</NativeHeading>
+              <FormSectionHeading>{t('verbsList.filter.form.title')}</FormSectionHeading>
             </FieldGroup.SectionHeader>
             <Picker
               label={t('meta.form')}
@@ -105,7 +105,7 @@ export function VerbFilterSheet({
           </FieldGroup.Section>
           <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
             <FieldGroup.SectionHeader>
-              <NativeHeading>{t('verbsList.filter.rootType.title')}</NativeHeading>
+              <FormSectionHeading>{t('verbsList.filter.rootType.title')}</FormSectionHeading>
             </FieldGroup.SectionHeader>
             {ROOT_SHAPES.map((shape) => (
               <Switch
@@ -119,7 +119,7 @@ export function VerbFilterSheet({
           </FieldGroup.Section>
           <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
             <FieldGroup.SectionHeader>
-              <NativeHeading>{t('verbsList.filter.other.title')}</NativeHeading>
+              <FormSectionHeading>{t('verbsList.filter.other.title')}</FormSectionHeading>
             </FieldGroup.SectionHeader>
             <Picker
               label={t('verbsList.filter.other.title')}

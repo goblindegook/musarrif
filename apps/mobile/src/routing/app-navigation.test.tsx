@@ -8,11 +8,11 @@ jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockRouterPush }) })
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 59, bottom: 34, left: 0, right: 0 }),
 }))
-jest.mock('../features/browse/NativeSearchHeader', () => {
+jest.mock('../features/browse/SearchHeader', () => {
   const React = require('react')
   const { Pressable, TextInput, View } = require('react-native')
   return {
-    NativeSearchHeader: ({
+    SearchHeader: ({
       clearLabel,
       filterLabel,
       filtersActive,

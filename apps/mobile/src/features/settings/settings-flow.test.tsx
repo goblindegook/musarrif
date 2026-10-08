@@ -36,7 +36,7 @@ jest.mock('expo-sharing', () => ({
   shareAsync: (...args: unknown[]) => mockShareAsync(...args),
 }))
 
-describe('native settings', () => {
+describe('settings', () => {
   test('persists the diacritics preference and exports data as a shareable backup file', async () => {
     const values: Partial<Record<UserDataKey, UserDataValue>> = {
       'setting:language': 'it',

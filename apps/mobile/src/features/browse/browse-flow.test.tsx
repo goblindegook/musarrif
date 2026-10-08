@@ -19,7 +19,7 @@ afterEach(async () => {
   jest.useRealTimers()
 })
 
-describe('native browse flow', () => {
+describe('browse flow', () => {
   test('searches within the included verbs on the same list screen', async () => {
     await render(<VerbList language="en" query="kataba" onSelect={jest.fn<void, [DisplayVerb]>()} />)
 

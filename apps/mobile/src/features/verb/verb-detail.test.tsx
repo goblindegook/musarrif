@@ -25,7 +25,7 @@ const tenses = () => within(screen.getByRole('radiogroup', { name: 'Select tense
 const moods = () => within(screen.getByRole('radiogroup', { name: 'Select mood' }))
 const passiveSwitch = () => screen.getByRole('switch', { name: 'Passive' })
 
-describe('native verb detail', () => {
+describe('verb detail', () => {
   beforeEach(() => {
     english.onOpenVerb.mockClear()
   })

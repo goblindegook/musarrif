@@ -16,7 +16,7 @@ jest.mock('../../../../../src/exercises/scheduler', () => {
 })
 jest.mock('../../theme/tokens', () => require('./mock-theme-tokens').themeTokensMock)
 
-describe('native exercise route', () => {
+describe('exercise route', () => {
   afterEach(() => jest.restoreAllMocks())
 
   test('generates from the shared scheduler and persists answer progress through the provider', async () => {

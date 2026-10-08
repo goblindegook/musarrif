@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import type { DisplayVerb } from '../../../../../../src/paradigms/verb-types'
 import { Surface } from '../../../components/Surface'
 import { DEFAULT_FILTERS, type FilterState, hasActiveFilters } from '../../../features/browse/filter-model'
-import { NativeSearchHeader } from '../../../features/browse/NativeSearchHeader'
+import { SearchHeader } from '../../../features/browse/SearchHeader'
 import { VerbFilterSheet } from '../../../features/browse/VerbFilterSheet'
 import { VerbList } from '../../../features/browse/VerbList'
 import { getCopy, useSystemLanguage } from '../../../i18n/copy'
@@ -14,7 +14,7 @@ import { useDiacriticsPreference, useFavouriteVerbIDs } from '../../../storage/u
 import { useThemeTokens } from '../../../theme/tokens'
 
 const HEADER_TOP_MARGIN = 8
-const HEADER_HEIGHT = 52
+const HEADER_HEIGHT = 44
 const LIST_GAP_BELOW_HEADER = 12
 
 export default function SearchRoute() {
@@ -58,11 +58,12 @@ export default function SearchRoute() {
         bottomInset={insets.bottom + 16}
       />
       <View style={{ position: 'absolute', top: insets.top + HEADER_TOP_MARGIN, left: 16, right: 16, zIndex: 10 }}>
-        <NativeSearchHeader
+        <SearchHeader
           width={width}
           placeholder={t('tabs.search')}
           filterLabel={t('browse.filters.show')}
           clearLabel={t('search.clear')}
+          closeLabel={t('search.close')}
           query={query}
           filtersActive={hasActiveFilters(filters)}
           onChangeText={setQuery}

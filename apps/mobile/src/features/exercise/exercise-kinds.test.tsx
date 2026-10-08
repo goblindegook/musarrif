@@ -18,7 +18,7 @@ const exercises = EXERCISE_GENERATORS.map((generator, index) => {
   return exercise
 })
 
-describe('native exercise kinds', () => {
+describe('exercise kinds', () => {
   test.each(exercises.map((exercise) => [exercise.kind, exercise] as const))(
     '%s renders its generated prompt and preserves card identity on answer',
     async (kind: ExerciseKind, exercise: Exercise) => {

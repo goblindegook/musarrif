@@ -2,7 +2,7 @@ import { FieldGroup } from '@expo/ui'
 import { Button, Label, Text } from '@expo/ui/swift-ui'
 import { foregroundStyle, listRowBackground, tint } from '@expo/ui/swift-ui/modifiers'
 import { useState } from 'react'
-import { NativeHeading } from '../../components/Heading'
+import { FormSectionHeading } from '../../components/Heading'
 import type { Language } from '../../i18n/copy'
 import { getCopy } from '../../i18n/copy'
 import type { CloudSyncStatus } from '../../sync/CloudSyncCoordinator'
@@ -32,7 +32,7 @@ export function CloudSyncSettings({
   return (
     <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
       <FieldGroup.SectionHeader>
-        <NativeHeading>{t('settings.cloud.title')}</NativeHeading>
+        <FormSectionHeading>{t('settings.cloud.title')}</FormSectionHeading>
       </FieldGroup.SectionHeader>
       <Label
         modifiers={[foregroundStyle(theme.inkSecondary)]}

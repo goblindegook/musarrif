@@ -55,7 +55,9 @@ jest.mock('@expo/ui/swift-ui', () => {
       isPresented: boolean
       testID: string
     }) => (isPresented ? React.createElement(View, { testID }, children) : null),
+    GlassEffectContainer: ({ children }: { children: React.ReactNode }) => children,
     Group: ({ children }: { children: React.ReactNode }) => children,
+    HStack: ({ children }: { children: React.ReactNode }) => children,
     RNHostView: ({ children }: { children: React.ReactNode }) => children,
     Button: ({
       children,

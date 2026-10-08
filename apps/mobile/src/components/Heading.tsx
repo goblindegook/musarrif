@@ -1,4 +1,4 @@
-import { Text as NativeText } from '@expo/ui/swift-ui'
+import { Text as SwiftText } from '@expo/ui/swift-ui'
 import { font, foregroundStyle, kerning, textCase } from '@expo/ui/swift-ui/modifiers'
 import type { ReactNode } from 'react'
 import { Text } from 'react-native'
@@ -24,10 +24,10 @@ export function Heading({ children }: { children: ReactNode }) {
   )
 }
 
-export function NativeHeading({ children }: { children: string }) {
+export function FormSectionHeading({ children }: { children: string }) {
   const theme = useThemeTokens()
   return (
-    <NativeText
+    <SwiftText
       modifiers={[
         font({ size: 13, weight: 'bold' }),
         foregroundStyle(theme.inkSecondary),
@@ -36,6 +36,6 @@ export function NativeHeading({ children }: { children: string }) {
       ]}
     >
       {children}
-    </NativeText>
+    </SwiftText>
   )
 }

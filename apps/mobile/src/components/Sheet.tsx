@@ -1,12 +1,11 @@
-import { BottomSheet, Button, Group, Host, RNHostView } from '@expo/ui/swift-ui'
+import { BottomSheet, Button, GlassEffectContainer, Group, Host, HStack, Image, RNHostView } from '@expo/ui/swift-ui'
 import {
-  buttonBorderShape,
+  accessibilityLabel,
   buttonStyle,
-  labelStyle,
-  labelsHidden,
+  frame,
+  glassEffect,
   presentationBackground,
   presentationDragIndicator,
-  tint,
 } from '@expo/ui/swift-ui/modifiers'
 import type { ReactNode } from 'react'
 import { ScrollView, Text, useWindowDimensions, View } from 'react-native'
@@ -38,21 +37,20 @@ export function SheetButton({
 }) {
   const theme = useThemeTokens()
   return (
-    <Host seedColor={theme.accent} style={{ width: 48, height: 48 }}>
-      <Button
-        label={label}
+    <Button modifiers={[buttonStyle('plain'), accessibilityLabel(label)]} onPress={onPress} testID={testID}>
+      <Image
+        systemName={systemImage}
+        size={20}
+        color={prominent ? theme.onAccent : theme.ink}
         modifiers={[
-          buttonStyle(prominent ? 'glassProminent' : 'glass'),
-          buttonBorderShape('circle'),
-          labelStyle('iconOnly'),
-          labelsHidden(),
-          tint(prominent ? theme.accent : theme.ink),
+          frame({ width: 44, height: 44 }),
+          glassEffect({
+            shape: 'circle',
+            glass: { variant: 'regular', interactive: true, ...(prominent ? { tint: theme.accent } : {}) },
+          }),
         ]}
-        onPress={onPress}
-        systemImage={systemImage}
-        testID={testID}
       />
-    </Host>
+    </Button>
   )
 }
 
@@ -111,9 +109,11 @@ export function Sheet({
                 ) : (
                   title
                 )}
-                <View style={{ alignItems: 'center', flexDirection: rtl ? 'row-reverse' : 'row', gap: 8 }}>
-                  {actions}
-                </View>
+                <Host matchContents seedColor={theme.accent}>
+                  <GlassEffectContainer spacing={8}>
+                    <HStack spacing={8}>{actions}</HStack>
+                  </GlassEffectContainer>
+                </Host>
               </View>
               <ScrollView style={{ maxHeight: height * MAX_SHEET_FRACTION - HEADER_HEIGHT }}>
                 <View

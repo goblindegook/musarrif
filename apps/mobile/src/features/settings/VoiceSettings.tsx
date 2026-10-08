@@ -2,7 +2,7 @@ import { FieldGroup } from '@expo/ui'
 import { Picker, Text } from '@expo/ui/swift-ui'
 import { labelsHidden, listRowBackground, pickerStyle, tag } from '@expo/ui/swift-ui/modifiers'
 import { useEffect, useState } from 'react'
-import { NativeHeading } from '../../components/Heading'
+import { FormSectionHeading } from '../../components/Heading'
 import type { Language } from '../../i18n/copy'
 import { getCopy } from '../../i18n/copy'
 import {
@@ -62,7 +62,7 @@ export function VoiceSettings({
   return (
     <FieldGroup.Section modifiers={[listRowBackground(theme.surface)]}>
       <FieldGroup.SectionHeader>
-        <NativeHeading>{t('settings.voice.title')}</NativeHeading>
+        <FormSectionHeading>{t('settings.voice.title')}</FormSectionHeading>
       </FieldGroup.SectionHeader>
       <Picker
         label={t('settings.voice.arabic')}

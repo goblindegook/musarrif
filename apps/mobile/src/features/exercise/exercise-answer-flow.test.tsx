@@ -20,7 +20,7 @@ const exercise: Exercise<'conjugation'> = {
   inputModes: ['multiple-choice', 'keyboard', 'speech'],
 }
 
-describe('native exercise answer flow', () => {
+describe('exercise answer flow', () => {
   test('reveals the shared grammar explanation after an answer', async () => {
     const explainedExercise: Exercise<'conjugation'> = {
       ...exercise,

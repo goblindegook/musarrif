@@ -54,6 +54,7 @@ export function VerbList({
       testID="verb-results"
       initialNumToRender={INITIAL_ROWS}
       keyExtractor={(verb) => verb.id}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       ListEmptyComponent={<Text style={[styles.empty, { color: theme.inkSecondary }]}>{t('search.noResults')}</Text>}
       style={[styles.scrollList, { backgroundColor: theme.background }]}

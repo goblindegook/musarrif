@@ -38,6 +38,7 @@ jest.mock('@expo/ui/swift-ui', () => {
         { accessibilityLabel: accessibleName(label, modifiers), accessibilityRole: 'button', onPress, testID },
         children ?? (label ? React.createElement(Text, null, label) : null),
       ),
+    GlassEffectContainer: passthrough,
     Group: passthrough,
     HStack: passthrough,
     Host: passthrough,

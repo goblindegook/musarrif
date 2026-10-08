@@ -20,7 +20,7 @@ const browserExportFixture = {
   },
 }
 
-describe('native user-data backup codec', () => {
+describe('user-data backup codec', () => {
   test('decodes a browser v1 export into mobile storage keys', () => {
     expect(decodeUserDataExport(JSON.stringify(browserExportFixture))).toEqual({
       values: {

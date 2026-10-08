@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native'
 import { DEFAULT_FILTERS } from './filter-model'
 import { VerbFilterSheet } from './VerbFilterSheet'
 
-describe('native verb filters', () => {
+describe('verb filters', () => {
   test('shows sort choices as the same native list style as group choices', async () => {
     const onChange = jest.fn()
     await render(
