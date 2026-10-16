@@ -9806,6 +9806,12 @@
     "form": 10
   },
   {
+    "root": "fsw",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fu3aal"]
+  },
+  {
     "root": "fsx",
     "form": 1,
     "vowels": "a-a",
