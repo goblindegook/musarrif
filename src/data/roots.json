@@ -2290,6 +2290,13 @@
     "passive": "impersonal"
   },
   {
+    "root": "DrT",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": ["fa3al"],
+    "passive": "none"
+  },
+  {
     "root": "Drb",
     "form": 1,
     "vowels": "a-i",
