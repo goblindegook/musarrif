@@ -6792,6 +6792,12 @@
   },
   {
     "root": "Twf",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l", "fa3aal", "fa3alaan"]
+  },
+  {
+    "root": "Twf",
     "form": 2
   },
   {
