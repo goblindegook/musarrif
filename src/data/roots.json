@@ -11220,6 +11220,22 @@
   },
   {
     "root": "hwy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3alaan"],
+    "lexicalMasdars": ["huwiy~"],
+    "passive": "none"
+  },
+  {
+    "root": "hwy",
+    "form": 1,
+    "vowels": "i-a",
+    "masdars": [],
+    "lexicalMasdars": ["hawFY"],
+    "lexicalActiveParticiple": "hawK"
+  },
+  {
+    "root": "hwy",
     "form": 2
   },
   {
