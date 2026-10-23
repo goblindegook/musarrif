@@ -162,11 +162,12 @@ function extractParadigms(
     addConjugationCell(bucket, masculineCells[0] ?? [], '1s')
     addConjugationCell(bucket, masculineCells[1] ?? [], '2ms')
     addConjugationCell(bucket, masculineCells[2] ?? [], '3ms')
-    addConjugationCell(bucket, masculineCells[3] ?? [], '2d')
-    addConjugationCell(bucket, masculineCells[4] ?? [], '3md')
-    addConjugationCell(bucket, masculineCells[5] ?? [], '1p')
-    addConjugationCell(bucket, masculineCells[6] ?? [], '2mp')
-    addConjugationCell(bucket, masculineCells[7] ?? [], '3mp')
+    // masculineCells[3] is the 1st person dual, which has no pronoun of its own (it shares 1p's form).
+    addConjugationCell(bucket, masculineCells[4] ?? [], '2d')
+    addConjugationCell(bucket, masculineCells[5] ?? [], '3md')
+    addConjugationCell(bucket, masculineCells[6] ?? [], '1p')
+    addConjugationCell(bucket, masculineCells[7] ?? [], '2mp')
+    addConjugationCell(bucket, masculineCells[8] ?? [], '3mp')
 
     const feminineRow = rows[index + 1]
     if (!feminineRow) continue

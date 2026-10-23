@@ -24,14 +24,15 @@ const WIKTIONARY_HTML = `
 <td colspan="7"><span class="Arab">مَكْتُوب</span></td>
 </tr>
 <tr><th colspan="12" class="outer">active voice</th></tr>
-<tr><th colspan="2"></th><th colspan="3">singular</th><th rowspan="12" class="separator"></th><th colspan="2">dual</th><th rowspan="12" class="separator"></th><th colspan="3">plural</th></tr>
-<tr><th colspan="2"></th><th>1st</th><th>2nd</th><th>3rd</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th></tr>
+<tr><th colspan="2"></th><th colspan="3">singular</th><th rowspan="12" class="separator"></th><th colspan="3">dual</th><th rowspan="12" class="separator"></th><th colspan="3">plural</th></tr>
+<tr><th colspan="2"></th><th>1st</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th></tr>
 <tr>
 <th rowspan="2">past (perfect) indicative</th>
 <th class="secondary">m</th>
 <td rowspan="2"><span class="Arab">كَتَبْتُ</span></td>
 <td><span class="Arab">كَتَبْتَ</span></td>
 <td><span class="Arab">كَتَبَ</span></td>
+<td rowspan="2"><span class="Arab">كَتَبْنَا</span></td>
 <td rowspan="2"><span class="Arab">كَتَبْتُمَا</span></td>
 <td><span class="Arab">كَتَبَا</span></td>
 <td rowspan="2"><span class="Arab">كَتَبْنَا</span></td>
@@ -52,6 +53,7 @@ const WIKTIONARY_HTML = `
 <td rowspan="2"></td>
 <td><span class="Arab">اُكْتُبْ</span></td>
 <td rowspan="2"></td>
+<td rowspan="2"></td>
 <td rowspan="2"><span class="Arab">اُكْتُبَا</span></td>
 <td rowspan="2"></td>
 <td rowspan="2"></td>
@@ -64,14 +66,15 @@ const WIKTIONARY_HTML = `
 <td><span class="Arab">اُكْتُبْنَ</span></td>
 </tr>
 <tr><th colspan="12" class="outer">passive voice</th></tr>
-<tr><th colspan="2"></th><th colspan="3">singular</th><th rowspan="10" class="separator"></th><th colspan="2">dual</th><th rowspan="10" class="separator"></th><th colspan="3">plural</th></tr>
-<tr><th colspan="2"></th><th>1st</th><th>2nd</th><th>3rd</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th></tr>
+<tr><th colspan="2"></th><th colspan="3">singular</th><th rowspan="10" class="separator"></th><th colspan="3">dual</th><th rowspan="10" class="separator"></th><th colspan="3">plural</th></tr>
+<tr><th colspan="2"></th><th>1st</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th><th>1st</th><th>2nd</th><th>3rd</th></tr>
 <tr>
 <th rowspan="2">past (perfect) indicative</th>
 <th class="secondary">m</th>
 <td rowspan="2"><span class="Arab">كُتِبْتُ</span></td>
 <td><span class="Arab">كُتِبْتَ</span></td>
 <td><span class="Arab">كُتِبَ</span></td>
+<td rowspan="2"><span class="Arab">كُتِبْنَا</span></td>
 <td rowspan="2"><span class="Arab">كُتِبْتُمَا</span></td>
 <td><span class="Arab">كُتِبَا</span></td>
 <td rowspan="2"><span class="Arab">كُتِبْنَا</span></td>
