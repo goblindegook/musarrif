@@ -68,7 +68,7 @@ afterEach(() => {
 
 function createSrsStore(intervalForCard: (card: SrsCardIdentity) => number, dueDate = '2999-01-01'): SrsStore {
   const store: SrsStore = {}
-  for (const card of cardSpace()) {
+  for (const card of cardSpace().values()) {
     store[card.key] = {
       interval: intervalForCard(card),
       ef: 2.5,
@@ -383,9 +383,9 @@ describe('ExerciseStats', () => {
         passed: 0,
       }))
       const store: SrsStore = Object.fromEntries(
-        cardSpace()
+        [...cardSpace().keys()]
           .slice(0, 100)
-          .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
+          .map((key) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
       )
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
       renderStats(stats)
@@ -406,9 +406,9 @@ describe('ExerciseStats', () => {
         passed: 0,
       }))
       const store: SrsStore = Object.fromEntries(
-        cardSpace()
+        [...cardSpace().keys()]
           .slice(0, 100)
-          .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
+          .map((key) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
       )
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
       renderStats(stats)

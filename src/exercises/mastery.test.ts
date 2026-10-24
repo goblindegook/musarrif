@@ -192,9 +192,9 @@ function makeDailyRange(
 
 function makeOverdueStore(count: number): SrsStore {
   return Object.fromEntries(
-    cardSpace()
+    [...cardSpace().keys()]
       .slice(0, count)
-      .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' }]),
+      .map((key) => [key, { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' }]),
   )
 }
 

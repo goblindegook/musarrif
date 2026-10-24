@@ -257,6 +257,32 @@ describe('parseSrsStore', () => {
     })
   })
 
+  test('drops verb cards for pronouns an impersonal passive cannot take', () => {
+    const result = parseSrsStore({
+      'conjugation:hollow:7:passive.present.subjunctive:3ms': {
+        interval: 22,
+        ef: 1.3,
+        repetitions: 7,
+        dueDate: '2026-11-12',
+      },
+      'conjugation:hollow:7:passive.present.subjunctive:3md': {
+        interval: 1,
+        ef: 1.42,
+        repetitions: 0,
+        dueDate: '2026-06-27',
+      },
+    })
+
+    expect(result).toEqual({
+      'conjugation:hollow:7:passive.present.subjunctive:3ms': {
+        interval: 22,
+        ef: 1.3,
+        repetitions: 7,
+        dueDate: '2026-11-12',
+      },
+    })
+  })
+
   test('keeps oversized interval and dueDate values untouched', () => {
     const result = parseSrsStore({
       'conjugation:sound:1:active.past:3ms': {

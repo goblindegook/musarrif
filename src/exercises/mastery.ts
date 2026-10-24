@@ -127,7 +127,7 @@ const masteryGroups = memoize(
     const cardGroups = new Map<string, { itemId: MasteryItemId; group: number }[]>()
     for (const [itemId, matches] of MASTERY_ITEMS) {
       const groups = new Map<string, number>()
-      for (const card of cardSpace()) {
+      for (const card of cardSpace().values()) {
         if (!matches(card)) continue
         const groupKey = combinationGroupKey(card)
         const group = groups.get(groupKey) ?? groups.size

@@ -175,8 +175,8 @@ export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T
 function normalizeSrsStore(store: SrsStore): SrsStore {
   let normalized = store
   for (const [key, state] of Object.entries(store)) {
-    const tense = parseCardKey(key).tense
-    if (tense === 'active.future' || tense === 'passive.future') {
+    // No generator produces these verb cards, so they would stay due forever.
+    if (parseCardKey(key).tense != null && !cardSpace().has(key)) {
       if (normalized === store) normalized = { ...store }
       delete normalized[key]
       continue
@@ -226,7 +226,7 @@ function pronounSpace(tense: VerbTense, impersonalPassive: boolean): readonly Pr
 
 export const cardSpace = memoize(
   () => 'constant',
-  () => {
+  (): ReadonlyMap<string, SrsCardIdentity> => {
     const allForms = new Set(formPool(MAX_LEVELS.forms))
     const allRootTypes = new Set(rootTypesPool(MAX_LEVELS.rootTypes))
     const allTenses = tensePool(MAX_LEVELS.tenses)
@@ -254,6 +254,6 @@ export const cardSpace = memoize(
       }
     }
 
-    return [...unique.values()]
+    return unique
   },
 )
