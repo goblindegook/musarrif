@@ -83,11 +83,8 @@ function findConjugationTables(arabicSection: Element): HTMLTableElement[] {
     for (let node = cursor.nextElementSibling; node != null; node = node.nextElementSibling) {
       const startsHeadingBlock = node.classList.contains('mw-heading') || /^H[1-6]$/.test(node.tagName)
       if (startsHeadingBlock) break
-      const table = node.querySelector('table.inflection-table')
-      if (table) {
-        tables.push(table as HTMLTableElement)
-        break
-      }
+      // One heading can hold several tables: ضرط lists ضَرِطَ and ضَرَطَ under a single Conjugation.
+      tables.push(...(node.querySelectorAll('table.inflection-table') as NodeListOf<HTMLTableElement>))
     }
   }
 

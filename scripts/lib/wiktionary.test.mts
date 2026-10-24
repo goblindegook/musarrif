@@ -323,6 +323,55 @@ ${formIVCaption}
     expect(patternAI.paradigms['active present indicative']?.['3ms']).toEqual(['يَقْدِرُ'])
   })
 
+  test('finds every conjugation table under one heading, not only the first', async () => {
+    const sharedHeadingHtml = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>ضَرِطَ</strong></i> (I, sound, i ~ a)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">non-past (imperfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">أَضْرَطُ</span></td>
+<td><span class="Arab">تَضْرَطُ</span></td>
+<td><span class="Arab">يَضْرَطُ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>ضَرَطَ</strong></i> (I, sound, a ~ i)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">non-past (imperfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">أَضْرِطُ</span></td>
+<td><span class="Arab">تَضْرِطُ</span></td>
+<td><span class="Arab">يَضْرِطُ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(sharedHeadingHtml, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const parsed = await fetchParadigms(getVerb('ضرط', 1, 'a-i'))
+    expect(parsed.paradigms['active present indicative']?.['3ms']).toEqual(['يَضْرِطُ'])
+  })
+
   test('matches quadriliteral form captions labelled with a trailing "q" (e.g. "Iq")', async () => {
     const html = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
