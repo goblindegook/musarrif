@@ -132,6 +132,7 @@ function addConjugationCell(bucket: Partial<Record<PronounId, string[]>>, values
 
 function extractParadigms(
   table: HTMLTableElement,
+  variant: Variant,
 ): Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>> {
   const paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>> = {}
   let voice: 'active' | 'passive' | undefined
@@ -155,7 +156,10 @@ function extractParadigms(
     const bucket = paradigms[paradigm] ?? {}
     paradigms[paradigm] = bucket
 
-    const masculineCells = Array.from(row.querySelectorAll('td')).map((cell) => extractArabicStrings(cell))
+    // Only the active non-past and the imperative carry the imperfect vowel.
+    const varies = paradigm.startsWith('active present') || paradigm === 'active imperative'
+    const read = (cell: Element) => (varies ? pickVariant(extractArabicStrings(cell), variant) : extractArabicStrings(cell))
+    const masculineCells = Array.from(row.querySelectorAll('td')).map(read)
     addConjugationCell(bucket, masculineCells[0] ?? [], '1s')
     addConjugationCell(bucket, masculineCells[1] ?? [], '2ms')
     addConjugationCell(bucket, masculineCells[2] ?? [], '3ms')
@@ -173,7 +177,7 @@ function extractParadigms(
     ).toLowerCase()
     if (feminineMarker !== 'f') continue
 
-    const feminineCells = Array.from(feminineRow.querySelectorAll('td')).map((cell) => extractArabicStrings(cell))
+    const feminineCells = Array.from(feminineRow.querySelectorAll('td')).map(read)
     if (paradigm === 'active imperative') {
       addConjugationCell(bucket, feminineCells[0] ?? [], '2fs')
       addConjugationCell(bucket, feminineCells[1] ?? [], '2fp')
@@ -200,10 +204,28 @@ function readCaptionForm(table: HTMLTableElement): string | undefined {
   return caption.match(/\(([IVX]+q?),/)?.[1]
 }
 
-function readCaptionVowels(table: HTMLTableElement): string | undefined {
+interface CaptionVowels {
+  past: string
+  presents: string[]
+}
+
+// "a ~ u/i" is one table for several imperfect vowels: each non-past cell then lists one form per
+// vowel, in caption order (أَكْفُرُ, أَكْفِرُ).
+function readCaptionVowels(table: HTMLTableElement): CaptionVowels | undefined {
   const caption = normalizeWhitespace(table.querySelector('caption')?.textContent ?? '')
-  const match = caption.match(/\b([aiu]) ~ ([aiu])\b/)
-  return match ? `${match[1]}-${match[2]}` : undefined
+  const match = caption.match(/\b([aiu]) ~ ([aiu](?:\/[aiu])*)\b/)
+  return match ? { past: match[1], presents: match[2].split('/') } : undefined
+}
+
+interface Variant {
+  index: number
+  count: number
+}
+
+function pickVariant(values: string[], variant: Variant): string[] {
+  if (variant.count < 2 || values.length % variant.count !== 0) return values
+  const size = values.length / variant.count
+  return values.slice(variant.index * size, (variant.index + 1) * size)
 }
 
 type RootDeclaration = { el: Element; arabicRoot: string }
@@ -261,9 +283,17 @@ function parseConjugationTable(
   const formMatches = expectedForm
     ? lemmaMatches.filter((table) => readCaptionForm(table) === expectedForm)
     : lemmaMatches
+  const [past, present] = vowels?.split('-') ?? []
+  const presentIndex = (table: HTMLTableElement) => {
+    const caption = readCaptionVowels(table)
+    return caption && caption.past === past ? caption.presents.indexOf(present) : -1
+  }
+  // A table naming the vowel first beats one that lists it as a variant.
   const vowelMatches =
     vowels && formMatches.some((table) => readCaptionVowels(table))
-      ? formMatches.filter((table) => readCaptionVowels(table) === vowels)
+      ? formMatches
+          .filter((table) => presentIndex(table) >= 0)
+          .toSorted((left, right) => presentIndex(left) - presentIndex(right))
       : formMatches
   const matchingTable = vowelMatches[0]
   const table = matchingTable ?? tablesToSearch[0]
@@ -275,7 +305,10 @@ function parseConjugationTable(
   }
 
   return {
-    paradigms: extractParadigms(table),
+    paradigms: extractParadigms(table, {
+      index: presentIndex(table),
+      count: readCaptionVowels(table)?.presents.length ?? 1,
+    }),
     nominals: extractNominals(table),
   }
 }

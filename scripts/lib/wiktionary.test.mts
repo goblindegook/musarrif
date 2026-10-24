@@ -448,6 +448,51 @@ ${formIVCaption}
     expect(parsed.paradigms[`passive ${tense}` as 'passive past']?.['3ms']).toEqual([passive])
   })
 
+  test.each([
+    { vowels: 'a-u', past: 'كَفَرَ', present: 'يَكْفُرُ' },
+    { vowels: 'a-i', past: 'كَفَرَ', present: 'يَكْفِرُ' },
+  ] as const)('reads $vowels from a caption listing several imperfect vowels', async ({ vowels, past, present }) => {
+    const html = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>كَفَرَ</strong></i> (I, sound, a ~ u/i, full passive)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">past (perfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">كَفَرْتُ</span></td>
+<td><span class="Arab">كَفَرْتَ</span></td>
+<td><span class="Arab">كَفَرَ</span></td>
+</tr>
+<tr>
+<th rowspan="2">non-past (imperfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">أَكْفُرُ</span>, <span class="Arab">أَكْفِرُ</span></td>
+<td><span class="Arab">تَكْفُرُ</span>, <span class="Arab">تَكْفِرُ</span></td>
+<td><span class="Arab">يَكْفُرُ</span>, <span class="Arab">يَكْفِرُ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(html, {
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          status: 200,
+        })
+      }),
+    )
+
+    const parsed = await fetchParadigms(getVerb('كفر', 1, vowels))
+    expect(parsed.paradigms['active past']?.['3ms']).toEqual([past])
+    expect(parsed.paradigms['active present indicative']?.['3ms']).toEqual([present])
+  })
+
   test('captures multiple alternative forms in a single cell as an array', async () => {
     const html = `
 <div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
