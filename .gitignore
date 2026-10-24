@@ -33,9 +33,9 @@ dist-ssr
 /.superpowers/
 /docs/superpowers/
 
-# MemPalace per-project files
 mempalace.yaml
 entities.json
+palace.yaml
 
 # Generated files
 /src-tauri/icons/
