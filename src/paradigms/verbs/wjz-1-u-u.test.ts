@@ -8,7 +8,7 @@ import { getVerbById } from '../verbs'
 
 describe('wjz-1 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('wjz-1')!)).toEqualT({
+    expect(conjugatePast(getVerbById('wjz-1-u-u')!)).toEqualT({
       '1s': 'وَجُزْتُ',
       '2ms': 'وَجُزْتَ',
       '2fs': 'وَجُزْتِ',
@@ -26,7 +26,7 @@ describe('wjz-1 (Wiktionary)', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('wjz-1')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wjz-1-u-u')!, 'indicative')).toEqualT({
       '1s': 'أَوْجُزُ',
       '2ms': 'تَوْجُزُ',
       '2fs': 'تَوْجُزِينَ',
@@ -44,7 +44,7 @@ describe('wjz-1 (Wiktionary)', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('wjz-1')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wjz-1-u-u')!, 'subjunctive')).toEqualT({
       '1s': 'أَوْجُزَ',
       '2ms': 'تَوْجُزَ',
       '2fs': 'تَوْجُزِي',
@@ -62,7 +62,7 @@ describe('wjz-1 (Wiktionary)', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('wjz-1')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wjz-1-u-u')!, 'jussive')).toEqualT({
       '1s': 'أَوْجُزْ',
       '2ms': 'تَوْجُزْ',
       '2fs': 'تَوْجُزِي',
@@ -80,7 +80,7 @@ describe('wjz-1 (Wiktionary)', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('wjz-1')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('wjz-1-u-u')!)).toMatchObjectT({
       '2ms': 'اُوجُزْ',
       '2fs': 'اُوجُزِي',
       '2d': 'اُوجُزَا',
@@ -90,10 +90,10 @@ describe('wjz-1 (Wiktionary)', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('wjz-1')!)).toEqualT('وَجِيز')
+    expect(deriveActiveParticiple(getVerbById('wjz-1-u-u')!)).toEqualT('وَجِيز')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById('wjz-1')!))).toEqualT(new Set(['وَجَازَة']))
+    expect(new Set(deriveMasdar(getVerbById('wjz-1-u-u')!))).toEqualT(new Set(['وَجَازَة']))
   })
 })

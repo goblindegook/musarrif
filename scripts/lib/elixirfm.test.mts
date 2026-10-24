@@ -416,7 +416,7 @@ describe('isSameVowelPattern', () => {
     { id: 'ktb-1', past: 'كَتَبتُ', present: 'أَكتُبُ', expected: true },
     { id: 'kfr-1', past: 'كَفَرتُ', present: 'أَكفِرُ', expected: false },
     { id: 'mss-1', past: 'مَسَستُ', present: 'أَمَسُّ', expected: false },
-    { id: 'lbb-1', past: 'لَبَبتُ', present: 'أَلُبُّ', expected: false },
+    { id: 'lbb-1-a-a', past: 'لَبَبتُ', present: 'أَلُبُّ', expected: false },
   ])('$id against ElixirFM $past / $present is the same verb: $expected', ({ id, past, present, expected }) => {
     const forms = new Map([
       [toTag('active past', '1s') as string, past],

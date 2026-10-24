@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('wvq-1', () => {
+describe('wvq-1-u-u', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('wvq-1')!)).toEqualT({
+    expect(conjugatePast(getVerbById('wvq-1-u-u')!)).toEqualT({
       '1s': 'وَثُقْتُ',
       '2ms': 'وَثُقْتَ',
       '2fs': 'وَثُقْتِ',
@@ -28,7 +28,7 @@ describe('wvq-1', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('wvq-1')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wvq-1-u-u')!, 'indicative')).toEqualT({
       '1s': 'أَوْثُقُ',
       '2ms': 'تَوْثُقُ',
       '2fs': 'تَوْثُقِينَ',
@@ -46,7 +46,7 @@ describe('wvq-1', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('wvq-1')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wvq-1-u-u')!, 'subjunctive')).toEqualT({
       '1s': 'أَوْثُقَ',
       '2ms': 'تَوْثُقَ',
       '2fs': 'تَوْثُقِي',
@@ -64,7 +64,7 @@ describe('wvq-1', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('wvq-1')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('wvq-1-u-u')!, 'jussive')).toEqualT({
       '1s': 'أَوْثُقْ',
       '2ms': 'تَوْثُقْ',
       '2fs': 'تَوْثُقِي',
@@ -82,7 +82,7 @@ describe('wvq-1', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('wvq-1')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('wvq-1-u-u')!)).toMatchObjectT({
       '2ms': 'اُوثُقْ',
       '2fs': 'اُوثُقِي',
       '2d': 'اُوثُقَا',
@@ -92,38 +92,38 @@ describe('wvq-1', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('wvq-1')!)).toMatchObjectT({
+    expect(conjugatePassivePast(getVerbById('wvq-1-u-u')!)).toMatchObjectT({
       '3ms': 'وُثِقَ',
     })
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('wvq-1')!, 'indicative')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('wvq-1-u-u')!, 'indicative')).toMatchObjectT({
       '3ms': 'يُوثَقُ',
     })
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('wvq-1')!, 'subjunctive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('wvq-1-u-u')!, 'subjunctive')).toMatchObjectT({
       '3ms': 'يُوثَقَ',
     })
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('wvq-1')!, 'jussive')).toMatchObjectT({
+    expect(conjugatePassivePresentMood(getVerbById('wvq-1-u-u')!, 'jussive')).toMatchObjectT({
       '3ms': 'يُوثَقْ',
     })
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('wvq-1')!)).toEqualT('وَثِيق')
+    expect(deriveActiveParticiple(getVerbById('wvq-1-u-u')!)).toEqualT('وَثِيق')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('wvq-1')!)).toEqualT('مَوْثُوق')
+    expect(derivePassiveParticiple(getVerbById('wvq-1-u-u')!)).toEqualT('مَوْثُوق')
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById('wvq-1')!)).toEqualT(['وَثَاقَة'])
+    expect(deriveMasdar(getVerbById('wvq-1-u-u')!)).toEqualT(['وَثَاقَة'])
   })
 })
