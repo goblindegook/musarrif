@@ -249,7 +249,7 @@
   "exercise.insights.pronounClass.singular": "singular forms",
   "exercise.insights.recommendation.focus.focusCandidate": "Focus on {value} next.",
   "exercise.insights.recommendation.focus.keepUnlocking": "Keep unlocking new material steadily.",
-  "exercise.insights.recommendation.habit.increaseSlightly": "Add a little more practice time this week.",
+  "exercise.insights.recommendation.habit.catchUp": "Aim for about {count} answers a day this week to catch up.",
   "exercise.insights.recommendation.habit.keepSteady": "Keep your daily habit steady.",
   "exercise.insights.recommendation.habit.protectAccuracy": "Slow down slightly and protect your accuracy.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "Rebuild a small daily habit before pushing for speed.",

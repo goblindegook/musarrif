@@ -188,7 +188,7 @@
   "exercise.insights.pronounClass.singular": "صِيَغُ ٱلْمُفْرَدِ",
   "exercise.insights.recommendation.focus.focusCandidate": "رَكِّزْ ٱلْآنَ عَلَى {value}.",
   "exercise.insights.recommendation.focus.keepUnlocking": "وَاصِلْ فَتْحَ مَوَادَّ جَدِيدَةٍ بِوَتِيرَةٍ ثَابِتَةٍ.",
-  "exercise.insights.recommendation.habit.increaseSlightly": "زِدْ وَقْتَ ٱلْمُمَارَسَةِ قَلِيلًا هَذَا ٱلْأُسْبُوعَ.",
+  "exercise.insights.recommendation.habit.catchUp": "ٱرْفَعْ عَدَدَ إِجَابَاتِكَ ٱلْيَوْمِيَّةِ هَذَا ٱلْأُسْبُوعَ إِلَى نَحْوِ {count} لِتَلْحَقَ بِٱلْمُرَاجَعَاتِ.",
   "exercise.insights.recommendation.habit.keepSteady": "حَافِظْ عَلَى عَادَتِكَ ٱلْيَوْمِيَّةِ بِثَبَاتٍ.",
   "exercise.insights.recommendation.habit.protectAccuracy": "تَمَهَّلْ قَلِيلًا وَحَافِظْ عَلَى دِقَّتِكَ.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "أَعِدْ بِنَاءَ عَادَةٍ يَوْمِيَّةٍ صَغِيرَةٍ قَبْلَ زِيَادَةِ ٱلسُّرْعَةِ.",

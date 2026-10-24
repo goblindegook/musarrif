@@ -10,7 +10,7 @@ import {
   type MasteryCategoryId,
   type MasteryItemIdByCategory,
 } from './mastery'
-import type { SrsStore } from './srs'
+import { cardSpace, type SrsStore } from './srs'
 import type { DailyActivity, TrackedExercises } from './stats'
 
 function getCategory<T extends MasteryCategoryId>(snapshot: readonly MasteryCategory<T>[], categoryId: T) {
@@ -188,6 +188,14 @@ function makeDailyRange(
   incorrect: number,
 ): readonly DailyActivity[] {
   return Array.from({ length }, (_, i) => makeDailyActivity(startDaysAgo - i, correct, incorrect))
+}
+
+function makeOverdueStore(count: number): SrsStore {
+  return Object.fromEntries(
+    cardSpace()
+      .slice(0, count)
+      .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' }]),
+  )
 }
 
 describe('computeInsights', () => {
@@ -429,24 +437,12 @@ describe('computeInsights — overdue', () => {
   })
 
   test('a backlog the current pace clears within a week is few, however many cards', () => {
-    const store: SrsStore = Object.fromEntries(
-      Array.from({ length: 30 }, (_, i) => [
-        `conjugation:sound:1:active.past:3ms:${i}`,
-        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
-      ]),
-    )
-    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(30), makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
     expect(result.backlog).toEqual({ state: 'few', eta: 'fewDays' })
   })
 
   test('a backlog the current pace needs weeks to clear is many, however few cards', () => {
-    const store: SrsStore = Object.fromEntries(
-      Array.from({ length: 15 }, (_, i) => [
-        `conjugation:sound:1:active.past:3ms:${i}`,
-        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
-      ]),
-    )
-    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 1, 0), ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(15), makeDailyRange(13, 14, 1, 0), ANCHOR_DATE)
     expect(result.backlog).toEqual({ state: 'many', eta: 'threeWeeks' })
   })
 
@@ -456,32 +452,12 @@ describe('computeInsights — overdue', () => {
   })
 
   test('backlog state is few with a rounded eta for small overdue queues', () => {
-    const store: SrsStore = {}
-    for (let i = 0; i < 12; i++) {
-      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
-        ef: 2.5,
-        repetitions: 2,
-        interval: 3,
-        dueDate: '2026-04-14',
-      }
-    }
-    const stats = makeDailyRange(13, 14, 2, 0)
-    const result = computeInsights(BASE_PROFILE, store, stats, ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(12), makeDailyRange(13, 14, 2, 0), ANCHOR_DATE)
     expect(result.backlog).toEqual({ state: 'few', eta: 'oneWeek' })
   })
 
   test('backlog state is many with a rounded eta for large overdue queues', () => {
-    const store: SrsStore = {}
-    for (let i = 0; i < 30; i++) {
-      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
-        ef: 2.5,
-        repetitions: 3,
-        interval: 3,
-        dueDate: '2026-04-14',
-      }
-    }
-    const stats = makeDailyRange(13, 14, 2, 0)
-    const result = computeInsights(BASE_PROFILE, store, stats, ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(30), makeDailyRange(13, 14, 2, 0), ANCHOR_DATE)
     expect(result.backlog).toEqual({ state: 'many', eta: 'threeWeeks' })
   })
 })
@@ -592,29 +568,24 @@ describe('computeInsights — stuck', () => {
   })
 
   test('a backlog the current pace clears within a week does not ask for more practice', () => {
-    const store: SrsStore = Object.fromEntries(
-      Array.from({ length: 30 }, (_, i) => [
-        `conjugation:sound:1:active.past:3ms:${i}`,
-        { ef: 2.5, repetitions: 3, interval: 3, dueDate: '2026-04-14' },
-      ]),
-    )
-    const result = computeInsights(BASE_PROFILE, store, makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(30), makeDailyRange(13, 14, 10, 0), ANCHOR_DATE)
     expect(result.recommendation[0]).toEqual({ kind: 'habit', action: 'keepSteady' })
   })
 
+  test('a backlog the current pace cannot clear within a week asks for the daily answers that would', () => {
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(140), makeDailyRange(13, 14, 2, 0), ANCHOR_DATE)
+    expect(result.recommendation[0]).toEqual({ kind: 'habit', action: 'catchUp', dailyTarget: 20 })
+  })
+
+  test('a catch-up target never asks for less than the daily streak goal', () => {
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(15), makeDailyRange(13, 14, 1, 0), ANCHOR_DATE)
+    expect(result.recommendation[0]).toEqual({ kind: 'habit', action: 'catchUp', dailyTarget: 10 })
+  })
+
   test('declining accuracy prioritizes protecting accuracy over increasing pace', () => {
-    const store: SrsStore = {}
-    for (let i = 0; i < 25; i++) {
-      store[`conjugation:sound:1:active.past:3ms:${i}`] = {
-        ef: 2.5,
-        repetitions: 3,
-        interval: 3,
-        dueDate: '2026-04-14',
-      }
-    }
     const prior = makeDailyRange(22, 16, 10, 1)
     const recent = makeDailyRange(6, 7, 4, 6)
-    const result = computeInsights(BASE_PROFILE, store, [...prior, ...recent], ANCHOR_DATE)
+    const result = computeInsights(BASE_PROFILE, makeOverdueStore(25), [...prior, ...recent], ANCHOR_DATE)
     expect(result.recommendation[0]).toMatchObject({ kind: 'habit', action: 'protectAccuracy' })
   })
 

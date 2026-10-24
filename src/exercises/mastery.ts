@@ -15,7 +15,7 @@ import {
   type SrsStore,
   utcAddDays,
 } from './srs'
-import { getAccuracyPercent, getStatsWindow, type TrackedExercises } from './stats'
+import { getAccuracyPercent, getStatsWindow, STREAK_DAILY_GOAL, type TrackedExercises } from './stats'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
@@ -194,7 +194,8 @@ export type BacklogState = 'none' | 'few' | 'many'
 export type BacklogETA = 'fewDays' | 'oneWeek' | 'twoWeeks' | 'threeWeeks' | 'fourWeeks' | 'oneMonthOrMore'
 
 export type Recommendation =
-  | { kind: 'habit'; action: 'keepSteady' | 'increaseSlightly' | 'rebuildDailyHabit' | 'protectAccuracy' }
+  | { kind: 'habit'; action: 'keepSteady' | 'rebuildDailyHabit' | 'protectAccuracy' }
+  | { kind: 'habit'; action: 'catchUp'; dailyTarget: number }
   | { kind: 'focus'; action: 'focusCandidate'; candidate: Pick<InsightCandidate, 'type' | 'value'> }
   | { kind: 'focus'; action: 'keepUnlocking' }
 
@@ -336,27 +337,30 @@ function backlogEtaBucket(days: number): BacklogETA {
   return 'oneMonthOrMore'
 }
 
+function catchUpDailyTarget(srsStore: SrsStore, today: string): number {
+  const weeklyHorizon = utcAddDays(today, 7)
+  const dueByHorizon = Object.values(srsStore).filter((state) => state.dueDate <= weeklyHorizon).length
+  return Math.max(STREAK_DAILY_GOAL, Math.ceil(dueByHorizon / 7))
+}
+
 function buildRecommendations(
   journeyTrend: InsightData['journey']['trend'],
   volumeTrend: InsightData['volume']['trend'],
   backlogState: BacklogState,
   stuck: InsightData['stuck'],
   challenge: readonly InsightCandidate[],
+  dailyTarget: number,
 ): readonly Recommendation[] {
   const candidate = stuck.topDimensions[0] ?? challenge[0]
 
   return [
-    {
-      kind: 'habit',
-      action:
-        journeyTrend === 'declining'
-          ? 'protectAccuracy'
-          : volumeTrend === 'inactive'
-            ? 'rebuildDailyHabit'
-            : backlogState === 'many'
-              ? 'increaseSlightly'
-              : 'keepSteady',
-    },
+    journeyTrend === 'declining'
+      ? { kind: 'habit', action: 'protectAccuracy' }
+      : volumeTrend === 'inactive'
+        ? { kind: 'habit', action: 'rebuildDailyHabit' }
+        : backlogState === 'many'
+          ? { kind: 'habit', action: 'catchUp', dailyTarget }
+          : { kind: 'habit', action: 'keepSteady' },
     candidate ? { kind: 'focus', action: 'focusCandidate', candidate } : { kind: 'focus', action: 'keepUnlocking' },
   ]
 }
@@ -429,7 +433,14 @@ export function computeInsights(
     backlog,
     stuck,
     focus: stuck.topDimensions.length > 0 ? stuck.topDimensions : challenge,
-    recommendation: buildRecommendations(trend, volume.trend, backlog.state, stuck, challenge),
+    recommendation: buildRecommendations(
+      trend,
+      volume.trend,
+      backlog.state,
+      stuck,
+      challenge,
+      catchUpDailyTarget(srsStore, today),
+    ),
   }
 }
 

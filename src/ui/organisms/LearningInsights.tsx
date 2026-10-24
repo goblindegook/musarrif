@@ -131,7 +131,9 @@ function resolveNextValueLabel(t: Translate, dim: MasteryCategoryId, value: stri
 function buildRecommendationText(t: Translate, recommendation: Recommendation): string {
   switch (recommendation.kind) {
     case 'habit':
-      return t(`exercise.insights.recommendation.habit.${recommendation.action}`)
+      return recommendation.action === 'catchUp'
+        ? t('exercise.insights.recommendation.habit.catchUp', { count: String(recommendation.dailyTarget) })
+        : t(`exercise.insights.recommendation.habit.${recommendation.action}`)
     case 'focus':
       return recommendation.action === 'focusCandidate'
         ? t('exercise.insights.recommendation.focus.focusCandidate', {

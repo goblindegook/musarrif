@@ -376,21 +376,17 @@ describe('ExerciseStats', () => {
     })
 
     test('shows a separate backlog section after momentum when many cards are overdue', () => {
-      const store: SrsStore = {}
       const stats = Array.from({ length: 14 }, (_, i) => ({
         date: new Date(2026, 3, 2 + i),
         correct: 6,
         incorrect: 1,
         passed: 0,
       }))
-      for (let i = 0; i < 100; i++) {
-        store[`conjugation:sound:1:active.past:3ms:${i}`] = {
-          ef: 2.5,
-          repetitions: 3,
-          interval: 10,
-          dueDate: '2026-04-01',
-        }
-      }
+      const store: SrsStore = Object.fromEntries(
+        cardSpace()
+          .slice(0, 100)
+          .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
+      )
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
       renderStats(stats)
       fireEvent.click(screen.getByText('Progress'))
@@ -400,6 +396,27 @@ describe('ExerciseStats', () => {
       expect(momentum.parentElement?.textContent).toContain('You’re maintaining a consistent practice rhythm.')
       expect(backlog.parentElement?.textContent).toContain('Many reviews are piling up.')
       expect(momentum.compareDocumentPosition(backlog) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+    })
+
+    test('recommends a daily answer count when the backlog will not clear within a week', () => {
+      const stats = Array.from({ length: 14 }, (_, i) => ({
+        date: new Date(2026, 3, 2 + i),
+        correct: 6,
+        incorrect: 1,
+        passed: 0,
+      }))
+      const store: SrsStore = Object.fromEntries(
+        cardSpace()
+          .slice(0, 100)
+          .map(({ key }) => [key, { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-01' }]),
+      )
+      localStorage.setItem('conjugator:srs', JSON.stringify(store))
+      renderStats(stats)
+      fireEvent.click(screen.getByText('Progress'))
+      fireEvent.click(screen.getByText('See insights'))
+      expect(screen.getByText(/^Recommendation:/).parentElement?.textContent).toContain(
+        'Aim for about 15 answers a day this week to catch up.',
+      )
     })
 
     test('shows a recommendation section', () => {

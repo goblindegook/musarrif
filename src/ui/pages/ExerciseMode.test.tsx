@@ -333,16 +333,16 @@ describe('SRS recording', () => {
       kind: 'conjugation',
       options: ['correct', 'incorrect', 'incorrect', 'incorrect'],
       answer: 0,
-      cardKey: 'conjugation:regular:1:active.past:3ms',
+      cardKey: 'conjugation:sound:1:active.past:3ms',
     })
     renderWithProviders(<ExerciseMode generateExercise={() => exercise} />)
     fireEvent.click(screen.getByText('correct', { selector: 'button' }))
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(srs['conjugation:regular:1:active.past:3ms']).toBeDefined()
+    expect(srs['conjugation:sound:1:active.past:3ms']).toBeDefined()
   })
 
   test('keeps oversized persisted SRS state untouched when loading from localStorage', () => {
-    const cardKey = 'conjugation:regular:1:active.past:3ms'
+    const cardKey = 'conjugation:sound:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({

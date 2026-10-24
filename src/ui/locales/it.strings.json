@@ -249,7 +249,7 @@
   "exercise.insights.pronounClass.singular": "forme singolari",
   "exercise.insights.recommendation.focus.focusCandidate": "Concentrati ora su {value}.",
   "exercise.insights.recommendation.focus.keepUnlocking": "Continua a sbloccare nuovo materiale con regolarità.",
-  "exercise.insights.recommendation.habit.increaseSlightly": "Aggiungi un po’ più di pratica questa settimana.",
+  "exercise.insights.recommendation.habit.catchUp": "Punta a circa {count} risposte al giorno questa settimana per recuperare.",
   "exercise.insights.recommendation.habit.keepSteady": "Mantieni costante la tua abitudine quotidiana.",
   "exercise.insights.recommendation.habit.protectAccuracy": "Rallenta leggermente e proteggi la tua precisione.",
   "exercise.insights.recommendation.habit.rebuildDailyHabit": "Ricostruisci una piccola abitudine quotidiana prima di aumentare il ritmo.",
