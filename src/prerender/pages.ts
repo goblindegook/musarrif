@@ -1,5 +1,12 @@
+import { formIVowelPattern } from '../paradigms/form-i-vowels'
 import { applyDiacriticsPreference } from '../paradigms/tokens'
-import { type DisplayVerb, formatFormLabel, getAvailableParadigms, verbs } from '../paradigms/verbs'
+import {
+  type DisplayVerb,
+  formatFormLabel,
+  getAvailableParadigms,
+  isTriliteralFormIDisplayVerb,
+  verbs,
+} from '../paradigms/verbs'
 import enVerbs from '../ui/locales/en.verbs.json'
 
 interface PrerenderPage {
@@ -132,7 +139,10 @@ function canonicalUrl(path: string, origin: string): string {
 
 function verbSummary(verb: DisplayVerb, gloss: string | undefined): string {
   const subject = gloss ? `${verb.lemma} (${gloss})` : verb.lemma
-  const form = formatFormLabel(verb.form, verb.root)
+  // Form I readings can share a lemma (شَبَرَ يَشْبُرُ, شَبَرَ يَشْبِرُ), so only the vowel pattern tells them apart.
+  const form = isTriliteralFormIDisplayVerb(verb)
+    ? `${formatFormLabel(verb.form, verb.root)} (${formIVowelPattern(verb)})`
+    : formatFormLabel(verb.form, verb.root)
   const root = Array.from(verb.root).join('-')
   return `${subject}, an Arabic Form ${form} verb from the root ${root}`
 }

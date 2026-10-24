@@ -468,7 +468,7 @@ describe('Form I roots with more than one vowel pattern', () => {
   })
 
   test.each<[string, FormIPattern[]]>([
-    ['حسب', ['a-u', 'i-a', 'u-u']],
+    ['حسب', ['a-u', 'i-a', 'i-i', 'u-u']],
     ['جمل', ['a-u', 'u-u']],
   ])('%s stores its Form I readings in ascending vowel order', (root, expected) => {
     const patterns = findVerbsByRoot(root)

@@ -29,7 +29,7 @@ describe('renderDocument', () => {
 
     expect(html).toContain('<title>كَتَبَ · Muṣarrif</title>')
     expect(html).toContain(
-      '<meta name="description" content="Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب." />',
+      '<meta name="description" content="Conjugate كَتَبَ (to write), an Arabic Form I (◌َ / ◌ُ) verb from the root ك-ت-ب." />',
     )
     expect(html).toContain('<link rel="canonical" href="http://localhost/verbs/ktb-1/" />')
   })
@@ -72,7 +72,7 @@ describe('renderDocument', () => {
           '@id': 'http://localhost/verbs/ktb-1/',
           url: 'http://localhost/verbs/ktb-1/',
           name: 'كَتَبَ · Muṣarrif',
-          description: 'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+          description: 'Conjugate كَتَبَ (to write), an Arabic Form I (◌َ / ◌ُ) verb from the root ك-ت-ب.',
           inLanguage: 'en',
           isPartOf: { '@id': 'http://localhost/#website' },
           breadcrumb: { '@id': 'http://localhost/verbs/ktb-1/#breadcrumb' },
@@ -93,7 +93,8 @@ describe('renderDocument', () => {
           '@id': 'http://localhost/verbs/ktb-1/#verb',
           name: 'كَتَبَ',
           alternateName: 'كتب',
-          description: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+          description:
+            'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I (◌َ / ◌ُ) verb from the root ك-ت-ب.',
           inLanguage: 'ar',
           inDefinedTermSet: { '@id': 'http://localhost/verbs/#verbs' },
         },
@@ -190,16 +191,17 @@ describe('prerenderPages', () => {
       file: 'verbs/ktb-1/index.html',
       route: ['verbs', 'ktb-1'],
       canonical: 'http://localhost/verbs/ktb-1/',
-      description: 'Conjugate كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+      description: 'Conjugate كَتَبَ (to write), an Arabic Form I (◌َ / ◌ُ) verb from the root ك-ت-ب.',
       name: 'كَتَبَ',
       alternateName: 'كتب',
-      termDescription: 'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I verb from the root ك-ت-ب.',
+      termDescription:
+        'Conjugation and derived forms of كَتَبَ (to write), an Arabic Form I (◌َ / ◌ُ) verb from the root ك-ت-ب.',
     })
   })
 
   test('claims no derived forms for a verb that has none', () => {
     expect(pages.find((candidate) => candidate.path === '/verbs/lys-1/')?.termDescription).toBe(
-      'Conjugation of لَيْسَ (not to be), an Arabic Form I verb from the root ل-ي-س.',
+      'Conjugation of لَيْسَ (not to be), an Arabic Form I (◌ِ / ◌َ) verb from the root ل-ي-س.',
     )
   })
 

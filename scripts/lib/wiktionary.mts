@@ -158,7 +158,8 @@ function extractParadigms(
 
     // Only the active non-past and the imperative carry the imperfect vowel.
     const varies = paradigm.startsWith('active present') || paradigm === 'active imperative'
-    const read = (cell: Element) => (varies ? pickVariant(extractArabicStrings(cell), variant) : extractArabicStrings(cell))
+    const read = (cell: Element) =>
+      varies ? pickVariant(extractArabicStrings(cell), variant) : extractArabicStrings(cell)
     const masculineCells = Array.from(row.querySelectorAll('td')).map(read)
     addConjugationCell(bucket, masculineCells[0] ?? [], '1s')
     addConjugationCell(bucket, masculineCells[1] ?? [], '2ms')
