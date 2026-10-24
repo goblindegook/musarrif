@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve as resolvePath } from 'node:path'
+import { conjugate } from '../../src/paradigms/conjugation'
 import { DAMMA, FATHA, KASRA, SHADDA, SUKOON } from '../../src/paradigms/tokens'
 import { type DisplayVerb, formatFormLabel, isTriliteralFormIDisplayVerb, verbs } from '../../src/paradigms/verbs'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
@@ -218,10 +219,12 @@ export function normalizeArabic(form: string): string {
 // NFC orders a short vowel before a shadda, so on a doubled final radical the case vowel is the
 // second-to-last character rather than the last (أَصَمَّ ends shadda, not fatḥa).
 
+function withoutCaseVowel(form: string): string {
+  return normalizeArabic(form).replace(new RegExp(`[${FATHA}${DAMMA}${KASRA}](${SHADDA}?)$`), '$1')
+}
+
 export function isSameLexeme(citation: string, lemma: string): boolean {
-  const stem = (form: string) =>
-    normalizeArabic(form).replace(new RegExp(`[${FATHA}${DAMMA}${KASRA}](${SHADDA}?)$`), '$1')
-  return stem(citation) === stem(lemma)
+  return withoutCaseVowel(citation) === withoutCaseVowel(lemma)
 }
 
 export function compareForm(musarrif: string, elixir: string | undefined): 'match' | 'mismatch' | 'skip' {
@@ -263,9 +266,21 @@ const SHORT_VOWEL_LETTERS: Record<string, string> = {
   [String(DAMMA)]: 'u',
 }
 
-function presentVowelOf(imperfect: string): string | undefined {
-  const vowels = [...normalizeArabic(imperfect).slice(0, -1)].filter((char) => char in SHORT_VOWEL_LETTERS)
+function stemVowelOf(form: string): string | undefined {
+  const vowels = [...withoutCaseVowel(form)].filter((char) => char in SHORT_VOWEL_LETTERS)
   return SHORT_VOWEL_LETTERS[vowels.at(-1) ?? '']
+}
+
+// A Form I verb fixes its own past and present stem vowels, so a different vowel on either side is a
+// different verb even when the citation matches: مَسَّ hides مَسِسْتُ against ElixirFM's مَسَستُ.
+// Every other form takes its vowels from the pattern.
+export function isSameVowelPattern(verb: DisplayVerb, elixirForms: Map<string, string>): boolean {
+  if (!isTriliteralFormIDisplayVerb(verb)) return true
+  return (['active.past', 'active.present.indicative'] as const).every((tense) => {
+    const musarrif = conjugate(verb, tense)['1s']?.toString()
+    const elixir = elixirForms.get(toTag(tense.replaceAll('.', ' ') as VerbParadigm, '1s') as string)
+    return !musarrif || !elixir || stemVowelOf(musarrif) === stemVowelOf(elixir)
+  })
 }
 
 async function pickByPresentVowel(
@@ -276,7 +291,7 @@ async function pickByPresentVowel(
   const tag = toTag('active present indicative', '3ms') as string
   for (const [lexemeId, entryNum, citation] of candidates) {
     const forms = await inflectVerb(lexemeId, entryNum, rateMs)
-    if (presentVowelOf(forms.get(tag) ?? '') === vowel) return [lexemeId, entryNum, citation]
+    if (stemVowelOf(forms.get(tag) ?? '') === vowel) return [lexemeId, entryNum, citation]
   }
   return undefined
 }

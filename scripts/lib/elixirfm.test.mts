@@ -5,7 +5,16 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { getVerb, getVerbById } from '../../src/paradigms/verbs'
-import { compareForm, fetchParadigms, fromTag, isSameLexeme, lookupRoot, resolveVerb, toTag } from './elixirfm.mts'
+import {
+  compareForm,
+  fetchParadigms,
+  fromTag,
+  isSameLexeme,
+  isSameVowelPattern,
+  lookupRoot,
+  resolveVerb,
+  toTag,
+} from './elixirfm.mts'
 
 const ELIXIR_URL = 'https://quest.ms.mff.cuni.cz/cgi-bin/elixir/index.fcgi'
 
@@ -399,6 +408,22 @@ describe('isSameLexeme', () => {
 
   test('reports a differing stem vowel', () => {
     expect(isSameLexeme('كَبَر', 'كَبُرَ')).toBe(false)
+  })
+})
+
+describe('isSameVowelPattern', () => {
+  test.each([
+    { id: 'ktb-1', past: 'كَتَبتُ', present: 'أَكتُبُ', expected: true },
+    { id: 'kfr-1', past: 'كَفَرتُ', present: 'أَكفِرُ', expected: false },
+    { id: 'mss-1', past: 'مَسَستُ', present: 'أَمَسُّ', expected: false },
+    { id: 'lbb-1', past: 'لَبَبتُ', present: 'أَلُبُّ', expected: false },
+  ])('$id against ElixirFM $past / $present is the same verb: $expected', ({ id, past, present, expected }) => {
+    const forms = new Map([
+      [toTag('active past', '1s') as string, past],
+      [toTag('active present indicative', '1s') as string, present],
+    ])
+
+    expect(isSameVowelPattern(getVerbById(id)!, forms)).toBe(expected)
   })
 })
 

@@ -12,7 +12,7 @@ import { conjugate } from '../src/paradigms/conjugation.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import { ALL_TENSES, type VerbTense } from '../src/paradigms/tense.ts'
 import { type DisplayVerb, getAvailableParadigms, verbs } from '../src/paradigms/verbs.ts'
-import { compareForm, inflectVerb, isSameLexeme, resolveVerb, toTag } from './lib/elixirfm.mts'
+import { compareForm, inflectVerb, isSameLexeme, isSameVowelPattern, resolveVerb, toTag } from './lib/elixirfm.mts'
 import type { VerbParadigm } from './lib/paradigms.mts'
 
 // ElixirFM has no future tense, and every remaining VerbTense is the parser's VerbParadigm spelled
@@ -83,6 +83,11 @@ for (const verb of verbsToTest as DisplayVerb[]) {
     }
 
     const elixirForms = await inflectVerb(lexemeId, entryNum, 500)
+    if (!isSameVowelPattern(verb, elixirForms)) {
+      console.log(`other-lexeme ${citation}`)
+      differing++
+      continue
+    }
 
     const availableTenses = new Set(getAvailableParadigms(verb))
     let verbMatched = 0
