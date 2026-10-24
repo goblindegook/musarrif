@@ -19,7 +19,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:mutation": "stryker run",
-    "check:all": "npm run check:lint && npm run check:boundaries && npm test -- --no-watch && tsc && vite build",
+    "check:all": "npm run check:lint && npm run check:boundaries && npm test -- --no-watch && tsc && npm run mobile:typecheck && npm run mobile:test && vite build",
     "check:lint": "biome check .",
     "check:boundaries": "depcruise src scripts",
     "format": "biome check --write --unsafe . && biome format --write .",
