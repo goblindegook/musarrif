@@ -4,7 +4,7 @@
     "slug": "musarrif",
     "scheme": "musarrif",
     "version": "0.1.0",
-    "icon": "../../public/icon.png",
+    "icon": "../../assets/icon.png",
     "platforms": ["ios"],
     "ios": {
       "supportsTablet": false,

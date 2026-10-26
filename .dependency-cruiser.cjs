@@ -85,7 +85,7 @@ module.exports = {
         'available on live with an non-guaranteed version. Fix it by adding the package to the dependencies ' +
         'in your package.json.',
       from: {
-        pathNot: '^src/test/', // test-only helpers pull vitest internals
+        pathNot: ['^src/test/', '^apps/web/src/test/'], // test-only helpers pull vitest internals
       },
       to: {
         dependencyTypes: ['npm-no-pkg', 'npm-unknown'],
@@ -123,14 +123,14 @@ module.exports = {
       name: 'logic-not-to-ui',
       severity: 'error',
       comment:
-        'Paradigms and exercises are pure functions - no src/ui, no Preact, no goober. ' +
+        'Paradigms and exercises are pure functions - no web app code, no Preact, no goober. ' +
         'Return data and let the UI render it, or move the shared bit into src/primitives.',
       from: {
         path: '^src/(paradigms|exercises)/',
         pathNot: '[.](?:spec|test)[.](?:ts|tsx)$',
       },
       to: {
-        path: ['^src/ui/', 'node_modules/(?:preact|goober)'],
+        path: ['^apps/web/src/', 'node_modules/(?:preact|goober)'],
       },
     },
     {
@@ -166,11 +166,11 @@ module.exports = {
       severity: 'error',
       comment: 'Atomic design is one-way: atoms may not reach up into molecules, organisms or pages.',
       from: {
-        path: '^src/ui/atoms/',
+        path: '^apps/web/src/atoms/',
         pathNot: '[.](?:spec|test)[.](?:ts|tsx)$',
       },
       to: {
-        path: '^src/ui/(?:molecules|organisms|pages)/',
+        path: '^apps/web/src/(?:molecules|organisms|pages)/',
       },
     },
     {
@@ -178,11 +178,11 @@ module.exports = {
       severity: 'error',
       comment: 'Atomic design is one-way: molecules may not reach up into organisms or pages.',
       from: {
-        path: '^src/ui/molecules/',
+        path: '^apps/web/src/molecules/',
         pathNot: '[.](?:spec|test)[.](?:ts|tsx)$',
       },
       to: {
-        path: '^src/ui/(?:organisms|pages)/',
+        path: '^apps/web/src/(?:organisms|pages)/',
       },
     },
     {
@@ -192,11 +192,35 @@ module.exports = {
         'Atomic design is one-way: organisms may not reach up into pages. Lift the shared ' +
         'piece into an organism or pass it in as a prop.',
       from: {
-        path: '^src/ui/organisms/',
+        path: '^apps/web/src/organisms/',
         pathNot: '[.](?:spec|test)[.](?:ts|tsx)$',
       },
       to: {
-        path: '^src/ui/pages/',
+        path: '^apps/web/src/pages/',
+      },
+    },
+    {
+      name: 'shared-not-to-apps',
+      severity: 'error',
+      comment:
+        'Root src and scripts are shared by every app. Importing from apps/ ties shared code to one ' +
+        'app - move the shared bit down into root src instead.',
+      from: {
+        path: '^(src|scripts)/',
+      },
+      to: {
+        path: '^apps/',
+      },
+    },
+    {
+      name: 'web-not-to-mobile',
+      severity: 'error',
+      comment: 'The web app and the mobile app are siblings. Share code through root src, not across apps.',
+      from: {
+        path: '^apps/web/',
+      },
+      to: {
+        path: '^apps/mobile/',
       },
     },
 
@@ -224,10 +248,10 @@ module.exports = {
         'section of your package.json. If this module is development only - add it to the ' +
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
-        path: '^(src)',
+        path: '^(src|apps/web/src)/',
         pathNot: [
           '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
-          '^src/test/', // test harness, never bundled
+          '^(src|apps/web/src)/test/', // test harness, never bundled
           '[.]d[.]ts$', // ambient type references
         ],
       },
@@ -311,11 +335,6 @@ module.exports = {
     // your coverage reports.
     // suffix: '.html',
 
-    // false (the default): ignore dependencies that only exist before typescript-to-javascript compilation
-    // true: also detect dependencies that only exist before typescript-to-javascript compilation
-    // 'specify': for each dependency identify whether it only exists before compilation or also after
-    tsPreCompilationDeps: true,
-
     // list of extensions to scan that aren't javascript or compile-to-javascript.
     // Empty by default. Only put extensions in here that you want to take into
     // account that are _not_ parsable.
@@ -329,16 +348,9 @@ module.exports = {
     // if true leave symlinks untouched, otherwise use the realpath
     // preserveSymlinks: false,
 
-    // TypeScript project file ('tsconfig.json') to use for
-    // (1) compilation and
-    // (2) resolution (e.g. with the paths property)
-    //
-    // The (optional) fileName attribute specifies which file to take (relative to
-    // dependency-cruiser's current working directory). When not provided
-    // defaults to './tsconfig.json'.
-    tsConfig: {
-      fileName: 'tsconfig.json',
-    },
+    // dependency-cruiser only drives the typescript compiler up to 6.x; TypeScript 7 has no JS
+    // compiler API, so without swc every .ts/.tsx file is silently skipped.
+    parser: 'swc',
 
     // Webpack configuration to use to get resolve options from.
     //

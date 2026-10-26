@@ -11,11 +11,11 @@ import {
 } from '../src/exercises/mastery.ts'
 import type { SrsCard, SrsStore } from '../src/exercises/srs.ts'
 import { getSrsCards, parseSrsStore, utcAddDays } from '../src/exercises/srs.ts'
+import { parseTrackedExercises } from '../src/exercises/stats.ts'
+import en from '../src/locales/en.strings.json' with { type: 'json' }
 import { isDual, isFemininePlural, isMasculinePlural } from '../src/paradigms/pronouns.ts'
 import { utcToday } from '../src/primitives/dates.ts'
 import { parseInteger, toRoman } from '../src/primitives/numbers.ts'
-import { parseTrackedExercises } from '../src/ui/hooks/useStats.ts'
-import en from '../src/ui/locales/en.strings.json' with { type: 'json' }
 
 const filePath = process.argv[2]
 if (!filePath) {

@@ -21,7 +21,7 @@ import { fetchRootNote } from './lib/wiktionary.mts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
-const LOCALES_DIR = join(ROOT, 'src/ui/locales')
+const LOCALES_DIR = join(ROOT, 'src/locales')
 
 function readLocale(name: string): LocaleVerbFile {
   return JSON.parse(readFileSync(join(LOCALES_DIR, `${name}.verbs.json`), 'utf8'))

@@ -10,7 +10,7 @@ Elegant, minimal, quietly authoritative. Three words: **precise, warm, scholarly
 
 ### Aesthetic Direction
 
-**Rubrication**: ink on paper, ruled, with one red used where the scribe meant it. All tokens live in `src/ui/index.css` — never hardcode a color.
+**Rubrication**: ink on paper, ruled, with one red used where the scribe meant it. All tokens live in `apps/web/src/index.css` — never hardcode a color.
 
 - **Palette**: Paper ground `#f6f3ec`, iron-gall ink text (`#1f1a17` → `#5b5147` → `#8a8076`), **one** accent — cinnabar `#a32b18` (`#e8705a` dark). Red carries emphasis, focus, active states. Semantic green/amber/red only for exercise feedback; insight colors are a coding channel, not decoration.
 - **Flat surfaces**: no gradients; no shadows except `--shadow-elevated` for modals/overlays. Panels transparent, separated by hairline rules — not cards.
@@ -47,7 +47,7 @@ Elegant, minimal, quietly authoritative. Three words: **precise, warm, scholarly
 ## UI Components
 
 **No new styles when existing idioms suffice.** Extend/reuse first; new styling only when unavoidable requirement can't be met with current idioms.
-**Reuse existing UI primitives.** Check `src/ui/atoms/`, `src/ui/molecules/`, `src/ui/icons/`, `Modal.tsx`, `Overlay.tsx`, `Panel.tsx` first. Never roll bespoke wrappers — use `IconButton` + SVG icon (not emoji), `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
+**Reuse existing UI primitives.** Check `apps/web/src/atoms/`, `apps/web/src/molecules/`, `apps/web/src/icons/`, `Modal.tsx`, `Overlay.tsx`, `Panel.tsx` first. Never roll bespoke wrappers — use `IconButton` + SVG icon (not emoji), `Modal`/`Overlay` for modals (not custom `position: fixed` divs). Violating this causes visual inconsistency.
 
 ### Preact Component Conventions
 

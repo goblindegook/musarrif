@@ -7,7 +7,7 @@
 
 ## Verb Entry Workflow
 
-Adding a new verb, root, or form — and correcting a wrong conjugated form — both use the `add-verb` skill (`.claude/skills/add-verb/`). It drives the process through `npm run add:tests -- <source> <slug>` for the reference table and `npm run add:verb -- <source> <slug>` for the `roots.json` row. The row script writes no locale entries: add `verbs`/`roots` to en/it/pt and `roots` to `ar.verbs.json` by hand, then run biome over `src/data/roots.json` and `src/ui/locales`. `npm run add:verb:wizard` is the interactive fallback for a case no source covers.
+Adding a new verb, root, or form — and correcting a wrong conjugated form — both use the `add-verb` skill (`.claude/skills/add-verb/`). It drives the process through `npm run add:tests -- <source> <slug>` for the reference table and `npm run add:verb -- <source> <slug>` for the `roots.json` row. The row script writes no locale entries: add `verbs`/`roots` to en/it/pt and `roots` to `ar.verbs.json` by hand, then run biome over `src/data/roots.json` and `src/locales`. `npm run add:verb:wizard` is the interactive fallback for a case no source covers.
 
 Translating the entry once the row exists — or sweeping the dataset for anything left untranslated — uses the `translate-verb` skill (`.claude/skills/translate-verb/`), backed by `npm run glosses`.
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import en from '../ui/locales/en.verbs.json'
-import pt from '../ui/locales/pt.verbs.json'
+import en from '../locales/en.verbs.json'
+import pt from '../locales/pt.verbs.json'
 import { search } from './search'
 
 describe('search', () => {

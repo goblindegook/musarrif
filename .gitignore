@@ -7,11 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-/node_modules/
-/dist/
-/dev-dist/
-dist-ssr
+node_modules/
 *.local
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -29,24 +27,17 @@ dist-ssr
 /reports/
 /.caches/
 
+/.claude/launch.json
 /.claude/settings.local.json
-/.superpowers/
-/docs/superpowers/
-
+.superpowers/
+.impact/
 mempalace.yaml
 entities.json
 palace.yaml
 
-# Generated files
-/src-tauri/icons/
-
-/.claude/launch.json
-.impact/
-/docs/superpowers
-/docs/specs
-/docs/plans
-/public/piper
-/public/voices
+/docs/superpowers/
+/docs/specs/
+/docs/plans/
 .impeccable/
 .impeccable.md
 *.musarrif

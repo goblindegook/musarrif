@@ -2,6 +2,7 @@ import * as v from 'valibot'
 import { DimensionStore as DimensionStoreSchema, parseDimensionStore } from '../../../../src/exercises/dimensions'
 import { mergeExerciseData } from '../../../../src/exercises/merge'
 import { SrsStore as SrsStoreSchema } from '../../../../src/exercises/srs'
+import { SerializedDailyActivity, SerializedTrackedExercises } from '../../../../src/exercises/stats'
 import { readSrsStore } from '../storage/exercise-data'
 import {
   isRecord,
@@ -10,18 +11,6 @@ import {
   type UserDataValue,
   type ValidatedUserDataSnapshot,
 } from '../storage/schema'
-
-const NonNegativeInteger = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
-const DailyActivity = v.object({
-  date: v.pipe(v.string(), v.isoDate()),
-  correct: NonNegativeInteger,
-  incorrect: NonNegativeInteger,
-  passed: NonNegativeInteger,
-})
-const TrackedExercises = v.pipe(
-  v.fallback(v.array(v.fallback(v.union([DailyActivity, v.null()]), null)), []),
-  v.transform((entries) => entries.filter((entry): entry is v.InferOutput<typeof DailyActivity> => entry != null)),
-)
 
 const Settings = v.object({
   language: v.optional(v.fallback(v.picklist(['en', 'it', 'pt', 'ar']), 'en'), 'en'),
@@ -34,7 +23,7 @@ const ImportPayload = v.pipe(
     version: v.optional(v.number()),
     settings: v.optional(Settings),
     favouriteVerbs: v.optional(v.fallback(v.array(v.string()), [])),
-    trackedExercises: v.optional(TrackedExercises),
+    trackedExercises: v.optional(SerializedTrackedExercises),
     srs: v.optional(SrsStoreSchema),
     dimensions: v.optional(DimensionStoreSchema),
   }),
@@ -42,7 +31,7 @@ const ImportPayload = v.pipe(
   v.transform((payload) => ({
     settings: payload.settings ?? v.parse(Settings, {}),
     favouriteVerbs: payload.favouriteVerbs ?? [],
-    trackedExercises: payload.trackedExercises ?? v.parse(TrackedExercises, undefined),
+    trackedExercises: payload.trackedExercises ?? v.parse(SerializedTrackedExercises, undefined),
     srs: payload.srs ?? v.parse(SrsStoreSchema, undefined),
     dimensions: payload.dimensions ?? v.parse(DimensionStoreSchema, undefined),
   })),
@@ -112,7 +101,7 @@ export function encodeUserDataExport(values: UserDataSnapshot['values']): string
     .flatMap(([key, value]) => {
       if (!key.startsWith('exercise:daily:') || !isRecord(value)) return []
       const date = key.slice('exercise:daily:'.length)
-      const entry = v.safeParse(DailyActivity, { ...value, date })
+      const entry = v.safeParse(SerializedDailyActivity, { ...value, date })
       return entry.success ? [entry.output] : []
     })
     .sort((left, right) => left.date.localeCompare(right.date))

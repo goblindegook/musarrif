@@ -1,0 +1,106 @@
+import { cleanup, screen } from '@testing-library/preact'
+import userEvent from '@testing-library/user-event'
+import { act } from 'preact/test-utils'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { renderWithProviders } from '../test/fixtures'
+import { Search } from './SearchBox'
+
+const noop = () => {}
+
+describe('Search mobile behavior', () => {
+  beforeEach(() => {
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 500,
+    })
+    window.scrollTo = vi.fn()
+  })
+
+  afterEach(() => {
+    cleanup()
+  })
+
+  test('does not keep mobile behavior after resizing to desktop', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = container.querySelector('input[type="search"]')
+
+    await Promise.resolve()
+
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1200,
+    })
+    act(() => {
+      window.dispatchEvent(new Event('resize'))
+    })
+
+    await user.click(input as HTMLInputElement)
+
+    expect(window.scrollTo).not.toHaveBeenCalled()
+  })
+
+  test('applies mobile behavior after resizing from desktop', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1200,
+    })
+
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = container.querySelector('input[type="search"]')
+
+    await Promise.resolve()
+
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 500,
+    })
+    act(() => {
+      window.dispatchEvent(new Event('resize'))
+    })
+
+    await user.click(input as HTMLInputElement)
+
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0 })
+  })
+
+  test('combobox links to listbox with aria-controls', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = container.querySelector('input[type="search"]')!
+    await user.type(input, 'ktb')
+
+    const listbox = container.querySelector('[role="listbox"]')
+    expect(input).toHaveAttribute('aria-controls', listbox!.id)
+  })
+
+  test('tabbing from the input into the suggestions keeps the list open and moves focus into it', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = screen.getByLabelText('Verb')
+    await user.type(input, 'ktb')
+
+    await user.tab()
+
+    expect(document.activeElement).toHaveAttribute('role', 'option')
+    expect(container.querySelector('[role="listbox"]')).toBeInTheDocument()
+  })
+
+  test('search input lang follows typed script', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const { container } = renderWithProviders(<Search onSelect={noop} />)
+    const input = container.querySelector('input[type="search"]')!
+
+    await user.type(input, 'kataba')
+    expect(input).toHaveAttribute('lang', 'en')
+
+    await user.clear(input)
+    await user.type(input, 'كتب')
+    expect(input).toHaveAttribute('lang', 'ar')
+  })
+})

@@ -1,0 +1,123 @@
+import { styled } from 'goober'
+import { useState } from 'preact/hooks'
+import { type DerivationStep, derivationSteps } from '../../../../src/paradigms/annotation'
+import { renderExplanation, resolveVerbExplanationLayers } from '../../../../src/paradigms/explanation'
+import type { PronounId } from '../../../../src/paradigms/pronouns'
+import type { VerbTense } from '../../../../src/paradigms/tense'
+import { type DisplayVerb, formatFormLabel } from '../../../../src/paradigms/verbs'
+import { AnnotatedArabic } from '../atoms/AnnotatedArabic'
+import { ArabicDisplay } from '../atoms/ArabicDisplay'
+import { IconButton } from '../atoms/IconButton'
+import { type Translate, useI18n } from '../hooks/useI18n'
+import { LightBulbIcon } from '../icons/LightBulbIcon'
+import { ExplanationText } from '../molecules/ExplanationText'
+import { Modal } from '../molecules/Modal'
+
+interface ConjugationInsightsProps {
+  verb: DisplayVerb
+  verbTense: VerbTense
+  pronoun: PronounId
+  arabic: string
+}
+
+function stepLabel(step: DerivationStep, verb: DisplayVerb, t: Translate): string {
+  switch (step.type) {
+    case 'root':
+      return t('meta.root')
+    case 'form':
+      return t('meta.form.withNumber', { form: formatFormLabel(step.form, verb.root) })
+    case 'pronoun':
+      return t(`pronoun.${step.pronounId}`)
+    case 'tense':
+      return t(`tense.${step.tense}`)
+  }
+}
+
+function DerivationSteps({ steps, verb, t }: { steps: readonly DerivationStep[]; verb: DisplayVerb; t: Translate }) {
+  return (
+    <StepsTable>
+      {steps.map((step, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
+        <StepRow key={i} isFinal={i === steps.length - 1}>
+          <StepLabel>{stepLabel(step, verb, t)}</StepLabel>
+          <StepArabic dir="rtl" lang="ar">
+            <AnnotatedArabic morphemes={step.morphemes} />
+          </StepArabic>
+        </StepRow>
+      ))}
+    </StepsTable>
+  )
+}
+
+export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: ConjugationInsightsProps) {
+  const { t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const steps = derivationSteps(verb, verbTense, pronoun)
+  const finalStep = steps.at(-1)
+
+  return (
+    <>
+      <IconButton aria-label={t('aria.explanation', { word: arabic })} onClick={() => setOpen(true)}>
+        <LightBulbIcon />
+      </IconButton>
+      {open && (
+        <Modal isOpen={open} onClose={() => setOpen(false)} title={t('conjugationInfo.title')}>
+          <VerbDisplayArea>
+            <ArabicDisplay>
+              {finalStep ? (
+                <AnnotatedArabic morphemes={finalStep.morphemes.filter((m) => m.role !== 'elided')} />
+              ) : (
+                arabic
+              )}
+            </ArabicDisplay>
+            <DerivationSteps steps={steps} verb={verb} t={t} />
+          </VerbDisplayArea>
+          <ExplanationText
+            paragraphs={renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun), t)}
+            showMorphemeMarkers
+          />
+        </Modal>
+      )}
+    </>
+  )
+}
+
+const StepsTable = styled('div')`
+  display: flex;
+  flex-direction: column;
+`
+
+const StepRow = styled('div')<{ isFinal: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0.875rem;
+  background: ${(p) => (p.isFinal ? 'var(--color-bg-surface)' : 'transparent')};
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
+const StepLabel = styled('span')`
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+`
+
+const StepArabic = styled('span')`
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: right;
+`
+
+const VerbDisplayArea = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+`

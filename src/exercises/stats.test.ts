@@ -1,6 +1,13 @@
 import { describe, expect, test } from 'vitest'
 import type { DailyActivity } from './stats'
-import { addResult, getAccuracyPercent, getRecentAccuracyPercent, getStreak, getStreakRecord } from './stats'
+import {
+  addResult,
+  getAccuracyPercent,
+  getRecentAccuracyPercent,
+  getStreak,
+  getStreakRecord,
+  parseTrackedExercises,
+} from './stats'
 
 const d = (s: string) => {
   const [y, m, day] = s.split('-').map(Number)
@@ -283,5 +290,27 @@ describe('getStreakRecord', () => {
       { date: d('2026-03-13'), correct: 10, incorrect: 0, passed: 0 },
     ]
     expect(getStreakRecord(stats)).toBe(2)
+  })
+})
+
+describe('parseTrackedExercises', () => {
+  test('normalizes numeric fields and drops entries with invalid date', () => {
+    expect(
+      parseTrackedExercises([
+        { date: '2026-03-19', correct: 3, incorrect: 1 },
+        { date: '2026-03-21', correct: 2, incorrect: 0, passed: 4 },
+        { date: '2026-03-20', correct: Number.NaN, incorrect: 1 },
+        { date: 123, correct: 1, incorrect: 0 },
+        null,
+      ]),
+    ).toEqual([
+      { date: '2026-03-19', correct: 3, incorrect: 1, passed: 0 },
+      { date: '2026-03-21', correct: 2, incorrect: 0, passed: 4 },
+      { date: '2026-03-20', correct: 0, incorrect: 1, passed: 0 },
+    ])
+  })
+
+  test('returns empty array for non-array input', () => {
+    expect(parseTrackedExercises('nope')).toEqual([])
   })
 })

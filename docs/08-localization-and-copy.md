@@ -2,7 +2,7 @@
 
 ## Locale files
 
-Supports English, Italian, European Portuguese, Arabic. Translation files in `src/ui/locales/`.
+Supports English, Italian, European Portuguese, Arabic. Translation files in `src/locales/`.
 
 - All UI strings live in flat `*.strings.json` files for all four languages
 - Verb translations live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (verbs need no Arabic translation)
@@ -13,7 +13,7 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 
 ## Copy
 
-The rest of this file applies to every string in `src/ui/locales/*.strings.json`. One concept, one name; change all four locales together.
+The rest of this file applies to every string in `src/locales/*.strings.json`. One concept, one name; change all four locales together.
 
 ## Examples inside copy
 

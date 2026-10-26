@@ -1,0 +1,591 @@
+import { styled } from 'goober'
+import { Fragment } from 'preact'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { formIVowelPattern } from '../../../../src/paradigms/form-i-vowels'
+import { deriveMasdar } from '../../../../src/paradigms/nominal/masdar'
+import { deriveActiveParticiple, derivePassiveParticiple } from '../../../../src/paradigms/nominal/participle'
+import type { Mood, Tense, Voice } from '../../../../src/paradigms/tense'
+import { applyDiacriticsPreference, spell } from '../../../../src/paradigms/tokens'
+import {
+  type DisplayVerb,
+  findVerbsByRoot,
+  formatFormLabel,
+  getAvailableParadigms,
+  getVerbById,
+  isTriliteralFormIDisplayVerb,
+  KWN_SISTERS_IDS,
+  verbs,
+  ZNN_SISTERS_IDS,
+} from '../../../../src/paradigms/verbs'
+import { FormattedText } from '../atoms/FormattedText'
+import { LinkButton } from '../atoms/LinkButton'
+import { Text } from '../atoms/Text'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useFavourites } from '../hooks/useFavourites'
+import { useI18n } from '../hooks/useI18n'
+import { useRecent } from '../hooks/useRecent'
+import { CopyButton } from '../molecules/CopyButton'
+import { Detail } from '../molecules/Detail'
+import { FavouriteButton } from '../molecules/FavouriteButton'
+import { Modal } from '../molecules/Modal'
+import { ModeToggle } from '../molecules/ModeToggle'
+import { Panel } from '../molecules/Panel'
+import { Search } from '../molecules/SearchBox'
+import { ShareButton } from '../molecules/ShareButton'
+import { SpeechButton } from '../molecules/SpeechButton'
+import { VerbPill } from '../molecules/VerbPill'
+import { ConjugateBox } from '../organisms/ConjugateBox'
+import { ConjugationTable } from '../organisms/ConjugationTable'
+import { FormInsights } from '../organisms/FormInsights'
+import { NominalInsights } from '../organisms/NominalInsights'
+import { RootInsights } from '../organisms/RootInsights'
+import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
+import { useRouting } from '../routes'
+
+const SISTER_GROUPS = [
+  { ids: KWN_SISTERS_IDS, titleKey: 'verbsList.filter.kanaSisters.label' },
+  { ids: ZNN_SISTERS_IDS, titleKey: 'verbsList.filter.zannaSisters.label' },
+] as const
+
+interface ConjugationModeProps {
+  verbId: string
+  voice?: Voice
+  tense?: Tense
+  mood?: Mood
+}
+
+export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood }: ConjugationModeProps) {
+  const { t, lang, dir, diacriticsPreference } = useI18n()
+  const { navigateTo } = useRouting()
+  const { favourites, isFavourite, toggleFavourite } = useFavourites()
+  const { recents, addRecent } = useRecent()
+  const [openModal, setOpenModal] = useState<
+    'form' | 'root' | 'active-participle' | 'passive-participle' | 'masdar' | null
+  >(null)
+  const [syntheticVerb, setSyntheticVerb] = useState<DisplayVerb | undefined>()
+  const routeVerb = useMemo(() => {
+    const verb = getVerbById(verbId)
+    if (!verb) throw new Error(`Unknown verb id: ${verbId}`)
+    return verb
+  }, [verbId])
+  const [searchTab, setSearchTab] = useState<'search' | 'build'>(() => {
+    return routeVerb.synthetic ? 'build' : 'search'
+  })
+
+  const formatArabic = useMemo(
+    () => (value: string | null) => applyDiacriticsPreference(value ?? '', diacriticsPreference),
+    [diacriticsPreference],
+  )
+
+  const selectedVerb = useMemo(
+    () => (syntheticVerb?.id === verbId ? syntheticVerb : routeVerb),
+    [syntheticVerb, verbId, routeVerb],
+  )
+
+  const documentTitle = useMemo(() => {
+    const verb = formatArabic(selectedVerb.lemma)
+    const gloss = selectedVerb.synthetic || lang === 'ar' ? undefined : t(selectedVerb.id)
+    const conjugation =
+      gloss && gloss !== selectedVerb.id
+        ? t('documentTitle.conjugation.withGloss', { verb, gloss })
+        : t('documentTitle.conjugation', { verb })
+    return [conjugation, t('title')].filter(Boolean).join(' · ')
+  }, [formatArabic, selectedVerb, lang, t])
+
+  useDocumentTitle(documentTitle)
+
+  const selectedVerbFormLabel = useMemo(() => formatFormLabel(selectedVerb.form, selectedVerb.root), [selectedVerb])
+
+  const handleSelect = useCallback(
+    (verb: DisplayVerb) => {
+      setSyntheticVerb(verb)
+      navigateTo(['verbs', verb.id])
+    },
+    [navigateTo],
+  )
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: picking another verb closes any open insight modal, though the body never reads the verb
+  useEffect(() => {
+    setOpenModal(null)
+  }, [selectedVerb])
+
+  const derivedForms = useMemo(
+    () => findVerbsByRoot(selectedVerb.root).toSorted((a, b) => a.form - b.form),
+    [selectedVerb.root],
+  )
+
+  const sisters = useMemo(() => {
+    const group = SISTER_GROUPS.find(({ ids }) => ids.has(selectedVerb.id))
+    return group && { titleKey: group.titleKey, verbs: verbs.filter((verb) => group.ids.has(verb.id)) }
+  }, [selectedVerb.id])
+
+  const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== verbId), [recents, verbId])
+
+  useEffect(() => {
+    addRecent(routeVerb.id)
+  }, [routeVerb.id, addRecent])
+
+  useEffect(() => {
+    if (routeVerb.id !== verbId && !routeVerb.synthetic) navigateTo(['verbs', routeVerb.id], { replace: true })
+  }, [routeVerb, verbId, navigateTo])
+
+  const currentTense = voice === 'passive' && tense === 'imperative' ? 'past' : tense
+  const currentMood = tense === 'present' ? mood : undefined
+
+  const handleVoiceChange = useCallback(
+    (nextVoice: Voice) => {
+      if (currentMood) {
+        navigateTo(['verbs', verbId, nextVoice, 'present', currentMood])
+        return
+      }
+      if (nextVoice === 'passive')
+        navigateTo(['verbs', verbId, nextVoice, currentTense === 'imperative' ? 'past' : currentTense])
+      else navigateTo(['verbs', verbId, nextVoice, currentTense])
+    },
+    [navigateTo, currentMood, currentTense, verbId],
+  )
+
+  const handleTenseChange = useCallback(
+    (nextTense: Tense) => {
+      if (nextTense === 'imperative') navigateTo(['verbs', verbId, 'active', nextTense])
+      else navigateTo(['verbs', verbId, voice, nextTense])
+    },
+    [navigateTo, voice, verbId],
+  )
+
+  const handleMoodChange = useCallback(
+    (nextMood: Mood) => navigateTo(['verbs', verbId, voice, 'present', nextMood]),
+    [navigateTo, voice, verbId],
+  )
+
+  const availableParadigms = useMemo(() => getAvailableParadigms(selectedVerb), [selectedVerb])
+  const masdar = useMemo(
+    () => (availableParadigms.includes('masdar') ? deriveMasdar(selectedVerb).map(String) : []),
+    [selectedVerb, availableParadigms],
+  )
+  const lexicalMasdarStartIndex = masdar.length - (selectedVerb.lexicalMasdars?.length ?? 0)
+  const activeParticiple = useMemo(
+    () => (availableParadigms.includes('active.participle') ? String(deriveActiveParticiple(selectedVerb)) : null),
+    [selectedVerb, availableParadigms],
+  )
+  const passiveParticiple = useMemo(
+    () => (availableParadigms.includes('passive.participle') ? String(derivePassiveParticiple(selectedVerb)) : null),
+    [selectedVerb, availableParadigms],
+  )
+
+  return (
+    <Main id="main-content" tabIndex={-1}>
+      <Stack area="search">
+        <Panel prerender="omit">
+          <span data-tour-step="2">
+            <ModeToggle
+              activeMode={searchTab === 'build' ? 1 : 0}
+              labels={[t('tabs.search'), t('tabs.build')]}
+              size="large"
+              onClick={(index) => setSearchTab(index === 0 ? 'search' : 'build')}
+            />
+          </span>
+
+          {searchTab === 'search' && (
+            <Search id="verb-search-input" onSelect={handleSelect} selectedVerb={selectedVerb} />
+          )}
+
+          {searchTab === 'build' && <ConjugateBox onSelect={handleSelect} selectedVerb={selectedVerb} />}
+        </Panel>
+      </Stack>
+
+      <Stack area="verb">
+        <VerbHeaderPanel
+          verb={selectedVerb}
+          actions={
+            <>
+              <ShareButton />
+              <CopyButton
+                text={formatArabic(selectedVerb.lemma)}
+                ariaLabel={t('aria.copy', { text: formatArabic(selectedVerb.lemma) })}
+              />
+              <SpeechButton
+                text={selectedVerb.lemma}
+                lang="ar"
+                ariaLabel={t('aria.speak', { text: selectedVerb.lemma })}
+              />
+              <FavouriteButton
+                isFavourite={isFavourite(selectedVerb.id)}
+                onToggle={() => toggleFavourite(selectedVerb.id)}
+              />
+            </>
+          }
+        >
+          <VerbMetaSection>
+            <Detail
+              label={t('meta.root')}
+              labelLang={lang}
+              labelDir={dir}
+              speechText={spell(selectedVerb.root).join(' ،')}
+              onInsightsClick={() => setOpenModal('root')}
+              insightsLabel={t('rootInfo.open')}
+              insightsOpen={openModal === 'root'}
+            >
+              <RootMetaValue dir="rtl" lang="ar">
+                {Array.from(selectedVerb.root).map((letter, index) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: list is static and never reordered, so position is its only identity
+                  <span key={index}>{letter}</span>
+                ))}
+              </RootMetaValue>
+            </Detail>
+            <Detail
+              label={t('meta.form')}
+              labelLang={lang}
+              labelDir={dir}
+              valueLang="en"
+              valueDir="ltr"
+              onInsightsClick={() => setOpenModal('form')}
+              insightsLabel={t('formInfo.open', { form: selectedVerbFormLabel })}
+              insightsOpen={openModal === 'form'}
+            >
+              <FormMetaValue>
+                <FormMetaItem>{selectedVerbFormLabel}</FormMetaItem>
+                {isTriliteralFormIDisplayVerb(selectedVerb) && (
+                  <VowelPattern>{formIVowelPattern(selectedVerb)}</VowelPattern>
+                )}
+              </FormMetaValue>
+            </Detail>
+          </VerbMetaSection>
+        </VerbHeaderPanel>
+
+        <ConjugationSection>
+          {currentTense === 'present' ? (
+            <ConjugationTable
+              verb={selectedVerb}
+              voice={voice}
+              tense="present"
+              mood={currentMood ?? 'indicative'}
+              diacriticsPreference={diacriticsPreference}
+              onVoiceChange={handleVoiceChange}
+              onTenseChange={handleTenseChange}
+              onMoodChange={handleMoodChange}
+            />
+          ) : (
+            <ConjugationTable
+              verb={selectedVerb}
+              voice={voice}
+              tense={currentTense}
+              diacriticsPreference={diacriticsPreference}
+              onVoiceChange={handleVoiceChange}
+              onTenseChange={handleTenseChange}
+              onMoodChange={handleMoodChange}
+            />
+          )}
+        </ConjugationSection>
+
+        <Panel title={t('nominals.title')} dir={dir} lang={lang}>
+          <NominalsGrid>
+            <MasdarSlot>
+              <Detail
+                label={masdar && masdar.length > 1 ? t('meta.verbalNoun.plural') : t('meta.verbalNoun')}
+                labelLang={lang}
+                labelDir={dir}
+                speechText={masdar?.length ? masdar.join('، ') : null}
+                copyText={masdar?.map((value) => formatArabic(value)).join('، ')}
+                onInsightsClick={masdar?.length ? () => setOpenModal('masdar') : undefined}
+                insightsLabel={t('nominalInfo.title.masdar')}
+                insightsOpen={openModal === 'masdar'}
+              >
+                {masdar?.length ? (
+                  <MasdarList>
+                    {masdar.map((value, index) => (
+                      <Fragment key={value}>
+                        <MasdarItem>
+                          <span>{formatArabic(value)}</span>
+                          {index >= lexicalMasdarStartIndex && (
+                            <MasdarNote>({t('meta.verbalNoun.lexical')})</MasdarNote>
+                          )}
+                        </MasdarItem>
+                        {index < masdar.length - 1 && <MasdarSeparator>،</MasdarSeparator>}
+                      </Fragment>
+                    ))}
+                  </MasdarList>
+                ) : (
+                  '—'
+                )}
+              </Detail>
+            </MasdarSlot>
+            <Detail
+              label={t('meta.activeParticiple')}
+              labelLang={lang}
+              labelDir={dir}
+              value={formatArabic(activeParticiple) || '—'}
+              speechText={activeParticiple}
+              copyText={formatArabic(activeParticiple)}
+              onInsightsClick={activeParticiple ? () => setOpenModal('active-participle') : undefined}
+              insightsLabel={t('nominalInfo.title.activeParticiple')}
+              insightsOpen={openModal === 'active-participle'}
+            />
+            <Detail
+              label={t('meta.passiveParticiple')}
+              labelLang={lang}
+              labelDir={dir}
+              value={formatArabic(passiveParticiple) || '—'}
+              speechText={passiveParticiple}
+              copyText={formatArabic(passiveParticiple)}
+              onInsightsClick={passiveParticiple ? () => setOpenModal('passive-participle') : undefined}
+              insightsLabel={t('nominalInfo.title.passiveParticiple')}
+              insightsOpen={openModal === 'passive-participle'}
+            />
+          </NominalsGrid>
+        </Panel>
+      </Stack>
+
+      <Stack area="recents">
+        {derivedForms.length > 1 && (
+          <Panel title={t('selectDerivedForm')} dir={dir} lang={lang}>
+            <VerbList>
+              {derivedForms.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        {sisters && (
+          <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
+            <VerbList>
+              {sisters.verbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        {recentVerbs.length > 0 && (
+          <Panel prerender="omit" title={t('recentlyViewed')} dir={dir} lang={lang} collapsible defaultCollapsed>
+            <VerbList>
+              {recentVerbs.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} />
+              ))}
+            </VerbList>
+          </Panel>
+        )}
+
+        <Panel prerender="omit" title={t('favourites')} dir={dir} lang={lang} collapsible defaultCollapsed>
+          {favourites.length > 0 ? (
+            <VerbList>
+              {favourites.map((verb) => (
+                <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />
+              ))}
+            </VerbList>
+          ) : (
+            <Text dir={dir} lang={lang}>
+              {t('favourites.empty')}
+            </Text>
+          )}
+        </Panel>
+      </Stack>
+
+      <Stack area="footer">
+        <Panel prerender="omit" title={t('footer.feedback.title')} dir={dir} lang={lang} collapsible defaultCollapsed>
+          <FormattedText dir={dir} lang={lang} text={t('footer.feedback.body')} />
+          <LinkButton dir={dir} lang={lang} href="https://github.com/goblindegook/musarrif/issues" rel="noreferrer">
+            {t('footer.feedback.cta')}
+          </LinkButton>
+        </Panel>
+      </Stack>
+
+      <Modal
+        isOpen={openModal === 'form'}
+        onClose={() => setOpenModal(null)}
+        title={t('formInfo.title', { form: selectedVerbFormLabel })}
+      >
+        <FormInsights verb={selectedVerb} />
+      </Modal>
+      <Modal isOpen={openModal === 'root'} onClose={() => setOpenModal(null)} title={t('rootInfo.title')}>
+        <RootInsights root={selectedVerb.root} rootId={selectedVerb.rootId} />
+      </Modal>
+      {activeParticiple && (
+        <Modal
+          isOpen={openModal === 'active-participle'}
+          onClose={() => setOpenModal(null)}
+          title={t('nominalInfo.title.activeParticiple')}
+        >
+          <NominalInsights verb={selectedVerb} nominal="activeParticiple" arabic={activeParticiple} />
+        </Modal>
+      )}
+      {passiveParticiple && (
+        <Modal
+          isOpen={openModal === 'passive-participle'}
+          onClose={() => setOpenModal(null)}
+          title={t('nominalInfo.title.passiveParticiple')}
+        >
+          <NominalInsights verb={selectedVerb} nominal="passiveParticiple" arabic={passiveParticiple} />
+        </Modal>
+      )}
+      {masdar.length > 0 && (
+        <Modal isOpen={openModal === 'masdar'} onClose={() => setOpenModal(null)} title={t('nominalInfo.title.masdar')}>
+          <NominalInsights verb={selectedVerb} nominal="masdar" arabic={masdar} />
+        </Modal>
+      )}
+    </Main>
+  )
+}
+
+const Main = styled('main')`
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: min-content;
+  align-items: start;
+  max-width: 600px;
+  margin: 0 auto;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'search' 'verb' 'recents' 'footer';
+
+  @media (min-width: 960px) {
+    gap: 1.25rem;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    max-width: inherit;
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'search verb'
+      'recents verb'
+      'footer verb';
+  }
+
+  @media print {
+    max-width: 100%;
+    margin: 0;
+    gap: 0;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'verb';
+  }
+
+  &:focus {
+    outline: none;
+  }
+`
+
+const Stack = styled('div')<{ area: 'search' | 'verb' | 'footer' | 'recents' }>`
+  grid-area: ${({ area: gridArea }) => gridArea};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-self: flex-start;
+
+  @media print {
+    ${({ area }) => (area === 'verb' ? 'gap: 0.5rem;' : 'display: none;')}
+  }
+`
+
+const VerbList = styled('div')`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`
+
+const VerbMetaSection = styled('section')`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+
+  @media print {
+    gap: 0.35rem;
+  }
+`
+
+const MasdarList = styled('div')`
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+`
+
+const MasdarItem = styled('div')`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+`
+
+const MasdarSeparator = styled('span')`
+  margin-inline-end: 0.3rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
+`
+
+const MasdarNote = styled('span')`
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+
+  @media print {
+    font-size: 0.7rem;
+  }
+`
+
+const ConjugationSection = styled('div')`
+  border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
+  background: transparent;
+
+  @media print {
+    border: none;
+    box-shadow: none;
+  }
+`
+
+const RootMetaValue = styled('div')`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 1rem;
+
+  @media print {
+    gap: 0.35rem;
+  }
+`
+
+const FormMetaValue = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: baseline;
+  justify-items: start;
+  width: 100%;
+
+  @media print {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.35rem;
+  }
+`
+
+const FormMetaItem = styled('span')`
+  font-weight: 600;
+`
+
+const VowelPattern = styled(FormMetaItem)`
+  font-size: 1.2rem;
+  font-weight: 400;
+  justify-self: end;
+  text-align: right;
+
+  @media print {
+    font-size: 0.9rem;
+  }
+`
+
+const NominalsGrid = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`
+
+const MasdarSlot = styled('div')`
+  @media (min-width: 480px) {
+    grid-column: 1 / -1;
+  }
+`

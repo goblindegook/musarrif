@@ -22,7 +22,7 @@ type LanguageCopy = {
 }
 
 // Metro bundles every locale file, but a lazy require only parses the ones in use.
-// Strings the app owns live beside this file; the shared web strings and verb glosses come from src/ui/locales.
+// Strings the app owns live beside this file; the shared web strings and verb glosses come from src/locales.
 function loadAppStrings(language: Language): Dictionary {
   switch (language) {
     case 'it':
@@ -39,26 +39,26 @@ function loadAppStrings(language: Language): Dictionary {
 function loadSharedStrings(language: Language): Dictionary {
   switch (language) {
     case 'it':
-      return require('../../../../src/ui/locales/it.strings.json')
+      return require('../../../../src/locales/it.strings.json')
     case 'pt':
-      return require('../../../../src/ui/locales/pt.strings.json')
+      return require('../../../../src/locales/pt.strings.json')
     case 'ar':
-      return require('../../../../src/ui/locales/ar.strings.json')
+      return require('../../../../src/locales/ar.strings.json')
     case 'en':
-      return require('../../../../src/ui/locales/en.strings.json')
+      return require('../../../../src/locales/en.strings.json')
   }
 }
 
 function loadVerbs(language: Language): VerbDictionary {
   switch (language) {
     case 'it':
-      return require('../../../../src/ui/locales/it.verbs.json')
+      return require('../../../../src/locales/it.verbs.json')
     case 'pt':
-      return require('../../../../src/ui/locales/pt.verbs.json')
+      return require('../../../../src/locales/pt.verbs.json')
     case 'ar':
-      return require('../../../../src/ui/locales/ar.verbs.json')
+      return require('../../../../src/locales/ar.verbs.json')
     case 'en':
-      return require('../../../../src/ui/locales/en.verbs.json')
+      return require('../../../../src/locales/en.verbs.json')
   }
 }
 

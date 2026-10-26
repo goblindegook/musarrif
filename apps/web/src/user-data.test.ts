@@ -1,0 +1,300 @@
+import { cleanup } from '@testing-library/preact'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { INITIAL_DIMENSION_PROFILE } from '../../../src/test/profiles'
+import {
+  getUserData,
+  importUserData,
+  type LaunchConsumer,
+  mergeUserData,
+  registerUserDataFileLaunchHandler,
+} from './user-data'
+
+const INITIAL_DIMENSION_WINDOWS = {
+  tenses: [],
+  pronouns: [],
+  forms: [],
+  rootTypes: [],
+  nominals: [],
+}
+
+beforeEach(() => {
+  vi.restoreAllMocks()
+  localStorage.clear()
+})
+
+afterEach(() => {
+  cleanup()
+  localStorage.clear()
+})
+
+describe('registerUserDataFileLaunchHandler', () => {
+  const launchQueueWindow = window as Window & { launchQueue?: { setConsumer: (consumer: LaunchConsumer) => void } }
+  const originalLaunchQueue = launchQueueWindow.launchQueue
+
+  afterEach(() => {
+    launchQueueWindow.launchQueue = originalLaunchQueue
+  })
+
+  test('loads launched musarrif files', async () => {
+    let consumer: LaunchConsumer | undefined
+    const getFile = vi.fn().mockResolvedValue(new File(['{"version":1}'], 'backup.musarrif'))
+    launchQueueWindow.launchQueue = {
+      setConsumer(nextConsumer: LaunchConsumer) {
+        consumer = nextConsumer
+      },
+    }
+
+    registerUserDataFileLaunchHandler()
+    await consumer?.({ files: [{ getFile } as unknown as FileSystemFileHandle] })
+
+    expect(getFile).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('getUserData', () => {
+  test('returns INITIAL_DIMENSION_PROFILE when no dimensions stored', () => {
+    const data = getUserData()
+    expect(data.dimensions.profile).toEqual(INITIAL_DIMENSION_PROFILE)
+  })
+
+  test('returns stored dimension profile', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2 }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
+    const data = getUserData()
+    expect(data.dimensions.profile.tenses).toBe(2)
+  })
+
+  test('rolls back adaptive dimension levels that violate prerequisites', () => {
+    const profile = {
+      ...INITIAL_DIMENSION_PROFILE,
+      tenses: 5,
+      pronouns: 3,
+      forms: 3,
+      rootTypes: 3,
+      nominals: 1,
+    }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
+    const data = getUserData()
+    expect(data.dimensions.profile).toMatchObject({
+      nominals: 0,
+    })
+  })
+
+  test('clamps stored dimension profile levels above current maximums', () => {
+    const profile = {
+      ...INITIAL_DIMENSION_PROFILE,
+      tenses: 5,
+      pronouns: 3,
+      forms: 9,
+      rootTypes: 5,
+      nominals: 2,
+    }
+    localStorage.setItem('conjugator:dimensions', JSON.stringify({ profile, windows: INITIAL_DIMENSION_WINDOWS }))
+    const data = getUserData()
+    expect(data.dimensions.profile).toMatchObject({
+      tenses: 5,
+      nominals: 2,
+    })
+  })
+
+  test('does not include exerciseDifficulty in export', () => {
+    const data = getUserData() as Record<string, unknown>
+    expect((data.settings as Record<string, unknown>).exerciseDifficulty).toBeUndefined()
+  })
+})
+
+describe('importUserData', () => {
+  test('rejects invalid JSON payload', () => {
+    expect(importUserData('{')).toBe(false)
+  })
+
+  test('rejects non-object payload', () => {
+    expect(importUserData('"hello"')).toBe(false)
+    expect(importUserData('123')).toBe(false)
+    expect(importUserData('true')).toBe(false)
+    expect(importUserData('null')).toBe(false)
+    expect(importUserData('[]')).toBe(false)
+  })
+
+  test('rejects empty object payload', () => {
+    expect(importUserData('{}')).toBe(false)
+  })
+
+  test('imports valid dimension profile', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 1 as const }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    expect(importUserData(payload)).toBe(true)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.forms).toBe(1)
+  })
+
+  test('imports dimension profile with max tenses level (5)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, tenses: 6, pronouns: 3, forms: 9, rootTypes: 5 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.tenses).toBe(5)
+  })
+
+  test('imports dimension profile with high forms level (9)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 9 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.forms).toBe(9)
+  })
+
+  test('imports dimension profile with max rootTypes level (5)', () => {
+    const profile = { ...INITIAL_DIMENSION_PROFILE, rootTypes: 5, pronouns: 1 }
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile.rootTypes).toBe(5)
+  })
+
+  test('preserves windows on import', () => {
+    const profile = INITIAL_DIMENSION_PROFILE
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: {
+        profile,
+        windows: { tenses: [true, false], pronouns: [], forms: [], rootTypes: [], nominals: [] },
+      },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.windows.tenses).toEqual([true, false])
+  })
+
+  test('clamps oversized imported dimensions while defaulting missing fields', () => {
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      dimensions: { profile: { tenses: 99 } },
+    })
+    importUserData(payload)
+    const stored = JSON.parse(localStorage.getItem('conjugator:dimensions')!)
+    expect(stored.profile).toEqual({ ...INITIAL_DIMENSION_PROFILE, tenses: 5 })
+  })
+
+  test('accepts payload without dimensions field without error', () => {
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all', exerciseDifficulty: 'hard' },
+    })
+    expect(importUserData(payload)).toBe(true)
+  })
+
+  test('accepts payload without settings field and applies defaults', () => {
+    const payload = JSON.stringify({
+      favouriteVerbs: ['ktb-1'],
+    })
+
+    expect(importUserData(payload)).toBe(true)
+    expect(localStorage.getItem('conjugator:language')).toBe('"en"')
+    expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe('"some"')
+    expect(localStorage.getItem('conjugator:theme')).toBe('"system"')
+  })
+
+  test('keeps oversized imported SRS entries untouched', () => {
+    const payload = JSON.stringify({
+      settings: { language: 'en', diacriticsPreference: 'all' },
+      srs: {
+        'conjugation:sound:1:active.past:3ms': {
+          interval: 145313,
+          ef: 2.5,
+          repetitions: 13,
+          dueDate: '2424-01-30',
+        },
+      },
+    })
+
+    expect(importUserData(payload)).toBe(true)
+    const stored = JSON.parse(localStorage.getItem('conjugator:srs')!)
+    expect(stored['conjugation:sound:1:active.past:3ms']).toMatchObject({
+      interval: 145313,
+      dueDate: '2424-01-30',
+    })
+  })
+})
+
+describe('mergeUserData', () => {
+  test('rejects an invalid payload', () => {
+    expect(mergeUserData('{}')).toBe(false)
+  })
+
+  test('takes the imported settings', () => {
+    localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+    localStorage.setItem('conjugator:theme', JSON.stringify('dark'))
+
+    expect(
+      mergeUserData(
+        JSON.stringify({ settings: { language: 'it', diacriticsPreference: 'all', themePreference: 'light' } }),
+      ),
+    ).toBe(true)
+    expect(localStorage.getItem('conjugator:language')).toBe('"it"')
+    expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe('"all"')
+    expect(localStorage.getItem('conjugator:theme')).toBe('"light"')
+  })
+
+  test('keeps favourite verbs from both sides', () => {
+    localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
+
+    mergeUserData(JSON.stringify({ favouriteVerbs: ['sfr-1', 'bdl-1'] }))
+
+    expect(JSON.parse(localStorage.getItem('conjugator:favouriteVerbs')!)).toEqual(['ktb-1', 'sfr-1', 'bdl-1'])
+  })
+
+  test('stores the merged exercise data', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+      }),
+    )
+    localStorage.setItem(
+      'conjugator:exercise:daily',
+      JSON.stringify([{ date: '2026-03-21', correct: 1, incorrect: 0, passed: 0 }]),
+    )
+    const dimensions = {
+      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+      windows: { ...INITIAL_DIMENSION_WINDOWS, pronouns: [true] },
+    }
+
+    mergeUserData(
+      JSON.stringify({
+        srs: {
+          'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+        },
+        trackedExercises: [{ date: '2026-03-29', correct: 3, incorrect: 1, passed: 0 }],
+        dimensions,
+      }),
+    )
+
+    expect({
+      srs: JSON.parse(localStorage.getItem('conjugator:srs')!),
+      trackedExercises: JSON.parse(localStorage.getItem('conjugator:exercise:daily')!),
+      dimensions: JSON.parse(localStorage.getItem('conjugator:dimensions')!),
+    }).toEqual({
+      srs: {
+        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+      },
+      trackedExercises: [
+        { date: '2026-03-21', correct: 1, incorrect: 0, passed: 0 },
+        { date: '2026-03-29', correct: 3, incorrect: 1, passed: 0 },
+      ],
+      dimensions,
+    })
+  })
+})

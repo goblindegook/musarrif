@@ -29,6 +29,34 @@
           }
         }
       }
+    },
+    {
+      "includes": ["src/**", "!src/**/*.test.ts", "!src/**/*.test.tsx", "!src/test/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "window": "Shared code runs on web, mobile and in scripts. Pass browser state in from the app instead.",
+                  "document": "Shared code runs on web, mobile and in scripts. Pass browser state in from the app instead.",
+                  "localStorage": "Shared code runs on web, mobile and in scripts. Pass storage in from the app instead.",
+                  "navigator": "Shared code runs on web, mobile and in scripts. Pass browser state in from the app instead."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/**"],
+      "linter": {
+        "domains": {
+          "react": "recommended"
+        }
+      }
     }
   ],
   "javascript": {

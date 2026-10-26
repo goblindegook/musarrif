@@ -1,3 +1,4 @@
+import en from '../src/locales/en.strings.json' with { type: 'json' }
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
@@ -21,7 +22,6 @@ import { type DisplayVerb, FORMS, getVerb, type TriliteralForm } from '../src/pa
 import type { Word } from '../src/paradigms/word.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 import { mapRecord } from '../src/primitives/objects.ts'
-import en from '../src/ui/locales/en.strings.json' with { type: 'json' }
 
 const locale = en as Record<string, string>
 

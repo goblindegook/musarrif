@@ -1,14 +1,13 @@
-import preact from '@preact/preset-vite'
 import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  plugins: [preact()],
   test: {
     globals: true,
     environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
     exclude: [...configDefaults.exclude, '**/.stryker-tmp/**'],
     projects: [
+      'apps/web',
       {
         extends: true,
         test: {
@@ -22,17 +21,6 @@ export default defineConfig({
             'src/paradigms/**/*.test.{ts,tsx}',
             'src/test/**/*.test.{ts,tsx}',
           ],
-        },
-      },
-      {
-        extends: true,
-        test: {
-          name: 'dom',
-          environment: 'happy-dom',
-          pool: 'forks',
-          isolate: true, // dom tests are leaky
-          sequence: { groupOrder: 1 },
-          include: ['src/prerender/**/*.test.{ts,tsx}', 'src/ui/**/*.test.{ts,tsx}'],
         },
       },
       {

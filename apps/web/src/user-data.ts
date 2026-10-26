@@ -1,0 +1,203 @@
+import * as v from 'valibot'
+import {
+  DEFAULT_DIMENSION_PROFILE,
+  DEFAULT_DIMENSION_WINDOWS,
+  type DimensionStore,
+  DimensionStore as DimensionStoreSchema,
+  parseDimensionStore,
+} from '../../../src/exercises/dimensions'
+import { mergeExerciseData } from '../../../src/exercises/merge'
+import { parseSrsStore, type SrsStore, SrsStore as SrsStoreSchema } from '../../../src/exercises/srs'
+import {
+  parseTrackedExercises,
+  type SerializedDailyActivity,
+  SerializedTrackedExercises,
+} from '../../../src/exercises/stats'
+import type { DiacriticsPreference } from '../../../src/paradigms/tokens'
+import type { Language } from './hooks/useI18n'
+import type { ThemePreference } from './hooks/useTheme'
+
+const MUSARRIF_MIME_TYPE = 'application/vnd.musarrif+json'
+export const ACCEPTED_TYPES = ['application/json', MUSARRIF_MIME_TYPE, '.json', '.musarrif']
+
+export type LaunchConsumer = (params: { files: readonly FileSystemFileHandle[] }) => void | Promise<void>
+
+export function registerFileDragDropHandler() {
+  const controller = new AbortController()
+  const { signal } = controller
+  document.addEventListener('dragover', (e) => e.preventDefault(), { signal })
+  document.addEventListener(
+    'drop',
+    async (e) => {
+      e.preventDefault()
+      for (const file of Array.from(e.dataTransfer?.files ?? [])) {
+        if (file.name.endsWith('.musarrif') || ACCEPTED_TYPES.includes(file.type)) {
+          document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: await file.text() }))
+        }
+      }
+    },
+    { signal },
+  )
+  return () => controller.abort()
+}
+
+export function registerTauriFileOpenHandler() {
+  if (!('__TAURI_INTERNALS__' in window)) return
+  let unlisten: (() => void) | undefined
+  import('@tauri-apps/api/event')
+    .then(({ listen }) =>
+      listen<string>('import-user-data', (event) => {
+        document.dispatchEvent(new CustomEvent('musarrif:pending-import', { detail: event.payload }))
+      }),
+    )
+    .then((fn) => {
+      unlisten = fn
+    })
+  return () => unlisten?.()
+}
+
+export function registerUserDataFileLaunchHandler() {
+  const launchQueue = (window as Window & { launchQueue?: { setConsumer: (consumer: LaunchConsumer) => void } })
+    .launchQueue
+  if (launchQueue == null) return
+
+  launchQueue.setConsumer(async ({ files }) => {
+    for (const fileHandle of files) {
+      const file = await fileHandle.getFile()
+      if (file.name.endsWith('.musarrif') || ACCEPTED_TYPES.includes(file.type)) {
+        if (importUserData(await file.text())) window.location.reload()
+      }
+    }
+  })
+}
+
+type Deserialize<T> = (raw: unknown, fallback: Readonly<T>) => Readonly<T>
+
+const Settings = v.object({
+  language: v.optional(v.fallback(v.picklist(['en', 'it', 'pt', 'ar']), 'en'), 'en'),
+  diacriticsPreference: v.optional(v.fallback(v.picklist(['all', 'some', 'none']), 'some'), 'some'),
+  themePreference: v.optional(v.fallback(v.picklist(['light', 'dark', 'system']), 'system'), 'system'),
+})
+
+const ImportUserData = v.pipe(
+  v.object({
+    version: v.optional(v.number()),
+    settings: v.optional(Settings),
+    favouriteVerbs: v.optional(v.fallback(v.array(v.string()), [])),
+    trackedExercises: v.optional(SerializedTrackedExercises),
+    srs: v.optional(SrsStoreSchema),
+    dimensions: v.optional(DimensionStoreSchema),
+  }),
+  v.minEntries(1),
+  v.transform((payload) => ({
+    ...payload,
+    settings: payload.settings ?? v.parse(Settings, {}),
+    trackedExercises: payload.trackedExercises ?? v.parse(SerializedTrackedExercises, undefined),
+    srs: payload.srs ?? v.parse(SrsStoreSchema, undefined),
+    dimensions: payload.dimensions ?? v.parse(DimensionStoreSchema, undefined),
+  })),
+)
+
+export function getUserData() {
+  return {
+    version: 1,
+    settings: {
+      language: load<Language>('conjugator:language', 'en'),
+      diacriticsPreference: load<DiacriticsPreference>('conjugator:diacriticsPreference', 'some'),
+      themePreference: load<ThemePreference>('conjugator:theme', 'system'),
+    },
+    favouriteVerbs: load<string[]>('conjugator:favouriteVerbs', []),
+    trackedExercises: load<SerializedDailyActivity[]>('conjugator:exercise:daily', [], parseTrackedExercises),
+    srs: load<SrsStore>('conjugator:srs', {}, parseSrsStore),
+    dimensions: load<DimensionStore>(
+      'conjugator:dimensions',
+      { profile: DEFAULT_DIMENSION_PROFILE, windows: DEFAULT_DIMENSION_WINDOWS },
+      parseDimensionStore,
+    ),
+  }
+}
+
+export async function saveDataFile(filename: string) {
+  const blob = new Blob([JSON.stringify(getUserData(), null, 2)], {
+    type: `${MUSARRIF_MIME_TYPE};charset=utf-8`,
+  })
+  if (window.showSaveFilePicker != null) {
+    try {
+      const fileHandle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [
+          {
+            description: 'Muṣarrif data',
+            accept: { [MUSARRIF_MIME_TYPE]: ['.musarrif'] },
+          },
+        ],
+      })
+      const writable = await fileHandle.createWritable()
+      try {
+        await writable.write(blob)
+      } finally {
+        await writable.close()
+      }
+      return
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return
+    }
+  }
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.append(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
+export function importUserData(raw: string): boolean {
+  const payload = v.safeParse(ImportUserData, parse(raw, null))
+  if (!payload.success) return false
+
+  saveUserData(payload.output)
+  return true
+}
+
+export function mergeUserData(raw: string): boolean {
+  const payload = v.safeParse(ImportUserData, parse(raw, null))
+  if (!payload.success) return false
+
+  const local = getUserData()
+  saveUserData({
+    ...payload.output,
+    ...mergeExerciseData(local, payload.output),
+    favouriteVerbs: [...new Set([...local.favouriteVerbs, ...(payload.output.favouriteVerbs ?? [])])],
+  })
+  return true
+}
+
+function saveUserData(data: v.InferOutput<typeof ImportUserData>) {
+  save('conjugator:language', data.settings.language)
+  save('conjugator:diacriticsPreference', data.settings.diacriticsPreference)
+  save('conjugator:theme', data.settings.themePreference)
+  save('conjugator:favouriteVerbs', data.favouriteVerbs ?? [])
+  save('conjugator:exercise:daily', data.trackedExercises)
+  save('conjugator:srs', data.srs)
+  save('conjugator:dimensions', data.dimensions)
+}
+
+function parse<T>(raw: string | null, defaultValue: T): T {
+  try {
+    return JSON.parse(raw ?? '')
+  } catch {
+    return defaultValue
+  }
+}
+
+function load<T>(key: string, defaultValue: T, deserialize?: Deserialize<T>): T {
+  const parsed = parse<unknown>(window.localStorage.getItem(key), defaultValue)
+  return deserialize == null ? (parsed as T) : deserialize(parsed, defaultValue)
+}
+
+function save<T>(key: string, value: T) {
+  window.localStorage.setItem(key, JSON.stringify(value))
+}

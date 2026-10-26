@@ -1,0 +1,6 @@
+/dist/
+/dev-dist/
+dist-ssr
+/public/piper
+/public/voices
+node_modules/

@@ -1,3 +1,4 @@
+import * as v from 'valibot'
 import { localDate } from '../primitives/dates'
 
 export interface DailyActivity {
@@ -10,6 +11,29 @@ export interface DailyActivity {
 export type TrackedExercises = readonly DailyActivity[]
 
 export const STREAK_DAILY_GOAL = 10
+
+const NonNegativeNumber = v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0)
+
+export const SerializedDailyActivity = v.object({
+  date: v.pipe(v.string(), v.isoDate()),
+  correct: NonNegativeNumber,
+  incorrect: NonNegativeNumber,
+  passed: NonNegativeNumber,
+})
+
+export type SerializedDailyActivity = v.InferOutput<typeof SerializedDailyActivity>
+
+export const SerializedTrackedExercises = v.pipe(
+  v.fallback(v.array(v.fallback(v.union([SerializedDailyActivity, v.null()]), null)), []),
+  v.transform((entries) => entries.filter((entry): entry is SerializedDailyActivity => entry != null)),
+  v.readonly(),
+)
+
+export type SerializedTrackedExercises = v.InferOutput<typeof SerializedTrackedExercises>
+
+export function parseTrackedExercises(data: unknown): SerializedTrackedExercises {
+  return v.parse(SerializedTrackedExercises, data)
+}
 
 type Result = 'correct' | 'incorrect' | 'passed'
 

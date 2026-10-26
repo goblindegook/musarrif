@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import enStrings from '../ui/locales/en.strings.json'
-import enLexicon from '../ui/locales/en.verbs.json'
+import enStrings from '../locales/en.strings.json'
+import enLexicon from '../locales/en.verbs.json'
 import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { renderExplanation, resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'

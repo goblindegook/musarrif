@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://musarrif.com"><img src="public/icon.png" alt="Muṣarrif" width="128" height="128"></a>
+  <a href="https://musarrif.com"><img src="assets/icon.png" alt="Muṣarrif" width="128" height="128"></a>
 </p>
 
 # Muṣarrif
@@ -55,52 +55,79 @@ ElixirFM also omits sukūns entirely; the comparison normalises them away before
 
 ## Setup
 
+The repository is an npm workspace: `apps/web` (the PWA and desktop shell, `musarrif-web`) and `apps/mobile` (the Expo app, `musarrif-mobile`), both consuming the shared code in `src/`. Run every command from the repository root.
+
 Install dependencies:
 
 ```bash
 npm install
 ```
 
-Start development server:
+Start the web development server:
 
 ```bash
-npm run dev
+npm run web:dev
 ```
 
-Build production bundle (typecheck, Vite build, then static verb page prerender):
+Build the production web bundle (typecheck, Vite build, then static verb page prerender) into `apps/web/dist`:
 
 ```bash
-npm run build
+npm run web:build
 ```
 
-Preview production build:
+`npm run web:prerender` re-runs the prerender step alone against an existing path-mode `apps/web/dist`.
+
+Preview the production web build:
 
 ```bash
-npm run preview
+npm run web:preview
 ```
 
 ## Desktop Target (Tauri 2)
 
-The repository includes a desktop build target via Tauri 2.0.
+The web app also builds as a desktop app via Tauri 2.0 (`apps/web/src-tauri`).
 
 Run in desktop dev mode:
 
 ```bash
-npm run tauri:dev
+npm run desktop:dev
 ```
 
-Build desktop bundles:
+Build desktop bundles (regenerates the icons from `assets/musarrif.png` first):
 
 ```bash
-npm run build:desktop
+npm run desktop:build
+```
+
+## Mobile Target (Expo)
+
+Start Metro for the iOS app:
+
+```bash
+npm run mobile:start
+```
+
+Run it in the iOS simulator:
+
+```bash
+npm run mobile:ios
 ```
 
 ## Quality Commands
 
-Run tests (single pass, no watch):
+Run the shared and web tests (single pass, no watch):
 
 ```bash
 npm test -- --no-watch
+```
+
+Run the web tests alone, then the web typecheck, the mobile tests and the mobile typecheck:
+
+```bash
+npm run web:test -- --run
+npm run web:typecheck
+npm run mobile:test
+npm run mobile:typecheck
 ```
 
 Coverage and mutation:
@@ -118,7 +145,7 @@ npm run check:boundaries
 npm run format
 ```
 
-Full CI gate (lint, boundaries, tests, typecheck, bundle):
+Full CI gate (lint, boundaries, shared and web tests, typechecks, mobile tests, bundle):
 
 ```bash
 npm run check:all
@@ -174,7 +201,7 @@ npm run add:verb -- wiktionary ktb-1
 npm run add:verb -- wiktionary qdr-1 a-u
 ```
 
-This writes no locale entries. Add `verbs` and `roots` translations to `en`, `it` and `pt`, and `roots` to `ar`, in `src/ui/locales/*.verbs.json` by hand. `npm run glosses -- --missing` lists what is still untranslated, and `npm run glosses -- <root> [form]` fetches candidate glosses.
+This writes no locale entries. Add `verbs` and `roots` translations to `en`, `it` and `pt`, and `roots` to `ar`, in `src/locales/*.verbs.json` by hand. `npm run glosses -- --missing` lists what is still untranslated, and `npm run glosses -- <root> [form]` fetches candidate glosses.
 
 For a verb no source covers, use the interactive wizard, which edits `src/data/roots.json` and the `en`, `it` and `pt` verb locale files:
 

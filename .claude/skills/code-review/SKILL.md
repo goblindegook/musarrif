@@ -143,18 +143,18 @@ Run each block whose trigger matches a file in the review set.
   variant.
 - Wrapper code compensating for a bad pattern instead of fixing it.
 
-**Any `src/ui/` component** (`docs/03-design-and-ui.md`)
+**Any `apps/web/src/` component** (`docs/03-design-and-ui.md`)
 
 - A bespoke wrapper where a primitive exists: `IconButton` with an SVG icon
-  from `src/ui/icons/`, `Modal`, `Overlay`, `Panel`, the `atoms/` and
+  from `apps/web/src/icons/`, `Modal`, `Overlay`, `Panel`, the `atoms/` and
   `molecules/` controls.
-- A hardcoded color instead of a token from `src/ui/index.css`, a third
+- A hardcoded color instead of a token from `apps/web/src/index.css`, a third
   radius, a shadow other than `--shadow-elevated`, a gradient, or a transition
   without a `prefers-reduced-motion` escape.
 - A `ref` on a goober `styled()` component created without `forwardRef` as
   its second argument. The ref silently receives Preact internals.
 
-**Any `src/ui/locales/*`** (`docs/08-localization-and-copy.md`)
+**Any `src/locales/*`** (`docs/08-localization-and-copy.md`)
 
 - A changed `*.strings.json` key missing from any of en, it, pt, ar.
 - A new `verbs` / `roots` entry missing from en, it, pt, or its `roots` entry

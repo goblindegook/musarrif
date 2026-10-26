@@ -21,7 +21,7 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 
 ## Contribution Checklist
 
-After any change, run the full CI gate — lint, dependency boundaries, tests, typecheck, mobile app typecheck and tests, and bundle (no prerender) — before considering the task done:
+After any change, run the full CI gate — lint, dependency boundaries, shared and web tests, shared and web typecheck, mobile app typecheck and tests, and web bundle (no prerender) — before considering the task done:
 
 ```bash
 rtk mise exec -- npm run check:all
