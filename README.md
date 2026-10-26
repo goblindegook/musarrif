@@ -75,14 +75,6 @@ Build the production web bundle (typecheck, Vite build, then static verb page pr
 npm run web:build
 ```
 
-`npm run web:prerender` re-runs the prerender step alone against an existing path-mode `apps/web/dist`.
-
-Preview the production web build:
-
-```bash
-npm run web:preview
-```
-
 ## Desktop Target (Tauri 2)
 
 The web app also builds as a desktop app via Tauri 2.0 (`apps/web/src-tauri`).
@@ -93,7 +85,7 @@ Run in desktop dev mode:
 npm run desktop:dev
 ```
 
-Build desktop bundles (regenerates the icons from `assets/musarrif.png` first):
+Build desktop bundles:
 
 ```bash
 npm run desktop:build
