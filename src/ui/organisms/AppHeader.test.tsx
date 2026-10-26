@@ -180,10 +180,13 @@ it('shows a warning modal when a file is pending import', () => {
 
   expect(screen.getByText('Import data warning')).toBeInTheDocument()
   expect(
-    screen.getByText('Importing will overwrite all your existing data. This action cannot be undone.'),
+    screen.getByText(
+      'Merge adds this file’s data to yours. Overwrite replaces all your existing data. Neither can be undone.',
+    ),
   ).toBeInTheDocument()
   expect(screen.getByText('Go back')).toBeInTheDocument()
-  expect(screen.getByText('Import and overwrite')).toBeInTheDocument()
+  expect(screen.getByText('Merge')).toBeInTheDocument()
+  expect(screen.getByText('Overwrite')).toBeInTheDocument()
 })
 
 it('closes the warning modal when Go back is clicked', () => {
@@ -241,7 +244,7 @@ it('imports user data from JSON and updates local storage', async () => {
   })
 
   await act(async () => {
-    await user.click(await screen.findByText('Import and overwrite'))
+    await user.click(await screen.findByText('Overwrite'))
   })
 
   await waitFor(() => expect(localStorage.getItem('conjugator:language')).toBe(JSON.stringify('it')))
@@ -250,6 +253,22 @@ it('imports user data from JSON and updates local storage', async () => {
   expect(localStorage.getItem('conjugator:exercise:daily')).toBe(
     JSON.stringify([{ date: '2026-03-20', correct: 2, incorrect: 3, passed: 0 }]),
   )
+  expect(reloadSpy).toHaveBeenCalledTimes(1)
+})
+
+it('merges imported user data into the existing data', async () => {
+  localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1']))
+  renderHeader('/#/verbs')
+  const reloadSpy = vi.spyOn(Location.prototype, 'reload').mockImplementation(() => {})
+
+  act(() => {
+    document.dispatchEvent(
+      new CustomEvent('musarrif:pending-import', { detail: JSON.stringify({ favouriteVerbs: ['bdl-1'] }) }),
+    )
+  })
+  fireEvent.click(screen.getByText('Merge'))
+
+  expect(localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['ktb-1', 'bdl-1']))
   expect(reloadSpy).toHaveBeenCalledTimes(1)
 })
 
@@ -362,7 +381,7 @@ it('routes a completed camera transfer through the confirmation modal rather tha
   expect(await screen.findByText('Import data warning')).toBeInTheDocument()
   expect(localStorage.getItem('conjugator:favouriteVerbs')).toBeNull()
 
-  fireEvent.click(screen.getByText('Import and overwrite'))
+  fireEvent.click(screen.getByText('Overwrite'))
 
   await waitFor(() => expect(localStorage.getItem('conjugator:favouriteVerbs')).toBe(JSON.stringify(['scanned-1'])))
   expect(reloadSpy).toHaveBeenCalledTimes(1)

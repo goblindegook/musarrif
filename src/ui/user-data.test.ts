@@ -1,7 +1,13 @@
 import { cleanup } from '@testing-library/preact'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from '../test/profiles'
-import { getUserData, importUserData, type LaunchConsumer, registerUserDataFileLaunchHandler } from './user-data'
+import {
+  getUserData,
+  importUserData,
+  type LaunchConsumer,
+  mergeUserData,
+  registerUserDataFileLaunchHandler,
+} from './user-data'
 
 const INITIAL_DIMENSION_WINDOWS = {
   tenses: [],
@@ -218,6 +224,77 @@ describe('importUserData', () => {
     expect(stored['conjugation:sound:1:active.past:3ms']).toMatchObject({
       interval: 145313,
       dueDate: '2424-01-30',
+    })
+  })
+})
+
+describe('mergeUserData', () => {
+  test('rejects an invalid payload', () => {
+    expect(mergeUserData('{}')).toBe(false)
+  })
+
+  test('takes the imported settings', () => {
+    localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+    localStorage.setItem('conjugator:theme', JSON.stringify('dark'))
+
+    expect(
+      mergeUserData(
+        JSON.stringify({ settings: { language: 'it', diacriticsPreference: 'all', themePreference: 'light' } }),
+      ),
+    ).toBe(true)
+    expect(localStorage.getItem('conjugator:language')).toBe('"it"')
+    expect(localStorage.getItem('conjugator:diacriticsPreference')).toBe('"all"')
+    expect(localStorage.getItem('conjugator:theme')).toBe('"light"')
+  })
+
+  test('keeps favourite verbs from both sides', () => {
+    localStorage.setItem('conjugator:favouriteVerbs', JSON.stringify(['ktb-1', 'sfr-1']))
+
+    mergeUserData(JSON.stringify({ favouriteVerbs: ['sfr-1', 'bdl-1'] }))
+
+    expect(JSON.parse(localStorage.getItem('conjugator:favouriteVerbs')!)).toEqual(['ktb-1', 'sfr-1', 'bdl-1'])
+  })
+
+  test('stores the merged exercise data', () => {
+    localStorage.setItem(
+      'conjugator:srs',
+      JSON.stringify({
+        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+      }),
+    )
+    localStorage.setItem(
+      'conjugator:exercise:daily',
+      JSON.stringify([{ date: '2026-03-21', correct: 1, incorrect: 0, passed: 0 }]),
+    )
+    const dimensions = {
+      profile: { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+      windows: { ...INITIAL_DIMENSION_WINDOWS, pronouns: [true] },
+    }
+
+    mergeUserData(
+      JSON.stringify({
+        srs: {
+          'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+        },
+        trackedExercises: [{ date: '2026-03-29', correct: 3, incorrect: 1, passed: 0 }],
+        dimensions,
+      }),
+    )
+
+    expect({
+      srs: JSON.parse(localStorage.getItem('conjugator:srs')!),
+      trackedExercises: JSON.parse(localStorage.getItem('conjugator:exercise:daily')!),
+      dimensions: JSON.parse(localStorage.getItem('conjugator:dimensions')!),
+    }).toEqual({
+      srs: {
+        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+      },
+      trackedExercises: [
+        { date: '2026-03-21', correct: 1, incorrect: 0, passed: 0 },
+        { date: '2026-03-29', correct: 3, incorrect: 1, passed: 0 },
+      ],
+      dimensions,
     })
   })
 })

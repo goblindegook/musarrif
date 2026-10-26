@@ -16,9 +16,10 @@ import * as Sharing from 'expo-sharing'
 import { useState } from 'react'
 import { Alert, View } from 'react-native'
 import { FormSectionHeading } from '../../components/Heading'
-import { decodeUserDataExport, encodeUserDataExport } from '../../data/UserDataCodec'
+import { decodeUserDataExport, encodeUserDataExport, mergeUserDataSnapshot } from '../../data/UserDataCodec'
 import { getCopy, useSystemLanguage } from '../../i18n/copy'
 import { getLocaleDirection } from '../../i18n/direction'
+import type { ValidatedUserDataSnapshot } from '../../storage/schema'
 import { useUserData } from '../../storage/UserDataProvider'
 import { useDiacriticsPreference } from '../../storage/user-data-hooks'
 import { useCloudSyncLifecycle } from '../../sync/CloudSyncLifecycle'
@@ -70,16 +71,21 @@ function SettingsContent() {
         Alert.alert(t('settings.data.import'), t('settings.data.importInvalid'))
         return
       }
+      const applyImport = (next: ValidatedUserDataSnapshot) => {
+        void replaceExportedData(next)
+          .then(() => Alert.alert(t('settings.data.import'), t('settings.data.imported')))
+          .catch(() => Alert.alert(t('settings.data.import'), t('settings.data.importError')))
+      }
       Alert.alert(t('settings.importWarning.title'), t('settings.importWarning.message'), [
         { text: t('settings.importWarning.cancel'), style: 'cancel' },
         {
-          text: t('settings.importWarning.confirm'),
+          text: t('settings.importWarning.merge'),
+          onPress: () => applyImport(mergeUserDataSnapshot(store.getValues(), snapshot)),
+        },
+        {
+          text: t('settings.importWarning.overwrite'),
           style: 'destructive',
-          onPress: () => {
-            void replaceExportedData(snapshot)
-              .then(() => Alert.alert(t('settings.data.import'), t('settings.data.imported')))
-              .catch(() => Alert.alert(t('settings.data.import'), t('settings.data.importError')))
-          },
+          onPress: () => applyImport(snapshot),
         },
       ])
     } catch {

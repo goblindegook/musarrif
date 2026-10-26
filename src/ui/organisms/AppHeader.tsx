@@ -19,7 +19,7 @@ import { ModeToggle } from '../molecules/ModeToggle'
 import { SegmentedControl } from '../molecules/SegmentedControl'
 import { isOpticalTransferSupported } from '../optical-transfer'
 import { useRouting } from '../routes'
-import { ACCEPTED_TYPES, getUserData, importUserData, saveDataFile } from '../user-data'
+import { ACCEPTED_TYPES, getUserData, importUserData, mergeUserData, saveDataFile } from '../user-data'
 import { OpticalReceive } from './OpticalReceive'
 import { OpticalSend } from './OpticalSend'
 
@@ -199,8 +199,17 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
       >
         <SettingsModalBody>
           <p>{t('settings.importWarning.message')}</p>
-          <ActionRow>
+          <ImportChoices>
             <Button onClick={() => setPendingImportContent(null)}>{t('settings.importWarning.cancel')}</Button>
+            <Button
+              onClick={() => {
+                const content = pendingImportContent
+                setPendingImportContent(null)
+                if (content != null && mergeUserData(content)) window.location.reload()
+              }}
+            >
+              {t('settings.importWarning.merge')}
+            </Button>
             <Button
               onClick={() => {
                 const content = pendingImportContent
@@ -208,9 +217,9 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
                 if (content != null && importUserData(content)) window.location.reload()
               }}
             >
-              {t('settings.importWarning.confirm')}
+              {t('settings.importWarning.overwrite')}
             </Button>
-          </ActionRow>
+          </ImportChoices>
         </SettingsModalBody>
       </Modal>
       {opticalMode === 'send' && (
@@ -360,4 +369,14 @@ const ActionRow = styled('div')`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+`
+
+const ImportChoices = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+
+  @media (max-width: 479px) {
+    grid-template-columns: 1fr;
+  }
 `

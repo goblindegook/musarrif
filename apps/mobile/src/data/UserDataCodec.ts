@@ -1,5 +1,6 @@
 import * as v from 'valibot'
 import { DimensionStore as DimensionStoreSchema, parseDimensionStore } from '../../../../src/exercises/dimensions'
+import { mergeExerciseData } from '../../../../src/exercises/merge'
 import { SrsStore as SrsStoreSchema } from '../../../../src/exercises/srs'
 import { readSrsStore } from '../storage/exercise-data'
 import {
@@ -56,9 +57,31 @@ export function decodeUserDataExport(raw: string): ValidatedUserDataSnapshot | u
   }
 
   const result = v.safeParse(ImportPayload, parsed)
-  if (!result.success) return undefined
+  return result.success ? toSnapshot(result.output) : undefined
+}
 
-  const { settings, favouriteVerbs, trackedExercises, srs, dimensions } = result.output
+/** Device-only values stay as they are, since a backup never carries them. */
+export function mergeUserDataSnapshot(
+  local: UserDataSnapshot['values'],
+  incoming: ValidatedUserDataSnapshot,
+): ValidatedUserDataSnapshot {
+  const existing = v.parse(ImportPayload, JSON.parse(encodeUserDataExport(local)))
+  const imported = v.parse(ImportPayload, JSON.parse(encodeUserDataExport(incoming.values)))
+  const merged = toSnapshot({
+    ...imported,
+    ...mergeExerciseData(existing, imported),
+    favouriteVerbs: [...new Set([...existing.favouriteVerbs, ...imported.favouriteVerbs])],
+  })
+  return { values: { ...local, ...merged.values } }
+}
+
+function toSnapshot({
+  settings,
+  favouriteVerbs,
+  trackedExercises,
+  srs,
+  dimensions,
+}: v.InferOutput<typeof ImportPayload>): ValidatedUserDataSnapshot {
   const values: Partial<Record<UserDataKey, UserDataValue>> = {
     'setting:language': settings.language,
     'setting:diacriticsPreference': settings.diacriticsPreference,

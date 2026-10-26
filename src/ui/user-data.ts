@@ -6,6 +6,7 @@ import {
   DimensionStore as DimensionStoreSchema,
   parseDimensionStore,
 } from '../exercises/dimensions'
+import { mergeExerciseData } from '../exercises/merge'
 import { parseSrsStore, type SrsStore, SrsStore as SrsStoreSchema } from '../exercises/srs'
 import type { DiacriticsPreference } from '../paradigms/tokens'
 import type { Language } from './hooks/useI18n'
@@ -153,15 +154,31 @@ export function importUserData(raw: string): boolean {
   const payload = v.safeParse(ImportUserData, parse(raw, null))
   if (!payload.success) return false
 
-  save('conjugator:language', payload.output.settings.language)
-  save('conjugator:diacriticsPreference', payload.output.settings.diacriticsPreference)
-  save('conjugator:theme', payload.output.settings.themePreference)
-  save('conjugator:favouriteVerbs', payload.output.favouriteVerbs ?? [])
-  save('conjugator:exercise:daily', payload.output.trackedExercises)
-  save('conjugator:srs', payload.output.srs)
-  save('conjugator:dimensions', payload.output.dimensions)
-
+  saveUserData(payload.output)
   return true
+}
+
+export function mergeUserData(raw: string): boolean {
+  const payload = v.safeParse(ImportUserData, parse(raw, null))
+  if (!payload.success) return false
+
+  const local = getUserData()
+  saveUserData({
+    ...payload.output,
+    ...mergeExerciseData(local, payload.output),
+    favouriteVerbs: [...new Set([...local.favouriteVerbs, ...(payload.output.favouriteVerbs ?? [])])],
+  })
+  return true
+}
+
+function saveUserData(data: v.InferOutput<typeof ImportUserData>) {
+  save('conjugator:language', data.settings.language)
+  save('conjugator:diacriticsPreference', data.settings.diacriticsPreference)
+  save('conjugator:theme', data.settings.themePreference)
+  save('conjugator:favouriteVerbs', data.favouriteVerbs ?? [])
+  save('conjugator:exercise:daily', data.trackedExercises)
+  save('conjugator:srs', data.srs)
+  save('conjugator:dimensions', data.dimensions)
 }
 
 function parse<T>(raw: string | null, defaultValue: T): T {

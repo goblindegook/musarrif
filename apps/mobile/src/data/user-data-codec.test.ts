@@ -1,5 +1,5 @@
 import type { UserDataSnapshot } from '../storage/schema'
-import { decodeUserDataExport, encodeUserDataExport } from './UserDataCodec'
+import { decodeUserDataExport, encodeUserDataExport, mergeUserDataSnapshot } from './UserDataCodec'
 
 const browserExportFixture = {
   version: 1,
@@ -135,6 +135,43 @@ describe('user-data backup codec', () => {
       },
       dimensions: {
         profile: { nominals: 0 },
+      },
+    })
+  })
+})
+
+describe('merging an imported backup', () => {
+  test('takes the imported settings, joins favourites, merges exercise data and keeps device-only values', () => {
+    const local: UserDataSnapshot['values'] = {
+      'setting:language': 'ar',
+      'setting:diacriticsPreference': 'all',
+      'setting:theme': 'light',
+      'setting:arabicVoice': 'Voice 1',
+      'favorite:ktb-1': true,
+      'exercise:daily:2026-03-20': { date: '2026-03-20', correct: 1, incorrect: 0, passed: 0 },
+      'srs:conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
+      'dimension:store': {
+        profile: { tenses: 1, pronouns: 0, forms: 0, rootTypes: 0, nominals: 0 },
+        windows: { tenses: [true], pronouns: [], forms: [], rootTypes: [], nominals: [] },
+      },
+      'local:tourComplete': true,
+    }
+    const incoming = decodeUserDataExport(JSON.stringify(browserExportFixture))!
+
+    expect(mergeUserDataSnapshot(local, incoming)).toEqual({
+      values: {
+        'setting:language': 'pt',
+        'setting:diacriticsPreference': 'none',
+        'setting:theme': 'dark',
+        'setting:arabicVoice': 'Voice 1',
+        'favorite:ktb-1': true,
+        'favorite:sfr-1': true,
+        'exercise:daily:2026-03-20': { date: '2026-03-20', correct: 1, incorrect: 0, passed: 0 },
+        'exercise:daily:2026-03-21': { date: '2026-03-21', correct: 4, incorrect: 1, passed: 2 },
+        'srs:conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
+        'srs:conjugation:sound:1:active.past:3ms': browserExportFixture.srs['conjugation:sound:1:active.past:3ms'],
+        'dimension:store': browserExportFixture.dimensions,
+        'local:tourComplete': true,
       },
     })
   })
