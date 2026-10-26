@@ -17,7 +17,7 @@
     "mobile:start": "npm run start --workspace musarrif-mobile",
     "mobile:ios": "npm run ios --workspace musarrif-mobile",
     "mobile:typecheck": "npm run typecheck --workspace musarrif-mobile",
-    "mobile:test": "npm run test --workspace musarrif-mobile -- --runInBand",
+    "mobile:test": "npm run test --workspace musarrif-mobile",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
