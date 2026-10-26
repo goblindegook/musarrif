@@ -64,7 +64,7 @@ const Dialog = styled('dialog')`
   border-radius: var(--radius);
   padding: 0;
   max-width: 520px;
-  width: min(100%, 520px);
+  width: min(100% - 2rem, 520px);
   max-height: calc(100vh - 2rem);
   overflow: hidden;
   box-shadow: var(--shadow-elevated);
