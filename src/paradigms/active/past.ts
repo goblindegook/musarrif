@@ -150,9 +150,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
 
-  if (c3.isWeak) return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(pastVowel.equals(KASRA) ? YEH : c3)]]
-
-  if (c2.isWeak && verb.hollowContraction !== 'uncontracted') return [[...prefix, radicalMorpheme(c3)]]
+  if (c2.isWeak && !c3.isWeak && verb.hollowContraction !== 'uncontracted') return [[...prefix, radicalMorpheme(c3)]]
 
   return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 }
@@ -188,10 +186,7 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF_HAMZA, FATHA), radicalMorpheme(c1)]
 
-  if (c2.equals(c3) && c3.isWeak)
-    return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
-  if (c2.equals(c3))
+  if (c2.equals(c3) && !c3.isWeak)
     return [
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
       [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
@@ -199,10 +194,7 @@ function derivePastFormIV(verb: NonFormIVerb): PastBaseForms {
 
   if (verb.hamzaElision) return [[...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)]]
 
-  if (c3.isWeak)
-    return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
-  if (c2.isWeak)
+  if (c2.isWeak && !c3.isWeak)
     return [
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)],
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)],
@@ -230,20 +222,14 @@ function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
 
-  return [
-    c3.isWeak
-      ? [...prefix, measureMorpheme(...longVowelA), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]
-      : [...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
-  ]
+  return [[...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
 }
 
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF, KASRA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
-  if (c2.isWeak && c3.isWeak) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
-  if (c2.isWeak)
+  if (c2.isWeak && !c3.isWeak)
     return [
       [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)],
       [...prefix, radicalMorpheme(c3)],
@@ -269,15 +255,7 @@ function derivePastFormVIII(verb: NonFormIVerb): PastBaseForms {
       ],
     ]
 
-  if (c2.isWeak && c3.isWeak) return [[...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
-  if (c2.equals(YEH))
-    return [
-      [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)],
-      [...prefix, radicalMorpheme(c3)],
-    ]
-
-  if (c2.isWeak && !infix.equals(DAL))
+  if (!c3.isWeak && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
     return [
       [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)],
       [...prefix, radicalMorpheme(c3)],
@@ -306,16 +284,13 @@ function derivePastFormX(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
   const prefix = [measureMorpheme(ALIF, KASRA, SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
 
-  if (c2.isWeak && c3.isWeak)
-    return [[...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
-
-  if (c2.equals(c3))
+  if (c2.equals(c3) && !c3.isWeak)
     return [
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)],
       [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)],
     ]
 
-  if (c2.isWeak)
+  if (c2.isWeak && !c3.isWeak)
     return [
       [...prefix, measureMorpheme(...longVowelA), radicalMorpheme(c3)],
       [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3)],
@@ -385,6 +360,9 @@ function contractDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morphem
   const agreement = morphemes[index + 1]
 
   if (before.equals([KASRA])) {
+    // A weak radical after kasra is always yeh (حيو → حَيِيَ):
+    if (c3.equals([WAW])) return contractDefectiveRoot(morphemes.with(index, radicalMorpheme(YEH)))
+
     // Elide kasra + c3 before a damma-initial agreement suffix (3mp):
     if (agreement.startsWith([DAMMA]))
       return findPrecedingRadical(morphemes, index)?.equals(c3)
@@ -397,11 +375,12 @@ function contractDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morphem
     return morphemes
   }
 
-  // Bare 3ms elides c3 and replaces it with alif or alif maqsura:
+  // Bare 3ms elides c3 and replaces it with alif or alif maqsura. Alif after a yeh radical avoids
+  // a yeh + alif maqsura spelling (أَحْيَا):
   if (agreement.equals([FATHA]))
     return [
       ...morphemes.slice(0, index),
-      radicalMorpheme(c3.equals([WAW]) || findPrecedingRadical(morphemes, index)?.equals(c3) ? ALIF : ALIF_MAQSURA),
+      radicalMorpheme(c3.equals([WAW]) || findPrecedingRadical(morphemes, index)?.equals([YEH]) ? ALIF : ALIF_MAQSURA),
     ]
 
   // 3fs and 3fd elide defective root and its fatha, keeping the teh-initial suffix:
