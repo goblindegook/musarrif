@@ -31,14 +31,17 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
   const [c1, c2, c3] = verb.rootTokens
 
   switch (pattern) {
-    case 'fa3l':
+    case 'fa3l': {
+      // Different hollow-defective radicals assimilate to yeh (kawy → kayy)
+      const assimilated = c2.isWeak && c3.isWeak && !c2.equals(c3)
       return [
         radicalMorpheme(c1),
         measureMorpheme(FATHA),
-        radicalMorpheme(c2),
+        radicalMorpheme(assimilated ? YEH : c2),
         measureMorpheme(SUKOON),
-        radicalMorpheme(c3),
+        radicalMorpheme(assimilated ? YEH : c3),
       ]
+    }
 
     case 'fa3al':
       return [

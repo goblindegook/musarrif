@@ -13406,8 +13406,7 @@
     "root": "kwy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": [],
-    "lexicalMasdars": ["kay~"]
+    "masdars": ["fa3l"]
   },
   {
     "root": "kwy",
@@ -24854,8 +24853,7 @@
     "root": "zwy",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3iil"],
-    "lexicalMasdars": ["zay~"]
+    "masdars": ["fa3l", "fa3iil"]
   },
   {
     "root": "zwy",
