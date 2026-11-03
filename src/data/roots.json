@@ -13404,6 +13404,13 @@
   },
   {
     "root": "kwy",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": [],
+    "lexicalMasdars": ["kay~"]
+  },
+  {
+    "root": "kwy",
     "form": 8,
     "passive": "none"
   },
