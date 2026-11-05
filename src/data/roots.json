@@ -3126,6 +3126,19 @@
   },
   {
     "root": "Ell",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"],
+    "passive": "none"
+  },
+  {
+    "root": "Ell",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3al", "fa3l"]
+  },
+  {
+    "root": "Ell",
     "form": 2
   },
   {
@@ -3777,6 +3790,12 @@
     "root": "Ewj",
     "form": 9,
     "passive": "none"
+  },
+  {
+    "root": "Ewl",
+    "form": 1,
+    "vowels": "a-u",
+    "masdars": ["fa3l"]
   },
   {
     "root": "Ewl",
