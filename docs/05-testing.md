@@ -2,12 +2,7 @@
 
 ### TDD is MANDATORY ⚠️
 
-**Never change system behaviour before writing tests.**
-
-**Red-Green-Refactor**:
-1. Write failing test, **verify it fails** (Red)
-2. Write minimum code to pass (Green)
-3. Refactor, keep tests green (Refactor)
+**Never change system behaviour before writing tests.** Follow the `tdd` skill for every behaviour change.
 
 Tests co-located with source files (`.test.ts` / `.test.tsx`). Framework: Vitest + `@testing-library/preact` + `@testing-library/jest-dom`.
 

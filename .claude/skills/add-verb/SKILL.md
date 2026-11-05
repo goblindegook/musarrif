@@ -11,7 +11,13 @@ One flow covers both jobs: generate the reference test, then make it pass. Addin
 ## Quick Flow
 
 1. Identify the target root and form from `$ARGUMENTS`.
-2. Generate the test file:
+2. **Confirm with the user before writing any file.** Read the sources without touching the repo (`npm run glosses -- <root> [form]`, the Wiktionary page of the bare lemma, ElixirFM) and show the user, for each candidate verb:
+   - the verb id and Form I vowel pattern(s), listing every Form I conjugation the source has for the root, since adding one, several or all is the user's call;
+   - the passive (full, impersonal, none) and the maṣdars the source gives;
+   - the proposed en, it and pt infinitives and the root gloss, each quoted from **that form's own entry** on the source page. Never borrow a gloss the entry does not state. Choose one primary sense, plus further comma-separated senses when genuinely distinct (`to provide for, to impoverish`), never synonyms.
+
+   Wait for the user's answer. Only then run the scripts or edit anything.
+3. Generate the test file:
 
 ```bash
 rtk mise exec -- npm run add:tests -- wiktionary <verb-id> [<vowels>]
@@ -19,31 +25,34 @@ rtk mise exec -- npm run add:tests -- wiktionary <verb-id> [<vowels>]
 
 Both scripts take `<source> <verb-id> [<vowels>]`. For a Form I triliteral verb, pass the vowel pattern (`a-u`, `a-i`, `i-a`, …) as the third argument whenever the root has more than one Form I conjugation. It selects the Wiktionary table, the ElixirFM lexeme, and the Qutrub reading, and overrides the dataset entry when one already exists. The script rejects a vowel pattern for any other form.
 
-3. Run the generated test and confirm it fails before changing production data/code.
-4. Generate the `src/data/roots.json` row from the **same source and arguments**:
+4. Run the generated test and confirm it fails before changing production data/code.
+5. Generate the `src/data/roots.json` row from the **same source and arguments**:
 
 ```bash
 rtk mise exec -- npm run add:verb -- wiktionary <verb-id> [<vowels>]
 ```
 
-5. Add the translations and glosses by hand, since the script writes no locale entries. Skip this step when correcting a verb that is already in the dataset:
+6. Add the translations and glosses by hand, since the script writes no locale entries. Skip this step when correcting a verb that is already in the dataset:
 
+- Gloss selection follows `translate-verb` step 4 (one primary sense, extra senses only when genuinely distinct).
 - `en.verbs.json`, `it.verbs.json`, `pt.verbs.json`: `verbs["<verb-id>"]` (infinitive, e.g. `to write` / `scrivere` / `escrever`) and, for a new root, `roots["<root>"]` (nominal gloss, e.g. `writing`).
 - `ar.verbs.json`: `roots["<root>"]` only, fully vocalised. This is the **semantic meaning of the root**, not the verb: an abstract noun for the shared sense of the root, never a conjugated form. A maṣdar is fine when it carries that sense (`$rb` → `شُرْب`), and so is a noun from another form (`$rk` → `مُشارَكَة`). Separate distinct senses with `، ` (`$wr` → `إِشارَة، اِسْتِشارَة`).
 
-6. Format the data and locale files:
+7. Format the data and locale files:
 
 ```bash
 rtk mise exec -- npm run format
 ```
 
-7. Verify with the full gate:
+8. Verify with the full gate:
 
 ```bash
 rtk mise exec -- npm run check:all
 ```
 
-8. Decide whether the generated test earns a place. It exists to drive the red-green loop, not to be kept per verb: the suite covers **patterns**, not the whole dataset. Keep it only when its root shape (sound, hollow, doubled, assimilated, defective, hamzated) × form × Form I vowel class is not already covered by an existing `src/paradigms/verbs/*.test.ts`, or if it was added to correct a conjugation. Otherwise delete it and keep the dataset row and locale entries alone.
+9. Decide whether the generated test earns a place. It exists to drive the red-green loop, not to be kept per verb: the suite covers **patterns**, not the whole dataset. Keep it only when its root shape (sound, hollow, doubled, assimilated, defective, hamzated) × form × Form I vowel class is not already covered by an existing `src/paradigms/verbs/*.test.ts`, or if it was added to correct a conjugation. Otherwise delete it and keep the dataset row and locale entries alone.
+
+When no source covers the verb, `rtk mise exec -- npm run add:verb:wizard` is the interactive fallback: it edits `src/data/roots.json` and the en, it and pt verb locale files.
 
 ## What the Row Script Derives
 
@@ -53,7 +62,7 @@ rtk mise exec -- npm run check:all
 
 ## Correcting a Wrong Conjugation
 
-Same flow. Start at step 2 to get a full reference table for the verb; the generated test covers every paradigm, so it will show whether the reported cell is the only wrong one. Then step 4 to refresh the row, which also rescues a stale `masdars` or `passive`.
+Same flow. Start at step 3 to get a full reference table for the verb; the generated test covers every paradigm, so it will show whether the reported cell is the only wrong one. Then step 5 to refresh the row, which also rescues a stale `masdars` or `passive`.
 
 If cells are still wrong once the row matches the source, the derivation is at fault. Escalate in this order, and stop at the first level that fixes it:
 
