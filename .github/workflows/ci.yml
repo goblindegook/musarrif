@@ -32,6 +32,9 @@ jobs:
       - name: Check module boundaries
         run: npm run check:boundaries
 
+      - name: Validate verb data
+        run: npm run check:roots
+
       - name: Typecheck
         run: npx tsc
 

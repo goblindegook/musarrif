@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/ui": "~58.0.0",
+    "@pacote/buckwalter": "^0.1.1",
     "expo": "~58.0.0",
     "expo-build-properties": "~58.0.0",
     "expo-clipboard": "~58.0.0",

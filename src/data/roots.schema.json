@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Muṣarrif verb lexicon",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["root", "form"],
+    "additionalProperties": false,
+    "properties": {
+      "root": { "type": "string", "minLength": 3, "maxLength": 4 },
+      "form": { "type": "integer", "minimum": 1, "maximum": 10 },
+      "vowels": { "enum": ["a-a", "a-i", "a-u", "i-a", "i-i", "i-u", "u-a", "u-i", "u-u"] },
+      "passive": { "enum": ["none", "impersonal"] },
+      "hollowContraction": { "enum": ["contracted", "uncontracted"] },
+      "contractedImperative": { "type": "boolean" },
+      "hamzaElision": { "type": "boolean" },
+      "masdars": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "fa3l",
+            "fi3l",
+            "fu3l",
+            "fa3al",
+            "fa3il",
+            "fa3aal",
+            "fa3iil",
+            "fi3aal",
+            "fu3aal",
+            "fu3ool",
+            "fu3oola",
+            "fa3alaan",
+            "fu3laan",
+            "fa3aala",
+            "fa3la",
+            "fi3aala",
+            "fi3la",
+            "fu3la",
+            "fi3al",
+            "mimi"
+          ]
+        }
+      },
+      "lexicalMasdars": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+      "lexicalActiveParticiple": { "type": "string", "minLength": 1 },
+      "lexicalPassiveParticiple": { "type": "string", "minLength": 1 },
+      "valency": { "type": "array", "items": { "enum": [1, 2, 3] }, "uniqueItems": true },
+      "prepositions": {
+        "type": "object",
+        "propertyNames": {
+          "enum": ["bi", "li", "ka", "fiy", "Eano", "mino", "<ilaY", "EalaY", "Hat~aY", "muno*u", "mu*o", "rub~a"]
+        },
+        "additionalProperties": { "enum": ["required", "optional"] }
+      }
+    },
+    "allOf": [
+      {
+        "if": { "properties": { "root": { "type": "string", "minLength": 4 } } },
+        "then": { "properties": { "form": { "type": "integer", "maximum": 4 } } }
+      }
+    ]
+  }
+}
