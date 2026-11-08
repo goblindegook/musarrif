@@ -30,7 +30,7 @@ describe('VerbHeaderPanel', () => {
         prepositions: ['bi', 'li', 'ka', 'mino'],
       },
     })
-    expect(screen.getByText('بِـ، لِـ، كَـ، مِنْ')).toBeInTheDocument()
+    expect(screen.getByText('(بِـ، لِـ، كَـ، مِنْ)')).toBeInTheDocument()
   })
 
   test('shows a comma-separated list in annotation order', () => {
@@ -38,7 +38,7 @@ describe('VerbHeaderPanel', () => {
     renderVerbHeaderPanel({
       verb: { ...getVerb('كتب', 1), prepositions: ['Eano', 'fiy'] },
     })
-    const prepositions = screen.getByText('عَنْ، فِي')
+    const prepositions = screen.getByText('(عَنْ، فِي)')
     expect(prepositions).toHaveAttribute('lang', 'ar')
     expect(prepositions).toHaveAttribute('dir', 'rtl')
   })
@@ -48,7 +48,7 @@ describe('VerbHeaderPanel', () => {
     renderVerbHeaderPanel({
       verb: { ...getVerb('كتب', 1), prepositions: ['Eano', 'fiy'] },
     })
-    expect(screen.getByText('عن، في')).toBeInTheDocument()
+    expect(screen.getByText('(عن، في)')).toBeInTheDocument()
   })
 
   test('renders verb, translation, actions, and content', async () => {

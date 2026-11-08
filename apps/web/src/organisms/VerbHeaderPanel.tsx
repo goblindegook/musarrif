@@ -49,9 +49,9 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
             {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
             {formatArabic(verb.lemma)}
             {prepositions.length > 0 && (
-              <ValencyLabel lang="ar" dir="rtl" style={{ fontSize: '1rem' }}>
-                {prepositions.join('، ')}
-              </ValencyLabel>
+              <Prepositions lang="ar" dir="rtl">
+                ({prepositions.join('، ')})
+              </Prepositions>
             )}
           </Lemma>
           <Actions>{actions}</Actions>
@@ -98,12 +98,8 @@ const Actions = styled('div')`
 `
 
 const Lemma = styled('h2')`
-  display: flex;
   flex: 1;
   min-width: 0;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem;
   margin: 0;
   font-size: 2rem;
   font-weight: 600;
@@ -121,6 +117,13 @@ const ValencyLabel = styled('span')`
   font-weight: 400;
   font-style: italic;
   text-transform: lowercase;
+  color: var(--color-text-secondary);
+`
+
+const Prepositions = styled('span')`
+  margin-inline-start: 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
   color: var(--color-text-secondary);
 `
 

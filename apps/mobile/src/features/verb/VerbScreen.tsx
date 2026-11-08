@@ -86,7 +86,7 @@ export function VerbScreen({ source }: { source: 'search' | 'build' }) {
                     )}
                     {prepositions.length > 0 && (
                       <ArabicText style={{ color: theme.inkSecondary, fontSize: 16 }}>
-                        {prepositions.join('، ')}
+                        {prepositions.join(' · ')}
                       </ArabicText>
                     )}
                   </View>
