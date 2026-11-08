@@ -79,7 +79,7 @@ describe('buildRootEntry', () => {
       form: 1,
       vowels: 'a-u',
       valency: [2, 3],
-      prepositions: { li: 'required' },
+      prepositions: ['li'],
       contractedImperative: true,
       hamzaElision: true,
     }
@@ -92,7 +92,7 @@ describe('buildRootEntry', () => {
       hamzaElision: true,
       masdars: ['fa3l'],
       valency: [2, 3],
-      prepositions: { li: 'required' },
+      prepositions: ['li'],
     })
   })
 
@@ -104,7 +104,7 @@ describe('buildRootEntry', () => {
       vowels: 'a-a',
       valency: [2, 3],
       lexicalActiveParticiple: 'x',
-      prepositions: { li: 'required' },
+      prepositions: ['li'],
     }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({

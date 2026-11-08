@@ -1,7 +1,7 @@
 import { transliterate } from '@pacote/buckwalter'
 import type { FormIPattern } from '../../src/paradigms/form-i-vowels.ts'
 import { deriveMasdar } from '../../src/paradigms/nominal/masdar.ts'
-import type { Prepositions } from '../../src/paradigms/verb-types.ts'
+import type { Preposition } from '../../src/paradigms/verb-types.ts'
 import {
   type DisplayVerb,
   isTriliteralFormIDisplayVerb,
@@ -27,7 +27,7 @@ export interface RootEntry {
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
-  prepositions?: Prepositions
+  prepositions?: readonly Preposition[]
 }
 
 type MasdarSelection = { masdars?: MasdarPattern[]; lexicalMasdars?: string[] }

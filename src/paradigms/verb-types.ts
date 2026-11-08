@@ -75,7 +75,6 @@ export type Preposition =
   | 'muno*u'
   | 'mu*o'
   | 'rub~a'
-export type Prepositions = Readonly<Partial<Record<Preposition, 'required' | 'optional'>>>
 export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
@@ -88,7 +87,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   lexicalMasdars?: readonly string[]
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
-  prepositions?: Prepositions
+  prepositions?: readonly Preposition[]
 }
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {

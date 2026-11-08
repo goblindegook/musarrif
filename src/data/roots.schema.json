@@ -46,11 +46,11 @@
       "lexicalPassiveParticiple": { "type": "string", "minLength": 1 },
       "valency": { "type": "array", "items": { "enum": [1, 2, 3] }, "uniqueItems": true },
       "prepositions": {
-        "type": "object",
-        "propertyNames": {
+        "type": "array",
+        "items": {
           "enum": ["bi", "li", "ka", "fiy", "Eano", "mino", "<ilaY", "EalaY", "Hat~aY", "muno*u", "mu*o", "rub~a"]
         },
-        "additionalProperties": { "enum": ["required", "optional"] }
+        "uniqueItems": true
       }
     },
     "allOf": [
