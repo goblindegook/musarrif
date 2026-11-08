@@ -30,6 +30,7 @@ rtk mise exec -- npm run glosses -- <root> <form>      # e.g. mHq 2
 ```
 
 This prints, for that root:
+
 - The Wiktionary root-appendix note (a "related to X" line), the best root-gloss candidate.
 - Any inline `Form <roman>: <lemma> ("<gloss>")` text the same appendix page carries. It is present for
   roughly half of roots and absent for the rest.

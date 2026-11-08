@@ -1,17 +1,11 @@
-## Code Style and Formatting
+## Code Style
 
 ### TypeScript Conventions
 
-- Use TypeScript with strict typing
-- Use `type` keyword for type-only imports: `import type { Verb } from './verbs'`
 - Prefer explicit types over inference when it improves readability
 - Use readonly arrays/objects for immutability: `readonly string[]`
 - Prefer nullish equality (`value == null` / `value != null`) over strict `undefined`/`null` checks for absence
 - Inline variables used only once unless it hurts readability
-
-### Formatting Rules (Biome)
-
-Formatting is set in `biome.json` and enforced by CI (`npm run check:lint`). Run `npm run format` rather than hand-matching a style.
 
 ### Naming Conventions
 
@@ -23,8 +17,7 @@ Formatting is set in `biome.json` and enforced by CI (`npm run check:lint`). Run
 ### Function and Code Organization
 
 - Keep functions small, single responsibility; prefer pure functions
-- Use `const` for components and module-level constants; use spread over mutation
-- Imports: external packages first, then internal type imports, then internal component/utility imports
+- Use spread over mutation
 
 ### Type Definitions
 

@@ -1,6 +1,7 @@
 ## Exercise Mode
 
 **Interface** (`src/exercises/exercises.ts`):
+
 ```typescript
 type InputMode = 'multiple-choice' | 'keyboard' | 'speech'
 
@@ -24,6 +25,7 @@ interface Exercise {
 **Generator pattern**: Each kind has dedicated generator in `src/exercises/generators/` (e.g., `conjugation.ts`, `verb-form.ts`, `masdar-form.ts`).
 
 **Adaptive dimensions** (`src/exercises/dimensions.ts`):
+
 - `tenses` (0–4): unlocks active past → full passive set
 - `pronouns` (0–3): `3ms` → full inventory
 - `forms` (0–9): form I → all ten forms
@@ -35,12 +37,14 @@ Exercise prompts render with partial diacritics by default. Diacritics are not s
 `recordDimensionAnswer` tracks rolling windows; `promoteDimensions` promotes/demotes via accuracy thresholds; `enforcePrerequisites` blocks invalid profiles.
 
 **SRS and persistence**:
+
 - `nextExercise(profile, srsStore, session, focus)` prioritizes due cards filtered by unlocked dimensions
 - Card identity: `cardKey` (`kind:rootType:form[:tense:pronoun]`)
 - SRS state: `conjugator:srs`; daily stats: `conjugator:exercise:daily`; dimension state: `conjugator:dimensions`
 - Streak goal: 10 correct/day
 
 **Input modes** (`ExerciseAnswerArea`): Each exercise declares which input modes it supports via `inputModes`. The answer area renders the appropriate UI:
+
 - `multiple-choice` — grid of `ShortcutButton` options (always available)
 - `keyboard` — Arabic text input with inline submit; correct answer revealed on wrong
 - `speech` — Web Speech API recognition via `useSpeechRecognition('ar')`; auto-starts on mode entry; correct spoken answer auto-submits without explicit confirmation; wrong answer shows transcript and retry button; mode only offered when `supported === true`

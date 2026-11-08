@@ -29,18 +29,18 @@ Copy is written fully vocalised. `ExplanationText` and `FormInsights` apply the 
 
 ## One name per concept
 
-| Use | Not |
-| --- | --- |
-| mīmī | mimi |
-| the verb | the stem |
+| Use                                  | Not             |
+| ------------------------------------ | --------------- |
+| mīmī                                 | mimi            |
+| the verb                             | the stem        |
 | Form II … Form X, Form Iq … Form IVq | measure, binyan |
-| radical (for a root letter) | letter |
+| radical (for a root letter)          | letter          |
 
-A root letter is a **radical** — *first radical*, *middle radical*, *last radical*, *the identical radicals*. Reserve **letter** for something that is not a radical: the Form VIII ت infix, the carrier the hamza sits on, the doubled letter a merge produces, and counting a root's size (*four-letter root*). Italian and Portuguese treat `radicale` / `radical` as feminine, following the `rootInfo.*` strings.
+A root letter is a **radical** — _first radical_, _middle radical_, _last radical_, _the identical radicals_. Reserve **letter** for something that is not a radical: the Form VIII ت infix, the carrier the hamza sits on, the doubled letter a merge produces, and counting a root's size (_four-letter root_). Italian and Portuguese treat `radicale` / `radical` as feminine, following the `rootInfo.*` strings.
 
-`stem` has no definition anywhere in the copy, so it is not used in it. Say *the verb*, *at the front*, *at the end*.
+`stem` has no definition anywhere in the copy, so it is not used in it. Say _the verb_, _at the front_, _at the end_.
 
-**Masdar is the one deliberate split.** UI labels stay *Verbal noun* / *Verbal nouns* (`meta.verbalNoun`, `nominalInfo.title.masdar`, `exercise.*.nominal.masdar`); explanation prose says *masdar*, because that is the term the explanation is teaching. Arabic uses `ٱلْمَصْدَرُ` throughout.
+**Masdar is the one deliberate split.** UI labels stay _Verbal noun_ / _Verbal nouns_ (`meta.verbalNoun`, `nominalInfo.title.masdar`, `exercise.*.nominal.masdar`); explanation prose says _masdar_, because that is the term the explanation is teaching. Arabic uses `ٱلْمَصْدَرُ` throughout.
 
 Arabic names a radical by its slot in فعل: `ٱلْفَاءُ`, `ٱلْعَيْنُ`, `ٱللَّامُ`, and `ٱلْأُصُولُ` for the set, matching `rootInfo.*`. They are feminine, so agreement follows (`تَصِيرُ ٱلْعَيْنُ ٱلْمُعْتَلَّةُ`, not `يَصِيرُ`). `ٱلْحَرْف` stays for non-radicals: `حَرْفُ ٱلْمُضَارَعَةِ`, `حَرْفٌ مُضَعَّفٌ`, `حَرْفُ عِلَّةٍ` as a category.
 
@@ -48,7 +48,7 @@ Arabic also keeps the wasl distinction the Latin locales make: `أَلِفُ ٱ�
 
 ## Register
 
-Explanation copy is plain: short sentences, hedged with *usually* / *often* where the grammar is a tendency. `formInfo.*.relationship` sits on the same panel as `explanation.form.*` and matches that register. No `animate causer`, `co-participant`, `patient`, `self-causation`.
+Explanation copy is plain: short sentences, hedged with _usually_ / _often_ where the grammar is a tendency. `formInfo.*.relationship` sits on the same panel as `explanation.form.*` and matches that register. No `animate causer`, `co-participant`, `patient`, `self-causation`.
 
 ## Punctuation
 

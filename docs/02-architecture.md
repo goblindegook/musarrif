@@ -1,24 +1,20 @@
 ## Architecture
 
-**Stack**: Preact + TypeScript (strict), Vite, goober (CSS-in-JS), Vitest + @testing-library/preact, Biome, dependency-cruiser (module boundaries, CI-gated).
+**Stack**: Preact + TypeScript, Vite, goober (CSS-in-JS), Vitest + @testing-library/preact, Biome, dependency-cruiser.
 
-**Module separation**: The repository is an npm workspace. Root `src/` and `scripts/` hold code shared by every app: `src/paradigms/`, `src/exercises/`, `src/primitives/`, `src/data/`, `src/locales/`. `apps/web/` (`musarrif-web`, the Preact PWA and Tauri desktop shell) and `apps/mobile/` (`musarrif-mobile`, the Expo app) are siblings that consume it. `src/paradigms/`, `src/exercises/`, and `src/primitives/` are pure — no DOM, no Preact, no goober. Biome rejects `window`, `document`, `localStorage` and `navigator` anywhere in shared `src/` outside tests, because Node's type definitions let them through `tsc`. Imports are enforced in CI by `npm run check:boundaries` (`.dependency-cruiser.cjs`), not just convention:
-- `src/paradigms/` and `src/exercises/` never import `apps/web/src/`, Preact or goober.
-- `src/paradigms/` never imports `src/exercises/`; exercises build on paradigms, not the other way round.
-- `src/primitives/` never imports other project modules.
-- Inside `apps/web/src/`, atomic design is one-way: atoms never import molecules, organisms or pages; molecules never import organisms or pages; organisms never import pages.
-- Shared code in `src/` and `scripts/` never imports from `apps/`.
-- The web app never imports from the mobile app; `npm run check:boundaries` enforces this. The mobile app is not scanned.
+**Module separation**: The repository is an npm workspace. Root `src/` and `scripts/` hold code shared by every app: `src/paradigms/`, `src/exercises/`, `src/primitives/`, `src/data/`, `src/locales/`. `apps/web/` (`musarrif-web`, the Preact PWA and Tauri desktop shell) and `apps/mobile/` (`musarrif-mobile`, the Expo app) are siblings that consume it.
 
 Conjugation functions return `Word` objects (see `word.ts` below), not raw strings — `String(word)` happens only at UI boundaries. `apps/web/src/prerender/` is a build-time-only module that mounts the real app to emit static HTML (see below).
 
 **State management**: Two context providers in `apps/web/src/hooks/`:
+
 - `RoutingProvider` (`apps/web/src/routes.ts`) — dual-mode: `path` by default (real URLs like `/verbs/:verbId`, required for the prerendered static pages to resolve), or `hash` (`#/verbs/:verbId`) when built with `VITE_ROUTING_MODE=hash` (`npm run web:build:hash`, for hosts without server-side rewrite support). Canonical route segments: `verbs`, `verbs/:verbId`, `verbs/:verbId/:voice/:tense`, `verbs/:verbId/:voice/present/:mood`, `test`.
 - `I18nProvider` — Language (en/it/pt/ar), diacritics (`all`/`some`/`none`), RTL/LTR.
 
 **Verb data**: Raw roots in `src/data/roots.json`, parsed and looked up via `src/paradigms/verbs.ts` (`getVerb`, `getVerbById`, `findVerbsByRoot*`, paradigm-availability rules). Fuzzy search w/ transliteration is a separate memoized module, `src/paradigms/search.ts` (10k-entry LRU).
 
 **Paradigm structure**:
+
 - `src/paradigms/active/` — past, present (indicative/subjunctive/jussive), future, imperative (each w/ an `-annotation.ts` file)
 - `src/paradigms/passive/` — past, present, future (each w/ an `-annotation.ts` file), plus `support.ts`
 - `src/paradigms/nominal/` — `masdar.ts`, `participle.ts` (active + passive participle)

@@ -19,13 +19,13 @@ review is worse than no review because it cost everyone time.
 
 Work out what is under review before reading anything.
 
-| User says | Diff to take |
-|---|---|
-| "review my changes", nothing specified | `git diff HEAD` plus untracked files |
-| "review the staged changes" | `git diff --cached` |
-| "review this commit", a SHA | `git show <sha>` |
-| "review this PR/branch", "compare to main" | `git diff <base>...<head>` |
-| a PR number or URL | `gh pr diff <n>` |
+| User says                                  | Diff to take                         |
+| ------------------------------------------ | ------------------------------------ |
+| "review my changes", nothing specified     | `git diff HEAD` plus untracked files |
+| "review the staged changes"                | `git diff --cached`                  |
+| "review this commit", a SHA                | `git show <sha>`                     |
+| "review this PR/branch", "compare to main" | `git diff <base>...<head>`           |
+| a PR number or URL                         | `gh pr diff <n>`                     |
 
 Then fix the review set: the list of files whose changed lines you are allowed
 to comment on. Everything else in the repository is context you may read but
@@ -162,8 +162,8 @@ Run each block whose trigger matches a file in the review set.
 - A gloss joining two synonyms (`to indicate, to guide`). A second sense must
   be a genuinely different meaning.
 - Internal pronoun codes (`3fs`, `2md`) in copy.
-- Terminology: *radical* not *letter* for a root letter, *the verb* not
-  *stem*, *Form II* not *measure*.
+- Terminology: _radical_ not _letter_ for a root letter, _the verb_ not
+  _stem_, _Form II_ not _measure_.
 - Punctuation: pt is pt_PT pre-AO90, en is en-US, `’` and `…`, no em dashes,
   `“ ”` in en and `« »` elsewhere, Arabic wrapped in `<span lang="ar">` and
   fully vocalised.
@@ -218,13 +218,15 @@ while describing something real. Unverifiable is not incorrect.
 <one or two sentences: what the change does, and the headline verdict>
 
 ### Critical
+
 - **`path/to/file.ts:42-48`** [bug] Description of the problem and its impact.
   > Fix: what to do instead.
-
 ### High
+
 ...
 
 ### Medium
+
 ...
 ```
 

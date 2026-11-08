@@ -43,7 +43,6 @@ Elegant, minimal, quietly authoritative. Three words: **precise, warm, scholarly
 5. **Scholarly credibility.** Typography + hierarchy evoke a well-designed reference book — warmth in paper and ink, not ornament.
 6. **Progressive depth.** Simple surface, depth revealed naturally — never overwhelming.
 
-
 ## UI Components
 
 **No new styles when existing idioms suffice.** Extend/reuse first; new styling only when unavoidable requirement can't be met with current idioms.

@@ -95,7 +95,7 @@ test('exposes query params from hash routes', () => {
     mode: 'hash',
     parse: () => ['home'],
   })
-  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+  const wrapper = ({ children }: { children?: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
 
   window.history.replaceState({}, '', '/#/home?form=2&page=3')
 
@@ -109,7 +109,7 @@ test('updates query params through useRouting setter', () => {
     mode: 'hash',
     parse: () => ['home'],
   })
-  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+  const wrapper = ({ children }: { children?: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
 
   window.history.replaceState({}, '', '/#/home?form=2&page=3')
 
@@ -128,7 +128,7 @@ test('scrolls to top when navigating to a new route', () => {
     mode: 'hash',
     parse: (segments) => (segments[0] === 'article' ? ['article', segments[1]] : ['home']),
   })
-  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+  const wrapper = ({ children }: { children?: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
   const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
 
   const { result } = renderHook(() => useDemoRouting(), { wrapper })
@@ -148,7 +148,7 @@ const articleRouting = (mode: 'hash' | 'path') =>
 
 const wrapperFor =
   (RoutingProvider: (props: { children: ComponentChildren }) => VNode) =>
-  ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+  ({ children }: { children?: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
 
 test('builds hash hrefs with a leading hash and no trailing slash', () => {
   const { RoutingProvider, useRouting: useDemoRouting } = articleRouting('hash')
@@ -241,7 +241,7 @@ test('scrolls to top when route changes via hashchange event', () => {
     mode: 'hash',
     parse: (segments) => (segments[0] === 'article' ? ['article', segments[1]] : ['home']),
   })
-  const wrapper = ({ children }: { children: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
+  const wrapper = ({ children }: { children?: ComponentChildren }) => <RoutingProvider>{children}</RoutingProvider>
   const scrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
 
   window.history.replaceState({}, '', '/#/home')

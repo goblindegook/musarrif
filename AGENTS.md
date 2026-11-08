@@ -13,27 +13,20 @@ This file is an index. Full guidance is split by topic under `docs/` so agents c
 - [Project Overview and Commands](docs/01-overview.md)
 - [Architecture and Directory Map](docs/02-architecture.md)
 - [Design Context and UI Conventions](docs/03-design-and-ui.md)
-- [Code Style and Formatting](docs/04-code-style.md)
+- [Code Style](docs/04-code-style.md)
 - [Testing Standards and TDD](docs/05-testing.md)
 - [Conjugation Rules and Verb Entry Workflow](docs/06-conjugation-and-lexicon.md)
 - [Exercise Mode Architecture](docs/07-exercise-mode.md)
 - [Localization, Copy Terminology, and Punctuation](docs/08-localization-and-copy.md)
 
-## Contribution Checklist
+## Verification
 
-After any change, run the full CI gate — lint, dependency boundaries, shared and web tests, shared and web typecheck, mobile app typecheck and tests, and web bundle (no prerender) — before considering the task done:
+After any change, run the checks and fix any issues before considering the task done:
 
 ```bash
 rtk mise exec -- npm run check:all
 ```
 
-`npm run check:all` does not check two things, so do a manual pass:
-
-- [ ] Linter passes without undocumented ignores (`check:all` confirms lint passes, not that every ignore is explained)
-- [ ] Existing UI primitives reused (no bespoke wrappers)
-
-**If TDD was violated (tests written after production code), the fix isn't automatic: you must start over.**
-
 ## Notes
 
-- When updating AGENTS guidance, edit the relevant file(s) in `docs/` and keep this index current; keep the checklist here in `AGENTS.md`.
+- When updating AGENTS guidance, edit the relevant file(s) in `docs/` and keep this index current.

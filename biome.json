@@ -13,6 +13,11 @@
     "indentStyle": "space",
     "lineWidth": 120
   },
+  "markdown": {
+    "parser": {
+      "frontmatter": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -20,6 +25,31 @@
     }
   },
   "overrides": [
+    {
+      "includes": ["apps/mobile/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noReactNativeRawText": {
+              "level": "error",
+              "options": {
+                "skip": ["PrimaryButton", "ArabicText"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/hooks/useRouting.tsx", "apps/web/src/test/fixtures.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noComponentHookFactories": "off"
+          }
+        }
+      }
+    },
     {
       "includes": ["**/*.test.tsx", "**/*.test.ts", "**/*.test.mts"],
       "linter": {

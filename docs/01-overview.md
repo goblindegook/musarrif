@@ -2,11 +2,9 @@
 
 Muṣarrif: PWA Arabic verb conjugator. Search, browse, drill conjugation tables — active/passive voice, all tenses/moods, nominal derivations (masdar, active/passive participles), speech synthesis. Exercise mode for form ID + root extraction.
 
-
 ## Version Control
 
 - Agents must not commit or push. User controls all commits + releases.
-
 
 ## Commands
 
