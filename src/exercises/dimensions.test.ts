@@ -230,9 +230,7 @@ describe('parseDimensionStore', () => {
     })
     expect(sanitized.windows).not.toHaveProperty('obsoleteDimension')
   })
-})
 
-describe('parseDimensionStore', () => {
   test('enforces prerequisites and preserves windows', () => {
     const imported = parseDimensionStore({
       profile: { ...INITIAL_DIMENSION_PROFILE, tenses: 1, nominals: 1, forms: 9, pronouns: 0 },

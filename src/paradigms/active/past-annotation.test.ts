@@ -448,7 +448,7 @@ describe('annotatePast', () => {
     ])
   })
 
-  test('Form VIII — حلم (1s) matches annotation object', () => {
+  test('Form VIII — خير (2mp) matches annotation object', () => {
     const steps = activePastDerivationSteps(getVerbById('xyr-8')!, '2mp')
 
     expect(detokenizeDerivationSteps(steps)).toEqual([
