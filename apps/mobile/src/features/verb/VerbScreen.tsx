@@ -1,3 +1,4 @@
+import { transliterateReverse } from '@pacote/buckwalter'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { ActivityIndicator, Share, Text, View } from 'react-native'
 import { applyDiacriticsPreference } from '../../../../../src/paradigms/tokens'
@@ -52,6 +53,10 @@ export function VerbScreen({ source }: { source: 'search' | 'build' }) {
       params: { verbId: related.id },
     })
   }
+  const prepositions = (verb.prepositions ?? []).map((preposition) => {
+    const arabic = applyDiacriticsPreference(transliterateReverse(preposition), diacriticsPreference)
+    return ['bi', 'li', 'ka'].includes(preposition) ? `${arabic}ـ` : arabic
+  })
 
   return (
     <>
@@ -60,25 +65,33 @@ export function VerbScreen({ source }: { source: 'search' | 'build' }) {
           title: applyDiacriticsPreference(verb.lemma, diacriticsPreference),
           headerTitleAlign: 'center',
           headerBackButtonDisplayMode: 'minimal',
-          headerTitle: verb.synthetic
-            ? () => (
-                <View style={{ alignItems: 'center' }}>
-                  <ArabicText style={{ color: theme.accent, fontSize: 27 }}>
-                    {applyDiacriticsPreference(verb.lemma, diacriticsPreference)}
-                  </ArabicText>
-                  <Text
-                    style={{
-                      color: theme.inkSecondary,
-                      fontSize: 10,
-                      letterSpacing: CAPS_TRACKING,
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {t('verb.generated')}
-                  </Text>
-                </View>
-              )
-            : undefined,
+          headerTitle:
+            verb.synthetic || prepositions.length > 0
+              ? () => (
+                  <View style={{ alignItems: 'center' }}>
+                    <ArabicText style={{ color: theme.accent, fontSize: 27 }}>
+                      {applyDiacriticsPreference(verb.lemma, diacriticsPreference)}
+                    </ArabicText>
+                    {verb.synthetic && (
+                      <Text
+                        style={{
+                          color: theme.inkSecondary,
+                          fontSize: 10,
+                          letterSpacing: CAPS_TRACKING,
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {t('verb.generated')}
+                      </Text>
+                    )}
+                    {prepositions.length > 0 && (
+                      <ArabicText style={{ color: theme.inkSecondary, fontSize: 16 }}>
+                        {prepositions.join('، ')}
+                      </ArabicText>
+                    )}
+                  </View>
+                )
+              : undefined,
           headerTitleStyle: { color: theme.accent, fontSize: 27 },
         }}
       />

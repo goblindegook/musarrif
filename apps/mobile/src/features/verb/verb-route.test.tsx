@@ -173,4 +173,21 @@ describe('verb detail route', () => {
 
     expect(mockHeaderOptions.title).toBe('كتب')
   })
+
+  test.each([
+    ["'ty-1", 'أتى', 'بـ، على'],
+    ["'ty-5", 'تأتى', 'عن، من، لـ، في'],
+  ])('shows %s prepositions below the navigation title', async (verbId, title, prepositions) => {
+    mockParams = { verbId }
+    const repository = createInMemoryRepository({ 'setting:diacriticsPreference': 'none' })
+    await render(
+      <UserDataProvider repositoryFactory={async () => repository}>
+        <VerbScreen source="search" />
+      </UserDataProvider>,
+    )
+    await act(async () => {})
+
+    expect(mockHeaderOptions.title).toBe(title)
+    expect(screen.getByText(prepositions)).toBeTruthy()
+  })
 })

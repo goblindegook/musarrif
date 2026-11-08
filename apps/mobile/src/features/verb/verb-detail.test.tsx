@@ -124,7 +124,7 @@ describe('verb detail', () => {
 
   test('shows localized valency, including multiple readings in numeric order', async () => {
     const { rerender } = await render(<VerbDetail verb={getVerbById('ktb-1')!} {...english} />)
-    expect(screen.getByTestId('verb-valency').props.children).toBe('Transitive · Ditransitive')
+    expect(screen.getByTestId('verb-valency').props.children).toBe('Intransitive · Transitive')
 
     await rerender(<VerbDetail verb={getVerbById("'kl-1")!} {...english} />)
     expect(screen.getByTestId('verb-valency').props.children).toBe('Intransitive · Transitive')

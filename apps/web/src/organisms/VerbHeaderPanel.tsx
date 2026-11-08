@@ -1,3 +1,4 @@
+import { transliterateReverse } from '@pacote/buckwalter'
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useMemo } from 'preact/hooks'
@@ -14,6 +15,10 @@ export interface VerbHeaderPanelProps {
 
 export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
   const { lang, dir, t, diacriticsPreference } = useI18n()
+  const prepositions = (verb.prepositions ?? []).map((preposition) => {
+    const arabic = applyDiacriticsPreference(transliterateReverse(preposition), diacriticsPreference)
+    return ['bi', 'li', 'ka'].includes(preposition) ? `${arabic}ـ` : arabic
+  })
 
   const formatArabic = useMemo(
     () => (value: string | null) => applyDiacriticsPreference(value ?? '', diacriticsPreference),
@@ -43,6 +48,11 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
           <Lemma>
             {verb.synthetic && <SyntheticMarker aria-hidden="true">* </SyntheticMarker>}
             {formatArabic(verb.lemma)}
+            {prepositions.length > 0 && (
+              <ValencyLabel lang="ar" dir="rtl" style={{ fontSize: '1rem' }}>
+                {prepositions.join('، ')}
+              </ValencyLabel>
+            )}
           </Lemma>
           <Actions>{actions}</Actions>
         </PanelTitleRow>
@@ -90,6 +100,10 @@ const Actions = styled('div')`
 const Lemma = styled('h2')`
   display: flex;
   flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
   margin: 0;
   font-size: 2rem;
   font-weight: 600;

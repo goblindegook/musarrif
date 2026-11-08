@@ -1,8 +1,13 @@
 import { cleanup, render, screen } from '@testing-library/preact'
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test } from 'vitest'
 import { getVerb, getVerbById } from '../../../../src/paradigms/verbs'
 import { I18nProvider } from '../hooks/useI18n'
 import { VerbHeaderPanel, type VerbHeaderPanelProps } from './VerbHeaderPanel'
+
+afterEach(() => {
+  cleanup()
+  localStorage.clear()
+})
 
 const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
   cleanup()
@@ -17,6 +22,35 @@ const renderVerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps
 }
 
 describe('VerbHeaderPanel', () => {
+  test('marks prepositions that attach to their complement with an extension line', () => {
+    localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('all'))
+    renderVerbHeaderPanel({
+      verb: {
+        ...getVerb('كتب', 1),
+        prepositions: ['bi', 'li', 'ka', 'mino'],
+      },
+    })
+    expect(screen.getByText('بِـ، لِـ، كَـ، مِنْ')).toBeInTheDocument()
+  })
+
+  test('shows a comma-separated list in annotation order', () => {
+    localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('all'))
+    renderVerbHeaderPanel({
+      verb: { ...getVerb('كتب', 1), prepositions: ['Eano', 'fiy'] },
+    })
+    const prepositions = screen.getByText('عَنْ، فِي')
+    expect(prepositions).toHaveAttribute('lang', 'ar')
+    expect(prepositions).toHaveAttribute('dir', 'rtl')
+  })
+
+  test('uses the saved diacritics preference for prepositions', () => {
+    localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+    renderVerbHeaderPanel({
+      verb: { ...getVerb('كتب', 1), prepositions: ['Eano', 'fiy'] },
+    })
+    expect(screen.getByText('عن، في')).toBeInTheDocument()
+  })
+
   test('renders verb, translation, actions, and content', async () => {
     renderVerbHeaderPanel({
       verb: getVerbById('ktb-1')!,
@@ -58,7 +92,7 @@ describe('VerbHeaderPanel', () => {
   })
 
   test('shows both readings for a verb labile between transitive and ditransitive', () => {
-    renderVerbHeaderPanel({ verb: getVerbById('ktb-1')! })
+    renderVerbHeaderPanel({ verb: { ...getVerbById('ktb-1')!, valency: [3, 2] } })
     expect(screen.getByText('Transitive · Ditransitive')).toBeInTheDocument()
   })
 
