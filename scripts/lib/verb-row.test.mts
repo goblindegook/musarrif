@@ -79,6 +79,7 @@ describe('buildRootEntry', () => {
       form: 1,
       vowels: 'a-u',
       valency: [2, 3],
+      prepositions: { li: 'required' },
       contractedImperative: true,
       hamzaElision: true,
     }
@@ -91,12 +92,20 @@ describe('buildRootEntry', () => {
       hamzaElision: true,
       masdars: ['fa3l'],
       valency: [2, 3],
+      prepositions: { li: 'required' },
     })
   })
 
   test('drops fields belonging to the lexeme a changed vowel pattern replaces', () => {
     const verb = getVerb('كتب', 1, 'a-u')
-    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-a', valency: [2, 3], lexicalActiveParticiple: 'x' }
+    const existing: RootEntry = {
+      root: 'ktb',
+      form: 1,
+      vowels: 'a-a',
+      valency: [2, 3],
+      lexicalActiveParticiple: 'x',
+      prepositions: { li: 'required' },
+    }
 
     expect(buildRootEntry(verb, parsed({ nominals: { masdar: ['كَتْب'] } }), existing)).toEqual({
       root: 'ktb',

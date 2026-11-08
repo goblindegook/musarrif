@@ -62,6 +62,20 @@ export const MASDAR_PATTERNS = [
 export type MasdarPattern = (typeof MASDAR_PATTERNS)[number]
 export type Passive = 'none' | 'impersonal'
 export type Valency = 1 | 2 | 3
+export type Preposition =
+  | 'bi'
+  | 'li'
+  | 'ka'
+  | 'fiy'
+  | 'Eano'
+  | 'mino'
+  | '<ilaY'
+  | 'EalaY'
+  | 'Hat~aY'
+  | 'muno*u'
+  | 'mu*o'
+  | 'rub~a'
+export type Prepositions = Readonly<Partial<Record<Preposition, 'required' | 'optional'>>>
 export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
@@ -74,6 +88,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
   lexicalMasdars?: readonly string[]
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
+  prepositions?: Prepositions
 }
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {

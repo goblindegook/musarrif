@@ -13,6 +13,7 @@ import type {
   HollowContractionBehaviour,
   MasdarPattern,
   Passive,
+  Prepositions,
   QuadriliteralForm,
   QuadriliteralRoot,
   QuadriliteralRootTokens,
@@ -91,6 +92,7 @@ type RawVerb = {
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
+  prepositions?: Prepositions
 }
 
 function tokenizeRoot(root: string): RootTokens {

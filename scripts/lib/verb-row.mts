@@ -1,6 +1,7 @@
 import { transliterate } from '@pacote/buckwalter'
 import type { FormIPattern } from '../../src/paradigms/form-i-vowels.ts'
 import { deriveMasdar } from '../../src/paradigms/nominal/masdar.ts'
+import type { Prepositions } from '../../src/paradigms/verb-types.ts'
 import {
   type DisplayVerb,
   isTriliteralFormIDisplayVerb,
@@ -26,6 +27,7 @@ export interface RootEntry {
   lexicalActiveParticiple?: string
   lexicalPassiveParticiple?: string
   valency?: readonly Valency[]
+  prepositions?: Prepositions
 }
 
 type MasdarSelection = { masdars?: MasdarPattern[]; lexicalMasdars?: string[] }
@@ -86,6 +88,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     ...(carried?.lexicalActiveParticiple ? { lexicalActiveParticiple: carried.lexicalActiveParticiple } : {}),
     ...(carried?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: carried.lexicalPassiveParticiple } : {}),
     ...(carried?.valency?.length ? { valency: carried.valency } : {}),
+    ...(carried?.prepositions ? { prepositions: carried.prepositions } : {}),
   }
 }
 

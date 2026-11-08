@@ -1640,12 +1640,14 @@
     "vowels": "a-i",
     "masdars": ["fa3l"],
     "lexicalMasdars": ["<itoyaAn", "ma>otaAp", "ma>otFY"],
-    "valency": [1, 2]
+    "valency": [1, 2],
+    "prepositions": { "bi": "optional", "EalaY": "optional" }
   },
   {
     "root": "'ty",
     "form": 3,
-    "valency": [2]
+    "valency": [2],
+    "prepositions": { "bi": "required", "EalaY": "required" }
   },
   {
     "root": "'ty",
@@ -1656,7 +1658,8 @@
     "root": "'ty",
     "form": 5,
     "passive": "impersonal",
-    "valency": [1]
+    "valency": [1],
+    "prepositions": { "Eano": "required", "mino": "required", "li": "required", "fiy": "required" }
   },
   {
     "root": "'ty",
