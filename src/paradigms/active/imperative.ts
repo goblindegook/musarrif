@@ -1,5 +1,5 @@
 import { mapRecord } from '../../primitives/objects'
-import { isFormIPresentVowel } from '../form-i-vowels'
+import { formIPresentVowel, isFormIPresentVowel } from '../form-i-vowels'
 import type { PronounId } from '../pronouns'
 import {
   ALIF,
@@ -75,7 +75,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
             if (c2.equals(c3)) {
               const prefix = [
                 radicalMorpheme(HAMZA),
-                measureMorpheme(isPatternI ? KASRA : DAMMA),
+                measureMorpheme(formIPresentVowel(verb)),
                 radicalMorpheme(c2),
                 measureMorpheme(SUKOON),
                 radicalMorpheme(c3),

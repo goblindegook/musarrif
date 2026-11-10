@@ -113,13 +113,13 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
   let i = 0
   while (i < slots.length) {
     const token = slots[i].token
-    // A second hamza only merges into madda when its own vowel matches (fatha/sukoon); a
-    // differing vowel means the two hamzas stay distinct letters.
+    // A second hamza only merges into madda when it is vowelless (أَأْ → آ); a voweled second
+    // hamza is its own syllable onset, so the two stay distinct letters (أَأَلُّ).
     if (
       token.equals(ALIF_HAMZA) &&
       slots.at(i + 1)?.token.equals(FATHA) &&
       (slots.at(i + 2)?.token.equals(ALIF) ||
-        (slots.at(i + 2)?.token.equals(ALIF_HAMZA) && !slots.at(i + 3)?.token?.oneOf(KASRA, DAMMA)))
+        (slots.at(i + 2)?.token.equals(ALIF_HAMZA) && !slots.at(i + 3)?.token?.oneOf(FATHA, KASRA, DAMMA)))
     ) {
       const skip = slots.at(i + 3)?.token.equals(SUKOON) ? 4 : 3
       const role0 = morphemes[slots[i].index].role
