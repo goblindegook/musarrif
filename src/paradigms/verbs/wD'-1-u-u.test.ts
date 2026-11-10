@@ -6,9 +6,9 @@ import { deriveMasdar } from '../nominal/masdar'
 import { deriveActiveParticiple } from '../nominal/participle'
 import { getVerbById } from '../verbs'
 
-describe("wD'-1 (Wiktionary)", () => {
+describe("wD'-1-u-u (Wiktionary)", () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById("wD'-1")!)).toEqualT({
+    expect(conjugatePast(getVerbById("wD'-1-u-u")!)).toEqualT({
       '1s': 'وَضُؤْتُ',
       '2ms': 'وَضُؤْتَ',
       '2fs': 'وَضُؤْتِ',
@@ -26,7 +26,7 @@ describe("wD'-1 (Wiktionary)", () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById("wD'-1")!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById("wD'-1-u-u")!, 'indicative')).toEqualT({
       '1s': 'أَوْضُؤُ',
       '2ms': 'تَوْضُؤُ',
       '2fs': 'تَوْضُئِينَ',
@@ -44,7 +44,7 @@ describe("wD'-1 (Wiktionary)", () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById("wD'-1")!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById("wD'-1-u-u")!, 'subjunctive')).toEqualT({
       '1s': 'أَوْضُؤَ',
       '2ms': 'تَوْضُؤَ',
       '2fs': 'تَوْضُئِي',
@@ -62,7 +62,7 @@ describe("wD'-1 (Wiktionary)", () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById("wD'-1")!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById("wD'-1-u-u")!, 'jussive')).toEqualT({
       '1s': 'أَوْضُؤْ',
       '2ms': 'تَوْضُؤْ',
       '2fs': 'تَوْضُئِي',
@@ -80,7 +80,7 @@ describe("wD'-1 (Wiktionary)", () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById("wD'-1")!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById("wD'-1-u-u")!)).toMatchObjectT({
       '2ms': 'اُوضُؤْ',
       '2fs': 'اُوضُئِي',
       '2d': 'اُوضُؤَا',
@@ -90,10 +90,10 @@ describe("wD'-1 (Wiktionary)", () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById("wD'-1")!)).toEqualT('وَضِيء')
+    expect(deriveActiveParticiple(getVerbById("wD'-1-u-u")!)).toEqualT('وَضِيء')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById("wD'-1")!))).toEqualT(new Set(['وَضَاءَة', 'وُضُوء']))
+    expect(new Set(deriveMasdar(getVerbById("wD'-1-u-u")!))).toEqualT(new Set(['وَضَاءَة', 'وُضُوء']))
   })
 })

@@ -53,7 +53,7 @@ describe('verbPronounExercise difficulty', () => {
 
   test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
+    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَبَ')
   })
 
   test('pronouns:0: options never include dual pronouns', () => {

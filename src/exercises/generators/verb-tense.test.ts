@@ -65,7 +65,7 @@ describe('tenseExercise difficulty', () => {
 
   test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَرَ')
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).word).toEqualT('شَعَبَ')
   })
 
   test('options are unvoiced tense keys', () => {

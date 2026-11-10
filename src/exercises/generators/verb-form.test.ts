@@ -82,7 +82,7 @@ describe('formExercise difficulty', () => {
 
     const { word } = verbFormExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 })
 
-    expect(word).toBe('شَعَرَ')
+    expect(word).toBe('شَعَبَ')
   })
 
   test('pronouns:0 always uses 3ms — word is 3ms active past of selected verb', () => {
@@ -90,13 +90,13 @@ describe('formExercise difficulty', () => {
 
     const { word } = verbFormExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 })
 
-    expect(word).toBe('شَعَرَ')
+    expect(word).toBe('شَعَبَ')
   })
 
   test('pronouns:2 uses a random pronoun with the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = verbFormExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2 })
-    expect(word).toBe('شَعَرَ')
+    expect(word).toBe('شَعَبَ')
   })
 })
 

@@ -63,13 +63,13 @@ describe('conjugationExercise difficulty', () => {
   test('word uses the exercise diacritics display', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { word } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(word).toEqualT('شَعَرَ')
+    expect(word).toEqualT('شَعَبَ')
   })
 
   test('pronouns:0/tenses:0: answer is 3ms active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(options[answer]).toEqualT('شَعَرَ')
+    expect(options[answer]).toEqualT('شَعَبَ')
   })
 
   test('pronouns:0/tenses:0: promptParams.tense is unvoiced tense key for active past (random=0)', () => {
