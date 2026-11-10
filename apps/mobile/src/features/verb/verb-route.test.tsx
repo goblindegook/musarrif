@@ -175,8 +175,8 @@ describe('verb detail route', () => {
   })
 
   test.each([
-    ["'ty-1", 'أتى', 'بـ، على'],
-    ["'ty-5", 'تأتى', 'عن، من، لـ، في'],
+    ["'ty-1", 'أتى', 'بـ · على'],
+    ["'ty-5", 'تأتى', 'عن · من · لـ · في'],
   ])('shows %s prepositions below the navigation title', async (verbId, title, prepositions) => {
     mockParams = { verbId }
     const repository = createInMemoryRepository({ 'setting:diacriticsPreference': 'none' })
