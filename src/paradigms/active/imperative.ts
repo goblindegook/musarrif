@@ -155,11 +155,14 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
           return [...stem.slice(0, shaddaIndex - 2), measureMorpheme(FATHA), ...stem.slice(shaddaIndex - 1)]
         }
 
+        case 8: {
+          if (c1.isHamza && c2.equals(c3)) return [measureMorpheme(ALIF, KASRA), radicalMorpheme(c1), ...stem.slice(1)]
+          return [measureMorpheme(ALIF, KASRA), ...stem]
+        }
+
         case 7:
-        case 8:
         case 9:
         case 10: {
-          if (c1.isHamza && c2.equals(c3)) return [measureMorpheme(ALIF, KASRA), radicalMorpheme(c1), ...stem.slice(1)]
           return [measureMorpheme(ALIF, KASRA), ...stem]
         }
       }
