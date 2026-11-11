@@ -419,8 +419,7 @@ function derivePassivePastFormIq(verb: QuadriliteralVerb): PassivePastParams {
     stem: [
       radicalMorpheme(c1),
       measureMorpheme(DAMMA),
-      radicalMorpheme(c2.equals(YEH) ? WAW : c2),
-      measureMorpheme(SUKOON),
+      ...(c2.isWeak ? [radicalMorpheme(WAW)] : [radicalMorpheme(c2), measureMorpheme(SUKOON)]),
       radicalMorpheme(c3),
       measureMorpheme(KASRA),
       radicalMorpheme(c4),
