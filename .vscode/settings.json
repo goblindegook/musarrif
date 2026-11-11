@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnPaste": false,
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "vitest.cliArguments": "--config vitest.config.ts",
+  "jest.rootPath": "apps/mobile",
+  "jest.jestCommandLine": "npm test --",
+  "todo-tree.tree.scanMode": "workspace only"
+}

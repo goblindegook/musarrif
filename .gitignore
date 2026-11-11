@@ -12,8 +12,7 @@ node_modules/
 *.tsbuildinfo
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+.vscode/.react/
 /.idea/
 .DS_Store
 *.suo
