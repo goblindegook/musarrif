@@ -30,33 +30,27 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
 
     // Word-final hamza
     if (!word.at(index + 2)) {
-      if (index < word.length - 1 && longVowelBefore === 'i' && !after.isVowel) return HAMZA_ON_YEH
+      if (longVowelBefore === 'i' && after && !after.isVowel) return HAMZA_ON_YEH
 
       // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
       // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
       // which leaves the hamza effectively medial, and kasra dominates:
       if (vowel?.equals(KASRA)) return HAMZA_ON_YEH
 
-      // case vowel doesn't govern the seat, only the preceding vowel does:
-      if (before.equals(KASRA)) return HAMZA_ON_YEH
-      if (before.equals(DAMMA)) return HAMZA_ON_WAW
-      if (before.equals(FATHA)) return ALIF_HAMZA
-      return HAMZA
+      return seatOn(before)
     }
 
-    // Hamza directly after alif, followed by another waw, avoids waw-on-waw; seat on yeh instead:
-    if (before.equals(ALIF) && vowel?.equals(DAMMA) && word[index + 2]?.equals(WAW)) return HAMZA_ON_YEH
+    if (before.equals(ALIF)) {
+      // Followed by another waw, avoids waw-on-waw; seat on yeh instead:
+      if (vowel?.equals(DAMMA) && word[index + 2]?.equals(WAW)) return HAMZA_ON_YEH
 
-    // Seat on the line to avoid alif + alif hamza:
-    if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
-
-    if (before.equals(SUKOON)) {
-      if (longVowelAt(word, index + 1) === 'i') return HAMZA_ON_YEH // for w'y-1 passive participle
-      if (longVowelAt(word, index + 1) === 'u') return HAMZA_ON_WAW // for y's-1 and w'd-1 passive participle
-
-      if (word[index - 2].equals(YEH)) return HAMZA_ON_YEH
-      if (word[index - 2].equals(WAW)) return HAMZA
+      // Seat on the line to avoid alif + alif hamza:
+      if (vowel?.equals(FATHA)) return HAMZA
     }
+
+    // After ay, a following long u still wins, for the y's-1 passive participle:
+    if (before.equals(SUKOON) && word[index - 2].equals(YEH))
+      return longVowelAt(word, index + 1) === 'u' ? HAMZA_ON_WAW : HAMZA_ON_YEH
 
     if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
@@ -69,12 +63,15 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
       return HAMZA
     }
 
-    const dominant = vowelStrength(before) > vowelStrength(vowel) ? before : vowel
-    if (dominant?.equals(KASRA)) return HAMZA_ON_YEH
-    if (dominant?.equals(DAMMA)) return HAMZA_ON_WAW
-    if (dominant?.equals(FATHA)) return ALIF_HAMZA
-    return HAMZA
+    return seatOn(vowelStrength(before) > vowelStrength(vowel) ? before : vowel)
   })
+}
+
+function seatOn(vowel?: Token): Token {
+  if (KASRA.equals(vowel)) return HAMZA_ON_YEH
+  if (DAMMA.equals(vowel)) return HAMZA_ON_WAW
+  if (FATHA.equals(vowel)) return ALIF_HAMZA
+  return HAMZA
 }
 
 function vowelStrength(token?: Token): number {
