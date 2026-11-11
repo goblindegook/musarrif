@@ -9,9 +9,9 @@ export interface Speech {
   speak(text: string): Promise<void>
   playing: boolean
   supported: boolean
-  voices: SpeechSynthesisVoice[]
-  voiceName: string | null
-  setVoiceName: (name: string) => void
+  voices: { id: string; name: string; index?: number }[]
+  voiceId: string
+  setVoiceId: (id: string) => void
 }
 
 export function useSpeech(lang: string, options: SpeechOptions = {}): Speech {
@@ -19,10 +19,7 @@ export function useSpeech(lang: string, options: SpeechOptions = {}): Speech {
   const [engine] = useState(webSpeechEngine())
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(() => (engine.supported ? voicesForLang(lang) : []))
-  const [storedVoiceName, setStoredVoiceName, refetchVoiceName] = useLocalStorage<string | null>(
-    'arabicVoiceName',
-    null,
-  )
+  const [storedVoiceId, setStoredVoiceId, refetchVoiceId] = useLocalStorage<string | null>('arabicVoiceName', null)
 
   useEffect(() => {
     if (!engine.supported) return
@@ -35,42 +32,53 @@ export function useSpeech(lang: string, options: SpeechOptions = {}): Speech {
     }
   }, [lang, engine.supported])
 
+  const selectedVoice =
+    voices.find((voice) => voice.voiceURI === storedVoiceId) ??
+    voices.find((voice) => voice.name === storedVoiceId) ??
+    (storedVoiceId == null ? voices[0] : undefined)
+  const selectedVoiceId = selectedVoice?.voiceURI || selectedVoice?.name
+
   useEffect(() => {
-    if (storedVoiceName === null && voices.length > 0) {
-      setStoredVoiceName(voices[0].name)
-    }
-  }, [storedVoiceName, voices, setStoredVoiceName])
+    // Preserve existing name-based preferences while storing a unique identifier for future selections.
+    if (selectedVoiceId != null && selectedVoiceId !== storedVoiceId) setStoredVoiceId(selectedVoiceId)
+  }, [storedVoiceId, selectedVoiceId, setStoredVoiceId])
 
-  const voiceName = storedVoiceName ?? voices[0]?.name ?? null
-
-  const setVoiceName = useCallback(
-    (name: string) => {
-      setStoredVoiceName(name)
+  const setVoiceId = useCallback(
+    (id: string) => {
+      const voice = voices[Number(id)]
+      if (voice != null) setStoredVoiceId(voice.voiceURI || voice.name)
     },
-    [setStoredVoiceName],
+    [voices, setStoredVoiceId],
   )
 
   const speak = useCallback(
     async (text: string) => {
       setPlaying(true)
       try {
-        const currentName = refetchVoiceName() ?? voices[0]?.name
-        const voice = voices.find((v) => v.name === currentName)
+        const currentId = refetchVoiceId()
+        const voice =
+          voices.find((voice) => voice.voiceURI === currentId) ??
+          voices.find((voice) => voice.name === currentId) ??
+          (currentId == null ? voices[0] : undefined)
         await engine.speak(text, lang, { ...options, voice })
       } finally {
         setPlaying(false)
       }
     },
-    [engine, lang, options, voices, refetchVoiceName],
+    [engine, lang, options, voices, refetchVoiceId],
   )
 
   return {
     speak,
     playing,
     supported: engine.supported,
-    voices,
-    voiceName,
-    setVoiceName,
+    voices: voices.map((voice, index) =>
+      voices.filter((candidate) => candidate.name === voice.name).length > 1
+        ? { id: String(index), name: voice.name, index }
+        : { id: String(index), name: voice.name },
+    ),
+    voiceId: String(selectedVoice == null ? -1 : voices.indexOf(selectedVoice)),
+    setVoiceId,
   }
 }
 

@@ -304,7 +304,7 @@ it('voice picker lists all available Arabic voices', () => {
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))
   const options = screen.getByLabelText('Voice').querySelectorAll('option')
-  expect([...options].map((option) => option.textContent)).toEqual(['Majed', 'Tarik'])
+  expect([...options]).toMatchObject([{ textContent: 'Majed' }, { textContent: 'Tarik' }])
 })
 
 it('selecting a voice persists to localStorage', async () => {
@@ -315,8 +315,27 @@ it('selecting a voice persists to localStorage', async () => {
   renderHeader('/#/verbs')
   fireEvent.click(screen.getByLabelText('Settings'))
   const user = userEvent.setup()
-  await user.selectOptions(screen.getByLabelText('Voice'), 'Tarik')
+  await user.selectOptions(screen.getByLabelText('Voice'), screen.getByText('Tarik'))
   expect(localStorage.getItem('conjugator:arabicVoiceName')).toBe('"Tarik"')
+})
+
+it('numbers only repeated voice names and preserves the selected duplicate', async () => {
+  const first = { name: 'Majed', lang: 'ar-SA', voiceURI: 'voice-a' }
+  const second = { name: 'Majed', lang: 'ar-SA', voiceURI: 'voice-b' }
+  mockSpeechSynthesis([first, second, { name: 'Tarik', lang: 'ar-SA' }])
+  renderHeader()
+  fireEvent.click(screen.getByLabelText('Settings'))
+  const picker = screen.getByLabelText('Voice')
+  expect([...picker.querySelectorAll('option')]).toMatchObject([
+    { textContent: 'Majed (1)' },
+    { textContent: 'Majed (2)' },
+    { textContent: 'Tarik' },
+  ])
+  await userEvent.setup().selectOptions(picker, screen.getByText('Majed (2)'))
+  fireEvent.click(screen.getByLabelText('Close'))
+  fireEvent.click(screen.getByLabelText('Settings'))
+  expect((screen.getByLabelText('Voice') as HTMLSelectElement).selectedOptions[0].textContent).toBe('Majed (2)')
+  expect(localStorage.getItem('conjugator:arabicVoiceName')).toBe('"voice-b"')
 })
 
 it('voice picker appears before the theme control in the settings modal', () => {

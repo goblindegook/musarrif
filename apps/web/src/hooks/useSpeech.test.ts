@@ -17,13 +17,16 @@ afterEach(() => {
 test('voices only contains voices matching lang', () => {
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2, EN_VOICE])
   const { result } = renderHook(() => useSpeech('en'))
-  expect(result.current.voices).toEqual([EN_VOICE])
+  expect(result.current.voices).toEqual([{ id: '0', name: 'Samantha' }])
 })
 
 test('voices contains only Arabic voices when lang is ar', () => {
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2, EN_VOICE])
   const { result } = renderHook(() => useSpeech('ar'))
-  expect(result.current.voices).toEqual([AR_VOICE_1, AR_VOICE_2])
+  expect(result.current.voices).toEqual([
+    { id: '0', name: 'Majed' },
+    { id: '1', name: 'Tarik' },
+  ])
 })
 
 test('voices is empty when no voices match lang', () => {
@@ -41,7 +44,13 @@ test('voices has one entry when one voice matches lang', () => {
 test('voiceName defaults to first voice when nothing in localStorage', () => {
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2])
   const { result } = renderHook(() => useSpeech('ar'))
-  expect(result.current.voiceName).toBe('Majed')
+  expect(result.current).toMatchObject({
+    voiceId: '0',
+    voices: [
+      { id: '0', name: 'Majed' },
+      { id: '1', name: 'Tarik' },
+    ],
+  })
 })
 
 test('default voiceName is persisted to localStorage', () => {
@@ -54,28 +63,40 @@ test('voiceName reads from localStorage when stored', () => {
   localStorage.setItem('conjugator:arabicVoiceName', '"Tarik"')
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2])
   const { result } = renderHook(() => useSpeech('ar'))
-  expect(result.current.voiceName).toBe('Tarik')
+  expect(result.current).toMatchObject({
+    voiceId: '1',
+    voices: [
+      { id: '0', name: 'Majed' },
+      { id: '1', name: 'Tarik' },
+    ],
+  })
 })
 
-test('voiceName is null when no voices match lang', () => {
+test('selected voice is absent when no voices match lang', () => {
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2])
   const { result } = renderHook(() => useSpeech('en'))
-  expect(result.current.voiceName).toBeNull()
+  expect(result.current).toMatchObject({ voiceId: '-1', voices: [] })
 })
 
-test('voiceName is null when no Arabic voices available', () => {
+test('selected voice is absent when no Arabic voices available', () => {
   mockSpeechSynthesis([])
   const { result } = renderHook(() => useSpeech('ar'))
-  expect(result.current.voiceName).toBeNull()
+  expect(result.current).toMatchObject({ voiceId: '-1', voices: [] })
 })
 
 test('setVoiceName persists to localStorage and updates voiceName', () => {
   mockSpeechSynthesis([AR_VOICE_1, AR_VOICE_2])
   const { result } = renderHook(() => useSpeech('ar'))
   act(() => {
-    result.current.setVoiceName('Tarik')
+    result.current.setVoiceId('1')
   })
-  expect(result.current.voiceName).toBe('Tarik')
+  expect(result.current).toMatchObject({
+    voiceId: '1',
+    voices: [
+      { id: '0', name: 'Majed' },
+      { id: '1', name: 'Tarik' },
+    ],
+  })
   expect(localStorage.getItem('conjugator:arabicVoiceName')).toBe('"Tarik"')
 })
 
@@ -96,13 +117,14 @@ test('reloads voices when voiceschanged fires', () => {
   const synthesis = mockSpeechSynthesis([AR_VOICE_1])
   const { result } = renderHook(() => useSpeech('ar'))
   synthesis.getVoices.mockReturnValue([AR_VOICE_1, AR_VOICE_2])
-  const handler = (synthesis.addEventListener.mock.calls as [string, ...unknown[]][]).find(
-    ([e]) => e === 'voiceschanged',
-  )?.[1] as () => void
+  const [[, handler]] = synthesis.addEventListener.mock.calls as [string, () => void][]
   act(() => {
     handler()
   })
-  expect(result.current.voices).toEqual([AR_VOICE_1, AR_VOICE_2])
+  expect(result.current.voices).toEqual([
+    { id: '0', name: 'Majed' },
+    { id: '1', name: 'Tarik' },
+  ])
 })
 
 test('speak sets utterance.voice to selected voice', async () => {
@@ -114,6 +136,35 @@ test('speak sets utterance.voice to selected voice', async () => {
   })
   const utterance = synthesis.speak.mock.calls[0][0]
   expect(utterance.voice).toBe(AR_VOICE_1)
+})
+
+test('exposes IDs, names and duplicate indices and restores the chosen voice internally', async () => {
+  const first = { ...AR_VOICE_1, voiceURI: 'voice-a' }
+  const second = { ...AR_VOICE_1, voiceURI: 'voice-b' }
+  const synthesis = mockSpeechSynthesis([first, second, AR_VOICE_2])
+  const { result, unmount } = renderHook(() => useSpeech('ar'))
+  expect(result.current.voices).toStrictEqual([
+    { id: '0', name: 'Majed', index: 0 },
+    { id: '1', name: 'Majed', index: 1 },
+    { id: '2', name: 'Tarik' },
+  ])
+  act(() => result.current.setVoiceId('1'))
+  unmount()
+
+  const restored = renderHook(() => useSpeech('ar'))
+  expect(restored.result.current).toMatchObject({
+    voiceId: '1',
+    voices: [
+      { id: '0', name: 'Majed', index: 0 },
+      { id: '1', name: 'Majed', index: 1 },
+      { id: '2', name: 'Tarik' },
+    ],
+  })
+  expect(localStorage.getItem('conjugator:arabicVoiceName')).toBe('"voice-b"')
+  await act(async () => {
+    await restored.result.current.speak('مرحبا')
+  })
+  expect(synthesis.speak.mock.calls[0][0].voice).toBe(second)
 })
 
 test('speak does not set utterance.voice when stored voice not in list', async () => {

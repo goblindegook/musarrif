@@ -34,7 +34,7 @@ interface AppHeaderProps {
 export const AppHeader = ({ onHelp }: AppHeaderProps) => {
   const { t, lang, dir, diacriticsPreference, setDiacriticsPreference } = useI18n()
   const { themePreference, setThemePreference } = useTheme()
-  const { voices, voiceName, setVoiceName } = useSpeech('ar')
+  const { voices, voiceId, setVoiceId } = useSpeech('ar')
   const { route, navigateTo, toHref } = useRouting()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [pendingImportContent, setPendingImportContent] = useState<string | null>(null)
@@ -148,15 +148,16 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
             <ControlGroup>
               <Subheading>{t('settings.voice.title')}</Subheading>
               <Select
-                value={voiceName ?? ''}
-                onChange={(event) => setVoiceName(event.currentTarget.value)}
+                value={voiceId}
+                onChange={(event) => setVoiceId(event.currentTarget.value)}
                 aria-label={t('settings.voice.title')}
                 title={t('settings.voice.title')}
                 dir={dir}
               >
                 {voices.map((voice) => (
-                  <option key={voice.name} value={voice.name}>
+                  <option key={voice.id} value={voice.id}>
                     {voice.name}
+                    {voice.index != null && ` (${voice.index + 1})`}
                   </option>
                 ))}
               </Select>
