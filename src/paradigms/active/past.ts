@@ -150,7 +150,7 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
 
-  if (c2.isWeak && !c3.isWeak && verb.hollowContraction !== 'uncontracted') return [[...prefix, radicalMorpheme(c3)]]
+  if (c2.isWeak && !c3.isWeak) return [[...prefix, radicalMorpheme(c3)]]
 
   return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
 }
