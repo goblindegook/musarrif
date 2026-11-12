@@ -1135,7 +1135,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fi3l", "fi3la"],
-    "lexicalMasdars": ["$arikap"]
+    "lexicalMasdars": ["$arikap"],
+    "lexicalActiveParticiple": "$ariyk"
   },
   {
     "root": "$rk",
@@ -6902,6 +6903,7 @@
     "vowels": "u-u",
     "masdars": ["fu3l", "fu3la", "fi3la", "fa3aal"],
     "lexicalMasdars": ["Hurum"],
+    "lexicalActiveParticiple": "Hariym",
     "passive": "impersonal"
   },
   {
@@ -14140,7 +14142,8 @@
     "root": "grr",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3al", "fa3aala", "fi3la"]
+    "masdars": ["fa3al", "fa3aala", "fi3la"],
+    "lexicalActiveParticiple": ">agar~"
   },
   {
     "root": "grr",
