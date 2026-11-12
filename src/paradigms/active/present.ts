@@ -10,7 +10,6 @@ import {
   DAMMA,
   FATHA,
   HAMZA,
-  HAMZA_ON_YEH,
   KASRA,
   longVowel,
   NOON,
@@ -53,18 +52,13 @@ function deriveFeminineSingularStem(stem: readonly Morpheme[], verb: Verb): read
 }
 
 function deriveMasculinePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
-  const damma = agreementMorpheme(DAMMA)
-  const [, c2, c3] = verb.rootTokens
+  const [, , c3] = verb.rootTokens
 
   // Form V: a defective root's masculine plural here takes no agreement vowel at all and only
   // the weak radical itself is dropped (the preceding vowel measure survives):
   if (verb.form === 5 && c3.isWeak) return stem.slice(0, -1)
 
-  // Hollow root ending in hamza: the masculine plural -ū suffix would otherwise
-  // sandwich a hamza-on-waw between two waws, which is avoided in favour of yeh:
-  if (verb.form === 1 && c2.isWeak && c3.isHamza) return [...stem.slice(0, -1), radicalMorpheme(HAMZA_ON_YEH), damma]
-
-  return [...stem, damma]
+  return [...stem, agreementMorpheme(DAMMA)]
 }
 
 function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readonly Morpheme[] {

@@ -25,13 +25,10 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     if (index === 0) return vowel?.equals(KASRA) ? ALIF_HAMZA_BELOW : ALIF_HAMZA
 
     const before = word[index - 1]
-    const after = word[index + 1]
     const longVowelBefore = longVowelAt(word, index - 2)
 
     // Word-final hamza
     if (!word.at(index + 2)) {
-      if (longVowelBefore === 'i' && after && !after.isVowel) return HAMZA_ON_YEH
-
       // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
       // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
       // which leaves the hamza effectively medial, and kasra dominates:
@@ -40,13 +37,8 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
       return seatOn(before)
     }
 
-    if (before.equals(ALIF)) {
-      // Followed by another waw, avoids waw-on-waw; seat on yeh instead:
-      if (vowel?.equals(DAMMA) && word[index + 2]?.equals(WAW)) return HAMZA_ON_YEH
-
-      // Seat on the line to avoid alif + alif hamza:
-      if (vowel?.equals(FATHA)) return HAMZA
-    }
+    // Seat on the line to avoid alif + alif hamza:
+    if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
 
     // After ay, a following long u still wins, for the y's-1 passive participle:
     if (before.equals(SUKOON) && word[index - 2].equals(YEH))
@@ -54,14 +46,8 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
 
     if (longVowelBefore === 'i') return HAMZA_ON_YEH
 
-    if (longVowelBefore === 'u') {
-      if (vowel?.equals(KASRA)) return HAMZA_ON_YEH // for l'm-3 passive past 3ms / bw'-1 active jussive 3fs:
-
-      // Hamza directly after waw in the masculine plural waw-alif (uw'wA endings). Avoid waw-on-waw, seat on yeh instead:
-      if (word[index + 3]?.equals(ALIF)) return HAMZA_ON_YEH
-
-      return HAMZA
-    }
+    // Long u outranks a following u or a, but kasra still wins (l'm-3 passive past 3ms, bw'-1 active jussive 3fs):
+    if (longVowelBefore === 'u') return vowel?.equals(KASRA) ? HAMZA_ON_YEH : HAMZA
 
     return seatOn(vowelStrength(before) > vowelStrength(vowel) ? before : vowel)
   })

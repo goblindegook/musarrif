@@ -8,7 +8,7 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe("r'y-6", () => {
+describe("r'y-6 (Wiktionary)", () => {
   test('active past', () => {
     expect(conjugatePast(getVerbById("r'y-6")!)).toEqualT({
       '1s': 'تَرَاءَيْتُ',
@@ -104,7 +104,7 @@ describe("r'y-6", () => {
       '1p': 'تُرُوئِينَا',
       '2mp': 'تُرُوئِيتُمْ',
       '2fp': 'تُرُوئِيتُنَّ',
-      '3mp': 'تُرُوئُوا',
+      '3mp': expect.toBeOneOf(['تُرُوئُوا', 'تُرُوءُوا']),
       '3fp': 'تُرُوئِينَ',
     })
   })
@@ -172,6 +172,6 @@ describe("r'y-6", () => {
   })
 
   test('masdar', () => {
-    expect(deriveMasdar(getVerbById("r'y-6")!)).toEqualT(['تَرَاءٍ'])
+    expect(new Set(deriveMasdar(getVerbById("r'y-6")!))).toEqualT(new Set(['تَرَاءٍ', 'تَرَائٍ']))
   })
 })

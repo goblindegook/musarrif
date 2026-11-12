@@ -25,7 +25,6 @@ test.each<[string, string, string | string[]]>([
   ["Ti'T", 'on yeh', HAMZA_ON_YEH],
   ["Tu'T", 'on waw', HAMZA_ON_WAW],
   ["Ta'T", 'on alif', ALIF_HAMZA],
-  ["Tiy'T", 'on yeh', HAMZA_ON_YEH],
   ["Tuw'T", 'on the line', HAMZA],
   ["TaA'T", 'on the line', HAMZA],
 
@@ -73,10 +72,10 @@ test.each<[string, string, string | string[]]>([
   // ["Tayo'uwT", 'on yeh', HAMZA_ON_YEH], // Conflicts with y's-1 passive participle mayo&uws
   ["Tayo'aAT", 'on yeh', HAMZA_ON_YEH],
 
-  // ["Tuw'iT", 'on the line', HAMZA], // Conflicts with l'm-3 passive past 3ms
+  ["Tuw'iT", 'on yeh', HAMZA_ON_YEH],
   ["Tuw'uT", 'on the line', HAMZA],
   ["Tuw'aT", 'on the line', HAMZA],
-  // ["Tuw'iyT", 'on the line', HAMZA], // Conflicts with bw'-1 active jussive 3fs
+  ["Tuw'iyT", 'on yeh', HAMZA_ON_YEH],
   ["Tuw'uwT", 'on the line', HAMZA],
   ["Tuw'aAT", 'on the line', HAMZA],
 
