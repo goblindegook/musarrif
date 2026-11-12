@@ -30956,8 +30956,8 @@
     "root": "xyr",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l"],
-    "lexicalMasdars": ["xiyrap", "xiyarap"]
+    "masdars": ["fa3l", "fi3la"],
+    "lexicalMasdars": ["xiyarap"]
   },
   {
     "root": "xyr",

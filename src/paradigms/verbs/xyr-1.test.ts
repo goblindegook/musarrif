@@ -8,9 +8,9 @@ import { conjugatePassivePast } from '../passive/past'
 import { conjugatePassivePresentMood } from '../passive/present'
 import { getVerbById } from '../verbs'
 
-describe('xyr-1-a-i (Wiktionary)', () => {
+describe('xyr-1 (Wiktionary)', () => {
   test('active past', () => {
-    expect(conjugatePast(getVerbById('xyr-1-a-i')!)).toEqualT({
+    expect(conjugatePast(getVerbById('xyr-1')!)).toEqualT({
       '1s': 'خِرْتُ',
       '2ms': 'خِرْتَ',
       '2fs': 'خِرْتِ',
@@ -28,7 +28,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('active present indicative', () => {
-    expect(conjugatePresentMood(getVerbById('xyr-1-a-i')!, 'indicative')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('xyr-1')!, 'indicative')).toEqualT({
       '1s': 'أَخِيرُ',
       '2ms': 'تَخِيرُ',
       '2fs': 'تَخِيرِينَ',
@@ -46,7 +46,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('active present subjunctive', () => {
-    expect(conjugatePresentMood(getVerbById('xyr-1-a-i')!, 'subjunctive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('xyr-1')!, 'subjunctive')).toEqualT({
       '1s': 'أَخِيرَ',
       '2ms': 'تَخِيرَ',
       '2fs': 'تَخِيرِي',
@@ -64,7 +64,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('active present jussive', () => {
-    expect(conjugatePresentMood(getVerbById('xyr-1-a-i')!, 'jussive')).toEqualT({
+    expect(conjugatePresentMood(getVerbById('xyr-1')!, 'jussive')).toEqualT({
       '1s': 'أَخِرْ',
       '2ms': 'تَخِرْ',
       '2fs': 'تَخِيرِي',
@@ -82,7 +82,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('active imperative', () => {
-    expect(conjugateImperative(getVerbById('xyr-1-a-i')!)).toMatchObjectT({
+    expect(conjugateImperative(getVerbById('xyr-1')!)).toMatchObjectT({
       '2ms': 'خِرْ',
       '2fs': 'خِيرِي',
       '2d': 'خِيرَا',
@@ -92,7 +92,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('passive past', () => {
-    expect(conjugatePassivePast(getVerbById('xyr-1-a-i')!)).toEqualT({
+    expect(conjugatePassivePast(getVerbById('xyr-1')!)).toEqualT({
       '1s': 'خِرْتُ',
       '2ms': 'خِرْتَ',
       '2fs': 'خِرْتِ',
@@ -110,7 +110,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('passive present indicative', () => {
-    expect(conjugatePassivePresentMood(getVerbById('xyr-1-a-i')!, 'indicative')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('xyr-1')!, 'indicative')).toEqualT({
       '1s': 'أُخَارُ',
       '2ms': 'تُخَارُ',
       '2fs': 'تُخَارِينَ',
@@ -128,7 +128,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('passive present subjunctive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('xyr-1-a-i')!, 'subjunctive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('xyr-1')!, 'subjunctive')).toEqualT({
       '1s': 'أُخَارَ',
       '2ms': 'تُخَارَ',
       '2fs': 'تُخَارِي',
@@ -146,7 +146,7 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('passive present jussive', () => {
-    expect(conjugatePassivePresentMood(getVerbById('xyr-1-a-i')!, 'jussive')).toEqualT({
+    expect(conjugatePassivePresentMood(getVerbById('xyr-1')!, 'jussive')).toEqualT({
       '1s': 'أُخَرْ',
       '2ms': 'تُخَرْ',
       '2fs': 'تُخَارِي',
@@ -164,14 +164,14 @@ describe('xyr-1-a-i (Wiktionary)', () => {
   })
 
   test('active participle', () => {
-    expect(deriveActiveParticiple(getVerbById('xyr-1-a-i')!)).toEqualT('خَائِر')
+    expect(deriveActiveParticiple(getVerbById('xyr-1')!)).toEqualT('خَائِر')
   })
 
   test('passive participle', () => {
-    expect(derivePassiveParticiple(getVerbById('xyr-1-a-i')!)).toEqualT('مَخِير')
+    expect(derivePassiveParticiple(getVerbById('xyr-1')!)).toEqualT('مَخِير')
   })
 
   test('masdar', () => {
-    expect(new Set(deriveMasdar(getVerbById('xyr-1-a-i')!))).toEqualT(new Set(['خَيْر', 'خِيرَة', 'خِيَرَة']))
+    expect(new Set(deriveMasdar(getVerbById('xyr-1')!))).toEqualT(new Set(['خَيْر', 'خِيرَة', 'خِيَرَة']))
   })
 })

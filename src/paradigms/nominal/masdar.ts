@@ -157,6 +157,14 @@ function deriveMasdarFormI(verb: FormIVerb, pattern: MasdarPattern): readonly Mo
       ]
 
     case 'fi3la':
+      return [
+        radicalMorpheme(c1),
+        measureMorpheme(KASRA),
+        ...(c2.isWeak && !c3.isWeak ? [radicalMorpheme(YEH)] : [radicalMorpheme(c2), measureMorpheme(SUKOON)]),
+        radicalMorpheme(c3),
+        measureMorpheme(FATHA, TEH_MARBUTA),
+      ]
+
     case 'fu3la':
       return [
         radicalMorpheme(c1),
