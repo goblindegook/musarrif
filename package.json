@@ -22,6 +22,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:mutation": "stryker run",
+    "test:mutation:paradigms": "stryker run stryker.paradigms.config.mjs",
     "check:all": "npm run check:lint && npm run check:roots && npm run check:boundaries && npm test -- --no-watch && tsc && npm run web:typecheck && npm run mobile:typecheck && npm run mobile:test && npm exec --workspace musarrif-web -- vite build",
     "check:roots": "ajv validate -s src/data/roots.schema.json -d src/data/roots.json --strict=true --all-errors --errors=text",
     "check:lint": "biome check .",

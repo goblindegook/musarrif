@@ -7,7 +7,7 @@ export default {
   testFiles: ['src/paradigms/**/*.test.{ts,tsx}'],
   // TypeScript 7 has no JS API; core's tsconfig rewrite calls ts.parseConfigFileTextToJson and crashes. A missing file skips it.
   tsconfigFile: 'tsconfig.stryker-skip.json',
-  ignorePatterns: ['dist', 'apps/web/src-tauri/target', 'apps/mobile/ios'],
+  ignorePatterns: ['dist', 'apps/web/src-tauri/target', 'apps/mobile/ios', '.caches', '.claude', 'coverage', 'docs'],
   cleanTempDir: 'always',
   ignoreStatic: true,
   incremental: true,
