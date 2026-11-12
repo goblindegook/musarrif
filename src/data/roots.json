@@ -27108,7 +27108,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "fa3aal"],
-    "lexicalMasdars": ["suw'", "sawaA'ap", "sawaAyap", "sawaA}iyap", "masaA'ap", "masaAyap", "masaA'", "masaA}iyap"]
+    "lexicalMasdars": ["suw'", "sawaA'ap", "sawaAyap", "sawaA}iyap", "masaA'ap", "masaAyap", "masaA'", "masaA}iyap"],
+    "lexicalActiveParticiple": "say~i}"
   },
   {
     "root": "sw'",
