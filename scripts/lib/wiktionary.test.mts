@@ -529,6 +529,57 @@ ${formIVCaption}
     expect(parsed.paradigms['active present jussive']?.['2ms']).toEqual(['تَكْتُبْ'])
   })
 
+  test('falls back to the root page when the lemma page has no table for the requested verb', async () => {
+    const lemmaPageHtml = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>خَارَ</strong></i> (I, hollow, a ~ u, no passive)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">past (perfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">خُرْتُ</span></td>
+<td><span class="Arab">خُرْتَ</span></td>
+<td><span class="Arab">خَارَ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+    const rootPageHtml = `
+<div class="mw-heading mw-heading2"><h2 id="Arabic">Arabic</h2></div>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>
+<div class="inflection-table-wrapper" data-toggle-category="conjugation">
+<table class="inflection-table">
+<caption class="inflection-table-title">Conjugation of <i class="Arab mention" lang="ar"><strong>خَوِرَ</strong></i> (I, sound, i ~ a, no passive)</caption>
+<tbody>
+<tr><th colspan="12" class="outer">active voice</th></tr>
+<tr>
+<th rowspan="2">past (perfect) indicative</th>
+<th class="secondary">m</th>
+<td rowspan="2"><span class="Arab">خَوِرْتُ</span></td>
+<td><span class="Arab">خَوِرْتَ</span></td>
+<td><span class="Arab">خَوِرَ</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+`
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', ({ request }) => {
+        const html = request.url.endsWith(encodeURIComponent('خور')) ? rootPageHtml : lemmaPageHtml
+        return new HttpResponse(html, { headers: { 'content-type': 'text/html; charset=utf-8' }, status: 200 })
+      }),
+    )
+
+    const parsed = await fetchParadigms({ ...getVerb('خور', 1, 'i-a'), lemma: 'خَارَ' })
+
+    expect(parsed.paradigms['active past']?.['1s']).toEqual(['خَوِرْتُ'])
+  })
+
   test('throws the HTTP status when Wiktionary rejects the request', async () => {
     server.use(
       http.get('https://en.wiktionary.org/wiki/:title', () => {

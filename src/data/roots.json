@@ -5291,13 +5291,6 @@
     "form": 3
   },
   {
-    "root": "Ewz",
-    "form": 1,
-    "vowels": "i-a",
-    "masdars": ["fa3al"],
-    "lexicalActiveParticiple": "EaAwiz"
-  },
-  {
     "root": "Ey$",
     "form": 1,
     "vowels": "a-i",
@@ -30903,9 +30896,8 @@
   {
     "root": "xwr",
     "form": 1,
-    "vowels": "i-a",
+    "vowels": "a-u",
     "masdars": ["fa3al"],
-    "lexicalActiveParticiple": "xaA}ir",
     "passive": "none"
   },
   {
@@ -30959,6 +30951,13 @@
   {
     "root": "xym",
     "form": 2
+  },
+  {
+    "root": "xyr",
+    "form": 1,
+    "vowels": "a-i",
+    "masdars": ["fa3l"],
+    "lexicalMasdars": ["xiyrap", "xiyarap"]
   },
   {
     "root": "xyr",

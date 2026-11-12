@@ -56,7 +56,7 @@ When no source covers the verb, `rtk mise exec -- npm run add:verb:wizard` is th
 
 ## What the Row Script Derives
 
-`npm run add:verb` reads the source paradigms and writes `root`, `form`, `masdars`, `lexicalMasdars`, and `passive`. It also writes `vowels`, but only for a triliteral Form I verb; every other form has none. The row is upserted by root, form and vowels. Masdar patterns come from matching each fetched maṣdar against the derivation of every known pattern; anything unmatched is recorded as a lexicalized maṣdar. Fields no source can describe (`valency`, `hollowContraction`, `contractedImperative`, `lexicalActiveParticiple`, `lexicalPassiveParticiple`) are carried over from the existing row.
+`npm run add:verb` reads the source paradigms and writes `root`, `form`, `masdars`, `lexicalMasdars`, and `passive`. It also writes `vowels`, but only for a triliteral Form I verb; every other form has none. The row is upserted by root, form and vowels. Masdar patterns come from matching each fetched maṣdar against the derivation of every known pattern; anything unmatched is recorded as a lexicalized maṣdar. Fields no source can describe (`valency`, `retainsInitialWaw`, `contractedImperative`, `lexicalActiveParticiple`, `lexicalPassiveParticiple`) are carried over from the existing row.
 
 `passive` is `'none'` when the source has no passive past at all, and `'impersonal'` when it has only the `3ms` cell; a full passive leaves it unset. The script warns when it writes either value. A thin source looks the same as a genuinely defective verb, so confirm the value against the source before accepting it.
 
@@ -68,7 +68,7 @@ If cells are still wrong once the row matches the source, the derivation is at f
 
 1. **Derivation rule**: the algorithm is wrong for a class of verbs. Preferred, since it fixes every verb sharing the feature.
 2. **Pattern**: the rule is right but the pattern table has the wrong shape.
-3. **Override**: a per-verb field on the row (`hollowContraction`, `contractedImperative`, `lexicalActiveParticiple`, `lexicalPassiveParticiple`, `lexicalMasdars`). Last resort, and the only one that survives a later `add:verb` re-run untouched.
+3. **Override**: a per-verb field on the row (`retainsInitialWaw`, `contractedImperative`, `lexicalActiveParticiple`, `lexicalPassiveParticiple`, `lexicalMasdars`). Last resort, and the only one that survives a later `add:verb` re-run untouched.
 
 Derive from root features (hamzated initial, final weak, doubled…), never from root identity.
 
@@ -86,6 +86,6 @@ It reports matched and mismatched cells per verb, and names any form where Elixi
 - Never copy test expectations from production output.
 - Source order is Wiktionary → ElixirFM → Qutrub → Reverso, and `add:tests` and `add:verb` must use the same source. Fall back to `elixirfm` when Wiktionary lacks the verb (normalise: ElixirFM omits sukūn and writes doubled jussive/imperative uncontracted), then `qutrub`. `reverso` is the last resort and its output must be cross-checked: it silently returns the wrong lemma for shadda'd queries and emits ungrammatical doubled forms. Prefer ElixirFM lexicon glosses for translations, read off the ElixirFM site, since no script extracts them.
 - Research is only for anything the scripts do not provide cleanly, mainly translations or missing/incomplete source cases.
-- If a verb test fails, consider correcting the verb row (e.g. setting `hollowContraction`, `contractedImperative`, lexical participles) before changing production code.
+- If a verb test fails, consider correcting the verb row (e.g. setting `retainsInitialWaw`, `contractedImperative`, lexical participles) before changing production code.
 - Never open a fix on a Reverso-only mismatch. Confirm it against one of the other three sources first.
 - Never hard-code root identity checks in production code.

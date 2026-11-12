@@ -126,10 +126,6 @@ enum MasdarPatternName {
 -- (subject unexpressed).
 enum Passive { none | impersonal }
 
--- Some Form I hollow verbs contract their stem in the jussive and imperative;
--- the corpus records the behaviour explicitly where it is irregular.
-enum HollowContraction { contracted | uncontracted }
-
 enum Voice { active | passive }
 
 enum Tense { past | present | future | imperative }
@@ -193,8 +189,9 @@ entity Verb {
     -- their imperative is contracted (hamzat al-wasl is dropped).
     contractedImperative: Boolean?
 
-    -- Form I hollow verbs only; overrides the default stem-contraction behaviour.
-    hollowContraction: HollowContraction?
+    -- true for Form I verbs with an initial wāw that keep it in the present
+    -- even though their present vowel is not ḍamma (وَحِلَ، يَوْحَلُ).
+    retainsInitialWaw: Boolean?
 
     -- Numbers of arguments the verb takes; drives the grammatical explanations.
     valency: List<Integer>

@@ -315,13 +315,21 @@ function parseConjugationTable(
 }
 
 export async function fetchParadigms(verb: DisplayVerb): Promise<ParsedParadigms> {
-  return parseConjugationTable(
-    await fetchHtml(applyDiacriticsPreference(verb.lemma, 'none')),
-    verb.lemma,
-    verb.root,
-    verb.form,
-    isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined,
-  )
+  const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined
+  try {
+    return parseConjugationTable(
+      await fetchHtml(applyDiacriticsPreference(verb.lemma, 'none')),
+      verb.lemma,
+      verb.root,
+      verb.form,
+      vowels,
+    )
+  } catch (error) {
+    // A wrongly derived lemma lands on another verb's page (خار for خَوِرَ); the bare radicals name
+    // the page of a verb that keeps all three, and match its caption once diacritics are stripped.
+    if (verb.form !== 1) throw error
+    return parseConjugationTable(await fetchHtml(verb.root), verb.root, verb.root, verb.form, vowels)
+  }
 }
 
 export interface RootFormGloss {
