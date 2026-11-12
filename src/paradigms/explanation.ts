@@ -4,7 +4,6 @@ import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
 import { type FormIPattern, isFormIPresentVowel } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
-import { isFa3iilActiveParticiple } from './nominal/participle'
 import type { PronounId } from './pronouns'
 import {
   analyzeRoot,
@@ -561,7 +560,6 @@ function toDefectiveNominalRoot(verb: Verb, nominal: NominalKind): NominalRootIn
 }
 
 function resolveActiveParticipleKind(verb: Verb): ActiveParticipleKind {
-  if (isFa3iilActiveParticiple(verb)) return 'fa3iil'
   return isTriliteralFormIVerb(verb) && verb.lexicalActiveParticiple ? 'lexical' : 'faa3il'
 }
 

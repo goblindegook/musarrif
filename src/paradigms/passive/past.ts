@@ -78,7 +78,7 @@ function derivePassivePastFormI(verb: FormIVerb): PassivePastParams {
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
-  if (c2.isWeak && verb.hollowContraction !== 'uncontracted')
+  if (c2.isWeak)
     return {
       stem: [radicalMorpheme(c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
@@ -122,17 +122,6 @@ function derivePassivePastFormII(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  if (c3.isWeak)
-    return {
-      stem: [
-        radicalMorpheme(c1),
-        measureMorpheme(DAMMA, WAW),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA),
-        radicalMorpheme(YEH),
-      ],
-      suffix3sd: [measureMorpheme(FATHA)],
-    }
 
   if (c2.equals(c3))
     return {
@@ -229,19 +218,6 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
       suffix3sd: [measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
 
-  if (c3.isWeak)
-    return {
-      stem: [
-        measureMorpheme(TEH, DAMMA),
-        radicalMorpheme(c1),
-        measureMorpheme(DAMMA, WAW),
-        radicalMorpheme(c2),
-        measureMorpheme(KASRA),
-        radicalMorpheme(YEH),
-      ],
-      suffix3sd: [measureMorpheme(FATHA)],
-    }
-
   return {
     stem: [
       measureMorpheme(TEH, DAMMA),
@@ -257,13 +233,6 @@ function derivePassivePastFormVI(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormVII(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-
-  if (c2.equals(c3)) {
-    return {
-      stem: [measureMorpheme(ALIF, DAMMA, NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(DAMMA)],
-      suffix3sd: [radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3), measureMorpheme(FATHA)],
-    }
-  }
 
   if (c2.isWeak && !c3.isWeak)
     return {

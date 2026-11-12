@@ -1191,7 +1191,7 @@ describe('resolveNominalExplanationLayers', () => {
     expect(layers.isMasdarMimi).toBe(true)
   })
 
-  test('activeParticipleKind is "lexical" for a lexical active participle in a non-فَعِيل pattern', () => {
+  test('activeParticipleKind is "lexical" for a lexical active participle', () => {
     const zrq = getVerbById('zrq-1-i-a')!
     const layers = resolveNominalExplanationLayers(zrq, 'activeParticiple', 'أَزْرَق')
     expect(layers.activeParticipleKind).toBe('lexical')
@@ -1200,12 +1200,6 @@ describe('resolveNominalExplanationLayers', () => {
   test('activeParticipleKind is "faa3il" for a regularly derived verb', () => {
     const layers = resolveNominalExplanationLayers(verb, 'activeParticiple', 'كَاتِب')
     expect(layers.activeParticipleKind).toBe('faa3il')
-  })
-
-  test('activeParticipleKind is "fa3iil" for a lexical active participle following the فَعِيل pattern', () => {
-    const sEd = getVerbById('sEd-1')!
-    const layers = resolveNominalExplanationLayers(sEd, 'activeParticiple', 'سَعِيد')
-    expect(layers.activeParticipleKind).toBe('fa3iil')
   })
 })
 
