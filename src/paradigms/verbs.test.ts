@@ -20,7 +20,7 @@ describe('getVerbById', () => {
       rootTokens: tokenize('كتب'),
       form: 1,
       vowels: 'a-u',
-      hollowContraction: undefined,
+      retainsInitialWaw: undefined,
       masdars: ['fi3aala', 'fa3l', 'fi3aal'],
       lexicalMasdars: undefined,
       passive: undefined,

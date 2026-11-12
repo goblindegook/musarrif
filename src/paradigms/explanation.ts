@@ -302,8 +302,7 @@ function liveRootAnalysis(verb: Verb): RootAnalysis {
 // a yāʾ one still contracts (اِزْدَادَ) - the same split derivePastFormVIII makes.
 function contractsHollow(verb: Verb): boolean {
   const [c1, c2] = Array.from(verb.rootTokens)
-  if (verb.form === 8 && c2.equals(WAW) && resolveFormVIIIInfixConsonant(c1).equals(DAL)) return false
-  return !isTriliteralFormIVerb(verb) || verb.hollowContraction !== 'uncontracted'
+  return verb.form !== 8 || !c2.equals(WAW) || !resolveFormVIIIInfixConsonant(c1).equals(DAL)
 }
 
 function baseLayers(verb: Verb, arabic: string | readonly string[]): BaseExplanationLayers {

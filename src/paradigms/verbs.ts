@@ -10,7 +10,6 @@ import type {
   AllowedFormForRoot,
   DisplayVerb,
   DisplayVerbForRootAndForm,
-  HollowContractionBehaviour,
   MasdarPattern,
   Passive,
   Preposition,
@@ -83,7 +82,7 @@ type RawVerb = {
   root: string
   form: TriliteralForm
   vowels?: FormIPattern
-  hollowContraction?: HollowContractionBehaviour
+  retainsInitialWaw?: boolean
   contractedImperative?: boolean
   hamzaElision?: boolean
   passive?: Passive

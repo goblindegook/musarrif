@@ -117,13 +117,7 @@ function deriveParticiple(verb: Verb, isActive: boolean): readonly Morpheme[] {
         const defectiveLongVowel = c3.equals(YEH) ? longVowelI : longVowelU
         return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(...defectiveLongVowel, SHADDA)]
       }
-      if (c2.equals(WAW))
-        return [
-          ...prefix,
-          ...(verb.hollowContraction === 'uncontracted' ? [measureMorpheme(SUKOON), radicalMorpheme(c2)] : []),
-          measureMorpheme(...longVowelU),
-          radicalMorpheme(c3),
-        ]
+      if (c2.equals(WAW)) return [...prefix, measureMorpheme(...longVowelU), radicalMorpheme(c3)]
       if (c2.equals(YEH)) return [...prefix, measureMorpheme(...longVowelI), radicalMorpheme(c3)]
       return [
         ...prefix,

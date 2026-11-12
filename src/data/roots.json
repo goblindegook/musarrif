@@ -28295,7 +28295,7 @@
   {
     "root": "wHl",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "waHil",
@@ -28489,7 +28489,7 @@
   {
     "root": "wbr",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "wabir",
@@ -28692,7 +28692,7 @@
   {
     "root": "whl",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "wahil",
@@ -28701,7 +28701,7 @@
   {
     "root": "whm",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "passive": "impersonal"
@@ -28751,7 +28751,7 @@
   {
     "root": "wjE",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "wajiE"
@@ -28838,7 +28838,7 @@
   {
     "root": "wjl",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalMasdars": ["mawojal"],
@@ -28966,7 +28966,7 @@
   {
     "root": "wlE",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalMasdars": ["waluwE"],
@@ -29392,7 +29392,7 @@
   {
     "root": "wsn",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al", "fa3la"],
     "lexicalMasdars": ["sinap"],
@@ -29413,7 +29413,7 @@
   {
     "root": "wsx",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "wasix",
@@ -29530,7 +29530,7 @@
   {
     "root": "wxm",
     "form": 1,
-    "hollowContraction": "uncontracted",
+    "retainsInitialWaw": true,
     "vowels": "i-a",
     "masdars": ["fa3al"],
     "lexicalActiveParticiple": "waxim",

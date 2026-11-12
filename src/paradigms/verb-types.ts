@@ -75,7 +75,6 @@ export type Preposition =
   | 'muno*u'
   | 'mu*o'
   | 'rub~a'
-export type HollowContractionBehaviour = 'contracted' | 'uncontracted'
 
 type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
   root: Root
@@ -92,7 +91,7 @@ type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends R
 
 export type TriliteralFormIVerb = VerbProps<TriliteralRoot, TriliteralRootTokens, 1> & {
   vowels: FormIPattern
-  hollowContraction?: HollowContractionBehaviour
+  retainsInitialWaw?: boolean
   contractedImperative?: boolean
   lexicalActiveParticiple?: string
 }

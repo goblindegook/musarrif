@@ -18,7 +18,7 @@ export interface RootEntry {
   root: string
   form: TriliteralForm
   vowels?: FormIPattern
-  hollowContraction?: 'contracted' | 'uncontracted'
+  retainsInitialWaw?: boolean
   contractedImperative?: boolean
   hamzaElision?: boolean
   masdars?: readonly MasdarPattern[]
@@ -79,7 +79,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     root: verb.rootId,
     form: verb.form,
     ...(vowels ? { vowels } : {}),
-    ...(carried?.hollowContraction ? { hollowContraction: carried.hollowContraction } : {}),
+    ...(carried?.retainsInitialWaw ? { retainsInitialWaw: true } : {}),
     ...(carried?.contractedImperative ? { contractedImperative: true } : {}),
     ...(carried?.hamzaElision ? { hamzaElision: true } : {}),
     ...(masdars ? { masdars } : {}),

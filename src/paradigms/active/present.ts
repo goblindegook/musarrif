@@ -327,13 +327,13 @@ function deriveFormIVq(verb: QuadriliteralVerb): readonly Morpheme[] {
   ]
 }
 
-// وَعَدَ يَعِدُ and وَضَعَ يَضَعُ lose the wāw; وَجُزَ يَوْجُزُ keeps it before a ḍamma present,
-// while explicitly uncontracted stems retain it before other vowels. وَدَّ يَوَدُّ also keeps it because the
-// geminate stem never exposes it to the drop.
+// وَعَدَ يَعِدُ and وَضَعَ يَضَعُ lose the wāw; وَجُزَ يَوْجُزُ keeps it before a ḍamma present, and
+// وَحِلَ يَوْحَلُ keeps it lexically. وَدَّ يَوَدُّ also keeps it because the geminate stem never exposes it
+// to the drop.
 export function dropsInitialWaw(verb: Verb): boolean {
   if (!isTriliteralFormIVerb(verb)) return false
   const [c1, c2, c3] = verb.rootTokens
-  if (!c1.equals(WAW) || c2.equals(c3) || verb.hollowContraction === 'uncontracted') return false
+  if (!c1.equals(WAW) || c2.equals(c3) || verb.retainsInitialWaw) return false
   return c3.isWeak || !formIPresentVowel(verb).equals(DAMMA)
 }
 
@@ -380,15 +380,6 @@ function deriveFormI(verb: FormIVerb): readonly Morpheme[] {
       measureMorpheme(...longVowel(presentVowel)),
     ]
   }
-
-  if (verb.hollowContraction === 'uncontracted')
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-    ]
 
   if (c2.isWeak) {
     const [shortVowel, longLetter] = longVowel(presentVowel)
