@@ -163,10 +163,14 @@ function formIVerbId(rootId: string, vowels: FormIPattern): string {
 
 function buildDisplayVerb<T extends Verb>(verb: T, synthetic?: true): VerbBase<T> {
   const rootId = transliterate(verb.root)
+  let lemma: string | undefined
   return {
     ...verb,
     id: isFormIVerbInput(verb) ? formIVerbId(rootId, verb.vowels) : `${rootId}-${verb.form}`,
-    lemma: String(conjugatePast(verb)['3ms']),
+    get lemma() {
+      lemma ??= String(conjugatePast(verb)['3ms'])
+      return lemma
+    },
     rootId,
     synthetic,
   }
