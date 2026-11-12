@@ -277,17 +277,6 @@ function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId
 function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
 
-  if (c2.equals(c3))
-    return [
-      measureMorpheme(NOON, SUKOON),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c3),
-      ...geminateSuffix(mood, pronounId),
-    ]
-
   if (c3.isWeak)
     return [
       measureMorpheme(NOON, SUKOON),
