@@ -366,9 +366,9 @@ describe('ExerciseStats', () => {
       renderStats(SAMPLE_STATS)
       fireEvent.click(screen.getByText('Progress'))
       fireEvent.click(screen.getByText('See insights'))
-      const dialog = screen.getByText(/^Your journey so far:/).closest('[role="dialog"]')!
+      const dialog = screen.getByText(/^Your practice so far:/).closest('[role="dialog"]')!
       expect([...dialog.querySelectorAll('strong')].map((label) => label.textContent)).toEqual([
-        'Your journey so far:',
+        'Your practice so far:',
         'Your momentum:',
         'Your stage:',
         'Recommendation:',
@@ -480,7 +480,7 @@ describe('ExerciseStats', () => {
     renderStats()
     fireEvent.click(screen.getByText('Progress'))
     expect(document.querySelector('[role="dialog"]')).not.toBeInTheDocument()
-    expect(screen.queryByText(/^Your journey so far:/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Your practice so far:/)).not.toBeInTheDocument()
   })
 
   test('opens learning insights modal from stats panel', () => {
@@ -488,7 +488,7 @@ describe('ExerciseStats', () => {
     fireEvent.click(screen.getByText('Progress'))
     fireEvent.click(screen.getByText('See insights'))
     expect(screen.getByText('Learning insights')).toBeInTheDocument()
-    expect(screen.getByText(/^Your journey so far:/)).toBeInTheDocument()
+    expect(screen.getByText(/^Your practice so far:/)).toBeInTheDocument()
     expect(screen.getByText(/^Your stage:/)).toBeInTheDocument()
     expect(screen.getByText(/^Recommendation:/)).toBeInTheDocument()
   })

@@ -184,7 +184,7 @@ describe('verb detail', () => {
     const drawer = screen.getByLabelText('Explanation details')
     expect(within(drawer).getAllByLabelText(/^Root radical /)).toHaveLength(3)
     expect(within(drawer).getByText(/writing/)).toBeTruthy()
-    expect(within(drawer).getByText(/strong root with all radicals being consonants/)).toBeTruthy()
+    expect(within(drawer).getByText(/strong root: all its radicals are consonants/)).toBeTruthy()
     expect(within(drawer).getByTestId('root-form-ktb-3')).toBeTruthy()
     expect(within(drawer).getByTestId('root-form-ktb-6')).toBeTruthy()
   })

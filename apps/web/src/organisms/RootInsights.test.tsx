@@ -17,6 +17,6 @@ describe('RootInsights', () => {
 
   test('sound triliteral root shows the generic strong-root description', () => {
     renderWithProviders(<RootInsights root="كتب" rootId="root.ktb" />)
-    expect(screen.getByText(/strong root with all radicals being consonants/i, { selector: 'p' })).toBeInTheDocument()
+    expect(screen.getByText(/strong root: all its radicals are consonants/i, { selector: 'p' })).toBeInTheDocument()
   })
 })
