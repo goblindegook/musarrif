@@ -8,10 +8,6 @@ describe('rootExercise', () => {
     expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbRoot')
   })
 
-  test('returns the correct translation key', () => {
-    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbRoot')
-  })
-
   test('returns exactly four options', () => {
     expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

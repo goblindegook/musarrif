@@ -26,7 +26,6 @@ export const masdarFormExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.masdarForm',
       word,
       spokenWord: masdar,
       options: options.map((form) => formatFormLabel(form, verb.root)),

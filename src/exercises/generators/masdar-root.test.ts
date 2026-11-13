@@ -14,12 +14,6 @@ describe('masdarRootExercise', () => {
     expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarRoot')
   })
 
-  test('returns the correct translation key', () => {
-    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.masdarRoot',
-    )
-  })
-
   test('returns exactly four options', () => {
     expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

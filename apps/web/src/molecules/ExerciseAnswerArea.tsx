@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import { type AnswerDiffResult, diffAnswer } from '../../../../src/exercises/answer-diff'
 import type { Exercise, InputMode } from '../../../../src/exercises/exercises'
 import type { AnswerResult } from '../../../../src/exercises/srs'
+import { localizedOptions } from '../../../../src/localization'
 import { normalizeForComparison } from '../../../../src/paradigms/tokens'
 import { AnswerDiff } from '../atoms/AnswerDiff'
 import { ScreenReaderOnly } from '../atoms/ScreenReaderOnly'
@@ -76,7 +77,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
     }
   }, [effectiveMode, speechState, speechResult, transcript, exercise, onAnswer])
 
-  const answerLabel = t(exercise.options[exercise.answer])
+  const optionLabels = localizedOptions(t, exercise)
+  const answerLabel = optionLabels[exercise.answer]
   const status = !reveal
     ? ''
     : selected === exercise.answer || typedResult === 'correct' || speechResult === 'correct'
@@ -84,8 +86,8 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       : typedResult === 'partial'
         ? t('exercise.answer.partial')
         : selected !== null || typedResult === 'wrong'
-          ? t('exercise.answer.incorrect', { answer: answerLabel })
-          : t('exercise.answer.skipped', { answer: answerLabel })
+          ? t('exercise.answer.incorrect', { answer: answerLabel }, { keepDiacritics: true })
+          : t('exercise.answer.skipped', { answer: answerLabel }, { keepDiacritics: true })
 
   return (
     <Wrapper role={promptId != null ? 'group' : undefined} aria-labelledby={promptId}>
@@ -93,7 +95,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
       {effectiveMode === 'multiple-choice' ? (
         <OptionsGrid>
           {exercise.options.map((option, index) => {
-            const optionLabel = t(option, {}, { keepDiacritics: true })
+            const optionLabel = optionLabels[index]
             const hasArabicScript = /[؀-ۿ]/.test(optionLabel)
             const isCorrect = index === exercise.answer
             const isSelected = index === selected
@@ -175,11 +177,7 @@ export function ExerciseAnswerArea({ exercise, forceReveal = false, onAnswer, pr
           </InputRow>
           {reveal && typedResult !== 'correct' && (
             <CorrectReveal dir="rtl" lang="ar" data-testid="correct-answer-reveal">
-              {diff != null ? (
-                <AnswerDiff segments={diff.correct} />
-              ) : (
-                t(exercise.options[exercise.answer], {}, { keepDiacritics: true })
-              )}
+              {diff != null ? <AnswerDiff segments={diff.correct} /> : optionLabels[exercise.answer]}
             </CorrectReveal>
           )}
         </TypingForm>

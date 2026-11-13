@@ -12,7 +12,7 @@ interface VerbIndexRowProps {
 }
 
 export function VerbIndexRow({ verb }: VerbIndexRowProps) {
-  const { lang, dir, t, diacriticsPreference } = useI18n()
+  const { lang, dir, t, gloss, diacriticsPreference } = useI18n()
   const { navigateTo, toHref } = useRouting()
   const form = formatFormLabel(verb.form, verb.root)
   const route = ['verbs', verb.id] as const
@@ -26,10 +26,9 @@ export function VerbIndexRow({ verb }: VerbIndexRowProps) {
     (candidate: DisplayVerb) => {
       if (lang === 'ar') return ''
       if (candidate.synthetic) return '—'
-      const translation = t(candidate.id)
-      return translation === candidate.id ? '—' : translation
+      return gloss(candidate.id) ?? '—'
     },
-    [lang, t],
+    [lang, gloss],
   )
 
   return (

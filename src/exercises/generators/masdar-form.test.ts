@@ -43,12 +43,6 @@ describe('masdarFormExercise', () => {
     expect(word.length).toBeGreaterThan(0)
   })
 
-  test('returns the correct translation key', () => {
-    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.masdarForm',
-    )
-  })
-
   test('returns exactly four options', () => {
     expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

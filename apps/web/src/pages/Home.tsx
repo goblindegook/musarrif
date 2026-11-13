@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import * as v from 'valibot'
+import { localizedRootShape, localizedSortOrder } from '../../../../src/localization'
 import { analyzeRoot, type RootShape } from '../../../../src/paradigms/roots'
 import {
   type DisplayVerb,
@@ -19,7 +20,7 @@ import { Subheading } from '../atoms/Subheading'
 import { Text } from '../atoms/Text'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useFavourites } from '../hooks/useFavourites'
-import { useI18n } from '../hooks/useI18n'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { useRecent } from '../hooks/useRecent'
 import { ArrowIcon } from '../icons/ArrowIcon'
 import { ModeToggle } from '../molecules/ModeToggle'
@@ -99,9 +100,9 @@ function setQuery(query: Query): URLSearchParams {
 }
 
 const OTHER_FILTERS = [
-  { key: 'favourites', labelKey: 'verbsList.filter.favourites.label' },
-  { key: 'kana', labelKey: 'verbsList.filter.kanaSisters.label' },
-  { key: 'zanna', labelKey: 'verbsList.filter.zannaSisters.label' },
+  { key: 'favourites', label: (t: Translate) => t('verbsList.filter.favourites.label') },
+  { key: 'kana', label: (t: Translate) => t('verbsList.filter.kanaSisters.label') },
+  { key: 'zanna', label: (t: Translate) => t('verbsList.filter.zannaSisters.label') },
 ] as const
 
 function withFormFilter(query: Query, option: string): Query {
@@ -250,7 +251,7 @@ export function Home() {
               <ModeToggle
                 size="large"
                 activeMode={SORT_ORDERS.indexOf(query.sort)}
-                labels={SORT_ORDERS.map((order) => t(`verbsList.sort.${order}.label`))}
+                labels={SORT_ORDERS.map((order) => localizedSortOrder(t, order))}
                 ariaLabel={t('verbsList.sort.title')}
                 onClick={(index) => applySort(SORT_ORDERS[index])}
               />
@@ -301,7 +302,7 @@ export function Home() {
                         disabled={isFilterDisabled(query.filters.root.includes(option), withRootShape(query, option))}
                         onClick={() => applyRootShape(option)}
                       >
-                        {t(`verbsList.filter.rootType.${option}.label`)}
+                        {localizedRootShape(t, option)}
                       </SelectableButton>
                     ))}
                   </FilterBar>
@@ -324,7 +325,7 @@ export function Home() {
                         )}
                         onClick={() => applyGroupFilter(option.key)}
                       >
-                        {t(option.labelKey)}
+                        {option.label(t)}
                       </SelectableButton>
                     ))}
                   </FilterBar>

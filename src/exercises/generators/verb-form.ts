@@ -42,7 +42,6 @@ export const verbFormExercise = defineExercise(
 
     return {
       dimensions: ['forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.verbForm',
       word,
       spokenWord: conjugatedVerb,
       options: options.map((form) => formatFormLabel(form, verb.root)),

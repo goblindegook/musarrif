@@ -3,10 +3,8 @@ import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms
 import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomGeneratedVerb, randomNominalVerb } from '../dimensions.ts'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
-import { defineExercise } from '../exercises.ts'
+import { defineExercise, type Participle } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
-
-type Participle = 'active' | 'passive'
 
 export const participleVerbExercise = defineExercise(
   'participleVerb',
@@ -21,8 +19,7 @@ export const participleVerbExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey:
-        kind === 'active' ? 'exercise.prompt.activeParticipleVerb' : 'exercise.prompt.passiveParticipleVerb',
+      participle: kind,
       word: exerciseDiacritics(participle),
       spokenWord: participle,
       options,

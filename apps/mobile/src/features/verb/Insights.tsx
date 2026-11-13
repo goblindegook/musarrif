@@ -1,5 +1,14 @@
 import type { ReactNode } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import {
+  localizedExplanation,
+  localizedFormMeaning,
+  localizedFormRelationship,
+  localizedPronoun,
+  localizedRootDescription,
+  localizedTense,
+  type Translate,
+} from '../../../../../src/localization'
 import { derivationSteps } from '../../../../../src/paradigms/annotation'
 import type { DerivationStep } from '../../../../../src/paradigms/annotation-types'
 import { conjugate } from '../../../../../src/paradigms/conjugation'
@@ -7,7 +16,6 @@ import {
   type ExplanationKind,
   type NominalKind,
   type Paragraphs,
-  renderExplanation,
   resolveNominalExplanationLayers,
   resolveVerbExplanationLayers,
   toFormDescriptor,
@@ -15,7 +23,7 @@ import {
 import { deriveMasdar } from '../../../../../src/paradigms/nominal/masdar'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../../../../src/paradigms/nominal/participle'
 import type { PronounId } from '../../../../../src/paradigms/pronouns'
-import { analyzeRoot, rootTypeLocaleKey } from '../../../../../src/paradigms/roots'
+import { analyzeRoot } from '../../../../../src/paradigms/roots'
 import type { VerbTense } from '../../../../../src/paradigms/tense'
 import type { DiacriticsPreference } from '../../../../../src/paradigms/tokens'
 import { applyDiacriticsPreference, tokenize } from '../../../../../src/paradigms/tokens'
@@ -70,15 +78,11 @@ function keyed<T>(values: readonly T[], identify: (value: T) => string): { value
   })
 }
 
-function labelForStep(
-  step: DerivationStep,
-  verb: DisplayVerb,
-  t: (key: string, values?: Record<string, string>) => string,
-): string {
+function labelForStep(step: DerivationStep, verb: DisplayVerb, t: Translate): string {
   if (step.type === 'root') return t('meta.root')
   if (step.type === 'form') return t('meta.form.withNumber', { form: formatFormLabel(step.form, verb.root) })
-  if (step.type === 'pronoun') return t(`pronoun.${step.pronounId}`)
-  return t(`tense.${step.tense}`)
+  if (step.type === 'pronoun') return localizedPronoun(t, step.pronounId)
+  return localizedTense(t, step.tense)
 }
 
 function AnnotatedMorphemes({
@@ -227,13 +231,13 @@ export function Insights({
   onOpenVerb,
 }: InsightsProps) {
   const theme = useThemeTokens()
-  const { t, translateRoot } = getCopy(language as Language)
+  const { t, gloss } = getCopy(language as Language)
   const layers = nominal
     ? resolveNominalExplanationLayers(verb, nominal, arabic)
     : verbTense && pronoun
       ? resolveVerbExplanationLayers(verb, verbTense, pronoun)
       : undefined
-  const paragraphs = layers ? renderExplanation(layers, (key, params) => t(key, params)) : []
+  const paragraphs = layers ? localizedExplanation(t, layers) : []
   const steps = verbTense && pronoun ? derivationSteps(verb, verbTense, pronoun) : []
   const finalStep = steps.at(-1)
   const nominalWords =
@@ -245,21 +249,18 @@ export function Insights({
           ? [derivePassiveParticiple(verb)]
           : []
   const rootAnalysis = subject === 'root' ? analyzeRoot(tokenize(verb.root)) : undefined
-  const rootGloss = subject === 'root' ? translateRoot(verb.rootId) : undefined
+  const rootGloss = subject === 'root' ? gloss(verb.rootId) : undefined
   const relatedVerbs = subject === 'root' ? findVerbsByRoot(verb.root).toSorted((a, b) => a.form - b.form) : []
   const formLayers = subject === 'form' ? resolveVerbExplanationLayers(verb, 'active.past', '3ms') : undefined
   const formParagraphs = formLayers
-    ? renderExplanation(
-        {
-          category: 'verb',
-          paradigmRoots: formLayers.paradigmRoots,
-          paradigmForm: formLayers.paradigmForm,
-          arabic: formLayers.arabic,
-          form: formLayers.form,
-          formRoot: formLayers.formRoot,
-        },
-        (key, params) => t(key, params),
-      ).slice(0, 1)
+    ? localizedExplanation(t, {
+        category: 'verb',
+        paradigmRoots: formLayers.paradigmRoots,
+        paradigmForm: formLayers.paradigmForm,
+        arabic: formLayers.arabic,
+        form: formLayers.form,
+        formRoot: formLayers.formRoot,
+      }).slice(0, 1)
     : []
   const title =
     subject === 'root'
@@ -344,7 +345,7 @@ export function Insights({
           </Section>
           <Section>
             <Text selectable style={{ color: theme.ink, fontSize: 16, lineHeight: 28 }}>
-              {t(`rootInfo.${rootTypeLocaleKey(rootAnalysis.type, rootAnalysis.weakLetter)}.description`)}
+              {localizedRootDescription(t, rootAnalysis)}
             </Text>
             {rootAnalysis.type.includes('biliteral') && (
               <Text selectable style={{ color: theme.ink, fontSize: 16, lineHeight: 28 }}>
@@ -376,7 +377,7 @@ export function Insights({
         <>
           <Section>
             <Text selectable style={{ color: theme.accent, fontSize: 18, fontWeight: '600', textAlign: 'center' }}>
-              {t(`formInfo.form${toFormDescriptor(verb)}.semantic`)}
+              {localizedFormMeaning(t, toFormDescriptor(verb))}
             </Text>
             <ArabicText locale="ar" selectable style={{ fontSize: 25, textAlign: 'center' }}>
               {applyDiacriticsPreference(formPattern(verb), diacriticsPreference)}
@@ -390,7 +391,7 @@ export function Insights({
             />
             {verb.root.length === 3 && (
               <Text selectable style={{ color: theme.ink, fontSize: 16, lineHeight: 28 }}>
-                {t(`formInfo.form${verb.form}.relationship`)}
+                {localizedFormRelationship(t, verb.form)}
               </Text>
             )}
           </Section>

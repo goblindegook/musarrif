@@ -1,7 +1,8 @@
 import { styled } from 'goober'
 import { Fragment } from 'preact'
+import { localizedExplanation } from '../../../../src/localization'
 import type { NominalKind } from '../../../../src/paradigms/explanation'
-import { renderExplanation, resolveNominalExplanationLayers } from '../../../../src/paradigms/explanation'
+import { resolveNominalExplanationLayers } from '../../../../src/paradigms/explanation'
 import { deriveMasdar } from '../../../../src/paradigms/nominal/masdar'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../../../src/paradigms/nominal/participle'
 import { type DisplayVerb, formatFormLabel } from '../../../../src/paradigms/verbs'
@@ -61,7 +62,7 @@ export function NominalInsights({ verb, nominal, arabic }: NominalInsightsProps)
         <Detail label={t('meta.verb')} value={verb.lemma} valueLang="ar" valueDir="rtl" />
       </VerbContextSection>
       <ExplanationText
-        paragraphs={renderExplanation(resolveNominalExplanationLayers(verb, nominal, arabic), t)}
+        paragraphs={localizedExplanation(t, resolveNominalExplanationLayers(verb, nominal, arabic))}
         showMorphemeMarkers
       />
     </>

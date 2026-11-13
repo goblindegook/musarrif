@@ -17,19 +17,6 @@ describe('conjugationExercise', () => {
     expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
   })
 
-  test('returns promptTranslationKey "exercise.prompt.conjugation"', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.conjugation',
-    )
-  })
-
-  test('returns promptParams with tense and pronoun keys', () => {
-    const { promptParams } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(promptParams).toBeDefined()
-    expect(promptParams?.tense).toBeDefined()
-    expect(promptParams?.pronoun).toBeDefined()
-  })
-
   test('returns exactly four options', () => {
     expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })
@@ -72,49 +59,33 @@ describe('conjugationExercise difficulty', () => {
     expect(options[answer]).toEqualT('شَعَبَ')
   })
 
-  test('pronouns:0/tenses:0: promptParams.tense is unvoiced tense key for active past (random=0)', () => {
+  test('pronouns:0/tenses:0: asks for the active past without voice (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.tense).toBe(
-      'exercise.conjugation.tense.past',
-    )
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)).toMatchObject({
+      tense: 'active.past',
+      withVoice: false,
+    })
   })
 
-  test('tenses:4: promptParams.tense uses unvoiced key (voice not yet unlocked)', () => {
+  test('tenses:3: omits voice (voice not yet unlocked)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 3 }).promptParams?.tense,
-    ).toBe('exercise.conjugation.tense.past')
+    expect(conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 3 })).toMatchObject({
+      tense: 'active.past',
+      withVoice: false,
+    })
   })
 
-  test('tenses:4: promptParams.tense uses voiced key for active past (random=0)', () => {
+  test('tenses:4: names the voice for active past (random=0)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(
-      conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4 }).promptParams?.tense,
-    ).toBe('exercise.conjugation.tense.active.past')
+    expect(conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, pronouns: 2, tenses: 4 })).toMatchObject({
+      tense: 'active.past',
+      withVoice: true,
+    })
   })
 
-  test('pronouns:0/tenses:0: promptParams.pronoun is pronoun.3ms (random=0 → 3ms)', () => {
+  test('pronouns:0/tenses:0: pronoun is 3ms (random=0 → 3ms)', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBe('pronoun.3ms')
-  })
-
-  test('pronouns:0/tenses:0: pronoun key is one of the known pronoun translation keys', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun).toBeOneOf([
-      'pronoun.1s',
-      'pronoun.1p',
-      'pronoun.2ms',
-      'pronoun.2fs',
-      'pronoun.2d',
-      'pronoun.2mp',
-      'pronoun.2fp',
-      'pronoun.3ms',
-      'pronoun.3fs',
-      'pronoun.3md',
-      'pronoun.3fd',
-      'pronoun.3mp',
-      'pronoun.3fp',
-    ])
+    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)).toMatchObject({ pronoun: '3ms' })
   })
 })
 
@@ -155,14 +126,6 @@ describe('conjugationExercise distractors', () => {
     const distractors = options.filter((_, i) => i !== answer)
     expect(distractors.every((d) => d !== options[answer])).toBe(true)
   })
-
-  test('pronouns:0/tenses:0: no dual pronoun forms appear in any option (random=0)', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0)
-    const DUAL_KEYS = new Set(['pronoun.2d', 'pronoun.3md', 'pronoun.3fd'])
-    expect(DUAL_KEYS.has(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.pronoun ?? '')).toBe(
-      false,
-    )
-  })
 })
 
 describe('conjugationExercise with constraints', () => {
@@ -194,7 +157,7 @@ describe('conjugationExercise with constraints', () => {
       { rootType: 'defective', form: 10, tense: 'passive.present.subjunctive', pronoun: '2mp' },
     )
 
-    expect(exercise.promptParams?.pronoun).toBe('pronoun.3ms')
+    expect(exercise.pronoun).toBe('3ms')
     expect(exercise.cardKey).toContain(':passive.present.subjunctive:3ms')
     expect(exercise.options[exercise.answer]).not.toBe('')
   })

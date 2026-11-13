@@ -3,10 +3,8 @@ import { resolveNominalExplanationLayers } from '../../paradigms/explanation.ts'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { formatFormLabel, formsForRoot, getAvailableParadigms, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
-import { defineExercise } from '../exercises.ts'
+import { defineExercise, type Participle } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
-
-type Participle = 'active' | 'passive'
 
 export const participleFormExercise = defineExercise(
   'participleForm',
@@ -33,8 +31,7 @@ export const participleFormExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey:
-        kind === 'active' ? 'exercise.prompt.activeParticipleForm' : 'exercise.prompt.passiveParticipleForm',
+      participle: kind,
       word,
       spokenWord: participle,
       options: options.map((form) => formatFormLabel(form, verb.root)),

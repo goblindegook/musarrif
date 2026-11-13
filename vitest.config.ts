@@ -16,11 +16,7 @@ export default defineConfig({
           // shares parsed verb corpus across files, Stryker needs isolation
           isolate: 'STRYKER_MUTATOR_WORKER' in process.env,
           sequence: { groupOrder: 0 },
-          include: [
-            'src/exercises/**/*.test.{ts,tsx}',
-            'src/paradigms/**/*.test.{ts,tsx}',
-            'src/test/**/*.test.{ts,tsx}',
-          ],
+          include: ['src/**/*.test.{ts,tsx}'],
         },
       },
       {

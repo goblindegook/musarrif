@@ -1,4 +1,3 @@
-import { toRoman } from '../primitives/numbers'
 import { dropsInitialWaw } from './active/present'
 import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
@@ -7,12 +6,10 @@ import { deriveMasdar } from './nominal/masdar'
 import type { PronounId } from './pronouns'
 import {
   analyzeRoot,
-  behaviourShapes,
   type RootAnalysis,
   type RootAnalysisType,
   type RootShape,
   rootShapes,
-  rootTypeLocaleKey,
   type WeakLetter,
 } from './roots'
 import type { VerbTense } from './tense'
@@ -21,7 +18,6 @@ import {
   ALIF_MADDA,
   DAL,
   DAMMA,
-  FATHA,
   NOON,
   normalizeForComparison,
   resolveFormVIIIInfixConsonant,
@@ -39,7 +35,7 @@ import {
 import type { Morpheme } from './word'
 import { Word } from './word'
 
-type FormIVowel = 'a' | 'i' | 'u'
+export type FormIVowel = 'a' | 'i' | 'u'
 
 export type VerbFormDescriptor =
   | '1-action'
@@ -63,14 +59,14 @@ export type NominalKind = 'activeParticiple' | 'passiveParticiple' | 'masdar'
 
 type ActiveParticipleKind = 'faa3il' | 'fa3iil' | 'lexical'
 
-type FormRootInteraction =
+export type FormRootInteraction =
   | 'assimilation-complete'
   | 'assimilation-voicing'
   | 'assimilation-emphasis'
   | 'assimilation-weak-initial'
   | 'assimilation-hamza-initial'
 
-type TenseRootInteraction =
+export type TenseRootInteraction =
   | 'final-drops'
   | 'final-elides'
   | 'final-isolated'
@@ -101,7 +97,7 @@ type TenseRootInteraction =
   | 'middle-shortens'
   | 'middle-shortens-consonant'
 
-type NominalRootInteraction =
+export type NominalRootInteraction =
   | 'geminate-contracts'
   | 'geminate-separates'
   | 'hollow-hamza'
@@ -157,7 +153,7 @@ interface MasdarExplanationLayers extends BaseNominalExplanationLayers {
   masdarPattern?: string
 }
 
-type NominalExplanationLayers<T extends NominalKind = NominalKind> = Extract<
+export type NominalExplanationLayers<T extends NominalKind = NominalKind> = Extract<
   ActiveParticipleExplanationLayers | PassiveParticipleExplanationLayers | MasdarExplanationLayers,
   { nominal: T }
 >
@@ -174,8 +170,6 @@ export interface ExplanationSentence {
 export type Paragraph = readonly ExplanationSentence[]
 
 export type Paragraphs = readonly Paragraph[]
-
-type DraftParagraph = readonly (ExplanationSentence | undefined)[]
 
 // The past-tense pronouns whose ending starts with a vowel, so nothing forces the stem to break up.
 const VOWEL_SUFFIX_PAST_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
@@ -240,7 +234,7 @@ const FORM_I_PRESENT_ENDING = {
   u: 'final-lengthens-uu',
 } as const satisfies Record<FormIVowel, TenseRootInteraction>
 
-const PAST_VOWEL_NAMES: Record<FormIVowel, { pastVowel: string; arabicVowel: string }> = {
+export const PAST_VOWEL_NAMES: Record<FormIVowel, { pastVowel: string; arabicVowel: string }> = {
   a: { pastVowel: 'fatḥa', arabicVowel: 'فَتْحَة' },
   i: { pastVowel: 'kasra', arabicVowel: 'كَسْرَة' },
   u: { pastVowel: 'ḍamma', arabicVowel: 'ضَمَّة' },
@@ -265,17 +259,17 @@ const QUADRILITERAL_MASDAR_PATTERNS: Partial<Record<TriliteralForm, string>> = {
   4: 'اِفْعِلَّال',
 }
 
-function toArabicText(arabic: string | readonly string[]): string {
+export function toArabicText(arabic: string | readonly string[]): string {
   return Array.isArray(arabic) ? arabic.join('، ') : String(arabic)
 }
 
 // Only the imperatives that actually open on a cluster carry the prop: اُشْكُرْ and اِنْقَصَّ do,
 // while a contracted geminate (ذُمَّ) and a Form IV hamza (أَبْقِ) do not.
-const hasAlifAlWasl = (arabic: string): boolean => arabic.startsWith(String(ALIF))
+export const hasAlifAlWasl = (arabic: string): boolean => arabic.startsWith(String(ALIF))
 
 // لَيْسَ is جامد: no pattern prose applies to it, the same exception derivePastFormI and
 // getAvailableParadigms already make.
-const isLaysa = (root: string): boolean => root === 'ليس'
+export const isLaysa = (root: string): boolean => root === 'ليس'
 
 export function toFormDescriptor(
   verb: Pick<Verb, 'form' | 'rootTokens'> & { vowels?: FormIPattern },
@@ -588,157 +582,15 @@ function resolveMimiPatternLabel(verb: Verb, arabic: string): string {
   return 'مَفْعَل'
 }
 
-export function renderExplanation(layers: ExplanationLayers, t: Translate): Paragraphs {
-  const arabic = toArabicText(layers.arabic)
-
-  // A paradigm the verb does not have leaves the cell empty, and an empty cell has nothing to explain.
-  if (!arabic) return []
-
-  const nominalLayers = layers.category === 'nominal' ? layers : undefined
-  const verbLayers = layers.category === 'verb' ? layers : undefined
-  const tense = verbLayers?.tense
-
-  const say = sayWith(t, {
-    ...(layers.vowels && PAST_VOWEL_NAMES[layers.vowels[0] as FormIVowel]),
-    arabic,
-    root: layers.paradigmRoots.join('-'),
-    initialRadical: layers.paradigmRoots[0] ?? '',
-    form: toRoman(layers.paradigmForm),
-    pattern: (nominalLayers?.nominal === 'masdar' ? nominalLayers.masdarPattern : undefined) ?? '',
-    pastForm: layers.pastForm ?? '',
-    presentForm: layers.presentForm ?? '',
-  })
-
-  if (verbLayers && isLaysa(layers.paradigmRoots.join('')))
-    return toParagraphs(
-      [say('measure', 'explanation.laysa.frozen'), say('radical', 'explanation.laysa.radical')],
-      [say('measure', 'explanation.laysa.meaning')],
-      renderPronounSentences(verbLayers, t),
-    )
-
-  return toParagraphs(
-    [
-      say('measure', layers.vowels && `explanation.form-i-pattern.${layers.vowels}`),
-      say('measure', layers.form && `explanation.form.${layers.form}`),
-      say('measure', layers.form === '8' && hasAlifAlWasl(arabic) && 'explanation.form.8-wasl'),
-      say('radical', resolveRootNoteKey(layers)),
-      say('radical', layers.rootType?.includes('biliteral') && 'explanation.root.biliteral'),
-      say('radical', layers.formRoot && `explanation.form-root.${layers.formRoot}`),
-    ],
-    [
-      say('measure', resolveNominalKey(nominalLayers)),
-      say('radical', nominalLayers?.nominalRoot && `explanation.nominal-root.${nominalLayers.nominalRoot}`),
-    ],
-    [
-      say('measure', tense?.startsWith('passive') && `explanation.voice.${tense}`),
-      say('elided', tense === 'active.imperative' && 'explanation.tense.active.imperative.elision'),
-      say(
-        'measure',
-        tense === 'active.imperative' && hasAlifAlWasl(arabic) && 'explanation.tense.active.imperative.support',
-      ),
-      tense &&
-        say(
-          tenseKind(tense),
-          tense !== 'active.imperative' && tense !== 'passive.past' && `explanation.tense.${tense}`,
-        ),
-      say(
-        'measure',
-        layers.paradigmForm === 1 &&
-          tense === 'active.past' &&
-          verbLayers?.pronoun === '3ms' &&
-          'explanation.tense.active.past.form-i',
-      ),
-      say('radical', verbLayers?.tenseRoot && `explanation.tense-root.${verbLayers.tenseRoot}`),
-    ],
-    renderPronounSentences(verbLayers, t),
-  )
-}
-
-function tenseKind(tense: VerbTense): ExplanationKind {
-  if (tense === 'active.future') return 'particle'
-  if (tense === 'active.past' || tense.startsWith('passive')) return 'measure'
-  return 'agreement'
-}
-
-function resolveRootNoteKey(layers: ExplanationLayers): string {
-  const { rootType, weakLetter, paradigmForm: form } = layers
-  if (rootType == null) return ''
-
-  const live = behaviourShapes(rootType).filter((shape) => !isNeutralizedByForm(shape, form))
-
-  if (live.length === 0 && rootType.includes('hollow')) return 'explanation.root.hollow-sound-form'
-  if (live.length === 0 && rootType.includes('doubled')) return 'explanation.root.doubled-sound-form'
-  if (live.length === 0 && weakLetter) return `explanation.root.hollow-uncontracted-${weakLetter}`
-  if (live.length === 1 && live[0] === 'assimilated' && form === 8) return ''
-  if (live.length === 1 && live[0] === 'assimilated' && form !== 1) return 'explanation.root.assimilated-sound-form'
-
-  // A neutralized shape only ever drops out above Form I, where a final weak radical is always yāʾ.
-  const liveWeakLetter = live.includes('hollow')
-    ? weakLetter
-    : live.includes('defective')
-      ? form === 1
-        ? weakLetter
-        : 'yaa'
-      : undefined
-  return `explanation.root.${rootTypeLocaleKey(live, liveWeakLetter)}`
-}
-
-function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
+export function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boolean {
   if (shape === 'hollow') return HOLLOW_NEUTRAL_FORMS.includes(form)
   if (shape === 'doubled') return DOUBLED_NEUTRAL_FORMS.includes(form)
   return false
 }
 
-function resolveNominalKey(layers?: NominalExplanationLayers): string {
-  if (layers?.nominal == null) return ''
-
-  const isQuadriliteral = layers.paradigmRoots.length > 3
-
-  if (layers.nominal === 'masdar') {
-    if (isQuadriliteral) return `explanation.nominal.masdar.${layers.form}`
-    if (layers.paradigmForm !== 1) return layers.masdarPattern ? 'explanation.nominal.masdar.non-form-i' : ''
-    return layers.isMasdarMimi ? 'explanation.nominal.masdar.form-i-mimi' : 'explanation.nominal.masdar.form-i'
-  }
-
-  if (layers.nominal === 'activeParticiple' && layers.activeParticipleKind !== 'faa3il')
-    return `explanation.nominal.activeParticiple.form-i-${layers.activeParticipleKind}`
-
-  return isQuadriliteral ? `explanation.nominal.${layers.nominal}.quad` : `explanation.nominal.${layers.nominal}`
-}
-
-function renderPronounSentences(layers: VerbExplanationLayers | undefined, t: Translate): Paragraph {
-  if (layers?.pronoun == null) return []
-
-  const say = sayWith(t, { pronounLabel: t(`pronoun.${layers.pronoun}`), arabic: toArabicText(layers.arabic) })
-  const assimilatedNun = hasAssimilatedEndingNun(layers)
-
-  const prefix = layers.prefix ? `${layers.prefix}ـ` : undefined
-  const ending = `${hasAbsorbedDualAlif(layers) ? `${FATHA}${ALIF}` : ''}${assimilatedNun ? String(NOON) : ''}${layers.suffix ?? ''}`
-  const suffix = ending ? `ـ${ending}` : undefined
-
-  const affixKey =
-    prefix && suffix ? 'prefix-and-suffix' : prefix ? 'prefix-only' : suffix ? 'suffix-only' : 'base-form'
-
-  return toParagraph(
-    affixKey === 'base-form' && layers.paradigmForm === 1 && layers.tense === 'active.past'
-      ? undefined
-      : say('agreement', `explanation.pronoun.${affixKey}`, {
-          ...(prefix && { prefix }),
-          ...(suffix && { suffix }),
-        }),
-    say('elided', layers.elidedPrefix && layers.tense !== 'active.imperative' && 'explanation.pronoun.dropped-prefix', {
-      elidedPrefix: `${layers.elidedPrefix}ـ`,
-    }),
-    say('elided', layers.elidedSuffix?.includes(String(NOON)) && 'explanation.pronoun.dropped-suffix', {
-      elidedSuffix: `ـ${layers.elidedSuffix}`,
-    }),
-    say('elided', assimilatedNun && 'explanation.pronoun.assimilated-nun'),
-  )
-}
-
 // A stem-final hamza swallows the dual's own alif into a madda (يَقْرَآنِ, قَرَآ, يَطَآنِ), leaving the
 // extracted suffix with the nūn alone, or with nothing at all where the mood drops the nūn too.
-function hasAbsorbedDualAlif(layers: VerbExplanationLayers): boolean {
+export function hasAbsorbedDualAlif(layers: VerbExplanationLayers): boolean {
   if (!DUAL_PRONOUNS.includes(layers.pronoun as PronounId)) return false
   if (layers.suffix?.includes(String(ALIF))) return false
   return toArabicText(layers.arabic).includes(String(ALIF_MADDA))
@@ -747,27 +599,9 @@ function hasAbsorbedDualAlif(layers: VerbExplanationLayers): boolean {
 // ـْنَ and ـْنَا merge into a stem that already ends in ن (سَكَنَّ, سَكَنَّا), so the ending's own nūn
 // never reaches the extracted suffix and the affix sentence alone would leave it unaccounted for.
 // Outside the past, 1p carries no nūn at all: its ending is the bare mood vowel of نَكْتُبَ.
-function hasAssimilatedEndingNun(layers: VerbExplanationLayers): boolean {
+export function hasAssimilatedEndingNun(layers: VerbExplanationLayers): boolean {
   const pronoun = layers.pronoun as PronounId
   if (!NUN_INITIAL_ENDING_PRONOUNS.includes(pronoun)) return false
   if (pronoun === '1p' && !layers.tense?.endsWith('past')) return false
   return layers.suffix != null && !layers.suffix.includes(String(NOON))
-}
-
-type Translate = (key: string, params?: Record<string, string>) => string
-
-function sayWith(t: Translate, params: Record<string, string>) {
-  return (
-    kind: ExplanationKind,
-    key: string | false | undefined,
-    extraParams?: Record<string, string>,
-  ): ExplanationSentence | undefined => (key ? { text: t(key, { ...params, ...extraParams }), kind } : undefined)
-}
-
-function toParagraph(...sentences: DraftParagraph): Paragraph {
-  return sentences.filter((sentence): sentence is ExplanationSentence => sentence != null)
-}
-
-function toParagraphs(...paragraphs: readonly DraftParagraph[]): Paragraphs {
-  return paragraphs.map((sentences) => toParagraph(...sentences)).filter((paragraph) => paragraph.length > 0)
 }

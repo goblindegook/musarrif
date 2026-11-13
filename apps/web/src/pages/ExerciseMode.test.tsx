@@ -22,7 +22,6 @@ function testExercise(overrides = {}): Exercise {
     dimensions: ['forms', 'rootTypes'],
     word: 'كَتَبَ',
     spokenWord: 'كَتَبَ',
-    promptTranslationKey: 'exercise.prompt.verbForm',
     options: ['I', 'II', 'III', 'IV'],
     answer: 0,
     cardKey: 'verbForm:sound:1',
@@ -567,14 +566,15 @@ describe('mastery filtering in ExerciseMode', () => {
   })
 })
 
-function conjugationExercise(overrides: Partial<Exercise> = {}): Exercise {
+function conjugationExercise(overrides: Partial<Exercise<'conjugation'>> = {}): Exercise<'conjugation'> {
   return {
     kind: 'conjugation',
     dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes'],
     word: 'يَكتُبُ',
     spokenWord: 'يَكتُبُ',
-    promptTranslationKey: 'exercise.prompt.conjugation',
-    promptParams: { tense: 'exercise.conjugation.tense.past', pronoun: 'pronoun.3ms' },
+    tense: 'active.past',
+    pronoun: '3ms',
+    withVoice: false,
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,
     cardKey: 'conjugation:sound:1:active.past:3ms',

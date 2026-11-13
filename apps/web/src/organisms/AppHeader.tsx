@@ -2,6 +2,7 @@ import { listen } from '@tauri-apps/api/event'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { styled } from 'goober'
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
+import { localizedDiacritics, localizedTheme } from '../../../../src/localization'
 import { Button } from '../atoms/Button'
 import { IconButton } from '../atoms/IconButton'
 import { Select } from '../atoms/Select'
@@ -136,8 +137,8 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
               fill
               options={DIACRITICS_OPTIONS.map((option) => ({
                 value: option,
-                label: t(`diacritics.${option}`),
-                title: `${t('diacritics.title')}: ${t(`diacritics.${option}`)}`,
+                label: localizedDiacritics(t, option),
+                title: `${t('diacritics.title')}: ${localizedDiacritics(t, option)}`,
               }))}
               value={diacriticsPreference}
               onChange={(option) => setDiacriticsPreference(option)}
@@ -169,8 +170,8 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
               fill
               options={THEME_OPTIONS.map((option) => ({
                 value: option,
-                label: t(`theme.${option}`),
-                title: `${t('theme.title')}: ${t(`theme.${option}`)}`,
+                label: localizedTheme(t, option),
+                title: `${t('theme.title')}: ${localizedTheme(t, option)}`,
               }))}
               value={themePreference}
               onChange={(option) => setThemePreference(option as ThemePreference)}

@@ -1,11 +1,8 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
+import { localizedExplanation, localizedFormMeaning, localizedFormRelationship } from '../../../../src/localization'
 import { conjugate } from '../../../../src/paradigms/conjugation'
-import {
-  renderExplanation,
-  resolveVerbExplanationLayers,
-  toFormDescriptor,
-} from '../../../../src/paradigms/explanation'
+import { resolveVerbExplanationLayers, toFormDescriptor } from '../../../../src/paradigms/explanation'
 import { applyDiacriticsPreference } from '../../../../src/paradigms/tokens'
 import { type DisplayVerb, getVerb, isTriliteralFormIDisplayVerb, verbs } from '../../../../src/paradigms/verbs'
 import { ArabicDisplay } from '../atoms/ArabicDisplay'
@@ -34,7 +31,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       '3ms',
     )
     return (
-      renderExplanation({ category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot }, t)[0]
+      localizedExplanation(t, { category: 'verb', paradigmRoots, paradigmForm, arabic, form, formRoot })[0]
         ?.map((s) => s.text)
         .join(' ') ?? ''
     )
@@ -49,7 +46,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
   return (
     <>
       <SemanticAnchor dir={dir} lang={lang}>
-        {t(`formInfo.form${toFormDescriptor(verb)}.semantic`)}
+        {localizedFormMeaning(t, toFormDescriptor(verb))}
       </SemanticAnchor>
       <ArabicDisplay>{pattern}</ArabicDisplay>
       {formExplanationParagraph && (
@@ -61,7 +58,7 @@ export const FormInsights = ({ verb }: { verb: DisplayVerb }) => {
       )}
       {verb.root.length === 3 && (
         <Text dir={dir} lang={lang}>
-          {t(`formInfo.form${verb.form}.relationship`)}
+          {localizedFormRelationship(t, verb.form)}
         </Text>
       )}
       <Heading dir={dir} lang={lang}>

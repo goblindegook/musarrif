@@ -12,7 +12,6 @@ export function sessionProps(overrides: Pick<Props, 'exercise'> & Partial<Props>
     onPersistAnswer: jest.fn(),
     onNext: jest.fn(),
     translate,
-    translatePrompt: translate,
     ...overrides,
   }
 }

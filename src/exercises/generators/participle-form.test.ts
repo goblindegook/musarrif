@@ -58,14 +58,6 @@ describe('participleFormExercise', () => {
     expect(answer).toBeLessThan(options.length)
   })
 
-  test('returns the prompt translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(promptTranslationKey).toBeOneOf([
-      'exercise.prompt.activeParticipleForm',
-      'exercise.prompt.passiveParticipleForm',
-    ])
-  })
-
   test('attaches nominal explanation layers for the selected participle type', () => {
     const exercise = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
@@ -89,8 +81,7 @@ describe('participleFormExercise', () => {
     )
 
     expect(
-      (exercise.promptTranslationKey === 'exercise.prompt.activeParticipleForm' && activeMatch) ||
-        (exercise.promptTranslationKey === 'exercise.prompt.passiveParticipleForm' && passiveMatch),
+      (exercise.participle === 'active' && activeMatch) || (exercise.participle === 'passive' && passiveMatch),
     ).toBe(true)
   })
 })

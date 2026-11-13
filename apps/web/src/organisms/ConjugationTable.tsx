@@ -1,48 +1,22 @@
 import { styled } from 'goober'
+import {
+  localizedMood,
+  localizedPronoun,
+  localizedSimpleTense,
+  localizedTense,
+  localizedVoice,
+} from '../../../../src/localization'
 import { conjugate } from '../../../../src/paradigms/conjugation'
-import { ARABIC_PRONOUNS, type PronounId } from '../../../../src/paradigms/pronouns'
+import { ARABIC_PRONOUNS, PRONOUN_IDS } from '../../../../src/paradigms/pronouns'
 import { ALL_TENSES, type Mood, type Tense, type VerbTense, type Voice } from '../../../../src/paradigms/tense'
 import { applyDiacriticsPreference, type DiacriticsPreference } from '../../../../src/paradigms/tokens'
 import type { DisplayVerb } from '../../../../src/paradigms/verbs'
 import { getAvailableParadigms } from '../../../../src/paradigms/verbs'
-import { keys } from '../../../../src/primitives/objects'
 import { useI18n } from '../hooks/useI18n'
 import { CopyButton } from '../molecules/CopyButton'
 import { SpeechButton } from '../molecules/SpeechButton'
 import { TabBar, TabButton, TabPanel } from '../molecules/Tabs'
 import { ConjugationInsights } from './ConjugationInsights'
-
-type TranslationKey = string
-
-interface PronounSlot {
-  id: PronounId
-  number: 'singular' | 'dual' | 'plural'
-  person: '1st' | '2nd' | '3rd'
-  gender?: 'masculine' | 'feminine'
-}
-
-const PRONOUNS: readonly PronounSlot[] = [
-  { id: '1s', number: 'singular', person: '1st' },
-
-  { id: '2ms', number: 'singular', person: '2nd', gender: 'masculine' },
-  { id: '2fs', number: 'singular', person: '2nd', gender: 'feminine' },
-
-  { id: '3ms', number: 'singular', person: '3rd', gender: 'masculine' },
-  { id: '3fs', number: 'singular', person: '3rd', gender: 'feminine' },
-
-  { id: '2d', number: 'dual', person: '2nd' },
-
-  { id: '3md', number: 'dual', person: '3rd', gender: 'masculine' },
-  { id: '3fd', number: 'dual', person: '3rd', gender: 'feminine' },
-
-  { id: '1p', number: 'plural', person: '1st' },
-
-  { id: '2mp', number: 'plural', person: '2nd', gender: 'masculine' },
-  { id: '2fp', number: 'plural', person: '2nd', gender: 'feminine' },
-
-  { id: '3mp', number: 'plural', person: '3rd', gender: 'masculine' },
-  { id: '3fp', number: 'plural', person: '3rd', gender: 'feminine' },
-] as const
 
 interface ConjugationProps {
   verb: DisplayVerb
@@ -102,7 +76,7 @@ export function ConjugationTable({
   const availableTenses = TENSE_OPTIONS[selectedVoice].filter((t) =>
     availableParadigms.some((p) => p === `${selectedVoice}.${t}` || p.startsWith(`${selectedVoice}.${t}.`)),
   )
-  const moodOptions = keys(MOOD_LABELS)
+  const moodOptions = MOOD_OPTIONS
   const paradigms = ALL_TENSES.filter((paradigm) => availableParadigms.includes(paradigm))
 
   return (
@@ -120,14 +94,14 @@ export function ConjugationTable({
               aria-selected={option === selectedVoice}
               aria-controls={panelId(tabId(option, tense, mood))}
               tabIndex={option === selectedVoice ? 0 : -1}
-              aria-label={t(VOICE_LABELS[option])}
+              aria-label={localizedVoice(t, option)}
               onClick={() => onVoiceChange(option)}
               onKeyDown={tabKeyDown(availableVoices, option, 'voice-tab', onVoiceChange)}
               dir={dir}
               lang={lang}
               fluid
             >
-              {t(VOICE_LABELS[option])}
+              {localizedVoice(t, option)}
             </TabButton>
           ))}
         </TabBar>
@@ -146,14 +120,14 @@ export function ConjugationTable({
                   tabId(selectedVoice, option, option === 'present' ? (mood ?? 'indicative') : undefined),
                 )}
                 tabIndex={option === tense ? 0 : -1}
-                aria-label={t(TENSE_LABELS[option])}
+                aria-label={localizedSimpleTense(t, option)}
                 onClick={() => onTenseChange(option)}
                 onKeyDown={tabKeyDown(availableTenses, option, 'tense-tab', onTenseChange)}
                 dir={dir}
                 lang={lang}
                 fluid
               >
-                {t(TENSE_LABELS[option])}
+                {localizedSimpleTense(t, option)}
               </TabButton>
             ))}
           </SubTabBar>
@@ -169,14 +143,14 @@ export function ConjugationTable({
                   aria-selected={option === mood}
                   aria-controls={panelId(tabId(selectedVoice, 'present', option))}
                   tabIndex={option === mood ? 0 : -1}
-                  aria-label={t(MOOD_LABELS[option])}
+                  aria-label={localizedMood(t, option)}
                   size="compact"
                   onClick={() => onMoodChange(option)}
                   onKeyDown={tabKeyDown(moodOptions, option, 'mood-tab', onMoodChange)}
                   dir={dir}
                   lang={lang}
                 >
-                  {t(MOOD_LABELS[option])}
+                  {localizedMood(t, option)}
                 </TabButton>
               ))}
             </SubTabBar>
@@ -190,7 +164,7 @@ export function ConjugationTable({
             key={paradigm}
             role="tabpanel"
             id={panelId(tabId(pVoice, pTense, pMood))}
-            aria-label={t(`tense.${paradigm}`)}
+            aria-label={localizedTense(t, paradigm)}
             data-selected={paradigm === verbTense ? 'true' : 'false'}
             data-print={paradigm.endsWith('.future') ? 'omit' : undefined}
           >
@@ -228,17 +202,17 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
             <HeadLabel>{t('table.pronoun')}</HeadLabel>
           </TableHeadCell>
           <VerbHeadCell scope="col" colspan={2}>
-            {t(`tense.${verbTense}`)}
+            {localizedTense(t, verbTense)}
           </VerbHeadCell>
         </Row>
       </thead>
       <TableBody>
-        {PRONOUNS.map((slot) => {
-          const conjugation = conjugations[slot.id]
+        {PRONOUN_IDS.map((pronoun) => {
+          const conjugation = conjugations[pronoun]
 
           if (!String(conjugation))
             return (
-              <BlankRow key={slot.id}>
+              <BlankRow key={pronoun}>
                 <PronounCell scope="row" />
                 <VerbCell dir="rtl" lang="ar">
                   {'\u00a0'}
@@ -250,13 +224,13 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
           const displayText = applyDiacriticsPreference(String(conjugation), diacriticsPreference)
 
           return (
-            <Row key={slot.id}>
+            <Row key={pronoun}>
               <PronounCell scope="row">
                 <span dir="rtl" lang="ar">
-                  {applyDiacriticsPreference(ARABIC_PRONOUNS[slot.id], diacriticsPreference)}
+                  {applyDiacriticsPreference(ARABIC_PRONOUNS[pronoun], diacriticsPreference)}
                 </span>
                 <PronounDescription dir={dir} lang={lang}>
-                  {formatDescription(slot, t)}
+                  {localizedPronoun(t, pronoun, true)}
                 </PronounDescription>
               </PronounCell>
               <VerbCell dir="rtl" lang="ar">
@@ -275,7 +249,7 @@ function ParadigmTable({ verb, verbTense, diacriticsPreference, interactive }: P
                     <ConjugationInsights
                       verb={verb}
                       verbTense={verbTense}
-                      pronoun={slot.id}
+                      pronoun={pronoun}
                       arabic={String(conjugation)}
                     />
                   </ActionButtons>
@@ -313,28 +287,12 @@ function tabKeyDown<T extends string>(
 
 const VOICE_OPTIONS: readonly Voice[] = ['active', 'passive']
 
-const VOICE_LABELS: Readonly<Record<Voice, TranslationKey>> = {
-  active: 'voice.active',
-  passive: 'voice.passive',
-} as const
-
 const TENSE_OPTIONS: Readonly<Record<Voice, readonly Tense[]>> = {
   active: ['past', 'present', 'future', 'imperative'],
   passive: ['past', 'present', 'future'],
 } as const
 
-const TENSE_LABELS: Readonly<Record<Tense, TranslationKey>> = {
-  past: 'tense.past',
-  present: 'tense.present',
-  future: 'tense.future',
-  imperative: 'mood.imperative',
-} as const
-
-const MOOD_LABELS: Readonly<Record<Mood, TranslationKey>> = {
-  indicative: 'mood.indicative',
-  subjunctive: 'mood.subjunctive',
-  jussive: 'mood.jussive',
-} as const
+const MOOD_OPTIONS: readonly Mood[] = ['indicative', 'subjunctive', 'jussive']
 
 const TabsContainer = styled('nav')`
   display: flex;
@@ -582,7 +540,3 @@ const ActionButtons = styled('div')`
     display: none;
   }
 `
-
-function formatDescription(slot: PronounSlot, translate: (key: TranslationKey) => string): string {
-  return translate(['pronoun', slot.person, slot.number, slot.gender].filter(Boolean).join('.') as TranslationKey)
-}

@@ -2,16 +2,14 @@ import { cleanup, render, screen, waitFor } from '@testing-library/preact'
 import { afterEach, describe, expect, test } from 'vitest'
 import { I18nProvider, useI18n } from './useI18n'
 
-function TranslationProbe({ translationKey = 'exercise.prompt.conjugation' }: { translationKey?: string }) {
+function TranslationProbe() {
   const { t } = useI18n()
 
   return (
-    <div data-testid="translation-output">
-      {t(translationKey, {
-        tense: 'X',
-        pronoun: 'Y',
-      })}
-    </div>
+    <>
+      <div data-testid="title">{t('title')}</div>
+      <div data-testid="prompt">{t('exercise.prompt.conjugation', { tense: 'X', pronoun: 'Y' })}</div>
+    </>
   )
 }
 
@@ -24,11 +22,11 @@ describe('i18n', () => {
   test('english strings are available on the initial render', () => {
     render(
       <I18nProvider>
-        <TranslationProbe translationKey="title" />
+        <TranslationProbe />
       </I18nProvider>,
     )
 
-    expect(screen.getByTestId('translation-output').textContent).toBe('Muṣarrif')
+    expect(screen.getByTestId('title').textContent).toBe('Muṣarrif')
   })
 
   test('t() applies diacritics preference before returning translated strings', async () => {
@@ -42,7 +40,7 @@ describe('i18n', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByTestId('translation-output').textContent).toBe(
+      expect(screen.getByTestId('prompt').textContent).toBe(
         'صرف هذا ٱلفعل في <strong>X</strong> للضمير <strong>Y</strong>.',
       )
     })

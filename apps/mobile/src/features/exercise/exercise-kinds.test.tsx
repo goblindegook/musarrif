@@ -26,8 +26,8 @@ describe('exercise kinds', () => {
       await render(<ExerciseSession {...sessionProps({ exercise, onPersistAnswer, translate: (key) => key })} />)
 
       expect(screen.getByText(exercise.word)).toBeTruthy()
-      expect(screen.getByText(exercise.promptTranslationKey)).toBeTruthy()
-      await fireEvent.press(screen.getByRole('radio', { name: exercise.options[exercise.answer] }))
+      expect(screen.getByText(/^exercise\.prompt\./)).toBeTruthy()
+      await fireEvent.press(screen.getAllByRole('radio')[exercise.answer])
 
       expect(screen.getByText('exercise.answer.correct · exercise.next')).toBeTruthy()
       expect(onPersistAnswer).toHaveBeenCalledWith(

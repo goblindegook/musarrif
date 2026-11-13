@@ -18,6 +18,7 @@
       "frontmatter": true
     }
   },
+  "plugins": ["./.biome/literal-translation-key.grit"],
   "linter": {
     "enabled": true,
     "rules": {

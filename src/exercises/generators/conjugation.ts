@@ -19,23 +19,6 @@ import {
 import { defineExercise } from '../exercises'
 import { buildCardKey, getSrsRootType } from '../srs'
 
-const TENSE_SLUGS: Record<string, string> = {
-  past: 'past',
-  future: 'future',
-  imperative: 'imperative',
-  'present.indicative': 'present',
-  'present.subjunctive': 'subjunctive',
-  'present.jussive': 'jussive',
-}
-
-function tensePromptKey(tense: VerbTense, includeVoice: boolean): string {
-  const [voice, ...parts] = tense.split('.')
-  const tenseOrMood = parts.join('.')
-  const slug = TENSE_SLUGS[tenseOrMood]
-  if (!includeVoice || tense === 'active.imperative') return `exercise.conjugation.tense.${slug}`
-  return `exercise.conjugation.tense.${voice}.${slug}`
-}
-
 function distractorPronouns(tense: VerbTense, profile: DimensionProfile): readonly PronounId[] {
   const pool = pronounPool(profile.pronouns)
   if (tense === 'active.imperative') return pool.filter((p) => p.startsWith('2'))
@@ -151,11 +134,9 @@ export const conjugationExercise = defineExercise(
 
     return {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.conjugation',
-      promptParams: {
-        tense: tensePromptKey(targetTense, profile.tenses >= 4),
-        pronoun: `pronoun.${targetPronoun}`,
-      },
+      tense: targetTense,
+      pronoun: targetPronoun,
+      withVoice: profile.tenses >= 4,
       word,
       spokenWord: verb.lemma,
       options,

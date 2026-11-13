@@ -122,7 +122,7 @@ describe('useDimensionStore', () => {
       expect(result.current[1]).toEqual([
         {
           dimension: 'forms',
-          items: ['exercise.unlock.form.2'],
+          items: [2],
           type: 'promotion',
         },
       ])

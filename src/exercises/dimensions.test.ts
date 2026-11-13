@@ -704,13 +704,13 @@ describe('getDimensionChanges', () => {
   test('returns promotion for pronoun level increase', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, pronouns: 0 }, { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 }),
-    ).toEqual([{ type: 'promotion', dimension: 'pronouns', items: ['exercise.unlock.pronounGroup.singular'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'pronouns', items: ['singular'] }])
   })
 
   test('returns promotion for forms level increase from 0 to 1', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, forms: 0 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([{ type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.2'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'forms', items: [2] }])
   })
 
   test('returns promotion with merged items across a multi-level jump', () => {
@@ -720,7 +720,7 @@ describe('getDimensionChanges', () => {
       {
         type: 'promotion',
         dimension: 'tenses',
-        items: ['exercise.unlock.tenseGroup.presentIndicative', 'exercise.unlock.tenseGroup.subjunctiveJussive'],
+        items: ['presentIndicative', 'subjunctiveJussive'],
       },
     ])
   })
@@ -728,19 +728,19 @@ describe('getDimensionChanges', () => {
   test('returns promotion for passive past unlock', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 3 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 4 }),
-    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passivePast'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['passivePast'] }])
   })
 
   test('returns promotion for passive present unlock', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, tenses: 4 }, { ...INITIAL_DIMENSION_PROFILE, tenses: 5 }),
-    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['exercise.unlock.tenseGroup.passivePresent'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'tenses', items: ['passivePresent'] }])
   })
 
   test('returns demotion for level decrease', () => {
     expect(
       getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, { ...INITIAL_DIMENSION_PROFILE, forms: 1 }),
-    ).toEqual([{ type: 'demotion', dimension: 'forms', items: ['exercise.unlock.form.3'] }])
+    ).toEqual([{ type: 'demotion', dimension: 'forms', items: [3] }])
   })
 
   test('rootTypes promotion from 1 to 2 announces assimilated', () => {
@@ -749,7 +749,7 @@ describe('getDimensionChanges', () => {
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 1 },
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 2 },
       ),
-    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.assimilated'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['assimilated'] }])
   })
 
   test('rootTypes promotion from 2 to 3 announces hollow', () => {
@@ -758,7 +758,7 @@ describe('getDimensionChanges', () => {
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 2 },
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 3 },
       ),
-    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hollow'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['hollow'] }])
   })
 
   test('rootTypes promotion from 3 to 4 announces defective', () => {
@@ -767,7 +767,7 @@ describe('getDimensionChanges', () => {
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 3 },
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
       ),
-    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.defective'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['defective'] }])
   })
 
   test('rootTypes promotion from 4 to 5 announces hamzated', () => {
@@ -776,7 +776,13 @@ describe('getDimensionChanges', () => {
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 5 },
       ),
-    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.hamzated'] }])
+    ).toEqual([{ type: 'promotion', dimension: 'rootTypes', items: ['hamzated'] }])
+  })
+
+  test('nominals promotion from 0 to 1 announces participles', () => {
+    expect(
+      getDimensionChanges({ ...INITIAL_DIMENSION_PROFILE, nominals: 0 }, { ...INITIAL_DIMENSION_PROFILE, nominals: 1 }),
+    ).toEqual([{ type: 'promotion', dimension: 'nominals', items: ['participles'] }])
   })
 
   test('returns both promotion and demotion for simultaneous changes', () => {
@@ -786,8 +792,8 @@ describe('getDimensionChanges', () => {
         { ...INITIAL_DIMENSION_PROFILE, forms: 2, rootTypes: 1 },
       ),
     ).toEqual([
-      { type: 'promotion', dimension: 'forms', items: ['exercise.unlock.form.3'] },
-      { type: 'demotion', dimension: 'rootTypes', items: ['exercise.unlock.rootType.assimilated'] },
+      { type: 'promotion', dimension: 'forms', items: [3] },
+      { type: 'demotion', dimension: 'rootTypes', items: ['assimilated'] },
     ])
   })
 })

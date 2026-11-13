@@ -33,10 +33,10 @@ export function VerbList({
   onSelect,
 }: VerbListProps) {
   const theme = useThemeTokens()
-  const { t, translate } = getCopy(language)
+  const { t, gloss } = getCopy(language)
   const matches = useMemo(
-    () => (query.trim() ? new Set(search(query, { language, translate }).map((verb) => verb.id)) : null),
-    [language, query, translate],
+    () => (query.trim() ? new Set(search(query, { language, gloss }).map((verb) => verb.id)) : null),
+    [language, query, gloss],
   )
   const filtered = useMemo(
     () => filterVerbs(filters, favouriteVerbIDs).filter((verb) => matches == null || matches.has(verb.id)),

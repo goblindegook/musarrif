@@ -25,6 +25,7 @@ export interface I18nContextValue {
   lang: Language
   dir: 'ltr' | 'rtl'
   t: Translate
+  gloss: (lexiconId: string) => string | undefined
   hasLexicon: boolean
   diacriticsPreference: DiacriticsPreference
   setDiacriticsPreference: (next: DiacriticsPreference) => void
@@ -109,19 +110,19 @@ export function I18nProvider({ children }: { children: ComponentChildren }) {
       lang,
       dir: LANGUAGE_DIRECTIONS[lang],
       t: (key, params, options) => {
-        const fallback = getCachedTranslation('en') ?? EN_TRANSLATION
-        const template =
-          translation.strings[key] ??
-          translation.verbs?.[key] ??
-          translation.roots?.[key] ??
-          fallback.strings[key] ??
-          fallback.verbs?.[key] ??
-          fallback.roots?.[key] ??
-          key
-        const rendered = format(template, params)
+        const rendered = format(translation.strings[key] ?? EN_STRINGS[key] ?? key, params)
         return lang === 'ar' && !options?.keepDiacritics
           ? applyDiacriticsPreference(rendered, diacriticsPreference)
           : rendered
+      },
+      gloss: (lexiconId) => {
+        const fallback = getCachedTranslation('en') ?? EN_TRANSLATION
+        const gloss =
+          translation.verbs?.[lexiconId] ??
+          translation.roots?.[lexiconId] ??
+          fallback.verbs?.[lexiconId] ??
+          fallback.roots?.[lexiconId]
+        return gloss != null && lang === 'ar' ? applyDiacriticsPreference(gloss, diacriticsPreference) : gloss
       },
       hasLexicon: translation.verbs != null,
       diacriticsPreference,

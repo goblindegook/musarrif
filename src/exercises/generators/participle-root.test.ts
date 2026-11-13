@@ -10,14 +10,6 @@ describe('participleRootExercise', () => {
     expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleRoot')
   })
 
-  test('returns the correct translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(promptTranslationKey).toBeOneOf([
-      'exercise.prompt.activeParticipleRoot',
-      'exercise.prompt.passiveParticipleRoot',
-    ])
-  })
-
   test('attaches nominal explanation layers for the selected participle type', () => {
     const exercise = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
@@ -59,8 +51,7 @@ describe('participleRootExercise', () => {
     )
 
     expect(
-      (exercise.promptTranslationKey === 'exercise.prompt.activeParticipleRoot' && matchesActive) ||
-        (exercise.promptTranslationKey === 'exercise.prompt.passiveParticipleRoot' && matchesPassive),
+      (exercise.participle === 'active' && matchesActive) || (exercise.participle === 'passive' && matchesPassive),
     ).toBe(true)
   })
 

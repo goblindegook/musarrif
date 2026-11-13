@@ -1,7 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { formatFormLabel, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
-import { exerciseDiacritics } from '../dimensions.ts'
 import { rootFormVerbExercise } from './root-form-verb.ts'
 
 describe('rootFormVerbExercise', () => {
@@ -11,16 +9,6 @@ describe('rootFormVerbExercise', () => {
 
   test('returns a non-empty Arabic word', () => {
     expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
-  })
-
-  test('returns the correct translation key', () => {
-    expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.rootFormVerb',
-    )
-  })
-
-  test('returns promptParams with a form Roman numeral', () => {
-    expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).promptParams?.form).toMatch(/^[IVX]+q?$/)
   })
 
   test('returns at least two options', () => {
@@ -38,19 +26,12 @@ describe('rootFormVerbExercise', () => {
     expect(answer).toBeLessThan(options.length)
   })
 
-  test('word matches the root of the selected verb', () => {
-    const easyProfile = INITIAL_DIMENSION_PROFILE
-    const exercise = rootFormVerbExercise.generate(easyProfile)
-    const root = exercise.word.replace(/ /g, '')
-    const formLabel = exercise.promptParams?.form
-    expect(
-      verbs.some(
-        (v) =>
-          v.root === root &&
-          formatFormLabel(v.form, v.root) === formLabel &&
-          exerciseDiacritics(v.lemma) === exercise.options[exercise.answer],
-      ),
-    ).toBe(true)
+  test('asks for the form of the answer verb', () => {
+    const exercise = rootFormVerbExercise.generate(
+      { ...INITIAL_DIMENSION_PROFILE, forms: 3, rootTypes: 5 },
+      { form: 2, rootType: 'sound' },
+    )
+    expect(exercise.form).toBe(2)
   })
 })
 

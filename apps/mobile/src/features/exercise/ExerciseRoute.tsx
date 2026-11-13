@@ -3,6 +3,7 @@ import { ActivityIndicator, Text } from 'react-native'
 import type { Exercise } from '../../../../../src/exercises/exercises'
 import type { ExerciseSession as SchedulerSession } from '../../../../../src/exercises/scheduler'
 import { nextExercise } from '../../../../../src/exercises/scheduler'
+import { localizedDimension, localizedUnlock } from '../../../../../src/localization'
 import { showBanner } from '../../../modules/musarrif-apple-services/src/NotificationBanner'
 import { Surface } from '../../components/Surface'
 import { getCopy, useSystemLanguage } from '../../i18n/copy'
@@ -45,8 +46,8 @@ export function ExerciseRoute() {
         .catch(() => setPersistenceFailed(true))
 
       for (const change of progress.dimensionChanges) {
-        const items = change.items.map((item) => t(item)).join(', ')
-        const dimension = t(`exercise.unlock.dimension.${change.dimension}`)
+        const items = change.items.map((item) => localizedUnlock(t, item)).join(', ')
+        const dimension = localizedDimension(t, change.dimension)
         showBanner(
           change.type === 'promotion'
             ? { kind: 'success', message: t('exercise.unlock.line', { dimension, items }), color: theme.correct }
@@ -87,11 +88,6 @@ export function ExerciseRoute() {
     )
   }
 
-  const promptTranslation = (key: string, params?: Record<string, string>) => {
-    const translatedParams = Object.fromEntries(Object.entries(params ?? {}).map(([name, value]) => [name, t(value)]))
-    return t(key, translatedParams).replace(/<\/?strong>/gu, '')
-  }
-
   return (
     <Surface style={{ flex: 1 }}>
       {persistenceFailed ? (
@@ -105,7 +101,6 @@ export function ExerciseRoute() {
         onPersistAnswer={persistAnswer}
         srsStore={srsStore}
         translate={t}
-        translatePrompt={promptTranslation}
       />
     </Surface>
   )

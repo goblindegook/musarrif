@@ -1,7 +1,7 @@
 import { shuffle } from '@pacote/shuffle'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation.ts'
 import { spell } from '../../paradigms/tokens.ts'
-import { formatFormLabel, formsForRoot, getVerb } from '../../paradigms/verbs.ts'
+import { formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
@@ -27,8 +27,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
 
   return {
     dimensions: ['forms', 'rootTypes'],
-    promptTranslationKey: 'exercise.prompt.rootFormVerb',
-    promptParams: { form: formatFormLabel(verb.form, verb.root) },
+    form: verb.form,
     word: Array.from(verb.root).join(' '),
     spokenWord: spell(verb.root).join(', '),
     options: options.map(({ label }) => exerciseDiacritics(label)),

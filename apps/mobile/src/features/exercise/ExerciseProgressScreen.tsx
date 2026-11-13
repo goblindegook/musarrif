@@ -3,12 +3,7 @@ import { tint } from '@expo/ui/swift-ui/modifiers'
 import { useMemo, useState } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated'
-import {
-  computeInsights,
-  computeMastery,
-  type MasteryCategoryId,
-  type MasteryItem,
-} from '../../../../../src/exercises/mastery'
+import { computeInsights, computeMastery, type MasteryCategoryId } from '../../../../../src/exercises/mastery'
 import {
   findStatsForDate,
   getAccuracyPercent,
@@ -18,7 +13,13 @@ import {
   getStreakRecord,
   STREAK_DAILY_GOAL,
 } from '../../../../../src/exercises/stats'
-import { toRoman } from '../../../../../src/primitives/numbers'
+import {
+  localizedChartTrend,
+  localizedDimension,
+  localizedMasteryItem,
+  localizedStreakRecord,
+  localizedStreakUnit,
+} from '../../../../../src/localization'
 import { CAPS_TRACKING, Heading } from '../../components/Heading'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { getCopy, useSystemLanguage } from '../../i18n/copy'
@@ -28,24 +29,6 @@ import { useMotionDuration } from '../../theme/motion'
 import { type ThemeTokens, useThemeTokens } from '../../theme/tokens'
 import { ExerciseLearningInsightsSheet } from './ExerciseLearningInsightsSheet'
 import { ExerciseProgressChart } from './ExerciseProgressChart'
-
-function masteryLabel(
-  item: MasteryItem<MasteryCategoryId>,
-  t: (key: string, values?: Record<string, string>) => string,
-) {
-  switch (item.categoryId) {
-    case 'rootTypes':
-      return t(`exercise.stats.mastery.rootType.${item.value}`)
-    case 'forms':
-      return t('exercise.stats.mastery.form', { form: toRoman(Number(item.value)) })
-    case 'tenses':
-      return t(`tense.${item.value}`)
-    case 'pronouns':
-      return t(`pronoun.${item.value}`)
-    case 'nominals':
-      return t(`exercise.stats.mastery.nominal.${item.value}`)
-  }
-}
 
 function masteryProgress(score: number, locked: boolean): number {
   return locked || score <= 0 ? 0 : score ** 0.4
@@ -95,11 +78,11 @@ export function ExerciseProgressScreen() {
     incorrect: t('exercise.stats.incorrect'),
     passed: t('exercise.stats.skipped'),
   }
-  const trend = (key: 'correct' | 'incorrect' | 'passed') => {
-    const first = week[0]?.[key] ?? 0
-    const last = week[week.length - 1]?.[key] ?? 0
-    return t(`exercise.stats.chart.trend.${last > first ? 'up' : last < first ? 'down' : 'steady'}`)
-  }
+  const trend = (key: 'correct' | 'incorrect' | 'passed') =>
+    localizedChartTrend(
+      t,
+      week.map((day) => day[key]),
+    )
   const chartSummary = t('exercise.stats.chart.aria.summary', {
     correctLabel: chartLabels.correct,
     correctTotal: String(weekly.correct),
@@ -134,13 +117,9 @@ export function ExerciseProgressScreen() {
           <View style={styles.summaryColumn}>
             <Text style={[styles.label, { color: theme.inkMuted }]}>{t('exercise.stats.streak.label')}</Text>
             <Text style={[styles.value, { color: theme.ink }]}>
-              {streak} {t(streak === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
+              {streak} {localizedStreakUnit(t, streak)}
             </Text>
-            <Text style={{ color: theme.inkMuted }}>
-              {t(record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural', {
-                days: String(record),
-              })}
-            </Text>
+            <Text style={{ color: theme.inkMuted }}>{localizedStreakRecord(t, record)}</Text>
           </View>
         </View>
 
@@ -163,7 +142,7 @@ export function ExerciseProgressScreen() {
           <View>
             {mastery.map((category, index) => {
               const isExpanded = expanded === category.id
-              const label = t(`exercise.unlock.dimension.${category.id}`)
+              const label = localizedDimension(t, category.id)
               return (
                 <Animated.View
                   key={category.id}
@@ -203,7 +182,7 @@ export function ExerciseProgressScreen() {
                       {category.items.map((item) => (
                         <View key={item.id} style={styles.masteryItem}>
                           <View style={styles.masteryLabel}>
-                            <Text style={{ color: theme.inkSecondary }}>{masteryLabel(item, t)}</Text>
+                            <Text style={{ color: theme.inkSecondary }}>{localizedMasteryItem(t, item)}</Text>
                             {item.locked ? (
                               <Text style={{ color: theme.inkMuted }}>{t('exercise.stats.mastery.locked')}</Text>
                             ) : null}

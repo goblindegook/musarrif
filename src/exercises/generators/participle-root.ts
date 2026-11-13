@@ -10,10 +10,8 @@ import {
   weakAlternativeRootDistractor,
   wordSliceDistractor,
 } from '../distractors.ts'
-import { defineExercise } from '../exercises.ts'
+import { defineExercise, type Participle } from '../exercises.ts'
 import { buildCardKey, getSrsRootType } from '../srs.ts'
-
-type Participle = 'active' | 'passive'
 
 export const participleRootExercise = defineExercise(
   'participleRoot',
@@ -27,8 +25,7 @@ export const participleRootExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey:
-        kind === 'active' ? 'exercise.prompt.activeParticipleRoot' : 'exercise.prompt.passiveParticipleRoot',
+      participle: kind,
       word: exerciseDiacritics(participle),
       spokenWord: participle,
       options: options.map((option) => Array.from(option).join(' ')),

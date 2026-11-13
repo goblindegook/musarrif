@@ -11,7 +11,9 @@ const exercise: Exercise<'conjugation'> = {
   kind: 'conjugation',
   word: 'يَكْتُبُ',
   spokenWord: 'يَكْتُبُ',
-  promptTranslationKey: 'Choose the Arabic form',
+  tense: 'active.present.indicative',
+  pronoun: '3ms',
+  withVoice: false,
   options: ['يَكْتُبُ', 'كَتَبَ', 'يَكْتَبُ', 'كُتِبَ'],
   answer: 0,
   answerText: 'يَكْتُبُ',
@@ -203,12 +205,18 @@ describe('exercise answer flow', () => {
     expect(screen.getByText('Risposta corretta · Avanti')).toBeTruthy()
   })
 
-  test('shows translated labels for answer options that are translation keys', async () => {
-    const tenseExercise: Exercise<'conjugation'> = {
-      ...exercise,
-      options: ['tense.past', 'tense.present'],
+  test('shows translated tense names as verb tense options', async () => {
+    const tenseExercise: Exercise<'verbTense'> = {
+      kind: 'verbTense',
+      word: 'يَكْتُبُ',
+      spokenWord: 'يَكْتُبُ',
+      tenses: ['active.past', 'active.present.indicative'],
+      withVoice: false,
+      options: ['active.past', 'active.present.indicative'],
       answer: 0,
-      answerText: 'tense.past',
+      cardKey: 'verbTense:sound:1:active.past:3ms',
+      dimensions: ['tenses'],
+      inputModes: ['multiple-choice'],
     }
     await render(<ExerciseSession {...sessionProps({ exercise: tenseExercise })} />)
 

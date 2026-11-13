@@ -6,12 +6,12 @@ import { type DisplayVerb, findVerbsByRoot, findVerbsByRootPrefix, frequencyRank
 
 type SearchOptions = {
   language: string
-  translate: (key: string) => string | undefined
+  gloss: (key: string) => string | undefined
 }
 
 const DEFAULT_SEARCH_OPTIONS: SearchOptions = {
   language: '',
-  translate: (key: string) => key,
+  gloss: (key: string) => key,
 }
 
 function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): DisplayVerb[] {
@@ -30,7 +30,7 @@ function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): Displa
       ...verbs.filter(
         (verb) =>
           verb.id.toLowerCase().startsWith(normalizedQuery) ||
-          (options.language && normalizeQuery(options.translate(verb.id) ?? '').includes(normalizedQuery)),
+          (options.language && normalizeQuery(options.gloss(verb.id) ?? '').includes(normalizedQuery)),
       ),
     ]),
   )
@@ -39,7 +39,7 @@ function searchInternal(query: string, options = DEFAULT_SEARCH_OPTIONS): Displa
       // Lemma distance cannot tell an exact root from a root-prefix match: ءمن and منع both sit 3 edits from "امن ب".
       rootMatch: candidates.includes(verb.root) ? 0 : 1,
       distance: wordDistance(normalizedQuery, normalizeQuery(verb.lemma)),
-      translation: normalizeQuery(options.translate(verb.id) ?? ''),
+      translation: normalizeQuery(options.gloss(verb.id) ?? ''),
     }))
     .toSorted(
       (a, b) =>

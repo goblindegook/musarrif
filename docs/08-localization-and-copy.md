@@ -8,6 +8,11 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 - Verb translations live in `en.verbs.json`, `it.verbs.json`, `pt.verbs.json` only (verbs need no Arabic translation)
 - Root glosses (`roots` key) live in all four: en/it/pt plus `ar.verbs.json`, which has **only** `roots` — Arabic maṣdar/abstract-noun labels, fully vocalised. Wired via `LEXICON_LOADERS` in `useI18n.tsx`
 - Verb and root glosses are written through the `add-verb` and `translate-verb` skills, which hold the gloss-selection rules and the `glosses` tool. Translations go in the same change as the verb entry.
+- Look glosses up with `gloss(id)`.
+
+## Translation keys in code
+
+Labels for a known set of values are `localizedX` functions in `src/localization.ts`.
 
 ## Copy
 

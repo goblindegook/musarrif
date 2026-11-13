@@ -1,0 +1,6 @@
+language js
+
+`t($key, $...)` where {
+  not $key <: string(),
+  register_diagnostic(span=$key, severity="warn", message="Translation keys must be whole string literals. Use one key per message, with a variant key per known value.")
+}

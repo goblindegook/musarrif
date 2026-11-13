@@ -12,8 +12,15 @@ import {
   nextExercise,
 } from '../../../../src/exercises/scheduler'
 import type { AnswerResult, SrsStore } from '../../../../src/exercises/srs'
-import { renderExplanation } from '../../../../src/paradigms/explanation'
-import type { PronounId } from '../../../../src/paradigms/pronouns'
+import {
+  localizedDimension,
+  localizedExplanation,
+  localizedPrompt,
+  localizedPronoun,
+  localizedRootShape,
+  localizedTense,
+  localizedUnlock,
+} from '../../../../src/localization'
 import { toRoman } from '../../../../src/primitives/numbers'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'
@@ -37,22 +44,6 @@ type Props = {
     session: ExerciseSession,
     focus: ExerciseFocus,
   ) => Exercise
-}
-
-const PRONOUN_ABBREVIATION_LABELS: Record<PronounId, string> = {
-  '1s': 'pronoun.1st.singular',
-  '1p': 'pronoun.1st.plural',
-  '2ms': 'pronoun.2nd.singular.masculine',
-  '2fs': 'pronoun.2nd.singular.feminine',
-  '2d': 'pronoun.2nd.dual',
-  '2mp': 'pronoun.2nd.plural.masculine',
-  '2fp': 'pronoun.2nd.plural.feminine',
-  '3ms': 'pronoun.3rd.singular.masculine',
-  '3fs': 'pronoun.3rd.singular.feminine',
-  '3md': 'pronoun.3rd.dual.masculine',
-  '3fd': 'pronoun.3rd.dual.feminine',
-  '3mp': 'pronoun.3rd.plural.masculine',
-  '3fp': 'pronoun.3rd.plural.feminine',
 }
 
 export function ExerciseMode({ generateExercise = nextExercise }: Props) {
@@ -93,8 +84,12 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         ? { glyph: '↓', ariaLabel: [ariaLabel ?? label, recommendedLabel].join(', ') }
         : { ariaLabel: ariaLabel ?? label }
 
-    const groupOption = (key: string, options: readonly OptionItem<MasteryItemId>[]) => {
-      const label = t(`exercise.focus.${key}.label`)
+    const groupOption = (
+      key: string,
+      label: string,
+      pickerTitle: string,
+      options: readonly OptionItem<MasteryItemId>[],
+    ) => {
       const recommendation = options.some((o) => recommended.has(o.value))
         ? {
             glyph: '↓',
@@ -106,7 +101,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         key,
         label,
         ariaLabel: label,
-        pickerTitle: t(`exercise.focus.${key}.pickerTitle`),
+        pickerTitle,
         hint: t('exercise.focus.mixedHint'),
         options,
         ...recommendation,
@@ -120,9 +115,11 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'form',
+          t('exercise.focus.form.label'),
+          t('exercise.focus.form.pickerTitle'),
           forms.map((f) => ({
             value: `forms.${f}`,
-            label: t(`exercise.unlock.form.${f}`),
+            label: localizedUnlock(t, f),
             ...itemOption(toRoman(f), `forms.${f}`, t('exercise.stats.mastery.form', { form: toRoman(f) })),
           })),
         ),
@@ -134,10 +131,12 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'tense',
+          t('exercise.focus.tense.label'),
+          t('exercise.focus.tense.pickerTitle'),
           tenses.map((value) => ({
             value: `tenses.${value}`,
-            label: t(`tense.${value}`),
-            ...itemOption(t(`tense.${value}`), `tenses.${value}`),
+            label: localizedTense(t, value),
+            ...itemOption(localizedTense(t, value), `tenses.${value}`),
           })),
         ),
       )
@@ -148,10 +147,12 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'rootType',
+          t('exercise.focus.rootType.label'),
+          t('exercise.focus.rootType.pickerTitle'),
           rootTypes.map((value) => ({
             value: `rootTypes.${value}`,
-            label: t(`exercise.stats.mastery.rootType.${value}`),
-            ...itemOption(t(`exercise.stats.mastery.rootType.${value}`), `rootTypes.${value}`),
+            label: localizedRootShape(t, value),
+            ...itemOption(localizedRootShape(t, value), `rootTypes.${value}`),
           })),
         ),
       )
@@ -162,10 +163,12 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
       groups.push(
         groupOption(
           'pronoun',
+          t('exercise.focus.pronoun.label'),
+          t('exercise.focus.pronoun.pickerTitle'),
           pronouns.map((p) => ({
             value: `pronouns.${p}`,
-            label: t(PRONOUN_ABBREVIATION_LABELS[p]),
-            ...itemOption(t(PRONOUN_ABBREVIATION_LABELS[p]), `pronouns.${p}`, t(`pronoun.${p}`)),
+            label: localizedPronoun(t, p, true),
+            ...itemOption(localizedPronoun(t, p, true), `pronouns.${p}`, localizedPronoun(t, p)),
           })),
         ),
       )
@@ -173,7 +176,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
 
     if (dimensionProfile.nominals >= 2)
       groups.push(
-        groupOption('nominal', [
+        groupOption('nominal', t('exercise.focus.nominal.label'), t('exercise.focus.nominal.pickerTitle'), [
           {
             value: 'nominals.participles' as MasteryItemId,
             label: t('exercise.stats.mastery.nominal.participles'),
@@ -248,11 +251,11 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
   const explanation = (() => {
     if (answeredIndex == null && !skipped) return []
     if (exercise.explanation == null) return []
-    return renderExplanation(
+    return localizedExplanation(
+      t,
       answerResult !== 'correct' || skipped
         ? exercise.explanation
         : filterMasteredLayers(srsStore, exercise.explanation),
-      t,
     )
   })()
 
@@ -308,14 +311,7 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
         <VerbDisplay lang="ar" dir="rtl">
           {exercise.word}
         </VerbDisplay>
-        <FormattedText
-          id={EXERCISE_PROMPT_ID}
-          className={PROMPT_CLASS}
-          text={t(
-            exercise.promptTranslationKey,
-            Object.fromEntries(Object.entries(exercise.promptParams ?? {}).map(([k, v]) => [k, t(v)])),
-          )}
-        />
+        <FormattedText id={EXERCISE_PROMPT_ID} className={PROMPT_CLASS} text={localizedPrompt(t, exercise)} />
         <AnswerAreaContainer aria-hidden={isFocusPickerOpen}>
           <ExerciseAnswerArea
             exercise={exercise}
@@ -343,8 +339,8 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                     <SuccessAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.unlock.line', {
-                          dimension: t(`exercise.unlock.dimension.${change.dimension}`),
-                          items: change.items.map((item) => t(item)).join(', '),
+                          dimension: localizedDimension(t, change.dimension),
+                          items: change.items.map((item) => localizedUnlock(t, item)).join(', '),
                         })}
                       </Text>
                     </SuccessAlert>
@@ -353,8 +349,8 @@ export function ExerciseMode({ generateExercise = nextExercise }: Props) {
                     <WarningAlert key={`${exercise.cardKey}-change-${index}`} lang={lang} dir={dir}>
                       <Text>
                         {t('exercise.demotion.line', {
-                          dimension: t(`exercise.unlock.dimension.${change.dimension}`),
-                          items: change.items.map((item) => t(item)).join(', '),
+                          dimension: localizedDimension(t, change.dimension),
+                          items: change.items.map((item) => localizedUnlock(t, item)).join(', '),
                         })}
                       </Text>
                     </WarningAlert>

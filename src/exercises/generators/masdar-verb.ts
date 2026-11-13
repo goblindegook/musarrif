@@ -19,7 +19,6 @@ export const masdarVerbExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.masdarVerb',
       word,
       spokenWord: String(masdar),
       options,

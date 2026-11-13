@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { localizedPronoun } from '../../../../../src/localization'
 import { conjugate } from '../../../../../src/paradigms/conjugation'
 import type { PronounId } from '../../../../../src/paradigms/pronouns'
 import { ARABIC_PRONOUNS, PRONOUN_IDS } from '../../../../../src/paradigms/pronouns'
@@ -32,12 +33,6 @@ export function ParadigmTable({
   const { t } = getCopy(language)
   const forms = conjugate(verb, tense)
   const shown = PRONOUN_IDS.filter((pronoun) => String(forms[pronoun] ?? '').length > 0)
-  const persons: Record<string, string> = { '1': '1st', '2': '2nd', '3': '3rd' }
-  const genders: Record<string, string> = { m: 'masculine', f: 'feminine' }
-  const numbers: Record<string, string> = { s: 'singular', d: 'dual', p: 'plural' }
-  // Ids read person, optional gender, number: `3fs`, `2d`.
-  const abbreviation = (pronoun: PronounId) =>
-    t(['pronoun', persons[pronoun[0]], numbers[pronoun.slice(-1)], genders[pronoun[1]]].filter(Boolean).join('.'))
 
   return (
     <View accessibilityLabel={t('verb.table')} accessibilityRole="list">
@@ -46,7 +41,7 @@ export function ParadigmTable({
         const displayed = applyDiacriticsPreference(arabic, diacriticsPreference)
         return (
           <Pressable
-            accessibilityLabel={`${t(`pronoun.${pronoun}`)}: ${displayed}`}
+            accessibilityLabel={`${localizedPronoun(t, pronoun)}: ${displayed}`}
             accessibilityRole="button"
             key={pronoun}
             testID="conjugation-form"
@@ -69,7 +64,7 @@ export function ParadigmTable({
                 {applyDiacriticsPreference(ARABIC_PRONOUNS[pronoun], diacriticsPreference)}
               </ArabicText>
               <Text style={{ color: theme.inkMuted, fontSize: 12, fontStyle: 'italic', textAlign: 'right' }}>
-                {abbreviation(pronoun)}
+                {localizedPronoun(t, pronoun, true)}
               </Text>
             </View>
             <ArabicText locale="ar" style={{ fontSize: 32, flex: 1 }}>

@@ -5,20 +5,27 @@ import { DEFAULT_DIMENSION_PROFILE, type DimensionProfile } from '../../../../sr
 import {
   computeInsights,
   computeMastery,
-  type InsightCandidate,
   type InsightData,
   type MasteryCategoryId,
   type MasteryCategory as MasteryCategoryType,
-  type MasteryItem as MasteryItemData,
 } from '../../../../src/exercises/mastery'
 import type { SrsStore } from '../../../../src/exercises/srs'
 import type { DailyActivity } from '../../../../src/exercises/stats'
-import { parseInteger, sum, toRoman } from '../../../../src/primitives/numbers'
+import {
+  localizedChartTrend,
+  localizedDimension,
+  localizedMasteryItem,
+  localizedStreakHint,
+  localizedStreakRecord,
+  localizedStreakUnit,
+  type StreakHint,
+} from '../../../../src/localization'
+import { sum } from '../../../../src/primitives/numbers'
 import { Button } from '../atoms/Button'
 import { DisclosureChevron } from '../atoms/DisclosureChevron'
 import { Heading } from '../atoms/Heading'
 import { ProgressBar } from '../atoms/ProgressBar'
-import { type Translate, useI18n } from '../hooks/useI18n'
+import { useI18n } from '../hooks/useI18n'
 import { type Streak, useStats } from '../hooks/useStats'
 import { useTheme } from '../hooks/useTheme'
 import { LockIcon } from '../icons/LockIcon'
@@ -40,15 +47,6 @@ interface Props {
 
 const MASTERY_DISPLAY_EXPONENT = 0.4
 
-const ROOT_TYPE_LABEL_KEYS = {
-  sound: 'exercise.stats.mastery.rootType.sound',
-  doubled: 'exercise.stats.mastery.rootType.doubled',
-  assimilated: 'exercise.stats.mastery.rootType.assimilated',
-  hollow: 'exercise.stats.mastery.rootType.hollow',
-  defective: 'exercise.stats.mastery.rootType.defective',
-  hamzated: 'exercise.stats.mastery.rootType.hamzated',
-} as const
-
 export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
   const { theme } = useTheme()
   const { t, lang } = useI18n()
@@ -62,7 +60,7 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   const week = useMemo(() => days(7), [days])
   const [insightsOpen, setInsightsOpen] = useState(false)
 
-  const [streakHintKey, streakHintParams] = useMemo(() => {
+  const streakHint = useMemo(() => {
     const today = new Date()
     const yesterday = new Date()
     yesterday.setDate(today.getDate() - 1)
@@ -73,12 +71,7 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
 
   return (
     <>
-      <Panel
-        title={t('exercise.stats.title')}
-        collapsible
-        defaultCollapsed
-        hint={t(streakHintKey, resolveStreakHintParams(t, streakHintParams))}
-      >
+      <Panel title={t('exercise.stats.title')} collapsible defaultCollapsed hint={localizedStreakHint(t, streakHint)}>
         <Chart
           ariaLabel={buildChartAriaLabel(week, t)}
           series={[
@@ -124,20 +117,6 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
   )
 }
 
-function masteryItemLabel<T extends MasteryCategoryId>(
-  item: MasteryItemData<T>,
-  t: (key: string, params?: Record<string, string>) => string,
-): string {
-  const { categoryId, value } = item
-  if (categoryId === 'rootTypes') return t(ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS])
-  if (categoryId === 'forms') return t('exercise.stats.mastery.form', { form: toRoman(parseInteger(String(value), 0)) })
-  if (categoryId === 'tenses') return t(`tense.${value}`)
-  if (categoryId === 'pronouns') return t(`pronoun.${value}`)
-  if (categoryId === 'nominals' && value === 'participles') return t('exercise.stats.mastery.nominal.participles')
-  if (categoryId === 'nominals' && value === 'masdar') return t('exercise.stats.mastery.nominal.masdar')
-  return ''
-}
-
 function masteryProgressBar(score: number, locked: boolean): { value: number; max: number } {
   if (locked || score <= 0) return { value: 0, max: 1 }
   const displayedScore = score ** MASTERY_DISPLAY_EXPONENT
@@ -157,7 +136,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
             <MasteryCategory key={category.id} name="mastery">
               <MasterySummary data-testid={`mastery-category-header-${category.id}`}>
                 <MasteryLabelGroup data-testid={`mastery-category-label-${category.id}`}>
-                  <span>{t(`exercise.unlock.dimension.${category.id}`)}</span>
+                  <span>{localizedDimension(t, category.id)}</span>
                   {category.locked && (
                     <InlineLock>
                       <LockIcon aria-hidden="true" />
@@ -171,7 +150,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                     value={categoryProgress.value}
                     max={categoryProgress.max}
                     style={{ height: '0.45rem' }}
-                    aria-label={t(`exercise.unlock.dimension.${category.id}`)}
+                    aria-label={localizedDimension(t, category.id)}
                   />
                 </MasteryCategoryRow>
               </MasterySummary>
@@ -182,7 +161,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                     return (
                       <MasteryItem key={item.id}>
                         <MasteryItemTop>
-                          <MasteryLabel>{masteryItemLabel(item, t)}</MasteryLabel>
+                          <MasteryLabel>{localizedMasteryItem(t, item)}</MasteryLabel>
                           {item.locked && (
                             <InlineLock>
                               <LockIcon aria-hidden="true" />
@@ -195,7 +174,7 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
                             value={itemProgress.value}
                             max={itemProgress.max}
                             style={{ height: '0.45rem' }}
-                            aria-label={masteryItemLabel(item, t)}
+                            aria-label={localizedMasteryItem(t, item)}
                           />
                         </MasteryRow>
                       </MasteryItem>
@@ -211,14 +190,6 @@ function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<Mas
   )
 }
 
-function trendDirection(values: readonly number[]): 'up' | 'down' | 'steady' {
-  const first = values[0] ?? 0
-  const last = values[values.length - 1] ?? 0
-  if (last > first) return 'up'
-  if (last < first) return 'down'
-  return 'steady'
-}
-
 function buildChartAriaLabel(
   days: readonly DailyActivity[],
   t: (key: string, params?: Record<string, string>) => string,
@@ -229,13 +200,13 @@ function buildChartAriaLabel(
   return t('exercise.stats.chart.aria.summary', {
     correctLabel: t('exercise.stats.correct'),
     correctTotal: String(sum(correctValues)),
-    correctTrend: t(`exercise.stats.chart.trend.${trendDirection(correctValues)}`),
+    correctTrend: localizedChartTrend(t, correctValues),
     incorrectLabel: t('exercise.stats.incorrect'),
     incorrectTotal: String(sum(incorrectValues)),
-    incorrectTrend: t(`exercise.stats.chart.trend.${trendDirection(incorrectValues)}`),
+    incorrectTrend: localizedChartTrend(t, incorrectValues),
     skippedLabel: t('exercise.stats.skipped'),
     skippedTotal: String(sum(skippedValues)),
-    skippedTrend: t(`exercise.stats.chart.trend.${trendDirection(skippedValues)}`),
+    skippedTrend: localizedChartTrend(t, skippedValues),
   })
 }
 
@@ -260,17 +231,9 @@ function StatsDetailsPanel({ mastery, onOpenInsights }: StatsDetailsPanelProps) 
         <Detail label={t('exercise.stats.streak.label')} valueLang={lang} valueDir="ltr">
           <ValueStack>
             <span>
-              {streak.current}{' '}
-              {t(streak.current === 1 ? 'exercise.stats.streak.unit.singular' : 'exercise.stats.streak.unit.plural')}
+              {streak.current} {localizedStreakUnit(t, streak.current)}
             </span>
-            <SubNote>
-              {t(
-                streak.record === 1 ? 'exercise.stats.streak.record.singular' : 'exercise.stats.streak.record.plural',
-                {
-                  days: String(streak.record),
-                },
-              )}
-            </SubNote>
+            <SubNote>{localizedStreakRecord(t, streak.record)}</SubNote>
           </ValueStack>
         </Detail>
       </DetailsRow>
@@ -293,83 +256,40 @@ function StatsDetailsPanel({ mastery, onOpenInsights }: StatsDetailsPanelProps) 
   )
 }
 
-interface StreakHintParams extends Record<string, string | undefined> {
-  remaining?: string
-  target?: string
-  dimension?: string
-  dimensionLabelKey?: string
-  form?: string
-}
-
-function candidateLabelDescriptor({ type, value }: InsightCandidate): [key: string, form: string] {
-  switch (type) {
-    case 'rootType':
-      return [ROOT_TYPE_LABEL_KEYS[value as keyof typeof ROOT_TYPE_LABEL_KEYS], '']
-    case 'form':
-      return ['exercise.stats.mastery.form', toRoman(parseInteger(value, 0))]
-    case 'tense':
-      return [`tense.${value}`, '']
-    case 'pronounClass':
-      return [`exercise.insights.pronounClass.${value}`, '']
-    case 'nominal':
-      return [`exercise.stats.mastery.nominal.${value}`, '']
-  }
-}
-
-function resolveStreakHintParams(t: Translate, streakHintParams: StreakHintParams) {
-  return streakHintParams.dimensionLabelKey == null
-    ? streakHintParams
-    : {
-        ...streakHintParams,
-        dimension:
-          streakHintParams.dimensionLabelKey === 'exercise.stats.mastery.form'
-            ? t(streakHintParams.dimensionLabelKey, { form: streakHintParams.form })
-            : t(streakHintParams.dimensionLabelKey),
-      }
-}
-
 function buildStreakHint(
   streak: Streak,
   today?: DailyActivity,
   yesterday?: DailyActivity,
   insights?: InsightData,
-): [string, StreakHintParams] {
-  if (streak.remaining > 1) return ['exercise.stats.progressHint.streak', { remaining: String(streak.remaining) }]
-  if (streak.remaining === 1) return ['exercise.stats.progressHint.streak.almostThere', {}]
-  if (streak.correct === streak.goal) return ['exercise.stats.progressHint.streak.wellDone', {}]
+): StreakHint {
+  if (streak.remaining > 1) return { kind: 'streak', remaining: streak.remaining }
+  if (streak.remaining === 1) return { kind: 'streakAlmostThere' }
+  if (streak.correct === streak.goal) return { kind: 'streakWellDone' }
 
   const correct = today?.correct ?? 0
   const incorrect = today?.incorrect ?? 0
   const passed = today?.passed ?? 0
   const attempted = correct + incorrect
 
-  if (attempted > 0 && incorrect / attempted > 0.5) return ['exercise.stats.progressHint.encourage', {}]
-  if (passed >= Math.max(attempted, 4)) return ['exercise.stats.progressHint.skipping', {}]
-  if (attempted >= 12 && correct / attempted >= 0.9) return ['exercise.stats.progressHint.excellent', {}]
+  if (attempted > 0 && incorrect / attempted > 0.5) return { kind: 'encourage' }
+  if (passed >= Math.max(attempted, 4)) return { kind: 'skipping' }
+  if (attempted >= 12 && correct / attempted >= 0.9) return { kind: 'excellent' }
 
   const strongest = insights?.strengths[0]
-  if (strongest != null && strongest.score >= 0.75) {
-    const [dimensionLabelKey, form] = candidateLabelDescriptor(strongest)
-    return ['exercise.stats.progressHint.strongDimension', { dimensionLabelKey, form }]
-  }
+  if (strongest != null && strongest.score >= 0.75) return { kind: 'strongDimension', candidate: strongest }
 
   const stuck = insights?.stuck.topDimensions[0]
-  if (stuck != null) {
-    const [dimensionLabelKey, form] = candidateLabelDescriptor(stuck)
-    return ['exercise.stats.progressHint.weakDimension', { dimensionLabelKey, form }]
-  }
+  if (stuck != null) return { kind: 'weakDimension', candidate: stuck }
 
   const yesterdayCorrect = yesterday?.correct ?? 0
 
   if (correct < yesterdayCorrect && yesterdayCorrect - correct <= 5)
-    return ['exercise.stats.progressHint.vsYesterday.almostThere', { target: String(yesterdayCorrect - correct) }]
-  if (correct < yesterdayCorrect)
-    return ['exercise.stats.progressHint.vsYesterday.below', { target: String(yesterdayCorrect) }]
-  if (correct === yesterdayCorrect) return ['exercise.stats.progressHint.vsYesterday.equal', {}]
-  if (correct > yesterdayCorrect && correct - yesterdayCorrect <= 5)
-    return ['exercise.stats.progressHint.vsYesterday.exceeded', {}]
+    return { kind: 'vsYesterdayAlmostThere', target: yesterdayCorrect - correct }
+  if (correct < yesterdayCorrect) return { kind: 'vsYesterdayBelow', target: yesterdayCorrect }
+  if (correct === yesterdayCorrect) return { kind: 'vsYesterdayEqual' }
+  if (correct > yesterdayCorrect && correct - yesterdayCorrect <= 5) return { kind: 'vsYesterdayExceeded' }
 
-  return ['', {}]
+  return { kind: 'none' }
 }
 
 const DetailsRow = styled('div')`

@@ -2,6 +2,7 @@ import { transliterateReverse } from '@pacote/buckwalter'
 import { styled } from 'goober'
 import type { ComponentChildren } from 'preact'
 import { useMemo } from 'preact/hooks'
+import { localizedValency } from '../../../../src/localization'
 import { applyDiacriticsPreference } from '../../../../src/paradigms/tokens'
 import type { DisplayVerb } from '../../../../src/paradigms/verbs'
 import { useI18n } from '../hooks/useI18n'
@@ -14,7 +15,7 @@ export interface VerbHeaderPanelProps {
 }
 
 export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProps) => {
-  const { lang, dir, t, diacriticsPreference } = useI18n()
+  const { lang, dir, t, gloss, diacriticsPreference } = useI18n()
   const prepositions = (verb.prepositions ?? []).map((preposition) => {
     const arabic = applyDiacriticsPreference(transliterateReverse(preposition), diacriticsPreference)
     return ['bi', 'li', 'ka'].includes(preposition) ? `${arabic}ـ` : arabic
@@ -28,15 +29,14 @@ export const VerbHeaderPanel = ({ verb, actions, children }: VerbHeaderPanelProp
   const translation = useMemo(() => {
     if (verb.synthetic) return t('meta.synthetic')
     if (lang === 'ar') return undefined
-    const result = t(verb.id)
-    return result !== verb.id ? result : '—'
-  }, [verb, lang, t])
+    return gloss(verb.id) ?? '—'
+  }, [verb, lang, t, gloss])
 
   const valency = useMemo(
     () =>
       (verb.valency ?? [])
         .toSorted((a, b) => a - b)
-        .map((value) => t(`valency.${value}`))
+        .map((value) => localizedValency(t, value))
         .join(' · '),
     [verb, t],
   )

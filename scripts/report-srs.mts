@@ -1,21 +1,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parseDimensionStore } from '../src/exercises/dimensions.ts'
-import {
-  computeInsights,
-  type InsightCandidate,
-  type InsightCandidateType,
-  type InsightData,
-  type MasteryCategoryId,
-  type Recommendation,
-} from '../src/exercises/mastery.ts'
+import { computeInsights } from '../src/exercises/mastery.ts'
 import type { SrsCard, SrsStore } from '../src/exercises/srs.ts'
 import { getSrsCards, parseSrsStore, utcAddDays } from '../src/exercises/srs.ts'
 import { parseTrackedExercises } from '../src/exercises/stats.ts'
 import en from '../src/locales/en.strings.json' with { type: 'json' }
+import { localizedInsights } from '../src/localization.ts'
 import { isDual, isFemininePlural, isMasculinePlural } from '../src/paradigms/pronouns.ts'
 import { utcToday } from '../src/primitives/dates.ts'
-import { parseInteger, toRoman } from '../src/primitives/numbers.ts'
+import { toRoman } from '../src/primitives/numbers.ts'
 
 const filePath = process.argv[2]
 if (!filePath) {
@@ -222,7 +216,7 @@ function describeCard(card: SrsCard): string {
   return [kindLabels[kind] ?? kind, rootType, toRoman(form), tenseStr, pronounStr].filter(Boolean).join(' · ')
 }
 
-// --- Insights text (mirrors LearningInsights.tsx) ---
+// --- Insights text ---
 
 function t(key: string, params?: Record<string, string>): string {
   let str = (en as Record<string, string>)[key] ?? key
@@ -230,122 +224,23 @@ function t(key: string, params?: Record<string, string>): string {
   return str
 }
 
-const TYPE_ORDER: readonly InsightCandidateType[] = ['rootType', 'tense', 'form', 'pronounClass', 'nominal']
-
-function candidateKey(c: Pick<InsightCandidate, 'type' | 'value'>): string {
-  switch (c.type) {
-    case 'rootType':
-      return `exercise.unlock.rootType.${c.value}`
-    case 'tense':
-      return `exercise.conjugation.tense.${c.value}`
-    case 'form':
-      return `exercise.unlock.form.${c.value}`
-    case 'pronounClass':
-      return `exercise.insights.pronounClass.${c.value}`
-    case 'nominal':
-      return `exercise.insights.nominal.${c.value}`
-  }
-}
-
-function sortPair(a: InsightCandidate, b: InsightCandidate): [InsightCandidate, InsightCandidate] {
-  return TYPE_ORDER.indexOf(a.type) <= TYPE_ORDER.indexOf(b.type) ? [a, b] : [b, a]
-}
-
-function resolveNextLabel(dim: MasteryCategoryId, value: string): string {
-  switch (dim) {
-    case 'rootTypes':
-      return t(`exercise.stats.mastery.rootType.${value}`)
-    case 'tenses':
-      return t(`tense.${value}`)
-    case 'forms':
-      return toRoman(parseInteger(value, 0))
-    case 'pronouns':
-      return t(`pronoun.${value}`)
-    case 'nominals':
-      return t(`exercise.stats.mastery.nominal.${value}`)
-  }
-}
-
-function sectionText(
-  candidates: InsightData['strengths'],
-  section: 'strengths' | 'challenge',
-  noneKey: string,
-): string {
-  if (candidates.length === 0) return t(noneKey)
-  if (candidates.length === 1) {
-    const [a] = candidates
-    return t(`exercise.insights.${section}.single.${a.type}`, { value: t(candidateKey(a)) })
-  }
-  const [first, second] = sortPair(candidates[0], candidates[1])
-  return t(`exercise.insights.${section}.pair.${first.type}.${second.type}`, {
-    value1: t(candidateKey(first)),
-    value2: t(candidateKey(second)),
-  })
-}
-
-function backlogText(ins: InsightData['backlog']): string | null {
-  if (ins.state === 'none') return null
-  if (ins.eta == null) return t(`exercise.insights.backlog.${ins.state}.noEta`)
-  return t(`exercise.insights.backlog.${ins.state}`, { eta: t(`exercise.insights.backlog.eta.${ins.eta}`) })
-}
-
-function recommendationText(r: Recommendation): string {
-  if (r.kind === 'habit') return t(`exercise.insights.recommendation.habit.${r.action}`)
-  return r.action === 'focusCandidate'
-    ? t('exercise.insights.recommendation.focus.focusCandidate', { value: t(candidateKey(r.candidate)) })
-    : t('exercise.insights.recommendation.focus.keepUnlocking')
-}
-
 function buildInsightRows(): Array<{ label: string; text: string }> {
-  const journeyText =
-    insights.journey.days === 0
-      ? t('exercise.insights.journey.new')
-      : t('exercise.insights.journey', {
-          days: String(insights.journey.days),
-          answers: String(insights.journey.answers),
-          accuracy: String(insights.journey.accuracy),
-        })
-  const journeyLine =
-    insights.journey.days > 0
-      ? `${journeyText} ${t(`exercise.insights.journey.trend.${insights.journey.trend}`)}`
-      : journeyText
-
-  const stageLine =
-    insights.stage.nextDimension != null && insights.stage.nextValue != null
-      ? t(`exercise.insights.stage.next.${insights.stage.nextDimension}`, {
-          value: resolveNextLabel(insights.stage.nextDimension, insights.stage.nextValue),
-        })
-      : t('exercise.insights.stage.next.complete')
-
-  const challengeText =
-    insights.stuck.topDimensions.length > 0
-      ? insights.stuck.topDimensions.length === 1
-        ? t('exercise.insights.difficult.single', { value: t(candidateKey(insights.stuck.topDimensions[0])) })
-        : t('exercise.insights.difficult.pair', {
-            value1: t(candidateKey(insights.stuck.topDimensions[0])),
-            value2: t(candidateKey(insights.stuck.topDimensions[1])),
-          })
-      : sectionText(insights.challenge, 'challenge', 'exercise.insights.challenge.none')
-
-  const rows: Array<{ label: string; text: string }> = [
-    { label: t('exercise.insights.heading.journey'), text: journeyLine },
-    { label: t('exercise.insights.heading.momentum'), text: t(`exercise.insights.momentum.${insights.volume.trend}`) },
+  const text = localizedInsights(t, insights)
+  return [
+    { label: t('exercise.insights.heading.journey'), text: text.journey },
+    { label: t('exercise.insights.heading.momentum'), text: text.momentum },
+    ...(text.backlog == null ? [] : [{ label: t('exercise.insights.heading.backlog'), text: text.backlog }]),
     {
       label: t('exercise.insights.heading.strengths'),
-      text: sectionText(insights.strengths, 'strengths', 'exercise.insights.strengths.none'),
+      text: text.strengths ?? t('exercise.insights.strengths.none'),
     },
-    { label: t('exercise.insights.heading.challenge'), text: challengeText },
-    { label: t('exercise.insights.heading.stage'), text: stageLine },
     {
-      label: t('exercise.insights.heading.recommendation'),
-      text: insights.recommendation.map(recommendationText).join(' '),
+      label: t('exercise.insights.heading.challenge'),
+      text: text.challenge ?? t('exercise.insights.challenge.none'),
     },
+    { label: t('exercise.insights.heading.stage'), text: text.stage },
+    { label: t('exercise.insights.heading.recommendation'), text: text.recommendation },
   ]
-
-  const bl = backlogText(insights.backlog)
-  if (bl != null) rows.splice(2, 0, { label: t('exercise.insights.heading.backlog'), text: bl })
-
-  return rows
 }
 
 // --- HTML ---

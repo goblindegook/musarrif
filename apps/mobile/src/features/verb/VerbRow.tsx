@@ -27,12 +27,12 @@ export function VerbRow({
   verb: DisplayVerb
 }) {
   const theme = useThemeTokens()
-  const { t, translate } = getCopy(language)
+  const { t, gloss } = getCopy(language)
   const rtl = getLocaleDirection(language) === 'rtl'
   const lemma = applyDiacriticsPreference(verb.lemma, diacriticsPreference)
   const form = formatFormLabel(verb.form, verb.root)
   const vowelPattern = isTriliteralFormIDisplayVerb(verb) ? formIVowelPattern(verb) : undefined
-  const gloss = language === 'ar' ? undefined : translate(verb.id)
+  const verbGloss = language === 'ar' ? undefined : gloss(verb.id)
 
   return (
     <Pressable
@@ -40,7 +40,7 @@ export function VerbRow({
         lemma,
         t('meta.form.withNumber', { form }),
         vowelPattern,
-        gloss,
+        verbGloss,
         includeIdInLabel ? verb.id : null,
       ]
         .filter(Boolean)
@@ -78,9 +78,9 @@ export function VerbRow({
         <ArabicText allowFontScaling style={styles.lemma}>
           {lemma}
         </ArabicText>
-        {gloss ? (
+        {verbGloss ? (
           <Text allowFontScaling style={[styles.gloss, { color: theme.inkSecondary }]}>
-            {gloss}
+            {verbGloss}
           </Text>
         ) : null}
       </View>

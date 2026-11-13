@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { analyzeRoot, rootTypeLocaleKey } from '../../../../src/paradigms/roots.ts'
+import { localizedRootDescription } from '../../../../src/localization.ts'
+import { analyzeRoot } from '../../../../src/paradigms/roots.ts'
 import { tokenize } from '../../../../src/paradigms/tokens.ts'
 import { findVerbsByRoot } from '../../../../src/paradigms/verbs.ts'
 import { Heading } from '../atoms/Heading.tsx'
@@ -10,14 +11,14 @@ import { useI18n } from '../hooks/useI18n.tsx'
 import { VerbPill } from '../molecules/VerbPill'
 
 export const RootInsights = ({ root, rootId }: { root: string; rootId: string }) => {
-  const { t, dir, lang } = useI18n()
+  const { t, gloss, dir, lang } = useI18n()
   const rootAnalysis = analyzeRoot(tokenize(root))
-  const rootGloss = t(rootId)
+  const rootGloss = gloss(rootId)
   const derivedForms = useMemo(() => findVerbsByRoot(root).toSorted((a, b) => a.form - b.form), [root])
   return (
     <>
       <RootDisplay>
-        {rootGloss !== rootId && (
+        {rootGloss != null && (
           <Text dir={dir} lang={lang}>
             <em>
               <q>{rootGloss}</q>
@@ -40,8 +41,7 @@ export const RootInsights = ({ root, rootId }: { root: string; rootId: string })
         </RootLetters>
       </RootDisplay>
       <Text dir={dir} lang={lang}>
-        {t(`rootInfo.${rootTypeLocaleKey(rootAnalysis.type, rootAnalysis.weakLetter)}.description`) ||
-          t('rootInfo.sound.description')}
+        {localizedRootDescription(t, rootAnalysis)}
       </Text>
       {rootAnalysis.type.includes('biliteral') && (
         <Text dir={dir} lang={lang}>

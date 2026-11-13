@@ -37,10 +37,6 @@ describe('generateFormExercise', () => {
     expect(word.length).toBeGreaterThan(0)
   })
 
-  test('returns the correct translation key', () => {
-    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe('exercise.prompt.verbForm')
-  })
-
   test('returns exactly four options', () => {
     expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

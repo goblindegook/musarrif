@@ -34,10 +34,11 @@ export const verbTenseExercise = defineExercise(
 
     return {
       dimensions: ['tenses', 'forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.verbTense',
+      tenses: options,
+      withVoice: profile.tenses >= 4,
       word,
       spokenWord,
-      options: options.map((t) => tenseKey(t, profile.tenses >= 4)),
+      options,
       answer,
       cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
       explanation,
@@ -46,11 +47,6 @@ export const verbTenseExercise = defineExercise(
   },
   { weight: 2 },
 )
-
-function tenseKey(tense: VerbTense, includeVoice: boolean): string {
-  if (includeVoice) return `tense.${tense}`
-  return `tense.${tense.replace(/^\w+\./, '')}`
-}
 
 function buildOptions(
   verb: DisplayVerb,

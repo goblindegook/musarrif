@@ -60,11 +60,13 @@ export interface MasteryItem<K extends MasteryCategoryId> {
   locked: boolean
 }
 
+export type AnyMasteryItem<K extends MasteryCategoryId = MasteryCategoryId> = { [J in K]: MasteryItem<J> }[K]
+
 export interface MasteryCategory<K extends MasteryCategoryId> {
   id: K
   score: number
   locked: boolean
-  items: readonly MasteryItem<K>[]
+  items: readonly AnyMasteryItem<K>[]
 }
 
 export function computeMastery(
@@ -159,36 +161,45 @@ function combinationGroupKey(card: SrsCardIdentity): string {
   return `${card.rootType}:${card.form}:${card.kind}`
 }
 
-export function insightItemIds(
-  candidate: Pick<InsightCandidate, 'type' | 'value'>,
-  profile: DimensionProfile,
-): readonly MasteryItemId[] {
+export function insightItemIds(candidate: InsightDimension, profile: DimensionProfile): readonly MasteryItemId[] {
   switch (candidate.type) {
     case 'rootType':
-      return [`rootTypes.${candidate.value}` as MasteryItemId]
+      return [`rootTypes.${candidate.value}` as const]
     case 'tense':
-      return [`tenses.${candidate.value}` as MasteryItemId]
+      return [`tenses.${candidate.value}` as const]
     case 'form':
-      return [`forms.${candidate.value}` as MasteryItemId]
+      return [`forms.${candidate.value}` as const]
     case 'nominal':
-      return [`nominals.${candidate.value}` as MasteryItemId]
+      return [`nominals.${candidate.value}` as const]
     case 'pronounClass': {
       const unlocked = pronounPool(profile.pronouns)
-      return PRONOUN_CLASS_MEMBERS[candidate.value as PronounClassId]
+      return PRONOUN_CLASS_MEMBERS[candidate.value]
         .filter((pronoun) => unlocked.includes(pronoun))
-        .map((pronoun) => `pronouns.${pronoun}` as MasteryItemId)
+        .map((pronoun) => `pronouns.${pronoun}` as const)
     }
   }
 }
 
-export type InsightCandidateType = 'rootType' | 'tense' | 'form' | 'pronounClass' | 'nominal'
-type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
+export type PronounClassId = 'singular' | 'dual' | '1stPlural' | '2ndPlural' | '3rdPlural'
 
-export interface InsightCandidate {
-  type: InsightCandidateType
-  value: string
-  score: number
-}
+export type InsightDimension =
+  | { type: 'rootType'; value: SrsRootType }
+  | { type: 'tense'; value: VerbTense }
+  | { type: 'form'; value: TriliteralForm }
+  | { type: 'pronounClass'; value: PronounClassId }
+  | { type: 'nominal'; value: MasteryItemIdByCategory['nominals'] }
+
+export type InsightCandidateType = InsightDimension['type']
+
+export type InsightCandidate = InsightDimension & { score: number }
+
+export type InsightStage =
+  | { [K in MasteryCategoryId]: { nextDimension: K; nextValue?: MasteryItemIdByCategory[K] } }[Exclude<
+      MasteryCategoryId,
+      'forms'
+    >]
+  | { nextDimension: 'forms'; nextValue?: `${TriliteralForm}` }
+  | { nextDimension: null; nextValue?: undefined }
 
 export type BacklogState = 'none' | 'few' | 'many'
 export type BacklogETA = 'fewDays' | 'oneWeek' | 'twoWeeks' | 'threeWeeks' | 'fourWeeks' | 'oneMonthOrMore'
@@ -196,7 +207,7 @@ export type BacklogETA = 'fewDays' | 'oneWeek' | 'twoWeeks' | 'threeWeeks' | 'fo
 export type Recommendation =
   | { kind: 'habit'; action: 'keepSteady' | 'rebuildDailyHabit' | 'protectAccuracy' }
   | { kind: 'habit'; action: 'catchUp'; dailyTarget: number }
-  | { kind: 'focus'; action: 'focusCandidate'; candidate: Pick<InsightCandidate, 'type' | 'value'> }
+  | { kind: 'focus'; action: 'focusCandidate'; candidate: InsightDimension }
   | { kind: 'focus'; action: 'keepUnlocking' }
 
 export interface InsightData {
@@ -208,10 +219,7 @@ export interface InsightData {
   }
   strengths: readonly InsightCandidate[]
   challenge: readonly InsightCandidate[]
-  stage: {
-    nextDimension?: MasteryCategoryId
-    nextValue?: string
-  }
+  stage: InsightStage
   volume: {
     trend: 'ramping' | 'steady' | 'dropping' | 'inactive' | 'insufficient'
   }
@@ -253,22 +261,22 @@ function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
 
   if (stuck.length === 0) return { topDimensions: [] }
 
-  const counts = new Map<string, { type: InsightCandidateType; value: string; count: number }>()
+  const counts = new Map<string, { dimension: InsightDimension; count: number }>()
 
-  const bump = (type: InsightCandidateType, value: string) => {
-    const mapKey = `${type}:${value}`
+  const bump = (dimension: InsightDimension) => {
+    const mapKey = `${dimension.type}:${dimension.value}`
     const entry = counts.get(mapKey)
     if (entry != null) entry.count++
-    else counts.set(mapKey, { type, value, count: 1 })
+    else counts.set(mapKey, { dimension, count: 1 })
   }
 
   for (const card of stuck) {
-    bump('rootType', card.rootType)
-    bump('form', String(card.form))
-    if (card.tense != null) bump('tense', card.tense)
+    bump({ type: 'rootType', value: card.rootType })
+    bump({ type: 'form', value: card.form })
+    if (card.tense != null) bump({ type: 'tense', value: card.tense })
     if (card.pronoun != null) {
       const pronounClass = getPronounClass(card.pronoun)
-      if (pronounClass != null) bump('pronounClass', pronounClass)
+      if (pronounClass != null) bump({ type: 'pronounClass', value: pronounClass })
     }
   }
 
@@ -276,11 +284,7 @@ function computeStuck(srsStore: SrsStore): InsightData['stuck'] {
   const sorted = [...counts.values()].filter(({ count }) => count < total).sort((a, b) => b.count - a.count)
 
   return {
-    topDimensions: sorted.slice(0, 2).map(({ type, value, count }) => ({
-      type,
-      value,
-      score: count / total,
-    })),
+    topDimensions: sorted.slice(0, 2).map(({ dimension, count }) => ({ ...dimension, score: count / total })),
   }
 }
 
@@ -377,17 +381,18 @@ export function computeInsights(
 
   const practised = getSrsCards(srsStore)
   const unlockedPronouns = pronounPool(profile.pronouns)
-  const candidate = (type: InsightCandidateType, value: string, matches: (card: SrsCardIdentity) => boolean) =>
-    practisedCandidate(type, value, practised.filter(matches), srsStore, today)
+  const candidate = (dimension: InsightDimension, matches: (card: SrsCardIdentity) => boolean) =>
+    practisedCandidate(dimension, practised.filter(matches), srsStore, today)
 
   const sorted = [
-    ...rootTypesPool(profile.rootTypes).map((value) => candidate('rootType', value, (c) => c.rootType === value)),
-    ...tensePool(profile.tenses).map((value) => candidate('tense', value, (c) => c.tense === value)),
-    ...formPool(profile.forms).map((value) => candidate('form', String(value), (c) => c.form === value)),
+    ...rootTypesPool(profile.rootTypes).map((value) =>
+      candidate({ type: 'rootType', value }, (c) => c.rootType === value),
+    ),
+    ...tensePool(profile.tenses).map((value) => candidate({ type: 'tense', value }, (c) => c.tense === value)),
+    ...formPool(profile.forms).map((value) => candidate({ type: 'form', value }, (c) => c.form === value)),
     ...PRONOUN_CLASS_ORDER.map((classId) =>
       candidate(
-        'pronounClass',
-        classId,
+        { type: 'pronounClass', value: classId },
         (c) =>
           c.pronoun != null &&
           PRONOUN_CLASS_MEMBERS[classId].includes(c.pronoun) &&
@@ -395,16 +400,15 @@ export function computeInsights(
       ),
     ),
     ...NOMINAL_ORDER.slice(0, profile.nominals).map((value) =>
-      candidate('nominal', value, value === 'participles' ? isParticipleCard : isMasdarCard),
+      candidate({ type: 'nominal', value }, value === 'participles' ? isParticipleCard : isMasdarCard),
     ),
   ]
     .filter((c): c is InsightCandidate => c != null)
     .sort((a, b) => a.score - b.score)
 
-  const nextDimension =
-    MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim]).sort(
-      (a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b],
-    )[0] ?? null
+  const nextDimension = MASTERY_DIMENSION_KEYS.filter((dim) => profile[dim] < MAX_LEVELS[dim])
+    .sort((a, b) => profile[a] / MAX_LEVELS[a] - profile[b] / MAX_LEVELS[b])
+    .at(0)
   const overdueCount = Object.values(srsStore).filter((s) => s.dueDate < today).length
   const eta = estimateBacklogETA(srsStore, stats, today)
   const backlog = { state: computeBacklogState(overdueCount, eta), eta }
@@ -424,10 +428,7 @@ export function computeInsights(
       .slice(-2)
       .reverse(),
     challenge,
-    stage: {
-      nextDimension,
-      nextValue: nextDimension != null ? insightNextValue(profile, nextDimension) : undefined,
-    },
+    stage: nextDimension != null ? insightStage(profile, nextDimension) : { nextDimension: null, nextValue: undefined },
     volume,
     overdue: { count: overdueCount },
     backlog,
@@ -448,8 +449,7 @@ const MIN_PRACTISED_CARDS = 3
 const STRENGTH_THRESHOLD = 0.5
 
 function practisedCandidate(
-  type: InsightCandidateType,
-  value: string,
+  dimension: InsightDimension,
   cards: readonly SrsCardIdentity[],
   store: SrsStore,
   today: string,
@@ -462,7 +462,7 @@ function practisedCandidate(
     const current = grouped.get(combinationKey)
     if (current == null || strength > current) grouped.set(combinationKey, strength)
   }
-  return { type, value, score: average([...grouped.values()]) }
+  return { ...dimension, score: average([...grouped.values()]) }
 }
 
 function computeInsightTrend(
@@ -477,26 +477,32 @@ function computeInsightTrend(
   return 'steady'
 }
 
-function insightNextValue(profile: DimensionProfile, dim: MasteryCategoryId): string | undefined {
+function insightStage(profile: DimensionProfile, dim: MasteryCategoryId): InsightStage {
   switch (dim) {
     case 'rootTypes': {
       const next = (profile.rootTypes + 1) as typeof profile.rootTypes
-      return rootTypesPool(next).find((v) => !rootTypesPool(profile.rootTypes).includes(v))
+      return {
+        nextDimension: dim,
+        nextValue: rootTypesPool(next).find((v) => !rootTypesPool(profile.rootTypes).includes(v)),
+      }
     }
     case 'tenses': {
       const next = (profile.tenses + 1) as typeof profile.tenses
-      return tensePool(next).find((v) => !tensePool(profile.tenses).includes(v))
+      return { nextDimension: dim, nextValue: tensePool(next).find((v) => !tensePool(profile.tenses).includes(v)) }
     }
     case 'forms': {
       const next = (profile.forms + 1) as typeof profile.forms
       const added = formPool(next).find((v) => !formPool(profile.forms).includes(v))
-      return added != null ? String(added) : undefined
+      return { nextDimension: dim, nextValue: added != null ? `${added}` : undefined }
     }
     case 'pronouns': {
       const next = (profile.pronouns + 1) as typeof profile.pronouns
-      return pronounPool(next).find((v) => !pronounPool(profile.pronouns).includes(v))
+      return {
+        nextDimension: dim,
+        nextValue: pronounPool(next).find((v) => !pronounPool(profile.pronouns).includes(v)),
+      }
     }
     case 'nominals':
-      return NOMINAL_ORDER.at(profile.nominals)
+      return { nextDimension: dim, nextValue: NOMINAL_ORDER.at(profile.nominals) }
   }
 }

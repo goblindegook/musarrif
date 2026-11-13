@@ -22,7 +22,6 @@ export const verbMasdarExercise = defineExercise(
 
     return {
       dimensions: ['nominals', 'forms', 'rootTypes'],
-      promptTranslationKey: 'exercise.prompt.verbMasdar',
       word,
       spokenWord: verb.lemma,
       options,

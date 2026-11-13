@@ -55,7 +55,7 @@ describe('search', () => {
     ['kt', 'كتب'],
     ['kataba', 'كتب'],
   ])('matches verbs by Buckwalter input "%s"', (query, expectedRoot) => {
-    const matches = search(query, { translate: () => '', language: 'test' })
+    const matches = search(query, { gloss: () => '', language: 'test' })
 
     expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
   })
@@ -68,7 +68,7 @@ describe('search', () => {
     ['FTH', 'فتح'],
     ['ftH', 'فتح'],
   ])('matches root and lemma case-insensitively for "%s"', (query, expectedRoot) => {
-    const matches = search(query, { translate: () => '', language: 'casefold' })
+    const matches = search(query, { gloss: () => '', language: 'casefold' })
 
     expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
   })
@@ -79,27 +79,27 @@ describe('search', () => {
     ['shariba', 'شرب'],
     ['ghasala', 'غسل'],
   ])('matches verbs by romanised digraph input "%s"', (query, expectedRoot) => {
-    const matches = search(query, { translate: () => '', language: 'digraph' })
+    const matches = search(query, { gloss: () => '', language: 'digraph' })
 
     expect(matches.find((verb) => verb.root === expectedRoot)).toBeDefined()
   })
 
   test('matches a root-triplet romanised digraph without vowels between consonants', () => {
-    const matches = search('khrj', { translate: () => '', language: 'digraph' })
+    const matches = search('khrj', { gloss: () => '', language: 'digraph' })
 
     expect(matches.find((verb) => verb.root === 'خرج')).toBeDefined()
   })
 
   test('matches verbs by translated text', () => {
     const translations = (en as { verbs?: Record<string, string> }).verbs ?? {}
-    const matches = search('translate', { translate: (key) => translations[key], language: 'en' })
+    const matches = search('translate', { gloss: (key) => translations[key], language: 'en' })
 
     expect(matches.find((verb) => verb.id === 'trjm-1')).toBeDefined()
   })
 
   test('ranks the more common verb first among translated matches', () => {
     const translations: Record<string, string> = en.verbs
-    const matches = search('write', { translate: (key) => translations[key], language: 'en' })
+    const matches = search('write', { gloss: (key) => translations[key], language: 'en' })
 
     expect(matches[0]?.id).toBe('ktb-1')
   })
@@ -108,8 +108,8 @@ describe('search', () => {
     const english: Record<string, string> = en?.verbs ?? {}
     const portuguese: Record<string, string> = pt?.verbs ?? {}
 
-    const englishMatches = search('translate', { translate: (key) => english[key], language: 'en' })
-    const portugueseMatches = search('translate', { translate: (key) => portuguese[key], language: 'pt' })
+    const englishMatches = search('translate', { gloss: (key) => english[key], language: 'en' })
+    const portugueseMatches = search('translate', { gloss: (key) => portuguese[key], language: 'pt' })
 
     expect(englishMatches.length).toBeGreaterThan(portugueseMatches.length)
   })
@@ -117,7 +117,7 @@ describe('search', () => {
   test('uses a different cache entry once translated search is enabled', () => {
     const untranslated = search('write')
     const english = (en as { verbs?: Record<string, string> }).verbs ?? {}
-    const translated = search('write', { translate: (key) => english[key], language: 'en' })
+    const translated = search('write', { gloss: (key) => english[key], language: 'en' })
 
     expect(untranslated).toEqual([])
     expect(translated[0]?.id).toBe('ktb-1')

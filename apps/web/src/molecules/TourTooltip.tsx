@@ -12,6 +12,8 @@ export type TourStepPlacement = 'above' | 'below' | 'center' | 'side'
 interface TourTooltipProps {
   step: number
   totalSteps: number
+  title: string
+  body: string
   placement: TourStepPlacement
   targetSelector: string | null
   onNext: () => void
@@ -31,7 +33,16 @@ type PositionResult = {
   containerTransform?: string
 }
 
-export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNext, onSkip }: TourTooltipProps) => {
+export const TourTooltip = ({
+  step,
+  totalSteps,
+  title,
+  body,
+  placement,
+  targetSelector,
+  onNext,
+  onSkip,
+}: TourTooltipProps) => {
   const { t } = useI18n()
   const containerRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState<PositionResult | null>(null)
@@ -109,7 +120,7 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
       ref={containerRef}
       popover="manual"
       role="dialog"
-      aria-label={t(`tour.step.${step}.title`)}
+      aria-label={title}
       style={
         position
           ? {
@@ -123,14 +134,14 @@ export const TourTooltip = ({ step, totalSteps, placement, targetSelector, onNex
       <Card>
         {position != null && <Arrow placement={position.arrowPlacement} />}
         <CardHeader>
-          <Heading>{t(`tour.step.${step}.title`)}</Heading>
+          <Heading>{title}</Heading>
           <Dots role="img" aria-label={t('tour.progress', { step: String(step + 1), total: String(totalSteps) })}>
             {Array.from({ length: totalSteps }).map((_, index) => (
               <Dot key={String(index)} active={index <= step} aria-hidden="true" />
             ))}
           </Dots>
         </CardHeader>
-        <Text>{t(`tour.step.${step}.body`)}</Text>
+        <Text>{body}</Text>
         <Actions>
           {isFinal ? (
             <Button data-tour-primary size="compact" variant="primary" onClick={onNext}>

@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { renderExplanation, type VerbExplanationLayers } from '../paradigms/explanation'
+import { localizedExplanation } from '../localization'
+import type { VerbExplanationLayers } from '../paradigms/explanation'
 import { filterMasteredLayers } from './explanation'
 
 describe('filterMasteredLayers', () => {
@@ -256,7 +257,7 @@ describe('filterMasteredLayers', () => {
         isMasdarMimi: false,
       },
     )
-    expect(renderExplanation(result, (key) => key)).toEqual([])
+    expect(localizedExplanation((key) => key, result)).toEqual([])
   })
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {

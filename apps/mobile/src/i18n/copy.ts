@@ -17,8 +17,7 @@ type VerbDictionary = { verbs?: Dictionary; roots?: Dictionary }
 type Copy = (key: string, values?: Record<string, string>) => string
 type LanguageCopy = {
   t: Copy
-  translate: (key: string) => string | undefined
-  translateRoot: (key: string) => string | undefined
+  gloss: (key: string) => string | undefined
 }
 
 // Metro bundles every locale file, but a lazy require only parses the ones in use.
@@ -82,5 +81,5 @@ function createCopy(language: Language): LanguageCopy {
     const template = app[key] ?? shared[key] ?? english.app[key] ?? english.shared[key] ?? key
     return template.replace(/\{([^}]+)\}/gu, (_match, name: string) => values[name] ?? `{${name}}`)
   }
-  return { t, translate: (key) => verbs.verbs?.[key], translateRoot: (key) => verbs.roots?.[key] }
+  return { t, gloss: (key) => verbs.verbs?.[key] ?? verbs.roots?.[key] }
 }

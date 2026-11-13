@@ -1,4 +1,5 @@
 import en from '../src/locales/en.strings.json' with { type: 'json' }
+import { localizedExplanation } from '../src/localization.ts'
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'
@@ -6,7 +7,6 @@ import { conjugatePresentMood } from '../src/paradigms/active/present.ts'
 import {
   type ExplanationLayers,
   type NominalKind,
-  renderExplanation,
   resolveNominalExplanationLayers,
   resolveVerbExplanationLayers,
 } from '../src/paradigms/explanation.ts'
@@ -51,7 +51,7 @@ function formsForTense(verb: DisplayVerb, tense: VerbTense): ConjugationForms {
 }
 
 function printRendered(type: string, verb: DisplayVerb, derived: string, layers: ExplanationLayers): void {
-  const explanation = renderExplanation(layers, t)
+  const explanation = localizedExplanation(t, layers)
   const label = (verb as DisplayVerb & { label?: string }).label
   console.log('\n────────────────────────────────────────────')
   console.log(`Verb: ${label} (${verb.id})`)

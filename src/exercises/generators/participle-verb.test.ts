@@ -10,14 +10,6 @@ describe('participleVerbExercise', () => {
     expect(participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleVerb')
   })
 
-  test('returns the correct translation key for active or passive participle', () => {
-    const { promptTranslationKey } = participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(promptTranslationKey).toBeOneOf([
-      'exercise.prompt.activeParticipleVerb',
-      'exercise.prompt.passiveParticipleVerb',
-    ])
-  })
-
   test('attaches nominal explanation layers for the selected participle type', () => {
     const exercise = participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE)
 
@@ -48,7 +40,7 @@ describe('participleVerbExercise', () => {
     const matches = verbs.filter((verb) => exerciseDiacritics(verb.lemma) === answerLabel)
 
     const valid =
-      exercise.promptTranslationKey === 'exercise.prompt.activeParticipleVerb'
+      exercise.participle === 'active'
         ? matches.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word)
         : matches.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word)
 

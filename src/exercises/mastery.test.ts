@@ -161,7 +161,7 @@ describe('insightItemIds', () => {
   })
 
   test('maps every other candidate to its own mastery item', () => {
-    expect(insightItemIds({ type: 'form', value: '2' }, BASE_PROFILE)).toEqual(['forms.2'])
+    expect(insightItemIds({ type: 'form', value: 2 }, BASE_PROFILE)).toEqual(['forms.2'])
   })
 })
 
@@ -308,8 +308,8 @@ describe('computeInsights', () => {
       'conjugation:sound:2:active.past:1s': strong,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
-    expect(result.challenge[0]).toMatchObject({ type: 'form', value: '1' })
-    expect(result.strengths[0]).toMatchObject({ type: 'form', value: '2' })
+    expect(result.challenge[0]).toMatchObject({ type: 'form', value: 1 })
+    expect(result.strengths[0]).toMatchObject({ type: 'form', value: 2 })
   })
 
   test('focus falls back to the challenge when nothing is stuck', () => {
@@ -325,7 +325,7 @@ describe('computeInsights', () => {
       'conjugation:sound:2:active.past:1s': strong,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
-    expect(result.focus[0]).toMatchObject({ type: 'form', value: '1' })
+    expect(result.focus[0]).toMatchObject({ type: 'form', value: 1 })
   })
 
   test('improving trend when recent accuracy exceeds all-time by more than 5', () => {

@@ -172,7 +172,7 @@ export function VerbDetail({ verb, language, diacriticsPreference, speechVoice, 
   const voice: Voice = selected.startsWith('passive.') ? 'passive' : 'active'
   const tense: Tense = selected.includes('.present.') ? 'present' : (selected.split('.').at(-1) as Tense)
   const mood: Mood = selected.includes('.present.') ? (selected.split('.').at(-1) as Mood) : 'indicative'
-  const gloss = language === 'ar' || verb.synthetic ? undefined : getCopy(language).translate(verb.id)
+  const gloss = language === 'ar' || verb.synthetic ? undefined : getCopy(language).gloss(verb.id)
   const valency = (verb.valency ?? [])
     .toSorted((a, b) => a - b)
     .map((value) => getCopy(language).t(`valency.${value}`))

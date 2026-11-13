@@ -14,7 +14,7 @@ interface SearchProps {
 }
 
 export function Search({ id, onSelect, selectedVerb }: SearchProps) {
-  const { t, lang, dir, hasLexicon, diacriticsPreference } = useI18n()
+  const { t, gloss, lang, dir, hasLexicon, diacriticsPreference } = useI18n()
   const [query, setQuery] = useState('')
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [highligtedIndex, setHighlightedIndex] = useState(-1)
@@ -30,8 +30,8 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
 
   const matchingVerbs = useMemo<DisplayVerb[]>(() => {
     if (!query.trim()) return []
-    return search(query, { translate: t, language: hasLexicon ? lang : 'none' })
-  }, [hasLexicon, lang, query, t])
+    return search(query, { gloss, language: hasLexicon ? lang : 'none' })
+  }, [hasLexicon, lang, query, gloss])
 
   const suggested = useMemo(() => matchingVerbs.slice(0, 20), [matchingVerbs])
 
@@ -171,13 +171,17 @@ export function Search({ id, onSelect, selectedVerb }: SearchProps) {
                     event.preventDefault()
                     handleSelect(verb)
                   }}
-                  aria-label={[verb.lemma, t('meta.form.withNumber', { form: formLabel }), lang !== 'ar' && t(verb.id)]
+                  aria-label={[
+                    verb.lemma,
+                    t('meta.form.withNumber', { form: formLabel }),
+                    lang !== 'ar' && gloss(verb.id),
+                  ]
                     .filter(Boolean)
                     .join(' ')}
                 >
                   {lang !== 'ar' && (
                     <SuggestionItemTranslation dir={dir} lang={lang}>
-                      {t(verb.id)}
+                      {gloss(verb.id)}
                     </SuggestionItemTranslation>
                   )}
                   <SuggestionItemVerb>

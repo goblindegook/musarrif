@@ -7,7 +7,7 @@ import { diffAnswer } from '../../../../../src/exercises/answer-diff'
 import type { Exercise, InputMode } from '../../../../../src/exercises/exercises'
 import { filterMasteredLayers } from '../../../../../src/exercises/explanation'
 import type { AnswerResult, SrsStore } from '../../../../../src/exercises/srs'
-import { renderExplanation } from '../../../../../src/paradigms/explanation'
+import { localizedExplanation, localizedOptions, localizedPrompt } from '../../../../../src/localization'
 import { ArabicText } from '../../components/ArabicText'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { SecondaryButton } from '../../components/SecondaryButton'
@@ -36,14 +36,12 @@ export function ExerciseSession({
   onPersistAnswer,
   onNext,
   translate,
-  translatePrompt,
 }: {
   exercise: Exercise
   srsStore: SrsStore
   onPersistAnswer: (answer: PersistedExerciseAnswer) => void
   onNext: () => void
   translate: ExerciseTranslator
-  translatePrompt: ExerciseTranslator
 }) {
   const theme = useThemeTokens()
   const insets = useSafeAreaInsets()
@@ -61,9 +59,9 @@ export function ExerciseSession({
   const correctAnswer = exercise.answerText ?? exercise.options[exercise.answer]
   const explanation =
     result != null && exercise.explanation != null
-      ? renderExplanation(
-          result === 'correct' ? filterMasteredLayers(srsStore, exercise.explanation) : exercise.explanation,
+      ? localizedExplanation(
           translate,
+          result === 'correct' ? filterMasteredLayers(srsStore, exercise.explanation) : exercise.explanation,
         )
       : []
 
@@ -132,7 +130,7 @@ export function ExerciseSession({
               {exercise.word}
             </ArabicText>
             <Text style={[styles.promptText, { color: theme.inkSecondary }]}>
-              {translatePrompt(exercise.promptTranslationKey, exercise.promptParams)}
+              {localizedPrompt(translate, exercise).replace(/<\/?strong>/gu, '')}
             </Text>
           </View>
           <Animated.View entering={FadeIn.duration(motion)} key={currentMode}>
@@ -141,7 +139,7 @@ export function ExerciseSession({
                 correctIndex={exercise.answer}
                 correctLabel={translate('exercise.a11y.correctChoice')}
                 incorrectLabel={translate('exercise.a11y.incorrectChoice')}
-                labels={exercise.options.map((option) => translate(option))}
+                labels={localizedOptions(translate, exercise)}
                 disabled={result != null}
                 onSelect={(index) => submit(exercise.options[index], index)}
                 options={exercise.options}

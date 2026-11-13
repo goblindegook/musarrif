@@ -5,20 +5,22 @@
 ```typescript
 type InputMode = 'multiple-choice' | 'keyboard' | 'speech'
 
-interface Exercise {
-  kind: ExerciseKind
+// Shared fields plus the fields of one kind, e.g. { kind: 'conjugation'; tense; pronoun; withVoice }
+// or { kind: 'rootFormVerb'; form }. Kinds with no prompt parameters carry no extra fields.
+type Exercise = {
   word: string
   spokenWord: string
-  promptTranslationKey: string
-  promptParams?: Record<string, string>
   options: readonly string[]
   answer: number
+  answerText?: string
   cardKey: string
   dimensions: readonly DimensionKey[]
   explanation?: ExplanationLayers | null
   inputModes: readonly InputMode[]
-}
+} & ExerciseFieldsByKind[kind]
 ```
+
+Exercises carry typed data, never translation keys. `localizedPrompt`, `localizedOptions` and `localizedUnlock` in `src/localization.ts` turn them into text.
 
 **Exercise kinds**: `conjugation`, `masdarForm`, `masdarRoot`, `masdarVerb`, `participleForm`, `participleRoot`, `participleVerb`, `verbParticiple`, `verbForm`, `verbMasdar`, `verbPronoun`, `verbRoot`, `rootFormVerb`, `verbTense`.
 

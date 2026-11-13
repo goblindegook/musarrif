@@ -11,7 +11,6 @@ describe('defineExerciseGenerator', () => {
       () => ({
         word: 'كَتَبَ',
         spokenWord: 'كَتَبَ',
-        promptTranslationKey: 'exercise.prompt.verbForm',
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
         cardKey: 'verbForm:sound:1',
@@ -28,7 +27,6 @@ describe('defineExerciseGenerator', () => {
       kind: 'verbForm',
       word: 'كَتَبَ',
       spokenWord: 'كَتَبَ',
-      promptTranslationKey: 'exercise.prompt.verbForm',
       options: ['I', 'II', 'III', 'IV'],
       answer: 0,
       cardKey: 'verbForm:sound:1',
@@ -43,7 +41,6 @@ describe('defineExerciseGenerator', () => {
       (profile, constraints) => ({
         word: `profile:${profile.forms}`,
         spokenWord: `constraint:${constraints?.form ?? 'none'}`,
-        promptTranslationKey: 'exercise.prompt.verbForm',
         options: ['I', 'II', 'III', 'IV'],
         answer: 0,
         cardKey: `verbForm:regular:${constraints?.form}:${constraints?.tense}:${constraints?.pronoun}`,

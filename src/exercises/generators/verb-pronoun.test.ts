@@ -15,12 +15,6 @@ describe('verbPronounExercise', () => {
     expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbPronoun')
   })
 
-  test('returns the correct translation key', () => {
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.verbPronoun',
-    )
-  })
-
   test('returns exactly four options', () => {
     expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

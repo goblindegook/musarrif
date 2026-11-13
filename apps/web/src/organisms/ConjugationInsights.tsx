@@ -1,7 +1,8 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
+import { localizedExplanation, localizedPronoun, localizedTense } from '../../../../src/localization'
 import { type DerivationStep, derivationSteps } from '../../../../src/paradigms/annotation'
-import { renderExplanation, resolveVerbExplanationLayers } from '../../../../src/paradigms/explanation'
+import { resolveVerbExplanationLayers } from '../../../../src/paradigms/explanation'
 import type { PronounId } from '../../../../src/paradigms/pronouns'
 import type { VerbTense } from '../../../../src/paradigms/tense'
 import { type DisplayVerb, formatFormLabel } from '../../../../src/paradigms/verbs'
@@ -27,9 +28,9 @@ function stepLabel(step: DerivationStep, verb: DisplayVerb, t: Translate): strin
     case 'form':
       return t('meta.form.withNumber', { form: formatFormLabel(step.form, verb.root) })
     case 'pronoun':
-      return t(`pronoun.${step.pronounId}`)
+      return localizedPronoun(t, step.pronounId)
     case 'tense':
-      return t(`tense.${step.tense}`)
+      return localizedTense(t, step.tense)
   }
 }
 
@@ -73,7 +74,7 @@ export function ConjugationInsights({ verb, verbTense, pronoun, arabic }: Conjug
             <DerivationSteps steps={steps} verb={verb} t={t} />
           </VerbDisplayArea>
           <ExplanationText
-            paragraphs={renderExplanation(resolveVerbExplanationLayers(verb, verbTense, pronoun), t)}
+            paragraphs={localizedExplanation(t, resolveVerbExplanationLayers(verb, verbTense, pronoun))}
             showMorphemeMarkers
           />
         </Modal>

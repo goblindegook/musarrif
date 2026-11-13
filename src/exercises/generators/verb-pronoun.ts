@@ -35,7 +35,6 @@ export const verbPronounExercise = defineExercise(
     return {
       word,
       spokenWord: conjugatedVerb,
-      promptTranslationKey: 'exercise.prompt.verbPronoun',
       options: options.map((p) => ARABIC_PRONOUNS[p]),
       answer,
       cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),

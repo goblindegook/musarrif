@@ -146,7 +146,7 @@ export function VerbBuilder({ diacriticsPreference = 'all', language = 'en', onS
     ? t('build.conjugateVerb', { verb: applyDiacriticsPreference(built.lemma, diacriticsPreference) })
     : t('build.conjugate')
   const slotLabel = (slot: number) =>
-    t(['build.rootSlotLabel.initial', 'build.rootSlotLabel.medial', 'build.rootSlotLabel.final'][slot])
+    [t('build.rootSlotLabel.initial'), t('build.rootSlotLabel.medial'), t('build.rootSlotLabel.final')][slot]
   const patterns = FORM_I_PATTERNS.map((candidate) => {
     const sample = getVerb('فعل', 1, candidate)
     return {
@@ -215,10 +215,11 @@ export function VerbBuilder({ diacriticsPreference = 'all', language = 'en', onS
                   <HStack key={row[0].candidate} spacing={8}>
                     {row.map(({ candidate, text }) => (
                       <ChoiceButton
-                        accessibilityLabel={t(
-                          RARE_FORM_I_PATTERNS.has(candidate) ? 'build.patternOption.rare' : 'build.patternOption',
-                          { pattern: candidate },
-                        )}
+                        accessibilityLabel={
+                          RARE_FORM_I_PATTERNS.has(candidate)
+                            ? t('build.patternOption.rare', { pattern: candidate })
+                            : t('build.patternOption', { pattern: candidate })
+                        }
                         dim={RARE_FORM_I_PATTERNS.has(candidate)}
                         fontSize={17}
                         key={candidate}

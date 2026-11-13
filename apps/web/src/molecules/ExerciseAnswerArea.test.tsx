@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/preact'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact'
 import type { ComponentChildren } from 'preact'
 import { afterEach, expect, test, vi } from 'vitest'
 import type { Exercise } from '../../../../src/exercises/exercises'
@@ -20,13 +20,15 @@ function Wrapper({ children }: { children: ComponentChildren }) {
   return <I18nProvider>{children}</I18nProvider>
 }
 
-function makeExercise(overrides: Partial<Exercise> = {}): Exercise {
+function makeExercise(overrides: Partial<Exercise<'conjugation'>> = {}): Exercise<'conjugation'> {
   return {
     kind: 'conjugation',
     dimensions: ['tenses'],
     word: 'يَكتُبُ',
     spokenWord: 'يَكتُبُ',
-    promptTranslationKey: 'exercise.prompt.conjugation',
+    tense: 'active.past',
+    pronoun: '3ms',
+    withVoice: false,
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,
     cardKey: 'test:card',
@@ -80,6 +82,15 @@ test('a skipped typing exercise reveals the answer with its diacritics when the 
   fireEvent.keyDown(document, { key: 't' })
   rerender(<ExerciseAnswerArea exercise={exercise} onAnswer={noop} forceReveal />)
   expect(screen.getByTestId('correct-answer-reveal')).toHaveTextContent('كَتَبَ')
+})
+
+test('skipping announces the correct answer with its diacritics when the Arabic UI hides diacritics', async () => {
+  localStorage.setItem('conjugator:language', JSON.stringify('ar'))
+  localStorage.setItem('conjugator:diacriticsPreference', JSON.stringify('none'))
+  render(<ExerciseAnswerArea exercise={makeExercise()} onAnswer={noop} forceReveal />, { wrapper: Wrapper })
+  await waitFor(() =>
+    expect(document.querySelector('[role="status"]')).toHaveTextContent('تُخُطِّيَ ٱلسُّؤَالُ. ٱلْإِجَابَةُ ٱلصَّحِيحَةُ هِيَ كَتَبَ.'),
+  )
 })
 
 test('multiple-choice option buttons with localized non-Arabic text do not force Arabic lang or direction', () => {

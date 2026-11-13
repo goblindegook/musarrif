@@ -1,13 +1,46 @@
 import { useEffect } from 'preact/hooks'
 import { Overlay } from '../atoms/Overlay'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { type TourStepPlacement, TourTooltip } from '../molecules/TourTooltip'
 
-const TOUR_STEPS: readonly { selector: string | null; placement: TourStepPlacement }[] = [
-  { selector: '[data-tour-step="0"]', placement: 'below' },
-  { selector: '[data-tour-step="1"]', placement: 'side' },
-  { selector: '[data-tour-step="2"]', placement: 'below' },
-  { selector: '[data-tour-step="3"]', placement: 'below' },
-  { selector: '[data-tour-step="4"]', placement: 'below' },
+interface TourStep {
+  selector: string | null
+  placement: TourStepPlacement
+  title: (t: Translate) => string
+  body: (t: Translate) => string
+}
+
+const TOUR_STEPS: readonly TourStep[] = [
+  {
+    selector: '[data-tour-step="0"]',
+    placement: 'below',
+    title: (t) => t('tour.step.0.title'),
+    body: (t) => t('tour.step.0.body'),
+  },
+  {
+    selector: '[data-tour-step="1"]',
+    placement: 'side',
+    title: (t) => t('tour.step.1.title'),
+    body: (t) => t('tour.step.1.body'),
+  },
+  {
+    selector: '[data-tour-step="2"]',
+    placement: 'below',
+    title: (t) => t('tour.step.2.title'),
+    body: (t) => t('tour.step.2.body'),
+  },
+  {
+    selector: '[data-tour-step="3"]',
+    placement: 'below',
+    title: (t) => t('tour.step.3.title'),
+    body: (t) => t('tour.step.3.body'),
+  },
+  {
+    selector: '[data-tour-step="4"]',
+    placement: 'below',
+    title: (t) => t('tour.step.4.title'),
+    body: (t) => t('tour.step.4.body'),
+  },
 ]
 
 interface TourLayerProps {
@@ -19,6 +52,7 @@ interface TourLayerProps {
 }
 
 export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLayerProps) => {
+  const { t } = useI18n()
   const config = step >= 0 ? (TOUR_STEPS[step] ?? null) : null
 
   useEffect(() => {
@@ -75,6 +109,8 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
       <TourTooltip
         step={step}
         totalSteps={totalSteps}
+        title={config.title(t)}
+        body={config.body(t)}
         placement={config.placement}
         targetSelector={config.selector}
         onNext={onNext}

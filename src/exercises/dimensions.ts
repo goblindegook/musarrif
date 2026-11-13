@@ -24,7 +24,7 @@ export type TensesLevel = Level<typeof TENSE_POOLS>
 export type PronounsLevel = Level<typeof PRONOUN_POOLS>
 export type FormsLevel = Level<typeof FORM_POOLS>
 export type RootTypesLevel = Level<typeof ROOT_TYPE_POOLS>
-export type NominalsLevel = Level<typeof NOMINAL_UNLOCK_KEYS>
+export type NominalsLevel = 0 | 1 | 2
 
 export type DimensionProfile = {
   tenses: TensesLevel
@@ -58,9 +58,14 @@ export const DEFAULT_DIMENSION_WINDOWS: DimensionWindows = {
   nominals: [],
 }
 
+export type TenseUnlock = 'presentIndicative' | 'subjunctiveJussive' | 'imperative' | 'passivePast' | 'passivePresent'
+export type PronounUnlock = 'singular' | 'plural' | 'dual'
+export type NominalUnlock = 'participles' | 'masdar'
+export type DimensionUnlock = TenseUnlock | PronounUnlock | TriliteralForm | SrsRootType | NominalUnlock
+
 export type DimensionChange =
-  | { type: 'promotion'; dimension: DimensionKey; items: readonly string[] }
-  | { type: 'demotion'; dimension: DimensionKey; items: readonly string[] }
+  | { type: 'promotion'; dimension: DimensionKey; items: readonly DimensionUnlock[] }
+  | { type: 'demotion'; dimension: DimensionKey; items: readonly DimensionUnlock[] }
 
 export function random<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -131,18 +136,14 @@ const R4: SrsRootType[] = [...R3, 'defective']
 const R5: SrsRootType[] = [...R4, 'hamzated']
 const ROOT_TYPE_POOLS = [R0, R1, R2, R3, R4, R5] as const
 
-const NOMINAL_UNLOCK_KEYS = [
-  [],
-  ['exercise.unlock.nominal.activeParticiple', 'exercise.unlock.nominal.passiveParticiple'],
-  ['exercise.unlock.nominal.masdar'],
-] as const
+const NOMINAL_UNLOCKS = ['participles', 'masdar'] as const satisfies readonly NominalUnlock[]
 
 export const MAX_LEVELS = {
   tenses: (TENSE_POOLS.length - 1) as TensesLevel,
   pronouns: (PRONOUN_POOLS.length - 1) as PronounsLevel,
   forms: (FORM_POOLS.length - 1) as FormsLevel,
   rootTypes: (ROOT_TYPE_POOLS.length - 1) as RootTypesLevel,
-  nominals: (NOMINAL_UNLOCK_KEYS.length - 1) as NominalsLevel,
+  nominals: NOMINAL_UNLOCKS.length as NominalsLevel,
 } satisfies Record<DimensionKey, number>
 
 const integerBetween = (min: number, max: number) =>
@@ -181,42 +182,19 @@ export const DimensionStore = v.fallback(
 
 const DIMENSIONS = ['tenses', 'pronouns', 'forms', 'rootTypes', 'nominals'] as const
 
-const DIMENSION_UNLOCK_KEYS: Record<DimensionKey, readonly (readonly string[])[]> = {
-  tenses: [
-    [],
-    ['exercise.unlock.tenseGroup.presentIndicative'],
-    ['exercise.unlock.tenseGroup.subjunctiveJussive'],
-    ['exercise.unlock.tenseGroup.imperative'],
-    ['exercise.unlock.tenseGroup.passivePast'],
-    ['exercise.unlock.tenseGroup.passivePresent'],
-  ],
-  pronouns: [
-    [],
-    ['exercise.unlock.pronounGroup.singular'],
-    ['exercise.unlock.pronounGroup.plural'],
-    ['exercise.unlock.pronounGroup.dual'],
-  ],
-  forms: [
-    [],
-    ['exercise.unlock.form.2'],
-    ['exercise.unlock.form.3'],
-    ['exercise.unlock.form.4'],
-    ['exercise.unlock.form.5'],
-    ['exercise.unlock.form.6'],
-    ['exercise.unlock.form.7'],
-    ['exercise.unlock.form.8'],
-    ['exercise.unlock.form.9'],
-    ['exercise.unlock.form.10'],
-  ],
-  rootTypes: [
-    [],
-    ['exercise.unlock.rootType.doubled'],
-    ['exercise.unlock.rootType.assimilated'],
-    ['exercise.unlock.rootType.hollow'],
-    ['exercise.unlock.rootType.defective'],
-    ['exercise.unlock.rootType.hamzated'],
-  ],
-  nominals: [...NOMINAL_UNLOCK_KEYS],
+// Level 0 unlocks nothing, so level n unlocks the item at index n - 1.
+const DIMENSION_UNLOCKS: {
+  tenses: readonly TenseUnlock[]
+  pronouns: readonly PronounUnlock[]
+  forms: readonly TriliteralForm[]
+  rootTypes: readonly SrsRootType[]
+  nominals: readonly NominalUnlock[]
+} = {
+  tenses: ['presentIndicative', 'subjunctiveJussive', 'imperative', 'passivePast', 'passivePresent'],
+  pronouns: ['singular', 'plural', 'dual'],
+  forms: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+  rootTypes: ['doubled', 'assimilated', 'hollow', 'defective', 'hamzated'],
+  nominals: NOMINAL_UNLOCKS,
 }
 
 export function rootTypesPool(level: RootTypesLevel): readonly SrsRootType[] {
@@ -382,16 +360,16 @@ export function getDimensionChanges(previous: DimensionProfile, next: DimensionP
     const current = previous[dimension]
     const target = next[dimension]
     if (target > current) {
-      const items: string[] = []
+      const items: DimensionUnlock[] = []
       for (let level = current + 1; level <= target; level++) {
-        items.push(...(DIMENSION_UNLOCK_KEYS[dimension][level] ?? []))
+        items.push(DIMENSION_UNLOCKS[dimension][level - 1])
       }
       if (items.length) changes.push({ type: 'promotion', dimension, items })
     }
     if (target < current) {
-      const items: string[] = []
+      const items: DimensionUnlock[] = []
       for (let level = current; level > target; level--) {
-        items.push(...(DIMENSION_UNLOCK_KEYS[dimension][level] ?? []))
+        items.push(DIMENSION_UNLOCKS[dimension][level - 1])
       }
       if (items.length) changes.push({ type: 'demotion', dimension, items })
     }

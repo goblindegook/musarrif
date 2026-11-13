@@ -22,7 +22,7 @@ import { LinkButton } from '../atoms/LinkButton'
 import { Text } from '../atoms/Text'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useFavourites } from '../hooks/useFavourites'
-import { useI18n } from '../hooks/useI18n'
+import { type Translate, useI18n } from '../hooks/useI18n'
 import { useRecent } from '../hooks/useRecent'
 import { CopyButton } from '../molecules/CopyButton'
 import { Detail } from '../molecules/Detail'
@@ -43,8 +43,8 @@ import { VerbHeaderPanel } from '../organisms/VerbHeaderPanel'
 import { useRouting } from '../routes'
 
 const SISTER_GROUPS = [
-  { ids: KWN_SISTERS_IDS, titleKey: 'verbsList.filter.kanaSisters.label' },
-  { ids: ZNN_SISTERS_IDS, titleKey: 'verbsList.filter.zannaSisters.label' },
+  { ids: KWN_SISTERS_IDS, title: (t: Translate) => t('verbsList.filter.kanaSisters.label') },
+  { ids: ZNN_SISTERS_IDS, title: (t: Translate) => t('verbsList.filter.zannaSisters.label') },
 ] as const
 
 interface ConjugationModeProps {
@@ -55,7 +55,7 @@ interface ConjugationModeProps {
 }
 
 export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood }: ConjugationModeProps) {
-  const { t, lang, dir, diacriticsPreference } = useI18n()
+  const { t, gloss, lang, dir, diacriticsPreference } = useI18n()
   const { navigateTo } = useRouting()
   const { favourites, isFavourite, toggleFavourite } = useFavourites()
   const { recents, addRecent } = useRecent()
@@ -84,13 +84,12 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
   const documentTitle = useMemo(() => {
     const verb = formatArabic(selectedVerb.lemma)
-    const gloss = selectedVerb.synthetic || lang === 'ar' ? undefined : t(selectedVerb.id)
-    const conjugation =
-      gloss && gloss !== selectedVerb.id
-        ? t('documentTitle.conjugation.withGloss', { verb, gloss })
-        : t('documentTitle.conjugation', { verb })
+    const verbGloss = selectedVerb.synthetic || lang === 'ar' ? undefined : gloss(selectedVerb.id)
+    const conjugation = verbGloss
+      ? t('documentTitle.conjugation.withGloss', { verb, gloss: verbGloss })
+      : t('documentTitle.conjugation', { verb })
     return [conjugation, t('title')].filter(Boolean).join(' · ')
-  }, [formatArabic, selectedVerb, lang, t])
+  }, [formatArabic, selectedVerb, lang, t, gloss])
 
   useDocumentTitle(documentTitle)
 
@@ -116,7 +115,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
 
   const sisters = useMemo(() => {
     const group = SISTER_GROUPS.find(({ ids }) => ids.has(selectedVerb.id))
-    return group && { titleKey: group.titleKey, verbs: verbs.filter((verb) => group.ids.has(verb.id)) }
+    return group && { title: group.title, verbs: verbs.filter((verb) => group.ids.has(verb.id)) }
   }, [selectedVerb.id])
 
   const recentVerbs = useMemo(() => recents.filter((verb) => verb.id !== verbId), [recents, verbId])
@@ -348,7 +347,7 @@ export function ConjugationMode({ verbId, voice = 'active', tense = 'past', mood
         )}
 
         {sisters && (
-          <Panel title={t(sisters.titleKey)} dir={dir} lang={lang} collapsible>
+          <Panel title={sisters.title(t)} dir={dir} lang={lang} collapsible>
             <VerbList>
               {sisters.verbs.map((verb) => (
                 <VerbPill key={verb.id} verb={verb} className={verb.id === verbId ? 'active' : undefined} />

@@ -9,6 +9,7 @@ import {
   tag,
   tint,
 } from '@expo/ui/swift-ui/modifiers'
+import { localizedRootShape } from '../../../../../src/localization'
 import type { RootShape } from '../../../../../src/paradigms/roots'
 import { FormSectionHeading } from '../../components/Heading'
 import {
@@ -110,7 +111,7 @@ export function VerbFilterSheet({
             {ROOT_SHAPES.map((shape) => (
               <Switch
                 key={shape}
-                label={t(`verbsList.filter.rootType.${shape}.label`)}
+                label={localizedRootShape(t, shape)}
                 onValueChange={(enabled) => changeRootShape(shape, enabled)}
                 testID={`filter-root-${shape}`}
                 value={filters.rootShapes.includes(shape)}

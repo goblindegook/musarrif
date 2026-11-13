@@ -15,12 +15,6 @@ describe('masdarVerbExercise', () => {
     expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarVerb')
   })
 
-  test('returns the correct translation key', () => {
-    expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).promptTranslationKey).toBe(
-      'exercise.prompt.masdarVerb',
-    )
-  })
-
   test('returns exactly four options', () => {
     expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
   })

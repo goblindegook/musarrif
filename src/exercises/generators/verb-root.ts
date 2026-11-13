@@ -28,7 +28,6 @@ export const verbRootExercise = defineExercise('verbRoot', (profile, constraints
 
   return {
     dimensions: ['forms', 'rootTypes'],
-    promptTranslationKey: 'exercise.prompt.verbRoot',
     word,
     spokenWord: conjugatedVerb,
     options: options.map((option) => Array.from(option).join(' ')),
