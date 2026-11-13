@@ -20,7 +20,7 @@ type Exercise = {
 } & ExerciseFieldsByKind[kind]
 ```
 
-Exercises carry typed data, never translation keys. `localizedPrompt`, `localizedOptions` and `localizedUnlock` in `src/localization.ts` turn them into text.
+Exercises carry typed data, never translation keys. `localizedPrompt`, `localizedOptions` and `localizedUnlock` in `src/localization.exercises.ts` turn them into text.
 
 **Exercise kinds**: `conjugation`, `masdarForm`, `masdarRoot`, `masdarVerb`, `participleForm`, `participleRoot`, `participleVerb`, `verbParticiple`, `verbForm`, `verbMasdar`, `verbPronoun`, `verbRoot`, `rootFormVerb`, `verbTense`.
 

@@ -1,6 +1,7 @@
 import { styled } from 'goober'
 import { useState } from 'preact/hooks'
-import { localizedExplanation, localizedPronoun, localizedTense } from '../../../../src/localization'
+import { localizedPronoun, localizedTense } from '../../../../src/localization'
+import { localizedExplanation } from '../../../../src/localization.explanation'
 import { type DerivationStep, derivationSteps } from '../../../../src/paradigms/annotation'
 import { resolveVerbExplanationLayers } from '../../../../src/paradigms/explanation'
 import type { PronounId } from '../../../../src/paradigms/pronouns'

@@ -1,5 +1,5 @@
 import en from '../src/locales/en.strings.json' with { type: 'json' }
-import { localizedExplanation } from '../src/localization.ts'
+import { localizedExplanation } from '../src/localization.explanation.ts'
 import { conjugateFuture } from '../src/paradigms/active/future.ts'
 import { conjugateImperative } from '../src/paradigms/active/imperative.ts'
 import { conjugatePast } from '../src/paradigms/active/past.ts'

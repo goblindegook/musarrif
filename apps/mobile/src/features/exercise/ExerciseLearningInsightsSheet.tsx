@@ -1,6 +1,7 @@
 import { Text } from 'react-native'
 import type { InsightData } from '../../../../../src/exercises/mastery'
-import { localizedInsights, type Translate } from '../../../../../src/localization'
+import type { Translate } from '../../../../../src/localization'
+import { localizedInsights } from '../../../../../src/localization.exercises'
 import { Sheet, SheetButton } from '../../components/Sheet'
 import { getCopy, type Language } from '../../i18n/copy'
 import { useThemeTokens } from '../../theme/tokens'

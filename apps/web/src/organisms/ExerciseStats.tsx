@@ -19,7 +19,7 @@ import {
   localizedStreakRecord,
   localizedStreakUnit,
   type StreakHint,
-} from '../../../../src/localization'
+} from '../../../../src/localization.exercises'
 import { sum } from '../../../../src/primitives/numbers'
 import { Button } from '../atoms/Button'
 import { DisclosureChevron } from '../atoms/DisclosureChevron'

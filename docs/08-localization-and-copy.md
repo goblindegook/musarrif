@@ -12,7 +12,7 @@ Supports English, Italian, European Portuguese, Arabic. Translation files in `sr
 
 ## Translation keys in code
 
-Labels for a known set of values are `localizedX` functions in `src/localization.ts`.
+Labels for a known set of values are `localizedX` functions: general labels in `src/localization.ts`, exercise and progress text in `src/localization.exercises.ts`, explanations and root/form insights in `src/localization.explanation.ts`.
 
 ## Copy
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { localizedExplanation } from '../localization'
+import { localizedExplanation } from '../localization.explanation'
 import type { VerbExplanationLayers } from '../paradigms/explanation'
 import { filterMasteredLayers } from './explanation'
 

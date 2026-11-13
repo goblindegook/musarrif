@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import enStrings from '../locales/en.strings.json'
 import enLexicon from '../locales/en.verbs.json'
-import { localizedExplanation } from '../localization'
+import { localizedExplanation } from '../localization.explanation'
 import type { ExplanationLayers, VerbExplanationLayers } from './explanation'
 import { resolveNominalExplanationLayers, resolveVerbExplanationLayers } from './explanation'
 import { deriveMasdar } from './nominal/masdar'

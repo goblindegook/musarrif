@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { localizedRootDescription } from '../../../../src/localization.ts'
+import { localizedRootDescription } from '../../../../src/localization.explanation.ts'
 import { analyzeRoot } from '../../../../src/paradigms/roots.ts'
 import { tokenize } from '../../../../src/paradigms/tokens.ts'
 import { findVerbsByRoot } from '../../../../src/paradigms/verbs.ts'

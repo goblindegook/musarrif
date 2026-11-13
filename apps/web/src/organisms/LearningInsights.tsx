@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
 import { computeInsights } from '../../../../src/exercises/mastery'
-import { localizedInsights } from '../../../../src/localization'
+import { localizedInsights } from '../../../../src/localization.exercises'
 import { useDimensionStore } from '../hooks/useDimensionStore'
 import { useI18n } from '../hooks/useI18n'
 import { useSrsStore } from '../hooks/useSrsStore'

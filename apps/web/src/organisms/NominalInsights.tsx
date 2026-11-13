@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 import { Fragment } from 'preact'
-import { localizedExplanation } from '../../../../src/localization'
+import { localizedExplanation } from '../../../../src/localization.explanation'
 import type { NominalKind } from '../../../../src/paradigms/explanation'
 import { resolveNominalExplanationLayers } from '../../../../src/paradigms/explanation'
 import { deriveMasdar } from '../../../../src/paradigms/nominal/masdar'

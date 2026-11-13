@@ -1,14 +1,12 @@
 import type { ReactNode } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import { localizedPronoun, localizedTense, type Translate } from '../../../../../src/localization'
 import {
   localizedExplanation,
   localizedFormMeaning,
   localizedFormRelationship,
-  localizedPronoun,
   localizedRootDescription,
-  localizedTense,
-  type Translate,
-} from '../../../../../src/localization'
+} from '../../../../../src/localization.explanation'
 import { derivationSteps } from '../../../../../src/paradigms/annotation'
 import type { DerivationStep } from '../../../../../src/paradigms/annotation-types'
 import { conjugate } from '../../../../../src/paradigms/conjugation'

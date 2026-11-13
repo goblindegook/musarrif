@@ -19,7 +19,7 @@ import {
   localizedMasteryItem,
   localizedStreakRecord,
   localizedStreakUnit,
-} from '../../../../../src/localization'
+} from '../../../../../src/localization.exercises'
 import { CAPS_TRACKING, Heading } from '../../components/Heading'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { getCopy, useSystemLanguage } from '../../i18n/copy'

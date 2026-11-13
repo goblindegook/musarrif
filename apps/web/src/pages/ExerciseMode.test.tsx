@@ -328,11 +328,9 @@ describe('ExerciseMode', () => {
 
 describe('SRS recording', () => {
   test('records answer in SRS store when option selected', () => {
-    const exercise = testExercise({
-      kind: 'conjugation',
+    const exercise = conjugationExercise({
       options: ['correct', 'incorrect', 'incorrect', 'incorrect'],
-      answer: 0,
-      cardKey: 'conjugation:sound:1:active.past:3ms',
+      inputModes: ['multiple-choice'],
     })
     renderWithProviders(<ExerciseMode generateExercise={() => exercise} />)
     fireEvent.click(screen.getByText('correct', { selector: 'button' }))
@@ -354,11 +352,7 @@ describe('SRS recording', () => {
       }),
     )
 
-    const gen = vi.fn().mockReturnValue({
-      ...testExercise(),
-      kind: 'conjugation',
-      cardKey,
-    })
+    const gen = vi.fn().mockReturnValue(conjugationExercise({ cardKey }))
 
     renderWithProviders(<ExerciseMode generateExercise={gen} />)
 

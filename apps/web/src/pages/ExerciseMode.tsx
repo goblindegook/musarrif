@@ -12,15 +12,9 @@ import {
   nextExercise,
 } from '../../../../src/exercises/scheduler'
 import type { AnswerResult, SrsStore } from '../../../../src/exercises/srs'
-import {
-  localizedDimension,
-  localizedExplanation,
-  localizedPrompt,
-  localizedPronoun,
-  localizedRootShape,
-  localizedTense,
-  localizedUnlock,
-} from '../../../../src/localization'
+import { localizedPronoun, localizedRootShape, localizedTense } from '../../../../src/localization'
+import { localizedDimension, localizedPrompt, localizedUnlock } from '../../../../src/localization.exercises'
+import { localizedExplanation } from '../../../../src/localization.explanation'
 import { toRoman } from '../../../../src/primitives/numbers'
 import { Button } from '../atoms/Button'
 import { FormattedText } from '../atoms/FormattedText'

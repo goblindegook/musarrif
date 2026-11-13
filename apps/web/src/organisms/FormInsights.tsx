@@ -1,6 +1,10 @@
 import { styled } from 'goober'
 import { useMemo } from 'preact/hooks'
-import { localizedExplanation, localizedFormMeaning, localizedFormRelationship } from '../../../../src/localization'
+import {
+  localizedExplanation,
+  localizedFormMeaning,
+  localizedFormRelationship,
+} from '../../../../src/localization.explanation'
 import { conjugate } from '../../../../src/paradigms/conjugation'
 import { resolveVerbExplanationLayers, toFormDescriptor } from '../../../../src/paradigms/explanation'
 import { applyDiacriticsPreference } from '../../../../src/paradigms/tokens'
