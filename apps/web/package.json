@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run prerender",
-    "build:hash": "VITE_ROUTING_MODE=hash tsc && VITE_ROUTING_MODE=hash vite build",
+    "build": "npm run typecheck && vite build && npm run prerender",
+    "build:hash": "npm run typecheck && VITE_ROUTING_MODE=hash vite build",
     "preview": "vite preview",
     "prerender": "tsx scripts/prerender.mts",
     "test": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b ../../tsconfig.src.json && tsc --noEmit",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "tauri:icons": "tauri icon ../../assets/musarrif.png"

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "expo start",
     "ios": "expo run:ios",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b ../../tsconfig.src.json && tsc --noEmit",
     "test": "jest"
   },
   "dependencies": {
