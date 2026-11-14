@@ -329,7 +329,7 @@ describe('ExerciseMode', () => {
 describe('SRS recording', () => {
   test('records answer in SRS store when option selected', () => {
     const exercise = conjugationExercise({
-      options: ['correct', 'incorrect', 'incorrect', 'incorrect'],
+      options: ['correct', 'wrong1', 'wrong2', 'wrong3'],
       inputModes: ['multiple-choice'],
     })
     renderWithProviders(<ExerciseMode generateExercise={() => exercise} />)
