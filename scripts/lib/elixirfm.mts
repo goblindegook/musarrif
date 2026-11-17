@@ -72,7 +72,7 @@ export function fromTag(tag: string): { paradigm: VerbParadigm; pronounId: Prono
 
 function getCell(block: string, klass: string): string | undefined {
   const match = new RegExp(`<td class="${klass}"[^>]*>([^<]+)</td>`).exec(block)
-  return match?.[1]?.trim()
+  return match?.[1]?.trim().normalize('NFC')
 }
 
 function addConjugation(

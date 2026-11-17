@@ -184,6 +184,30 @@ describe('fetchElixirFmParadigms', () => {
     ])
   })
 
+  test('normalises ElixirFM combining-mark order to NFC', async () => {
+    const shaddaFirst = 'رَوَّحَ'
+    server.use(
+      http.post(ELIXIR_URL, async ({ request }) => {
+        const data = Object.fromEntries(new URLSearchParams(await request.text()).entries())
+        if (data.mode === 'resolve') return new HttpResponse(RESOLVE_HTML, { status: 200 })
+        if (data.mode === 'inflect')
+          return new HttpResponse(
+            `<table><tr><td class="xtag">VP-A-3MS--</td><td class="orth">${shaddaFirst}</td></tr></table>`,
+            { status: 200 },
+          )
+        return new HttpResponse(
+          `<table><tr><td class="xtag">A--P------</td><td class="orth">م${shaddaFirst}</td></tr></table>`,
+          { status: 200 },
+        )
+      }),
+    )
+
+    const paradigms = await fetchParadigms(getVerbById('ktb-1')!)
+
+    expect(paradigms.paradigms['active past']?.['3ms']).toEqual([shaddaFirst.normalize('NFC')])
+    expect(paradigms.nominals.passiveParticiple).toBe(`م${shaddaFirst}`.normalize('NFC'))
+  })
+
   test('selects the entry matching the verb form', async () => {
     const paradigms = await fetchParadigms(getVerbById('dHrj-4')!)
 
