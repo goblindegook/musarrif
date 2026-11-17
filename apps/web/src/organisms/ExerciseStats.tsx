@@ -45,8 +45,6 @@ interface Props {
   srsStore?: SrsStore
 }
 
-const MASTERY_DISPLAY_EXPONENT = 0.4
-
 export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, srsStore = {} }: Props) {
   const { theme } = useTheme()
   const { t, lang } = useI18n()
@@ -118,9 +116,7 @@ export function ExerciseStats({ dimensionProfile = DEFAULT_DIMENSION_PROFILE, sr
 }
 
 function masteryProgressBar(score: number, locked: boolean): { value: number; max: number } {
-  if (locked || score <= 0) return { value: 0, max: 1 }
-  const displayedScore = score ** MASTERY_DISPLAY_EXPONENT
-  return { value: Number(displayedScore.toFixed(6)), max: 1 }
+  return { value: locked ? 0 : score, max: 1 }
 }
 
 function MasterySection({ mastery }: { mastery: readonly MasteryCategoryType<MasteryCategoryId>[] }) {

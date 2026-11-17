@@ -31,7 +31,7 @@ import { ExerciseLearningInsightsSheet } from './ExerciseLearningInsightsSheet'
 import { ExerciseProgressChart } from './ExerciseProgressChart'
 
 function masteryProgress(score: number, locked: boolean): number {
-  return locked || score <= 0 ? 0 : score ** 0.4
+  return locked ? 0 : score
 }
 
 function MasteryBar({ score, locked, theme }: { score: number; locked: boolean; theme: ThemeTokens }) {
