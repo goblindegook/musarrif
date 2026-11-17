@@ -11,10 +11,10 @@ One flow covers both jobs: generate the reference test, then make it pass. Addin
 ## Quick Flow
 
 1. Identify the target root and form from `$ARGUMENTS`.
-2. **Confirm with the user before writing any file.** Read the sources without touching the repo (`npm run glosses -- <root> [form]`, the Wiktionary page of the bare lemma, ElixirFM) and show the user, for each candidate verb:
+2. **Confirm with the user before writing any file.** Read the sources without touching the repo (`npm run glosses -- <root> [form]`, which prints Hans Wehr, Wiktionary and ElixirFM glosses side by side; the Wiktionary page of the bare lemma) and show the user, for each candidate verb:
    - the verb id and Form I vowel pattern(s), listing every Form I conjugation the source has for the root, since adding one, several or all is the user's call;
    - the passive (full, impersonal, none) and the maṣdars the source gives;
-   - the proposed en, it and pt infinitives and the root gloss, each quoted from **that form's own entry** on the source page. Never borrow a gloss the entry does not state. Choose one primary sense, plus further comma-separated senses when genuinely distinct (`to provide for, to impoverish`), never synonyms.
+   - the proposed en, it and pt infinitives and the root gloss, each quoted from **that form's own entry** on the source page. Never borrow a gloss the entry does not state. Hans Wehr is the authority for Modern Standard Arabic senses: Wiktionary's lemma page can mix in colloquial entries, and Hans Wehr files a hollow Form IV (`أَرَاحَ`) under its sound homograph (`أَرْوَحَ`), so read the whole entry and attribute each sense to the right verb. List every genuinely distinct sense Hans Wehr gives, as comma-separated senses (`to provide for, to impoverish`), never synonyms. When a homograph of the same root and form has a different conjugation, say so and ask the user how to handle it, since one verb id holds one conjugation.
 
    Wait for the user's answer. Only then run the scripts or edit anything.
 3. Generate the test file:

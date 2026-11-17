@@ -31,6 +31,8 @@ rtk mise exec -- npm run glosses -- <root> <form>      # e.g. mHq 2
 
 This prints, for that root:
 
+- Every Hans Wehr form entry for the root (from the dictionary dataset hanswehr.app publishes, cached
+  under `.caches/hanswehr/`), with its full senses. Hans Wehr is the preferred source for the glosses.
 - The Wiktionary root-appendix note (a "related to X" line), the best root-gloss candidate.
 - Any inline `Form <roman>: <lemma> ("<gloss>")` text the same appendix page carries. It is present for
   roughly half of roots and absent for the rest.
@@ -43,11 +45,14 @@ This prints, for that root:
    e.g. via `WebFetch` or the browser tools. Use the lemma from `getVerbById('<root>-<form>')`
    (`src/paradigms/verbs.ts`) if you need it.
 
+   Take the senses from the Hans Wehr block the tool prints first: it is the authority for Modern
+   Standard Arabic, while Wiktionary's lemma page can mix in colloquial entries. Attribute each sense to
+   the right verb, since Hans Wehr lists a form's variants (`أَرْوَحَ`, `أَرَاحَ`) under one heading.
+
 4. Pick the translation and write it in by hand, since the tool fetches and never writes:
 
-- `en.verbs.json`: `verbs["<verb-id>"]`, infinitive (`to write`). One primary meaning only, by
-  default. Add a second, comma-separated sense ONLY when it is a genuinely distinct meaning
-  (`to help, to rescue`), never a synonym or near-synonym of the first (NOT `to indicate, to
+- `en.verbs.json`: `verbs["<verb-id>"]`, infinitive (`to write`). List every genuinely distinct
+  meaning the sources give, comma-separated (`to help, to rescue`), never a synonym or near-synonym of the first (NOT `to indicate, to
   guide`, NOT `to infer, to conclude`: pick the one best word). Same rule for it/pt/ar below.
 - `en.verbs.json` roots, `it.verbs.json`, `pt.verbs.json` (`verbs` + `roots`): infer from the
   English gloss and the Arabic root meaning, not by mechanical word-for-word translation. No `to`

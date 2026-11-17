@@ -1,5 +1,5 @@
 /**
- * Looks up English glosses from Wiktionary and ElixirFM for a root (or one of its forms), and lists
+ * Looks up English glosses from Hans Wehr, Wiktionary and ElixirFM for a root (or one of its forms), and lists
  * every verb id or root missing a translation in the locale files.
  *
  * Usage:
@@ -15,7 +15,8 @@ import { fileURLToPath } from 'node:url'
 import { transliterateReverse } from '@pacote/buckwalter'
 import { verbs } from '../src/paradigms/verbs.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
-import { type LexiconEntry, lookupRoot } from './lib/elixirfm.mts'
+import { type LexiconEntry as ElixirFmEntry, lookupRoot as lookupElixirFmRoot } from './lib/elixirfm.mts'
+import { type LexiconEntry as HansWehrEntry, lookupRoot as lookupHansWehrRoot } from './lib/hanswehr.mts'
 import { findMissingTranslations, type LocaleVerbFile } from './lib/missing-translations.mts'
 import { fetchRootNote } from './lib/wiktionary.mts'
 
@@ -39,7 +40,7 @@ function printMissing(): void {
     console.log(`  ${rootId.padEnd(18)} missing: ${missingIn.join(', ')}`)
 }
 
-function printLexiconEntries(entries: readonly LexiconEntry[]): void {
+function printLexiconEntries(entries: readonly ElixirFmEntry[]): void {
   if (entries.length === 0) {
     console.log('  (none)')
     return
@@ -63,18 +64,29 @@ async function printRoot(rootCode: string, form?: number): Promise<void> {
   const arabicRoot = transliterateReverse(rootCode)
   console.log(`Root ${rootCode} (${arabicRoot})\n`)
 
-  const [note, entries] = await Promise.all([
+  const [hansWehrForms, note, entries] = await Promise.all([
+    lookupHansWehrRoot(arabicRoot).catch((error: unknown) => {
+      console.warn(`Hans Wehr lookup unavailable: ${error instanceof Error ? error.message : String(error)}`)
+      return [] as HansWehrEntry[]
+    }),
     fetchRootNote(arabicRoot).catch((error: unknown) => {
       console.warn(`Wiktionary root note unavailable: ${error instanceof Error ? error.message : String(error)}`)
       return { note: undefined, forms: [] }
     }),
-    lookupRoot(arabicRoot).catch((error: unknown) => {
+    lookupElixirFmRoot(arabicRoot).catch((error: unknown) => {
       console.warn(`ElixirFM lookup unavailable: ${error instanceof Error ? error.message : String(error)}`)
-      return [] as LexiconEntry[]
+      return [] as ElixirFmEntry[]
     }),
   ])
 
-  console.log(`Wiktionary root note (candidate for the root gloss): ${note.note ?? '(none)'}\n`)
+  console.log(
+    'Hans Wehr (authority for Modern Standard Arabic senses; a form may list a variant verb inside its entry):',
+  )
+  const hansWehrMatches = hansWehrForms.filter((f) => form == null || f.roman === toRoman(form))
+  if (hansWehrMatches.length === 0) console.log('  (none)')
+  for (const f of hansWehrMatches) console.log(`  Form ${f.roman.padEnd(5)} ${f.lemma}  (${f.translit})  ${f.gloss}`)
+
+  console.log(`\nWiktionary root note (candidate for the root gloss): ${note.note ?? '(none)'}\n`)
 
   const inlineForms = form == null ? note.forms : note.forms.filter((f) => f.roman === toRoman(form))
   console.log('Wiktionary inline form glosses:')
