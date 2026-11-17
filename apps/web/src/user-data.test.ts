@@ -120,6 +120,10 @@ describe('importUserData', () => {
     expect(importUserData('{}')).toBe(false)
   })
 
+  test('rejects a file written by a newer version of the app', () => {
+    expect(importUserData(JSON.stringify({ version: 2, favouriteVerbs: ['ktb-1'] }))).toBe(false)
+  })
+
   test('imports valid dimension profile', () => {
     const profile = { ...INITIAL_DIMENSION_PROFILE, forms: 1 as const }
     const payload = JSON.stringify({

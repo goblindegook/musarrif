@@ -79,9 +79,11 @@ const Settings = v.object({
   themePreference: v.optional(v.fallback(v.picklist(['light', 'dark', 'system']), 'system'), 'system'),
 })
 
+const USER_DATA_VERSION = 1
+
 const ImportUserData = v.pipe(
   v.object({
-    version: v.optional(v.number()),
+    version: v.optional(v.pipe(v.number(), v.maxValue(USER_DATA_VERSION))),
     settings: v.optional(Settings),
     favouriteVerbs: v.optional(v.fallback(v.array(v.string()), [])),
     trackedExercises: v.optional(SerializedTrackedExercises),
@@ -100,7 +102,7 @@ const ImportUserData = v.pipe(
 
 export function getUserData() {
   return {
-    version: 1,
+    version: USER_DATA_VERSION,
     settings: {
       language: load<Language>('conjugator:language', 'en'),
       diacriticsPreference: load<DiacriticsPreference>('conjugator:diacriticsPreference', 'some'),

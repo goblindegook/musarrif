@@ -18,9 +18,11 @@ const Settings = v.object({
   themePreference: v.optional(v.fallback(v.picklist(['light', 'dark', 'system']), 'system'), 'system'),
 })
 
+const USER_DATA_VERSION = 1
+
 const ImportPayload = v.pipe(
   v.object({
-    version: v.optional(v.number()),
+    version: v.optional(v.pipe(v.number(), v.maxValue(USER_DATA_VERSION))),
     settings: v.optional(Settings),
     favouriteVerbs: v.optional(v.fallback(v.array(v.string()), [])),
     trackedExercises: v.optional(SerializedTrackedExercises),
@@ -111,7 +113,7 @@ export function encodeUserDataExport(values: UserDataSnapshot['values']): string
 
   return JSON.stringify(
     {
-      version: 1,
+      version: USER_DATA_VERSION,
       settings,
       favouriteVerbs,
       trackedExercises,

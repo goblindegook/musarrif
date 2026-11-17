@@ -48,6 +48,10 @@ describe('user-data backup codec', () => {
     expect(decodeUserDataExport('{}')).toBeUndefined()
   })
 
+  test('rejects a file written by a newer version of the app', () => {
+    expect(decodeUserDataExport(JSON.stringify({ version: 2, favouriteVerbs: ['ktb-1'] }))).toBeUndefined()
+  })
+
   test('applies browser v1 defaults when optional export sections are absent', () => {
     expect(decodeUserDataExport(JSON.stringify({ favouriteVerbs: ['ktb-1'] }))).toEqual({
       values: {
