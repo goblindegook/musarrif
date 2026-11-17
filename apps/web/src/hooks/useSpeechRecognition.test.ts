@@ -139,6 +139,6 @@ test('unmount aborts any active recognition session', () => {
   const mock = mockSpeechRecognition()
   const { result, unmount } = renderHook(() => useSpeechRecognition('ar'))
   act(() => result.current.start())
-  unmount()
+  act(() => unmount())
   expect(mock.instance?.abort).toHaveBeenCalledOnce()
 })

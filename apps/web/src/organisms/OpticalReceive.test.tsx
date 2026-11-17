@@ -99,7 +99,7 @@ it('releases the camera when the receiver closes', async () => {
   const { unmount } = renderWithProviders(<OpticalReceive onComplete={vi.fn()} />)
   await waitFor(() => expect(scanner.callback).not.toBeNull())
 
-  unmount()
+  act(() => unmount())
 
   expect(scanner.stop).toHaveBeenCalled()
 })
