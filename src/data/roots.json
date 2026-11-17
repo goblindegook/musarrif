@@ -25615,6 +25615,12 @@
   },
   {
     "root": "rwH",
+    "form": 2,
+    "masdars": [],
+    "lexicalMasdars": ["tarowiyH"]
+  },
+  {
+    "root": "rwH",
     "form": 4
   },
   {
