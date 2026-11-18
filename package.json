@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",
-    "@biomejs/biome": "^2.6.7",
+    "@biomejs/biome": "^2.6.8",
     "@inquirer/prompts": "^8.8.0",
     "@stryker-mutator/core": "^10.1.1",
     "@stryker-mutator/typescript-checker": "^10.1.1",
