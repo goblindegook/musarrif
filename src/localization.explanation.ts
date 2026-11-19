@@ -81,6 +81,7 @@ export function localizedRootDescription(t: Translate, analysis: Pick<RootAnalys
       return t('rootInfo.hollow-waw.description')
     case 'hollow-yaa':
       return t('rootInfo.hollow-yaa.description')
+    // biome-ignore lint/plugin: rootTypeLocaleKey returns a plain string, and every other key reads as sound
     default:
       return t('rootInfo.sound.description')
   }
@@ -333,8 +334,6 @@ function uncontractedHollowNote(t: Translate, weakLetter: WeakLetter, params: Pa
   }
 }
 
-// rootTypeLocaleKey joins the live shapes into a plain string, so no union can prove this switch
-// exhaustive; every combination a dataset verb reaches has a case.
 function rootShapeNote(t: Translate, rootTypeKey: string, params: Params): string | undefined {
   switch (rootTypeKey) {
     case 'sound':
@@ -383,6 +382,7 @@ function rootShapeNote(t: Translate, rootTypeKey: string, params: Params): strin
       return t('explanation.root.hollow-waw', params)
     case 'hollow-yaa':
       return t('explanation.root.hollow-yaa', params)
+    // biome-ignore lint/plugin: rootTypeLocaleKey joins the live shapes into a plain string, so no union can prove this switch exhaustive; every combination a dataset verb reaches has a case
     default:
       return undefined
   }

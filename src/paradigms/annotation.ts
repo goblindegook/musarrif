@@ -37,7 +37,5 @@ export function derivationSteps(verb: Verb, verbTense: VerbTense, pronounId: Pro
       return passivePresentMoodDerivationSteps(verb, 'jussive', pronounId)
     case 'passive.future':
       return passiveFutureDerivationSteps(verb, pronounId)
-    default:
-      return []
   }
 }

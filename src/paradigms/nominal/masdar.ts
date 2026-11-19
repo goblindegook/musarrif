@@ -537,8 +537,6 @@ function masdar(verb: Verb, pattern: MasdarPattern): readonly Morpheme[] {
         return deriveMasdarFormIIIq(verb)
       case 4:
         return deriveMasdarFormIVq(verb)
-      default:
-        return []
     }
   }
 

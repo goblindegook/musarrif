@@ -200,6 +200,7 @@ function tableForKey(key: UserDataKey): DataTable {
       return 'adaptive_dimensions'
     case 'local':
       return 'local_state'
+    // biome-ignore lint/plugin: the prefix comes from stored data, so an unknown one must still throw
     default:
       throw new Error(`Unsupported user data key: ${key}`)
   }

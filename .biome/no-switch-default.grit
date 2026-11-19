@@ -1,0 +1,5 @@
+language js
+
+JsDefaultClause() as $clause where {
+  register_diagnostic(span=$clause, severity="warn", message="Switch over a known value space lists every case and has no default. Group cases that share a result.")
+}

@@ -227,14 +227,6 @@ function localizedChallenge(t: Translate, insights: InsightData): string | null 
       })
 }
 
-const CANDIDATE_RANK = {
-  rootType: 0,
-  tense: 1,
-  form: 2,
-  pronounClass: 3,
-  nominal: 4,
-} satisfies Record<InsightCandidate['type'], number>
-
 function localizedStrengthsSingle(t: Translate, candidate: InsightCandidate): string {
   const value = localizedInsightDimension(t, candidate)
   switch (candidate.type) {
@@ -256,30 +248,42 @@ function localizedStrengths(t: Translate, candidates: readonly InsightCandidate[
   if (a == null) return null
   if (b == null) return localizedStrengthsSingle(t, a)
   const values = { [a.type]: localizedInsightDimension(t, a), [b.type]: localizedInsightDimension(t, b) }
-  const [first, second] = CANDIDATE_RANK[a.type] <= CANDIDATE_RANK[b.type] ? [a, b] : [b, a]
-  switch (`${first.type}.${second.type}` as const) {
+  switch (`${a.type}.${b.type}` as const) {
     case 'rootType.tense':
+    case 'tense.rootType':
       return t('exercise.insights.strengths.pair.rootType.tense', values)
     case 'rootType.form':
+    case 'form.rootType':
       return t('exercise.insights.strengths.pair.rootType.form', values)
     case 'rootType.pronounClass':
+    case 'pronounClass.rootType':
       return t('exercise.insights.strengths.pair.rootType.pronounClass', values)
     case 'rootType.nominal':
+    case 'nominal.rootType':
       return t('exercise.insights.strengths.pair.rootType.nominal', values)
     case 'tense.form':
+    case 'form.tense':
       return t('exercise.insights.strengths.pair.tense.form', values)
     case 'tense.pronounClass':
+    case 'pronounClass.tense':
       return t('exercise.insights.strengths.pair.tense.pronounClass', values)
     case 'tense.nominal':
+    case 'nominal.tense':
       return t('exercise.insights.strengths.pair.tense.nominal', values)
     case 'form.pronounClass':
+    case 'pronounClass.form':
       return t('exercise.insights.strengths.pair.form.pronounClass', values)
     case 'form.nominal':
+    case 'nominal.form':
       return t('exercise.insights.strengths.pair.form.nominal', values)
     case 'pronounClass.nominal':
+    case 'nominal.pronounClass':
       return t('exercise.insights.strengths.pair.pronounClass.nominal', values)
-    // Ranked order leaves only same-type pairs here, and those read as a single candidate.
-    default:
+    case 'rootType.rootType':
+    case 'tense.tense':
+    case 'form.form':
+    case 'pronounClass.pronounClass':
+    case 'nominal.nominal':
       return localizedStrengthsSingle(t, a)
   }
 }
@@ -305,30 +309,42 @@ function localizedChallengeCandidates(t: Translate, candidates: readonly Insight
   if (a == null) return null
   if (b == null) return localizedChallengeSingle(t, a)
   const values = { [a.type]: localizedInsightDimension(t, a), [b.type]: localizedInsightDimension(t, b) }
-  const [first, second] = CANDIDATE_RANK[a.type] <= CANDIDATE_RANK[b.type] ? [a, b] : [b, a]
-  switch (`${first.type}.${second.type}` as const) {
+  switch (`${a.type}.${b.type}` as const) {
     case 'rootType.tense':
+    case 'tense.rootType':
       return t('exercise.insights.challenge.pair.rootType.tense', values)
     case 'rootType.form':
+    case 'form.rootType':
       return t('exercise.insights.challenge.pair.rootType.form', values)
     case 'rootType.pronounClass':
+    case 'pronounClass.rootType':
       return t('exercise.insights.challenge.pair.rootType.pronounClass', values)
     case 'rootType.nominal':
+    case 'nominal.rootType':
       return t('exercise.insights.challenge.pair.rootType.nominal', values)
     case 'tense.form':
+    case 'form.tense':
       return t('exercise.insights.challenge.pair.tense.form', values)
     case 'tense.pronounClass':
+    case 'pronounClass.tense':
       return t('exercise.insights.challenge.pair.tense.pronounClass', values)
     case 'tense.nominal':
+    case 'nominal.tense':
       return t('exercise.insights.challenge.pair.tense.nominal', values)
     case 'form.pronounClass':
+    case 'pronounClass.form':
       return t('exercise.insights.challenge.pair.form.pronounClass', values)
     case 'form.nominal':
+    case 'nominal.form':
       return t('exercise.insights.challenge.pair.form.nominal', values)
     case 'pronounClass.nominal':
+    case 'nominal.pronounClass':
       return t('exercise.insights.challenge.pair.pronounClass.nominal', values)
-    // Ranked order leaves only same-type pairs here, and those read as a single candidate.
-    default:
+    case 'rootType.rootType':
+    case 'tense.tense':
+    case 'form.form':
+    case 'pronounClass.pronounClass':
+    case 'nominal.nominal':
       return localizedChallengeSingle(t, a)
   }
 }
