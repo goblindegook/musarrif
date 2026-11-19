@@ -41,7 +41,7 @@ export function mockSpeechSynthesis(voices: Array<{ name: string; lang: string }
 }
 
 export function mockSpeechRecognition() {
-  type RecognitionInstance = {
+  interface RecognitionInstance {
     lang: string
     continuous: boolean
     interimResults: boolean

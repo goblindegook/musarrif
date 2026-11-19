@@ -8,7 +8,7 @@ import { useThemeTokens } from '../../theme/tokens'
 import { VerbRow } from '../verb/VerbRow'
 import { DEFAULT_FILTERS, type FilterState, filterVerbs } from './filter-model'
 
-type VerbListProps = {
+interface VerbListProps {
   language?: Language
   query?: string
   favouriteVerbIDs?: ReadonlySet<string>

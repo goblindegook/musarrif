@@ -13,9 +13,12 @@ export function useSystemLanguage(): Language {
 }
 
 type Dictionary = Record<string, string>
-type VerbDictionary = { verbs?: Dictionary; roots?: Dictionary }
+interface VerbDictionary {
+  verbs?: Dictionary
+  roots?: Dictionary
+}
 type Copy = (key: string, values?: Record<string, string>) => string
-type LanguageCopy = {
+interface LanguageCopy {
   t: Copy
   gloss: (key: string) => string | undefined
 }

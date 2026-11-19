@@ -6,7 +6,9 @@ const ENDPOINT = 'https://qutrub.arabeyes.org/ajaxGet'
 export type PresentVowel = 'a' | 'i' | 'u'
 
 type QutrubRow = Record<string, string>
-type QutrubResponse = { result?: Record<string, QutrubRow> }
+interface QutrubResponse {
+  result?: Record<string, QutrubRow>
+}
 
 const COLUMN_PARADIGMS: Record<string, VerbParadigm> = {
   'الماضي المعلوم': 'active past',

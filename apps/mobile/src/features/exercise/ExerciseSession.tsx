@@ -20,7 +20,7 @@ import { ExplanationParagraphs } from '../verb/Insights'
 import { AnswerChoices } from './AnswerChoices'
 import { ArabicAnswerInput } from './ArabicAnswerInput'
 
-export type PersistedExerciseAnswer = {
+export interface PersistedExerciseAnswer {
   answer?: string
   cardKey: string
   dimensions: Exercise['dimensions']

@@ -2,7 +2,7 @@ import { styled } from 'goober'
 import type { ComponentChild } from 'preact'
 import { SegmentedControl } from './SegmentedControl'
 
-type Props = {
+interface Props {
   activeMode?: number
   labels: readonly string[]
   icons?: readonly ComponentChild[]

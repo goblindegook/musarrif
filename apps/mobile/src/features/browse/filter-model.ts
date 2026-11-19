@@ -7,7 +7,7 @@ import { toRoman } from '../../../../../src/primitives/numbers'
 
 type SortOrder = 'frequency' | 'alphabetical'
 type GroupFilter = 'favourites' | 'kana' | 'zanna'
-export type FilterState = {
+export interface FilterState {
   sort: SortOrder
   form: string | null
   rootShapes: readonly RootShape[]

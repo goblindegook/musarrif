@@ -78,7 +78,7 @@ export const ZNN_SISTERS_IDS = new Set([
   "'x*-8",
 ])
 
-type RawVerb = {
+interface RawVerb {
   root: string
   form: TriliteralForm
   vowels?: FormIPattern

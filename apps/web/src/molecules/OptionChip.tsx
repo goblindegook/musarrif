@@ -5,14 +5,14 @@ import { IconButton } from '../atoms/IconButton'
 import { SelectableButton } from '../atoms/SelectableButton'
 import { Subheading } from '../atoms/Subheading'
 
-export type OptionItem<T> = {
+export interface OptionItem<T> {
   label: string
   value: T
   ariaLabel?: string
   glyph?: string
 }
 
-export type OptionGroup<T> = {
+export interface OptionGroup<T> {
   key: string
   label: string
   options: readonly OptionItem<T>[]
@@ -22,12 +22,12 @@ export type OptionGroup<T> = {
   hint?: string
 }
 
-export type OptionValue<T> = {
+export interface OptionValue<T> {
   groupKey: string
   value: T
 }
 
-type Props<T> = {
+interface Props<T> {
   groups: readonly OptionGroup<T>[]
   value: OptionValue<T> | null
   onChange: (value: OptionValue<T> | null) => void

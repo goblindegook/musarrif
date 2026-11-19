@@ -106,7 +106,10 @@ function hamzaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
 }
 
 function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  type Slot = { token: Token; index: number }
+  interface Slot {
+    token: Token
+    index: number
+  }
   const slots: Slot[] = morphemes.flatMap((m, i) => m.tokens.map((t) => ({ token: t, index: i })))
 
   const result: Morpheme[] = []
@@ -136,7 +139,10 @@ function maddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
 }
 
 function shaddaPass(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  type Slot = { token: Token; role: MorphemeRole }
+  interface Slot {
+    token: Token
+    role: MorphemeRole
+  }
   const slots: Slot[] = morphemes.flatMap((m) => m.tokens.map((t) => ({ token: t, role: m.role })))
 
   const result: Morpheme[] = []

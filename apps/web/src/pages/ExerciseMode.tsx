@@ -31,7 +31,7 @@ import { ShortcutButton } from '../molecules/ShortcutButton'
 import { SpeechButton } from '../molecules/SpeechButton'
 import { ExerciseStats } from '../organisms/ExerciseStats'
 
-type Props = {
+interface Props {
   generateExercise?: (
     profile: DimensionProfile,
     srsStore: SrsStore,

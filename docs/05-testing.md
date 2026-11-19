@@ -27,7 +27,6 @@ test('descriptive test name', () => {
 - ✅ Test edge cases and boundary conditions
 - ✅ Use `afterEach(cleanup)` for Preact component tests
 - ✅ Assert user-facing rendered text when feature intent is localized copy
-- ✅ Prefer `findBy*` over `waitFor` + `getBy*` for async queries
 - ✅ Use real collaborators; only mock external boundaries or hard-to-reproduce conditions
 - ✅ Static imports only in tests
 - ✅ Property-based testing (e.g. fast-check) welcome for general rules

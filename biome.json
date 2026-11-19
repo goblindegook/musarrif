@@ -18,11 +18,18 @@
       "frontmatter": true
     }
   },
-  "plugins": ["./.biome/literal-translation-key.grit", "./.biome/no-switch-default.grit"],
+  "plugins": [
+    "./.biome/literal-translation-key.grit",
+    "./.biome/no-switch-default.grit",
+    { "path": "./.biome/find-by-over-wait-for.grit", "includes": ["**/*.test.ts", "**/*.test.tsx"] }
+  ],
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "style": {
+        "useConsistentTypeDefinitions": { "level": "error", "options": { "style": "interface" } }
+      }
     }
   },
   "overrides": [

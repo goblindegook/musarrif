@@ -26,7 +26,7 @@ const DESKTOP_BREAKPOINT = 960
 
 type ArrowPlacement = 'top' | 'bottom' | 'right'
 
-type PositionResult = {
+interface PositionResult {
   top: number
   left: number
   arrowPlacement: ArrowPlacement

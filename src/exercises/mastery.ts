@@ -40,7 +40,7 @@ const STRENGTH_DENOMINATOR = Math.log2(MASTERY_THRESHOLD_DAYS + 1)
 
 export type MasteryCategoryId = 'rootTypes' | 'forms' | 'tenses' | 'pronouns' | 'nominals'
 
-export type MasteryItemIdByCategory = {
+export interface MasteryItemIdByCategory {
   rootTypes: SrsRootType
   forms: TriliteralForm
   tenses: VerbTense

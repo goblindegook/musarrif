@@ -1,0 +1,6 @@
+language js
+
+`waitFor($callback)` where {
+  $callback <: contains JsCallExpression(callee=$callee) where { $callee <: r"(?:.*\.)?getBy[A-Za-z]+" },
+  register_diagnostic(span=$callback, severity="warn", message="Use an awaited findBy* query instead of waitFor around getBy*.")
+}

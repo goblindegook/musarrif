@@ -26,7 +26,7 @@ export type FormsLevel = Level<typeof FORM_POOLS>
 export type RootTypesLevel = Level<typeof ROOT_TYPE_POOLS>
 export type NominalsLevel = 0 | 1 | 2
 
-export type DimensionProfile = {
+export interface DimensionProfile {
   tenses: TensesLevel
   pronouns: PronounsLevel
   forms: FormsLevel
@@ -37,7 +37,7 @@ export type DimensionKey = keyof DimensionProfile
 
 type DimensionWindows = Record<DimensionKey, boolean[]>
 
-export type DimensionStore = {
+export interface DimensionStore {
   profile: DimensionProfile
   windows: DimensionWindows
 }

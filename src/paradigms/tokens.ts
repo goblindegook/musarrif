@@ -1,7 +1,9 @@
 import { memoize } from '@pacote/memoize'
 
 export type DiacriticsPreference = 'all' | 'some' | 'none'
-type Stringifiable = { toString(): string }
+interface Stringifiable {
+  toString(): string
+}
 
 export class Token {
   private readonly raw: string

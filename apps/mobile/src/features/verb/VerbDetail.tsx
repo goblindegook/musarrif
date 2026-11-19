@@ -48,7 +48,7 @@ import { Insights, type InsightTarget } from './Insights'
 import { ParadigmTable } from './ParadigmTable'
 import { VerbRow } from './VerbRow'
 
-type VerbDetailProps = {
+interface VerbDetailProps {
   verb: DisplayVerb
   language: Language
   diacriticsPreference: DiacriticsPreference

@@ -12,7 +12,7 @@ import { InfoIcon } from '../../components/InfoIcon'
 import { getCopy, type Language } from '../../i18n/copy'
 import { useThemeTokens } from '../../theme/tokens'
 
-type ParadigmTableProps = {
+interface ParadigmTableProps {
   verb: DisplayVerb
   tense: VerbTense
   diacriticsPreference: DiacriticsPreference

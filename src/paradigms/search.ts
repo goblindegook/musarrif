@@ -4,7 +4,7 @@ import { wordDistance } from '../primitives/strings'
 import { ALIF, HAMZA, normalizeForComparison } from './tokens'
 import { type DisplayVerb, findVerbsByRoot, findVerbsByRootPrefix, frequencyRank, verbs } from './verbs'
 
-type SearchOptions = {
+interface SearchOptions {
   language: string
   gloss: (key: string) => string | undefined
 }

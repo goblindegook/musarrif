@@ -11,7 +11,7 @@ import { useI18n } from '../hooks/useI18n'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { ShortcutButton } from './ShortcutButton'
 
-type Props = {
+interface Props {
   exercise: Exercise
   forceReveal?: boolean
   onAnswer: (index: number, result: AnswerResult) => void

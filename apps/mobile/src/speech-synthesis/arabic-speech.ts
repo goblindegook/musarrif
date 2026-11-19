@@ -1,12 +1,12 @@
 import * as Speech from 'expo-speech'
 
-export type ArabicSystemVoice = {
+export interface ArabicSystemVoice {
   identifier: string
   name: string
   language: string
 }
 
-type ArabicSpeechOptions = {
+interface ArabicSpeechOptions {
   voiceIdentifier?: string
   rate: number
 }

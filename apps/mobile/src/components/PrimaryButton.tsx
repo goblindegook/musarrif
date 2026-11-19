@@ -13,7 +13,7 @@ import { View } from 'react-native'
 import { useScaledSize } from '../theme/dynamic-type'
 import { useThemeTokens } from '../theme/tokens'
 
-type PrimaryButtonProps = {
+interface PrimaryButtonProps {
   accessibilityLabel: string
   children: string
   disabled?: boolean

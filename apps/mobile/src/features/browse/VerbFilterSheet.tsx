@@ -23,7 +23,7 @@ import { getCopy, type Language } from '../../i18n/copy'
 import { useThemeTokens } from '../../theme/tokens'
 import { type FilterState, FORM_OPTIONS, ROOT_SHAPES } from './filter-model'
 
-type VerbFilterSheetProps = {
+interface VerbFilterSheetProps {
   filters: FilterState
   isPresented: boolean
   language: Language

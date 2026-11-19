@@ -15,13 +15,13 @@ export type VerbParadigm =
   | 'passive present subjunctive'
   | 'passive present jussive'
 
-export type NominalSet = {
+export interface NominalSet {
   masdar?: string[]
   activeParticiple?: string
   passiveParticiple?: string
 }
 
-export type ParsedParadigms = {
+export interface ParsedParadigms {
   paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>>
   nominals: NominalSet
 }

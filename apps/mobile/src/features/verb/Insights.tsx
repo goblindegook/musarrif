@@ -43,7 +43,7 @@ import { VerbRow } from './VerbRow'
 
 export type InsightTarget = Pick<InsightsProps, 'arabic' | 'subject' | 'nominal' | 'verbTense' | 'pronoun'>
 
-type InsightsProps = {
+interface InsightsProps {
   verb: DisplayVerb
   arabic: string | readonly string[]
   language: string

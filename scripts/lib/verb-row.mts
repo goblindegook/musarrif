@@ -30,7 +30,10 @@ export interface RootEntry {
   prepositions?: readonly Preposition[]
 }
 
-type MasdarSelection = { masdars?: MasdarPattern[]; lexicalMasdars?: string[] }
+interface MasdarSelection {
+  masdars?: MasdarPattern[]
+  lexicalMasdars?: string[]
+}
 
 function derivedMasdar(verb: DisplayVerb, masdars?: readonly MasdarPattern[]): string {
   return String(deriveMasdar({ ...verb, masdars, lexicalMasdars: undefined } as Verb)[0])

@@ -21,7 +21,7 @@
 
 ### Type Definitions
 
-- Define types/interfaces explicitly; prefer `interface` over `type`
+- Define types/interfaces explicitly
 - Use type aliases for complex types
 - Use union types for limited values: `1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10`
 - Use type guards for narrowing: `function isLanguage(lang: unknown): lang is Language`

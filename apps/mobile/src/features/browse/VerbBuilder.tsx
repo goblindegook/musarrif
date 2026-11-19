@@ -18,7 +18,7 @@ import { Sheet, SheetButton } from '../../components/Sheet'
 import { getCopy, type Language } from '../../i18n/copy'
 import { useThemeTokens } from '../../theme/tokens'
 
-type VerbBuilderProps = {
+interface VerbBuilderProps {
   diacriticsPreference?: DiacriticsPreference
   language?: Language
   onSelect: (verb: DisplayVerb) => void

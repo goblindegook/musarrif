@@ -76,7 +76,7 @@ export type Preposition =
   | 'mu*o'
   | 'rub~a'
 
-type VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> = {
+interface VerbProps<Root extends TriliteralRoot | QuadriliteralRoot, Tokens extends RootTokens, Form extends number> {
   root: Root
   rootTokens: Tokens
   form: Form

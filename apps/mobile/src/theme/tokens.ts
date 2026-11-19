@@ -1,6 +1,6 @@
 import { type ColorSchemeName, useColorScheme } from 'react-native'
 
-export type ThemeTokens = {
+export interface ThemeTokens {
   background: string
   surface: string
   surfaceSecondary: string

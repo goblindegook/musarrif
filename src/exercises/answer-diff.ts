@@ -1,9 +1,12 @@
 import { applyDiacriticsPreference } from '../paradigms/tokens'
 
 export type AnswerMark = 'match' | 'error' | 'missing'
-export type AnswerSegment = { text: string; mark: AnswerMark }
+export interface AnswerSegment {
+  text: string
+  mark: AnswerMark
+}
 
-export type AnswerDiffResult = {
+export interface AnswerDiffResult {
   outcome: 'correct' | 'partial' | 'wrong'
   typed: readonly AnswerSegment[]
   correct: readonly AnswerSegment[]
@@ -13,7 +16,7 @@ const SHADDA = 'ّ'
 const SUKOON = 'ْ'
 const VOWELS = new Set(['ً', 'ٌ', 'ٍ', 'َ', 'ُ', 'ِ'])
 
-type Cluster = {
+interface Cluster {
   letter: string
   slot: string
   shadda: boolean

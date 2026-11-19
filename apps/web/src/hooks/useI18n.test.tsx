@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/preact'
+import { cleanup, render, screen } from '@testing-library/preact'
 import { afterEach, describe, expect, test } from 'vitest'
 import { I18nProvider, useI18n } from './useI18n'
 
@@ -39,10 +39,8 @@ describe('i18n', () => {
       </I18nProvider>,
     )
 
-    await waitFor(() => {
-      expect(screen.getByTestId('prompt').textContent).toBe(
-        'صرف هذا ٱلفعل في <strong>X</strong> للضمير <strong>Y</strong>.',
-      )
-    })
+    expect(
+      await screen.findByText('صرف هذا ٱلفعل في <strong>X</strong> للضمير <strong>Y</strong>.'),
+    ).toBeInTheDocument()
   })
 })

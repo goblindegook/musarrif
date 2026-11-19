@@ -229,7 +229,10 @@ function pickVariant(values: string[], variant: Variant): string[] {
   return values.slice(variant.index * size, (variant.index + 1) * size)
 }
 
-type RootDeclaration = { el: Element; arabicRoot: string }
+interface RootDeclaration {
+  el: Element
+  arabicRoot: string
+}
 
 function findRootDeclarations(arabicSection: Element): RootDeclaration[] {
   const declarations: RootDeclaration[] = []
