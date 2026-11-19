@@ -27,15 +27,10 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     const before = word[index - 1]
     const longVowelBefore = longVowelAt(word, index - 2)
 
-    // Word-final hamza
-    if (!word.at(index + 2)) {
-      // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
-      // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
-      // which leaves the hamza effectively medial, and kasra dominates:
-      if (vowel?.equals(KASRA)) return HAMZA_ON_YEH
-
-      return seatOn(before)
-    }
+    // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
+    // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
+    // which leaves the hamza effectively medial, and kasra dominates:
+    if (!word.at(index + 2)) return vowel?.equals(KASRA) ? HAMZA_ON_YEH : seatOn(before)
 
     // Seat on the line to avoid alif + alif hamza:
     if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
@@ -49,22 +44,16 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     // Long u outranks a following u or a, but kasra still wins (l'm-3 passive past 3ms, bw'-1 active jussive 3fs):
     if (longVowelBefore === 'u') return vowel?.equals(KASRA) ? HAMZA_ON_YEH : HAMZA
 
-    return seatOn(vowelStrength(before) > vowelStrength(vowel) ? before : vowel)
+    return seatOn(before, vowel)
   })
 }
 
-function seatOn(vowel?: Token): Token {
-  if (KASRA.equals(vowel)) return HAMZA_ON_YEH
-  if (DAMMA.equals(vowel)) return HAMZA_ON_WAW
-  if (FATHA.equals(vowel)) return ALIF_HAMZA
+// The strongest vowel around the hamza picks the seat: kasra, then damma, then fatha.
+function seatOn(...vowels: readonly (Token | undefined)[]): Token {
+  if (vowels.some((v) => v?.equals(KASRA))) return HAMZA_ON_YEH
+  if (vowels.some((v) => v?.equals(DAMMA))) return HAMZA_ON_WAW
+  if (vowels.some((v) => v?.equals(FATHA))) return ALIF_HAMZA
   return HAMZA
-}
-
-function vowelStrength(token?: Token): number {
-  if (KASRA.equals(token)) return 3
-  if (DAMMA.equals(token)) return 2
-  if (FATHA.equals(token)) return 1
-  return 0
 }
 
 function longVowelAt(tokens: readonly Token[], index: number): 'i' | 'u' | undefined {
@@ -79,5 +68,5 @@ function findVowel(tokens: readonly Token[], index: number): Token | undefined {
   const candidate = tokens.at(index + 1)
   // When geminated, the effective vowel is after the shadda:
   if (SHADDA.equals(candidate)) return findVowel(tokens, index + 1)
-  return [KASRA, FATHA, DAMMA].some((t) => t.equals(candidate)) ? candidate : undefined
+  return candidate?.oneOf(KASRA, FATHA, DAMMA) ? candidate : undefined
 }
