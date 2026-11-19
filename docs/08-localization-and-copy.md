@@ -59,7 +59,5 @@ Explanation copy is plain: short sentences, hedged with _usually_ / _often_ wher
 
 - English is **en-US**: `color`, `behavior`, `favorite`, `memorize`.
 - Portuguese is **pt_PT, pre-AO90**: `acção`, `activo`, `facto`, `óptimo`, `contacto`, `directo`.
-- Apostrophe `’`, never `'`. Ellipsis `…`, never `...`. En dash `–` for ranges (`Forms II–X`); no em dashes.
-- Quotes: `“ ”` in English, `« »` in Italian, Portuguese and Arabic.
-- Transliterated hamza is `ʾ` (`yāʾ`), never `'`. Long vowels and emphatics carry their marks: `fatḥa`, `ḍamma`, `mīmī`.
-- Straight `"` appears only inside markup (`<span lang="ar">`).
+- En dash `–` for ranges (`Forms II–X`).
+- Transliterated hamza is `ʾ` (`yāʾ`), not the apostrophe `’`. Long vowels and emphatics carry their marks: `fatḥa`, `ḍamma`, `mīmī`.

@@ -21,7 +21,8 @@
   "plugins": [
     "./.biome/literal-translation-key.grit",
     "./.biome/no-switch-default.grit",
-    { "path": "./.biome/find-by-over-wait-for.grit", "includes": ["**/*.test.ts", "**/*.test.tsx"] }
+    { "path": "./.biome/find-by-over-wait-for.grit", "includes": ["**/*.test.ts", "**/*.test.tsx"] },
+    { "path": "./.biome/locale-punctuation.grit", "includes": ["src/locales/*.json"] }
   ],
   "linter": {
     "enabled": true,

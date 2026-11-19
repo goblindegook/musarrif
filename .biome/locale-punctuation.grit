@@ -1,0 +1,28 @@
+language json
+
+JsonStringValue() as $s where {
+  or {
+    and {
+      $s <: or {
+        r".*'.*",
+        r".*\.\.\..*",
+        r".*—.*"
+      },
+      register_diagnostic(span=$s, severity="error", message="Copy punctuation: apostrophe ’ (hamza ʾ), ellipsis …, en dash – for ranges; never ', ... or —.")
+    },
+    and {
+      $filename <: r".*/en\.[a-z]+\.json",
+      $s <: r".*[«»].*",
+      register_diagnostic(span=$s, severity="error", message="English quotes are “ ”.")
+    },
+    and {
+      $filename <: r".*/(?:ar|it|pt)\.[a-z]+\.json",
+      $s <: r".*[“”].*",
+      register_diagnostic(span=$s, severity="error", message="Italian, Portuguese and Arabic quotes are « ».")
+    },
+    and {
+      $s <: r".*[^=]\\\"[^>].*",
+      register_diagnostic(span=$s, severity="warn", message="Straight \" belongs only inside markup attributes; use the locale's quotes.")
+    }
+  }
+}
