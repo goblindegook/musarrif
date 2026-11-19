@@ -44,7 +44,11 @@ for (const ex of exercises) {
   monthMap.set(ym, { correct: cur.correct + ex.correct, incorrect: cur.incorrect + ex.incorrect, days: cur.days + 1 })
 }
 const months = [...monthMap.entries()].sort(([a], [b]) => a.localeCompare(b))
-const recentMonths = months.slice(-4)
+// First day of the month three months back: the last 3 full months plus the current one.
+const since = new Date(Date.UTC(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 1 - 3, 1))
+  .toISOString()
+  .slice(0, 10)
+const recentMonths = months.filter(([ym]) => ym >= since.slice(0, 7))
 
 // --- SRS stats ---
 
@@ -263,7 +267,7 @@ h2 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacin
 .metric-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
 .metric-value { font-size: 22px; font-weight: 500; }
 .metric-sub { font-size: 11px; color: var(--hint); margin-top: 2px; }
-.month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.month-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .month-card { background: var(--bg2); border-radius: 8px; padding: 12px 14px; border-left: 3px solid transparent; }
 .month-name { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
 .month-acc { font-size: 18px; font-weight: 500; margin-bottom: 2px; }
@@ -468,19 +472,24 @@ ${barRow('ef 1.3 — struggling', overdueEfBuckets['1.3'], overdueCards.length, 
 <script type="application/json" id="d">${JSON.stringify(exercises)}</script>
 <script>
 (function () {
-  const days = JSON.parse(document.getElementById('d').textContent)
+  const all = JSON.parse(document.getElementById('d').textContent)
   const canvas = document.getElementById('chart')
   const ctx = canvas.getContext('2d')
   const dark = matchMedia('(prefers-color-scheme: dark)').matches
   const textCol = dark ? 'rgba(255,255,255,.45)' : 'rgba(0,0,0,.4)'
   const gridCol = dark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)'
 
-  const rolling = days.map(function (_, i) {
-    const w = days.slice(Math.max(0, i - 6), i + 1)
+  const rollingAll = all.map(function (_, i) {
+    const w = all.slice(Math.max(0, i - 6), i + 1)
     const c = w.reduce(function (a, b) { return a + b.correct }, 0)
     const t = w.reduce(function (a, b) { return a + b.correct + b.incorrect }, 0)
     return t > 0 ? c / t : 0
   })
+  // Rolling accuracy is computed over all history so the window's first days keep their full 7-day lookback.
+  const first = all.findIndex(function (d) { return d.date >= '${since}' })
+  const start = first === -1 ? all.length : first
+  const days = all.slice(start)
+  const rolling = rollingAll.slice(start)
 
   function draw() {
     const W = canvas.parentElement.clientWidth
