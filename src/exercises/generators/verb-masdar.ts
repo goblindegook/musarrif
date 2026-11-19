@@ -5,9 +5,9 @@ import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomGeneratedVerb, randomNominalVerb } from '../dimensions.ts'
 import { singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbMasdarExercise = defineExercise(
+  'production',
   'verbMasdar',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -27,7 +27,7 @@ export const verbMasdarExercise = defineExercise(
       options,
       answer: answerIndex,
       answerText,
-      cardKey: buildCardKey('verbMasdar', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation,
       inputModes: verb.form !== 1 ? ['multiple-choice', 'keyboard', 'speech'] : ['multiple-choice'],
     }

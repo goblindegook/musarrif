@@ -1,12 +1,13 @@
 import { useCallback } from 'preact/hooks'
-import { type AnswerResult, parseSrsStore, recordAnswer, type SrsStore } from '../../../../src/exercises/srs'
+import { type AnswerResult, recordAnswer, type SrsStore } from '../../../../src/exercises/srs'
 import { utcToday } from '../../../../src/primitives/dates'
+import { parseStoredSrsStore } from '../user-data'
 import { useLocalStorage } from './useLocalStorage'
 
 type AnswerRecorder = (cardKey: string, result: AnswerResult, elapsedMs?: number) => void
 
 export function useSrsStore(): [SrsStore, AnswerRecorder] {
-  const [srs, setSrs] = useLocalStorage<SrsStore>('srs', {}, parseSrsStore)
+  const [srs, setSrs] = useLocalStorage<SrsStore>('srs', {}, parseStoredSrsStore)
 
   const recordSrsAnswer = useCallback(
     (cardKey: string, result: AnswerResult, elapsedMs?: number) =>

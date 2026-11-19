@@ -43,7 +43,12 @@ describe('buildMasterySnapshot', () => {
           computeMastery(
             BASE_PROFILE,
             {
-              'conjugation:sound:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 10, dueDate: '2026-04-21' },
+              'production:verb:sound:1:active.past:3ms': {
+                interval: 30,
+                ef: 2.5,
+                repetitions: 10,
+                dueDate: '2026-04-21',
+              },
             },
             today,
           ),
@@ -59,7 +64,7 @@ describe('buildMasterySnapshot', () => {
 
   test('counts non-due cards with interval-based mastery', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'production:verb:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
     const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const rootTypes = getCategory(snapshot, 'rootTypes')
@@ -69,7 +74,7 @@ describe('buildMasterySnapshot', () => {
   test('includes locked nominal items as zero in category score', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, nominals: 1 }
     const store: SrsStore = {
-      'participleForm:sound:1': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'recognition:participle:sound:1': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
     const snapshot = computeMastery(profile, store, '2026-04-21')
     const nominals = getCategory(snapshot, 'nominals')
@@ -83,7 +88,7 @@ describe('buildMasterySnapshot', () => {
   test('scores participles and verbal nouns from their own cards', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, nominals: 2 }
     const store: SrsStore = {
-      'participleForm:sound:1': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'recognition:participle:sound:1': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
     const nominals = getCategory(computeMastery(profile, store, '2026-04-21'), 'nominals')
     expect(getItem(nominals, 'participles').score).toBeGreaterThan(0)
@@ -119,7 +124,12 @@ describe('buildMasterySnapshot', () => {
   test('excludes impossible imperative pronoun combinations', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, tenses: 4, pronouns: 1 }
     const store: SrsStore = {
-      'conjugation:sound:1:active.imperative:1s': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'production:verb:sound:1:active.imperative:1s': {
+        interval: 365,
+        ef: 2.5,
+        repetitions: 10,
+        dueDate: '2026-04-22',
+      },
     }
     const snapshot = computeMastery(profile, store, '2026-04-21')
     const pronouns = getCategory(snapshot, 'pronouns')
@@ -130,7 +140,7 @@ describe('buildMasterySnapshot', () => {
 
   test('keeps tense mastery stable when unlocking a new form', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'production:verb:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
     const lockedFormsSnapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const unlockedFormsSnapshot = computeMastery({ ...BASE_PROFILE, forms: 1 }, store, '2026-04-21')
@@ -141,7 +151,7 @@ describe('buildMasterySnapshot', () => {
 
   test('does not overestimate active past from a single strong 3ms card', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
+      'production:verb:sound:1:active.past:3ms': { interval: 365, ef: 2.5, repetitions: 10, dueDate: '2026-04-22' },
     }
     const snapshot = computeMastery(BASE_PROFILE, store, '2026-04-21')
     const activePast = getItem(getCategory(snapshot, 'tenses'), 'active.past').score
@@ -228,7 +238,7 @@ describe('computeInsights', () => {
   test('global ranking: strengths.top scores are all >= challenge.weak scores', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     const minStrength = Math.min(...result.strengths.map((c) => c.score))
@@ -240,9 +250,9 @@ describe('computeInsights', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
     const card = { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': card,
-      'conjugation:sound:1:active.past:1s': card,
-      'conjugation:sound:1:active.past:2fs': card,
+      'production:verb:sound:1:active.past:3ms': card,
+      'production:verb:sound:1:active.past:1s': card,
+      'production:verb:sound:1:active.past:2fs': card,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect([...result.strengths, ...result.challenge]).toContainEqual({
@@ -256,9 +266,9 @@ describe('computeInsights', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 3 }
     const card = { interval: 60, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:2d': card,
-      'conjugation:sound:1:active.past:3md': card,
-      'conjugation:sound:1:active.past:3fd': card,
+      'production:verb:sound:1:active.past:2d': card,
+      'production:verb:sound:1:active.past:3md': card,
+      'production:verb:sound:1:active.past:3fd': card,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect([...result.strengths, ...result.challenge]).toContainEqual(
@@ -270,9 +280,9 @@ describe('computeInsights', () => {
     const profile: DimensionProfile = { ...BASE_PROFILE, pronouns: 1 }
     const fresh = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': fresh,
-      'conjugation:sound:1:active.past:1s': fresh,
-      'conjugation:sound:1:active.past:2ms': fresh,
+      'production:verb:sound:1:active.past:3ms': fresh,
+      'production:verb:sound:1:active.past:1s': fresh,
+      'production:verb:sound:1:active.past:2ms': fresh,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect(result.strengths).toEqual([])
@@ -284,12 +294,12 @@ describe('computeInsights', () => {
     const mature = { interval: 90, ef: 2.5, repetitions: 6, dueDate: '2099-01-01' }
     const fresh = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'participleForm:sound:1': mature,
-      'participleRoot:sound:1': mature,
-      'participleVerb:sound:1': mature,
-      'conjugation:sound:1:active.past:3ms': fresh,
-      'conjugation:sound:1:active.past:1s': fresh,
-      'conjugation:sound:1:active.past:2ms': fresh,
+      'recognition:participle:sound:1': mature,
+      'production:participle:sound:1': mature,
+      'recognition:participle:sound:2': mature,
+      'production:verb:sound:1:active.past:3ms': fresh,
+      'production:verb:sound:1:active.past:1s': fresh,
+      'production:verb:sound:1:active.past:2ms': fresh,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect(result.strengths).toEqual([{ type: 'nominal', value: 'participles', score: 1 }])
@@ -300,12 +310,12 @@ describe('computeInsights', () => {
     const weak = { interval: 1, ef: 1.7, repetitions: 0, dueDate: '2099-01-01' }
     const strong = { interval: 30, ef: 2.5, repetitions: 4, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': weak,
-      'conjugation:sound:1:active.past:1s': weak,
-      'conjugation:sound:1:active.past:2ms': weak,
-      'conjugation:sound:2:active.past:3fs': strong,
-      'conjugation:sound:2:active.past:2fs': strong,
-      'conjugation:sound:2:active.past:1s': strong,
+      'production:verb:sound:1:active.past:3ms': weak,
+      'production:verb:sound:1:active.past:1s': weak,
+      'production:verb:sound:1:active.past:2ms': weak,
+      'production:verb:sound:2:active.past:3fs': strong,
+      'production:verb:sound:2:active.past:2fs': strong,
+      'production:verb:sound:2:active.past:1s': strong,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect(result.challenge[0]).toMatchObject({ type: 'form', value: 1 })
@@ -317,12 +327,12 @@ describe('computeInsights', () => {
     const weak = { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2099-01-01' }
     const strong = { interval: 30, ef: 2.5, repetitions: 4, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': weak,
-      'conjugation:sound:1:active.past:1s': weak,
-      'conjugation:sound:1:active.past:2ms': weak,
-      'conjugation:sound:2:active.past:3fs': strong,
-      'conjugation:sound:2:active.past:2fs': strong,
-      'conjugation:sound:2:active.past:1s': strong,
+      'production:verb:sound:1:active.past:3ms': weak,
+      'production:verb:sound:1:active.past:1s': weak,
+      'production:verb:sound:1:active.past:2ms': weak,
+      'production:verb:sound:2:active.past:3fs': strong,
+      'production:verb:sound:2:active.past:2fs': strong,
+      'production:verb:sound:2:active.past:1s': strong,
     }
     const result = computeInsights(profile, store, [], '2026-05-23')
     expect(result.focus[0]).toMatchObject({ type: 'form', value: 1 })
@@ -399,7 +409,7 @@ describe('computeInsights — overdue', () => {
 
   test('count is 0 when all cards are not yet due', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-16' },
+      'production:verb:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-16' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.overdue.count).toBe(0)
@@ -407,7 +417,7 @@ describe('computeInsights — overdue', () => {
 
   test('cards due today are regular reviews, not backlog', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': {
+      'production:verb:sound:1:active.past:3ms': {
         ef: 2.5,
         repetitions: 5,
         interval: 30,
@@ -420,8 +430,8 @@ describe('computeInsights — overdue', () => {
 
   test('counts cards where dueDate is in the past as overdue', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-10' },
-      'conjugation:sound:1:active.past:1s': { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-03-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-10' },
+      'production:verb:sound:1:active.past:1s': { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-03-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.overdue.count).toBe(2)
@@ -429,8 +439,8 @@ describe('computeInsights — overdue', () => {
 
   test('does not count future-due cards', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-16' },
-      'conjugation:sound:1:active.past:1s': { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-14' },
+      'production:verb:sound:1:active.past:3ms': { ef: 2.5, repetitions: 5, interval: 30, dueDate: '2026-04-16' },
+      'production:verb:sound:1:active.past:1s': { ef: 2.5, repetitions: 3, interval: 10, dueDate: '2026-04-14' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.overdue.count).toBe(1)
@@ -470,7 +480,7 @@ describe('computeInsights — stuck', () => {
 
   test('topDimensions is empty when ef is above threshold', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 1.6, repetitions: 5, interval: 5, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.6, repetitions: 5, interval: 5, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.stuck.topDimensions).toEqual([])
@@ -479,9 +489,9 @@ describe('computeInsights — stuck', () => {
   test('hard cards that have since been recalled three times in a row are no longer stuck', () => {
     const recovered = { ef: 1.3, repetitions: 3, interval: 6, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': recovered,
-      'conjugation:sound:1:passive.past:1s': recovered,
-      'conjugation:sound:1:active.past:3ms': recovered,
+      'production:verb:sound:1:passive.past:3ms': recovered,
+      'production:verb:sound:1:passive.past:1s': recovered,
+      'production:verb:sound:1:active.past:3ms': recovered,
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.stuck.topDimensions).toEqual([])
@@ -489,7 +499,7 @@ describe('computeInsights — stuck', () => {
 
   test('topDimensions has at most 2 entries', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.stuck.topDimensions.length).toBeLessThanOrEqual(2)
@@ -497,7 +507,7 @@ describe('computeInsights — stuck', () => {
 
   test('topDimensions is empty when there is only one stuck card (no discriminative signal)', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.stuck.topDimensions).toEqual([])
@@ -505,10 +515,10 @@ describe('computeInsights — stuck', () => {
 
   test('tense with most stuck cards appears in topDimensions', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:passive.past:2ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:2ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     const dimKeys = result.stuck.topDimensions.map((d) => `${d.type}:${d.value}`)
@@ -517,9 +527,9 @@ describe('computeInsights — stuck', () => {
 
   test('dominant tense appears in topDimensions when passive cards outnumber active', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     const dimKeys = result.stuck.topDimensions.map((d) => `${d.type}:${d.value}`)
@@ -528,9 +538,9 @@ describe('computeInsights — stuck', () => {
 
   test('scores are proportions of total stuck count', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     const passivePast = result.stuck.topDimensions.find((d) => d.type === 'tense' && d.value === 'passive.past')
@@ -541,9 +551,9 @@ describe('computeInsights — stuck', () => {
   test('root type with most stuck cards appears in topDimensions', () => {
     const failing = { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:hollow:1:active.past:3ms': failing,
-      'conjugation:hollow:1:active.past:1s': failing,
-      'conjugation:sound:1:active.past:2ms': failing,
+      'production:verb:hollow:1:active.past:3ms': failing,
+      'production:verb:hollow:1:active.past:1s': failing,
+      'production:verb:sound:1:active.past:2ms': failing,
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.stuck.topDimensions[0]).toEqual({ type: 'rootType', value: 'hollow', score: expect.closeTo(2 / 3) })
@@ -552,9 +562,9 @@ describe('computeInsights — stuck', () => {
   test('focus follows the stuck dimensions when any exist', () => {
     const failing = { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' }
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': failing,
-      'conjugation:sound:1:passive.past:1s': failing,
-      'conjugation:sound:1:active.past:3ms': failing,
+      'production:verb:sound:1:passive.past:3ms': failing,
+      'production:verb:sound:1:passive.past:1s': failing,
+      'production:verb:sound:1:active.past:3ms': failing,
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.focus[0]).toMatchObject({ type: 'tense', value: 'passive.past' })
@@ -591,9 +601,9 @@ describe('computeInsights — stuck', () => {
 
   test('focus recommendation prefers stuck dimensions when they exist', () => {
     const store: SrsStore = {
-      'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-      'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+      'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
     }
     const result = computeInsights(BASE_PROFILE, store, [], ANCHOR_DATE)
     expect(result.recommendation[1]).toMatchObject({

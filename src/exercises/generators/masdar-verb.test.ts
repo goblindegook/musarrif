@@ -57,6 +57,6 @@ describe('masdarVerbExercise', () => {
 
 describe('masdarVerbExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^masdarVerb:[a-z]+:\d+$/)
+    expect(masdarVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
   })
 })

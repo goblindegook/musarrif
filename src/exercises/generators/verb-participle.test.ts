@@ -49,6 +49,8 @@ describe('verbParticipleExercise', () => {
 
 describe('verbParticipleExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbParticiple:[a-z]+:\d+$/)
+    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^production:participle:[a-z]+:\d+$/,
+    )
   })
 })

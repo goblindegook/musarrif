@@ -18,18 +18,43 @@ describe('nextExercise', () => {
 
   test('serves a due card when session does not allow new card introduction', () => {
     const store = {
-      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
     }
     const session = { reviews: 0, lastNewAt: 0 }
 
     const keys = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session).cardKey)
 
-    expect(keys).toContain('conjugation:sound:1:active.past:3ms')
+    expect(keys).toContain('production:verb:sound:1:active.past:3ms')
+  })
+
+  test('serves a due recognition card through a recognition exercise', () => {
+    const store = {
+      'recognition:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+    const session = { reviews: 0, lastNewAt: 0 }
+
+    const keys = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session).cardKey)
+
+    expect(keys).toContain('recognition:verb:sound:1:active.past:3ms')
+  })
+
+  test('serves a due participle card through a participle exercise', () => {
+    const store = {
+      'recognition:participle:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+    }
+    const session = { reviews: 0, lastNewAt: 0 }
+
+    const keys = Array.from(
+      { length: 20 },
+      () => nextExercise({ ...INITIAL_DIMENSION_PROFILE, nominals: 1 }, store, session).cardKey,
+    )
+
+    expect(new Set(keys)).toEqual(new Set(['recognition:participle:sound:1']))
   })
 
   test('does not serve due subjunctive cards before subjunctive tenses are unlocked', () => {
     const store = {
-      'verbTense:sound:1:active.present.subjunctive:3ms': {
+      'recognition:verb:sound:1:active.present.subjunctive:3ms': {
         interval: 1,
         ef: 2.5,
         repetitions: 1,
@@ -43,13 +68,13 @@ describe('nextExercise', () => {
       () => nextExercise({ ...INITIAL_DIMENSION_PROFILE, tenses: 1 }, store, session).cardKey,
     )
 
-    expect(keys).not.toContain('verbTense:sound:1:active.present.subjunctive:3ms')
+    expect(keys).not.toContain('recognition:verb:sound:1:active.present.subjunctive:3ms')
   })
 
   test('uses normalized cardKey when due key has an incompatible pronoun for impersonal passive', () => {
     vi.spyOn(dimensions, 'randomVerb').mockReturnValue(getVerbById('lqy-10')!)
     const store = {
-      'conjugation:defective:10:passive.present.subjunctive:2mp': {
+      'production:verb:defective:10:passive.present.subjunctive:2mp': {
         interval: 1,
         ef: 2.5,
         repetitions: 1,
@@ -64,11 +89,11 @@ describe('nextExercise', () => {
       session,
     )
 
-    expect(exercise.cardKey).toBe('conjugation:defective:10:passive.present.subjunctive:3ms')
+    expect(exercise.cardKey).toBe('production:verb:defective:10:passive.present.subjunctive:3ms')
   })
 
   test('serves a new triple when session allows and due cards exist', () => {
-    const store = { 'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' } }
+    const store = { 'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' } }
     const session = { reviews: 3, lastNewAt: 0 }
 
     const exercises = Array.from({ length: 20 }, () => nextExercise(INITIAL_DIMENSION_PROFILE, store, session))
@@ -79,7 +104,7 @@ describe('nextExercise', () => {
   test('does not introduce new triples when overdue backlog is high', () => {
     const store = Object.fromEntries(
       Array.from({ length: 21 }, (_, index) => [
-        `conjugation:sound:1:active.past:3ms:${index}`,
+        `production:verb:sound:1:active.past:3ms:${index}`,
         { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       ]),
     )
@@ -93,11 +118,11 @@ describe('nextExercise', () => {
 
   test('does not introduce new triples after only three reviews when backlog is moderate', () => {
     const store = {
-      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'recognition:verb:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'recognition:verb:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
     }
 
     const exercises = Array.from({ length: 20 }, () =>
@@ -109,11 +134,11 @@ describe('nextExercise', () => {
 
   test('serves due cards after eight reviews when moderate backlog only has breadth-expanding triples', () => {
     const store = {
-      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:doubled:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'recognition:verb:sound:1:extra-1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'recognition:verb:sound:1:extra-2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
     }
 
     const exercises = Array.from({ length: 20 }, () =>
@@ -125,9 +150,9 @@ describe('nextExercise', () => {
 
   test('does not allow root-type and form cross-product combinations during breadth freeze', () => {
     const store = {
-      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbForm:doubled:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:doubled:2': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
     }
 
     const exercises = Array.from({ length: 20 }, () =>
@@ -140,7 +165,7 @@ describe('nextExercise', () => {
   test('does not introduce a new exercise kind while backlog remains above near-zero', () => {
     const store = Object.fromEntries(
       Array.from({ length: 5 }, (_, index) => [
-        `conjugation:sound:1:active.past:3ms:${index}`,
+        `production:verb:sound:1:active.past:3ms:${index}`,
         { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       ]),
     )
@@ -154,11 +179,9 @@ describe('nextExercise', () => {
 
   test('does not introduce a new form while backlog remains above near-zero', () => {
     const store = {
-      'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbRoot:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbPronoun:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      'verbTense:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+      'recognition:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
     }
 
     const exercises = Array.from({ length: 20 }, () =>
@@ -169,7 +192,7 @@ describe('nextExercise', () => {
   })
 
   test('serves a new triple when no due cards exist regardless of session ratio', () => {
-    const store = { 'verbForm:sound:1': { interval: 7, ef: 2.5, repetitions: 2, dueDate: '2030-01-01' } }
+    const store = { 'production:verb:sound:1': { interval: 7, ef: 2.5, repetitions: 2, dueDate: '2030-01-01' } }
     const session = { reviews: 0, lastNewAt: 0 }
 
     const exercise = nextExercise(INITIAL_DIMENSION_PROFILE, store, session)
@@ -181,7 +204,7 @@ describe('nextExercise', () => {
     const exercises = Array.from({ length: 50 }, () =>
       nextExercise(
         { ...INITIAL_DIMENSION_PROFILE, tenses: 2, pronouns: 2, forms: 1, rootTypes: 1, nominals: 1 },
-        { 'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' } },
+        { 'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' } },
         { reviews: 3, lastNewAt: 0 },
       ),
     )
@@ -205,8 +228,8 @@ describe('nextExercise', () => {
     test('routes to pinned form when random < 0.75 and pinned due cards exist', () => {
       vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
       const store = {
-        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercise = nextExercise(
         { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
@@ -222,8 +245,8 @@ describe('nextExercise', () => {
       // Run 30 draws; if constrained to form 3 only, all would be form 3.
       const spy = vi.spyOn(Math, 'random')
       const store = {
-        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const forms = Array.from({ length: 30 }, () => {
         spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
@@ -248,8 +271,8 @@ describe('nextExercise', () => {
 
     test('appears at roughly 75% across draws', () => {
       const store = {
-        'verbForm:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const session = { reviews: 0, lastNewAt: 0 }
       const forms = Array.from(
@@ -265,7 +288,7 @@ describe('nextExercise', () => {
 
     test('behaves normally when no focus is set', () => {
       const store = {
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercise = nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, { reviews: 0, lastNewAt: 0 })
       expect(parseCardKey(exercise.cardKey).form).toBe(1)
@@ -274,8 +297,8 @@ describe('nextExercise', () => {
     test('routes to pinned tense when random < 0.75 and pinned due cards exist', () => {
       vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
       const store = {
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.present.indicative:3ms': {
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.present.indicative:3ms': {
           interval: 1,
           ef: 2.5,
           repetitions: 1,
@@ -294,8 +317,8 @@ describe('nextExercise', () => {
     test('routes to unconstrained pool for tense when random >= 0.75', () => {
       const spy = vi.spyOn(Math, 'random')
       const store = {
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.present.indicative:3ms': {
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.present.indicative:3ms': {
           interval: 1,
           ef: 2.5,
           repetitions: 1,
@@ -319,8 +342,8 @@ describe('nextExercise', () => {
     test('exercises without a tense slot pass through when tense focus is active', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5) // always apply focus
       const store = {
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.present.indicative:3ms': {
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.present.indicative:3ms': {
           interval: 1,
           ef: 2.5,
           repetitions: 1,
@@ -335,7 +358,7 @@ describe('nextExercise', () => {
           { tense: 'active.past' },
         ),
       )
-      expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
+      expect(exercises.some((e) => e.kind === 'rootFormVerb')).toBe(true)
     })
 
     test('freezes overdue reviews to cards with the focused tense when backlog is present', () => {
@@ -344,14 +367,14 @@ describe('nextExercise', () => {
       randomSpy.mockReturnValueOnce(0.999)
 
       const store = {
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.present.indicative:3ms': {
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.present.indicative:3ms': {
           interval: 1,
           ef: 2.5,
           repetitions: 1,
           dueDate: '2026-03-23',
         },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
 
       const exercise = nextExercise(
@@ -361,7 +384,7 @@ describe('nextExercise', () => {
         { tense: 'active.past' },
       )
 
-      expect(exercise.cardKey).toBe('conjugation:sound:1:active.past:3ms')
+      expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:3ms')
     })
 
     test('freezes overdue reviews to cards with the focused pronoun when backlog is present', () => {
@@ -370,9 +393,9 @@ describe('nextExercise', () => {
       randomSpy.mockReturnValueOnce(0.999)
 
       const store = {
-        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
 
       const exercise = nextExercise(
@@ -382,14 +405,14 @@ describe('nextExercise', () => {
         { pronoun: '1s' },
       )
 
-      expect(exercise.cardKey).toBe('conjugation:sound:1:active.past:1s')
+      expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:1s')
     })
 
     test('routes to pinned root type when random < 0.75 and pinned due cards exist', () => {
       vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
       const store = {
-        'verbForm:hollow:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:hollow:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercise = nextExercise(
         { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
@@ -401,7 +424,9 @@ describe('nextExercise', () => {
     })
 
     test('root type focus filters uncovered triples', () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5)
+      const random = Math.random
+      // Every draw stays below the 0.75 focus threshold but still varies, so distractor sampling terminates.
+      vi.spyOn(Math, 'random').mockImplementation(() => random() * 0.75)
       const exercises = Array.from({ length: 30 }, () =>
         nextExercise(
           { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
@@ -416,8 +441,8 @@ describe('nextExercise', () => {
     test('routes to pinned pronoun when random < 0.75 and pinned due cards exist', () => {
       vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
       const store = {
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercise = nextExercise(
         { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1 },
@@ -431,8 +456,8 @@ describe('nextExercise', () => {
     test('exercises without a pronoun slot pass through when pronoun focus is active', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5)
       const store = {
-        'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercises = Array.from({ length: 20 }, () =>
         nextExercise(
@@ -442,15 +467,15 @@ describe('nextExercise', () => {
           { pronoun: '1s' },
         ),
       )
-      expect(exercises.some((e) => e.kind === 'verbForm')).toBe(true)
+      expect(exercises.some((e) => e.kind === 'rootFormVerb')).toBe(true)
     })
 
     test('nominal focus filters due cards to masdar kinds', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5)
       const masdarKinds = ['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar']
       const store = {
-        'participleForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'masdarForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'recognition:participle:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
+        'recognition:masdar:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
       const exercises = Array.from({ length: 20 }, () =>
         nextExercise(
@@ -467,30 +492,30 @@ describe('nextExercise', () => {
 
 describe('isCoveredTriple', () => {
   test('returns false for a triple absent from the store', () => {
-    expect(isCoveredTriple('conjugation:sound:1:active.past:3ms', {})).toBe(false)
+    expect(isCoveredTriple('production:verb:sound:1:active.past:3ms', {})).toBe(false)
   })
 
   test('returns true when an exact triple key with no tense/pronoun is in the store', () => {
-    const store = { 'masdarForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' } }
-    expect(isCoveredTriple('masdarForm:sound:1', store)).toBe(true)
+    const store = { 'recognition:masdar:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' } }
+    expect(isCoveredTriple('recognition:masdar:sound:1', store)).toBe(true)
   })
 
   test('returns true when a key with tense and pronoun suffix for the same triple is in the store', () => {
     const store = {
-      'conjugation:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' },
+      'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' },
     }
-    expect(isCoveredTriple('conjugation:sound:1:active.past:3ms', store)).toBe(true)
+    expect(isCoveredTriple('production:verb:sound:1:active.past:3ms', store)).toBe(true)
   })
 
   test('returns false when a different kind has an entry but not the queried triple', () => {
-    const store = { 'verbForm:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' } }
-    expect(isCoveredTriple('conjugation:sound:1:active.past:3ms', store)).toBe(false)
+    const store = { 'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' } }
+    expect(isCoveredTriple('production:verb:sound:1:active.past:3ms', store)).toBe(false)
   })
 
   test('does not confuse form 1 with form 10', () => {
     const store = {
-      'conjugation:sound:10:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' },
+      'production:verb:sound:10:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2030-01-01' },
     }
-    expect(isCoveredTriple('conjugation:sound:1:active.past:3ms', store)).toBe(false)
+    expect(isCoveredTriple('production:verb:sound:1:active.past:3ms', store)).toBe(false)
   })
 })

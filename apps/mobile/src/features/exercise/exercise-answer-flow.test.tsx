@@ -17,7 +17,7 @@ const exercise: Exercise<'conjugation'> = {
   options: ['يَكْتُبُ', 'كَتَبَ', 'يَكْتَبُ', 'كُتِبَ'],
   answer: 0,
   answerText: 'يَكْتُبُ',
-  cardKey: 'conjugation:sound:1:active.present.indicative:3ms',
+  cardKey: 'production:verb:sound:1:active.present.indicative:3ms',
   dimensions: ['tenses', 'pronouns'],
   inputModes: ['multiple-choice', 'keyboard', 'speech'],
 }

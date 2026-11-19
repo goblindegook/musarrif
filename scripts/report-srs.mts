@@ -192,28 +192,11 @@ function barRow(label: string, count: number, total: number, bg: string): string
     </div>`
 }
 
-const kindLabels: Record<string, string> = {
-  conjugation: 'conjugate',
-  verbRoot: 'identify root',
-  verbForm: 'identify form',
-  verbTense: 'identify tense',
-  verbPronoun: 'identify pronoun',
-  rootFormVerb: 'root→form→verb',
-  participleRoot: 'participle→root',
-  participleVerb: 'participle→verb',
-  participleForm: 'participle→form',
-  verbParticiple: 'verb→participle',
-  masdarRoot: 'masdar→root',
-  masdarVerb: 'masdar→verb',
-  masdarForm: 'masdar→form',
-  verbMasdar: 'verb→masdar',
-}
-
 function describeCard(card: SrsCard): string {
-  const { kind, rootType, form, tense, pronoun } = card
+  const { type, category, rootType, form, tense, pronoun } = card
   const tenseStr = tense ? tense.replace(/\./g, ' ') : ''
   const pronounStr = pronoun ?? ''
-  return [kindLabels[kind] ?? kind, rootType, toRoman(form), tenseStr, pronounStr].filter(Boolean).join(' · ')
+  return [`${type} ${category}`, rootType, toRoman(form), tenseStr, pronounStr].filter(Boolean).join(' · ')
 }
 
 // --- Insights text ---

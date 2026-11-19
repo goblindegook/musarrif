@@ -52,7 +52,9 @@ describe('rootExercise', () => {
 
 describe('verbRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbRoot:[a-z]+:\d+:[\w.]+:\w+$/)
+    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+    )
   })
 
   test('includes explanation layers for the selected tense and pronoun', () => {

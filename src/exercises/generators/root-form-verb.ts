@@ -4,9 +4,8 @@ import { spell } from '../../paradigms/tokens.ts'
 import { formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
-export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, constraints) => {
+export const rootFormVerbExercise = defineExercise('production', 'rootFormVerb', (profile, constraints) => {
   const verb = randomVerb(profile, constraints)
   const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
 
@@ -33,7 +32,7 @@ export const rootFormVerbExercise = defineExercise('rootFormVerb', (profile, con
     options: options.map(({ label }) => exerciseDiacritics(label)),
     answer,
     answerText: String(verb.lemma),
-    cardKey: buildCardKey('rootFormVerb', getSrsRootType(verb.root), verb.form),
+    card: { root: verb.root, form: verb.form },
     explanation,
     inputModes: ['multiple-choice', 'keyboard', 'speech'],
   }

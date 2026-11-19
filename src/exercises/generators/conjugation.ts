@@ -17,7 +17,6 @@ import {
   tensePool,
 } from '../dimensions'
 import { defineExercise } from '../exercises'
-import { buildCardKey, getSrsRootType } from '../srs'
 
 function distractorPronouns(tense: VerbTense, profile: DimensionProfile): readonly PronounId[] {
   const pool = pronounPool(profile.pronouns)
@@ -101,26 +100,26 @@ function hardCandidates(
 }
 
 export const conjugationExercise = defineExercise(
+  'production',
   'conjugation',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
     const word = exerciseDiacritics(verb.lemma)
-    const targetTense = constraints?.tense ?? randomTense(verb, profile.tenses)
-    const targetPronoun = normalizeExercisePronoun(
+    const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
+    const pronoun = normalizeExercisePronoun(
       verb,
-      targetTense,
-      constraints?.pronoun ?? randomPronoun(verb, targetTense, profile.pronouns),
+      tense,
+      constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
     )
-    const answerText = String(conjugate(verb, targetTense)[targetPronoun])
+    const answerText = String(conjugate(verb, tense)[pronoun])
     const answer = exerciseDiacritics(answerText)
-    const explanation = resolveVerbExplanationLayers(verb, targetTense, targetPronoun)
 
     const raw =
       profile.pronouns >= 2 && profile.tenses >= 2
-        ? hardCandidates(verb, targetTense, targetPronoun, profile)
+        ? hardCandidates(verb, tense, pronoun, profile)
         : profile.pronouns < 2 && profile.tenses < 2
-          ? easyCandidates(targetTense, targetPronoun, verb, profile)
-          : mediumCandidates(verb, targetTense, targetPronoun, profile)
+          ? easyCandidates(tense, pronoun, verb, profile)
+          : mediumCandidates(verb, tense, pronoun, profile)
 
     const candidates = new Set(raw.map((r) => exerciseDiacritics(r)))
     candidates.delete('')
@@ -134,18 +133,18 @@ export const conjugationExercise = defineExercise(
 
     return {
       dimensions: ['tenses', 'pronouns', 'forms', 'rootTypes'],
-      tense: targetTense,
-      pronoun: targetPronoun,
+      tense,
+      pronoun,
       withVoice: profile.tenses >= 4,
       word,
       spokenWord: verb.lemma,
       options,
       answer: options.indexOf(answer),
       answerText,
-      cardKey: buildCardKey('conjugation', getSrsRootType(verb.root), verb.form, targetTense, targetPronoun),
-      explanation,
+      card: { root: verb.root, form: verb.form, tense, pronoun },
+      explanation: resolveVerbExplanationLayers(verb, tense, pronoun),
       inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
-  { weight: 5 },
+  { conjugated: true, weight: 5 },
 )

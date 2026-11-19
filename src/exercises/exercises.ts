@@ -4,6 +4,7 @@ import type { VerbTense } from '../paradigms/tense'
 import type { TriliteralForm } from '../paradigms/verbs'
 import type { DimensionKey, DimensionProfile } from './dimensions'
 import type { ExerciseKind } from './exercise-kinds'
+import { buildCardKey, type CardFamily, type CardType, getSrsRootType, type MorphologicalCategory } from './srs'
 import type { CardConstraints } from './srs-types'
 
 export type { ExerciseKind } from './exercise-kinds'
@@ -49,27 +50,66 @@ type ExerciseFields<T extends ExerciseKind> = ExerciseBase & ExerciseFieldsByKin
 // while a generic T still reduces to `{ kind: T } & ExerciseFields<T>` and defineExercise needs no cast:
 export type Exercise<T extends ExerciseKind = ExerciseKind> = { [K in T]: { kind: K } & ExerciseFields<K> }[T]
 
-export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> {
+export interface ExerciseGenerator<T extends ExerciseKind = ExerciseKind> extends CardFamily {
   kind: T
   generate: (profile: DimensionProfile, constraints?: CardConstraints) => Exercise<T>
   minNominals?: 1 | 2
   weight?: number
 }
 
-interface ExerciseConfig {
+interface ExerciseConfig extends Pick<CardFamily, 'conjugated'> {
   minNominals?: 1 | 2
   weight?: number
 }
 
+/** What an exercise's card is keyed by: the root and form, plus the tense and pronoun of a conjugated card. */
+type ExerciseCard =
+  | { root: string; form: TriliteralForm }
+  | { root: string; form: TriliteralForm; tense: VerbTense; pronoun: PronounId }
+
+type ExerciseBuild<T extends ExerciseKind> = Omit<ExerciseFields<T>, 'cardKey'> & { card: ExerciseCard }
+
+const CATEGORIES: Readonly<Record<ExerciseKind, MorphologicalCategory>> = {
+  conjugation: 'verb',
+  rootFormVerb: 'verb',
+  verbForm: 'verb',
+  verbPronoun: 'verb',
+  verbRoot: 'verb',
+  verbTense: 'verb',
+  masdarForm: 'masdar',
+  masdarRoot: 'masdar',
+  masdarVerb: 'masdar',
+  verbMasdar: 'masdar',
+  participleForm: 'participle',
+  participleRoot: 'participle',
+  participleVerb: 'participle',
+  verbParticiple: 'participle',
+}
+
 export function defineExercise<T extends ExerciseKind>(
+  exerciseType: CardType,
   kind: T,
-  build: (profile: DimensionProfile, constraints?: CardConstraints) => ExerciseFields<T>,
+  build: (profile: DimensionProfile, constraints?: CardConstraints) => ExerciseBuild<T>,
   config: ExerciseConfig = {},
 ): ExerciseGenerator<T> {
+  const cardKey = (card: ExerciseCard): string => {
+    const rootType = getSrsRootType(card.root)
+    return 'tense' in card
+      ? buildCardKey(exerciseType, 'verb', rootType, card.form, card.tense, card.pronoun)
+      : buildCardKey(exerciseType, CATEGORIES[kind], rootType, card.form)
+  }
+
   return {
     kind,
+    cardType: exerciseType,
+    category: CATEGORIES[kind],
+    conjugated: config.conjugated,
     minNominals: config.minNominals,
     weight: config.weight,
-    generate: (profile, constraints) => ({ kind, ...build(profile, constraints) }),
+    generate: (profile, constraints) => {
+      const { card, ...fields } = build(profile, constraints)
+      // TypeScript cannot follow a key swap on a generic T; the fields pass through untouched.
+      return { kind, ...fields, cardKey: cardKey(card) } as unknown as Exercise<T>
+    },
   }
 }

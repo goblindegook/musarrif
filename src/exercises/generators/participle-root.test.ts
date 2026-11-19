@@ -66,6 +66,8 @@ describe('participleRootExercise', () => {
 
 describe('participleRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleRoot:[a-z]+:\d+$/)
+    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:participle:[a-z]+:\d+$/,
+    )
   })
 })

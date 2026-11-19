@@ -18,7 +18,7 @@ const Settings = v.object({
   themePreference: v.optional(v.fallback(v.picklist(['light', 'dark', 'system']), 'system'), 'system'),
 })
 
-const USER_DATA_VERSION = 1
+const USER_DATA_VERSION = 2
 
 const ImportPayload = v.pipe(
   v.object({

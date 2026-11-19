@@ -4,9 +4,9 @@ import type { DisplayVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomGeneratedVerb, randomNominalVerb } from '../dimensions.ts'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const masdarVerbExercise = defineExercise(
+  'recognition',
   'masdarVerb',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -24,14 +24,12 @@ export const masdarVerbExercise = defineExercise(
       options,
       answer,
       answerText: String(verb.lemma),
-      cardKey: buildCardKey('masdarVerb', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation,
       inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
-  {
-    minNominals: 2,
-  },
+  { minNominals: 2 },
 )
 
 function buildOptions(verb: DisplayVerb): readonly string[] {

@@ -84,7 +84,9 @@ describe('verbTenseExercise with constraints', () => {
   })
 
   test('attaches cardKey to returned exercise', () => {
-    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbTense:[a-z]+:\d+:[\w.]+:\w+$/)
+    expect(verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+    )
   })
 
   test('uses a valid imperative pronoun when constrained to imperative at pronoun level 0', () => {

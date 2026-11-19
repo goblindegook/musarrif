@@ -50,6 +50,8 @@ describe('participleVerbExercise', () => {
 
 describe('participleVerbExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleVerb:[a-z]+:\d+$/)
+    expect(participleVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:participle:[a-z]+:\d+$/,
+    )
   })
 })

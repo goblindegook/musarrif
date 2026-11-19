@@ -5,9 +5,9 @@ import { getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomGeneratedVerb, randomNominalVerb } from '../dimensions.ts'
 import { randomizeOptions, singleLetterWordDistractor, weakAlternativeRootDistractor } from '../distractors.ts'
 import { defineExercise, type Participle } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbParticipleExercise = defineExercise(
+  'production',
   'verbParticiple',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -25,7 +25,7 @@ export const verbParticipleExercise = defineExercise(
       options,
       answer: options.indexOf(answer),
       answerText: kind === 'active' ? active : passive,
-      cardKey: buildCardKey('verbParticiple', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation: resolveNominalExplanationLayers(
         verb,
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',

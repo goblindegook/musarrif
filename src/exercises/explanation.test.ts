@@ -31,7 +31,7 @@ describe('filterMasteredLayers', () => {
 
   test('returns all fields unchanged when no mastery exceeds threshold', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 20, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 20, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result).toMatchObject({
@@ -45,7 +45,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides rootType when rootType mastery reaches threshold', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result.rootType).toBeUndefined()
@@ -53,7 +53,7 @@ describe('filterMasteredLayers', () => {
 
   test('a mastered doubled card hides the root note of a sound doubled root, which files under doubled', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:doubled:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:doubled:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       { ...FULL_LAYERS, paradigmRoots: ['م', 'د', 'د'], arabic: 'مَدَّ', rootType: ['sound', 'doubled'] },
     )
     expect(result.rootType).toBeUndefined()
@@ -61,7 +61,7 @@ describe('filterMasteredLayers', () => {
 
   test('excludes cards of a different root type from rootType mastery', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:hollow:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:hollow:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result.rootType).toEqual(['sound'])
@@ -71,8 +71,8 @@ describe('filterMasteredLayers', () => {
     // Two different pronoun combo keys → two dedup slots → median([20, 30]) = 25 ≥ 21 → hidden
     const result = filterMasteredLayers(
       {
-        'conjugation:sound:1:active.past:3ms': { interval: 20, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
-        'conjugation:sound:1:active.past:3fs': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+        'production:verb:sound:1:active.past:3ms': { interval: 20, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+        'production:verb:sound:1:active.past:3fs': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
       },
       FULL_LAYERS,
     )
@@ -82,8 +82,8 @@ describe('filterMasteredLayers', () => {
   test('keeps rootType hidden when a newly unlocked form adds a low-interval card', () => {
     const result = filterMasteredLayers(
       {
-        'conjugation:sound:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
-        'conjugation:sound:2:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2099-01-01' },
+        'production:verb:sound:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2099-01-01' },
       },
       FULL_LAYERS,
     )
@@ -92,7 +92,7 @@ describe('filterMasteredLayers', () => {
 
   test('shows rootType again when the strongest card is due', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 30, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
       21,
       '2099-01-01',
@@ -101,11 +101,11 @@ describe('filterMasteredLayers', () => {
   })
 
   test('deduplicates by combination key keeping max interval per combination', () => {
-    // Two exercise kinds for same combo key → dedup keeps max (40) → median([40]) = 40 ≥ 21 → tense hidden
+    // Production and recognition cards for the same combo key → dedup keeps max (40) → median([40]) = 40 ≥ 21 → tense hidden
     const result = filterMasteredLayers(
       {
-        'conjugation:sound:1:active.past:3ms': { interval: 10, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
-        'verbTense:sound:1:active.past:3ms': { interval: 40, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+        'production:verb:sound:1:active.past:3ms': { interval: 10, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
+        'recognition:verb:sound:1:active.past:3ms': { interval: 40, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' },
       },
       FULL_LAYERS,
     )
@@ -114,7 +114,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides form and vowels when form mastery reaches threshold', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result).toMatchObject({ form: undefined, vowels: undefined })
@@ -122,7 +122,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides tense when tense mastery reaches threshold', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result.tense).toBeUndefined()
@@ -130,7 +130,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides pronoun when pronoun mastery reaches threshold', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       {
         category: 'verb',
         paradigmRoots: ['ك', 'ت', 'ب'],
@@ -149,9 +149,9 @@ describe('filterMasteredLayers', () => {
   })
 
   test.each([
-    ['conjugation:hollow:8:active.past:3ms', 'assimilation-complete'],
-    ['conjugation:sound:1:active.past:3ms', 'assimilation-complete'],
-    ['conjugation:sound:8:active.past:3ms', undefined],
+    ['production:verb:hollow:8:active.past:3ms', 'assimilation-complete'],
+    ['production:verb:sound:1:active.past:3ms', 'assimilation-complete'],
+    ['production:verb:sound:8:active.past:3ms', undefined],
   ])('hides formRoot only when both form and rootType exceed threshold', (card, formRoot) => {
     expect(
       filterMasteredLayers(
@@ -170,9 +170,9 @@ describe('filterMasteredLayers', () => {
   })
 
   test.each([
-    ['conjugation:sound:1:active.past:3ms', 'middle-lengthens-aa'],
-    ['conjugation:hollow:1:active.present.indicative:3ms', 'middle-lengthens-aa'],
-    ['conjugation:hollow:1:active.past:3ms', undefined],
+    ['production:verb:sound:1:active.past:3ms', 'middle-lengthens-aa'],
+    ['production:verb:hollow:1:active.present.indicative:3ms', 'middle-lengthens-aa'],
+    ['production:verb:hollow:1:active.past:3ms', undefined],
   ])('hides tenseRoot only when both tense and rootType exceed threshold', (card, tenseRoot) => {
     expect(
       filterMasteredLayers(
@@ -193,7 +193,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using MASDAR_KINDS', () => {
     const result = filterMasteredLayers(
-      { 'masdarForm:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'recognition:masdar:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       {
         category: 'nominal',
         paradigmRoots: ['ك', 'ت', 'ب'],
@@ -208,7 +208,7 @@ describe('filterMasteredLayers', () => {
 
   test('hides nominal when nominal mastery reaches threshold using PARTICIPLE_KINDS', () => {
     const result = filterMasteredLayers(
-      { 'participleForm:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'recognition:participle:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       {
         category: 'nominal',
         paradigmRoots: ['ك', 'ت', 'ب'],
@@ -222,9 +222,9 @@ describe('filterMasteredLayers', () => {
   })
 
   test.each([
-    ['masdarForm:doubled:1', undefined],
-    ['masdarForm:sound:1', 'geminate-contracts'],
-    ['conjugation:doubled:1:active.past:3ms', 'geminate-contracts'],
+    ['recognition:masdar:doubled:1', undefined],
+    ['recognition:masdar:sound:1', 'geminate-contracts'],
+    ['production:verb:doubled:1:active.past:3ms', 'geminate-contracts'],
   ])('hides nominalRoot only when both nominal and rootType exceed threshold', (card, nominalRoot) => {
     expect(
       filterMasteredLayers(
@@ -245,7 +245,7 @@ describe('filterMasteredLayers', () => {
 
   test('renders nothing once every nominal layer is mastered', () => {
     const result = filterMasteredLayers(
-      { 'masdarForm:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'recognition:masdar:sound:1': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       {
         category: 'nominal',
         paradigmRoots: ['ك', 'ت', 'ب'],
@@ -262,7 +262,7 @@ describe('filterMasteredLayers', () => {
 
   test('maps hollow-waw RootAnalysisType to hollow SrsRootType', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:hollow:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:hollow:1:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       {
         category: 'verb',
         paradigmRoots: ['ق', 'و', 'ل'],
@@ -278,7 +278,7 @@ describe('filterMasteredLayers', () => {
 
   test('preserves rootLetters and arabic unconditionally', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 100, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 100, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
     )
     expect(result).toMatchObject({
@@ -289,7 +289,7 @@ describe('filterMasteredLayers', () => {
 
   test('uses custom threshold when provided', () => {
     const result = filterMasteredLayers(
-      { 'conjugation:sound:1:active.past:3ms': { interval: 7, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
+      { 'production:verb:sound:1:active.past:3ms': { interval: 7, ef: 2.5, repetitions: 3, dueDate: '2099-01-01' } },
       FULL_LAYERS,
       7,
     )

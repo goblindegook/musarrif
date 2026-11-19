@@ -307,9 +307,9 @@ describe('ExerciseStats', () => {
       renderStats(stats, {
         dimensionProfile: { tenses: 4, pronouns: 3, forms: 9, rootTypes: 5, nominals: 2 },
         srsStore: {
-          'conjugation:sound:1:passive.past:3ms': failing,
-          'conjugation:sound:1:passive.past:1s': failing,
-          'conjugation:sound:1:active.past:3ms': failing,
+          'production:verb:sound:1:passive.past:3ms': failing,
+          'production:verb:sound:1:passive.past:1s': failing,
+          'production:verb:sound:1:active.past:3ms': failing,
         },
       })
 
@@ -435,9 +435,9 @@ describe('ExerciseStats', () => {
 
     test('shows Difficult section when stuck cards exist', () => {
       const store: SrsStore = {
-        'conjugation:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-        'conjugation:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
-        'conjugation:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+        'production:verb:sound:1:passive.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+        'production:verb:sound:1:passive.past:1s': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
+        'production:verb:sound:1:active.past:3ms': { ef: 1.3, repetitions: 0, interval: 1, dueDate: '2099-01-01' },
       }
       localStorage.setItem('conjugator:srs', JSON.stringify(store))
       renderStats(SAMPLE_STATS)
@@ -451,9 +451,9 @@ describe('ExerciseStats', () => {
       localStorage.setItem(
         'conjugator:srs',
         JSON.stringify({
-          'conjugation:sound:1:active.past:3ms': fresh,
-          'verbForm:sound:1:active.past:3ms': fresh,
-          'verbRoot:sound:1:active.past:3ms': fresh,
+          'production:verb:sound:1:active.past:3ms': fresh,
+          'recognition:verb:sound:1:active.past:3ms': fresh,
+          'production:verb:sound:1:active.past:1s': fresh,
         }),
       )
       renderStats(SAMPLE_STATS)

@@ -93,6 +93,6 @@ describe('masdarFormExercise', () => {
 
 describe('masdarFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^masdarForm:[a-z]+:\d+$/)
+    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
   })
 })

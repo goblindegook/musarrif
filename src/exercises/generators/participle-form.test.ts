@@ -88,6 +88,8 @@ describe('participleFormExercise', () => {
 
 describe('participleFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^participleForm:[a-z]+:\d+$/)
+    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:participle:[a-z]+:\d+$/,
+    )
   })
 })

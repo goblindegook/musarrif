@@ -6,11 +6,11 @@ describe('readSrsStore', () => {
 
     expect(
       readSrsStore({
-        'srs:conjugation.sound.1': card,
+        'srs:production:verb:sound:1': card,
         'srs:broken': { interval: 0 },
         'favorite:ktb-1': true,
       }),
-    ).toEqual({ 'conjugation.sound.1': card })
+    ).toEqual({ 'production:verb:sound:1': card })
   })
 })
 

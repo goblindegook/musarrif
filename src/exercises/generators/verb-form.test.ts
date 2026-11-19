@@ -102,7 +102,9 @@ describe('verbFormExercise with constraints', () => {
   })
 
   test('attaches cardKey to returned exercise', () => {
-    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^verbForm:[a-z]+:\d+:[\w.]+:\w+$/)
+    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+    )
   })
 
   test('includes full explanation for all options', () => {

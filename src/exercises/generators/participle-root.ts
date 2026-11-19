@@ -11,9 +11,9 @@ import {
   wordSliceDistractor,
 } from '../distractors.ts'
 import { defineExercise, type Participle } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const participleRootExercise = defineExercise(
+  'recognition',
   'participleRoot',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -30,7 +30,7 @@ export const participleRootExercise = defineExercise(
       spokenWord: participle,
       options: options.map((option) => Array.from(option).join(' ')),
       answer: options.indexOf(verb.root),
-      cardKey: buildCardKey('participleRoot', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation: resolveNominalExplanationLayers(
         verb,
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
@@ -39,9 +39,7 @@ export const participleRootExercise = defineExercise(
       inputModes: ['multiple-choice'],
     }
   },
-  {
-    minNominals: 1,
-  },
+  { minNominals: 1 },
 )
 
 function buildOptions(verb: Verb, word: string): readonly string[] {

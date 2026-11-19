@@ -158,7 +158,7 @@ function combinationGroupKey(card: SrsCardIdentity): string {
   if (card.tense != null && card.pronoun != null) return `${card.rootType}:${card.form}:${card.tense}:${card.pronoun}`
   if (isParticipleCard(card)) return `${card.rootType}:${card.form}:participles`
   if (isMasdarCard(card)) return `${card.rootType}:${card.form}:masdar`
-  return `${card.rootType}:${card.form}:${card.kind}`
+  return `${card.rootType}:${card.form}:${card.type}`
 }
 
 export function insightItemIds(candidate: InsightDimension, profile: DimensionProfile): readonly MasteryItemId[] {

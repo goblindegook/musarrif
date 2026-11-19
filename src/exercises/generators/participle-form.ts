@@ -4,9 +4,9 @@ import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms
 import { formatFormLabel, formsForRoot, getAvailableParadigms, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise, type Participle } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const participleFormExercise = defineExercise(
+  'recognition',
   'participleForm',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -36,7 +36,7 @@ export const participleFormExercise = defineExercise(
       spokenWord: participle,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer: options.indexOf(verb.form),
-      cardKey: buildCardKey('participleForm', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation: resolveNominalExplanationLayers(
         verb,
         kind === 'active' ? 'activeParticiple' : 'passiveParticiple',
@@ -45,7 +45,5 @@ export const participleFormExercise = defineExercise(
       inputModes: ['multiple-choice'],
     }
   },
-  {
-    minNominals: 1,
-  },
+  { minNominals: 1 },
 )

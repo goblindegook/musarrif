@@ -67,6 +67,6 @@ describe('masdarRootExercise', () => {
 
 describe('masdarRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^masdarRoot:[a-z]+:\d+$/)
+    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
   })
 })

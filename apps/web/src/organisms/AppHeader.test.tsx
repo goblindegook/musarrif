@@ -124,7 +124,7 @@ it('exports user data in JSON format', async () => {
 
   const parsed = JSON.parse(await exportedBlob!.text())
   expect(parsed).toEqual({
-    version: 1,
+    version: 2,
     settings: { language: 'pt', diacriticsPreference: 'none', themePreference: 'system' },
     favouriteVerbs: ['ktb-1', 'sfr-1'],
     trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1, passed: 0 }],
@@ -167,7 +167,7 @@ it('exports user data through the file picker when available', async () => {
   expect(close).toHaveBeenCalledTimes(1)
 
   expect(JSON.parse(await written!.text())).toMatchObject({
-    version: 1,
+    version: 2,
     favouriteVerbs: ['ktb-1'],
   })
 })
@@ -225,7 +225,7 @@ it('imports user data from JSON and updates local storage', async () => {
   const file = new File(
     [
       JSON.stringify({
-        version: 1,
+        version: 2,
         settings: {
           language: 'it',
           diacriticsPreference: 'all',

@@ -37,7 +37,7 @@ describe('rootFormVerbExercise', () => {
 
 describe('rootFormVerbExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^rootFormVerb:[a-z]+:\d+$/)
+    expect(rootFormVerbExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^production:verb:[a-z]+:\d+$/)
   })
 
   test('includes full explanation for all options', () => {

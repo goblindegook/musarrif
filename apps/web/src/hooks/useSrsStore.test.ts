@@ -12,8 +12,17 @@ afterEach(() => {
 })
 
 describe('useSRSStore', () => {
+  test('reads cards stored by a v1 app under their v2 keys', () => {
+    const state = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' }
+    localStorage.setItem('conjugator:srs', JSON.stringify({ 'conjugation:sound:1:active.past:3ms': state }))
+
+    const { result } = renderHook(() => useSrsStore())
+
+    expect(result.current[0]).toEqual({ 'production:verb:sound:1:active.past:3ms': state })
+  })
+
   test('keeps oversized persisted data untouched', async () => {
-    const cardKey = 'conjugation:sound:1:active.past:3ms'
+    const cardKey = 'production:verb:sound:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
@@ -38,7 +47,7 @@ describe('useSRSStore', () => {
   })
 
   test('records answer updates through the hook API', async () => {
-    const cardKey = 'conjugation:sound:1:active.past:3ms'
+    const cardKey = 'production:verb:sound:1:active.past:3ms'
 
     const { result } = renderHook(() => useSrsStore())
     act(() => {

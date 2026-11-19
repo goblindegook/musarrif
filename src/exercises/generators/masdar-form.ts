@@ -4,9 +4,9 @@ import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { formatFormLabel, formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, random, randomNominalVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const masdarFormExercise = defineExercise(
+  'recognition',
   'masdarForm',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -30,12 +30,10 @@ export const masdarFormExercise = defineExercise(
       spokenWord: masdar,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
-      cardKey: buildCardKey('masdarForm', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation,
       inputModes: ['multiple-choice'],
     }
   },
-  {
-    minNominals: 2,
-  },
+  { minNominals: 2 },
 )

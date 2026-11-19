@@ -10,33 +10,37 @@ import {
   wordSliceDistractor,
 } from '../distractors.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
-export const verbRootExercise = defineExercise('verbRoot', (profile, constraints) => {
-  const verb = randomVerb(profile, constraints)
-  const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
-  const pronoun = normalizeExercisePronoun(
-    verb,
-    tense,
-    constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
-  )
-  const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
-  const explanation = resolveVerbExplanationLayers(verb, tense, pronoun)
+export const verbRootExercise = defineExercise(
+  'recognition',
+  'verbRoot',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
+    const pronoun = normalizeExercisePronoun(
+      verb,
+      tense,
+      constraints?.pronoun ?? randomPronoun(verb, tense, profile.pronouns),
+    )
+    const conjugatedVerb = String(conjugate(verb, tense)[pronoun])
+    const explanation = resolveVerbExplanationLayers(verb, tense, pronoun)
 
-  const word = exerciseDiacritics(conjugatedVerb)
-  const options = buildOptions(verb.root, word)
+    const word = exerciseDiacritics(conjugatedVerb)
+    const options = buildOptions(verb.root, word)
 
-  return {
-    dimensions: ['forms', 'rootTypes'],
-    word,
-    spokenWord: conjugatedVerb,
-    options: options.map((option) => Array.from(option).join(' ')),
-    answer: options.indexOf(verb.root),
-    cardKey: buildCardKey('verbRoot', getSrsRootType(verb.root), verb.form, tense, pronoun),
-    explanation,
-    inputModes: ['multiple-choice'],
-  }
-})
+    return {
+      dimensions: ['forms', 'rootTypes'],
+      word,
+      spokenWord: conjugatedVerb,
+      options: options.map((option) => Array.from(option).join(' ')),
+      answer: options.indexOf(verb.root),
+      card: { root: verb.root, form: verb.form, tense, pronoun },
+      explanation,
+      inputModes: ['multiple-choice'],
+    }
+  },
+  { conjugated: true },
+)
 
 function buildOptions(answer: string, word: string): readonly string[] {
   const generators = [

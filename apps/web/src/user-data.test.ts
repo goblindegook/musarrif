@@ -51,6 +51,18 @@ describe('registerUserDataFileLaunchHandler', () => {
   })
 })
 
+describe('reading stored SRS data', () => {
+  test('collapses recognition cards stored by a v1 app', () => {
+    const state = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' }
+    localStorage.setItem('conjugator:srs', JSON.stringify({ 'verbTense:sound:1:active.past:3ms': state }))
+
+    expect(getUserData()).toMatchObject({ srs: { 'recognition:verb:sound:1:active.past:3ms': state } })
+    expect(JSON.parse(localStorage.getItem('conjugator:srs')!)).toEqual({
+      'recognition:verb:sound:1:active.past:3ms': state,
+    })
+  })
+})
+
 describe('getUserData', () => {
   test('returns INITIAL_DIMENSION_PROFILE when no dimensions stored', () => {
     const data = getUserData()
@@ -121,7 +133,15 @@ describe('importUserData', () => {
   })
 
   test('rejects a file written by a newer version of the app', () => {
-    expect(importUserData(JSON.stringify({ version: 2, favouriteVerbs: ['ktb-1'] }))).toBe(false)
+    expect(importUserData(JSON.stringify({ version: 3, favouriteVerbs: ['ktb-1'] }))).toBe(false)
+  })
+
+  test('collapses recognition cards from a v1 file', () => {
+    const state = { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' }
+    importUserData(JSON.stringify({ version: 1, srs: { 'verbRoot:sound:1:active.past:3ms': state } }))
+    expect(JSON.parse(localStorage.getItem('conjugator:srs')!)).toEqual({
+      'recognition:verb:sound:1:active.past:3ms': state,
+    })
   })
 
   test('imports valid dimension profile', () => {
@@ -214,7 +234,7 @@ describe('importUserData', () => {
     const payload = JSON.stringify({
       settings: { language: 'en', diacriticsPreference: 'all' },
       srs: {
-        'conjugation:sound:1:active.past:3ms': {
+        'production:verb:sound:1:active.past:3ms': {
           interval: 145313,
           ef: 2.5,
           repetitions: 13,
@@ -225,7 +245,7 @@ describe('importUserData', () => {
 
     expect(importUserData(payload)).toBe(true)
     const stored = JSON.parse(localStorage.getItem('conjugator:srs')!)
-    expect(stored['conjugation:sound:1:active.past:3ms']).toMatchObject({
+    expect(stored['production:verb:sound:1:active.past:3ms']).toMatchObject({
       interval: 145313,
       dueDate: '2424-01-30',
     })
@@ -263,7 +283,7 @@ describe('mergeUserData', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+        'production:verb:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
       }),
     )
     localStorage.setItem(
@@ -278,7 +298,7 @@ describe('mergeUserData', () => {
     mergeUserData(
       JSON.stringify({
         srs: {
-          'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+          'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
         },
         trackedExercises: [{ date: '2026-03-29', correct: 3, incorrect: 1, passed: 0 }],
         dimensions,
@@ -291,8 +311,8 @@ describe('mergeUserData', () => {
       dimensions: JSON.parse(localStorage.getItem('conjugator:dimensions')!),
     }).toEqual({
       srs: {
-        'conjugation:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
-        'conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
+        'production:verb:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-27' },
+        'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-30' },
       },
       trackedExercises: [
         { date: '2026-03-21', correct: 1, incorrect: 0, passed: 0 },

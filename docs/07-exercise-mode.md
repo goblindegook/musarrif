@@ -41,7 +41,7 @@ Exercise prompts render with partial diacritics by default. Diacritics are not s
 **SRS and persistence**:
 
 - `nextExercise(profile, srsStore, session, focus)` prioritizes due cards filtered by unlocked dimensions
-- Card identity: `cardKey` (`kind:rootType:form[:tense:pronoun]`)
+- Card identity: `cardKey` is `type:category:rootType:form[:tense:pronoun]`. The card type is `production` or `recognition`; the morphological category is `verb`, `masdar` or `participle` (active and passive share one card); tense and pronoun appear only on conjugated verb cards (`recognition:verb:sound:1:active.past:3ms`, `production:verb:sound:1` for root-form-verb, `recognition:masdar:sound:1`). Every exercise that tests the same skill on the same card shares it. Each exercise passes its card type as `defineExercise`'s first argument and `conjugated` in its config, its category follows from its kind, and it returns a `card` (root and form, plus tense and pronoun when conjugated) that `defineExercise` turns into the `cardKey`
 - SRS state: `conjugator:srs`; daily stats: `conjugator:exercise:daily`; dimension state: `conjugator:dimensions`
 - Streak goal: 10 correct/day
 

@@ -16,6 +16,7 @@ import {
 import type { DiacriticsPreference } from '../../../src/paradigms/tokens'
 import type { Language } from './hooks/useI18n'
 import type { ThemePreference } from './hooks/useTheme'
+import { migrateUserData, USER_DATA_VERSION } from './user-data.migrations'
 
 const MUSARRIF_MIME_TYPE = 'application/vnd.musarrif+json'
 export const ACCEPTED_TYPES = ['application/json', MUSARRIF_MIME_TYPE, '.json', '.musarrif']
@@ -79,8 +80,6 @@ const Settings = v.object({
   themePreference: v.optional(v.fallback(v.picklist(['light', 'dark', 'system']), 'system'), 'system'),
 })
 
-const USER_DATA_VERSION = 1
-
 const ImportUserData = v.pipe(
   v.object({
     version: v.optional(v.pipe(v.number(), v.maxValue(USER_DATA_VERSION))),
@@ -98,7 +97,19 @@ const ImportUserData = v.pipe(
     srs: payload.srs ?? v.parse(SrsStoreSchema, undefined),
     dimensions: payload.dimensions ?? v.parse(DimensionStoreSchema, undefined),
   })),
+  v.transform(migrateUserData),
 )
+
+/** Parses the stored SRS store, migrating it first when an older app wrote it, since parsing drops unknown card keys. */
+export function parseStoredSrsStore(raw: unknown): SrsStore {
+  const version = load<number>('conjugator:version', 1, (stored) => v.parse(v.fallback(v.number(), 1), stored))
+  if (version === USER_DATA_VERSION) return parseSrsStore(raw)
+  const migrated = migrateUserData({ version, srs: v.parse(SrsStoreSchema, raw) })
+  // Saved before the version, so a reader that never writes back cannot strand the old cards.
+  save('conjugator:srs', migrated.srs)
+  save('conjugator:version', migrated.version)
+  return parseSrsStore(migrated.srs)
+}
 
 export function getUserData() {
   return {
@@ -110,7 +121,7 @@ export function getUserData() {
     },
     favouriteVerbs: load<string[]>('conjugator:favouriteVerbs', []),
     trackedExercises: load<SerializedDailyActivity[]>('conjugator:exercise:daily', [], parseTrackedExercises),
-    srs: load<SrsStore>('conjugator:srs', {}, parseSrsStore),
+    srs: load<SrsStore>('conjugator:srs', {}, parseStoredSrsStore),
     dimensions: load<DimensionStore>(
       'conjugator:dimensions',
       { profile: DEFAULT_DIMENSION_PROFILE, windows: DEFAULT_DIMENSION_WINDOWS },
@@ -184,6 +195,7 @@ function saveUserData(data: v.InferOutput<typeof ImportUserData>) {
   save('conjugator:favouriteVerbs', data.favouriteVerbs ?? [])
   save('conjugator:exercise:daily', data.trackedExercises)
   save('conjugator:srs', data.srs)
+  save('conjugator:version', data.version)
   save('conjugator:dimensions', data.dimensions)
 }
 

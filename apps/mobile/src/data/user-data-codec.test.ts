@@ -2,12 +2,12 @@ import type { UserDataSnapshot } from '../storage/schema'
 import { decodeUserDataExport, encodeUserDataExport, mergeUserDataSnapshot } from './UserDataCodec'
 
 const browserExportFixture = {
-  version: 1,
+  version: 2,
   settings: { language: 'pt', diacriticsPreference: 'none', themePreference: 'dark' },
   favouriteVerbs: ['ktb-1', 'sfr-1'],
   trackedExercises: [{ date: '2026-03-21', correct: 4, incorrect: 1, passed: 2 }],
   srs: {
-    'conjugation:sound:1:active.past:3ms': {
+    'production:verb:sound:1:active.past:3ms': {
       interval: 6,
       ef: 2.5,
       repetitions: 2,
@@ -30,7 +30,7 @@ describe('user-data backup codec', () => {
         'favorite:ktb-1': true,
         'favorite:sfr-1': true,
         'exercise:daily:2026-03-21': { date: '2026-03-21', correct: 4, incorrect: 1, passed: 2 },
-        'srs:conjugation:sound:1:active.past:3ms': {
+        'srs:production:verb:sound:1:active.past:3ms': {
           interval: 6,
           ef: 2.5,
           repetitions: 2,
@@ -49,7 +49,7 @@ describe('user-data backup codec', () => {
   })
 
   test('rejects a file written by a newer version of the app', () => {
-    expect(decodeUserDataExport(JSON.stringify({ version: 2, favouriteVerbs: ['ktb-1'] }))).toBeUndefined()
+    expect(decodeUserDataExport(JSON.stringify({ version: 3, favouriteVerbs: ['ktb-1'] }))).toBeUndefined()
   })
 
   test('applies browser v1 defaults when optional export sections are absent', () => {
@@ -95,13 +95,14 @@ describe('user-data backup codec', () => {
       'favorite:disabled': false,
       'exercise:daily:2026-03-22': { date: '2026-03-22', correct: 1, incorrect: 2, passed: 0 },
       'exercise:daily:2026-03-21': { date: '2026-03-21', correct: 4, incorrect: 1, passed: 2 },
-      'srs:conjugation:sound:1:active.past:3ms': browserExportFixture.srs['conjugation:sound:1:active.past:3ms'],
+      'srs:production:verb:sound:1:active.past:3ms':
+        browserExportFixture.srs['production:verb:sound:1:active.past:3ms'],
       'dimension:store': browserExportFixture.dimensions,
       'local:tourComplete': true,
     }
 
     expect(JSON.parse(encodeUserDataExport(snapshot))).toEqual({
-      version: 1,
+      version: 2,
       settings: { language: 'ar', diacriticsPreference: 'all', themePreference: 'light' },
       favouriteVerbs: ['ktb-1', 'sfr-1'],
       trackedExercises: [
@@ -115,13 +116,13 @@ describe('user-data backup codec', () => {
 
   test('applies the same SRS and adaptive-dimension normalization as browser exports', () => {
     const snapshot: UserDataSnapshot['values'] = {
-      'srs:conjugation:sound:1:active.future:3ms': {
+      'srs:production:verb:sound:1:active.future:3ms': {
         interval: 1.4,
         ef: 2.5,
         repetitions: 1,
         dueDate: '2026-03-22',
       },
-      'srs:conjugation:sound:1:active.past:3ms': {
+      'srs:production:verb:sound:1:active.past:3ms': {
         interval: 1.4,
         ef: 2.5,
         repetitions: 1,
@@ -135,7 +136,7 @@ describe('user-data backup codec', () => {
 
     expect(JSON.parse(encodeUserDataExport(snapshot))).toMatchObject({
       srs: {
-        'conjugation:sound:1:active.past:3ms': { interval: 1 },
+        'production:verb:sound:1:active.past:3ms': { interval: 1 },
       },
       dimensions: {
         profile: { nominals: 0 },
@@ -153,7 +154,7 @@ describe('merging an imported backup', () => {
       'setting:arabicVoice': 'Voice 1',
       'favorite:ktb-1': true,
       'exercise:daily:2026-03-20': { date: '2026-03-20', correct: 1, incorrect: 0, passed: 0 },
-      'srs:conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
+      'srs:production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
       'dimension:store': {
         profile: { tenses: 1, pronouns: 0, forms: 0, rootTypes: 0, nominals: 0 },
         windows: { tenses: [true], pronouns: [], forms: [], rootTypes: [], nominals: [] },
@@ -172,8 +173,9 @@ describe('merging an imported backup', () => {
         'favorite:sfr-1': true,
         'exercise:daily:2026-03-20': { date: '2026-03-20', correct: 1, incorrect: 0, passed: 0 },
         'exercise:daily:2026-03-21': { date: '2026-03-21', correct: 4, incorrect: 1, passed: 2 },
-        'srs:conjugation:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
-        'srs:conjugation:sound:1:active.past:3ms': browserExportFixture.srs['conjugation:sound:1:active.past:3ms'],
+        'srs:production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-21' },
+        'srs:production:verb:sound:1:active.past:3ms':
+          browserExportFixture.srs['production:verb:sound:1:active.past:3ms'],
         'dimension:store': browserExportFixture.dimensions,
         'local:tourComplete': true,
       },

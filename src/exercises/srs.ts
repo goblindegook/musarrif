@@ -5,13 +5,12 @@ import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, type TriliteralForm, verbs } from '../paradigms/verbs'
 import { utcToday } from '../primitives/dates'
 import { formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
-import type { ExerciseKind } from './exercise-kinds'
 import { getSrsRootType, type SrsRootType } from './root-types'
-import type { SrsCardIdentity } from './srs-types'
+import type { CardConstraints, CardFamily, CardType, MorphologicalCategory, SrsCardIdentity } from './srs-types'
 
 export type AnswerResult = 'correct' | 'partial' | 'wrong' | 'pass'
 export type { SrsRootType } from './root-types'
-export type { CardConstraints, SrsCardIdentity } from './srs-types'
+export type { CardConstraints, CardFamily, CardType, MorphologicalCategory, SrsCardIdentity } from './srs-types'
 export { getSrsRootType }
 
 const CardState = v.object({
@@ -41,45 +40,53 @@ export type SrsStore = v.InferOutput<typeof SrsStore>
 
 export type SrsCard = SrsCardIdentity & CardState
 
-const VERB_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
+const CARD_TYPES: readonly CardType[] = ['production', 'recognition']
 
-const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
-  'participleForm',
-  'participleRoot',
-  'participleVerb',
-  'verbParticiple',
-])
+const NOMINAL_CATEGORIES: readonly MorphologicalCategory[] = ['masdar', 'participle']
 
-const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
-
-export function buildCardKey(kind: ExerciseKind, rootType: SrsRootType, form: TriliteralForm): string
 export function buildCardKey(
-  kind: ExerciseKind,
+  type: CardType,
+  category: MorphologicalCategory,
+  rootType: SrsRootType,
+  form: TriliteralForm,
+): string
+export function buildCardKey(
+  type: CardType,
+  category: 'verb',
   rootType: SrsRootType,
   form: TriliteralForm,
   tense: VerbTense,
   pronoun: PronounId,
 ): string
 export function buildCardKey(
-  kind: ExerciseKind,
+  type: CardType,
+  category: MorphologicalCategory,
   rootType: SrsRootType,
   form: TriliteralForm,
   tense?: VerbTense,
   pronoun?: PronounId,
 ): string {
-  return tense == null ? `${kind}:${rootType}:${form}` : `${kind}:${rootType}:${form}:${tense}:${pronoun}`
+  return [type, category, rootType, form, tense, pronoun].filter((segment) => segment != null).join(':')
+}
+
+export function answersCard(family: CardFamily, card: SrsCardIdentity): boolean {
+  return (
+    family.cardType === card.type &&
+    family.category === card.category &&
+    (family.conjugated === true) === (card.tense != null)
+  )
 }
 
 export function isVerbCard(card: SrsCardIdentity): boolean {
   return card.tense != null
 }
 
-export function isParticipleCard(card: SrsCardIdentity): boolean {
-  return PARTICIPLE_EXERCISES.has(card.kind)
+export function isParticipleCard(card: Pick<CardConstraints, 'category'>): boolean {
+  return card.category === 'participle'
 }
 
-export function isMasdarCard(card: SrsCardIdentity): boolean {
-  return MASDAR_EXERCISES.has(card.kind)
+export function isMasdarCard(card: Pick<CardConstraints, 'category'>): boolean {
+  return card.category === 'masdar'
 }
 
 export function isNominalCard(card: SrsCardIdentity): boolean {
@@ -87,27 +94,15 @@ export function isNominalCard(card: SrsCardIdentity): boolean {
 }
 
 export function parseCardKey(key: string): SrsCardIdentity {
-  const [kind, rootType, formStr, tense, pronoun] = key.split(':')
-
-  if (tense == null) {
-    return {
-      key,
-      kind: kind as ExerciseKind,
-      rootType: rootType as SrsRootType,
-      form: Number(formStr) as TriliteralForm,
-      tense: undefined,
-      pronoun: undefined,
-    }
-  }
-
-  return {
+  const [type, category, rootType, form, tense, pronoun] = key.split(':')
+  const card: SrsCardIdentity = {
     key,
-    kind: kind as ExerciseKind,
+    type: type as CardType,
+    category: category as MorphologicalCategory,
     rootType: rootType as SrsRootType,
-    form: Number(formStr) as TriliteralForm,
-    tense: tense as VerbTense,
-    pronoun: pronoun as PronounId,
+    form: Number(form) as TriliteralForm,
   }
+  return tense == null ? card : { ...card, tense: tense as VerbTense, pronoun: pronoun as PronounId }
 }
 
 export function utcAddDays(date: string, days: number): string {
@@ -239,18 +234,20 @@ export const cardSpace = memoize(
       const paradigms = new Set(getAvailableParadigms(verb))
       const availableVerbTenses = allTenses.filter((tense) => paradigms.has(tense))
 
-      for (const kind of VERB_EXERCISES) {
+      for (const type of CARD_TYPES) {
         for (const tense of availableVerbTenses) {
           for (const pronoun of pronounSpace(tense, verb.passive === 'impersonal')) {
-            const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
-            unique.set(key, { key, kind, rootType, form: verb.form, tense, pronoun })
+            const key = buildCardKey(type, 'verb', rootType, verb.form, tense, pronoun)
+            unique.set(key, parseCardKey(key))
           }
         }
       }
 
-      for (const kind of [...PARTICIPLE_EXERCISES, ...MASDAR_EXERCISES]) {
-        const key = buildCardKey(kind, rootType, verb.form)
-        unique.set(key, { key, kind, rootType, form: verb.form })
+      for (const type of CARD_TYPES) {
+        for (const category of NOMINAL_CATEGORIES) {
+          const key = buildCardKey(type, category, rootType, verb.form)
+          unique.set(key, parseCardKey(key))
+        }
       }
     }
 

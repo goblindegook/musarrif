@@ -15,9 +15,9 @@ import {
   tensePool,
 } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbTenseExercise = defineExercise(
+  'recognition',
   'verbTense',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
@@ -40,12 +40,12 @@ export const verbTenseExercise = defineExercise(
       spokenWord,
       options,
       answer,
-      cardKey: buildCardKey('verbTense', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      card: { root: verb.root, form: verb.form, tense, pronoun },
       explanation,
       inputModes: ['multiple-choice'],
     }
   },
-  { weight: 2 },
+  { conjugated: true, weight: 2 },
 )
 
 function buildOptions(

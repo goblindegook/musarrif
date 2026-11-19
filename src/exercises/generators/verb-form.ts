@@ -2,21 +2,13 @@ import { shuffle } from '@pacote/shuffle'
 import { conjugate } from '../../paradigms/conjugation'
 import { resolveVerbExplanationLayers } from '../../paradigms/explanation'
 import { formatFormLabel, formsForRoot, getVerb } from '../../paradigms/verbs.ts'
-import {
-  type DimensionProfile,
-  exerciseDiacritics,
-  normalizeExercisePronoun,
-  randomPronoun,
-  randomTense,
-  randomVerb,
-} from '../dimensions.ts'
+import { exerciseDiacritics, normalizeExercisePronoun, randomPronoun, randomTense, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
-import type { CardConstraints } from '../srs.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbFormExercise = defineExercise(
+  'recognition',
   'verbForm',
-  (profile: DimensionProfile, constraints?: CardConstraints) => {
+  (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
     const tense = constraints?.tense ?? randomTense(verb, profile.tenses)
     const pronoun = normalizeExercisePronoun(
@@ -46,9 +38,10 @@ export const verbFormExercise = defineExercise(
       spokenWord: conjugatedVerb,
       options: options.map((form) => formatFormLabel(form, verb.root)),
       answer,
-      cardKey: buildCardKey('verbForm', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      card: { root: verb.root, form: verb.form, tense, pronoun },
       explanation,
       inputModes: ['multiple-choice'],
     }
   },
+  { conjugated: true },
 )

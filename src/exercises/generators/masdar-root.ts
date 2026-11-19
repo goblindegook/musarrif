@@ -11,9 +11,9 @@ import {
   wordSliceDistractor,
 } from '../distractors.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const masdarRootExercise = defineExercise(
+  'recognition',
   'masdarRoot',
   (profile, constraints) => {
     const verb = randomNominalVerb(profile, constraints)
@@ -29,14 +29,12 @@ export const masdarRootExercise = defineExercise(
       spokenWord: String(masdar),
       options: options.map((option) => Array.from(option).join(' ')),
       answer,
-      cardKey: buildCardKey('masdarRoot', getSrsRootType(verb.root), verb.form),
+      card: { root: verb.root, form: verb.form },
       explanation,
       inputModes: ['multiple-choice'],
     }
   },
-  {
-    minNominals: 2,
-  },
+  { minNominals: 2 },
 )
 
 function buildOptions(verb: Verb, word: string): readonly string[] {

@@ -30,43 +30,49 @@ describe('getSrsRootType', () => {
 })
 
 describe('buildCardKey', () => {
-  test('conjugation-style key includes kind, rootType, form, tense, pronoun', () => {
-    expect(buildCardKey('conjugation', 'sound', 1, 'active.past', '1s')).toBe('conjugation:sound:1:active.past:1s')
-  })
+  test.each(['production', 'recognition'] as const)(
+    '%s verb cell key includes root type, form, tense, pronoun',
+    (kind) => {
+      expect(buildCardKey(kind, 'verb', 'sound', 1, 'active.past', '1s')).toBe(`${kind}:verb:sound:1:active.past:1s`)
+    },
+  )
 
   test('3-tuple tense serialises all three parts', () => {
-    expect(buildCardKey('verbTense', 'hollow', 3, 'passive.present.indicative', '3ms')).toBe(
-      'verbTense:hollow:3:passive.present.indicative:3ms',
+    expect(buildCardKey('production', 'verb', 'hollow', 3, 'passive.present.indicative', '3ms')).toBe(
+      'production:verb:hollow:3:passive.present.indicative:3ms',
     )
   })
 
   test('imperative serialises as 2-token tense', () => {
-    expect(buildCardKey('conjugation', 'sound', 1, 'active.imperative', '2ms')).toBe(
-      'conjugation:sound:1:active.imperative:2ms',
+    expect(buildCardKey('production', 'verb', 'sound', 1, 'active.imperative', '2ms')).toBe(
+      'production:verb:sound:1:active.imperative:2ms',
     )
   })
 
-  test('base-form key omits tense and pronoun', () => {
-    expect(buildCardKey('masdarForm', 'hamzated', 4)).toBe('masdarForm:hamzated:4')
-  })
+  test.each(['verb', 'masdar', 'participle'] as const)(
+    '%s key that is not conjugated has only root type and form',
+    (type) => {
+      expect(buildCardKey('recognition', type, 'hamzated', 4)).toBe(`recognition:${type}:hamzated:4`)
+    },
+  )
 })
 
 describe('parseCardKey', () => {
-  test('parses base-form key', () => {
-    expect(parseCardKey('masdarForm:hamzated:4')).toEqual({
-      key: 'masdarForm:hamzated:4',
-      kind: 'masdarForm',
+  test('parses a nominal key', () => {
+    expect(parseCardKey('recognition:masdar:hamzated:4')).toEqual({
+      key: 'recognition:masdar:hamzated:4',
+      type: 'recognition',
+      category: 'masdar',
       rootType: 'hamzated',
       form: 4,
-      tense: undefined,
-      pronoun: undefined,
     })
   })
 
-  test('parses 2-token tense key', () => {
-    expect(parseCardKey('conjugation:sound:1:active.past:1s')).toEqual({
-      key: 'conjugation:sound:1:active.past:1s',
-      kind: 'conjugation',
+  test('parses a 2-token tense key', () => {
+    expect(parseCardKey('production:verb:sound:1:active.past:1s')).toEqual({
+      key: 'production:verb:sound:1:active.past:1s',
+      type: 'production',
+      category: 'verb',
       rootType: 'sound',
       form: 1,
       tense: 'active.past',
@@ -74,10 +80,11 @@ describe('parseCardKey', () => {
     })
   })
 
-  test('parses 3-token tense key', () => {
-    expect(parseCardKey('verbTense:hollow:3:passive.present.indicative:3ms')).toEqual({
-      key: 'verbTense:hollow:3:passive.present.indicative:3ms',
-      kind: 'verbTense',
+  test('parses a 3-token tense key', () => {
+    expect(parseCardKey('recognition:verb:hollow:3:passive.present.indicative:3ms')).toEqual({
+      key: 'recognition:verb:hollow:3:passive.present.indicative:3ms',
+      type: 'recognition',
+      category: 'verb',
       rootType: 'hollow',
       form: 3,
       tense: 'passive.present.indicative',
@@ -197,7 +204,7 @@ describe('updateCardState', () => {
 describe('parseSrsStore', () => {
   test('keeps only valid card entries from unknown input', () => {
     const result = parseSrsStore({
-      'conjugation:sound:1:active.past:3ms': {
+      'production:verb:sound:1:active.past:3ms': {
         interval: 6,
         ef: 2.5,
         repetitions: 2,
@@ -222,18 +229,18 @@ describe('parseSrsStore', () => {
       },
     })
 
-    expect(Object.keys(result)).toEqual(['conjugation:sound:1:active.past:3ms'])
+    expect(Object.keys(result)).toEqual(['production:verb:sound:1:active.past:3ms'])
   })
 
   test('drops legacy future cards from parsed stores', () => {
     const result = parseSrsStore({
-      'conjugation:sound:1:active.past:3ms': {
+      'production:verb:sound:1:active.past:3ms': {
         interval: 6,
         ef: 2.5,
         repetitions: 2,
         dueDate: '2026-03-29',
       },
-      'conjugation:sound:1:passive.future:3ms': {
+      'production:verb:sound:1:passive.future:3ms': {
         interval: 6,
         ef: 2.5,
         repetitions: 2,
@@ -248,7 +255,7 @@ describe('parseSrsStore', () => {
     })
 
     expect(result).toEqual({
-      'conjugation:sound:1:active.past:3ms': {
+      'production:verb:sound:1:active.past:3ms': {
         interval: 6,
         ef: 2.5,
         repetitions: 2,
@@ -259,13 +266,13 @@ describe('parseSrsStore', () => {
 
   test('drops verb cards for pronouns an impersonal passive cannot take', () => {
     const result = parseSrsStore({
-      'conjugation:hollow:7:passive.present.subjunctive:3ms': {
+      'production:verb:hollow:7:passive.present.subjunctive:3ms': {
         interval: 22,
         ef: 1.3,
         repetitions: 7,
         dueDate: '2026-11-12',
       },
-      'conjugation:hollow:7:passive.present.subjunctive:3md': {
+      'production:verb:hollow:7:passive.present.subjunctive:3md': {
         interval: 1,
         ef: 1.42,
         repetitions: 0,
@@ -274,7 +281,7 @@ describe('parseSrsStore', () => {
     })
 
     expect(result).toEqual({
-      'conjugation:hollow:7:passive.present.subjunctive:3ms': {
+      'production:verb:hollow:7:passive.present.subjunctive:3ms': {
         interval: 22,
         ef: 1.3,
         repetitions: 7,
@@ -285,7 +292,7 @@ describe('parseSrsStore', () => {
 
   test('keeps oversized interval and dueDate values untouched', () => {
     const result = parseSrsStore({
-      'conjugation:sound:1:active.past:3ms': {
+      'production:verb:sound:1:active.past:3ms': {
         interval: 145313,
         ef: 2.5,
         repetitions: 13,
@@ -293,7 +300,7 @@ describe('parseSrsStore', () => {
       },
     })
 
-    expect(result['conjugation:sound:1:active.past:3ms']).toMatchObject({
+    expect(result['production:verb:sound:1:active.past:3ms']).toMatchObject({
       interval: 145313,
       dueDate: '2424-01-30',
     })
@@ -356,17 +363,17 @@ describe('weightedRandomSrs', () => {
 
 describe('recordAnswer', () => {
   test('creates a new entry on first answer', () => {
-    const store = recordAnswer({}, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
-    expect(store['conjugation:sound:1:active.past:1s']).toMatchObject({
+    const store = recordAnswer({}, 'production:verb:sound:1:active.past:1s', 'correct', '2026-03-23')
+    expect(store['production:verb:sound:1:active.past:1s']).toMatchObject({
       repetitions: 1,
       dueDate: '2026-03-24',
     })
   })
 
   test('updates existing entry on subsequent answer', () => {
-    const s1 = recordAnswer({}, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
-    const s2 = recordAnswer(s1, 'conjugation:sound:1:active.past:1s', 'correct', '2026-03-23')
-    expect(s2['conjugation:sound:1:active.past:1s'].repetitions).toBe(2)
+    const s1 = recordAnswer({}, 'production:verb:sound:1:active.past:1s', 'correct', '2026-03-23')
+    const s2 = recordAnswer(s1, 'production:verb:sound:1:active.past:1s', 'correct', '2026-03-23')
+    expect(s2['production:verb:sound:1:active.past:1s'].repetitions).toBe(2)
   })
 
   test('returns store unchanged when cardKey is undefined', () => {

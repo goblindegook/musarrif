@@ -335,11 +335,11 @@ describe('SRS recording', () => {
     renderWithProviders(<ExerciseMode generateExercise={() => exercise} />)
     fireEvent.click(screen.getByText('correct', { selector: 'button' }))
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(srs['conjugation:sound:1:active.past:3ms']).toBeDefined()
+    expect(srs['production:verb:sound:1:active.past:3ms']).toBeDefined()
   })
 
   test('keeps oversized persisted SRS state untouched when loading from localStorage', () => {
-    const cardKey = 'conjugation:sound:1:active.past:3ms'
+    const cardKey = 'production:verb:sound:1:active.past:3ms'
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
@@ -447,10 +447,12 @@ describe('keyboard shortcuts', () => {
 
 describe('pass SRS recording', () => {
   test('clicking pass records a daily pass entry and halves the card SRS interval', () => {
-    const exercise = testExercise({ cardKey: 'verbForm:regular:1' })
+    const exercise = testExercise({ cardKey: 'recognition:verb:sound:1:active.past:3ms' })
     localStorage.setItem(
       'conjugator:srs',
-      JSON.stringify({ 'verbForm:regular:1': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-29' } }),
+      JSON.stringify({
+        'recognition:verb:sound:1:active.past:3ms': { interval: 6, ef: 2.5, repetitions: 2, dueDate: '2026-03-29' },
+      }),
     )
     localStorage.setItem('conjugator:exercise:daily', JSON.stringify([]))
 
@@ -458,11 +460,11 @@ describe('pass SRS recording', () => {
     fireEvent.click(screen.getByText(/skip/i, { selector: 'button' }))
 
     const srs = JSON.parse(localStorage.getItem('conjugator:srs') ?? '{}')
-    expect(srs['verbForm:regular:1']).toMatchObject({
+    expect(srs['recognition:verb:sound:1:active.past:3ms']).toMatchObject({
       interval: 3,
       repetitions: 2,
     })
-    expect(srs['verbForm:regular:1'].ef).toBeCloseTo(2.5)
+    expect(srs['recognition:verb:sound:1:active.past:3ms'].ef).toBeCloseTo(2.5)
 
     const daily = JSON.parse(localStorage.getItem('conjugator:exercise:daily') ?? '[]')
     expect(daily).toHaveLength(1)
@@ -493,8 +495,8 @@ describe('mastery filtering in ExerciseMode', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
-        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
       }),
     )
 
@@ -509,8 +511,8 @@ describe('mastery filtering in ExerciseMode', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
-        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
       }),
     )
 
@@ -525,8 +527,8 @@ describe('mastery filtering in ExerciseMode', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
-        'conjugation:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3ms': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
+        'production:verb:sound:2:active.past:3fs': { interval: 21, ef: 2.5, repetitions: 5, dueDate: '2099-01-01' },
       }),
     )
 
@@ -571,7 +573,7 @@ function conjugationExercise(overrides: Partial<Exercise<'conjugation'>> = {}): 
     withVoice: false,
     options: ['كَتَبَ', 'يَكتُبُ', 'كَتَّبَ', 'أَكتَبَ'],
     answer: 0,
-    cardKey: 'conjugation:sound:1:active.past:3ms',
+    cardKey: 'production:verb:sound:1:active.past:3ms',
     inputModes: ['multiple-choice', 'keyboard'],
     ...overrides,
   }
@@ -655,7 +657,7 @@ describe('typing mode', () => {
     const gen = vi
       .fn()
       .mockReturnValueOnce(conjugationExercise())
-      .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'conjugation:sound:1:active.past:3fs' }))
+      .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'production:verb:sound:1:active.past:3fs' }))
     renderWithProviders(<ExerciseMode generateExercise={gen} />)
     fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
     fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'كَتَبَ' } })
@@ -668,7 +670,7 @@ describe('typing mode', () => {
     const gen = vi
       .fn()
       .mockReturnValueOnce(conjugationExercise())
-      .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'conjugation:sound:1:active.past:3fs' }))
+      .mockReturnValueOnce(conjugationExercise({ word: 'يَذهَبُ', cardKey: 'production:verb:sound:1:active.past:3fs' }))
     renderWithProviders(<ExerciseMode generateExercise={gen} />)
     fireEvent.click(screen.getByText('Type the answer', { selector: 'button' }))
     fireEvent.change(screen.getByPlaceholderText('Type your answer'), { target: { value: 'يَكتُبُ' } })
@@ -798,12 +800,12 @@ describe('focus chip', () => {
     localStorage.setItem(
       'conjugator:srs',
       JSON.stringify({
-        'conjugation:sound:1:active.past:3ms': mature,
-        'verbForm:sound:1:active.past:3ms': mature,
-        'verbRoot:sound:1:active.past:3ms': mature,
-        'conjugation:sound:2:active.past:3ms': fresh,
-        'verbForm:sound:2:active.past:3ms': fresh,
-        'verbRoot:sound:2:active.past:3ms': fresh,
+        'production:verb:sound:1:active.past:3ms': mature,
+        'recognition:verb:sound:1:active.past:3ms': mature,
+        'production:verb:sound:1:active.past:1s': mature,
+        'production:verb:sound:2:active.past:3ms': fresh,
+        'recognition:verb:sound:2:active.past:3ms': fresh,
+        'production:verb:sound:2:active.past:1s': fresh,
       }),
     )
     renderWithProviders(<ExerciseMode generateExercise={() => testExercise()} />)

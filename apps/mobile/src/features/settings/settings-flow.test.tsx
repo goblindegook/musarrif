@@ -61,7 +61,7 @@ describe('settings', () => {
     expect(values['setting:diacriticsPreference']).toBe('all')
     await fireEvent.press(screen.getByRole('button', { name: 'Export data' }))
     expect(mockFileCreate).toHaveBeenCalledWith({ overwrite: true })
-    expect(mockFileWrite).toHaveBeenCalledWith(expect.stringContaining('"version": 1'))
+    expect(mockFileWrite).toHaveBeenCalledWith(expect.stringContaining('"version": 2'))
     expect(mockShareAsync).toHaveBeenCalledWith(
       expect.stringMatching(/^file:\/\/\/cache\/user-data-.*\.musarrif$/),
       expect.objectContaining({ mimeType: 'application/vnd.musarrif+json', UTI: 'public.json' }),

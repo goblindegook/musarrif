@@ -15,9 +15,9 @@ import {
   randomVerb,
 } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
-import { buildCardKey, getSrsRootType } from '../srs.ts'
 
 export const verbPronounExercise = defineExercise(
+  'recognition',
   'verbPronoun',
   (profile, constraints) => {
     const verb = randomVerb(profile, constraints)
@@ -37,13 +37,13 @@ export const verbPronounExercise = defineExercise(
       spokenWord: conjugatedVerb,
       options: options.map((p) => ARABIC_PRONOUNS[p]),
       answer,
-      cardKey: buildCardKey('verbPronoun', getSrsRootType(verb.root), verb.form, tense, pronoun),
+      card: { root: verb.root, form: verb.form, tense, pronoun },
       dimensions: ['pronouns', 'forms', 'rootTypes'],
       explanation,
       inputModes: ['multiple-choice'],
     }
   },
-  { weight: 2 },
+  { conjugated: true, weight: 2 },
 )
 
 function buildOptions(

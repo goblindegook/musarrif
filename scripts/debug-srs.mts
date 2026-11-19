@@ -12,10 +12,12 @@ import {
   tensePool,
   WINDOW_SIZES,
 } from '../src/exercises/dimensions.ts'
-import type { ExerciseKind } from '../src/exercises/exercises.ts'
 import {
-  buildCardKey,
-  getSrsRootType,
+  type CardType,
+  cardSpace,
+  isMasdarCard,
+  isParticipleCard,
+  type MorphologicalCategory,
   parseSrsStore,
   type SrsRootType,
   type SrsStore,
@@ -23,16 +25,17 @@ import {
 } from '../src/exercises/srs.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
-import { getAvailableParadigms, type TriliteralForm, verbs } from '../src/paradigms/verbs.ts'
+import type { TriliteralForm } from '../src/paradigms/verbs.ts'
 import { utcToday } from '../src/primitives/dates.ts'
 
-type CoverageDimension = 'kind' | 'rootType' | 'form' | 'tense' | 'pronoun' | 'nominal'
+type CoverageDimension = 'type' | 'rootType' | 'form' | 'tense' | 'pronoun' | 'nominal'
 type NominalGroup = 'participles' | 'masdar'
 type DueBucket = 'overdue' | 'today' | 'tomorrow' | 'next7' | 'next30' | 'next365' | 'future'
 
 interface UniverseCard {
   key: string
-  kind: ExerciseKind
+  type: CardType
+  category: MorphologicalCategory
   rootType: SrsRootType
   form: TriliteralForm
   tense?: VerbTense
@@ -69,22 +72,7 @@ interface LoadedDimensions {
   windows: Record<DimensionKey, readonly boolean[]>
 }
 
-const EXERCISE_KINDS: readonly ExerciseKind[] = [
-  'conjugation',
-  'masdarForm',
-  'masdarRoot',
-  'masdarVerb',
-  'participleForm',
-  'rootFormVerb',
-  'participleRoot',
-  'participleVerb',
-  'verbForm',
-  'verbMasdar',
-  'verbParticiple',
-  'verbPronoun',
-  'verbRoot',
-  'verbTense',
-]
+const CARD_TYPES: readonly CardType[] = ['production', 'recognition']
 
 const ROOT_TYPE_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
 const FORM_ORDER: readonly TriliteralForm[] = formPool(9)
@@ -100,15 +88,6 @@ const INITIAL_DIMENSION_PROFILE: DimensionProfile = {
 }
 
 const DIMENSION_ORDER: readonly DimensionKey[] = ['tenses', 'pronouns', 'forms', 'rootTypes', 'nominals']
-
-const TENSE_EXERCISES = new Set<ExerciseKind>(['conjugation', 'verbForm', 'verbPronoun', 'verbRoot', 'verbTense'])
-const PARTICIPLE_EXERCISES = new Set<ExerciseKind>([
-  'participleForm',
-  'participleRoot',
-  'participleVerb',
-  'verbParticiple',
-])
-const MASDAR_EXERCISES = new Set<ExerciseKind>(['masdarForm', 'masdarRoot', 'masdarVerb', 'verbMasdar'])
 
 function toPercent(part: number, total: number): number {
   if (total === 0) return 0
@@ -229,73 +208,24 @@ function dueDistribution(store: SrsStore, today: string): readonly DueDistributi
   ]
 }
 
-function pronounSpace(
-  tense: VerbTense,
-  pronouns: readonly PronounId[],
-  impersonalPassive: boolean,
-): readonly PronounId[] {
-  if (tense === 'active.imperative') {
-    const imperative = pronouns.filter((pronoun) => pronoun.startsWith('2'))
-    return imperative.length > 0 ? imperative : ['2ms']
-  }
-  if (impersonalPassive && tense.startsWith('passive')) return ['3ms']
-  return pronouns
-}
-
-function nominalGroup(kind: ExerciseKind): NominalGroup | undefined {
-  if (PARTICIPLE_EXERCISES.has(kind)) return 'participles'
-  if (MASDAR_EXERCISES.has(kind)) return 'masdar'
-  return undefined
-}
-
 function buildUniverse(): readonly UniverseCard[] {
-  const allForms = new Set(formPool(9))
-  const allRootTypes = new Set(rootTypesPool(5))
-  const allTenses = tensePool(4)
-  const allPronouns = pronounPool(3)
-  const unique = new Map<string, UniverseCard>()
+  const forms = new Set(formPool(9))
+  const rootTypes = new Set(rootTypesPool(5))
+  const tenses = new Set(tensePool(4))
+  const pronouns = new Set(pronounPool(3))
 
-  for (const verb of verbs) {
-    if (verb.root.length !== 3) continue
-    if (!allForms.has(verb.form)) continue
-
-    const rootType = getSrsRootType(verb.root)
-    if (!allRootTypes.has(rootType)) continue
-
-    const paradigms = new Set(getAvailableParadigms(verb))
-    const availableTenses = allTenses.filter((tense) => paradigms.has(tense))
-
-    for (const kind of EXERCISE_KINDS) {
-      if (!TENSE_EXERCISES.has(kind)) {
-        const key = buildCardKey(kind, rootType, verb.form)
-        unique.set(key, {
-          key,
-          kind,
-          rootType,
-          form: verb.form,
-          nominal: nominalGroup(kind),
-        })
-        continue
-      }
-
-      for (const tense of availableTenses) {
-        for (const pronoun of pronounSpace(tense, allPronouns, verb.passive === 'impersonal')) {
-          const key = buildCardKey(kind, rootType, verb.form, tense, pronoun)
-          unique.set(key, {
-            key,
-            kind,
-            rootType,
-            form: verb.form,
-            tense,
-            pronoun,
-            nominal: nominalGroup(kind),
-          })
-        }
-      }
-    }
-  }
-
-  return [...unique.values()]
+  return [...cardSpace().values()]
+    .filter(
+      (card) =>
+        forms.has(card.form) &&
+        rootTypes.has(card.rootType) &&
+        (card.tense == null || tenses.has(card.tense)) &&
+        (card.pronoun == null || pronouns.has(card.pronoun)),
+    )
+    .map((card) => ({
+      ...card,
+      nominal: isParticipleCard(card) ? 'participles' : isMasdarCard(card) ? 'masdar' : undefined,
+    }))
 }
 
 function countCoverage(
@@ -320,8 +250,8 @@ function countCoverage(
 }
 
 function coverageRows(cards: readonly UniverseCard[], coveredKeys: ReadonlySet<string>, dimension: CoverageDimension) {
-  if (dimension === 'kind')
-    return EXERCISE_KINDS.map((kind) => countCoverage(cards, coveredKeys, kind, (card) => card.kind === kind))
+  if (dimension === 'type')
+    return CARD_TYPES.map((type) => countCoverage(cards, coveredKeys, type, (card) => card.type === type))
 
   if (dimension === 'rootType')
     return ROOT_TYPE_ORDER.map((rootType) =>
@@ -372,7 +302,7 @@ function printCoverageDistribution(cards: readonly UniverseCard[], store: SrsSto
   const rows = coverageRows(cards, new Set(Object.keys(store)), dimension)
 
   const sectionLabel: Record<CoverageDimension, string> = {
-    kind: 'exercise type',
+    type: 'card type',
     rootType: 'root type',
     form: 'form',
     tense: 'tense',
@@ -490,7 +420,7 @@ async function run() {
 
   const universe = buildUniverse()
   let lastMainAction: 'due' | 'coverage' | 'dimensions' | 'exit' = 'due'
-  let lastCoverageDimension: CoverageDimension = 'kind'
+  let lastCoverageDimension: CoverageDimension = 'type'
 
   while (true) {
     const action: 'due' | 'coverage' | 'dimensions' | 'exit' = await select({
@@ -521,7 +451,7 @@ async function run() {
       const dimension = (await select({
         message: 'Coverage submenu:',
         choices: [
-          { name: 'By exercise type', value: 'kind' },
+          { name: 'By card type', value: 'type' },
           { name: 'By root type', value: 'rootType' },
           { name: 'By form', value: 'form' },
           { name: 'By tense', value: 'tense' },

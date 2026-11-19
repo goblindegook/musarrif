@@ -4,7 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '../test/fixtures'
 import { OpticalSend } from './OpticalSend'
 
-// Not imported from production: a test asserting behaviour by importing the same constant
+// Not imported from production:verb: a test asserting behaviour by importing the same constant
 // production uses to produce it would never notice a regression in the constant itself.
 const FRAME_INTERVAL_MS = 125
 
