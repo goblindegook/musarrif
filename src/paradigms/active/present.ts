@@ -68,16 +68,13 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
   switch (verb.form) {
     case 1:
     case 4:
+    case 10:
       return [...migrateGeminateLinkingVowel(stem), suffix]
 
-    case 2:
-      return [...stem, suffix]
-
     case 3:
+    case 8:
+    case 9:
       return [...expandGeminationMorphemes(stem, KASRA), suffix]
-
-    case 5:
-      return [...stem, suffix]
 
     case 6:
       return [...(c3.isHamza ? stem : expandGeminationMorphemes(stem, FATHA)), suffix]
@@ -95,16 +92,11 @@ function deriveFemininePluralStem(stem: readonly Morpheme[], verb: Verb): readon
         ]
       return [...stem, suffix]
 
-    case 8:
-    case 9:
-      return [...expandGeminationMorphemes(stem, KASRA), suffix]
-
-    case 10:
-      return [...migrateGeminateLinkingVowel(stem), suffix]
+    case 2:
+    case 5:
+      return [...stem, suffix]
   }
 }
-
-const dammaSuffix = (s: boolean) => (s ? [agreementMorpheme(DAMMA)] : [])
 
 function hasFathaDefectiveEnding(morphemes: readonly Morpheme[]): boolean {
   if (morphemes.at(-1)?.endsWith([FATHA])) return true
@@ -115,15 +107,21 @@ function conjugateIndicative(verb: Verb): Record<PronounId, readonly Morpheme[]>
   const [c1, , c3] = verb.rootTokens
   const stem = derivePresentStem(verb)
   const vowel = presentPrefixVowel(verb)
-  const suffix = dammaSuffix(isQuadriliteralVerb(verb) || !c3.isWeak)
+  const suffix = isQuadriliteralVerb(verb) || !c3.isWeak ? [agreementMorpheme(DAMMA)] : []
   const feminineSingularStem = deriveFeminineSingularStem(stem, verb)
-  const feminineSingularSuffix = hasFathaDefectiveEnding(feminineSingularStem)
-    ? agreementMorpheme(YEH, SUKOON, NOON, FATHA)
-    : agreementMorpheme(YEH, NOON, FATHA)
+  const feminineSingularSuffix = agreementMorpheme(
+    YEH,
+    hasFathaDefectiveEnding(feminineSingularStem) ? SUKOON : null,
+    NOON,
+    FATHA,
+  )
   const masculinePluralStem = deriveMasculinePluralStem(stem, verb)
-  const masculinePluralSuffix = hasFathaDefectiveEnding(masculinePluralStem)
-    ? agreementMorpheme(WAW, SUKOON, NOON, FATHA)
-    : agreementMorpheme(WAW, NOON, FATHA)
+  const masculinePluralSuffix = agreementMorpheme(
+    WAW,
+    hasFathaDefectiveEnding(masculinePluralStem) ? SUKOON : null,
+    NOON,
+    FATHA,
+  )
   const femininePluralStem = deriveFemininePluralStem(stem, verb)
 
   return mapRecord(
@@ -159,38 +157,39 @@ function presentPrefixVowel(verb: Verb): Token {
   return [2, 3, 4].includes(verb.form) ? DAMMA : FATHA
 }
 
-function conjugateSubjunctive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const indicative = conjugateIndicative(verb)
-
-  return {
-    '1s': subjunctiveStem(indicative['1s']),
-    '2ms': subjunctiveStem(indicative['2ms']),
-    '2fs': [
-      ...indicative['2fs'].with(
-        -1,
-        indicative['2fs'].at(-2)?.endsWith([FATHA]) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
-      ),
-      elidedMorpheme(NOON, FATHA),
-    ],
-    '3ms': subjunctiveStem(indicative['3ms']),
-    '3fs': subjunctiveStem(indicative['3fs']),
-    '2d': dropTrailingNoon(indicative['2d']),
-    '3md': dropTrailingNoon(indicative['3md']),
-    '3fd': dropTrailingNoon(indicative['3fd']),
-    '1p': subjunctiveStem(indicative['1p']),
-    '2mp': [
-      ...indicative['2mp'].slice(0, -1),
-      agreementMorpheme(WAW, indicative['2mp'].at(-1)?.startsWith([WAW, SUKOON]) ? SUKOON : null, ALIF),
-      elidedMorpheme(NOON, FATHA),
-    ],
-    '2fp': indicative['2fp'],
-    '3mp': [
-      ...indicative['3mp'].slice(0, -1),
-      agreementMorpheme(WAW, indicative['3mp'].at(-1)?.startsWith([WAW, SUKOON]) ? SUKOON : null, ALIF),
-      elidedMorpheme(NOON, FATHA),
-    ],
-    '3fp': indicative['3fp'],
-  }
+// Subjunctive and jussive differ only where the indicative ends in a vowel (singular and 1p):
+// every -na/-ni ending drops the same way in both moods.
+function conjugateNonIndicative(verb: Verb, mood: Exclude<Mood, 'indicative'>): Record<PronounId, readonly Morpheme[]> {
+  return mapRecord(conjugateIndicative(verb), (indicative, pronoun) => {
+    switch (pronoun) {
+      case '2fs':
+        return [
+          ...indicative.slice(0, -1),
+          agreementMorpheme(YEH, indicative.at(-2)?.endsWith([FATHA]) ? SUKOON : null),
+          elidedMorpheme(NOON, FATHA),
+        ]
+      case '2d':
+      case '3md':
+      case '3fd':
+        return dropTrailingNoon(indicative)
+      case '2mp':
+      case '3mp':
+        return [
+          ...indicative.slice(0, -1),
+          agreementMorpheme(WAW, indicative.at(-1)?.startsWith([WAW, SUKOON]) ? SUKOON : null, ALIF),
+          elidedMorpheme(NOON, FATHA),
+        ]
+      case '2fp':
+      case '3fp':
+        return indicative
+      case '1s':
+      case '2ms':
+      case '3ms':
+      case '3fs':
+      case '1p':
+        return mood === 'subjunctive' ? subjunctiveStem(indicative) : jussiveStem(indicative, verb)
+    }
+  })
 }
 
 const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
@@ -198,30 +197,6 @@ const subjunctiveStem = (stem: readonly Morpheme[]): readonly Morpheme[] => {
   if (finalMorpheme?.equals([ALIF_MAQSURA]) || finalMorpheme?.equals([ALIF])) return stem
   if (finalMorpheme?.equals([DAMMA])) return stem.with(-1, finalMorpheme.with(-1, FATHA))
   return [...stem, agreementMorpheme(FATHA)]
-}
-
-function conjugateJussive(verb: Verb): Record<PronounId, readonly Morpheme[]> {
-  const indicative = conjugateIndicative(verb)
-
-  return {
-    '1s': jussiveStem(indicative['1s'], verb),
-    '2ms': jussiveStem(indicative['2ms'], verb),
-    '2fs': [
-      ...indicative['2fs'].slice(0, -1),
-      indicative['2fs'].at(-2)?.at(-1)?.equals(FATHA) ? agreementMorpheme(YEH, SUKOON) : agreementMorpheme(YEH),
-      elidedMorpheme(NOON, FATHA),
-    ],
-    '3ms': jussiveStem(indicative['3ms'], verb),
-    '3fs': jussiveStem(indicative['3fs'], verb),
-    '2d': dropTrailingNoon(indicative['2d']),
-    '3md': dropTrailingNoon(indicative['3md']),
-    '3fd': dropTrailingNoon(indicative['3fd']),
-    '1p': jussiveStem(indicative['1p'], verb),
-    '2mp': jussiveMasculinePlural(indicative['2mp']),
-    '2fp': indicative['2fp'],
-    '3mp': jussiveMasculinePlural(indicative['3mp']),
-    '3fp': indicative['3fp'],
-  }
 }
 
 function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morpheme[] {
@@ -243,12 +218,7 @@ function jussiveStem(indicative: readonly Morpheme[], verb: Verb): readonly Morp
     return [...stem, final.with(-1, geminateJussiveFatha ? FATHA : SUKOON)]
   }
 
-  return [...indicative.slice(0, -1), final.slice(0, -1), elidedMorpheme(final.tokens.at(-1))]
-}
-
-function jussiveMasculinePlural(indicative: readonly Morpheme[]): readonly Morpheme[] {
-  const base = dropTrailingNoon(indicative)
-  return base.with(-2, agreementMorpheme(...(base.at(-2)?.tokens ?? []), ALIF))
+  return [...stem, final.slice(0, -1), elidedMorpheme(final.tokens.at(-1))]
 }
 
 function dropTrailingNoon(stem: readonly Morpheme[]): readonly Morpheme[] {
@@ -263,9 +233,10 @@ function dropTrailingNoon(stem: readonly Morpheme[]): readonly Morpheme[] {
 }
 
 export function conjugatePresentMood(verb: Verb, mood: Mood): Record<PronounId, Word> {
-  if (mood === 'subjunctive') return mapRecord(conjugateSubjunctive(verb), (m) => new Word(m))
-  if (mood === 'jussive') return mapRecord(conjugateJussive(verb), (m) => new Word(m))
-  return mapRecord(conjugateIndicative(verb), (morphemes) => new Word(morphemes))
+  return mapRecord(
+    mood === 'indicative' ? conjugateIndicative(verb) : conjugateNonIndicative(verb, mood),
+    (m) => new Word(m),
+  )
 }
 
 function deriveFormIq(verb: QuadriliteralVerb): readonly Morpheme[] {
@@ -424,18 +395,9 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 
   if (verb.hamzaElision) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)]
 
-  if (c3.isWeak)
-    return [
-      ...prefix,
-      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
-      radicalMorpheme(c2),
-      measureMorpheme(KASRA),
-      radicalMorpheme(YEH),
-    ]
+  if (!c3.isWeak && c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
 
-  if (c2.isWeak) return [...prefix, measureMorpheme(KASRA), radicalMorpheme(YEH), radicalMorpheme(c3)]
-
-  if (c2.equals(c3))
+  if (!c3.isWeak && c2.equals(c3))
     return [...prefix, measureMorpheme(KASRA), radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)]
 
   return [
@@ -449,25 +411,17 @@ function deriveFormIV(verb: NonFormIVerb): readonly Morpheme[] {
 
 function deriveFormV(verb: NonFormIVerb): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-
-  if (c3.equals(YEH))
-    return [
-      measureMorpheme(TEH, FATHA),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(SUKOON, c2, FATHA),
-      radicalMorpheme(c2.equals(YEH) ? ALIF : ALIF_MAQSURA),
-    ]
-
-  return [
+  const prefix = [
     measureMorpheme(TEH, FATHA),
     radicalMorpheme(c1),
     measureMorpheme(FATHA),
     radicalMorpheme(c2),
     measureMorpheme(SUKOON, c2, FATHA),
-    radicalMorpheme(c3),
   ]
+
+  if (c3.equals(YEH)) return [...prefix, radicalMorpheme(c2.equals(YEH) ? ALIF : ALIF_MAQSURA)]
+
+  return [...prefix, radicalMorpheme(c3)]
 }
 
 function deriveFormVI(verb: NonFormIVerb): readonly Morpheme[] {
@@ -493,9 +447,7 @@ function deriveFormVII(verb: NonFormIVerb): readonly Morpheme[] {
 
   if (c2.equals(c3)) return [...prefix, radicalMorpheme(c2), measureMorpheme(SHADDA)]
 
-  if (c3.isWeak) return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
-
-  if (c2.isWeak) return [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)]
+  if (c2.isWeak && !c3.isWeak) return [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3)]
 
   return [...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)]
 }
@@ -514,16 +466,7 @@ function deriveFormVIII(verb: NonFormIVerb): readonly Morpheme[] {
       radicalMorpheme(c3),
     ]
 
-  if (c3.isWeak)
-    return [
-      radicalMorpheme(assimilatedC1),
-      measureMorpheme(SUKOON, infix, FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(KASRA),
-      radicalMorpheme(YEH),
-    ]
-
-  if (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))
+  if (!c3.isWeak && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
     return [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3)]
 
   return [
@@ -675,13 +618,13 @@ function replaceFusedDefectiveMeasureBeforeMasculinePluralDamma(morphemes: reado
 }
 
 function contractDefectiveRoot(morphemes: readonly Morpheme[]): readonly Morpheme[] {
-  return replaceFusedDefectiveMeasureBeforeMasculinePluralDamma(
-    elideWeakRadicalBeforeMasculinePluralDamma(
-      elideWeakRadicalReusingPrecedingVowelBeforeFeminineSingularSuffix(
-        stripFemininePluralSuffixAfterDefectiveTail(substituteWeakRadicalWithYehBeforeDualMarker(morphemes)),
-      ),
-    ),
-  )
+  return [
+    substituteWeakRadicalWithYehBeforeDualMarker,
+    stripFemininePluralSuffixAfterDefectiveTail,
+    elideWeakRadicalReusingPrecedingVowelBeforeFeminineSingularSuffix,
+    elideWeakRadicalBeforeMasculinePluralDamma,
+    replaceFusedDefectiveMeasureBeforeMasculinePluralDamma,
+  ].reduce((current, pass) => pass(current), morphemes)
 }
 
 function expandGeminationMorphemes(stem: readonly Morpheme[], vowel: Token): readonly Morpheme[] {

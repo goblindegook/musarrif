@@ -30,7 +30,7 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     // Word-final hamza: a mood ending (-u, -a) never governs the seat, only the preceding vowel does.
     // A kasra is never a mood ending, so here it is the stem vowel of a dropped final radical (يَرْتَئِ),
     // which leaves the hamza effectively medial, and kasra dominates:
-    if (!word.at(index + 2)) return vowel?.equals(KASRA) ? HAMZA_ON_YEH : seatOn(before)
+    if (!word.at(index + 2)) return vowel?.equals(KASRA) ? HAMZA_ON_YEH : seatStrongest(before)
 
     // Seat on the line to avoid alif + alif hamza:
     if (before.equals(ALIF) && vowel?.equals(FATHA)) return HAMZA
@@ -44,12 +44,12 @@ export function seatHamzas(word: readonly Token[]): readonly Token[] {
     // Long u outranks a following u or a, but kasra still wins (l'm-3 passive past 3ms, bw'-1 active jussive 3fs):
     if (longVowelBefore === 'u') return vowel?.equals(KASRA) ? HAMZA_ON_YEH : HAMZA
 
-    return seatOn(before, vowel)
+    return seatStrongest(before, vowel)
   })
 }
 
 // The strongest vowel around the hamza picks the seat: kasra, then damma, then fatha.
-function seatOn(...vowels: readonly (Token | undefined)[]): Token {
+function seatStrongest(...vowels: readonly (Token | undefined)[]): Token {
   if (vowels.some((v) => v?.equals(KASRA))) return HAMZA_ON_YEH
   if (vowels.some((v) => v?.equals(DAMMA))) return HAMZA_ON_WAW
   if (vowels.some((v) => v?.equals(FATHA))) return ALIF_HAMZA
