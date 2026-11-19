@@ -61,6 +61,13 @@ describe('getVerbById', () => {
     })
   })
 
+  test.each([
+    [7, 'impersonal'],
+    [9, 'impersonal'],
+  ] as const)('synthesizes Form %i with the least strict passive its attested verbs allow: %s', (form, passive) => {
+    expect(getVerb('ضفز', form)).toMatchObject({ synthetic: true, passive })
+  })
+
   test('Forms II-X', () => {
     expect(getVerbById('Dfz-2')).toEqual({
       form: 2,

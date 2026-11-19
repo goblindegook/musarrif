@@ -301,10 +301,12 @@ function synthesizeVerb<Root extends string, Form extends AllowedFormForRoot<Roo
     )
   }
 
+  // No attested Form VII or IX verb has a personal passive (VII is reflexive, IX intransitive).
+  const passive = [7, 9].includes(form) ? 'impersonal' : undefined
   return buildDisplayVerb(
     form === 1
-      ? { root: toTriliteralRoot(root), rootTokens, form, vowels: vowels ?? 'a-a' }
-      : { root: toTriliteralRoot(root), rootTokens, form },
+      ? { root: toTriliteralRoot(root), rootTokens, form, vowels: vowels ?? 'a-a', passive }
+      : { root: toTriliteralRoot(root), rootTokens, form, passive },
     true,
   )
 }

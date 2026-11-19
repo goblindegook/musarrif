@@ -230,10 +230,10 @@ function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounI
   const [c1, c2, c3] = verb.rootTokens
   const prefix = [measureMorpheme(NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
-  if (!c3.isWeak && c2.isWeak && mood === 'jussive') return [...prefix, radicalMorpheme(c3), agreementMorpheme(SUKOON)]
-
-  if (!c3.isWeak && c2.isWeak)
-    return [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
+  if (!c3.isWeak && c2.isWeak) {
+    const longVowel = hasClosedFinalSyllable(mood, pronounId) ? [] : [radicalMorpheme(ALIF)]
+    return [...prefix, ...longVowel, radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
+  }
 
   return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), ...finalRadical(c3, mood, pronounId)]
 }
