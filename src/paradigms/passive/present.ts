@@ -17,6 +17,7 @@ import {
   SHADDA,
   SUKOON,
   TEH,
+  type Token,
   WAW,
   YEH,
 } from '../tokens'
@@ -76,9 +77,8 @@ function buildC1SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Mo
   const [c1, c2, c3] = verb.rootTokens
 
   if (c2.equals(c3)) {
-    if (!c1.isWeak && isFemininePlural(pronounId)) return [radicalMorpheme(c1), measureMorpheme(SUKOON)]
-    if (isFemininePlural(pronounId)) return [radicalMorpheme(c1)]
-    return [radicalMorpheme(c1), measureMorpheme(FATHA)]
+    if (!isFemininePlural(pronounId)) return [radicalMorpheme(c1), measureMorpheme(FATHA)]
+    return c1.isWeak ? [radicalMorpheme(c1)] : [radicalMorpheme(c1), measureMorpheme(SUKOON)]
   }
 
   if (c2.isWeak && !c3.isWeak) return [radicalMorpheme(c1), measureMorpheme(FATHA)]
@@ -104,21 +104,14 @@ function buildC2SegmentFormI(verb: FormIVerb, pronounId: PronounId, mood: Mood):
 
   if (c3.isWeak) return [radicalMorpheme(c2)]
 
-  if (!c2.isWeak || c3.isWeak) return [radicalMorpheme(c2), measureMorpheme(FATHA)]
+  if (!c2.isWeak) return [radicalMorpheme(c2), measureMorpheme(FATHA)]
 
-  if (isFemininePlural(pronounId)) return []
-
-  if (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
-    return [radicalMorpheme(ALIF)]
-
-  return []
+  return hasClosedFinalSyllable(mood, pronounId) ? [] : [radicalMorpheme(ALIF)]
 }
 
 function buildC3SegmentFormI(verb: FormIVerb, pronounId: PronounId): readonly Morpheme[] {
   const [, c2, c3] = verb.rootTokens
-  if (c3.isWeak) return []
-  if (isFemininePlural(pronounId)) return [radicalMorpheme(c3)]
-  if (c2.equals(c3)) return []
+  if (c3.isWeak || (c2.equals(c3) && !isFemininePlural(pronounId))) return []
   return [radicalMorpheme(c3)]
 }
 
@@ -140,17 +133,19 @@ function derivePassivePresentStemFormI(verb: FormIVerb, pronounId: PronounId, mo
 
 function derivePassivePresentStemFormII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-  const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2), measureMorpheme(SHADDA)]
 
-  if (c3.isWeak) return [...prefix, measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId, c2.equals(c3))]
-
-  return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
+  return [
+    radicalMorpheme(c1),
+    measureMorpheme(FATHA),
+    radicalMorpheme(c2),
+    measureMorpheme(SHADDA),
+    measureMorpheme(FATHA),
+    ...finalRadical(c3, mood, pronounId, c2.equals(c3)),
+  ]
 }
 
 function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
-  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
   if (c2.equals(c3)) {
@@ -159,9 +154,7 @@ function derivePassivePresentStemFormIII(verb: NonFormIVerb, pronounId: PronounI
     return [...prefix, measureMorpheme(SHADDA), ...geminateSuffix(mood, pronounId)]
   }
 
-  if (c3.isWeak) return [...prefix, measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
-
-  return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
+  return [...prefix, measureMorpheme(FATHA), ...finalRadical(c3, mood, pronounId)]
 }
 
 function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
@@ -171,22 +164,13 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
 
   if (verb.hamzaElision) return [radicalMorpheme(initial), measureMorpheme(FATHA), ...defectiveSuffix(mood, pronounId)]
 
-  if (c3.isWeak)
-    return [
-      radicalMorpheme(initial),
-      ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId, c2.equals(c3)),
-    ]
-
-  if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.equals([SUKOON]))
+  if (!c3.isWeak && c2.isWeak) {
+    if (hasClosedFinalSyllable(mood, pronounId))
       return [radicalMorpheme(initial), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
     return [radicalMorpheme(initial), measureMorpheme(FATHA), radicalMorpheme(ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
-  if (c2.equals(c3)) {
+  if (!c3.isWeak && c2.equals(c3)) {
     if (isFemininePlural(pronounId))
       return [
         radicalMorpheme(initial),
@@ -211,24 +195,12 @@ function derivePassivePresentStemFormIV(verb: NonFormIVerb, pronounId: PronounId
     ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
     radicalMorpheme(c2),
     measureMorpheme(FATHA),
-    radicalMorpheme(c3),
-    ...moodSuffix,
+    ...finalRadical(c3, mood, pronounId, c2.equals(c3)),
   ]
 }
 
 function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
-  const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
-
-  if (c3.isWeak)
-    return [
-      measureMorpheme(TEH, FATHA),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(SHADDA, FATHA),
-      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
-    ]
 
   return [
     measureMorpheme(TEH, FATHA),
@@ -236,85 +208,34 @@ function derivePassivePresentStemFormV(verb: NonFormIVerb, pronounId: PronounId,
     measureMorpheme(FATHA),
     radicalMorpheme(c2),
     measureMorpheme(SHADDA, FATHA),
-    radicalMorpheme(c3),
-    ...moodSuffix,
+    ...finalRadical(c3, mood, pronounId, c2.equals(YEH)),
   ]
 }
 
 function derivePassivePresentStemFormVI(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
 
-  if (c3.isWeak)
-    return [
-      measureMorpheme(TEH, FATHA),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA, ALIF),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
-    ]
-
-  if (c2.equals(c3)) {
-    const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1), measureMorpheme(FATHA, ALIF), radicalMorpheme(c2)]
-
+  if (!c3.isWeak && c2.equals(c3)) {
     if (isFemininePlural(pronounId))
       return [...prefix, measureMorpheme(FATHA), radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
 
     return [...prefix, measureMorpheme(SUKOON), radicalMorpheme(c3), ...geminateSuffix(mood, pronounId)]
   }
 
-  return [
-    measureMorpheme(TEH, FATHA),
-    radicalMorpheme(c1),
-    measureMorpheme(FATHA, ALIF),
-    radicalMorpheme(c2),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c3),
-    ...MOOD_SUFFIXES[mood][pronounId],
-  ]
+  return [...prefix, measureMorpheme(FATHA), ...finalRadical(c3, mood, pronounId, c2.equals(YEH))]
 }
 
 function derivePassivePresentStemFormVII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = verb.rootTokens
+  const prefix = [measureMorpheme(NOON, SUKOON), radicalMorpheme(c1), measureMorpheme(FATHA)]
 
-  if (c3.isWeak)
-    return [
-      measureMorpheme(NOON, SUKOON),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
-    ]
+  if (!c3.isWeak && c2.isWeak && mood === 'jussive') return [...prefix, radicalMorpheme(c3), agreementMorpheme(SUKOON)]
 
-  if (c2.isWeak && mood === 'jussive')
-    return [
-      measureMorpheme(NOON, SUKOON),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-      agreementMorpheme(SUKOON),
-    ]
+  if (!c3.isWeak && c2.isWeak)
+    return [...prefix, radicalMorpheme(ALIF), radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
 
-  if (c2.isWeak)
-    return [
-      measureMorpheme(NOON, SUKOON),
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(ALIF),
-      radicalMorpheme(c3),
-      ...MOOD_SUFFIXES[mood][pronounId],
-    ]
-
-  return [
-    measureMorpheme(NOON, SUKOON),
-    radicalMorpheme(c1),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c2),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c3),
-    ...MOOD_SUFFIXES[mood][pronounId],
-  ]
+  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), ...finalRadical(c3, mood, pronounId)]
 }
 
 function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
@@ -344,60 +265,26 @@ function derivePassivePresentStemFormVIII(verb: NonFormIVerb, pronounId: Pronoun
     ]
   }
 
-  if ((c1.isWeak || c1.isHamza) && c3.isWeak)
-    return [
-      measureMorpheme(TEH, SHADDA, FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
-    ]
-
   if (c1.isWeak || c1.isHamza)
     return [
       measureMorpheme(TEH, SHADDA, FATHA),
       radicalMorpheme(c2),
       measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-      ...moodSuffix,
+      ...finalRadical(c3, mood, pronounId),
     ]
 
-  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL)))) {
-    return !isFemininePlural(pronounId) &&
-      (mood !== 'jussive' || pronounId === '2fs' || isDual(pronounId) || isMasculinePlural(pronounId))
-      ? [
-          radicalMorpheme(c1),
-          measureMorpheme(SUKOON, infix, FATHA),
-          radicalMorpheme(ALIF),
-          radicalMorpheme(c3),
-          ...moodSuffix,
-        ]
-      : [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA), radicalMorpheme(c3), ...moodSuffix]
-  }
+  const prefix = [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA)]
+  const closed = hasClosedFinalSyllable(mood, pronounId)
 
-  if (c3.isWeak)
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON, infix, FATHA),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId),
-    ]
+  if (!c3.isWeak && !c3.isHamza && (c2.equals(YEH) || (c2.isWeak && !infix.equals(DAL))))
+    return [...prefix, ...(closed ? [] : [radicalMorpheme(ALIF)]), radicalMorpheme(c3), ...moodSuffix]
 
   if (c2.isWeak && c3.isHamza) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.equals([SUKOON]))
-      return [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA), radicalMorpheme(c3), ...moodSuffix]
-
+    if (closed) return [...prefix, radicalMorpheme(c3), ...moodSuffix]
     return [radicalMorpheme(c1), measureMorpheme(SUKOON, infix, FATHA, ALIF), radicalMorpheme(c3), ...moodSuffix]
   }
 
-  return [
-    radicalMorpheme(c1),
-    measureMorpheme(SUKOON, infix, FATHA),
-    radicalMorpheme(c2),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c3),
-    ...moodSuffix,
-  ]
+  return [...prefix, radicalMorpheme(c2), measureMorpheme(FATHA), ...finalRadical(c3, mood, pronounId)]
 }
 
 function derivePassivePresentStemFormIX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
@@ -417,24 +304,13 @@ function derivePassivePresentStemFormIX(verb: NonFormIVerb, pronounId: PronounId
 
 function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId, mood: Mood): readonly Morpheme[] {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA)]
+  const prefix = [measureMorpheme(SEEN, SUKOON, TEH, FATHA), radicalMorpheme(c1)]
   const moodSuffix = MOOD_SUFFIXES[mood][pronounId]
 
-  if (c3.isWeak)
-    return [
-      ...prefix,
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      ...defectiveSuffix(mood, pronounId, c2.equals(YEH)),
-    ]
-
-  if (c2.equals(c3)) {
+  if (!c3.isWeak && c2.equals(c3)) {
     if (isFemininePlural(pronounId))
       return [
         ...prefix,
-        radicalMorpheme(c1),
         measureMorpheme(SUKOON),
         radicalMorpheme(c2),
         measureMorpheme(FATHA),
@@ -443,7 +319,6 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
       ]
     return [
       ...prefix,
-      radicalMorpheme(c1),
       measureMorpheme(FATHA),
       radicalMorpheme(c2),
       measureMorpheme(SHADDA),
@@ -451,27 +326,17 @@ function derivePassivePresentStemFormX(verb: NonFormIVerb, pronounId: PronounId,
     ]
   }
 
-  if (c2.isWeak) {
-    if (isFemininePlural(pronounId) || moodSuffix.at(0)?.equals([SUKOON]))
-      return [...prefix, radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c3), ...moodSuffix]
-    return [
-      ...prefix,
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA),
-      radicalMorpheme(ALIF),
-      radicalMorpheme(c3),
-      ...moodSuffix,
-    ]
+  if (!c3.isWeak && c2.isWeak) {
+    const longVowel = hasClosedFinalSyllable(mood, pronounId) ? [] : [radicalMorpheme(ALIF)]
+    return [...prefix, measureMorpheme(FATHA), ...longVowel, radicalMorpheme(c3), ...moodSuffix]
   }
 
   return [
     ...prefix,
-    radicalMorpheme(c1),
     measureMorpheme(SUKOON),
     radicalMorpheme(c2),
     measureMorpheme(FATHA),
-    radicalMorpheme(c3),
-    ...moodSuffix,
+    ...finalRadical(c3, mood, pronounId, c2.equals(YEH)),
   ]
 }
 
@@ -536,24 +401,9 @@ function derivePassivePresentStemFormIVq(
   mood: Mood,
 ): readonly Morpheme[] {
   const [c1, c2, c3, c4] = verb.rootTokens
-
-  const useLongForm =
-    isFemininePlural(pronounId) ||
-    (mood === 'jussive' && !isDual(pronounId) && pronounId !== '2fs' && !isMasculinePlural(pronounId))
-
-  if (useLongForm)
-    return [
-      radicalMorpheme(c1),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c2),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c3),
-      measureMorpheme(SUKOON),
-      radicalMorpheme(c4),
-      measureMorpheme(FATHA),
-      radicalMorpheme(c4),
-      ...MOOD_SUFFIXES[mood][pronounId],
-    ]
+  const geminate = hasClosedFinalSyllable(mood, pronounId)
+    ? [measureMorpheme(SUKOON), radicalMorpheme(c4), measureMorpheme(FATHA), radicalMorpheme(c4)]
+    : [measureMorpheme(FATHA), radicalMorpheme(c4), measureMorpheme(SHADDA)]
 
   return [
     radicalMorpheme(c1),
@@ -561,11 +411,21 @@ function derivePassivePresentStemFormIVq(
     radicalMorpheme(c2),
     measureMorpheme(FATHA),
     radicalMorpheme(c3),
-    measureMorpheme(FATHA),
-    radicalMorpheme(c4),
-    measureMorpheme(SHADDA),
+    ...geminate,
     ...MOOD_SUFFIXES[mood][pronounId],
   ]
+}
+
+// Feminine plural -na and the bare jussive sukūn close the stem's last syllable, which shortens
+// a hollow stem's long vowel (يُقَلْنَ، لَمْ يُقَلْ).
+function hasClosedFinalSyllable(mood: Mood, pronounId: PronounId): boolean {
+  return MOOD_SUFFIXES[mood][pronounId].at(0)?.startsWith([SUKOON]) === true
+}
+
+// A weak final radical fuses into the defective ending; a sound one takes the mood ending.
+function finalRadical(c3: Token, mood: Mood, pronounId: PronounId, isGeminateRoot?: boolean): readonly Morpheme[] {
+  if (c3.isWeak) return defectiveSuffix(mood, pronounId, isGeminateRoot)
+  return [radicalMorpheme(c3), ...MOOD_SUFFIXES[mood][pronounId]]
 }
 
 function geminateSuffix(mood: Mood, pronounId: PronounId): readonly Morpheme[] {

@@ -18,6 +18,7 @@
 
 - Keep functions small, single responsibility; prefer pure functions
 - Use spread over mutation
+- Switch over a known value space (a union, a form number, a pronoun id) lists every case and has no `default`, so adding a value makes TypeScript flag each switch that needs a decision. Group cases that share a result instead of sending them to `default`
 
 ### Type Definitions
 
