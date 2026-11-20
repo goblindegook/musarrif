@@ -21,12 +21,11 @@ import {
   parseSrsStore,
   type SrsRootType,
   type SrsStore,
-  utcAddDays,
 } from '../src/exercises/srs.ts'
 import { PRONOUN_IDS, type PronounId } from '../src/paradigms/pronouns.ts'
 import type { VerbTense } from '../src/paradigms/tense.ts'
 import type { TriliteralForm } from '../src/paradigms/verbs.ts'
-import { utcToday } from '../src/primitives/dates.ts'
+import { utcAddDays, utcToday } from '../src/primitives/dates.ts'
 
 type CoverageDimension = 'type' | 'rootType' | 'form' | 'tense' | 'pronoun' | 'nominal'
 type NominalGroup = 'participles' | 'masdar'

@@ -3,12 +3,12 @@ import { resolve } from 'node:path'
 import { parseDimensionStore } from '../src/exercises/dimensions.ts'
 import { computeInsights } from '../src/exercises/mastery.ts'
 import type { SrsCard, SrsStore } from '../src/exercises/srs.ts'
-import { getSrsCards, parseSrsStore, utcAddDays } from '../src/exercises/srs.ts'
+import { getSrsCards, parseSrsStore } from '../src/exercises/srs.ts'
 import { parseTrackedExercises } from '../src/exercises/stats.ts'
 import en from '../src/locales/en.strings.json' with { type: 'json' }
 import { localizedInsights } from '../src/localization.exercises.ts'
 import { isDual, isFemininePlural, isMasculinePlural } from '../src/paradigms/pronouns.ts'
-import { utcToday } from '../src/primitives/dates.ts'
+import { utcAddDays, utcToday } from '../src/primitives/dates.ts'
 import { toRoman } from '../src/primitives/numbers.ts'
 
 const filePath = process.argv[2]
