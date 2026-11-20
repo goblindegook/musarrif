@@ -147,12 +147,11 @@ function derivePastFormI(verb: FormIVerb): PastBaseForms {
   if (verb.root === 'ليس') return conjugateLaysa()
 
   const [c1, c2, c3] = verb.rootTokens
-  const pastVowel = formIPastVowel(verb)
   const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA), radicalMorpheme(c2)]
 
   if (c2.isWeak && !c3.isWeak) return [[...prefix, radicalMorpheme(c3)]]
 
-  return [[...prefix, measureMorpheme(pastVowel), radicalMorpheme(c3)]]
+  return [[...prefix, measureMorpheme(formIPastVowel(verb)), radicalMorpheme(c3)]]
 }
 
 function derivePastFormII(verb: NonFormIVerb): PastBaseForms {
@@ -220,9 +219,16 @@ function derivePastFormV(verb: NonFormIVerb): PastBaseForms {
 
 function derivePastFormVI(verb: NonFormIVerb): PastBaseForms {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  const prefix = [measureMorpheme(TEH, FATHA), radicalMorpheme(c1)]
-
-  return [[...prefix, measureMorpheme(FATHA, ALIF), radicalMorpheme(c2), measureMorpheme(FATHA), radicalMorpheme(c3)]]
+  return [
+    [
+      measureMorpheme(TEH, FATHA),
+      radicalMorpheme(c1),
+      measureMorpheme(FATHA, ALIF),
+      radicalMorpheme(c2),
+      measureMorpheme(FATHA),
+      radicalMorpheme(c3),
+    ],
+  ]
 }
 
 function derivePastFormVII(verb: NonFormIVerb): PastBaseForms {
@@ -408,9 +414,7 @@ function contractActivePastGeminateRoot(morphemes: readonly Morpheme[]): readonl
       morphemes[i + 1]?.role === 'radical' &&
       morphemes[i + 1].equals(morphemes[i - 1]),
   )
-  if (index === -1) return morphemes
-
-  if (morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
+  if (index === -1 || morphemes[index + 2]?.startsWith([SUKOON])) return morphemes
 
   return [...morphemes.slice(0, index), measureMorpheme(SUKOON), ...morphemes.slice(index + 1)]
 }

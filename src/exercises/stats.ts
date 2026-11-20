@@ -1,5 +1,5 @@
 import * as v from 'valibot'
-import { localDate } from '../primitives/dates'
+import { localDate, utcAddDays } from '../primitives/dates'
 
 export interface DailyActivity {
   date: Date
@@ -50,14 +50,14 @@ export function getStreak(stats: TrackedExercises, today = todayDate()): number 
   const extendedDates = new Set(stats.filter((d) => d.correct >= STREAK_DAILY_GOAL).map((d) => localDate(d.date)))
 
   // Streak can start from today or yesterday
-  const startDate = extendedDates.has(todayStr) ? todayStr : offsetDate(todayStr, -1)
+  const startDate = extendedDates.has(todayStr) ? todayStr : utcAddDays(todayStr, -1)
   if (!extendedDates.has(startDate)) return 0
 
   let streak = 0
   let current = startDate
   while (extendedDates.has(current)) {
     streak++
-    current = offsetDate(current, -1)
+    current = utcAddDays(current, -1)
   }
   return streak
 }
@@ -84,7 +84,7 @@ export function getStreakRecord(stats: TrackedExercises): number {
   let prev: string | null = null
 
   for (const date of activeDates) {
-    currentRun = prev !== null && date === offsetDate(prev, 1) ? currentRun + 1 : 1
+    currentRun = prev !== null && date === utcAddDays(prev, 1) ? currentRun + 1 : 1
     max = Math.max(max, currentRun)
     prev = date
   }
@@ -118,10 +118,4 @@ export function getStatsWindow(stats: readonly DailyActivity[], sinceDays: numbe
 function todayDate(): Date {
   const now = new Date()
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
-}
-
-function offsetDate(dateStr: string, days: number): string {
-  const d = new Date(dateStr)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
 }

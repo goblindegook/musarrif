@@ -1,4 +1,5 @@
-import { type CardState, type SrsStore, utcAddDays } from './srs'
+import { utcAddDays } from '../primitives/dates'
+import type { CardState, SrsStore } from './srs'
 
 interface DayCounts {
   readonly date: string

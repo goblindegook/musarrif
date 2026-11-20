@@ -13,13 +13,6 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-/** A real calendar date in `YYYY-MM-DD` form, never converted through a timezone. */
-export function isDateOnly(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false
-  const date = new Date(`${value}T00:00:00Z`)
-  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value
-}
-
 export type UserDataKey =
   | `setting:${string}`
   | `favorite:${string}`

@@ -13,7 +13,7 @@ import {
   STREAK_DAILY_GOAL,
   type TrackedExercises,
 } from '../../../../src/exercises/stats'
-import { localDate } from '../../../../src/primitives/dates'
+import { localDate, parseLocalDate } from '../../../../src/primitives/dates'
 import { useLocalStorage } from './useLocalStorage'
 
 type Result = 'correct' | 'incorrect' | 'passed'
@@ -64,8 +64,5 @@ export function serializeDayStats(stats: TrackedExercises): SerializedTrackedExe
 }
 
 export function deserializeDayStats(raw: readonly unknown[]): TrackedExercises {
-  return parseTrackedExercises(raw).map((d) => {
-    const [y, m, day] = d.date.split('-').map(Number)
-    return { ...d, date: new Date(y, m - 1, day) }
-  })
+  return parseTrackedExercises(raw).map((d) => ({ ...d, date: parseLocalDate(d.date) }))
 }

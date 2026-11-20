@@ -2,7 +2,7 @@ import { memoize } from '@pacote/memoize'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { FORMS, type TriliteralForm } from '../paradigms/verbs'
-import { utcToday } from '../primitives/dates'
+import { daysBetween, parseLocalDate, utcAddDays, utcToday } from '../primitives/dates'
 import { average, clamp } from '../primitives/numbers'
 import { type DimensionProfile, formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import {
@@ -13,7 +13,6 @@ import {
   type SrsCardIdentity,
   type SrsRootType,
   type SrsStore,
-  utcAddDays,
 } from './srs'
 import { getAccuracyPercent, getStatsWindow, STREAK_DAILY_GOAL, type TrackedExercises } from './stats'
 
@@ -150,8 +149,7 @@ function cardStrength(store: SrsStore, key: string, today: string): number {
   const interval = clamp(Math.round(state.interval), 1, MASTERY_THRESHOLD_DAYS)
   const strength = Math.log2(interval + 1) / STRENGTH_DENOMINATOR
   if (state.dueDate >= today) return strength
-  const daysOverdue = (Date.parse(today) - Date.parse(state.dueDate)) / 86_400_000
-  return strength * (interval / (interval + daysOverdue))
+  return strength * (interval / (interval + daysBetween(state.dueDate, today)))
 }
 
 function combinationGroupKey(card: SrsCardIdentity): string {
@@ -308,8 +306,7 @@ function computeBacklogState(overdueCount: number, eta?: BacklogETA): BacklogSta
 }
 
 function estimateBacklogETA(srsStore: SrsStore, stats: TrackedExercises, today: string): BacklogETA | undefined {
-  const todayDate = new Date(`${today}T00:00:00`)
-  const recentWindow = getStatsWindow(stats, 14, todayDate)
+  const recentWindow = getStatsWindow(stats, 14, parseLocalDate(today))
   const dailyPace = average(recentWindow.map((d) => d.correct + d.incorrect + d.passed))
   if (dailyPace < 1) return
 
@@ -375,7 +372,7 @@ export function computeInsights(
   stats: TrackedExercises,
   today = utcToday(),
 ): InsightData {
-  const todayDate = new Date(`${today}T00:00:00`)
+  const todayDate = parseLocalDate(today)
   const accuracy = getAccuracyPercent(stats)
   const trend = computeInsightTrend(stats, accuracy, getStatsWindow(stats, 15, todayDate))
 

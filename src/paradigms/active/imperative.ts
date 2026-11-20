@@ -63,7 +63,7 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
                 radicalMorpheme(c1),
                 measureMorpheme(SUKOON),
                 radicalMorpheme(c2),
-                measureMorpheme(!isPatternI ? FATHA : pronounId === '2mp' ? DAMMA : KASRA),
+                measureMorpheme(isPatternI ? (pronounId === '2mp' ? DAMMA : KASRA) : FATHA),
                 agreementMorpheme(
                   ...jussiveMorphemes
                     .slice(4)
@@ -88,16 +88,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
 
             if (c2.isWeak) return [radicalMorpheme(HAMZA), ...stem.slice(1)]
 
-            if (isPatternU)
-              return [
-                measureMorpheme(ALIF, DAMMA),
-                radicalMorpheme(c1),
-                measureMorpheme(SUKOON),
-                ...jussiveMorphemes.slice(3),
-              ]
-
             return [
-              measureMorpheme(ALIF, KASRA),
+              measureMorpheme(ALIF, isPatternU ? DAMMA : KASRA),
               radicalMorpheme(c1),
               measureMorpheme(SUKOON),
               ...jussiveMorphemes.slice(3),
@@ -116,9 +108,8 @@ export function conjugateImperative(verb: Verb): Record<PronounId, Word> {
         }
 
         case 4: {
-          if (c1.isHamza) {
-            return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(2)]
-          }
+          if (c1.isHamza) return [measureMorpheme(HAMZA, ...longVowelA), ...stem.slice(1)]
+
           if (c1.isWeak && c3.isWeak) {
             const prefix = [
               measureMorpheme(HAMZA, FATHA),

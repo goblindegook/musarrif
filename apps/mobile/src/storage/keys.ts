@@ -1,4 +1,5 @@
-import { isDateOnly, type UserDataKey } from './schema'
+import { isDateOnly } from '../../../../src/primitives/dates'
+import type { UserDataKey } from './schema'
 
 /** The exact SRS card key the web implementation uses, without normalizing its contents. */
 export function srsCardKey(cardKey: string): UserDataKey {

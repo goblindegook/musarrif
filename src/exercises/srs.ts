@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import type { PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { getAvailableParadigms, type TriliteralForm, verbs } from '../paradigms/verbs'
-import { utcToday } from '../primitives/dates'
+import { daysBetween, utcAddDays, utcToday } from '../primitives/dates'
 import { formPool, MAX_LEVELS, pronounPool, rootTypesPool, tensePool } from './dimensions'
 import { getSrsRootType, type SrsRootType } from './root-types'
 import type { CardConstraints, CardFamily, CardType, MorphologicalCategory, SrsCardIdentity } from './srs-types'
@@ -105,12 +105,6 @@ export function parseCardKey(key: string): SrsCardIdentity {
   return tense == null ? card : { ...card, tense: tense as VerbTense, pronoun: pronoun as PronounId }
 }
 
-export function utcAddDays(date: string, days: number): string {
-  const d = new Date(`${date}T00:00:00.000Z`)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
-}
-
 export function updateCardState(
   current: CardState | undefined,
   result: AnswerResult,
@@ -148,13 +142,9 @@ const MAX_WEIGHT = 10
 
 export function cardSrsWeight(state: CardState | undefined, today: string): number {
   if (state == null) return MAX_WEIGHT
-  if (state.dueDate < today) {
-    const daysOverdue = (Date.parse(today) - Date.parse(state.dueDate)) / 86_400_000
-    return MAX_WEIGHT + daysOverdue
-  }
+  if (state.dueDate < today) return MAX_WEIGHT + daysBetween(state.dueDate, today)
   if (state.dueDate === today) return MAX_WEIGHT
-  const daysUntilDue = (Date.parse(state.dueDate) - Date.parse(today)) / 86_400_000
-  return 1 / daysUntilDue
+  return 1 / daysBetween(today, state.dueDate)
 }
 
 export function weightedRandomSrs<T>(items: T[], weight: (item: T) => number): T {

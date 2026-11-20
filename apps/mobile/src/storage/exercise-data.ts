@@ -3,7 +3,8 @@ import { parseDimensionStore } from '../../../../src/exercises/dimensions'
 import type { SrsStore } from '../../../../src/exercises/srs'
 import { parseSrsStore } from '../../../../src/exercises/srs'
 import type { DailyActivity } from '../../../../src/exercises/stats'
-import { isDateOnly, isRecord, type UserDataSnapshot } from './schema'
+import { isDateOnly, parseLocalDate } from '../../../../src/primitives/dates'
+import { isRecord, type UserDataSnapshot } from './schema'
 
 const SRS_PREFIX = 'srs:'
 const DAILY_PREFIX = 'exercise:daily:'
@@ -27,7 +28,7 @@ export function readDailyActivity(values: UserDataSnapshot['values']): DailyActi
     if (!isDateOnly(date)) return []
     return [
       {
-        date: new Date(`${date}T00:00:00`),
+        date: parseLocalDate(date),
         correct: count(value.correct),
         incorrect: count(value.incorrect),
         passed: count(value.passed),
