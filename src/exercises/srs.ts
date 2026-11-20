@@ -168,10 +168,9 @@ function normalizeSrsStore(store: SrsStore): SrsStore {
     }
 
     const interval = Math.max(1, Math.round(state.interval))
-    const nextState = interval === state.interval ? state : { ...state, interval }
-    if (nextState === state) continue
+    if (interval === state.interval) continue
     if (normalized === store) normalized = { ...store }
-    normalized[key] = nextState
+    normalized[key] = { ...state, interval }
   }
   return normalized
 }

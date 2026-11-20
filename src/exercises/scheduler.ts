@@ -136,10 +136,10 @@ export function nextExercise(
     const dueKey = weightedRandomSrs(dueKeys, srsWeight)
     const { rootType, form, tense, pronoun, category } = parseCardKey(dueKey)
     const generator = weightedRandomSrs(generatorsFor(dueKey), exerciseWeight)
-    const pool = verbs.filter(
+    const hasVerb = verbs.some(
       (v) => (rootType == null || getSrsRootType(v.root) === rootType) && (form == null || v.form === form),
     )
-    if (pool.length > 0) return generator.generate(profile, { rootType, form, tense, pronoun, category })
+    if (hasVerb) return generator.generate(profile, { rootType, form, tense, pronoun, category })
   }
 
   return weightedRandomSrs(available, exerciseWeight).generate(profile)

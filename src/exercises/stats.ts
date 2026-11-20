@@ -51,7 +51,6 @@ export function getStreak(stats: TrackedExercises, today = todayDate()): number 
 
   // Streak can start from today or yesterday
   const startDate = extendedDates.has(todayStr) ? todayStr : utcAddDays(todayStr, -1)
-  if (!extendedDates.has(startDate)) return 0
 
   let streak = 0
   let current = startDate
