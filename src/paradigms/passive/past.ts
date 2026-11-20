@@ -35,14 +35,14 @@ function deriveMasculinePluralStem(stem: readonly Morpheme[]): readonly Morpheme
   return stem.with(-1, measureMorpheme(DAMMA))
 }
 
-function hasAgreement(last?: Morpheme): boolean {
+function endsInStrongRadical(last?: Morpheme): boolean {
   return last?.role === 'radical' && last.some((t) => !t.isWeak)
 }
 
 function toConjugation({ stem, suffix = [], suffix3sd = [] }: PassivePastParams): Record<PronounId, Word> {
   const consonantStem = [...stem, ...suffix]
   const vowelStem = [...stem, ...suffix3sd]
-  const agreement = hasAgreement(consonantStem.at(-1)) ? [SUKOON] : []
+  const agreement = endsInStrongRadical(consonantStem.at(-1)) ? [SUKOON] : []
 
   return mapRecord(
     {
