@@ -39,25 +39,26 @@ function hasAgreement(last?: Morpheme): boolean {
   return last?.role === 'radical' && last.some((t) => !t.isWeak)
 }
 
-function toConjugation(params: PassivePastParams): Record<PronounId, Word> {
-  const { stem, suffix = [], suffix3sd = [] } = params
-  const agreement = hasAgreement([...stem, ...suffix].at(-1)) ? [SUKOON] : []
+function toConjugation({ stem, suffix = [], suffix3sd = [] }: PassivePastParams): Record<PronounId, Word> {
+  const consonantStem = [...stem, ...suffix]
+  const vowelStem = [...stem, ...suffix3sd]
+  const agreement = hasAgreement(consonantStem.at(-1)) ? [SUKOON] : []
 
   return mapRecord(
     {
-      '1s': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA)],
-      '2ms': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, FATHA)],
-      '2fs': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, KASRA)],
-      '3ms': [...stem, ...suffix3sd],
-      '3fs': [...stem, ...suffix3sd, agreementMorpheme(TEH, SUKOON)],
-      '2d': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, FATHA, ALIF)],
-      '3md': [...stem, ...suffix3sd, agreementMorpheme(ALIF)],
-      '3fd': [...stem, ...suffix3sd, agreementMorpheme(TEH, FATHA, ALIF)],
-      '1p': [...stem, ...suffix, agreementMorpheme(...agreement, NOON, FATHA, ALIF)],
-      '2mp': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, SUKOON)],
-      '2fp': [...stem, ...suffix, agreementMorpheme(...agreement, TEH, DAMMA, NOON, SHADDA, FATHA)],
-      '3mp': [...deriveMasculinePluralStem([...stem, ...suffix3sd]), agreementMorpheme(WAW, ALIF)],
-      '3fp': [...stem, ...suffix, agreementMorpheme(...agreement, NOON, FATHA)],
+      '1s': [...consonantStem, agreementMorpheme(...agreement, TEH, DAMMA)],
+      '2ms': [...consonantStem, agreementMorpheme(...agreement, TEH, FATHA)],
+      '2fs': [...consonantStem, agreementMorpheme(...agreement, TEH, KASRA)],
+      '3ms': vowelStem,
+      '3fs': [...vowelStem, agreementMorpheme(TEH, SUKOON)],
+      '2d': [...consonantStem, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, FATHA, ALIF)],
+      '3md': [...vowelStem, agreementMorpheme(ALIF)],
+      '3fd': [...vowelStem, agreementMorpheme(TEH, FATHA, ALIF)],
+      '1p': [...consonantStem, agreementMorpheme(...agreement, NOON, FATHA, ALIF)],
+      '2mp': [...consonantStem, agreementMorpheme(...agreement, TEH, DAMMA, MEEM, SUKOON)],
+      '2fp': [...consonantStem, agreementMorpheme(...agreement, TEH, DAMMA, NOON, SHADDA, FATHA)],
+      '3mp': [...deriveMasculinePluralStem(vowelStem), agreementMorpheme(WAW, ALIF)],
+      '3fp': [...consonantStem, agreementMorpheme(...agreement, NOON, FATHA)],
     },
     (morphemes) => new Word(morphemes),
   )
@@ -144,19 +145,18 @@ function derivePassivePastFormIII(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
-  const initial = c1.isHamza || c1.equals(YEH) ? WAW : c1
+  const prefix = [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(c1.isHamza || c1.isWeak ? WAW : c1)]
 
   if (verb.hamzaElision)
     return {
-      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(initial), measureMorpheme(KASRA), radicalMorpheme(c3)],
+      stem: [...prefix, measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
   if (c3.isWeak)
     return {
       stem: [
-        measureMorpheme(HAMZA, DAMMA),
-        radicalMorpheme(initial),
+        ...prefix,
         ...(c1.isWeak || c1.isHamza ? [] : [measureMorpheme(SUKOON)]),
         radicalMorpheme(c2),
         measureMorpheme(KASRA),
@@ -165,17 +165,16 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
       suffix3sd: [measureMorpheme(FATHA)],
     }
 
-  if (c2.isWeak) {
+  if (c2.isWeak)
     return {
-      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(initial), measureMorpheme(KASRA)],
+      stem: [...prefix, measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
       suffix3sd: [radicalMorpheme(YEH), radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
-  }
 
   if (c2.equals(c3))
     return {
-      stem: [measureMorpheme(HAMZA, DAMMA), radicalMorpheme(initial)],
+      stem: prefix,
       suffix: [measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [
         measureMorpheme(KASRA),
@@ -188,8 +187,7 @@ function derivePassivePastFormIV(verb: NonFormIVerb): PassivePastParams {
 
   return {
     stem: [
-      measureMorpheme(HAMZA, DAMMA),
-      radicalMorpheme(initial),
+      ...prefix,
       ...(c1.isWeak || c1.isHamza ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
       measureMorpheme(KASRA),
@@ -334,11 +332,12 @@ function derivePassivePastFormIX(verb: NonFormIVerb): PassivePastParams {
 
 function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
   const [c1, c2, c3] = derivedRadicals(verb.rootTokens)
+  const prefix = measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA)
 
   if (c2.equals(c3) && c2.isWeak)
     return {
       stem: [
-        measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA),
+        prefix,
         radicalMorpheme(c1),
         measureMorpheme(SUKOON),
         radicalMorpheme(c2),
@@ -350,7 +349,7 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.equals(c3))
     return {
-      stem: [measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA), radicalMorpheme(c1)],
+      stem: [prefix, radicalMorpheme(c1)],
       suffix: [measureMorpheme(SUKOON), radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)],
       suffix3sd: [
         measureMorpheme(KASRA),
@@ -363,14 +362,14 @@ function derivePassivePastFormX(verb: NonFormIVerb): PassivePastParams {
 
   if (c2.isWeak && !c3.isWeak)
     return {
-      stem: [measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA), radicalMorpheme(c1), measureMorpheme(KASRA)],
+      stem: [prefix, radicalMorpheme(c1), measureMorpheme(KASRA)],
       suffix: [radicalMorpheme(c3)],
       suffix3sd: [radicalMorpheme(YEH), radicalMorpheme(c3), measureMorpheme(FATHA)],
     }
 
   return {
     stem: [
-      measureMorpheme(ALIF, DAMMA, SEEN, SUKOON, TEH, DAMMA),
+      prefix,
       radicalMorpheme(c1.isWeak ? WAW : c1),
       ...(c1.isWeak ? [] : [measureMorpheme(SUKOON)]),
       radicalMorpheme(c2),
