@@ -1,5 +1,5 @@
 import { memoize } from '@pacote/memoize'
-import type { PronounId } from '../paradigms/pronouns'
+import { PRONOUN_IDS, type PronounId } from '../paradigms/pronouns'
 import type { VerbTense } from '../paradigms/tense'
 import { FORMS, type TriliteralForm } from '../paradigms/verbs'
 import { daysBetween, parseLocalDate, utcAddDays, utcToday } from '../primitives/dates'
@@ -17,21 +17,6 @@ import {
 import { getAccuracyPercent, getStatsWindow, STREAK_DAILY_GOAL, type TrackedExercises } from './stats'
 
 const ROOT_TYPES_ORDER: readonly SrsRootType[] = ['sound', 'doubled', 'hamzated', 'assimilated', 'hollow', 'defective']
-const PRONOUN_TABLE_ORDER: readonly PronounId[] = [
-  '1s',
-  '2ms',
-  '2fs',
-  '3ms',
-  '3fs',
-  '2d',
-  '3md',
-  '3fd',
-  '1p',
-  '2mp',
-  '2fp',
-  '3mp',
-  '3fp',
-]
 const NOMINAL_ORDER = ['participles', 'masdar'] as const
 
 const MASTERY_THRESHOLD_DAYS = 90
@@ -101,7 +86,7 @@ export function computeMastery(
     category('rootTypes', ROOT_TYPES_ORDER, rootTypesPool(profile.rootTypes)),
     category('forms', FORMS, formPool(profile.forms)),
     category('tenses', tensePool(MAX_LEVELS.tenses), tensePool(profile.tenses)),
-    category('pronouns', PRONOUN_TABLE_ORDER, pronounPool(profile.pronouns)),
+    category('pronouns', PRONOUN_IDS, pronounPool(profile.pronouns)),
     category('nominals', NOMINAL_ORDER, NOMINAL_ORDER.slice(0, profile.nominals)),
   ]
 }
@@ -114,9 +99,7 @@ const MASTERY_ITEMS: readonly (readonly [MasteryItemId, (card: SrsCardIdentity) 
   ...tensePool(MAX_LEVELS.tenses).map(
     (value) => [`tenses.${value}`, (card: SrsCardIdentity) => card.tense === value] as const,
   ),
-  ...PRONOUN_TABLE_ORDER.map(
-    (value) => [`pronouns.${value}`, (card: SrsCardIdentity) => card.pronoun === value] as const,
-  ),
+  ...PRONOUN_IDS.map((value) => [`pronouns.${value}`, (card: SrsCardIdentity) => card.pronoun === value] as const),
   ['nominals.participles', isParticipleCard],
   ['nominals.masdar', isMasdarCard],
 ]
