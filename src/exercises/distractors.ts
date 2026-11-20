@@ -82,7 +82,7 @@ export function singleLetterWordDistractor(word: string): DistractorGenerator {
   const letterIndices = chars.map((_c, i) => i).filter((i) => !chars[i].isCombiningMark)
 
   return () => {
-    const index = letterIndices[Math.floor(Math.random() * letterIndices.length)]
+    const index = random(letterIndices)
     const replacements = RANDOM_LETTERS.filter((letter) => !letter.equals(chars[index]))
     const candidate = [...chars]
     candidate[index] = random(replacements)

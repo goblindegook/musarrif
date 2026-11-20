@@ -14,14 +14,8 @@ interface LayerMastery {
 // before a doubled pair, so a root carrying several shapes lands on the same card either way.
 const SRS_ROOT_TYPES: readonly SrsRootType[] = ['defective', 'hollow', 'assimilated', 'hamzated', 'doubled', 'sound']
 
-function strongestDeduped(cards: SrsCard[], today: string): number {
-  const grouped = new Map<string, number>()
-  for (const card of cards) {
-    if (card.dueDate <= today) continue
-    const current = grouped.get(card.key)
-    if (current == null || card.interval > current) grouped.set(card.key, card.interval)
-  }
-  return Math.max(0, ...grouped.values())
+function strongestInterval(cards: SrsCard[], today: string): number {
+  return Math.max(0, ...cards.filter((card) => card.dueDate > today).map((card) => card.interval))
 }
 
 function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers, today: string): LayerMastery {
@@ -30,32 +24,29 @@ function computeLayerMastery(srsStore: SrsStore, explanation: ExplanationLayers,
   const srsType = rootType && SRS_ROOT_TYPES.find((shape) => rootType.includes(shape))
 
   return {
-    rootType: strongestDeduped(
+    rootType: strongestInterval(
       cards.filter((card) => card.rootType === srsType),
       today,
     ),
-    form: strongestDeduped(
+    form: strongestInterval(
       cards.filter((card) => card.form === explanation.paradigmForm),
       today,
     ),
     tense:
       explanation.category === 'verb'
-        ? strongestDeduped(
+        ? strongestInterval(
             cards.filter((card) => isVerbCard(card) && card.tense === explanation.tense),
             today,
           )
         : 0,
     pronoun:
       explanation.category === 'verb'
-        ? strongestDeduped(
+        ? strongestInterval(
             cards.filter((card) => isVerbCard(card) && card.pronoun === explanation.pronoun),
             today,
           )
         : 0,
-    nominal: strongestDeduped(
-      cards.filter((card) => isNominalCard(card)),
-      today,
-    ),
+    nominal: strongestInterval(cards.filter(isNominalCard), today),
   }
 }
 
@@ -72,34 +63,31 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
   const mastery = computeLayerMastery(srsStore, layers, today)
   const showRootType = mastery.rootType < threshold
   const showForm = mastery.form < threshold
+  const rootAndForm = {
+    rootType: on(showRootType, layers.rootType),
+    weakLetter: on(showRootType, layers.weakLetter),
+    form: on(showForm, layers.form),
+    vowels: on(showForm, layers.vowels),
+    formRoot: on(showForm || showRootType, layers.formRoot),
+  }
 
   if (layers.category === 'nominal') {
     const showNominal = mastery.nominal < threshold
+    const nominal = {
+      ...layers,
+      ...rootAndForm,
+      nominal: on(showNominal, layers.nominal),
+      nominalRoot: on(showNominal || showRootType, layers.nominalRoot),
+    }
 
     if (layers.nominal === 'masdar')
       return {
-        ...layers,
-        rootType: on(showRootType, layers.rootType),
-        weakLetter: on(showRootType, layers.weakLetter),
-        form: on(showForm, layers.form),
-        vowels: on(showForm, layers.vowels),
-        formRoot: on(showForm || showRootType, layers.formRoot),
-        nominal: on(showNominal, layers.nominal),
-        nominalRoot: on(showNominal || showRootType, layers.nominalRoot),
+        ...nominal,
         isMasdarMimi: on(showNominal, layers.isMasdarMimi),
         masdarPattern: on(showNominal, layers.masdarPattern),
       }
 
-    return {
-      ...layers,
-      rootType: on(showRootType, layers.rootType),
-      weakLetter: on(showRootType, layers.weakLetter),
-      form: on(showForm, layers.form),
-      vowels: on(showForm, layers.vowels),
-      formRoot: on(showForm || showRootType, layers.formRoot),
-      nominal: on(showNominal, layers.nominal),
-      nominalRoot: on(showNominal || showRootType, layers.nominalRoot),
-    }
+    return nominal
   }
 
   const showTense = mastery.tense < threshold
@@ -107,11 +95,7 @@ export function filterMasteredLayers<T extends ExplanationLayers>(
 
   return {
     ...layers,
-    rootType: on(showRootType, layers.rootType),
-    weakLetter: on(showRootType, layers.weakLetter),
-    form: on(showForm, layers.form),
-    vowels: on(showForm, layers.vowels),
-    formRoot: on(showForm || showRootType, layers.formRoot),
+    ...rootAndForm,
     tense: on(showTense, layers.tense),
     tenseRoot: on(showTense || showRootType, layers.tenseRoot),
     pronoun: on(showPronoun, layers.pronoun),
