@@ -30,48 +30,18 @@ export function deriveActiveParticiple(verb: Verb): Word {
       return new Word([measureMorpheme(...tokenize(transliterateReverse(verb.lexicalActiveParticiple)))])
 
     const [c1, c2, c3] = verb.rootTokens
+    const prefix = [radicalMorpheme(c1), measureMorpheme(FATHA, ALIF)]
 
-    if (c2.equals(c3))
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c2),
-        measureMorpheme(SUKOON),
-        radicalMorpheme(c3),
-      ])
+    if (c2.equals(c3)) return new Word([...prefix, radicalMorpheme(c2), measureMorpheme(SUKOON), radicalMorpheme(c3)])
 
-    if (c3.isWeak)
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c2),
-        measureMorpheme(TANWEEN_KASRA),
-      ])
+    if (c3.isWeak) return new Word([...prefix, radicalMorpheme(c2), measureMorpheme(TANWEEN_KASRA)])
 
-    if (c2.isWeak && c3.isHamza)
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(c3),
-        measureMorpheme(TANWEEN_KASRA),
-      ])
+    if (c2.isWeak && c3.isHamza) return new Word([...prefix, radicalMorpheme(c3), measureMorpheme(TANWEEN_KASRA)])
 
     if (c2.isWeak)
-      return new Word([
-        radicalMorpheme(c1),
-        measureMorpheme(FATHA, ALIF),
-        radicalMorpheme(HAMZA_ON_YEH),
-        measureMorpheme(KASRA),
-        radicalMorpheme(c3),
-      ])
+      return new Word([...prefix, radicalMorpheme(HAMZA_ON_YEH), measureMorpheme(KASRA), radicalMorpheme(c3)])
 
-    return new Word([
-      radicalMorpheme(c1),
-      measureMorpheme(FATHA, ALIF),
-      radicalMorpheme(c2),
-      measureMorpheme(KASRA),
-      radicalMorpheme(c3),
-    ])
+    return new Word([...prefix, radicalMorpheme(c2), measureMorpheme(KASRA), radicalMorpheme(c3)])
   }
 
   return new Word(deriveParticiple(verb, true))

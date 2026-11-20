@@ -3,7 +3,7 @@ import { derivationSteps } from './annotation'
 import { conjugate } from './conjugation'
 import { type FormIPattern, isFormIPresentVowel } from './form-i-vowels'
 import { deriveMasdar } from './nominal/masdar'
-import type { PronounId } from './pronouns'
+import { isDual, isFemininePlural, type PronounId } from './pronouns'
 import {
   analyzeRoot,
   type RootAnalysis,
@@ -174,14 +174,8 @@ export type Paragraphs = readonly Paragraph[]
 // The past-tense pronouns whose ending starts with a vowel, so nothing forces the stem to break up.
 const VOWEL_SUFFIX_PAST_PRONOUNS: readonly PronounId[] = ['3ms', '3fs', '3md', '3fd', '3mp']
 
-// The present-tense pronouns whose ـْنَ ending starts with sukūn.
-const FEMININE_PLURAL_PRONOUNS: readonly PronounId[] = ['2fp', '3fp']
-
 // The present-tense pronouns whose ending starts with a vowel, which protects the stem from apocope.
 const VOWEL_SUFFIX_PRESENT_PRONOUNS: readonly PronounId[] = ['2fs', '2d', '2mp', '3md', '3fd', '3mp']
-
-// The pronouns whose ending opens on the dual's own alif: ـَا, or ـَانِ in the indicative.
-const DUAL_PRONOUNS: readonly PronounId[] = ['2d', '3md', '3fd']
 
 // The pronouns whose personal ending begins with nūn: ـْنَ for the feminine plural, ـْنَا for 1p.
 const NUN_INITIAL_ENDING_PRONOUNS: readonly PronounId[] = ['1p', '2fp', '3fp']
@@ -439,6 +433,7 @@ function resolveDefective(verb: Verb, tense: VerbTense, pronoun: PronounId): Ten
       return 'final-surfaces-consonant'
     case 'active.present.jussive':
     case 'active.imperative':
+    case 'passive.present.jussive':
       return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-drops' : 'final-surfaces-consonant'
     case 'passive.past':
       return pronoun === '3mp' ? 'final-passive-uu' : 'final-passive-ya'
@@ -446,8 +441,6 @@ function resolveDefective(verb: Verb, tense: VerbTense, pronoun: PronounId): Ten
     case 'passive.present.subjunctive':
     case 'passive.future':
       return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-passive-aa' : 'final-surfaces-consonant'
-    case 'passive.present.jussive':
-      return BARE_PRESENT_PRONOUNS.includes(pronoun) ? 'final-drops' : 'final-surfaces-consonant'
   }
 }
 
@@ -469,7 +462,7 @@ function resolveHollow(verb: Verb, tense: VerbTense, pronoun: PronounId): TenseR
   }
 
   if (!VOWEL_SUFFIX_PRESENT_PRONOUNS.includes(pronoun) && APOCOPATING_TENSES.includes(tense)) return 'middle-shortens'
-  if (FEMININE_PLURAL_PRONOUNS.includes(pronoun)) return 'middle-shortens-consonant'
+  if (isFemininePlural(pronoun)) return 'middle-shortens-consonant'
   if (isPassive) return 'middle-passive-aa'
   if (HOLLOW_PRESENT_II_FORMS.includes(verb.form)) return 'middle-lengthens-ii-derived'
   if (HOLLOW_PRESENT_AA_FORMS.includes(verb.form)) return 'middle-lengthens-aa-present'
@@ -483,9 +476,7 @@ function resolveGeminate(verb: Verb, tense: VerbTense, pronoun: PronounId): Tens
   // ending settles the question on its own, exactly as it does in the indicative.
   if (BARE_PRESENT_PRONOUNS.includes(pronoun) && APOCOPATING_TENSES.includes(tense)) return 'geminate-jussive'
 
-  const contracts = tense.endsWith('past')
-    ? VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun)
-    : !FEMININE_PLURAL_PRONOUNS.includes(pronoun)
+  const contracts = tense.endsWith('past') ? VOWEL_SUFFIX_PAST_PRONOUNS.includes(pronoun) : !isFemininePlural(pronoun)
   return contracts ? 'geminate-contracts' : 'geminate-separates'
 }
 
@@ -591,7 +582,7 @@ export function isNeutralizedByForm(shape: RootShape, form: TriliteralForm): boo
 // A stem-final hamza swallows the dual's own alif into a madda (يَقْرَآنِ, قَرَآ, يَطَآنِ), leaving the
 // extracted suffix with the nūn alone, or with nothing at all where the mood drops the nūn too.
 export function hasAbsorbedDualAlif(layers: VerbExplanationLayers): boolean {
-  if (!DUAL_PRONOUNS.includes(layers.pronoun as PronounId)) return false
+  if (!isDual(layers.pronoun as PronounId)) return false
   if (layers.suffix?.includes(String(ALIF))) return false
   return toArabicText(layers.arabic).includes(String(ALIF_MADDA))
 }

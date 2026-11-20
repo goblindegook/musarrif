@@ -27,7 +27,7 @@ function distractorPronouns(tense: VerbTense, profile: DimensionProfile): readon
 function buildSiblings(verb: DisplayVerb): DisplayVerb[] {
   return formsForRoot(verb.root)
     .filter((f) => f !== verb.form)
-    .flatMap((form) => [form === 1 ? getVerb(verb.root, 1, 'a-a') : getVerb(verb.root, form)])
+    .map((form) => (form === 1 ? getVerb(verb.root, 1, 'a-a') : getVerb(verb.root, form)))
 }
 
 function easyCandidates(
