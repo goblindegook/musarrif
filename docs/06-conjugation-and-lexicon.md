@@ -31,8 +31,8 @@ What each source gets wrong, in the order the `add-verb` skill uses them:
 
 ### Preposition annotations
 
-`prepositions` is an optional array on a verb entry, separate from valency. Values are fully vocalised Buckwalter prepositions from the `Preposition` union, with no duplicates. Missing or empty annotations make no claim about what the verb takes. Annotate only on request; the verb-entry skills do not prompt for this field.
+`prepositions` is an optional array on a verb entry, separate from valency. Values are fully vocalised Buckwalter prepositions from the `Preposition` union, with no duplicates. Missing or empty annotations make no claim about what the verb takes. `npm run add:verb` with the Wiktionary source adds every preposition the matched entry's definitions mark, keeping the ones already annotated; it never removes one.
 
-Every preposition needs evidence from a dictionary or grammar: consult Wiktionary first, then Lane’s Lexicon. Conjugators do not establish these annotations. Name the source in chat before adding an annotation, so the owner can review it; do not store sources in the dataset or a separate register. Annotations do not classify complements as required or optional.
+Every preposition needs evidence from a dictionary or grammar: Wiktionary first, then Lane’s Lexicon. Conjugators do not establish these annotations. Adding a preposition by hand, from Lane’s or elsewhere, happens only on request: name the source in chat first, so the owner can review it; do not store sources in the dataset or a separate register. Annotations do not classify complements as required or optional.
 
 Verb details display prepositions in annotation order, separated by Arabic commas, without brackets, following the diacritics preference. Attached prepositions have an extension line: بِـ، لِـ، كَـ. Formatting belongs in the web and mobile UI. Do not add meanings, sense labels, examples, exercises, or standalone-use claims to this annotation.

@@ -1341,7 +1341,8 @@
   },
   {
     "root": "$wr",
-    "form": 4
+    "form": 4,
+    "prepositions": ["<ilaY"]
   },
   {
     "root": "$wr",
@@ -1729,7 +1730,8 @@
   {
     "root": "'dy",
     "form": 2,
-    "lexicalMasdars": [">adaA'"]
+    "lexicalMasdars": [">adaA'"],
+    "prepositions": ["bi", "<ilaY"]
   },
   {
     "root": "'fk",
@@ -1847,7 +1849,8 @@
   },
   {
     "root": "'kd",
-    "form": 2
+    "form": 2,
+    "prepositions": ["<ilaY", "li"]
   },
   {
     "root": "'kd",
@@ -3937,7 +3940,8 @@
   },
   {
     "root": "Ebr",
-    "form": 8
+    "form": 8,
+    "prepositions": ["bi"]
   },
   {
     "root": "Ebrn",
@@ -4437,7 +4441,8 @@
   },
   {
     "root": "Eln",
-    "form": 4
+    "form": 4,
+    "prepositions": ["Eano", "<ilaY"]
   },
   {
     "root": "Elq",
@@ -4451,7 +4456,8 @@
   },
   {
     "root": "Elq",
-    "form": 5
+    "form": 5,
+    "prepositions": ["bi"]
   },
   {
     "root": "Elq",
@@ -4536,7 +4542,8 @@
     "root": "Eml",
     "form": 1,
     "vowels": "i-a",
-    "masdars": ["fa3al"]
+    "masdars": ["fa3al"],
+    "prepositions": ["EalaY"]
   },
   {
     "root": "Eml",
@@ -5174,7 +5181,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "fa3la", "mimi"],
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["EalaY", "<ilaY", "bi"]
   },
   {
     "root": "Ewd",
@@ -5766,7 +5774,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fu3ool"],
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["mino", "EalaY"]
   },
   {
     "root": "HSl",
@@ -6519,7 +6528,8 @@
     "root": "Hml",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fa3l", "fu3laan"]
+    "masdars": ["fa3l", "fu3laan"],
+    "prepositions": ["EalaY", "li", "<ilaY", "Eano", "fiy", "mino"]
   },
   {
     "root": "Hml",
@@ -7218,7 +7228,8 @@
   },
   {
     "root": "Hwj",
-    "form": 8
+    "form": 8,
+    "prepositions": ["<ilaY", "li"]
   },
   {
     "root": "Hwk",
@@ -8317,7 +8328,8 @@
   {
     "root": "Slw",
     "form": 2,
-    "lexicalMasdars": ["SalaAp"]
+    "lexicalMasdars": ["SalaAp"],
+    "prepositions": ["EalaY"]
   },
   {
     "root": "Sly",
@@ -9045,7 +9057,8 @@
   {
     "root": "Tlb",
     "form": 3,
-    "lexicalMasdars": ["TilaAb"]
+    "lexicalMasdars": ["TilaAb"],
+    "prepositions": ["bi"]
   },
   {
     "root": "Tlb",
@@ -9818,7 +9831,8 @@
     "root": "bHv",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "prepositions": ["fiy", "Eano"]
   },
   {
     "root": "bHv",
@@ -11944,7 +11958,8 @@
     "root": "dxl",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fu3ool"]
+    "masdars": ["fu3ool"],
+    "prepositions": ["fiy", "<ilaY", "EalaY", "bi"]
   },
   {
     "root": "dxl",
@@ -13461,7 +13476,8 @@
   },
   {
     "root": "fyd",
-    "form": 4
+    "form": 4,
+    "prepositions": ["mino", "bi"]
   },
   {
     "root": "fyd",
@@ -15872,7 +15888,8 @@
     "root": "jmE",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "prepositions": ["bi"]
   },
   {
     "root": "jmE",
@@ -16422,7 +16439,8 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["mimi", "fa3l"],
-    "lexicalMasdars": ["jayo}ap", "jiy}ap"]
+    "lexicalMasdars": ["jayo}ap", "jiy}ap"],
+    "prepositions": ["bi"]
   },
   {
     "root": "jyb",
@@ -16525,7 +16543,8 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l"],
-    "lexicalMasdars": ["ka$ifap"]
+    "lexicalMasdars": ["ka$ifap"],
+    "prepositions": ["Eano", "EalaY"]
   },
   {
     "root": "k$f",
@@ -18527,7 +18546,8 @@
     "root": "lys",
     "form": 1,
     "vowels": "i-a",
-    "passive": "none"
+    "passive": "none",
+    "prepositions": ["bi"]
   },
   {
     "root": "lzj",
@@ -19031,12 +19051,14 @@
   },
   {
     "root": "mkn",
-    "form": 4
+    "form": 4,
+    "prepositions": ["mino"]
   },
   {
     "root": "mkn",
     "form": 5,
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["mino"]
   },
   {
     "root": "mknn",
@@ -19411,7 +19433,8 @@
   },
   {
     "root": "mrr",
-    "form": 10
+    "form": 10,
+    "prepositions": ["fiy", "EalaY", "bi"]
   },
   {
     "root": "mrs",
@@ -19579,7 +19602,8 @@
   {
     "root": "mvl",
     "form": 2,
-    "lexicalMasdars": ["tamovaAl"]
+    "lexicalMasdars": ["tamovaAl"],
+    "prepositions": ["bi", "li", "EalaY"]
   },
   {
     "root": "mvl",
@@ -21161,7 +21185,8 @@
   },
   {
     "root": "nhy",
-    "form": 8
+    "form": 8,
+    "prepositions": ["bi", "mino", "Eano"]
   },
   {
     "root": "nhz",
@@ -23909,7 +23934,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "mimi"],
-    "lexicalMasdars": ["maqaAlap"]
+    "lexicalMasdars": ["maqaAlap"],
+    "prepositions": ["bi"]
   },
   {
     "root": "qwl",
@@ -23932,7 +23958,8 @@
     "form": 1,
     "vowels": "a-u",
     "masdars": ["fa3l", "fi3aal", "mimi"],
-    "lexicalMasdars": ["qaAmap"]
+    "lexicalMasdars": ["qaAmap"],
+    "prepositions": ["bi", "EalaY"]
   },
   {
     "root": "qwm",
@@ -23946,7 +23973,8 @@
   {
     "root": "qwm",
     "form": 4,
-    "lexicalMasdars": ["<iqaAm", "muqaAm"]
+    "lexicalMasdars": ["<iqaAm", "muqaAm"],
+    "prepositions": ["EalaY", "bi"]
   },
   {
     "root": "qwm",
@@ -24667,7 +24695,8 @@
     "root": "rdd",
     "form": 1,
     "vowels": "a-u",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "prepositions": ["mino"]
   },
   {
     "root": "rdd",
@@ -24861,7 +24890,8 @@
     "form": 1,
     "vowels": "i-a",
     "masdars": ["fa3la", "fa3al"],
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["fiy", "Eano"]
   },
   {
     "root": "rgm",
@@ -25644,7 +25674,8 @@
   },
   {
     "root": "rwd",
-    "form": 4
+    "form": 4,
+    "prepositions": ["mino"]
   },
   {
     "root": "rwd",
@@ -25915,7 +25946,8 @@
     "root": "sEy",
     "form": 1,
     "vowels": "a-a",
-    "masdars": ["fa3l"]
+    "masdars": ["fa3l"],
+    "prepositions": ["<ilaY", "li", "fiy"]
   },
   {
     "root": "sHb",
@@ -26592,7 +26624,8 @@
   },
   {
     "root": "slm",
-    "form": 2
+    "form": 2,
+    "prepositions": ["EalaY", "bi"]
   },
   {
     "root": "slm",
@@ -27534,7 +27567,8 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l", "fi3l", "fu3l", "fa3aal", "fi3aal", "fu3aal", "fa3aala", "fi3aala"],
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["EalaY"]
   },
   {
     "root": "tmm",
@@ -28360,7 +28394,8 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fa3l", "fu3la"],
-    "lexicalMasdars": ["Silap"]
+    "lexicalMasdars": ["Silap"],
+    "prepositions": ["<ilaY", "bi"]
   },
   {
     "root": "wSl",
@@ -28387,7 +28422,8 @@
   {
     "root": "wSl",
     "form": 8,
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["bi"]
   },
   {
     "root": "wSm",
@@ -28767,7 +28803,8 @@
     "form": 1,
     "vowels": "a-i",
     "masdars": ["fu3ool"],
-    "passive": "none"
+    "passive": "none",
+    "prepositions": ["EalaY"]
   },
   {
     "root": "wjb",
@@ -29070,7 +29107,8 @@
     "form": 1,
     "vowels": "a-a",
     "masdars": ["fu3ool"],
-    "passive": "impersonal"
+    "passive": "impersonal",
+    "prepositions": ["EalaY", "li", "<ilaY", "fiy"]
   },
   {
     "root": "wqE",
@@ -30674,7 +30712,8 @@
     "form": 1,
     "vowels": "a-u",
     "passive": "impersonal",
-    "masdars": ["fu3ool"]
+    "masdars": ["fu3ool"],
+    "prepositions": ["mino", "Eano", "EalaY"]
   },
   {
     "root": "xrj",
@@ -31793,7 +31832,8 @@
     "root": "zyd",
     "form": 1,
     "vowels": "a-i",
-    "masdars": ["fi3aala", "fa3l"]
+    "masdars": ["fi3aala", "fa3l"],
+    "prepositions": ["EalaY"]
   },
   {
     "root": "zyd",

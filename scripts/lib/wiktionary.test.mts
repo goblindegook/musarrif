@@ -204,7 +204,10 @@ describe('fetchParadigms', () => {
     server.use(
       http.get('https://en.wiktionary.org/wiki/:title', () => {
         return new HttpResponse(
-          WIKTIONARY_HTML.replace('<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>', definitions),
+          WIKTIONARY_HTML.replace(
+            '<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>',
+            definitions,
+          ),
           { headers: { 'content-type': 'text/html; charset=utf-8' }, status: 200 },
         )
       }),
