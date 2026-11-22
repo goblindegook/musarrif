@@ -1,4 +1,5 @@
 import type { PronounId } from '../../src/paradigms/pronouns.ts'
+import type { Preposition } from '../../src/paradigms/verb-types.ts'
 
 export type { PronounId }
 
@@ -24,4 +25,5 @@ export interface NominalSet {
 export interface ParsedParadigms {
   paradigms: Partial<Record<VerbParadigm, Partial<Record<PronounId, string[]>>>>
   nominals: NominalSet
+  prepositions?: Preposition[]
 }

@@ -193,6 +193,28 @@ describe('fetchParadigms', () => {
     })
   })
 
+  test('reads the prepositions marked in the definitions above the matched conjugation table', async () => {
+    const definitions = `
+<ol>
+<li>to write [<i>with</i> <b class="Arab" lang="ar"><a href="/wiki/على">عَلَى</a></b> <span class="tr Latn">ʕalā</span>]</li>
+<li>to correspond [<i>with</i> <b class="Arab" lang="ar"><a href="/wiki/إلى">إِلَى</a></b>] about (<i class="Arab mention" lang="ar">بِـ</i>)</li>
+<li>to inscribe [<i>with</i> <b class="Arab" lang="ar">عَلَى</b>]</li>
+</ol>
+<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>`
+    server.use(
+      http.get('https://en.wiktionary.org/wiki/:title', () => {
+        return new HttpResponse(
+          WIKTIONARY_HTML.replace('<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>', definitions),
+          { headers: { 'content-type': 'text/html; charset=utf-8' }, status: 200 },
+        )
+      }),
+    )
+
+    const parsed = await fetchParadigms(getVerbById('ktb-1')!)
+
+    expect(parsed.prepositions).toEqual(['EalaY', '<ilaY', 'bi'])
+  })
+
   test('finds conjugation tables when heading level is h4', async () => {
     const htmlWithH4 = WIKTIONARY_HTML.replace(
       '<div class="mw-heading mw-heading5"><h5 id="Conjugation">Conjugation</h5></div>',

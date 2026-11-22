@@ -1,5 +1,6 @@
 import { JSDOM } from 'jsdom'
 import { applyDiacriticsPreference } from '../../src/paradigms/tokens'
+import type { Preposition } from '../../src/paradigms/verb-types'
 import { type DisplayVerb, isTriliteralFormIDisplayVerb } from '../../src/paradigms/verbs'
 import { toRoman } from '../../src/primitives/numbers'
 import type { NominalSet, ParsedParadigms, PronounId, VerbParadigm } from './paradigms.mts'
@@ -255,6 +256,41 @@ function nearestRoot(table: HTMLTableElement, declarations: RootDeclaration[]): 
   return result
 }
 
+const PREPOSITION_ARABIC: Record<Preposition, string> = {
+  bi: 'بِ',
+  li: 'لِ',
+  ka: 'كَ',
+  fiy: 'فِي',
+  Eano: 'عَنْ',
+  mino: 'مِنْ',
+  '<ilaY': 'إِلَى',
+  EalaY: 'عَلَى',
+  'Hat~aY': 'حَتَّى',
+  'muno*u': 'مُنْذُ',
+  'mu*o': 'مُذْ',
+  'rub~a': 'رُبَّ',
+}
+
+const PREPOSITION_BY_KEY = new Map(
+  Object.entries(PREPOSITION_ARABIC).map(([code, arabic]) => [normalizeArabicKey(arabic), code as Preposition]),
+)
+
+// A verb's senses sit in the nearest list above its conjugation table; Wiktionary marks a governed
+// preposition ({{+obj}}, {{m}}) as its own Arabic element, while example sentences never reduce to one.
+function readPrepositions(table: HTMLTableElement, arabicSection: Element): Preposition[] {
+  let block: Element = table
+  while (block.parentElement && block.parentElement !== arabicSection) block = block.parentElement
+  let definitions = block.previousElementSibling
+  while (definitions && definitions.tagName !== 'OL') definitions = definitions.previousElementSibling
+
+  const found = new Set<Preposition>()
+  for (const element of definitions?.querySelectorAll('.Arab') ?? []) {
+    const code = PREPOSITION_BY_KEY.get(normalizeArabicKey(element.textContent ?? '').replace(/ـ/g, ''))
+    if (code) found.add(code)
+  }
+  return [...found]
+}
+
 function parseConjugationTable(
   html: string,
   lemma: string,
@@ -314,6 +350,7 @@ function parseConjugationTable(
       count: readCaptionVowels(table)?.presents.length ?? 1,
     }),
     nominals: extractNominals(table),
+    prepositions: readPrepositions(table, arabicSection),
   }
 }
 

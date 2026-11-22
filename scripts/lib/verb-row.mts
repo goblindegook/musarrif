@@ -77,6 +77,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
   const passive = selectPassive(parsed)
   const vowels = isTriliteralFormIDisplayVerb(verb) ? verb.vowels : undefined
   const carried = existing?.vowels === vowels ? existing : undefined
+  const prepositions = [...new Set([...(carried?.prepositions ?? []), ...(parsed.prepositions ?? [])])]
 
   return {
     root: verb.rootId,
@@ -91,7 +92,7 @@ export function buildRootEntry(verb: DisplayVerb, parsed: ParsedParadigms, exist
     ...(carried?.lexicalActiveParticiple ? { lexicalActiveParticiple: carried.lexicalActiveParticiple } : {}),
     ...(carried?.lexicalPassiveParticiple ? { lexicalPassiveParticiple: carried.lexicalPassiveParticiple } : {}),
     ...(carried?.valency?.length ? { valency: carried.valency } : {}),
-    ...(carried?.prepositions ? { prepositions: carried.prepositions } : {}),
+    ...(prepositions.length > 0 ? { prepositions } : {}),
   }
 }
 

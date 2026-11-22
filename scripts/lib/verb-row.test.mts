@@ -96,6 +96,15 @@ describe('buildRootEntry', () => {
     })
   })
 
+  test('appends the source prepositions the existing entry lacks', () => {
+    const verb = getVerb('كتب', 1, 'a-u')
+    const existing: RootEntry = { root: 'ktb', form: 1, vowels: 'a-u', prepositions: ['li'] }
+
+    expect(buildRootEntry(verb, { ...parsed(), prepositions: ['EalaY', 'li'] }, existing)).toMatchObject({
+      prepositions: ['li', 'EalaY'],
+    })
+  })
+
   test('drops fields belonging to the lexeme a changed vowel pattern replaces', () => {
     const verb = getVerb('كتب', 1, 'a-u')
     const existing: RootEntry = {
