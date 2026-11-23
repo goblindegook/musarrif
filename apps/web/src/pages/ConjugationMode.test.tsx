@@ -133,22 +133,24 @@ describe('Conjugation table', () => {
     expect(screen.getByText('Active Past')).toBeInTheDocument()
   })
 
-  it.each([
-    'Active Past',
-    'Active Present',
-    'Active Subjunctive',
-    'Active Jussive',
-    'Active Future',
-    'Imperative',
-    'Passive Past',
-    'Passive Present',
-    'Passive Subjunctive',
-    'Passive Jussive',
-    'Passive Future',
-  ])('keeps the %s table in the document whichever paradigm is selected', (heading) => {
+  it('keeps every supported tense table in the document when active past is selected', () => {
     renderConjugationMode({ verbId: 'ktb-1', voice: 'active', tense: 'past' })
 
-    expect(screen.getByText(heading, { selector: 'th' })).toBeInTheDocument()
+    const headings = screen.getAllByText(/^(?:Active .+|Imperative|Passive .+)$/, { selector: 'th' })
+
+    expect(headings.map((heading) => heading.textContent)).toEqual([
+      'Active Past',
+      'Active Present',
+      'Active Subjunctive',
+      'Active Jussive',
+      'Active Future',
+      'Imperative',
+      'Passive Past',
+      'Passive Present',
+      'Passive Subjunctive',
+      'Passive Jussive',
+      'Passive Future',
+    ])
   })
 
   it('shows only the selected paradigm on screen', () => {

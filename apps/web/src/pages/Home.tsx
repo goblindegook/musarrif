@@ -126,19 +126,25 @@ function withRootShape(query: Query, option: RootShape): Query {
   return { ...query, filters: { ...query.filters, root }, page: 1 }
 }
 
+function matchesVerbFilters(
+  verb: DisplayVerb,
+  filters: Query['filters'],
+  favouriteVerbIds: ReadonlySet<string>,
+): boolean {
+  const { form, root, group } = filters
+  if (form != null && !matchesFormFilter(verb, form)) return false
+  if (group === 'favourites' && !favouriteVerbIds.has(verb.id)) return false
+  if (group === 'kana' && !KWN_SISTERS_IDS.has(verb.id)) return false
+  if (group === 'zanna' && !ZNN_SISTERS_IDS.has(verb.id)) return false
+  if (root.length === 0) return true
+  const { type } = analyzeRoot(verb.rootTokens)
+  return root.every((shape) => type.includes(shape))
+}
+
 function filterVerbs({ filters, sort }: Query, favouriteVerbIds: ReadonlySet<string>): DisplayVerb[] {
-  let filtered = sort === 'frequency' ? allVerbsByFrequency : allVerbs
-  const { form } = filters
-  if (form) filtered = filtered.filter((verb) => matchesFormFilter(verb, form))
-  if (filters.root.length > 0)
-    filtered = filtered.filter((verb) => {
-      const { type } = analyzeRoot(verb.rootTokens)
-      return filters.root.every((shape) => type.includes(shape))
-    })
-  if (filters.group === 'favourites') filtered = filtered.filter((verb) => favouriteVerbIds.has(verb.id))
-  if (filters.group === 'kana') filtered = filtered.filter((verb) => KWN_SISTERS_IDS.has(verb.id))
-  if (filters.group === 'zanna') filtered = filtered.filter((verb) => ZNN_SISTERS_IDS.has(verb.id))
-  return filtered
+  const ordered = sort === 'frequency' ? allVerbsByFrequency : allVerbs
+  if (filters.form == null && filters.root.length === 0 && filters.group == null) return ordered
+  return ordered.filter((verb) => matchesVerbFilters(verb, filters, favouriteVerbIds))
 }
 
 export function Home() {
@@ -162,7 +168,8 @@ export function Home() {
   const handleSelect = useCallback((verb: DisplayVerb) => navigateTo(['verbs', verb.id]), [navigateTo])
 
   const isFilterDisabled = useCallback(
-    (isActive: boolean, query: Query) => !isActive && filterVerbs(query, favouriteVerbIds).length === 0,
+    (isActive: boolean, query: Query) =>
+      !isActive && !allVerbs.some((verb) => matchesVerbFilters(verb, query.filters, favouriteVerbIds)),
     [favouriteVerbIds],
   )
 

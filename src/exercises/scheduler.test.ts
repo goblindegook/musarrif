@@ -241,8 +241,12 @@ describe('nextExercise', () => {
   describe('focus mode', () => {
     afterEach(() => vi.restoreAllMocks())
 
-    test('routes to pinned form when random < 0.75 and pinned due cards exist', () => {
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
+    test.each([
+      { draw: 0.749, expectedForm: 3 },
+      { draw: 0.75, expectedForm: 1 },
+    ])('selects form $expectedForm when the focus draw is $draw', ({ draw, expectedForm }) => {
+      // The second draw selects form 1 if both due cards are eligible.
+      vi.spyOn(Math, 'random').mockReturnValueOnce(draw).mockReturnValueOnce(0.99)
       const store = {
         'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
@@ -253,25 +257,7 @@ describe('nextExercise', () => {
         { reviews: 0, lastNewAt: 0 },
         { form: 3 },
       )
-      expect(parseCardKey(exercise.cardKey).form).toBe(3)
-    })
-
-    test('routes to unconstrained pool when random >= 0.75', () => {
-      // With random >= 0.75, activeForm = undefined → pool includes all forms.
-      // Run 30 draws; if constrained to form 3 only, all would be form 3.
-      const spy = vi.spyOn(Math, 'random')
-      const store = {
-        'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      }
-      const forms = Array.from({ length: 30 }, () => {
-        spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
-        return parseCardKey(
-          nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, { reviews: 0, lastNewAt: 0 }, { form: 3 })
-            .cardKey,
-        ).form
-      })
-      expect(forms.some((f) => f !== 3)).toBe(true)
+      expect(parseCardKey(exercise.cardKey).form).toBe(expectedForm)
     })
 
     test('falls back when pinned form has no available cards', () => {
@@ -283,23 +269,6 @@ describe('nextExercise', () => {
         { form: 3 },
       )
       expect(parseCardKey(exercise.cardKey).form).toBe(1)
-    })
-
-    test('appears at roughly 75% across draws', () => {
-      const store = {
-        'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-        'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
-      }
-      const session = { reviews: 0, lastNewAt: 0 }
-      const forms = Array.from(
-        { length: 200 },
-        () =>
-          parseCardKey(nextExercise({ ...INITIAL_DIMENSION_PROFILE, forms: 2 }, store, session, { form: 3 }).cardKey)
-            .form,
-      )
-      const pinnedCount = forms.filter((f) => f === 3).length
-      expect(pinnedCount).toBeGreaterThan(110)
-      expect(pinnedCount).toBeLessThan(190)
     })
 
     test('behaves normally when no focus is set', () => {

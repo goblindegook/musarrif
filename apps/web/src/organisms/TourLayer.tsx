@@ -67,10 +67,10 @@ export const TourLayer = ({ isOpen, step, totalSteps, onNext, onSkip }: TourLaye
   }, [isOpen, onSkip])
 
   useEffect(() => {
-    clearTourStyles()
-
     const selector = config?.selector
     if (!isOpen || selector == null) return
+
+    clearTourStyles()
     const target = document.querySelector(selector)
     if (!(target instanceof HTMLElement)) return
     target.scrollIntoView({ block: 'nearest' })
