@@ -3,7 +3,7 @@ import type { VerbTense } from '../paradigms/tense.ts'
 import type { TriliteralForm } from '../paradigms/verbs.ts'
 import { verbs } from '../paradigms/verbs.ts'
 import { utcToday } from '../primitives/dates.ts'
-import { type DimensionProfile, formPool, pronounPool, random, rootTypesPool, tensePool } from './dimensions.ts'
+import { type DimensionProfile, formPool, pronounPool, rootTypesPool, tensePool } from './dimensions.ts'
 import type { Exercise, ExerciseGenerator, ExerciseKind } from './exercises.ts'
 import { conjugationExercise } from './generators/conjugation.ts'
 import { masdarFormExercise } from './generators/masdar-form.ts'
@@ -126,7 +126,9 @@ export function nextExercise(
     (dueKeys.length === 0 || session.reviews - session.lastNewAt >= backlogPolicy.reviewGap)
 
   if (shouldIntroduceNew) {
-    const { generator, rootType, form } = random(uncovered)
+    const { generator, rootType, form } = weightedRandomSrs([...uncovered], ({ generator }) =>
+      exerciseWeight(generator),
+    )
     return generator.generate(profile, { rootType, form })
   }
 

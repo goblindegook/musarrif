@@ -39,7 +39,7 @@ export const verbRootExercise = defineExercise(
       inputModes: ['multiple-choice'],
     }
   },
-  { conjugated: true },
+  { conjugated: true, weight: 2 },
 )
 
 function buildOptions(answer: string, word: string): readonly string[] {

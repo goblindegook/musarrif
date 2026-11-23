@@ -45,7 +45,7 @@ export const verbTenseExercise = defineExercise(
       inputModes: ['multiple-choice'],
     }
   },
-  { conjugated: true, weight: 2 },
+  { conjugated: true, weight: 4 },
 )
 
 function buildOptions(

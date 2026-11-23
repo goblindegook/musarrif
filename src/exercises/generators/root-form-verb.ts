@@ -5,35 +5,40 @@ import { formsForRoot, getVerb } from '../../paradigms/verbs.ts'
 import { exerciseDiacritics, randomVerb } from '../dimensions.ts'
 import { defineExercise } from '../exercises.ts'
 
-export const rootFormVerbExercise = defineExercise('production', 'rootFormVerb', (profile, constraints) => {
-  const verb = randomVerb(profile, constraints)
-  const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
+export const rootFormVerbExercise = defineExercise(
+  'production',
+  'rootFormVerb',
+  (profile, constraints) => {
+    const verb = randomVerb(profile, constraints)
+    const explanation = resolveVerbExplanationLayers(verb, 'active.past', '3ms')
 
-  const answerDisplay = exerciseDiacritics(verb.lemma)
+    const answerDisplay = exerciseDiacritics(verb.lemma)
 
-  const distractors = shuffle(
-    formsForRoot(verb.root).filter((form) => {
-      if (form === verb.form) return false
-      const candidate = getVerb(verb.root, form)
-      return exerciseDiacritics(candidate.lemma) !== answerDisplay
-    }),
-  )
-    .slice(0, 3)
-    .map((form) => ({ form, label: getVerb(verb.root, form).lemma }))
+    const distractors = shuffle(
+      formsForRoot(verb.root).filter((form) => {
+        if (form === verb.form) return false
+        const candidate = getVerb(verb.root, form)
+        return exerciseDiacritics(candidate.lemma) !== answerDisplay
+      }),
+    )
+      .slice(0, 3)
+      .map((form) => ({ form, label: getVerb(verb.root, form).lemma }))
 
-  const options = shuffle([{ form: verb.form, label: verb.lemma }, ...distractors])
-  const answer = options.findIndex(({ form }) => form === verb.form)
+    const options = shuffle([{ form: verb.form, label: verb.lemma }, ...distractors])
+    const answer = options.findIndex(({ form }) => form === verb.form)
 
-  return {
-    dimensions: ['forms', 'rootTypes'],
-    form: verb.form,
-    word: Array.from(verb.root).join(' '),
-    spokenWord: spell(verb.root).join(', '),
-    options: options.map(({ label }) => exerciseDiacritics(label)),
-    answer,
-    answerText: String(verb.lemma),
-    card: { root: verb.root, form: verb.form },
-    explanation,
-    inputModes: ['multiple-choice', 'keyboard', 'speech'],
-  }
-})
+    return {
+      dimensions: ['forms', 'rootTypes'],
+      form: verb.form,
+      word: Array.from(verb.root).join(' '),
+      spokenWord: spell(verb.root).join(', '),
+      options: options.map(({ label }) => exerciseDiacritics(label)),
+      answer,
+      answerText: String(verb.lemma),
+      card: { root: verb.root, form: verb.form },
+      explanation,
+      inputModes: ['multiple-choice', 'keyboard', 'speech'],
+    }
+  },
+  { weight: 2 },
+)

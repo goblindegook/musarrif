@@ -146,5 +146,5 @@ export const conjugationExercise = defineExercise(
       inputModes: ['multiple-choice', 'keyboard', 'speech'],
     }
   },
-  { conjugated: true, weight: 5 },
+  { conjugated: true, weight: 10 },
 )

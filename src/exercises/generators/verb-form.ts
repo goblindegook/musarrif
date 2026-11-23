@@ -43,5 +43,5 @@ export const verbFormExercise = defineExercise(
       inputModes: ['multiple-choice'],
     }
   },
-  { conjugated: true },
+  { conjugated: true, weight: 2 },
 )

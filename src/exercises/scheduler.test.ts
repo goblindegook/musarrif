@@ -200,6 +200,22 @@ describe('nextExercise', () => {
     expect(isCoveredTriple(exercise.cardKey, store)).toBe(false)
   })
 
+  test('weights the exercise kind of a new triple', () => {
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.9).mockReturnValueOnce(0.3)
+
+    const exercise = nextExercise(INITIAL_DIMENSION_PROFILE, {}, { reviews: 0, lastNewAt: 0 })
+
+    expect(exercise.kind).toBe('conjugation')
+  })
+
+  test('weights verb exercises of a new triple above nominal exercises', () => {
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.9).mockReturnValueOnce(0.28)
+
+    const exercise = nextExercise({ ...INITIAL_DIMENSION_PROFILE, nominals: 1 }, {}, { reviews: 0, lastNewAt: 0 })
+
+    expect(exercise.kind).toBe('conjugation')
+  })
+
   test('introduces nominal triples when nominals unlock and uncovered triples exist', () => {
     const exercises = Array.from({ length: 50 }, () =>
       nextExercise(
