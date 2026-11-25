@@ -48,11 +48,14 @@
         "minWidth": 480,
         "minHeight": 640,
         "titleBarStyle": "Overlay",
-        "hiddenTitle": true
+        "hiddenTitle": true,
+        "backgroundColor": "#f6f3ec"
       }
     ],
     "security": {
-      "capabilities": ["default"]
+      "capabilities": ["default"],
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'",
+      "dangerousDisableAssetCspModification": ["style-src"]
     }
   }
 }

@@ -73,6 +73,7 @@ export const AppHeader = ({ onHelp }: AppHeaderProps) => {
 
   return (
     <TopBar>
+      {'__TAURI_INTERNALS__' in window && <TitleBarDragStrip data-tauri-drag-region />}
       <TopBarHeader>
         <TitleGroup
           dir={dir}
@@ -274,6 +275,21 @@ const TopBar = styled('header')`
   }
 `
 
+// Covers the blank space above the header, where the hidden title bar would be.
+// Its height matches the top padding above the header at each breakpoint, so it never covers a control.
+const TitleBarDragStrip = styled('div')`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1rem;
+  z-index: 101;
+
+  @media (min-width: 960px) {
+    height: 2rem;
+  }
+`
+
 const TopBarHeader = styled('div')`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -291,7 +307,6 @@ const TitleGroup = styled('div')`
   min-width: 0;
   overflow: hidden;
   cursor: default;
-  user-select: none;
 `
 
 const Eyebrow = styled('p')`

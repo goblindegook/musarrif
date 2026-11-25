@@ -2,12 +2,24 @@
 
 use tauri::{
   menu::{Menu, MenuItemBuilder, SubmenuBuilder},
-  Emitter,
+  Emitter, Manager,
 };
 use tauri_plugin_deep_link::DeepLinkExt;
 
 fn main() {
   tauri::Builder::default()
+    // Must be registered first so a second launch exits before other plugins start.
+    .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+      if let Some(window) = app.get_webview_window("main") {
+        window.unminimize().ok();
+        window.show().ok();
+        window.set_focus().ok();
+      }
+      // Windows and Linux pass an opened .musarrif file to the second launch as an argument.
+      let urls = args.iter().skip(1).filter_map(|arg| url::Url::from_file_path(arg).ok()).collect();
+      open_musarrif_urls(app, urls);
+    }))
+    .plugin(tauri_plugin_window_state::Builder::default().build())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_deep_link::init())
     .setup(|app| {
