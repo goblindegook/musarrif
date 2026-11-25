@@ -30,7 +30,7 @@
     "@preact/preset-vite": "^2.10.6",
     "@tauri-apps/cli": "^2.12.4",
     "@testing-library/dom": "^10.4.2",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/preact": "^3.2.6",
     "@testing-library/user-event": "^14.6.10",
     "@types/qrcode": "^1.5.6",
