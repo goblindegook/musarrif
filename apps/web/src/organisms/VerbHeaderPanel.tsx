@@ -104,6 +104,8 @@ const Lemma = styled('h2')`
   font-size: 2rem;
   font-weight: 600;
   color: var(--color-text-emphasis);
+  -webkit-user-select: text;
+  user-select: text;
 `
 
 const MetaRow = styled('div')`
@@ -133,6 +135,8 @@ const Translation = styled('p')`
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--color-text-secondary);
+  -webkit-user-select: text;
+  user-select: text;
 `
 
 const PanelBody = styled('div')`

@@ -181,6 +181,20 @@ body {
   background: var(--color-bg-page);
 }
 
+/* Interface text is not selectable; Arabic content opts back in with user-select: text.
+   Dialogs are listed because the browser's default styles make them selectable again. */
+body,
+dialog {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 @supports (padding: env(safe-area-inset-top)) {
   body::before,
   body::after {

@@ -469,6 +469,8 @@ const VerbCell = styled('td')`
   text-align: right;
   font-size: 1.6rem;
   vertical-align: middle;
+  -webkit-user-select: text;
+  user-select: text;
 
   @media (min-width: 480px) {
     font-size: 1.8rem;

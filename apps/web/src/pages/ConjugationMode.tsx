@@ -514,6 +514,8 @@ const MasdarNote = styled('span')`
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--color-text-secondary);
+  -webkit-user-select: none;
+  user-select: none;
 
   @media print {
     font-size: 0.7rem;

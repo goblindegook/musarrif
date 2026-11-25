@@ -29,4 +29,6 @@ const DisplayText = styled('span')`
   color: var(--color-text-primary);
   text-align: center;
   word-break: break-word;
+  -webkit-user-select: text;
+  user-select: text;
 `

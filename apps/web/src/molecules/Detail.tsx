@@ -156,6 +156,11 @@ const DetailContent = styled('span')`
   font-size: 1.6rem;
   font-weight: 600;
 
+  &[lang='ar'] {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
   @media (min-width: 480px) {
     font-size: 1.8rem;
   }

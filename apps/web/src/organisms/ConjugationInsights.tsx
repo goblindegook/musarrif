@@ -115,6 +115,8 @@ const StepArabic = styled('span')`
   font-size: 1.5rem;
   font-weight: 600;
   text-align: right;
+  -webkit-user-select: text;
+  user-select: text;
 `
 
 const VerbDisplayArea = styled('div')`

@@ -424,6 +424,8 @@ const VerbDisplay = styled('p')`
   line-height: 1.2;
   direction: rtl;
   padding: 2rem 0 1rem;
+  -webkit-user-select: text;
+  user-select: text;
 `
 
 const EXERCISE_PROMPT_ID = 'exercise-prompt'
