@@ -17,7 +17,10 @@ jest.mock('../../../../../src/exercises/scheduler', () => {
 jest.mock('../../theme/tokens', () => require('./mock-theme-tokens').themeTokensMock)
 
 describe('exercise route', () => {
-  afterEach(() => jest.restoreAllMocks())
+  afterEach(() => {
+    jest.restoreAllMocks()
+    jest.useRealTimers()
+  })
 
   test('generates from the shared scheduler and persists answer progress through the provider', async () => {
     const random = jest.spyOn(Math, 'random').mockImplementation(seededRandom(27))
@@ -92,10 +95,9 @@ describe('exercise route', () => {
     ) as typeof import('../../../../../src/exercises/scheduler')
     const expected = actualScheduler.nextExercise(DEFAULT_DIMENSION_PROFILE)
     jest.mocked(nextExercise).mockReturnValue(expected)
-    const now = new Date()
-    const day = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    jest.useFakeTimers({ now: new Date(2026, 4, 23, 12), advanceTimers: true })
     const values: UserDataSnapshot['values'] = {
-      [`exercise:daily:${day}`]: { date: day, correct: 9, incorrect: 0, passed: 0 },
+      'exercise:daily:2026-05-23': { date: '2026-05-23', correct: 9, incorrect: 0, passed: 0 },
     }
     const repository = createInMemoryRepository(values)
     await render(

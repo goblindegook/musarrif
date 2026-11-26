@@ -5,11 +5,8 @@ import { UserDataProvider } from '../../storage/UserDataProvider'
 import { ExerciseProgressScreen } from './ExerciseProgressScreen'
 
 const mockPush = jest.fn()
-const today = new Date()
-const older = new Date(today)
-older.setDate(today.getDate() - 30)
-const dayKey = (date: Date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+beforeEach(() => jest.useFakeTimers({ now: new Date(2026, 4, 23, 12), advanceTimers: true }))
+afterEach(() => jest.useRealTimers())
 jest.mock('expo-router', () => {
   const React = require('react')
   const { Pressable, View } = require('react-native')
@@ -90,8 +87,8 @@ jest.mock('@expo/ui/swift-ui', () => {
 })
 
 const repository = createInMemoryRepository({
-  [`exercise:daily:${dayKey(today)}`]: { date: dayKey(today), correct: 8, incorrect: 2, passed: 1 },
-  [`exercise:daily:${dayKey(older)}`]: { date: dayKey(older), correct: 0, incorrect: 10, passed: 0 },
+  'exercise:daily:2026-05-23': { date: '2026-05-23', correct: 8, incorrect: 2, passed: 1 },
+  'exercise:daily:2026-04-23': { date: '2026-04-23', correct: 0, incorrect: 10, passed: 0 },
 })
 
 test('the exercise title bar opens a dedicated Progress screen', async () => {
