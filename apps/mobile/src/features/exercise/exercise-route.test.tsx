@@ -50,7 +50,7 @@ describe('exercise route', () => {
 
     expect(values[`srs:${expected.cardKey}`]).toBeDefined()
     expect(values['dimension:store']).toEqual(expect.objectContaining({ profile: DEFAULT_DIMENSION_PROFILE }))
-    expect(Object.keys(values).some((key) => key.startsWith('exercise:daily:'))).toBe(true)
+    expect(Object.keys(values)).toContainEqual(expect.stringMatching(/^exercise:daily:/))
     await fireEvent.press(screen.getByTestId('exercise-next'))
     expect(scheduler).toHaveBeenLastCalledWith(expect.objectContaining({}), expect.anything(), {
       reviews: 0,

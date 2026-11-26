@@ -407,7 +407,9 @@ test('clicking speech toggle again returns to multiple-choice', () => {
   fireEvent.click(screen.getByText(/Speak the answer/)) // enter speech
   fireEvent.click(screen.getByText(/See options/)) // exit speech
   expect(screen.queryByDisplayValue(/Listening/)).not.toBeInTheDocument()
-  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].map((button) => button.textContent)).toContainEqual(
+    expect.stringContaining('كَتَبَ'),
+  )
 })
 
 test('entering speech mode auto-starts recognition and shows listening state', () => {
@@ -589,7 +591,9 @@ test('typing mode falls back to MC when new exercise does not support typing', (
     </I18nProvider>,
   )
   expect(screen.queryByPlaceholderText('Type your answer')).not.toBeInTheDocument()
-  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].map((button) => button.textContent)).toContainEqual(
+    expect.stringContaining('كَتَبَ'),
+  )
 })
 
 test('speech mode falls back to MC when new exercise does not support speech', () => {
@@ -608,7 +612,9 @@ test('speech mode falls back to MC when new exercise does not support speech', (
     </I18nProvider>,
   )
   expect(screen.queryByText(/See options/)).not.toBeInTheDocument()
-  expect([...document.querySelectorAll('button')].some((button) => button.textContent?.includes('كَتَبَ'))).toBe(true)
+  expect([...document.querySelectorAll('button')].map((button) => button.textContent)).toContainEqual(
+    expect.stringContaining('كَتَبَ'),
+  )
 })
 
 // Typed answer diff rendering

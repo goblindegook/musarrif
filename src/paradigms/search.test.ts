@@ -38,7 +38,7 @@ describe('search', () => {
   test('falls back to lemma-prefix matching for suggestions', () => {
     const matches = search('آم')
 
-    expect(matches.some((verb) => verb.lemma.startsWith('آم'))).toBe(true)
+    expect(matches.map((verb) => verb.lemma)).toContainEqual(expect.stringMatching(/^آم/))
   })
 
   test('keeps exact-root matches ahead of more distant roots', () => {

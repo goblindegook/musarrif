@@ -236,7 +236,7 @@ describe('nextExercise', () => {
       'masdarVerb',
       'verbMasdar',
     ]
-    expect(exercises.some((e) => nominalKinds.includes(e.kind))).toBe(true)
+    expect(exercises.map((e) => e.kind)).toContainEqual(expect.toBeOneOf(nominalKinds))
   })
 
   describe('focus mode', () => {
@@ -343,7 +343,7 @@ describe('nextExercise', () => {
           { tense: 'active.past' },
         ),
       )
-      expect(exercises.some((e) => e.kind === 'rootFormVerb')).toBe(true)
+      expect(exercises.map((e) => e.kind)).toContain('rootFormVerb')
     })
 
     test('freezes overdue reviews to cards with the focused tense when backlog is present', () => {
@@ -447,7 +447,7 @@ describe('nextExercise', () => {
           { pronoun: '1s' },
         ),
       )
-      expect(exercises.some((e) => e.kind === 'rootFormVerb')).toBe(true)
+      expect(exercises.map((e) => e.kind)).toContain('rootFormVerb')
     })
 
     test('nominal focus filters due cards to masdar kinds', () => {
