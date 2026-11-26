@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { formatFormLabel, getAvailableParadigms, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import { type DimensionProfile, exerciseDiacritics } from '../dimensions.ts'
 import { participleFormExercise } from './participle-form.ts'
 
@@ -30,66 +31,84 @@ const FORM_LABEL_ORDER = [
 
 describe('participleFormExercise', () => {
   test('returns kind "participleForm"', () => {
-    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleForm')
+    forAnyRandomness(() => {
+      expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleForm')
+    })
   })
 
   test('returns a non-empty Arabic word', () => {
-    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('all options are unique', () => {
-    const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('options are Roman numerals sorted in ascending form order', () => {
-    const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
-    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+    forAnyRandomness(() => {
+      const { options } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+      expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+    })
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+    forAnyRandomness(() => {
+      const { options, answer } = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('attaches nominal explanation layers for the selected participle type', () => {
-    const exercise = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const exercise = participleFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+      expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+    })
   })
 
   test('prompt type matches the shown participle word in easy difficulty', () => {
-    const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
-    const exercise = participleFormExercise.generate(easyProfile)
-    const selectedForm = exercise.options[exercise.answer]
-    const selectedFormVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
-    const activeMatch = selectedFormVerbs.some(
-      (verb) =>
-        getAvailableParadigms(verb).includes('active.participle') &&
-        exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
-    )
-    const passiveMatch = selectedFormVerbs.some(
-      (verb) =>
-        getAvailableParadigms(verb).includes('passive.participle') &&
-        exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
-    )
+    forAnyRandomness(() => {
+      const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
+      const exercise = participleFormExercise.generate(easyProfile)
+      const selectedForm = exercise.options[exercise.answer]
+      const selectedFormVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
+      const activeMatch = selectedFormVerbs.some(
+        (verb) =>
+          getAvailableParadigms(verb).includes('active.participle') &&
+          exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
+      )
+      const passiveMatch = selectedFormVerbs.some(
+        (verb) =>
+          getAvailableParadigms(verb).includes('passive.participle') &&
+          exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
+      )
 
-    expect(
-      (exercise.participle === 'active' && activeMatch) || (exercise.participle === 'passive' && passiveMatch),
-    ).toBe(true)
+      expect(
+        (exercise.participle === 'active' && activeMatch) || (exercise.participle === 'passive' && passiveMatch),
+      ).toBe(true)
+    })
   })
 })
 
 describe('participleFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^recognition:participle:[a-z]+:\d+$/,
-    )
+    forAnyRandomness(() => {
+      expect(participleFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:participle:[a-z]+:\d+$/,
+      )
+    })
   })
 })

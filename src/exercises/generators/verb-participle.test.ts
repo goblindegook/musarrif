@@ -2,55 +2,70 @@ import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { verbParticipleExercise } from './verb-participle.ts'
 
 describe('verbParticipleExercise', () => {
   test('returns kind "verbParticiple"', () => {
-    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbParticiple')
+    forAnyRandomness(() => {
+      expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbParticiple')
+    })
   })
 
   test('attaches nominal explanation layers for the selected participle type', () => {
-    const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+      expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+    forAnyRandomness(() => {
+      const { options, answer } = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('all options are unique by visible label', () => {
-    const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(new Set(exercise.options).size).toBe(exercise.options.length)
+      expect(new Set(exercise.options).size).toBe(exercise.options.length)
+    })
   })
 
   test('answer matches requested participle type for the shown verb', () => {
-    const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const exercise = verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const matchingVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma) === exercise.word)
+      const matchingVerbs = verbs.filter((verb) => exerciseDiacritics(verb.lemma) === exercise.word)
 
-    const answer = exercise.options[exercise.answer]
+      const answer = exercise.options[exercise.answer]
 
-    expect(
-      exercise.participle === 'active'
-        ? matchingVerbs.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === answer)
-        : matchingVerbs.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === answer),
-    ).toBe(true)
+      expect(
+        exercise.participle === 'active'
+          ? matchingVerbs.some((verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === answer)
+          : matchingVerbs.some((verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === answer),
+      ).toBe(true)
+    })
   })
 })
 
 describe('verbParticipleExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^production:participle:[a-z]+:\d+$/,
-    )
+    forAnyRandomness(() => {
+      expect(verbParticipleExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^production:participle:[a-z]+:\d+$/,
+      )
+    })
   })
 })

@@ -2,72 +2,91 @@ import { describe, expect, test } from 'vitest'
 import { deriveActiveParticiple, derivePassiveParticiple } from '../../paradigms/nominal/participle.ts'
 import { verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import { type DimensionProfile, exerciseDiacritics } from '../dimensions.ts'
 import { participleRootExercise } from './participle-root.ts'
 
 describe('participleRootExercise', () => {
   test('returns kind "participleRoot"', () => {
-    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleRoot')
+    forAnyRandomness(() => {
+      expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('participleRoot')
+    })
   })
 
   test('attaches nominal explanation layers for the selected participle type', () => {
-    const exercise = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const exercise = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+      expect(exercise.explanation).toMatchObject({ category: 'nominal', nominal: /Participle/ })
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('returns unique options', () => {
-    const { options } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('correct answer is a valid index', () => {
-    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('correct option matches an existing root with letters separated by spaces', () => {
-    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    forAnyRandomness(() => {
+      const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const correctRoot = options[answer].split(' ').join('')
+      expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    })
   })
 
   test('prompt type matches the shown participle word in easy difficulty', () => {
-    const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
-    const exercise = participleRootExercise.generate(easyProfile)
-    const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
-    const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
-    const matchesActive = matchingVerbs.some(
-      (verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
-    )
-    const matchesPassive = matchingVerbs.some(
-      (verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
-    )
+    forAnyRandomness(() => {
+      const easyProfile: DimensionProfile = INITIAL_DIMENSION_PROFILE
+      const exercise = participleRootExercise.generate(easyProfile)
+      const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
+      const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
+      const matchesActive = matchingVerbs.some(
+        (verb) => exerciseDiacritics(deriveActiveParticiple(verb)) === exercise.word,
+      )
+      const matchesPassive = matchingVerbs.some(
+        (verb) => exerciseDiacritics(derivePassiveParticiple(verb)) === exercise.word,
+      )
 
-    expect(
-      (exercise.participle === 'active' && matchesActive) || (exercise.participle === 'passive' && matchesPassive),
-    ).toBe(true)
+      expect(
+        (exercise.participle === 'active' && matchesActive) || (exercise.participle === 'passive' && matchesPassive),
+      ).toBe(true)
+    })
   })
 
   test('includes exactly three wrong options and all differ from the correct root', () => {
-    const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const wrongOptions = options.filter((_, index) => index !== answer)
+    forAnyRandomness(() => {
+      const { options, answer } = participleRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const wrongOptions = options.filter((_, index) => index !== answer)
 
-    expect(wrongOptions).toHaveLength(3)
-    expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
+      expect(wrongOptions).toHaveLength(3)
+      expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
+    })
   })
 })
 
 describe('participleRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^recognition:participle:[a-z]+:\d+$/,
-    )
+    forAnyRandomness(() => {
+      expect(participleRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:participle:[a-z]+:\d+$/,
+      )
+    })
   })
 })

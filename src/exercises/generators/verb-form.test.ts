@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../../paradigms/verbs'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import * as dimensions from '../dimensions'
 import { verbFormExercise } from './verb-form.ts'
 
@@ -29,42 +30,56 @@ const FORM_LABEL_ORDER = [
 
 describe('generateFormExercise', () => {
   test('returns kind "form"', () => {
-    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbForm')
+    forAnyRandomness(() => {
+      expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbForm')
+    })
   })
 
   test('returns a non-empty Arabic word', () => {
-    const { word } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(word.length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      const { word } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(word.length).toBeGreaterThan(0)
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('options are Roman numerals sorted in ascending form order', () => {
-    const { options } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
-    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+      const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+      expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+    })
   })
 
   test('correctAnswer is a valid index into options', () => {
-    const { options, answer: correctAnswer } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer: correctAnswer } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(correctAnswer).toBeGreaterThanOrEqual(0)
-    expect(correctAnswer).toBeLessThan(options.length)
+      expect(correctAnswer).toBeGreaterThanOrEqual(0)
+      expect(correctAnswer).toBeLessThan(options.length)
+    })
   })
 
   test('options[correctAnswer] matches the verb form', () => {
-    const { options, answer: correctAnswer, word } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer: correctAnswer, word } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(options[correctAnswer]).toMatch(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)q?$/)
-    expect(word.length).toBeGreaterThan(0)
+      expect(options[correctAnswer]).toMatch(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)q?$/)
+      expect(word.length).toBeGreaterThan(0)
+    })
   })
 
   test('all options are unique', () => {
-    const { options } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = verbFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 })
 
@@ -102,9 +117,11 @@ describe('verbFormExercise with constraints', () => {
   })
 
   test('attaches cardKey to returned exercise', () => {
-    expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
-    )
+    forAnyRandomness(() => {
+      expect(verbFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+      )
+    })
   })
 
   test('includes full explanation for all options', () => {

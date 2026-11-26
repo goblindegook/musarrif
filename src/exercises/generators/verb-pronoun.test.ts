@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import { verbPronounExercise } from './verb-pronoun.ts'
 
 const ALL_PRONOUN_KEYS = new Set(['أَنَا', 'نَحْنُ', 'أَنْتَ', 'أَنْتِ', 'أَنْتُمَا', 'أَنْتُمْ', 'أَنْتُنَّ', 'هُوَ', 'هِيَ', 'هُمَا', 'هُمْ', 'هُنَّ'])
@@ -12,31 +13,43 @@ describe('verbPronounExercise', () => {
   })
 
   test('returns kind "verbPronoun"', () => {
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbPronoun')
+    forAnyRandomness(() => {
+      expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbPronoun')
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('all options are unique', () => {
-    const { options } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+    forAnyRandomness(() => {
+      const { options, answer } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('word is non-empty', () => {
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    })
   })
 
   test('options are Arabic pronouns', () => {
-    const { options } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
+    forAnyRandomness(() => {
+      const { options } = verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(options.every((o) => ALL_PRONOUN_KEYS.has(o))).toBe(true)
+    })
   })
 })
 
@@ -90,8 +103,10 @@ describe('verbPronounExercise distractor strategies', () => {
 
 describe('verbPronounExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
-    )
+    forAnyRandomness(() => {
+      expect(verbPronounExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+      )
+    })
   })
 })

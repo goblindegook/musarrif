@@ -1,74 +1,93 @@
 import { describe, expect, test } from 'vitest'
 import { verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import { verbRootExercise } from './verb-root.ts'
 
 describe('rootExercise', () => {
   test('returns kind "root"', () => {
-    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbRoot')
+    forAnyRandomness(() => {
+      expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('verbRoot')
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('returns unique options', () => {
-    const { options } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('correct answer is a valid index', () => {
-    const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('correct option matches an existing root with letters separated by spaces', () => {
-    const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    forAnyRandomness(() => {
+      const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const correctRoot = options[answer].split(' ').join('')
+      expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    })
   })
 
   test('all options use the same number of letters as the root', () => {
-    const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const rootLength = options[answer].split(' ').length
+    forAnyRandomness(() => {
+      const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const rootLength = options[answer].split(' ').length
 
-    expect(
-      options.every((option) => {
-        const letters = option.split(' ')
-        return letters.length === rootLength && letters.every((letter) => letter.length === 1)
-      }),
-    ).toBe(true)
+      expect(
+        options.every((option) => {
+          const letters = option.split(' ')
+          return letters.length === rootLength && letters.every((letter) => letter.length === 1)
+        }),
+      ).toBe(true)
+    })
   })
 
   test('includes exactly three wrong options', () => {
-    const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const wrongOptions = options.filter((_, index) => index !== answer)
+    forAnyRandomness(() => {
+      const { options, answer } = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const wrongOptions = options.filter((_, index) => index !== answer)
 
-    expect(wrongOptions).toHaveLength(3)
+      expect(wrongOptions).toHaveLength(3)
+    })
   })
 })
 
 describe('verbRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
-      /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
-    )
+    forAnyRandomness(() => {
+      expect(verbRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:verb:[a-z]+:\d+:[\w.]+:\w+$/,
+      )
+    })
   })
 
   test('includes explanation layers for the selected tense and pronoun', () => {
-    const exercise = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE, {
-      form: 1,
-      rootType: 'sound',
-      tense: 'active.past',
-      pronoun: '3ms',
-    })
-    expect(exercise.explanation).toEqual(
-      expect.objectContaining({
+    forAnyRandomness(() => {
+      const exercise = verbRootExercise.generate(INITIAL_DIMENSION_PROFILE, {
+        form: 1,
+        rootType: 'sound',
         tense: 'active.past',
         pronoun: '3ms',
-      }),
-    )
+      })
+      expect(exercise.explanation).toEqual(
+        expect.objectContaining({
+          tense: 'active.past',
+          pronoun: '3ms',
+        }),
+      )
+    })
   })
 })

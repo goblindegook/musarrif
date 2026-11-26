@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { formatFormLabel, getAvailableParadigms, getVerbById, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import * as dimensions from '../dimensions.ts'
 import { exerciseDiacritics } from '../dimensions.ts'
 import { masdarFormExercise } from './masdar-form.ts'
@@ -35,49 +36,63 @@ describe('masdarFormExercise', () => {
   })
 
   test('returns kind "masdarForm"', () => {
-    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarForm')
+    forAnyRandomness(() => {
+      expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarForm')
+    })
   })
 
   test('returns a non-empty Arabic word', () => {
-    const { word } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(word.length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      const { word } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(word.length).toBeGreaterThan(0)
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('options are Roman numerals sorted in ascending form order', () => {
-    const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
-    expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+      const optionOrder = options.map((option) => FORM_LABEL_ORDER.indexOf(option))
+      expect(optionOrder).toEqual([...optionOrder].sort((a, b) => a - b))
+    })
   })
 
   test('correct answer is a valid index into options', () => {
-    const { options, answer } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('all options are unique', () => {
-    const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('word matches at least one masdar for the selected form in easy difficulty', () => {
-    const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const selectedForm = exercise.options[exercise.answer]
-    const matchingVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
+    forAnyRandomness(() => {
+      const exercise = masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const selectedForm = exercise.options[exercise.answer]
+      const matchingVerbs = verbs.filter((verb) => formatFormLabel(verb.form, verb.root) === selectedForm)
 
-    expect(
-      matchingVerbs.some(
-        (verb) =>
-          getAvailableParadigms(verb).includes('masdar') &&
-          deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar) === exercise.word),
-      ),
-    ).toBe(true)
+      expect(
+        matchingVerbs.some(
+          (verb) =>
+            getAvailableParadigms(verb).includes('masdar') &&
+            deriveMasdar(verb).some((masdar) => exerciseDiacritics(masdar) === exercise.word),
+        ),
+      ).toBe(true)
+    })
   })
 
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
@@ -93,6 +108,8 @@ describe('masdarFormExercise', () => {
 
 describe('masdarFormExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
+    forAnyRandomness(() => {
+      expect(masdarFormExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
+    })
   })
 })

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 import { deriveMasdar } from '../../paradigms/nominal/masdar.ts'
 import { getVerbById, verbs } from '../../paradigms/verbs.ts'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import * as dimensions from '../dimensions.ts'
 import { masdarRootExercise } from './masdar-root.ts'
 
@@ -11,47 +12,61 @@ describe('masdarRootExercise', () => {
   })
 
   test('returns kind "masdarRoot"', () => {
-    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarRoot')
+    forAnyRandomness(() => {
+      expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('masdarRoot')
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('returns unique options', () => {
-    const { options } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('correct answer is a valid index', () => {
-    const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+    forAnyRandomness(() => {
+      const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
 
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('correct option matches an existing root with letters separated by spaces', () => {
-    const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const correctRoot = options[answer].split(' ').join('')
-    expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    forAnyRandomness(() => {
+      const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const correctRoot = options[answer].split(' ').join('')
+      expect(verbs.map((verb) => verb.root)).toContain(correctRoot)
+    })
   })
 
   test("word is one of the selected verb's masdars", () => {
-    const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
-    const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
+    forAnyRandomness(() => {
+      const exercise = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const selectedRoot = exercise.options[exercise.answer].split(' ').join('')
+      const matchingVerbs = verbs.filter((verb) => verb.root === selectedRoot)
 
-    expect(matchingVerbs.flatMap((verb) => deriveMasdar(verb).map(dimensions.exerciseDiacritics))).toContain(
-      exercise.word,
-    )
+      expect(matchingVerbs.flatMap((verb) => deriveMasdar(verb).map(dimensions.exerciseDiacritics))).toContain(
+        exercise.word,
+      )
+    })
   })
 
   test('includes exactly three wrong options and all differ from the correct root', () => {
-    const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
-    const wrongOptions = options.filter((_, index) => index !== answer)
+    forAnyRandomness(() => {
+      const { options, answer } = masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE)
+      const wrongOptions = options.filter((_, index) => index !== answer)
 
-    expect(wrongOptions).toHaveLength(3)
-    expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
+      expect(wrongOptions).toHaveLength(3)
+      expect(wrongOptions.every((option) => option !== options[answer])).toBe(true)
+    })
   })
 
   test('adds mimi-masdar explanation layer when the selected masdar is mimi', () => {
@@ -67,6 +82,10 @@ describe('masdarRootExercise', () => {
 
 describe('masdarRootExercise with constraints', () => {
   test('attaches cardKey to returned exercise', () => {
-    expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(/^recognition:masdar:[a-z]+:\d+$/)
+    forAnyRandomness(() => {
+      expect(masdarRootExercise.generate(INITIAL_DIMENSION_PROFILE).cardKey).toMatch(
+        /^recognition:masdar:[a-z]+:\d+$/,
+      )
+    })
   })
 })

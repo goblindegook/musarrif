@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../paradigms/verbs'
 import { INITIAL_DIMENSION_PROFILE } from '../test/profiles'
+import { forAnyRandomness } from '../test/random'
 import * as dimensions from './dimensions'
 import { isCoveredTriple, nextExercise } from './scheduler'
 import { parseCardKey } from './srs'
@@ -201,7 +202,7 @@ describe('nextExercise', () => {
   })
 
   test('weights the exercise kind of a new triple', () => {
-    vi.spyOn(Math, 'random').mockReturnValueOnce(0.9).mockReturnValueOnce(0.3)
+    vi.spyOn(Math, 'random').mockReturnValue(0.3)
 
     const exercise = nextExercise(INITIAL_DIMENSION_PROFILE, {}, { reviews: 0, lastNewAt: 0 })
 
@@ -209,7 +210,7 @@ describe('nextExercise', () => {
   })
 
   test('weights verb exercises of a new triple above nominal exercises', () => {
-    vi.spyOn(Math, 'random').mockReturnValueOnce(0.9).mockReturnValueOnce(0.28)
+    vi.spyOn(Math, 'random').mockReturnValue(0.28)
 
     const exercise = nextExercise({ ...INITIAL_DIMENSION_PROFILE, nominals: 1 }, {}, { reviews: 0, lastNewAt: 0 })
 
@@ -242,22 +243,23 @@ describe('nextExercise', () => {
     afterEach(() => vi.restoreAllMocks())
 
     test.each([
-      { draw: 0.749, expectedForm: 3 },
-      { draw: 0.75, expectedForm: 1 },
-    ])('selects form $expectedForm when the focus draw is $draw', ({ draw, expectedForm }) => {
-      // The second draw selects form 1 if both due cards are eligible.
-      vi.spyOn(Math, 'random').mockReturnValueOnce(draw).mockReturnValueOnce(0.99)
+      { range: [0, 0.75] as const, expectedForm: 3 },
+      { range: [0.75, 1] as const, expectedForm: 1 },
+    ])('selects form $expectedForm when draws fall in $range', ({ range, expectedForm }) => {
+      // Draws of 0.75 and above also select form 1 if both due cards are eligible.
       const store = {
         'production:verb:sound:3': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { form: 3 },
-      )
-      expect(parseCardKey(exercise.cardKey).form).toBe(expectedForm)
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, forms: 2 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { form: 3 },
+        )
+        expect(parseCardKey(exercise.cardKey).form).toBe(expectedForm)
+      }, range)
     })
 
     test('falls back when pinned form has no available cards', () => {
@@ -280,7 +282,6 @@ describe('nextExercise', () => {
     })
 
     test('routes to pinned tense when random < 0.75 and pinned due cards exist', () => {
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5) // routing: 0.5 < 0.75 → pinned
       const store = {
         'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1:active.present.indicative:3ms': {
@@ -290,17 +291,18 @@ describe('nextExercise', () => {
           dueDate: '2026-03-23',
         },
       }
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { tense: 'active.past' },
-      )
-      expect(parseCardKey(exercise.cardKey).tense).toBe('active.past')
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { tense: 'active.past' },
+        )
+        expect(parseCardKey(exercise.cardKey).tense).toBe('active.past')
+      }, [0, 0.75])
     })
 
     test('routes to unconstrained pool for tense when random >= 0.75', () => {
-      const spy = vi.spyOn(Math, 'random')
       const store = {
         'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1:active.present.indicative:3ms': {
@@ -310,18 +312,16 @@ describe('nextExercise', () => {
           dueDate: '2026-03-23',
         },
       }
-      const tenses = Array.from({ length: 30 }, () => {
-        spy.mockReturnValueOnce(0.9) // routing: 0.9 >= 0.75 → unconstrained
-        return parseCardKey(
-          nextExercise(
-            { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
-            store,
-            { reviews: 0, lastNewAt: 0 },
-            { tense: 'active.past' },
-          ).cardKey,
-        ).tense
-      })
-      expect(tenses.some((t) => t !== 'active.past')).toBe(true)
+      // Draws of 0.75 and above pick the later of the two equally weighted due cards.
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { tense: 'active.past' },
+        )
+        expect(parseCardKey(exercise.cardKey).tense).toBe('active.present.indicative')
+      }, [0.75, 1])
     })
 
     test('exercises without a tense slot pass through when tense focus is active', () => {
@@ -347,10 +347,6 @@ describe('nextExercise', () => {
     })
 
     test('freezes overdue reviews to cards with the focused tense when backlog is present', () => {
-      const randomSpy = vi.spyOn(Math, 'random')
-      randomSpy.mockReturnValueOnce(0.5)
-      randomSpy.mockReturnValueOnce(0.999)
-
       const store = {
         'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1:active.present.indicative:3ms': {
@@ -362,80 +358,79 @@ describe('nextExercise', () => {
         'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
 
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { tense: 'active.past' },
-      )
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, tenses: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { tense: 'active.past' },
+        )
 
-      expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:3ms')
+        expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:3ms')
+      }, [0, 0.75])
     })
 
     test('freezes overdue reviews to cards with the focused pronoun when backlog is present', () => {
-      const randomSpy = vi.spyOn(Math, 'random')
-      randomSpy.mockReturnValueOnce(0.5)
-      randomSpy.mockReturnValueOnce(0.999)
-
       const store = {
         'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
 
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { pronoun: '1s' },
-      )
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, pronouns: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { pronoun: '1s' },
+        )
 
-      expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:1s')
+        expect(exercise.cardKey).toBe('production:verb:sound:1:active.past:1s')
+      }, [0, 0.75])
     })
 
     test('routes to pinned root type when random < 0.75 and pinned due cards exist', () => {
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
       const store = {
         'production:verb:hollow:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { rootType: 'hollow' },
-      )
-      expect(parseCardKey(exercise.cardKey).rootType).toBe('hollow')
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { rootType: 'hollow' },
+        )
+        expect(parseCardKey(exercise.cardKey).rootType).toBe('hollow')
+      }, [0, 0.75])
     })
 
     test('root type focus filters uncovered triples', () => {
-      const random = Math.random
-      // Every draw stays below the 0.75 focus threshold but still varies, so distractor sampling terminates.
-      vi.spyOn(Math, 'random').mockImplementation(() => random() * 0.75)
-      const exercises = Array.from({ length: 30 }, () =>
-        nextExercise(
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
           { ...INITIAL_DIMENSION_PROFILE, rootTypes: 4 },
           {},
           { reviews: 0, lastNewAt: -3 },
           { rootType: 'hollow' },
-        ),
-      )
-      expect(exercises.every((e) => parseCardKey(e.cardKey).rootType === 'hollow')).toBe(true)
+        )
+        expect(parseCardKey(exercise.cardKey).rootType).toBe('hollow')
+      }, [0, 0.75])
     })
 
     test('routes to pinned pronoun when random < 0.75 and pinned due cards exist', () => {
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.5)
       const store = {
         'production:verb:sound:1:active.past:3ms': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
         'production:verb:sound:1:active.past:1s': { interval: 1, ef: 2.5, repetitions: 1, dueDate: '2026-03-23' },
       }
-      const exercise = nextExercise(
-        { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1 },
-        store,
-        { reviews: 0, lastNewAt: 0 },
-        { pronoun: '1s' },
-      )
-      expect(parseCardKey(exercise.cardKey).pronoun).toBe('1s')
+      forAnyRandomness(() => {
+        const exercise = nextExercise(
+          { ...INITIAL_DIMENSION_PROFILE, tenses: 0, pronouns: 1 },
+          store,
+          { reviews: 0, lastNewAt: 0 },
+          { pronoun: '1s' },
+        )
+        expect(parseCardKey(exercise.cardKey).pronoun).toBe('1s')
+      }, [0, 0.75])
     })
 
     test('exercises without a pronoun slot pass through when pronoun focus is active', () => {

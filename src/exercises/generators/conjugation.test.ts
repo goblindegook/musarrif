@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { getVerbById } from '../../paradigms/verbs'
 import { INITIAL_DIMENSION_PROFILE } from '../../test/profiles'
+import { forAnyRandomness } from '../../test/random'
 import * as dimensions from '../dimensions'
 import { conjugationExercise } from './conjugation'
 
@@ -10,35 +11,49 @@ describe('conjugationExercise', () => {
   })
 
   test('returns kind "conjugation"', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('conjugation')
+    forAnyRandomness(() => {
+      expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).kind).toBe('conjugation')
+    })
   })
 
   test('returns a non-empty Arabic word', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).word.length).toBeGreaterThan(0)
+    })
   })
 
   test('returns exactly four options', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    forAnyRandomness(() => {
+      expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).options).toHaveLength(4)
+    })
   })
 
   test('all options are unique', () => {
-    const { options } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(new Set(options).size).toBe(options.length)
+    forAnyRandomness(() => {
+      const { options } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(new Set(options).size).toBe(options.length)
+    })
   })
 
   test('answer is a valid index', () => {
-    const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(answer).toBeGreaterThanOrEqual(0)
-    expect(answer).toBeLessThan(options.length)
+    forAnyRandomness(() => {
+      const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(answer).toBeGreaterThanOrEqual(0)
+      expect(answer).toBeLessThan(options.length)
+    })
   })
 
   test('options[answer] is a non-empty Arabic string', () => {
-    const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(options[answer].length).toBeGreaterThan(0)
+    forAnyRandomness(() => {
+      const { options, answer } = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(options[answer].length).toBeGreaterThan(0)
+    })
   })
 
   test('includes speech in inputModes', () => {
-    expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).inputModes).toContain('speech')
+    forAnyRandomness(() => {
+      expect(conjugationExercise.generate(INITIAL_DIMENSION_PROFILE).inputModes).toContain('speech')
+    })
   })
 })
 
@@ -132,21 +147,27 @@ describe('conjugationExercise with constraints', () => {
   afterEach(() => vi.restoreAllMocks())
 
   test('attaches cardKey to returned exercise', () => {
-    const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
-    expect(exercise.cardKey).toMatch(/^production:verb:[a-z]+:\d+:[\w.]+:\w+$/)
+    forAnyRandomness(() => {
+      const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE)
+      expect(exercise.cardKey).toMatch(/^production:verb:[a-z]+:\d+:[\w.]+:\w+$/)
+    })
   })
 
   test('cardKey reflects constrained form', () => {
-    const exercise = conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, forms: 1 }, { form: 2 })
-    expect(exercise.cardKey).toMatch(/^production:verb:[a-z]+:2:/)
+    forAnyRandomness(() => {
+      const exercise = conjugationExercise.generate({ ...INITIAL_DIMENSION_PROFILE, forms: 1 }, { form: 2 })
+      expect(exercise.cardKey).toMatch(/^production:verb:[a-z]+:2:/)
+    })
   })
 
   test('cardKey reflects constrained tense', () => {
-    const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE, {
-      tense: 'active.past',
-      pronoun: '3ms',
+    forAnyRandomness(() => {
+      const exercise = conjugationExercise.generate(INITIAL_DIMENSION_PROFILE, {
+        tense: 'active.past',
+        pronoun: '3ms',
+      })
+      expect(exercise.cardKey).toContain(':active.past:3ms')
     })
-    expect(exercise.cardKey).toContain(':active.past:3ms')
   })
 
   test('forces 3ms for impersonal passive constraints and keeps the answer non-empty', () => {
