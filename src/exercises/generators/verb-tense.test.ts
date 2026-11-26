@@ -67,7 +67,7 @@ describe('tenseExercise difficulty', () => {
     })
   })
 
-  test('correct answer is the active past (random=0)', () => {
+  test('correct answer is the active past when only the past is unlocked', () => {
     forAnyRandomness(() => {
       const { options, answer } = verbTenseExercise.generate(INITIAL_DIMENSION_PROFILE)
       expect(options[answer]).toBe('active.past')
