@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import { parseDimensionStore } from '../src/exercises/dimensions.ts'
 import { computeInsights } from '../src/exercises/mastery.ts'
 import type { SrsCard, SrsStore } from '../src/exercises/srs.ts'
-import { getSrsCards, parseSrsStore } from '../src/exercises/srs.ts'
+import { cardSpace, getSrsCards, parseSrsStore } from '../src/exercises/srs.ts'
 import { parseTrackedExercises } from '../src/exercises/stats.ts'
 import en from '../src/locales/en.strings.json' with { type: 'json' }
 import { localizedInsights } from '../src/localization.exercises.ts'
@@ -91,6 +91,19 @@ const dueBucketCounts: Record<DueBucket, number> = {
   future: 0,
 }
 for (const card of cards) dueBucketCounts[dueBucket(today, card.dueDate)] += 1
+
+// Matches MASTERY_THRESHOLD_DAYS in src/exercises/mastery.ts.
+const masteredCount = cards.filter((c) => c.interval >= 90).length
+const cardSpaceSize = cardSpace().size
+const masteryPerDay = masteredCount / Math.max(1, daysDiff(exercises[0].date, today))
+const daysToMaster = masteryPerDay > 0 ? (cardSpaceSize - masteredCount) / masteryPerDay : Number.POSITIVE_INFINITY
+
+function fmtDuration(days: number): string {
+  if (!Number.isFinite(days)) return '∞'
+  const [count, unit] = days >= 365 ? [days / 365, 'year'] : days >= 30 ? [days / 30, 'month'] : [days, 'day']
+  const n = Math.ceil(count)
+  return `${n} ${unit}${n === 1 ? '' : 's'}`
+}
 
 const sortedOverdue = overdueCards.sort((a, b) => a.dueDate.localeCompare(b.dueDate))
 const oldestDaysAgo = sortedOverdue[0] ? daysDiff(sortedOverdue[0].dueDate, today) : 0
@@ -335,8 +348,13 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
   <div class="metric">
     <div class="metric-label">SRS cards</div>
-    <div class="metric-value" style="color:var(--amber)">${cards.length}</div>
+    <div class="metric-value" style="color:var(--amber)">${cards.length.toLocaleString()} <span style="font-size:13px;color:var(--muted)">/ ${cardSpaceSize.toLocaleString()}</span></div>
     <div class="metric-sub">${overdueCards.length} overdue (${Math.round((overdueCards.length / cards.length) * 100)}%)</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Time to master all cards</div>
+    <div class="metric-value" style="color:var(--blue)">${fmtDuration(daysToMaster)}</div>
+    <div class="metric-sub">${masteredCount.toLocaleString()} of ${cardSpaceSize.toLocaleString()} mastered (90d+ interval) · ${(masteryPerDay * 7).toFixed(1)}/week</div>
   </div>
 </div>
 
