@@ -26,7 +26,6 @@ vi.mock('uplot', () => {
         }
         mount.append(root)
       }
-      setLegend() {}
       destroy() {}
     },
   }

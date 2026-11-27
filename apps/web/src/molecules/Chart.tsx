@@ -58,12 +58,11 @@ export function Chart({ series, data, ariaLabel, width: defaultWidth, height = 2
           },
         ],
         series: series.map((s) => ({ paths: spline, ...s })),
+        hooks: { ready: [(u) => u.setLegend({ idx: data[0].length - 1 })] },
       },
       data,
       mountRef.current,
     )
-
-    plot.setLegend({ idx: data[0].length - 1 })
 
     return () => plot.destroy()
   }, [series, data, width, height, theme])
