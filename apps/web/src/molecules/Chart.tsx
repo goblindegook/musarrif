@@ -63,6 +63,8 @@ export function Chart({ series, data, ariaLabel, width: defaultWidth, height = 2
       mountRef.current,
     )
 
+    plot.setLegend({ idx: data[0].length - 1 })
+
     return () => plot.destroy()
   }, [series, data, width, height, theme])
 
